@@ -6,9 +6,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action
@@ -26,9 +27,12 @@ class SitePickerViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var siteRecord: SiteRecord
 
+    @Mock
+    private lateinit var wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper
+
     @Before
     fun setUp() {
-        viewModel = SitePickerViewModel(mock(), mock())
+        viewModel = SitePickerViewModel(wpJetpackIndividualPluginHelper)
     }
 
     @Test
@@ -88,4 +92,24 @@ class SitePickerViewModelTest : BaseUnitTest() {
         viewModel.onRefreshReblogActionMode()
         assertThat(result!!.peekContent()).isEqualTo(NavigateToState(TO_SITE_SELECTED, siteRecord))
     }
+
+    @Test
+    fun `when checkJetpackIndividualPluginOverlayNeeded is invoked then showJetpackIndividualPluginOverlay is true`() =
+        test {
+            whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(true)
+
+            viewModel.checkJetpackIndividualPluginOverlayNeeded()
+
+            assertThat(viewModel.showJetpackIndividualPluginOverlay.value).isTrue()
+        }
+
+    @Test
+    fun `when checkJetpackIndividualPluginOverlayNeeded is invoked then showJetpackIndividualPluginOverlay is false`() =
+        test {
+            whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(false)
+
+            viewModel.checkJetpackIndividualPluginOverlayNeeded()
+
+            assertThat(viewModel.showJetpackIndividualPluginOverlay.value).isFalse()
+        }
 }

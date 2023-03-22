@@ -5,10 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSiteModel
-import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord
-import org.wordpress.android.util.config.WPIndividualPluginOverlayFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.AskForSiteSelection
@@ -22,8 +20,7 @@ import org.wordpress.android.viewmodel.main.SitePickerViewModel.NavigateState.TO
 import javax.inject.Inject
 
 class SitePickerViewModel @Inject constructor(
-    private val siteStore: SiteStore,
-    private val wpIndividualPluginOverlayFeatureConfig: WPIndividualPluginOverlayFeatureConfig,
+    private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
 ) : ViewModel() {
     private val _onActionTriggered = MutableLiveData<Event<Action>>()
     val onActionTriggered: LiveData<Event<Action>> = _onActionTriggered
@@ -33,15 +30,10 @@ class SitePickerViewModel @Inject constructor(
 
     private var siteForReblog: SiteRecord? = null
 
-    fun initialize() {
-        checkJetpackIndividualPluginOverlayNeeded()
-    }
-
-    private fun checkJetpackIndividualPluginOverlayNeeded() {
+    fun checkJetpackIndividualPluginOverlayNeeded() {
         viewModelScope.launch {
-            if (wpIndividualPluginOverlayFeatureConfig.isEnabled() && siteStore.hasJetpackCPConnectedSites()) {
-                _showJetpackIndividualPluginOverlay.postValue(true)
-            }
+            _showJetpackIndividualPluginOverlay
+                .postValue(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay())
         }
     }
 
@@ -72,15 +64,6 @@ class SitePickerViewModel @Inject constructor(
     private fun selectSite(siteRecord: SiteRecord) {
         siteForReblog = siteRecord
         _onActionTriggered.value = Event(NavigateToState(TO_SITE_SELECTED, siteRecord))
-    }
-
-    val jetpackConnectedSites = MutableLiveData<List<JetpackCPConnectedSiteModel>>()
-
-    fun fetchJetpackConnectedSites() {
-        viewModelScope.launch {
-            val sites = siteStore.getJetpackCPConnectedSites()
-            jetpackConnectedSites.postValue(sites)
-        }
     }
 
     enum class ActionType {

@@ -206,7 +206,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         mViewModel.getShowJetpackIndividualPluginOverlay().observe(this, this::onShowJetpackIndividualPluginOverlay);
-        mViewModel.initialize();
+        mViewModel.checkJetpackIndividualPluginOverlayNeeded();
 
         // If the picker is already in editing mode from previous configuration, re-enable the editing mode.
         if (mIsInEditMode) {
@@ -223,7 +223,10 @@ public class SitePickerActivity extends LocaleAwareActivity
     private void onShowJetpackIndividualPluginOverlay(Boolean shouldShowJetpackIndividualPluginOverlay) {
         // TODO thomashortadev temporary during development of #18114
         if (shouldShowJetpackIndividualPluginOverlay) {
-            ToastUtils.showToast(this, "WP - Individual plugin overlay is enabled");
+            ToastUtils.showToast(
+                    this,
+                    "WP - Individual plugin overlay is enabled & user has sites with Individual plugins"
+            );
         }
     }
 
