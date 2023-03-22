@@ -179,14 +179,9 @@ Language: sk
     <string name="content_description_more">Viac</string>
     <string name="reader_empty_followed_tags_title">Žiadne sledované témy</string>
     <string name="reader_empty_followed_tags_subtitle">Pridajte témy a nájdite články vašich obľúbených témach</string>
-    <string name="jetpack_installed">Jetpack nainštalovaný</string>
-    <string name="installing_jetpack">Inštalovanie Jetpack</string>
-    <string name="install_jetpack">Inštalovať Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Najčastejšie otázky Jetpack</string>
     <string name="login_to_to_connect_jetpack">Prihláste sa do účtu WordPress.com. ktorý používate na pripojenie Jetpack.</string>
-    <string name="install_jetpack_retry">Znova</string>
-    <string name="jetpack_installation_problem">Vyskytol sa problém</string>
     <string name="stats_jetpack_connection_setup_info">Budete si musieť nainštalovať Jetpack plugin, keď chcete používať Štatistiky na vašej webovej stránke WordPress.</string>
     <string name="themes_empty_list">Žiadne témy nezodpovedajú vášmu vyhľadávaniu</string>
     <string name="reader_label_post_search_explainer">Čo by ste chceli nájsť?</string>

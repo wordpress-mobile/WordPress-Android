@@ -14,8 +14,6 @@ Language: el_GR
     <string name="help_buttons_screen_title">Βοήθεια</string>
     <string name="free">Δωρεάν</string>
     <string name="tickets">Εισιτήρια</string>
-    <string name="jetpack_full_plugin_install_error_title">Παρουσιάστηκε ένα πρόβλημα</string>
-    <string name="jetpack_full_plugin_install_error_image_content_description">Εικονίδιο σφάλματος</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d Απαντήσεις</string>
     <string name="blogging_prompts_list_number_of_answers_one">1 απάντηση</string>
     <string name="blogging_prompts_list_number_of_answers_zero">0 απαντήσεις</string>
@@ -198,16 +196,9 @@ Language: el_GR
     <string name="my_site_create_new_site_title">Δεν έχετε ιστότοπους</string>
     <string name="content_description_more">Περισσότερα</string>
     <string name="reader_empty_followed_tags_title">Μη ακολουθούμενα θέματα</string>
-    <string name="install_jetpack">Εγκατάσταση Jetpack</string>
-    <string name="install_jetpack_retry">Προσπαθήστε ξανά</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Συχνές Ερωτήσεις για το Jetpack</string>
-    <string name="jetpack_installation_problem">Παρουσιάστηκε ένα πρόβλημα</string>
-    <string name="jetpack_installed">Το Jetpack εγκαταστάθηκε</string>
-    <string name="installing_jetpack">Εγκατάσταση Jetpack</string>
     <string name="login_to_to_connect_jetpack">Συνδεθείτε στο WordPress.com λογαριασμό σας που χρησιμοποιείτε για να συνδεθείτε με το Jetpack.</string>
-    <string name="jetpack_installation_problem_message">Το Jetpack δεν ήταν δυνατό να εγκατασταθεί αυτή τη στιγμή.</string>
-    <string name="installing_jetpack_message">Το Jetpack εγκαθίσταται στον ιστότοπο σας. Αυτό μπορεί να διαρκέσει μερικά λεπτά για να ολοκληρωθεί.</string>
     <string name="reader_label_post_search_explainer">Τι θα θέλατε να βρείτε;</string>
     <string name="site_settings_tags_empty_title">Δεν έχετε κάποια ετικέτα</string>
     <string name="site_settings_tags_empty_button">Δημιουργήστε μια ετικέτα</string>

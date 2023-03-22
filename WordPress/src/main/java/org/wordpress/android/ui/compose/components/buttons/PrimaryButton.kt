@@ -10,6 +10,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
@@ -32,6 +33,7 @@ fun PrimaryButton(
     isInProgress: Boolean = false,
     colors: ButtonColors = ButtonDefaults.buttonColors(
         contentColor = AppColor.White,
+        disabledContentColor = AppColor.White.copy(alpha = ContentAlpha.disabled),
         disabledBackgroundColor = colorResource(R.color.jetpack_green_70),
     ),
     padding: PaddingValues = PaddingValues(
