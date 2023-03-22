@@ -12,14 +12,15 @@ class RootWPAPIRestResponse(
     val namespaces: List<String>? = null,
     val authentication: Authentication? = null
 ) : Response {
-    class Authentication : JsonObjectOrEmptyArray() {
-        class Oauth1 {
-            var request: String? = null
-            var authorize: String? = null
-            var access: String? = null
-            var version: String? = null
+    class Authentication(
+        @SerializedName("application-passwords") val applicationPasswords: ApplicationPasswords? = null
+    ): JsonObjectOrEmptyArray() {
+        class ApplicationPasswords(
+            val endpoints: Endpoints?
+        ) {
+            class Endpoints(
+                val authorization: String?
+            )
         }
-
-        var oauth1: Oauth1? = null
     }
 }
