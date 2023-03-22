@@ -46,9 +46,11 @@ public abstract class BaseRequest<T> extends Request<T> {
     public interface OnAuthFailedListener {
         void onAuthFailed(AuthenticateErrorPayload errorType);
     }
+
     public interface BaseErrorListener {
         void onErrorResponse(@NonNull BaseNetworkError error);
     }
+
     public interface OnParseErrorListener {
         void onParseError(OnUnexpectedError event);
     }
@@ -82,11 +84,13 @@ public abstract class BaseRequest<T> extends Request<T> {
             this.type = error;
             this.volleyError = volleyError;
         }
+
         public BaseNetworkError(@NonNull GenericErrorType error, @NonNull VolleyError volleyError) {
             this.message = "";
             this.type = error;
             this.volleyError = volleyError;
         }
+
         public BaseNetworkError(@NonNull GenericErrorType error,
                                 @NonNull VolleyError volleyError,
                                 @NonNull XmlRpcErrorType xmlRpcErrorType) {
@@ -95,31 +99,38 @@ public abstract class BaseRequest<T> extends Request<T> {
             this.volleyError = volleyError;
             this.xmlRpcErrorType = xmlRpcErrorType;
         }
+
         public BaseNetworkError(@NonNull VolleyError volleyError) {
             this.type = GenericErrorType.UNKNOWN;
             this.message = "";
             this.volleyError = volleyError;
         }
+
         public BaseNetworkError(@NonNull VolleyError volleyError, @NonNull XmlRpcErrorType xmlRpcErrorType) {
             this.type = GenericErrorType.UNKNOWN;
             this.message = "";
             this.volleyError = volleyError;
             this.xmlRpcErrorType = xmlRpcErrorType;
         }
+
         public BaseNetworkError(@NonNull GenericErrorType error) {
             this.type = error;
         }
+
         public BaseNetworkError(@NonNull GenericErrorType error, @NonNull String message) {
             this.type = error;
             this.message = message;
         }
+
         public BaseNetworkError(@NonNull GenericErrorType error, @NonNull XmlRpcErrorType xmlRpcErrorType) {
             this.type = error;
             this.xmlRpcErrorType = xmlRpcErrorType;
         }
+
         public boolean isGeneric() {
             return type != null;
         }
+
         public boolean hasVolleyError() {
             return volleyError != null;
         }
@@ -172,7 +183,9 @@ public abstract class BaseRequest<T> extends Request<T> {
     }
 
     public void addQueryParameters(Map<String, String> parameters) {
-        if (parameters == null) return;
+        if (parameters == null) {
+            return;
+        }
         Builder builder = mUri.buildUpon();
         for (String key : parameters.keySet()) {
             builder.appendQueryParameter(key, parameters.get(key));
@@ -183,7 +196,7 @@ public abstract class BaseRequest<T> extends Request<T> {
     /**
      * Enable caching for this request. The {@code timeToLive} param corresponds to the
      * {@code ttl} field in {@link Cache}.
-     *
+     * <p>
      * Disables soft expiry, which is when the cached result is returned, but a network request is also dispatched
      * to update the cache.
      *
@@ -197,7 +210,7 @@ public abstract class BaseRequest<T> extends Request<T> {
      * Enable caching for this request. The {@code timeToLive} and {@code softTimeToLive} params correspond to the
      * {@code ttl} and {@code softTtl} fields in {@link Cache}.
      *
-     * @param timeToLive the amount of time before the cache expires
+     * @param timeToLive     the amount of time before the cache expires
      * @param softTimeToLive the amount of time before the cache soft expires (the cached result is returned,
      *                       but a network request is also dispatched to update the cache)
      */
@@ -260,10 +273,10 @@ public abstract class BaseRequest<T> extends Request<T> {
 
     /**
      * Generate a cache entry for this request.
-     *
+     * <p>
      * If caching has been enabled through {@link BaseRequest#enableCaching(int, int)}, the expiry parameters that were
      * given are used to configure the cache entry.
-     *
+     * <p>
      * Otherwise, just generate a cache entry from the response's cache headers (default behaviour).
      */
     protected Cache.Entry createCacheEntry(NetworkResponse response) {
@@ -358,7 +371,10 @@ public abstract class BaseRequest<T> extends Request<T> {
 
     @Override
     public final void deliverError(VolleyError volleyError) {
-        AppLog.e(AppLog.T.API, "Volley error on " + getUrl(), volleyError);
+        Integer statusCode = volleyError.networkResponse != null ? volleyError.networkResponse.statusCode : null;
+        AppLog.e(AppLog.T.API,
+                "Volley error on " + getUrl() + (statusCode != null ? " Status Code: " + statusCode : ""),
+                volleyError);
         if (volleyError instanceof ParseError && mOnParseErrorListener != null) {
             OnUnexpectedError error = new OnUnexpectedError(volleyError, "API response parse error");
             error.addExtra(OnUnexpectedError.KEY_URL, getUrl());

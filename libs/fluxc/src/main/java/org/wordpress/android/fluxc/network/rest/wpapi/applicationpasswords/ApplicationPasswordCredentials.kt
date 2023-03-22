@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 
-internal data class ApplicationPasswordCredentials(
+data class ApplicationPasswordCredentials(
     val userName: String,
     val password: String,
-    val uuid: ApplicationPasswordUUID
+    val uuid: ApplicationPasswordUUID? = null
 )

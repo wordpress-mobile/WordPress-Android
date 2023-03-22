@@ -6,7 +6,6 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType.SITE
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.plugin.PluginWPAPIRestClient
 import org.wordpress.android.fluxc.persistence.PluginSqlUtilsWrapper
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError
@@ -32,7 +31,6 @@ class PluginCoroutineStore
     private val coroutineEngine: CoroutineEngine,
     private val dispatcher: Dispatcher,
     private val pluginWPAPIRestClient: PluginWPAPIRestClient,
-    private val wpapiAuthenticator: WPAPIAuthenticator,
     private val pluginSqlUtils: PluginSqlUtilsWrapper
 ) {
     fun fetchWPApiPlugins(siteModel: SiteModel) =
@@ -44,9 +42,7 @@ class PluginCoroutineStore
     suspend fun syncFetchWPApiPlugins(
         siteModel: SiteModel
     ): OnPluginDirectoryFetched {
-        val payload = wpapiAuthenticator.makeAuthenticatedWPAPIRequest(siteModel) { nonce ->
-            pluginWPAPIRestClient.fetchPlugins(siteModel, nonce)
-        }
+        val payload = pluginWPAPIRestClient.fetchPlugins(siteModel)
         val event = OnPluginDirectoryFetched(SITE, false)
         val error = payload.error
         if (error != null) {
@@ -65,9 +61,7 @@ class PluginCoroutineStore
         }
 
     suspend fun syncFetchWPApiPlugin(site: SiteModel, pluginName: String): OnSitePluginFetched {
-        val payload = wpapiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
-            pluginWPAPIRestClient.fetchPlugin(site, nonce, pluginName)
-        }
+        val payload = pluginWPAPIRestClient.fetchPlugin(site, pluginName)
         val error = payload.error
         return if (error != null) {
             val fetchError = FetchSitePluginError(error.type, error.message)
@@ -95,9 +89,7 @@ class PluginCoroutineStore
         slug: String
     ): OnSitePluginDeleted {
         val plugin = pluginSqlUtils.getSitePluginBySlug(site, slug)
-        val payload = wpapiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
-            pluginWPAPIRestClient.deletePlugin(site, nonce, plugin?.name ?: pluginName)
-        }
+        val payload = pluginWPAPIRestClient.deletePlugin(site, plugin?.name ?: pluginName)
         val event = OnSitePluginDeleted(payload.site, pluginName, slug)
         val error = payload.error?.let {
             DeleteSitePluginError(it.type, it.message)
@@ -123,9 +115,7 @@ class PluginCoroutineStore
         isActive: Boolean
     ): OnSitePluginConfigured {
         val plugin = pluginSqlUtils.getSitePluginBySlug(site, slug)
-        val payload = wpapiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce, ->
-            pluginWPAPIRestClient.updatePlugin(site, nonce, plugin?.name ?: pluginName, isActive)
-        }
+        val payload = pluginWPAPIRestClient.updatePlugin(site, plugin?.name ?: pluginName, isActive)
         val event = OnSitePluginConfigured(payload.site, pluginName, slug)
         val error = payload.error
         if (error != null) {
@@ -145,9 +135,7 @@ class PluginCoroutineStore
         site: SiteModel,
         slug: String
     ): OnSitePluginInstalled {
-        val payload = wpapiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
-            pluginWPAPIRestClient.installPlugin(site, nonce, slug)
-        }
+        val payload = pluginWPAPIRestClient.installPlugin(site, slug)
         val event = OnSitePluginInstalled(payload.site, payload.data?.slug ?: slug)
         val error = payload.error
         if (error != null) {
