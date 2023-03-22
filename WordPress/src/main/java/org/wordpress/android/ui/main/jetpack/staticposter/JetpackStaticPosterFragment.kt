@@ -17,6 +17,7 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.main.jetpack.staticposter.compose.JetpackStaticPoster
 import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -39,7 +40,7 @@ class JetpackStaticPosterFragment : Fragment() {
                         uiState = state,
                         onPrimaryClick = viewModel::onPrimaryClick,
                         onSecondaryClick = viewModel::onSecondaryClick,
-                        onBackClick = requireActivity()::onBackPressed,
+                        onBackClick = requireActivity().onBackPressedDispatcher::onBackPressed,
                     )
                     is UiState.Loading -> CircularProgressIndicator()
                 }
@@ -50,7 +51,7 @@ class JetpackStaticPosterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeEvents()
-        viewModel.start(requireNotNull(requireArguments().getParcelable(ARG_PARCEL)))
+        viewModel.start(requireNotNull(requireArguments().getParcelableCompat(ARG_PARCEL)))
     }
 
     private fun observeEvents() {
