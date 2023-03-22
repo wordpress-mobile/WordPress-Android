@@ -6,6 +6,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord
@@ -27,7 +28,7 @@ class SitePickerViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        viewModel = SitePickerViewModel()
+        viewModel = SitePickerViewModel(mock(), mock())
     }
 
     @Test
