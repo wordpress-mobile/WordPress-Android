@@ -176,7 +176,6 @@ open class SiteStore @Inject constructor(
      * @param segmentId The segment that the site belongs to
      * @param siteDesign The design template of the site
      * @param dryRun If set to true the call only validates the parameters passed
-     * @param isComingSoon The "coming soon" flag, which hides the site content from the public
      */
     data class NewSitePayload(
         @JvmField val siteName: String?,
@@ -188,7 +187,7 @@ open class SiteStore @Inject constructor(
         @JvmField val siteDesign: String? = null,
         @JvmField val dryRun: Boolean,
         @JvmField val findAvailableUrl: Boolean? = null,
-        @JvmField val isComingSoon: Boolean? = null,
+        @JvmField val siteCreationFlow: String? = null
     ) : Payload<BaseNetworkError>() {
         constructor(
             siteName: String?,
@@ -1037,7 +1036,10 @@ open class SiteStore @Inject constructor(
     }
 
     enum class SiteVisibility(private val mValue: Int) {
-        PRIVATE(-1), BLOCK_SEARCH_ENGINE(0), PUBLIC(1);
+        PRIVATE(-1),
+        BLOCK_SEARCH_ENGINE(0),
+        PUBLIC(1),
+        COMING_SOON(999);
 
         fun value(): Int {
             return mValue
@@ -1600,8 +1602,8 @@ open class SiteStore @Inject constructor(
                 payload.segmentId,
                 payload.siteDesign,
                 payload.findAvailableUrl,
-                payload.isComingSoon,
                 payload.dryRun,
+                payload.siteCreationFlow
         )
         return handleCreateNewSiteCompleted(
                 payload = result
