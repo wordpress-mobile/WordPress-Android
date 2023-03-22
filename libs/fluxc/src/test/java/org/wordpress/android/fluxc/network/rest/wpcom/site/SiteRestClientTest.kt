@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType
 import org.wordpress.android.fluxc.store.SiteStore.SiteFilter.WPCOM
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.COMING_SOON
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.test
 import kotlin.test.assertNotNull
@@ -201,7 +202,6 @@ class SiteRestClientTest {
         val siteDesign = "design"
         val timeZoneId = "Europe/London"
         val findAvailableUrl = true
-        val isComingSoon = false
 
         val result = restClient.newSite(
             siteName,
@@ -212,7 +212,6 @@ class SiteRestClientTest {
             segmentId,
             siteDesign,
             findAvailableUrl,
-            isComingSoon,
             dryRun
         )
 
@@ -235,7 +234,6 @@ class SiteRestClientTest {
                                 "site_segment" to segmentId,
                                 "template" to siteDesign,
                                 "timezone_string" to timeZoneId,
-                                "wpcom_public_coming_soon" to "0"
                         )
                 )
         )
@@ -262,8 +260,6 @@ class SiteRestClientTest {
         val segmentId = 123L
         val siteDesign = "design"
         val timeZoneId = "Europe/London"
-        val isComingSoon = false
-
 
         val result = restClient.newSite(
             siteName,
@@ -274,7 +270,6 @@ class SiteRestClientTest {
             segmentId,
             siteDesign,
             null,
-            isComingSoon,
             dryRun
         )
 
@@ -298,7 +293,6 @@ class SiteRestClientTest {
                     "template" to siteDesign,
                     "site_creation_flow" to "with-design-picker",
                     "timezone_string" to timeZoneId,
-                    "wpcom_public_coming_soon" to "0"
                 )
             )
         )
@@ -325,7 +319,6 @@ class SiteRestClientTest {
         val segmentId = 123L
         val siteDesign = "design"
         val timeZoneId = "Europe/London"
-        val isComingSoon = false
 
         val result = restClient.newSite(
             siteName,
@@ -336,7 +329,6 @@ class SiteRestClientTest {
             segmentId,
             siteDesign,
             null,
-            isComingSoon,
             dryRun
         )
 
@@ -359,7 +351,6 @@ class SiteRestClientTest {
                     "template" to siteDesign,
                     "site_creation_flow" to "with-design-picker",
                     "timezone_string" to timeZoneId,
-                    "wpcom_public_coming_soon" to "0"
                 )
             )
         )
@@ -384,7 +375,6 @@ class SiteRestClientTest {
         val language = "CZ"
         val visibility = SiteVisibility.PRIVATE
         val timeZoneId = "Europe/London"
-        val isComingSoon = false
 
         val result = restClient.newSite(
             siteName,
@@ -395,7 +385,6 @@ class SiteRestClientTest {
             null,
             null,
             null,
-            isComingSoon,
             dryRun
         )
 
@@ -414,7 +403,6 @@ class SiteRestClientTest {
                         "client_secret" to appSecret,
                         "options" to mapOf<String, Any>(
                             "timezone_string" to timeZoneId,
-                            "wpcom_public_coming_soon" to "0"
                         )
                 )
         )
@@ -453,6 +441,56 @@ class SiteRestClientTest {
 
         assertNotNull(errorResponse.error)
         assertThat(errorResponse.error.type).isEqualTo(PostFormatsErrorType.GENERIC_ERROR)
+    }
+
+    @Test
+    fun `creates new site in coming soon state`() = test {
+        // given
+        whenever(appSecrets.appId).thenReturn("")
+        whenever(appSecrets.appSecret).thenReturn("")
+        initNewSiteResponse()
+
+        // when
+        restClient.newSite("", "", "", "", visibility = COMING_SOON, null, null, null, false)
+
+        // then
+        val body = bodyCaptor.lastValue
+        @Suppress("UNCHECKED_CAST")
+        val options = body["options"] as Map<String, String>
+
+        assertThat(body).containsEntry("public", "0")
+        assertThat(options).containsEntry("wpcom_public_coming_soon", "1")
+    }
+
+    @Test
+    fun `creates new site with override site creation flow if specified`() = test {
+        // given
+        whenever(appSecrets.appId).thenReturn("")
+        whenever(appSecrets.appSecret).thenReturn("")
+        initNewSiteResponse()
+
+        val siteCreationFlow = "sample_creation_flow"
+
+        // when
+        restClient.newSite(
+            null,
+            "",
+            "",
+            "",
+            visibility = COMING_SOON,
+            null,
+            null,
+            null,
+            false,
+            siteCreationFlow = siteCreationFlow
+        )
+
+        // then
+        val body = bodyCaptor.lastValue
+        @Suppress("UNCHECKED_CAST")
+        val options = body["options"] as Map<String, String>
+
+        assertThat(options).containsEntry("site_creation_flow", siteCreationFlow)
     }
 
     private suspend fun initSiteResponse(
