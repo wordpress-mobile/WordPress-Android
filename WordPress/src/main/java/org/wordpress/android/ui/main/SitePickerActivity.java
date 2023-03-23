@@ -58,6 +58,7 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.config.WPIndividualPluginOverlayFeatureConfig;
 import org.wordpress.android.util.helpers.Debouncer;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.viewmodel.main.SitePickerViewModel;
@@ -133,6 +134,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Inject StatsStore mStatsStore;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+    @Inject WPIndividualPluginOverlayFeatureConfig mWPIndividualPluginOverlayFeatureConfig;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -213,6 +215,12 @@ public class SitePickerActivity extends LocaleAwareActivity
     public void onResume() {
         super.onResume();
         ActivityId.trackLastActivity(ActivityId.SITE_PICKER);
+
+        // TODO thomashortadev temporary during development of #18114
+        if (mWPIndividualPluginOverlayFeatureConfig.isEnabled()) {
+            // show toast saying the feature is enabled
+            ToastUtils.showToast(this, "WP - Individual plugin overlay is enabled");
+        }
     }
 
     @Override
