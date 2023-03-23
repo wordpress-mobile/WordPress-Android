@@ -9,7 +9,6 @@ import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.about.UnifiedAboutActivity;
 import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
-import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
@@ -28,7 +27,6 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditFragment;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesFragment;
-import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment;
 import org.wordpress.android.ui.domains.DomainSuggestionsFragment;
@@ -139,7 +137,6 @@ import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
 import org.wordpress.android.ui.reader.CommentNotificationsBottomSheetFragment;
 import org.wordpress.android.ui.reader.ReaderBlogFragment;
-import org.wordpress.android.ui.reader.ReaderCommentListActivity;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
@@ -206,8 +203,6 @@ public interface AppComponent {
     void inject(MediaUploadHandler object);
 
     void inject(PostUploadHandler object);
-
-    void inject(SignupEpilogueActivity object);
 
     void inject(SignupEpilogueFragment object);
 
@@ -318,8 +313,6 @@ public interface AppComponent {
     void inject(NotificationsPendingDraftsReceiver object);
 
     void inject(NotificationsDetailListFragment object);
-
-    void inject(ReaderCommentListActivity object);
 
     void inject(ReaderSubsActivity object);
 
@@ -440,8 +433,6 @@ public interface AppComponent {
     void inject(TodayWidgetListProvider object);
 
     void inject(TodayWidgetBlockListProviderFactory object);
-
-    void inject(DomainRegistrationActivity object);
 
     void inject(EditPostPublishSettingsFragment object);
 

@@ -9,6 +9,9 @@ import androidx.appcompat.widget.Toolbar;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.LocaleAwareActivity;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class AccountSettingsActivity extends LocaleAwareActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
