@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
@@ -98,5 +99,10 @@ class WPJetpackIndividualPluginFragment : DialogFragment() {
 
         @JvmStatic
         fun newInstance(): WPJetpackIndividualPluginFragment = WPJetpackIndividualPluginFragment()
+
+        @JvmStatic
+        fun show(fm: FragmentManager): WPJetpackIndividualPluginFragment = newInstance().also {
+            it.show(fm, TAG)
+        }
     }
 }

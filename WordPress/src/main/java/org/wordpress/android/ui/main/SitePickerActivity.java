@@ -225,10 +225,7 @@ public class SitePickerActivity extends LocaleAwareActivity
 
     private void onShowJetpackIndividualPluginOverlay(Boolean shouldShowJetpackIndividualPluginOverlay) {
         if (shouldShowJetpackIndividualPluginOverlay) {
-            WPJetpackIndividualPluginFragment.newInstance().show(
-                    getSupportFragmentManager(),
-                    WPJetpackIndividualPluginFragment.TAG
-            );
+            WPJetpackIndividualPluginFragment.show(getSupportFragmentManager());
         }
     }
 
