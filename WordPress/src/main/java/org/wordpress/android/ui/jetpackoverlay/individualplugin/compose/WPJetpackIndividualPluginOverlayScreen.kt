@@ -1,10 +1,13 @@
 package org.wordpress.android.ui.jetpackoverlay.individualplugin.compose
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -77,7 +80,8 @@ fun WPJetpackIndividualPluginOverlayScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(20.dp)
         ) {
-            Spacer(modifier = Modifier.weight(1f)) // Spacer to push the content to the center of the screen
+            // Spacer to push the content to the center of the screen
+            Spacer(modifier = Modifier.weight(1f))
 
             // Icon
             JPInstallFullPluginAnimation(
@@ -102,31 +106,37 @@ fun WPJetpackIndividualPluginOverlayScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.weight(1f)) // Spacer to push the content to the center of the screen
+            // Spacer to push the content to the center of the screen
+            Spacer(modifier = Modifier.weight(1f))
 
             // Buttons
-            PrimaryButton(
-                text = stringResource(R.string.wp_jetpack_individual_plugin_overlay_primary_button),
-                onClick = onPrimaryButtonClick,
-                buttonSize = ButtonSize.LARGE,
-                padding = PaddingValues(0.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = JpColorPalette().primary,
-                    contentColor = AppColor.White,
-                ),
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-            SecondaryButton(
-                text = stringResource(R.string.wp_jetpack_continue_without_jetpack),
-                onClick = onSecondaryButtonClick,
-                buttonSize = ButtonSize.LARGE,
-                padding = PaddingValues(0.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Transparent,
-                    contentColor = JpColorPalette().primary,
-                ),
-            )
-            Spacer(modifier = Modifier.height(12.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ){
+                PrimaryButton(
+                    text = stringResource(R.string.wp_jetpack_individual_plugin_overlay_primary_button),
+                    onClick = onPrimaryButtonClick,
+                    buttonSize = ButtonSize.LARGE,
+                    padding = PaddingValues(0.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = JpColorPalette().primary,
+                        contentColor = AppColor.White,
+                    ),
+                )
+                SecondaryButton(
+                    text = stringResource(R.string.wp_jetpack_continue_without_jetpack),
+                    onClick = onSecondaryButtonClick,
+                    buttonSize = ButtonSize.LARGE,
+                    padding = PaddingValues(0.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color.Transparent,
+                        contentColor = JpColorPalette().primary,
+                    ),
+                )
+            }
         }
     }
 }
