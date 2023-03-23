@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -88,6 +89,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
@@ -152,21 +154,24 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private ConversationNotificationsViewModel mConversationViewModel;
 
     @Override
-    public void onBackPressed() {
-        CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
-                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
-
-        if (fragment != null) {
-            fragment.onBackPressed();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_comment_list);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
+                        getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
+
+                if (fragment != null) {
+                    fragment.collapse();
+                } else {
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -248,9 +253,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 mSuggestionServiceConnectionManager,
                 mPost.isWP()
         );
-        if (mSuggestionAdapter != null) {
-            mEditComment.setAdapter(mSuggestionAdapter);
-        }
+        mEditComment.setAdapter(mSuggestionAdapter);
 
         mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost, mSource);
 

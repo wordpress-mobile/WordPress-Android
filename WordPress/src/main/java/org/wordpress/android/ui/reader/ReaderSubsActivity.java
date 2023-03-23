@@ -10,6 +10,7 @@ import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -54,6 +55,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 
@@ -93,6 +95,18 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (!TextUtils.isEmpty(mLastAddedTagName)) {
+                    EventBus.getDefault().postSticky(new ReaderEvents.TagAdded(mLastAddedTagName));
+                }
+                mReaderTracker.track(Stat.READER_MANAGE_VIEW_DISMISSED);
+                CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
         setContentView(R.layout.reader_activity_subs);
         restoreState(savedInstanceState);
 
@@ -107,7 +121,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            toolbar.setNavigationOnClickListener(v -> onBackPressed());
+            toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         }
 
         ActionBar actionBar = getSupportActionBar();
@@ -234,15 +248,6 @@ public class ReaderSubsActivity extends LocaleAwareActivity
             outState.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
         }
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (!TextUtils.isEmpty(mLastAddedTagName)) {
-            EventBus.getDefault().postSticky(new ReaderEvents.TagAdded(mLastAddedTagName));
-        }
-        mReaderTracker.track(Stat.READER_MANAGE_VIEW_DISMISSED);
-        super.onBackPressed();
     }
 
     /*

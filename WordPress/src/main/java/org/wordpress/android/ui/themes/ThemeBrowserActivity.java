@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.View.OnScrollChangeListener;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -47,6 +48,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.widgets.HeaderGridView;
 
 import java.util.HashMap;
@@ -93,6 +95,19 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
 
         setContentView(R.layout.theme_browser_activity);
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                FragmentManager fm = getSupportFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    fm.popBackStack();
+                } else {
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
         if (savedInstanceState == null) {
             addBrowserFragment();
             fetchInstalledThemesIfJetpackSite();
@@ -129,21 +144,11 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @Override

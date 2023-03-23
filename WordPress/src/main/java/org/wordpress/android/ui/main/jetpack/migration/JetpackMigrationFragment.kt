@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
@@ -44,6 +44,7 @@ import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.util.AppThemeUtils
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -77,7 +78,7 @@ class JetpackMigrationFragment : Fragment() {
         observeViewModelEvents()
         observeRefreshAppThemeEvents()
         val showDeleteWpState = arguments?.getBoolean(KEY_SHOW_DELETE_WP_STATE, false) ?: false
-        val deepLinkData = arguments?.getParcelable<PreMigrationDeepLinkData>(KEY_DEEP_LINK_DATA)
+        val deepLinkData = arguments?.getParcelableCompat<PreMigrationDeepLinkData>(KEY_DEEP_LINK_DATA)
         initBackPressHandler(showDeleteWpState)
         viewModel.start(
             showDeleteWpState,
@@ -127,15 +128,7 @@ class JetpackMigrationFragment : Fragment() {
 
     private fun initBackPressHandler(showDeleteWpState: Boolean) {
         if (showDeleteWpState) return
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(
-                true
-            ) {
-                override fun handleOnBackPressed() {
-                    viewModel.logoutAndFallbackToLogin()
-                }
-            })
+        requireActivity().onBackPressedDispatcher.addCallback(this) { viewModel.logoutAndFallbackToLogin() }
     }
 
     companion object {

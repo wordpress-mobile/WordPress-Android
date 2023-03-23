@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -41,6 +42,7 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 import javax.inject.Inject;
 
@@ -66,6 +68,17 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.reader_activity_post_list);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                ReaderPostListFragment fragment = getListFragment();
+                if (fragment == null || !fragment.onActivityBackPressed()) {
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -189,14 +202,6 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        ReaderPostListFragment fragment = getListFragment();
-        if (fragment == null || !fragment.onActivityBackPressed()) {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
             getMenuInflater().inflate(R.menu.share, menu);
@@ -209,7 +214,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
                 return true;
             case R.id.menu_share:
                 shareSite();

@@ -22,6 +22,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartD
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.viewBinding
 
 private const val Y_BUFFER = 10
@@ -90,7 +91,7 @@ class QuickStartDynamicCardViewHolder(
 
     private fun restoreScrollState(recyclerView: RecyclerView, key: String) {
         recyclerView.layoutManager?.apply {
-            val scrollState = nestedScrollStates.getParcelable<Parcelable>(key)
+            val scrollState = nestedScrollStates.getParcelableCompat<Parcelable>(key)
             if (scrollState != null) {
                 onRestoreInstanceState(scrollState)
             } else {
@@ -127,14 +128,14 @@ class QuickStartDynamicCardViewHolder(
          * We need to do this immediately, because if we don't, then the next move event could potentially
          * trigger the viewPager to switch tabs
          */
-        override fun onDown(e: MotionEvent?): Boolean = with(binding) {
+        override fun onDown(e: MotionEvent): Boolean = with(binding) {
             quickStartCardRecyclerView.parent.requestDisallowInterceptTouchEvent(true)
             return super.onDown(e)
         }
 
         override fun onScroll(
-            e1: MotionEvent?,
-            e2: MotionEvent?,
+            e1: MotionEvent,
+            e2: MotionEvent,
             distanceX: Float,
             distanceY: Float
         ): Boolean = with(binding) {

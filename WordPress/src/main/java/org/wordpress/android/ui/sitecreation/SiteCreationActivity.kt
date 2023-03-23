@@ -4,9 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
 import org.wordpress.android.R
@@ -53,6 +53,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.config.SiteNameFeatureConfig
 import org.wordpress.android.util.extensions.exhaustive
+import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -79,9 +80,18 @@ class SiteCreationActivity : LocaleAwareActivity(),
     @Inject internal lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
     @Inject internal lateinit var activityLauncherWrapper: ActivityLauncherWrapper
 
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            mainViewModel.onBackPressed()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.site_creation_activity)
+
+        onBackPressedDispatcher.addCallback(this, backPressedCallback)
+
         mainViewModel.start(savedInstanceState, getSiteCreationSource())
         mainViewModel.preloadThumbnails(this)
 
@@ -96,8 +106,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
     @Suppress("LongMethod")
     private fun observeVMState() {
         mainViewModel.navigationTargetObservable
-            .observe(this, Observer { target -> target?.let { showStep(target) } })
-        mainViewModel.wizardFinishedObservable.observe(this, Observer { createSiteState ->
+            .observe(this) { target -> target?.let { showStep(target) } }
+        mainViewModel.wizardFinishedObservable.observe(this) { createSiteState ->
             createSiteState?.let {
                 val intent = Intent()
                 val (siteCreated, localSiteId, titleTaskComplete) = when (createSiteState) {
@@ -110,8 +120,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
                         Triple(true, null, createSiteState.isSiteTitleTaskComplete)
                     }
                     is SiteCreationCompleted -> Triple(
-                            true, createSiteState.localSiteId,
-                            createSiteState.isSiteTitleTaskComplete
+                        true, createSiteState.localSiteId,
+                        createSiteState.isSiteTitleTaskComplete
                     )
                 }
                 intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, localSiteId)
@@ -119,43 +129,38 @@ class SiteCreationActivity : LocaleAwareActivity(),
                 setResult(if (siteCreated) Activity.RESULT_OK else Activity.RESULT_CANCELED, intent)
                 finish()
             }
-        })
-        mainViewModel.dialogActionObservable.observe(this, Observer { dialogHolder ->
-            dialogHolder?.let {
-                val supportFragmentManager = requireNotNull(supportFragmentManager) {
-                    "FragmentManager can't be null at this point"
-                }
-                dialogHolder.show(this, supportFragmentManager, uiHelpers)
-            }
-        })
-        mainViewModel.exitFlowObservable.observe(this, Observer {
+        }
+        mainViewModel.dialogActionObservable.observe(this) {
+            it?.show(this, supportFragmentManager, uiHelpers)
+        }
+        mainViewModel.exitFlowObservable.observe(this) {
             setResult(Activity.RESULT_CANCELED)
             finish()
-        })
-        mainViewModel.onBackPressedObservable.observe(this, Observer {
+        }
+        mainViewModel.onBackPressedObservable.observe(this) {
             ActivityUtils.hideKeyboard(this)
-            super.onBackPressed()
-        })
-        siteCreationIntentsViewModel.onBackButtonPressed.observe(this, Observer {
+            onBackPressedDispatcher.onBackPressedCompat(backPressedCallback)
+        }
+        siteCreationIntentsViewModel.onBackButtonPressed.observe(this) {
             mainViewModel.onBackPressed()
-        })
-        siteCreationIntentsViewModel.onSkipButtonPressed.observe(this, Observer {
+        }
+        siteCreationIntentsViewModel.onSkipButtonPressed.observe(this) {
             mainViewModel.onSiteIntentSkipped()
-        })
-        siteCreationSiteNameViewModel.onBackButtonPressed.observe(this, Observer {
+        }
+        siteCreationSiteNameViewModel.onBackButtonPressed.observe(this) {
             mainViewModel.onBackPressed()
             ActivityUtils.hideKeyboard(this)
-        })
-        siteCreationSiteNameViewModel.onSkipButtonPressed.observe(this, Observer {
+        }
+        siteCreationSiteNameViewModel.onSkipButtonPressed.observe(this) {
             ActivityUtils.hideKeyboard(this)
             mainViewModel.onSiteNameSkipped()
-        })
-        hppViewModel.onBackButtonPressed.observe(this, Observer {
+        }
+        hppViewModel.onBackButtonPressed.observe(this) {
             mainViewModel.onBackPressed()
-        })
-        hppViewModel.onDesignActionPressed.observe(this, Observer { design ->
+        }
+        hppViewModel.onDesignActionPressed.observe(this) { design ->
             mainViewModel.onSiteDesignSelected(design.template)
-        })
+        }
 
         observeOverlayEvents()
     }
@@ -274,14 +279,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
             return true
         }
         return false
-    }
-
-    override fun onBackPressed() {
-        mainViewModel.onBackPressed()
     }
 
     companion object {

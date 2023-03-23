@@ -32,6 +32,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
 import org.wordpress.android.util.experiments.SiteCreationDomainPurchasingExperiment
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -128,7 +129,7 @@ class SiteCreationMainVM @Inject constructor(
                 showSiteCreationNextStep()
         } else {
             siteCreationCompleted = savedInstanceState.getBoolean(KEY_SITE_CREATION_COMPLETED, false)
-            siteCreationState = requireNotNull(savedInstanceState.getParcelable(KEY_SITE_CREATION_STATE))
+            siteCreationState = requireNotNull(savedInstanceState.getParcelableCompat(KEY_SITE_CREATION_STATE))
             val currentStepIndex = savedInstanceState.getInt(KEY_CURRENT_STEP)
             wizardManager.setCurrentStepIndex(currentStepIndex)
         }

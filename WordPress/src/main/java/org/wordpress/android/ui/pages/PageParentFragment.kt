@@ -25,6 +25,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PageParentFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.viewmodel.pages.PageParentViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
@@ -60,7 +62,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
         android.R.id.home -> {
-            activity?.onBackPressed()
+            activity?.onBackPressedDispatcher?.onBackPressed()
             true
         }
         R.id.save_parent -> {
@@ -87,17 +89,17 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
         result.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, pageId)
         result.putExtra(EXTRA_PAGE_PARENT_ID_KEY, viewModel.currentParent.id)
         activity?.setResult(Activity.RESULT_OK, result)
-        activity?.onBackPressed()
+        activity?.onBackPressedDispatcher?.onBackPressed()
     }
 
     private fun PageParentFragmentBinding.initializeSearchView() {
         searchAction.setOnActionExpandListener(object : OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 viewModel.onSearchExpanded(restorePreviousSearch)
                 return true
             }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 viewModel.onSearchCollapsed()
                 return true
             }
@@ -121,8 +123,8 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
             }
         })
 
-        val searchEditFrame = searchAction.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
-        (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
+        val searchEditFrame = searchAction.actionView?.findViewById<LinearLayout>(R.id.search_edit_frame)
+        (searchEditFrame?.layoutParams as LinearLayout.LayoutParams)
             .apply { this.leftMargin = DisplayUtils.dpToPx(activity, SEARCH_ACTION_LEFT_MARGIN_DP) }
 
         viewModel.isSearchExpanded.observe(this@PageParentFragment) {
@@ -158,7 +160,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
 
     private fun PageParentFragmentBinding.initializeViews(activity: FragmentActivity, savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
+        savedInstanceState?.getParcelableCompat<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 
@@ -178,15 +180,13 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
         pageId: Long,
         isFirstStart: Boolean
     ) {
-        viewModel = ViewModelProvider(activity, viewModelFactory)
-            .get(PageParentViewModel::class.java)
+        viewModel = ViewModelProvider(activity, viewModelFactory)[PageParentViewModel::class.java]
 
         setupObservers()
 
         if (isFirstStart) {
-            val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
-            val nonNullSite = checkNotNull(site)
-            viewModel.start(nonNullSite, pageId)
+            val site = requireNotNull(activity.intent?.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
+            viewModel.start(site, pageId)
         } else {
             restorePreviousSearch = true
         }
