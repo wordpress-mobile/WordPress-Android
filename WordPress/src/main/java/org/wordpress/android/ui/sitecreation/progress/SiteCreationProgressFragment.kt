@@ -26,6 +26,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection
+import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -68,7 +69,7 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
 
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
-        viewModel.start(requireArguments()[ARG_STATE] as SiteCreationState)
+        viewModel.start(requireNotNull(requireArguments().getParcelableCompat(ARG_STATE)))
     }
 
     private fun SiteCreationProgressScreenBinding.observeState() {
@@ -148,7 +149,7 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
                 progressText.text = newText
             }
 
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 super.onAnimationEnd(animation)
                 animatorSet = null
             }

@@ -114,8 +114,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private fun observeVMState() {
         mainViewModel.navigationTargetObservable
             .observe(this) { target -> target?.let { showStep(target) } }
-        mainViewModel.wizardFinishedObservable.observe(this) { createSiteState ->
-            createSiteState?.let {
+        mainViewModel.wizardFinishedObservable.observe(this) { result ->
+            result?.run {
                 val intent = Intent()
                 val (siteCreated, localSiteId, titleTaskComplete) = when (this@run) {
                     // site creation flow was canceled
