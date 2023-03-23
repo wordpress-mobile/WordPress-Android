@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -43,6 +44,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
@@ -79,6 +81,7 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
+@AndroidEntryPoint
 public class SitePickerActivity extends LocaleAwareActivity
         implements SitePickerAdapter.OnSiteClickListener,
         SitePickerAdapter.OnSelectedCountChangedListener,
@@ -221,11 +224,10 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     private void onShowJetpackIndividualPluginOverlay(Boolean shouldShowJetpackIndividualPluginOverlay) {
-        // TODO thomashortadev temporary during development of #18114
         if (shouldShowJetpackIndividualPluginOverlay) {
-            ToastUtils.showToast(
-                    this,
-                    "WP - Individual plugin overlay is enabled & user has sites with Individual plugins"
+            WPJetpackIndividualPluginFragment.newInstance().show(
+                    getSupportFragmentManager(),
+                    WPJetpackIndividualPluginFragment.TAG
             );
         }
     }
