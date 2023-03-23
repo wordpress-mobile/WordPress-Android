@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -115,7 +114,7 @@ fun WPJetpackIndividualPluginOverlayScreen(
                     .fillMaxWidth()
                     .padding(vertical = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
-            ){
+            ) {
                 PrimaryButton(
                     text = stringResource(R.string.wp_jetpack_individual_plugin_overlay_primary_button),
                     onClick = onPrimaryButtonClick,
