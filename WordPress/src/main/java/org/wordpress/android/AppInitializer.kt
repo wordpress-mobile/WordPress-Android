@@ -604,6 +604,8 @@ class AppInitializer @Inject constructor(
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAuthenticationChanged(event: OnAuthenticationChanged) {
+        appConfig.refresh(appScope)
+
         if (accountStore.hasAccessToken()) {
             // Make sure the Push Notification token is sent to our servers after a successful login
             GCMRegistrationIntentService.enqueueWork(

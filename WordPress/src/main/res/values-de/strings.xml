@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-17 16:21:30+0000
+Translation-Revision-Date: 2023-03-20 23:16:15+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: de
@@ -38,24 +38,11 @@ Language: de
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">vollständige Jetpack-Plugin</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">individuelle Jetpack-Plugins</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">das %1$s-Plugin</string>
-    <string name="jetpack_full_plugin_install_onboarding_description">%1$s verwendet %2$s, das noch nicht alle Funktionen der App unterstützt.\n\nBitte installiere das %3$s, um die App mit dieser Website zu verwenden.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">Bitte installiere das vollständige Jetpack-Plugin</string>
     <string name="only_one_primary_site_message">Es ist nur eine Website verfügbar, du kannst deine Haupt-Website also nicht ändern.</string>
-    <string name="my_site_jp_install_full_plugin_card_content">Diese Website verwendet ein individuelles Plugin, das noch nicht alle Funktionen der App unterstützt. Bitte installiere das vollständige Jetpack-Plugin.</string>
-    <string name="jetpack_full_plugin_install_error_button_contact_support">Support kontaktieren</string>
-    <string name="jetpack_full_plugin_install_error_button_retry">Erneut versuchen</string>
-    <string name="jetpack_full_plugin_install_error_description">Jetpack kann zurzeit nicht installiert werden.</string>
-    <string name="jetpack_full_plugin_install_error_title">Es ist ein Problem aufgetreten</string>
-    <string name="jetpack_full_plugin_install_error_image_content_description">Fehler-Icon</string>
-    <string name="jetpack_full_plugin_install_done_button">Fertig</string>
-    <string name="jetpack_full_plugin_install_done_description">Diese Website kann jetzt mit der App verwendet werden.</string>
-    <string name="jetpack_full_plugin_install_done_title">Jetpack installiert</string>
-    <string name="jetpack_full_plugin_install_installing_description">Jetpack wird auf deiner Website installiert. Dieser Vorgang kann einige Minuten dauern.</string>
-    <string name="jetpack_full_plugin_install_installing_title">Jetpack wird installiert</string>
-    <string name="jetpack_full_plugin_install_initial_button">Weiter</string>
-    <string name="jetpack_full_plugin_install_initial_description">Deine Website-Anmeldedaten werden nicht gespeichert und werden nur verwendet, um Jetpack zu installieren.</string>
-    <string name="jetpack_full_plugin_install_initial_title">Jetpack installieren</string>
-    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack-Icon</string>
+    <string name="jetpack_plugin_install_error_button_contact_support">Support kontaktieren</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Fehler-Icon</string>
+    <string name="jetpack_plugin_install_done_title">Jetpack installiert</string>
     <string name="button_promote_with_blaze">Mit Blaze bewerben</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Entfalte das volle Potenzial deiner Website. Erhalte Statistiken, Benachrichtigungen und vieles mehr mit Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Deine Website hat das Jetpack-Plugin</string>
@@ -1858,7 +1845,6 @@ Language: de
     <string name="domain_suggestions_search_hint">Gib ein Stichwort ein, um weitere Ideen zu erhalten</string>
     <string name="domains_suggestions_empty_list">Keine Vorschläge gefunden</string>
     <string name="register_domain">Domain registrieren</string>
-    <string name="jetpack_plugin_install_remote_plugin_done_description">Jetpack ist installiert. Jetzt müssen wir nur noch die Einrichtung abschließen. Dies dauert nur eine Minute.</string>
     <string name="stats_menu_remove">Aus Einsichten entfernen</string>
     <string name="stats_menu_move_down">Nach unten verschieben</string>
     <string name="stats_menu_move_up">Nach oben verschieben</string>
@@ -2124,18 +2110,8 @@ Language: de
     <string name="reader_empty_followed_tags_title">Keine abonnierten Themen</string>
     <string name="reader_empty_followed_tags_subtitle">Füge hier Themen hinzu, um Beiträge zu deinen Lieblingsthemen zu finden</string>
     <string name="login_to_to_connect_jetpack">Melde dich bei deinem WordPress.com-Konto an, das du für die Jetpack-Verbindung verwendet hast.</string>
-    <string name="install_jetpack_retry">Erneut versuchen</string>
-    <string name="install_jetpack_continue">Einrichten</string>
-    <string name="jetpack_installation_problem_message">Jetpack kann zurzeit nicht installiert werden</string>
-    <string name="jetpack_installation_problem">Es ist ein Problem aufgetreten</string>
-    <string name="jetpack_installed">Jetpack installiert</string>
-    <string name="installing_jetpack_message">Jetpack wird auf deiner Website installiert. Dieser Vorgang kann einige Minuten dauern</string>
-    <string name="installing_jetpack">Jetpack installieren</string>
-    <string name="install_jetpack_message">Deine Website-Anmeldedaten werden nicht gespeichert und werden verwendet, um Jetpack zu installieren</string>
-    <string name="install_jetpack">Jetpack installieren</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Häufige Fragen zu Jetpack</string>
-    <string name="jetpack_plugin_install_remote_plugin_done_button">Einrichten</string>
     <string name="stats_jetpack_connection_setup_info">Wenn du Statistiken zu deiner WordPress-Website erhalten möchtest, musst du das Jetpack-Plugin installieren.</string>
     <string name="themes_empty_list">Keine Themes entsprechen deiner Suche</string>
     <string name="reader_label_post_search_explainer">Was möchtest du finden?</string>

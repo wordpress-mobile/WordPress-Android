@@ -17,6 +17,7 @@ import org.wordpress.android.ui.history.HistoryAdapter
 import org.wordpress.android.ui.history.HistoryListItem
 import org.wordpress.android.ui.history.HistoryListItem.Revision
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.history.HistoryViewModel
 import org.wordpress.android.viewmodel.history.HistoryViewModel.HistoryListStatus
@@ -84,10 +85,11 @@ class HistoryListFragment : Fragment(R.layout.history_list_fragment) {
 
             (nonNullActivity.application as WordPress).component().inject(this@HistoryListFragment)
 
-            viewModel = ViewModelProvider(this@HistoryListFragment, viewModelFactory).get(HistoryViewModel::class.java)
+            viewModel = ViewModelProvider(this@HistoryListFragment, viewModelFactory)[HistoryViewModel::class.java]
+            val site = requireNotNull(arguments?.getSerializableCompat<SiteModel>(KEY_SITE))
             viewModel.create(
                 localPostId = arguments?.getInt(KEY_POST_LOCAL_ID) ?: 0,
-                site = arguments?.get(KEY_SITE) as SiteModel
+                site = site
             )
             updatePostOrPageEmptyView()
             setObservers()

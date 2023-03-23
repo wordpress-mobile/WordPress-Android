@@ -1258,12 +1258,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             int mediaId = isNetworkUrl ? Integer.valueOf(mediaEntry.getValue().getMediaId())
                     : mediaEntry.getValue().getId();
             String url = isNetworkUrl ? mediaEntry.getKey() : "file://" + mediaEntry.getKey();
+            MediaFile mediaFile = mediaEntry.getValue();
+            WritableNativeMap metadata = new WritableNativeMap();
+            String videoPressGuid = mediaFile.getVideoPressGuid();
+            if (videoPressGuid != null) {
+                metadata.putString("videopressGUID", videoPressGuid);
+            }
             rnMediaList.add(createRNMediaUsingMimeType(mediaId,
                     url,
-                    mediaEntry.getValue().getMimeType(),
-                    mediaEntry.getValue().getCaption(),
-                    mediaEntry.getValue().getTitle(),
-                    mediaEntry.getValue().getAlt()));
+                    mediaFile.getMimeType(),
+                    mediaFile.getCaption(),
+                    mediaFile.getTitle(),
+                    mediaFile.getAlt(),
+                    metadata));
         }
 
         getGutenbergContainerFragment().appendMediaFiles(rnMediaList);

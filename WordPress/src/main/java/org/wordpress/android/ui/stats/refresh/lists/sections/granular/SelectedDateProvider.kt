@@ -20,6 +20,8 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.ui.stats.refresh.utils.trackWithSection
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.extensions.readListCompat
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.filter
 import java.util.Date
 import javax.inject.Inject
@@ -172,7 +174,7 @@ class SelectedDateProvider
 
     fun onRestoreInstanceState(savedState: Bundle) {
         for (period in listOf(DAYS, WEEKS, MONTHS, YEARS)) {
-            val selectedDate: SelectedDate? = savedState.getParcelable(buildStateKey(period)) as SelectedDate?
+            val selectedDate = savedState.getParcelableCompat<SelectedDate>(buildStateKey(period))
             if (selectedDate != null) {
                 mutableDates[period] = selectedDate
             }
@@ -223,7 +225,7 @@ class SelectedDateProvider
                     null
                 }
                 val availableTimeStamps = mutableListOf<Any?>()
-                parcel.readList(availableTimeStamps, null)
+                parcel.readListCompat(availableTimeStamps, null)
                 val availableDates = availableTimeStamps.map { Date(it as Long) }
                 val loading = parcel.readValue(null) as Boolean
                 val error = parcel.readValue(null) as Boolean

@@ -35,6 +35,8 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
 
     fun isInRemovalPhase() = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
 
+    fun shouldShowBrandingInDashboard() = jetpackFeatureRemovalPhaseHelper.shouldShowJetpackBrandingInDashboard()
+
     fun shouldShowPhaseOneBranding(): Boolean {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
             PhaseOne,

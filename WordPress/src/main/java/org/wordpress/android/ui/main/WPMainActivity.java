@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
@@ -150,6 +151,7 @@ import org.wordpress.android.util.analytics.service.InstallationReferrerServiceS
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig;
 import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig;
 import org.wordpress.android.util.config.QRCodeAuthFlowFeatureConfig;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
@@ -309,6 +311,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
+        initBackPressHandler();
 
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(v -> {
@@ -488,6 +491,30 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         displayJetpackFeatureCollectionOverlayIfNeeded();
+    }
+
+    private void initBackPressHandler() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // let the fragment handle the back button if it implements our OnParentBackPressedListener
+                if (mBottomNav != null) {
+                    Fragment fragment = mBottomNav.getActiveFragment();
+                    if (fragment instanceof OnActivityBackPressedListener) {
+                        boolean handled = ((OnActivityBackPressedListener) fragment).onActivityBackPressed();
+                        if (handled) {
+                            return;
+                        }
+                    }
+                }
+
+                if (isTaskRoot() && DeviceUtils.getInstance().isChromebook(WPMainActivity.this)) {
+                    return; // don't close app in Main Activity
+                }
+                CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     private void showJetpackOverlayIfNeeded(String action) {
@@ -1109,25 +1136,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void announceTitleForAccessibility(PageType pageType) {
         getWindow().getDecorView().announceForAccessibility(mBottomNav.getContentDescriptionForPageType(pageType));
-    }
-
-    @Override
-    public void onBackPressed() {
-        // let the fragment handle the back button if it implements our OnParentBackPressedListener
-        if (mBottomNav != null) {
-            Fragment fragment = mBottomNav.getActiveFragment();
-            if (fragment instanceof OnActivityBackPressedListener) {
-                boolean handled = ((OnActivityBackPressedListener) fragment).onActivityBackPressed();
-                if (handled) {
-                    return;
-                }
-            }
-        }
-
-        if (isTaskRoot() && DeviceUtils.getInstance().isChromebook(this)) {
-            return; // don't close app in Main Activity
-        }
-        super.onBackPressed();
     }
 
     @Override

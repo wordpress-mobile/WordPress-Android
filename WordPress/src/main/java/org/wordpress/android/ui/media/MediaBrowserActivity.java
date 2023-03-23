@@ -639,7 +639,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
                 return true;
             case R.id.menu_new_media:
                 // Do Nothing (handled in action view click listener)

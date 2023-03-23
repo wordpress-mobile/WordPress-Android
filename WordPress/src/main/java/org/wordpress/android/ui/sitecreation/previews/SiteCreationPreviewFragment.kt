@@ -31,6 +31,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener
 import org.wordpress.android.util.URLFilteredWebViewClient
 import org.wordpress.android.widgets.NestedWebView
+import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 
 private const val SLIDE_IN_ANIMATION_DURATION = 450L
@@ -60,7 +61,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private fun init() {
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
-        viewModel.start(requireArguments()[ARG_STATE] as SiteCreationState)
+        viewModel.start(requireArguments().getParcelableCompat(ARG_DATA))
     }
 
     override fun getContentLayout() = R.layout.site_creation_preview_screen
