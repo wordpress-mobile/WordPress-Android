@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,8 +36,6 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.theme.JpColorPalette
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.SiteWithIndividualJetpackPlugins
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.compose.component.JPInstallFullPluginAnimation
-
-// TODO hthomas move strings to resources
 
 private val TitleTextStyle
     @ReadOnlyComposable
@@ -95,14 +95,12 @@ fun WPJetpackIndividualPluginOverlayScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Content
-            // TODO hthomas add content for each variation:
-            //  1. multiple problem sites
-            //  2. single problem site with 1 individual plugin
-            //  3. single problem site with multiple individual plugins
-            Text(
-                text = "You have ${sites.size} sites with individual Jetpack plugins. Switch to Jetpack!",
-                style = ContentTextStyle,
-            )
+            CompositionLocalProvider(LocalTextStyle provides ContentTextStyle) {
+                when {
+                    sites.size > 1 -> MultipleSitesContent(sites)
+                    sites.size == 1 -> SingleSiteContent(sites.first())
+                }
+            }
 
             Spacer(modifier = Modifier.weight(1f)) // Spacer to push the content to the center of the screen
 
@@ -135,10 +133,10 @@ fun WPJetpackIndividualPluginOverlayScreen(
 
 @ReadOnlyComposable
 @Composable
-fun getTitle(siteCount: Int): String = if (siteCount > 1) {
-    "Unable to access some of your sites"
+private fun getTitle(siteCount: Int): String = if (siteCount > 1) {
+    stringResource(R.string.wp_jetpack_individual_plugin_overlay_multiple_sites_title)
 } else {
-    "Unable to access one of your sites"
+    stringResource(R.string.wp_jetpack_individual_plugin_overlay_single_site_title)
 }
 
 @Preview
