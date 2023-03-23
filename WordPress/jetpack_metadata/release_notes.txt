@@ -1,2 +1,1 @@
-* [*] Block editor: Allow new block transforms for most blocks. [https://github.com/WordPress/gutenberg/pull/48792]
-
+You can now transform most types of blocks into other block types, like quotes, columns, and groups.
