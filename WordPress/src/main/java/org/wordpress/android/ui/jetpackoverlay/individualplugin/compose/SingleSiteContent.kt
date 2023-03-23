@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.utils.htmlToAnnotatedString
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.SiteWithIndividualJetpackPlugins
 
 @Composable
@@ -27,7 +28,7 @@ fun SingleSiteContent(
         )
     }
 
-    Text(firstParagraphContent)
+    Text(htmlToAnnotatedString(firstParagraphContent))
     Spacer(modifier = Modifier.height(16.dp))
     Text(stringResource(R.string.wp_jetpack_individual_plugin_overlay_content_2))
 }

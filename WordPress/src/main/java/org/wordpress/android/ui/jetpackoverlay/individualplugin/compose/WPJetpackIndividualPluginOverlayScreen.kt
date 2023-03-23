@@ -106,7 +106,7 @@ fun WPJetpackIndividualPluginOverlayScreen(
 
             // Buttons
             PrimaryButton(
-                text = "Switch to Jetpack",
+                text = stringResource(R.string.wp_jetpack_individual_plugin_overlay_primary_button),
                 onClick = onPrimaryButtonClick,
                 buttonSize = ButtonSize.LARGE,
                 padding = PaddingValues(0.dp),

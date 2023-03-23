@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.utils.htmlToAnnotatedString
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.SiteWithIndividualJetpackPlugins
 
 @Composable
@@ -57,7 +58,7 @@ private fun MultipleSitesContentItem(
     }
 
     Text(
-        text = text,
+        text = htmlToAnnotatedString(text),
         modifier = Modifier.padding(vertical = 12.dp)
     )
     Box(
