@@ -37,7 +37,7 @@ public class SitesModel extends Payload<BaseNetworkError> {
     }
 
     public void setSites(List<SiteModel> sites) {
-        this.mSites = sites;
+        mSites = sites;
     }
 
     public void setJetpackCPSites(List<SiteModel> jetpackCPSites) {
