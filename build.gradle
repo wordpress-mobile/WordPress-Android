@@ -16,7 +16,7 @@ ext {
 
 ext {
     // libs
-    automatticAboutVersion = '1.0.0'
+    automatticAboutVersion = '1.1.0'
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '2.0.0'
     automatticTracksVersion = '2.2.0'
