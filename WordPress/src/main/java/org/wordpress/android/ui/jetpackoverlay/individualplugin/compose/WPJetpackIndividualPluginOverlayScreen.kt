@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpackoverlay.individualplugin.compose
 
+import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,9 +19,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -75,21 +78,38 @@ fun WPJetpackIndividualPluginOverlayScreen(
             )
         }
     ) {
+        val orientation = LocalConfiguration.current.orientation
+        val isLandscape = remember(orientation) { orientation == Configuration.ORIENTATION_LANDSCAPE }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .let {
+                    if (isLandscape) it.verticalScroll(rememberScrollState()) else it
+                }
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
+                    .let {
+                        if (!isLandscape) {
+                            it
+                                .weight(1f)
+                                .verticalScroll(rememberScrollState())
+                        } else {
+                            it
+                        }
+                    }
                     .padding(ContentMargin),
                 verticalArrangement = Arrangement.Center,
             ) {
                 // Icon
                 JPInstallFullPluginAnimation(
-                    modifier = Modifier.align(Alignment.Start)
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .let {
+                            if (isLandscape) it.height(48.dp) else it
+                        }
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -154,6 +174,7 @@ private fun getTitle(siteCount: Int): String = if (siteCount > 1) {
 
 @Preview
 @Preview(uiMode = UI_MODE_NIGHT_YES)
+@Preview(widthDp = 720, heightDp = 360)
 @Composable
 fun WPJetpackIndividualPluginOverlayScreenSingleSiteSinglePluginPreview() {
     AppTheme {
@@ -174,6 +195,7 @@ fun WPJetpackIndividualPluginOverlayScreenSingleSiteSinglePluginPreview() {
 
 @Preview
 @Preview(uiMode = UI_MODE_NIGHT_YES)
+@Preview(widthDp = 720, heightDp = 360)
 @Composable
 fun WPJetpackIndividualPluginOverlayScreenSingleSiteMultiplePluginsPreview() {
     AppTheme {
@@ -194,6 +216,8 @@ fun WPJetpackIndividualPluginOverlayScreenSingleSiteMultiplePluginsPreview() {
 
 @Preview
 @Preview(uiMode = UI_MODE_NIGHT_YES)
+@Preview(widthDp = 360, heightDp = 600)
+@Preview(widthDp = 720, heightDp = 360)
 @Composable
 fun WPJetpackIndividualPluginOverlayScreenMultipleSitesPreview() {
     AppTheme {
@@ -208,6 +232,11 @@ fun WPJetpackIndividualPluginOverlayScreenMultipleSitesPreview() {
                     name = "Site 2",
                     url = "site2.wordpress.com",
                     individualPluginNames = listOf("Jetpack Boost")
+                ),
+                SiteWithIndividualJetpackPlugins(
+                    name = "Site 3",
+                    url = "site3.wordpress.com",
+                    individualPluginNames = listOf("Jetpack Social")
                 ),
             ),
             onCloseClick = {},
