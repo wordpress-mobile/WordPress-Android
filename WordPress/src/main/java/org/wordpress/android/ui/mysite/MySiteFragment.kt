@@ -22,6 +22,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.MySiteFragmentBinding
 import org.wordpress.android.databinding.MySiteInfoHeaderCardBinding
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
@@ -186,6 +187,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
         viewModel.selectTab.observeEvent(viewLifecycleOwner) { navTarget ->
             viewPager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
+        }
+        viewModel.onShowJetpackIndividualPluginOverlay.observeEvent(viewLifecycleOwner) {
+            WPJetpackIndividualPluginFragment.show(requireActivity().supportFragmentManager)
         }
     }
 
