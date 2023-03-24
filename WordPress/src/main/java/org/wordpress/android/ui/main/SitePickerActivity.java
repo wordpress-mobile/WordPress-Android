@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.main;
 
-import dagger.hilt.android.AndroidEntryPoint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -80,6 +79,8 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class SitePickerActivity extends LocaleAwareActivity
