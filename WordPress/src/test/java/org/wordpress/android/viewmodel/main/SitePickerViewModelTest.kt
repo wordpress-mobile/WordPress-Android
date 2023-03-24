@@ -99,6 +99,7 @@ class SitePickerViewModelTest : BaseUnitTest() {
             whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(true)
 
             viewModel.checkJetpackIndividualPluginOverlayNeeded()
+            advanceUntilIdle()
 
             assertThat(viewModel.showJetpackIndividualPluginOverlay.value).isTrue()
         }
@@ -109,6 +110,7 @@ class SitePickerViewModelTest : BaseUnitTest() {
             whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(false)
 
             viewModel.checkJetpackIndividualPluginOverlayNeeded()
+            advanceUntilIdle()
 
             assertThat(viewModel.showJetpackIndividualPluginOverlay.value).isFalse()
         }
