@@ -8,6 +8,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 
@@ -24,9 +25,17 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var siteStore: SiteStore
 
+    @Mock
+    private lateinit var wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper
+
     @Before
     fun setUp() {
-        viewModel = LoginEpilogueViewModel(appPrefsWrapper, buildConfigWrapper, siteStore)
+        viewModel = LoginEpilogueViewModel(
+            appPrefsWrapper,
+            buildConfigWrapper,
+            siteStore,
+            wpJetpackIndividualPluginHelper
+        )
     }
 
     @Test
@@ -261,6 +270,28 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
 
         assertThat(navigationEvents.last()).isInstanceOf(LoginNavigationEvents.ShowNoJetpackSites::class.java)
     }
+
+    @Test
+    fun `when checkJetpackIndividualPluginOverlayNeeded is invoked then showJetpackIndividualPluginOverlay is true`() =
+        test {
+            whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(true)
+
+            viewModel.checkJetpackIndividualPluginOverlayNeeded()
+            advanceUntilIdle()
+
+            assertThat(viewModel.showJetpackIndividualPluginOverlay.value).isTrue()
+        }
+
+    @Test
+    fun `when checkJetpackIndividualPluginOverlayNeeded is invoked then showJetpackIndividualPluginOverlay is false`() =
+        test {
+            whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(false)
+
+            viewModel.checkJetpackIndividualPluginOverlayNeeded()
+            advanceUntilIdle()
+
+            assertThat(viewModel.showJetpackIndividualPluginOverlay.value).isFalse()
+        }
 
     private data class Observers(val navigationEvents: List<LoginNavigationEvents>)
 
