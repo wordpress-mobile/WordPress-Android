@@ -33,7 +33,7 @@ interface JetpackCPConnectedSitesDao {
         val description: String,
         val activeJetpackConnectionPlugins: String,
     ) {
-        fun toJetpackCPConnectedSite() = JetpackCPConnectedSiteModel(
+        fun toJetpackCPConnectedSite(): JetpackCPConnectedSiteModel = JetpackCPConnectedSiteModel(
             remoteSiteId = remoteSiteId,
             localSiteId = localSiteId,
             url = url,
