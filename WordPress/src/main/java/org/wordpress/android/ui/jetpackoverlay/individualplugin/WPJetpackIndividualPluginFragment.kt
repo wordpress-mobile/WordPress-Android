@@ -1,43 +1,37 @@
 package org.wordpress.android.ui.jetpackoverlay.individualplugin
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.ComponentDialog
-import androidx.activity.addCallback
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginViewModel.ActionEvent
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginViewModel.UiState
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.compose.WPJetpackIndividualPluginOverlayScreen
 import org.wordpress.android.util.extensions.exhaustive
-import org.wordpress.android.util.extensions.onBackPressedCompat
-import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
+import org.wordpress.android.util.extensions.fillScreen
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class WPJetpackIndividualPluginFragment : DialogFragment() {
+class WPJetpackIndividualPluginFragment : BottomSheetDialogFragment() {
     private val viewModel: WPJetpackIndividualPluginViewModel by viewModels()
 
     @Inject
     lateinit var activityLauncher: ActivityLauncherWrapper
-
-    override fun getTheme(): Int {
-        return R.style.WPJetpackIndividualPluginDialogFragment
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,13 +65,13 @@ class WPJetpackIndividualPluginFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         super.onCreateDialog(savedInstanceState).apply {
-            (this as ComponentDialog).onBackPressedDispatcher
-                .addCallback(this@WPJetpackIndividualPluginFragment) {
-                    viewModel.onDismissScreenClick()
-                    onBackPressedDispatcher.onBackPressedCompat(this)
-                }
-            setStatusBarAsSurfaceColor()
+            (this as? BottomSheetDialog)?.fillScreen()
         }
+
+    override fun onCancel(dialog: DialogInterface) {
+        // called when user hits the back button
+        viewModel.onDismissScreenClick()
+    }
 
     private fun observeActionEvents() {
         viewModel.actionEvents.onEach(this::handleActionEvents).launchIn(lifecycleScope)
