@@ -272,25 +272,27 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when checkJetpackIndividualPluginOverlayNeeded is invoked then showJetpackIndividualPluginOverlay is true`() =
+    fun `when onSiteListLoaded is invoked then show jetpack individual plugin overlay`() =
         test {
+            val navigationEvents = initObservers().navigationEvents
             whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(true)
 
-            viewModel.checkJetpackIndividualPluginOverlayNeeded()
+            viewModel.onSiteListLoaded()
             advanceUntilIdle()
 
-            assertThat(viewModel.showJetpackIndividualPluginOverlay.value).isTrue()
+            assertThat(navigationEvents.last()).isEqualTo(LoginNavigationEvents.ShowJetpackIndividualPluginOverlay)
         }
 
     @Test
-    fun `when checkJetpackIndividualPluginOverlayNeeded is invoked then showJetpackIndividualPluginOverlay is false`() =
+    fun `when onSiteListLoaded is invoked then don't show jetpack individual plugin overlay`() =
         test {
+            val navigationEvents = initObservers().navigationEvents
             whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(false)
 
-            viewModel.checkJetpackIndividualPluginOverlayNeeded()
+            viewModel.onSiteListLoaded()
             advanceUntilIdle()
 
-            assertThat(viewModel.showJetpackIndividualPluginOverlay.value).isFalse()
+            assertThat(navigationEvents.lastOrNull()).isNull()
         }
 
     private data class Observers(val navigationEvents: List<LoginNavigationEvents>)

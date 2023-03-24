@@ -28,7 +28,6 @@ import org.wordpress.android.ui.accounts.LoginEpilogueViewModel;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
-import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.OnDataLoadedListener;
 import org.wordpress.android.ui.main.SitePickerAdapter.OnSiteClickListener;
@@ -169,7 +168,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViewModel();
-        initObservers();
     }
 
     @Override
@@ -209,11 +207,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         setOnSiteClickListener();
     }
 
-    private void initObservers() {
-        mParentViewModel.getShowJetpackIndividualPluginOverlay()
-                        .observe(getViewLifecycleOwner(), this::onShowJetpackIndividualPluginOverlay);
-    }
-
     @NonNull
     private OnDataLoadedListener dataLoadedListener() {
         return new OnDataLoadedListener() {
@@ -236,7 +229,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                         }
                     }
 
-                    mParentViewModel.checkJetpackIndividualPluginOverlayNeeded();
+                    mParentViewModel.onSiteListLoaded();
                 });
             }
         };
@@ -404,11 +397,5 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         mSitesList.setAdapter(mAdapter);
 
         mParentViewModel.onLoginFinished(mDoLoginUpdate);
-    }
-
-    private void onShowJetpackIndividualPluginOverlay(Boolean shouldShowJetpackIndividualPluginOverlay) {
-        if (shouldShowJetpackIndividualPluginOverlay && getActivity() != null) {
-            WPJetpackIndividualPluginFragment.show(getActivity().getSupportFragmentManager());
-        }
     }
 }

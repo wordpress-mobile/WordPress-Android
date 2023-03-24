@@ -11,7 +11,6 @@ import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndivid
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 class LoginEpilogueViewModel @Inject constructor(
@@ -22,9 +21,6 @@ class LoginEpilogueViewModel @Inject constructor(
 ) : ViewModel() {
     private val _navigationEvents = MediatorLiveData<Event<LoginNavigationEvents>>()
     val navigationEvents: LiveData<Event<LoginNavigationEvents>> = _navigationEvents
-
-    private val _showJetpackIndividualPluginOverlay = SingleLiveEvent<Boolean>()
-    val showJetpackIndividualPluginOverlay: LiveData<Boolean> = _showJetpackIndividualPluginOverlay
 
     fun onSiteClick(localId: Int) {
         _navigationEvents.postValue(Event(LoginNavigationEvents.SelectSite(localId)))
@@ -61,14 +57,16 @@ class LoginEpilogueViewModel @Inject constructor(
         if (doLoginUpdate && !siteStore.hasSite()) handleNoSitesFound()
     }
 
-    fun checkJetpackIndividualPluginOverlayNeeded() {
-        // don't show if already shown
-        if (_showJetpackIndividualPluginOverlay.value == true) return
+    fun onSiteListLoaded() {
+        // don't check if already shown
+        if (_navigationEvents.value?.peekContent() == LoginNavigationEvents.ShowJetpackIndividualPluginOverlay) return
 
         viewModelScope.launch {
-            delay(DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY)
-            _showJetpackIndividualPluginOverlay
-                .postValue(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay())
+            val showOverlay = wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()
+            if (showOverlay) {
+                delay(DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY)
+                _navigationEvents.postValue(Event(LoginNavigationEvents.ShowJetpackIndividualPluginOverlay))
+            }
         }
     }
 
