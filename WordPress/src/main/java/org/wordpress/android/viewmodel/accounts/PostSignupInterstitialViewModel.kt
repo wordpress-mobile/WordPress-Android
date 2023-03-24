@@ -80,6 +80,6 @@ class PostSignupInterstitialViewModel
     }
 
     companion object {
-        const val DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY = 500L
+        private const val DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY = 500L
     }
 }
