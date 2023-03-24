@@ -6,6 +6,7 @@ import dagger.Provides
 import org.wordpress.android.fluxc.persistence.BloggingRemindersDao
 import org.wordpress.android.fluxc.persistence.PlanOffersDao
 import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao
+import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSitesDao
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao
 import org.wordpress.android.fluxc.persistence.WPAndroidDatabase
 import org.wordpress.android.fluxc.persistence.WPAndroidDatabase.Companion.buildDb
@@ -69,5 +70,13 @@ class DatabaseModule {
     @Provides
     fun provideBlazeStatusDao(wpAndroidDatabase: WPAndroidDatabase): BlazeStatusDao {
         return wpAndroidDatabase.blazeStatusDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideJetpackConnectedSitesDao(
+        wpAndroidDatabase: WPAndroidDatabase
+    ): JetpackCPConnectedSitesDao {
+        return wpAndroidDatabase.jetpackCPConnectedSitesDao()
     }
 }
