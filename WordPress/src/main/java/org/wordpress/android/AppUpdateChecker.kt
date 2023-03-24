@@ -1,5 +1,6 @@
 package org.wordpress.android
 
+import android.app.Activity
 import android.app.Application
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -9,6 +10,10 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import javax.inject.Singleton
 
 private const val MAXIMUM_THRESHHOLD_FOR_FLEXIBLE_UPDATES: Int = 60
+
+const val APP_UPDATE_IMMEDIATE_REQUEST_CODE = 1001
+
+const val APP_UPDATE_FLEXIBLE_REQUEST_CODE = 1002
 
 @Singleton
 class AppUpdateChecker {
@@ -46,11 +51,27 @@ class AppUpdateChecker {
         }
     }
 
-    private fun requestImmediateUpdate(appUpdateInfo: AppUpdateInfo) {
-        //todo: show a dialog to the user to confirm the update
+    private fun requestImmediateUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
+        appUpdateManager.startUpdateFlowForResult(
+            // Pass the intent that is returned by 'getAppUpdateInfo()'.
+            appUpdateInfo,
+            // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
+            AppUpdateType.IMMEDIATE,
+            // The current activity making the update request.
+            activity,
+            // Include a request code to later monitor this update request.
+            APP_UPDATE_IMMEDIATE_REQUEST_CODE)
     }
 
-    private fun requestFlexibleUpdate() {
-        //todo: show a dialog to the user to confirm the update
+    private fun requestFlexibleUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
+        appUpdateManager.startUpdateFlowForResult(
+            // Pass the intent that is returned by 'getAppUpdateInfo()'.
+            appUpdateInfo,
+            // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
+            AppUpdateType.FLEXIBLE,
+            // The current activity making the update request.
+            activity,
+            // Include a request code to later monitor this update request.
+            APP_UPDATE_FLEXIBLE_REQUEST_CODE)
     }
 }
