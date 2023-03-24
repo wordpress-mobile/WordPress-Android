@@ -138,8 +138,8 @@ class SiteRestClient @Inject constructor(
                 val jetpackCPSiteArray = mutableListOf<SiteModel>()
                 for (siteResponse in response.data.sites) {
                     val siteModel = siteResponseToSiteModel(siteResponse)
-                    // see https://github.com/wordpress-mobile/WordPress-Android/issues/15540#issuecomment-993752880
                     if (siteModel.isJetpackCPConnected) jetpackCPSiteArray.add(siteModel)
+                    // see https://github.com/wordpress-mobile/WordPress-Android/issues/15540#issuecomment-993752880
                     if (filterJetpackConnectedPackageSite && siteModel.isJetpackCPConnected) continue
                     siteArray.add(siteModel)
                 }
