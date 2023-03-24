@@ -1541,14 +1541,12 @@ class MySiteViewModel @Inject constructor(
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
 
-    fun setActionableEmptyViewGone(isVisible: Boolean, setGone: () -> Unit) {
-        if (isVisible) analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_HIDDEN)
-        setGone()
+    fun onActionableEmptyViewGone() {
+        analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_HIDDEN)
     }
 
-    fun setActionableEmptyViewVisible(isVisible: Boolean, setVisible: () -> Unit) {
-        if (!isVisible) analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
-        setVisible()
+    fun onActionableEmptyViewVisible() {
+        analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
     }
 
     fun trackWithTabSource(event: MySiteTrackWithTabSource) {

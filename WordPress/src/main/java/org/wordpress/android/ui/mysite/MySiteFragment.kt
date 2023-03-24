@@ -204,9 +204,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
         tabLayout.setVisible(state.tabsUiState.showTabs)
         updateTabs(state.tabsUiState)
-        actionableEmptyView.setVisible(false)
-        viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
+        if (actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
+            viewModel.onActionableEmptyViewGone()
         }
         if (state.siteInfoHeaderState.hasUpdates || !header.isVisible) {
             siteInfo.loadMySiteDetails(state.siteInfoHeaderState.siteInfoHeader)
@@ -259,11 +259,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
         tabLayout.setVisible(state.tabsUiState.showTabs)
-        viewModel.setActionableEmptyViewVisible(actionableEmptyView.isVisible) {
+        if (!actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(true)
             actionableEmptyView.image.setVisible(state.shouldShowImage)
+            viewModel.onActionableEmptyViewVisible()
         }
-        actionableEmptyView.image.setVisible(state.shouldShowImage)
         siteTitle = getString(R.string.my_site_section_screen_title)
         updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
         appbarMain.setExpanded(false, true)
