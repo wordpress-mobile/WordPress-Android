@@ -143,7 +143,6 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
 
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(SitePickerViewModel.class);
 

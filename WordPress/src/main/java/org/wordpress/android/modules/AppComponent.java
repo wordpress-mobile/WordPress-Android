@@ -239,8 +239,6 @@ public interface AppComponent {
 
     void inject(AccountSettingsFragment object);
 
-    void inject(SitePickerActivity object);
-
     void inject(SitePickerAdapter object);
 
     void inject(SiteSettingsFragment object);
