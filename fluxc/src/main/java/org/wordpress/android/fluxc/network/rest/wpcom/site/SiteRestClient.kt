@@ -139,13 +139,15 @@ class SiteRestClient @Inject constructor(
         return when (response) {
             is Success -> {
                 val siteArray = mutableListOf<SiteModel>()
+                val jetpackCPSiteArray = mutableListOf<SiteModel>()
                 for (siteResponse in response.data.sites) {
                     val siteModel = siteResponseToSiteModel(siteResponse)
+                    if (siteModel.isJetpackCPConnected) jetpackCPSiteArray.add(siteModel)
                     // see https://github.com/wordpress-mobile/WordPress-Android/issues/15540#issuecomment-993752880
                     if (filterJetpackConnectedPackageSite && siteModel.isJetpackCPConnected) continue
                     siteArray.add(siteModel)
                 }
-                SitesModel(siteArray)
+                SitesModel(siteArray, jetpackCPSiteArray)
             }
             is Error -> {
                 val payload = SitesModel(emptyList())

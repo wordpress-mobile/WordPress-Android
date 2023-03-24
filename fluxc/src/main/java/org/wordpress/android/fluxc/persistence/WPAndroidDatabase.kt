@@ -10,6 +10,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.wordpress.android.fluxc.persistence.BloggingRemindersDao.BloggingReminders
 import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao.FeatureFlag
+import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSitesDao.JetpackCPConnectedSiteEntity
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOffer
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferFeature
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
@@ -25,7 +26,7 @@ import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
 
 @Database(
-        version = 12,
+        version = 13,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -36,10 +37,12 @@ import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
             BloggingPromptEntity::class,
             FeatureFlag::class,
             RemoteConfig::class,
-            BlazeStatus::class
+            BlazeStatus::class,
+            JetpackCPConnectedSiteEntity::class,
         ],
         autoMigrations = [
-            AutoMigration(from = 11, to = 12)
+            AutoMigration(from = 11, to = 12),
+            AutoMigration(from = 12, to = 13)
         ]
 )
 @TypeConverters(
@@ -63,6 +66,8 @@ abstract class WPAndroidDatabase : RoomDatabase() {
     abstract fun remoteConfigDao(): RemoteConfigDao
 
     abstract fun blazeStatusDao(): BlazeStatusDao
+
+    abstract fun jetpackCPConnectedSitesDao(): JetpackCPConnectedSitesDao
 
     @Suppress("MemberVisibilityCanBePrivate")
     companion object {
