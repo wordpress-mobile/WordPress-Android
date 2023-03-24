@@ -213,8 +213,6 @@ public interface AppComponent {
 
     void inject(SignupEpilogueFragment object);
 
-    void inject(PostSignupInterstitialActivity object);
-
     void inject(JetpackConnectionResultActivity object);
 
     void inject(StatsConnectJetpackActivity object);
