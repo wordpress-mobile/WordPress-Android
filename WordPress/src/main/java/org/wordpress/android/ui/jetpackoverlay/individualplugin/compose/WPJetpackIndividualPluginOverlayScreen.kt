@@ -57,6 +57,8 @@ private val ContentTextStyle
         letterSpacing = 0.25.sp,
     )
 
+private val ContentMargin = 20.dp
+
 @Composable
 fun WPJetpackIndividualPluginOverlayScreen(
     sites: List<SiteWithIndividualJetpackPlugins>,
@@ -76,43 +78,45 @@ fun WPJetpackIndividualPluginOverlayScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(20.dp)
         ) {
-            // Spacer to push the content to the center of the screen
-            Spacer(modifier = Modifier.weight(1f))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+                    .padding(ContentMargin),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                // Icon
+                JPInstallFullPluginAnimation(
+                    modifier = Modifier.align(Alignment.Start)
+                )
 
-            // Icon
-            JPInstallFullPluginAnimation(
-                modifier = Modifier.align(Alignment.Start)
-            )
+                Spacer(modifier = Modifier.height(24.dp))
 
-            Spacer(modifier = Modifier.height(24.dp))
+                // Title
+                Text(
+                    text = getTitle(siteCount = sites.size),
+                    style = TitleTextStyle,
+                )
 
-            // Title
-            Text(
-                text = getTitle(siteCount = sites.size),
-                style = TitleTextStyle,
-            )
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Content
-            CompositionLocalProvider(LocalTextStyle provides ContentTextStyle) {
-                when {
-                    sites.size > 1 -> MultipleSitesContent(sites)
-                    sites.size == 1 -> SingleSiteContent(sites.first())
+                // Content
+                CompositionLocalProvider(LocalTextStyle provides ContentTextStyle) {
+                    when {
+                        sites.size > 1 -> MultipleSitesContent(sites)
+                        sites.size == 1 -> SingleSiteContent(sites.first())
+                    }
                 }
             }
-
-            // Spacer to push the content to the center of the screen
-            Spacer(modifier = Modifier.weight(1f))
 
             // Buttons
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 12.dp),
+                    .padding(top = 10.dp, bottom = ContentMargin)
+                    .padding(horizontal = ContentMargin),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 PrimaryButton(
