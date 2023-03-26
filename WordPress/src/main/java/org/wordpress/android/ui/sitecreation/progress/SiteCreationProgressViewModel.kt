@@ -9,8 +9,13 @@ import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.domains.DomainProductDetails
+import org.wordpress.android.ui.domains.DomainsRegistrationTracker
+import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.ui.sitecreation.SiteCreationState
+import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -25,6 +30,7 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.S
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.SUCCESS
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -34,6 +40,7 @@ import javax.inject.Named
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
 const val LOADING_STATE_TEXT_ANIMATION_DELAY = 2000L
 private const val ERROR_CONTEXT = "site_preview"
+private val LOG_TAG = AppLog.T.SITE_CREATION
 
 private val loadingTexts = listOf(
     UiStringRes(R.string.new_site_creation_creating_site_loading_1),
@@ -46,15 +53,15 @@ private val loadingTexts = listOf(
 class SiteCreationProgressViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val tracker: SiteCreationTracker,
+    private val domainsRegistrationTracker: DomainsRegistrationTracker,
+    private val createCartUseCase: CreateCartUseCase,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private var loadingAnimationJob: Job? = null
 
     private lateinit var siteCreationState: SiteCreationState
-
-    private var urlWithoutScheme: String? = null
-    private var siteTitle: String? = null
+    private lateinit var domain: DomainModel
 
     private var lastReceivedServiceState: SiteCreationServiceState? = null
     private var serviceStateForRetry: SiteCreationServiceState? = null
@@ -74,17 +81,20 @@ class SiteCreationProgressViewModel @Inject constructor(
     private val _onRemoteSiteCreated = SingleLiveEvent<Long>()
     val onRemoteSiteCreated: LiveData<Long> = _onRemoteSiteCreated
 
+    private val _onCartCreated = SingleLiveEvent<DomainProductDetails>()
+    // val onCartCreated: LiveData<DomainProductDetails> = _onCartCreated
+
     override fun onCleared() {
         super.onCleared()
         loadingAnimationJob?.cancel()
+        createCartUseCase.clear()
     }
 
     fun start(siteCreationState: SiteCreationState) {
         if (isStarted) return
         isStarted = true
         this.siteCreationState = siteCreationState
-        urlWithoutScheme = siteCreationState.domain?.domainName
-        siteTitle = siteCreationState.siteName
+        domain = requireNotNull(siteCreationState.domain) { "domain required to create a site" }
 
         runLoadingAnimationUi()
         startCreateSiteService()
@@ -92,16 +102,16 @@ class SiteCreationProgressViewModel @Inject constructor(
 
     private fun startCreateSiteService(previousState: SiteCreationServiceState? = null) {
         if (networkUtils.isNetworkAvailable()) {
-            siteCreationState.apply {
+            siteCreationState.let { state ->
                 // A non-null [segmentId] may invalidate the [siteDesign] selection
                 // https://github.com/wordpress-mobile/WordPress-Android/issues/13749
-                val segmentIdentifier = segmentId.takeIf { siteDesign != null }
+                val segmentIdentifier = state.segmentId.takeIf { state.siteDesign != null }
                 val serviceData = SiteCreationServiceData(
                     segmentIdentifier,
-                    siteDesign,
-                    urlWithoutScheme,
-                    siteTitle,
-                    requireNotNull(siteCreationState.domain?.isFree) { "domain required to create a site" },
+                    state.siteDesign,
+                    domain.domainName,
+                    state.siteName,
+                    domain.isFree,
                 )
                 _startCreateSiteService.value = StartServiceData(serviceData, previousState)
             }
@@ -144,8 +154,14 @@ class SiteCreationProgressViewModel @Inject constructor(
         when (event.step) {
             IDLE, CREATE_SITE -> Unit
             SUCCESS -> {
-                val remoteSiteId = (event.payload as Pair<*, *>).first as Long
-                _onRemoteSiteCreated.postValue(remoteSiteId)
+                require(event.payload is Pair<*, *>) { "Expected Pair in Payload but got: ${event.payload}" }
+                val blogId = event.payload.first as Long
+                if (domain.isFree) {
+                    _onRemoteSiteCreated.postValue(blogId)
+                } else {
+                    val siteSlug = event.payload.second as String
+                    createCart(blogId, siteSlug)
+                }
             }
             FAILURE -> {
                 serviceStateForRetry = event.payload as SiteCreationServiceState
@@ -156,6 +172,28 @@ class SiteCreationProgressViewModel @Inject constructor(
                 )
                 updateUiStateAsync(GenericError)
             }
+        }
+    }
+
+    private fun createCart(blogId: Long, siteSlug: String) = launch {
+        AppLog.d(LOG_TAG, "Creating cart: $domain")
+
+        val site = SiteModel().apply { siteId = blogId; url = siteSlug }
+        val event = createCartUseCase.execute(
+            site,
+            domain.productId,
+            domain.domainName,
+            domain.supportsPrivacy,
+            false,
+        )
+
+        if (event.isError) {
+            AppLog.e(LOG_TAG, "Failed cart creation: ${event.error.message}")
+            updateUiStateAsync(GenericError)
+        } else {
+            AppLog.d(LOG_TAG, "Successful cart creation: ${event.cartDetails}")
+            _onCartCreated.postValue(DomainProductDetails(domain.productId, domain.domainName))
+            domainsRegistrationTracker.trackDomainsPurchaseWebviewViewed(site, isSiteCreation = true)
         }
     }
 
