@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitecreation.progress
 
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceTimeBy
 import org.assertj.core.api.Assertions.assertThat
@@ -8,6 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atMost
 import org.mockito.kotlin.check
@@ -17,6 +19,11 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
+import org.wordpress.android.ui.domains.DomainsRegistrationTracker
+import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
+import org.wordpress.android.ui.sitecreation.CART_ERROR
+import org.wordpress.android.ui.sitecreation.CART_SUCCESS
 import org.wordpress.android.ui.sitecreation.PAID_DOMAIN
 import org.wordpress.android.ui.sitecreation.SERVICE_ERROR
 import org.wordpress.android.ui.sitecreation.SERVICE_SUCCESS
@@ -41,6 +48,8 @@ import kotlin.test.assertTrue
 class SiteCreationProgressViewModelTest : BaseUnitTest() {
     private var networkUtils = mock<NetworkUtilsWrapper>()
     private var tracker = mock<SiteCreationTracker>()
+    private val domainsRegistrationTracker = mock<DomainsRegistrationTracker>()
+    private val createCartUseCase = mock<CreateCartUseCase>()
 
     private val uiStateObserver = mock<Observer<SiteProgressUiState>>()
     private val startServiceObserver = mock<Observer<StartServiceData>>()
@@ -55,6 +64,8 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
         viewModel = SiteCreationProgressViewModel(
             networkUtils,
             tracker,
+            domainsRegistrationTracker,
+            createCartUseCase,
             testDispatcher(),
         )
         viewModel.uiState.observeForever(uiStateObserver)
@@ -154,6 +165,33 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `on service success for paid domain creates cart`() = test {
+        startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
+        viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
+        verify(createCartUseCase).execute(
+            any(),
+            eq(PAID_DOMAIN.productId),
+            eq(PAID_DOMAIN.domainName),
+            eq(PAID_DOMAIN.supportsPrivacy),
+            any(),
+        )
+    }
+
+    @Test
+    fun `on cart success tracks domain purchase webview viewed`() = testWith(CART_SUCCESS) {
+        startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
+        viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
+        verify(domainsRegistrationTracker).trackDomainsPurchaseWebviewViewed(any(), eq(true))
+    }
+
+    @Test
+    fun `on cart failure shows generic error`() = testWith(CART_ERROR) {
+        startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
+        viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
+        verify(uiStateObserver).onChanged(eq(GenericError))
+    }
+
+    @Test
     fun `on service failure shows generic error`() {
         startViewModel()
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_ERROR)
@@ -168,6 +206,10 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     }
 
     // region Helpers
+    private fun testWith(response: OnShoppingCartCreated, block: suspend CoroutineScope.() -> Unit) = test {
+        whenever(createCartUseCase.execute(any(), any(), any(), any(), any())).thenReturn(response)
+        block()
+    }
 
     private fun startViewModel(state: SiteCreationState = SITE_CREATION_STATE) {
         viewModel.start(state)
