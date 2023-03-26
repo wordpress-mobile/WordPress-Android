@@ -577,7 +577,6 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     private fun mockDomain(name: String = "", free: Boolean = true) = mock<DomainModel> {
         on { domainName } doReturn name
         on { isFree } doReturn free
-        on { supportsPrivacy } doReturn true
     }
     // endregion
 }
