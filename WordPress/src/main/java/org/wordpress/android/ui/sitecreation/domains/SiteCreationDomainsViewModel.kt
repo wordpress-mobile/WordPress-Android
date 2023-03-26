@@ -226,6 +226,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             isFree = is_free,
             cost = cost.orEmpty(),
             productId = product_id,
+            supportsPrivacy = supports_privacy,
         )
     }
 

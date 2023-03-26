@@ -346,6 +346,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
                 is_free = it % 2 == 0
                 cost = if (is_free) "Free" else "$$it.00"
                 product_id = it
+                supports_privacy = !is_free
             }
         }
 
@@ -576,6 +577,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     private fun mockDomain(name: String = "", free: Boolean = true) = mock<DomainModel> {
         on { domainName } doReturn name
         on { isFree } doReturn free
+        on { supportsPrivacy } doReturn true
     }
     // endregion
 }

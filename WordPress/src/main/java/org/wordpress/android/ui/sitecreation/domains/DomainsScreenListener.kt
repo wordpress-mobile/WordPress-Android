@@ -13,4 +13,5 @@ data class DomainModel(
     val isFree: Boolean,
     val cost: String,
     val productId: Int,
+    val supportsPrivacy: Boolean,
 ) : Parcelable
