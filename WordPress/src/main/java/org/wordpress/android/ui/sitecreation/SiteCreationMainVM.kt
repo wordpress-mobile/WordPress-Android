@@ -57,9 +57,7 @@ data class SiteCreationState(
     val siteDesign: String? = null,
     val domain: DomainModel? = null,
     val result: SiteCreationResult = NotCreated,
-) : WizardState, Parcelable {
-    fun isSiteTitleStepCompleted() = !siteName.isNullOrBlank()
-}
+) : WizardState, Parcelable
 
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
 
@@ -264,10 +262,12 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onProgressScreenFinished(remoteSiteId: Long) {
         siteCreationState = siteCreationState.copy(
-            result = NotInLocalDb(remoteSiteId, siteCreationState.isSiteTitleStepCompleted())
+            result = NotInLocalDb(remoteSiteId, isSiteTitleTaskCompleted())
         )
         wizardManager.showNextStep()
     }
+
+    private fun isSiteTitleTaskCompleted() = !siteCreationState.siteName.isNullOrBlank()
 
     fun onWizardCancelled() {
         _wizardFinishedObservable.value = NotCreated

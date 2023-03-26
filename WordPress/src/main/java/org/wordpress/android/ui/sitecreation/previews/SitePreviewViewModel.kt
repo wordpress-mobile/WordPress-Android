@@ -83,7 +83,7 @@ class SitePreviewViewModel @Inject constructor(
             if (it is NotInLocalDb) {
                 launch {
                     fetchNewlyCreatedSiteModel(it.remoteId)?.run {
-                        result = Completed(id, siteCreationState.isSiteTitleStepCompleted(), url)
+                        result = Completed(id, it.isSiteTitleTaskComplete, url)
                     }
                 }
             }
