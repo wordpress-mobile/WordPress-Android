@@ -188,7 +188,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     fun `on cart failure shows generic error`() = testWith(CART_ERROR) {
         startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
-        verify(uiStateObserver).onChanged(eq(GenericError))
+        assertIs<GenericError>(viewModel.uiState.value)
     }
 
     @Test
