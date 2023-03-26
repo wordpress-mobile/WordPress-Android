@@ -10,6 +10,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atMost
 import org.mockito.kotlin.check
@@ -20,6 +21,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
+import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
 import org.wordpress.android.ui.domains.DomainsRegistrationTracker
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.ui.sitecreation.CART_ERROR
@@ -30,6 +32,7 @@ import org.wordpress.android.ui.sitecreation.SERVICE_SUCCESS
 import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE
 import org.wordpress.android.ui.sitecreation.SITE_REMOTE_ID
 import org.wordpress.android.ui.sitecreation.SiteCreationState
+import org.wordpress.android.ui.sitecreation.URL
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.ConnectionError
@@ -56,6 +59,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     private val onHelpClickedObserver = mock<Observer<Unit>>()
     private val onCancelWizardClickedObserver = mock<Observer<Unit>>()
     private val onRemoteSiteCreatedObserver = mock<Observer<Long>>()
+    private val onCartCreatedObserver = mock<Observer<CheckoutDetails>>()
 
     private lateinit var viewModel: SiteCreationProgressViewModel
 
@@ -73,6 +77,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
         viewModel.onHelpClicked.observeForever(onHelpClickedObserver)
         viewModel.onCancelWizardClicked.observeForever(onCancelWizardClickedObserver)
         viewModel.onRemoteSiteCreated.observeForever(onRemoteSiteCreatedObserver)
+        viewModel.onCartCreated.observeForever(onCartCreatedObserver)
 
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
@@ -182,6 +187,17 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
         startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
         verify(domainsRegistrationTracker).trackDomainsPurchaseWebviewViewed(any(), eq(true))
+    }
+
+    @Test
+    fun `on cart success propagates checkout details`() = testWith(CART_SUCCESS) {
+        startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
+        viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
+        verify(onCartCreatedObserver).onChanged(argThat {
+            assertEquals(SITE_REMOTE_ID, site.siteId)
+            assertEquals(URL, site.url)
+            domainName == PAID_DOMAIN.domainName
+        })
     }
 
     @Test

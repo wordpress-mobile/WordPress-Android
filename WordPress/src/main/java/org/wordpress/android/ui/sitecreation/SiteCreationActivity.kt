@@ -177,6 +177,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         progressViewModel.onRemoteSiteCreated.observe(this) { remoteSiteId ->
             mainViewModel.onProgressScreenFinished(remoteSiteId)
         }
+        progressViewModel.onCartCreated.observe(this) { mainViewModel.onCartCreated(it) }
         previewViewModel.onOkButtonClicked.observe(this) { result ->
             mainViewModel.onWizardFinished(result)
         }

@@ -11,7 +11,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.domains.DomainProductDetails
+import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
 import org.wordpress.android.ui.domains.DomainsRegistrationTracker
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.ui.sitecreation.SiteCreationState
@@ -81,8 +81,8 @@ class SiteCreationProgressViewModel @Inject constructor(
     private val _onRemoteSiteCreated = SingleLiveEvent<Long>()
     val onRemoteSiteCreated: LiveData<Long> = _onRemoteSiteCreated
 
-    private val _onCartCreated = SingleLiveEvent<DomainProductDetails>()
-    // val onCartCreated: LiveData<DomainProductDetails> = _onCartCreated
+    private val _onCartCreated = SingleLiveEvent<CheckoutDetails>()
+    val onCartCreated: LiveData<CheckoutDetails> = _onCartCreated
 
     override fun onCleared() {
         super.onCleared()
@@ -192,7 +192,7 @@ class SiteCreationProgressViewModel @Inject constructor(
             updateUiStateAsync(GenericError)
         } else {
             AppLog.d(LOG_TAG, "Successful cart creation: ${event.cartDetails}")
-            _onCartCreated.postValue(DomainProductDetails(domain.productId, domain.domainName))
+            _onCartCreated.postValue(CheckoutDetails(site, domain.domainName))
             domainsRegistrationTracker.trackDomainsPurchaseWebviewViewed(site, isSiteCreation = true)
         }
     }
