@@ -82,8 +82,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private val jetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel by viewModels()
     private val progressViewModel: SiteCreationProgressViewModel by viewModels()
     private val previewViewModel: SitePreviewViewModel by viewModels()
+
     @Inject
     internal lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+
     @Inject
     internal lateinit var activityLauncherWrapper: ActivityLauncherWrapper
 
