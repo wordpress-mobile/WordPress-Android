@@ -195,13 +195,6 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     fun `on service failure shows generic error`() {
         startViewModel()
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_ERROR)
-        verify(uiStateObserver).onChanged(eq(GenericError))
-    }
-
-    @Test
-    fun `on service failure shows error`() {
-        startViewModel()
-        viewModel.onSiteCreationServiceStateUpdated(SERVICE_ERROR)
         assertIs<GenericError>(viewModel.uiState.value)
     }
 
