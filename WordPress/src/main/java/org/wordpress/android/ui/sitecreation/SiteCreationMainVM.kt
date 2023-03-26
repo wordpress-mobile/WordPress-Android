@@ -17,11 +17,14 @@ import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.networking.MShot
+import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
+import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.DomainRegistered
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotInLocalDb
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
@@ -67,6 +70,14 @@ sealed interface SiteCreationResult : Parcelable {
 
     @Parcelize
     data class NotInLocalDb(val remoteId: Long, val isSiteTitleTaskComplete: Boolean) : SiteCreationResult
+
+    @Parcelize
+    data class DomainRegistered(
+        val domainName: String,
+        val email: String,
+        val remoteId: Long,
+        val isSiteTitleTaskComplete: Boolean,
+    ) : SiteCreationResult
 
     @Parcelize
     data class Completed(val localId: Int, val isSiteTitleTaskComplete: Boolean, val url: String) : SiteCreationResult
@@ -123,6 +134,9 @@ class SiteCreationMainVM @Inject constructor(
 
     private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
     val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
+
+    private val _showDomainCheckout = SingleLiveEvent<CheckoutDetails>()
+    val launchDomainCheckout: LiveData<CheckoutDetails> = _showDomainCheckout
 
     fun start(savedInstanceState: Bundle?, siteCreationSource: SiteCreationSource) {
         if (isStarted) return
@@ -258,6 +272,26 @@ class SiteCreationMainVM @Inject constructor(
                 stepPosition - 1 // -1 -> first item has general title - Create Site
             )
         }
+    }
+
+    fun onCartCreated(checkoutDetails: CheckoutDetails) {
+        siteCreationState = siteCreationState.copy(
+            result = NotInLocalDb(checkoutDetails.site.siteId, isSiteTitleTaskCompleted())
+        )
+        _showDomainCheckout.value = checkoutDetails
+    }
+
+    fun onCheckoutSuccess(event: DomainRegistrationCompletedEvent) {
+        val (remoteId, isSiteTitleTaskComplete) = siteCreationState.result as NotInLocalDb
+        siteCreationState = siteCreationState.copy(
+            result = DomainRegistered(
+                event.domainName,
+                event.email,
+                remoteId,
+                isSiteTitleTaskComplete
+            )
+        )
+        wizardManager.showNextStep()
     }
 
     fun onProgressScreenFinished(remoteSiteId: Long) {

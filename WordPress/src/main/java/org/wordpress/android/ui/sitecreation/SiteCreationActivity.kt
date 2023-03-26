@@ -16,6 +16,7 @@ import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
+import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayViewModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.DismissDialog
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.DomainRegistered
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotInLocalDb
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
@@ -95,6 +97,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
         }
     }
 
+    private val domainCheckoutActivityLauncher = registerForActivityResult(OpenCheckout()) {
+        it?.let(mainViewModel::onCheckoutSuccess)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.site_creation_activity)
@@ -130,6 +136,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
                         intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
                         Triple(true, null, isSiteTitleTaskComplete)
                     }
+                    is DomainRegistered -> {
+                        intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
+                        Triple(true, null, isSiteTitleTaskComplete)
+                    }
                     is Completed -> {
                         Triple(true, localId, isSiteTitleTaskComplete)
                     }
@@ -151,6 +161,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
             ActivityUtils.hideKeyboard(this)
             onBackPressedDispatcher.onBackPressedCompat(backPressedCallback)
         }
+        mainViewModel.launchDomainCheckout.observe(this, domainCheckoutActivityLauncher::launch)
         siteCreationIntentsViewModel.onBackButtonPressed.observe(this) {
             mainViewModel.onBackPressed()
         }
