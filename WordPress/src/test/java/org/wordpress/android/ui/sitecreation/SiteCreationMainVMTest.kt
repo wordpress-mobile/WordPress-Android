@@ -141,9 +141,9 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on progress screen finished updates state with remote id`() {
+    fun `on progress screen finished updates state with result`() {
         viewModel.onProgressScreenFinished(SITE_REMOTE_ID)
-        assertThat(currentWizardState(viewModel).remoteSiteId).isEqualTo(SITE_REMOTE_ID)
+        assertThat(currentWizardState(viewModel).result).isEqualTo(RESULT_CREATED)
     }
 
     @Test

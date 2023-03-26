@@ -56,7 +56,6 @@ data class SiteCreationState(
     val segmentId: Long? = null,
     val siteDesign: String? = null,
     val domain: DomainModel? = null,
-    val remoteSiteId: Long? = null,
     val result: SiteCreationResult = NotCreated,
 ) : WizardState, Parcelable {
     fun isSiteTitleStepCompleted() = !siteName.isNullOrBlank()
@@ -265,7 +264,6 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onProgressScreenFinished(remoteSiteId: Long) {
         siteCreationState = siteCreationState.copy(
-            remoteSiteId = remoteSiteId,
             result = NotInLocalDb(remoteSiteId, siteCreationState.isSiteTitleStepCompleted())
         )
         wizardManager.showNextStep()

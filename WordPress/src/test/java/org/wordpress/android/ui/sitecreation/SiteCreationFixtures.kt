@@ -29,7 +29,6 @@ val SITE_CREATION_STATE = SiteCreationState(
     segmentId = 1,
     siteDesign = defaultTemplateSlug,
     domain = FREE_DOMAIN,
-    remoteSiteId = SITE_REMOTE_ID,
 )
 
 val FETCH_SUCCESS = OnSiteChanged(1)
