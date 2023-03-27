@@ -9,7 +9,7 @@
     <issue id="HardcodedText" severity="error" />
     <issue id="IconDuplicates" severity="error" />
     <issue id="IconDipSize" severity="error">
-        <ignore path="**/libs/editor/src/main/res/drawable-*/format_bar_chevron.png" />
+        <ignore path="**/libs/editor/src/main/res/drawable-hdpi/format_bar_chevron.png" />
     </issue>
     <issue id="InconsistentArrays" severity="error" />
     <issue id="StringFormatCount" severity="error" />
