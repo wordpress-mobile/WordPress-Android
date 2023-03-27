@@ -72,7 +72,7 @@ sealed interface SiteCreationResult : Parcelable {
     data class NotInLocalDb(val remoteId: Long, val isSiteTitleTaskComplete: Boolean) : SiteCreationResult
 
     @Parcelize
-    data class DomainRegistered(
+    data class DomainRegistrationPurchased(
         val domainName: String,
         val email: String,
         val remoteId: Long,
@@ -284,7 +284,7 @@ class SiteCreationMainVM @Inject constructor(
     fun onCheckoutSuccess(event: DomainRegistrationCompletedEvent) {
         val (remoteId, isSiteTitleTaskComplete) = siteCreationState.result as NotInLocalDb
         siteCreationState = siteCreationState.copy(
-            result = DomainRegistered(
+            result = DomainRegistrationPurchased(
                 event.domainName,
                 event.email,
                 remoteId,

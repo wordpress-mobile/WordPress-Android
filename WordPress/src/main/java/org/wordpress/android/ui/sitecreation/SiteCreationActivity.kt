@@ -136,7 +136,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
                         intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
                         Triple(true, null, isSiteTitleTaskComplete)
                     }
-                    is DomainRegistered -> {
+                    is DomainRegistrationPurchased -> {
                         intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
                         Triple(true, null, isSiteTitleTaskComplete)
                     }
