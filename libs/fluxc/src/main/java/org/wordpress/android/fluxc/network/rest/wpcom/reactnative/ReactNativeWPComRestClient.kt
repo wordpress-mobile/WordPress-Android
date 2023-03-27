@@ -43,7 +43,7 @@ class ReactNativeWPComRestClient @Inject constructor(
     suspend fun postRequest(
         url: String,
         params: Map<String, String>,
-        body: Map<String, String>,
+        body: Map<String, Any>,
         successHandler: (data: JsonElement) -> ReactNativeFetchResponse,
         errorHandler: (BaseNetworkError) -> ReactNativeFetchResponse
     ): ReactNativeFetchResponse {
