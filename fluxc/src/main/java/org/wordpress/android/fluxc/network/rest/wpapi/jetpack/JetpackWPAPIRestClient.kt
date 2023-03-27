@@ -70,9 +70,9 @@ class JetpackWPAPIRestClient @Inject constructor(
                         return@RawRequest
                     }
 
-                    response.headers["Location"].let {
-                        if (!it.isNullOrEmpty()) {
-                            cont.resume(Result.success(response.headers["Location"]!!))
+                    response.headers?.get("Location")?.let {
+                        if (it.isNotEmpty()) {
+                            cont.resume(Result.success(it))
                         } else {
                             cont.resume(Result.failure(Exception("Location header missing")))
                         }
