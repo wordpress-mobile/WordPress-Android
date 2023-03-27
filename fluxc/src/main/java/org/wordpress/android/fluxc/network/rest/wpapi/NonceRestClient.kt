@@ -84,7 +84,7 @@ class NonceRestClient @Inject constructor(
                 } else {
                     val networkResponse = response.error.volleyError?.networkResponse
                     if (networkResponse?.statusCode?.isRedirect() == true) {
-                        requestNonce(networkResponse.headers["Location"] ?: redirectUrl, username)
+                        requestNonce(networkResponse.headers?.get("Location") ?: redirectUrl, username)
                     } else {
                         FailedRequest(
                             timeOfResponse = currentTimeProvider.currentDate().time,
