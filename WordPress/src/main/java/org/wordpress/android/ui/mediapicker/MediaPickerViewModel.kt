@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.mediapicker
 
-import android.Manifest.permission
+import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -64,7 +64,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.UriWrapper
-import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -91,7 +90,7 @@ class MediaPickerViewModel @Inject constructor(
     private var searchJob: Job? = null
     private val _domainModel = MutableLiveData<DomainModel>()
     private val _selectedIds = MutableLiveData<List<Identifier>?>()
-    private val _onPermissionsRequested = MutableLiveData<Event<PermissionsRequested>>()
+    private val _onCameraPermissionsRequested = MutableLiveData<Event<Unit>>()
     private val _softAskRequest = MutableLiveData<SoftAskRequest>()
     private val _searchExpanded = MutableLiveData<Boolean>()
     private val _showProgressDialog = MutableLiveData<ProgressDialogUiModel>()
@@ -101,7 +100,7 @@ class MediaPickerViewModel @Inject constructor(
     val onSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = _onSnackbarMessage
     val onNavigate = _onNavigate as LiveData<Event<MediaNavigationEvent>>
 
-    val onPermissionsRequested: LiveData<Event<PermissionsRequested>> = _onPermissionsRequested
+    val onCameraPermissionsRequested: LiveData<Event<Unit>> = _onCameraPermissionsRequested
 
     val uiState: LiveData<MediaPickerUiState> = merge(
         _domainModel.distinct(),
@@ -297,14 +296,11 @@ class MediaPickerViewModel @Inject constructor(
                 UiStringText(String.format(resourceProvider.getString(R.string.cab_selected), numSelected))
             }
             else -> {
-                val isImagePicker = mediaPickerSetup.allowedTypes.contains(IMAGE)
-                val isVideoPicker = mediaPickerSetup.allowedTypes.contains(VIDEO)
-                val isAudioPicker = mediaPickerSetup.allowedTypes.contains(AUDIO)
-                if (isImagePicker && isVideoPicker) {
+                if (isImagePicker() && isVideoPicker()) {
                     UiStringRes(R.string.photo_picker_use_media)
-                } else if (isVideoPicker) {
+                } else if (isVideoPicker()) {
                     UiStringRes(R.string.photo_picker_use_video)
-                } else if (isAudioPicker) {
+                } else if (isAudioPicker()) {
                     UiStringRes(R.string.photo_picker_use_audio)
                 } else {
                     UiStringRes(R.string.photo_picker_use_photo)
@@ -328,12 +324,17 @@ class MediaPickerViewModel @Inject constructor(
         )
     }
 
+    private fun hasPermission() = when {
+        mediaPickerSetup.requiresPhotosVideosPermissions -> permissionsHandler.hasPhotosVideosPermission()
+        mediaPickerSetup.requiresMusicAudioPermissions -> permissionsHandler.hasMusicAudioPermission()
+        else -> false
+    }
+
     fun refreshData(forceReload: Boolean) {
-        if (!permissionsHandler.hasStoragePermission()) {
-            return
-        }
-        launch(bgDispatcher) {
-            loadActions.send(LoadAction.Refresh(forceReload))
+        if (hasPermission()) {
+            launch(bgDispatcher) {
+                loadActions.send(LoadAction.Refresh(forceReload))
+            }
         }
     }
 
@@ -369,7 +370,9 @@ class MediaPickerViewModel @Inject constructor(
                     _domainModel.value = domainModel
                 }
             }
-            if (!mediaPickerSetup.requiresStoragePermissions || permissionsHandler.hasStoragePermission()) {
+            if ((!mediaPickerSetup.requiresPhotosVideosPermissions && !mediaPickerSetup.requiresMusicAudioPermissions)
+                || hasPermission()
+            ) {
                 launch(bgDispatcher) {
                     loadActions.send(LoadAction.Start())
                 }
@@ -499,7 +502,7 @@ class MediaPickerViewModel @Inject constructor(
         mediaPickerTracker.trackIconClick(icon, mediaPickerSetup)
         if (icon is WpStoriesCapture || icon is CapturePhoto) {
             if (!permissionsHandler.hasPermissionsToAccessPhotos()) {
-                _onPermissionsRequested.value = Event(PermissionsRequested.CAMERA)
+                _onCameraPermissionsRequested.value = Event(Unit)
                 lastTappedIcon = icon
                 return
             }
@@ -566,11 +569,17 @@ class MediaPickerViewModel @Inject constructor(
         return IconClickEvent(action)
     }
 
-    fun checkStoragePermission(isAlwaysDenied: Boolean) {
-        if (!mediaPickerSetup.requiresStoragePermissions) {
+    fun checkMediaPermissions(isPhotosVideosAlwaysDenied: Boolean, isMusicAudioAlwaysDenied: Boolean) {
+        if (!mediaPickerSetup.requiresPhotosVideosPermissions && !mediaPickerSetup.requiresMusicAudioPermissions) {
+            // No permission is required, so there is no need to check permissions.
             return
         }
-        if (permissionsHandler.hasStoragePermission()) {
+        val isAlwaysDenied = if (mediaPickerSetup.requiresPhotosVideosPermissions) {
+            isPhotosVideosAlwaysDenied
+        } else {
+            isMusicAudioAlwaysDenied
+        }
+        if (hasPermission()) {
             _softAskRequest.value = SoftAskRequest(show = false, isAlwaysDenied = isAlwaysDenied)
             if (_domainModel.value?.domainItems.isNullOrEmpty()) {
                 refreshData(false)
@@ -591,34 +600,45 @@ class MediaPickerViewModel @Inject constructor(
         clickIcon(icon)
     }
 
+    private fun getRequiredPermissionName(): String {
+        val permissionName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (mediaPickerSetup.requiresPhotosVideosPermissions) {
+                R.string.permission_images
+            } else if (mediaPickerSetup.requiresMusicAudioPermissions) {
+                R.string.permission_audio
+            } else {
+                R.string.unknown
+            }
+        } else {
+            R.string.permission_storage
+        }
+        return resourceProvider.getString(permissionName)
+    }
+
+    private fun isImagePicker() = mediaPickerSetup.allowedTypes.contains(IMAGE)
+    private fun isVideoPicker() = mediaPickerSetup.allowedTypes.contains(VIDEO)
+    private fun isAudioPicker() = mediaPickerSetup.allowedTypes.contains(AUDIO)
+
     private fun buildSoftAskView(softAskRequest: SoftAskRequest?): SoftAskViewUiModel {
         if (softAskRequest != null && softAskRequest.show) {
             mediaPickerTracker.trackShowPermissionsScreen(mediaPickerSetup, softAskRequest.isAlwaysDenied)
             val appName = "<strong>${resourceProvider.getString(R.string.app_name)}</strong>"
             val label = if (softAskRequest.isAlwaysDenied) {
-                val writePermission = ("<strong>${
-                    WPPermissionUtils.getPermissionName(
-                        resourceProvider,
-                        permission.WRITE_EXTERNAL_STORAGE
-                    )
-                }</strong>")
-                val readPermission = ("<strong>${
-                    WPPermissionUtils.getPermissionName(
-                        resourceProvider,
-                        permission.READ_EXTERNAL_STORAGE
-                    )
-                }</strong>")
+                val permission = ("<strong>${getRequiredPermissionName()}</strong>")
                 String.format(
-                    resourceProvider.getString(R.string.media_picker_soft_ask_permissions_denied),
+                    resourceProvider.getString(R.string.media_picker_soft_ask_media_permissions_denied),
                     appName,
-                    writePermission,
-                    readPermission
+                    permission
                 )
             } else {
-                String.format(
-                    resourceProvider.getString(R.string.photo_picker_soft_ask_label),
-                    appName
-                )
+                val description = when {
+                    isImagePicker() && isVideoPicker() -> R.string.photo_picker_soft_ask_photos_videos_label
+                    isImagePicker() -> R.string.photo_picker_soft_ask_photos_label
+                    isVideoPicker() -> R.string.photo_picker_soft_ask_videos_label
+                    isAudioPicker() -> R.string.photo_picker_soft_ask_audios_label
+                    else -> R.string.unknown
+                }
+                String.format(resourceProvider.getString(description), appName)
             }
             val allowId = if (softAskRequest.isAlwaysDenied) {
                 R.string.button_edit_permissions
@@ -731,10 +751,6 @@ class MediaPickerViewModel @Inject constructor(
         enum class BrowseAction {
             SYSTEM_PICKER, DEVICE, WP_MEDIA_LIBRARY, STOCK_LIBRARY, GIF_LIBRARY
         }
-    }
-
-    enum class PermissionsRequested {
-        CAMERA, STORAGE
     }
 
     data class SoftAskRequest(val show: Boolean, val isAlwaysDenied: Boolean)

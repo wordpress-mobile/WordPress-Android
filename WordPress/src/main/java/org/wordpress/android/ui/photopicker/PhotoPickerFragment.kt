@@ -440,7 +440,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
     private fun requestStoragePermission() {
         val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE)
         requestPermissions(
-            permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE
+            permissions, WPPermissionUtils.PHOTO_PICKER_MEDIA_PERMISSION_REQUEST_CODE
         )
     }
 
@@ -465,7 +465,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
             requireActivity(), requestCode, permissions, grantResults, checkForAlwaysDenied
         )
         when (requestCode) {
-            WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE -> checkStoragePermission()
+            WPPermissionUtils.PHOTO_PICKER_MEDIA_PERMISSION_REQUEST_CODE -> checkStoragePermission()
             WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE -> if (allGranted) {
                 viewModel.clickOnLastTappedIcon()
             }

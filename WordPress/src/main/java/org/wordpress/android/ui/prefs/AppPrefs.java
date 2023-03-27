@@ -228,6 +228,9 @@ public class AppPrefs {
         // permission keys - set once a specific permission has been asked, regardless of response
         ASKED_PERMISSION_STORAGE_WRITE,
         ASKED_PERMISSION_STORAGE_READ,
+        ASKED_PERMISSION_IMAGES_READ,
+        ASKED_PERMISSION_VIDEO_READ,
+        ASKED_PERMISSION_AUDIO_READ,
         ASKED_PERMISSION_CAMERA,
 
         // Updated after WP.com themes have been fetched
