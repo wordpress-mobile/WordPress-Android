@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
-    <!-- ERROR -->
-    <issue id="IconDipSize">
-        <ignore path="**/libs/editor/src/main/res/drawable-hdpi/format_bar_chevron.png" />
-    </issue>
-
-    <!-- IGNORE -->
     <issue id="MissingTranslation" severity="ignore" />
     <issue id="ExtraTranslation" severity="ignore" />
     <issue id="PluralsCandidate" severity="ignore" /> <!-- GlotPress doesn't support plurals -->
+    <issue id="Typos">
+        <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
+    </issue>
 
     <issue id="UnusedResources">
         <ignore path="**/libs/editor/src/main/res/drawable/**" /> <!-- 9 errors -->
@@ -18,7 +15,7 @@
         <ignore regexp=".*\/values\/strings\.xml$"/>
     </issue>
 
-    <issue id="Typos">
-        <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
+    <issue id="IconDipSize">
+        <ignore path="**/libs/editor/src/main/res/drawable-hdpi/format_bar_chevron.png" />
     </issue>
 </lint>
