@@ -62,12 +62,6 @@
     <issue id="MissingTranslation" severity="ignore" />
     <issue id="ExtraTranslation" severity="ignore" />
     <issue id="PluralsCandidate" severity="ignore" /> <!-- GlotPress doesn't support plurals -->
-    <issue id="InvalidPackage">
-        <ignore regexp="okio-1.9.0.jar" />
-        <ignore regexp="java-common-1.13.jar" />
-        <ignore path="**/sentry*.jar"/>
-        <ignore path="bcprov-jdk15on-1.64.jar"/>
-    </issue>
 
     <issue id="UnusedResources" severity="error">
         <ignore path="**/libs/editor/**" />
