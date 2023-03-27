@@ -59,6 +59,22 @@ class ReactNativeStoreWpComTest {
     }
 
     @Test
+    fun `makes POST request to WPCOM`() = test {
+        val expectedResponse = mock<ReactNativeFetchResponse>()
+
+        val site = mock<SiteModel>()
+        whenever(site.siteId).thenReturn(123456L)
+        whenever(site.isUsingWpComRestApi).thenReturn(true)
+
+        val expectedUrl = "https://public-api.wordpress.com/wp/v2/sites/${site.siteId}/media/100"
+        whenever(wpComRestClient.postRequest(expectedUrl, mapOf("paramKey" to "paramValue"), mapOf("title" to "newTitle"), ::Success, ::Error))
+            .thenReturn(expectedResponse)
+
+        val actualResponse = store.executePostRequest(site, "/wp/v2/media/100?paramKey=paramValue", mapOf("title" to "newTitle"))
+        assertEquals(expectedResponse, actualResponse)
+    }
+
+    @Test
     fun `handles failure to parse path`() = test {
         val mockUri = mock<Uri>()
         assertNull(mockUri.path, "path must be null to represent failure to parse the path in this test")
