@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
-    <!-- INFO -->
-    <issue id="IconMissingDensityFolder" severity="info" />
-
     <!-- WARNING -->
     <issue id="RtlSymmetry" severity="warning" />
     <issue id="UseSparseArrays" severity="warning" />
