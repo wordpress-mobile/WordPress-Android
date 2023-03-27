@@ -64,7 +64,8 @@
     <issue id="PluralsCandidate" severity="ignore" /> <!-- GlotPress doesn't support plurals -->
 
     <issue id="UnusedResources" severity="error">
-        <ignore path="**/libs/editor/**" />
+        <ignore path="**/libs/editor/src/main/res/drawable/**" /> <!-- 9 errors -->
+        <ignore path="**/libs/editor/src/main/res/drawable-hdpi/**" />  <!-- 6 errors -->
         <ignore path="**/.gradle/caches/**" />
         <ignore path="**/generated/**" />
         <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
