@@ -74,6 +74,4 @@
     <issue id="Typos" severity="error">
         <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
     </issue>
-
-    <issue id="InvalidFragmentVersionForActivityResult" severity="ignore" />
 </lint>
