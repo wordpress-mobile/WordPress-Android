@@ -263,7 +263,7 @@ android {
         warningsAsErrors = true
         checkDependencies = true
         checkGeneratedSources = true
-        lintConfig file("${project.rootDir}/config/lint.xml")
+        lintConfig file("${project.rootDir}/config/lint/lint.xml")
     }
 
     packagingOptions {
