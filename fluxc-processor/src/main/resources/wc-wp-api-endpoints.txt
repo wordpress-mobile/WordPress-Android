@@ -98,3 +98,4 @@
 /onboarding/tasks
 
 /subscriptions/
+/subscriptions/<id>/
