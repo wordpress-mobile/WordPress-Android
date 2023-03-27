@@ -35,6 +35,10 @@ class WPJetpackIndividualPluginHelper @Inject constructor(
         return siteStore.getJetpackCPConnectedSites()
             .filter { it.isJetpackIndividualPluginConnectedWithoutFullPlugin() }
     }
+
+    companion object {
+        private const val OVERLAY_MAX_SHOWN = 3
+    }
 }
 
 data class SiteWithIndividualJetpackPlugins(
