@@ -30,6 +30,10 @@ class WPJetpackIndividualPluginHelper @Inject constructor(
         }
     }
 
+    fun incrementJetpackIndividualPluginOverlayShownCount() {
+        appPrefs.incrementWPJetpackIndividualPluginOverlayShownCount()
+    }
+
     private suspend fun hasIndividualPluginJetpackConnectedSites(): Boolean {
         val individualPluginConnectedSites = getIndividualPluginJetpackConnectedSites()
         return individualPluginConnectedSites.isNotEmpty()

@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -23,21 +24,24 @@ class WPJetpackIndividualPluginViewModel @Inject constructor(
     val actionEvents = _actionEvents
 
     fun onScreenShown() {
-        // TODO thomashortadev add tracking
+        if (_uiState.value != UiState.None) return
         launch {
             val sites = wpJetpackIndividualPluginHelper.getJetpackConnectedSitesWithIndividualPlugins()
             _uiState.update { UiState.Loaded(sites) }
+            wpJetpackIndividualPluginHelper.incrementJetpackIndividualPluginOverlayShownCount()
+            AppLog.d(AppLog.T.JETPACK_MIGRATION, "WPJetpackIndividualPluginViewModel onScreenShown")
+            // TODO thomashortadev add tracking
         }
     }
 
     fun onDismissScreenClick() {
-        // TODO thomashortadev add tracking
         postActionEvent(ActionEvent.Dismiss)
+        // TODO thomashortadev add tracking
     }
 
     fun onPrimaryButtonClick() {
-        // TODO thomashortadev add tracking
         postActionEvent(ActionEvent.PrimaryButtonClick)
+        // TODO thomashortadev add tracking
     }
 
     private fun postActionEvent(actionEvent: ActionEvent) {
