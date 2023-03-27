@@ -2,6 +2,7 @@ package org.wordpress.android.ui.jetpackoverlay.individualplugin
 
 import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSiteModel
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.config.WPIndividualPluginOverlayFeatureConfig
 import org.wordpress.android.util.extensions.activeIndividualJetpackPluginNames
 import org.wordpress.android.util.extensions.isJetpackIndividualPluginConnectedWithoutFullPlugin
@@ -10,9 +11,12 @@ import javax.inject.Inject
 class WPJetpackIndividualPluginHelper @Inject constructor(
     private val siteStore: SiteStore,
     private val wpIndividualPluginOverlayFeatureConfig: WPIndividualPluginOverlayFeatureConfig,
+    private val appPrefs: AppPrefsWrapper,
 ) {
     suspend fun shouldShowJetpackIndividualPluginOverlay(): Boolean {
-        return wpIndividualPluginOverlayFeatureConfig.isEnabled() && hasIndividualPluginJetpackConnectedSites()
+        return wpIndividualPluginOverlayFeatureConfig.isEnabled() &&
+                hasIndividualPluginJetpackConnectedSites() &&
+                !wasOverlayShownOverMaxTimes()
     }
 
     suspend fun getJetpackConnectedSitesWithIndividualPlugins(): List<SiteWithIndividualJetpackPlugins> {
@@ -36,8 +40,12 @@ class WPJetpackIndividualPluginHelper @Inject constructor(
             .filter { it.isJetpackIndividualPluginConnectedWithoutFullPlugin() }
     }
 
+    private fun wasOverlayShownOverMaxTimes(): Boolean {
+        return appPrefs.wpJetpackIndividualPluginOverlayShownCount >= OVERLAY_MAX_SHOWN_COUNT
+    }
+
     companion object {
-        private const val OVERLAY_MAX_SHOWN = 3
+        private const val OVERLAY_MAX_SHOWN_COUNT = 3
     }
 }
 
