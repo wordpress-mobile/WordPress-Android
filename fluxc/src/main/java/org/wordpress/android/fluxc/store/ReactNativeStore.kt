@@ -82,7 +82,7 @@ class ReactNativeStore @VisibleForTesting constructor(
     suspend fun executePostRequest(
         site: SiteModel,
         pathWithParams: String,
-        body: Map<String, String> = emptyMap(),
+        body: Map<String, Any> = emptyMap(),
     ): ReactNativeFetchResponse =
         coroutineEngine.withDefaultContext(AppLog.T.API, this, "executePostRequest") {
             return@withDefaultContext if (site.isUsingWpComRestApi) {
@@ -111,7 +111,7 @@ class ReactNativeStore @VisibleForTesting constructor(
     private suspend fun executeWPComPostRequest(
         site: SiteModel,
         path: String,
-        body: Map<String, String>,
+        body: Map<String, Any>,
     ): ReactNativeFetchResponse {
         val (url, params) = parseUrlAndParamsForWPCom(path, site.siteId)
         return if (url != null) {
@@ -141,7 +141,7 @@ class ReactNativeStore @VisibleForTesting constructor(
     private suspend fun executeWPAPIPostRequest(
         site: SiteModel,
         pathWithParams: String,
-        body: Map<String, String>,
+        body: Map<String, Any>,
     ): ReactNativeFetchResponse {
         val (path, params) = parsePathAndParams(pathWithParams)
         return if (path != null) {
@@ -165,7 +165,7 @@ class ReactNativeStore @VisibleForTesting constructor(
         path: String,
         method: RequestMethod,
         params: Map<String, String>,
-        body: Map<String, String>,
+        body: Map<String, Any>,
         enableCaching: Boolean
     ): ReactNativeFetchResponse {
         // Storing this in a variable to avoid a NPE that can occur if the site object is mutated
@@ -250,7 +250,7 @@ class ReactNativeStore @VisibleForTesting constructor(
 
     private suspend fun executePost(
         fullRestApiUrl: String,
-        body: Map<String, String>,
+        body: Map<String, Any>,
         nonce: String?
     ): ReactNativeFetchResponse =
         wpAPIRestClient.postRequest(fullRestApiUrl, body, ::Success, ::Error, nonce)

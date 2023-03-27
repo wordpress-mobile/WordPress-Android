@@ -46,7 +46,7 @@ class ReactNativeWPAPIRestClient @Inject constructor(
 
     suspend fun postRequest(
         url: String,
-        body: Map<String, String>,
+        body: Map<String, Any>,
         successHandler: (data: JsonElement?) -> ReactNativeFetchResponse,
         errorHandler: (BaseNetworkError) -> ReactNativeFetchResponse,
         nonce: String? = null,
