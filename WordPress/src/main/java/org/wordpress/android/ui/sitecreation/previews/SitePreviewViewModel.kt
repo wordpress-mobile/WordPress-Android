@@ -16,7 +16,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.SiteCreationResult
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
@@ -80,7 +80,7 @@ class SitePreviewViewModel @Inject constructor(
         urlWithoutScheme = requireNotNull(siteCreationState.domain) { "url required for preview" }.domainName
         startPreLoadingWebView()
         result = siteCreationState.result.also {
-            if (it is Created) {
+            if (it is CreatedButNotFetched) {
                 launch {
                     fetchNewlyCreatedSiteModel(it.remoteId)?.run {
                         result = Completed(id, it.isSiteTitleTaskComplete, url)

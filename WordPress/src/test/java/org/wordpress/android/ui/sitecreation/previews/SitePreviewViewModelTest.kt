@@ -23,7 +23,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.ui.sitecreation.FETCH_ERROR
 import org.wordpress.android.ui.sitecreation.FETCH_SUCCESS
-import org.wordpress.android.ui.sitecreation.RESULT_CREATED
+import org.wordpress.android.ui.sitecreation.RESULT_NOT_IN_LOCAL_DB
 import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE
 import org.wordpress.android.ui.sitecreation.SITE_REMOTE_ID
 import org.wordpress.android.ui.sitecreation.SUB_DOMAIN
@@ -84,7 +84,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
 
     @Test
     fun `on start fetches site by remote id when result is created`() = testWith(FETCH_SUCCESS) {
-        startViewModel(SITE_CREATION_STATE.copy(result = RESULT_CREATED))
+        startViewModel(SITE_CREATION_STATE.copy(result = RESULT_NOT_IN_LOCAL_DB))
         verify(fetchWpComSiteUseCase).fetchSiteWithRetry(SITE_REMOTE_ID)
     }
 

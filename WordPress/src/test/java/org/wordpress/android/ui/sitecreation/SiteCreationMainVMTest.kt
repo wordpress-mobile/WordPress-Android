@@ -196,7 +196,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun `on progress screen finished updates state with result`() {
         viewModel.onProgressScreenFinished(SITE_REMOTE_ID)
-        assertThat(currentWizardState(viewModel).result).isEqualTo(RESULT_CREATED)
+        assertThat(currentWizardState(viewModel).result).isEqualTo(RESULT_NOT_IN_LOCAL_DB)
     }
 
     @Test
