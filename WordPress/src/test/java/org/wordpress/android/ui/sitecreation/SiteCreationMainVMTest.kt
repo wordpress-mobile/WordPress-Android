@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui.sitecreation
 
 import android.os.Bundle
