@@ -32,7 +32,7 @@ class RemoteFieldConfigRepository
             // that the app is launched for the first time and we need to
             // store the default in the database
             if (!remoteFields.containsAllFields()) {
-                insertMissingRemoteConfigDefaultsInDatabase()
+                insertMissingRemoteConfigDefaultsInDatabase(remoteFields.map { it.key })
                 refresh()
             }
         }
@@ -45,10 +45,9 @@ class RemoteFieldConfigRepository
         }
     }
 
-    private fun insertMissingRemoteConfigDefaultsInDatabase() {
-        val existingRemoteFieldKeys = remoteFields.map { it.key }
+    private fun insertMissingRemoteConfigDefaultsInDatabase(existingKeys: List<String>) {
         RemoteFieldConfigDefaults.remoteFieldConfigDefaults.forEach { remoteField ->
-            if (remoteField.key !in existingRemoteFieldKeys) {
+            if (remoteField.key !in existingKeys) {
                 remoteConfigStore.insertRemoteConfig(
                     remoteField.key,
                     remoteField.value.toString()
@@ -72,6 +71,10 @@ class RemoteFieldConfigRepository
                 Stat.REMOTE_FIELD_CONFIG_SYNCED_STATE,
                 configValues
             )
+
+            // re-insert the defaults in case they were removed from the remote config and also to make sure latest
+            // version defaults overwrite the old ones that might already be in the database
+            insertMissingRemoteConfigDefaultsInDatabase(configValues.map { it.key })
         }
         if (response.isError) {
             AppLog.e(UTILS, "Remote field config values sync failed")
