@@ -75,6 +75,20 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
         )
     }
 
+    private fun isImmediateUpdateInProgress(appUpdateInfo: AppUpdateInfo): Boolean {
+        return (appUpdateInfo.updateAvailability()
+                == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS)
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
+                && isUpdatePriorityHigh(appUpdateInfo)
+    }
+
+    private fun isFlexibleUpdateInProgress(appUpdateInfo: AppUpdateInfo): Boolean {
+        return (appUpdateInfo.updateAvailability()
+                == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS)
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+                && !isUpdatePriorityHigh(appUpdateInfo)
+    }
+
     private fun setLastUpdateRequestedTime() {
         //todo: add logic to save the time when the update request was made
     }
