@@ -14,6 +14,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
 import org.wordpress.android.ui.domains.DomainsRegistrationTracker
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
@@ -57,7 +58,6 @@ class SiteCreationProgressViewModel @Inject constructor(
     private val createCartUseCase: CreateCartUseCase,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
-    private var isStarted = false
     private var loadingAnimationJob: Job? = null
 
     private lateinit var siteCreationState: SiteCreationState
@@ -91,8 +91,13 @@ class SiteCreationProgressViewModel @Inject constructor(
     }
 
     fun start(siteCreationState: SiteCreationState) {
-        if (isStarted) return
-        isStarted = true
+        if (siteCreationState.result is Created.InCart) {
+            // reuse the previously blog when returning with the same domain
+            if (siteCreationState.domain == this.siteCreationState.domain) {
+                createCart(siteCreationState.result.remoteId, siteCreationState.result.siteSlug)
+                return
+            }
+        }
         this.siteCreationState = siteCreationState
         domain = requireNotNull(siteCreationState.domain) { "domain required to create a site" }
 

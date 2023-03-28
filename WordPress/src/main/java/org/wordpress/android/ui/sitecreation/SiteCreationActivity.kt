@@ -29,9 +29,9 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.DomainRegistered
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.DomainRegistrationPurchased
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotInLocalDb
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.INTENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.PROGRESS
@@ -98,7 +98,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     }
 
     private val domainCheckoutActivityLauncher = registerForActivityResult(OpenCheckout()) {
-        it?.let(mainViewModel::onCheckoutSuccess)
+        mainViewModel.onCheckoutResult(it)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -130,7 +130,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
                     is NotCreated -> {
                         Triple(false, null, false)
                     }
-                    is NotInLocalDb -> {
+                    is Created -> {
                         // Site was created, but we haven't been able to fetch it, let `SitePickerActivity` handle
                         // this with a Snackbar message.
                         intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)

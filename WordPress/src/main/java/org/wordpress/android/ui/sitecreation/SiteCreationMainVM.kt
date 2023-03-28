@@ -24,9 +24,9 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.DomainRegistered
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.DomainRegistrationPurchased
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotInLocalDb
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -68,8 +68,23 @@ sealed interface SiteCreationResult : Parcelable {
     @Parcelize
     object NotCreated : SiteCreationResult
 
-    @Parcelize
-    data class NotInLocalDb(val remoteId: Long, val isSiteTitleTaskComplete: Boolean) : SiteCreationResult
+    sealed interface Created : SiteCreationResult {
+        val remoteId: Long
+        val isSiteTitleTaskComplete: Boolean
+
+        @Parcelize
+        data class NotInLocalDb(
+            override val remoteId: Long,
+            override val isSiteTitleTaskComplete: Boolean,
+        ) : Created
+
+        @Parcelize
+        data class InCart(
+            val siteSlug: String,
+            override val remoteId: Long,
+            override val isSiteTitleTaskComplete: Boolean,
+        ) : Created
+    }
 
     @Parcelize
     data class DomainRegistrationPurchased(
@@ -276,27 +291,30 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onCartCreated(checkoutDetails: CheckoutDetails) {
         siteCreationState = siteCreationState.copy(
-            result = NotInLocalDb(checkoutDetails.site.siteId, isSiteTitleTaskCompleted())
+            result = Created.InCart(checkoutDetails.site.url, checkoutDetails.site.siteId, isSiteTitleTaskCompleted())
         )
         _showDomainCheckout.value = checkoutDetails
     }
 
-    fun onCheckoutSuccess(event: DomainRegistrationCompletedEvent) {
-        val (remoteId, isSiteTitleTaskComplete) = siteCreationState.result as NotInLocalDb
-        siteCreationState = siteCreationState.copy(
-            result = DomainRegistrationPurchased(
-                event.domainName,
-                event.email,
-                remoteId,
-                isSiteTitleTaskComplete
+    fun onCheckoutResult(event: DomainRegistrationCompletedEvent?) {
+        if (event == null) return onBackPressed()
+        siteCreationState = siteCreationState.run {
+            check(result is Created)
+            copy(
+                result = DomainRegistrationPurchased(
+                    event.domainName,
+                    event.email,
+                    result.remoteId,
+                    isSiteTitleTaskCompleted()
+                )
             )
-        )
+        }
         wizardManager.showNextStep()
     }
 
     fun onProgressScreenFinished(remoteSiteId: Long) {
         siteCreationState = siteCreationState.copy(
-            result = NotInLocalDb(remoteSiteId, isSiteTitleTaskCompleted())
+            result = Created.NotInLocalDb(remoteSiteId, isSiteTitleTaskCompleted())
         )
         wizardManager.showNextStep()
     }
