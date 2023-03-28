@@ -226,9 +226,6 @@ class AppInitializer @Inject constructor(
     @Inject
     lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
-    @Inject
-    lateinit var appUpdateChecker: AppUpdateChecker
-
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
     lateinit var storyNotificationTrackerProvider: StoryNotificationTrackerProvider
         private set
@@ -285,8 +282,6 @@ class AppInitializer @Inject constructor(
     fun init() {
         dispatcher.register(this)
         appConfig.init(appScope)
-        appUpdateChecker.init(application)
-
         // Upload any encrypted logs that were queued but not yet uploaded
         encryptedLogging.start()
 
