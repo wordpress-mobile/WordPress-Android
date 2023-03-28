@@ -21,7 +21,7 @@ class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockP
         return if (id != null && !id.isJsonNull && id.asString == mLocalId) {
             jsonAttributes.apply {
                 addProperty(ID_ATTRIBUTE, Integer.parseInt(mRemoteId))
-                // Functionality for populating the block's attributes will go here.
+                addProperty(GUID_ATTRIBUTE, mRemoteGuid)
             }
             true
         } else {
@@ -31,5 +31,6 @@ class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockP
 
     companion object {
         const val ID_ATTRIBUTE = "id"
+        const val GUID_ATTRIBUTE = "guid"
     }
 }
