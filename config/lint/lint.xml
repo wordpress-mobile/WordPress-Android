@@ -7,6 +7,10 @@
     <issue id="Typos">
         <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
     </issue>
+    <issue id="MissingFirebaseInstanceTokenRefresh">
+        <!-- GCM -->
+        <ignore path="**/generated/source/kapt/**/org/wordpress/android/push/Hilt_GCMMessageService.java" />
+    </issue>
     <!-- PERFORMANCE -->
     <issue id="UnusedResources">
         <!-- EDITOR -->
