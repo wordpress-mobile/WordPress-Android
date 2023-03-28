@@ -67,10 +67,17 @@ class ReactNativeStoreWpComTest {
         whenever(site.isUsingWpComRestApi).thenReturn(true)
 
         val expectedUrl = "https://public-api.wordpress.com/wp/v2/sites/${site.siteId}/media/100"
-        whenever(wpComRestClient.postRequest(expectedUrl, mapOf("paramKey" to "paramValue"), mapOf("title" to "newTitle"), ::Success, ::Error))
+        whenever(wpComRestClient.postRequest(
+            expectedUrl,
+            mapOf("paramKey" to "paramValue"),
+            mapOf("title" to "newTitle"),
+            ::Success, ::Error))
             .thenReturn(expectedResponse)
 
-        val actualResponse = store.executePostRequest(site, "/wp/v2/media/100?paramKey=paramValue", mapOf("title" to "newTitle"))
+        val actualResponse = store.executePostRequest(
+            site,
+            "/wp/v2/media/100?paramKey=paramValue",
+            mapOf("title" to "newTitle"))
         assertEquals(expectedResponse, actualResponse)
     }
 
