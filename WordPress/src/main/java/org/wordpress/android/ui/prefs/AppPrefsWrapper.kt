@@ -89,6 +89,10 @@ class AppPrefsWrapper @Inject constructor() {
     val wpJetpackIndividualPluginOverlayShownCount: Int
         get() = AppPrefs.getWPJetpackIndividualPluginOverlayShownCount()
 
+    var wpJetpackIndividualPluginOverlayLastShownTimestamp: Long
+        get() = AppPrefs.getWPJetpackIndividualPluginOverlayLastShownTimestamp()
+        set(timestamp) = AppPrefs.setWPJetpackIndividualPluginOverlayLastShownTimestamp(timestamp)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
