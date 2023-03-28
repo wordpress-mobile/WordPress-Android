@@ -23,21 +23,23 @@ class WPJetpackIndividualPluginViewModel @Inject constructor(
     val actionEvents = _actionEvents
 
     fun onScreenShown() {
-        // TODO thomashortadev add tracking
+        if (_uiState.value != UiState.None) return
         launch {
             val sites = wpJetpackIndividualPluginHelper.getJetpackConnectedSitesWithIndividualPlugins()
             _uiState.update { UiState.Loaded(sites) }
+            wpJetpackIndividualPluginHelper.incrementJetpackIndividualPluginOverlayShownCount()
+            // TODO thomashortadev add tracking
         }
     }
 
     fun onDismissScreenClick() {
-        // TODO thomashortadev add tracking
         postActionEvent(ActionEvent.Dismiss)
+        // TODO thomashortadev add tracking
     }
 
     fun onPrimaryButtonClick() {
-        // TODO thomashortadev add tracking
         postActionEvent(ActionEvent.PrimaryButtonClick)
+        // TODO thomashortadev add tracking
     }
 
     private fun postActionEvent(actionEvent: ActionEvent) {

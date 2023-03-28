@@ -86,6 +86,9 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.shouldScheduleCreateSiteNotification()
         set(shouldSchedule) = AppPrefs.setShouldScheduleCreateSiteNotification(shouldSchedule)
 
+    val wpJetpackIndividualPluginOverlayShownCount: Int
+        get() = AppPrefs.getWPJetpackIndividualPluginOverlayShownCount()
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
@@ -326,6 +329,9 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setShouldHidePromoteWithBlazeCard(siteId: Long, isHidden: Boolean) =
         AppPrefs.setShouldHidePromoteWithBlazeCard(siteId, isHidden)
+
+    fun incrementWPJetpackIndividualPluginOverlayShownCount() =
+        AppPrefs.incrementWPJetpackIndividualPluginOverlayShownCount()
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 

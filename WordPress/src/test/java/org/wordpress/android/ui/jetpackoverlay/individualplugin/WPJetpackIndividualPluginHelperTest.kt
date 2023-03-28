@@ -7,10 +7,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSiteModel
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.config.WPIndividualPluginOverlayFeatureConfig
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -22,11 +24,14 @@ class WPJetpackIndividualPluginHelperTest : BaseUnitTest() {
     @Mock
     lateinit var wpIndividualPluginOverlayFeatureConfig: WPIndividualPluginOverlayFeatureConfig
 
+    @Mock
+    lateinit var appPrefs: AppPrefsWrapper
+
     lateinit var helper: WPJetpackIndividualPluginHelper
 
     @Before
     fun setUp() {
-        helper = WPJetpackIndividualPluginHelper(siteStore, wpIndividualPluginOverlayFeatureConfig)
+        helper = WPJetpackIndividualPluginHelper(siteStore, wpIndividualPluginOverlayFeatureConfig, appPrefs)
     }
 
     @Test
@@ -46,8 +51,9 @@ class WPJetpackIndividualPluginHelperTest : BaseUnitTest() {
             assertThat(helper.shouldShowJetpackIndividualPluginOverlay()).isFalse
         }
 
+    @Suppress("MaxLineLength")
     @Test
-    fun `GIVEN config is on and has problem sites WHEN shouldShowJetpackIndividualPluginOverlay THEN return true`() =
+    fun `GIVEN config is on, has problem sites, and shown more than max count WHEN shouldShowJetpackIndividualPluginOverlay THEN return false`() =
         test {
             whenever(wpIndividualPluginOverlayFeatureConfig.isEnabled()).thenReturn(true)
             val connectedSites = listOf(
@@ -63,6 +69,30 @@ class WPJetpackIndividualPluginHelperTest : BaseUnitTest() {
                 )
             )
             whenever(siteStore.getJetpackCPConnectedSites()).thenReturn(connectedSites)
+            whenever(appPrefs.wpJetpackIndividualPluginOverlayShownCount).thenReturn(3)
+
+            assertThat(helper.shouldShowJetpackIndividualPluginOverlay()).isFalse
+        }
+
+    @Suppress("MaxLineLength")
+    @Test
+    fun `GIVEN config is on, has problem sites, and shown less than max count WHEN shouldShowJetpackIndividualPluginOverlay THEN return true`() =
+        test {
+            whenever(wpIndividualPluginOverlayFeatureConfig.isEnabled()).thenReturn(true)
+            val connectedSites = listOf(
+                jetpackCPConnectedSiteModel(
+                    name = "site1",
+                    url = "site1.com",
+                    activeJpPlugins = "jetpack-social"
+                ),
+                jetpackCPConnectedSiteModel(
+                    name = "site2",
+                    url = "site2.com",
+                    activeJpPlugins = "other-plugin"
+                )
+            )
+            whenever(siteStore.getJetpackCPConnectedSites()).thenReturn(connectedSites)
+            whenever(appPrefs.wpJetpackIndividualPluginOverlayShownCount).thenReturn(2)
 
             assertThat(helper.shouldShowJetpackIndividualPluginOverlay()).isTrue
         }
@@ -96,6 +126,13 @@ class WPJetpackIndividualPluginHelperTest : BaseUnitTest() {
         assertThat(sites[0].url).isEqualTo("site1.com")
         assertThat(sites[0].individualPluginNames).hasSize(1)
         assertThat(sites[0].individualPluginNames[0]).isEqualTo("Jetpack Social")
+    }
+
+    @Test
+    fun `WHEN incrementJetpackIndividualPluginOverlayShownCount THEN app prefs method is called`() {
+        helper.incrementJetpackIndividualPluginOverlayShownCount()
+
+        verify(appPrefs).incrementWPJetpackIndividualPluginOverlayShownCount()
     }
 
     private fun jetpackCPConnectedSiteModel(name: String, url: String, activeJpPlugins: String?) =
