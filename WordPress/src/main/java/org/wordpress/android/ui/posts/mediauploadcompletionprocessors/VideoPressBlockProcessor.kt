@@ -41,6 +41,9 @@ class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockP
 
     /**
      * Build VideoPress URL based on the values of the block's various settings.
+     * In order to have a cleaner URL, only the options differing from the default settings are added.
+     * Matches logic in Jetpack.
+     * Ref: https://github.com/Automattic/jetpack/blob/b1b826ab38690c5fad18789301ac81297a458878/projects/packages/videopress/src/client/lib/url/index.ts#L19-L67
      *
      */
     fun getVideoPressURL(guid: String): String {
@@ -61,38 +64,90 @@ class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockP
         )
     }
 
-    /**
-     * In order to have a cleaner URL, only the options differing from the default settings are added.
-     *
-     * Turned OFF by default: Autoplay, Loop, Muted, Plays Inline
-     * Turned ON by default: Controls, UseAverageColor
-     * No values by default: Poster, SeekbarColor, SeekbarPlayerColor, SeekbarLoadingColor
-     * Set to "metadata" by default: Preload
-     *
-     * Matches logic in Jetpack.
-     * Ref: https://github.com/Automattic/jetpack/blob/b1b826ab38690c5fad18789301ac81297a458878/projects/packages/videopress/src/client/lib/url/index.ts#L19-L67
-     *
-     */
     private fun getBlockSettingsQueryArgs(
         queryArgs: MutableMap<String, String>,
         blockSettings: VideoPressBlockSettings
     ) {
         with(blockSettings) {
-            autoplay?.let { if (it) queryArgs["autoPlay"] = "true" }
-            controls?.let { if (!it) queryArgs["controls"] = "false" }
-            loop?.let { if (it) queryArgs["loop"] = "true" }
-            muted?.let {
-                if (it) {
-                    queryArgs["muted"] = "true"; queryArgs["persistVolume"] = "false"
-                }
-            }
-            playsinline?.let { if (it) queryArgs["playsinline"] = "true" }
-            poster?.let { queryArgs["posterUrl"] = it }
-            preload?.let { if (it.isNotEmpty()) queryArgs["preloadContent"] = it }
-            seekbarColor?.let { if (it.isNotEmpty()) queryArgs["sbc"] = it }
-            seekbarPlayedColor?.let { if (it.isNotEmpty()) queryArgs["sbpc"] = it }
-            seekbarLoadingColor?.let { if (it.isNotEmpty()) queryArgs["sblc"] = it }
-            useAverageColor?.let { if (it) queryArgs["useAverageColor"] = "true" }
+            addAutoplayArg(queryArgs, autoplay)
+            addControlsArg(queryArgs, controls)
+            addLoopArg(queryArgs, loop)
+            addMutedAndPersistVolumeArgs(queryArgs, muted)
+            addPlaysinlineArg(queryArgs, playsinline)
+            addPosterArg(queryArgs, poster)
+            addPreloadArg(queryArgs, preload)
+            addSeekbarArgs(queryArgs, seekbarColor, seekbarPlayedColor, seekbarLoadingColor)
+            addUseAverageColorArg(queryArgs, useAverageColor)
+        }
+    }
+
+    // Adds AutoPlay option. Turned OFF by default.
+    private fun addAutoplayArg(queryArgs: MutableMap<String, String>, autoplay: Boolean?) {
+        if (autoplay == true) {
+            queryArgs["autoPlay"] = "true"
+        }
+    }
+
+    // Adds Controls option. Turned ON by default.
+    private fun addControlsArg(queryArgs: MutableMap<String, String>, controls: Boolean?) {
+        if (controls == false) {
+            queryArgs["controls"] = "false"
+        }
+    }
+
+    // Adds Loops option. Turned OFF by default.
+    private fun addLoopArg(queryArgs: MutableMap<String, String>, loop: Boolean?) {
+        if (loop == true) {
+            queryArgs["loop"] = "true"
+        }
+    }
+
+    // Adds Volume-related options. Muted: Turned OFF by default.
+    private fun addMutedAndPersistVolumeArgs(queryArgs: MutableMap<String, String>, muted: Boolean?) {
+        if (muted == true) {
+            queryArgs["muted"] = "true"
+            queryArgs["persistVolume"] = "false"
+        }
+    }
+
+    // Adds PlaysInline option. Turned OFF by default.
+    private fun addPlaysinlineArg(queryArgs: MutableMap<String, String>, playsinline: Boolean?) {
+        if (playsinline == true) {
+            queryArgs["playsinline"] = "true"
+        }
+    }
+
+    // Adds Poster option. No image by default.
+    private fun addPosterArg(queryArgs: MutableMap<String, String>, poster: String?) {
+        poster?.let { queryArgs["posterUrl"] = it }
+    }
+
+    // Adds Preload option. Metadata by default.
+    private fun addPreloadArg(queryArgs: MutableMap<String, String>, preload: String?) {
+        preload?.let { if (it.isNotEmpty()) queryArgs["preloadContent"] = it }
+    }
+
+    /**
+     * Adds Seekbar options.
+     * - SeekbarColor: No color by default.
+     * - SeekbarPlayerColor: No color by default.
+     * - SeekbarLoadingColor: No color by default.
+     */
+    private fun addSeekbarArgs(
+        queryArgs: MutableMap<String, String>,
+        seekbarColor: String?,
+        seekbarPlayedColor: String?,
+        seekbarLoadingColor: String?
+    ) {
+        seekbarColor?.let { if (it.isNotEmpty()) queryArgs["sbc"] = it }
+        seekbarPlayedColor?.let { if (it.isNotEmpty()) queryArgs["sbpc"] = it }
+        seekbarLoadingColor?.let { if (it.isNotEmpty()) queryArgs["sblc"] = it }
+    }
+
+    // Adds UseAverageColor option. Turned ON by default.
+    private fun addUseAverageColorArg(queryArgs: MutableMap<String, String>, useAverageColor: Boolean?) {
+        if (useAverageColor == true) {
+            queryArgs["useAverageColor"] = "true"
         }
     }
 
