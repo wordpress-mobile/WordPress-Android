@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
 import android.net.Uri
+import android.os.Build
 import com.google.gson.JsonObject
 import org.jsoup.nodes.Document
 import org.wordpress.android.util.helpers.MediaFile
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockProcessor(localId, mediaFile) {
     class VideoPressBlockSettings(
@@ -51,7 +54,11 @@ class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockP
         getBlockSettingsQueryArgs(queryArgs, mBlockSettings)
 
         val encodedQueryArgs = queryArgs.entries.joinToString("&") {
-            "${Uri.encode(it.key)}=${Uri.encode(it.value)}"
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                "${URLEncoder.encode(it.key, StandardCharsets.UTF_8)}=${URLEncoder.encode(it.value, StandardCharsets.UTF_8)}"
+            } else {
+                "${Uri.encode(it.key)}=${Uri.encode(it.value)}"
+            }
         }
 
         return "https://videopress.com/v/$guid?$encodedQueryArgs"
