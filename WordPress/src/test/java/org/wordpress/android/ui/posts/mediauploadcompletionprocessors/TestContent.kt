@@ -30,6 +30,7 @@ object TestContent {
     const val remoteMediaId = "97629"
     const val remoteMediaId2 = "97630"
     const val attachmentPageUrl = "https://wordpress.org?p=${remoteMediaId}"
+    const val videoPressGuid = "AbCdE"
 
     const val oldImageBlock = """<!-- wp:image {"id":${localMediaId},"align":"full"} -->
 <figure class="wp-block-image alignfull">
