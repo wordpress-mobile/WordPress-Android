@@ -299,7 +299,7 @@ class SiteCreationMainVM @Inject constructor(
     fun onCheckoutResult(event: DomainRegistrationCompletedEvent?) {
         if (event == null) return onBackPressed()
         siteCreationState = siteCreationState.run {
-            check(result is Created)
+            check(result is Created.InCart)
             copy(
                 result = DomainRegistrationPurchased(
                     event.domainName,
