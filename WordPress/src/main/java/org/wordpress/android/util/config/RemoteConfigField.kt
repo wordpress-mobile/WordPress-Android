@@ -2,7 +2,7 @@ package org.wordpress.android.util.config
 
 open class RemoteConfigField<T>(val appConfig: AppConfig, val remoteField: String) {
     @Suppress("UseCheckOrError")
-    inline fun <reified R : T> getValue(): R {
+    inline fun <reified R> getValue(): R {
         val remoteFieldValue = appConfig.getRemoteFieldConfigValue(remoteField)
         return when (R::class) {
             Int::class -> remoteFieldValue.toInt() as R
