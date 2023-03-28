@@ -7,13 +7,16 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.config.AppConfig
 import org.wordpress.android.util.config.WPIndividualPluginOverlayFeatureConfig
+import org.wordpress.android.util.config.WPIndividualPluginOverlayMaxShownConfig
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
@@ -22,16 +25,29 @@ class WPJetpackIndividualPluginHelperTest : BaseUnitTest() {
     lateinit var siteStore: SiteStore
 
     @Mock
+    lateinit var appPrefs: AppPrefsWrapper
+
+    @Mock
     lateinit var wpIndividualPluginOverlayFeatureConfig: WPIndividualPluginOverlayFeatureConfig
 
     @Mock
-    lateinit var appPrefs: AppPrefsWrapper
+    lateinit var appConfig: AppConfig
 
-    lateinit var helper: WPJetpackIndividualPluginHelper
+    private lateinit var wpIndividualPluginOverlayMaxShownConfig: WPIndividualPluginOverlayMaxShownConfig
+
+    private lateinit var helper: WPJetpackIndividualPluginHelper
 
     @Before
     fun setUp() {
-        helper = WPJetpackIndividualPluginHelper(siteStore, wpIndividualPluginOverlayFeatureConfig, appPrefs)
+        wpIndividualPluginOverlayMaxShownConfig = WPIndividualPluginOverlayMaxShownConfig(appConfig)
+        helper = WPJetpackIndividualPluginHelper(
+            siteStore,
+            appPrefs,
+            wpIndividualPluginOverlayFeatureConfig,
+            wpIndividualPluginOverlayMaxShownConfig,
+        )
+
+        whenever(appConfig.getRemoteFieldConfigValue(any())).thenReturn("3")
     }
 
     @Test
