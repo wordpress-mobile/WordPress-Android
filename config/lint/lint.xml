@@ -11,6 +11,7 @@
         <!-- GCM -->
         <ignore path="**/generated/source/kapt/**/org/wordpress/android/push/Hilt_GCMMessageService.java" />
     </issue>
+    <issue id="GradleDependency" severity="ignore" /> <!-- Dependabot will take care of this -->
     <!-- PERFORMANCE -->
     <issue id="UnusedResources">
         <!-- EDITOR -->
