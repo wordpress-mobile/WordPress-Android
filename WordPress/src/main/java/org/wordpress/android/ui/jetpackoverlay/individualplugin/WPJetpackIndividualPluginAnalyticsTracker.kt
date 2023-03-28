@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class WPJetpackIndividualPluginAnalyticsTracker @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    ) {
+) {
     fun trackScreenShown() = analyticsTrackerWrapper.track(
         AnalyticsTracker.Stat.WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_SHOWN, emptyMap()
     )
