@@ -29,4 +29,10 @@
         <!-- EDITOR -->
         <ignore path="**/libs/editor/src/main/res/drawable-hdpi/format_bar_chevron.png" />
     </issue>
+    <issue id="IconMissingDensityFolder">
+        <!-- EDITOR -->
+        <ignore path="**/libs/editor/src/main/res" /> <!-- drawable-mdpi -->
+        <!-- WORDPRESS -->
+        <ignore path="**/src/wordpress/res" /> <!-- drawable-hdpi, drawable-xxhdpi -->
+    </issue>
 </lint>

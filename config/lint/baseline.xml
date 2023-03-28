@@ -102,13 +102,6 @@
             column="25"/>
     </issue>
 
-    <issue
-        id="IconMissingDensityFolder"
-        message="Missing density variation folders in `/Users/petros.paraskevopoulos/AndroidStudioProjects/automattic/WordPress-Android/WordPress/src/wordpress/res`: drawable-hdpi, drawable-xxhdpi">
-        <location
-            file="src/wordpress/res"/>
-    </issue>
-
     <!-- JETPACK -->
 
     <issue
@@ -4799,13 +4792,6 @@
         message="Missing the following drawables in `drawable-xxhdpi`: list_focused_wordpress.9.png (found in drawable-hdpi, drawable-xhdpi)">
         <location
             file="src/main/res/drawable-xxhdpi"/>
-    </issue>
-
-    <issue
-        id="IconMissingDensityFolder"
-        message="Missing density variation folders in `/Users/petros.paraskevopoulos/AndroidStudioProjects/automattic/WordPress-Android/libs/editor/src/main/res`: drawable-mdpi">
-        <location
-            file="src/main/res"/>
     </issue>
 
     <issue
