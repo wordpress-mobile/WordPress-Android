@@ -79,6 +79,7 @@ ext {
     squareupRetrofitVersion = '2.9.0'
     uCropVersion = '2.2.8'
     zendeskVersion = '5.1.1'
+    googlePlayInAppUpdateVersion = '2.0.1'
 
     // test
     assertjVersion = '3.23.1'
