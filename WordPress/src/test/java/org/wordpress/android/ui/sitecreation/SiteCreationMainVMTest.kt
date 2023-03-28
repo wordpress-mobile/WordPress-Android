@@ -1,3 +1,4 @@
+
 package org.wordpress.android.ui.sitecreation
 
 import android.os.Bundle
@@ -12,6 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
+import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.eq
@@ -42,6 +44,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
+import kotlin.test.assertEquals
 
 private const val SEGMENT_ID = 1L
 private const val VERTICAL = "Test Vertical"
@@ -138,6 +141,24 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     fun `on wizard finished is propagated`() {
         viewModel.onWizardFinished(RESULT_COMPLETED)
         verify(wizardFinishedObserver).onChanged(eq(RESULT_COMPLETED))
+    }
+
+    @Test
+    fun `on cart created is propagated`() {
+        viewModel.onCartCreated(CHECKOUT_DETAILS)
+        assertEquals(CHECKOUT_DETAILS, viewModel.showDomainCheckout.value)
+    }
+
+    @Test
+    fun `on cart created updates state with result`() {
+        viewModel.onCartCreated(CHECKOUT_DETAILS)
+
+        // Assert on the private state via bundle
+        viewModel.writeToBundle(savedInstanceState)
+        verify(savedInstanceState).putParcelable(
+            eq(KEY_SITE_CREATION_STATE),
+            argWhere<SiteCreationState> { it.result == RESULT_IN_CART }
+        )
     }
 
     @Test
