@@ -151,7 +151,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on cart created updates state with result`() {
+    fun `on cart created updates result`() {
         viewModel.onCartCreated(CHECKOUT_DETAILS)
 
         // Assert on the private state via bundle
@@ -180,7 +180,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on checkout result when not null updates state with result`() {
+    fun `on checkout result when not null updates result`() {
         viewModel.onCartCreated(CHECKOUT_DETAILS)
 
         viewModel.onCheckoutResult(CHECKOUT_EVENT)
@@ -193,7 +193,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on progress screen finished updates state with result`() {
+    fun `on progress screen finished updates result`() {
         viewModel.onProgressScreenFinished(SITE_REMOTE_ID)
         assertThat(currentWizardState(viewModel).result).isEqualTo(RESULT_NOT_IN_LOCAL_DB)
     }
