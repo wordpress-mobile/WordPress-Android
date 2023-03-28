@@ -161,7 +161,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
             ActivityUtils.hideKeyboard(this)
             onBackPressedDispatcher.onBackPressedCompat(backPressedCallback)
         }
-        mainViewModel.launchDomainCheckout.observe(this, domainCheckoutActivityLauncher::launch)
+        mainViewModel.showDomainCheckout.observe(this, domainCheckoutActivityLauncher::launch)
         siteCreationIntentsViewModel.onBackButtonPressed.observe(this) {
             mainViewModel.onBackPressed()
         }

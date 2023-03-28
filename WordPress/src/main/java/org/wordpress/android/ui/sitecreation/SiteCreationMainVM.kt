@@ -151,7 +151,7 @@ class SiteCreationMainVM @Inject constructor(
     val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
 
     private val _showDomainCheckout = SingleLiveEvent<CheckoutDetails>()
-    val launchDomainCheckout: LiveData<CheckoutDetails> = _showDomainCheckout
+    val showDomainCheckout: LiveData<CheckoutDetails> = _showDomainCheckout
 
     fun start(savedInstanceState: Bundle?, siteCreationSource: SiteCreationSource) {
         if (isStarted) return
