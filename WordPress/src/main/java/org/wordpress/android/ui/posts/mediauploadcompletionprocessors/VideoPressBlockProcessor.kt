@@ -57,7 +57,7 @@ class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockP
 
         val encodedQueryArgs = queryArgs.entries.joinToString("&") {
             if (Build.VERSION.SDK_INT >= 33) {
-                encodeQueryArgsSdkSAndAbove(it.key, it.value)
+                encodeQueryArgsSdkSAndAbove(it.key, it.value).replace("%23", "")
             } else {
                 encodeQueryArgsBelowSdkS(it.key, it.value)
             }
