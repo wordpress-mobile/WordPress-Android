@@ -41,6 +41,27 @@ class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockP
 
     /**
      * Build VideoPress URL based on the values of the block's various settings.
+     *
+     */
+    fun getVideoPressURL(guid: String): String {
+        val queryArgs = getDefaultQueryArgs()
+        getBlockSettingsQueryArgs(queryArgs, mBlockSettings)
+
+        val encodedQueryArgs = queryArgs.entries.joinToString("&") {
+            "${Uri.encode(it.key)}=${Uri.encode(it.value)}"
+        }
+
+        return "https://videopress.com/v/$guid?$encodedQueryArgs"
+    }
+
+    private fun getDefaultQueryArgs(): MutableMap<String, String> {
+        return mutableMapOf(
+            "resizeToParent" to "true",
+            "cover" to "true"
+        )
+    }
+
+    /**
      * In order to have a cleaner URL, only the options differing from the default settings are added.
      *
      * Turned OFF by default: Autoplay, Loop, Muted, Plays Inline
@@ -50,19 +71,21 @@ class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockP
      *
      * Matches logic in Jetpack.
      * Ref: https://github.com/Automattic/jetpack/blob/b1b826ab38690c5fad18789301ac81297a458878/projects/packages/videopress/src/client/lib/url/index.ts#L19-L67
+     *
      */
-    fun getVideoPressURL(guid: String): String {
-        // Add default options.
-        val queryArgs = mutableMapOf(
-            "resizeToParent" to "true",
-            "cover" to "true"
-        )
-
-        with(mBlockSettings) {
+    private fun getBlockSettingsQueryArgs(
+        queryArgs: MutableMap<String, String>,
+        blockSettings: VideoPressBlockSettings
+    ) {
+        with(blockSettings) {
             autoplay?.let { if (it) queryArgs["autoPlay"] = "true" }
             controls?.let { if (!it) queryArgs["controls"] = "false" }
             loop?.let { if (it) queryArgs["loop"] = "true" }
-            muted?.let { if (it) { queryArgs["muted"] = "true"; queryArgs["persistVolume"] = "false" } }
+            muted?.let {
+                if (it) {
+                    queryArgs["muted"] = "true"; queryArgs["persistVolume"] = "false"
+                }
+            }
             playsinline?.let { if (it) queryArgs["playsinline"] = "true" }
             poster?.let { queryArgs["posterUrl"] = it }
             preload?.let { if (it.isNotEmpty()) queryArgs["preloadContent"] = it }
@@ -71,12 +94,6 @@ class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockP
             seekbarLoadingColor?.let { if (it.isNotEmpty()) queryArgs["sblc"] = it }
             useAverageColor?.let { if (it) queryArgs["useAverageColor"] = "true" }
         }
-
-        val encodedQueryArgs = queryArgs.entries.joinToString("&") {
-            "${Uri.encode(it.key)}=${Uri.encode(it.value)}"
-        }
-
-        return "https://videopress.com/v/$guid?$encodedQueryArgs"
     }
 
     override fun processBlockContentDocument(document: Document?): Boolean {
