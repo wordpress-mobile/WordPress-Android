@@ -14,6 +14,5 @@ class WPIndividualPluginOverlayMaxShownConfig @Inject constructor(
     appConfig: AppConfig,
 ) : RemoteConfigField<Int>(
     appConfig = appConfig,
-    remoteField = WP_INDIVIDUAL_PLUGIN_OVERLAY_MAX_SHOWN_REMOTE_FIELD,
-    defaultValue = WP_INDIVIDUAL_PLUGIN_OVERLAY_MAX_SHOWN_DEFAULT
+    remoteField = WP_INDIVIDUAL_PLUGIN_OVERLAY_MAX_SHOWN_REMOTE_FIELD
 )
