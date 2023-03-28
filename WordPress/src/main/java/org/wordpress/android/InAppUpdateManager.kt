@@ -1,6 +1,7 @@
 package org.wordpress.android
 
 import android.app.Activity
+import com.google.android.gms.tasks.Task
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.install.InstallStateUpdatedListener
@@ -19,6 +20,10 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
 
     fun registerUpdateListener(installStateUpdatedListener: InstallStateUpdatedListener) {
         appUpdateManager.registerListener(installStateUpdatedListener)
+    }
+
+    fun getInAppUpdateManager(): Task<AppUpdateInfo> {
+        return appUpdateManager.appUpdateInfo
     }
 
     fun checkForAppUpdate(activity: Activity) {
