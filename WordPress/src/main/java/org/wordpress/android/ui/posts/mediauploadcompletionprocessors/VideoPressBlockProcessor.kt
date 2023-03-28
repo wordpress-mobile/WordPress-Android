@@ -15,7 +15,7 @@ class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockP
         var controls: Boolean? = null,
         var loop: Boolean? = null,
         var muted: Boolean? = null,
-        var persistVolume: Boolean? = null,
+        private var persistVolume: Boolean? = null,
         var playsinline: Boolean? = null,
         var poster: String? = null,
         var preload: String? = null,
@@ -51,7 +51,7 @@ class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockP
      * Ref: https://github.com/Automattic/jetpack/blob/b1b826ab38690c5fad18789301ac81297a458878/projects/packages/videopress/src/client/lib/url/index.ts#L19-L67
      *
      */
-    fun getVideoPressURL(guid: String): String {
+    private fun getVideoPressURL(guid: String): String {
         val queryArgs = getDefaultQueryArgs()
         getBlockSettingsQueryArgs(queryArgs, mBlockSettings)
 
