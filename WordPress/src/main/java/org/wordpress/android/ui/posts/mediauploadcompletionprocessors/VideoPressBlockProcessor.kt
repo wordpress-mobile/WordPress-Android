@@ -31,6 +31,7 @@ class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockP
                 muted = isMuted
                 persistVolume = !isMuted
             }
+            playsinline = jsonAttributes["playsinline"]?.asBoolean ?: false
             poster = jsonAttributes["poster"]?.toString()
             preload = jsonAttributes["preload"]?.toString() ?: "metadata"
             seekbarColor = jsonAttributes["seekbarColor"]?.toString()
