@@ -12,6 +12,11 @@
         <ignore path="**/generated/source/kapt/**/org/wordpress/android/push/Hilt_GCMMessageService.java" />
     </issue>
     <issue id="GradleDependency" severity="ignore" /> <!-- Dependabot will take care of this -->
+    <!-- SECURITY -->
+    <issue id="TrustAllX509TrustManager">
+        <!-- EDITOR -->
+        <ignore path="**/libs/editor/org/jsoup/helper/HttpConnection$Response$2.class" /> <!-- jsoup -->
+    </issue>
     <!-- PERFORMANCE -->
     <issue id="UnusedResources">
         <!-- EDITOR -->
