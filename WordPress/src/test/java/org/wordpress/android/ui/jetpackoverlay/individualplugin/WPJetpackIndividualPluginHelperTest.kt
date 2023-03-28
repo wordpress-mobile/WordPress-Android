@@ -145,10 +145,17 @@ class WPJetpackIndividualPluginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN incrementJetpackIndividualPluginOverlayShownCount THEN app prefs method is called`() {
-        helper.incrementJetpackIndividualPluginOverlayShownCount()
+    fun `WHEN onJetpackIndividualPluginOverlayShown THEN app prefs is called to increment count`() {
+        helper.onJetpackIndividualPluginOverlayShown()
 
         verify(appPrefs).incrementWPJetpackIndividualPluginOverlayShownCount()
+    }
+
+    @Test
+    fun `WHEN onJetpackIndividualPluginOverlayShown THEN app prefs is called to update timestamp`() {
+        helper.onJetpackIndividualPluginOverlayShown()
+
+        verify(appPrefs).wpJetpackIndividualPluginOverlayLastShownTimestamp = any()
     }
 
     private fun jetpackCPConnectedSiteModel(name: String, url: String, activeJpPlugins: String?) =
