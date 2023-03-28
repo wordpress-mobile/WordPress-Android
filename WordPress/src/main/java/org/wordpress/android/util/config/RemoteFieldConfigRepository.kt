@@ -31,16 +31,24 @@ class RemoteFieldConfigRepository
             // If the flags are empty, then this means that the
             // that the app is launched for the first time and we need to
             // store the default in the database
-            if (remoteFields.isEmpty()) {
-                insertRemoteConfigDefaultsInDatabase()
+            if (!remoteFields.containsAllFields()) {
+                insertMissingRemoteConfigDefaultsInDatabase()
                 refresh()
             }
         }
     }
 
-    private fun insertRemoteConfigDefaultsInDatabase() {
-        RemoteFieldConfigDefaults.remoteFieldConfigDefaults.mapNotNull { remoteField ->
-            remoteField.let {
+    private fun List<RemoteConfig>.containsAllFields(): Boolean {
+        val defaults = RemoteFieldConfigDefaults.remoteFieldConfigDefaults
+        return defaults.all { default ->
+            this.any { it.key == default.key }
+        }
+    }
+
+    private fun insertMissingRemoteConfigDefaultsInDatabase() {
+        val existingRemoteFieldKeys = remoteFields.map { it.key }
+        RemoteFieldConfigDefaults.remoteFieldConfigDefaults.forEach { remoteField ->
+            if (remoteField.key !in existingRemoteFieldKeys) {
                 remoteConfigStore.insertRemoteConfig(
                     remoteField.key,
                     remoteField.value.toString()
@@ -71,6 +79,9 @@ class RemoteFieldConfigRepository
     }
 
     fun getValue(field: String): String {
-        return remoteFields.find { it.key == field }?.value ?: ""
+        // search the remote fields (from local database) then in-memory defaults, and return "" as fallback
+        return remoteFields.find { it.key == field }?.value
+            ?: RemoteFieldConfigDefaults.remoteFieldConfigDefaults[field]?.toString()
+            ?: ""
     }
 }
