@@ -3,7 +3,7 @@ package org.wordpress.android.ui.jetpackplugininstall.fullplugin
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.config.JetpackInstallFullPluginFeatureConfig
-import org.wordpress.android.util.extensions.isJetpackConnectedWithoutFullPlugin
+import org.wordpress.android.util.extensions.isJetpackIndividualPluginConnectedWithoutFullPlugin
 import javax.inject.Inject
 
 class GetShowJetpackFullPluginInstallOnboardingUseCase @Inject constructor(
@@ -14,5 +14,5 @@ class GetShowJetpackFullPluginInstallOnboardingUseCase @Inject constructor(
         siteModel.id != 0 &&
                 jetpackInstallFullPluginFeatureConfig.isEnabled() &&
                 appPrefsWrapper.getShouldShowJetpackInstallOnboarding(siteModel.id) &&
-                siteModel.isJetpackConnectedWithoutFullPlugin()
+                siteModel.isJetpackIndividualPluginConnectedWithoutFullPlugin()
 }
