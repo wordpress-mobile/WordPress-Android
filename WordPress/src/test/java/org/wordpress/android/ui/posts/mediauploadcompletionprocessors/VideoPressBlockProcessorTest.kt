@@ -17,6 +17,13 @@ class VideoPressBlockProcessorTest {
         whenever(mediaFile.videoPressGuid).thenReturn(TestContent.videoPressGuid)
         processor = VideoPressBlockProcessor(TestContent.localMediaId, mediaFile)
     }
+
+    @Test
+    fun `processBlock replaces id and contents in VideoPress block with default attributes`() {
+        val processedBlock = processor.processBlock(TestContent.oldVideoPressBlockWithDefaultAttrs)
+        Assertions.assertThat(processedBlock).isEqualTo(TestContent.newVideoPressBlockWithDefaultAttrs)
+    }
+
     @Test
     fun `processBlock leaves Video block unchanged`() {
         val nonMatchingId = "123"

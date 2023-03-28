@@ -660,6 +660,14 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 <figure class="wp-block-audio"><audio controls src="$remoteAudioUrl"></audio></figure>
 <!-- /wp:audio -->"""
 
+    const val oldVideoPressBlockWithDefaultAttrs = """<!-- wp:videopress/video {"id":${localMediaId}} -->
+<figure class="wp-block-videopress-video wp-block-jetpack-videopress jetpack-videopress-player"></figure>
+<!-- /wp:videopress/video -->"""
+
+    const val newVideoPressBlockWithDefaultAttrs = """<!-- wp:videopress/video {"id":${remoteMediaId},"guid":"${videoPressGuid}"} -->
+<figure class="wp-block-videopress-video wp-block-jetpack-videopress jetpack-videopress-player"><div class="jetpack-videopress-player__wrapper">https://videopress.com/v/${videoPressGuid}?resizeToParent=true&amp;cover=true&amp;preloadContent=metadata&amp;useAverageColor=true</div></figure>
+<!-- /wp:videopress/video -->"""
+
     const val oldPostImage = paragraphBlock + oldImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val newPostImage = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val oldPostVideo = paragraphBlock + newImageBlock + oldVideoBlock + newMediaTextBlock + newGalleryBlock
