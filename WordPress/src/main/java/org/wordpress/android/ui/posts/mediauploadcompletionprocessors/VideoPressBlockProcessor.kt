@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
 import android.net.Uri
 import android.os.Build
+import androidx.annotation.RequiresApi
 import com.google.gson.JsonObject
 import org.jsoup.nodes.Document
 import org.wordpress.android.util.helpers.MediaFile
@@ -55,14 +56,23 @@ class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockP
         getBlockSettingsQueryArgs(queryArgs, mBlockSettings)
 
         val encodedQueryArgs = queryArgs.entries.joinToString("&") {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                "${URLEncoder.encode(it.key, StandardCharsets.UTF_8)}=${URLEncoder.encode(it.value, StandardCharsets.UTF_8)}"
+            if (Build.VERSION.SDK_INT >= 33) {
+                encodeQueryArgsSdkSAndAbove(it.key, it.value)
             } else {
-                "${Uri.encode(it.key)}=${Uri.encode(it.value)}"
+                encodeQueryArgsBelowSdkS(it.key, it.value)
             }
         }
 
         return "https://videopress.com/v/$guid?$encodedQueryArgs"
+    }
+
+    @RequiresApi(33)
+    private fun encodeQueryArgsSdkSAndAbove(key: String, value: String): String {
+        return "${URLEncoder.encode(key, StandardCharsets.UTF_8)}=${URLEncoder.encode(value, StandardCharsets.UTF_8)}"
+    }
+
+    private fun encodeQueryArgsBelowSdkS(key: String, value: String): String {
+        return "${Uri.encode(key)}=${Uri.encode(value)}"
     }
 
     private fun getDefaultQueryArgs(): MutableMap<String, String> {
