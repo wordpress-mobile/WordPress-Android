@@ -33,6 +33,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.DomainRegistrationPurchased
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
@@ -45,6 +46,7 @@ import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 private const val SEGMENT_ID = 1L
 private const val VERTICAL = "Test Vertical"
@@ -159,6 +161,36 @@ class SiteCreationMainVMTest : BaseUnitTest() {
             eq(KEY_SITE_CREATION_STATE),
             argWhere<SiteCreationState> { it.result == RESULT_IN_CART }
         )
+    }
+
+    @Test
+    fun `on checkout result when null shows previous step`() {
+        viewModel.onCheckoutResult(null)
+
+        verify(wizardManager).onBackPressed()
+        verify(onBackPressedObserver).onChanged(anyOrNull())
+    }
+
+    @Test
+    fun `on checkout result when not null shows next step`() {
+        viewModel.onCartCreated(CHECKOUT_DETAILS)
+
+        viewModel.onCheckoutResult(CHECKOUT_EVENT)
+
+        verify(wizardManager).showNextStep()
+    }
+
+    @Test
+    fun `on checkout result when not null updates state with result`() {
+        viewModel.onCartCreated(CHECKOUT_DETAILS)
+
+        viewModel.onCheckoutResult(CHECKOUT_EVENT)
+
+        assertIs<DomainRegistrationPurchased>(currentWizardState(viewModel).result).run {
+            assertEquals(CHECKOUT_DETAILS.site.siteId, remoteId)
+            assertEquals(CHECKOUT_EVENT.domainName, domainName)
+            assertEquals(CHECKOUT_EVENT.email, email)
+        }
     }
 
     @Test

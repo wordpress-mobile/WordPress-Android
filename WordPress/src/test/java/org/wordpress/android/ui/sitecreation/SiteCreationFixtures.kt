@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.TransactionsStore.CreateShoppingCartError
 import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity
+import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
@@ -50,6 +51,8 @@ val CART_ERROR = OnShoppingCartCreated(mock<CreateShoppingCartError>())
 val RESULT_CREATED = Created.NotInLocalDb(SITE_REMOTE_ID, false)
 val RESULT_IN_CART = Created.InCart(SITE_SLUG, SITE_REMOTE_ID, false)
 val RESULT_COMPLETED = Completed(SITE_LOCAL_ID, false, URL)
+
+val CHECKOUT_EVENT = DomainRegistrationCompletedEvent(URL_CUSTOM, "email@host.com")
 
 val SERVICE_SUCCESS = SiteCreationServiceState(SUCCESS, Pair(SITE_REMOTE_ID, URL))
 val SERVICE_ERROR = SiteCreationServiceState(FAILURE, SiteCreationServiceState(CREATE_SITE))
