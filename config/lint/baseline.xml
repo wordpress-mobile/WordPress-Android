@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <issues format="6" by="lint 7.2.1" type="baseline" client="gradle" dependencies="true" name="AGP (7.2.1)" variant="all" version="7.2.1">
 
-    <!-- ANDROID TEST -->
-
-    <issue
-        id="IgnoreWithoutReason"
-        message="Test is ignored without giving any explanation"
-        errorLine1="    @Ignore"
-        errorLine2="    ~~~~~~~">
-        <location
-            file="src/androidTest/java/org/wordpress/android/e2e/BlockEditorTests.kt"
-            line="51"
-            column="5"/>
-    </issue>
-
     <!-- DEBUG -->
 
     <issue
