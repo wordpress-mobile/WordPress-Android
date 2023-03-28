@@ -17,19 +17,6 @@
             file="org/jsoup/helper/HttpConnection$Response$2.class"/>
     </issue>
 
-    <!-- LIBS -->
-
-    <issue
-        id="AppBundleLocaleChanges"
-        message="Found dynamic locale changes, but did not find corresponding Play Core library calls for downloading languages and splitting by language is not disabled in the `bundle` configuration"
-        errorLine1="        defaultLocaleConfiguration.setLocale(defaultLocale);"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../libs/editor/src/main/java/org/wordpress/android/editor/gutenberg/GutenbergUtils.java"
-            line="43"
-            column="9"/>
-    </issue>
-
     <!-- ANDROID TEST -->
 
     <issue
