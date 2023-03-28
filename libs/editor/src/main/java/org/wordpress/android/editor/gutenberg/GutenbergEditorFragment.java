@@ -406,7 +406,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         mEditorFragmentListener.onPerformFetch(path, enableCaching, onSuccess, onError);
                     }
                     @Override
-                    public void performPostRequest(String path, ReadableMap data, Consumer<String> onSuccess, Consumer<Bundle> onError) {
+                    public void performPostRequest(
+                            String path,
+                            ReadableMap data,
+                            Consumer<String> onSuccess,
+                            Consumer<Bundle> onError) {
                         mEditorFragmentListener.onPerformPost(path, data.toHashMap(), onSuccess, onError);
                     }
                 },
