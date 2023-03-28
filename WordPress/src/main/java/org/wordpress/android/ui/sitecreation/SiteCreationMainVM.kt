@@ -291,7 +291,11 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onCartCreated(checkoutDetails: CheckoutDetails) {
         siteCreationState = siteCreationState.copy(
-            result = CreatedButNotFetched.InCart(checkoutDetails.site.url, checkoutDetails.site.siteId, isSiteTitleTaskCompleted())
+            result = CreatedButNotFetched.InCart(
+                checkoutDetails.site.url,
+                checkoutDetails.site.siteId,
+                isSiteTitleTaskCompleted()
+            )
         )
         _showDomainCheckout.value = checkoutDetails
     }
