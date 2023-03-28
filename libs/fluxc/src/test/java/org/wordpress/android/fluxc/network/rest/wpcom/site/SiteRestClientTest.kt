@@ -31,8 +31,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType
 import org.wordpress.android.fluxc.store.SiteStore.SiteFilter.WPCOM
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.COMING_SOON
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.test
+import kotlin.test.assertNotNull
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteRestClientTest {
@@ -104,7 +106,7 @@ class SiteRestClientTest {
         )
         val errorResponse = restClient.fetchSite(site)
 
-        assertThat(errorResponse.error).isNotNull()
+        assertNotNull(errorResponse.error)
         assertThat(errorResponse.error.type).isEqualTo(GenericErrorType.NETWORK_ERROR)
         assertThat(errorResponse.error.message).isEqualTo(errorMessage)
     }
@@ -173,7 +175,7 @@ class SiteRestClientTest {
         )
         val errorResponse = restClient.fetchSites(listOf(), false)
 
-        assertThat(errorResponse.error).isNotNull()
+        assertNotNull(errorResponse.error)
         assertThat(errorResponse.error.type).isEqualTo(GenericErrorType.NETWORK_ERROR)
         assertThat(errorResponse.error.message).isEqualTo(errorMessage)
     }
@@ -199,6 +201,7 @@ class SiteRestClientTest {
         val segmentId = 123L
         val siteDesign = "design"
         val timeZoneId = "Europe/London"
+        val findAvailableUrl = true
 
         val result = restClient.newSite(
             siteName,
@@ -208,6 +211,7 @@ class SiteRestClientTest {
             visibility,
             segmentId,
             siteDesign,
+            findAvailableUrl,
             dryRun
         )
 
@@ -223,12 +227,13 @@ class SiteRestClientTest {
                         "lang_id" to language,
                         "public" to "1",
                         "validate" to "0",
+                        "find_available_url" to findAvailableUrl.toString(),
                         "client_id" to appId,
                         "client_secret" to appSecret,
                         "options" to mapOf<String, Any>(
                                 "site_segment" to segmentId,
                                 "template" to siteDesign,
-                                "timezone_string" to timeZoneId
+                                "timezone_string" to timeZoneId,
                         )
                 )
         )
@@ -264,6 +269,7 @@ class SiteRestClientTest {
             visibility,
             segmentId,
             siteDesign,
+            null,
             dryRun
         )
 
@@ -286,7 +292,7 @@ class SiteRestClientTest {
                     "site_segment" to segmentId,
                     "template" to siteDesign,
                     "site_creation_flow" to "with-design-picker",
-                    "timezone_string" to timeZoneId
+                    "timezone_string" to timeZoneId,
                 )
             )
         )
@@ -322,6 +328,7 @@ class SiteRestClientTest {
             visibility,
             segmentId,
             siteDesign,
+            null,
             dryRun
         )
 
@@ -343,7 +350,7 @@ class SiteRestClientTest {
                     "site_segment" to segmentId,
                     "template" to siteDesign,
                     "site_creation_flow" to "with-design-picker",
-                    "timezone_string" to timeZoneId
+                    "timezone_string" to timeZoneId,
                 )
             )
         )
@@ -377,6 +384,7 @@ class SiteRestClientTest {
             visibility,
             null,
             null,
+            null,
             dryRun
         )
 
@@ -393,7 +401,9 @@ class SiteRestClientTest {
                         "validate" to "1",
                         "client_id" to appId,
                         "client_secret" to appSecret,
-                        "options" to mapOf<String, Any>("timezone_string" to timeZoneId)
+                        "options" to mapOf<String, Any>(
+                            "timezone_string" to timeZoneId,
+                        )
                 )
         )
     }
@@ -429,8 +439,58 @@ class SiteRestClientTest {
         )
         val errorResponse = restClient.fetchPostFormats(site)
 
-        assertThat(errorResponse.error).isNotNull()
+        assertNotNull(errorResponse.error)
         assertThat(errorResponse.error.type).isEqualTo(PostFormatsErrorType.GENERIC_ERROR)
+    }
+
+    @Test
+    fun `creates new site in coming soon state`() = test {
+        // given
+        whenever(appSecrets.appId).thenReturn("")
+        whenever(appSecrets.appSecret).thenReturn("")
+        initNewSiteResponse()
+
+        // when
+        restClient.newSite("", "", "", "", visibility = COMING_SOON, null, null, null, false)
+
+        // then
+        val body = bodyCaptor.lastValue
+        @Suppress("UNCHECKED_CAST")
+        val options = body["options"] as Map<String, String>
+
+        assertThat(body).containsEntry("public", "0")
+        assertThat(options).containsEntry("wpcom_public_coming_soon", "1")
+    }
+
+    @Test
+    fun `creates new site with override site creation flow if specified`() = test {
+        // given
+        whenever(appSecrets.appId).thenReturn("")
+        whenever(appSecrets.appSecret).thenReturn("")
+        initNewSiteResponse()
+
+        val siteCreationFlow = "sample_creation_flow"
+
+        // when
+        restClient.newSite(
+            null,
+            "",
+            "",
+            "",
+            visibility = COMING_SOON,
+            null,
+            null,
+            null,
+            false,
+            siteCreationFlow = siteCreationFlow
+        )
+
+        // then
+        val body = bodyCaptor.lastValue
+        @Suppress("UNCHECKED_CAST")
+        val options = body["options"] as Map<String, String>
+
+        assertThat(options).containsEntry("site_creation_flow", siteCreationFlow)
     }
 
     private suspend fun initSiteResponse(
@@ -462,7 +522,7 @@ class SiteRestClientTest {
     }
 
     private suspend fun <T> initGetResponse(
-        kclass: Class<T>,
+        clazz: Class<T>,
         data: T,
         error: WPComGsonNetworkError? = null
     ): Response<T> {
@@ -472,7 +532,7 @@ class SiteRestClientTest {
                         eq(restClient),
                         urlCaptor.capture(),
                         paramsCaptor.capture(),
-                        eq(kclass),
+                        eq(clazz),
                         any(),
                         any(),
                         any()
@@ -483,7 +543,7 @@ class SiteRestClientTest {
     }
 
     private suspend fun <T> initPostResponse(
-        kclass: Class<T>,
+        clazz: Class<T>,
         data: T,
         error: WPComGsonNetworkError? = null
     ): Response<T> {
@@ -494,7 +554,7 @@ class SiteRestClientTest {
                         urlCaptor.capture(),
                         paramsCaptor.capture(),
                         bodyCaptor.capture(),
-                        eq(kclass),
+                        eq(clazz),
                         anyOrNull(),
                         anyOrNull(),
                 )

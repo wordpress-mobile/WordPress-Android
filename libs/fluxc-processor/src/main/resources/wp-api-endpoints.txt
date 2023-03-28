@@ -16,6 +16,7 @@
 /users/me/
 /users/me/application-passwords
 /users/me/application-passwords/<uuid>#String
+/users/me/application-passwords/introspect
 
 /plugins/
 /plugins/<name>#String

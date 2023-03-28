@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.RawRequest
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
-import org.wordpress.android.fluxc.network.rest.wpapi.Nonce
+import org.wordpress.android.fluxc.network.rest.wpapi.CookieNonceAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIEncodedBodyRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
@@ -26,23 +26,25 @@ import kotlin.coroutines.resume
 class JetpackWPAPIRestClient @Inject constructor(
     private val wpApiEncodedBodyRequestBuilder: WPAPIEncodedBodyRequestBuilder,
     private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
+    private val cookieNonceAuthenticator: CookieNonceAuthenticator,
     dispatcher: Dispatcher,
     @Named("custom-ssl") requestQueue: RequestQueue,
     @Named("no-redirects") private val noRedirectsRequestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
     suspend fun fetchJetpackConnectionUrl(
-        site: SiteModel,
-        nonce: Nonce?
+        site: SiteModel
     ): JetpackWPAPIPayload<String> {
         val baseUrl = site.wpApiRestUrl ?: "${site.url}/wp-json"
         val url = "${baseUrl.trimEnd('/')}/${JPAPI.connection.url.pathV4.trimStart('/')}"
 
-        val response = wpApiEncodedBodyRequestBuilder.syncGetRequest(
-            restClient = this,
-            url = url,
-            nonce = nonce?.value
-        )
+        val response = cookieNonceAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+            wpApiEncodedBodyRequestBuilder.syncGetRequest(
+                restClient = this,
+                url = url,
+                nonce = nonce.value
+            )
+        }
 
         return when (response) {
             is Success<String> -> JetpackWPAPIPayload(response.data)
@@ -68,9 +70,9 @@ class JetpackWPAPIRestClient @Inject constructor(
                         return@RawRequest
                     }
 
-                    response.headers["Location"].let {
-                        if (!it.isNullOrEmpty()) {
-                            cont.resume(Result.success(response.headers["Location"]!!))
+                    response.headers?.get("Location")?.let {
+                        if (it.isNotEmpty()) {
+                            cont.resume(Result.success(it))
                         } else {
                             cont.resume(Result.failure(Exception("Location header missing")))
                         }
@@ -87,17 +89,18 @@ class JetpackWPAPIRestClient @Inject constructor(
     }
 
     suspend fun fetchJetpackUser(
-        site: SiteModel,
-        nonce: Nonce?
+        site: SiteModel
     ): JetpackWPAPIPayload<JetpackUser> {
         val url = site.buildUrl(JPAPI.connection.data.pathV4)
 
-        val response = wpApiGsonRequestBuilder.syncGetRequest(
-            restClient = this,
-            url = url,
-            nonce = nonce?.value,
-            clazz = JetpackConnectionDataResponse::class.java
-        )
+        val response = cookieNonceAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+            wpApiGsonRequestBuilder.syncGetRequest(
+                restClient = this,
+                url = url,
+                nonce = nonce.value,
+                clazz = JetpackConnectionDataResponse::class.java
+            )
+        }
 
         return when (response) {
             is Success<JetpackConnectionDataResponse> -> JetpackWPAPIPayload(
@@ -112,6 +115,7 @@ class JetpackWPAPIRestClient @Inject constructor(
                     )
                 }
             )
+
             is Error -> JetpackWPAPIPayload(response.error)
         }
     }

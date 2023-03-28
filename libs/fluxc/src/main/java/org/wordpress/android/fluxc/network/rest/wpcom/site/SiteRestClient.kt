@@ -79,6 +79,10 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.UNAUTHORIZED
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.UNKNOWN_SITE
 import org.wordpress.android.fluxc.store.SiteStore.SiteFilter
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.BLOCK_SEARCH_ENGINE
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.COMING_SOON
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PRIVATE
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType.EMPTY_RESULTS
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload
@@ -135,13 +139,15 @@ class SiteRestClient @Inject constructor(
         return when (response) {
             is Success -> {
                 val siteArray = mutableListOf<SiteModel>()
+                val jetpackCPSiteArray = mutableListOf<SiteModel>()
                 for (siteResponse in response.data.sites) {
                     val siteModel = siteResponseToSiteModel(siteResponse)
+                    if (siteModel.isJetpackCPConnected) jetpackCPSiteArray.add(siteModel)
                     // see https://github.com/wordpress-mobile/WordPress-Android/issues/15540#issuecomment-993752880
                     if (filterJetpackConnectedPackageSite && siteModel.isJetpackCPConnected) continue
                     siteArray.add(siteModel)
                 }
-                SitesModel(siteArray)
+                SitesModel(siteArray, jetpackCPSiteArray)
             }
             is Error -> {
                 val payload = SitesModel(emptyList())
@@ -190,6 +196,7 @@ class SiteRestClient @Inject constructor(
      * @param visibility The visibility of the site (public or private)
      * @param segmentId The segment that the site belongs to
      * @param siteDesign The design template of the site
+     * @param isComingSoon The "coming soon" flag, which hides the site content from the public
      * @param dryRun If set to true the call only validates the parameters passed
      *
      * The domain of the site is generated with the following logic:
@@ -213,17 +220,22 @@ class SiteRestClient @Inject constructor(
         visibility: SiteVisibility,
         segmentId: Long?,
         siteDesign: String?,
-        dryRun: Boolean
+        findAvailableUrl: Boolean?,
+        dryRun: Boolean,
+        siteCreationFlow: String? = null
     ): NewSiteResponsePayload {
         val url = WPCOMREST.sites.new_.urlV1_1
         val body = mutableMapOf<String, Any>()
         val options = mutableMapOf<String, Any>()
 
         body["lang_id"] = language
-        body["public"] = visibility.value().toString()
+
+        determineVisibility(visibility, body, options)
+
         body["validate"] = if (dryRun) "1" else "0"
         body["client_id"] = appSecrets.appId
         body["client_secret"] = appSecrets.appSecret
+        findAvailableUrl?.let { body["find_available_url"] = it.toString() }
 
         if (siteTitle != null) {
             body["blog_title"] = siteTitle
@@ -242,6 +254,9 @@ class SiteRestClient @Inject constructor(
         }
         if (timeZoneId != null) {
             options["timezone_string"] = timeZoneId
+        }
+        if (siteCreationFlow != null) {
+            options["site_creation_flow"] = siteCreationFlow
         }
 
         // Add site options if available
@@ -272,6 +287,23 @@ class SiteRestClient @Inject constructor(
             }
             is Error -> {
                 volleyErrorToAccountResponsePayload(response.error.volleyError, dryRun)
+            }
+        }
+    }
+
+    private fun determineVisibility(
+        visibility: SiteVisibility,
+        body: MutableMap<String, Any>,
+        options: MutableMap<String, Any>
+    ) {
+        when (visibility) {
+            PRIVATE, BLOCK_SEARCH_ENGINE, PUBLIC -> {
+                body["public"] = visibility.value().toString()
+            }
+
+            COMING_SOON -> {
+                body["public"] = BLOCK_SEARCH_ENGINE.value().toString()
+                options["wpcom_public_coming_soon"] = "1"
             }
         }
     }
