@@ -6,7 +6,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
@@ -26,6 +28,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
+import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSitesDao
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload
@@ -46,6 +49,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteFilter.WPCOM
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
+import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteStoreTest {
@@ -56,6 +60,7 @@ class SiteStoreTest {
     @Mock lateinit var siteWPAPIClient: SiteWPAPIRestClient
     @Mock lateinit var privateAtomicCookie: PrivateAtomicCookie
     @Mock lateinit var siteSqlUtils: SiteSqlUtils
+    @Mock lateinit var jetpackCPConnectedSitesDao: JetpackCPConnectedSitesDao
     @Mock lateinit var domainsSuccessResponse: Response.Success<DomainsResponse>
     @Mock lateinit var plansSuccessResponse: Response.Success<PlansResponse>
     @Mock lateinit var domainsErrorResponse: Response.Error<DomainsResponse>
@@ -72,6 +77,7 @@ class SiteStoreTest {
                 siteWPAPIClient,
                 privateAtomicCookie,
                 siteSqlUtils,
+                jetpackCPConnectedSitesDao,
                 initCoroutineEngine()
         )
     }
@@ -164,6 +170,74 @@ class SiteStoreTest {
     }
 
     @Test
+    fun `fetchSites saves jetpack CP connected sites to DB`() = test {
+        val payload = FetchSitesPayload(listOf(WPCOM))
+        val sitesModel = SitesModel()
+        val siteA = SiteModel().apply {
+            siteId = 1
+            url = "http://A"
+            name = "A"
+            description = "A description"
+            setIsJetpackCPConnected(false)
+        }
+        val siteB = SiteModel().apply {
+            siteId = 2
+            url = "http://B"
+            name = "B"
+            description = "B description"
+            setIsJetpackCPConnected(false)
+        }
+        val siteC = SiteModel().apply {
+            siteId = 3
+            url = "http://C"
+            name = "C"
+            description = "C description"
+            activeJetpackConnectionPlugins = "jetpack-boost"
+            setIsJetpackCPConnected(true)
+        }
+        sitesModel.sites = listOf(siteA, siteB)
+        sitesModel.jetpackCPSites = listOf(siteC)
+        whenever(siteRestClient.fetchSites(payload.filters, false)).thenReturn(sitesModel)
+        whenever(siteSqlUtils.insertOrUpdateSite(siteA)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSite(siteB)).thenReturn(1)
+
+        siteStore.fetchSites(payload)
+
+        val inOrder = inOrder(jetpackCPConnectedSitesDao)
+        inOrder.verify(jetpackCPConnectedSitesDao).deleteAll()
+        inOrder.verify(jetpackCPConnectedSitesDao).insert(argWhere { it.size == 1 })
+    }
+
+    @Test
+    fun `fetchSites doesn't save jetpack CP connected sites to DB`() = test {
+        val payload = FetchSitesPayload(listOf(WPCOM))
+        val sitesModel = SitesModel()
+        val siteA = SiteModel().apply {
+            siteId = 1
+            url = "http://A"
+            name = "A"
+            description = "A description"
+            setIsJetpackCPConnected(false)
+        }
+        val siteB = SiteModel().apply {
+            siteId = 2
+            url = "http://B"
+            name = "B"
+            description = "B description"
+            setIsJetpackCPConnected(false)
+        }
+        sitesModel.sites = listOf(siteA, siteB)
+        whenever(siteRestClient.fetchSites(payload.filters, false)).thenReturn(sitesModel)
+        whenever(siteSqlUtils.insertOrUpdateSite(siteA)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSite(siteB)).thenReturn(1)
+
+        siteStore.fetchSites(payload)
+
+        verify(jetpackCPConnectedSitesDao, never()).deleteAll()
+        verify(jetpackCPConnectedSitesDao, never()).insert(argWhere { it.size == 1 })
+    }
+
+    @Test
     fun `fetchSites returns error`() = test {
         val payload = FetchSitesPayload(listOf(WPCOM))
         val sitesModel = SitesModel()
@@ -180,16 +254,19 @@ class SiteStoreTest {
     @Test
     fun `creates a new site`() = test {
         val dryRun = false
-        val payload = NewSitePayload("New site", "CZ", "Europe/London", PUBLIC, dryRun)
+        val name = "New site"
+        val payload = NewSitePayload(name, null, "CZ", "Europe/London", PUBLIC, null, dryRun)
         val newSiteRemoteId: Long = 123
-        val response = NewSiteResponsePayload(newSiteRemoteId, dryRun = dryRun)
+        val url = "new.wp.com"
+        val response = NewSiteResponsePayload(newSiteRemoteId, siteUrl = url, dryRun)
         whenever(
                 siteRestClient.newSite(
-                        payload.siteName,
+                        name,
                         null,
                         payload.language,
                         payload.timeZoneId,
                         payload.visibility,
+                        null,
                         null,
                         null,
                         payload.dryRun
@@ -200,6 +277,7 @@ class SiteStoreTest {
 
         assertThat(result.dryRun).isEqualTo(dryRun)
         assertThat(result.newSiteRemoteId).isEqualTo(newSiteRemoteId)
+        assertEquals(url, result.url)
     }
 
     @Test
@@ -216,6 +294,7 @@ class SiteStoreTest {
                         payload.language,
                         payload.timeZoneId,
                         payload.visibility,
+                        null,
                         null,
                         null,
                         payload.dryRun

@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.jetpack.JetpackUser
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.jetpack.JetpackWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient
 import org.wordpress.android.fluxc.store.JetpackStore.ActivateStatsModuleErrorType.GENERIC_ERROR
@@ -39,7 +38,6 @@ class JetpackStore
     private val jetpackWPAPIRestClient: JetpackWPAPIRestClient,
     private val siteStore: SiteStore,
     private val coroutineEngine: CoroutineEngine,
-    private val wpapiAuthenticator: WPAPIAuthenticator,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
     private var siteContinuation: Continuation<Unit>? = null
@@ -51,11 +49,12 @@ class JetpackStore
             INSTALL_JETPACK -> {
                 coroutineEngine.launch(T.SETTINGS, this, "JetpackAction.INSTALL_JETPACK") {
                     install(
-                            action.payload as SiteModel,
-                            actionType
+                        action.payload as SiteModel,
+                        actionType
                     )
                 }
             }
+
             ACTIVATE_STATS_MODULE -> {
                 coroutineEngine.launch(T.SETTINGS, this, "JetpackAction.ACTIVATE_STATS_MODULE") {
                     emitChange(activateStatsModule(action.payload as ActivateStatsModulePayload))
@@ -78,8 +77,8 @@ class JetpackStore
         val isJetpackInstalled = reloadedSite?.isJetpackInstalled == true
         return@withDefaultContext if (!installedPayload.isError || isJetpackInstalled) {
             val onJetpackInstall = OnJetpackInstalled(
-                    installedPayload.success ||
-                            isJetpackInstalled, action
+                installedPayload.success ||
+                    isJetpackInstalled, action
             )
             emitChange(onJetpackInstall)
             onJetpackInstall
@@ -123,7 +122,7 @@ class JetpackStore
         val causeOfChange: JetpackAction
     ) : Store.OnChanged<JetpackInstallError>() {
         constructor(error: JetpackInstallError, causeOfChange: JetpackAction) :
-                this(success = false, causeOfChange = causeOfChange) {
+            this(success = false, causeOfChange = causeOfChange) {
             this.error = error
         }
     }
@@ -170,8 +169,8 @@ class JetpackStore
             OnActivateStatsModule(ACTIVATE_STATS_MODULE)
         } else {
             OnActivateStatsModule(
-                    ActivateStatsModuleError(GENERIC_ERROR, "Unable to activate stats"),
-                    ACTIVATE_STATS_MODULE
+                ActivateStatsModuleError(GENERIC_ERROR, "Unable to activate stats"),
+                ACTIVATE_STATS_MODULE
             )
         }
     }
@@ -205,9 +204,7 @@ class JetpackStore
     ): JetpackConnectionUrlResult {
         if (site.isUsingWpComRestApi) error("This function supports only self-hosted site using WPAPI")
         return coroutineEngine.withDefaultContext(T.API, this, "fetchJetpackConnectionUrl") {
-            val result = wpapiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
-                jetpackWPAPIRestClient.fetchJetpackConnectionUrl(site, nonce)
-            }
+            val result = jetpackWPAPIRestClient.fetchJetpackConnectionUrl(site)
 
             when {
                 result.isError -> JetpackConnectionUrlResult(
@@ -216,9 +213,11 @@ class JetpackStore
                         errorCode = result.error?.volleyError?.networkResponse?.statusCode
                     )
                 )
+
                 result.result.isNullOrEmpty() -> JetpackConnectionUrlResult(
                     JetpackConnectionUrlError("Response Empty")
                 )
+
                 else -> {
                     val url = result.result.trim('"').replace("\\", "")
                     val connectionUri = URI.create(url)
@@ -264,9 +263,7 @@ class JetpackStore
     suspend fun fetchJetpackUser(site: SiteModel): JetpackUserResult {
         if (site.isUsingWpComRestApi) error("This function is not implemented yet for Jetpack tunnel")
         return coroutineEngine.withDefaultContext(T.API, this, "fetchJetpackUser") {
-            val result = wpapiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
-                jetpackWPAPIRestClient.fetchJetpackUser(site, nonce)
-            }
+            val result = jetpackWPAPIRestClient.fetchJetpackUser(site)
 
             when {
                 result.isError -> JetpackUserResult(
@@ -275,9 +272,11 @@ class JetpackStore
                         errorCode = result.error?.volleyError?.networkResponse?.statusCode
                     )
                 )
+
                 result.result == null -> JetpackUserResult(
                     JetpackUserError("Response Empty")
                 )
+
                 else -> {
                     JetpackUserResult(result.result)
                 }

@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCatego
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
+import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSitesDao;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
@@ -64,6 +65,7 @@ public class SiteStoreUnitTest {
             Mockito.mock(SiteWPAPIRestClient.class),
             Mockito.mock(PrivateAtomicCookie.class),
             mSiteSqlUtils,
+            Mockito.mock(JetpackCPConnectedSitesDao.class),
             CoroutineEngineUtilsKt.initCoroutineEngine()
     );
 

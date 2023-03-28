@@ -394,7 +394,11 @@ class ReactNativeStoreWPAPITest {
     @Test
     fun `nonce unavailable from recent request, so does not request nonce`() = test {
         // previous nonce faield, and was "recent"
-        val fourMinuteOldFailedNonceRequest = FailedRequest(currentTime - 4 * 60 * 1000, site.username)
+        val fourMinuteOldFailedNonceRequest = FailedRequest(
+            currentTime - 4 * 60 * 1000,
+            site.username,
+            Nonce.CookieNonceErrorType.GENERIC_ERROR
+        )
         initStore(fourMinuteOldFailedNonceRequest)
 
         // does not use nonce to make request because of recent unsuccessful attempt to refresh nonce
@@ -412,7 +416,11 @@ class ReactNativeStoreWPAPITest {
     @Test
     fun `nonce unavailable from older request, so requests nonce`() = test {
         // previous nonce request failed, but was not "recent"
-        val sixMinuteOldUnavailableNonce = FailedRequest(currentTime - 6 * 60 * 1000, site.username)
+        val sixMinuteOldUnavailableNonce = FailedRequest(
+            currentTime - 6 * 60 * 1000,
+            site.username,
+            Nonce.CookieNonceErrorType.GENERIC_ERROR
+        )
         initStore(sixMinuteOldUnavailableNonce)
 
         // refreshes nonce because latest attempt to refresh nonce was not recent
