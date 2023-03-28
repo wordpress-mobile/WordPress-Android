@@ -27,7 +27,6 @@ val FREE_DOMAIN = DomainModel(URL, true, "", 1, false)
 val PAID_DOMAIN = DomainModel(URL_CUSTOM, false, "$1", 2, true)
 
 const val SITE_REMOTE_ID = 1L
-private const val SITE_LOCAL_ID = 1
 
 val SITE_CREATION_STATE = SiteCreationState(
     segmentId = 1,
@@ -35,12 +34,10 @@ val SITE_CREATION_STATE = SiteCreationState(
     domain = FREE_DOMAIN,
 )
 
-val SITE_MODEL = SiteModel().apply {
-    siteId = SITE_REMOTE_ID
-    url = SITE_SLUG
-}
+val SITE_MODEL = SiteModel().apply { siteId = SITE_REMOTE_ID; url = SITE_SLUG }
 
 val CHECKOUT_DETAILS = DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails(SITE_MODEL, SITE_SLUG)
+val CHECKOUT_EVENT = DomainRegistrationCompletedEvent(URL_CUSTOM, "email@host.com")
 
 val FETCH_SUCCESS = OnSiteChanged(1)
 val FETCH_ERROR = OnSiteChanged(0).apply { error = SiteError(GENERIC_ERROR) }
@@ -50,9 +47,7 @@ val CART_ERROR = OnShoppingCartCreated(mock<CreateShoppingCartError>())
 
 val RESULT_NOT_IN_LOCAL_DB = CreatedButNotFetched.NotInLocalDb(SITE_REMOTE_ID, false)
 val RESULT_IN_CART = CreatedButNotFetched.InCart(SITE_SLUG, SITE_REMOTE_ID, false)
-val RESULT_COMPLETED = Completed(SITE_LOCAL_ID, false, URL)
-
-val CHECKOUT_EVENT = DomainRegistrationCompletedEvent(URL_CUSTOM, "email@host.com")
+val RESULT_COMPLETED = Completed(1, false, URL)
 
 val SERVICE_SUCCESS = SiteCreationServiceState(SUCCESS, Pair(SITE_REMOTE_ID, URL))
 val SERVICE_ERROR = SiteCreationServiceState(FAILURE, SiteCreationServiceState(CREATE_SITE))
