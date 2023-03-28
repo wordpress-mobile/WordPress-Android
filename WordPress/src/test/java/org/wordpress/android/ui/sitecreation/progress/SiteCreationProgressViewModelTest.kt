@@ -4,6 +4,7 @@ import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -14,12 +15,17 @@ import org.mockito.kotlin.argThat
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atMost
 import org.mockito.kotlin.check
+import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.isNull
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.refEq
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
 import org.wordpress.android.ui.domains.DomainsRegistrationTracker
@@ -27,6 +33,7 @@ import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.ui.sitecreation.CART_ERROR
 import org.wordpress.android.ui.sitecreation.CART_SUCCESS
 import org.wordpress.android.ui.sitecreation.PAID_DOMAIN
+import org.wordpress.android.ui.sitecreation.RESULT_IN_CART
 import org.wordpress.android.ui.sitecreation.SERVICE_ERROR
 import org.wordpress.android.ui.sitecreation.SERVICE_SUCCESS
 import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE
@@ -93,7 +100,6 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
         startViewModel()
         assertNotNull(viewModel.startCreateSiteService.value)
     }
-
     @Test
     fun `on start emits service event for free domains with isFree true`() = test {
         startViewModel(SITE_CREATION_STATE)
@@ -212,6 +218,47 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
         startViewModel()
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_ERROR)
         assertIs<GenericError>(viewModel.uiState.value)
+    }
+
+    @Test
+    fun `on restart with same paid domain reuses previous blog to create new cart`() = testWith(CART_SUCCESS) {
+        val state = SITE_CREATION_STATE.copy(domain = PAID_DOMAIN)
+        startViewModel(state)
+        val previous = SiteModel().apply { siteId = 9L;url = "blog.wordpress.com" }
+        viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS.copy(payload = previous.siteId to previous.url))
+
+        startViewModel(state.copy(result = RESULT_IN_CART))
+
+        verify(startServiceObserver, atMost(1)).onChanged(any())
+        verify(createCartUseCase).execute(
+            refEq(previous),
+            eq(PAID_DOMAIN.productId),
+            eq(PAID_DOMAIN.domainName),
+            eq(PAID_DOMAIN.supportsPrivacy),
+            any()
+        )
+    }
+
+    @Test
+    fun `on restart with different paid domain emits service event`() = testWith(CART_SUCCESS) {
+        startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
+        viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
+
+        startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN.copy(domainName = "different")))
+
+        verify(startServiceObserver, times(2)).onChanged(any())
+    }
+
+    @Test
+    fun `on restart with free domain emits service event`() = testWith(CART_SUCCESS) {
+        startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
+        viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
+        clearInvocations(createCartUseCase)
+
+        startViewModel(SITE_CREATION_STATE)
+
+        verify(startServiceObserver, times(2)).onChanged(any())
+        verifyNoMoreInteractions(createCartUseCase)
     }
 
     // region Helpers
