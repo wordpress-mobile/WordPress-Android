@@ -341,21 +341,13 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun onPositiveDialogButtonClicked(instanceTag: String) {
-        when (instanceTag) {
-            TAG_WARNING_DIALOG -> {
-                exitFlow(true)
-            }
-            else -> NotImplementedError("Unknown dialog tag: $instanceTag")
-        }
+        check(instanceTag == TAG_WARNING_DIALOG) { "Unknown dialog tag: $instanceTag" }
+        exitFlow(true)
     }
 
     fun onNegativeDialogButtonClicked(instanceTag: String) {
-        when (instanceTag) {
-            TAG_WARNING_DIALOG -> {
-                // do nothing
-            }
-            else -> NotImplementedError("Unknown dialog tag: $instanceTag")
-        }
+        check(instanceTag == TAG_WARNING_DIALOG) { "Unknown dialog tag: $instanceTag" }
+        // do nothing
     }
 
     sealed class SiteCreationScreenTitle {
