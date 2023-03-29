@@ -79,7 +79,8 @@ class VideoPressBlockProcessorTest {
         /*
         * As Uri.encode is part of an Android class, it cannot run locally in unit tests by default.
         * To workaround this, it has been replaced below with URLEncoder.encode, which works in a similar manner.
-        * Note, we cannot currently use URLEncoder.encode in the main app as it only runs with API 33 or later (we support a min of 24)
+        * Note, we cannot currently use URLEncoder.encode in the main app as it only runs with API 33 or later.
+        * We support a minimum of API 24.
         */
         for (key in urlKeys) {
             whenever(uriWrapper.encode(key)).thenReturn(URLEncoder.encode(key, StandardCharsets.UTF_8))

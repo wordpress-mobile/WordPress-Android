@@ -4,7 +4,11 @@ import com.google.gson.JsonObject
 import org.jsoup.nodes.Document
 import org.wordpress.android.util.helpers.MediaFile
 
-class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?, private val uriWrapper: UriWrapper = UriWrapper()) : BlockProcessor(localId, mediaFile) {
+class VideoPressBlockProcessor(
+    localId: String?,
+    mediaFile: MediaFile?,
+    private val uriWrapper: UriWrapper = UriWrapper()
+) : BlockProcessor(localId, mediaFile) {
     class VideoPressBlockSettings(
         var autoplay: Boolean? = null,
         var controls: Boolean? = null,
