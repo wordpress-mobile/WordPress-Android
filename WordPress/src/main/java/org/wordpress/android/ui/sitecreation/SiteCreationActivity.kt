@@ -30,7 +30,6 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.DomainRegistrationPurchased
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.INTENTS
@@ -132,10 +131,6 @@ class SiteCreationActivity : LocaleAwareActivity(),
                     }
                     is CreatedButNotFetched -> {
                         // Let `SitePickerActivity` handle this with a Snackbar message
-                        intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
-                        Triple(true, null, isSiteTitleTaskComplete)
-                    }
-                    is DomainRegistrationPurchased -> {
                         intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
                         Triple(true, null, isSiteTitleTaskComplete)
                     }

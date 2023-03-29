@@ -25,7 +25,6 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.DomainRegistrationPurchased
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
@@ -84,15 +83,15 @@ sealed interface SiteCreationResult : Parcelable {
             override val remoteId: Long,
             override val isSiteTitleTaskComplete: Boolean,
         ) : CreatedButNotFetched
-    }
 
-    @Parcelize
-    data class DomainRegistrationPurchased(
-        val domainName: String,
-        val email: String,
-        val remoteId: Long,
-        val isSiteTitleTaskComplete: Boolean,
-    ) : SiteCreationResult
+        @Parcelize
+        data class DomainRegistrationPurchased(
+            val domainName: String,
+            val email: String,
+            override val remoteId: Long,
+            override val isSiteTitleTaskComplete: Boolean,
+        ) : CreatedButNotFetched
+    }
 
     @Parcelize
     data class Completed(val localId: Int, val isSiteTitleTaskComplete: Boolean, val url: String) : SiteCreationResult
@@ -305,7 +304,7 @@ class SiteCreationMainVM @Inject constructor(
         siteCreationState = siteCreationState.run {
             check(result is CreatedButNotFetched.InCart)
             copy(
-                result = DomainRegistrationPurchased(
+                result = CreatedButNotFetched.DomainRegistrationPurchased(
                     event.domainName,
                     event.email,
                     result.remoteId,
