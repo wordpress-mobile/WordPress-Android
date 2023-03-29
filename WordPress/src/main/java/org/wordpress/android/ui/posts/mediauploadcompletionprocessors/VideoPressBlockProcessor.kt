@@ -1,12 +1,8 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.google.gson.JsonObject
 import org.jsoup.nodes.Document
 import org.wordpress.android.util.helpers.MediaFile
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 class VideoPressBlockProcessor(localId: String?, mediaFile: MediaFile?, private val uriWrapper: UriWrapper = UriWrapper()) : BlockProcessor(localId, mediaFile) {
     class VideoPressBlockSettings(
