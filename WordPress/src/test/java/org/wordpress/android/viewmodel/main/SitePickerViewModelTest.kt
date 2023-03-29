@@ -16,6 +16,7 @@ import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.AskForSiteSelection
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.ContinueReblogTo
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.NavigateToState
+import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.ShowJetpackIndividualPluginOverlay
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.NavigateState.TO_NO_SITE_SELECTED
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.NavigateState.TO_SITE_SELECTED
 
@@ -94,22 +95,24 @@ class SitePickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when checkJetpackIndividualPluginOverlayNeeded is invoked then showJetpackIndividualPluginOverlay is true`() =
+    fun `when onSiteListLoaded is invoked then show jetpack individual plugin overlay`() =
         test {
             whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(true)
 
-            viewModel.checkJetpackIndividualPluginOverlayNeeded()
+            viewModel.onSiteListLoaded()
+            advanceUntilIdle()
 
-            assertThat(viewModel.showJetpackIndividualPluginOverlay.value).isTrue()
+            assertThat(viewModel.onActionTriggered.value?.peekContent()).isEqualTo(ShowJetpackIndividualPluginOverlay)
         }
 
     @Test
-    fun `when checkJetpackIndividualPluginOverlayNeeded is invoked then showJetpackIndividualPluginOverlay is false`() =
+    fun `when onSiteListLoaded is invoked then don't show jetpack individual plugin overlay`() =
         test {
             whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(false)
 
-            viewModel.checkJetpackIndividualPluginOverlayNeeded()
+            viewModel.onSiteListLoaded()
+            advanceUntilIdle()
 
-            assertThat(viewModel.showJetpackIndividualPluginOverlay.value).isFalse()
+            assertThat(viewModel.onActionTriggered.value?.peekContent()).isNull()
         }
 }
