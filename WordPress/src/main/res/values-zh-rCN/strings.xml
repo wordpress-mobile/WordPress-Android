@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-14 09:54:10+0000
+Translation-Revision-Date: 2023-03-28 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_CN
 -->
 <resources>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。\n\n请安装 %3$s，通过此站点使用该应用程序。</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">此站点</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。 请安装 %3$s。</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。 请安装 %3$s。</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">几天后将移动至 Jetpack 应用程序。</string>
+    <string name="wp_jp_static_poster_footnote">切换免费，只需一会儿。</string>
+    <string name="wp_jp_static_poster_message">统计信息、阅读器、通知和其他由 Jetpack 提供支持的功能已从 WordPress 应用程序上删除，现在只能在 Jetpack 应用程序中使用。</string>
+    <string name="wp_jp_static_poster_button_secondary">请访问 Jetpack.com 了解详情</string>
+    <string name="wp_jp_static_poster_button_primary">切换到 Jetpack 应用程序</string>
+    <string name="wp_jp_static_poster_title_plural">%s 已移至 Jetpack 应用程序。</string>
+    <string name="wp_jp_static_poster_title">%s 已移至 Jetpack 应用程序。</string>
+    <string name="my_site_btn_wp_admin">WP 管理</string>
+    <string name="my_site_header_manage">管理</string>
+    <string name="my_site_header_traffic">流量</string>
+    <string name="my_site_header_content">内容</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">设置</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">完成</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">安装 Jetpack 后，我们只需进行设置即可。 这只需要一分钟时间。</string>
     <string name="blaze_overlay_site_promotional_button">立即通过 Blaze 宣传文章</string>
     <string name="blaze_overlay_page_promotional_button">立即通过 Blaze 宣传此页面</string>
     <string name="blaze_overlay_post_promotional_button">立即通过 Blaze 宣传此文章</string>
@@ -38,10 +56,11 @@ Language: zh_CN
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">完整的 Jetpack 插件</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">独立的 Jetpack 插件</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">%1$s 插件</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。\n\n请安装 %3$s，通过此站点使用该应用程序。</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">请安装完整的 Jetpack 插件</string>
     <string name="only_one_primary_site_message">只有一个站点可用，因此您不能更改您的主站点。</string>
     <string name="button_promote_with_blaze">大力宣传并推广</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">释放站点的全部潜力。 使用 Jetpack，获得统计信息、通知等功能。</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">释放站点的全部潜力。 通过 Jetpack，获取统计信息、通知和更多功能。</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">您的站点已安装 Jetpack 插件</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack 移动应用程序旨在与 Jetpack 插件配合使用。 立即切换，访问统计信息、通知、阅读器以及更多功能。</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">接收有关新评论、点赞、查看等内容的通知。</string>
