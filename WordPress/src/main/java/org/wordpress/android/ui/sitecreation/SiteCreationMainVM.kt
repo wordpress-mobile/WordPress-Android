@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.networking.MShot
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
+import org.wordpress.android.ui.domains.DomainsRegistrationTracker
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
@@ -108,6 +109,7 @@ class SiteCreationMainVM @Inject constructor(
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val domainPurchasingExperiment: SiteCreationDomainPurchasingExperiment,
     private val domainPurchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig,
+    private val domainsRegistrationTracker: DomainsRegistrationTracker,
 ) : ViewModel() {
     init {
         dispatcher.register(fetchHomePageLayoutsUseCase)
@@ -296,6 +298,7 @@ class SiteCreationMainVM @Inject constructor(
                 isSiteTitleTaskCompleted()
             )
         )
+        domainsRegistrationTracker.trackDomainsPurchaseWebviewViewed(checkoutDetails.site, isSiteCreation = true)
         _showDomainCheckout.value = checkoutDetails
     }
 

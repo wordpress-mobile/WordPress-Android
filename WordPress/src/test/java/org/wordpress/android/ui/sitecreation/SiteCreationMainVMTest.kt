@@ -28,6 +28,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.fluxc.model.experiments.Variation.Treatment
+import org.wordpress.android.ui.domains.DomainsRegistrationTracker
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
@@ -104,6 +105,9 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Mock
     lateinit var domainPurchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig
 
+    @Mock
+    lateinit var domainsRegistrationTracker: DomainsRegistrationTracker
+
     private val wizardManagerNavigatorLiveData = SingleLiveEvent<SiteCreationStep>()
 
     private lateinit var viewModel: SiteCreationMainVM
@@ -145,9 +149,15 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on cart created is propagated`() {
+    fun `on cart created propagates details to show checkout`() {
         viewModel.onCartCreated(CHECKOUT_DETAILS)
         assertEquals(CHECKOUT_DETAILS, viewModel.showDomainCheckout.value)
+    }
+
+    @Test
+    fun `on cart created tracks checkout webview viewed`() {
+        viewModel.onCartCreated(CHECKOUT_DETAILS)
+        verify(domainsRegistrationTracker).trackDomainsPurchaseWebviewViewed(eq(CHECKOUT_DETAILS.site), eq(true))
     }
 
     @Test
@@ -398,5 +408,6 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         jetpackFeatureRemovalOverlayUtil,
         domainPurchasingExperiment,
         domainPurchasingFeatureConfig,
+        domainsRegistrationTracker,
     )
 }

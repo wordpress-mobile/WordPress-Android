@@ -28,7 +28,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
-import org.wordpress.android.ui.domains.DomainsRegistrationTracker
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.ui.sitecreation.CART_ERROR
 import org.wordpress.android.ui.sitecreation.CART_SUCCESS
@@ -58,7 +57,6 @@ import kotlin.test.assertTrue
 class SiteCreationProgressViewModelTest : BaseUnitTest() {
     private var networkUtils = mock<NetworkUtilsWrapper>()
     private var tracker = mock<SiteCreationTracker>()
-    private val domainsRegistrationTracker = mock<DomainsRegistrationTracker>()
     private val createCartUseCase = mock<CreateCartUseCase>()
 
     private val uiStateObserver = mock<Observer<SiteProgressUiState>>()
@@ -75,7 +73,6 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
         viewModel = SiteCreationProgressViewModel(
             networkUtils,
             tracker,
-            domainsRegistrationTracker,
             createCartUseCase,
             testDispatcher(),
         )
@@ -186,13 +183,6 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
             eq(PAID_DOMAIN.supportsPrivacy),
             any(),
         )
-    }
-
-    @Test
-    fun `on cart success tracks domain purchase webview viewed`() = testWith(CART_SUCCESS) {
-        startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
-        viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
-        verify(domainsRegistrationTracker).trackDomainsPurchaseWebviewViewed(any(), eq(true))
     }
 
     @Test

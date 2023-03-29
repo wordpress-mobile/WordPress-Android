@@ -12,7 +12,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
-import org.wordpress.android.ui.domains.DomainsRegistrationTracker
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched
 import org.wordpress.android.ui.sitecreation.SiteCreationState
@@ -54,7 +53,6 @@ private val loadingTexts = listOf(
 class SiteCreationProgressViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val tracker: SiteCreationTracker,
-    private val domainsRegistrationTracker: DomainsRegistrationTracker,
     private val createCartUseCase: CreateCartUseCase,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
@@ -198,7 +196,6 @@ class SiteCreationProgressViewModel @Inject constructor(
         } else {
             AppLog.d(LOG_TAG, "Successful cart creation: ${event.cartDetails}")
             _onCartCreated.postValue(CheckoutDetails(site, domain.domainName))
-            domainsRegistrationTracker.trackDomainsPurchaseWebviewViewed(site, isSiteCreation = true)
         }
     }
 
