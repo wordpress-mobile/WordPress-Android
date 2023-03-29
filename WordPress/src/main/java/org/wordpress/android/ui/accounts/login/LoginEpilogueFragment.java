@@ -228,6 +228,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                             mBottomShadow.setVisibility(View.GONE);
                         }
                     }
+
+                    mParentViewModel.onSiteListLoaded();
                 });
             }
         };
