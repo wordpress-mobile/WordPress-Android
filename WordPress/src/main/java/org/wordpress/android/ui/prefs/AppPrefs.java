@@ -188,6 +188,7 @@ public class AppPrefs {
 
         // Jetpack Individual Plugin overlay for WordPress app
         WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_SHOWN_COUNT,
+        WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_LAST_SHOWN_TIMESTAMP,
     }
 
     /**
@@ -1623,5 +1624,13 @@ public class AppPrefs {
     public static void incrementWPJetpackIndividualPluginOverlayShownCount() {
         int count = getWPJetpackIndividualPluginOverlayShownCount();
         setInt(DeletablePrefKey.WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_SHOWN_COUNT, count + 1);
+    }
+
+    public static long getWPJetpackIndividualPluginOverlayLastShownTimestamp() {
+        return getLong(DeletablePrefKey.WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_LAST_SHOWN_TIMESTAMP, 0);
+    }
+
+    public static void setWPJetpackIndividualPluginOverlayLastShownTimestamp(long timestamp) {
+        setLong(DeletablePrefKey.WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_LAST_SHOWN_TIMESTAMP, timestamp);
     }
 }

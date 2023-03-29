@@ -27,7 +27,7 @@ class WPJetpackIndividualPluginViewModel @Inject constructor(
         launch {
             val sites = wpJetpackIndividualPluginHelper.getJetpackConnectedSitesWithIndividualPlugins()
             _uiState.update { UiState.Loaded(sites) }
-            wpJetpackIndividualPluginHelper.incrementJetpackIndividualPluginOverlayShownCount()
+            wpJetpackIndividualPluginHelper.onJetpackIndividualPluginOverlayShown()
             // TODO thomashortadev add tracking
         }
     }

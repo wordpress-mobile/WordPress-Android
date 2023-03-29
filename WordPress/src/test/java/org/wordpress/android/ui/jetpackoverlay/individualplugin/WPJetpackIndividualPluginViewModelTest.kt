@@ -42,13 +42,13 @@ class WPJetpackIndividualPluginViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN onScreenShown THEN overlay shown count is incremented only once`() = test {
+    fun `WHEN onScreenShown THEN overlay shown helper method is called only once`() = test {
         whenever(helper.getJetpackConnectedSitesWithIndividualPlugins()).thenReturn(connectedSites)
         viewModel.onScreenShown()
         viewModel.onScreenShown()
         viewModel.onScreenShown()
 
-        verify(helper).incrementJetpackIndividualPluginOverlayShownCount()
+        verify(helper).onJetpackIndividualPluginOverlayShown()
     }
 
     @Test
