@@ -4,17 +4,6 @@
     <!-- DEBUG -->
 
     <issue
-        id="ScopedStorage"
-        message="WRITE_EXTERNAL_STORAGE no longer provides write access when targeting Android 11+, even when using `requestLegacyExternalStorage`"
-        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; />"
-        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/debug/AndroidManifest.xml"
-            line="25"
-            column="36"/>
-    </issue>
-
-    <issue
         id="ManifestOrder"
         message="`&lt;uses-permission>` tag appears after `&lt;application>` tag"
         errorLine1="    &lt;uses-permission android:name=&quot;android.permission.DISABLE_KEYGUARD&quot; />"
