@@ -8,6 +8,7 @@ import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.wordpress.android.util.UriEncoder
 import org.wordpress.android.util.helpers.MediaFile
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -15,7 +16,7 @@ import java.nio.charset.StandardCharsets
 @RunWith(MockitoJUnitRunner::class)
 class VideoPressBlockProcessorTest {
     private val mediaFile: MediaFile = mock()
-    private val uriWrapper = Mockito.mock(UriWrapper::class.java)
+    private val uriEncoder = Mockito.mock(UriEncoder::class.java)
     private lateinit var processor: VideoPressBlockProcessor
 
     // Keys for each query in VideoPress URL.
@@ -83,14 +84,14 @@ class VideoPressBlockProcessorTest {
         * We support a minimum of API 24.
         */
         for (key in urlKeys) {
-            whenever(uriWrapper.encode(key)).thenReturn(URLEncoder.encode(key, StandardCharsets.UTF_8))
+            whenever(uriEncoder.encode(key)).thenReturn(URLEncoder.encode(key, StandardCharsets.UTF_8))
         }
 
         for (value in urlValues) {
-            whenever(uriWrapper.encode(value)).thenReturn(URLEncoder.encode(value, StandardCharsets.UTF_8))
+            whenever(uriEncoder.encode(value)).thenReturn(URLEncoder.encode(value, StandardCharsets.UTF_8))
         }
 
-        processor = VideoPressBlockProcessor(TestContent.localMediaId, mediaFile, uriWrapper)
+        processor = VideoPressBlockProcessor(TestContent.localMediaId, mediaFile, uriEncoder)
     }
 
     @Test

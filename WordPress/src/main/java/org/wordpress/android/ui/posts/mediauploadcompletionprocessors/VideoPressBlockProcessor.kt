@@ -2,12 +2,13 @@ package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
 import com.google.gson.JsonObject
 import org.jsoup.nodes.Document
+import org.wordpress.android.util.UriEncoder
 import org.wordpress.android.util.helpers.MediaFile
 
 class VideoPressBlockProcessor(
     localId: String?,
     mediaFile: MediaFile?,
-    private val uriWrapper: UriWrapper = UriWrapper()
+    private val uriEncoder: UriEncoder = UriEncoder()
 ) : BlockProcessor(localId, mediaFile) {
     class VideoPressBlockSettings(
         var autoplay: Boolean? = null,
@@ -56,7 +57,7 @@ class VideoPressBlockProcessor(
 
         val encodedQueryArgs = queryArgs.entries.joinToString("&") {
             val encodedValue = it.value.removeSurrounding("\"")
-            "${uriWrapper.encode(it.key)}=${uriWrapper.encode(encodedValue)}"
+            "${uriEncoder.encode(it.key)}=${uriEncoder.encode(encodedValue)}"
         }
 
         return "https://videopress.com/v/$guid?$encodedQueryArgs"
