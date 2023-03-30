@@ -35,7 +35,8 @@
     <application
         android:name=".WordPressDebug"
         android:supportsRtl="true"
-        tools:replace="android:name,android:supportsRtl">
+        tools:replace="android:name,android:supportsRtl"
+        tools:ignore="MissingApplicationIcon">
         <activity
             android:name=".ui.debug.previews.PreviewFragmentActivity"
             android:theme="@style/WordPress.NoActionBar" />
