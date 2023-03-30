@@ -12,6 +12,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseF
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseStaticPosters
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -28,17 +29,20 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
     private val jpDeadlineConfig: JPDeadlineConfig,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
-    private val jpDeadlineDate: String? by lazy {
+    private val jpDeadlineDate: String by lazy {
         jpDeadlineConfig.getValue()
     }
 
     fun isInRemovalPhase() = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
+
+    fun shouldShowBrandingInDashboard() = jetpackFeatureRemovalPhaseHelper.shouldShowJetpackBrandingInDashboard()
 
     fun shouldShowPhaseOneBranding(): Boolean {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
             PhaseOne,
             PhaseTwo,
             PhaseThree,
+            PhaseStaticPosters,
             PhaseFour -> true
             else -> false
         }
@@ -48,6 +52,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
             PhaseTwo,
             PhaseThree,
+            PhaseStaticPosters,
             PhaseFour -> true
             else -> false
         }
@@ -55,6 +60,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
 
     fun getBrandingTextByPhase(screen: JetpackPoweredScreen): UiString {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
+            PhaseStaticPosters -> UiStringRes(R.string.wp_jetpack_feature_removal_static_posters_phase)
             PhaseThree -> (screen as? JetpackPoweredScreen.WithDynamicText)?.let { screenWithDynamicText ->
                 getDynamicBrandingForScreen(screenWithDynamicText)
             } ?: UiStringRes(JetpackBrandingUiState.RES_JP_POWERED)
@@ -85,7 +91,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         }
     }
 
-    private fun retrieveDeadline(): LocalDate? = jpDeadlineDate?.let {
+    private fun retrieveDeadline(): LocalDate? = jpDeadlineDate.takeIf { it.isNotBlank() }?.let {
         dateTimeUtilsWrapper.parseDateString(it, JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)?.toLocalDate()
     }
 

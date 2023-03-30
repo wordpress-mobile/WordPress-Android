@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts
 
 import android.app.Dialog
 import android.app.TimePickerDialog
-import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -13,6 +12,7 @@ import org.wordpress.android.R.style
 import org.wordpress.android.WordPress
 
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel
+import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 
 class PostTimePickerDialogFragment : DialogFragment() {
@@ -21,30 +21,31 @@ class PostTimePickerDialogFragment : DialogFragment() {
     private lateinit var viewModel: PublishSettingsViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val publishSettingsFragmentType = arguments?.getParcelable<PublishSettingsFragmentType>(
+        val publishSettingsFragmentType = arguments?.getParcelableCompat<PublishSettingsFragmentType>(
             ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE
         )
 
         viewModel = when (publishSettingsFragmentType) {
-            PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(EditPostPublishSettingsViewModel::class.java)
-            PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(PrepublishingPublishSettingsViewModel::class.java)
+            PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(
+                requireActivity(),
+                viewModelFactory
+            )[EditPostPublishSettingsViewModel::class.java]
+            PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(
+                requireActivity(),
+                viewModelFactory
+            )[PrepublishingPublishSettingsViewModel::class.java]
             null -> error("PublishSettingsViewModel not initialized")
         }
 
         val is24HrFormat = DateFormat.is24HourFormat(activity)
         val context = ContextThemeWrapper(activity, style.PostSettingsCalendar)
-        val timePickerDialog = TimePickerDialog(
+        return TimePickerDialog(
             context,
-            OnTimeSetListener { _, selectedHour, selectedMinute ->
-                viewModel.onTimeSelected(selectedHour, selectedMinute)
-            },
+            { _, selectedHour, selectedMinute -> viewModel.onTimeSelected(selectedHour, selectedMinute) },
             viewModel.hour ?: 0,
             viewModel.minute ?: 0,
             is24HrFormat
         )
-        return timePickerDialog
     }
 
     override fun onAttach(context: Context) {

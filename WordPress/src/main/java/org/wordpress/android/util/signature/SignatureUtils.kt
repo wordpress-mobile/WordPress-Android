@@ -4,6 +4,7 @@ import android.annotation.TargetApi
 import android.content.pm.PackageManager
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
+import org.wordpress.android.util.extensions.getPackageInfoCompat
 import org.wordpress.android.viewmodel.ContextProvider
 import java.security.MessageDigest
 import javax.inject.Inject
@@ -28,8 +29,11 @@ class SignatureUtils @Inject constructor(
         trustedPackageId: String,
         trustedSignatureHash: String
     ): Boolean = try {
-        val signingInfo = contextProvider.getContext().packageManager.getPackageInfo(
-            trustedPackageId, PackageManager.GET_SIGNING_CERTIFICATES
+        val signingInfo = requireNotNull(
+            contextProvider.getContext().packageManager.getPackageInfoCompat(
+                trustedPackageId,
+                PackageManager.GET_SIGNING_CERTIFICATES
+            )
         ).signingInfo
         if (signingInfo.hasMultipleSigners()) {
             throw SignatureNotFoundException()

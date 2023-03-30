@@ -3,27 +3,29 @@ package org.wordpress.android.ui.mysite.cards.jpfullplugininstall
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
+import androidx.compose.ui.res.stringResource
 import org.wordpress.android.R
 import org.wordpress.android.databinding.JpInstallFullPluginCardBinding
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.jpfullplugininstall.onboarding.compose.component.PluginDescription
+import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.compose.component.PluginDescription
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
-import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
 
 class JetpackInstallFullPluginCardViewHolder(
     parent: ViewGroup,
-    private val uiHelpers: UiHelpers,
 ) : MySiteCardAndItemViewHolder<JpInstallFullPluginCardBinding>(
     parent.viewBinding(JpInstallFullPluginCardBinding::inflate)
 ) {
     fun bind(card: JetpackInstallFullPluginCard) = with(binding) {
         jpInstallFullPluginCardContentComposable.setContent {
             AppTheme {
-                uiHelpers::class.java
-                PluginDescription(siteName = card.siteName, pluginNames = card.pluginNames)
+                PluginDescription(
+                    siteString = stringResource(R.string.jetpack_full_plugin_install_onboarding_description_this_site),
+                    pluginNames = card.pluginNames,
+                    useConciseText = true,
+                )
             }
         }
 

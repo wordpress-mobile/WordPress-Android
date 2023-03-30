@@ -937,8 +937,8 @@ Language: cs_CZ
     <string name="suggestion_none">Nejsou k dispozici žádné návrhy %s.</string>
     <string name="suggestion_problem">Při načítání návrhů došlo k problému.</string>
     <string name="suggestion_no_matching">Bez shody %s.</string>
-    <string name="threat_fix_current_not_fixable_description">Jetpack Scan nemůže tuto hrozbu automaticky opravit.\n         Doporučujeme hrozbu vyřešit ručně: ujistěte se, že WordPress, vaše téma a všechny vaše doplňky jsou aktuální, a odstraňte z webu nevhodný kód, téma nebo plugin.\n \n\n         Pokud potřebujete další pomoc při řešení této hrozby, doporučujeme &lt;b&gt;Codeable+&lt;/b&gt;, důvěryhodné tržiště nezávislých odborníků s vysoce prověřenými odborníky na WordPress.\n         Identifikovali vybranou skupinu bezpečnostních odborníků, kteří s těmito projekty pomohli. Ceny se pohybují od 70–120 USD / hodinu a můžete získat bezplatný odhad bez povinnosti najmout.</string>
     <string name="threat_fix_fixable_replace">Jetpack Scan nahradí ovlivněný soubor nebo adresář.</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan nemůže tuto hrozbu automaticky opravit.\n         Doporučujeme hrozbu vyřešit ručně: ujistěte se, že WordPress, vaše téma a všechny vaše doplňky jsou aktuální, a odstraňte z webu nevhodný kód, téma nebo plugin.\n \n\n         Pokud potřebujete další pomoc při řešení této hrozby, doporučujeme &lt;b&gt;Codeable+&lt;/b&gt;, důvěryhodné tržiště nezávislých odborníků s vysoce prověřenými odborníky na WordPress.\n         Identifikovali vybranou skupinu bezpečnostních odborníků, kteří s těmito projekty pomohli. Ceny se pohybují od 70–120 USD / hodinu a můžete získat bezplatný odhad bez povinnosti najmout.</string>
     <string name="threat_problem_header">Jaký byl problém?</string>
     <string name="threat_technical_details_header">Technické podrobnosti</string>
     <string name="threat_file_description">V souboru nalezena hrozba:</string>
@@ -1777,7 +1777,6 @@ Language: cs_CZ
     <string name="post_uploading_draft">Nahrávám koncept</string>
     <string name="post_list_tab_drafts">Koncepty</string>
     <string name="error_restoring_post">Při obnovování příspěvku došlo k chybě</string>
-    <string name="jetpack_installed_message">Nyní, když je nainstalován Jetpack, musíme vás ho nechat nastavit. Bude to trvat jen minutu.</string>
     <string name="register_domain">Registrovat doménu</string>
     <string name="domains_suggestions_empty_list">Nebyly nalezeny žádné návrhy</string>
     <string name="domain_suggestions_search_hint">Napište klíčové slovo pro více nápadů</string>
@@ -2053,15 +2052,6 @@ Language: cs_CZ
     <string name="my_site_create_new_site_title">Nemáte žádné stránky</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
-    <string name="install_jetpack">Instalovat Jetpack</string>
-    <string name="install_jetpack_retry">Odpověď</string>
-    <string name="install_jetpack_continue">Pokračovat</string>
-    <string name="installing_jetpack">Instalování Jetpacku</string>
-    <string name="jetpack_installation_problem">Vyskytl se problém</string>
-    <string name="jetpack_installed">Jetpack nainstalován</string>
-    <string name="install_jetpack_message">Pověření na vašem webu nebudou uložena a budou použita pouze za účelem instalace Jetpack.</string>
-    <string name="installing_jetpack_message">Instalace Jetpack na vaše stránky. To může trvat až několik minut.</string>
-    <string name="jetpack_installation_problem_message">Jetpack v tuto chvíli nelze nainstalovat.</string>
     <string name="login_to_to_connect_jetpack">Přihlaste se k účtu WordPress.com, který jste použili k připojení Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">K zobrazení statistik je třeba mít nainstalovaný Jetpack plugin.</string>
     <string name="themes_empty_list">Žádné šablony neodpovídají hledanému výrazu</string>

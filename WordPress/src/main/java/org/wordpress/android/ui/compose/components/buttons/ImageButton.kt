@@ -48,7 +48,6 @@ fun PreviewDrawButton() {
     )
 }
 
-
 @Composable
 fun ImageButton(
     modifier: Modifier = Modifier,
@@ -59,7 +58,8 @@ fun ImageButton(
     button: Button,
     onClick: () -> Unit
 ) {
-    ConstraintLayout(modifier = modifier) {
+    ConstraintLayout(modifier = modifier
+        .clickable { onClick.invoke() }) {
         val (buttonTextRef) = createRefs()
         Box(modifier = Modifier
             .constrainAs(buttonTextRef) {
@@ -69,7 +69,6 @@ fun ImageButton(
                 end.linkTo(parent.end, drawableRight?.iconSize ?: 0.dp)
                 width = Dimension.wrapContent
             }
-            .clickable { onClick.invoke() }
         ) {
             val buttonTextValue: String = uiStringText(button.text)
             Text(

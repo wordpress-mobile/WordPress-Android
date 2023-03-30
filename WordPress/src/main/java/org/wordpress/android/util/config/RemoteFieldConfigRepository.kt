@@ -31,16 +31,23 @@ class RemoteFieldConfigRepository
             // If the flags are empty, then this means that the
             // that the app is launched for the first time and we need to
             // store the default in the database
-            if (remoteFields.isEmpty()) {
-                insertRemoteConfigDefaultsInDatabase()
+            if (!remoteFields.containsAllFields()) {
+                insertMissingRemoteConfigDefaultsInDatabase(remoteFields.map { it.key })
                 refresh()
             }
         }
     }
 
-    private fun insertRemoteConfigDefaultsInDatabase() {
-        RemoteFieldConfigDefaults.remoteFieldConfigDefaults.mapNotNull { remoteField ->
-            remoteField.let {
+    private fun List<RemoteConfig>.containsAllFields(): Boolean {
+        val defaults = RemoteFieldConfigDefaults.remoteFieldConfigDefaults
+        return defaults.all { default ->
+            this.any { it.key == default.key }
+        }
+    }
+
+    private fun insertMissingRemoteConfigDefaultsInDatabase(existingKeys: List<String>) {
+        RemoteFieldConfigDefaults.remoteFieldConfigDefaults.forEach { remoteField ->
+            if (remoteField.key !in existingKeys) {
                 remoteConfigStore.insertRemoteConfig(
                     remoteField.key,
                     remoteField.value.toString()
@@ -64,6 +71,10 @@ class RemoteFieldConfigRepository
                 Stat.REMOTE_FIELD_CONFIG_SYNCED_STATE,
                 configValues
             )
+
+            // re-insert the defaults in case they were removed from the remote config and also to make sure latest
+            // version defaults overwrite the old ones that might already be in the database
+            insertMissingRemoteConfigDefaultsInDatabase(configValues.map { it.key })
         }
         if (response.isError) {
             AppLog.e(UTILS, "Remote field config values sync failed")
@@ -71,6 +82,9 @@ class RemoteFieldConfigRepository
     }
 
     fun getValue(field: String): String {
-        return remoteFields.find { it.key == field }?.value ?: ""
+        // search the remote fields (from local database) then in-memory defaults, and return "" as fallback
+        return remoteFields.find { it.key == field }?.value
+            ?: RemoteFieldConfigDefaults.remoteFieldConfigDefaults[field]?.toString()
+            ?: ""
     }
 }

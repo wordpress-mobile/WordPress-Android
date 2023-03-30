@@ -43,6 +43,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
@@ -58,6 +59,7 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.config.WPIndividualPluginOverlayFeatureConfig;
 import org.wordpress.android.util.helpers.Debouncer;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.viewmodel.main.SitePickerViewModel;
@@ -78,6 +80,9 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class SitePickerActivity extends LocaleAwareActivity
         implements SitePickerAdapter.OnSiteClickListener,
         SitePickerAdapter.OnSelectedCountChangedListener,
@@ -133,11 +138,11 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Inject StatsStore mStatsStore;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+    @Inject WPIndividualPluginOverlayFeatureConfig mWPIndividualPluginOverlayFeatureConfig;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
 
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(SitePickerViewModel.class);
 
@@ -153,56 +158,59 @@ public class SitePickerActivity extends LocaleAwareActivity
             AnalyticsTracker.track(Stat.SITE_SWITCHER_DISPLAYED);
         }
 
-        if (mSitePickerMode.isReblogMode()) {
-            mViewModel.getOnActionTriggered().observe(
-                    this,
-                    unitEvent -> unitEvent.applyIfNotHandled(action -> {
-                        switch (action.getActionType()) {
-                            case NAVIGATE_TO_STATE:
-                                switch (((NavigateToState) action).getNavigateState()) {
-                                    case TO_SITE_SELECTED:
-                                        mSitePickerMode = SitePickerMode.REBLOG_CONTINUE_MODE;
-                                        if (getAdapter().getIsInSearchMode()) {
-                                            disableSearchMode();
-                                        }
+        mViewModel.getOnActionTriggered().observe(
+                this,
+                unitEvent -> unitEvent.applyIfNotHandled(action -> {
+                    switch (action.getActionType()) {
+                        case NAVIGATE_TO_STATE:
+                            if (!mSitePickerMode.isReblogMode()) break;
+                            switch (((NavigateToState) action).getNavigateState()) {
+                                case TO_SITE_SELECTED:
+                                    mSitePickerMode = SitePickerMode.REBLOG_CONTINUE_MODE;
+                                    if (getAdapter().getIsInSearchMode()) {
+                                        disableSearchMode();
+                                    }
 
-                                        if (mReblogActionMode == null) {
-                                            startSupportActionMode(new ReblogActionModeCallback());
-                                        }
+                                    if (mReblogActionMode == null) {
+                                        startSupportActionMode(new ReblogActionModeCallback());
+                                    }
 
-                                        SiteRecord site = ((NavigateToState) action).getSiteForReblog();
-                                        if (site != null) {
-                                            mReblogActionMode.setTitle(site.getBlogNameOrHomeURL());
-                                        }
-                                        break;
-                                    case TO_NO_SITE_SELECTED:
-                                        mSitePickerMode = SitePickerMode.REBLOG_SELECT_MODE;
-                                        getAdapter().clearReblogSelection();
-                                        break;
-                                }
-                                break;
-                            case CONTINUE_REBLOG_TO:
-                                SiteRecord siteToReblog = ((ContinueReblogTo) action).getSiteForReblog();
-                                selectSiteAndFinish(siteToReblog);
-                                break;
-                            case ASK_FOR_SITE_SELECTION:
-                                if (BuildConfig.DEBUG) {
-                                    throw new IllegalStateException(
-                                            "SitePickerActivity > Selected site was null while attempting to reblog"
-                                    );
-                                } else {
-                                    AppLog.e(
-                                            AppLog.T.READER,
-                                            "SitePickerActivity > Selected site was null while attempting to reblog"
-                                    );
-                                    ToastUtils.showToast(this, R.string.site_picker_ask_site_select);
-                                }
-                                break;
-                        }
-                        return null;
-                    }));
-        }
-
+                                    SiteRecord site = ((NavigateToState) action).getSiteForReblog();
+                                    if (site != null) {
+                                        mReblogActionMode.setTitle(site.getBlogNameOrHomeURL());
+                                    }
+                                    break;
+                                case TO_NO_SITE_SELECTED:
+                                    mSitePickerMode = SitePickerMode.REBLOG_SELECT_MODE;
+                                    getAdapter().clearReblogSelection();
+                                    break;
+                            }
+                            break;
+                        case CONTINUE_REBLOG_TO:
+                            if (!mSitePickerMode.isReblogMode()) break;
+                            SiteRecord siteToReblog = ((ContinueReblogTo) action).getSiteForReblog();
+                            selectSiteAndFinish(siteToReblog);
+                            break;
+                        case ASK_FOR_SITE_SELECTION:
+                            if (!mSitePickerMode.isReblogMode()) break;
+                            if (BuildConfig.DEBUG) {
+                                throw new IllegalStateException(
+                                        "SitePickerActivity > Selected site was null while attempting to reblog"
+                                );
+                            } else {
+                                AppLog.e(
+                                        AppLog.T.READER,
+                                        "SitePickerActivity > Selected site was null while attempting to reblog"
+                                );
+                                ToastUtils.showToast(this, R.string.site_picker_ask_site_select);
+                            }
+                            break;
+                        case SHOW_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY:
+                            WPJetpackIndividualPluginFragment.show(getSupportFragmentManager());
+                            break;
+                    }
+                    return null;
+                }));
         // If the picker is already in editing mode from previous configuration, re-enable the editing mode.
         if (mIsInEditMode) {
             startEditingVisibility();
@@ -274,7 +282,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_DISMISSED);
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else if (itemId == R.id.menu_edit) {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_TOGGLED_EDIT_TAPPED,
@@ -477,6 +485,7 @@ public class SitePickerActivity extends LocaleAwareActivity
                                 mRecycleView.scrollToPosition(scrollPos);
                             }
                         }
+                        mViewModel.onSiteListLoaded();
                     }
                 },
                 mSitePickerMode,

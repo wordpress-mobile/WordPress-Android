@@ -11,7 +11,9 @@ import org.wordpress.android.databinding.StatsListActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.JetpackBrandingUtils
@@ -24,17 +26,24 @@ class StatsActivity : LocaleAwareActivity() {
 
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
+    @Inject
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
     private val viewModel: StatsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(StatsListActivityBinding.inflate(layoutInflater).root)
+        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+            ActivityLauncher.showJetpackStaticPoster(this)
+            finish()
+        } else {
+            setContentView(StatsListActivityBinding.inflate(layoutInflater).root)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
             return true
         }
         return super.onOptionsItemSelected(item)

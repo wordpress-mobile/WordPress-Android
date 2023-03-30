@@ -1072,35 +1072,25 @@
     <string name="stats_widget_error_no_network">No network available</string>
     <string name="stats_widget_error_no_access_token">To view your stats, log in to the WordPress.com account.</string>
 
-    <!-- Jetpack install -->
+    <!-- Jetpack install plugin -->
     <string name="jetpack">Jetpack</string>
-    <string name="install_jetpack">Install Jetpack</string>
-    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack.</string>
-    <string name="installing_jetpack">Installing Jetpack</string>
-    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete.</string>
-    <string name="jetpack_installed">Jetpack installed</string>
-    <string name="jetpack_installed_message">Now that Jetpack is installed, we just need to get you set up. This will only take a minute.</string>
-    <string name="jetpack_installation_problem">There was a problem</string>
-    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time.</string>
-    <string name="install_jetpack_continue">Set up</string>
-    <string name="install_jetpack_retry">Retry</string>
     <string name="login_to_to_connect_jetpack" tools:ignore="UnusedResources" a8c-src-lib="login">Log in to the WordPress.com account you used to connect Jetpack.</string>
-
-    <!-- Jetpack install full plugin -->
-    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack icon</string>
-    <string name="jetpack_full_plugin_install_initial_title">Install Jetpack</string>
-    <string name="jetpack_full_plugin_install_initial_description">Your website credentials will not be stored and are used only for the purpose of installing Jetpack.</string>
-    <string name="jetpack_full_plugin_install_initial_button">Continue</string>
-    <string name="jetpack_full_plugin_install_installing_title">Installing Jetpack</string>
-    <string name="jetpack_full_plugin_install_installing_description">Installing Jetpack on your site. This can take up to a few minutes to complete.</string>
-    <string name="jetpack_full_plugin_install_done_title">Jetpack installed</string>
-    <string name="jetpack_full_plugin_install_done_description">Ready to use this site with the app.</string>
-    <string name="jetpack_full_plugin_install_done_button">Done</string>
-    <string name="jetpack_full_plugin_install_error_image_content_description">Error icon</string>
-    <string name="jetpack_full_plugin_install_error_title">There was a problem</string>
-    <string name="jetpack_full_plugin_install_error_description">Jetpack could not be installed at this time.</string>
-    <string name="jetpack_full_plugin_install_error_button_retry">Retry</string>
-    <string name="jetpack_full_plugin_install_error_button_contact_support">Contact Support</string>
+    <string name="jetpack_plugin_install_jp_logo_content_description">Jetpack icon</string>
+    <string name="jetpack_plugin_install_initial_title">Install Jetpack</string>
+    <string name="jetpack_plugin_install_initial_description">Your website credentials will not be stored and are used only for the purpose of installing Jetpack.</string>
+    <string name="jetpack_plugin_install_initial_button">Continue</string>
+    <string name="jetpack_plugin_install_installing_title">Installing Jetpack</string>
+    <string name="jetpack_plugin_install_installing_description">Installing Jetpack on your site. This can take up to a few minutes to complete.</string>
+    <string name="jetpack_plugin_install_done_title">Jetpack installed</string>
+    <string name="jetpack_plugin_install_full_plugin_done_description">Ready to use this site with the app.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Now that Jetpack is installed, we just need to get you set up. This will only take a minute.</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">Done</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Set up</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Error icon</string>
+    <string name="jetpack_plugin_install_error_title">There was a problem</string>
+    <string name="jetpack_plugin_install_error_description">Jetpack could not be installed at this time.</string>
+    <string name="jetpack_plugin_install_error_button_retry">Retry</string>
+    <string name="jetpack_plugin_install_error_button_contact_support">Contact Support</string>
 
     <!-- activity log -->
     <string name="activity_log">Activity Log</string>
@@ -2261,6 +2251,11 @@
     <string name="support_ticket_subject">WordPress for Android Support</string>
 
     <!--My Site-->
+    <string name="my_site_header_content">Content</string>
+    <string name="my_site_header_traffic">Traffic</string>
+    <string name="my_site_header_manage">Manage</string>
+    <string name="my_site_btn_wp_admin">WP Admin</string>
+
     <string name="my_site_header_external">External</string>
     <string name="my_site_header_configuration">Configuration</string>
     <string name="my_site_header_look_and_feel">Look and Feel</string>
@@ -2355,8 +2350,6 @@
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 answer</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d answers</string>
     <string name="my_site_blogging_prompt_card_view_answers">View all responses</string>
-
-    <string name="my_site_jp_install_full_plugin_card_content">This site is using an individual plugin, which doesn\'t support all features of the app yet. Please install the full Jetpack plugin.</string>
 
     <!-- My Site - Jetpack migration success card -->
     <string name="jp_migration_success_card_message">Please delete the WordPress app</string>
@@ -4304,6 +4297,12 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="login">Check your email on this device!</string>
     <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">We just sent a magic link to</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link Rel</string>
+    <string name="wp_jp_static_poster_title">%s has moved to the Jetpack app.</string>
+    <string name="wp_jp_static_poster_title_plural">%s have moved to the Jetpack app.</string>
+    <string name="wp_jp_static_poster_button_primary">Switch to the Jetpack app</string>
+    <string name="wp_jp_static_poster_button_secondary">Learn more at Jetpack.com</string>
+    <string name="wp_jp_static_poster_message">Stats, Reader, Notifications and other Jetpack powered features have been removed from the WordPress app, and can now only be found in the Jetpack app.</string>
+    <string name="wp_jp_static_poster_footnote">Switching is free and only takes a minute.</string>
 
     <!-- Jetpack Welcome Screen -->
     <string name="jp_migration_welcome_title">Welcome to Jetpack!</string>
@@ -4372,6 +4371,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Get notifications for new comments, likes, views, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">The Jetpack mobile app is designed to work in companion with the Jetpack plugin. Switch now to get access to stats, notifications, reader, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Your site has the Jetpack plugin</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Moving to the Jetpack app in a few days.</string>
+
 
     <!-- Deep Linking Activity Aliases -->
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
@@ -4392,7 +4393,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Jetpack Feature Card -->
     <string name="jetpack_feature_card_content_phase_three">Stats, Reader, Notifications and other features will soon move to the Jetpack mobile app.</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Unlock your site’s full potential. Get stats, notications and more with Jetpack.</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Unlock your site’s full potential. Get stats, notifications and more with Jetpack.</string>
     <string name="jetpack_feature_card_learn_more" translatable="false">@string/learn_more</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
     <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Featured</string>
@@ -4403,13 +4404,29 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jetpack_individual_plugin_support_onboarding_title">Please install the full Jetpack plugin</string>
     <!-- translators:
         %1$s = the current site address (e.g. "https://wordpress.com/"),
-        %2$s = can be either "the <plugin name> plugin" (e.g. "the Jetpack Backup plugin") OR "individual plugins"
+        %2$s = the text "the <plugin name> plugin" (e.g. "the Jetpack Backup plugin")
         %3$s = the text "full Jetpack plugin" -->
-    <string name="jetpack_full_plugin_install_onboarding_description">%1$s is using %2$s, which don’t support all features of the app yet.\n\nPlease install the %3$s to use the app with this site.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s is using %2$s, which doesn’t support all features of the app yet.\n\nPlease install the %3$s to use the app with this site.</string>
+    <!-- translators:
+        %1$s = the current site address (e.g. "https://wordpress.com/"),
+        %2$s = the text "individual plugins"
+        %3$s = the text "full Jetpack plugin" -->
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s is using %2$s, which don’t support all features of the app yet.\n\nPlease install the %3$s to use the app with this site.</string>
+    <!-- translators:
+        %1$s = the text "This site",
+        %2$s = the text "the <plugin name> plugin" (e.g. "the Jetpack Backup plugin")
+        %3$s = the text "full Jetpack plugin" -->
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s is using %2$s, which doesn’t support all features of the app yet. Please install the %3$s.</string>
+    <!-- translators:
+        %1$s = the text "This site",
+        %2$s = the text "individual plugins"
+        %3$s = the text "full Jetpack plugin" -->
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s is using %2$s, which don’t support all features of the app yet. Please install the %3$s.</string>
     <!-- translators: %1$s = a plugin name (e.g. "Jetpack Search") -->
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">the %1$s plugin</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">individual Jetpack plugins</string>
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">full Jetpack plugin</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">This site</string>
     <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">By setting up Jetpack you agree to our </string>
     <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Terms and conditions</string>
     <string name="jetpack_full_plugin_install_onboarding_install_button">Install the full plugin</string>
