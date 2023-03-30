@@ -96,3 +96,6 @@
 /admin/notes/delete/all
 
 /onboarding/tasks
+
+/subscriptions/
+/subscriptions/<id>/
