@@ -70,7 +70,7 @@ ext {
     googleMLKitBarcodeScanningVersion = '17.0.0'
     googlePlayServicesAuthVersion = '20.4.1'
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
-    jsoupVersion = '1.10.3'
+    jsoupVersion = '1.15.4'
     kotlinxCoroutinesVersion = '1.6.4'
     lottieVersion = '5.2.0'
     philjayMpAndroidChartVersion = 'v3.1.0'

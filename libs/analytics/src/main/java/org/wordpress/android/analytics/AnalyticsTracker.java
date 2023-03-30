@@ -1034,7 +1034,10 @@ public final class AnalyticsTracker {
         BLAZE_FLOW_STARTED,
         BLAZE_FLOW_COMPLETED,
         BLAZE_FLOW_CANCELED,
-        BLAZE_FLOW_ERROR
+        BLAZE_FLOW_ERROR,
+        WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_SHOWN,
+        WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_DISMISSED,
+        WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_PRIMARY_TAPPED,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
