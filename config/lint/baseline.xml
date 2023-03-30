@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <issues format="6" by="lint 7.2.1" type="baseline" client="gradle" dependencies="true" name="AGP (7.2.1)" variant="all" version="7.2.1">
 
-    <!-- DEBUG -->
-
-    <issue
-        id="ManifestOrder"
-        message="`&lt;uses-permission>` tag appears after `&lt;application>` tag"
-        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.DISABLE_KEYGUARD&quot; />"
-        errorLine2="     ~~~~~~~~~~~~~~~">
-        <location
-            file="src/debug/AndroidManifest.xml"
-            line="21"
-            column="6"/>
-    </issue>
-
     <!-- WORDPRESS -->
 
     <issue
