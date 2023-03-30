@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-14 16:54:23+0000
+Translation-Revision-Date: 2023-03-28 15:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: he_IL
 -->
 <resources>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">האתר ⁦%1$s⁩ משתמש ב-⁦%2$s⁩ שעדיין לא תומך בכל האפשרויות של האפליקציה.\n\nיש להתקין את ⁦%3$s⁩ כדי להשתמש באפליקציה עם האתר הזה.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">האתר הזה</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">האתר ⁦%1$s⁩ משתמש ב-⁦%2$s⁩ שעדיין לא תומכים בכל האפשרויות של האפליקציה. יש להתקין את ⁦%3$s⁩.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">האתר ⁦%1$s⁩ משתמש ב-⁦%2$s⁩ שעדיין לא תומך בכל האפשרויות של האפליקציה. יש להתקין את ⁦%3$s⁩.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">האפשרות תעבור לאפליקציה של Jetpack בימים הקרובים.</string>
+    <string name="wp_jp_static_poster_footnote">ההחלפה היא חינמית ואורכת דקה בלבד.</string>
+    <string name="wp_jp_static_poster_message">נתונים סטטיסטיים, Reader, הודעות ואפשרויות אחרות שמופעלות על ידי Jetpack הוסרו מאפליקציית WordPress וכעת ניתן לגשת אליהן רק באפליקציה של Jetpack.</string>
+    <string name="wp_jp_static_poster_button_secondary">מידע נוסף באתר Jetpack.com</string>
+    <string name="wp_jp_static_poster_button_primary">החלפה לאפליקציה של Jetpack</string>
+    <string name="wp_jp_static_poster_title_plural">האפשרויות של %s הועברו לאפליקציה של Jetpack.</string>
+    <string name="wp_jp_static_poster_title">האפשרות של %s הועברה לאפליקציה של Jetpack.</string>
+    <string name="my_site_btn_wp_admin">ניהול WP</string>
+    <string name="my_site_header_manage">ניהול</string>
+    <string name="my_site_header_traffic">תעבורה</string>
+    <string name="my_site_header_content">תוכן</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">הגדרה</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">הושלם</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">כעת, לאחר ההתקנה של Jetpack, צריך להגדיר את החשבון. התהליך יארך כדקה.</string>
     <string name="blaze_overlay_site_promotional_button">לקדם פוסט עם Blaze עכשיו</string>
     <string name="blaze_overlay_page_promotional_button">להשתמש ב-Blaze בעמוד הזה</string>
     <string name="blaze_overlay_post_promotional_button">להשתמש ב-Blaze בפוסט הזה</string>
@@ -41,7 +59,7 @@ Language: he_IL
     <string name="jetpack_individual_plugin_support_onboarding_title">יש להתקין את התוסף המלא של Jetpack</string>
     <string name="only_one_primary_site_message">יש רק אתר אחד זמין ולכן אין אפשרות לשנות את האתר הראשי שלך.</string>
     <string name="button_promote_with_blaze">לקדם עם Blaze</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">להתחיל לממש את מלוא הפוטנציאל של האתר. לראות נתונים סטטיסטיים, לקרוא הודעות ועוד בעזרת Jetpack.</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">להתחיל לממש את מלוא הפוטנציאל של האתר. לקבל נתונים סטטיסטיים, לקרוא הודעות ועוד בעזרת Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">באתר שלך מותקן תוסף של Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">האפליקציה לנייד של Jetpack נועדה לעבוד בשילוב עם התוסף של Jetpack. כדאי להחליף עכשיו כדי לגשת לנתונים סטטיסטיים, להודעות, ל-Reader ועוד.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">לקבל הודעות על תגובות חדשות, לייקים, צפיות ועוד.</string>

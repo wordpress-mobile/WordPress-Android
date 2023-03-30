@@ -20,11 +20,14 @@ class WPJetpackIndividualPluginViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var helper: WPJetpackIndividualPluginHelper
 
+    @Mock
+    lateinit var tracker: WPJetpackIndividualPluginAnalyticsTracker
+
     private lateinit var viewModel: WPJetpackIndividualPluginViewModel
 
     @Before
     fun setUp() {
-        viewModel = WPJetpackIndividualPluginViewModel(helper, testDispatcher())
+        viewModel = WPJetpackIndividualPluginViewModel(helper, tracker, testDispatcher())
     }
 
     @Test
@@ -42,13 +45,23 @@ class WPJetpackIndividualPluginViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN onScreenShown THEN overlay shown count is incremented only once`() = test {
+    fun `WHEN onScreenShown THEN overlay shown helper method is called only once`() = test {
         whenever(helper.getJetpackConnectedSitesWithIndividualPlugins()).thenReturn(connectedSites)
         viewModel.onScreenShown()
         viewModel.onScreenShown()
         viewModel.onScreenShown()
 
-        verify(helper).incrementJetpackIndividualPluginOverlayShownCount()
+        verify(helper).onJetpackIndividualPluginOverlayShown()
+    }
+
+    @Test
+    fun `WHEN onScreenShown THEN analytics event is tracked only once`() = test {
+        whenever(helper.getJetpackConnectedSitesWithIndividualPlugins()).thenReturn(connectedSites)
+        viewModel.onScreenShown()
+        viewModel.onScreenShown()
+        viewModel.onScreenShown()
+
+        verify(tracker).trackScreenShown()
     }
 
     @Test
@@ -62,6 +75,13 @@ class WPJetpackIndividualPluginViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `WHEN onDismissScreenClick THEN analytics event is tracked`() = test {
+        viewModel.onDismissScreenClick()
+
+        verify(tracker).trackScreenDismissed()
+    }
+
+    @Test
     fun `WHEN onPrimaryButtonClick THEN emit appropriate event`() = test {
         val result = viewModel.actionEvents.testCollect(this) {
             viewModel.onPrimaryButtonClick()
@@ -69,6 +89,13 @@ class WPJetpackIndividualPluginViewModelTest : BaseUnitTest() {
 
         assertThat(result).hasSize(1)
         assertThat(result.first()).isEqualTo(ActionEvent.PrimaryButtonClick)
+    }
+
+    @Test
+    fun `WHEN onPrimaryButtonClick THEN analytics event is tracked`() = test {
+        viewModel.onPrimaryButtonClick()
+
+        verify(tracker).trackPrimaryButtonClick()
     }
 
     companion object {

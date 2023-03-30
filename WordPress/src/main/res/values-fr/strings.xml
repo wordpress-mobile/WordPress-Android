@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-14 11:54:27+0000
+Translation-Revision-Date: 2023-03-28 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: fr
 -->
 <resources>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s utilise une %2$s, qui ne prend pas encore en charge toutes les fonctionnalités de l’application.\n\nInstallez l’%3$s pour utiliser l’application avec ce site.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">Ce site</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s utilise des %2$s, qui ne prennent pas encore en charge toutes les fonctionnalités de l’application. Installez l’%3$s.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s utilise une %2$s, qui ne prend pas encore en charge toutes les fonctionnalités de l’application. Installez l’%3$s.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Le passage à l’application Jetpack est prévu dans quelques jours.</string>
+    <string name="wp_jp_static_poster_footnote">Passer d’une application à l’autre est gratuit et ne prend qu’une minute.</string>
+    <string name="wp_jp_static_poster_message">Les statistiques, le lecteur, les notifications et d’autres fonctionnalités reposant sur Jetpack ont été supprimées de l’application WordPress et sont désormais uniquement disponibles dans l’application Jetpack.</string>
+    <string name="wp_jp_static_poster_button_secondary">Lire la suite sur Jetpack.com</string>
+    <string name="wp_jp_static_poster_button_primary">Passer à l’application Jetpack</string>
+    <string name="wp_jp_static_poster_title_plural">Les %s sont désormais disponibles dans l’application Jetpack.</string>
+    <string name="wp_jp_static_poster_title">Le %s est désormais disponible dans l’application Jetpack.</string>
+    <string name="my_site_btn_wp_admin">Administrateur WP</string>
+    <string name="my_site_header_manage">Gérer</string>
+    <string name="my_site_header_traffic">Trafic</string>
+    <string name="my_site_header_content">Contenu</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Configurer</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">Terminé</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Maintenant que Jetpack est installé, il ne nous reste plus qu’à procéder à votre configuration. Ce processus ne prendra qu’une minute.</string>
     <string name="blaze_overlay_site_promotional_button">Donner de la visibilité à un article avec Blaze maintenant</string>
     <string name="blaze_overlay_page_promotional_button">Donner de la visibilité à cette page avec Blaze</string>
     <string name="blaze_overlay_post_promotional_button">Donner de la visibilité à cet article avec Blaze</string>
@@ -39,7 +57,7 @@ Language: fr
     <string name="jetpack_individual_plugin_support_onboarding_title">Installez l’extension Jetpack complète</string>
     <string name="only_one_primary_site_message">Un seul site est disponible. Vous ne pouvez donc pas changer de site principal.</string>
     <string name="button_promote_with_blaze">Promouvoir avec Blaze</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Libérez tout le potentiel de votre site. Profitez des statistiques, des notifications et de bien plus encore avec Jetpack.</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Libérez tout le potentiel de votre site. Profitez de statistiques, de notifications et de bien d’autres choses encore avec Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Votre site comporte l’extension Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">L’application mobile Jetpack est conçue pour compléter l’extension Jetpack. Effectuez le changement dès maintenant pour accéder aux statistiques, aux notifications, au lecteur et bien plus encore.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Recevez des notifications pour tout nouveau commentaire, mention J\'aime, vue, et plus encore.</string>

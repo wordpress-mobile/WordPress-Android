@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-15 11:54:07+0000
+Translation-Revision-Date: 2023-03-29 09:54:25+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ja_JP
 -->
 <resources>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。\n\nアプリをこのサイトと一緒に使用するには、%3$s をインストールしてください。</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">このサイト</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。 %3$s をインストールしてください。</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。 %3$s をインストールしてください。</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">数日後に Jetpack アプリに移動予定です。</string>
+    <string name="wp_jp_static_poster_footnote">切り替えは無料で、数分で終わります。</string>
+    <string name="wp_jp_static_poster_message">統計、Reader、通知などの Jetpack 機能は WordPress アプリから削除され、Jetpack アプリでのみ使用できるようになりました。</string>
+    <string name="wp_jp_static_poster_button_secondary">詳細は Jetpack.com をご覧ください</string>
+    <string name="wp_jp_static_poster_button_primary">Jetpack アプリに切り替える</string>
+    <string name="wp_jp_static_poster_title_plural">%sは Jetpack アプリに移動しました。</string>
+    <string name="wp_jp_static_poster_title">%sは Jetpack アプリに移動しました。</string>
+    <string name="my_site_btn_wp_admin">WP 管理画面</string>
+    <string name="my_site_header_manage">管理</string>
+    <string name="my_site_header_traffic">トラフィック</string>
+    <string name="my_site_header_content">コンテンツ</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">セットアップ</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">完了</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Jetpack がインストールされたので、あとはセットアップするだけです。 ほんの1分ほどで済みます。</string>
     <string name="blaze_overlay_site_promotional_button">今すぐ投稿を目立たせる</string>
     <string name="blaze_overlay_page_promotional_button">このページを目立たせる</string>
     <string name="blaze_overlay_post_promotional_button">この投稿を目立たせる</string>
@@ -41,7 +59,7 @@ Language: ja_JP
     <string name="jetpack_individual_plugin_support_onboarding_title">完全な Jetpack プラグインをインストールしてください</string>
     <string name="only_one_primary_site_message">1つのサイトのみを利用できるため、主要サイトを変更できません。</string>
     <string name="button_promote_with_blaze">Blaze を使って宣伝</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">サイトの可能性を十分に引き出すことができます。 Jetpack で統計、通知などを利用できます。</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">サイトの可能性を十分に引き出すことができます。 Jetpack で統計や通知などを利用できます。</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">ご利用のサイトには Jetpack プラグインが設定されています</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack モバイルアプリは、Jetpack プラグインと連携させて利用できます。 今すぐ乗り換えて、統計、通知、Reader などをご利用ください。</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">新しいコメントや「いいね」、表示数などの通知を受信できます。</string>

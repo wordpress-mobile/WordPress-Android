@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-14 09:54:12+0000
+Translation-Revision-Date: 2023-03-22 12:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: it
 -->
 <resources>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s utilizza %2$s, che non supportano ancora tutte le funzionalità dell\'app.\n\nInstalla %3$s per usare l\'app coon questo sito.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">Questo sito</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s utilizza %2$s, che non supportano ancora tutte le funzionalità dell\'app. Please install the %3$s.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s utilizza %2$s, che non supportano ancora tutte le funzionalità dell\'app. Please install the %3$s.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Moving to the Jetpack app in a few days.</string>
+    <string name="wp_jp_static_poster_footnote">Il passaggio è gratuito e richiede solo un minuto.</string>
+    <string name="wp_jp_static_poster_message">Statistiche, Reader, Notifiche e altre funzionalità basate su Jetpack sono state rimosse dall\'app WordPress.</string>
+    <string name="wp_jp_static_poster_button_secondary">Maggiori informazioni su jetpack.com</string>
+    <string name="wp_jp_static_poster_button_primary">Passa all\'app Jetpack</string>
+    <string name="wp_jp_static_poster_title_plural">%s have moved to the Jetpack app.</string>
+    <string name="wp_jp_static_poster_title">%s has moved to the Jetpack app.</string>
+    <string name="my_site_btn_wp_admin">WP Admin</string>
+    <string name="my_site_header_manage">Gestisci</string>
+    <string name="my_site_header_traffic">Traffico</string>
+    <string name="my_site_header_content">Contenuto</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Configura</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">Fatto</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Ora che Jetpack è installato, manca solo la configurazione. Ci vorrà soltanto un minuto.</string>
     <string name="blaze_overlay_site_promotional_button">Diffondi un articolo ora</string>
     <string name="blaze_overlay_page_promotional_button">Diffondi questa pagina</string>
     <string name="blaze_overlay_post_promotional_button">Diffondi questo articolo</string>
@@ -40,7 +58,6 @@ Language: it
     <string name="jetpack_individual_plugin_support_onboarding_title">Installa il plugin Jetpack completo</string>
     <string name="only_one_primary_site_message">È disponibile un solo sito, quindi non puoi modificare il sito principale.</string>
     <string name="button_promote_with_blaze">Promuovi con la diffusione</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Sblocca tutto il potenziale del tuo sito web. Ottieni statistiche, notifiche e altro con Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Il tuo sito ha il plugin Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">L\'app mobile Jetpack è progettata per funzionare insieme al plugin Jetpack. Passa ora per accedere a statistiche, notifiche, reader e altro ancora.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Ricevi notifiche per nuovi commenti, Mi piace, visualizzazioni e altro ancora.</string>
