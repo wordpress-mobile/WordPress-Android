@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -20,13 +21,14 @@ import org.wordpress.android.util.UrlUtils;
 
 import javax.inject.Inject;
 
-import dagger.android.support.DaggerFragment;
+import dagger.hilt.android.AndroidEntryPoint;
 
 /**
  * Fragment responsible for caching post content into WebView.
  * Caching happens on UI thread, so any configuration change will restart it from scratch.
  */
-public class ReaderPostWebViewCachingFragment extends DaggerFragment {
+@AndroidEntryPoint
+public class ReaderPostWebViewCachingFragment extends Fragment {
     private static final String ARG_BLOG_ID = "blog_id";
     private static final String ARG_POST_ID = "post_id";
 

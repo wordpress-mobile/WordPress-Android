@@ -2,9 +2,11 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.minified
 
 import android.os.Bundle
 import android.view.MenuItem
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.StatsMinifiedWidgetConfigureActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 
+@AndroidEntryPoint
 class StatsMinifiedWidgetConfigureActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
