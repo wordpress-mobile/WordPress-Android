@@ -12,7 +12,6 @@ Language: gl_ES
     <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contactar con soporte</string>
     <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Termos e condicións</string>
     <string name="button_promote_with_blaze">Promocionar con Blaze</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Libera todo o potencial do teu sitio. Obtén estatísticas, notificacións e máis con Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">O teu sitio ten o plugin de Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">A aplicación móbil Jetpack está deseñada para funcionar xunto co plugin de Jetpack. Fai o cambio agora e obtén acceso a estatísticas, notificacións e ao lector, entre outras funcións.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Recibe notificacións por novos comentarios, Gústame, visualizacións, etc.</string>
