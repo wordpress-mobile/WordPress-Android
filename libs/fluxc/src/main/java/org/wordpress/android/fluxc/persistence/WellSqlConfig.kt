@@ -36,7 +36,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 181
+        return 182
     }
 
     override fun getDbName(): String {
@@ -1893,6 +1893,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 180 -> migrate(version) {
                     db.execSQL("ALTER TABLE SiteModel ADD APPLICATION_PASSWORDS_AUTHORIZE_URL TEXT")
+                }
+                181 -> migrate(version) {
+                    db.execSQL("ALTER TABLE WCProductVariationModel ADD METADATA TEXT")
                 }
             }
         }
