@@ -134,6 +134,8 @@
 
 /sites/$site/homepage
 
+/sites/$site/ecommerce-trial/add/$plan_slug#String
+
 /users/new/
 /users/social/new
 /users/$emailOrUsername#String/auth-options
