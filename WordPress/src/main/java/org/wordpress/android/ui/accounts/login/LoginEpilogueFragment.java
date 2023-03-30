@@ -396,4 +396,9 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
         mParentViewModel.onLoginFinished(mDoLoginUpdate);
     }
+
+    @Override
+    protected boolean isJetpackAppLogin() {
+        return mDoLoginUpdate && mBuildConfigWrapper.isJetpackApp();
+    }
 }
