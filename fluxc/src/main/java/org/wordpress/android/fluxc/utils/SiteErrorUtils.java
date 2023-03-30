@@ -19,7 +19,7 @@ public class SiteErrorUtils {
             }
         }
 
-        SiteError siteError = new SiteError(errorType, error.message);
+        SiteError siteError = new SiteError(errorType, error.message, SelfHostedErrorType.NOT_SET);
 
         switch (error.xmlRpcErrorType) {
             case METHOD_NOT_ALLOWED:

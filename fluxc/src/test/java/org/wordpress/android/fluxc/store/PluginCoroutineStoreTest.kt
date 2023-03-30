@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store
 
-import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -10,24 +9,19 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType.SITE
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.HTTP_AUTH_ERROR
-import org.wordpress.android.fluxc.network.rest.wpapi.Nonce
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.plugin.PluginWPAPIRestClient
 import org.wordpress.android.fluxc.persistence.PluginSqlUtilsWrapper
 import org.wordpress.android.fluxc.store.PluginCoroutineStore.WPApiPluginsPayload
@@ -45,26 +39,12 @@ import org.wordpress.android.fluxc.tools.initCoroutineEngine
 class PluginCoroutineStoreTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var pluginWPAPIRestClient: PluginWPAPIRestClient
-    private val wpapiAuthenticator = mock<WPAPIAuthenticator> {
-        onBlocking {
-            makeAuthenticatedWPAPIRequest(
-                any(),
-                any<suspend (Nonce?) -> Payload<BaseNetworkError?>>()
-            )
-        } doAnswer { invocation ->
-            runBlocking {
-                @Suppress("UNCHECKED_CAST")
-                invocation.getArgument<suspend (Nonce?) -> Payload<BaseNetworkError?>>(1).invoke(nonce)
-            }
-        }
-    }
     @Mock lateinit var pluginSqlUtils: PluginSqlUtilsWrapper
     private lateinit var store: PluginCoroutineStore
     private val site: SiteModel = SiteModel().apply {
         url = "site.com"
         username = "username"
     }
-    private val nonce = Nonce.Available("nonce", site.username)
     private lateinit var onFetchedEventCaptor: KArgumentCaptor<OnPluginDirectoryFetched>
     private lateinit var onDeletedEventCaptor: KArgumentCaptor<OnSitePluginDeleted>
     private lateinit var onConfiguredEventCaptor: KArgumentCaptor<OnSitePluginConfigured>
@@ -72,11 +52,10 @@ class PluginCoroutineStoreTest {
     @Before
     fun setUp() {
         store = PluginCoroutineStore(
-                initCoroutineEngine(),
-                dispatcher,
-                pluginWPAPIRestClient,
-                wpapiAuthenticator,
-                pluginSqlUtils
+            initCoroutineEngine(),
+            dispatcher,
+            pluginWPAPIRestClient,
+            pluginSqlUtils
         )
         onFetchedEventCaptor = argumentCaptor()
         onDeletedEventCaptor = argumentCaptor()
@@ -86,13 +65,13 @@ class PluginCoroutineStoreTest {
     @Test
     fun `fetches WP Api plugins with success`() = test {
         val fetchedPlugins = listOf(
-                SitePluginModel()
+            SitePluginModel()
         )
-        whenever(pluginWPAPIRestClient.fetchPlugins(site, nonce, true)).thenReturn(
-                WPApiPluginsPayload(
-                        site,
-                        fetchedPlugins
-                )
+        whenever(pluginWPAPIRestClient.fetchPlugins(site, true)).thenReturn(
+            WPApiPluginsPayload(
+                site,
+                fetchedPlugins
+            )
         )
 
         val result = store.syncFetchWPApiPlugins(site)
@@ -104,12 +83,12 @@ class PluginCoroutineStoreTest {
 
     @Test
     fun `fetches WP Api plugins with error `() = test {
-        whenever(pluginWPAPIRestClient.fetchPlugins(site, nonce, true)).thenReturn(
-                WPApiPluginsPayload(
-                        BaseNetworkError(
-                                GenericErrorType.AUTHORIZATION_REQUIRED
-                        )
+        whenever(pluginWPAPIRestClient.fetchPlugins(site, true)).thenReturn(
+            WPApiPluginsPayload(
+                BaseNetworkError(
+                    GenericErrorType.AUTHORIZATION_REQUIRED
                 )
+            )
         )
 
         val result = store.syncFetchWPApiPlugins(site)
@@ -122,13 +101,13 @@ class PluginCoroutineStoreTest {
     @Test
     fun `fetches WP Api plugins and emits event`() = test {
         val fetchedPlugins = listOf(
-                SitePluginModel()
+            SitePluginModel()
         )
-        whenever(pluginWPAPIRestClient.fetchPlugins(site, nonce, true)).thenReturn(
-                WPApiPluginsPayload(
-                        site,
-                        fetchedPlugins
-                )
+        whenever(pluginWPAPIRestClient.fetchPlugins(site, true)).thenReturn(
+            WPApiPluginsPayload(
+                site,
+                fetchedPlugins
+            )
         )
 
         store.fetchWPApiPlugins(site)
@@ -145,11 +124,11 @@ class PluginCoroutineStoreTest {
         val slug = "plugin_slug"
         val sitePluginModel = SitePluginModel()
         whenever(pluginSqlUtils.getSitePluginBySlug(site, slug)).thenReturn(sitePluginModel)
-        whenever(pluginWPAPIRestClient.deletePlugin(site, nonce, pluginName)).thenReturn(
-                WPApiPluginsPayload(
-                        site,
-                        sitePluginModel
-                )
+        whenever(pluginWPAPIRestClient.deletePlugin(site, pluginName)).thenReturn(
+            WPApiPluginsPayload(
+                site,
+                sitePluginModel
+            )
         )
 
         val result = store.syncDeleteSitePlugin(site, pluginName, slug)
@@ -167,11 +146,11 @@ class PluginCoroutineStoreTest {
         val sitePluginModel = SitePluginModel()
         sitePluginModel.name = pluginName
         whenever(pluginSqlUtils.getSitePluginBySlug(site, slug)).thenReturn(sitePluginModel)
-        whenever(pluginWPAPIRestClient.deletePlugin(site, nonce, pluginName)).thenReturn(
-                WPApiPluginsPayload(
-                        site,
-                        sitePluginModel
-                )
+        whenever(pluginWPAPIRestClient.deletePlugin(site, pluginName)).thenReturn(
+            WPApiPluginsPayload(
+                site,
+                sitePluginModel
+            )
         )
 
         store.deleteSitePlugin(site, pluginName, slug)
@@ -189,10 +168,10 @@ class PluginCoroutineStoreTest {
         val slug = "plugin_slug"
         val sitePluginModel = SitePluginModel()
         whenever(pluginSqlUtils.getSitePluginBySlug(site, slug)).thenReturn(sitePluginModel)
-        whenever(pluginWPAPIRestClient.deletePlugin(site, nonce, pluginName)).thenReturn(
-                WPApiPluginsPayload(
-                        BaseNetworkError(HTTP_AUTH_ERROR)
-                )
+        whenever(pluginWPAPIRestClient.deletePlugin(site, pluginName)).thenReturn(
+            WPApiPluginsPayload(
+                BaseNetworkError(HTTP_AUTH_ERROR)
+            )
         )
 
         val result = store.syncDeleteSitePlugin(site, pluginName, slug)
@@ -208,10 +187,10 @@ class PluginCoroutineStoreTest {
         val slug = "plugin_slug"
         val sitePluginModel = SitePluginModel()
         whenever(pluginSqlUtils.getSitePluginBySlug(site, slug)).thenReturn(sitePluginModel)
-        whenever(pluginWPAPIRestClient.deletePlugin(site, nonce, pluginName)).thenReturn(
-                WPApiPluginsPayload(
-                        BaseNetworkError(GenericErrorType.NOT_FOUND)
-                )
+        whenever(pluginWPAPIRestClient.deletePlugin(site, pluginName)).thenReturn(
+            WPApiPluginsPayload(
+                BaseNetworkError(GenericErrorType.NOT_FOUND)
+            )
         )
 
         val result = store.syncDeleteSitePlugin(site, pluginName, slug)
@@ -227,11 +206,11 @@ class PluginCoroutineStoreTest {
         val sitePluginModel = SitePluginModel()
         whenever(pluginSqlUtils.getSitePluginBySlug(site, slug)).thenReturn(sitePluginModel)
         val active = true
-        whenever(pluginWPAPIRestClient.updatePlugin(site, nonce, pluginName, active)).thenReturn(
-                WPApiPluginsPayload(
-                        site,
-                        sitePluginModel
-                )
+        whenever(pluginWPAPIRestClient.updatePlugin(site, pluginName, active)).thenReturn(
+            WPApiPluginsPayload(
+                site,
+                sitePluginModel
+            )
         )
 
         val result = store.syncConfigureSitePlugin(site, pluginName, slug, active)
@@ -250,11 +229,11 @@ class PluginCoroutineStoreTest {
         sitePluginModel.name = pluginName
         whenever(pluginSqlUtils.getSitePluginBySlug(site, slug)).thenReturn(sitePluginModel)
         val active = true
-        whenever(pluginWPAPIRestClient.updatePlugin(site, nonce, pluginName, active)).thenReturn(
-                WPApiPluginsPayload(
-                        site,
-                        sitePluginModel
-                )
+        whenever(pluginWPAPIRestClient.updatePlugin(site, pluginName, active)).thenReturn(
+            WPApiPluginsPayload(
+                site,
+                sitePluginModel
+            )
         )
 
         store.configureSitePlugin(site, pluginName, slug, active)
@@ -273,10 +252,10 @@ class PluginCoroutineStoreTest {
         val sitePluginModel = SitePluginModel()
         whenever(pluginSqlUtils.getSitePluginBySlug(site, slug)).thenReturn(sitePluginModel)
         val active = true
-        whenever(pluginWPAPIRestClient.updatePlugin(site, nonce, pluginName, active)).thenReturn(
-                WPApiPluginsPayload(
-                        BaseNetworkError(HTTP_AUTH_ERROR)
-                )
+        whenever(pluginWPAPIRestClient.updatePlugin(site, pluginName, active)).thenReturn(
+            WPApiPluginsPayload(
+                BaseNetworkError(HTTP_AUTH_ERROR)
+            )
         )
 
         val result = store.syncConfigureSitePlugin(site, pluginName, slug, active)
@@ -293,17 +272,17 @@ class PluginCoroutineStoreTest {
         val name = "plugin_name"
         sitePluginModel.name = name
         sitePluginModel.slug = slug
-        whenever(pluginWPAPIRestClient.installPlugin(site, nonce, slug)).thenReturn(
-                WPApiPluginsPayload(
-                        site,
-                        sitePluginModel
-                )
+        whenever(pluginWPAPIRestClient.installPlugin(site, slug)).thenReturn(
+            WPApiPluginsPayload(
+                site,
+                sitePluginModel
+            )
         )
-        whenever(pluginWPAPIRestClient.updatePlugin(site, nonce, name, true)).thenReturn(
-                WPApiPluginsPayload(
-                        site,
-                        sitePluginModel
-                )
+        whenever(pluginWPAPIRestClient.updatePlugin(site, name, true)).thenReturn(
+            WPApiPluginsPayload(
+                site,
+                sitePluginModel
+            )
         )
 
         val result = store.syncInstallSitePlugin(site, slug)
@@ -311,7 +290,7 @@ class PluginCoroutineStoreTest {
         assertThat(result.isError).isFalse()
         assertThat(result.slug).isEqualTo(slug)
         verify(pluginSqlUtils, times(2)).insertOrUpdateSitePlugin(site, sitePluginModel)
-        verify(pluginWPAPIRestClient).updatePlugin(site, nonce, name, true)
+        verify(pluginWPAPIRestClient).updatePlugin(site, name, true)
         verify(dispatcher, times(2)).emitChange(any())
     }
 
@@ -323,11 +302,11 @@ class PluginCoroutineStoreTest {
         sitePluginModel.name = name
         sitePluginModel.slug = slug
         whenever(
-                pluginWPAPIRestClient.installPlugin(
-                        site,
-                        nonce,
-                        slug
-                )
+            pluginWPAPIRestClient.installPlugin(
+                site,
+
+                slug
+            )
         ).thenReturn(WPApiPluginsPayload(BaseNetworkError(HTTP_AUTH_ERROR)))
 
         val result = store.syncInstallSitePlugin(site, slug)
@@ -336,7 +315,7 @@ class PluginCoroutineStoreTest {
         assertThat(result.slug).isEqualTo(slug)
         assertThat(result.error.type).isEqualTo(InstallSitePluginErrorType.UNAUTHORIZED)
         verifyNoInteractions(pluginSqlUtils)
-        verify(pluginWPAPIRestClient, never()).updatePlugin(eq(site), eq(nonce), any(), any())
+        verify(pluginWPAPIRestClient, never()).updatePlugin(eq(site), any(), any())
         verify(dispatcher, times(1)).emitChange(any())
     }
 }

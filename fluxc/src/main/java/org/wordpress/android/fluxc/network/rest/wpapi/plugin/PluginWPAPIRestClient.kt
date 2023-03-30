@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
-import org.wordpress.android.fluxc.network.rest.wpapi.Nonce
+import org.wordpress.android.fluxc.network.rest.wpapi.CookieNonceAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
@@ -20,25 +20,26 @@ import javax.inject.Singleton
 @Singleton
 class PluginWPAPIRestClient @Inject constructor(
     private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
+    private val cookieNonceAuthenticator: CookieNonceAuthenticator,
     dispatcher: Dispatcher,
     @Named("custom-ssl") requestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
     suspend fun fetchPlugins(
         site: SiteModel,
-        nonce: Nonce? = null,
         enableCaching: Boolean = true
     ): WPApiPluginsPayload<List<SitePluginModel>> {
         val url = buildUrl(site)
         val type = object : TypeToken<List<PluginResponseModel>>() {}.type
-        val response =
-                wpApiGsonRequestBuilder.syncGetRequest<List<PluginResponseModel>>(
-                        restClient = this,
-                        url = url,
-                        type = type,
-                        enableCaching = enableCaching,
-                        nonce = nonce?.value
-                )
+        val response = cookieNonceAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+            wpApiGsonRequestBuilder.syncGetRequest<List<PluginResponseModel>>(
+                restClient = this,
+                url = url,
+                type = type,
+                enableCaching = enableCaching,
+                nonce = nonce.value
+            )
+        }
         return when (response) {
             is Success -> {
                 val plugins = response.data?.map {
@@ -46,6 +47,7 @@ class PluginWPAPIRestClient @Inject constructor(
                 }
                 WPApiPluginsPayload(site, plugins)
             }
+
             is Error -> {
                 WPApiPluginsPayload(response.error)
             }
@@ -54,68 +56,68 @@ class PluginWPAPIRestClient @Inject constructor(
 
     suspend fun fetchPlugin(
         site: SiteModel,
-        nonce: Nonce?,
         pluginName: String
     ): WPApiPluginsPayload<SitePluginModel> {
         val url = buildUrl(site, pluginName)
-        val response =
+        val response = cookieNonceAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
             wpApiGsonRequestBuilder.syncGetRequest(
                 restClient = this,
                 url = url,
                 clazz = PluginResponseModel::class.java,
-                nonce = nonce?.value
+                nonce = nonce.value
             )
+        }
         return handleResponse(response, site)
     }
 
     suspend fun installPlugin(
         site: SiteModel,
-        nonce: Nonce? = null,
         installedPluginSlug: String
     ): WPApiPluginsPayload<SitePluginModel> {
         val url = buildUrl(site)
-        val response =
-                wpApiGsonRequestBuilder.syncPostRequest(
-                        restClient = this,
-                        url = url,
-                        body = mapOf("slug" to installedPluginSlug),
-                        clazz = PluginResponseModel::class.java,
-                        nonce = nonce?.value
-                )
+        val response = cookieNonceAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+            wpApiGsonRequestBuilder.syncPostRequest(
+                restClient = this,
+                url = url,
+                body = mapOf("slug" to installedPluginSlug),
+                clazz = PluginResponseModel::class.java,
+                nonce = nonce.value
+            )
+        }
         return handleResponse(response, site)
     }
 
     suspend fun updatePlugin(
         site: SiteModel,
-        nonce: Nonce? = null,
         updatedPlugin: String,
         active: Boolean
     ): WPApiPluginsPayload<SitePluginModel> {
         val url = buildUrl(site, updatedPlugin)
-        val response =
-                wpApiGsonRequestBuilder.syncPutRequest(
-                        restClient = this,
-                        url = url,
-                        body = mapOf("status" to if (active) "active" else "inactive"),
-                        clazz = PluginResponseModel::class.java,
-                        nonce = nonce?.value
-                )
+        val response = cookieNonceAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+            wpApiGsonRequestBuilder.syncPutRequest(
+                restClient = this,
+                url = url,
+                body = mapOf("status" to if (active) "active" else "inactive"),
+                clazz = PluginResponseModel::class.java,
+                nonce = nonce.value
+            )
+        }
         return handleResponse(response, site)
     }
 
     suspend fun deletePlugin(
         site: SiteModel,
-        nonce: Nonce? = null,
         deletedPlugin: String
     ): WPApiPluginsPayload<SitePluginModel> {
         val url = buildUrl(site, deletedPlugin)
-        val response =
-                wpApiGsonRequestBuilder.syncDeleteRequest(
-                        restClient = this,
-                        url = url,
-                        clazz = PluginResponseModel::class.java,
-                        nonce = nonce?.value
-                )
+        val response = cookieNonceAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+            wpApiGsonRequestBuilder.syncDeleteRequest(
+                restClient = this,
+                url = url,
+                clazz = PluginResponseModel::class.java,
+                nonce = nonce.value
+            )
+        }
         return handleResponse(response, site)
     }
 
@@ -127,6 +129,7 @@ class PluginWPAPIRestClient @Inject constructor(
             val plugin = response.data?.toDomainModel(site.id)
             WPApiPluginsPayload(site, plugin)
         }
+
         is Error -> {
             WPApiPluginsPayload(response.error)
         }

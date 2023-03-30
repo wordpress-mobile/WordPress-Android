@@ -97,6 +97,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSit
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedCountryResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
+import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSiteModel
+import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSitesDao
+import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSitesDao.JetpackCPConnectedSiteEntity
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException
@@ -138,6 +141,7 @@ open class SiteStore @Inject constructor(
     private val siteWPAPIRestClient: SiteWPAPIRestClient,
     private val privateAtomicCookie: PrivateAtomicCookie,
     private val siteSqlUtils: SiteSqlUtils,
+    private val jetpackCPConnectedSitesDao: JetpackCPConnectedSitesDao,
     private val coroutineEngine: CoroutineEngine
 ) : Store(dispatcher) {
     @Inject internal lateinit var applicationPasswordsManagerProvider: Provider<ApplicationPasswordsManager>
@@ -155,9 +159,9 @@ open class SiteStore @Inject constructor(
     ) : Payload<BaseNetworkError>()
 
     data class FetchWPAPISitePayload(
-        @JvmField val username: String = "",
-        @JvmField val password: String = "",
-        @JvmField val url: String = ""
+        val url: String,
+        val username: String? = null,
+        val password: String? = null,
     ) : Payload<BaseNetworkError>()
 
     data class FetchSitesPayload @JvmOverloads constructor(
@@ -185,7 +189,9 @@ open class SiteStore @Inject constructor(
         @JvmField val visibility: SiteVisibility,
         @JvmField val segmentId: Long? = null,
         @JvmField val siteDesign: String? = null,
-        @JvmField val dryRun: Boolean
+        @JvmField val dryRun: Boolean,
+        @JvmField val findAvailableUrl: Boolean? = null,
+        @JvmField val siteCreationFlow: String? = null
     ) : Payload<BaseNetworkError>() {
         constructor(
             siteName: String?,
@@ -216,8 +222,9 @@ open class SiteStore @Inject constructor(
             language: String,
             timeZoneId: String,
             visibility: SiteVisibility,
+            findAvailableUrl: Boolean?,
             dryRun: Boolean
-        ) : this(siteName, siteTitle, language, timeZoneId, visibility, null, null, dryRun)
+        ) : this(siteName, siteTitle, language, timeZoneId, visibility, null, null, dryRun, findAvailableUrl)
     }
 
     data class FetchedPostFormatsPayload(
@@ -1033,7 +1040,10 @@ open class SiteStore @Inject constructor(
     }
 
     enum class SiteVisibility(private val mValue: Int) {
-        PRIVATE(-1), BLOCK_SEARCH_ENGINE(0), PUBLIC(1);
+        PRIVATE(-1),
+        BLOCK_SEARCH_ENGINE(0),
+        PUBLIC(1),
+        COMING_SOON(999);
 
         fun value(): Int {
             return mValue
@@ -1287,6 +1297,14 @@ open class SiteStore @Inject constructor(
         return siteSqlUtils.getUserRoles(site!!)
     }
 
+    suspend fun getJetpackCPConnectedSites(): List<JetpackCPConnectedSiteModel> {
+        return jetpackCPConnectedSitesDao.getAll().map { it.toJetpackCPConnectedSite() }
+    }
+
+    suspend fun hasJetpackCPConnectedSites(): Boolean {
+        return jetpackCPConnectedSitesDao.getCount() > 0
+    }
+
     @Subscribe(threadMode = ASYNC)
     @Suppress("LongMethod", "ComplexMethod")
     override fun onAction(action: Action<*>) {
@@ -1315,8 +1333,12 @@ open class SiteStore @Inject constructor(
             EXPORT_SITE -> exportSite(action.payload as SiteModel)
             EXPORTED_SITE -> handleExportedSite(action.payload as ExportSiteResponsePayload)
             REMOVE_SITE -> removeSite(action.payload as SiteModel)
-            REMOVE_ALL_SITES -> removeAllSites()
-            REMOVE_WPCOM_AND_JETPACK_SITES -> removeWPComAndJetpackSites()
+            REMOVE_ALL_SITES -> coroutineEngine.launch(T.MAIN, this, "Remove all sites") {
+                removeAllSites()
+            }
+            REMOVE_WPCOM_AND_JETPACK_SITES -> coroutineEngine.launch(T.MAIN, this, "Remove WPCom and Jetpack sites") {
+                removeWPComAndJetpackSites()
+            }
             SHOW_SITES -> toggleSitesVisibility(action.payload as SitesModel, true)
             HIDE_SITES -> toggleSitesVisibility(action.payload as SitesModel, false)
             CREATE_NEW_SITE -> coroutineEngine.launch(T.MAIN, this, "Create a new site") {
@@ -1477,7 +1499,7 @@ open class SiteStore @Inject constructor(
     }
 
     @Suppress("ForbiddenComment")
-    private fun handleFetchedSitesWPComRest(fetchedSites: SitesModel): OnSiteChanged {
+    private suspend fun handleFetchedSitesWPComRest(fetchedSites: SitesModel): OnSiteChanged {
         return if (fetchedSites.isError) {
             // TODO: what kind of error could we get here?
             OnSiteChanged(SiteErrorUtils.genericToSiteError(fetchedSites.error))
@@ -1489,6 +1511,9 @@ open class SiteStore @Inject constructor(
                 OnSiteChanged(res.rowsAffected, res.updatedSites)
             }
             siteSqlUtils.removeWPComRestSitesAbsentFromList(postSqlUtils, fetchedSites.sites)
+
+            createOrUpdateJetpackCPConnectedSites(fetchedSites, res.updatedSites)
+
             result
         }
     }
@@ -1518,6 +1543,23 @@ open class SiteStore @Inject constructor(
             }
         }
         return UpdateSitesResult(rowsAffected, updatedSites, duplicateSiteFound)
+    }
+
+    // Insert Jetpack CP connected sites, with updated local id info if they are also in the fetched sites list
+    private suspend fun createOrUpdateJetpackCPConnectedSites(fetchedSites: SitesModel, updatedSites: List<SiteModel>) {
+        if (fetchedSites.jetpackCPSites.isNotEmpty()) {
+            for (i in fetchedSites.jetpackCPSites.indices) {
+                val site = fetchedSites.jetpackCPSites[i]
+                val siteInList = updatedSites.find { it.siteId == site.siteId }
+                siteInList?.let { fetchedSites.jetpackCPSites[i] = it }
+            }
+
+            // clear all Jetpack CP connected sites and insert the new ones (to remove old stale sites)
+            jetpackCPConnectedSitesDao.deleteAll()
+            jetpackCPConnectedSitesDao.insert(
+                fetchedSites.jetpackCPSites.mapNotNull(JetpackCPConnectedSiteEntity::from)
+            )
+        }
     }
 
     private fun deleteSite(site: SiteModel) {
@@ -1563,17 +1605,25 @@ open class SiteStore @Inject constructor(
         emitChange(OnSiteRemoved(rowsAffected))
     }
 
-    private fun removeAllSites() {
+    private suspend fun removeAllSites() {
         val rowsAffected = siteSqlUtils.deleteAllSites()
         val event = OnAllSitesRemoved(rowsAffected)
+
+        // also drop everything from the Jetpack CP connected sites table, no change needs to be emitted for this
+        jetpackCPConnectedSitesDao.deleteAll()
+
         emitChange(event)
     }
 
-    private fun removeWPComAndJetpackSites() {
+    private suspend fun removeWPComAndJetpackSites() {
         // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were fetched over the WP.com
         // REST API only (they don't have a .org site id)
         val wpcomAndJetpackSites = siteSqlUtils.sitesAccessedViaWPComRest.asModel
         val rowsAffected = removeSites(wpcomAndJetpackSites)
+
+        // also drop everything from the Jetpack CP connected sites table, no change needs to be emitted for this
+        jetpackCPConnectedSitesDao.deleteAll()
+
         emitChange(OnSiteRemoved(rowsAffected))
     }
 
@@ -1595,7 +1645,9 @@ open class SiteStore @Inject constructor(
                 payload.visibility,
                 payload.segmentId,
                 payload.siteDesign,
-                payload.dryRun
+                payload.findAvailableUrl,
+                payload.dryRun,
+                payload.siteCreationFlow
         )
         return handleCreateNewSiteCompleted(
                 payload = result
