@@ -171,7 +171,6 @@ class VideoPressBlockProcessor(
 
     override fun processBlockJsonAttributes(jsonAttributes: JsonObject?): Boolean {
         val id = jsonAttributes?.get(ID_ATTRIBUTE)
-        val src = jsonAttributes?.get(SRC_ATTRIBUTE)
 
         return if (id != null && !id.isJsonNull && id.asString == mLocalId) {
             jsonAttributes.apply {
@@ -190,6 +189,5 @@ class VideoPressBlockProcessor(
     companion object {
         const val ID_ATTRIBUTE = "id"
         const val GUID_ATTRIBUTE = "guid"
-        const val SRC_ATTRIBUTE = "src"
     }
 }
