@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="GutenbergContainerTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <item name="colorAccent">@color/accent_color</item>
@@ -15,19 +13,19 @@
         <item name="android:textOff">""</item>
     </style>
 
-    <style name="FormatBarButtonTablet" parent="FormatBarButton">
+    <style name="FormatBarButtonTablet" parent="FormatBarButton" tools:ignore="UnusedResources">
         <item name="android:layout_marginRight">@dimen/format_bar_button_margin_tablet</item>
         <item name="android:layout_marginLeft">@dimen/format_bar_button_margin_tablet</item>
         <item name="android:layout_marginStart">@dimen/format_bar_button_margin_tablet</item>
         <item name="android:layout_marginEnd">@dimen/format_bar_button_margin_tablet</item>
     </style>
 
-    <style name="FormatBarHtmlButton" parent="FormatBarButton">
+    <style name="FormatBarHtmlButton" parent="FormatBarButton" tools:ignore="UnusedResources">
         <item name="android:layout_marginLeft">@dimen/format_bar_html_button_left_margin</item>
         <item name="android:layout_marginStart">@dimen/format_bar_html_button_left_margin</item>
     </style>
 
-    <style name="Divider">
+    <style name="Divider" tools:ignore="UnusedResources">
         <item name="android:background">@color/format_bar_divider</item>
     </style>
 
@@ -35,7 +33,7 @@
         <item name="android:background">@color/sourceview_separator</item>
     </style>
 
-    <style name="FormatBarTabletGroup">
+    <style name="FormatBarTabletGroup" tools:ignore="UnusedResources">
         <item name="android:layout_marginLeft">@dimen/format_bar_button_group_tablet</item>
         <item name="android:layout_marginRight">@dimen/format_bar_button_group_tablet</item>
         <item name="android:layout_marginStart">@dimen/format_bar_button_group_tablet</item>

@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-15 09:54:07+0000
+Translation-Revision-Date: 2023-03-28 11:32:35+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ru
 -->
 <resources>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">На %1$s используется плагин %2$s, который пока поддерживает не все функции приложения.\n\nУстановите %3$s, чтобы использовать приложение с этим сайтом.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">Этот сайт</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">На %1$s используется плагин %2$s, который пока поддерживает не все функции приложения. Установите %3$s.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">На %1$s используется плагин %2$s, который пока поддерживает не все функции приложения. Установите %3$s.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Через несколько дней мы переходим на приложение Jetpack.</string>
+    <string name="wp_jp_static_poster_footnote">Переход бесплатен и занимает всего минуту.</string>
+    <string name="wp_jp_static_poster_message">Статистика, Обозреватель, уведомления и другие функции на базе Jetpack удалены из приложения WordPress и теперь будут только в приложении Jetpack.</string>
+    <string name="wp_jp_static_poster_button_secondary">Дополнительные сведения см. на Jetpack.com</string>
+    <string name="wp_jp_static_poster_button_primary">Перейти в новое приложение Jetpack</string>
+    <string name="wp_jp_static_poster_title_plural">%s перемещены в приложение Jetpack.</string>
+    <string name="wp_jp_static_poster_title">%s перемещен в приложение Jetpack.</string>
+    <string name="my_site_btn_wp_admin">Консоль</string>
+    <string name="my_site_header_manage">Управление</string>
+    <string name="my_site_header_traffic">Посещаемость</string>
+    <string name="my_site_header_content">Содержимое</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Настроить</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">Готово</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Jetpack установлен, осталось его настроить. Это займет всего минуту.</string>
     <string name="blaze_overlay_site_promotional_button">Выделить запись с помощью Blaze сейчас</string>
     <string name="blaze_overlay_page_promotional_button">Выделить эту страницу с помощью Blaze</string>
     <string name="blaze_overlay_post_promotional_button">Выделить эту запись с помощью Blaze</string>
@@ -38,10 +56,24 @@ Language: ru
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">Полнофункциональный плагин Jetpack</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">Отдельные плагины Jetpack</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">плагин %1$s</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">На %1$s используется плагин %2$s, который пока поддерживает не все функции приложения.\n\nУстановите %3$s, чтобы использовать приложение с этим сайтом.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">Установите полнофункциональный плагин Jetpack</string>
     <string name="only_one_primary_site_message">Доступен только один сайт, поэтому изменить основной сайт невозможно.</string>
+    <string name="jetpack_plugin_install_error_button_contact_support">Обратитесь в службу поддержки</string>
+    <string name="jetpack_plugin_install_error_button_retry">Повторить</string>
+    <string name="jetpack_plugin_install_error_description">Невозможно установить Jetpack в настоящий момент.</string>
+    <string name="jetpack_plugin_install_error_title">Возникла проблема</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Значок ошибки</string>
+    <string name="jetpack_plugin_install_full_plugin_done_description">Сайт готов к использованию в приложении.</string>
+    <string name="jetpack_plugin_install_done_title">Jetpack установлен</string>
+    <string name="jetpack_plugin_install_installing_description">Jetpack устанавливается на вашем сайте. Это может занять несколько минут.</string>
+    <string name="jetpack_plugin_install_installing_title">Выполняется установка Jetpack</string>
+    <string name="jetpack_plugin_install_initial_button">Продолжить</string>
+    <string name="jetpack_plugin_install_initial_description">Учётные данные вашего сайта не будут сохранены и будут использованы только для безопасной установки Jetpack.</string>
+    <string name="jetpack_plugin_install_initial_title">Установить Jetpack</string>
+    <string name="jetpack_plugin_install_jp_logo_content_description">Значок Jetpack</string>
     <string name="button_promote_with_blaze">Продвигайте содержимое с помощью Blaze</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Используйте возможности сайта максимально эффективно. Установите Jetpack и получите доступ к статистике, уведомлениям и многим другим функциям.</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Используйте возможности сайта максимально эффективно. Установите Jetpack и получите доступ к статистике, уведомлениям и другим функциям.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">На вашем сайте есть плагин Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Мобильное приложение Jetpack создано работать в паре с плагином Jetpack. Перейдите в приложение, чтобы использовать статистику, уведомления, Чтиво и другие возможности.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Получайте уведомления о новых комментариях, отметках «Нравится», просмотрах и других событиях.</string>

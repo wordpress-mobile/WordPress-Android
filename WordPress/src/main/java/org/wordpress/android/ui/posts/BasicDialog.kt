@@ -1,13 +1,12 @@
 package org.wordpress.android.ui.posts
 
 import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
@@ -15,6 +14,7 @@ import javax.inject.Inject
 /**
  * Basic dialog fragment with support for 1,2 or 3 buttons.
  */
+@AndroidEntryPoint
 class BasicDialog : AppCompatDialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -74,11 +74,6 @@ class BasicDialog : AppCompatDialogFragment() {
             }
         }
         return builder.create()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        AndroidSupportInjection.inject(this)
     }
 
     override fun onDismiss(dialog: DialogInterface) {

@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsListFragmentBinding
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
@@ -35,6 +35,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -76,7 +77,6 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
                     ?: StatsSection.INSIGHTS
 
         setHasOptionsMenu(statsSection == StatsSection.INSIGHTS)
-        (requireActivity().application as WordPress).component().inject(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

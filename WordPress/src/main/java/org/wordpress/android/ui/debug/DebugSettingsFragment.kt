@@ -3,10 +3,11 @@ package org.wordpress.android.ui.debug
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.DebugSettingsFragmentBinding
 import org.wordpress.android.ui.ActivityLauncher
@@ -18,7 +19,8 @@ import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
-class DebugSettingsFragment : DaggerFragment(R.layout.debug_settings_fragment) {
+@AndroidEntryPoint
+class DebugSettingsFragment : Fragment(R.layout.debug_settings_fragment) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DebugSettingsViewModel
