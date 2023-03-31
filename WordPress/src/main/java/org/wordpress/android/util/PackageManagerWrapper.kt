@@ -29,10 +29,6 @@ class PackageManagerWrapper @Inject constructor(
         )
     }
 
-    fun disableReaderDeepLinks() = WPActivityUtils.disableReaderDeeplinks(contextProvider.getContext())
-    fun enableReaderDeeplinks() = WPActivityUtils.enableReaderDeeplinks(contextProvider.getContext())
-
-
     @Suppress("SwallowedException")
     fun getActivityLabelResFromIntent(intent: Intent): Int? {
         intent.component?.let {

@@ -424,9 +424,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             }
         }
 
-        // Ensure deep linking activities are enabled.They may have been disabled elsewhere and failed to get re-enabled
-        enableDeepLinkingComponentsIfNeeded();
-
         // monitor whether we're not the default app
         trackDefaultApp();
 
@@ -1042,10 +1039,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         // Load selected site
         initSelectedSite();
-
-        // ensure the deep linking activity is enabled. We might be returning from the external-browser
-        // viewing of a post
-        enableDeepLinkingComponentsIfNeeded();
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
@@ -1838,16 +1831,5 @@ public class WPMainActivity extends LocaleAwareActivity implements
         super.onPause();
 
         QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
-    }
-
-    private void enableDeepLinkingComponentsIfNeeded() {
-        if (mOpenWebLinksWithJetpackFlowFeatureConfig.isEnabled()) {
-            if (!AppPrefs.getIsOpenWebLinksWithJetpack()) {
-                mDeepLinkOpenWebLinksWithJetpackHelper.enableDeepLinks();
-            }
-        } else {
-            // re-enable all deep linking components
-            mDeepLinkOpenWebLinksWithJetpackHelper.enableDeepLinks();
-        }
     }
 }

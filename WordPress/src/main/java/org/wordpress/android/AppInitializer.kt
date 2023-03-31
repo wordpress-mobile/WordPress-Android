@@ -721,16 +721,6 @@ class AppInitializer @Inject constructor(
         }
     }
 
-    private fun enableDeepLinkingComponentsIfNeeded() {
-        if (openWebLinksWithJetpackFlowFeatureConfig.isEnabled()) {
-            if (!AppPrefs.getIsOpenWebLinksWithJetpack()) {
-                openWebLinksWithJetpackHelper.enableDeepLinks()
-            }
-        } else {
-            openWebLinksWithJetpackHelper.enableDeepLinks()
-        }
-    }
-
     private fun disableWidgetReceiversIfNeeded() {
         jetpackFeatureRemovalWidgetHelper.disableWidgetReceiversIfNeeded()
     }
@@ -802,9 +792,6 @@ class AppInitializer @Inject constructor(
             properties.putAll(readerTracker.getAnalyticsData())
 
             readerTracker.onAppGoesToBackground()
-
-            // Ensure that the deeplinking activity is are re-enabled if needed
-            enableDeepLinkingComponentsIfNeeded()
 
             AnalyticsTracker.track(Stat.APPLICATION_CLOSED, properties)
             AnalyticsTracker.endSession(false)

@@ -681,11 +681,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
     private void handleOpenLinksInJetpack(Boolean newValue) {
         try {
-            if (newValue) {
-                mOpenWebLinksWithJetpackHelper.disableDeepLinks();
-            } else {
-                mOpenWebLinksWithJetpackHelper.enableDeepLinks();
-            }
             AppPrefs.setIsOpenWebLinksWithJetpack(newValue);
             AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED, Collections
                     .singletonMap(TRACK_ENABLED, newValue));

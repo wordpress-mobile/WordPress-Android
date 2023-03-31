@@ -49,7 +49,6 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.about.UnifiedAboutActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
-import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
@@ -465,7 +464,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 R.string.signout
             ) { _, _ ->
                 clearNotifications()
-                enableDeepLinkComponents()
                 signOutWordPressCom()
             }
             .setNegativeButton(R.string.cancel, null)
@@ -479,15 +477,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     private fun clearNotifications() {
         NotificationsUtils.cancelAllNotifications(requireActivity())
-    }
-
-    private fun enableDeepLinkComponents() {
-        packageManagerWrapper.enableReaderDeeplinks()
-        packageManagerWrapper.enableComponentEnabledSetting(
-            DeepLinkOpenWebLinksWithJetpackHelper.WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS
-        )
-        appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(0L)
-        appPrefsWrapper.setIsOpenWebLinksWithJetpack(false)
     }
 
     @Suppress("DEPRECATION")

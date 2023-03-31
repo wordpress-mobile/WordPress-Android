@@ -1640,10 +1640,6 @@ public class ActivityLauncher {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         try {
-            // Disable deeplinking activity so to not catch WP URLs.
-            // We'll re-enable them later - see callers of WPActivityUtils#enableReaderDeeplinks.
-            WPActivityUtils.disableReaderDeeplinks(context);
-
             context.startActivity(intent);
         } catch (ActivityNotFoundException e) {
             ToastUtils.showToast(context, context.getString(R.string.cant_open_url), ToastUtils.Duration.LONG);

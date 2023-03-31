@@ -283,7 +283,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                         if (!mDeepLinkOpenWebLinksWithJetpackHelper.handleOpenLinksInJetpackIfPossible()) {
                             finishDeepLinkRequestFromOverlay(getIntent().getAction(), getIntent().getData());
                         } else {
-                            WPActivityUtils.disableReaderDeeplinks(this);
                             ActivityLauncher.openJetpackForDeeplink(this, getIntent().getAction(),
                                     new UriWrapper(getIntent().getData()));
                             finish();
