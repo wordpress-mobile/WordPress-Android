@@ -134,6 +134,7 @@ android {
         buildConfigField "boolean", "ENABLE_BLAZE_FEATURE", "false"
         buildConfigField "boolean", "WP_INDIVIDUAL_PLUGIN_OVERLAY", "false"
         buildConfigField "boolean", "DASHBOARD_CARD_PAGES", "false"
+        buildConfigField "boolean", "DASHBOARD_CARD_ACTIVITY_LOG", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
