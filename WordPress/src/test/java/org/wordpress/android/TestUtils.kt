@@ -1,6 +1,11 @@
 package org.wordpress.android
 
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.mockito.Mockito
 import org.mockito.kotlin.internal.createInstance
 import org.wordpress.android.viewmodel.Event
@@ -26,4 +31,19 @@ fun <T> LiveData<Event<T>>.eventToList(): MutableList<T> {
         event?.getContentIfNotHandled()?.let { list.add(it) }
     }
     return list
+}
+
+/**
+ * Test helper for capturing emitted Flow values during the execution of a certain [testBody]
+ *
+ * @param scope should be the test [CoroutineScope]
+ * @param testBody is the code that will be executed which result in flow emissions
+ * @return the list of values emitted by the Flow during the executing of [testBody]
+ */
+suspend fun <T> Flow<T>.testCollect(scope: CoroutineScope, testBody: () -> Unit): List<T> {
+    val result = mutableListOf<T>()
+    val job = onEach { result.add(it) }.launchIn(scope)
+    testBody()
+    job.cancelAndJoin()
+    return result
 }

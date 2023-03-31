@@ -41,7 +41,6 @@ Language: lv
     <string name="jetpack_individual_plugin_support_onboarding_title">Lūdzu, instalējiet pilno Jetpack spraudņa versiju</string>
     <string name="only_one_primary_site_message">Ir pieejama tikai viena vietne, tāpēc jūs nevarat mainīt savu galveno vietni.</string>
     <string name="button_promote_with_blaze">Reklamējiet ar Blaze</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Atbrīvojiet visu savas vietnes potenciālu. Iegūstiet statistiku, paziņojumus un daudz ko citu, izmantojot Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Jūsu vietnei ir spraudnis Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack mobilā lietotne ir paredzēta darbam kopā ar Jetpack spraudni. Pārslēdziet tagad, lai piekļūtu statistikai, paziņojumiem, lasītājam un daudz kam citam.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Saņemiet paziņojumus par jauniem komentāriem, atzīmēm Patīk, skatījumiem un daudz ko citu.</string>

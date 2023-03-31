@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-14 17:54:08+0000
+Translation-Revision-Date: 2023-03-28 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: nl
 -->
 <resources>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s gebruikt %2$s. Deze ondersteunt nog niet alle functies van de app.\n\nInstalleer de %3$s om de app met deze site te gebruiken.</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s gebruikt %2$s. Deze ondersteunen nog niet alle functies van de app. Installeer de %3$s.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s gebruikt %2$s. Deze ondersteunt nog niet alle functies van de app. Installeer de %3$s.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">We stappen binnen een paar dagen over naar Jetpack.</string>
+    <string name="wp_jp_static_poster_message">Statistieken, Reader, meldingen en andere functies die door Jetpack aangedreven worden, zijn verwijderd uit de WordPress-app en kunnen nu alleen in de Jetpack-app gevonden worden.</string>
+    <string name="wp_jp_static_poster_button_secondary">Ga naar Jetpack.com voor meer informatie</string>
+    <string name="wp_jp_static_poster_button_primary">Schakel over naar de Jetpack-app</string>
+    <string name="wp_jp_static_poster_title_plural">%s zijn naar de Jetpack-app verplaatst</string>
+    <string name="wp_jp_static_poster_title">%s is naar de Jetpack-app verplaatst</string>
+    <string name="my_site_btn_wp_admin">WP Admin</string>
+    <string name="my_site_header_traffic">Bezoekersaantallen</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">Gereed</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Nu Jetpack is geïnstalleerd, hoeven we er alleen nog voor te zorgen dat alles goed ingesteld is. Dit duurt maar heel even.</string>
     <string name="blaze_promotional_subtitle_3">Volg prestaties, start en stop je Blaze op elk gewenst moment.</string>
     <string name="blaze_promotional_subtitle_2">Je content zal op miljoenen WordPress en Tumblr sites verschijnen.</string>
     <string name="blaze_promotional_subtitle_1">Promoot in een paar minuten elke post of pagina voor slechts enkele euro’s per dag.</string>
@@ -24,7 +37,8 @@ Language: nl
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">individuele Jetpack-plug-ins</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">de %1$s-plug-in</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">Installeer de volledige Jetpack-plug-in</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Ontgrendel de volledige functionaliteit van je site. Krijg statistieken, meldingen en meer met Jetpack.</string>
+    <string name="jetpack_plugin_install_jp_logo_content_description">Jetpack pictogram</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Ontgrendel de volledige functionaliteit van je site. Krijg Statistieken, Lezer, Meldingen en meer met Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Je site heeft de Jetpack-plugin</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">De Jetpack mobiele app is ontworpen om samen met de Jetpack-plugin te werken. Stap nu over om toegang te krijgen tot Statistieken, Meldingen, Reader en meer.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Krijg meldingen over nieuwe reacties, likes, weergaven en meer.</string>

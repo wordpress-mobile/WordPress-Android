@@ -2,10 +2,12 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.managemen
 
 import android.os.Bundle
 import android.view.MenuItem
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.InsightsManagementActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 
+@AndroidEntryPoint
 class InsightsManagementActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

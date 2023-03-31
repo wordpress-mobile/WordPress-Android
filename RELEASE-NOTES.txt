@@ -2,7 +2,7 @@
 
 22.1
 -----
-
+* [**] [WordPress-only] Warns user about sites with only individual plugins not supporting core app features and offers the option to switch to the Jetpack app. [https://github.com/wordpress-mobile/WordPress-Android/pull/18199]
 
 22.0
 -----

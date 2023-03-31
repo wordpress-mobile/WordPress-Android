@@ -14,6 +14,7 @@ import javax.inject.Named
 @HiltViewModel
 class WPJetpackIndividualPluginViewModel @Inject constructor(
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
+    private val analyticsTracker: WPJetpackIndividualPluginAnalyticsTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiState = MutableStateFlow<UiState>(UiState.None)
@@ -23,21 +24,23 @@ class WPJetpackIndividualPluginViewModel @Inject constructor(
     val actionEvents = _actionEvents
 
     fun onScreenShown() {
-        // TODO thomashortadev add tracking
+        if (_uiState.value != UiState.None) return
         launch {
             val sites = wpJetpackIndividualPluginHelper.getJetpackConnectedSitesWithIndividualPlugins()
             _uiState.update { UiState.Loaded(sites) }
+            wpJetpackIndividualPluginHelper.onJetpackIndividualPluginOverlayShown()
+            analyticsTracker.trackScreenShown()
         }
     }
 
     fun onDismissScreenClick() {
-        // TODO thomashortadev add tracking
         postActionEvent(ActionEvent.Dismiss)
+        analyticsTracker.trackScreenDismissed()
     }
 
     fun onPrimaryButtonClick() {
-        // TODO thomashortadev add tracking
         postActionEvent(ActionEvent.PrimaryButtonClick)
+        analyticsTracker.trackPrimaryButtonClick()
     }
 
     private fun postActionEvent(actionEvent: ActionEvent) {
