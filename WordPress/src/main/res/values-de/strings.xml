@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-28 13:54:09+0000
+Translation-Revision-Date: 2023-03-31 11:37:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: de
@@ -56,6 +56,7 @@ Language: de
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">vollständige Jetpack-Plugin</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">individuelle Jetpack-Plugins</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">das %1$s-Plugin</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s verwendet %2$s, das noch nicht alle Funktionen der App unterstützt.\n\nBitte installiere %3$s, um die App mit dieser Website zu verwenden.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">Bitte installiere das vollständige Jetpack-Plugin</string>
     <string name="only_one_primary_site_message">Es ist nur eine Website verfügbar, du kannst deine Haupt-Website also nicht ändern.</string>
     <string name="jetpack_plugin_install_error_button_contact_support">Support kontaktieren</string>
@@ -65,7 +66,10 @@ Language: de
     <string name="jetpack_plugin_install_error_image_content_description">Fehler-Icon</string>
     <string name="jetpack_plugin_install_full_plugin_done_description">Diese Website kann jetzt mit der App verwendet werden.</string>
     <string name="jetpack_plugin_install_done_title">Jetpack installiert</string>
+    <string name="jetpack_plugin_install_installing_description">Jetpack wird auf deiner Website installiert. Dieser Vorgang kann einige Minuten dauern.</string>
     <string name="jetpack_plugin_install_installing_title">Jetpack wird installiert</string>
+    <string name="jetpack_plugin_install_initial_button">Weiter</string>
+    <string name="jetpack_plugin_install_initial_description">Deine Website-Anmeldedaten werden nicht gespeichert und werden nur verwendet, um Jetpack zu installieren.</string>
     <string name="jetpack_plugin_install_initial_title">Jetpack installieren</string>
     <string name="jetpack_plugin_install_jp_logo_content_description">Jetpack-Icon</string>
     <string name="button_promote_with_blaze">Mit Blaze bewerben</string>
