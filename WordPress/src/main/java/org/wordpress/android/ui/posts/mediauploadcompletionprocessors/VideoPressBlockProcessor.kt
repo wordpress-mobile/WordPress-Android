@@ -177,10 +177,6 @@ class VideoPressBlockProcessor(
             jsonAttributes.apply {
                 addProperty(ID_ATTRIBUTE, Integer.parseInt(mRemoteId))
                 addProperty(GUID_ATTRIBUTE, mRemoteGuid)
-                when (src) {
-                    null -> Unit
-                    else -> jsonAttributes.addProperty(SRC_ATTRIBUTE, mRemoteUrl)
-                }
             }
 
             mBlockSettings = VideoPressBlockSettings(jsonAttributes)
