@@ -10,8 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_WIDGET_ADDED
 import org.wordpress.android.databinding.StatsWidgetConfigureFragmentBinding
@@ -33,7 +34,8 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-class StatsWidgetConfigureFragment : DaggerFragment() {
+@AndroidEntryPoint
+class StatsWidgetConfigureFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 

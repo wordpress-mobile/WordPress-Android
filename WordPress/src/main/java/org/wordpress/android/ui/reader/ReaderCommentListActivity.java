@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -39,7 +40,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderCommentTable;
@@ -86,10 +86,11 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -106,8 +107,10 @@ import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SE
 import static org.wordpress.android.ui.reader.FollowConversationUiStateKt.FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import kotlin.Unit;
 
+@AndroidEntryPoint
 public class ReaderCommentListActivity extends LocaleAwareActivity implements OnConfirmListener,
         OnCollapseListener {
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
@@ -151,22 +154,24 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private ConversationNotificationsViewModel mConversationViewModel;
 
     @Override
-    public void onBackPressed() {
-        CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
-                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
-
-        if (fragment != null) {
-            fragment.onBackPressed();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.reader_activity_comment_list);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
+                        getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
+
+                if (fragment != null) {
+                    fragment.collapse();
+                } else {
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -248,9 +253,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 mSuggestionServiceConnectionManager,
                 mPost.isWP()
         );
-        if (mSuggestionAdapter != null) {
-            mEditComment.setAdapter(mSuggestionAdapter);
-        }
+        mEditComment.setAdapter(mSuggestionAdapter);
 
         mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost, mSource);
 
@@ -336,8 +339,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
             snackbarMessageHolderEvent.applyIfNotHandled(holder -> {
                 WPSnackbar.make(mCoordinator,
-                        mUiHelpers.getTextOfUiString(ReaderCommentListActivity.this, holder.getMessage()),
-                        Snackbar.LENGTH_LONG)
+                                  mUiHelpers.getTextOfUiString(ReaderCommentListActivity.this, holder.getMessage()),
+                                  Snackbar.LENGTH_LONG)
                           .setAction(
                                   holder.getButtonTitle() != null
                                           ? mUiHelpers.getTextOfUiString(
@@ -805,8 +808,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                     getCommentAdapter().setHighlightCommentId(mCommentId, false);
                     if (!mAccountStore.hasAccessToken()) {
                         WPSnackbar.make(mCoordinator,
-                                R.string.reader_snackbar_err_cannot_like_post_logged_out,
-                                Snackbar.LENGTH_INDEFINITE)
+                                          R.string.reader_snackbar_err_cannot_like_post_logged_out,
+                                          Snackbar.LENGTH_INDEFINITE)
                                   .setAction(R.string.sign_in, mSignInClickListener)
                                   .show();
                     } else {

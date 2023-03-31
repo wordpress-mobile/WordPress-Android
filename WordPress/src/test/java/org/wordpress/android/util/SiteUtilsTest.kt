@@ -180,6 +180,7 @@ class SiteUtilsTest {
 
     @Test
     fun `supportsStoriesFeature returns true when origin is wpcom rest`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowStoryPost()).thenReturn(true)
         val site = SiteModel().apply {
             origin = SiteModel.ORIGIN_WPCOM_REST
             setIsWPCom(true)
@@ -192,6 +193,7 @@ class SiteUtilsTest {
 
     @Test
     fun `supportsStoriesFeature returns true when Jetpack site meets requirement`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowStoryPost()).thenReturn(true)
         val site = initJetpackSite().apply {
             jetpackVersion = SiteUtils.WP_STORIES_JETPACK_VERSION
         }
@@ -218,7 +220,7 @@ class SiteUtilsTest {
             origin = SiteModel.ORIGIN_WPCOM_REST
             setIsWPCom(true)
         }
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowStoryPost()).thenReturn(false)
 
         val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)
 

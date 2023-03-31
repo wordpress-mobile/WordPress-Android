@@ -15,7 +15,7 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -25,7 +25,8 @@ import javax.inject.Inject
 class PostListCreateMenuViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
+    private val siteUtilsWrapper: SiteUtilsWrapper
 ) : ViewModel() {
     private var isStarted = false
     private lateinit var site: SiteModel
@@ -67,15 +68,17 @@ class PostListCreateMenuViewModel @Inject constructor(
                 onClickAction = null
             )
         )
-        actionsList.add(
-            CreateAction(
-                actionType = CREATE_NEW_STORY,
-                iconRes = R.drawable.ic_story_icon_24dp,
-                labelRes = R.string.my_site_bottom_sheet_add_story,
-                onClickAction = ::onCreateActionClicked
+        if (siteUtilsWrapper.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
+            actionsList.add(
+                CreateAction(
+                    actionType = CREATE_NEW_STORY,
+                    iconRes = R.drawable.ic_story_icon_24dp,
+                    labelRes = R.string.my_site_bottom_sheet_add_story,
+                    onClickAction = ::onCreateActionClicked
 
+                )
             )
-        )
+        }
         actionsList.add(
             CreateAction(
                 actionType = CREATE_NEW_POST,
@@ -145,7 +148,7 @@ class PostListCreateMenuViewModel @Inject constructor(
     }
 
     private fun getCreateContentMessageId(): Int {
-        return if (SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
+        return if (siteUtilsWrapper.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
             R.string.create_post_story_fab_tooltip
         } else {
             R.string.create_post_fab_tooltip

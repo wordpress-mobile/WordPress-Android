@@ -22,7 +22,7 @@ public class NotificationsSettings {
     private JSONObject mWPComSettings;
     private LongSparseArray<JSONObject> mBlogSettings;
 
-    // The main notification settings channels (displayed at root of NoticationsSettingsFragment)
+    // The main notification settings channels (displayed at root of NotificationsSettingsFragment)
     public enum Channel {
         OTHER,
         BLOGS,

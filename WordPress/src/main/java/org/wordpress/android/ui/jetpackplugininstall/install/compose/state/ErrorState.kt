@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpackplugininstall.install.compose.state
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -27,14 +28,14 @@ fun ErrorState(
             PrimaryButton(
                 text = stringResource(retryButtonText),
                 onClick = onRetryClick,
-                useDefaultMargins = false,
+                padding = PaddingValues(0.dp),
                 buttonSize = ButtonSize.LARGE,
             )
             Spacer(modifier = Modifier.height(10.dp))
             SecondaryButton(
                 text = stringResource(contactSupportButtonText),
                 onClick = onContactSupportClick,
-                useDefaultMargins = false,
+                padding = PaddingValues(0.dp),
                 buttonSize = ButtonSize.LARGE,
             )
         }

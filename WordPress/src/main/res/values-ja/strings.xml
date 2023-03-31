@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-03 10:54:08+0000
+Translation-Revision-Date: 2023-03-29 09:54:25+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ja_JP
 -->
 <resources>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。\n\nアプリをこのサイトと一緒に使用するには、%3$s をインストールしてください。</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">このサイト</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。 %3$s をインストールしてください。</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。 %3$s をインストールしてください。</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">数日後に Jetpack アプリに移動予定です。</string>
+    <string name="wp_jp_static_poster_footnote">切り替えは無料で、数分で終わります。</string>
+    <string name="wp_jp_static_poster_message">統計、Reader、通知などの Jetpack 機能は WordPress アプリから削除され、Jetpack アプリでのみ使用できるようになりました。</string>
+    <string name="wp_jp_static_poster_button_secondary">詳細は Jetpack.com をご覧ください</string>
+    <string name="wp_jp_static_poster_button_primary">Jetpack アプリに切り替える</string>
+    <string name="wp_jp_static_poster_title_plural">%sは Jetpack アプリに移動しました。</string>
+    <string name="wp_jp_static_poster_title">%sは Jetpack アプリに移動しました。</string>
+    <string name="my_site_btn_wp_admin">WP 管理画面</string>
+    <string name="my_site_header_manage">管理</string>
+    <string name="my_site_header_traffic">トラフィック</string>
+    <string name="my_site_header_content">コンテンツ</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">セットアップ</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">完了</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Jetpack がインストールされたので、あとはセットアップするだけです。 ほんの1分ほどで済みます。</string>
+    <string name="blaze_overlay_site_promotional_button">今すぐ投稿を目立たせる</string>
+    <string name="blaze_overlay_page_promotional_button">このページを目立たせる</string>
+    <string name="blaze_overlay_post_promotional_button">この投稿を目立たせる</string>
+    <string name="blaze_promotional_subtitle_3">パフォーマンスの追跡、Blaze の開始と停止をいつでも実行できます。</string>
+    <string name="blaze_promotional_subtitle_2">コンテンツは数百万もの WordPress と Tumblr のサイトに表示されます。</string>
+    <string name="blaze_promotional_subtitle_1">1日わずか数百円、たった数分で投稿やページを宣伝できます。</string>
+    <string name="blaze_promotional_text">Blaze でサイトのトラフィックを増やす</string>
+    <string name="site_creation_domain_tag_unavailable">このドメインはすでに登録されています</string>
+    <string name="site_creation_domain_tag_sale">セール</string>
+    <string name="site_creation_domain_tag_recommended">おすすめ</string>
+    <string name="site_creation_domain_tag_best_alternative">こちらもおすすめ</string>
+    <string name="site_creation_domain_cost">%s/ 年</string>
+    <string name="me_btn_help">ヘルプ</string>
+    <string name="support_faq_title">Jetpack アプリにお切り替えいただきありがとうございます !</string>
+    <string name="logs_button">ログ</string>
+    <string name="tickets">チケット</string>
+    <string name="free">無料</string>
+    <string name="help_buttons_screen_title">ヘルプ</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="support_faq_caption">FAQ でよくある質問に対する回答をご確認ください。</string>
     <string name="gutenberg_native_blocks_menu">ブロックのメニュー</string>
     <string name="promote_blaze_card_menu_hide_this">非表示</string>
     <string name="promote_blaze_card_sub_title">何百万ものサイトに作品を表示しましょう。</string>
@@ -18,26 +56,10 @@ Language: ja_JP
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">完全な Jetpack プラグイン</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">個々の Jetpack プラグイン</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">%1$s プラグイン</string>
-    <string name="jetpack_full_plugin_install_onboarding_description">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。\n\nアプリをこのサイトと一緒に使用するには、%3$s をインストールしてください。</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">完全な Jetpack プラグインをインストールしてください</string>
     <string name="only_one_primary_site_message">1つのサイトのみを利用できるため、主要サイトを変更できません。</string>
-    <string name="my_site_jp_install_full_plugin_card_content">このサイトが使用している個別のプラグインは、まだアプリのすべての機能をサポートしていません。 完全な Jetpack プラグインをインストールしてください。</string>
-    <string name="jetpack_full_plugin_install_error_button_contact_support">サポートに連絡</string>
-    <string name="jetpack_full_plugin_install_error_button_retry">再試行</string>
-    <string name="jetpack_full_plugin_install_error_description">Jetpack は現在インストールできません。</string>
-    <string name="jetpack_full_plugin_install_error_title">問題が発生しました</string>
-    <string name="jetpack_full_plugin_install_error_image_content_description">エラーアイコン</string>
-    <string name="jetpack_full_plugin_install_done_button">完了</string>
-    <string name="jetpack_full_plugin_install_done_title">Jetpack がインストールされています</string>
-    <string name="jetpack_full_plugin_install_installing_description">サイトに Jetpack をインストールしています。 完了まで数分かかります。</string>
-    <string name="jetpack_full_plugin_install_installing_title">Jetpack をインストールしています</string>
-    <string name="jetpack_full_plugin_install_initial_button">続行</string>
-    <string name="jetpack_full_plugin_install_initial_description">サイトの証明書は保存されず、Jetpack インストールの目的のみに使用されます。</string>
-    <string name="jetpack_full_plugin_install_initial_title">Jetpack をインストール</string>
-    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack アイコン</string>
     <string name="button_promote_with_blaze">Blaze を使って宣伝</string>
-    <string name="jetpack_full_plugin_install_done_description">アプリでこのサイトを使用する準備ができました。</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">サイトの可能性を十分に引き出すことができます。 Jetpack で統計、通知などを利用できます。</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">サイトの可能性を十分に引き出すことができます。 Jetpack で統計や通知などを利用できます。</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">ご利用のサイトには Jetpack プラグインが設定されています</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack モバイルアプリは、Jetpack プラグインと連携させて利用できます。 今すぐ乗り換えて、統計、通知、Reader などをご利用ください。</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">新しいコメントや「いいね」、表示数などの通知を受信できます。</string>
@@ -1837,7 +1859,6 @@ Language: ja_JP
     <string name="domain_suggestions_search_hint">その他のアイデアについてはキーワードを入力します</string>
     <string name="domains_suggestions_empty_list">提案が見つかりません</string>
     <string name="register_domain">ドメインを登録</string>
-    <string name="jetpack_plugin_install_remote_plugin_done_description">Jetpack がインストールされたので、あとはセットアップするだけです。ほんの1分ほどで済みます。</string>
     <string name="stats_menu_remove">統計概要から削除</string>
     <string name="stats_menu_move_down">下に移動</string>
     <string name="stats_menu_move_up">上に移動</string>
@@ -2103,17 +2124,8 @@ Language: ja_JP
     <string name="reader_empty_followed_tags_title">フォローしているトピックがありません</string>
     <string name="reader_empty_followed_tags_subtitle">ここでトピックを追加して、お気に入りのトピックに関する投稿を検索します</string>
     <string name="login_to_to_connect_jetpack">Jetpack を接続するのに使用した WordPress.com アカウントにログインします。</string>
-    <string name="install_jetpack_retry">再試行</string>
-    <string name="jetpack_installation_problem">問題が発生しました</string>
-    <string name="jetpack_installed">Jetpack がインストールされています</string>
-    <string name="installing_jetpack">Jetpack をインストール</string>
-    <string name="install_jetpack">Jetpack をインストール</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack よくある質問</string>
-    <string name="jetpack_plugin_install_remote_plugin_done_button">設定</string>
-    <string name="jetpack_installation_problem_message">Jetpack は現在インストールできません。</string>
-    <string name="installing_jetpack_message">サイトに Jetpack をインストールしています。完了まで数分かかることがあります。</string>
-    <string name="install_jetpack_message">サイトのログイン情報は保存されず、Jetpack インストールのためのみに使用されます。</string>
     <string name="stats_jetpack_connection_setup_info">WordPress サイトの統計情報を利用するには、Jetpack プラグインのインするが必要です。</string>
     <string name="themes_empty_list">検索と一致するテーマがありません</string>
     <string name="reader_label_post_search_explainer">何をお探しですか ?</string>

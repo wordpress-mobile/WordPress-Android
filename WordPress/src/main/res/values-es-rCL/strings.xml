@@ -235,11 +235,6 @@ Language: es_CL
     <string name="my_site_create_new_site_title">No tienes ningún sitio</string>
     <string name="content_description_more">Más</string>
     <string name="login_to_to_connect_jetpack">Inicia sesión en la cuenta WordPress.com que usaste para conectar jetpack.</string>
-    <string name="install_jetpack_retry">Reintentar</string>
-    <string name="jetpack_installation_problem">Hubo un problema</string>
-    <string name="jetpack_installed">Jetpack instalado</string>
-    <string name="installing_jetpack">Instalación de Jetpack</string>
-    <string name="install_jetpack">Instalar Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="stats_jetpack_connection_setup_info">Para usar stats en tu sitio de WordPress, necesitarás instalar el plugin de Jetpack.</string>

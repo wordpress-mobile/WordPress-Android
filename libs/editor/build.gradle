@@ -89,9 +89,6 @@ dependencies {
         exclude module: 'react-native'
     }
 
-    // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
-    implementation "org.jsoup:jsoup:$jsoupVersion"
-
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
 
     implementation "androidx.lifecycle:lifecycle-common:$androidxLifecycleVersion"

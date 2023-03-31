@@ -56,6 +56,8 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -265,12 +267,12 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
     private fun PagesFragmentBinding.initializeSearchView() {
         actionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 viewModel.onSearchExpanded(restorePreviousSearch)
                 return true
             }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 viewModel.onSearchCollapsed()
                 return true
             }
@@ -295,17 +297,17 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         })
 
         // fix the search view margins to match the action bar
-        val searchEditFrame = actionMenuItem.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
-        (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
+        val searchEditFrame = actionMenuItem.actionView?.findViewById<LinearLayout>(R.id.search_edit_frame)
+        (searchEditFrame?.layoutParams as LinearLayout.LayoutParams)
             .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
 
-        viewModel.isSearchExpanded.observe(this@PagesFragment, Observer {
+        viewModel.isSearchExpanded.observe(this@PagesFragment) {
             if (it == true) {
                 showSearchList(actionMenuItem)
             } else {
                 hideSearchList(actionMenuItem)
             }
-        })
+        }
     }
 
     private fun PagesFragmentBinding.initializeViewModelObservers(
@@ -316,13 +318,15 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         setupActions(activity)
         setupMlpObservers(activity)
 
-        val site = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
-            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            restorePreviousSearch = true
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
+        val site = requireNotNull(
+            if (savedInstanceState == null) {
+                val nonNullIntent = checkNotNull(activity.intent)
+                nonNullIntent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+            } else {
+                restorePreviousSearch = true
+                savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)
+            }
+        )
 
         viewModel.authorUIState.observe(activity, Observer { state ->
             state?.let {
@@ -377,7 +381,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
         viewModel.createNewPage.observe(viewLifecycleOwner, {
             if (mlpViewModel.canShowModalLayoutPicker()
-                && !jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                && jetpackFeatureRemovalPhaseHelper.shouldShowTemplateSelectionInPages()) {
                 mlpViewModel.createPageFlowTriggered()
             } else {
                 createNewPage()

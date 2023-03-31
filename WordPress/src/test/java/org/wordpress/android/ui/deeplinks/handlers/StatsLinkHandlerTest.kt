@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkUriUtils
 import org.wordpress.android.ui.deeplinks.buildUri
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.stats.StatsTimeframe.DAY
 import org.wordpress.android.ui.stats.StatsTimeframe.INSIGHTS
 import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
@@ -26,9 +27,12 @@ class StatsLinkHandlerTest {
     lateinit var site: SiteModel
     private lateinit var statsLinkHandler: StatsLinkHandler
 
+    @Mock
+    private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
     @Before
     fun setUp() {
-        statsLinkHandler = StatsLinkHandler(deepLinkUriUtils)
+        statsLinkHandler = StatsLinkHandler(deepLinkUriUtils, jetpackFeatureRemovalPhaseHelper)
     }
 
     @Test

@@ -1,4 +1,1 @@
-Good words are read
-The WordPress logo is blue
-There are no new updates
-Sorry to disappoint you
+You can now transform most types of blocks into other block types, like quotes, columns, and groups.

@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-01 11:54:10+0000
+Translation-Revision-Date: 2023-03-28 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: nl
 -->
 <resources>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s gebruikt %2$s. Deze ondersteunt nog niet alle functies van de app.\n\nInstalleer de %3$s om de app met deze site te gebruiken.</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s gebruikt %2$s. Deze ondersteunen nog niet alle functies van de app. Installeer de %3$s.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s gebruikt %2$s. Deze ondersteunt nog niet alle functies van de app. Installeer de %3$s.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">We stappen binnen een paar dagen over naar Jetpack.</string>
+    <string name="wp_jp_static_poster_message">Statistieken, Reader, meldingen en andere functies die door Jetpack aangedreven worden, zijn verwijderd uit de WordPress-app en kunnen nu alleen in de Jetpack-app gevonden worden.</string>
+    <string name="wp_jp_static_poster_button_secondary">Ga naar Jetpack.com voor meer informatie</string>
+    <string name="wp_jp_static_poster_button_primary">Schakel over naar de Jetpack-app</string>
+    <string name="wp_jp_static_poster_title_plural">%s zijn naar de Jetpack-app verplaatst</string>
+    <string name="wp_jp_static_poster_title">%s is naar de Jetpack-app verplaatst</string>
+    <string name="my_site_btn_wp_admin">WP Admin</string>
+    <string name="my_site_header_traffic">Bezoekersaantallen</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">Gereed</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Nu Jetpack is geïnstalleerd, hoeven we er alleen nog voor te zorgen dat alles goed ingesteld is. Dit duurt maar heel even.</string>
+    <string name="blaze_promotional_subtitle_3">Volg prestaties, start en stop je Blaze op elk gewenst moment.</string>
+    <string name="blaze_promotional_subtitle_2">Je content zal op miljoenen WordPress en Tumblr sites verschijnen.</string>
+    <string name="blaze_promotional_subtitle_1">Promoot in een paar minuten elke post of pagina voor slechts enkele euro’s per dag.</string>
+    <string name="blaze_promotional_text">Zorg dat meer mensen je site bezoeken met Blaze</string>
+    <string name="site_creation_domain_tag_sale">Aanbieding!</string>
+    <string name="support_faq_caption">Bekijk onze pagina met veelgestelde vragen om mogelijke antwoorden te vinden op jouw vragen.</string>
+    <string name="support_faq_title">Bedankt voor het overschakelen naar de Jetpack-app!</string>
+    <string name="logs_button">Logbestanden</string>
     <string name="gutenberg_native_blocks_menu">Blokkenmenu</string>
     <string name="promote_blaze_card_menu_hide_this">Dit verbergen</string>
     <string name="promote_blaze_card_sub_title">Stel je werk tentoon op miljoenen sites.</string>
@@ -15,21 +36,9 @@ Language: nl
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">volledige Jetpack-plug-in</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">individuele Jetpack-plug-ins</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">de %1$s-plug-in</string>
-    <string name="jetpack_full_plugin_install_onboarding_description">%1$s gebruikt %2$s. Deze ondersteunen nog niet alle functies van de app.\n\nInstalleer de %3$s om de app met deze site te gebruiken.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">Installeer de volledige Jetpack-plug-in</string>
-    <string name="my_site_jp_install_full_plugin_card_content">Deze site gebruikt een afzonderlijke plug-in. Deze plug-in ondersteunt nog niet alle functies van de app. Installeer de volledige Jetpack-plug-in.</string>
-    <string name="jetpack_full_plugin_install_error_button_contact_support">Neem contact op met de ondersteuning</string>
-    <string name="jetpack_full_plugin_install_error_button_retry">Opnieuw proberen</string>
-    <string name="jetpack_full_plugin_install_error_title">Er is een probleem opgetreden</string>
-    <string name="jetpack_full_plugin_install_error_image_content_description">Foutpictogram</string>
-    <string name="jetpack_full_plugin_install_done_button">Gereed</string>
-    <string name="jetpack_full_plugin_install_done_description">Gereed om deze site met de app te gebruiken.</string>
-    <string name="jetpack_full_plugin_install_installing_title">Jetpack installeren</string>
-    <string name="jetpack_full_plugin_install_initial_button">Doorgaan</string>
-    <string name="jetpack_full_plugin_install_initial_description">De inloggegevens voor je website zullen niet worden opgeslagen en worden alleen gebruikt om Jetpack te installeren.</string>
-    <string name="jetpack_full_plugin_install_initial_title">Jetpack installeren</string>
-    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack-pictogram</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Ontgrendel de volledige functionaliteit van je site. Krijg statistieken, meldingen en meer met Jetpack.</string>
+    <string name="jetpack_plugin_install_jp_logo_content_description">Jetpack pictogram</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Ontgrendel de volledige functionaliteit van je site. Krijg Statistieken, Lezer, Meldingen en meer met Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Je site heeft de Jetpack-plugin</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">De Jetpack mobiele app is ontworpen om samen met de Jetpack-plugin te werken. Stap nu over om toegang te krijgen tot Statistieken, Meldingen, Reader en meer.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Krijg meldingen over nieuwe reacties, likes, weergaven en meer.</string>
@@ -1805,7 +1814,6 @@ Language: nl
     <string name="domain_suggestions_search_hint">Type een trefwoord voor meer ideeën</string>
     <string name="domains_suggestions_empty_list">Geen suggesties gevonden</string>
     <string name="register_domain">Registreer domein</string>
-    <string name="jetpack_plugin_install_remote_plugin_done_description">Nu Jetpack is geïnstalleerd, hoeven we er alleen nog voor te zorgen dat alles goed ingesteld is. Dit duurt maar heel even.</string>
     <string name="stats_menu_remove">Verwijderen uit inzichten</string>
     <string name="stats_menu_move_down">Omlaag verplaatsen</string>
     <string name="stats_menu_move_up">Omhoog verplaatsen</string>
@@ -2071,15 +2079,6 @@ Language: nl
     <string name="reader_empty_followed_tags_title">Geen gevolgde onderwerpen</string>
     <string name="reader_empty_followed_tags_subtitle">Voeg hier onderwerpen toe om berichten te vinden over je favoriete onderwerpen</string>
     <string name="login_to_to_connect_jetpack">Log in op het WordPress.com-account dat je gebruikte om verbinding te maken met Jetpack.</string>
-    <string name="install_jetpack_retry">Opnieuw proberen</string>
-    <string name="jetpack_plugin_install_remote_plugin_done_button">Instellen</string>
-    <string name="jetpack_installation_problem_message">Jetpack kan momenteel niet geïnstalleerd worden.</string>
-    <string name="jetpack_installation_problem">Er is een probleem opgetreden</string>
-    <string name="jetpack_installed">Jetpack geïnstalleerd</string>
-    <string name="installing_jetpack_message">Jetpack installeren op je site. Het kan een aantal minuten duren voordat de installatie is afgerond.</string>
-    <string name="installing_jetpack">Jetpack installeren</string>
-    <string name="install_jetpack_message">Je site-referenties zullen niet worden opgeslagen en worden alleen gebruikt om Jetpack te installeren.</string>
-    <string name="install_jetpack">Jetpack installeren</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Veelgestelde vragen Jetpack</string>
     <string name="stats_jetpack_connection_setup_info">Installeer de Jetpack-plugin om statistieken voor je WordPress-site te gebruiken.</string>

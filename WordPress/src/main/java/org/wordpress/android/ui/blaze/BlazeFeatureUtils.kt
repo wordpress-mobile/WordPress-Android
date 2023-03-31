@@ -36,12 +36,13 @@ class BlazeFeatureUtils @Inject constructor(
                 postModel.password.isEmpty()
     }
 
-    fun shouldShowBlazeEntryPoint(blazeStatusModel: BlazeStatusModel?, siteId: Long): Boolean {
-        val isEligible = blazeStatusModel?.isEligible == true
-        return isBlazeEnabled() &&
-                isEligible &&
-                !isPromoteWithBlazeCardHiddenByUser(siteId)
-    }
+    fun shouldShowBlazeCardEntryPoint(blazeStatusModel: BlazeStatusModel?, siteId: Long) =
+        isBlazeEnabled() &&
+                blazeStatusModel?.isEligible == true &&
+                    !isPromoteWithBlazeCardHiddenByUser(siteId)
+
+    fun shouldShowBlazeMenuEntryPoint(blazeStatusModel: BlazeStatusModel?) =
+        isBlazeEnabled() &&  blazeStatusModel?.isEligible == true
 
     fun track(stat: AnalyticsTracker.Stat, source: BlazeFlowSource) {
         analyticsTrackerWrapper.track(

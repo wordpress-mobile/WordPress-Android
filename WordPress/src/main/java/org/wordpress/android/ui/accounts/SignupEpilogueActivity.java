@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.fragment.app.FragmentTransaction;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -14,6 +13,9 @@ import org.wordpress.android.ui.accounts.signup.SignupEpilogueListener;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class SignupEpilogueActivity extends LocaleAwareActivity implements SignupEpilogueListener {
     public static final String EXTRA_SIGNUP_DISPLAY_NAME = "EXTRA_SIGNUP_DISPLAY_NAME";
     public static final String EXTRA_SIGNUP_EMAIL_ADDRESS = "EXTRA_SIGNUP_EMAIL_ADDRESS";
@@ -28,7 +30,6 @@ public class SignupEpilogueActivity extends LocaleAwareActivity implements Signu
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
 

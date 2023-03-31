@@ -1,11 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-28 16:22:59+0000
+Translation-Revision-Date: 2023-03-22 12:54:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sq_AL
 -->
 <resources>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s po përdor %2$s, i cili nuk i mbulon ende krejt veçoritë e aplikacionit.\n\nJu lutemi, që të përdorni aplikacionin me këtë sajt, instaloni %3$s.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">Këtë sajt</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s po përdor %2$s, të cilat nuk i mbulojnë ende krejt veçoritë e aplikacionit. Ju lutemi, instaloni %3$s.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s po përdor %2$s, i cili nuk i mbulon ende krejt veçoritë e aplikacionit. Ju lutemi, instaloni %3$s.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Kalim në aplikacionin Jetpack pas pak ditësh.</string>
+    <string name="wp_jp_static_poster_footnote">Kalimi është falas dhe do vetëm një minutë.</string>
+    <string name="wp_jp_static_poster_message">Statistikat, Lexuesi, Njoftimet dhe veçori të tjera të bazuara në Jetpack tani janë hequr prej aplikacionit WordPress dhe tani mund të gjenden vetëm në aplikacionin Jetpack.</string>
+    <string name="wp_jp_static_poster_button_secondary">Mësoni më tepër, te Jetpack.com</string>
+    <string name="wp_jp_static_poster_button_primary">Kaloni te aplikacioni Jetpack</string>
+    <string name="wp_jp_static_poster_title_plural">%s kanë kaluar te aplikacioni Jetpack.</string>
+    <string name="wp_jp_static_poster_title">%s ka kaluar te aplikacioni Jetpack.</string>
+    <string name="my_site_btn_wp_admin">Përgjegjës WP-je</string>
+    <string name="my_site_header_manage">Administrojini</string>
+    <string name="my_site_header_traffic">Trafik</string>
+    <string name="my_site_header_content">Lëndë</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Ujdise</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">U bë</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Tani që Jetpack-u është instaluar, na duhet vetëm t’ju bëjmë gati. Kjo do të hajë vetëm një minutë.</string>
+    <string name="blaze_overlay_site_promotional_button">Promovoni një Postim në Blaze që tani</string>
+    <string name="blaze_overlay_page_promotional_button">Promovojeni këtë Faqe në Blaze</string>
+    <string name="blaze_overlay_post_promotional_button">Promovojeni këtë Postim në Blaze</string>
+    <string name="blaze_promotional_subtitle_3">Ndiqni punimin, nisni dhe ndalni Blaze-in tuaj në çfarëdo kohe.</string>
+    <string name="blaze_promotional_subtitle_2">Lënda juaj do të shfaqet në miliona sajte WordPress dhe Tumblr.</string>
+    <string name="blaze_promotional_subtitle_1">Promovoni çfarëdo postimi ose faqeje, brenda pak minutash, për vetëm pak dollarë në ditë.</string>
+    <string name="blaze_promotional_text">Shpini më tepër trafik te sajti juaj, përmes Blaze-it</string>
+    <string name="site_creation_domain_tag_unavailable">Kjo përkatësi është e regjistruar tashmë</string>
+    <string name="site_creation_domain_tag_sale">Ulje çmimesh</string>
+    <string name="site_creation_domain_tag_recommended">E rekomanduar</string>
+    <string name="site_creation_domain_tag_best_alternative">Alternativa Më e Mirë</string>
+    <string name="site_creation_domain_cost">%s/vit</string>
+    <string name="me_btn_help">Ndihmë</string>
+    <string name="support_faq_caption">Për përgjigje pyetjesh të rëndomta që mund të keni, shihni PBR-të tona.</string>
+    <string name="support_faq_title">Faleminderit që kaloni te aplikacioni Jetpack!</string>
+    <string name="logs_button">Regjistra</string>
+    <string name="tickets">Bileta</string>
+    <string name="free">Falas</string>
+    <string name="help_buttons_screen_title">Ndihmë</string>
     <string name="gutenberg_native_blocks_menu">Menu blloqesh</string>
     <string name="promote_blaze_card_menu_hide_this">Fshihe këtë</string>
     <string name="promote_blaze_card_sub_title">Shfaqeni punën tuaj nëpër miliona sajte.</string>
@@ -18,26 +55,23 @@ Language: sq_AL
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">shtojcë Jetpack e plotë</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">shtojca individuale Jetpack</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">shtojca %1$s</string>
-    <string name="jetpack_full_plugin_install_onboarding_description">%1$s po përdor %2$s, që s’mbulon ende krejt veçoritë e aplikacionit.\n\nQë të përdorni aplikacionin në këtë sajt, ju lutemi, instaloni %3$s.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s po përdor %2$s, që s’mbulon ende krejt veçoritë e aplikacionit.\n\nQë të përdorni aplikacionin në këtë sajt, ju lutemi, instaloni %3$s.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">Ju lutemi, instaloni të plotë shtojcën Jetpack</string>
     <string name="only_one_primary_site_message">Ka vetëm një sajt, ndaj s’mund të ndryshoni sajtin tuaj parësor.</string>
-    <string name="my_site_jp_install_full_plugin_card_content">Ky sajt përdor një shtojcë individuale, e cila s’mbulon ende krejt veçoritë e aplikacionit. Ju lutemi, instaloni të plotë shtojcën Jetpack.</string>
-    <string name="jetpack_full_plugin_install_error_button_contact_support">Lidhuni me Asistencën</string>
-    <string name="jetpack_full_plugin_install_error_button_retry">Riprovoni</string>
-    <string name="jetpack_full_plugin_install_error_description">Jetpack-u s’u instalua dot këtë herë.</string>
-    <string name="jetpack_full_plugin_install_error_title">Pati një problem</string>
-    <string name="jetpack_full_plugin_install_error_image_content_description">Ikonë gabimi</string>
-    <string name="jetpack_full_plugin_install_done_button">U bë</string>
-    <string name="jetpack_full_plugin_install_done_description">Gati për përdorim të këtij sajti me aplikacionin.</string>
-    <string name="jetpack_full_plugin_install_done_title">Jetpack-u u instalua</string>
-    <string name="jetpack_full_plugin_install_installing_description">Po instalohet Jetpack-u në sajtin tuaj. Kjo mund të marrë ca minuta për t’u plotësuar.</string>
-    <string name="jetpack_full_plugin_install_installing_title">Instalim i Jetpack-ut</string>
-    <string name="jetpack_full_plugin_install_initial_button">Vazhdo</string>
-    <string name="jetpack_full_plugin_install_initial_description">Kredencialet tuaja për në sajt nuk do të depozitohen dhe përdoren vetëm për qëllimin e instalimit të Jetpack-ut.</string>
-    <string name="jetpack_full_plugin_install_initial_title">Instaloni Jetpack-un</string>
-    <string name="jetpack_full_plugin_install_jp_logo_content_description">Ikonë Jetpack</string>
+    <string name="jetpack_plugin_install_error_button_contact_support">Lidhuni me Asistencën</string>
+    <string name="jetpack_plugin_install_error_button_retry">Riprovo</string>
+    <string name="jetpack_plugin_install_error_description">Jetpack-u s’u instalua dot këtë herë.</string>
+    <string name="jetpack_plugin_install_error_title">Pati një problem</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Ikonë gabimi</string>
+    <string name="jetpack_plugin_install_full_plugin_done_description">Gati për përdorim të këtij sajti me aplikacionin.</string>
+    <string name="jetpack_plugin_install_done_title">Jetpack-u u instalua</string>
+    <string name="jetpack_plugin_install_installing_description">Po instalohet Jetpack-u në sajtin tuaj. Kjo mund të marrë ca minuta për t’u plotësuar.</string>
+    <string name="jetpack_plugin_install_installing_title">Instalim i Jetpack-ut</string>
+    <string name="jetpack_plugin_install_initial_button">Vazhdo</string>
+    <string name="jetpack_plugin_install_initial_description">Kredencialet tuaja për në sajt nuk do të depozitohen dhe përdoren vetëm për qëllimin e instalimit të Jetpack-ut.</string>
+    <string name="jetpack_plugin_install_initial_title">Instaloni Jetpack-un</string>
+    <string name="jetpack_plugin_install_jp_logo_content_description">Ikonë Jetpack</string>
     <string name="button_promote_with_blaze">Promovojeni me Blaze</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Çlironi potencialin e plotë të sajtit tuaj. Merrni statistika, njoftime, etj me Jetpack-un.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Sajti juaj e ka shtojcën Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Aplikacioni Jetpack për celular është menduar të punojë tok me shtojcën Jetpack. Kaloni që tani në të, që të mund të përdorni statistikat, njoftimet, lexuesin, etj.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Merrni njoftime për komente, pëlqime, parje të reja, etj.</string>
@@ -120,6 +154,7 @@ Language: sq_AL
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack-u furnizon statistika, njoftime, etj, për t’ju ndihmuar të ngrini dhe fuqizoni sajtin tuaj WordPress që keni ëndërruar.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Krijoni një sajt të ri WordPress me aplikacionin Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">lidhje web</string>
+    <string name="deep_linking_urilinks_alias_label">lidhje URI</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Që të vazhdoni të merrni në pajisjen tuaj njoftime të atypëratyshme, kaloni te aplikacioni Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Që të gjeni, ndiqni dhe pëlqeni krejt sajtet dhe postimet tuaj të parapëlqyer me Lexuesin, kaloni te aplikacioni Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Që të shihni shtim trafiku në sajtin tuaj, përmes statistikash dhe prirjesh, kaloni te aplikacioni Jetpack.</string>
@@ -1830,7 +1865,6 @@ Language: sq_AL
     <string name="domain_suggestions_search_hint">Për më tepër ide, shtypni një fjalëkyç</string>
     <string name="domains_suggestions_empty_list">S’u gjetën sugjerime</string>
     <string name="register_domain">Regjistroni Përkatësi</string>
-    <string name="jetpack_plugin_install_remote_plugin_done_description">Tani që Jetpack-u është instaluar, na duhet vetëm t’ju bëjmë gati. Kjo do të hajë vetëm një minutë.</string>
     <string name="stats_menu_remove">Hiqe prej tendencave</string>
     <string name="stats_menu_move_down">Ule poshtë</string>
     <string name="stats_menu_move_up">Ngjite sipër</string>
@@ -2096,15 +2130,6 @@ Language: sq_AL
     <string name="reader_empty_followed_tags_title">Pa tema të ndjekura</string>
     <string name="reader_empty_followed_tags_subtitle">Shtoni këtu tema që të gjeni postime rreth temave tuaja të parapëlqyera</string>
     <string name="login_to_to_connect_jetpack">Bëni hyrjen te llogaria WordPress.com që përdorët për t’ia përshoqëruar Jetpack-ut.</string>
-    <string name="install_jetpack_retry">Riprovoni</string>
-    <string name="jetpack_plugin_install_remote_plugin_done_button">Ujdise</string>
-    <string name="jetpack_installation_problem_message">Jetpack-u s’u instalua dot këtë herë.</string>
-    <string name="jetpack_installation_problem">Pati një problem</string>
-    <string name="jetpack_installed">Jetpack-u u instalua</string>
-    <string name="installing_jetpack_message">Po instalohet Jetpack-u në sajtin tuaj. Kjo mund të dojë ca minuta të plotësohet.</string>
-    <string name="installing_jetpack">Instalim i Jetpack-ut</string>
-    <string name="install_jetpack_message">Kredencialet e hyrjes në sajtin tuaj nuk do të depozitohen, dhe përdoren vetëm për qëllimin e instalimit të Jetpack-ut.</string>
-    <string name="install_jetpack">Instaloni Jetpack-un</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">PBR për Jetpack</string>
     <string name="stats_jetpack_connection_setup_info">Që të përdorni Statistikat te sajti juaj WordPress, do t’ju duhet të instaloni shtojcën Jetpack.</string>

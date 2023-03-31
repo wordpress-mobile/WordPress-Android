@@ -9,6 +9,9 @@ import androidx.appcompat.widget.Toolbar;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.LocaleAwareActivity;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class AccountSettingsActivity extends LocaleAwareActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,7 @@ public class AccountSettingsActivity extends LocaleAwareActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);

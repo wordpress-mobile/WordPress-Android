@@ -15,6 +15,7 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
@@ -39,12 +40,14 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.FEATURE_CARD
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFullPluginInstallOnboardingUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
@@ -201,7 +204,9 @@ class MySiteViewModel @Inject constructor(
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
     private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker,
-    private val blazeFeatureUtils: BlazeFeatureUtils
+    private val blazeFeatureUtils: BlazeFeatureUtils,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
+    private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -220,6 +225,7 @@ class MySiteViewModel @Inject constructor(
     private val _onBloggingPromptsViewMore = SingleLiveEvent<Event<Unit>>()
     private val _onBloggingPromptsRemoved = SingleLiveEvent<Event<Unit>>()
     private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
+    private val _onShowJetpackIndividualPluginOverlay = SingleLiveEvent<Event<Unit>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartTabStep
         .switchMap { quickStartSiteMenuStep ->
@@ -246,7 +252,7 @@ class MySiteViewModel @Inject constructor(
     val isMySiteTabsEnabled: Boolean
         get() = isMySiteDashboardTabsEnabled &&
                 buildConfigWrapper.isMySiteTabsEnabled &&
-                !jetpackFeatureRemovalUtils.shouldHideJetpackFeatures() &&
+                jetpackFeatureRemovalPhaseHelper.shouldShowDashboard() &&
                 selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi ?: true
 
     val orderedTabTypes: List<MySiteTabType>
@@ -294,6 +300,7 @@ class MySiteViewModel @Inject constructor(
     val onBloggingPromptsViewMore = _onBloggingPromptsViewMore as LiveData<Event<Unit>>
     val onBloggingPromptsRemoved = _onBloggingPromptsRemoved as LiveData<Event<Unit>>
     val onOpenJetpackInstallFullPluginOnboarding = _onOpenJetpackInstallFullPluginOnboarding as LiveData<Event<Unit>>
+    val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     private var shouldMarkUpdateSiteTitleTaskComplete = false
@@ -526,7 +533,7 @@ class MySiteViewModel @Inject constructor(
         )
         val jetpackInstallFullPluginCard = jetpackInstallFullPluginCardBuilder.build(jetpackInstallFullPluginCardParams)
 
-        val cardsResult = if (jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()) emptyList()
+        val cardsResult = if (!jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()) emptyList()
         else cardsBuilder.build(
             QuickActionsCardBuilderParams(
                 siteModel = site,
@@ -574,7 +581,7 @@ class MySiteViewModel @Inject constructor(
                     onRemoveClick = this::onBloggingPromptRemoveClick
                 ),
                 promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
-                    isEligible = blazeFeatureUtils.shouldShowBlazeEntryPoint(
+                    isEligible = blazeFeatureUtils.shouldShowBlazeCardEntryPoint(
                         promoteWithBlazeUpdate?.blazeStatusModel,
                         site.siteId
                     ),
@@ -614,7 +621,7 @@ class MySiteViewModel @Inject constructor(
                 enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 onClick = this::onItemClick,
                 isBlazeEligible =
-                    blazeFeatureUtils.shouldShowBlazeEntryPoint(promoteWithBlazeUpdate?.blazeStatusModel, site.siteId)
+                blazeFeatureUtils.shouldShowBlazeMenuEntryPoint(promoteWithBlazeUpdate?.blazeStatusModel)
             )
         )
 
@@ -675,8 +682,7 @@ class MySiteViewModel @Inject constructor(
                 null
             }
         ).takeIf {
-            jetpackBrandingUtils.shouldShowJetpackBranding() &&
-                    !jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()
+            jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard()
         }
     }
 
@@ -703,6 +709,7 @@ class MySiteViewModel @Inject constructor(
             add(Type.QUICK_LINK_RIBBON)
             add(Type.JETPACK_INSTALL_FULL_PLUGIN_CARD)
         }
+
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
             if (defaultTab == MySiteTabType.SITE_MENU) {
                 add(Type.QUICK_START_CARD)
@@ -710,6 +717,7 @@ class MySiteViewModel @Inject constructor(
             add(Type.DOMAIN_REGISTRATION_CARD)
             add(Type.QUICK_ACTIONS_CARD)
         }
+
         MySiteTabType.ALL -> emptyList()
     }
 
@@ -722,9 +730,13 @@ class MySiteViewModel @Inject constructor(
     @Suppress("EmptyFunctionBlock")
     private fun onGetMoreViewsClick() {
         cardsTracker.trackTodaysStatsCardGetMoreViewsNudgeClicked()
-        _onNavigation.value = Event(
-            SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl(URL_GET_MORE_VIEWS_AND_TRAFFIC)
-        )
+        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
+        } else {
+            _onNavigation.value = Event(
+                SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl(URL_GET_MORE_VIEWS_AND_TRAFFIC)
+            )
+        }
     }
 
     private fun onTodaysStatsCardFooterLinkClick() {
@@ -739,7 +751,11 @@ class MySiteViewModel @Inject constructor(
 
     private fun navigateToTodaysStats() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        _onNavigation.value = Event(SiteNavigationAction.OpenStatsInsights(selectedSite))
+        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
+        } else {
+            _onNavigation.value = Event(SiteNavigationAction.OpenStatsInsights(selectedSite))
+        }
     }
 
     private fun buildNoSiteState(): NoSites {
@@ -816,6 +832,7 @@ class MySiteViewModel @Inject constructor(
             QuickStartNewSiteTask.UPDATE_SITE_TITLE,
             QuickStartNewSiteTask.UPLOAD_SITE_ICON,
             quickStartRepository.quickStartType.getTaskFromString(QUICK_START_VIEW_SITE_LABEL) -> true
+
             else -> false
         }
     }
@@ -845,17 +862,20 @@ class MySiteViewModel @Inject constructor(
                 ListItemAction.PLAN -> {
                     SiteNavigationAction.OpenPlan(selectedSite)
                 }
+
                 ListItemAction.POSTS -> SiteNavigationAction.OpenPosts(selectedSite)
                 ListItemAction.PAGES -> {
                     quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
                     SiteNavigationAction.OpenPages(selectedSite)
                 }
+
                 ListItemAction.ADMIN -> SiteNavigationAction.OpenAdmin(selectedSite)
                 ListItemAction.PEOPLE -> SiteNavigationAction.OpenPeople(selectedSite)
                 ListItemAction.SHARING -> {
                     quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.ENABLE_POST_SHARING)
                     SiteNavigationAction.OpenSharing(selectedSite)
                 }
+
                 ListItemAction.DOMAINS -> SiteNavigationAction.OpenDomains(selectedSite)
                 ListItemAction.SITE_SETTINGS -> SiteNavigationAction.OpenSiteSettings(selectedSite)
                 ListItemAction.THEMES -> SiteNavigationAction.OpenThemes(selectedSite)
@@ -866,16 +886,19 @@ class MySiteViewModel @Inject constructor(
                     )
                     getStatsNavigationActionForSite(selectedSite)
                 }
+
                 ListItemAction.MEDIA -> {
                     quickStartRepository.requestNextStepOfTask(
                         quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
                     )
                     SiteNavigationAction.OpenMedia(selectedSite)
                 }
+
                 ListItemAction.COMMENTS -> SiteNavigationAction.OpenUnifiedComments(selectedSite)
                 ListItemAction.VIEW_SITE -> {
                     SiteNavigationAction.OpenSite(selectedSite)
                 }
+
                 ListItemAction.JETPACK_SETTINGS -> SiteNavigationAction.OpenJetpackSettings(selectedSite)
                 ListItemAction.BLAZE -> {
                     blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.MENU_ITEM)
@@ -951,9 +974,11 @@ class MySiteViewModel @Inject constructor(
                 !selectedSite.isUsingWpComRestApi -> {
                     R.string.my_site_icon_dialog_change_requires_jetpack_message
                 }
+
                 hasIcon -> {
                     R.string.my_site_icon_dialog_change_requires_permission_message
                 }
+
                 else -> {
                     R.string.my_site_icon_dialog_add_requires_permission_message
                 }
@@ -1107,21 +1132,26 @@ class MySiteViewModel @Inject constructor(
                         )
                     )
                 }
+
                 TAG_REMOVE_NEXT_STEPS_DIALOG -> onRemoveNextStepsDialogPositiveButtonClicked()
             }
+
             is Negative -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG -> {
                     quickStartRepository.completeTask(QuickStartNewSiteTask.UPLOAD_SITE_ICON)
                     quickStartRepository.checkAndShowQuickStartNotice()
                 }
+
                 TAG_CHANGE_SITE_ICON_DIALOG -> {
                     analyticsTrackerWrapper.track(Stat.MY_SITE_ICON_REMOVED)
                     quickStartRepository.completeTask(QuickStartNewSiteTask.UPLOAD_SITE_ICON)
                     quickStartRepository.checkAndShowQuickStartNotice()
                     selectedSiteRepository.updateSiteIconMediaId(0, true)
                 }
+
                 TAG_REMOVE_NEXT_STEPS_DIALOG -> onRemoveNextStepsDialogNegativeButtonClicked()
             }
+
             is Dismissed -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
                     quickStartRepository.completeTask(QuickStartNewSiteTask.UPLOAD_SITE_ICON)
@@ -1224,7 +1254,11 @@ class MySiteViewModel @Inject constructor(
         return fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
     }
 
-    private fun getStatsNavigationActionForSite(site: SiteModel) = when {
+    private fun getStatsNavigationActionForSite(site: SiteModel): SiteNavigationAction = when {
+        // if we are in static posters phase - we don't want to show any connection/login messages
+        jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage() ->
+            SiteNavigationAction.ShowJetpackRemovalStaticPostersView
+
         // If the user is not logged in and the site is already connected to Jetpack, ask to login.
         !accountStore.hasAccessToken() && site.isJetpackConnected -> SiteNavigationAction.StartWPComLoginForJetpackStats
 
@@ -1308,6 +1342,7 @@ class MySiteViewModel @Inject constructor(
         isSiteTitleTaskCompleted: Boolean,
         isNewSite: Boolean
     ) {
+        if (!jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()) return
         quickStartRepository.checkAndSetQuickStartType(isNewSite = isNewSite)
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
             startQuickStart(siteLocalId, isSiteTitleTaskCompleted)
@@ -1368,8 +1403,10 @@ class MySiteViewModel @Inject constructor(
             when (params.postCardType) {
                 PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> _onNavigation.value =
                     Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
+
                 PostCardType.DRAFT -> _onNavigation.value =
                     Event(SiteNavigationAction.EditDraftPost(site, params.postId))
+
                 PostCardType.SCHEDULED -> _onNavigation.value =
                     Event(SiteNavigationAction.EditScheduledPost(site, params.postId))
             }
@@ -1386,6 +1423,7 @@ class MySiteViewModel @Inject constructor(
             _onNavigation.value = when (postCardType) {
                 PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT ->
                     Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
+
                 PostCardType.DRAFT -> Event(SiteNavigationAction.OpenDraftsPosts(site))
                 PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
             }
@@ -1527,14 +1565,26 @@ class MySiteViewModel @Inject constructor(
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
 
-    fun setActionableEmptyViewGone(isVisible: Boolean, setGone: () -> Unit) {
-        if (isVisible) analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_HIDDEN)
-        setGone()
+    fun onActionableEmptyViewGone() {
+        analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_HIDDEN)
     }
 
-    fun setActionableEmptyViewVisible(isVisible: Boolean, setVisible: () -> Unit) {
-        if (!isVisible) analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
-        setVisible()
+    fun onActionableEmptyViewVisible() {
+        analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
+        checkJetpackIndividualPluginOverlayShouldShow()
+    }
+
+    private fun checkJetpackIndividualPluginOverlayShouldShow() {
+        // don't check if already shown
+        if (_onShowJetpackIndividualPluginOverlay.value?.peekContent() == Unit) return
+
+        viewModelScope.launch {
+            val showOverlay = wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()
+            if (showOverlay) {
+                delay(DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY)
+                _onShowJetpackIndividualPluginOverlay.value = Event(Unit)
+            }
+        }
     }
 
     fun trackWithTabSource(event: MySiteTrackWithTabSource) {
@@ -1750,5 +1800,6 @@ class MySiteViewModel @Inject constructor(
         const val LIST_SCROLL_DELAY_MS = 500L
         const val MY_SITE_TAB = "tab"
         const val TAB_SOURCE = "tab_source"
+        private const val DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY = 500L
     }
 }

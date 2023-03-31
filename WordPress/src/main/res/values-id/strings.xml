@@ -1,11 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-28 09:54:09+0000
+Translation-Revision-Date: 2023-03-28 10:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: id
 -->
 <resources>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s ini menggunakan %2$s yang belum mendukung semua fitur dalam aplikasi.\n\nSilakan instal %3$s untuk menggunakan aplikasi dengan situs ini.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">Situs berikut</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s ini menggunakan %2$s yang belum mendukung semua fitur dalam aplikasi. Silakan instal %3$s.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s ini menggunakan %2$s yang belum mendukung semua fitur dalam aplikasi. Silakan instal %3$s.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Berpindah ke aplikasi Jetpack dalam beberapa hari.</string>
+    <string name="wp_jp_static_poster_footnote">Beralihlah ke aplikasi—gratis dan prosesnya cepat!</string>
+    <string name="wp_jp_static_poster_message">Statistik, Pembaca, Pemberitahuan, dan beragam fitur lain berbasis Jetpack telah dihapus dari aplikasi WordPress dan hanya dapat ditemukan di aplikasi Jetpack.</string>
+    <string name="wp_jp_static_poster_button_secondary">Baca selengkapnya di Jetpack.com</string>
+    <string name="wp_jp_static_poster_button_primary">Ganti ke aplikasi Jetpack</string>
+    <string name="wp_jp_static_poster_title_plural">%s telah berpindah ke aplikasi Jetpack.</string>
+    <string name="wp_jp_static_poster_title">%s telah berpindah ke aplikasi Jetpack.</string>
+    <string name="my_site_btn_wp_admin">Admin WP</string>
+    <string name="my_site_header_manage">Kelola</string>
+    <string name="my_site_header_traffic">Lalu Lintas</string>
+    <string name="my_site_header_content">Konten</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Siapkan</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">Selesai</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Sekarang Jetpack telah terinstal, kami hanya perlu Anda menyiapkannya. Ini hanya memerlukan waktu satu menit.</string>
+    <string name="blaze_overlay_site_promotional_button">Promosikan pos dengan Blaze sekarang</string>
+    <string name="blaze_overlay_page_promotional_button">Promosikan halaman ini dengan Blaze</string>
+    <string name="blaze_overlay_post_promotional_button">Promosikan pos ini dengan Blaze</string>
+    <string name="blaze_promotional_subtitle_3">Lacak performa, mulai, dan hentikan Blaze Anda kapan saja.</string>
+    <string name="blaze_promotional_subtitle_2">Konten Anda akan muncul di jutaan situs WordPress dan Tumblr.</string>
+    <string name="blaze_promotional_subtitle_1">Promosikan pos atau halaman apa saja dalam hitungan menit dengan biaya harian sangat terjangkau.</string>
+    <string name="blaze_promotional_text">Tingkatkan jumlah pengunjung situs Anda dengan Blaze</string>
+    <string name="site_creation_domain_tag_unavailable">Domain ini sudah terdaftar</string>
+    <string name="site_creation_domain_tag_sale">Obral</string>
+    <string name="site_creation_domain_tag_recommended">Disarankan</string>
+    <string name="site_creation_domain_tag_best_alternative">Alternatif Terbaik</string>
+    <string name="site_creation_domain_cost">%s/th</string>
+    <string name="me_btn_help">Bantuan</string>
+    <string name="support_faq_caption">Tanya Jawab Umum akan menjawab berbagai pertanyaan yang umum diajukan.</string>
+    <string name="support_faq_title">Terima kasih sudah beralih ke aplikasi Jetpack.</string>
+    <string name="logs_button">Log</string>
+    <string name="tickets">Tiket</string>
+    <string name="free">Gratis</string>
+    <string name="help_buttons_screen_title">Bantuan</string>
     <string name="gutenberg_native_blocks_menu">Menu blok</string>
     <string name="promote_blaze_card_menu_hide_this">Sembunyikan</string>
     <string name="promote_blaze_card_sub_title">Tunjukkan karya Anda di jutaan situs.</string>
@@ -18,24 +55,13 @@ Language: id
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">plugin Jetpack lengkap</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">plugin Jetpack versi individual</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">Plugin %1$s</string>
-    <string name="jetpack_full_plugin_install_onboarding_description">%1$s ini menggunakan %2$s yang belum mendukung semua fitur aplikasi.\n\nSilakan instal %3$s untuk menggunakan aplikasi dengan situs ini.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s ini menggunakan %2$s yang belum mendukung semua fitur dalam aplikasi.\n\nSilakan instal %3$s untuk menggunakan aplikasi dengan situs ini.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">Silakan pasang plugin Jetpack versi lengkap</string>
     <string name="only_one_primary_site_message">Hanya ada satu situs, sehingga Anda tidak bisa memilih situs yang utama.</string>
-    <string name="my_site_jp_install_full_plugin_card_content">Situs ini menggunakan plugin versi individual yang belum mendukung semua fitur aplikasi. Silakan pasang plugin Jetpack versi lengkap.</string>
-    <string name="jetpack_full_plugin_install_error_button_contact_support">Hubungi Dukungan</string>
-    <string name="jetpack_full_plugin_install_error_button_retry">Coba lagi</string>
-    <string name="jetpack_full_plugin_install_error_description">Jetpack tidak dapat diinstal untuk saat ini.</string>
-    <string name="jetpack_full_plugin_install_error_title">Terjadi kendala</string>
-    <string name="jetpack_plugin_install_error_image_content_description">Ikon eror</string>
-    <string name="jetpack_full_plugin_install_done_button">Selesai</string>
-    <string name="jetpack_full_plugin_install_done_description">Situs ini siap digunakan dengan aplikasi.</string>
-    <string name="jetpack_full_plugin_install_done_title">Jetpack sudah diinstal</string>
-    <string name="jetpack_full_plugin_install_installing_description">Menginstal Jetpack di situs Anda. Mungkin perlu waktu beberapa menit untuk menyelesaikan proses ini.</string>
-    <string name="jetpack_full_plugin_install_installing_title">Menginstal Jetpack</string>
-    <string name="jetpack_full_plugin_install_initial_button">Lanjutkan</string>
-    <string name="jetpack_full_plugin_install_initial_description">Kredensial situs web Anda tidak akan disimpan dan hanya akan digunakan untuk tujuan penginstalan Jetpack.</string>
-    <string name="jetpack_full_plugin_install_initial_title">Instal Jetpack</string>
-    <string name="jetpack_full_plugin_install_jp_logo_content_description">Ikon Jetpack</string>
+    <string name="jetpack_plugin_install_error_title">Ada masalah:</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Ikon Error</string>
+    <string name="jetpack_plugin_install_done_title">Jetpack terpasang</string>
+    <string name="jetpack_plugin_install_initial_title">Pasang Jetpack</string>
     <string name="button_promote_with_blaze">Promosikan dengan Blaze</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Maksimalkan potensi situs Anda. Dapatkan statistik, pemberitahuan, dan lainnya dengan Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Situs Anda memiliki plugin Jetpack</string>
@@ -1838,7 +1864,6 @@ Language: id
     <string name="domain_suggestions_search_hint">Ketikkan kata kunci untuk mendapatkan lebih banyak ide</string>
     <string name="domains_suggestions_empty_list">Saran tidak ditemukan</string>
     <string name="register_domain">Daftarkan Domain</string>
-    <string name="jetpack_plugin_install_remote_plugin_done_description">Sekarang Jetpack telah terinstal, kami hanya perlu Anda menyiapkannya. Ini hanya memerlukan waktu satu menit.</string>
     <string name="stats_menu_remove">Hapus dari wawasan</string>
     <string name="stats_menu_move_down">Geser bawah</string>
     <string name="stats_menu_move_up">Geser atas</string>
@@ -2104,15 +2129,6 @@ Language: id
     <string name="reader_empty_followed_tags_title">Tidak ada topi yang diikuti</string>
     <string name="reader_empty_followed_tags_subtitle">Tambahkan topik di sini untuk menemukan pos tentang topik favorit Anda.</string>
     <string name="login_to_to_connect_jetpack">Login ke akun WordPress.com yang Anda gunakan untuk menghubungkan Jetpack.</string>
-    <string name="install_jetpack_retry">Coba lagi</string>
-    <string name="jetpack_plugin_install_remote_plugin_done_button">Siapkan</string>
-    <string name="jetpack_installation_problem_message">Jetpack tidak dapat diinstal untuk saat ini.</string>
-    <string name="jetpack_installation_problem">Ada masalah</string>
-    <string name="jetpack_installed">Jetpack sudah diinstal</string>
-    <string name="installing_jetpack_message">Menginstal Jetpack di situs Anda. Mungkin perlu waktu beberapa menit untuk menyelesaikan proses ini.</string>
-    <string name="installing_jetpack">Menginstal Jetpack</string>
-    <string name="install_jetpack_message">Kredensial situs web Anda tidak akan disimpan dan hanya akan digunakan untuk tujuan penginstalan Jetpack.</string>
-    <string name="install_jetpack">Instal Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
     <string name="stats_jetpack_connection_setup_info">Untuk menggunakan Statistik di situs WordPress, Anda perlu menginstal plugin Jetpack.</string>
