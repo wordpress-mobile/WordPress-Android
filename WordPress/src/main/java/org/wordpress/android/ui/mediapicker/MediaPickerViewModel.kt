@@ -296,7 +296,8 @@ class MediaPickerViewModel @Inject constructor(
                 UiStringText(String.format(resourceProvider.getString(R.string.cab_selected), numSelected))
             }
             else -> {
-                if (isImagePicker() && isVideoPicker()) {
+                if (mediaPickerSetup.allowedTypes.size > 1) {
+                    // "image + video" picker, or "image + video + audio" picker
                     UiStringRes(R.string.photo_picker_use_media)
                 } else if (isVideoPicker()) {
                     UiStringRes(R.string.photo_picker_use_video)
@@ -324,14 +325,8 @@ class MediaPickerViewModel @Inject constructor(
         )
     }
 
-    private fun hasPermission() = when {
-        mediaPickerSetup.requiresPhotosVideosPermissions -> permissionsHandler.hasPhotosVideosPermission()
-        mediaPickerSetup.requiresMusicAudioPermissions -> permissionsHandler.hasMusicAudioPermission()
-        else -> false
-    }
-
     fun refreshData(forceReload: Boolean) {
-        if (hasPermission()) {
+        if (!needPhotosVideoPermission() && !needMusicAudioPermission()) {
             launch(bgDispatcher) {
                 loadActions.send(LoadAction.Refresh(forceReload))
             }
@@ -370,9 +365,7 @@ class MediaPickerViewModel @Inject constructor(
                     _domainModel.value = domainModel
                 }
             }
-            if ((!mediaPickerSetup.requiresPhotosVideosPermissions && !mediaPickerSetup.requiresMusicAudioPermissions)
-                || hasPermission()
-            ) {
+            if (!needPhotosVideoPermission() && !needMusicAudioPermission()) {
                 launch(bgDispatcher) {
                     loadActions.send(LoadAction.Start())
                 }
@@ -574,12 +567,9 @@ class MediaPickerViewModel @Inject constructor(
             // No permission is required, so there is no need to check permissions.
             return
         }
-        val isAlwaysDenied = if (mediaPickerSetup.requiresPhotosVideosPermissions) {
-            isPhotosVideosAlwaysDenied
-        } else {
-            isMusicAudioAlwaysDenied
-        }
-        if (hasPermission()) {
+        val isAlwaysDenied = (mediaPickerSetup.requiresPhotosVideosPermissions && isPhotosVideosAlwaysDenied) ||
+                (mediaPickerSetup.requiresMusicAudioPermissions && isMusicAudioAlwaysDenied)
+        if (!needPhotosVideoPermission() && !needMusicAudioPermission()) {
             _softAskRequest.value = SoftAskRequest(show = false, isAlwaysDenied = isAlwaysDenied)
             if (_domainModel.value?.domainItems.isNullOrEmpty()) {
                 refreshData(false)
@@ -600,17 +590,13 @@ class MediaPickerViewModel @Inject constructor(
         clickIcon(icon)
     }
 
-    private fun getRequiredPermissionName(): String {
-        val permissionName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (mediaPickerSetup.requiresPhotosVideosPermissions) {
-                R.string.permission_images
-            } else if (mediaPickerSetup.requiresMusicAudioPermissions) {
-                R.string.permission_audio
-            } else {
-                R.string.unknown
-            }
-        } else {
-            R.string.permission_storage
+    private fun getRequiredPermissionsNames(): String {
+        val permissionName = when {
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU -> R.string.permission_storage
+            needPhotosVideoPermission() && needMusicAudioPermission() -> R.string.permission_images_video_audio
+            needPhotosVideoPermission() -> R.string.permission_images
+            needMusicAudioPermission() -> R.string.permission_audio
+            else -> R.string.unknown
         }
         return resourceProvider.getString(permissionName)
     }
@@ -619,12 +605,18 @@ class MediaPickerViewModel @Inject constructor(
     private fun isVideoPicker() = mediaPickerSetup.allowedTypes.contains(VIDEO)
     private fun isAudioPicker() = mediaPickerSetup.allowedTypes.contains(AUDIO)
 
+    private fun needPhotosVideoPermission() =
+        mediaPickerSetup.requiresPhotosVideosPermissions && !permissionsHandler.hasPhotosVideosPermission()
+
+    private fun needMusicAudioPermission() =
+        mediaPickerSetup.requiresMusicAudioPermissions && !permissionsHandler.hasMusicAudioPermission()
+
     private fun buildSoftAskView(softAskRequest: SoftAskRequest?): SoftAskViewUiModel {
         if (softAskRequest != null && softAskRequest.show) {
             mediaPickerTracker.trackShowPermissionsScreen(mediaPickerSetup, softAskRequest.isAlwaysDenied)
             val appName = "<strong>${resourceProvider.getString(R.string.app_name)}</strong>"
             val label = if (softAskRequest.isAlwaysDenied) {
-                val permission = ("<strong>${getRequiredPermissionName()}</strong>")
+                val permission = ("<strong>${getRequiredPermissionsNames()}</strong>")
                 String.format(
                     resourceProvider.getString(R.string.media_picker_soft_ask_media_permissions_denied),
                     appName,
@@ -632,6 +624,9 @@ class MediaPickerViewModel @Inject constructor(
                 )
             } else {
                 val description = when {
+                    isImagePicker() && isVideoPicker() && isAudioPicker() -> {
+                        R.string.photo_picker_soft_ask_photos_videos_audio_label
+                    }
                     isImagePicker() && isVideoPicker() -> R.string.photo_picker_soft_ask_photos_videos_label
                     isImagePicker() -> R.string.photo_picker_soft_ask_photos_label
                     isVideoPicker() -> R.string.photo_picker_soft_ask_videos_label

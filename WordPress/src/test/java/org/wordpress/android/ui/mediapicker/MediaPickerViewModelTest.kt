@@ -116,11 +116,32 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private var uiStates = mutableListOf<MediaPickerUiState>()
     private lateinit var actions: Channel<LoadAction>
     private var navigateEvents = mutableListOf<Event<MediaNavigationEvent>>()
-    private val singleSelectMediaPickerSetup = buildMediaPickerSetup(false, setOf(IMAGE))
-    private val multiSelectMediaPickerSetup = buildMediaPickerSetup(true, setOf(IMAGE, VIDEO))
-    private val singleSelectVideoPickerSetup = buildMediaPickerSetup(false, setOf(VIDEO))
-    private val singleSelectAudioPickerSetup = buildMediaPickerSetup(false, setOf(AUDIO))
-    private val multiSelectFilePickerSetup = buildMediaPickerSetup(true, setOf(IMAGE, VIDEO, AUDIO, DOCUMENT))
+    private val singleSelectMediaPickerSetup = buildMediaPickerSetup(
+        false,
+        setOf(IMAGE),
+        requiresPhotosVideosPermission = true
+    )
+    private val multiSelectMediaPickerSetup = buildMediaPickerSetup(
+        true,
+        setOf(IMAGE, VIDEO),
+        requiresPhotosVideosPermission = true
+    )
+    private val singleSelectVideoPickerSetup = buildMediaPickerSetup(
+        false,
+        setOf(VIDEO),
+        requiresPhotosVideosPermission = true
+    )
+    private val singleSelectAudioPickerSetup = buildMediaPickerSetup(
+        false,
+        setOf(AUDIO),
+        requiresMusicAudioPermission = true
+    )
+    private val multiSelectFilePickerSetup = buildMediaPickerSetup(
+        true,
+        setOf(IMAGE, VIDEO, AUDIO, DOCUMENT),
+        requiresPhotosVideosPermission = true,
+        requiresMusicAudioPermission = true
+    )
     private val site = SiteModel()
     private lateinit var firstItem: MediaItem
     private lateinit var secondItem: MediaItem
@@ -950,8 +971,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         allowedTypes: Set<MediaType>,
         cameraSetup: CameraSetup = HIDDEN,
         editingEnabled: Boolean = true,
-        requiresPhotosVideosPermission: Boolean = true,
-        requiresMusicAudioPermission: Boolean = true
+        requiresPhotosVideosPermission: Boolean = false,
+        requiresMusicAudioPermission: Boolean = false
     ) = MediaPickerSetup(
         primaryDataSource = DEVICE,
         availableDataSources = setOf(),

@@ -2804,6 +2804,7 @@
     <string name="photo_picker_wordpress_media_library">Choose from WordPress Media Library</string>
     <string name="photo_picker_gif">Choose from Tenor</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
+    <string name="photo_picker_soft_ask_photos_videos_audio_label">%s needs permission to access your music, audio, photos and videos</string>
     <string name="photo_picker_soft_ask_photos_videos_label">%s needs permission to access your photos and videos</string>
     <string name="photo_picker_soft_ask_photos_label">%s needs permission to access your photos</string>
     <string name="photo_picker_soft_ask_videos_label">%s needs permission to access your videos</string>
@@ -2829,7 +2830,7 @@
     <string name="media_insert_failed_with_reason">Media insert failed: %s</string>
     <string name="media_insert_failed">Media insert failed.</string>
     <string name="media_loading_failed">Media loading failed</string>
-    <string name="media_picker_soft_ask_media_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">%1$s was denied access to your media files. To fix this, edit your permissions and turn on %2$s.</string>
 
     <!-- GIFs -->
     <string name="gif_powered_by_tenor">Powered by Tenor</string>
@@ -2857,6 +2858,7 @@
     <string name="permission_images">Photos and videos</string>
     <string name="permission_video">Photos and videos</string>
     <string name="permission_audio">Music and audio</string>
+    <string name="permission_images_video_audio">Photos and videos &amp; Music and audio</string>
     <string name="permission_camera">Camera</string>
     <string name="permission_microphone">Microphone</string>
 

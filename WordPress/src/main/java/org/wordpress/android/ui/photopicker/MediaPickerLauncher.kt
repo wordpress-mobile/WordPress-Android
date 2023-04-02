@@ -187,7 +187,7 @@ class MediaPickerLauncher @Inject constructor(
             primaryDataSource = DEVICE,
             availableDataSources = setOf(),
             canMultiselect = canMultiselect,
-            requiresPhotosVideosPermissions = false,
+            requiresPhotosVideosPermissions = allowedTypes.contains(IMAGE) || allowedTypes.contains(VIDEO),
             requiresMusicAudioPermissions = allowedTypes.contains(AUDIO),
             allowedTypes = allowedTypes,
             cameraSetup = HIDDEN,
