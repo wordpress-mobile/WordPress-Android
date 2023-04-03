@@ -100,6 +100,7 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
 
     private fun shouldRequestUpdate(): Boolean {
         //todo: add logic to check the time since last update request
+        return true
     }
 
 
