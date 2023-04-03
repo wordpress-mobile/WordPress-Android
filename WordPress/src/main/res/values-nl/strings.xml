@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-28 13:54:09+0000
+Translation-Revision-Date: 2023-03-30 12:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: nl
@@ -127,6 +127,7 @@ Language: nl
     <string name="jp_migration_done_delete_wp_message">&lt;b&gt;Verwijder de WordPress-app&lt;/b&gt; om gegevensconflicten te vermijden.</string>
     <string name="jp_migration_done_title">Bedankt dat je bent overgestapt naar Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">We zullen meldingen van de WordPress-app uitschakelen.</string>
+    <string name="jp_migration_notifications_subtitle">Je krijgt dezelfde meldingen, maar ze komen nu van de Jetpack-app.</string>
     <string name="jp_migration_notifications_title">Je krijgt nu meldingen van Jetpack</string>
     <string name="jp_migration_success_card_message">Verwijder de WordPress-app</string>
     <string name="wordpress_help_center_button">WordPress help centrum</string>

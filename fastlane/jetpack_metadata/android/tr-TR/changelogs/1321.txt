@@ -1,3 +1,0 @@
-21.9:
-Sıcak haber—Jetpack artık Blaze'i destekliyor, böylece uygulamadan bir yazıyı veya sayfayı tanıtarak yeni okuyuculara ulaşabilirsiniz.
-Ayrıca Yardım ekranına, WordPress uygulamasından Jetpack'e geçtikten sonra göreceğiniz bir geçiş sonrası SSS kartı ekledik.
