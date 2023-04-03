@@ -61,40 +61,92 @@ class ReactNativeStore @VisibleForTesting constructor(
             Uri::parse
     )
 
-    suspend fun executeRequest(
+    private enum class RequestMethod {
+        GET,
+        POST
+    }
+
+    suspend fun executeGetRequest(
         site: SiteModel,
         pathWithParams: String,
         enableCaching: Boolean = true
     ): ReactNativeFetchResponse =
-            coroutineEngine.withDefaultContext(AppLog.T.API, this, "executeRequest") {
+            coroutineEngine.withDefaultContext(AppLog.T.API, this, "executeGetRequest") {
                 return@withDefaultContext if (site.isUsingWpComRestApi) {
-                    executeWPComRequest(site, pathWithParams, enableCaching)
+                    executeWPComGetRequest(site, pathWithParams, enableCaching)
                 } else {
-                    executeWPAPIRequest(site, pathWithParams, enableCaching)
+                    executeWPAPIGetRequest(site, pathWithParams, enableCaching)
                 }
             }
 
-    private suspend fun executeWPComRequest(
+    suspend fun executePostRequest(
+        site: SiteModel,
+        pathWithParams: String,
+        body: Map<String, Any> = emptyMap(),
+    ): ReactNativeFetchResponse =
+        coroutineEngine.withDefaultContext(AppLog.T.API, this, "executePostRequest") {
+            return@withDefaultContext if (site.isUsingWpComRestApi) {
+                executeWPComPostRequest(site, pathWithParams, body)
+            } else {
+                executeWPAPIPostRequest(site, pathWithParams, body)
+            }
+        }
+
+    /**
+     * WPCOM REST API
+     */
+    private suspend fun executeWPComGetRequest(
         site: SiteModel,
         path: String,
         enableCaching: Boolean
     ): ReactNativeFetchResponse {
         val (url, params) = parseUrlAndParamsForWPCom(path, site.siteId)
         return if (url != null) {
-            wpComRestClient.fetch(url, params, ::Success, ::Error, enableCaching)
+            wpComRestClient.getRequest(url, params, ::Success, ::Error, enableCaching)
         } else {
             urlParseError(path)
         }
     }
 
-    private suspend fun executeWPAPIRequest(
+    private suspend fun executeWPComPostRequest(
+        site: SiteModel,
+        path: String,
+        body: Map<String, Any>,
+    ): ReactNativeFetchResponse {
+        val (url, params) = parseUrlAndParamsForWPCom(path, site.siteId)
+        return if (url != null) {
+            wpComRestClient.postRequest(url, params, body, ::Success, ::Error)
+        } else {
+            urlParseError(path)
+        }
+    }
+
+    /**
+     * WP REST PI
+     */
+    private suspend fun executeWPAPIGetRequest(
         site: SiteModel,
         pathWithParams: String,
         enableCaching: Boolean
     ): ReactNativeFetchResponse {
         val (path, params) = parsePathAndParams(pathWithParams)
         return if (path != null) {
-            executeWPAPIRequest(site, path, params, enableCaching)
+            // Omit `body` parameters as it's only supported in POST requests
+            executeWPAPIRequest(site, path, RequestMethod.GET, params, emptyMap(), enableCaching)
+        } else {
+            urlParseError(pathWithParams)
+        }
+    }
+
+    private suspend fun executeWPAPIPostRequest(
+        site: SiteModel,
+        pathWithParams: String,
+        body: Map<String, Any>,
+    ): ReactNativeFetchResponse {
+        val (path, params) = parsePathAndParams(pathWithParams)
+        return if (path != null) {
+            // Omit `params` and `enableCaching` parameters as they are only supported in GET requests
+            executeWPAPIRequest(site, path, RequestMethod.POST, emptyMap(), body, false)
         } else {
             urlParseError(pathWithParams)
         }
@@ -107,11 +159,13 @@ class ReactNativeStore @VisibleForTesting constructor(
         return Error(error)
     }
 
-    @Suppress("ComplexMethod", "NestedBlockDepth")
+    @Suppress("ComplexMethod", "NestedBlockDepth", "LongParameterList")
     private suspend fun executeWPAPIRequest(
         site: SiteModel,
         path: String,
+        method: RequestMethod,
         params: Map<String, String>,
+        body: Map<String, Any>,
         enableCaching: Boolean
     ): ReactNativeFetchResponse {
         // Storing this in a variable to avoid a NPE that can occur if the site object is mutated
@@ -136,7 +190,10 @@ class ReactNativeStore @VisibleForTesting constructor(
             nonce = nonceRestClient.requestNonce(site)
         }
 
-        val response = executeFetch(fullRestUrl, params, nonce?.value, enableCaching)
+        val response = when (method) {
+            RequestMethod.GET -> executeGet(fullRestUrl, params, nonce?.value, enableCaching)
+            RequestMethod.POST -> executePost(fullRestUrl, body, nonce?.value)
+        }
         return when (response) {
             is Success -> response
 
@@ -150,7 +207,10 @@ class ReactNativeStore @VisibleForTesting constructor(
                         // Try original call again if we have a new nonce
                         val nonceIsUpdated = newNonce != null && newNonce != previousNonce
                         if (nonceIsUpdated) {
-                            return executeFetch(fullRestUrl, params, newNonce, enableCaching)
+                            return when (method) {
+                                RequestMethod.GET -> executeGet(fullRestUrl, params, newNonce, enableCaching)
+                                RequestMethod.POST -> executePost(fullRestUrl, body, newNonce)
+                            }
                         }
                     }
                     response
@@ -165,7 +225,7 @@ class ReactNativeStore @VisibleForTesting constructor(
                         // If we did the previous call with a saved rest url, try again by making
                         // recursive call. This time there is no saved rest url to use
                         // so the rest url will be retrieved using discovery
-                        executeWPAPIRequest(site, path, params, enableCaching)
+                        executeWPAPIRequest(site, path, method, params, body, enableCaching)
                     } else {
                         // Already used discovery to fetch the rest base url and still got 'not found', so
                         // just return the error response
@@ -180,13 +240,20 @@ class ReactNativeStore @VisibleForTesting constructor(
         }
     }
 
-    private suspend fun executeFetch(
+    private suspend fun executeGet(
         fullRestApiUrl: String,
         params: Map<String, String>,
         nonce: String?,
         enableCaching: Boolean
     ): ReactNativeFetchResponse =
-            wpAPIRestClient.fetch(fullRestApiUrl, params, ::Success, ::Error, nonce, enableCaching)
+            wpAPIRestClient.getRequest(fullRestApiUrl, params, ::Success, ::Error, nonce, enableCaching)
+
+    private suspend fun executePost(
+        fullRestApiUrl: String,
+        body: Map<String, Any>,
+        nonce: String?
+    ): ReactNativeFetchResponse =
+        wpAPIRestClient.postRequest(fullRestApiUrl, body, ::Success, ::Error, nonce)
 
     private fun parseUrlAndParamsForWPCom(
         pathWithParams: String,
@@ -196,6 +263,7 @@ class ReactNativeStore @VisibleForTesting constructor(
                 val url = path?.let {
                     val newPath = it
                             .replace("wp/v2".toRegex(), "wp/v2/sites/$wpComSiteId")
+                            .replace("wpcom/v2".toRegex(), "wpcom/v2/sites/$wpComSiteId")
                             .replace("wp-block-editor/v1".toRegex(), "wp-block-editor/v1/sites/$wpComSiteId")
                             .replace("oembed/1.0".toRegex(), "oembed/1.0/sites/$wpComSiteId")
                     slashJoin(WPCOM_ENDPOINT, newPath)
