@@ -89,7 +89,7 @@ class EditorThemeStore
     }
 
     private suspend fun fetchEditorTheme(site: SiteModel, action: EditorThemeAction) {
-        val response = reactNativeStore.executeRequest(site, THEME_REQUEST_PATH, false)
+        val response = reactNativeStore.executeGetRequest(site, THEME_REQUEST_PATH, false)
 
         when (response) {
             is Success -> {
@@ -125,7 +125,7 @@ class EditorThemeStore
     }
 
     private suspend fun fetchEditorSettings(site: SiteModel, action: EditorThemeAction) {
-        val response = reactNativeStore.executeRequest(site, EDITOR_SETTINGS_REQUEST_PATH, false)
+        val response = reactNativeStore.executeGetRequest(site, EDITOR_SETTINGS_REQUEST_PATH, false)
 
         when (response) {
             is Success -> {
