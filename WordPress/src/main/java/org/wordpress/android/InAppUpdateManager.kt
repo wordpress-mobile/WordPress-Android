@@ -1,6 +1,7 @@
 package org.wordpress.android
 
 import android.app.Activity
+import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -27,15 +28,23 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
     }
 
     fun checkForAppUpdate(activity: Activity) {
+        Log.e("AppUpdateChecker", "checkPlayStoreUpdate called")
         if (!shouldRequestUpdate())
             return
+        Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update")
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
         appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, success")
             if (isImmediateUpdateNecessary(appUpdateInfo)) {
                 requestImmediateUpdate(appUpdateInfo, activity)
             } else if (isFlexibleUpdateNecessary(appUpdateInfo)) {
                 requestFlexibleUpdate(appUpdateInfo, activity)
             }
+        }
+
+        appUpdateInfoTask.addOnFailureListener { exception ->
+            Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, failure")
+            Log.e("AppUpdateChecker", exception.message.toString())
         }
     }
 
@@ -80,14 +89,14 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
         )
     }
 
-    private fun isImmediateUpdateInProgress(appUpdateInfo: AppUpdateInfo): Boolean {
+    fun isImmediateUpdateInProgress(appUpdateInfo: AppUpdateInfo): Boolean {
         return (appUpdateInfo.updateAvailability()
                 == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS)
                 && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
                 && isUpdatePriorityHigh(appUpdateInfo)
     }
 
-    private fun isFlexibleUpdateInProgress(appUpdateInfo: AppUpdateInfo): Boolean {
+    fun isFlexibleUpdateInProgress(appUpdateInfo: AppUpdateInfo): Boolean {
         return (appUpdateInfo.updateAvailability()
                 == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS)
                 && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
@@ -103,6 +112,13 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
         return true
     }
 
+    fun completeUpdate() {
+        appUpdateManager.completeUpdate()
+    }
+
+    fun unregisterListener(installStateUpdatedListener: InstallStateUpdatedListener) {
+        appUpdateManager.unregisterListener(installStateUpdatedListener)
+    }
 
     companion object {
         const val APP_UPDATE_IMMEDIATE_REQUEST_CODE = 1001
