@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.Constraints
  */
 @Composable
 fun RepeatingColumn(
+    modifier: Modifier = Modifier,
     position: Float,
     repeat: Int = 3,
-    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     Layout(

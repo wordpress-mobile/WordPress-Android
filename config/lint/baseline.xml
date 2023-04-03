@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <issues format="6" by="lint 7.2.1" type="baseline" client="gradle" dependencies="true" name="AGP (7.2.1)" variant="all" version="7.2.1">
 
-    <!-- JETPACK -->
-
-    <issue
-        id="ModifierParameter"
-        message="Modifier parameter should be the first optional parameter"
-        errorLine1="    modifier: Modifier = Modifier,"
-        errorLine2="    ~~~~~~~~">
-        <location
-            file="src/jetpack/java/org/wordpress/android/ui/accounts/login/components/RepeatingColumn.kt"
-            line="22"
-            column="5"/>
-    </issue>
-
     <!-- MAIN -->
 
     <issue
