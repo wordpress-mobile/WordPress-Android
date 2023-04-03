@@ -13,6 +13,7 @@
     <issue id="Typos">
         <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
     </issue>
+    <!-- TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/18185 -->
     <issue id="MissingFirebaseInstanceTokenRefresh">
         <!-- GCM -->
         <ignore path="**/generated/source/kapt/**/org/wordpress/android/push/Hilt_GCMMessageService.java" />
