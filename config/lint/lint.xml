@@ -4,6 +4,12 @@
     <issue id="MissingTranslation" severity="ignore" />
     <issue id="ExtraTranslation" severity="ignore" />
     <issue id="PluralsCandidate" severity="ignore" /> <!-- GlotPress doesn't support plurals -->
+    <!-- TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/18226 -->
+    <issue id="LocaleFolder">
+        <!-- JETPACK -->
+        <ignore path="**/src/jetpack/res/values-he" />
+        <ignore path="**/src/jetpack/res/values-id" />
+    </issue>
     <issue id="Typos">
         <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
     </issue>

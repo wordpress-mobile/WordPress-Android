@@ -4,20 +4,6 @@
     <!-- JETPACK -->
 
     <issue
-        id="LocaleFolder"
-        message="The locale folder &quot;`he`&quot; should be called &quot;`iw`&quot; instead; see the `java.util.Locale` documentation">
-        <location
-            file="src/jetpack/res/values-he"/>
-    </issue>
-
-    <issue
-        id="LocaleFolder"
-        message="The locale folder &quot;`id`&quot; should be called &quot;`in`&quot; instead; see the `java.util.Locale` documentation">
-        <location
-            file="src/jetpack/res/values-id"/>
-    </issue>
-
-    <issue
         id="IntentFilterUniqueDataAttributes"
         message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
         errorLine1="                &lt;data"
