@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +28,15 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.InstallStatus;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.InAppUpdateManager;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -274,6 +279,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
+    @Inject InAppUpdateManager mInAppUpdateManager;
+
     /*
      * fragments implement this if their contents can be scrolled, called when user
      * requests to scroll to the top
@@ -308,7 +315,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-
 
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(v -> {
@@ -366,10 +372,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     }
                 } else if (openedFromShortcut) {
                     initSelectedSite();
-                        mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
-                                ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
-                        showJetpackOverlayIfNeeded(getIntent().getStringExtra(
-                                ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
+                    mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
+                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
+                    showJetpackOverlayIfNeeded(getIntent().getStringExtra(
+                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
                 } else if (isQuickStartRequestedFromPush) {
@@ -1085,8 +1091,38 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
         );
 
+        checkForAnyPendingInAppUpdates();
+
         mFirstResume = false;
     }
+
+    private void checkForAnyPendingInAppUpdates() {
+        mInAppUpdateManager.checkForAppUpdate(WPMainActivity.this);
+        mInAppUpdateManager.registerUpdateListener(installStateUpdatedListener);
+
+        mInAppUpdateManager.getInAppUpdateManager().addOnSuccessListener(appUpdateInfo -> {
+            Log.e("WPMainActivity", "checkForAnyPendingInAppUpdates: " + appUpdateInfo);
+            if (mInAppUpdateManager.isImmediateUpdateInProgress(appUpdateInfo)) {
+                mInAppUpdateManager.requestImmediateUpdate(appUpdateInfo, WPMainActivity.this);
+            } else if (mInAppUpdateManager.isFlexibleUpdateInProgress(appUpdateInfo)) {
+                showSnackBarForUpdate();
+            } else {
+                mInAppUpdateManager.checkForAppUpdate(WPMainActivity.this);
+                mInAppUpdateManager.registerUpdateListener(installStateUpdatedListener);
+            }
+        });
+    }
+
+    InstallStateUpdatedListener installStateUpdatedListener = state -> {
+        Log.e("WPMainActivity", "installStateUpdatedListener: " + state.installStatus());
+        if (state.installStatus() == InstallStatus.DOWNLOADED) {
+            showSnackBarForUpdate();
+        } else if (state.installStatus() == InstallStatus.INSTALLED) {
+            removeInstallStateUpdateListener();
+        } else {
+            AppLog.d(AppLog.T.MAIN, "InstallStateUpdatedListener: state: " + state.installStatus());
+        }
+    };
 
     private void checkQuickStartNotificationStatus() {
         SiteModel selectedSite = getSelectedSite();
@@ -1411,7 +1447,16 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case RequestCodes.DOMAIN_REGISTRATION:
                 passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 break;
+            case InAppUpdateManager.APP_UPDATE_FLEXIBLE_REQUEST_CODE:
+            case InAppUpdateManager.APP_UPDATE_IMMEDIATE_REQUEST_CODE:
+                if (resultCode == RESULT_CANCELED) {
+                    removeInstallStateUpdateListener();
+                }
         }
+    }
+
+    private void removeInstallStateUpdateListener() {
+        mInAppUpdateManager.unregisterListener(installStateUpdatedListener);
     }
 
     private void appLanguageChanged() {
@@ -1829,6 +1874,16 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Override public void onUpdateSelectedSiteResult(int resultCode, @Nullable Intent data) {
         onActivityResult(RequestCodes.SITE_PICKER, resultCode, data);
+    }
+
+    private void showSnackBarForUpdate() {
+        Log.e("WPMainActivity", "showSnackBarForUpdate()");
+        Snackbar.make(findViewById(R.id.coordinator), R.string.update_available, Snackbar.LENGTH_LONG)
+                .setAction(R.string.update_now, v -> {
+                    mInAppUpdateManager.completeUpdate();
+                    // todo: AnalyticsTracker.track(Stat.IN_APP_UPDATE_COMPLETED);
+                })
+                .show();
     }
 
     // We dismiss the QuickStart SnackBar every time activity is paused because

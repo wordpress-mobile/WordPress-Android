@@ -4453,4 +4453,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Blaze -->
     <string name="blaze_header_done_label" translatable="false">@string/label_done_button</string>
     <string name="blaze_menu_item_label" translatable="false">@string/blaze_activity_title</string>
+    <string name="update_available">"Update is available for the app "</string>
 </resources>
