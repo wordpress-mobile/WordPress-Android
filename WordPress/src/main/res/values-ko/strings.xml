@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-14 15:54:08+0000
+Translation-Revision-Date: 2023-03-28 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ko_KR
 -->
 <resources>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s에서는 %2$s을(를) 사용하고 있으며 여기에서는 아직 앱의 모든 기능이 지원되지 않습니다.\n\n이 사이트에서 앱을 사용하려면 %3$s을(를) 설치하세요.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">이 사이트</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s에서는 %2$s을(를) 사용하고 있으며 여기에서는 아직 앱의 모든 기능이 지원되지 않습니다. %3$s을(를) 설치하세요.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s에서는 %2$s을(를) 사용하고 있으며 여기에서는 아직 앱의 모든 기능이 지원되지 않습니다. %3$s을(를) 설치하세요.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">며칠 후 젯팩 앱이 이동됩니다.</string>
+    <string name="wp_jp_static_poster_footnote">전환은 무료이며 1분밖에 걸리지 않습니다.</string>
+    <string name="wp_jp_static_poster_message">통계, 리더, 알림 및 기타 젯팩에서는 워드프레스 앱에서 제거된 기능이 제공되며, 젯팩 앱에서만 찾을 수 있습니다.</string>
+    <string name="wp_jp_static_poster_button_primary">젯팩 앱으로 전환</string>
+    <string name="wp_jp_static_poster_title_plural">%s이(가) 젯팩 앱으로 이동되었습니다.</string>
+    <string name="wp_jp_static_poster_title">%s이(가) 젯팩 앱으로 이동되었습니다.</string>
+    <string name="my_site_btn_wp_admin">WP 관리자</string>
+    <string name="my_site_header_manage">관리</string>
+    <string name="my_site_header_traffic">트래픽</string>
+    <string name="my_site_header_content">콘텐츠</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">설정</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">완료</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">젯팩 설치되었으므로 설정해야 합니다. 이 작업은 1분 정도 소요됩니다.</string>
     <string name="blaze_overlay_site_promotional_button">지금 글 Blaze</string>
     <string name="blaze_overlay_page_promotional_button">이 페이지 Blaze</string>
     <string name="blaze_overlay_post_promotional_button">이 글 Blaze</string>
@@ -38,10 +55,11 @@ Language: ko_KR
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">전체 젯팩 플러그인</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">개별 젯팩 플러그인</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">%1$s 플러그인</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s에서는 %2$s을(를) 사용하고 있으며 여기에서는 아직 앱의 모든 기능이 지원되지 않습니다.\n\n이 사이트에서 앱을 사용하려면 %3$s을(를) 설치하세요.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">전체 젯팩 플러그인을 설치하세요.</string>
     <string name="only_one_primary_site_message">하나의 사이트만 이용할 수 있어서 기본 사이트를 변경할 수 없습니다.</string>
     <string name="button_promote_with_blaze">Blaze로 홍보</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">사이트의 전체 잠재력을 잠금 해제하세요. 젯팩으로 통계, 알림 등을 받으세요.</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">사이트의 전체 잠재력을 잠금 해제하세요. 젯팩으로 통계, 알림 등을 이용하세요.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">사이트에 젯팩 플러그인 있음</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">젯팩 모바일 앱은 젯팩 플러그인과 연동하도록 설계되었습니다. 지금 전환하여 통계, 알림, 리더 등에 대한 접근 권한을 받으세요.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">새 댓글, 좋아요, 조회수 등에 대한 알림을 받으세요.</string>

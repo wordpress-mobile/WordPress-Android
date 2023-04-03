@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-14 09:54:12+0000
+Translation-Revision-Date: 2023-03-28 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_TW
 -->
 <resources>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s 正在使用 %2$s，目前尚未支援應用程式的所有功能。\n\n若要在此網站使用應用程式，請安裝 %3$s。</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">本網站</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s 正在使用 %2$s，目前尚未支援應用程式的所有功能。 Please install the %3$s.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s 正在使用 %2$s，目前尚未支援應用程式的所有功能。 Please install the %3$s.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Moving to the Jetpack app in a few days.</string>
+    <string name="wp_jp_static_poster_footnote">切換完全免費，只要 1 分鐘就能完成。</string>
+    <string name="wp_jp_static_poster_message">WordPress 應用程式已移除「統計資料」、「閱讀器」、「通知」和其他 Jetpack 提供的功能。</string>
+    <string name="wp_jp_static_poster_button_secondary">前往 jetpack.com 深入瞭解</string>
+    <string name="wp_jp_static_poster_button_primary">切換至 Jetpack 應用程式</string>
+    <string name="wp_jp_static_poster_title_plural">%s have moved to the Jetpack app.</string>
+    <string name="wp_jp_static_poster_title">%s has moved to the Jetpack app.</string>
+    <string name="my_site_btn_wp_admin">WP 管理員</string>
+    <string name="my_site_header_manage">管理</string>
+    <string name="my_site_header_traffic">流量</string>
+    <string name="my_site_header_content">內容</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">設定</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">完成</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">現在 Jetpack 已安裝完成，我們只需要協助你完成設定即可。 這只需要一分鐘左右。</string>
     <string name="blaze_overlay_site_promotional_button">立即使用 Blaze 宣傳文章</string>
     <string name="blaze_overlay_page_promotional_button">使用 Blaze 宣傳此頁面</string>
     <string name="blaze_overlay_post_promotional_button">使用 Blaze 宣傳此文章</string>
@@ -40,7 +58,7 @@ Language: zh_TW
     <string name="jetpack_individual_plugin_support_onboarding_title">請安裝完整 Jetpack 外掛程式</string>
     <string name="only_one_primary_site_message">只有一個網站可用，因此你無法變更主要網站。</string>
     <string name="button_promote_with_blaze">使用 Blaze 進行宣傳</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">充分發揮網站的潛能。 透過 Jetpack 取得統計資料、通知等功能。</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">充分發揮網站的潛能。 透過 Jetpack 取得統計資料、通知等。</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">你的網站已安裝 Jetpack 外掛程式</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">接收新留言、按讚、瀏覽次數等內容的通知。</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">尋找並追蹤你喜愛的網站和社群，並分享你的內容。</string>

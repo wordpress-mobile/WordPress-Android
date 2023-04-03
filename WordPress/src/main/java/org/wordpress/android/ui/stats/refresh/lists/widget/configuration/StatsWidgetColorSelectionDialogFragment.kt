@@ -1,14 +1,13 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
@@ -16,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsCo
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class StatsWidgetColorSelectionDialogFragment : AppCompatDialogFragment() {
     @Inject
     lateinit var imageManager: ImageManager
@@ -60,10 +60,5 @@ class StatsWidgetColorSelectionDialogFragment : AppCompatDialogFragment() {
             R.id.stats_widget_dark_color -> DARK
             else -> null
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        AndroidSupportInjection.inject(this)
     }
 }
