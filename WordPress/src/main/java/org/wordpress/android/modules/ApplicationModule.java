@@ -7,11 +7,14 @@ import android.content.SharedPreferences;
 import androidx.lifecycle.LiveData;
 import androidx.preference.PreferenceManager;
 
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
 import com.tenor.android.core.network.ApiClient;
 import com.tenor.android.core.network.ApiService;
 import com.tenor.android.core.network.IApiClient;
 
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.InAppUpdateManager;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogFragment;
@@ -145,5 +148,15 @@ public abstract class ApplicationModule {
     public static WizardManager<RestoreStep> provideRestoreWizardManager(
             RestoreStepsProvider stepsProvider) {
         return new WizardManager<>(stepsProvider.getSteps());
+    }
+
+    @Provides
+    public static InAppUpdateManager provideInAppUpdateManager(AppUpdateManager appUpdateManager) {
+        return new InAppUpdateManager(appUpdateManager);
+    }
+
+    @Provides
+    public static AppUpdateManager provideAppUpdateManager(@ApplicationContext Context context) {
+        return AppUpdateManagerFactory.create(context);
     }
 }
