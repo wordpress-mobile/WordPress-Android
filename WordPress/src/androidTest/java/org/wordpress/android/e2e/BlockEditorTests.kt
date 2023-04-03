@@ -42,8 +42,8 @@ class BlockEditorTests : BaseTest() {
             .verifyPostPublished()
     }
 
-    @Ignore
     @Test
+    @Ignore("This test is temporarily disabled as being flaky.")
     fun e2ePublishFullPost() {
         val title = "publishFullPost"
         MySitesPage()

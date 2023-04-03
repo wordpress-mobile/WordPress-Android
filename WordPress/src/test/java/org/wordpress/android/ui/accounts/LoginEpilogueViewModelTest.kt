@@ -8,6 +8,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 
@@ -24,9 +25,17 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var siteStore: SiteStore
 
+    @Mock
+    private lateinit var wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper
+
     @Before
     fun setUp() {
-        viewModel = LoginEpilogueViewModel(appPrefsWrapper, buildConfigWrapper, siteStore)
+        viewModel = LoginEpilogueViewModel(
+            appPrefsWrapper,
+            buildConfigWrapper,
+            siteStore,
+            wpJetpackIndividualPluginHelper
+        )
     }
 
     @Test
@@ -261,6 +270,30 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
 
         assertThat(navigationEvents.last()).isInstanceOf(LoginNavigationEvents.ShowNoJetpackSites::class.java)
     }
+
+    @Test
+    fun `when onSiteListLoaded is invoked then show jetpack individual plugin overlay`() =
+        test {
+            val navigationEvents = initObservers().navigationEvents
+            whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(true)
+
+            viewModel.onSiteListLoaded()
+            advanceUntilIdle()
+
+            assertThat(navigationEvents.last()).isEqualTo(LoginNavigationEvents.ShowJetpackIndividualPluginOverlay)
+        }
+
+    @Test
+    fun `when onSiteListLoaded is invoked then don't show jetpack individual plugin overlay`() =
+        test {
+            val navigationEvents = initObservers().navigationEvents
+            whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(false)
+
+            viewModel.onSiteListLoaded()
+            advanceUntilIdle()
+
+            assertThat(navigationEvents.lastOrNull()).isNull()
+        }
 
     private data class Observers(val navigationEvents: List<LoginNavigationEvents>)
 

@@ -133,6 +133,8 @@ android {
         buildConfigField "boolean", "JETPACK_INSTALL_FULL_PLUGIN", "false"
         buildConfigField "boolean", "ENABLE_BLAZE_FEATURE", "false"
         buildConfigField "boolean", "WP_INDIVIDUAL_PLUGIN_OVERLAY", "false"
+        buildConfigField "boolean", "DASHBOARD_CARD_PAGES", "false"
+        buildConfigField "boolean", "DASHBOARD_CARD_ACTIVITY_LOG", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -260,9 +262,11 @@ android {
     }
 
     lintOptions{
+        warningsAsErrors = true
         checkDependencies = true
         checkGeneratedSources = true
-        lintConfig file("${project.rootDir}/config/lint.xml")
+        lintConfig file("${project.rootDir}/config/lint/lint.xml")
+        baseline file("${project.rootDir}/config/lint/baseline.xml")
     }
 
     packagingOptions {
@@ -450,7 +454,6 @@ dependencies {
     implementation ("com.google.android.exoplayer:exoplayer:$googleExoPlayerVersion") {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    compileOnly "org.glassfish:javax.annotation:$glassfishJavaxAnnotationVersion"
     implementation "com.google.dagger:dagger-android-support:$gradle.ext.daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$gradle.ext.daggerVersion"
     implementation "com.google.dagger:hilt-android:$gradle.ext.daggerVersion"

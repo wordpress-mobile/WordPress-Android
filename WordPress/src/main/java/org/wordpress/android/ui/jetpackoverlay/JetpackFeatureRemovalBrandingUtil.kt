@@ -29,7 +29,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
     private val jpDeadlineConfig: JPDeadlineConfig,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
-    private val jpDeadlineDate: String? by lazy {
+    private val jpDeadlineDate: String by lazy {
         jpDeadlineConfig.getValue()
     }
 
@@ -91,7 +91,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         }
     }
 
-    private fun retrieveDeadline(): LocalDate? = jpDeadlineDate?.let {
+    private fun retrieveDeadline(): LocalDate? = jpDeadlineDate.takeIf { it.isNotBlank() }?.let {
         dateTimeUtilsWrapper.parseDateString(it, JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)?.toLocalDate()
     }
 

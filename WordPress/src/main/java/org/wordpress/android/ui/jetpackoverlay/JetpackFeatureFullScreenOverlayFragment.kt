@@ -1,13 +1,10 @@
 package org.wordpress.android.ui.jetpackoverlay
 
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +24,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.extensions.exhaustive
+import org.wordpress.android.util.extensions.fillScreen
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setVisible
 import javax.inject.Inject
@@ -66,32 +64,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
             RtlUtils.isRtl(view.context)
         )
         binding.setupObservers()
-
-        (dialog as? BottomSheetDialog)?.apply {
-            setOnShowListener {
-                val bottomSheet: FrameLayout = dialog?.findViewById(
-                    com.google.android.material.R.id.design_bottom_sheet
-                ) ?: return@setOnShowListener
-                val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-                bottomSheetBehavior.maxWidth = ViewGroup.LayoutParams.MATCH_PARENT
-                bottomSheetBehavior.isDraggable = false
-                if (bottomSheet.layoutParams != null) {
-                    showFullScreenBottomSheet(bottomSheet)
-                }
-                expandBottomSheet(bottomSheetBehavior)
-            }
-        }
-    }
-
-    private fun showFullScreenBottomSheet(bottomSheet: FrameLayout) {
-        val layoutParams = bottomSheet.layoutParams
-        layoutParams.height = Resources.getSystem().displayMetrics.heightPixels
-        bottomSheet.layoutParams = layoutParams
-    }
-
-    private fun expandBottomSheet(bottomSheetBehavior: BottomSheetBehavior<FrameLayout>) {
-        bottomSheetBehavior.skipCollapsed = true
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        (dialog as? BottomSheetDialog)?.fillScreen()
     }
 
     private fun getSiteScreen() = arguments?.getSerializableCompat<JetpackFeatureOverlayScreenType>(OVERLAY_SCREEN_TYPE)
