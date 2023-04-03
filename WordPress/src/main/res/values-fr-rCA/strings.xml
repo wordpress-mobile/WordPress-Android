@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-28 13:54:09+0000
+Translation-Revision-Date: 2023-03-30 20:58:13+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: fr
@@ -42,6 +42,8 @@ Language: fr
     <string name="logs_button">Journaux</string>
     <string name="free">Gratuit</string>
     <string name="help_buttons_screen_title">Aide</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="tickets">Billets</string>
     <string name="gutenberg_native_blocks_menu">Menu Blocs</string>
     <string name="promote_blaze_card_menu_hide_this">Masquer ceci</string>
     <string name="promote_blaze_card_sub_title">Diffusez votre contenu sur des millions de sites.</string>
@@ -54,9 +56,23 @@ Language: fr
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">extension Jetpack complète</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">extensions Jetpack individuelles</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">l’extension %1$s</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s utilise des %2$s, qui ne prennent pas encore en charge toutes les fonctionnalités de l’application.\n\nInstallez l’%3$s pour utiliser l’application avec ce site.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">Installez l’extension Jetpack complète</string>
     <string name="only_one_primary_site_message">Un seul site est disponible. Vous ne pouvez donc pas changer de site principal.</string>
+    <string name="jetpack_plugin_install_error_button_contact_support">Contacter l’assistance</string>
+    <string name="jetpack_plugin_install_error_button_retry">Réessayer</string>
+    <string name="jetpack_plugin_install_error_description">Impossible d’installer Jetpack pour le moment.</string>
+    <string name="jetpack_plugin_install_error_title">Un problème est survenu</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Icône d’erreur</string>
+    <string name="jetpack_plugin_install_full_plugin_done_description">Vous pouvez désormais utiliser ce site avec l’application.</string>
+    <string name="jetpack_plugin_install_done_title">Jetpack installé</string>
+    <string name="jetpack_plugin_install_installing_description">Installation de Jetpack sur votre site… Ce processus peut prendre quelques minutes.</string>
+    <string name="jetpack_plugin_install_installing_title">Installation de Jetpack</string>
+    <string name="jetpack_plugin_install_initial_button">Continuer</string>
+    <string name="jetpack_plugin_install_jp_logo_content_description">Icône Jetpack</string>
     <string name="button_promote_with_blaze">Promouvoir avec Blaze</string>
+    <string name="jetpack_plugin_install_initial_description">Les identifiants de connexion de votre site Web servent uniquement à l’installation de Jetpack et ne seront pas enregistrés.</string>
+    <string name="jetpack_plugin_install_initial_title">Installer Jetpack</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Libérez tout le potentiel de votre site. Profitez de statistiques, de notifications et de bien d’autres choses encore avec Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Votre site comporte l’extension Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">L’application mobile Jetpack est conçue pour compléter l’extension Jetpack. Effectuez le changement dès maintenant pour accéder aux statistiques, aux notifications, au lecteur et bien plus encore.</string>
@@ -75,18 +91,28 @@ Language: fr
     <string name="support_forum_title">Forums communautaires</string>
     <string name="site_settings_blogging_reminders_notification_title">Rappels de blog</string>
     <string name="site_settings_blogging_prompts_title">Afficher les invites</string>
+    <string name="site_settings_blogging">Bloguer</string>
     <string name="install_play_store_to_get_jetpack">Please install Google Play Store to get the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Plus tard</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Passer à Jetpack </string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Les statistiques, le lecteur, les notifications et d’autres fonctionnalités reposant sur Jetpack ont été supprimées de l’application WordPress.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Les fonctionnalités Jetpack ont été déplacées.</string>
     <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s is moving in %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s vont être déplacés dans %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s vont bientôt être déplacées</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s va bientôt être déplacée</string>
     <string name="wp_jetpack_powered_phase_2">Obtenir l’application Jetpack</string>
     <string name="my_site_blogging_prompt_card_view_answers">Consulter les réponses du formulaire</string>
     <string name="stats_insights_total_stats_seven_days_negative">inférieur de %1$s par rapport à la semaine précédente</string>
     <string name="stats_timeframe_previous_seven_days">7 jours précédents</string>
     <string name="stats_timeframe_last_seven_days">7 derniers jours</string>
     <string name="weeks_quantity_one">1 semaine</string>
+    <string name="weeks_quantity_other">%d semaines</string>
+    <string name="stats_insights_total_stats_seven_days_positive">%1$s en hausse par rapport aux 7 jours précédents</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Au cours des 7 derniers jours, vous avez enregistré %1$s de visiteurs en moins par rapport aux 7 jours précédents.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Au cours des 7 derniers jours, vous avez enregistré %1$s de visiteurs en plus par rapport aux 7 jours précédents.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Au cours des 7 derniers jours, vous avez enregistré %1$s de vues en moins par rapport aux 7 jours précédents.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Au cours des 7 derniers jours, vous avez enregistré %1$s de vues en plus par rapport aux 7 jours précédents.</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Depuis le &lt;b&gt;jour 1&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Masquer ceci</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Me rappeler ultérieurement</string>
@@ -3199,10 +3225,10 @@ Language: fr
     <string name="my_site_btn_blog_posts">Articles</string>
     <string name="my_site_header_configuration">Configuration</string>
     <string name="reader_label_new_posts_subtitle">Touchez pour les afficher</string>
-    <string name="deselect_all">Tout déselectionner</string>
     <string name="show">Montrer</string>
     <string name="select_all">Tout selectionner</string>
     <string name="hide">Masquer</string>
+    <string name="deselect_all">Tout désélectionner</string>
     <string name="language">Langue</string>
     <string name="verification_code">Code de vérification</string>
     <string name="invalid_verification_code">Code de vérification invalide</string>

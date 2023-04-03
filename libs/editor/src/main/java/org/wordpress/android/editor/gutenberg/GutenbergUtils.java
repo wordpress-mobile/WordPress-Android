@@ -1,5 +1,6 @@
 package org.wordpress.android.editor.gutenberg;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -26,6 +27,7 @@ class GutenbergUtils {
      *
      * @return Bundle a map of "english string" => [ "current locale string" ]
      */
+    @SuppressLint("AppBundleLocaleChanges")
     public static Bundle getTranslations(Activity activity) {
         Bundle translations = new Bundle();
         Locale defaultLocale = new Locale("en");

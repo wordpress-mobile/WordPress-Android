@@ -1,3 +1,0 @@
-21.9:
-Berita terbaru—Jetpack kini mendukung Blaze agar Anda dapat menjangkau pembaca baru dengan mempromosikan pos atau halaman dari dalam aplikasi.
-Kami juga menambahkan kartu FAQ pascamigrasi ke layar Bantuan, yang akan Anda temukan setelah beralih dari aplikasi WordPress ke Jetpack.

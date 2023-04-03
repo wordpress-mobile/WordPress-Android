@@ -1,0 +1,2 @@
+22.0:
+Ahora puedes transformar la mayoría de tipos de bloques en otros tipos de bloques, como citas, columnas y grupos.
