@@ -39,6 +39,7 @@ class ReactNativeStoreWPAPITest {
     private val restPath = "rest_path"
     private val restPathWithParams = "$restPath?$queryKey=$queryValue"
     private val paramMap = mapOf(queryKey to queryValue)
+    private val bodyMap = mapOf("b_key" to "b_value")
     private val currentTime = 1000000000L
 
     private val wpApiRestClient = mock<ReactNativeWPAPIRestClient>()
@@ -78,7 +79,7 @@ class ReactNativeStoreWPAPITest {
     }
 
     @Test
-    fun `discovers rest endpoint, authenticates, and performs fetch`() = test {
+    fun `discovers rest endpoint, authenticates, and performs GET request`() = test {
         // no saved endpoint
         site.wpApiRestUrl = null
 
@@ -95,17 +96,49 @@ class ReactNativeStoreWPAPITest {
         // uses updated nonce to make successful call
         val callWithSuccess = mock<Success>()
         val fetchUrl = "$restUrl/$restPath"
-        whenever(wpApiRestClient.fetch(fetchUrl, nonce.value))
+        whenever(wpApiRestClient.getRequest(fetchUrl, nonce.value))
                 .thenReturn(callWithSuccess)
 
-        val actualResponse = store.executeRequest(site, restPathWithParams)
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
         assertEquals(callWithSuccess, actualResponse)
         assertEquals(restUrl, site.wpApiRestUrl, "site should be updated with rest endpoint used for successful call")
         inOrder(discoveryWPAPIRestClient, sitePersistenceMock, wpApiRestClient, nonceRestClient) {
             verify(discoveryWPAPIRestClient).discoverWPAPIBaseURL(site.url)
             verify(sitePersistenceMock)(site) // persist site after discovering wpApiRestUrl
             verify(nonceRestClient).requestNonce(site)
-            verify(wpApiRestClient).fetch(fetchUrl, nonce.value)
+            verify(wpApiRestClient).getRequest(fetchUrl, nonce.value)
+        }
+    }
+
+    @Test
+    fun `discovers rest endpoint, authenticates, and performs POST request`() = test {
+        // no saved endpoint
+        site.wpApiRestUrl = null
+
+        // discovers proper rest url since no saved endpoint
+        val restUrl = "a_url_path_with_a_custom_rest_api_extension"
+        whenever(discoveryWPAPIRestClient.discoverWPAPIBaseURL(site.url))
+            .thenReturn(restUrl)
+
+        // retrieves nonce
+        val nonce = Available("a_nonce", site.username)
+        whenever(nonceRestClient.requestNonce(site))
+            .thenReturn(nonce)
+
+        // uses updated nonce to make successful call
+        val callWithSuccess = mock<Success>()
+        val postURL = "$restUrl/$restPath"
+        whenever(wpApiRestClient.postRequest(postURL, nonce.value))
+            .thenReturn(callWithSuccess)
+
+        val actualResponse = store.executePostRequest(site, restPathWithParams, bodyMap)
+        assertEquals(callWithSuccess, actualResponse)
+        assertEquals(restUrl, site.wpApiRestUrl, "site should be updated with rest endpoint used for successful call")
+        inOrder(discoveryWPAPIRestClient, sitePersistenceMock, wpApiRestClient, nonceRestClient) {
+            verify(discoveryWPAPIRestClient).discoverWPAPIBaseURL(site.url)
+            verify(sitePersistenceMock)(site) // persist site after discovering wpApiRestUrl
+            verify(nonceRestClient).requestNonce(site)
+            verify(wpApiRestClient).postRequest(postURL, nonce.value)
         }
     }
 
@@ -115,12 +148,12 @@ class ReactNativeStoreWPAPITest {
         val fetchUrl = "${site.wpApiRestUrl}/$restPath"
 
         val initialResponseWithSuccess = mock<Success>()
-        whenever(wpApiRestClient.fetch(fetchUrl))
+        whenever(wpApiRestClient.getRequest(fetchUrl))
                 .thenReturn(initialResponseWithSuccess)
 
-        val actualResponse = store.executeRequest(site, restPathWithParams)
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
         assertEquals(initialResponseWithSuccess, actualResponse)
-        verify(wpApiRestClient).fetch(fetchUrl)
+        verify(wpApiRestClient).getRequest(fetchUrl)
         verify(sitePersistenceMock, never())(any()) // no wpApiRestUrl updates, so no persistence
         verify(discoveryWPAPIRestClient, never()).discoverWPAPIBaseURL(any())
     }
@@ -138,16 +171,16 @@ class ReactNativeStoreWPAPITest {
         // performs successful call using discovered restUrl
         val initialResponseWithSuccess = mock<Success>()
         val fetchUrl = "$restUrl/$restPath"
-        whenever(wpApiRestClient.fetch(fetchUrl))
+        whenever(wpApiRestClient.getRequest(fetchUrl))
                 .thenReturn(initialResponseWithSuccess)
 
-        val actualResponse = store.executeRequest(site, restPathWithParams)
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
         assertEquals(initialResponseWithSuccess, actualResponse)
         assertEquals(restUrl, site.wpApiRestUrl, "site should be updated with rest endpoint used for successful call")
         inOrder(discoveryWPAPIRestClient, sitePersistenceMock, wpApiRestClient) {
             verify(discoveryWPAPIRestClient).discoverWPAPIBaseURL(site.url)
             verify(sitePersistenceMock)(site) // persist site after discovering wpApiRestUrl
-            verify(wpApiRestClient).fetch(fetchUrl)
+            verify(wpApiRestClient).getRequest(fetchUrl)
         }
     }
 
@@ -164,10 +197,10 @@ class ReactNativeStoreWPAPITest {
         val successfulResponse = mock<Success>()
         val fallbackRestUrl = "${site.url}/wp-json/"
         val fetchUrl = "$fallbackRestUrl$restPath"
-        whenever(wpApiRestClient.fetch(fetchUrl))
+        whenever(wpApiRestClient.getRequest(fetchUrl))
                 .thenReturn(successfulResponse)
 
-        val actualResponse = store.executeRequest(site, "$restPath?$queryKey=$queryValue")
+        val actualResponse = store.executeGetRequest(site, "$restPath?$queryKey=$queryValue")
         assertEquals(successfulResponse, actualResponse)
         assertEquals(
                 fallbackRestUrl, site.wpApiRestUrl,
@@ -176,7 +209,7 @@ class ReactNativeStoreWPAPITest {
         inOrder(discoveryWPAPIRestClient, sitePersistenceMock, wpApiRestClient) {
             verify(discoveryWPAPIRestClient).discoverWPAPIBaseURL(site.url)
             verify(sitePersistenceMock)(site) // persist default endpoint after failed discovery
-            verify(wpApiRestClient).fetch(fetchUrl)
+            verify(wpApiRestClient).getRequest(fetchUrl)
         }
     }
 
@@ -189,7 +222,7 @@ class ReactNativeStoreWPAPITest {
         // call fails with not found (404) error
         val incorrectUrl = "$incorrectRestEndpoint/$restPath"
         val initialResponseWithNotFoundError = errorResponse(StatusCode.NOT_FOUND_404)
-        whenever(wpApiRestClient.fetch(incorrectUrl))
+        whenever(wpApiRestClient.getRequest(incorrectUrl))
                 .thenReturn(initialResponseWithNotFoundError)
 
         // try to discover endpoint because failure was with a previously saved restUrl
@@ -200,18 +233,18 @@ class ReactNativeStoreWPAPITest {
         // second call using newly discovered rest url succeeds
         val correctUrl = "$restUrl/$restPath"
         val secondResponseWithSuccess = mock<Success>()
-        whenever(wpApiRestClient.fetch(correctUrl))
+        whenever(wpApiRestClient.getRequest(correctUrl))
                 .thenReturn(secondResponseWithSuccess)
 
-        val actualResponse = store.executeRequest(site, restPathWithParams)
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
         assertEquals(secondResponseWithSuccess, actualResponse)
         assertEquals(restUrl, site.wpApiRestUrl, "should save rest endpoint used for successful call")
         inOrder(discoveryWPAPIRestClient, sitePersistenceMock, wpApiRestClient) {
-            verify(wpApiRestClient).fetch(incorrectUrl)
+            verify(wpApiRestClient).getRequest(incorrectUrl)
             verify(sitePersistenceMock)(site) // persist site after clearing wpApiRestUrl that resulted in 404 failure
             verify(discoveryWPAPIRestClient).discoverWPAPIBaseURL(site.url)
             verify(sitePersistenceMock)(site) // persist site after discovering wpApiRestUrl
-            verify(wpApiRestClient).fetch(correctUrl)
+            verify(wpApiRestClient).getRequest(correctUrl)
         }
     }
 
@@ -228,17 +261,17 @@ class ReactNativeStoreWPAPITest {
         // call using discovered rest url fails with not found (404)
         val responseWithNotFoundError = errorResponse(StatusCode.NOT_FOUND_404)
         val fetchUrl = "$restUrl/$restPath"
-        whenever(wpApiRestClient.fetch(fetchUrl))
+        whenever(wpApiRestClient.getRequest(fetchUrl))
                 .thenReturn(responseWithNotFoundError)
 
         // 'not found' error does not lead to discovery call because we already did discovery
-        val actualResponse = store.executeRequest(site, restPathWithParams)
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
         assertEquals(responseWithNotFoundError, actualResponse)
         assertNull(site.wpApiRestUrl, "should not update site wpApiRestEndpoint when call fails")
         inOrder(discoveryWPAPIRestClient, sitePersistenceMock, wpApiRestClient) {
             verify(discoveryWPAPIRestClient).discoverWPAPIBaseURL(site.url)
             verify(sitePersistenceMock)(site) // persist site after discovering wpApiRestUrl
-            verify(wpApiRestClient).fetch(fetchUrl)
+            verify(wpApiRestClient).getRequest(fetchUrl)
             verify(sitePersistenceMock)(site) // persist site after clearing wpApiRestUrl that resulted in 404 failure
         }
     }
@@ -247,12 +280,12 @@ class ReactNativeStoreWPAPITest {
     fun `if error is NEITHER 'not found' nor unauthenticated, returns error`() = test {
         val responseWithUnknownError = errorResponse(StatusCode.UNKNOWN)
         val fetchUrl = "${site.wpApiRestUrl}/$restPath"
-        whenever(wpApiRestClient.fetch(fetchUrl))
+        whenever(wpApiRestClient.getRequest(fetchUrl))
                 .thenReturn(responseWithUnknownError)
 
-        val actualResponse = store.executeRequest(site, restPathWithParams)
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
         assertEquals(responseWithUnknownError, actualResponse)
-        verify(wpApiRestClient).fetch(fetchUrl)
+        verify(wpApiRestClient).getRequest(fetchUrl)
     }
 
     //
@@ -270,14 +303,14 @@ class ReactNativeStoreWPAPITest {
         // initial fetch uses saved nonce and fails with unauthorized
         val initialResponseWithUnauthorizedError = errorResponse(StatusCode.UNAUTHORIZED_401)
         val fetchUrl = "${site.wpApiRestUrl}/$restPath"
-        whenever(wpApiRestClient.fetch(fetchUrl, nonce.value))
+        whenever(wpApiRestClient.getRequest(fetchUrl, nonce.value))
                 .thenReturn(initialResponseWithUnauthorizedError)
 
         // Already refreshed nonce, so just returns unauthorized error
-        val actualResponse = store.executeRequest(site, restPathWithParams)
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
         assertEquals(initialResponseWithUnauthorizedError, actualResponse)
         inOrder(wpApiRestClient) {
-            verify(wpApiRestClient).fetch(fetchUrl, nonce.value)
+            verify(wpApiRestClient).getRequest(fetchUrl, nonce.value)
         }
     }
 
@@ -289,17 +322,17 @@ class ReactNativeStoreWPAPITest {
         // initial fetch uses saved nonce and fails with unauthorized
         val initialResponseWithUnauthorizedError = errorResponse(StatusCode.UNAUTHORIZED_401)
         val fetchUrl = "${site.wpApiRestUrl}/$restPath"
-        whenever(wpApiRestClient.fetch(fetchUrl, savedNonce.value))
+        whenever(wpApiRestClient.getRequest(fetchUrl, savedNonce.value))
                 .thenReturn(initialResponseWithUnauthorizedError)
 
         // fetching nonce returns already used nonce
         whenever(nonceRestClient.getNonce(site))
                 .thenReturn(savedNonce)
 
-        val actualResponse = store.executeRequest(site, restPathWithParams)
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
         assertEquals(initialResponseWithUnauthorizedError, actualResponse)
         inOrder(wpApiRestClient, nonceRestClient) {
-            verify(wpApiRestClient).fetch(fetchUrl, savedNonce.value)
+            verify(wpApiRestClient).getRequest(fetchUrl, savedNonce.value)
             verify(nonceRestClient).requestNonce(site)
         }
     }
@@ -312,7 +345,7 @@ class ReactNativeStoreWPAPITest {
         // initial fetch uses saved nonce and fails with unauthorized
         val initialResponseWithUnauthorizedError = errorResponse(StatusCode.UNAUTHORIZED_401)
         val fetchUrl = "${site.wpApiRestUrl}/$restPath"
-        whenever(wpApiRestClient.fetch(fetchUrl, savedNonce.value))
+        whenever(wpApiRestClient.getRequest(fetchUrl, savedNonce.value))
                 .thenReturn(initialResponseWithUnauthorizedError)
 
         // fetches new nonce successfully
@@ -322,16 +355,16 @@ class ReactNativeStoreWPAPITest {
 
         // retries original call
         val secondResponseWithSuccess = mock<Success>()
-        whenever(wpApiRestClient.fetch(fetchUrl, updatedNonce.value))
+        whenever(wpApiRestClient.getRequest(fetchUrl, updatedNonce.value))
                 .thenReturn(secondResponseWithSuccess)
 
-        val actualResponse = store.executeRequest(site, restPathWithParams)
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
         assertEquals(secondResponseWithSuccess, actualResponse)
         inOrder(wpApiRestClient, nonceRestClient) {
             verify(nonceRestClient).getNonce(site)
-            verify(wpApiRestClient).fetch(fetchUrl, savedNonce.value)
+            verify(wpApiRestClient).getRequest(fetchUrl, savedNonce.value)
             verify(nonceRestClient).requestNonce(site)
-            verify(wpApiRestClient).fetch(fetchUrl, updatedNonce.value)
+            verify(wpApiRestClient).getRequest(fetchUrl, updatedNonce.value)
         }
     }
 
@@ -343,17 +376,17 @@ class ReactNativeStoreWPAPITest {
         // initial fetch uses saved nonce and fails with unauthorized
         val initialResponseWithUnauthorizedError = errorResponse(StatusCode.UNAUTHORIZED_401)
         val fetchUrl = "${site.wpApiRestUrl}/$restPath"
-        whenever(wpApiRestClient.fetch(fetchUrl, savedNonce.value))
+        whenever(wpApiRestClient.getRequest(fetchUrl, savedNonce.value))
                 .thenReturn(initialResponseWithUnauthorizedError)
 
         // fails to fetch new nonce
         whenever(nonceRestClient.getNonce(site))
                 .thenReturn(savedNonce, null)
 
-        val actualResponse = store.executeRequest(site, restPathWithParams)
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
         assertEquals(initialResponseWithUnauthorizedError, actualResponse)
         inOrder(wpApiRestClient, nonceRestClient) {
-            verify(wpApiRestClient).fetch(fetchUrl, savedNonce.value)
+            verify(wpApiRestClient).getRequest(fetchUrl, savedNonce.value)
             verify(nonceRestClient).requestNonce(site)
         }
     }
@@ -371,12 +404,12 @@ class ReactNativeStoreWPAPITest {
         // does not use nonce to make request because of recent unsuccessful attempt to refresh nonce
         val fetchUrl = "${site.wpApiRestUrl}/$restPath"
         val successResponse = mock<Success>()
-        whenever(wpApiRestClient.fetch(fetchUrl, null)) // passes null for nonce
+        whenever(wpApiRestClient.getRequest(fetchUrl, null)) // passes null for nonce
                 .thenReturn(successResponse)
 
-        val actualResponse = store.executeRequest(site, restPathWithParams)
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
         assertEquals(successResponse, actualResponse)
-        verify(wpApiRestClient).fetch(fetchUrl, null)
+        verify(wpApiRestClient).getRequest(fetchUrl, null)
         verify(nonceRestClient, never()).requestNonce(any())
     }
 
@@ -397,14 +430,14 @@ class ReactNativeStoreWPAPITest {
 
         val fetchUrl = "${site.wpApiRestUrl}/$restPath"
         val successResponse = mock<Success>()
-        whenever(wpApiRestClient.fetch(fetchUrl, nonce.value)) // passes null for nonce
+        whenever(wpApiRestClient.getRequest(fetchUrl, nonce.value)) // passes null for nonce
                 .thenReturn(successResponse)
 
-        val actualResponse = store.executeRequest(site, restPathWithParams)
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
         assertEquals(successResponse, actualResponse)
         inOrder(nonceRestClient, wpApiRestClient) {
             verify(nonceRestClient).requestNonce(site)
-            verify(wpApiRestClient).fetch(fetchUrl, nonce.value)
+            verify(wpApiRestClient).getRequest(fetchUrl, nonce.value)
         }
     }
 
@@ -420,14 +453,14 @@ class ReactNativeStoreWPAPITest {
 
         val fetchUrl = "${site.wpApiRestUrl}/$restPath"
         val successResponse = mock<Success>()
-        whenever(wpApiRestClient.fetch(fetchUrl, nonce.value)) // passes null for nonce
+        whenever(wpApiRestClient.getRequest(fetchUrl, nonce.value)) // passes null for nonce
                 .thenReturn(successResponse)
 
-        val actualResponse = store.executeRequest(site, restPathWithParams)
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
         assertEquals(successResponse, actualResponse)
         inOrder(wpApiRestClient, nonceRestClient) {
             verify(nonceRestClient).requestNonce(site)
-            verify(wpApiRestClient).fetch(fetchUrl, nonce.value)
+            verify(wpApiRestClient).getRequest(fetchUrl, nonce.value)
         }
     }
 
@@ -457,13 +490,16 @@ class ReactNativeStoreWPAPITest {
                 uriParser
         )
 
-        val response = store.executeRequest(mock(), "")
+        val response = store.executeGetRequest(mock(), "")
         val errorType = (response as? Error)?.error?.type
         assertEquals(UNKNOWN, errorType)
     }
 
-    private suspend fun ReactNativeWPAPIRestClient.fetch(url: String, nonce: String? = null) =
-            fetch(url, paramMap, ReactNativeFetchResponse::Success, ReactNativeFetchResponse::Error, nonce)
+    private suspend fun ReactNativeWPAPIRestClient.getRequest(url: String, nonce: String? = null) =
+        getRequest(url, paramMap, ReactNativeFetchResponse::Success, ReactNativeFetchResponse::Error, nonce)
+
+    private suspend fun ReactNativeWPAPIRestClient.postRequest(url: String, nonce: String? = null) =
+        postRequest(url, bodyMap, ReactNativeFetchResponse::Success, ReactNativeFetchResponse::Error, nonce)
 
     private fun errorResponse(statusCode: Int): ReactNativeFetchResponse = Error(mock()).apply {
         error.volleyError = VolleyError(NetworkResponse(statusCode, null, false, 0L, null))

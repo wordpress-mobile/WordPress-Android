@@ -25,7 +25,7 @@ class ReactNativeWPComRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetch(
+    suspend fun getRequest(
         url: String,
         params: Map<String, String>,
         successHandler: (data: JsonElement) -> ReactNativeFetchResponse,
@@ -34,6 +34,21 @@ class ReactNativeWPComRestClient @Inject constructor(
     ): ReactNativeFetchResponse {
         val response =
                 wpComGsonRequestBuilder.syncGetRequest(this, url, params, JsonElement::class.java, enableCaching)
+        return when (response) {
+            is Success -> successHandler(response.data)
+            is Error -> errorHandler(response.error)
+        }
+    }
+
+    suspend fun postRequest(
+        url: String,
+        params: Map<String, String>,
+        body: Map<String, Any>,
+        successHandler: (data: JsonElement) -> ReactNativeFetchResponse,
+        errorHandler: (BaseNetworkError) -> ReactNativeFetchResponse
+    ): ReactNativeFetchResponse {
+        val response =
+            wpComGsonRequestBuilder.syncPostRequest(this, url, params, body, JsonElement::class.java)
         return when (response) {
             is Success -> successHandler(response.data)
             is Error -> errorHandler(response.error)

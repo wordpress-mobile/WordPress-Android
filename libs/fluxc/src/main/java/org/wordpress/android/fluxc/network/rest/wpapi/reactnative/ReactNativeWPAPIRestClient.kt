@@ -21,7 +21,7 @@ class ReactNativeWPAPIRestClient @Inject constructor(
     @Named("custom-ssl") requestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
-    suspend fun fetch(
+    suspend fun getRequest(
         url: String,
         params: Map<String, String>,
         successHandler: (data: JsonElement?) -> ReactNativeFetchResponse,
@@ -38,6 +38,26 @@ class ReactNativeWPAPIRestClient @Inject constructor(
                         JsonElement::class.java,
                         enableCaching,
                         nonce = nonce)
+        return when (response) {
+            is Success -> successHandler(response.data)
+            is Error -> errorHandler(response.error)
+        }
+    }
+
+    suspend fun postRequest(
+        url: String,
+        body: Map<String, Any>,
+        successHandler: (data: JsonElement?) -> ReactNativeFetchResponse,
+        errorHandler: (BaseNetworkError) -> ReactNativeFetchResponse,
+        nonce: String? = null,
+    ): ReactNativeFetchResponse {
+        val response =
+            wpApiGsonRequestBuilder.syncPostRequest(
+                this,
+                url,
+                body,
+                JsonElement::class.java,
+                nonce = nonce)
         return when (response) {
             is Success -> successHandler(response.data)
             is Error -> errorHandler(response.error)
