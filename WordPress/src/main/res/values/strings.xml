@@ -2810,7 +2810,6 @@
     <string name="photo_picker_soft_ask_videos_label">%s needs permission to access your videos</string>
     <string name="photo_picker_soft_ask_audios_label">%s needs permission to access your audios</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="photo_picker_use_photo">Use this photo</string>
     <string name="photo_picker_use_video">Use this video</string>
     <string name="photo_picker_use_audio">Use this audio</string>

@@ -494,7 +494,7 @@ class MediaPickerViewModel @Inject constructor(
     private fun clickIcon(icon: MediaPickerIcon) {
         mediaPickerTracker.trackIconClick(icon, mediaPickerSetup)
         if (icon is WpStoriesCapture || icon is CapturePhoto) {
-            if (!permissionsHandler.hasPermissionsToAccessPhotos()) {
+            if (!permissionsHandler.hasPermissionsToTakePhoto()) {
                 _onCameraPermissionsRequested.value = Event(Unit)
                 lastTappedIcon = icon
                 return

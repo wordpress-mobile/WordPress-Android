@@ -10,8 +10,8 @@ import javax.inject.Inject
 
 class PermissionsHandler
 @Inject constructor(private val context: Context) {
-    fun hasPermissionsToAccessPhotos(): Boolean {
-        return hasCameraPermission() && hasPhotosVideosPermission()
+    fun hasPermissionsToTakePhoto(): Boolean {
+        return hasCameraPermission() && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R || hasWriteStoragePermission())
     }
 
     fun hasPhotosVideosPermission(): Boolean {
