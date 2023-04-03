@@ -135,6 +135,7 @@ android {
         buildConfigField "boolean", "WP_INDIVIDUAL_PLUGIN_OVERLAY", "false"
         buildConfigField "boolean", "DASHBOARD_CARD_PAGES", "false"
         buildConfigField "boolean", "DASHBOARD_CARD_ACTIVITY_LOG", "false"
+        buildConfigField "boolean", "ENABLE_DOMAINS_DASHBOARD_CARD_FEATURE", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
