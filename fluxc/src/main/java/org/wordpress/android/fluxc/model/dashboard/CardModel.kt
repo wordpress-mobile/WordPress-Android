@@ -26,8 +26,7 @@ sealed class CardModel(
         data class PageCardModel(
             val id: Int,
             val title: String,
-            val content: String,
-            val featuredImage: String?,
+            val modifiedDate: String,
             val date: Date
         )
     }
