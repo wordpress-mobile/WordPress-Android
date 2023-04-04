@@ -1894,7 +1894,7 @@ open class WellSqlConfig : DefaultWellConfig {
                 180 -> migrate(version) {
                     db.execSQL("ALTER TABLE SiteModel ADD APPLICATION_PASSWORDS_AUTHORIZE_URL TEXT")
                 }
-                181 -> migrate(version) {
+                181 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCProductVariationModel ADD METADATA TEXT")
                 }
             }
