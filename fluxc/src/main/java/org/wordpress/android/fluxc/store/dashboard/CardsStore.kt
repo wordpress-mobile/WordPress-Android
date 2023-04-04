@@ -118,6 +118,11 @@ class CardsStore @Inject constructor(
         TIMEOUT
     }
 
+    class PageCardError(
+        val type: TodaysStatsCardErrorType,
+        val message: String? = null
+    ) : OnChangedError
+
     class CardsError(
         val type: CardsErrorType,
         val message: String? = null

@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.model.dashboard
 
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.PageCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
 import java.util.Date
