@@ -4,17 +4,6 @@
     <issue
         id="UseGetLayoutInflater"
         message="Use of LayoutInflater.from(getActivity()) detected. Consider using getLayoutInflater() instead"
-        errorLine1="        LayoutInflater inflater = LayoutInflater.from(getActivity());"
-        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/prefs/NumberPickerDialog.java"
-            line="149"
-            column="35"/>
-    </issue>
-
-    <issue
-        id="UseGetLayoutInflater"
-        message="Use of LayoutInflater.from(getActivity()) detected. Consider using getLayoutInflater() instead"
         errorLine1="        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());"
         errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
