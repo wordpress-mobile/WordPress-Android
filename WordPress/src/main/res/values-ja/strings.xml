@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-29 09:54:25+0000
+Translation-Revision-Date: 2023-03-31 20:49:34+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ja_JP
@@ -56,8 +56,22 @@ Language: ja_JP
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">完全な Jetpack プラグイン</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">個々の Jetpack プラグイン</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">%1$s プラグイン</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。\n\nアプリをこのサイトと一緒に使用するには、%3$s をインストールしてください。</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">完全な Jetpack プラグインをインストールしてください</string>
     <string name="only_one_primary_site_message">1つのサイトのみを利用できるため、主要サイトを変更できません。</string>
+    <string name="jetpack_plugin_install_error_button_contact_support">サポートに連絡</string>
+    <string name="jetpack_plugin_install_error_button_retry">再試行</string>
+    <string name="jetpack_plugin_install_error_description">Jetpack は現在インストールできません。</string>
+    <string name="jetpack_plugin_install_error_title">問題が発生しました</string>
+    <string name="jetpack_plugin_install_error_image_content_description">エラーアイコン</string>
+    <string name="jetpack_plugin_install_full_plugin_done_description">アプリでこのサイトを使用する準備ができました。</string>
+    <string name="jetpack_plugin_install_done_title">Jetpack がインストールされています</string>
+    <string name="jetpack_plugin_install_installing_description">サイトに Jetpack をインストールしています。 完了まで数分かかります。</string>
+    <string name="jetpack_plugin_install_installing_title">Jetpack をインストールしています</string>
+    <string name="jetpack_plugin_install_initial_button">続行</string>
+    <string name="jetpack_plugin_install_initial_description">サイトの証明書は保存されず、Jetpack インストールの目的のみに使用されます。</string>
+    <string name="jetpack_plugin_install_initial_title">Jetpack をインストール</string>
+    <string name="jetpack_plugin_install_jp_logo_content_description">Jetpack アイコン</string>
     <string name="button_promote_with_blaze">Blaze を使って宣伝</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">サイトの可能性を十分に引き出すことができます。 Jetpack で統計や通知などを利用できます。</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">ご利用のサイトには Jetpack プラグインが設定されています</string>
@@ -102,6 +116,7 @@ Language: ja_JP
     <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt; から</string>
     <string name="jetpack_feature_card_menu_item_hide_this">非表示</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">後で再通知</string>
+    <string name="jetpack_feature_card_content_phase_three">統計、Reader、通知などの機能は、まもなく Jetpack モバイルアプリに移動します。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Jetpack アプリに切り替える</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">詳細は jetpack.com をご覧ください</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">切り替えは無料で、数分で終わります。</string>

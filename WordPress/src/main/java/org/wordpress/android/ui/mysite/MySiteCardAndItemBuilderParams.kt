@@ -62,7 +62,8 @@ sealed class MySiteCardAndItemBuilderParams {
         val todaysStatsCardBuilderParams: TodaysStatsCardBuilderParams,
         val postCardBuilderParams: PostCardBuilderParams,
         val bloggingPromptCardBuilderParams: BloggingPromptCardBuilderParams,
-        val promoteWithBlazeCardBuilderParams: PromoteWithBlazeCardBuilderParams
+        val promoteWithBlazeCardBuilderParams: PromoteWithBlazeCardBuilderParams,
+        val dashboardCardDomainBuilderParams: DashboardCardDomainBuilderParams
     ) : MySiteCardAndItemBuilderParams()
 
     data class TodaysStatsCardBuilderParams(
@@ -109,6 +110,13 @@ sealed class MySiteCardAndItemBuilderParams {
     ) : MySiteCardAndItemBuilderParams()
 
     data class PromoteWithBlazeCardBuilderParams(
+        val isEligible: Boolean = false,
+        val onClick: () -> Unit,
+        val onHideMenuItemClick: () -> Unit,
+        val onMoreMenuClick: () -> Unit
+    ) : MySiteCardAndItemBuilderParams()
+
+    data class DashboardCardDomainBuilderParams(
         val isEligible: Boolean = false,
         val onClick: () -> Unit,
         val onHideMenuItemClick: () -> Unit,

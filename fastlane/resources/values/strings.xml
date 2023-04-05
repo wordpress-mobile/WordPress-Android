@@ -4453,4 +4453,28 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Blaze -->
     <string name="blaze_header_done_label" translatable="false">@string/label_done_button</string>
     <string name="blaze_menu_item_label" translatable="false">@string/blaze_activity_title</string>
+
+    <!-- WordPress - Jetpack Individual Plugin sites not supported Overlay -->
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">Switch to the Jetpack app</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">Please switch to the Jetpack app where we’ll guide you through connecting the full Jetpack plugin to use this site with the app.</string>
+
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">Unable to access one of your sites</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">Unable to access some of your sites</string>
+
+    <!-- translators:
+        %1$s = the current site address (e.g. "wordpress.com"),
+        %2$s = the non-translatable "<plugin name>" (e.g. "Jetpack Backup") -->
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt; is using the &lt;b&gt;%2$s&lt;/b&gt; plugin, which isn’t supported by the WordPress app.</string>
+    <!-- translators:
+        %1$s = the current site address (e.g. "wordpress.com") -->
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt; is using individual Jetpack plugins, which aren’t supported by the WordPress app.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">Sites with individual Jetpack plugins aren’t supported by the WordPress app.</string>
+    <!-- translators:
+        %1$s = the current site address (e.g. "wordpress.com"),
+        %2$s = the non-translatable "<plugin name>" (e.g. "Jetpack Backup") -->
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; is using the &lt;b&gt;%2$s&lt;/b&gt; plugin</string>
+    <!-- translators:
+       %1$s = the current site address (e.g. "wordpress.com"),
+       %2$s = the quantity of plugins the site has (e.g. "3") -->
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; is using %2$s individual Jetpack plugins</string>
 </resources>
