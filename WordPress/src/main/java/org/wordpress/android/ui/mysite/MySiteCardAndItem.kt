@@ -58,6 +58,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         POST_CARD_WITH_POST_ITEMS,
         BLOGGING_PROMPT_CARD,
         PROMOTE_WITH_BLAZE_CARD,
+        PAGES_CARD_ERROR,
         PAGES_CARD
     }
 
