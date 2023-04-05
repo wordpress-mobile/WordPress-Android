@@ -201,6 +201,30 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     }
                 }
 
+                sealed class PagesCard(
+                    override val dashboardCardType: DashboardCardType,
+                    open val footerLink: FooterLink? = null
+                ): DashboardCard(dashboardCardType) {
+                    data class Error(
+                        override val title: UiString
+                    ) : PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD_ERROR), ErrorWithinCard
+
+                    data class PageItem(
+                        val title: UiString,
+                        val status: UiString,
+                        val lastEditedTime: UiString,
+                        val onCardClick: () -> Unit,
+                        override val footerLink: FooterLink
+                    ) : PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD)
+
+                    data class FooterLink(
+                        val label: UiString,
+                        val description: UiString,
+                        @DrawableRes val imageRes: Int,
+                        val onClick: () -> Unit
+                    )
+                }
+
                 sealed class PostCard(
                     override val dashboardCardType: DashboardCardType,
                     open val footerLink: FooterLink? = null
