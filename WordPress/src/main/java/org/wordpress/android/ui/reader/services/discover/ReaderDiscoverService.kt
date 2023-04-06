@@ -25,7 +25,7 @@ import kotlin.coroutines.CoroutineContext
 @AndroidEntryPoint
 class ReaderDiscoverService : Service(), ServiceCompletionListener, CoroutineScope {
     @Inject
-    @field:Named("IO_THREAD")
+    @Named("IO_THREAD")
     lateinit var ioDispatcher: CoroutineDispatcher
 
     @Inject

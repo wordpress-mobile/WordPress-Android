@@ -2,28 +2,6 @@
 <issues format="6" by="lint 7.2.1" type="baseline" client="gradle" dependencies="true" name="AGP (7.2.1)" variant="all" version="7.2.1">
 
     <issue
-        id="FieldSiteTargetOnQualifierAnnotation"
-        message="Redundant &apos;field:&apos; used for Dagger qualifier annotation."
-        errorLine1="    @field:Named(&quot;IO_THREAD&quot;)"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/reader/services/discover/ReaderDiscoverJobService.kt"
-            line="22"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="FieldSiteTargetOnQualifierAnnotation"
-        message="Redundant &apos;field:&apos; used for Dagger qualifier annotation."
-        errorLine1="    @field:Named(&quot;IO_THREAD&quot;)"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/reader/services/discover/ReaderDiscoverService.kt"
-            line="28"
-            column="5"/>
-    </issue>
-
-    <issue
         id="FragmentTagUsage"
         message="Replace the &lt;fragment> tag with FragmentContainerView."
         errorLine1="    &lt;fragment"
