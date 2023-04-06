@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-31 11:37:56+0000
+Translation-Revision-Date: 2023-04-04 05:21:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: de
 -->
 <resources>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; benutzt %2$s individuelle Jetpack-Plugins</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; benutzt das &lt;b&gt;%2$s&lt;/b&gt; Plugin</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">Websites mit individuellen Jetpack-Plugins werden von der WordPress-App nicht unterstützt.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt; benutzt individuelle Jetpack-Plugins, die von der WordPress-App nicht unterstützt werden.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt; benutzt das &lt;b&gt;%2$s&lt;/b&gt; Plugin, welches nicht von der WordPress-App unterstützt wird.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">Auf manche deiner Websites kann nicht zugegriffen werden</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">Auf eine deiner Websites kann nicht zugegriffen werden</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">Bitte wechsle zu der Jetpack-App, wo wir dich durch die Anbindung des vollständigen Jetpack-Plugins führen, damit diese Website mit der App benutzt werden kann.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">Zur Jetpack-App wechseln</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s verwendet %2$s, das noch nicht alle Funktionen der App unterstützt.\n\nBitte installiere das %3$s, um die App mit dieser Website zu verwenden.</string>
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Diese Website</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s verwendet %2$s, das noch nicht alle Funktionen der App unterstützt. Bitte installiere das %3$s.</string>
@@ -2851,7 +2860,7 @@ Language: de
     <string name="invite_already_following">%s: Folge ich bereits</string>
     <string name="invite_already_a_member">%s: Bereits ein Mitglied</string>
     <string name="invite_username_not_found">%s: Benutzer nicht gefunden</string>
-    <string name="comment_moderated_approved">Kommentar genehmigt!</string>
+    <string name="comment_moderated_approved">Kommentar freigegeben!</string>
     <string name="like">Like</string>
     <string name="timespan_now">Jetzt</string>
     <string name="role_viewer">Besucher</string>

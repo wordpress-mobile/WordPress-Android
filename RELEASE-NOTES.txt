@@ -2,6 +2,8 @@
 
 22.2
 [***] [internal] Adds media permissions support for Android 13 [https://github.com/wordpress-mobile/WordPress-Android/pull/18183]
+-----
+
 
 22.1
 -----

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-28 09:54:09+0000
+Translation-Revision-Date: 2023-03-31 20:58:41+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_CN
@@ -59,6 +59,19 @@ Language: zh_CN
     <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。\n\n请安装 %3$s，通过此站点使用该应用程序。</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">请安装完整的 Jetpack 插件</string>
     <string name="only_one_primary_site_message">只有一个站点可用，因此您不能更改您的主站点。</string>
+    <string name="jetpack_plugin_install_error_button_contact_support">联系支持人员</string>
+    <string name="jetpack_plugin_install_error_button_retry">重试</string>
+    <string name="jetpack_plugin_install_error_description">目前无法安装 Jetpack。</string>
+    <string name="jetpack_plugin_install_error_title">出现问题</string>
+    <string name="jetpack_plugin_install_error_image_content_description">错误图标</string>
+    <string name="jetpack_plugin_install_full_plugin_done_description">已准备好通过应用程序使用此站点。</string>
+    <string name="jetpack_plugin_install_done_title">Jetpack 已安装</string>
+    <string name="jetpack_plugin_install_installing_description">正在您的站点上安装 Jetpack。 这将花费几分钟的时间才能完成。</string>
+    <string name="jetpack_plugin_install_installing_title">正在安装 Jetpack</string>
+    <string name="jetpack_plugin_install_initial_button">继续</string>
+    <string name="jetpack_plugin_install_initial_description">系统将不会存储您的网站凭据，并且仅将其用于安装 Jetpack。</string>
+    <string name="jetpack_plugin_install_initial_title">安装 Jetpack</string>
+    <string name="jetpack_plugin_install_jp_logo_content_description">Jetpack 图标</string>
     <string name="button_promote_with_blaze">大力宣传并推广</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">释放站点的全部潜力。 通过 Jetpack，获取统计信息、通知和更多功能。</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">您的站点已安装 Jetpack 插件</string>
@@ -103,6 +116,7 @@ Language: zh_CN
     <string name="my_site_blogging_prompt_card_attribution_dayone">从&lt;b&gt;第一天&lt;/b&gt;开始</string>
     <string name="jetpack_feature_card_menu_item_hide_this">隐藏此内容</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">稍后提醒我</string>
+    <string name="jetpack_feature_card_content_phase_three">统计信息、阅读器、通知和其他功能即将移至 Jetpack 移动应用。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">切换到 Jetpack 应用</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">请访问 jetpack.com 以了解详情</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">切换免费，只需一会儿。</string>
@@ -125,7 +139,9 @@ Language: zh_CN
     <string name="blogging_prompts_list_title">提示</string>
     <string name="close_desc">关闭</string>
     <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">或者，您可以轻点“转换为常规区块”分离和编辑此区块。</string>
+    <string name="dlg_confirm_delete_category">是否永久删除“%s”分类？</string>
     <string name="deleting_cat_success">已成功删除分类</string>
+    <string name="deleting_cat_failed">删除分类失败</string>
     <string name="reader_toast_user_blocked">此用户的文章不会再显示</string>
     <string name="reader_menu_block_user">屏蔽用户</string>
     <string name="reader_menu_report_user">举报此用户</string>
