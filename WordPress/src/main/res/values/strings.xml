@@ -4069,8 +4069,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_reminders_done">Done</string>
     <string name="blogging_reminders_notifications_permission_title">Turn on push notifications</string>
     <string name="blogging_reminders_notifications_permission_caption">To use blogging reminders, you\'ll need to turn on push notifications.</string>
-    <string name="blogging_reminders_notifications_permission_description">@string/notifications_permission_bottom_sheet_description_2</string>
-    <string name="blogging_reminders_notifications_permission_primary_button">@string/notifications_permission_bottom_sheet_button</string>
+    <string name="blogging_reminders_notifications_permission_description" translatable="false">@string/notifications_permission_bottom_sheet_description_2</string>
+    <string name="blogging_reminders_notifications_permission_primary_button" translatable="false">@string/notifications_permission_bottom_sheet_button</string>
     <string name="blogging_reminders_epilogue_title">All set!</string>
     <string name="blogging_reminders_epilogue_not_set_title">Reminders removed!</string>
     <string name="blogging_reminders_epilogue_body_days_with_time">You\'ll get reminders to blog %1$s a week on %2$s at %3$s.</string>
