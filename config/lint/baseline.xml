@@ -2,17 +2,6 @@
 <issues format="6" by="lint 7.2.1" type="baseline" client="gradle" dependencies="true" name="AGP (7.2.1)" variant="all" version="7.2.1">
 
     <issue
-        id="ScopedStorage"
-        message="WRITE_EXTERNAL_STORAGE no longer provides write access when targeting Android 11+, even when using `requestLegacyExternalStorage`"
-        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; />"
-        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="20"
-            column="36"/>
-    </issue>
-
-    <issue
         id="IntentReset"
         message="Calling `setType` after calling `setData` will clear the data: Call `setDataAndType` instead?"
         errorLine1="            calIntent.type = &quot;vnd.android.cursor.item/event&quot;"
