@@ -2804,8 +2804,12 @@
     <string name="photo_picker_wordpress_media_library">Choose from WordPress Media Library</string>
     <string name="photo_picker_gif">Choose from Tenor</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
+    <string name="photo_picker_soft_ask_photos_videos_audio_label">%s needs permission to access your music, audio, photos and videos</string>
+    <string name="photo_picker_soft_ask_photos_videos_label">%s needs permission to access your photos and videos</string>
+    <string name="photo_picker_soft_ask_photos_label">%s needs permission to access your photos</string>
+    <string name="photo_picker_soft_ask_videos_label">%s needs permission to access your videos</string>
+    <string name="photo_picker_soft_ask_audios_label">%s needs permission to access your audios</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="photo_picker_use_photo">Use this photo</string>
     <string name="photo_picker_use_video">Use this video</string>
     <string name="photo_picker_use_audio">Use this audio</string>
@@ -2825,7 +2829,7 @@
     <string name="media_insert_failed_with_reason">Media insert failed: %s</string>
     <string name="media_insert_failed">Media insert failed.</string>
     <string name="media_loading_failed">Media loading failed</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s and %3$s.</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">%1$s was denied access to your media files. To fix this, edit your permissions and turn on %2$s.</string>
 
     <!-- GIFs -->
     <string name="gif_powered_by_tenor">Powered by Tenor</string>
@@ -2850,6 +2854,10 @@
     <string name="permissions_denied_title">Permissions</string>
     <string name="permissions_denied_message">It looks like you turned off permissions required for this feature.&lt;br/&gt;&lt;br/&gt;To change this, edit your permissions and make sure &lt;strong&gt;%s&lt;/strong&gt; is enabled.</string>
     <string name="permission_storage">Storage</string>
+    <string name="permission_images">Photos and videos</string>
+    <string name="permission_video" translatable="false">@string/permission_images</string>
+    <string name="permission_audio">Music and audio</string>
+    <string name="permission_images_video_audio">Photos and videos &amp; Music and audio</string>
     <string name="permission_camera">Camera</string>
     <string name="permission_microphone">Microphone</string>
 

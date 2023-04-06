@@ -1,19 +1,13 @@
 package org.wordpress.android.e2e
 
-import android.Manifest.permission
-import androidx.test.rule.GrantPermissionRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.wordpress.android.e2e.pages.ReaderPage
 import org.wordpress.android.support.BaseTest
 
 @HiltAndroidTest
 class ReaderTests : BaseTest() {
-    @JvmField @Rule
-    var mRuntimeImageAccessRule = GrantPermissionRule.grant(permission.WRITE_EXTERNAL_STORAGE)
-
     @Before
     fun setUp() {
         logoutIfNecessary()

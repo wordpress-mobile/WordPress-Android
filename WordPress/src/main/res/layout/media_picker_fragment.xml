@@ -77,7 +77,7 @@
                 android:visibility="gone"
                 app:aevButton="@string/photo_picker_soft_ask_allow"
                 app:aevImage="@drawable/img_illustration_add_media_150dp"
-                app:aevTitle="@string/photo_picker_soft_ask_label"
+                app:aevTitle="@string/photo_picker_soft_ask_photos_label"
                 tools:visibility="visible" />
 
         </RelativeLayout>
