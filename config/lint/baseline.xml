@@ -2,22 +2,6 @@
 <issues format="6" by="lint 7.2.1" type="baseline" client="gradle" dependencies="true" name="AGP (7.2.1)" variant="all" version="7.2.1">
 
     <issue
-        id="IntentReset"
-        message="Calling `setType` after calling `setData` will clear the data: Call `setDataAndType` instead?"
-        errorLine1="            calIntent.type = &quot;vnd.android.cursor.item/event&quot;"
-        errorLine2="                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/posts/PublishSettingsFragment.kt"
-            line="83"
-            column="23"/>
-        <location
-            file="src/main/java/org/wordpress/android/ui/posts/PublishSettingsFragment.kt"
-            line="82"
-            column="13"
-            message="Originally set here"/>
-    </issue>
-
-    <issue
         id="LocaleFolder"
         message="The locale folder &quot;`he`&quot; should be called &quot;`iw`&quot; instead; see the `java.util.Locale` documentation">
         <location
