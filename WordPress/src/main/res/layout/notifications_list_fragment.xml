@@ -57,10 +57,8 @@
                 android:textColor="?attr/colorOnSurface" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/permission_fix_button"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/min_touch_target_sz"
-                android:background="?selectableItemBackgroundBorderless"
                 android:gravity="center"
                 android:minWidth="@dimen/min_touch_target_sz"
                 android:text="@string/notifications_permission_fix"

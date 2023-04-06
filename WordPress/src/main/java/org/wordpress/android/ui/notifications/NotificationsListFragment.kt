@@ -217,15 +217,14 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             viewModel.resetNotificationsPermissionWarningDismissState()
         }
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
-            hasPermission ||
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || hasPermission ||
             viewModel.isNotificationsPermissionsWarningDismissed
         ) {
             // If the user dismissed the warning, don't show it again.
             notificationPermissionWarning.isVisible = false
         } else {
             notificationPermissionWarning.isVisible = true
-            permissionFixButton.setOnClickListener {
+            notificationPermissionWarning.setOnClickListener {
                 val isAlwaysDenied = WPPermissionUtils.isPermissionAlwaysDenied(
                     requireActivity(),
                     Manifest.permission.POST_NOTIFICATIONS
