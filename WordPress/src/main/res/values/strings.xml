@@ -1497,6 +1497,12 @@
     <string name="notifications_tab_title_follows">Follows</string>
     <string name="notifications_tab_title_likes">Likes</string>
 
+    <!-- Notification permission -->
+    <string name="notifications_permission_bottom_sheet_title">Push notifications are turned off</string>
+    <string name="notifications_permission_bottom_sheet_description_1">You’ll need to open the app to see notifications.</string>
+    <string name="notifications_permission_bottom_sheet_description_2">Go to Settings → Notifications → App Settings, and turn %1$s on to be notified immediately.</string>
+    <string name="notifications_permission_bottom_sheet_button">Turn on notifications</string>
+
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
     <string name="notification_settings_main_status_on">On</string>
