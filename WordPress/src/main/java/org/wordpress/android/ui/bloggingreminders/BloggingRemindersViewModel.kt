@@ -203,17 +203,17 @@ class BloggingRemindersViewModel @Inject constructor(
         analyticsTracker.trackPrimaryButtonPressed(Screen.SELECTION)
         if (bloggingRemindersModel != null) {
             launch {
+                val daysCount = bloggingRemindersModel.enabledDays.size
+                if (!checkPermission()) {
+                    // There is no permission
+                    return@launch
+                }
                 bloggingRemindersStore.updateBloggingReminders(
                     mapper.toDomainModel(
                         bloggingRemindersModel
                     )
                 )
-                val daysCount = bloggingRemindersModel.enabledDays.size
                 if (daysCount > 0) {
-                    if (!checkPermission()) {
-                        // There is no permission
-                        return@launch
-                    }
                     reminderScheduler.schedule(
                         bloggingRemindersModel.siteId,
                         bloggingRemindersModel.hour,
