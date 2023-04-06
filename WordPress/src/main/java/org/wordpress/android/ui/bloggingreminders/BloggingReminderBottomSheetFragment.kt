@@ -126,7 +126,12 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
         if (granted) {
             viewModel.onPermissionGranted()
         } else {
-            viewModel.onPermissionDenied()
+            val isAlwaysDenied = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                    WPPermissionUtils.isPermissionAlwaysDenied(
+                        requireActivity(),
+                        Manifest.permission.POST_NOTIFICATIONS
+                    )
+            viewModel.onPermissionDenied(isAlwaysDenied)
         }
     }
 

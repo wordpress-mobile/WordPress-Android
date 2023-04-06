@@ -14,7 +14,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject
 
 class NotificationsPermissionBuilder @Inject constructor() {
-    fun buildUiItems(appName: String): List<BloggingRemindersItem> {
+    fun buildUiItems(appName: String, showAppSettingsGuide: Boolean): List<BloggingRemindersItem> {
         val title = UiStringRes(string.blogging_reminders_notifications_permission_title)
 
         val body = UiString.UiStringResWithParams(
@@ -22,12 +22,15 @@ class NotificationsPermissionBuilder @Inject constructor() {
             UiString.UiStringText(appName)
         )
 
-        return listOf(
+        val uiItems = mutableListOf(
             Illustration(drawable.img_illustration_bell_yellow_96dp),
             Title(title),
-            Caption(UiStringRes(string.blogging_reminders_notifications_permission_caption)),
-            HighEmphasisText(EmphasizedText(body, false))
+            Caption(UiStringRes(string.blogging_reminders_notifications_permission_caption))
         )
+        if (showAppSettingsGuide) {
+            uiItems.add(HighEmphasisText(EmphasizedText(body, false)))
+        }
+        return uiItems
     }
 
     fun buildPrimaryButton(onDone: () -> Unit): PrimaryButton {

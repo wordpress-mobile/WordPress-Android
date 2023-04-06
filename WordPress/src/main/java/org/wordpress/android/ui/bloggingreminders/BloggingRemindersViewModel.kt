@@ -65,8 +65,8 @@ class BloggingRemindersViewModel @Inject constructor(
 
     private val _bloggingRemindersModel = MutableLiveData<BloggingRemindersUiModel>()
     private val _isFirstTimeFlow = MutableLiveData<Boolean>()
-    private val _hasNotificationsPermission = MutableLiveData<Boolean>()
-    private val _notificationsPermissionAlwaysDenied = MutableLiveData<Boolean>()
+    private var hasNotificationsPermissionState = false
+    private var notificationsPermissionAlwaysDeniedState = false
 
     val uiState: LiveData<UiState> = merge(
         selectedScreen,
@@ -85,7 +85,10 @@ class BloggingRemindersViewModel @Inject constructor(
                     this::showBloggingPromptDialog
                 )
                 Screen.NOTIFICATIONS_PERMISSION -> {
-                    notificationsPermissionBuilder.buildUiItems(resourceProvider.getString(R.string.app_name))
+                    notificationsPermissionBuilder.buildUiItems(
+                        appName = resourceProvider.getString(R.string.app_name),
+                        showAppSettingsGuide = notificationsPermissionAlwaysDeniedState
+                    )
                 }
                 Screen.EPILOGUE -> epilogueBuilder.buildUiItems(bloggingRemindersModel)
             }
@@ -99,7 +102,9 @@ class BloggingRemindersViewModel @Inject constructor(
                     isFirstTimeFlow == true,
                     this::onSelectionButtonClick
                 )
-                Screen.NOTIFICATIONS_PERMISSION -> notificationsPermissionBuilder.buildPrimaryButton(showAppSettings)
+                Screen.NOTIFICATIONS_PERMISSION -> {
+                    notificationsPermissionBuilder.buildPrimaryButton(onPermissionButtonTapped)
+                }
                 Screen.EPILOGUE -> epilogueBuilder.buildPrimaryButton(finish)
             }
             UiState(uiItems, primaryButton)
@@ -119,8 +124,12 @@ class BloggingRemindersViewModel @Inject constructor(
         _isBottomSheetShowing.value = Event(false)
     }
 
-    private val showAppSettings: () -> Unit = {
-        _showDevicePermissionSettings.value = Event(true)
+    private val onPermissionButtonTapped: () -> Unit = {
+        if (notificationsPermissionAlwaysDeniedState) {
+            _showDevicePermissionSettings.value = Event(true)
+        } else {
+            _requestPermission.value = Event(true)
+        }
     }
 
     private fun onScreenChanged(screen: Screen) {
@@ -155,7 +164,7 @@ class BloggingRemindersViewModel @Inject constructor(
         }
     }
 
-    fun selectDay(day: DayOfWeek) {
+    private fun selectDay(day: DayOfWeek) {
         val currentState = _bloggingRemindersModel.value!!
         val enabledDays = currentState.enabledDays.toMutableSet()
         if (enabledDays.contains(day)) {
@@ -167,11 +176,11 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     fun setPermissionState(hasNotificationsPermission: Boolean, notificationsPermissionAlwaysDenied: Boolean) {
-        _hasNotificationsPermission.value = hasNotificationsPermission
-        _notificationsPermissionAlwaysDenied.value = notificationsPermissionAlwaysDenied
+        hasNotificationsPermissionState = hasNotificationsPermission
+        notificationsPermissionAlwaysDeniedState = notificationsPermissionAlwaysDenied
     }
 
-    fun selectTime() {
+    private fun selectTime() {
         _isTimePickerShowing.value = Event(true)
     }
 
@@ -233,14 +242,12 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     private fun checkPermission(): Boolean {
-        val hasPermission = _hasNotificationsPermission.value == true
-        val alwaysDenied = _notificationsPermissionAlwaysDenied.value == true
         return when {
-            !hasPermission && alwaysDenied -> {
+            !hasNotificationsPermissionState && notificationsPermissionAlwaysDeniedState -> {
                 _selectedScreen.value = Screen.NOTIFICATIONS_PERMISSION
                 false
             }
-            !hasPermission -> {
+            !hasNotificationsPermissionState -> {
                 _requestPermission.value = Event(true)
                 false
             }
@@ -327,18 +334,21 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     fun onPermissionGranted() {
-        if (_hasNotificationsPermission.value == false) {
+        if (!hasNotificationsPermissionState) {
             // Permission state is changed.
-            _hasNotificationsPermission.value = true
-            _notificationsPermissionAlwaysDenied.value = false
+            hasNotificationsPermissionState = true
+            notificationsPermissionAlwaysDeniedState = false
+
             if (_selectedScreen.value == Screen.NOTIFICATIONS_PERMISSION) {
                 onSelectionButtonClick(_bloggingRemindersModel.value)
             }
         }
     }
 
-    fun onPermissionDenied() {
-        _hasNotificationsPermission.value = false
+    fun onPermissionDenied(isAlwaysDenied: Boolean) {
+        hasNotificationsPermissionState = false
+        notificationsPermissionAlwaysDeniedState = isAlwaysDenied
+
         _selectedScreen.value = Screen.NOTIFICATIONS_PERMISSION
     }
 
