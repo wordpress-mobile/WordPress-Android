@@ -69,7 +69,7 @@ class CardsRestClient @Inject constructor(
             pages?.let { add(getPagesCardModel(it))}
         }.toList()
 
-        fun getPagesCardModel(pages: List<PageResponse>): PagesCardModel {
+        private fun getPagesCardModel(pages: List<PageResponse>): PagesCardModel {
             return PagesCardModel(pages.map{ it.toPages() })
         }
     }
