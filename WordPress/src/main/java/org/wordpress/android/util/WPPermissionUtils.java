@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.provider.Settings;
 
 import androidx.annotation.NonNull;
@@ -220,5 +222,21 @@ public class WPPermissionUtils {
         intent.setData(uri);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    /*
+     * open the device's notification settings page for this app so the user can edit permissions
+     */
+    public static void showNotificationsSettings(@NonNull Context context) {
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } else {
+            // We can't open notifications settings screen directly. Instead, open the app settings.
+            showAppSettings(context);
+        }
     }
 }
