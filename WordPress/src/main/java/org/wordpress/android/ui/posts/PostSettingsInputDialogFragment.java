@@ -93,7 +93,7 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder =
                 new MaterialAlertDialogBuilder(new ContextThemeWrapper(getActivity(), R.style.PostSettingsTheme));
-        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         //noinspection InflateParams
         View dialogView = layoutInflater.inflate(R.layout.post_settings_input_dialog, null);
         builder.setView(dialogView);

@@ -2,28 +2,6 @@
 <issues format="6" by="lint 7.2.1" type="baseline" client="gradle" dependencies="true" name="AGP (7.2.1)" variant="all" version="7.2.1">
 
     <issue
-        id="UseGetLayoutInflater"
-        message="Use of LayoutInflater.from(getActivity()) detected. Consider using getLayoutInflater() instead"
-        errorLine1="        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());"
-        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/posts/PostSettingsInputDialogFragment.java"
-            line="96"
-            column="41"/>
-    </issue>
-
-    <issue
-        id="UseGetLayoutInflater"
-        message="Use of LayoutInflater.from(getActivity()) detected. Consider using getLayoutInflater() instead"
-        errorLine1="        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());"
-        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/TextInputDialogFragment.java"
-            line="57"
-            column="41"/>
-    </issue>
-
-    <issue
         id="ScopedStorage"
         message="WRITE_EXTERNAL_STORAGE no longer provides write access when targeting Android 11+, even when using `requestLegacyExternalStorage`"
         errorLine1="    &lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; />"
