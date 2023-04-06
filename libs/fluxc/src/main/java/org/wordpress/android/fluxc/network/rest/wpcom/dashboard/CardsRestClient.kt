@@ -58,7 +58,8 @@ class CardsRestClient @Inject constructor(
 
     data class CardsResponse(
         @SerializedName("todays_stats") val todaysStats: TodaysStatsResponse? = null,
-        @SerializedName("posts") val posts: PostsResponse? = null
+        @SerializedName("posts") val posts: PostsResponse? = null,
+        @SerializedName("pages") val pages: List<PageResponse>? = null
     ) {
         fun toCards() = arrayListOf<CardModel>().apply {
             todaysStats?.let { add(it.toTodaysStatsCard()) }
@@ -129,6 +130,15 @@ class CardsRestClient @Inject constructor(
                 date = CardsUtils.fromDate(date)
         )
     }
+
+    data class PageResponse(
+        @SerializedName("id") val id: Int,
+        @SerializedName("title") val title: String,
+        @SerializedName("content") val content: String,
+        @SerializedName("modified") val modified: String?,
+        @SerializedName("status") val status: String,
+        @SerializedName("date") val date: String
+    )
 
     companion object {
         private const val CARDS = "cards"
