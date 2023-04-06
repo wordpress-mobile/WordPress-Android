@@ -30,8 +30,14 @@ class DashboardDomainCardBuilderTest {
 
         // Assert
         Assert.assertNotNull(result)
-        Assert.assertEquals(R.string.dashboard_card_domain_title, (result!!.title as UiString.UiStringRes).stringRes)
-        Assert.assertEquals(R.string.dashboard_card_domain_sub_title, (result.subtitle as UiString.UiStringRes).stringRes)
+        Assert.assertEquals(
+            R.string.dashboard_card_domain_title,
+            (result!!.title as UiString.UiStringRes).stringRes
+        )
+        Assert.assertEquals(
+            R.string.dashboard_card_domain_sub_title,
+            (result.subtitle as UiString.UiStringRes).stringRes
+        )
         Assert.assertNotNull(result.onClick)
         Assert.assertNotNull(result.onHideMenuItemClick)
         Assert.assertNotNull(result.onMoreMenuClick)
