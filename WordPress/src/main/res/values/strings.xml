@@ -2855,7 +2855,7 @@
     <string name="permissions_denied_message">It looks like you turned off permissions required for this feature.&lt;br/&gt;&lt;br/&gt;To change this, edit your permissions and make sure &lt;strong&gt;%s&lt;/strong&gt; is enabled.</string>
     <string name="permission_storage">Storage</string>
     <string name="permission_images">Photos and videos</string>
-    <string name="permission_video">Photos and videos</string>
+    <string name="permission_video">@string/permission_images</string>
     <string name="permission_audio">Music and audio</string>
     <string name="permission_images_video_audio">Photos and videos &amp; Music and audio</string>
     <string name="permission_camera">Camera</string>
