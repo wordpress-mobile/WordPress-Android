@@ -7,6 +7,8 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel.PageCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
@@ -135,10 +137,19 @@ class CardsRestClient @Inject constructor(
         @SerializedName("id") val id: Int,
         @SerializedName("title") val title: String,
         @SerializedName("content") val content: String,
-        @SerializedName("modified") val modified: String?,
+        @SerializedName("modified") val modified: String,
         @SerializedName("status") val status: String,
         @SerializedName("date") val date: String
-    )
+    ){
+        fun toPages() = PageCardModel(
+                id = id,
+                title = title,
+                content = content,
+                lastModifiedOrScheduledOn = modified,
+                status = status,
+                date = CardsUtils.fromDate(date)
+        )
+    }
 
     companion object {
         private const val CARDS = "cards"
