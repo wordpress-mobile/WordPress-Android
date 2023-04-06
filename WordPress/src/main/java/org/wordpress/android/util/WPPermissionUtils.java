@@ -39,6 +39,8 @@ public class WPPermissionUtils {
     public static final int EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE = 70;
     public static final int READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE = 80;
 
+    public static final int NOTIFICATIONS_PERMISSION_REQUEST_CODE = 90;
+
     /**
      * called by the onRequestPermissionsResult() of various activities and fragments - tracks
      * the permission results, remembers that the permissions have been asked for, and optionally
@@ -148,6 +150,8 @@ public class WPPermissionUtils {
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_STORAGE_READ;
             case android.Manifest.permission.CAMERA:
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_CAMERA;
+            case Manifest.permission.POST_NOTIFICATIONS:
+                return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_NOTIFICATIONS;
             default:
                 AppLog.w(AppLog.T.UTILS, "No key for requested permission");
                 return null;

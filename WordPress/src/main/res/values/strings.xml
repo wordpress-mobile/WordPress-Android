@@ -1498,6 +1498,9 @@
     <string name="notifications_tab_title_likes">Likes</string>
 
     <!-- Notification permission -->
+    <string name="notifications_permission_fix">Fix</string>
+    <string name="notifications_permission_dismiss_content_description">Dismiss notification permission warning.</string>
+    <string name="notifications_permission_off_desc">Push notifications are turned off.</string>
     <string name="notifications_permission_bottom_sheet_title">Push notifications are turned off</string>
     <string name="notifications_permission_bottom_sheet_description_1">You’ll need to open the app to see notifications.</string>
     <string name="notifications_permission_bottom_sheet_description_2">Go to Settings → Notifications → App Settings, and turn %1$s on to be notified immediately.</string>
