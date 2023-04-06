@@ -32,7 +32,7 @@ public class WPPermissionUtils {
     public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE = 10;
     public static final int MEDIA_BROWSER_PERMISSION_REQUEST_CODE = 20;
     public static final int MEDIA_PREVIEW_PERMISSION_REQUEST_CODE = 30;
-    public static final int PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE = 40;
+    public static final int PHOTO_PICKER_MEDIA_PERMISSION_REQUEST_CODE = 40;
     public static final int PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE = 41;
     public static final int EDITOR_LOCATION_PERMISSION_REQUEST_CODE = 50;
     public static final int EDITOR_MEDIA_PERMISSION_REQUEST_CODE = 60;
@@ -148,6 +148,12 @@ public class WPPermissionUtils {
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_STORAGE_WRITE;
             case android.Manifest.permission.READ_EXTERNAL_STORAGE:
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_STORAGE_READ;
+            case android.Manifest.permission.READ_MEDIA_IMAGES:
+                return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_IMAGES_READ;
+            case android.Manifest.permission.READ_MEDIA_VIDEO:
+                return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_VIDEO_READ;
+            case android.Manifest.permission.READ_MEDIA_AUDIO:
+                return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_AUDIO_READ;
             case android.Manifest.permission.CAMERA:
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_CAMERA;
             case Manifest.permission.POST_NOTIFICATIONS:
@@ -166,6 +172,12 @@ public class WPPermissionUtils {
             case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
             case android.Manifest.permission.READ_EXTERNAL_STORAGE:
                 return context.getString(R.string.permission_storage);
+            case android.Manifest.permission.READ_MEDIA_IMAGES:
+                return context.getString(R.string.permission_images);
+            case android.Manifest.permission.READ_MEDIA_VIDEO:
+                return context.getString(R.string.permission_video);
+            case android.Manifest.permission.READ_MEDIA_AUDIO:
+                return context.getString(R.string.permission_audio);
             case android.Manifest.permission.CAMERA:
                 return context.getString(R.string.permission_camera);
             case Manifest.permission.RECORD_AUDIO:
@@ -184,6 +196,12 @@ public class WPPermissionUtils {
             case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
             case android.Manifest.permission.READ_EXTERNAL_STORAGE:
                 return resourceProvider.getString(R.string.permission_storage);
+            case android.Manifest.permission.READ_MEDIA_IMAGES:
+                return resourceProvider.getString(R.string.permission_images);
+            case android.Manifest.permission.READ_MEDIA_VIDEO:
+                return resourceProvider.getString(R.string.permission_video);
+            case android.Manifest.permission.READ_MEDIA_AUDIO:
+                return resourceProvider.getString(R.string.permission_audio);
             case android.Manifest.permission.CAMERA:
                 return resourceProvider.getString(R.string.permission_camera);
             case Manifest.permission.RECORD_AUDIO:

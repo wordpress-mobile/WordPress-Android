@@ -17,7 +17,9 @@
     <!-- Dangerous permissions, access must be requested at runtime -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
