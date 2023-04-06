@@ -2,20 +2,6 @@
 <issues format="6" by="lint 7.2.1" type="baseline" client="gradle" dependencies="true" name="AGP (7.2.1)" variant="all" version="7.2.1">
 
     <issue
-        id="LocaleFolder"
-        message="The locale folder &quot;`he`&quot; should be called &quot;`iw`&quot; instead; see the `java.util.Locale` documentation">
-        <location
-            file="src/main/res/values-he"/>
-    </issue>
-
-    <issue
-        id="LocaleFolder"
-        message="The locale folder &quot;`id`&quot; should be called &quot;`in`&quot; instead; see the `java.util.Locale` documentation">
-        <location
-            file="src/main/res/values-id"/>
-    </issue>
-
-    <issue
         id="FieldSiteTargetOnQualifierAnnotation"
         message="Redundant &apos;field:&apos; used for Dagger qualifier annotation."
         errorLine1="    @field:Named(&quot;IO_THREAD&quot;)"
