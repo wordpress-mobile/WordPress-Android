@@ -18,15 +18,15 @@ sealed class CardModel(
     }
 
     data class PagesCardModel(
-        val hasPublished: Boolean = false,
-        val draft: List<PageCardModel> = emptyList(),
-        val scheduled: List<PageCardModel> = emptyList(),
+        val pages: List<PageCardModel> = emptyList(),
         val error: PageCardError? = null
     ) : CardModel(Type.PAGES) {
         data class PageCardModel(
             val id: Int,
             val title: String,
-            val modifiedDate: String,
+            val content: String,
+            val lastModifiedOrScheduledOn: String,
+            val status: String,
             val date: Date
         )
     }

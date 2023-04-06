@@ -66,7 +66,12 @@ class CardsRestClient @Inject constructor(
         fun toCards() = arrayListOf<CardModel>().apply {
             todaysStats?.let { add(it.toTodaysStatsCard()) }
             posts?.let { add(it.toPosts()) }
+            pages?.let { add(getPagesCardModel(it))}
         }.toList()
+
+        fun getPagesCardModel(pages: List<PageResponse>): PagesCardModel {
+            return PagesCardModel(pages.map{ it.toPages() })
+        }
     }
 
     data class TodaysStatsResponse(
