@@ -10,7 +10,7 @@ import org.wordpress.android.R.font
  * see: [GitHub: Problem with fonts on the Android platform](https://github.com/JetBrains/compose-jb/issues/333)
  */
 val FontFamily.Companion.EBGaramond
-    get() = when (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+    get() = when (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
         true -> FontFamily(Font(font.eb_garamond))
         false -> Serif
     }
