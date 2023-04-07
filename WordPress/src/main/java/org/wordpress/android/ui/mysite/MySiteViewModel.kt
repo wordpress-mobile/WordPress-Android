@@ -44,6 +44,7 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
+import org.wordpress.android.ui.domains.DashboardCardDomainUtils
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.FEATURE_CARD
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
@@ -61,6 +62,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
@@ -205,6 +207,7 @@ class MySiteViewModel @Inject constructor(
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
     private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker,
     private val blazeFeatureUtils: BlazeFeatureUtils,
+    private val dashboardCardDomainUtils: DashboardCardDomainUtils,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
 ) : ScopedViewModel(mainDispatcher) {
@@ -588,6 +591,14 @@ class MySiteViewModel @Inject constructor(
                     onClick = this::onPromoteWithBlazeCardClick,
                     onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
                     onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
+                ),
+                dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
+                    isEligible = dashboardCardDomainUtils.shouldShowCard(
+                        site, isDomainCreditAvailable
+                    ),
+                    onClick = this::onDashboardCardDomainClick,
+                    onHideMenuItemClick = this::onDashboardCardDomainHideMenuItemClick,
+                    onMoreMenuClick = this::onDashboardCardDomainMoreMenuClick
                 )
             ),
             QuickLinkRibbonBuilderParams(
@@ -1559,6 +1570,24 @@ class MySiteViewModel @Inject constructor(
         )
         selectedSiteRepository.getSelectedSite()?.let {
             blazeFeatureUtils.hidePromoteWithBlazeCard(it.siteId)
+        }
+        refresh()
+    }
+
+    private fun onDashboardCardDomainMoreMenuClick() {
+        // track
+    }
+
+    private fun onDashboardCardDomainClick() {
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        // track
+        _onNavigation.value = Event(SiteNavigationAction.OpenDomainRegistration(selectedSite))
+    }
+
+    private fun onDashboardCardDomainHideMenuItemClick() {
+        // track
+        selectedSiteRepository.getSelectedSite()?.let {
+            dashboardCardDomainUtils.hideCard(it.siteId)
         }
         refresh()
     }

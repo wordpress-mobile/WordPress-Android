@@ -3,6 +3,8 @@ package org.wordpress.android.ui.jetpackoverlay.individualplugin
 import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.StringUtils
+import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.config.WPIndividualPluginOverlayFeatureConfig
 import org.wordpress.android.util.config.WPIndividualPluginOverlayMaxShownConfig
 import org.wordpress.android.util.extensions.activeIndividualJetpackPluginNames
@@ -27,7 +29,7 @@ class WPJetpackIndividualPluginHelper @Inject constructor(
         return individualPluginConnectedSites.map { site ->
             SiteWithIndividualJetpackPlugins(
                 name = site.name,
-                url = site.url,
+                url = StringUtils.removeTrailingSlash(UrlUtils.removeScheme(site.url)),
                 individualPluginNames = site.activeIndividualJetpackPluginNames(),
             )
         }

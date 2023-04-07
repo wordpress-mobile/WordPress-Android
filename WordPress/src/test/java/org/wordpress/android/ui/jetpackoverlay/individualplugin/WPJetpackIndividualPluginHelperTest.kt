@@ -152,12 +152,12 @@ class WPJetpackIndividualPluginHelperTest : BaseUnitTest() {
             val connectedSites = listOf(
                 jetpackCPConnectedSiteModel(
                     name = "site1",
-                    url = "site1.com",
+                    url = "https://site1.com",
                     activeJpPlugins = "jetpack-social"
                 ),
                 jetpackCPConnectedSiteModel(
                     name = "site2",
-                    url = "site2.com",
+                    url = "https://site2.com",
                     activeJpPlugins = "other-plugin"
                 )
             )
@@ -190,12 +190,12 @@ class WPJetpackIndividualPluginHelperTest : BaseUnitTest() {
         val connectedSites = listOf(
             jetpackCPConnectedSiteModel(
                 name = "site1",
-                url = "site1.com",
+                url = "https://site1.com",
                 activeJpPlugins = "jetpack-social"
             ),
             jetpackCPConnectedSiteModel(
                 name = "site2",
-                url = "site2.com",
+                url = "https://site2.com",
                 activeJpPlugins = "other-plugin"
             )
         )
