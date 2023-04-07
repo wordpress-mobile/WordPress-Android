@@ -32,5 +32,31 @@
         "date": "2021-12-26 23:00:33"
       }
     ]
-  }
+  },
+  "pages": [
+    {
+      "id": 6,
+      "title": "Blog",
+      "content": "Follow My Blog Get new content delivered directly to your inbox.",
+      "modified": "2023-03-03 07:16:44",
+      "status": "publish",
+      "date": "2021-09-21 05:16:37"
+    },
+    {
+      "id": 361,
+      "title": "About",
+      "content": "There is no excerpt because this is a protected post.",
+      "modified": "2023-03-02 11:55:49",
+      "status": "publish",
+      "date": "2023-03-02 11:55:49"
+    },
+    {
+      "id": 5,
+      "title": "Ajesh R Pai",
+      "content": "Android Developer by Profession. Get new content delivered directly to your inbox.",
+      "modified": "2023-03-02 10:26:53",
+      "status": "publish",
+      "date": "2023-03-01 21:29:52"
+    }
+  ]
 }
