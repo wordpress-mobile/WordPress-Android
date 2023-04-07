@@ -21,6 +21,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
@@ -222,6 +223,7 @@ class CardsBuilderTest : BaseUnitTest() {
         hasBlogginPrompt: Boolean = false,
         showErrorCard: Boolean = false,
         isEligibleForBlaze: Boolean = false,
+        isEligibleForDomainCard: Boolean = false
     ): DashboardCards {
         doAnswer { if (hasTodaysStats) todaysStatsCard else null }.whenever(todaysStatsCardBuilder).build(any())
         doAnswer { if (hasPostsForPostCard) createPostCards() else createPostPromptCards() }.whenever(postCardBuilder)
@@ -243,7 +245,11 @@ class CardsBuilderTest : BaseUnitTest() {
                     mock(),
                     mock(),
                     mock()
+                ),
+                dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
+                    isEligibleForDomainCard, mock(), mock(), mock()
                 )
+
             )
         )
     }

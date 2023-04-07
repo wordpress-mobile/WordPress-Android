@@ -4,6 +4,8 @@
 -----
 * [*] Adds runtime notifications permission [https://github.com/wordpress-mobile/WordPress-Android/pull/18239]
 * [**] [internal] Adds media permissions support for Android 13 [https://github.com/wordpress-mobile/WordPress-Android/pull/18183]
+[***] [internal] Adds media permissions support for Android 13 [https://github.com/wordpress-mobile/WordPress-Android/pull/18183]
+-----
 
 22.1
 -----
