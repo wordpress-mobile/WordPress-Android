@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -86,9 +87,7 @@ sealed class MySiteCardAndItemBuilderParams {
     }
 
     data class PagesCardBuilderParams(
-        // the logic for getting the pages data will be added in a future PR
-        // once the end point implementation is done
-        // val pages: PagesCardModel?,
+        val pages: PagesCardModel,
         val onPagesItemClick: (params: PagesItemClickParams) -> Unit,
         val onFooterLinkClick: (pagesCardType: PagesCardType) -> Unit
     ) : MySiteCardAndItemBuilderParams() {
