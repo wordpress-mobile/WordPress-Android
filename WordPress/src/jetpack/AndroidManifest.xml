@@ -6,7 +6,7 @@
     <uses-permission android:name="org.wordpress.android.beta.permission.DISABLE_NOTIFICATIONS"/>
     <uses-permission android:name="org.wordpress.android.prealpha.permission.DISABLE_NOTIFICATIONS"/>
 
-    <application>
+    <application tools:ignore="MissingApplicationIcon">
         <!-- Deep Linking Activity -->
         <activity android:name="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"
             android:exported="true">
@@ -28,24 +28,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data
-                    android:host="viewpost"
-                    android:scheme="jetpack" />
-                <data
-                    android:host="stats"
-                    android:scheme="jetpack" />
-                <data
-                    android:host="read"
-                    android:scheme="jetpack" />
-                <data
-                    android:host="post"
-                    android:scheme="jetpack" />
-                <data
-                    android:host="notifications"
-                    android:scheme="jetpack" />
-                <data
-                    android:host="home"
-                    android:scheme="jetpack" />
+                <data android:scheme="jetpack" />
+                <data android:host="viewpost" />
+                <data android:host="stats" />
+                <data android:host="read" />
+                <data android:host="post" />
+                <data android:host="notifications" />
+                <data android:host="home" />
             </intent-filter>
         </activity>
 
