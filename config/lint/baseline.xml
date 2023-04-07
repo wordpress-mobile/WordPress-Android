@@ -7,17 +7,6 @@
         errorLine1="    &lt;fragment"
         errorLine2="     ~~~~~~~~">
         <location
-            file="src/main/res/layout/account_settings_activity.xml"
-            line="22"
-            column="6"/>
-    </issue>
-
-    <issue
-        id="FragmentTagUsage"
-        message="Replace the &lt;fragment> tag with FragmentContainerView."
-        errorLine1="    &lt;fragment"
-        errorLine2="     ~~~~~~~~">
-        <location
             file="src/main/res/layout/activity_edit_image.xml"
             line="18"
             column="6"/>
@@ -40,17 +29,6 @@
         errorLine1="    &lt;fragment"
         errorLine2="     ~~~~~~~~">
         <location
-            file="src/main/res/layout/app_settings_activity.xml"
-            line="22"
-            column="6"/>
-    </issue>
-
-    <issue
-        id="FragmentTagUsage"
-        message="Replace the &lt;fragment> tag with FragmentContainerView."
-        errorLine1="    &lt;fragment"
-        errorLine2="     ~~~~~~~~">
-        <location
             file="src/main/res/layout/backup_download_activity.xml"
             line="9"
             column="6"/>
@@ -64,17 +42,6 @@
         <location
             file="src/main/res/layout/debug_settings_activity.xml"
             line="7"
-            column="6"/>
-    </issue>
-
-    <issue
-        id="FragmentTagUsage"
-        message="Replace the &lt;fragment> tag with FragmentContainerView."
-        errorLine1="    &lt;fragment"
-        errorLine2="     ~~~~~~~~">
-        <location
-            file="src/main/res/layout/fragment_jetpack_security_settings.xml"
-            line="23"
             column="6"/>
     </issue>
 
