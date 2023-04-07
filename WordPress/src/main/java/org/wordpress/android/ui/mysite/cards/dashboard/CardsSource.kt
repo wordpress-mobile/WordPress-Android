@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.Type
@@ -49,9 +50,11 @@ class CardsSource @Inject constructor(
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
             coroutineScope.launch(bgDispatcher) {
-                cardsStore.getCards(selectedSite, getCardTypes()).collect { result ->
-                    postValue(CardsUpdate(result.model))
-                }
+                cardsStore.getCards(selectedSite, getCardTypes())
+                    .map { it.model }
+                    .collect { result ->
+                        postValue(CardsUpdate(result))
+                    }
             }
         } else {
             postErrorState()
