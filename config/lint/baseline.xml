@@ -150,51 +150,7 @@
         errorLine1="        &lt;fragment"
         errorLine2="         ~~~~~~~~">
         <location
-            file="src/main/res/layout/stats_all_time_widget_configure_activity.xml"
-            line="13"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="FragmentTagUsage"
-        message="Replace the &lt;fragment> tag with FragmentContainerView."
-        errorLine1="        &lt;fragment"
-        errorLine2="         ~~~~~~~~">
-        <location
             file="src/main/res/layout/stats_minified_widget_configure_activity.xml"
-            line="13"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="FragmentTagUsage"
-        message="Replace the &lt;fragment> tag with FragmentContainerView."
-        errorLine1="        &lt;fragment"
-        errorLine2="         ~~~~~~~~">
-        <location
-            file="src/main/res/layout/stats_today_widget_configure_activity.xml"
-            line="13"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="FragmentTagUsage"
-        message="Replace the &lt;fragment> tag with FragmentContainerView."
-        errorLine1="        &lt;fragment"
-        errorLine2="         ~~~~~~~~">
-        <location
-            file="src/main/res/layout/stats_views_widget_configure_activity.xml"
-            line="13"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="FragmentTagUsage"
-        message="Replace the &lt;fragment> tag with FragmentContainerView."
-        errorLine1="        &lt;fragment"
-        errorLine2="         ~~~~~~~~">
-        <location
-            file="src/main/res/layout/stats_week_views_widget_configure_activity.xml"
             line="13"
             column="10"/>
     </issue>
