@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PageResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.TodaysStatsResponse
@@ -49,7 +50,10 @@ private const val DATE_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss"
 
 /* CARD TYPES */
 
-private val CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.POSTS)
+private val CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS,
+    CardModel.Type.POSTS,
+    CardModel.Type.PAGES
+)
 
 /* ERRORS */
 private const val JETPACK_DISABLED = "jetpack_disabled"
@@ -88,6 +92,26 @@ private val SCHEDULED_POST_RESPONSE_ONE = PostResponse(
         date = "2021-12-26 23:00:33"
 )
 
+private val PAGE_RESPONSE_ONE = PageResponse(
+       id = 1,
+       title = "Page title",
+       content = "Page content",
+       modified = "2021-11-02 15:47:42",
+       status = "publish",
+       date = "2021-11-02 15:47:42"
+)
+
+private val PAGE_RESPONSE_TWO = PageResponse(
+       id = 2,
+       title = "Page title 2",
+       content = "Page content 2",
+       modified = "2023-03-02 11:55:49",
+       status = "publish",
+       date = "2023-03-02 11:55:49"
+)
+
+private val PAGES_RESPONSE = listOf(PAGE_RESPONSE_ONE, PAGE_RESPONSE_TWO)
+
 private val POSTS_RESPONSE = PostsResponse(
         hasPublished = true,
         draft = listOf(
@@ -101,7 +125,8 @@ private val POSTS_RESPONSE = PostsResponse(
 
 private val CARDS_RESPONSE = CardsResponse(
         todaysStats = TODAYS_STATS_RESPONSE,
-        posts = POSTS_RESPONSE
+        posts = POSTS_RESPONSE,
+        pages = PAGES_RESPONSE
 )
 
 @RunWith(MockitoJUnitRunner::class)
