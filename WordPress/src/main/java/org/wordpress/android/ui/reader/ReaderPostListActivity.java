@@ -46,9 +46,12 @@ import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 /*
  * serves as the host for ReaderPostListFragment when showing blog preview & tag preview
  */
+@AndroidEntryPoint
 public class ReaderPostListActivity extends LocaleAwareActivity {
     private String mSource;
     private ReaderPostListType mPostListType;
@@ -65,7 +68,6 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.reader_activity_post_list);
 
