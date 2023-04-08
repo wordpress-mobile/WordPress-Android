@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-31 20:49:34+0000
+Translation-Revision-Date: 2023-04-07 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ja_JP
 -->
 <resources>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; は個々の%2$s個の Jetpack プラグインを使用しています</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; は &lt;b&gt;%2$s&lt;/b&gt; プラグインを使用しています</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">個々の Jetpack プラグインを使用するサイトは WordPress アプリでサポートされていません。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt; は WordPress アプリでサポートされていない個々の Jetpack プラグインを使用しています。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt; は WordPress アプリでサポートされていない &lt;b&gt;%2$s&lt;/b&gt; プラグインを使用しています。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">一部のサイトにアクセスできません</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">サイトの1つにアクセスできません</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">Jetpack アプリに切り替えてください。完全な Jetpack プラグインを接続して、このサイトをアプリで使用する方法についてご案内します。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">Jetpack アプリに切り替える</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。\n\nアプリをこのサイトと一緒に使用するには、%3$s をインストールしてください。</string>
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">このサイト</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。 %3$s をインストールしてください。</string>
