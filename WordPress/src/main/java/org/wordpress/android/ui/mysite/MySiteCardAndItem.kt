@@ -209,12 +209,11 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         override val title: UiString
                     ) : PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD_ERROR), ErrorWithinCard
 
-                    data class PageItem(
+                    data class PageContentItem(
                         val title: UiString,
                         val status: UiString,
                         val lastEditedTime: UiString,
-                        val onCardClick: () -> Unit,
-                        override val footerLink: FooterLink
+                        val onCardClick: () -> Unit
                     ) : PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD)
 
                     data class FooterLink(
@@ -222,7 +221,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val description: UiString,
                         @DrawableRes val imageRes: Int,
                         val onClick: () -> Unit
-                    )
+                    ):PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD)
                 }
 
                 sealed class PostCard(
