@@ -211,8 +211,9 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
                     data class PageContentItem(
                         val title: UiString,
+                        @DrawableRes val statusIcon: Int,
                         val status: UiString,
-                        val lastEditedTime: UiString,
+                        val lastEditedOrScheduledTime: UiString,
                         val onCardClick: () -> Unit
                     ) : PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD)
 
