@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-31 20:50:49+0000
+Translation-Revision-Date: 2023-04-07 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_TW
 -->
 <resources>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; 正在使用 %2$s 個 Jetpack 個別外掛程式</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; 正在使用 &lt;b&gt;%2$s&lt;/b&gt; 外掛程式</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">WordPress 應用程式不支援安裝 Jetpack 個別外掛程式的網站。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt; 正在使用 WordPress 應用程式不支援的 Jetpack 個別外掛程式。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt; 正在使用 WordPress 應用程式不支援的 &lt;b&gt;%2$s&lt;/b&gt; 外掛程式。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">無法存取你的某些網站</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">無法存取你其中一個網站</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">請切換至 Jetpack 應用程式，我們會引導你連結完整 Jetpack 外掛程式，即可透過應用程式使用此網站。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">切換至 Jetpack 應用程式</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s 正在使用 %2$s，目前尚未支援應用程式的所有功能。\n\n若要在此網站使用應用程式，請安裝 %3$s。</string>
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">本網站</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s 正在使用 %2$s，目前尚未支援應用程式的所有功能。 Please install the %3$s.</string>
