@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.provider.Settings;
 
 import androidx.annotation.NonNull;
@@ -36,6 +38,8 @@ public class WPPermissionUtils {
     public static final int EDITOR_MEDIA_PERMISSION_REQUEST_CODE = 60;
     public static final int EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE = 70;
     public static final int READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE = 80;
+
+    public static final int NOTIFICATIONS_PERMISSION_REQUEST_CODE = 90;
 
     /**
      * called by the onRequestPermissionsResult() of various activities and fragments - tracks
@@ -152,6 +156,8 @@ public class WPPermissionUtils {
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_AUDIO_READ;
             case android.Manifest.permission.CAMERA:
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_CAMERA;
+            case Manifest.permission.POST_NOTIFICATIONS:
+                return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_NOTIFICATIONS;
             default:
                 AppLog.w(AppLog.T.UTILS, "No key for requested permission");
                 return null;
@@ -238,5 +244,21 @@ public class WPPermissionUtils {
         intent.setData(uri);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    /*
+     * open the device's notification settings page for this app so the user can edit permissions
+     */
+    public static void showNotificationsSettings(@NonNull Context context) {
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } else {
+            // We can't open notifications settings screen directly. Instead, open the app settings.
+            showAppSettings(context);
+        }
     }
 }

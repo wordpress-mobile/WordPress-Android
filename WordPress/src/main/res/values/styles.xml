@@ -1571,6 +1571,33 @@
         <item name="fontFamily">sans-serif</item>
     </style>
 
+    <!-- Bottom Sheet Styles -->
+    <style name="WordPress.BottomSheetDialogTheme.Text">
+        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+    </style>
+
+    <style name="WordPress.BottomSheetDialogTheme.Title" parent="WordPress.BottomSheetDialogTheme.Text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="fontFamily">serif</item>
+    </style>
+
+    <style name="WordPress.BottomSheetDialogTheme.Caption" parent="WordPress.BottomSheetDialogTheme.Text">
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+    </style>
+
+    <style name="WordPress.BottomSheetDialogTheme.PrimaryButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:backgroundTint">@color/secondary_gray_20_disabled_selector</item>
+    </style>
+
     <!-- Modal Layout Picker Styles -->
 
     <style name="ModalLayoutPickerText">
@@ -1739,30 +1766,16 @@
         <item name="android:minWidth">@dimen/min_touch_target_sz</item>
     </style>
 
-    <style name="BloggingRemindersText">
-        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:textColor">@color/login_on_surface_high_selector</item>
-    </style>
+    <style name="BloggingRemindersText" parent="WordPress.BottomSheetDialogTheme.Text" />
 
     <style name="BloggingRemindersText.MediumEmphasis" parent="BloggingRemindersText">
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:textColor">@color/on_surface_selector</item>
     </style>
 
-    <style name="BloggingRemindersText.Title" parent="BloggingRemindersText">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="fontFamily">serif</item>
-    </style>
+    <style name="BloggingRemindersText.Title" parent="WordPress.BottomSheetDialogTheme.Title" />
 
-    <style name="BloggingRemindersCaption" parent="BloggingRemindersText">
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
-    </style>
+    <style name="BloggingRemindersCaption" parent="WordPress.BottomSheetDialogTheme.Caption" />
 
     <style name="BloggingRemindersDayBubble">
         <item name="android:gravity">center</item>
@@ -1771,11 +1784,7 @@
         <item name="android:textAppearance">?attr/textAppearanceButton</item>
     </style>
 
-    <style name="BloggingRemindersPrimaryButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
-        <item name="android:textColor">?attr/colorOnSecondary</item>
-        <item name="android:backgroundTint">@color/secondary_gray_20_disabled_selector</item>
-    </style>
+    <style name="BloggingRemindersPrimaryButton" parent="WordPress.BottomSheetDialogTheme.PrimaryButton" />
 
     <style name="BloggingRemindersTipTitle">
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>

@@ -1497,6 +1497,15 @@
     <string name="notifications_tab_title_follows">Follows</string>
     <string name="notifications_tab_title_likes">Likes</string>
 
+    <!-- Notification permission -->
+    <string name="notifications_permission_fix">Fix</string>
+    <string name="notifications_permission_dismiss_content_description">Dismiss notification permission warning.</string>
+    <string name="notifications_permission_off_desc">Push notifications are turned off.</string>
+    <string name="notifications_permission_bottom_sheet_title">Push notifications are turned off</string>
+    <string name="notifications_permission_bottom_sheet_description_1">You\'ll need to open the app to see notifications.</string>
+    <string name="notifications_permission_bottom_sheet_description_2">Go to Settings → Notifications → App Settings, and turn %1$s on to be notified immediately.</string>
+    <string name="notifications_permission_bottom_sheet_button">Turn on notifications</string>
+
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
     <string name="notification_settings_main_status_on">On</string>
@@ -4066,6 +4075,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_reminders_notify_me">Notify me</string>
     <string name="blogging_reminders_update">Update</string>
     <string name="blogging_reminders_done">Done</string>
+    <string name="blogging_reminders_notifications_permission_title">Turn on push notifications</string>
+    <string name="blogging_reminders_notifications_permission_caption">To use blogging reminders, you\'ll need to turn on push notifications.</string>
+    <string name="blogging_reminders_notifications_permission_description" translatable="false">@string/notifications_permission_bottom_sheet_description_2</string>
+    <string name="blogging_reminders_notifications_permission_primary_button" translatable="false">@string/notifications_permission_bottom_sheet_button</string>
     <string name="blogging_reminders_epilogue_title">All set!</string>
     <string name="blogging_reminders_epilogue_not_set_title">Reminders removed!</string>
     <string name="blogging_reminders_epilogue_body_days_with_time">You\'ll get reminders to blog %1$s a week on %2$s at %3$s.</string>
