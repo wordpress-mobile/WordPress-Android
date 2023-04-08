@@ -150,7 +150,7 @@ class CardsRestClient @Inject constructor(
                 id = id,
                 title = title,
                 content = content,
-                lastModifiedOrScheduledOn = modified,
+                lastModifiedOrScheduledOn = CardsUtils.fromDate(modified),
                 status = status,
                 date = CardsUtils.fromDate(date)
         )

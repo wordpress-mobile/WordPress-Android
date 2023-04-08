@@ -25,7 +25,7 @@ sealed class CardModel(
             val id: Int,
             val title: String,
             val content: String,
-            val lastModifiedOrScheduledOn: String,
+            val lastModifiedOrScheduledOn: Date,
             val status: String,
             val date: Date
         )
