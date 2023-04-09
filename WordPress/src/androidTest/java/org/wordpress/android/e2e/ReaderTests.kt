@@ -21,18 +21,16 @@ class ReaderTests : BaseTest() {
         ReaderPage().go()
     }
 
-    var mCoachingPostTitle = "Let's check out the coaching team!"
-    var mCompetitionPostTitle = "Let's focus on the competition."
     @Test
     fun e2eNavigateThroughPosts() {
         ReaderPage()
             .tapFollowingTab()
-            .openPost(mCoachingPostTitle)
-            .verifyPostDisplayed(mCoachingPostTitle)
+            .openPost(TITLE_COACHING_POST)
+            .verifyPostDisplayed(TITLE_COACHING_POST)
             .slideToPreviousPost()
-            .verifyPostDisplayed(mCompetitionPostTitle)
+            .verifyPostDisplayed(TITLE_COMPETITION_POST)
             .slideToNextPost()
-            .verifyPostDisplayed(mCoachingPostTitle)
+            .verifyPostDisplayed(TITLE_COACHING_POST)
             .goBackToReader()
     }
 
@@ -40,11 +38,26 @@ class ReaderTests : BaseTest() {
     fun e2eLikePost() {
         ReaderPage()
             .tapFollowingTab()
-            .openPost(mCoachingPostTitle)
+            .openPost(TITLE_COACHING_POST)
             .likePost()
             .verifyPostLiked()
             .unlikePost()
             .verifyPostNotLiked()
             .goBackToReader()
+    }
+
+    @Test
+    fun e2eBookmarkPost() {
+        ReaderPage()
+            .openBlog(TITLE_BLOG)
+            .bookmarkPost()
+            .verifyPostBookmarked()
+            .goBackToReader()
+    }
+
+    companion object {
+        private const val TITLE_BLOG = "Technical World"
+        private const val TITLE_COACHING_POST = "Let's check out the coaching team!"
+        private const val TITLE_COMPETITION_POST = "Let's focus on the competition."
     }
 }

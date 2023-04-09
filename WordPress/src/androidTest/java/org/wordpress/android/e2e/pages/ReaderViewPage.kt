@@ -14,6 +14,8 @@ class ReaderViewPage {
         UiSelector().resourceId(buildResourceId("container_related_posts"))
     )
     private val swipeForMore = device.findObject(UiSelector().textContains("Swipe for more"))
+    private val savePostsForLater = device.findObject(UiSelector().text("Save Posts for Later"))
+    private val ok = device.findObject(UiSelector().text("OK"))
 
     private fun buildResourceId(id: String): String {
         val packageName = InstrumentationRegistry.getInstrumentation().targetContext.packageName
@@ -57,6 +59,21 @@ class ReaderViewPage {
         device.pressKeyCode(KeyEvent.KEYCODE_DPAD_LEFT)
     }
 
+    fun bookmarkPost(): ReaderViewPage {
+        // Navigate to Bookmark button.
+        device.pressKeyCode(KeyEvent.KEYCODE_TAB)
+        device.pressKeyCode(KeyEvent.KEYCODE_TAB)
+        device.pressKeyCode(KeyEvent.KEYCODE_TAB)
+        device.pressKeyCode(KeyEvent.KEYCODE_TAB)
+        // Click the Bookmark button.
+        device.pressKeyCode(KeyEvent.KEYCODE_DPAD_CENTER)
+        // Dismiss save posts locally dialog.
+        if (savePostsForLater.exists()) {
+            ok.clickAndWaitForNewWindow()
+        }
+        return this
+    }
+
     fun goBackToReader(): ReaderPage {
         device.pressBack()
         return ReaderPage()
@@ -91,6 +108,13 @@ class ReaderViewPage {
     fun verifyPostNotLiked(): ReaderViewPage {
         val likerDisplayed = likerContainer.exists()
         TestCase.assertFalse("Liker faces container was displayed.", likerDisplayed)
+        return this
+    }
+
+    fun verifyPostBookmarked(): ReaderViewPage {
+        val isBookmarked = device.findObject(UiSelector().text("Post saved"))
+            .waitForExists(WPSupportUtils.DEFAULT_TIMEOUT.toLong())
+        TestCase.assertTrue("Snackbar was not displayed.", isBookmarked)
         return this
     }
 }
