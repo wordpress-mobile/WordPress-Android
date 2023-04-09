@@ -8,53 +8,57 @@ import junit.framework.TestCase
 import org.wordpress.android.support.WPSupportUtils
 
 class ReaderViewPage {
-    var mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-    var mLikerContainerId = "org.wordpress.android.prealpha:id/liker_faces_container"
-    var mRelatedPostsId = "org.wordpress.android.prealpha:id/container_related_posts"
-    var mFooterId = "org.wordpress.android.prealpha:id/layout_post_detail_footer"
-    var mLikerContainer = mDevice.findObject(UiSelector().resourceId(mLikerContainerId))
-    var mRelatedPostsContainer = mDevice.findObject(UiSelector().resourceId(mRelatedPostsId))
-    var mSwipeForMore = mDevice.findObject(UiSelector().textContains("Swipe for more"))
-    var mFooter = mDevice.findObject(UiSelector().resourceId(mFooterId))
+    private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+    private val likerContainer = device.findObject(UiSelector().resourceId(buildResourceId("liker_faces_container")))
+    private val relatedPostsContainer = device.findObject(
+        UiSelector().resourceId(buildResourceId("container_related_posts"))
+    )
+    private val swipeForMore = device.findObject(UiSelector().textContains("Swipe for more"))
+
+    private fun buildResourceId(id: String): String {
+        val packageName = InstrumentationRegistry.getInstrumentation().targetContext.packageName
+        return "$packageName:id/$id"
+    }
+
     fun waitUntilLoaded(): ReaderViewPage {
-        mRelatedPostsContainer.waitForExists(WPSupportUtils.DEFAULT_TIMEOUT.toLong())
+        relatedPostsContainer.waitForExists(WPSupportUtils.DEFAULT_TIMEOUT.toLong())
         return this
     }
 
     fun likePost(): ReaderViewPage {
         tapLikeButton()
-        mLikerContainer.waitForExists(WPSupportUtils.DEFAULT_TIMEOUT.toLong())
+        likerContainer.waitForExists(WPSupportUtils.DEFAULT_TIMEOUT.toLong())
         return this
     }
 
     fun unlikePost(): ReaderViewPage {
         tapLikeButton()
-        mLikerContainer.waitUntilGone(WPSupportUtils.DEFAULT_TIMEOUT.toLong())
+        likerContainer.waitUntilGone(WPSupportUtils.DEFAULT_TIMEOUT.toLong())
         return this
     }
 
     private fun tapLikeButton() {
-        mSwipeForMore.waitUntilGone(WPSupportUtils.DEFAULT_TIMEOUT.toLong())
+        swipeForMore.waitUntilGone(WPSupportUtils.DEFAULT_TIMEOUT.toLong())
         // Even though it was working locally in simulator, tapping the footer buttons,
         // like 'mLikeButton.click()', was not working in CI.
         // The current workaround is to use arrows navigation.
 
         // Bring focus to the footer. First button is selected.
-        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_DOWN)
+        device.pressKeyCode(KeyEvent.KEYCODE_DPAD_DOWN)
         // Navigate to Like button.
-        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT)
-        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT)
-        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT)
+        device.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT)
+        device.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT)
+        device.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT)
         // Click the Like button.
-        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_CENTER)
+        device.pressKeyCode(KeyEvent.KEYCODE_DPAD_CENTER)
         // Navigate back to the first footer button.
-        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_LEFT)
-        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_LEFT)
-        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_LEFT)
+        device.pressKeyCode(KeyEvent.KEYCODE_DPAD_LEFT)
+        device.pressKeyCode(KeyEvent.KEYCODE_DPAD_LEFT)
+        device.pressKeyCode(KeyEvent.KEYCODE_DPAD_LEFT)
     }
 
     fun goBackToReader(): ReaderPage {
-        mDevice.pressBack()
+        device.pressBack()
         return ReaderPage()
     }
 
@@ -77,7 +81,7 @@ class ReaderViewPage {
     }
 
     fun verifyPostLiked(): ReaderViewPage {
-        val isLiked = mDevice
+        val isLiked = device
             .findObject(UiSelector().textContains("You like this."))
             .waitForExists(WPSupportUtils.DEFAULT_TIMEOUT.toLong())
         TestCase.assertTrue("Liker was not displayed.", isLiked)
@@ -85,7 +89,7 @@ class ReaderViewPage {
     }
 
     fun verifyPostNotLiked(): ReaderViewPage {
-        val likerDisplayed = mLikerContainer.exists()
+        val likerDisplayed = likerContainer.exists()
         TestCase.assertFalse("Liker faces container was displayed.", likerDisplayed)
         return this
     }
