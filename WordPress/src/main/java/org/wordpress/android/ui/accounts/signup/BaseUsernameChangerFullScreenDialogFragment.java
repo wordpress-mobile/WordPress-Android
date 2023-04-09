@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.text.HtmlCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
@@ -49,13 +50,11 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import dagger.android.support.DaggerFragment;
-
 /**
  * Created so that the base suggestions functionality can become shareable as similar functionality is being used in the
  * the Account settings & sign-up flow to change the username.
  */
-public abstract class BaseUsernameChangerFullScreenDialogFragment extends DaggerFragment implements
+public abstract class BaseUsernameChangerFullScreenDialogFragment extends Fragment implements
         FullScreenDialogContent, OnUsernameSelectedListener {
     private ProgressBar mProgressBar;
 

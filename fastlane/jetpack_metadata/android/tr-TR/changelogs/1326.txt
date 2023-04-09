@@ -1,0 +1,2 @@
+22.0:
+Artık çoğu blok türünü alıntılar, sütunlar ve gruplar gibi diğer blok türlerine dönüştürebilirsiniz.

@@ -185,6 +185,11 @@ public class AppPrefs {
         SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD,
         SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING,
         SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD,
+        SHOULD_HIDE_DASHBOARD_DOMAIN_CARD,
+
+        // Jetpack Individual Plugin overlay for WordPress app
+        WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_SHOWN_COUNT,
+        WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_LAST_SHOWN_TIMESTAMP,
     }
 
     /**
@@ -1611,5 +1616,34 @@ public class AppPrefs {
 
     @NonNull private static String getSiteIdHideBlazeKey(long siteId) {
         return DeletablePrefKey.SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD.name() + siteId;
+    }
+
+    public static Boolean getShouldHideDashboardDomainCard(long siteId) {
+        return prefs().getBoolean(getSiteIdHideDashboardDomainCardKey(siteId), false);
+    }
+
+    public static void setShouldHideDashboardDomainCard(long siteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHideDashboardDomainCardKey(siteId), isHidden).apply();
+    }
+
+    @NonNull private static String getSiteIdHideDashboardDomainCardKey(long siteId) {
+        return DeletablePrefKey.SHOULD_HIDE_DASHBOARD_DOMAIN_CARD.name() + siteId;
+    }
+
+    public static int getWPJetpackIndividualPluginOverlayShownCount() {
+        return getInt(DeletablePrefKey.WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_SHOWN_COUNT, 0);
+    }
+
+    public static void incrementWPJetpackIndividualPluginOverlayShownCount() {
+        int count = getWPJetpackIndividualPluginOverlayShownCount();
+        setInt(DeletablePrefKey.WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_SHOWN_COUNT, count + 1);
+    }
+
+    public static long getWPJetpackIndividualPluginOverlayLastShownTimestamp() {
+        return getLong(DeletablePrefKey.WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_LAST_SHOWN_TIMESTAMP, 0);
+    }
+
+    public static void setWPJetpackIndividualPluginOverlayLastShownTimestamp(long timestamp) {
+        setLong(DeletablePrefKey.WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_LAST_SHOWN_TIMESTAMP, timestamp);
     }
 }

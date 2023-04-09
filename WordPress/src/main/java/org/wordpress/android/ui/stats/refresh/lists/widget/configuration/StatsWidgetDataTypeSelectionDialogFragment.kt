@@ -1,14 +1,13 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.COMMENTS
@@ -18,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDa
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class StatsWidgetDataTypeSelectionDialogFragment : AppCompatDialogFragment() {
     @Inject
     lateinit var imageManager: ImageManager
@@ -67,10 +67,5 @@ class StatsWidgetDataTypeSelectionDialogFragment : AppCompatDialogFragment() {
             R.id.stats_widget_likes -> LIKES
             else -> null
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        AndroidSupportInjection.inject(this)
     }
 }

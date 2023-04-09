@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-08 18:08:06+0000
+Translation-Revision-Date: 2023-04-05 18:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: tr
 -->
 <resources>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt;, %2$s özel Jetpack eklentisini kullanıyor</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt;, &lt;b&gt;%2$s&lt;/b&gt; eklentisini kullanıyor</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">Özel Jetpack eklentilerini kullanan siteler WordPress uygulaması tarafından desteklenmemektedir.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt;, WordPress uygulaması tarafından desteklenmeyen özel Jetpack eklentilerini kullanıyor.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt;, WordPress uygulaması tarafından desteklenmeyen &lt;b&gt;%2$s&lt;/b&gt; eklentisini kullanıyor.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">Web sitelerinizin bazılarına ulaşılamıyor</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">Web sitelerinizin birine ulaşılamıyor</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">Bu web sitesini uygulamayla kullanabilmek için lütfen tam Jetpack eklentisini bağlamada size yardımcı olacağımız Jetpack uygulamasına geçiş yapın.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">Jetpack uygulamasına geçiş yapın</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s, henüz uygulamanın tüm özelliklerini desteklemeyen %2$s kullanıyor.\n\nUygulamayı bu siteyle kullanmak için lütfen %3$s öğesini yükleyin.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">Bu site</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s, henüz uygulamanın tüm özelliklerini desteklemeyen %2$s kullanıyor. Lütfen %3$s öğesini yükleyin.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s, henüz uygulamanın tüm özelliklerini desteklemeyen %2$s kullanıyor. Lütfen %3$s öğesini yükleyin.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Birkaç gün içinde Jetpack uygulamasına geçiş.</string>
+    <string name="wp_jp_static_poster_footnote">Geçiş ücretsizdir ve yalnızca bir dakika sürer.</string>
+    <string name="wp_jp_static_poster_message">İstatistikler, Okuyucu, Bildirimler ve Jetpack destekli diğer özellikler WordPress uygulamasından kaldırıldı ve artık yalnızca Jetpack uygulamasında bulunuyor.</string>
+    <string name="wp_jp_static_poster_button_secondary">Jetpack.com\'da daha fazla bilgi edinin</string>
+    <string name="wp_jp_static_poster_button_primary">Jetpack uygulamasına geçiş yapın</string>
+    <string name="wp_jp_static_poster_title_plural">%s, Jetpack uygulamasına geçti.</string>
+    <string name="wp_jp_static_poster_title">%s, Jetpack uygulamasına geçti.</string>
+    <string name="my_site_btn_wp_admin">Pano</string>
+    <string name="my_site_header_manage">Yönet</string>
+    <string name="my_site_header_traffic">Trafik</string>
+    <string name="my_site_header_content">İçerik</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Ayarla</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">Bitti</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Jetpack yüklendiğine göre artık sadece ayarlarınızı tamamlamanız yeterli. Bu işlem sadece bir dakika sürer.</string>
     <string name="blaze_overlay_site_promotional_button">Şimdi bir yazı yaz</string>
     <string name="blaze_overlay_page_promotional_button">Bu sayfayı Blazeleyin</string>
     <string name="blaze_overlay_post_promotional_button">Bu yazıyı Blazeleyin</string>
@@ -38,8 +65,22 @@ Language: tr
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">tam Jetpack eklentisi</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">bireysel Jetpack eklentileri</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">%1$s eklentisi</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s, henüz uygulamanın tüm özelliklerini desteklemeyen %2$s kullanıyor.\n\nUygulamayı bu siteyle kullanmak için lütfen %3$s öğesini yükleyin.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">Lütfen Jetpack eklentisinin tamamını yükleyin</string>
     <string name="only_one_primary_site_message">Yalnızca bir site kullanılabilir, bu nedenle birincil sitenizi değiştiremezsiniz.</string>
+    <string name="jetpack_plugin_install_error_button_contact_support">Desteğe Başvurun</string>
+    <string name="jetpack_plugin_install_error_button_retry">Tekrar dene</string>
+    <string name="jetpack_plugin_install_error_description">Jetpack şu anda yüklenemiyor.</string>
+    <string name="jetpack_plugin_install_error_title">Bir hata oluştu</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Hata simgesi</string>
+    <string name="jetpack_plugin_install_full_plugin_done_description">Bu site uygulamayla kullanılmaya hazır</string>
+    <string name="jetpack_plugin_install_done_title">Jetpack yüklendi</string>
+    <string name="jetpack_plugin_install_installing_description">Sitenize Jetpack yükleniyor. Bu işlemin tamamlanması birkaç dakika sürebilir.</string>
+    <string name="jetpack_plugin_install_installing_title">Jetpack yükleniyor</string>
+    <string name="jetpack_plugin_install_initial_button">Devam</string>
+    <string name="jetpack_plugin_install_initial_description">Web sitenizin kimlik bilgileri depolanmayacak ve yalnızca güvenli şekilde Jetpack yüklemek amacıyla kullanılacaktır.</string>
+    <string name="jetpack_plugin_install_initial_title">Jetpack\'i yükleyin</string>
+    <string name="jetpack_plugin_install_jp_logo_content_description">Jetpack simgesi</string>
     <string name="button_promote_with_blaze">Blaze ile Tanıt</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Sitenizin potansiyelinin tamamını ortaya çıkarın. Jetpack ile istatistikler, bildirimler ve daha fazlasını elde edin.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Sitenizde Jetpack eklentisi var</string>

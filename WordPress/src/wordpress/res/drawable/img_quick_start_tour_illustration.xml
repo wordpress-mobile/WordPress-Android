@@ -1,5 +1,6 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt"
+    xmlns:tools="http://schemas.android.com/tools"
     android:width="86dp"
     android:height="150dp"
     android:viewportWidth="86"
@@ -22,7 +23,7 @@
       android:fillType="nonZero"
       android:strokeColor="#00000000">
     <aapt:attr name="android:fillColor">
-      <gradient 
+      <gradient
           android:startY="98.86064"
           android:startX="18.35422"
           android:endY="98.86064"
@@ -146,7 +147,8 @@
       android:strokeWidth="1"
       android:fillColor="#003A5F"
       android:fillType="evenOdd"
-      android:strokeColor="#00000000"/>
+      android:strokeColor="#00000000"
+      tools:ignore="VectorPath"/>
   <path
       android:pathData="M23.376,5.301L30.648,5.627C31.376,5.659 31.94,6.276 31.907,7.003C31.876,7.688 31.329,8.228 30.658,8.262L30.53,8.262L23.258,7.937C22.531,7.904 21.967,7.288 22,6.56C22.03,5.875 22.578,5.336 23.249,5.302L23.376,5.301Z"
       android:strokeWidth="1"
@@ -165,7 +167,7 @@
       android:fillType="nonZero"
       android:strokeColor="#00000000">
     <aapt:attr name="android:fillColor">
-      <gradient 
+      <gradient
           android:startY="104.13257"
           android:startX="31.756687"
           android:endY="104.13257"
@@ -181,7 +183,8 @@
       android:strokeWidth="1"
       android:fillColor="#003D68"
       android:fillType="nonZero"
-      android:strokeColor="#00000000"/>
+      android:strokeColor="#00000000"
+      tools:ignore="VectorPath"/>
   <path
       android:pathData="M39.021,59.196L40.535,58.735L40.605,58.974L40.704,59.342C40.829,59.813 40.952,60.334 41.068,60.891C41.352,62.26 41.54,63.619 41.588,64.9C41.623,65.842 41.58,66.711 41.447,67.495C40.902,70.709 36.846,71.684 34.925,69.311C34.118,68.315 33.576,67.059 33.252,65.607C32.875,63.919 32.82,62.147 32.952,60.534L32.996,60.068L33.015,59.92L34.583,60.139L34.549,60.434L34.529,60.663C34.41,62.131 34.459,63.753 34.796,65.262C35.071,66.493 35.519,67.53 36.155,68.316C37.231,69.644 39.572,69.082 39.886,67.23C40,66.563 40.038,65.799 40.006,64.959C39.962,63.777 39.786,62.501 39.518,61.213C39.436,60.816 39.349,60.439 39.262,60.088L39.14,59.619L39.021,59.196Z"
       android:strokeWidth="1"

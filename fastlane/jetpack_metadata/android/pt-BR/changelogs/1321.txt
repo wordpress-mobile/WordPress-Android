@@ -1,3 +1,0 @@
-21.9:
-Notícia urgente: agora o Jetpack é compatível com o Blaze! Promova um post ou página pelo aplicativo para alcançar novos leitores.
-Além disso, adicionamos um cartão de perguntas frequentes sobre o período pós-migração. Para ver, mude do aplicativo do WordPress para o Jetpack.

@@ -41,7 +41,6 @@ Language: en_GB
     <string name="only_one_primary_site_message">Only one site is available, so you can\'t change your primary site.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">Please install the full Jetpack plugin</string>
     <string name="button_promote_with_blaze">Promote with Blaze</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Unlock your site’s full potential. Get stats, notifications and more with Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Your site has the Jetpack plugin</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Get notifications for new comments, likes, views, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Find and follow your favourite sites and communities, and share you content.</string>

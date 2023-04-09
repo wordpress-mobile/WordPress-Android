@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.text.HtmlCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -33,6 +34,7 @@ import org.wordpress.android.widgets.WPDialogSnackbar
 /**
  * Allows the user to change their username from the Account Settings screen.
  */
+@AndroidEntryPoint
 class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragment() {
     private lateinit var dialogController: FullScreenDialogController
 
