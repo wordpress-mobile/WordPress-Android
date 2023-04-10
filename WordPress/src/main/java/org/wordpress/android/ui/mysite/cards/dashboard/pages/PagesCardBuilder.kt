@@ -1,51 +1,75 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.pages
 
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.CreatNewPageItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.PageContentItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
-import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.config.DashboardCardPagesConfig
 import javax.inject.Inject
 
 class PagesCardBuilder @Inject constructor(
-    private val localeManagerWrapper: LocaleManagerWrapper
+    private val dashboardCardPagesConfig: DashboardCardPagesConfig
 ) {
-    fun build(params: PagesCardBuilderParams): List<PagesCard> {
-       return convertToPagesItems(params.pageCard)
+    fun build(params: PagesCardBuilderParams): PagesCard? {
+        if (!dashboardCardPagesConfig.isEnabled()) {
+            return null
+        }
+        return convertToPagesItems(params)
     }
 
-    private fun convertToPagesItems(pagesCardModel: PagesCardModel): List<PagesCard> {
-        val pages = pagesCardModel.pages
+    private fun convertToPagesItems(params: PagesCardBuilderParams): PagesCard.PagesCardWithData {
+        val pages = params.pageCard?.pages ?: emptyList()
         val content = getPagesContentItems(pages)
-        val createPageCard = getCreatePageCard(pages)
-
-        return content.toMutableList() + createPageCard
+        val createPageCard = getCreatePageCard(params)
+        return PagesCard.PagesCardWithData(
+            title = UiString.UiStringRes(R.string.dashboard_pages_card_title),
+            pages = content,
+            footerLink = createPageCard
+        )
     }
 
-    private fun getPagesContentItems(pages: List<PagesCardModel.PageCardModel>): List<PagesCard.PageContentItem> {
+    @Suppress("UNUSED_PARAMETER")
+    private fun getPagesContentItems(pages: List<PagesCardModel.PageCardModel>): List<PageContentItem> {
         //todo: implement
+        return emptyList()
     }
 
-    private fun getCreatePageCard(pages: List<PagesCardModel.PageCardModel>): PagesCard.FooterLink {
+    private fun getCreatePageCard(params: PagesCardBuilderParams): CreatNewPageItem {
         // Create new page button is shown with image if there is
         // less than three pages for a user
+        val pages = params.pageCard?.pages ?: emptyList()
         return if (pages.isEmpty()) {
-            createNewPageCardWithAddPageMessage()
+            createNewPageCardWithAddPageMessage(params)
         } else if (pages.size < 3) {
-            createNewPageCardWithAddAnotherPageMessage()
+            createNewPageCardWithAddAnotherPageMessage(params)
         } else {
-            createNewPageCardWithOnlyButton()
+            createNewPageCardWithOnlyButton(params)
         }
     }
 
-    private fun createNewPageCardWithAddPageMessage(params: PagesCardBuilderParams): PagesCard.FooterLink {
-        //todo: implement
+    private fun createNewPageCardWithAddPageMessage(params: PagesCardBuilderParams): CreatNewPageItem {
+        return CreatNewPageItem(
+            label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
+            description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
+            onClick = params.onFooterLinkClick
+        )
     }
 
-    private fun createNewPageCardWithAddAnotherPageMessage(): PagesCard.FooterLink {
-        //todo: implement
+    private fun createNewPageCardWithAddAnotherPageMessage(params: PagesCardBuilderParams): CreatNewPageItem {
+        return CreatNewPageItem(
+            label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
+            description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
+            onClick = params.onFooterLinkClick
+        )
     }
 
-    private fun createNewPageCardWithOnlyButton(): PagesCard.FooterLink {
-        //todo: implement
+    private fun createNewPageCardWithOnlyButton(params: PagesCardBuilderParams): CreatNewPageItem {
+        return CreatNewPageItem(
+            label = UiString.UiStringRes(R.string.dashboard_pages_card_title),
+            onClick = params.onFooterLinkClick
+        )
     }
 }
