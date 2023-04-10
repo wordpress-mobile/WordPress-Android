@@ -692,12 +692,12 @@ class MySiteViewModel @Inject constructor(
 
     @Suppress("UNUSED_PARAMETER")
     private fun onPagesItemClick(params: PagesCardBuilderParams.PagesItemClickParams) {
-        // todo: implement navigation logic for pages
+        // implement navigation logic for pages
     }
 
     @Suppress("UNUSED_PARAMETER")
     private fun onPagesCardFooterLinkClick() {
-        // todo: implement navigation logic for create page
+        // implement navigation logic for create page
     }
 
     private fun buildJetpackBadgeIfEnabled(): JetpackBadge? {

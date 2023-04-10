@@ -10,6 +10,8 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.config.DashboardCardPagesConfig
 import javax.inject.Inject
 
+private const val REQUIRED_PAGES_IN_CARD: Int = 3
+
 class PagesCardBuilder @Inject constructor(
     private val dashboardCardPagesConfig: DashboardCardPagesConfig
 ) {
@@ -33,7 +35,6 @@ class PagesCardBuilder @Inject constructor(
 
     @Suppress("UNUSED_PARAMETER")
     private fun getPagesContentItems(pages: List<PagesCardModel.PageCardModel>): List<PageContentItem> {
-        //todo: implement
         return emptyList()
     }
 
@@ -43,7 +44,7 @@ class PagesCardBuilder @Inject constructor(
         val pages = params.pageCard?.pages ?: emptyList()
         return if (pages.isEmpty()) {
             createNewPageCardWithAddPageMessage(params)
-        } else if (pages.size < 3) {
+        } else if (pages.size < REQUIRED_PAGES_IN_CARD) {
             createNewPageCardWithAddAnotherPageMessage(params)
         } else {
             createNewPageCardWithOnlyButton(params)

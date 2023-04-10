@@ -440,5 +440,4 @@ class CardsSourceTest : BaseUnitTest() {
 
             verify(cardsStore).fetchCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)
         }
-
 }
