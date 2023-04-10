@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.model.dashboard
 
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.PageCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
 import java.util.Date
@@ -19,7 +18,6 @@ sealed class CardModel(
 
     data class PagesCardModel(
         val pages: List<PageCardModel> = emptyList(),
-        val error: PageCardError? = null
     ) : CardModel(Type.PAGES) {
         data class PageCardModel(
             val id: Int,
