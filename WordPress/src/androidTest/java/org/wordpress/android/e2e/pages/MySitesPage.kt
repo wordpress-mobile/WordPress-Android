@@ -154,7 +154,11 @@ class MySitesPage {
 
     fun goToStats(): StatsPage {
         goToMenuTab()
-        clickQuickActionOrSiteMenuItem(R.id.quick_action_stats_button, R.string.stats)
+        val statsButton = Espresso.onView(Matchers.allOf(
+            ViewMatchers.withText(R.string.stats),
+            ViewMatchers.withId(R.id.my_site_item_primary_text)
+        ))
+        WPSupportUtils.clickOn(statsButton)
         WPSupportUtils.idleFor(4000)
         WPSupportUtils.dismissJetpackAdIfPresent()
         WPSupportUtils.waitForElementToBeDisplayedWithoutFailure(R.id.tabLayout)

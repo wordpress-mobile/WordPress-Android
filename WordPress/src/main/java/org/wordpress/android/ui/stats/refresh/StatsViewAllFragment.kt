@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,7 +13,7 @@ import com.google.android.material.appbar.AppBarLayout.LayoutParams
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsViewAllFragmentBinding
@@ -34,13 +35,18 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getParcelableExtraCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
-class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
+@AndroidEntryPoint
+class StatsViewAllFragment : Fragment(R.layout.stats_view_all_fragment) {
     @Inject
     lateinit var viewModelFactoryBuilder: StatsViewAllViewModelFactory.Builder
 
@@ -78,13 +84,13 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
             if (intent.hasExtra(ARGS_VIEW_TYPE)) {
                 outState.putSerializable(
                     ARGS_VIEW_TYPE,
-                    intent.getSerializableExtra(ARGS_VIEW_TYPE)
+                    intent.getSerializableExtraCompat(ARGS_VIEW_TYPE)
                 )
             }
             if (intent.hasExtra(ARGS_TIMEFRAME)) {
                 outState.putSerializable(
                     ARGS_TIMEFRAME,
-                    intent.getSerializableExtra(ARGS_TIMEFRAME)
+                    intent.getSerializableExtraCompat(ARGS_TIMEFRAME)
                 )
             }
             outState.putInt(WordPress.LOCAL_SITE_ID, intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0))
@@ -96,7 +102,7 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
     private fun StatsViewAllFragmentBinding.initializeViews(savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
 
-        savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
+        savedInstanceState?.getParcelableCompat<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
         with(statsListFragment) {
@@ -153,16 +159,18 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         savedInstanceState: Bundle?
     ) {
         val nonNullIntent = checkNotNull(activity.intent)
-        val type = if (savedInstanceState == null) {
-            nonNullIntent.getSerializableExtra(ARGS_VIEW_TYPE) as StatsViewType
-        } else {
-            savedInstanceState.getSerializable(ARGS_VIEW_TYPE) as StatsViewType
-        }
+        val type = requireNotNull(
+            if (savedInstanceState == null) {
+                nonNullIntent.getSerializableExtraCompat<StatsViewType>(ARGS_VIEW_TYPE)
+            } else {
+                savedInstanceState.getSerializableCompat<StatsViewType>(ARGS_VIEW_TYPE)
+            }
+        )
 
-        val granularity = if (savedInstanceState == null) {
-            nonNullIntent.getSerializableExtra(ARGS_TIMEFRAME) as StatsGranularity?
+        val granularity: StatsGranularity? = if (savedInstanceState == null) {
+            nonNullIntent.getSerializableExtraCompat(ARGS_TIMEFRAME)
         } else {
-            savedInstanceState.getSerializable(ARGS_TIMEFRAME) as StatsGranularity?
+            savedInstanceState.getSerializableCompat(ARGS_TIMEFRAME)
         }
 
         val siteId = savedInstanceState?.getInt(WordPress.LOCAL_SITE_ID, 0)
@@ -172,10 +180,10 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         val viewModelFactory = viewModelFactoryBuilder.build(type, granularity)
         viewModel = ViewModelProvider(activity, viewModelFactory).get(StatsViewAllViewModel::class.java)
 
-        val selectedDate = if (savedInstanceState == null) {
-            nonNullIntent.getParcelableExtra(ARGS_SELECTED_DATE) as SelectedDate?
+        val selectedDate: SelectedDate? = if (savedInstanceState == null) {
+            nonNullIntent.getParcelableExtraCompat(ARGS_SELECTED_DATE)
         } else {
-            savedInstanceState.getParcelable(ARGS_SELECTED_DATE) as SelectedDate?
+            savedInstanceState.getParcelableCompat(ARGS_SELECTED_DATE)
         }
         setupObservers(activity)
 

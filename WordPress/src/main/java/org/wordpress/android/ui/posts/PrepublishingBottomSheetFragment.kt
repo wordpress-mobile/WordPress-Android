@@ -28,6 +28,8 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettings
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.KeyboardResizeViewUtil
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -133,30 +135,28 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this, viewModelFactory)
-            .get(PrepublishingViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[PrepublishingViewModel::class.java]
 
-        viewModel.navigationTarget.observeEvent(this, { navigationState ->
+        viewModel.navigationTarget.observeEvent(this) { navigationState ->
             navigateToScreen(navigationState)
-        })
+        }
 
-        viewModel.dismissBottomSheet.observeEvent(this, {
+        viewModel.dismissBottomSheet.observeEvent(this) {
             dismiss()
-        })
+        }
 
-        viewModel.triggerOnSubmitButtonClickedListener.observeEvent(this, { publishPost ->
+        viewModel.triggerOnSubmitButtonClickedListener.observeEvent(this) { publishPost ->
             prepublishingBottomSheetListener?.onSubmitButtonClicked(publishPost)
-        })
+        }
 
-        viewModel.dismissKeyboard.observeEvent(this, {
+        viewModel.dismissKeyboard.observeEvent(this) {
             ActivityUtils.hideKeyboardForced(view)
-        })
+        }
 
-        val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(
+        val prepublishingScreenState = savedInstanceState?.getParcelableCompat<PrepublishingScreen>(
             KEY_SCREEN_STATE
         )
-        val site = arguments?.getSerializable(SITE) as SiteModel
-
+        val site = requireNotNull(arguments?.getSerializableCompat<SiteModel>(SITE))
         viewModel.start(site, prepublishingScreenState)
     }
 

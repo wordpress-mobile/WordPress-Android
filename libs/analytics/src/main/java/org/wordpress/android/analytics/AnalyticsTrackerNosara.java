@@ -2563,6 +2563,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blaze_flow_canceled";
             case BLAZE_FLOW_ERROR:
                 return "blaze_flow_error";
+            case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_SHOWN:
+                return "wp_individual_site_overlay_viewed";
+            case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_DISMISSED:
+                return "wp_individual_site_overlay_dismissed";
+            case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_PRIMARY_TAPPED:
+                return "wp_individual_site_overlay_primary_tapped";
         }
         return null;
     }

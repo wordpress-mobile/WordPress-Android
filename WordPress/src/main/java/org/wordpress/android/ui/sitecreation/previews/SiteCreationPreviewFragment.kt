@@ -41,6 +41,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener
 import org.wordpress.android.util.URLFilteredWebViewClient
+import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 
 private const val ARG_DATA = "arg_site_creation_data"
@@ -97,7 +98,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
-        viewModel.start(requireArguments()[ARG_DATA] as SiteCreationState, savedInstanceState)
+        viewModel.start(requireNotNull(arguments?.getParcelableCompat(ARG_DATA)), savedInstanceState)
     }
 
     override fun getContentLayout(): Int {
@@ -268,7 +269,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 progressText.text = newText
             }
 
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 super.onAnimationEnd(animation)
                 animatorSet = null
             }

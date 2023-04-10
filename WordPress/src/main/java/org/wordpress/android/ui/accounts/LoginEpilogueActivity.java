@@ -16,11 +16,13 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.CloseWithResultOk;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.CreateNewSite;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.SelectSite;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowJetpackIndividualPluginOverlay;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowPostSignupInterstitialScreen;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueListener;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
@@ -80,6 +82,8 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
                 closeWithResultOk();
             } else if (loginEvent instanceof ShowNoJetpackSites) {
                 showNoJetpackSites();
+            } else if (loginEvent instanceof ShowJetpackIndividualPluginOverlay) {
+                showJetpackIndividualPluginOverlay();
             }
         });
     }
@@ -148,6 +152,10 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
         }
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
         fragmentTransaction.commit();
+    }
+
+    private void showJetpackIndividualPluginOverlay() {
+        WPJetpackIndividualPluginFragment.show(getSupportFragmentManager());
     }
 
     @Override

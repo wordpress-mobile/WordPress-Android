@@ -10,19 +10,16 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
+msgctxt "release_note_221"
+msgid ""
+"22.1:\n"
+"When you log in to a self-hosted site that connects to Jetpack through individual plugins, you’ll see a pop-up stating that this type of connection doesn’t support the app’s core features yet. You can get around that problem by switching over to the Jetpack app. Up, up, and away.\n"
+msgstr ""
+
 msgctxt "release_note_220"
 msgid ""
 "22.0:\n"
 "You can now transform most types of blocks into other block types, like quotes, columns, and groups.\n"
-msgstr ""
-
-msgctxt "release_note_219"
-msgid ""
-"21.9:\n"
-"Good words are read\n"
-"The WordPress logo is blue\n"
-"There are no new updates\n"
-"Sorry to disappoint you\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

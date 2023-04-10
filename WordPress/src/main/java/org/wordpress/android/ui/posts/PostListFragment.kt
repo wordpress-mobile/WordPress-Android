@@ -27,6 +27,8 @@ import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
@@ -80,7 +82,7 @@ class PostListFragment : ViewPagerFragment() {
         (nonNullActivity.application as WordPress).component().inject(this)
 
         val nonNullIntent = checkNotNull(nonNullActivity.intent)
-        val site: SiteModel? = nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel?
+        val site = nonNullIntent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
 
         if (site == null) {
             ToastUtils.showToast(nonNullActivity, R.string.blog_not_found, ToastUtils.Duration.SHORT)
@@ -97,14 +99,13 @@ class PostListFragment : ViewPagerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
+        postListType = requireNotNull(arguments?.getSerializableCompat(EXTRA_POST_LIST_TYPE))
 
         if (postListType == SEARCH) {
             recyclerView?.id = R.id.posts_search_recycler_view_id
         }
 
-        mainViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
-            .get(PostListMainViewModel::class.java)
+        mainViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)[PostListMainViewModel::class.java]
 
         mainViewModel.viewLayoutType.observe(viewLifecycleOwner, Observer { optionaLayoutType ->
             optionaLayoutType?.let { layoutType ->
@@ -126,19 +127,19 @@ class PostListFragment : ViewPagerFragment() {
             }
         })
 
-        mainViewModel.authorSelectionUpdated.observe(viewLifecycleOwner, Observer {
+        mainViewModel.authorSelectionUpdated.observe(viewLifecycleOwner) {
             if (it != null) {
                 if (viewModel.updateAuthorFilterIfNotSearch(it)) {
                     recyclerView?.scrollToPosition(0)
                 }
             }
-        })
+        }
 
         actionableEmptyView?.updateLayoutForSearch(postListType == SEARCH, 0)
 
         val postListViewModelConnector = mainViewModel.getPostListViewModelConnector(postListType)
 
-        viewModel = ViewModelProvider(this, viewModelFactory).get(PostListViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[PostListViewModel::class.java]
 
         val displayWidth = DisplayUtils.getWindowPixelWidth(requireContext())
         val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
