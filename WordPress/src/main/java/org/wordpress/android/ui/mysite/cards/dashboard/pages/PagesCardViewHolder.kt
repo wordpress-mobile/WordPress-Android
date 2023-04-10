@@ -1,0 +1,31 @@
+package org.wordpress.android.ui.mysite.cards.dashboard.pages
+
+import android.view.ViewGroup
+import org.wordpress.android.databinding.MySiteCardToolbarBinding
+import org.wordpress.android.databinding.MySitePagesCardWithPageItemsBinding
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData
+import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
+import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.extensions.viewBinding
+
+class PagesCardViewHolder(
+    parent: ViewGroup,
+    private val uiHelpers: UiHelpers
+) : CardViewHolder<MySitePagesCardWithPageItemsBinding>(
+    parent.viewBinding(MySitePagesCardWithPageItemsBinding::inflate)
+) {
+    init {
+        //binding.postItems.adapter = PostItemsAdapter(imageManager, uiHelpers)
+    }
+
+    fun bind(card: PagesCard) = with(binding) {
+        val pagesCard = card as PagesCardWithData
+        mySiteToolbar.update(pagesCard.title)
+    }
+
+    private fun MySiteCardToolbarBinding.update(title: UiString?) {
+        uiHelpers.setTextOrHide(mySiteCardToolbarTitle, title)
+    }
+}
