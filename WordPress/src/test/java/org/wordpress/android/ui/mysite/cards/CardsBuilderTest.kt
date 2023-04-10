@@ -31,6 +31,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActio
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonBuilder
@@ -220,7 +221,8 @@ class CardsBuilderTest {
                     mock(),
                 ),
                 promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(true, mock(), mock(), mock()),
-                dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(true, mock(), mock(), mock())
+                dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(true, mock(), mock(), mock()),
+                pagesCardBuilderParams = PagesCardBuilderParams(mock(), mock(), mock()),
             ),
             quickLinkRibbonBuilderParams = QuickLinkRibbonBuilderParams(
                 siteModel = mock(),
