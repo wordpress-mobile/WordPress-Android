@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIEncodedBodyRequestBui
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsNetwork
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -27,14 +28,29 @@ class JetpackWPAPIRestClient @Inject constructor(
     private val wpApiEncodedBodyRequestBuilder: WPAPIEncodedBodyRequestBuilder,
     private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
     private val cookieNonceAuthenticator: CookieNonceAuthenticator,
+    private val applicationPasswordsNetwork: ApplicationPasswordsNetwork,
     dispatcher: Dispatcher,
     @Named("custom-ssl") requestQueue: RequestQueue,
     @Named("no-redirects") private val noRedirectsRequestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
     suspend fun fetchJetpackConnectionUrl(
-        site: SiteModel
+        site: SiteModel,
+        useApplicationPasswords: Boolean = false
     ): JetpackWPAPIPayload<String> {
+        if (useApplicationPasswords) {
+            val url = JPAPI.connection.url.pathV4
+            val response = applicationPasswordsNetwork.executeGetGsonRequest(
+                    site = site,
+                    path = url,
+                    clazz = String::class.java
+            )
+            return when (response) {
+                is Success<String> -> JetpackWPAPIPayload(response.data)
+                is Error -> JetpackWPAPIPayload(response.error)
+            }
+        }
+
         val baseUrl = site.wpApiRestUrl ?: "${site.url}/wp-json"
         val url = "${baseUrl.trimEnd('/')}/${JPAPI.connection.url.pathV4.trimStart('/')}"
 
