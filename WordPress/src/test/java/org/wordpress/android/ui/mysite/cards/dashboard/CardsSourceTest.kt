@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel.PageCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
@@ -22,6 +24,7 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.config.DashboardCardPagesConfig
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 
 /* SITE */
@@ -42,6 +45,14 @@ const val POST_TITLE = "title"
 const val POST_CONTENT = "content"
 const val POST_FEATURED_IMAGE = "featuredImage"
 const val POST_DATE = "2021-12-27 11:33:55"
+
+/* PAGES */
+const val PAGE_ID = 1
+const val PAGE_TITLE = "title"
+const val PAGE_CONTENT = "content"
+const val PAGE_MODIFIED_ON = "2023-03-02 10:26:53"
+const val PAGE_STATUS = "publish"
+const val PAGE_DATE = "2023-03-02 10:30:53"
 
 /* MODEL */
 
@@ -66,13 +77,28 @@ private val POSTS_MODEL = PostsCardModel(
     scheduled = listOf(POST_MODEL)
 )
 
+private val PAGE_MODEL = PageCardModel(
+    id = PAGE_ID,
+    title = PAGE_TITLE,
+    content = PAGE_CONTENT,
+    lastModifiedOrScheduledOn = CardsUtils.fromDate(PAGE_MODIFIED_ON),
+    status = PAGE_STATUS,
+    date = CardsUtils.fromDate(PAGE_DATE)
+)
+
+private val PAGES_MODEL = PagesCardModel(
+    pages = listOf(PAGE_MODEL)
+)
+
 private val CARDS_MODEL: List<CardModel> = listOf(
     TODAYS_STATS_CARDS_MODEL,
-    POSTS_MODEL
+    POSTS_MODEL,
+    PAGES_MODEL
 )
 
 private val DEFAULT_CARD_TYPE = listOf(CardModel.Type.POSTS)
 private val STATS_FEATURED_ENABLED_CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.POSTS)
+private val PAGES_FEATURED_ENABLED_CARD_TYPE = listOf(CardModel.Type.PAGES, CardModel.Type.POSTS)
 
 @ExperimentalCoroutinesApi
 class CardsSourceTest : BaseUnitTest() {
@@ -87,6 +113,10 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Mock
     private lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
+
+    @Mock
+    private lateinit var dashboardCardPagesConfig: DashboardCardPagesConfig
+
     private lateinit var cardSource: CardsSource
 
     private val data = CardsResult(
@@ -102,18 +132,26 @@ class CardsSourceTest : BaseUnitTest() {
         init()
     }
 
-    private fun init(isTodaysStatsCardFeatureConfigEnabled: Boolean = false) {
-        setUpMocks(isTodaysStatsCardFeatureConfigEnabled)
+    private fun init(
+        isTodaysStatsCardFeatureConfigEnabled: Boolean = false,
+        isDashboardCardPagesConfigEnabled: Boolean = false
+    ) {
+        setUpMocks(isTodaysStatsCardFeatureConfigEnabled, isDashboardCardPagesConfigEnabled)
         cardSource = CardsSource(
             selectedSiteRepository,
             cardsStore,
             todaysStatsCardFeatureConfig,
+            dashboardCardPagesConfig,
             testDispatcher()
         )
     }
 
-    private fun setUpMocks(isTodaysStatsCardFeatureConfigEnabled: Boolean) {
+    private fun setUpMocks(
+        isTodaysStatsCardFeatureConfigEnabled: Boolean,
+        isDashboardCardPagesConfigEnabled: Boolean = false
+    ) {
         whenever(todaysStatsCardFeatureConfig.isEnabled()).thenReturn(isTodaysStatsCardFeatureConfigEnabled)
+        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(isDashboardCardPagesConfigEnabled)
         whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
     }
@@ -372,4 +410,34 @@ class CardsSourceTest : BaseUnitTest() {
         assertThat(result.first()).isEqualTo(CardsUpdate(showErrorCard = true))
         assertThat(result.last()).isEqualTo(CardsUpdate(showErrorCard = true))
     }
+
+    @Test
+    fun `given pages feature enabled, when build is invoked, then pages from store(database)`() = test {
+        init(isDashboardCardPagesConfigEnabled = true)
+        val result = mutableListOf<CardsUpdate>()
+        whenever(cardsStore.getCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)).thenReturn(flowOf(data))
+
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
+
+        verify(cardsStore).getCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)
+    }
+
+    @Test
+    fun `given pages feature enabled, when refresh is invoked, then pages are requested from network`() =
+        test {
+            init(isDashboardCardPagesConfigEnabled = true)
+            val result = mutableListOf<CardsUpdate>()
+            whenever(cardsStore.getCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)).thenReturn(flowOf(data))
+            whenever(cardsStore.fetchCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)).thenReturn(success)
+            cardSource.refresh.observeForever { }
+
+            cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+                it?.let { result.add(it) }
+            }
+            advanceUntilIdle()
+
+            verify(cardsStore).fetchCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)
+        }
 }

@@ -58,7 +58,9 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         POST_CARD_WITH_POST_ITEMS,
         BLOGGING_PROMPT_CARD,
         PROMOTE_WITH_BLAZE_CARD,
-        DASHBOARD_DOMAIN_CARD
+        DASHBOARD_DOMAIN_CARD,
+        PAGES_CARD_ERROR,
+        PAGES_CARD
     }
 
     data class SiteInfoHeaderCard(
@@ -197,6 +199,35 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val links: List<Clickable>? = null
                     ) {
                         data class Clickable(val navigationAction: ListItemInteraction)
+                    }
+                }
+
+                sealed class PagesCard(
+                    override val dashboardCardType: DashboardCardType,
+                ): DashboardCard(dashboardCardType) {
+                    data class Error(
+                        override val title: UiString
+                    ) : PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD_ERROR), ErrorWithinCard
+
+                    data class PagesCardWithData(
+                        val title: UiString,
+                        val pages: List<PageContentItem>,
+                        val footerLink: CreatNewPageItem
+                    ) : PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD) {
+                        data class PageContentItem(
+                            val title: UiString,
+                            @DrawableRes val statusIcon: Int,
+                            val status: UiString,
+                            val lastEditedOrScheduledTime: UiString,
+                            val onCardClick: () -> Unit
+                        )
+
+                        data class CreatNewPageItem(
+                            val label: UiString,
+                            val description: UiString? = null,
+                            @DrawableRes val imageRes: Int? = null,
+                            val onClick: () -> Unit
+                        )
                     }
                 }
 

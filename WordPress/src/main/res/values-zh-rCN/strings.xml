@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-31 20:58:41+0000
+Translation-Revision-Date: 2023-04-07 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_CN
 -->
 <resources>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; 正在使用 %2$s 个独立的 Jetpack 插件</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; 正在使用 &lt;b&gt;%2$s&lt;/b&gt; 插件</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">WordPress 应用不支持使用独立的 Jetpack 插件的站点。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt; 正在使用独立的 Jetpack 插件，而 WordPress 应用不支持该插件。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt; 正在使用 &lt;b&gt;%2$s&lt;/b&gt; 插件，而 WordPress 应用不支持该插件。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">无法访问您的一些站点</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">无法访问您的其中一个站点</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">请切换到 Jetpack 应用，我们将在其中指导您连接完整的 Jetpack 插件，以便结合使用此站点和该应用。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">切换到 Jetpack 应用</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。\n\n请安装 %3$s，通过此站点使用该应用程序。</string>
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">此站点</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。 请安装 %3$s。</string>

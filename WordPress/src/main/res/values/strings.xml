@@ -4482,4 +4482,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
        %1$s = the current site address (e.g. "wordpress.com"),
        %2$s = the quantity of plugins the site has (e.g. "3") -->
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; is using %2$s individual Jetpack plugins</string>
+
+    <!-- Jetpack - Dashboard cards pages -->
+    <string name="dashboard_pages_card_title" translatable="false">@string/pages</string>
+    <string name="dashboard_pages_card_no_pages_create_page_button">Add Pages to your site</string>
+    <string name="dashboard_pages_card_create_another_page_button">Create Another Page</string>
+    <string name="dashboard_pages_card_create_another_page_description">Start with bespoke, mobile friendly layouts</string>
 </resources>

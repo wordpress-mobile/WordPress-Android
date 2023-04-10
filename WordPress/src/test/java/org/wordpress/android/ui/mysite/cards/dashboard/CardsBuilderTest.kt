@@ -20,8 +20,10 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
@@ -30,6 +32,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.CREATE_FIRST
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.DRAFT
@@ -55,6 +58,9 @@ class CardsBuilderTest : BaseUnitTest() {
     @Mock
     lateinit var dashboardDomainCardBuilder: DashboardDomainCardBuilder
 
+    @Mock
+    lateinit var pagesCardBuilder: PagesCardBuilder
+
     private lateinit var cardsBuilder: CardsBuilder
 
     @Before
@@ -64,7 +70,8 @@ class CardsBuilderTest : BaseUnitTest() {
             postCardBuilder,
             bloggingPromptCardsBuilder,
             promoteWithBlazeCardBuilder,
-            dashboardDomainCardBuilder
+            dashboardDomainCardBuilder,
+            pagesCardBuilder
         )
     }
 
@@ -195,6 +202,20 @@ class CardsBuilderTest : BaseUnitTest() {
         assertThat(cards.findDashboardDomainCard()).isNotNull
     }
 
+    @Test
+    fun `given has pages, when cards are built, then pages card is not built`() {
+        val cards = buildDashboardCards(hasPagesCard = false)
+
+        assertThat(cards.findPagesCard()).isNull()
+    }
+
+    @Test
+    fun `given has pages, when cards are built, then pages card is built`() {
+        val cards = buildDashboardCards(hasPagesCard = true)
+
+        assertThat(cards.findPagesCard()).isNotNull
+    }
+
     private fun DashboardCards.findTodaysStatsCard() =
         this.cards.find { it is TodaysStatsCardWithData } as? TodaysStatsCardWithData
 
@@ -213,6 +234,9 @@ class CardsBuilderTest : BaseUnitTest() {
     private fun DashboardCards.findDashboardDomainCard() =
         this.cards.find { it is DashboardDomainCard } as? DashboardDomainCard
 
+    private fun DashboardCards.findPagesCard() =
+        this.cards.find { it is PagesCardWithData } as? PagesCardWithData
+
     private fun DashboardCards.findErrorCard() = this.cards.find { it is ErrorCard } as? ErrorCard
 
     private val todaysStatsCard = mock<TodaysStatsCardWithData>()
@@ -222,6 +246,8 @@ class CardsBuilderTest : BaseUnitTest() {
     private val promoteWithBlazeCard = mock<PromoteWithBlazeCard>()
 
     private val dashboardDomainCard = mock<DashboardDomainCard>()
+
+    private val pagesCard = mock<PagesCardWithData>()
 
     private fun createPostCards() = listOf(
         PostCardWithPostItems(
@@ -249,7 +275,8 @@ class CardsBuilderTest : BaseUnitTest() {
         hasBlogginPrompt: Boolean = false,
         showErrorCard: Boolean = false,
         isEligibleForBlaze: Boolean = false,
-        isEligibleForDomainCard: Boolean = false
+        isEligibleForDomainCard: Boolean = false,
+        hasPagesCard:Boolean = false
     ): DashboardCards {
         doAnswer { if (hasTodaysStats) todaysStatsCard else null }.whenever(todaysStatsCardBuilder).build(any())
         doAnswer { if (hasPostsForPostCard) createPostCards() else createPostPromptCards() }.whenever(postCardBuilder)
@@ -259,6 +286,7 @@ class CardsBuilderTest : BaseUnitTest() {
             .build(any())
         doAnswer { if (isEligibleForDomainCard) dashboardDomainCard else null }.whenever(dashboardDomainCardBuilder)
             .build(any())
+        doAnswer { if(hasPagesCard) pagesCard else null }.whenever(pagesCardBuilder).build(any())
         return cardsBuilder.build(
             dashboardCardsBuilderParams = DashboardCardsBuilderParams(
                 showErrorCard = showErrorCard,
@@ -276,6 +304,11 @@ class CardsBuilderTest : BaseUnitTest() {
                 ),
                 dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
                     isEligibleForDomainCard, mock(), mock(), mock()
+                ),
+                pagesCardBuilderParams = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
+                    mock(),
+                    mock(),
+                    mock()
                 )
             )
         )
