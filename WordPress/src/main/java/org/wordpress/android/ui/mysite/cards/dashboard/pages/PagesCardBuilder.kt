@@ -68,7 +68,7 @@ class PagesCardBuilder @Inject constructor(
 
     private fun createNewPageCardWithOnlyButton(params: PagesCardBuilderParams): CreatNewPageItem {
         return CreatNewPageItem(
-            label = UiString.UiStringRes(R.string.dashboard_pages_card_title),
+            label = UiString.UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
             onClick = params.onFooterLinkClick
         )
     }
