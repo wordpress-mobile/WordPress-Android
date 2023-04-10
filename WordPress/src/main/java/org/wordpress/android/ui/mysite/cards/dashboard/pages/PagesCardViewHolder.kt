@@ -17,11 +17,12 @@ class PagesCardViewHolder(
     parent.viewBinding(MySitePagesCardWithPageItemsBinding::inflate)
 ) {
     init {
-        //binding.postItems.adapter = PostItemsAdapter(imageManager, uiHelpers)
+        binding.pagesItems.adapter = PagesItemsAdapter(uiHelpers)
     }
 
     fun bind(card: PagesCard) = with(binding) {
         val pagesCard = card as PagesCardWithData
+        (pagesItems.adapter as PagesItemsAdapter).update(pagesCard.pages)
         mySiteToolbar.update(pagesCard.title)
     }
 
