@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardType
+import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
@@ -87,13 +87,13 @@ sealed class MySiteCardAndItemBuilderParams {
     }
 
     data class PagesCardBuilderParams(
-        val pageCard: PagesCardModel,
+        val pageCard: PagesCardModel?,
         val onPagesItemClick: (params: PagesItemClickParams) -> Unit,
-        val onFooterLinkClick: (pagesCardType: PagesCardType) -> Unit
+        val onFooterLinkClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams() {
         data class PagesItemClickParams(
-            val pagesCardType: PagesCardType,
-            val postId: Int
+            val pagesCardType: PagesCardContentType,
+            val pageId: Int
         )
     }
 
