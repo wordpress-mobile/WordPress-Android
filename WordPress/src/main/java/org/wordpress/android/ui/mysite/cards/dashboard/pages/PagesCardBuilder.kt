@@ -21,8 +21,8 @@ class PagesCardBuilder @Inject constructor(
     }
 
     private fun convertToPagesItems(params: PagesCardBuilderParams): PagesCard.PagesCardWithData {
-        val pages = params.pageCard?.pages ?: emptyList()
-        val content = getPagesContentItems(pages)
+        val pages = params.pageCard?.pages
+        val content = pages?.let { getPagesContentItems(pages) } ?: emptyList()
         val createPageCard = getCreatePageCard(params)
         return PagesCard.PagesCardWithData(
             title = UiString.UiStringRes(R.string.dashboard_pages_card_title),
