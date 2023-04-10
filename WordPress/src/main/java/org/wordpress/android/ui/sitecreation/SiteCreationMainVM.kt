@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.networking.MShot
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
@@ -69,19 +70,18 @@ sealed interface SiteCreationResult : Parcelable {
     object NotCreated : SiteCreationResult
 
     sealed interface CreatedButNotFetched : SiteCreationResult {
-        val remoteId: Long
+        val site: SiteModel
         val isSiteTitleTaskComplete: Boolean
 
         @Parcelize
         data class NotInLocalDb(
-            override val remoteId: Long,
+            override val site: SiteModel,
             override val isSiteTitleTaskComplete: Boolean,
         ) : CreatedButNotFetched
 
         @Parcelize
         data class InCart(
-            val siteSlug: String,
-            override val remoteId: Long,
+            override val site: SiteModel,
             override val isSiteTitleTaskComplete: Boolean,
         ) : CreatedButNotFetched
 
@@ -89,7 +89,7 @@ sealed interface SiteCreationResult : Parcelable {
         data class DomainRegistrationPurchased(
             val domainName: String,
             val email: String,
-            override val remoteId: Long,
+            override val site: SiteModel,
             override val isSiteTitleTaskComplete: Boolean,
         ) : CreatedButNotFetched
     }
@@ -293,8 +293,7 @@ class SiteCreationMainVM @Inject constructor(
     fun onCartCreated(checkoutDetails: CheckoutDetails) {
         siteCreationState = siteCreationState.copy(
             result = CreatedButNotFetched.InCart(
-                checkoutDetails.site.url,
-                checkoutDetails.site.siteId,
+                checkoutDetails.site,
                 isSiteTitleTaskCompleted()
             )
         )
@@ -310,7 +309,7 @@ class SiteCreationMainVM @Inject constructor(
                 result = CreatedButNotFetched.DomainRegistrationPurchased(
                     event.domainName,
                     event.email,
-                    result.remoteId,
+                    result.site,
                     isSiteTitleTaskCompleted()
                 )
             )
@@ -318,9 +317,9 @@ class SiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
-    fun onProgressScreenFinished(remoteSiteId: Long) {
+    fun onProgressScreenFinished(site: SiteModel) {
         siteCreationState = siteCreationState.copy(
-            result = CreatedButNotFetched.NotInLocalDb(remoteSiteId, isSiteTitleTaskCompleted())
+            result = CreatedButNotFetched.NotInLocalDb(site, isSiteTitleTaskCompleted())
         )
         wizardManager.showNextStep()
     }

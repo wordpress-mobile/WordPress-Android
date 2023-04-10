@@ -73,18 +73,17 @@ class SitePreviewViewModel @Inject constructor(
     val onOkButtonClicked: LiveData<SiteCreationResult> = _onOkButtonClicked
 
     fun start(siteCreationState: SiteCreationState) {
-        if (isStarted) return
-        isStarted = true
+        if (isStarted) return else isStarted = true
 
         siteDesign = siteCreationState.siteDesign
-        urlWithoutScheme = requireNotNull(siteCreationState.domain) { "url required for preview" }.domainName
-        startPreLoadingWebView()
-        result = siteCreationState.result.also {
-            if (it is CreatedButNotFetched) {
-                launch {
-                    fetchNewlyCreatedSiteModel(it.remoteId)?.run {
-                        result = Completed(id, it.isSiteTitleTaskComplete, url)
-                    }
+        result = siteCreationState.result
+
+        (result as? CreatedButNotFetched)?.let {
+            urlWithoutScheme = it.site.url
+            startPreLoadingWebView()
+            launch {
+                fetchNewlyCreatedSiteModel(it.site.siteId)?.run {
+                    result = Completed(id, it.isSiteTitleTaskComplete, url)
                 }
             }
         }

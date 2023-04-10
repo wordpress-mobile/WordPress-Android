@@ -76,8 +76,8 @@ class SiteCreationProgressViewModel @Inject constructor(
     private val _onCancelWizardClicked = SingleLiveEvent<Unit>()
     val onCancelWizardClicked: LiveData<Unit> = _onCancelWizardClicked
 
-    private val _onRemoteSiteCreated = SingleLiveEvent<Long>()
-    val onRemoteSiteCreated: LiveData<Long> = _onRemoteSiteCreated
+    private val _onRemoteSiteCreated = SingleLiveEvent<SiteModel>()
+    val onRemoteSiteCreated: LiveData<SiteModel> = _onRemoteSiteCreated
 
     private val _onCartCreated = SingleLiveEvent<CheckoutDetails>()
     val onCartCreated: LiveData<CheckoutDetails> = _onCartCreated
@@ -92,7 +92,7 @@ class SiteCreationProgressViewModel @Inject constructor(
         if (siteCreationState.result is CreatedButNotFetched.InCart) {
             // reuse the previously blog when returning with the same domain
             if (siteCreationState.domain == this.siteCreationState.domain) {
-                createCart(siteCreationState.result.remoteId, siteCreationState.result.siteSlug)
+                createCart(siteCreationState.result.site)
                 return
             }
         }
@@ -157,13 +157,11 @@ class SiteCreationProgressViewModel @Inject constructor(
         when (event.step) {
             IDLE, CREATE_SITE -> Unit
             SUCCESS -> {
-                require(event.payload is Pair<*, *>) { "Expected Pair in Payload but got: ${event.payload}" }
-                val blogId = event.payload.first as Long
+                val site = mapPayloadToSiteModel(event.payload)
                 if (domain.isFree) {
-                    _onRemoteSiteCreated.postValue(blogId)
+                    _onRemoteSiteCreated.postValue(site)
                 } else {
-                    val siteSlug = event.payload.second as String
-                    createCart(blogId, siteSlug)
+                    createCart(site)
                 }
             }
             FAILURE -> {
@@ -178,10 +176,17 @@ class SiteCreationProgressViewModel @Inject constructor(
         }
     }
 
-    private fun createCart(blogId: Long, siteSlug: String) = launch {
+    private fun mapPayloadToSiteModel(payload: Any?): SiteModel {
+        require(payload is Pair<*, *>) { "Expected Pair in Payload, got: $payload" }
+        val (blogId, blogUrl) = payload
+        require(blogId is Long) { "Expected the 1st element in the Payload Pair to be a Long, got: $blogId" }
+        require(blogUrl is String)  { "Expected the 2nd element in the Payload Pair to be a Long, got: $blogUrl" }
+        return SiteModel().apply { siteId = blogId; url = blogUrl }
+    }
+
+    private fun createCart(site: SiteModel) = launch {
         AppLog.d(LOG_TAG, "Creating cart: $domain")
 
-        val site = SiteModel().apply { siteId = blogId; url = siteSlug }
         val event = createCartUseCase.execute(
             site,
             domain.productId,

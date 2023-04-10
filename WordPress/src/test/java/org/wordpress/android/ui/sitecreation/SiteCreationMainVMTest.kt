@@ -196,7 +196,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         viewModel.onCheckoutResult(CHECKOUT_EVENT)
 
         assertIs<DomainRegistrationPurchased>(currentWizardState(viewModel).result).run {
-            assertEquals(CHECKOUT_DETAILS.site.siteId, remoteId)
+            assertEquals(CHECKOUT_DETAILS.site, site)
             assertEquals(CHECKOUT_EVENT.domainName, domainName)
             assertEquals(CHECKOUT_EVENT.email, email)
         }
@@ -204,13 +204,13 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
     @Test
     fun `on progress screen finished updates result`() {
-        viewModel.onProgressScreenFinished(SITE_REMOTE_ID)
+        viewModel.onProgressScreenFinished(SITE_MODEL)
         assertThat(currentWizardState(viewModel).result).isEqualTo(RESULT_NOT_IN_LOCAL_DB)
     }
 
     @Test
     fun `on progress screen finished shows next step`() {
-        viewModel.onProgressScreenFinished(SITE_REMOTE_ID)
+        viewModel.onProgressScreenFinished(SITE_MODEL)
         verify(wizardManager).showNextStep()
     }
 

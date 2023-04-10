@@ -45,9 +45,9 @@ val FETCH_ERROR = OnSiteChanged(0).apply { error = SiteError(GENERIC_ERROR) }
 val CART_SUCCESS = OnShoppingCartCreated(mock<CreateShoppingCartResponse>())
 val CART_ERROR = OnShoppingCartCreated(mock<CreateShoppingCartError>())
 
-val RESULT_NOT_IN_LOCAL_DB = CreatedButNotFetched.NotInLocalDb(SITE_REMOTE_ID, false)
-val RESULT_IN_CART = CreatedButNotFetched.InCart(SITE_SLUG, SITE_REMOTE_ID, false)
+val RESULT_NOT_IN_LOCAL_DB = CreatedButNotFetched.NotInLocalDb(SITE_MODEL, false)
+val RESULT_IN_CART = CreatedButNotFetched.InCart(SITE_MODEL, false)
 val RESULT_COMPLETED = Completed(1, false, URL)
 
-val SERVICE_SUCCESS = SiteCreationServiceState(SUCCESS, Pair(SITE_REMOTE_ID, URL))
+val SERVICE_SUCCESS = SiteCreationServiceState(SUCCESS, Pair(SITE_REMOTE_ID, SITE_SLUG))
 val SERVICE_ERROR = SiteCreationServiceState(FAILURE, SiteCreationServiceState(CREATE_SITE))

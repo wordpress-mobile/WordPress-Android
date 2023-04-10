@@ -37,8 +37,8 @@ import org.wordpress.android.ui.sitecreation.SERVICE_ERROR
 import org.wordpress.android.ui.sitecreation.SERVICE_SUCCESS
 import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE
 import org.wordpress.android.ui.sitecreation.SITE_REMOTE_ID
+import org.wordpress.android.ui.sitecreation.SITE_SLUG
 import org.wordpress.android.ui.sitecreation.SiteCreationState
-import org.wordpress.android.ui.sitecreation.URL
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.ConnectionError
@@ -63,7 +63,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     private val startServiceObserver = mock<Observer<StartServiceData>>()
     private val onHelpClickedObserver = mock<Observer<Unit>>()
     private val onCancelWizardClickedObserver = mock<Observer<Unit>>()
-    private val onRemoteSiteCreatedObserver = mock<Observer<Long>>()
+    private val onRemoteSiteCreatedObserver = mock<Observer<SiteModel>>()
     private val onCartCreatedObserver = mock<Observer<CheckoutDetails>>()
 
     private lateinit var viewModel: SiteCreationProgressViewModel
@@ -97,6 +97,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
         startViewModel()
         assertNotNull(viewModel.startCreateSiteService.value)
     }
+
     @Test
     fun `on start emits service event for free domains with isFree true`() = test {
         startViewModel(SITE_CREATION_STATE)
@@ -166,10 +167,13 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on service success propagates remote id`() {
+    fun `on service success propagates site`() {
         startViewModel()
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
-        verify(onRemoteSiteCreatedObserver).onChanged(SITE_REMOTE_ID)
+        verify(onRemoteSiteCreatedObserver).onChanged(argThat {
+            assertEquals(SITE_REMOTE_ID, siteId)
+            url == SITE_SLUG
+        })
     }
 
     @Test
@@ -191,7 +195,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
         verify(onCartCreatedObserver).onChanged(argThat {
             assertEquals(SITE_REMOTE_ID, site.siteId)
-            assertEquals(URL, site.url)
+            assertEquals(SITE_SLUG, site.url)
             domainName == PAID_DOMAIN.domainName
         })
     }
