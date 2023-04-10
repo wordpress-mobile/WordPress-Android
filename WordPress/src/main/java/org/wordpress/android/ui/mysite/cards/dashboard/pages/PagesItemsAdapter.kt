@@ -23,13 +23,13 @@ class PagesItemsAdapter(
     }
 
     fun update(newItems: List<PageContentItem>) {
-        val diffResult = DiffUtil.calculateDiff(PostItemsDiffUtil(items, newItems))
+        val diffResult = DiffUtil.calculateDiff(PagesItemDiffUtil(items, newItems))
         items.clear()
         items.addAll(newItems)
         diffResult.dispatchUpdatesTo(this)
     }
 
-    class PostItemsDiffUtil(
+    class PagesItemDiffUtil(
         private val oldList: List<PageContentItem>,
         private val newList: List<PageContentItem>
     ) : Callback() {
