@@ -203,26 +203,32 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
                 sealed class PagesCard(
                     override val dashboardCardType: DashboardCardType,
-                    open val footerLink: FooterLink? = null
                 ): DashboardCard(dashboardCardType) {
                     data class Error(
                         override val title: UiString
                     ) : PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD_ERROR), ErrorWithinCard
 
-                    data class PageContentItem(
+                    data class PagesCardWithData(
                         val title: UiString,
-                        @DrawableRes val statusIcon: Int,
-                        val status: UiString,
-                        val lastEditedOrScheduledTime: UiString,
-                        val onCardClick: () -> Unit
-                    ) : PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD)
+                        val pages: List<PageContentItem>,
+                        val footerLink: CreatNewPageItem
+                    ) : PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD) {
 
-                    data class FooterLink(
-                        val label: UiString,
-                        val description: UiString,
-                        @DrawableRes val imageRes: Int,
-                        val onClick: () -> Unit
-                    ):PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD)
+                        data class PageContentItem(
+                            val title: UiString,
+                            @DrawableRes val statusIcon: Int,
+                            val status: UiString,
+                            val lastEditedOrScheduledTime: UiString,
+                            val onCardClick: () -> Unit
+                        )
+
+                        data class CreatNewPageItem(
+                            val label: UiString,
+                            val description: UiString? = null,
+                            @DrawableRes val imageRes: Int? = null,
+                            val onClick: () -> Unit
+                        )
+                    }
                 }
 
                 sealed class PostCard(
