@@ -744,4 +744,7 @@
     <dimen name="jetpack_full_screen_overlay_new_users_content_text_size">15sp</dimen>
     <dimen name="menu_item_icon_size">24dp</dimen>
 
+    <!-- Dashboard card pages -->
+    <dimen name="my_site_dashboard_card_page_height">80dp</dimen>
+
 </resources>

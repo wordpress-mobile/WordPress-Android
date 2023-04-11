@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_site_card_footer_link"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding = "@dimen/my_site_card_footer_link_padding"
+    android:minHeight="@dimen/my_site_dashboard_card_page_height">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/link_label"
-        style="@style/MySiteCardFooterLinkItem"
+        style="@style/MySiteCardPagesCardFooter"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -21,13 +23,9 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/link_description"
-        style="@style/MySiteErrorCardSubtitle"
+        style="@style/MySiteCardPagesCardFooterDescription"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingBottom="@dimen/my_site_card_footer_link_padding"
-        android:paddingEnd="@dimen/my_site_card_footer_link_padding"
-        android:paddingStart="@dimen/my_site_card_footer_link_padding"
-        android:paddingTop="@dimen/my_site_card_footer_link_padding_top"
         android:textAlignment="viewStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/link_icon"
@@ -40,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/dashboard_pages_card_create_another_page_description"
-        android:src="@drawable/img_illustration_add_media_150dp"
+        android:src="@drawable/img_illustration_create_pages"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
