@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.processor;
 
-import static javax.lang.model.SourceVersion.latestSupported;
-
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
@@ -36,6 +34,8 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import javax.tools.StandardLocation;
+
+import static javax.lang.model.SourceVersion.latestSupported;
 
 @SuppressWarnings("unused")
 @AutoService(Processor.class)
