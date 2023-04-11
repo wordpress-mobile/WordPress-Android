@@ -3135,6 +3135,17 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    @Override public void onPerformPost(
+            String path,
+            Map<String, Object> body,
+            Consumer<String> onResult,
+            Consumer<Bundle> onError
+    ) {
+        if (mSite != null) {
+            mReactNativeRequestHandler.performPostRequest(path, body, mSite, onResult, onError);
+        }
+    }
+
     @Override
     public void onCaptureVideoClicked() {
         onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO, false);

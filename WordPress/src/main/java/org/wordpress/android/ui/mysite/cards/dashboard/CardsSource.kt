@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.Type
@@ -14,6 +15,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.config.DashboardCardPagesConfig
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
@@ -24,9 +26,13 @@ class CardsSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val cardsStore: CardsStore,
     todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
+    dashboardCardPagesConfig: DashboardCardPagesConfig,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MySiteRefreshSource<CardsUpdate> {
     private val isTodaysStatsCardFeatureConfigEnabled = todaysStatsCardFeatureConfig.isEnabled()
+
+    private val isDashboardCardPagesConfigEnabled = dashboardCardPagesConfig.isEnabled()
+
     override val refresh = MutableLiveData(false)
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<CardsUpdate> {
@@ -44,9 +50,11 @@ class CardsSource @Inject constructor(
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
             coroutineScope.launch(bgDispatcher) {
-                cardsStore.getCards(selectedSite, getCardTypes()).collect { result ->
-                    postValue(CardsUpdate(result.model))
-                }
+                cardsStore.getCards(selectedSite, getCardTypes())
+                    .map { it.model }
+                    .collect { result ->
+                        postValue(CardsUpdate(result))
+                    }
             }
         } else {
             postErrorState()
@@ -95,6 +103,7 @@ class CardsSource @Inject constructor(
 
     private fun getCardTypes() = mutableListOf<Type>().apply {
         if (isTodaysStatsCardFeatureConfigEnabled) add(Type.TODAYS_STATS)
+        if (isDashboardCardPagesConfigEnabled) add(Type.PAGES)
         add(Type.POSTS)
     }.toList()
 

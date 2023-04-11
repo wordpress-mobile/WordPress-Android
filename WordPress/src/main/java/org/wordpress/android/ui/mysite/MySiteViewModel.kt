@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_CHECK_STATS_LABEL
@@ -44,6 +45,7 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
+import org.wordpress.android.ui.domains.DashboardCardDomainUtils
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.FEATURE_CARD
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
@@ -61,10 +63,12 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
@@ -205,6 +209,7 @@ class MySiteViewModel @Inject constructor(
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
     private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker,
     private val blazeFeatureUtils: BlazeFeatureUtils,
+    private val dashboardCardDomainUtils: DashboardCardDomainUtils,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
 ) : ScopedViewModel(mainDispatcher) {
@@ -588,7 +593,20 @@ class MySiteViewModel @Inject constructor(
                     onClick = this::onPromoteWithBlazeCardClick,
                     onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
                     onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
-                )
+                ),
+                dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
+                    isEligible = dashboardCardDomainUtils.shouldShowCard(
+                        site, isDomainCreditAvailable
+                    ),
+                    onClick = this::onDashboardCardDomainClick,
+                    onHideMenuItemClick = this::onDashboardCardDomainHideMenuItemClick,
+                    onMoreMenuClick = this::onDashboardCardDomainMoreMenuClick
+                ),
+                pagesCardBuilderParams = PagesCardBuilderParams(
+                    pageCard = cardsUpdate?.cards?.firstOrNull { it is PagesCardModel } as? PagesCardModel,
+                    onPagesItemClick = this::onPagesItemClick,
+                    onFooterLinkClick = this::onPagesCardFooterLinkClick
+                ),
             ),
             QuickLinkRibbonBuilderParams(
                 siteModel = site,
@@ -670,6 +688,16 @@ class MySiteViewModel @Inject constructor(
                 jetpackSwitchMenu = jetpackSwitchMenu
             )
         )
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun onPagesItemClick(params: PagesCardBuilderParams.PagesItemClickParams) {
+        // implement navigation logic for pages
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun onPagesCardFooterLinkClick() {
+        // implement navigation logic for create page
     }
 
     private fun buildJetpackBadgeIfEnabled(): JetpackBadge? {
@@ -1559,6 +1587,24 @@ class MySiteViewModel @Inject constructor(
         )
         selectedSiteRepository.getSelectedSite()?.let {
             blazeFeatureUtils.hidePromoteWithBlazeCard(it.siteId)
+        }
+        refresh()
+    }
+
+    private fun onDashboardCardDomainMoreMenuClick() {
+        // track
+    }
+
+    private fun onDashboardCardDomainClick() {
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        // track
+        _onNavigation.value = Event(SiteNavigationAction.OpenDomainRegistration(selectedSite))
+    }
+
+    private fun onDashboardCardDomainHideMenuItemClick() {
+        // track
+        selectedSiteRepository.getSelectedSite()?.let {
+            dashboardCardDomainUtils.hideCard(it.siteId)
         }
         refresh()
     }
