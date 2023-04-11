@@ -3,6 +3,7 @@ package org.wordpress.android.e2e.pages
 import android.view.KeyEvent
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
 import junit.framework.TestCase
 import org.wordpress.android.support.WPSupportUtils
@@ -14,8 +15,10 @@ class ReaderViewPage {
         UiSelector().resourceId(buildResourceId("container_related_posts"))
     )
     private val swipeForMore = device.findObject(UiSelector().textContains("Swipe for more"))
+    private val recyclerView = UiScrollable(UiSelector().resourceId(buildResourceId("recycler_view")))
     private val savePostsForLater = device.findObject(UiSelector().text("Save Posts for Later"))
     private val ok = device.findObject(UiSelector().text("OK"))
+    private val bookmarkButtonSelector = UiSelector().resourceId(buildResourceId("bookmark"))
 
     private fun buildResourceId(id: String): String {
         val packageName = InstrumentationRegistry.getInstrumentation().targetContext.packageName
@@ -60,18 +63,24 @@ class ReaderViewPage {
     }
 
     fun bookmarkPost(): ReaderViewPage {
-        // Navigate to Bookmark button.
-        device.pressKeyCode(KeyEvent.KEYCODE_TAB)
-        device.pressKeyCode(KeyEvent.KEYCODE_TAB)
-        device.pressKeyCode(KeyEvent.KEYCODE_TAB)
-        device.pressKeyCode(KeyEvent.KEYCODE_TAB)
-        // Click the Bookmark button.
-        device.pressKeyCode(KeyEvent.KEYCODE_DPAD_CENTER)
+        tapBookmarkButton()
         // Dismiss save posts locally dialog.
         if (savePostsForLater.exists()) {
             ok.clickAndWaitForNewWindow()
         }
         return this
+    }
+
+    fun removeBookmarkPost(): ReaderViewPage {
+        tapBookmarkButton()
+        return this
+    }
+
+    private fun tapBookmarkButton() {
+        // Scroll to the bookmark button.
+        recyclerView.scrollIntoView(bookmarkButtonSelector)
+        // Tap the bookmark button.
+        device.findObject(bookmarkButtonSelector).clickAndWaitForNewWindow()
     }
 
     fun goBackToReader(): ReaderPage {
@@ -115,6 +124,12 @@ class ReaderViewPage {
         val isBookmarked = device.findObject(UiSelector().text("Post saved"))
             .waitForExists(WPSupportUtils.DEFAULT_TIMEOUT.toLong())
         TestCase.assertTrue("Snackbar was not displayed.", isBookmarked)
+        return this
+    }
+
+    fun verifyPostNotBookmarked(): ReaderViewPage {
+        val isBookmarked = device.findObject(bookmarkButtonSelector).isSelected
+        TestCase.assertFalse("The bookmark button is selected", isBookmarked)
         return this
     }
 }

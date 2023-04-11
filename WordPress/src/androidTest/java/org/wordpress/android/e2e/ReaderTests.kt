@@ -52,6 +52,8 @@ class ReaderTests : BaseTest() {
             .openBlog(TITLE_BLOG)
             .bookmarkPost()
             .verifyPostBookmarked()
+            .removeBookmarkPost()
+            .verifyPostNotBookmarked()
             .goBackToReader()
     }
 
