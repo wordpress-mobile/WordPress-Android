@@ -70,9 +70,9 @@ class PagesCardBuilder @Inject constructor(
 
     private fun getStatusText(status: String): UiString? =
         when (status) {
-            DRAFT.status -> UiString.UiStringRes(R.string.pages_card_draft)
-            PUBLISHED.status -> UiString.UiStringRes(R.string.pages_card_published)
-            SCHEDULED.status -> UiString.UiStringRes(R.string.pages_card_scheduled)
+            DRAFT.status -> UiString.UiStringRes(R.string.dashboard_card_page_item_status_draft)
+            PUBLISHED.status -> UiString.UiStringRes(R.string.dashboard_card_page_item_status_published)
+            SCHEDULED.status -> UiString.UiStringRes(R.string.dashboard_card_page_item_status_scheduled)
             else -> null
         }
 
