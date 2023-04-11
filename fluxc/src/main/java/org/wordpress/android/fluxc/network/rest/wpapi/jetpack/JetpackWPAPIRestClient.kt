@@ -117,16 +117,7 @@ class JetpackWPAPIRestClient @Inject constructor(
             )
             return when (response) {
                 is Success<JetpackConnectionDataResponse> -> JetpackWPAPIPayload(
-                        response.data?.let {
-                            JetpackUser(
-                                    isConnected = it.currentUser.isConnected ?: false,
-                                    isMaster = it.currentUser.isMaster ?: false,
-                                    username = it.currentUser.username.orEmpty(),
-                                    wpcomEmail = it.currentUser.wpcomUser?.email.orEmpty(),
-                                    wpcomId = it.currentUser.wpcomUser?.id ?: 0L,
-                                    wpcomUsername = it.currentUser.wpcomUser?.login.orEmpty()
-                            )
-                        }
+                        response.data?.toJetpackUser()
                 )
 
                 is Error -> JetpackWPAPIPayload(response.error)
@@ -146,20 +137,22 @@ class JetpackWPAPIRestClient @Inject constructor(
 
         return when (response) {
             is Success<JetpackConnectionDataResponse> -> JetpackWPAPIPayload(
-                response.data?.let {
-                    JetpackUser(
-                        isConnected = it.currentUser.isConnected ?: false,
-                        isMaster = it.currentUser.isMaster ?: false,
-                        username = it.currentUser.username.orEmpty(),
-                        wpcomEmail = it.currentUser.wpcomUser?.email.orEmpty(),
-                        wpcomId = it.currentUser.wpcomUser?.id ?: 0L,
-                        wpcomUsername = it.currentUser.wpcomUser?.login.orEmpty()
-                    )
-                }
+                    response.data?.toJetpackUser()
             )
 
             is Error -> JetpackWPAPIPayload(response.error)
         }
+    }
+
+    private fun JetpackConnectionDataResponse.toJetpackUser(): JetpackUser {
+        return JetpackUser(
+            isConnected = currentUser.isConnected ?: false,
+            isMaster = currentUser.isMaster ?: false,
+            username = currentUser.username.orEmpty(),
+            wpcomEmail = currentUser.wpcomUser?.email.orEmpty(),
+            wpcomId = currentUser.wpcomUser?.id ?: 0L,
+            wpcomUsername = currentUser.wpcomUser?.login.orEmpty()
+        )
     }
 
     private fun SiteModel.buildUrl(path: String): String {
