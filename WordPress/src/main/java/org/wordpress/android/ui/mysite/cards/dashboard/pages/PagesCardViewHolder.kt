@@ -24,6 +24,9 @@ class PagesCardViewHolder(
         val pagesCard = card as PagesCardWithData
         (pagesItems.adapter as PagesItemsAdapter).update(pagesCard.pages)
         mySiteToolbar.update(pagesCard.title)
+        uiHelpers.setTextOrHide(mySiteCardFooterLink.linkLabel,pagesCard.footerLink.label)
+        uiHelpers.setTextOrHide(mySiteCardFooterLink.linkDescription,pagesCard.footerLink.description)
+        uiHelpers.setImageOrHide(mySiteCardFooterLink.linkIcon,pagesCard.footerLink.imageRes)
     }
 
     private fun MySiteCardToolbarBinding.update(title: UiString?) {
