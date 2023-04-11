@@ -41,7 +41,7 @@ class PagesCardBuilder @Inject constructor(
     private fun getPagesContentItems(pages: List<PagesCardModel.PageCardModel>, params: PagesCardBuilderParams): List<PageContentItem> {
         return pages.map {
             PageContentItem(
-                title = UiString.UiStringText(it.title),
+                title = getPageTitle(it.title),
                 statusIcon = getStatusIcon(it.status),
                 statusText = getStatusText(it.status),
                 onClick = { params.onPagesItemClick },
@@ -49,6 +49,9 @@ class PagesCardBuilder @Inject constructor(
             )
         }
     }
+
+    private fun getPageTitle(title: String) =
+        if (title.isEmpty()) UiString.UiStringRes(R.string.my_site_untitled_post) else UiString.UiStringText(title)
 
     private fun getLastEditedTime(): UiString? {
         // todo: implement this method
