@@ -17,8 +17,21 @@
         style="@style/MySitePostItemTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/title" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/status"
+        style="@style/MySiteCardPagesCardPagesItemStatus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="#F2F2F2"
+        app:drawableTintMode="src_in"
+        android:drawablePadding="@dimen/margin_medium"
+        android:padding="@dimen/my_site_blavatar_container_corner_radius"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 </androidx.constraintlayout.widget.ConstraintLayout>
