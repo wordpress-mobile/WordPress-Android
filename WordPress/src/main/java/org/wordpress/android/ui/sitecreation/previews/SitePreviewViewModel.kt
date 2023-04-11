@@ -14,8 +14,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.sitecreation.SiteCreationResult
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -61,7 +61,7 @@ class SitePreviewViewModel @Inject constructor(
     private var siteDesign: String? = null
     private var urlWithoutScheme: String? = null
 
-    private lateinit var result: SiteCreationResult
+    private lateinit var result: Created
 
     private val _uiState: MutableLiveData<SitePreviewUiState> = MutableLiveData()
     val uiState: LiveData<SitePreviewUiState> = _uiState
@@ -69,21 +69,20 @@ class SitePreviewViewModel @Inject constructor(
     private val _preloadPreview: MutableLiveData<String> = MutableLiveData()
     val preloadPreview: LiveData<String> = _preloadPreview
 
-    private val _onOkButtonClicked = SingleLiveEvent<SiteCreationResult>()
-    val onOkButtonClicked: LiveData<SiteCreationResult> = _onOkButtonClicked
+    private val _onOkButtonClicked = SingleLiveEvent<Created>()
+    val onOkButtonClicked: LiveData<Created> = _onOkButtonClicked
 
     fun start(siteCreationState: SiteCreationState) {
         if (isStarted) return else isStarted = true
-
+        require(siteCreationState.result is Created)
         siteDesign = siteCreationState.siteDesign
         result = siteCreationState.result
-
-        (result as? CreatedButNotFetched)?.let {
-            urlWithoutScheme = it.site.url
-            startPreLoadingWebView()
+        urlWithoutScheme = result.site.url
+        startPreLoadingWebView()
+        if (result is CreatedButNotFetched) {
             launch {
-                fetchNewlyCreatedSiteModel(it.site.siteId)?.run {
-                    result = Completed(id, it.isSiteTitleTaskComplete, url)
+                fetchNewlyCreatedSiteModel(result.site.siteId)?.let {
+                    result = Completed(it)
                 }
             }
         }

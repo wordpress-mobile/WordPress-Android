@@ -64,7 +64,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     lateinit var navigationTargetObserver: Observer<NavigationTarget>
 
     @Mock
-    lateinit var wizardFinishedObserver: Observer<SiteCreationResult>
+    lateinit var onCompletedObserver: Observer<SiteCreationCompletionEvent>
 
     @Mock
     lateinit var wizardExitedObserver: Observer<Unit>
@@ -121,7 +121,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         viewModel = getNewViewModel()
         viewModel.start(null, SiteCreationSource.UNSPECIFIED)
         viewModel.navigationTargetObservable.observeForever(navigationTargetObserver)
-        viewModel.wizardFinishedObservable.observeForever(wizardFinishedObserver)
+        viewModel.onCompleted.observeForever(onCompletedObserver)
         viewModel.dialogActionObservable.observeForever(dialogActionsObserver)
         viewModel.exitFlowObservable.observeForever(wizardExitedObserver)
         viewModel.onBackPressedObservable.observeForever(onBackPressedObserver)
@@ -145,7 +145,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun `on wizard finished is propagated`() {
         viewModel.onWizardFinished(RESULT_COMPLETED)
-        verify(wizardFinishedObserver).onChanged(eq(RESULT_COMPLETED))
+        verify(onCompletedObserver).onChanged(eq(RESULT_COMPLETED to false))
     }
 
     @Test

@@ -10,7 +10,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.isA
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -18,16 +20,18 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.ui.sitecreation.FETCH_ERROR
 import org.wordpress.android.ui.sitecreation.FETCH_SUCCESS
+import org.wordpress.android.ui.sitecreation.RESULT_COMPLETED
+import org.wordpress.android.ui.sitecreation.RESULT_CREATED
 import org.wordpress.android.ui.sitecreation.RESULT_NOT_IN_LOCAL_DB
 import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE
+import org.wordpress.android.ui.sitecreation.SITE_MODEL
 import org.wordpress.android.ui.sitecreation.SITE_REMOTE_ID
 import org.wordpress.android.ui.sitecreation.SUB_DOMAIN
-import org.wordpress.android.ui.sitecreation.SiteCreationResult
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.URL
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -55,7 +59,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     private lateinit var uiStateObserver: Observer<SitePreviewUiState>
 
     @Mock
-    private lateinit var onOkClickedObserver: Observer<SiteCreationResult>
+    private lateinit var onOkClickedObserver: Observer<Created>
 
     @Mock
     private lateinit var preloadPreviewObserver: Observer<String>
@@ -77,9 +81,9 @@ class SitePreviewViewModelTest : BaseUnitTest() {
         viewModel.onOkButtonClicked.observeForever(onOkClickedObserver)
         viewModel.preloadPreview.observeForever(preloadPreviewObserver)
 
-        whenever(urlUtils.extractSubDomain(URL)).thenReturn(SUB_DOMAIN)
-        whenever(urlUtils.addUrlSchemeIfNeeded(URL, true)).thenReturn(URL)
-        whenever(siteStore.getSiteBySiteId(SITE_REMOTE_ID)).thenReturn(SiteModel().apply { id = 1; url = URL })
+        whenever(urlUtils.extractSubDomain(any())).thenReturn(SUB_DOMAIN)
+        whenever(urlUtils.addUrlSchemeIfNeeded(any(), eq(true))).thenReturn(URL)
+        whenever(siteStore.getSiteBySiteId(SITE_REMOTE_ID)).thenReturn(SITE_MODEL)
     }
 
     @Test
@@ -121,8 +125,8 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on start preloads the preview when result is Completed`() {
-        startViewModel(SITE_CREATION_STATE)
+    fun `on start preloads the preview when result is Completed`() = test {
+        startViewModel(SITE_CREATION_STATE.copy(result = RESULT_COMPLETED))
         assertThat(viewModel.preloadPreview.value).isEqualTo(URL)
     }
 
@@ -140,8 +144,9 @@ class SitePreviewViewModelTest : BaseUnitTest() {
         block()
     }
 
-    private fun startViewModel(siteCreationState: SiteCreationState = SITE_CREATION_STATE) {
-        viewModel.start(siteCreationState)
+    private fun startViewModel(state: SiteCreationState = SITE_CREATION_STATE.copy(result = RESULT_CREATED)) {
+        whenever(RESULT_CREATED.site).thenReturn(SITE_MODEL)
+        viewModel.start(state)
     }
 
     // endregion
