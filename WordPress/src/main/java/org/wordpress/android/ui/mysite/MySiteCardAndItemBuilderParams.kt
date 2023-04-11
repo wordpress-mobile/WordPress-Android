@@ -89,6 +89,7 @@ sealed class MySiteCardAndItemBuilderParams {
 
     data class PagesCardBuilderParams(
         val pageCard: PagesCardModel?,
+        val onClick: () -> Unit,
         val onPagesItemClick: (params: PagesItemClickParams) -> Unit,
         val onFooterLinkClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams() {

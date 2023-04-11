@@ -605,7 +605,8 @@ class MySiteViewModel @Inject constructor(
                 pagesCardBuilderParams = PagesCardBuilderParams(
                     pageCard = cardsUpdate?.cards?.firstOrNull { it is PagesCardModel } as? PagesCardModel,
                     onPagesItemClick = this::onPagesItemClick,
-                    onFooterLinkClick = this::onPagesCardFooterLinkClick
+                    onFooterLinkClick = this::onPagesCardFooterLinkClick,
+                    onClick = this::onPagesCardClick,
                 ),
             ),
             QuickLinkRibbonBuilderParams(
@@ -688,6 +689,10 @@ class MySiteViewModel @Inject constructor(
                 jetpackSwitchMenu = jetpackSwitchMenu
             )
         )
+    }
+
+    private fun onPagesCardClick() {
+        // implement navigation logic for pages card
     }
 
     @Suppress("UNUSED_PARAMETER")
