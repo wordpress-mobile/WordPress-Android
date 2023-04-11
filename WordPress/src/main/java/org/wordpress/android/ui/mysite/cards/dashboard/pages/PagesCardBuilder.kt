@@ -41,8 +41,16 @@ class PagesCardBuilder @Inject constructor(
         return emptyList()
     }
 
+    private fun getStatusIcon(status: String) =
+        when (status) {
+            DRAFT.status -> R.drawable.ic_draft_page_draft_dashboard_card
+            PUBLISHED.status -> R.drawable.ic_published_page_dashboard_card
+            SCHEDULED.status -> R.drawable.ic_scheduled_page_dashboard_card
+            else -> null
+        }
+
     private fun getStatusText(status: String): UiString? =
-         when (status) {
+        when (status) {
             DRAFT.status -> UiString.UiStringRes(R.string.pages_card_draft)
             PUBLISHED.status -> UiString.UiStringRes(R.string.pages_card_published)
             SCHEDULED.status -> UiString.UiStringRes(R.string.pages_card_scheduled)
