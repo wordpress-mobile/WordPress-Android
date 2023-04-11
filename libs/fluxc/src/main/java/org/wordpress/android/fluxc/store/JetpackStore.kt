@@ -261,10 +261,10 @@ class JetpackStore
         val errorCode: Int? = null
     ) : OnChangedError
 
-    suspend fun fetchJetpackUser(site: SiteModel): JetpackUserResult {
+    suspend fun fetchJetpackUser(site: SiteModel, useApplicationPasswords: Boolean = false): JetpackUserResult {
         if (site.isUsingWpComRestApi) error("This function is not implemented yet for Jetpack tunnel")
         return coroutineEngine.withDefaultContext(T.API, this, "fetchJetpackUser") {
-            val result = jetpackWPAPIRestClient.fetchJetpackUser(site)
+            val result = jetpackWPAPIRestClient.fetchJetpackUser(site, useApplicationPasswords)
 
             when {
                 result.isError -> JetpackUserResult(

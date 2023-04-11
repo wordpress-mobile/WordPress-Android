@@ -105,8 +105,34 @@ class JetpackWPAPIRestClient @Inject constructor(
     }
 
     suspend fun fetchJetpackUser(
-        site: SiteModel
+        site: SiteModel,
+        useApplicationPasswords: Boolean = false
     ): JetpackWPAPIPayload<JetpackUser> {
+        if (useApplicationPasswords) {
+            val url = JPAPI.connection.data.pathV4
+            val response = applicationPasswordsNetwork.executeGetGsonRequest(
+                    site = site,
+                    path = url,
+                    clazz = JetpackConnectionDataResponse::class.java
+            )
+            return when (response) {
+                is Success<JetpackConnectionDataResponse> -> JetpackWPAPIPayload(
+                        response.data?.let {
+                            JetpackUser(
+                                    isConnected = it.currentUser.isConnected ?: false,
+                                    isMaster = it.currentUser.isMaster ?: false,
+                                    username = it.currentUser.username.orEmpty(),
+                                    wpcomEmail = it.currentUser.wpcomUser?.email.orEmpty(),
+                                    wpcomId = it.currentUser.wpcomUser?.id ?: 0L,
+                                    wpcomUsername = it.currentUser.wpcomUser?.login.orEmpty()
+                            )
+                        }
+                )
+
+                is Error -> JetpackWPAPIPayload(response.error)
+            }
+        }
+
         val url = site.buildUrl(JPAPI.connection.data.pathV4)
 
         val response = cookieNonceAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
