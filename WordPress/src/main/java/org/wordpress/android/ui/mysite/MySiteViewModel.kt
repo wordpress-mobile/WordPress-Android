@@ -354,12 +354,16 @@ class MySiteViewModel @Inject constructor(
                     state.dashboardCardsAndItems.filterIsInstance<DashboardCards>().firstOrNull()
                 )
 
+                dashboardCardDomainUtils.trackDashboardCardDomainShown(viewModelScope, state as? SiteSelected)
+
                 state
             } else {
                 buildNoSiteState()
             }
 
             bloggingPromptsCardTrackHelper.onSiteChanged(site?.id)
+
+            dashboardCardDomainUtils.onSiteChanged(site?.id, state as? SiteSelected)
 
             UiModel(currentAvatarUrl.orEmpty(), state)
         }
@@ -1108,6 +1112,7 @@ class MySiteViewModel @Inject constructor(
         checkAndShowJetpackFullPluginInstallOnboarding()
         checkAndShowQuickStartNotice()
         bloggingPromptsCardTrackHelper.onResume(currentTab)
+        dashboardCardDomainUtils.onResume(currentTab, uiModel.value?.state as? SiteSelected)
     }
 
     private fun checkAndShowJetpackFullPluginInstallOnboarding() {
@@ -1592,17 +1597,17 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onDashboardCardDomainMoreMenuClick() {
-        // track
+        dashboardCardDomainUtils.trackDashboardCardDomainMoreMenuTapped(uiModel.value?.state as? SiteSelected)
     }
 
     private fun onDashboardCardDomainClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        // track
+        dashboardCardDomainUtils.trackDashboardCardDomainTapped(uiModel.value?.state as? SiteSelected)
         _onNavigation.value = Event(SiteNavigationAction.OpenDomainRegistration(selectedSite))
     }
 
     private fun onDashboardCardDomainHideMenuItemClick() {
-        // track
+        dashboardCardDomainUtils.trackDashboardCardDomainHiddenByUser(uiModel.value?.state as? SiteSelected)
         selectedSiteRepository.getSelectedSite()?.let {
             dashboardCardDomainUtils.hideCard(it.siteId)
         }
