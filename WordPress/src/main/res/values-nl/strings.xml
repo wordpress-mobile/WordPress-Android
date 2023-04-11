@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-31 20:57:36+0000
+Translation-Revision-Date: 2023-04-06 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: nl
 -->
 <resources>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; gebruikt %2$s individuele Jetpack-plugins</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; gebruikt de &lt;b&gt;%2$s&lt;/b&gt;-plugin</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">Sites met individuele Jetpack-plugins worden niet ondersteund door de WordPress-app.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt; gebruikt individuele Jetpack-plugins, deze worden niet ondersteund door de WordPress-app.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt; gebruikt de &lt;b&gt;%2$s&lt;/b&gt;-plugin, deze wordt niet ondersteund door de WordPress-app.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">Kan een van je sites niet openen</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">Schakel over naar de Jetpack-app waarin we je helpen de volledige Jetpack-plugin te koppelen, zodat je deze site kunt gebruiken met de app.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">Schakel over naar de Jetpack-app</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s gebruikt %2$s. Deze ondersteunt nog niet alle functies van de app.\n\nInstalleer de %3$s om de app met deze site te gebruiken.</string>
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Deze site</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s gebruikt %2$s. Deze ondersteunen nog niet alle functies van de app. Installeer de %3$s.</string>

@@ -83,6 +83,12 @@ class CardsShownTracker @Inject constructor(
                 Type.PROMOTE_WITH_BLAZE.label
             )
         )
+        is DashboardCard.PagesCard -> trackCardShown(
+            Pair(
+                card.dashboardCardType.toTypeValue().label,
+                Type.PAGES.label
+            )
+        )
     }
 
     fun trackQuickStartCardShown(quickStartType: QuickStartType) {
