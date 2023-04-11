@@ -2569,6 +2569,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "wp_individual_site_overlay_dismissed";
             case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_PRIMARY_TAPPED:
                 return "wp_individual_site_overlay_primary_tapped";
+            case DASHBOARD_CARD_DOMAIN_SHOWN:
+                return "direct_domains_purchase_dashboard_card_shown";
+            case DASHBOARD_CARD_DOMAIN_TAPPED:
+                return "direct_domains_purchase_dashboard_card_tapped";
+            case DASHBOARD_CARD_DOMAIN_MORE_MENU_TAPPED:
+                return "direct_domains_purchase_dashboard_card_menu_tapped";
+            case DASHBOARD_CARD_DOMAIN_HIDDEN:
+                return "direct_domains_purchase_dashboard_card_hidden";
         }
         return null;
     }
