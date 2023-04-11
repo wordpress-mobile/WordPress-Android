@@ -17,7 +17,7 @@ class ReaderViewPage {
     private val swipeForMore = device.findObject(UiSelector().textContains("Swipe for more"))
     private val recyclerView = UiScrollable(UiSelector().resourceId(buildResourceId("recycler_view")))
     private val savePostsForLater = device.findObject(UiSelector().text("Save Posts for Later"))
-    private val ok = device.findObject(UiSelector().text("OK"))
+    private val okButton = device.findObject(UiSelector().text("OK"))
     private val bookmarkButtonSelector = UiSelector().resourceId(buildResourceId("bookmark"))
 
     private fun buildResourceId(id: String): String {
@@ -66,7 +66,7 @@ class ReaderViewPage {
         tapBookmarkButton()
         // Dismiss save posts locally dialog.
         if (savePostsForLater.exists()) {
-            ok.clickAndWaitForNewWindow()
+            okButton.clickAndWaitForNewWindow()
         }
         return this
     }
