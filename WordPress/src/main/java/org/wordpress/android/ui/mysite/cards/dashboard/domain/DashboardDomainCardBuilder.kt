@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.domain
+package org.wordpress.android.ui.mysite.cards.dashboard.domain
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardDomainCard

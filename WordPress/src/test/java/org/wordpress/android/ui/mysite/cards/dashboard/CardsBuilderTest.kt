@@ -37,7 +37,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.CREATE_FIRST
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.DRAFT
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder
-import org.wordpress.android.ui.mysite.cards.domain.DashboardDomainCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardDomainCardBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @ExperimentalCoroutinesApi

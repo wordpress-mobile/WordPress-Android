@@ -5,7 +5,7 @@ import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
-import org.wordpress.android.ui.mysite.cards.domain.DashboardDomainCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardDomainCardBuilder
 import org.wordpress.android.ui.utils.UiString
 
 class DashboardDomainCardBuilderTest {
