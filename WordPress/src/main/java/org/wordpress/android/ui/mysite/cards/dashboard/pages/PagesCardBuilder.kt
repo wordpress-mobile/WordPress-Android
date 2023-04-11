@@ -38,8 +38,21 @@ class PagesCardBuilder @Inject constructor(
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun getPagesContentItems(pages: List<PagesCardModel.PageCardModel>): List<PageContentItem> {
-        return emptyList()
+    private fun getPagesContentItems(pages: List<PagesCardModel.PageCardModel>, params: PagesCardBuilderParams): List<PageContentItem> {
+        return pages.map {
+            PageContentItem(
+                title = UiString.UiStringText(it.title),
+                statusIcon = getStatusIcon(it.status),
+                statusText = getStatusText(it.status),
+                onClick = { params.onPagesItemClick },
+                lastEditedOrScheduledTime = getLastEditedTime()
+            )
+        }
+    }
+
+    private fun getLastEditedTime(): UiString? {
+        // todo: implement this method
+        return null
     }
 
     private fun getStatusIcon(status: String) =
