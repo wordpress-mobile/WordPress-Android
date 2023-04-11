@@ -749,4 +749,7 @@
     <dimen name="activity_card_row_start_end_padding">16dp</dimen>
     <dimen name="activity_card_row_top_bottom_padding">12dp</dimen>
 
+    <!-- Dashboard card pages -->
+    <dimen name="my_site_dashboard_card_page_height">80dp</dimen>
+
 </resources>
