@@ -314,7 +314,7 @@ class SiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
-    fun onProgressScreenFinished(site: SiteModel) {
+    fun onFreeSiteCreated(site: SiteModel) {
         siteCreationState = siteCreationState.copy(result = CreatedButNotFetched.NotInLocalDb(site))
         wizardManager.showNextStep()
     }

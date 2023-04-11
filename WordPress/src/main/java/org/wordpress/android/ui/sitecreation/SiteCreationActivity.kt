@@ -165,7 +165,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         progressViewModel.onCancelWizardClicked.observe(this) {
             mainViewModel.onWizardCancelled()
         }
-        progressViewModel.onRemoteSiteCreated.observe(this, mainViewModel::onProgressScreenFinished)
+        progressViewModel.onFreeSiteCreated.observe(this, mainViewModel::onFreeSiteCreated)
         progressViewModel.onCartCreated.observe(this, mainViewModel::onCartCreated)
         previewViewModel.onOkButtonClicked.observe(this) { result ->
             mainViewModel.onWizardFinished(result)

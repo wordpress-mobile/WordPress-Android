@@ -76,8 +76,8 @@ class SiteCreationProgressViewModel @Inject constructor(
     private val _onCancelWizardClicked = SingleLiveEvent<Unit>()
     val onCancelWizardClicked: LiveData<Unit> = _onCancelWizardClicked
 
-    private val _onRemoteSiteCreated = SingleLiveEvent<SiteModel>()
-    val onRemoteSiteCreated: LiveData<SiteModel> = _onRemoteSiteCreated
+    private val _onFreeSiteCreated = SingleLiveEvent<SiteModel>()
+    val onFreeSiteCreated: LiveData<SiteModel> = _onFreeSiteCreated
 
     private val _onCartCreated = SingleLiveEvent<CheckoutDetails>()
     val onCartCreated: LiveData<CheckoutDetails> = _onCartCreated
@@ -159,7 +159,7 @@ class SiteCreationProgressViewModel @Inject constructor(
             SUCCESS -> {
                 val site = mapPayloadToSiteModel(event.payload)
                 if (domain.isFree) {
-                    _onRemoteSiteCreated.postValue(site)
+                    _onFreeSiteCreated.postValue(site)
                 } else {
                     createCart(site)
                 }

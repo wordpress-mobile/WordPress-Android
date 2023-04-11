@@ -80,7 +80,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
         viewModel.startCreateSiteService.observeForever(startServiceObserver)
         viewModel.onHelpClicked.observeForever(onHelpClickedObserver)
         viewModel.onCancelWizardClicked.observeForever(onCancelWizardClickedObserver)
-        viewModel.onRemoteSiteCreated.observeForever(onRemoteSiteCreatedObserver)
+        viewModel.onFreeSiteCreated.observeForever(onRemoteSiteCreatedObserver)
         viewModel.onCartCreated.observeForever(onCartCreatedObserver)
 
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)

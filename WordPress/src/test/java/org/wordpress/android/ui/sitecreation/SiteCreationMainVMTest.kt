@@ -204,13 +204,13 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
     @Test
     fun `on progress screen finished updates result`() {
-        viewModel.onProgressScreenFinished(SITE_MODEL)
+        viewModel.onFreeSiteCreated(SITE_MODEL)
         assertThat(currentWizardState(viewModel).result).isEqualTo(RESULT_NOT_IN_LOCAL_DB)
     }
 
     @Test
     fun `on progress screen finished shows next step`() {
-        viewModel.onProgressScreenFinished(SITE_MODEL)
+        viewModel.onFreeSiteCreated(SITE_MODEL)
         verify(wizardManager).showNextStep()
     }
 
