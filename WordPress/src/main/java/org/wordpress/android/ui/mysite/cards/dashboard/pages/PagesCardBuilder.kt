@@ -27,7 +27,7 @@ class PagesCardBuilder @Inject constructor(
 
     private fun convertToPagesItems(params: PagesCardBuilderParams): PagesCard.PagesCardWithData {
         val pages = params.pageCard?.pages
-        val content = pages?.let { getPagesContentItems(pages,params) } ?: emptyList()
+        val content = pages?.let { getPagesContentItems(pages, params) } ?: emptyList()
         val createPageCard = getCreatePageCard(params)
         return PagesCard.PagesCardWithData(
             title = UiString.UiStringRes(R.string.dashboard_pages_card_title),
@@ -37,8 +37,10 @@ class PagesCardBuilder @Inject constructor(
         )
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    private fun getPagesContentItems(pages: List<PagesCardModel.PageCardModel>, params: PagesCardBuilderParams): List<PageContentItem> {
+    private fun getPagesContentItems(
+        pages: List<PagesCardModel.PageCardModel>,
+        params: PagesCardBuilderParams
+    ): List<PageContentItem> {
         return pages.map {
             PageContentItem(
                 title = getPageTitle(it.title),
