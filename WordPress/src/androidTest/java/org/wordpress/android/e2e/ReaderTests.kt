@@ -25,7 +25,7 @@ class ReaderTests : BaseTest() {
     fun e2eNavigateThroughPosts() {
         ReaderPage()
             .tapFollowingTab()
-            .openPost(TITLE_COACHING_POST)
+            .openBlogOrPost(TITLE_COACHING_POST)
             .verifyPostDisplayed(TITLE_COACHING_POST)
             .slideToPreviousPost()
             .verifyPostDisplayed(TITLE_COMPETITION_POST)
@@ -38,7 +38,7 @@ class ReaderTests : BaseTest() {
     fun e2eLikePost() {
         ReaderPage()
             .tapFollowingTab()
-            .openPost(TITLE_COACHING_POST)
+            .openBlogOrPost(TITLE_COACHING_POST)
             .likePost()
             .verifyPostLiked()
             .unlikePost()
@@ -49,7 +49,8 @@ class ReaderTests : BaseTest() {
     @Test
     fun e2eBookmarkPost() {
         ReaderPage()
-            .openBlog(TITLE_BLOG)
+            .tapFollowingTab()
+            .openBlogOrPost(TITLE_LONGREADS_BLOG)
             .bookmarkPost()
             .verifyPostBookmarked()
             .removeBookmarkPost()
@@ -58,7 +59,7 @@ class ReaderTests : BaseTest() {
     }
 
     companion object {
-        private const val TITLE_BLOG = "Technical World"
+        private const val TITLE_LONGREADS_BLOG = "Longreads"
         private const val TITLE_COACHING_POST = "Let's check out the coaching team!"
         private const val TITLE_COMPETITION_POST = "Let's focus on the competition."
     }
