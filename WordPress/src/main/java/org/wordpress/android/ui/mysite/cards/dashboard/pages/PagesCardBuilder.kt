@@ -9,6 +9,9 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardB
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.config.DashboardCardPagesConfig
 import javax.inject.Inject
+import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.DRAFT
+import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.PUBLISHED
+import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.SCHEDULED
 
 private const val REQUIRED_PAGES_IN_CARD: Int = 3
 
@@ -37,6 +40,14 @@ class PagesCardBuilder @Inject constructor(
     private fun getPagesContentItems(pages: List<PagesCardModel.PageCardModel>): List<PageContentItem> {
         return emptyList()
     }
+
+    private fun getStatusText(status: String): UiString? =
+         when (status) {
+            DRAFT.status -> UiString.UiStringRes(R.string.pages_card_draft)
+            PUBLISHED.status -> UiString.UiStringRes(R.string.pages_card_published)
+            SCHEDULED.status -> UiString.UiStringRes(R.string.pages_card_scheduled)
+            else -> null
+        }
 
     private fun getCreatePageCard(params: PagesCardBuilderParams): CreatNewPageItem {
         // Create new page button is shown with image if there is
