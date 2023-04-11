@@ -125,7 +125,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on start preloads the preview when result is Completed`() = test {
+    fun `on start preloads the preview when result is Completed`() {
         startViewModel(SITE_CREATION_STATE.copy(result = RESULT_COMPLETED))
         assertThat(viewModel.preloadPreview.value).isEqualTo(URL)
     }
