@@ -10,7 +10,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.config.DashboardCardPagesConfig
 import javax.inject.Inject
 
-private const val REQUIRED_PAGES_IN_CARD: Int = 3
+private const val REQUIRED_PAGES_IN_CARD: Int = 2
 
 class PagesCardBuilder @Inject constructor(
     private val dashboardCardPagesConfig: DashboardCardPagesConfig
