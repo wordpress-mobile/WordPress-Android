@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.model.dashboard
 
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
 import java.util.Date
@@ -20,7 +21,7 @@ sealed class CardModel(
 
     data class ActivityCardModel(
         val activities: List<ActivityLogModel> = emptyList(),
-        val error: Boolean? = false
+        val error: ActivityCardError? = null
     )  : CardModel(Type.ACTIVITY)
 
     data class PagesCardModel(
