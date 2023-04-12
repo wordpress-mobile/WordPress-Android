@@ -29,8 +29,8 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.INTENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.PROGRESS
@@ -119,30 +119,16 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     @Suppress("LongMethod")
     private fun observeVMState() {
-        mainViewModel.navigationTargetObservable
-            .observe(this) { target -> target?.let { showStep(target) } }
-        mainViewModel.wizardFinishedObservable.observe(this) { result ->
-            result?.run {
-                val intent = Intent()
-                val (siteCreated, localSiteId, titleTaskComplete) = when (this@run) {
-                    // site creation flow was canceled
-                    is NotCreated -> {
-                        Triple(false, null, false)
-                    }
-                    is CreatedButNotFetched -> {
-                        // Let `SitePickerActivity` handle this with a Snackbar message
-                        intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
-                        Triple(true, null, isSiteTitleTaskComplete)
-                    }
-                    is Completed -> {
-                        Triple(true, localId, isSiteTitleTaskComplete)
-                    }
-                }
-                intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, localSiteId)
-                intent.putExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, titleTaskComplete)
-                setResult(if (siteCreated) Activity.RESULT_OK else Activity.RESULT_CANCELED, intent)
-                finish()
+        mainViewModel.navigationTargetObservable.observe(this) { it?.let(::showStep) }
+        mainViewModel.onCompleted.observe(this) { (result, isTitleTaskComplete) ->
+            val intent = Intent().apply {
+                putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, (result as? Created)?.site?.id)
+                putExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, isTitleTaskComplete)
+                // Let `SitePickerActivity` handle this with a SnackBar message
+                putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, result is CreatedButNotFetched)
             }
+            setResult(if (result is Completed) Activity.RESULT_OK else Activity.RESULT_CANCELED, intent)
+            finish()
         }
         mainViewModel.dialogActionObservable.observe(this) {
             it?.show(this, supportFragmentManager, uiHelpers)
@@ -179,10 +165,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
         progressViewModel.onCancelWizardClicked.observe(this) {
             mainViewModel.onWizardCancelled()
         }
-        progressViewModel.onRemoteSiteCreated.observe(this) { remoteSiteId ->
-            mainViewModel.onProgressScreenFinished(remoteSiteId)
-        }
-        progressViewModel.onCartCreated.observe(this) { mainViewModel.onCartCreated(it) }
+        progressViewModel.onFreeSiteCreated.observe(this, mainViewModel::onFreeSiteCreated)
+        progressViewModel.onCartCreated.observe(this, mainViewModel::onCartCreated)
         previewViewModel.onOkButtonClicked.observe(this) { result ->
             mainViewModel.onWizardFinished(result)
         }

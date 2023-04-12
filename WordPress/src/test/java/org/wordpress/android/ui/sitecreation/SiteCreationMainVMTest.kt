@@ -64,7 +64,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     lateinit var navigationTargetObserver: Observer<NavigationTarget>
 
     @Mock
-    lateinit var wizardFinishedObserver: Observer<SiteCreationResult>
+    lateinit var onCompletedObserver: Observer<SiteCreationCompletionEvent>
 
     @Mock
     lateinit var wizardExitedObserver: Observer<Unit>
@@ -121,7 +121,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         viewModel = getNewViewModel()
         viewModel.start(null, SiteCreationSource.UNSPECIFIED)
         viewModel.navigationTargetObservable.observeForever(navigationTargetObserver)
-        viewModel.wizardFinishedObservable.observeForever(wizardFinishedObserver)
+        viewModel.onCompleted.observeForever(onCompletedObserver)
         viewModel.dialogActionObservable.observeForever(dialogActionsObserver)
         viewModel.exitFlowObservable.observeForever(wizardExitedObserver)
         viewModel.onBackPressedObservable.observeForever(onBackPressedObserver)
@@ -145,7 +145,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun `on wizard finished is propagated`() {
         viewModel.onWizardFinished(RESULT_COMPLETED)
-        verify(wizardFinishedObserver).onChanged(eq(RESULT_COMPLETED))
+        verify(onCompletedObserver).onChanged(eq(RESULT_COMPLETED to false))
     }
 
     @Test
@@ -196,7 +196,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         viewModel.onCheckoutResult(CHECKOUT_EVENT)
 
         assertIs<DomainRegistrationPurchased>(currentWizardState(viewModel).result).run {
-            assertEquals(CHECKOUT_DETAILS.site.siteId, remoteId)
+            assertEquals(CHECKOUT_DETAILS.site, site)
             assertEquals(CHECKOUT_EVENT.domainName, domainName)
             assertEquals(CHECKOUT_EVENT.email, email)
         }
@@ -204,13 +204,13 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
     @Test
     fun `on progress screen finished updates result`() {
-        viewModel.onProgressScreenFinished(SITE_REMOTE_ID)
+        viewModel.onFreeSiteCreated(SITE_MODEL)
         assertThat(currentWizardState(viewModel).result).isEqualTo(RESULT_NOT_IN_LOCAL_DB)
     }
 
     @Test
     fun `on progress screen finished shows next step`() {
-        viewModel.onProgressScreenFinished(SITE_REMOTE_ID)
+        viewModel.onFreeSiteCreated(SITE_MODEL)
         verify(wizardManager).showNextStep()
     }
 

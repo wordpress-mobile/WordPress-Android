@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState
@@ -45,9 +46,10 @@ val FETCH_ERROR = OnSiteChanged(0).apply { error = SiteError(GENERIC_ERROR) }
 val CART_SUCCESS = OnShoppingCartCreated(mock<CreateShoppingCartResponse>())
 val CART_ERROR = OnShoppingCartCreated(mock<CreateShoppingCartError>())
 
-val RESULT_NOT_IN_LOCAL_DB = CreatedButNotFetched.NotInLocalDb(SITE_REMOTE_ID, false)
-val RESULT_IN_CART = CreatedButNotFetched.InCart(SITE_SLUG, SITE_REMOTE_ID, false)
-val RESULT_COMPLETED = Completed(1, false, URL)
+val RESULT_CREATED = mock<Created>()
+val RESULT_NOT_IN_LOCAL_DB = CreatedButNotFetched.NotInLocalDb(SITE_MODEL)
+val RESULT_IN_CART = CreatedButNotFetched.InCart(SITE_MODEL)
+val RESULT_COMPLETED = Completed(SITE_MODEL)
 
-val SERVICE_SUCCESS = SiteCreationServiceState(SUCCESS, Pair(SITE_REMOTE_ID, URL))
+val SERVICE_SUCCESS = SiteCreationServiceState(SUCCESS, Pair(SITE_REMOTE_ID, SITE_SLUG))
 val SERVICE_ERROR = SiteCreationServiceState(FAILURE, SiteCreationServiceState(CREATE_SITE))

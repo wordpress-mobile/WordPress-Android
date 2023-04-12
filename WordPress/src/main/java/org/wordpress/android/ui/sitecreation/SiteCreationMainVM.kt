@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.networking.MShot
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
@@ -68,35 +70,36 @@ sealed interface SiteCreationResult : Parcelable {
     @Parcelize
     object NotCreated : SiteCreationResult
 
-    sealed interface CreatedButNotFetched : SiteCreationResult {
-        val remoteId: Long
-        val isSiteTitleTaskComplete: Boolean
+    sealed interface Created: SiteCreationResult {
+        val site: SiteModel
+    }
 
+    sealed interface CreatedButNotFetched : Created {
         @Parcelize
         data class NotInLocalDb(
-            override val remoteId: Long,
-            override val isSiteTitleTaskComplete: Boolean,
+            override val site: SiteModel,
         ) : CreatedButNotFetched
 
         @Parcelize
         data class InCart(
-            val siteSlug: String,
-            override val remoteId: Long,
-            override val isSiteTitleTaskComplete: Boolean,
+            override val site: SiteModel,
         ) : CreatedButNotFetched
 
         @Parcelize
         data class DomainRegistrationPurchased(
             val domainName: String,
             val email: String,
-            override val remoteId: Long,
-            override val isSiteTitleTaskComplete: Boolean,
+            override val site: SiteModel,
         ) : CreatedButNotFetched
     }
 
     @Parcelize
-    data class Completed(val localId: Int, val isSiteTitleTaskComplete: Boolean, val url: String) : SiteCreationResult
+    data class Completed(
+        override val site: SiteModel,
+    ) : Created
 }
+
+typealias SiteCreationCompletionEvent = Pair<SiteCreationResult, Boolean>
 
 @HiltViewModel
 class SiteCreationMainVM @Inject constructor(
@@ -139,8 +142,8 @@ class SiteCreationMainVM @Inject constructor(
     private val _dialogAction = SingleLiveEvent<DialogHolder>()
     val dialogActionObservable: LiveData<DialogHolder> = _dialogAction
 
-    private val _wizardFinishedObservable = SingleLiveEvent<SiteCreationResult>()
-    val wizardFinishedObservable: LiveData<SiteCreationResult> = _wizardFinishedObservable
+    private val _onCompleted = SingleLiveEvent<SiteCreationCompletionEvent>()
+    val onCompleted: LiveData<SiteCreationCompletionEvent> = _onCompleted
 
     private val _exitFlowObservable = SingleLiveEvent<Unit>()
     val exitFlowObservable: LiveData<Unit> = _exitFlowObservable
@@ -291,13 +294,7 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun onCartCreated(checkoutDetails: CheckoutDetails) {
-        siteCreationState = siteCreationState.copy(
-            result = CreatedButNotFetched.InCart(
-                checkoutDetails.site.url,
-                checkoutDetails.site.siteId,
-                isSiteTitleTaskCompleted()
-            )
-        )
+        siteCreationState = siteCreationState.copy(result = CreatedButNotFetched.InCart(checkoutDetails.site))
         domainsRegistrationTracker.trackDomainsPurchaseWebviewViewed(checkoutDetails.site, isSiteCreation = true)
         _showDomainCheckout.value = checkoutDetails
     }
@@ -310,31 +307,28 @@ class SiteCreationMainVM @Inject constructor(
                 result = CreatedButNotFetched.DomainRegistrationPurchased(
                     event.domainName,
                     event.email,
-                    result.remoteId,
-                    isSiteTitleTaskCompleted()
+                    result.site,
                 )
             )
         }
         wizardManager.showNextStep()
     }
 
-    fun onProgressScreenFinished(remoteSiteId: Long) {
-        siteCreationState = siteCreationState.copy(
-            result = CreatedButNotFetched.NotInLocalDb(remoteSiteId, isSiteTitleTaskCompleted())
-        )
+    fun onFreeSiteCreated(site: SiteModel) {
+        siteCreationState = siteCreationState.copy(result = CreatedButNotFetched.NotInLocalDb(site))
         wizardManager.showNextStep()
     }
 
-    private fun isSiteTitleTaskCompleted() = !siteCreationState.siteName.isNullOrBlank()
-
     fun onWizardCancelled() {
-        _wizardFinishedObservable.value = NotCreated
+        _onCompleted.value = NotCreated to isSiteTitleTaskCompleted()
     }
 
-    fun onWizardFinished(result: SiteCreationResult) {
+    fun onWizardFinished(result: Created) {
         siteCreationState = siteCreationState.copy(result = result)
-        _wizardFinishedObservable.value = result
+        _onCompleted.value = result to isSiteTitleTaskCompleted()
     }
+
+    private fun isSiteTitleTaskCompleted() = !siteCreationState.siteName.isNullOrBlank()
 
     /**
      * Exits the flow and tracks an event when the user force-exits the "site creation in progress" before it completes.

@@ -50,7 +50,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
 import org.wordpress.android.util.extensions.isOnSale
-import org.wordpress.android.util.extensions.saleCostForDisplay
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -321,7 +320,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
                     domain.domainName,
                     cost = when {
                         domain.isFree -> Cost.Free
-                        product.isOnSale() -> Cost.OnSale(product.saleCostForDisplay(), domain.cost)
+                        product.isOnSale() -> Cost.OnSale(product?.combinedSaleCostDisplay.orEmpty(), domain.cost)
                         else -> Cost.Paid(domain.cost)
                     },
                     onClick = { onDomainSelected(domain) },

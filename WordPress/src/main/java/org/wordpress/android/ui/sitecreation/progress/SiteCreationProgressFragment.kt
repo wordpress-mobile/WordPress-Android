@@ -91,7 +91,7 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
                 SiteCreationService.createSite(requireNotNull(activity), it.previousState, it.serviceData)
             }
         }
-        viewModel.onRemoteSiteCreated.observe(viewLifecycleOwner) {
+        viewModel.onFreeSiteCreated.observe(viewLifecycleOwner) {
             view?.announceForAccessibility(getString(R.string.new_site_creation_preview_title))
         }
     }
