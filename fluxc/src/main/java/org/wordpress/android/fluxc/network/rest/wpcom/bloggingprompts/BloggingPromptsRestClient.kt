@@ -37,7 +37,7 @@ class BloggingPromptsRestClient @Inject constructor(
         site: SiteModel,
         perPage: Int,
         after: Date,
-        ignoresYear: Boolean = false,
+        ignoresYear: Boolean = true, // TODO #2710 maybe this should default to false
     ): BloggingPromptsPayload<BloggingPromptsListResponse> {
         val url = WPCOMV3.sites.site(site.siteId).blogging_prompts.url
         val params = mutableMapOf(
@@ -51,7 +51,15 @@ class BloggingPromptsRestClient @Inject constructor(
             BloggingPromptsListResponseTypeToken.type
         )
         return when (response) {
-            is Success -> BloggingPromptsPayload(response.data)
+            is Success -> BloggingPromptsPayload(
+                response.data.map {
+                    // TODO #2710 make this looks better, this replaces the actual date coming from the endpoint, which
+                    //  is the prompt post date (e.g.: 2020) with 2023, but it should be the "current year", if we want
+                    //  to just keep the workaround of considering the prompts for current dates
+                    it.copy(date = it.date.replaceRange(0, 4, "2023"))
+                }
+            )
+
             is Error -> BloggingPromptsPayload(response.error.toBloggingPromptsError())
         }
     }
@@ -70,8 +78,8 @@ class BloggingPromptsRestClient @Inject constructor(
         fun toBloggingPromptModel() = BloggingPromptModel(
             id = id,
             text = text,
-            title = TODO("#2710: remove title from model"),
-            content = TODO("#2710: remove content from model"),
+            title = "", // TODO #2710 remove the title field from the model
+            content = "",  // TODO #2710 remove the content field from the model
             date = BloggingPromptsUtils.stringToDate(date),
             isAnswered = isAnswered,
             attribution = attribution,
@@ -130,6 +138,7 @@ fun WPComGsonNetworkError.toBloggingPromptsError(): BloggingPromptsError {
 }
 
 typealias BloggingPromptsListResponse = List<BloggingPromptResponse>
+
 object BloggingPromptsListResponseTypeToken : TypeToken<BloggingPromptsListResponse>()
 
 fun BloggingPromptsListResponse.toBloggingPrompts() = map { it.toBloggingPromptModel() }
