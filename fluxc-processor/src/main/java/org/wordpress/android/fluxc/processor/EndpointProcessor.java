@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.annotations.endpoint.WCWPAPIEndpoint;
 import org.wordpress.android.fluxc.annotations.endpoint.WPAPIEndpoint;
 import org.wordpress.android.fluxc.annotations.endpoint.WPComEndpoint;
 import org.wordpress.android.fluxc.annotations.endpoint.WPComV2Endpoint;
+import org.wordpress.android.fluxc.annotations.endpoint.WPComV3Endpoint;
 import org.wordpress.android.fluxc.annotations.endpoint.WPOrgAPIEndpoint;
 
 import java.io.ByteArrayInputStream;
@@ -41,6 +42,7 @@ import static javax.lang.model.SourceVersion.latestSupported;
 public class EndpointProcessor extends AbstractProcessor {
     private static final String WPCOMREST_ENDPOINT_FILE = "wp-com-endpoints.txt";
     private static final String WPCOMV2_ENDPOINT_FILE = "wp-com-v2-endpoints.txt";
+    private static final String WPCOMV3_ENDPOINT_FILE = "wp-com-v3-endpoints.txt";
     private static final String XMLRPC_ENDPOINT_FILE = "xmlrpc-endpoints.txt";
     private static final String WPAPI_ENDPOINT_FILE = "wp-api-endpoints.txt";
     private static final String WPORG_API_ENDPOINT_FILE = "wporg-api-endpoints.txt";
@@ -56,6 +58,7 @@ public class EndpointProcessor extends AbstractProcessor {
     private static final Pattern JPAPI_VARIABLE_ENDPOINT_PATTERN = WPAPI_VARIABLE_ENDPOINT_PATTERN;
 
     private static final Map<String, List<String>> XML_RPC_ALIASES;
+
     static {
         XML_RPC_ALIASES = new HashMap<>();
         List<String> editPostAliases = new ArrayList<>();
@@ -83,6 +86,7 @@ public class EndpointProcessor extends AbstractProcessor {
             if (outputPath.contains(fs + "fluxc" + fs + "build")) {
                 generateWPCOMRESTEndpointFile();
                 generateWPCOMV2EndpointFile();
+                generateWPCOMV3EndpointFile();
                 generateXMLRPCEndpointFile();
                 generateWPAPIEndpointFile();
                 generateWPORGAPIEndpointFile();
@@ -119,6 +123,15 @@ public class EndpointProcessor extends AbstractProcessor {
         EndpointNode rootNode = EndpointTreeGenerator.process(inputStream);
 
         TypeSpec endpointClass = RESTPoet.generate(rootNode, "WPCOMV2", WPComV2Endpoint.class,
+                WPCOMREST_VARIABLE_ENDPOINT_PATTERN);
+        writeEndpointClassToFile(endpointClass);
+    }
+
+    private void generateWPCOMV3EndpointFile() throws IOException {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(WPCOMV3_ENDPOINT_FILE);
+        EndpointNode rootNode = EndpointTreeGenerator.process(inputStream);
+
+        TypeSpec endpointClass = RESTPoet.generate(rootNode, "WPCOMV3", WPComV3Endpoint.class,
                 WPCOMREST_VARIABLE_ENDPOINT_PATTERN);
         writeEndpointClassToFile(endpointClass);
     }
@@ -172,8 +185,8 @@ public class EndpointProcessor extends AbstractProcessor {
 
     private void writeEndpointClassToFile(TypeSpec endpointClass) throws IOException {
         JavaFile javaFile = JavaFile.builder(AnnotationConfig.PACKAGE_ENDPOINTS, endpointClass)
-                .indent("    ")
-                .build();
+                                    .indent("    ")
+                                    .build();
 
         javaFile.writeTo(mFiler);
     }
