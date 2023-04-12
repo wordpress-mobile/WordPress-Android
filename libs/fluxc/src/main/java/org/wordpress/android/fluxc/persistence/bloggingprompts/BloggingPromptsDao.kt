@@ -34,6 +34,7 @@ abstract class BloggingPromptsDao {
     @Query("DELETE FROM BloggingPrompts")
     abstract fun clear()
 
+    // TODO #2710: update this entity to match the new response and model format
     @Entity(
         tableName = "BloggingPrompts",
         primaryKeys = ["id"]
