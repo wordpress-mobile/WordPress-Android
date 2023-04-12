@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.UnitTestUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
@@ -30,13 +31,15 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
-import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PageResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.TodaysStatsResponse
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsPayload
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
@@ -51,7 +54,8 @@ private const val DATE_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss"
 
 /* CARD TYPES */
 
-private val CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS,
+private val CARD_TYPES = listOf(
+    CardModel.Type.TODAYS_STATS,
     CardModel.Type.POSTS,
     CardModel.Type.PAGES,
     CardModel.Type.ACTIVITY
@@ -125,8 +129,8 @@ private val POSTS_RESPONSE = PostsResponse(
         )
 )
 
-private val ACTIVITY_RESPONSE_ICON = ActivityLogRestClient.ActivitiesResponse.Icon("jpg", "dog.jpg", 100, 100)
-private val ACTIVITY_RESPONSE_ACTOR = ActivityLogRestClient.ActivitiesResponse.Actor(
+private val ACTIVITY_RESPONSE_ICON = ActivitiesResponse.Icon("jpg", "dog.jpg", 100, 100)
+private val ACTIVITY_RESPONSE_ACTOR = ActivitiesResponse.Actor(
     "author",
     "John Smith",
     10,
@@ -134,8 +138,8 @@ private val ACTIVITY_RESPONSE_ACTOR = ActivityLogRestClient.ActivitiesResponse.A
     ACTIVITY_RESPONSE_ICON,
     "admin"
 )
-private val ACTIVITY_RESPONSE_GENERATOR = ActivityLogRestClient.ActivitiesResponse.Generator(10.3f, 123)
-private val ACTIVITY_RESPONSE_PAGE = ActivityLogRestClient.ActivitiesResponse.ActivityResponse(
+private val ACTIVITY_RESPONSE_GENERATOR = ActivitiesResponse.Generator(10.3f, 123)
+private val ACTIVITY_RESPONSE_PAGE = ActivitiesResponse.ActivityResponse(
     summary = "activity",
     content = null,
     name = "name",
@@ -151,13 +155,12 @@ private val ACTIVITY_RESPONSE_PAGE = ActivityLogRestClient.ActivitiesResponse.Ac
 )
 
 private val ACTIVITY_RESPONSE_ACTIVITIES_PAGE =
-    ActivityLogRestClient.ActivitiesResponse.Page(orderedItems = listOf(ACTIVITY_RESPONSE_PAGE))
-private val ACTIVITY_RESPONSE = ActivityLogRestClient.ActivitiesResponse(
+    ActivitiesResponse.Page(orderedItems = listOf(ACTIVITY_RESPONSE_PAGE))
+private val ACTIVITY_RESPONSE = ActivitiesResponse(
     totalItems = 1,
     summary = "response",
     current = ACTIVITY_RESPONSE_ACTIVITIES_PAGE
 )
-
 
 private val CARDS_RESPONSE = CardsResponse(
         todaysStats = TODAYS_STATS_RESPONSE,
@@ -310,11 +313,27 @@ class CardsRestClientTest {
                 assertSuccessWithPostCardError(result)
             }
 
+    @Test
+    fun `given activity unauthorized, when fetch cards triggered, then returns activity unauthorized card error`() =
+        test {
+            val json = UnitTestUtils.getStringFromResourceFile(javaClass, DASHBOARD_CARDS_WITH_ERRORS_JSON)
+            val data = getCardsResponseFromJsonString(json)
+                .copy(activity = ActivitiesResponse(error = UNAUTHORIZED))
+            initFetchCards(data = data)
+
+            val result = restClient.fetchCards(site, CARD_TYPES)
+
+            assertSuccessWithActivityError(result)
+        }
+
     private fun CardsPayload<CardsResponse>.findTodaysStatsCardError(): TodaysStatsCardError? =
             this.response?.toCards()?.filterIsInstance(TodaysStatsCardModel::class.java)?.firstOrNull()?.error
 
     private fun CardsPayload<CardsResponse>.findPostCardError(): PostCardError? =
             this.response?.toCards()?.filterIsInstance(PostsCardModel::class.java)?.firstOrNull()?.error
+
+    private fun CardsPayload<CardsResponse>.findActivityCardError(): ActivityCardError? =
+        this.response?.toCards()?.filterIsInstance(ActivityCardModel::class.java)?.firstOrNull()?.error
 
     private fun getCardsResponseFromJsonString(json: String): CardsResponse {
         val responseType = object : TypeToken<CardsResponse>() {}.type
@@ -364,8 +383,8 @@ class CardsRestClientTest {
         }
     }
 
-    private fun assertSuccessActivityResponse(expected: ActivityLogRestClient.ActivitiesResponse.ActivityResponse,
-    actual: ActivityLogRestClient.ActivitiesResponse.ActivityResponse) {
+    private fun assertSuccessActivityResponse(expected: ActivitiesResponse.ActivityResponse,
+                                              actual: ActivitiesResponse.ActivityResponse) {
         with(actual) {
             assertEquals(expected.activity_id, this.activity_id)
             assertEquals(expected.is_rewindable, this.is_rewindable)
@@ -421,6 +440,16 @@ class CardsRestClientTest {
             assertEquals(site, this@CardsRestClientTest.site)
             assertFalse(isError)
             assertEquals(PostCardErrorType.UNAUTHORIZED, findPostCardError()?.type)
+        }
+    }
+
+    private fun assertSuccessWithActivityError(
+        actual: CardsPayload<CardsResponse>
+    ) {
+        with(actual) {
+            assertEquals(site, this@CardsRestClientTest.site)
+            assertFalse(isError)
+            assertEquals(ActivityCardErrorType.UNAUTHORIZED, findActivityCardError()?.type)
         }
     }
 
