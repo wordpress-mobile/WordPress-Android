@@ -11,13 +11,16 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel.PageCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PageResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostResponse
@@ -26,6 +29,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsPayload
@@ -35,6 +40,7 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardErrorType
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -66,11 +72,30 @@ const val PAGE_MODIFIED_ON = "2023-03-02 10:26:53"
 const val PAGE_STATUS = "publish"
 const val PAGE_DATE = "2023-03-02 10:30:53"
 
+/* ACTIVITY */
+const val ACTIVITY_ID = "activity123"
+const val ACTIVITY_SUMMARY = "activity"
+const val ACTIVITY_NAME = "name"
+const val ACTIVITY_TYPE = "create a blog"
+const val ACTIVITY_IS_REWINDABLE = false
+const val ACTIVITY_REWIND_ID = "10.0"
+const val ACTIVITY_GRID_ICON = "gridicon.jpg"
+const val ACTIVITY_STATUS = "OK"
+const val ACTIVITY_ACTOR_TYPE = "author"
+const val ACTIVITY_ACTOR_NAME = "John Smith"
+const val ACTIVITY_ACTOR_EXTERNAL_USER_ID = 10L
+const val ACTIVITY_ACTOR_WPCOM_USER_ID = 15L
+const val ACTIVITY_ACTOR_ROLE = "admin"
+const val ACTIVITY_ACTOR_ICON_URL = "dog.jpg"
+const val ACTIVITY_PUBLISHED_DATE = "2021-12-27 11:33:55"
+const val ACTIVITY_CONTENT = "content"
+
 /* CARD TYPES */
 
 private val CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS,
     CardModel.Type.POSTS,
-    CardModel.Type.PAGES
+    CardModel.Type.PAGES,
+    CardModel.Type.ACTIVITY
 )
 
 /* RESPONSE */
@@ -107,10 +132,43 @@ private val PAGE_RESPONSE = PageResponse(
 
 private val PAGES_RESPONSE = listOf(PAGE_RESPONSE)
 
+private val ACTIVITY_RESPONSE_ICON = ActivitiesResponse.Icon("jpg", ACTIVITY_ACTOR_ICON_URL, 100, 100)
+private val ACTIVITY_RESPONSE_ACTOR = ActivitiesResponse.Actor(
+    ACTIVITY_ACTOR_TYPE,
+    ACTIVITY_ACTOR_NAME,
+    ACTIVITY_ACTOR_EXTERNAL_USER_ID,
+    ACTIVITY_ACTOR_WPCOM_USER_ID,
+    ACTIVITY_RESPONSE_ICON,
+    ACTIVITY_ACTOR_ROLE
+)
+private val ACTIVITY_RESPONSE_GENERATOR = ActivitiesResponse.Generator(10.3f, 123)
+private val ACTIVITY_RESPONSE_PAGE = ActivitiesResponse.ActivityResponse(
+    summary = ACTIVITY_SUMMARY,
+    content = FormattableContent(text = ACTIVITY_CONTENT),
+    name = ACTIVITY_NAME,
+    actor = ACTIVITY_RESPONSE_ACTOR,
+    type = ACTIVITY_TYPE,
+    published = CardsUtils.fromDate(ACTIVITY_PUBLISHED_DATE),
+    generator = ACTIVITY_RESPONSE_GENERATOR,
+    is_rewindable = ACTIVITY_IS_REWINDABLE,
+    rewind_id = ACTIVITY_REWIND_ID,
+    gridicon = ACTIVITY_GRID_ICON,
+    status = ACTIVITY_STATUS,
+    activity_id = ACTIVITY_ID
+)
+
+private val ACTIVITY_RESPONSE_ACTIVITIES_PAGE = ActivitiesResponse.Page(orderedItems = listOf(ACTIVITY_RESPONSE_PAGE))
+private val ACTIVITY_RESPONSE = ActivitiesResponse(
+    totalItems = 1,
+    summary = "response",
+    current = ACTIVITY_RESPONSE_ACTIVITIES_PAGE
+)
+
 private val CARDS_RESPONSE = CardsResponse(
         todaysStats = TODAYS_STATS_RESPONSE,
         posts = POSTS_RESPONSE,
-        pages = PAGES_RESPONSE
+        pages = PAGES_RESPONSE,
+        activity = ACTIVITY_RESPONSE
 )
 
 /* MODEL */
@@ -156,10 +214,39 @@ private val PAGES_MODEL = PagesCardModel(
         pages = listOf(PAGE_MODEL)
 )
 
+private val ACTIVITY_LOG_MODEL = ActivityLogModel(
+    summary = ACTIVITY_SUMMARY,
+    content = FormattableContent(text = ACTIVITY_CONTENT),
+    name = ACTIVITY_NAME,
+    actor = ActivityLogModel.ActivityActor(
+        displayName = ACTIVITY_ACTOR_NAME,
+        type = ACTIVITY_ACTOR_TYPE,
+        wpcomUserID = ACTIVITY_ACTOR_WPCOM_USER_ID,
+        avatarURL = ACTIVITY_ACTOR_ICON_URL,
+        role = ACTIVITY_ACTOR_ROLE,
+    ),
+    type = ACTIVITY_TYPE,
+    published = CardsUtils.fromDate(ACTIVITY_PUBLISHED_DATE),
+    rewindable = ACTIVITY_IS_REWINDABLE,
+    rewindID = ACTIVITY_REWIND_ID,
+    gridicon = ACTIVITY_GRID_ICON,
+    status = ACTIVITY_STATUS,
+    activityID = ACTIVITY_ID
+)
+
+private val ACTIVITY_CARD_MODEL = ActivityCardModel(
+    activities = listOf(ACTIVITY_LOG_MODEL)
+)
+
+private val ACTIVITY_CARD_WITH_ERROR_MODEL = ActivityCardModel(
+    error = ActivityCardError(ActivityCardErrorType.UNAUTHORIZED)
+)
+
 private val CARDS_MODEL = listOf(
         TODAYS_STATS_MODEL,
         POSTS_MODEL,
-        PAGES_MODEL
+        PAGES_MODEL,
+        ACTIVITY_CARD_MODEL
 )
 
 /* ENTITY */
@@ -198,10 +285,25 @@ private val PAGES_ENTITY = CardEntity(
         json = CardsUtils.GSON.toJson(PAGES_MODEL)
 )
 
+private val ACTIVITY_ENTITY = CardEntity(
+        siteLocalId = SITE_LOCAL_ID,
+        type = CardModel.Type.ACTIVITY.name,
+        date = CardsUtils.getInsertDate(),
+        json = CardsUtils.GSON.toJson(ACTIVITY_CARD_MODEL)
+)
+
+private val ACTIVITY_WITH_ERROR_ENTITY = CardEntity(
+        siteLocalId = SITE_LOCAL_ID,
+        type = CardModel.Type.ACTIVITY.name,
+        date = CardsUtils.getInsertDate(),
+        json = CardsUtils.GSON.toJson(ACTIVITY_CARD_WITH_ERROR_MODEL)
+)
+
 private val CARDS_ENTITY = listOf(
         TODAYS_STATS_ENTITY,
         POSTS_ENTITY,
-        PAGES_ENTITY
+        PAGES_ENTITY,
+        ACTIVITY_ENTITY
 )
 
 @RunWith(MockitoJUnitRunner::class)
@@ -265,6 +367,16 @@ class CardsStoreTest {
         cardsStore.fetchCards(siteModel, listOf(CardModel.Type.PAGES))
 
         verify(dao).insertWithDate(siteModel.id, listOf(PAGES_MODEL))
+    }
+
+    @Test
+    fun `given activity type, when fetch cards triggered, then activity card model inserted into db`() = test {
+        val payload = CardsPayload(CardsResponse(activity = ACTIVITY_RESPONSE))
+        whenever(restClient.fetchCards(siteModel, listOf(CardModel.Type.ACTIVITY))).thenReturn(payload)
+
+        cardsStore.fetchCards(siteModel, listOf(CardModel.Type.ACTIVITY))
+
+        verify(dao).insertWithDate(siteModel.id, listOf(ACTIVITY_CARD_MODEL))
     }
 
     @Test
@@ -378,6 +490,16 @@ class CardsStoreTest {
         assertThat(result).isEqualTo(CardsResult(listOf(PAGES_MODEL)))
     }
 
+    @Test
+    fun `when get cards gets triggered for activity only, then a flow of activity card model is returned`() = test {
+        whenever(dao.get(SITE_LOCAL_ID, listOf(CardModel.Type.ACTIVITY)))
+            .thenReturn(flowOf(listOf(ACTIVITY_ENTITY)))
+
+        val result = cardsStore.getCards(siteModel, listOf(CardModel.Type.ACTIVITY)).single()
+
+        assertThat(result).isEqualTo(CardsResult(listOf(ACTIVITY_CARD_MODEL)))
+    }
+
     /* TODAYS STATS CARD WITH ERROR */
 
     @Test
@@ -444,14 +566,33 @@ class CardsStoreTest {
         assertThat(result.findPostsCardError()?.type).isEqualTo(PostCardErrorType.UNAUTHORIZED)
     }
 
+    /* ACTIVITY CARD WITH ERROR */
+    @Test
+    fun `given activity unauth error, when get cards triggered, then error exists in the card`() = test {
+        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES))
+            .thenReturn(flowOf(listOf(getActivityErrorCardEntity())))
+
+        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
+
+        assertThat(result.findActivityCardError()?.type).isEqualTo(ActivityCardErrorType.UNAUTHORIZED)
+    }
+
     private fun CardsResult<List<CardModel>>.findTodaysStatsCardError(): TodaysStatsCardError? =
             model?.filterIsInstance(TodaysStatsCardModel::class.java)?.firstOrNull()?.error
 
     private fun CardsResult<List<CardModel>>.findPostsCardError(): PostCardError? =
             model?.filterIsInstance(PostsCardModel::class.java)?.firstOrNull()?.error
 
+    private fun CardsResult<List<CardModel>>.findActivityCardError(): ActivityCardError? =
+        model?.filterIsInstance(ActivityCardModel::class.java)?.firstOrNull()?.error
+
     private fun getTodaysStatsErrorCardEntity(type: TodaysStatsCardErrorType) =
             TODAY_STATS_WITH_ERROR_ENTITY.copy(
                     json = CardsUtils.GSON.toJson(TodaysStatsCardModel(error = TodaysStatsCardError(type)))
             )
+
+    private fun getActivityErrorCardEntity() =
+        ACTIVITY_WITH_ERROR_ENTITY.copy(
+            json = CardsUtils.GSON.toJson(ActivityCardModel(error = ActivityCardError(ActivityCardErrorType.UNAUTHORIZED)))
+        )
 }
