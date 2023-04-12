@@ -3,9 +3,10 @@ package org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts
 import android.content.Context
 import com.android.volley.RequestQueue
 import com.google.gson.annotations.SerializedName
+import com.google.gson.reflect.TypeToken
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
-import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMV3
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
@@ -16,6 +17,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsRestClient.BloggingPromptResponse
 import org.wordpress.android.fluxc.store.Store.OnChangedError
 import java.util.Date
 import javax.inject.Inject
@@ -33,19 +35,20 @@ class BloggingPromptsRestClient @Inject constructor(
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchPrompts(
         site: SiteModel,
-        number: Int,
-        from: Date
+        perPage: Int,
+        after: Date,
+        ignoresYear: Boolean = false,
     ): BloggingPromptsPayload<BloggingPromptsListResponse> {
-        val url = WPCOMV2.sites.site(site.siteId).blogging_prompts.url
+        val url = WPCOMV3.sites.site(site.siteId).blogging_prompts.url
         val params = mutableMapOf(
-            "number" to number.toString(),
-            "from" to BloggingPromptsUtils.dateToString(from)
+            "per_page" to perPage.toString(),
+            "after" to BloggingPromptsUtils.dateToString(after, ignoresYear)
         )
-        val response = wpComGsonRequestBuilder.syncGetRequest(
+        val response = wpComGsonRequestBuilder.syncGetRequest<BloggingPromptsListResponse>(
             this,
             url,
             params,
-            BloggingPromptsListResponse::class.java
+            BloggingPromptsListResponseTypeToken.type
         )
         return when (response) {
             is Success -> BloggingPromptsPayload(response.data)
@@ -53,28 +56,22 @@ class BloggingPromptsRestClient @Inject constructor(
         }
     }
 
-    data class BloggingPromptsListResponse(
-        @SerializedName("prompts") val prompts: List<BloggingPromptResponse>?
-    ) {
-        fun toBloggingPrompts() = prompts?.map { it.toBloggingPromptModel() } ?: emptyList()
-    }
-
     data class BloggingPromptResponse(
         @SerializedName("id") val id: Int,
         @SerializedName("text") val text: String,
-        @SerializedName("title") val title: String?,
-        @SerializedName("content") val content: String,
         @SerializedName("date") val date: String,
         @SerializedName("answered") val isAnswered: Boolean,
         @SerializedName("attribution") val attribution: String,
         @SerializedName("answered_users_count") val respondentsCount: Int,
-        @SerializedName("answered_users_sample") val respondentsAvatars: List<BloggingPromptsRespondentAvatar>
+        @SerializedName("answered_users_sample") val respondentsAvatars: List<BloggingPromptsRespondentAvatar>,
+        @SerializedName("answered_link") val answeredLink: String?,
+        @SerializedName("answered_link_text") val answeredLinkText: String,
     ) {
         fun toBloggingPromptModel() = BloggingPromptModel(
             id = id,
             text = text,
-            title = title ?: "",
-            content = content,
+            title = TODO("#2710: remove title from model"),
+            content = TODO("#2710: remove content from model"),
             date = BloggingPromptsUtils.stringToDate(date),
             isAnswered = isAnswered,
             attribution = attribution,
@@ -116,15 +113,23 @@ fun WPComGsonNetworkError.toBloggingPromptsError(): BloggingPromptsError {
         GenericErrorType.SERVER_ERROR,
         GenericErrorType.INVALID_SSL_CERTIFICATE,
         GenericErrorType.NETWORK_ERROR -> BloggingPromptsErrorType.API_ERROR
+
         GenericErrorType.PARSE_ERROR,
         GenericErrorType.NOT_FOUND,
         GenericErrorType.CENSORED,
         GenericErrorType.INVALID_RESPONSE -> BloggingPromptsErrorType.INVALID_RESPONSE
+
         GenericErrorType.HTTP_AUTH_ERROR,
         GenericErrorType.AUTHORIZATION_REQUIRED,
         GenericErrorType.NOT_AUTHENTICATED -> BloggingPromptsErrorType.AUTHORIZATION_REQUIRED
+
         GenericErrorType.UNKNOWN,
         null -> BloggingPromptsErrorType.GENERIC_ERROR
     }
     return BloggingPromptsError(type, message)
 }
+
+typealias BloggingPromptsListResponse = List<BloggingPromptResponse>
+object BloggingPromptsListResponseTypeToken : TypeToken<BloggingPromptsListResponse>()
+
+fun BloggingPromptsListResponse.toBloggingPrompts() = map { it.toBloggingPromptModel() }
