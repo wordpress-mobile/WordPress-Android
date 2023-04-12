@@ -367,7 +367,6 @@ class CardsRestClientTest {
         expected: CardsResponse,
         actual: CardsPayload<CardsResponse>
     ) {
-
         with(actual) {
             assertEquals(site, this@CardsRestClientTest.site)
             assertFalse(isError)
