@@ -8,9 +8,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPr
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsListResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsRestClient.BloggingPromptsListResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.toBloggingPrompts
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
 import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.tools.CoroutineEngine
