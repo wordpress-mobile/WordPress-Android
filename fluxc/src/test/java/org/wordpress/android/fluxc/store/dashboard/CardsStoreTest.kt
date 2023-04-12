@@ -587,12 +587,18 @@ class CardsStoreTest {
         model?.filterIsInstance(ActivityCardModel::class.java)?.firstOrNull()?.error
 
     private fun getTodaysStatsErrorCardEntity(type: TodaysStatsCardErrorType) =
-            TODAY_STATS_WITH_ERROR_ENTITY.copy(
-                    json = CardsUtils.GSON.toJson(TodaysStatsCardModel(error = TodaysStatsCardError(type)))
-            )
+        TODAY_STATS_WITH_ERROR_ENTITY.copy(
+            json = CardsUtils.GSON.toJson(TodaysStatsCardModel(error = TodaysStatsCardError(type)))
+        )
 
     private fun getActivityErrorCardEntity() =
         ACTIVITY_WITH_ERROR_ENTITY.copy(
-            json = CardsUtils.GSON.toJson(ActivityCardModel(error = ActivityCardError(ActivityCardErrorType.UNAUTHORIZED)))
+            json = CardsUtils.GSON.toJson(
+                ActivityCardModel(
+                    error = ActivityCardError(
+                        ActivityCardErrorType.UNAUTHORIZED
+                    )
+                )
+            )
         )
 }
