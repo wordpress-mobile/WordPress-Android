@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PageResponse
@@ -52,7 +53,8 @@ private const val DATE_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss"
 
 private val CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS,
     CardModel.Type.POSTS,
-    CardModel.Type.PAGES
+    CardModel.Type.PAGES,
+    CardModel.Type.ACTIVITY
 )
 
 /* ERRORS */
@@ -123,10 +125,45 @@ private val POSTS_RESPONSE = PostsResponse(
         )
 )
 
+private val ACTIVITY_RESPONSE_ICON = ActivityLogRestClient.ActivitiesResponse.Icon("jpg", "dog.jpg", 100, 100)
+private val ACTIVITY_RESPONSE_ACTOR = ActivityLogRestClient.ActivitiesResponse.Actor(
+    "author",
+    "John Smith",
+    10,
+    15,
+    ACTIVITY_RESPONSE_ICON,
+    "admin"
+)
+private val ACTIVITY_RESPONSE_GENERATOR = ActivityLogRestClient.ActivitiesResponse.Generator(10.3f, 123)
+private val ACTIVITY_RESPONSE_PAGE = ActivityLogRestClient.ActivitiesResponse.ActivityResponse(
+    summary = "activity",
+    content = null,
+    name = "name",
+    actor = ACTIVITY_RESPONSE_ACTOR,
+    type = "create a blog",
+    published = null,
+    generator = ACTIVITY_RESPONSE_GENERATOR,
+    is_rewindable = false,
+    rewind_id = "10.0",
+    gridicon = "gridicon.jpg",
+    status = "OK",
+    activity_id = "activity123"
+)
+
+private val ACTIVITY_RESPONSE_ACTIVITIES_PAGE =
+    ActivityLogRestClient.ActivitiesResponse.Page(orderedItems = listOf(ACTIVITY_RESPONSE_PAGE))
+private val ACTIVITY_RESPONSE = ActivityLogRestClient.ActivitiesResponse(
+    totalItems = 1,
+    summary = "response",
+    current = ACTIVITY_RESPONSE_ACTIVITIES_PAGE
+)
+
+
 private val CARDS_RESPONSE = CardsResponse(
         todaysStats = TODAYS_STATS_RESPONSE,
         posts = POSTS_RESPONSE,
-        pages = PAGES_RESPONSE
+        pages = PAGES_RESPONSE,
+        activity = ACTIVITY_RESPONSE
 )
 
 @RunWith(MockitoJUnitRunner::class)
@@ -311,10 +348,46 @@ class CardsRestClientTest {
         expected: CardsResponse,
         actual: CardsPayload<CardsResponse>
     ) {
+
         with(actual) {
             assertEquals(site, this@CardsRestClientTest.site)
             assertFalse(isError)
-            assertEquals(CardsPayload(expected), this)
+            assertEquals(expected.pages, response?.pages)
+            assertEquals(expected.posts, response?.posts)
+            assertEquals(expected.todaysStats, response?.todaysStats)
+            assertEquals(response?.activity?.totalItems, response?.activity?.totalItems)
+            assertEquals(response?.activity?.summary, response?.activity?.summary)
+            assertSuccessActivityResponse(
+                expected.activity?.current?.orderedItems?.get(0)!!,
+                response?.activity?.current?.orderedItems?.get(0)!!
+            )
+        }
+    }
+
+    private fun assertSuccessActivityResponse(expected: ActivityLogRestClient.ActivitiesResponse.ActivityResponse,
+    actual: ActivityLogRestClient.ActivitiesResponse.ActivityResponse) {
+        with(actual) {
+            assertEquals(expected.activity_id, this.activity_id)
+            assertEquals(expected.is_rewindable, this.is_rewindable)
+            assertEquals(expected.name, this.name)
+            assertEquals(expected.published, this.published)
+            assertEquals(expected.gridicon, this.gridicon)
+            assertEquals(expected.rewind_id, this.rewind_id)
+            assertEquals(expected.status, this.status)
+            assertEquals(expected.summary, this.summary)
+            assertEquals(expected.content, this.content)
+            assertEquals(expected.type, this.type)
+            assertEquals(expected.actor?.icon?.type, this.actor?.icon?.type)
+            assertEquals(expected.actor?.icon?.url, this.actor?.icon?.url)
+            assertEquals(expected.actor?.icon?.height, this.actor?.icon?.height)
+            assertEquals(expected.actor?.icon?.width, this.actor?.icon?.width)
+            assertEquals(expected.actor?.type, this.actor?.type)
+            assertEquals(expected.actor?.name, this.actor?.name)
+            assertEquals(expected.actor?.wpcom_user_id, this.actor?.wpcom_user_id)
+            assertEquals(expected.actor?.external_user_id, this.actor?.external_user_id)
+            assertEquals(expected.actor?.role, this.actor?.role)
+            assertEquals(expected.generator?.blog_id, this.generator?.blog_id)
+            assertEquals(expected.generator?.jetpack_version, this.generator?.jetpack_version)
         }
     }
 
