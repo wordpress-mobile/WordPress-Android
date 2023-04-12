@@ -4483,4 +4483,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="dashboard_pages_card_no_pages_create_page_button">Add Pages to your site</string>
     <string name="dashboard_pages_card_create_another_page_button">Create Another Page</string>
     <string name="dashboard_pages_card_create_another_page_description">Start with bespoke, mobile friendly layouts</string>
+
+    <!-- Jetpack - Dashboard cards - Activity Card -->
+    <string name="dashboard_activity_card_title">Recent activity</string>
+    <string name="dashboard_activity_card_footer_link">View all activity</string>
 </resources>
