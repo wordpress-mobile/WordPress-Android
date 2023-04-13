@@ -12,11 +12,14 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel.PageCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PageResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.TodaysStatsResponse
@@ -55,9 +58,20 @@ const val POST_CONTENT = "content"
 const val POST_FEATURED_IMAGE = "featuredImage"
 const val POST_DATE = "2021-12-27 11:33:55"
 
+/* PAGES */
+const val PAGE_ID = 1
+const val PAGE_TITLE = "title"
+const val PAGE_CONTENT = "content"
+const val PAGE_MODIFIED_ON = "2023-03-02 10:26:53"
+const val PAGE_STATUS = "publish"
+const val PAGE_DATE = "2023-03-02 10:30:53"
+
 /* CARD TYPES */
 
-private val CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.POSTS)
+private val CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS,
+    CardModel.Type.POSTS,
+    CardModel.Type.PAGES
+)
 
 /* RESPONSE */
 
@@ -82,9 +96,21 @@ private val POSTS_RESPONSE = PostsResponse(
         scheduled = listOf(POST_RESPONSE)
 )
 
+private val PAGE_RESPONSE = PageResponse(
+    id = PAGE_ID,
+    title = PAGE_TITLE,
+    content = PAGE_CONTENT,
+    modified = PAGE_MODIFIED_ON,
+    status = PAGE_STATUS,
+    date = PAGE_DATE
+)
+
+private val PAGES_RESPONSE = listOf(PAGE_RESPONSE)
+
 private val CARDS_RESPONSE = CardsResponse(
         todaysStats = TODAYS_STATS_RESPONSE,
-        posts = POSTS_RESPONSE
+        posts = POSTS_RESPONSE,
+        pages = PAGES_RESPONSE
 )
 
 /* MODEL */
@@ -117,9 +143,23 @@ private val POSTS_WITH_ERROR_MODEL = PostsCardModel(
         error = PostCardError(PostCardErrorType.UNAUTHORIZED)
 )
 
+private val PAGE_MODEL = PageCardModel(
+        id = PAGE_ID,
+        title = PAGE_TITLE,
+        content = PAGE_CONTENT,
+        lastModifiedOrScheduledOn = CardsUtils.fromDate(PAGE_MODIFIED_ON),
+        status = PAGE_STATUS,
+        date = CardsUtils.fromDate(PAGE_DATE)
+)
+
+private val PAGES_MODEL = PagesCardModel(
+        pages = listOf(PAGE_MODEL)
+)
+
 private val CARDS_MODEL = listOf(
         TODAYS_STATS_MODEL,
-        POSTS_MODEL
+        POSTS_MODEL,
+        PAGES_MODEL
 )
 
 /* ENTITY */
@@ -151,9 +191,17 @@ private val POSTS_WITH_ERROR_ENTITY = CardEntity(
         json = CardsUtils.GSON.toJson(POSTS_WITH_ERROR_MODEL)
 )
 
+private val PAGES_ENTITY = CardEntity(
+        siteLocalId = SITE_LOCAL_ID,
+        type = CardModel.Type.PAGES.name,
+        date = CardsUtils.getInsertDate(),
+        json = CardsUtils.GSON.toJson(PAGES_MODEL)
+)
+
 private val CARDS_ENTITY = listOf(
         TODAYS_STATS_ENTITY,
-        POSTS_ENTITY
+        POSTS_ENTITY,
+        PAGES_ENTITY
 )
 
 @RunWith(MockitoJUnitRunner::class)
@@ -207,6 +255,16 @@ class CardsStoreTest {
         cardsStore.fetchCards(siteModel, listOf(CardModel.Type.POSTS))
 
         verify(dao).insertWithDate(siteModel.id, listOf(POSTS_MODEL))
+    }
+
+    @Test
+    fun `given pages type, when fetch cards triggered, then pages card model inserted into db`() = test {
+        val payload = CardsPayload(CardsResponse(pages = PAGES_RESPONSE))
+        whenever(restClient.fetchCards(siteModel, listOf(CardModel.Type.PAGES))).thenReturn(payload)
+
+        cardsStore.fetchCards(siteModel, listOf(CardModel.Type.PAGES))
+
+        verify(dao).insertWithDate(siteModel.id, listOf(PAGES_MODEL))
     }
 
     @Test
@@ -308,6 +366,16 @@ class CardsStoreTest {
         val result = cardsStore.getCards(siteModel, listOf(CardModel.Type.POSTS)).single()
 
         assertThat(result).isEqualTo(CardsResult(listOf(POSTS_MODEL)))
+    }
+
+    @Test
+    fun `when get cards gets triggered for pages only, then a flow of pages card model is returned`() = test {
+        whenever(dao.get(SITE_LOCAL_ID, listOf(CardModel.Type.PAGES)))
+            .thenReturn(flowOf(listOf(PAGES_ENTITY)))
+
+        val result = cardsStore.getCards(siteModel, listOf(CardModel.Type.PAGES)).single()
+
+        assertThat(result).isEqualTo(CardsResult(listOf(PAGES_MODEL)))
     }
 
     /* TODAYS STATS CARD WITH ERROR */

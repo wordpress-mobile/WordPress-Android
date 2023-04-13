@@ -12,7 +12,21 @@ sealed class CardModel(
         val label: String
     ) {
         TODAYS_STATS(TodaysStatsCardModel::class.java, "todays_stats"),
-        POSTS(PostsCardModel::class.java, "posts")
+        POSTS(PostsCardModel::class.java, "posts"),
+        PAGES(PagesCardModel::class.java, "pages")
+    }
+
+    data class PagesCardModel(
+        val pages: List<PageCardModel> = emptyList(),
+    ) : CardModel(Type.PAGES) {
+        data class PageCardModel(
+            val id: Int,
+            val title: String,
+            val content: String,
+            val lastModifiedOrScheduledOn: Date,
+            val status: String,
+            val date: Date
+        )
     }
 
     data class TodaysStatsCardModel(
