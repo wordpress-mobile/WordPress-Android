@@ -9,6 +9,8 @@ data class Product(
     val cost: Double? = 0.0,
     @SerializedName("sale_cost")
     val saleCost: Double? = 0.0,
+    @SerializedName("combined_sale_cost_display")
+    val combinedSaleCostDisplay: String? = "",
     @SerializedName("cost_display")
     val costDisplay: String? = "",
     @SerializedName("currency_code")

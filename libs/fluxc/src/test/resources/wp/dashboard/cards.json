@@ -32,5 +32,23 @@
         "date": "2021-12-26 23:00:33"
       }
     ]
-  }
+  },
+  "pages": [
+    {
+      "id": 1,
+      "title": "Page title",
+      "content": "Page content",
+      "modified": "2021-11-02 15:47:42",
+      "status": "publish",
+      "date": "2021-11-02 15:47:42"
+    },
+    {
+      "id": 2,
+      "title": "Page title 2",
+      "content": "Page content 2",
+      "modified": "2023-03-02 11:55:49",
+      "status": "publish",
+      "date": "2023-03-02 11:55:49"
+    }
+  ]
 }
