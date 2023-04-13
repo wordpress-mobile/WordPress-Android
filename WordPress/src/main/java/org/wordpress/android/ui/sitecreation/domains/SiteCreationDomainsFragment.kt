@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -48,10 +49,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         return R.layout.site_creation_domains_screen
     }
 
-    @Suppress("UseCheckOrError")
-    override val screenTitle: String
-        get() = arguments?.getString(EXTRA_SCREEN_TITLE)
-            ?: throw IllegalStateException("Required argument screen title is missing.")
+    override val screenTitle get() = requireArguments().getString(EXTRA_SCREEN_TITLE).orEmpty()
 
     override fun setBindingViewStubListener(parentBinding: SiteCreationFormScreenBinding) {
         parentBinding.siteCreationFormContentStub.setOnInflateListener { _, inflated ->
@@ -88,8 +86,8 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                 searchInputWithHeader?.updateHeader(requireActivity(), uiState.headerUiState)
                 searchInputWithHeader?.updateSearchInput(requireActivity(), uiState.searchInputUiState)
                 updateContentUiState(uiState.contentState)
-                uiHelpers.updateVisibility(createSiteButtonContainer, uiState.createSiteButtonContainerVisibility)
-                uiHelpers.updateVisibility(createSiteButtonShadow, uiState.createSiteButtonContainerVisibility)
+                createSiteButtonContainer.isVisible = uiState.createSiteButtonState != null
+                createSiteButton.text = uiState.createSiteButtonState?.stringRes?.let(::getString)
                 updateTitleVisibility(uiState.headerUiState == null)
             }
         })
