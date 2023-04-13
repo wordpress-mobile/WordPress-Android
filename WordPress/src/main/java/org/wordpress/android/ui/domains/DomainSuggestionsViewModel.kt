@@ -25,7 +25,6 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 import org.wordpress.android.util.extensions.isOnSale
-import org.wordpress.android.util.extensions.saleCostForDisplay
 import org.wordpress.android.util.helpers.Debouncer
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -186,7 +185,7 @@ class DomainSuggestionsViewModel @Inject constructor(
                     domainName = it.domain_name,
                     cost = it.cost,
                     isOnSale = product.isOnSale(),
-                    saleCost = product.saleCostForDisplay(),
+                    saleCost = product?.combinedSaleCostDisplay.orEmpty(),
                     isFree = it.is_free,
                     supportsPrivacy = it.supports_privacy,
                     productId = it.product_id,

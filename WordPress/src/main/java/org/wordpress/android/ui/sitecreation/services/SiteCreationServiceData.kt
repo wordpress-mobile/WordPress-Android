@@ -10,5 +10,6 @@ data class SiteCreationServiceData(
     val segmentId: Long?,
     val siteDesign: String?,
     val domain: String?,
-    val title: String?
+    val title: String?,
+    val isFree: Boolean,
 ) : Parcelable

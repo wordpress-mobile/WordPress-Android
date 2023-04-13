@@ -11,6 +11,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
@@ -22,8 +23,10 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
+import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.config.DashboardCardActivityLogConfig
 import org.wordpress.android.util.config.DashboardCardPagesConfig
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 
@@ -53,6 +56,23 @@ const val PAGE_CONTENT = "content"
 const val PAGE_MODIFIED_ON = "2023-03-02 10:26:53"
 const val PAGE_STATUS = "publish"
 const val PAGE_DATE = "2023-03-02 10:30:53"
+
+/* ACTIVITY */
+const val ACTIVITY_ID = "activity123"
+const val ACTIVITY_SUMMARY = "activity"
+const val ACTIVITY_NAME = "name"
+const val ACTIVITY_TYPE = "create a blog"
+const val ACTIVITY_IS_REWINDABLE = false
+const val ACTIVITY_REWIND_ID = "10.0"
+const val ACTIVITY_GRID_ICON = "gridicon.jpg"
+const val ACTIVITY_STATUS = "OK"
+const val ACTIVITY_ACTOR_TYPE = "author"
+const val ACTIVITY_ACTOR_NAME = "John Smith"
+const val ACTIVITY_ACTOR_WPCOM_USER_ID = 15L
+const val ACTIVITY_ACTOR_ROLE = "admin"
+const val ACTIVITY_ACTOR_ICON_URL = "dog.jpg"
+const val ACTIVITY_PUBLISHED_DATE = "2021-12-27 11:33:55"
+const val ACTIVITY_CONTENT = "content"
 
 /* MODEL */
 
@@ -90,15 +110,41 @@ private val PAGES_MODEL = PagesCardModel(
     pages = listOf(PAGE_MODEL)
 )
 
+private val ACTIVITY_LOG_MODEL = ActivityLogModel(
+    summary = ACTIVITY_SUMMARY,
+    content = FormattableContent(text = ACTIVITY_CONTENT),
+    name = ACTIVITY_NAME,
+    actor = ActivityLogModel.ActivityActor(
+        displayName = ACTIVITY_ACTOR_NAME,
+        type = ACTIVITY_ACTOR_TYPE,
+        wpcomUserID = ACTIVITY_ACTOR_WPCOM_USER_ID,
+        avatarURL = ACTIVITY_ACTOR_ICON_URL,
+        role = ACTIVITY_ACTOR_ROLE,
+    ),
+    type = ACTIVITY_TYPE,
+    published = CardsUtils.fromDate(ACTIVITY_PUBLISHED_DATE),
+    rewindable = ACTIVITY_IS_REWINDABLE,
+    rewindID = ACTIVITY_REWIND_ID,
+    gridicon = ACTIVITY_GRID_ICON,
+    status = ACTIVITY_STATUS,
+    activityID = ACTIVITY_ID
+)
+
+private val ACTIVITY_CARD_MODEL = CardModel.ActivityCardModel(
+    activities = listOf(ACTIVITY_LOG_MODEL)
+)
+
 private val CARDS_MODEL: List<CardModel> = listOf(
     TODAYS_STATS_CARDS_MODEL,
     POSTS_MODEL,
-    PAGES_MODEL
+    PAGES_MODEL,
+    ACTIVITY_CARD_MODEL
 )
 
 private val DEFAULT_CARD_TYPE = listOf(CardModel.Type.POSTS)
 private val STATS_FEATURED_ENABLED_CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.POSTS)
 private val PAGES_FEATURED_ENABLED_CARD_TYPE = listOf(CardModel.Type.PAGES, CardModel.Type.POSTS)
+private val ACTIVITY_FEATURED_ENABLED_CARD_TYPE = listOf(CardModel.Type.ACTIVITY, CardModel.Type.POSTS)
 
 @ExperimentalCoroutinesApi
 class CardsSourceTest : BaseUnitTest() {
@@ -117,6 +163,9 @@ class CardsSourceTest : BaseUnitTest() {
     @Mock
     private lateinit var dashboardCardPagesConfig: DashboardCardPagesConfig
 
+    @Mock
+    private lateinit var dashboardCardActivityLogConfig: DashboardCardActivityLogConfig
+
     private lateinit var cardSource: CardsSource
 
     private val data = CardsResult(
@@ -134,24 +183,32 @@ class CardsSourceTest : BaseUnitTest() {
 
     private fun init(
         isTodaysStatsCardFeatureConfigEnabled: Boolean = false,
-        isDashboardCardPagesConfigEnabled: Boolean = false
+        isDashboardCardPagesConfigEnabled: Boolean = false,
+        isDashboardCardActivityLogConfigEnabled: Boolean = false
     ) {
-        setUpMocks(isTodaysStatsCardFeatureConfigEnabled, isDashboardCardPagesConfigEnabled)
+        setUpMocks(
+            isTodaysStatsCardFeatureConfigEnabled,
+            isDashboardCardPagesConfigEnabled,
+            isDashboardCardActivityLogConfigEnabled
+        )
         cardSource = CardsSource(
             selectedSiteRepository,
             cardsStore,
             todaysStatsCardFeatureConfig,
             dashboardCardPagesConfig,
+            dashboardCardActivityLogConfig,
             testDispatcher()
         )
     }
 
     private fun setUpMocks(
         isTodaysStatsCardFeatureConfigEnabled: Boolean,
-        isDashboardCardPagesConfigEnabled: Boolean = false
+        isDashboardCardPagesConfigEnabled: Boolean = false,
+        isDashboardCardActivityLogConfig: Boolean = false
     ) {
         whenever(todaysStatsCardFeatureConfig.isEnabled()).thenReturn(isTodaysStatsCardFeatureConfigEnabled)
         whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(isDashboardCardPagesConfigEnabled)
+        whenever(dashboardCardActivityLogConfig.isEnabled()).thenReturn(isDashboardCardActivityLogConfig)
         whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
     }
@@ -439,5 +496,35 @@ class CardsSourceTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(cardsStore).fetchCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)
+        }
+
+    @Test
+    fun `given activity feature enabled, when build is invoked, then activity from store(database)`() = test {
+        init(isDashboardCardActivityLogConfigEnabled = true)
+        val result = mutableListOf<CardsUpdate>()
+        whenever(cardsStore.getCards(siteModel, ACTIVITY_FEATURED_ENABLED_CARD_TYPE)).thenReturn(flowOf(data))
+
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
+
+        verify(cardsStore).getCards(siteModel, ACTIVITY_FEATURED_ENABLED_CARD_TYPE)
+    }
+
+    @Test
+    fun `given activity feature enabled, when refresh is invoked, then activity are requested from network`() =
+        test {
+            init(isDashboardCardActivityLogConfigEnabled = true)
+            val result = mutableListOf<CardsUpdate>()
+            whenever(cardsStore.getCards(siteModel, ACTIVITY_FEATURED_ENABLED_CARD_TYPE)).thenReturn(flowOf(data))
+            whenever(cardsStore.fetchCards(siteModel, ACTIVITY_FEATURED_ENABLED_CARD_TYPE)).thenReturn(success)
+            cardSource.refresh.observeForever { }
+
+            cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+                it?.let { result.add(it) }
+            }
+            advanceUntilIdle()
+
+            verify(cardsStore).fetchCards(siteModel, ACTIVITY_FEATURED_ENABLED_CARD_TYPE)
         }
 }
