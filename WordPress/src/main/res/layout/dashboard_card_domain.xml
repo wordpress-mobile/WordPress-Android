@@ -18,14 +18,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
                 android:contentDescription="@string/content_description_more"
-                android:focusable="true"
                 android:src="@drawable/ic_more_vert_white_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="?attr/wpColorOnSurfaceMedium"
-                tools:ignore="TouchTargetSizeCheck" />
+                app:tint="?attr/wpColorOnSurfaceMedium" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/dashboard_card_domain_title"
@@ -33,35 +30,29 @@
                 android:layout_height="wrap_content"
                 android:text="@string/dashboard_card_domain_title"
                 android:textAlignment="viewStart"
-                android:textAppearance="@style/blaze_title"
+                android:textAppearance="@style/dashboard_card_title"
                 app:layout_constraintEnd_toStartOf="@+id/dashboard_domain_card_more"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/dashboard_card_domain_icon"
+                android:importantForAccessibility="no"
                 android:src="@drawable/ic_domains_white_24dp"
                 android:background="@color/jetpack_green"
-                android:contentDescription="@string/content_description_more"
-                android:clickable="true"
-                android:focusable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/dashboard_card_domain_title"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:ignore="TouchTargetSizeCheck"/>
+                app:layout_constraintStart_toStartOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/dashboard_card_domain_sub_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/margin_medium"
-                android:paddingEnd="@dimen/margin_medium"
-                android:paddingBottom="@dimen/margin_medium"
-                android:paddingTop="@dimen/margin_medium"
+                android:padding="@dimen/margin_medium"
                 android:text="@string/dashboard_card_domain_sub_title"
-                android:textAppearance="@style/blaze_sub_title"
+                android:textAppearance="@style/dashboard_card_sub_title"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/dashboard_card_domain_icon"
                 app:layout_constraintTop_toBottomOf="@+id/dashboard_card_domain_title"
