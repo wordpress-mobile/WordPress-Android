@@ -89,6 +89,12 @@ class CardsShownTracker @Inject constructor(
                 Type.PAGES.label
             )
         )
+        is DashboardCard.ActivityCard -> trackCardShown(
+            Pair(
+                card.dashboardCardType.toTypeValue().label,
+                Type.ACTIVITY.label
+            )
+        )
     }
 
     fun trackQuickStartCardShown(quickStartType: QuickStartType) {
