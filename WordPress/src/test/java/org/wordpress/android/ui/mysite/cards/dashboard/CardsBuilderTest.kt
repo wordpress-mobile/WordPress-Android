@@ -15,6 +15,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardDomainCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
@@ -36,6 +37,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.CREATE_FIRST
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.DRAFT
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder
+import org.wordpress.android.ui.mysite.cards.domain.DashboardDomainCardBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @ExperimentalCoroutinesApi
@@ -54,6 +56,9 @@ class CardsBuilderTest : BaseUnitTest() {
     lateinit var promoteWithBlazeCardBuilder: PromoteWithBlazeCardBuilder
 
     @Mock
+    lateinit var dashboardDomainCardBuilder: DashboardDomainCardBuilder
+
+    @Mock
     lateinit var pagesCardBuilder: PagesCardBuilder
 
     private lateinit var cardsBuilder: CardsBuilder
@@ -65,6 +70,7 @@ class CardsBuilderTest : BaseUnitTest() {
             postCardBuilder,
             bloggingPromptCardsBuilder,
             promoteWithBlazeCardBuilder,
+            dashboardDomainCardBuilder,
             pagesCardBuilder
         )
     }
@@ -183,6 +189,20 @@ class CardsBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given is not eligible for domain, when cards are built, then domain card is not built`() {
+        val cards = buildDashboardCards(isEligibleForDomainCard = false)
+
+        assertThat(cards.findDashboardDomainCard()).isNull()
+    }
+
+    @Test
+    fun `given is eligible for domain, when cards are built, then domain card is built`() {
+        val cards = buildDashboardCards(isEligibleForDomainCard = true)
+
+        assertThat(cards.findDashboardDomainCard()).isNotNull
+    }
+
+    @Test
     fun `given has pages, when cards are built, then pages card is not built`() {
         val cards = buildDashboardCards(hasPagesCard = false)
 
@@ -211,6 +231,9 @@ class CardsBuilderTest : BaseUnitTest() {
     private fun DashboardCards.findPromoteWithBlazeCard() =
         this.cards.find { it is PromoteWithBlazeCard } as? PromoteWithBlazeCard
 
+    private fun DashboardCards.findDashboardDomainCard() =
+        this.cards.find { it is DashboardDomainCard } as? DashboardDomainCard
+
     private fun DashboardCards.findPagesCard() =
         this.cards.find { it is PagesCardWithData } as? PagesCardWithData
 
@@ -221,6 +244,8 @@ class CardsBuilderTest : BaseUnitTest() {
     private val blogingPromptCard = mock<BloggingPromptCardWithData>()
 
     private val promoteWithBlazeCard = mock<PromoteWithBlazeCard>()
+
+    private val dashboardDomainCard = mock<DashboardDomainCard>()
 
     private val pagesCard = mock<PagesCardWithData>()
 
@@ -258,6 +283,8 @@ class CardsBuilderTest : BaseUnitTest() {
             .build(any())
         doAnswer { if (hasBlogginPrompt) blogingPromptCard else null }.whenever(bloggingPromptCardsBuilder).build(any())
         doAnswer { if (isEligibleForBlaze) promoteWithBlazeCard else null }.whenever(promoteWithBlazeCardBuilder)
+            .build(any())
+        doAnswer { if (isEligibleForDomainCard) dashboardDomainCard else null }.whenever(dashboardDomainCardBuilder)
             .build(any())
         doAnswer { if(hasPagesCard) pagesCard else null }.whenever(pagesCardBuilder).build(any())
         return cardsBuilder.build(

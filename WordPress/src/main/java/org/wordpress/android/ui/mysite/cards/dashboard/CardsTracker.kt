@@ -25,6 +25,7 @@ class CardsTracker @Inject constructor(
         POST("post"),
         BLOGGING_PROMPT("blogging_prompt"),
         PROMOTE_WITH_BLAZE("promote_with_blaze"),
+        DASHBOARD_CARD_DOMAIN("dashboard_card_domain"),
         PAGES("pages")
     }
 
@@ -120,6 +121,7 @@ fun DashboardCardType.toTypeValue(): Type {
         DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST
         DashboardCardType.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
         DashboardCardType.PROMOTE_WITH_BLAZE_CARD -> Type.PROMOTE_WITH_BLAZE
+        DashboardCardType.DASHBOARD_DOMAIN_CARD -> Type.DASHBOARD_CARD_DOMAIN
         DashboardCardType.PAGES_CARD -> Type.PAGES
         DashboardCardType.PAGES_CARD_ERROR -> Type.ERROR
     }
