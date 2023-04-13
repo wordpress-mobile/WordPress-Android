@@ -36,7 +36,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 183
+        return 184
     }
 
     override fun getDbName(): String {
@@ -1899,6 +1899,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 182 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCProductModel ADD BUNDLED_ITEMS TEXT")
+                }
+                183 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCProductModel ADD COMPOSITE_COMPONENTS TEXT")
                 }
             }
         }
