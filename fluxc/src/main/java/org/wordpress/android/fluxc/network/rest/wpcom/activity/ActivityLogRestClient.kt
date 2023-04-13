@@ -434,6 +434,7 @@ class ActivityLogRestClient @Inject constructor(
         val totalItems: Int?,
         val summary: String?,
         val current: Page?,
+        // This class is reused in CardsRestClient, the error field is not used for activity log
         val error: String? = null
     ) {
         class Page(val orderedItems: List<ActivityResponse>)
