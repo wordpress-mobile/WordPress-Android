@@ -34,6 +34,7 @@ class CardsShownTracker @Inject constructor(
         }
     }
 
+    @Suppress("LongMethod")
     private fun trackCardShown(card: DashboardCard) = when (card) {
         is ErrorCard -> trackCardShown(
             Pair(
