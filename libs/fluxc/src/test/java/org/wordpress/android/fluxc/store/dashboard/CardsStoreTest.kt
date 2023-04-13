@@ -19,8 +19,8 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel.Page
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PageResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostResponse

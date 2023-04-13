@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardErrorType
@@ -31,8 +32,6 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardErrorType
-import org.wordpress.android.fluxc.tools.FormattableContent
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -164,106 +163,11 @@ class CardsRestClient @Inject constructor(
         )
     }
 
-    @Suppress("ConstructorParameterNaming")
-    class ActivitiesResponse(
-        val totalItems: Int? = null,
-        val summary: String? = null,
-        val current: Page? = null,
-        val error: String? = null
-    ) {
-        class Page(val orderedItems: List<ActivityResponse>)
-
-        data class ActivityResponse(
-            val summary: String?,
-            val content: FormattableContent?,
-            val name: String?,
-            val actor: Actor?,
-            val type: String?,
-            val published: Date?,
-            val generator: Generator?,
-            val is_rewindable: Boolean?,
-            val rewind_id: String?,
-            val gridicon: String?,
-            val status: String?,
-            val activity_id: String?
-        )
-
-        class Actor(
-            val type: String?,
-            val name: String?,
-            val external_user_id: Long?,
-            val wpcom_user_id: Long?,
-            val icon: Icon?,
-            val role: String?
-        )
-
-        class Icon(val type: String?, val url: String?, val width: Int?, val height: Int?)
-
-        class Generator(val jetpack_version: Float?, val blog_id: Long?)
-
-        fun toActivityCardModel(): ActivityCardModel {
-            val error = error?.let { toActivityCardError(it) }
-
-            val activities = current?.orderedItems?.mapNotNull {
-                when {
-                    it.activity_id == null -> {
-                        null
-                    }
-                    it.summary == null -> {
-                        null
-                    }
-                    it.content?.text == null -> {
-                        null
-                    }
-                    it.published == null -> {
-                        null
-                    }
-                    else -> {
-                        ActivityLogModel(
-                            activityID = it.activity_id,
-                            summary = it.summary,
-                            content = it.content,
-                            name = it.name,
-                            type = it.type,
-                            gridicon = it.gridicon,
-                            status = it.status,
-                            rewindable = it.is_rewindable,
-                            rewindID = it.rewind_id,
-                            published = it.published,
-                            actor = it.actor?.let { act ->
-                                ActivityLogModel.ActivityActor(
-                                    act.name,
-                                    act.type,
-                                    act.wpcom_user_id,
-                                    act.icon?.url,
-                                    act.role
-                                )
-                            }
-                        )
-                    }
-                }
-            }
-
-            return ActivityCardModel(
-                activities = activities ?: emptyList(),
-                error = error
-            )
-        }
-
-        private fun toActivityCardError(error: String): ActivityCardError {
-            val errorType = when (error) {
-                UNAUTHORIZED -> ActivityCardErrorType.UNAUTHORIZED
-                else -> ActivityCardErrorType.GENERIC_ERROR
-            }
-            return ActivityCardError(errorType, error)
-        }
-    }
-
     companion object {
         private const val CARDS = "cards"
         private const val JETPACK_DISCONNECTED = "jetpack_disconnected"
         private const val JETPACK_DISABLED = "jetpack_disabled"
-        private const val UNAUTHORIZED = "unauthorized"
+        const val UNAUTHORIZED = "unauthorized"
     }
 }
 
@@ -285,4 +189,60 @@ fun WPComGsonNetworkError.toCardsError(): CardsError {
         null -> CardsErrorType.GENERIC_ERROR
     }
     return CardsError(type, message)
+}
+
+fun ActivitiesResponse.toActivityCardModel(): ActivityCardModel {
+    val error = error?.let { toActivityCardError(it) }
+
+    val activities = current?.orderedItems?.mapNotNull {
+        when {
+            it.activity_id == null -> {
+                null
+            }
+            it.summary == null -> {
+                null
+            }
+            it.content?.text == null -> {
+                null
+            }
+            it.published == null -> {
+                null
+            }
+            else -> {
+                ActivityLogModel(
+                    activityID = it.activity_id,
+                    summary = it.summary,
+                    content = it.content,
+                    name = it.name,
+                    type = it.type,
+                    gridicon = it.gridicon,
+                    status = it.status,
+                    rewindable = it.is_rewindable,
+                    rewindID = it.rewind_id,
+                    published = it.published,
+                    actor = it.actor?.let { act ->
+                        ActivityLogModel.ActivityActor(
+                            act.name,
+                            act.type,
+                            act.wpcom_user_id,
+                            act.icon?.url,
+                            act.role
+                        )
+                    }
+                )
+            }
+        }
+    }
+
+    return ActivityCardModel(
+        activities = activities ?: emptyList(),
+        error = error
+    )
+}
+fun toActivityCardError(error: String): ActivityCardError {
+    val errorType = when (error) {
+        CardsRestClient.UNAUTHORIZED -> ActivityCardErrorType.UNAUTHORIZED
+        else -> ActivityCardErrorType.GENERIC_ERROR
+    }
+    return ActivityCardError(errorType, error)
 }

@@ -433,7 +433,8 @@ class ActivityLogRestClient @Inject constructor(
     class ActivitiesResponse(
         val totalItems: Int?,
         val summary: String?,
-        val current: Page?
+        val current: Page?,
+        val error: String? = null
     ) {
         class Page(val orderedItems: List<ActivityResponse>)
 
