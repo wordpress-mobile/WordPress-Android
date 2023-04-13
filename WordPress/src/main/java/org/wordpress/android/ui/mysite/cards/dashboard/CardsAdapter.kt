@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DiffUtil.Callback
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
@@ -16,6 +17,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardViewHolder
+import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.error.ErrorCardViewHolder
@@ -55,6 +57,7 @@ class CardsAdapter(
             )
             DashboardCardType.PROMOTE_WITH_BLAZE_CARD.ordinal -> PromoteWithBlazeCardViewHolder(parent, uiHelpers)
             DashboardCardType.PAGES_CARD.ordinal -> PagesCardViewHolder(parent, uiHelpers)
+            DashboardCardType.ACTIVITY_CARD.ordinal -> ActivityCardViewHolder(parent, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -70,6 +73,7 @@ class CardsAdapter(
             is BloggingPromptCardViewHolder -> holder.bind(items[position] as BloggingPromptCardWithData)
             is PromoteWithBlazeCardViewHolder -> holder.bind(items[position] as PromoteWithBlazeCard)
             is PagesCardViewHolder -> holder.bind(items[position] as PagesCard)
+            is ActivityCardViewHolder -> holder.bind(items[position] as ActivityCard)
         }
     }
 
@@ -100,6 +104,7 @@ class CardsAdapter(
                 oldItem is BloggingPromptCardWithData && newItem is BloggingPromptCardWithData -> true
                 oldItem is PromoteWithBlazeCard && newItem is PromoteWithBlazeCard -> true
                 oldItem is PagesCard && newItem is PagesCard -> true
+                oldItem is ActivityCard && newItem is ActivityCard -> true
                 else -> throw UnsupportedOperationException("Diff not implemented yet")
             }
         }
