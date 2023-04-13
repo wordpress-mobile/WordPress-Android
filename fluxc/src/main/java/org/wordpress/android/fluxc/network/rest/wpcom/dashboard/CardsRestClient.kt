@@ -196,15 +196,7 @@ fun ActivitiesResponse.toActivityCardModel(): ActivityCardModel {
 
     val activities = current?.orderedItems?.mapNotNull {
         when {
-            it.activity_id == null -> {
-                null
-            }
-            it.summary == null -> {
-                null
-            }
-            it.content?.text == null -> {
-                null
-            }
+            it.activity_id == null || it.summary == null || it.content?.text == null ||
             it.published == null -> {
                 null
             }
