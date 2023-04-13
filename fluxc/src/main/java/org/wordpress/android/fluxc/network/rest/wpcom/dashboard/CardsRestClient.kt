@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel.PageCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
@@ -19,7 +21,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsPayload
@@ -61,12 +66,14 @@ class CardsRestClient @Inject constructor(
     data class CardsResponse(
         @SerializedName("todays_stats") val todaysStats: TodaysStatsResponse? = null,
         @SerializedName("posts") val posts: PostsResponse? = null,
-        @SerializedName("pages") val pages: List<PageResponse>? = null
+        @SerializedName("pages") val pages: List<PageResponse>? = null,
+        @SerializedName("activity") val activity: ActivitiesResponse? = null,
     ) {
         fun toCards() = arrayListOf<CardModel>().apply {
             todaysStats?.let { add(it.toTodaysStatsCard()) }
             posts?.let { add(it.toPosts()) }
             pages?.let { add(getPagesCardModel(it))}
+            activity?.let { add(it.toActivityCardModel()) }
         }.toList()
 
         private fun getPagesCardModel(pages: List<PageResponse>): PagesCardModel {
@@ -160,7 +167,7 @@ class CardsRestClient @Inject constructor(
         private const val CARDS = "cards"
         private const val JETPACK_DISCONNECTED = "jetpack_disconnected"
         private const val JETPACK_DISABLED = "jetpack_disabled"
-        private const val UNAUTHORIZED = "unauthorized"
+        const val UNAUTHORIZED = "unauthorized"
     }
 }
 
@@ -182,4 +189,52 @@ fun WPComGsonNetworkError.toCardsError(): CardsError {
         null -> CardsErrorType.GENERIC_ERROR
     }
     return CardsError(type, message)
+}
+
+fun ActivitiesResponse.toActivityCardModel(): ActivityCardModel {
+    val error = error?.let { toActivityCardError(it) }
+
+    val activities = current?.orderedItems?.mapNotNull {
+        when {
+            it.activity_id == null || it.summary == null || it.content?.text == null ||
+            it.published == null -> {
+                null
+            }
+            else -> {
+                ActivityLogModel(
+                    activityID = it.activity_id,
+                    summary = it.summary,
+                    content = it.content,
+                    name = it.name,
+                    type = it.type,
+                    gridicon = it.gridicon,
+                    status = it.status,
+                    rewindable = it.is_rewindable,
+                    rewindID = it.rewind_id,
+                    published = it.published,
+                    actor = it.actor?.let { act ->
+                        ActivityLogModel.ActivityActor(
+                            act.name,
+                            act.type,
+                            act.wpcom_user_id,
+                            act.icon?.url,
+                            act.role
+                        )
+                    }
+                )
+            }
+        }
+    }
+
+    return ActivityCardModel(
+        activities = activities ?: emptyList(),
+        error = error
+    )
+}
+fun toActivityCardError(error: String): ActivityCardError {
+    val errorType = when (error) {
+        CardsRestClient.UNAUTHORIZED -> ActivityCardErrorType.UNAUTHORIZED
+        else -> ActivityCardErrorType.GENERIC_ERROR
+    }
+    return ActivityCardError(errorType, error)
 }
