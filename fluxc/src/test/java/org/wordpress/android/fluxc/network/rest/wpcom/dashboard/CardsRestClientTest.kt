@@ -31,8 +31,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PageResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostResponse
@@ -316,9 +316,16 @@ class CardsRestClientTest {
     @Test
     fun `given activity unauthorized, when fetch cards triggered, then returns activity unauthorized card error`() =
         test {
-            val json = UnitTestUtils.getStringFromResourceFile(javaClass, DASHBOARD_CARDS_WITH_ERRORS_JSON)
+            val json = UnitTestUtils.getStringFromResourceFile(
+                javaClass,
+                DASHBOARD_CARDS_WITH_ERRORS_JSON
+            )
             val data = getCardsResponseFromJsonString(json)
-                .copy(activity = ActivitiesResponse(error = UNAUTHORIZED))
+                .copy(
+                    activity = ActivitiesResponse(
+                        error = UNAUTHORIZED, totalItems = null, summary = null, current = null
+                    )
+                )
             initFetchCards(data = data)
 
             val result = restClient.fetchCards(site, CARD_TYPES)
