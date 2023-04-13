@@ -4319,7 +4319,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_notifications_disabled_in_wp_message">We\'ll turn off notifications from the WordPress app.</string>
     <string name="jp_migration_done_title">Thanks for switching to Jetpack!</string>
     <string name="jp_migration_done_subtitle">We’ve transferred all your data and settings. Everything is right where you left it.</string>
-    <string name="jp_migration_done_delete_wp_message" translatable="false">@string/jp_migration_delete_message</string>
+    <string name="jp_migration_done_delete_wp_message">We recommend &lt;b&gt;uninstalling the WordPress app&lt;/b&gt; on your device to avoid data conflicts.</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Remove WordPress App icon</string>
     <string name="jp_migration_finish_button">Finish</string>
     <string name="jp_migration_try_again_button">Try again</string>
