@@ -136,7 +136,6 @@ import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
 import org.wordpress.android.ui.reader.CommentNotificationsBottomSheetFragment;
 import org.wordpress.android.ui.reader.ReaderBlogFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
-import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.ReaderSearchActivity;
@@ -341,8 +340,6 @@ public interface AppComponent {
     void inject(ReaderSimplePostContainerView object);
 
     void inject(ReaderPostPagerActivity object);
-
-    void inject(ReaderPostListActivity object);
 
     void inject(ReaderBlogFragment object);
 
