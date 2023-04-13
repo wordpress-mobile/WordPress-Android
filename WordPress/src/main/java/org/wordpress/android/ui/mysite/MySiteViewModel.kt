@@ -344,7 +344,8 @@ class MySiteViewModel @Inject constructor(
                     scanAvailable,
                     cardsUpdate,
                     bloggingPromptsUpdate,
-                    promoteWithBlazeUpdate
+                    promoteWithBlazeUpdate,
+                    hasSiteDomains
                 )
                 selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
@@ -394,7 +395,8 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
-        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?
+        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?,
+        hasSiteDomains: Boolean
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
             site,
@@ -407,7 +409,8 @@ class MySiteViewModel @Inject constructor(
             scanAvailable,
             cardsUpdate,
             bloggingPromptUpdate,
-            promoteWithBlazeUpdate
+            promoteWithBlazeUpdate,
+            hasSiteDomains
         )
 
         val siteInfoCardBuilderParams = SiteInfoCardBuilderParams(
@@ -496,7 +499,8 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
-        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?
+        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?,
+        hasSiteDomains: Boolean
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
             InfoItemBuilderParams(
@@ -600,7 +604,7 @@ class MySiteViewModel @Inject constructor(
                 ),
                 dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
                     isEligible = dashboardCardDomainUtils.shouldShowCard(
-                        site, isDomainCreditAvailable
+                        site, isDomainCreditAvailable, hasSiteDomains
                     ),
                     onClick = this::onDashboardCardDomainClick,
                     onHideMenuItemClick = this::onDashboardCardDomainHideMenuItemClick,
