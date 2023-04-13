@@ -45,7 +45,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         SINGLE_ACTION_CARD,
         JETPACK_FEATURE_CARD,
         JETPACK_SWITCH_CARD,
-        JETPACK_INSTALL_FULL_PLUGIN_CARD
+        JETPACK_INSTALL_FULL_PLUGIN_CARD,
+        ACTIVITY_CARD
     }
 
     enum class DashboardCardType {
@@ -59,7 +60,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         BLOGGING_PROMPT_CARD,
         PROMOTE_WITH_BLAZE_CARD,
         PAGES_CARD_ERROR,
-        PAGES_CARD
+        PAGES_CARD,
+        ACTIVITY_CARD,
     }
 
     data class SiteInfoHeaderCard(
@@ -271,6 +273,33 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     data class FooterLink(
                         val label: UiString,
                         val onClick: (postCardType: PostCardType) -> Unit
+                    )
+                }
+
+                sealed class ActivityCard(
+                    override val dashboardCardType: DashboardCardType,
+                    open val footerLink: FooterLink? = null
+                ) : DashboardCard(dashboardCardType) {
+                    data class ActivityCardWithItems(
+                        val title: UiString,
+                        val activityItems: List<ActivityItem>,
+                        override val footerLink: FooterLink
+                    ) : ActivityCard(
+                        dashboardCardType = DashboardCardType.ACTIVITY_CARD,
+                        footerLink = footerLink
+                    ) {
+                        data class ActivityItem(
+                            val title: UiString,
+                            val subtitle: UiString?,
+                            @DrawableRes val primaryImage: Int,
+                            val iconColor: Int? = null,
+                            val onClick: ListItemInteraction
+                        )
+                    }
+
+                    data class FooterLink(
+                        val label: UiString,
+                        val onClick: () -> Unit
                     )
                 }
 
