@@ -7,6 +7,8 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel.PageCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
@@ -58,12 +60,18 @@ class CardsRestClient @Inject constructor(
 
     data class CardsResponse(
         @SerializedName("todays_stats") val todaysStats: TodaysStatsResponse? = null,
-        @SerializedName("posts") val posts: PostsResponse? = null
+        @SerializedName("posts") val posts: PostsResponse? = null,
+        @SerializedName("pages") val pages: List<PageResponse>? = null
     ) {
         fun toCards() = arrayListOf<CardModel>().apply {
             todaysStats?.let { add(it.toTodaysStatsCard()) }
             posts?.let { add(it.toPosts()) }
+            pages?.let { add(getPagesCardModel(it))}
         }.toList()
+
+        private fun getPagesCardModel(pages: List<PageResponse>): PagesCardModel {
+            return PagesCardModel(pages.map{ it.toPages() })
+        }
     }
 
     data class TodaysStatsResponse(
@@ -126,6 +134,24 @@ class CardsRestClient @Inject constructor(
                 title = title,
                 content = content,
                 featuredImage = featuredImage,
+                date = CardsUtils.fromDate(date)
+        )
+    }
+
+    data class PageResponse(
+        @SerializedName("id") val id: Int,
+        @SerializedName("title") val title: String,
+        @SerializedName("content") val content: String,
+        @SerializedName("modified") val modified: String,
+        @SerializedName("status") val status: String,
+        @SerializedName("date") val date: String
+    ){
+        fun toPages() = PageCardModel(
+                id = id,
+                title = title,
+                content = content,
+                lastModifiedOrScheduledOn = CardsUtils.fromDate(modified),
+                status = status,
                 date = CardsUtils.fromDate(date)
         )
     }
