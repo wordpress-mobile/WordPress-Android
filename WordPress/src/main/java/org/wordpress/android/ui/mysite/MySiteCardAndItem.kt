@@ -46,7 +46,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         JETPACK_FEATURE_CARD,
         JETPACK_SWITCH_CARD,
         JETPACK_INSTALL_FULL_PLUGIN_CARD,
-        ACTIVITY_CARD
     }
 
     enum class DashboardCardType {
