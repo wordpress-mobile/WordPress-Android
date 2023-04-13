@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/fullscreen_error_with_retry"
+        layout="@layout/fullscreen_error_with_retry"
+        tools:visibility="gone" />
+
+    <include
+        android:id="@+id/site_creation_progress_creating_site"
+        layout="@layout/site_creation_progress_creating_site"
+        tools:visibility="visible" />
+</RelativeLayout>
