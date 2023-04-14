@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.provider.Settings;
 
 import androidx.annotation.NonNull;
@@ -30,12 +32,14 @@ public class WPPermissionUtils {
     public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE = 10;
     public static final int MEDIA_BROWSER_PERMISSION_REQUEST_CODE = 20;
     public static final int MEDIA_PREVIEW_PERMISSION_REQUEST_CODE = 30;
-    public static final int PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE = 40;
+    public static final int PHOTO_PICKER_MEDIA_PERMISSION_REQUEST_CODE = 40;
     public static final int PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE = 41;
     public static final int EDITOR_LOCATION_PERMISSION_REQUEST_CODE = 50;
     public static final int EDITOR_MEDIA_PERMISSION_REQUEST_CODE = 60;
     public static final int EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE = 70;
     public static final int READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE = 80;
+
+    public static final int NOTIFICATIONS_PERMISSION_REQUEST_CODE = 90;
 
     /**
      * called by the onRequestPermissionsResult() of various activities and fragments - tracks
@@ -144,8 +148,16 @@ public class WPPermissionUtils {
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_STORAGE_WRITE;
             case android.Manifest.permission.READ_EXTERNAL_STORAGE:
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_STORAGE_READ;
+            case android.Manifest.permission.READ_MEDIA_IMAGES:
+                return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_IMAGES_READ;
+            case android.Manifest.permission.READ_MEDIA_VIDEO:
+                return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_VIDEO_READ;
+            case android.Manifest.permission.READ_MEDIA_AUDIO:
+                return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_AUDIO_READ;
             case android.Manifest.permission.CAMERA:
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_CAMERA;
+            case Manifest.permission.POST_NOTIFICATIONS:
+                return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_NOTIFICATIONS;
             default:
                 AppLog.w(AppLog.T.UTILS, "No key for requested permission");
                 return null;
@@ -160,6 +172,12 @@ public class WPPermissionUtils {
             case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
             case android.Manifest.permission.READ_EXTERNAL_STORAGE:
                 return context.getString(R.string.permission_storage);
+            case android.Manifest.permission.READ_MEDIA_IMAGES:
+                return context.getString(R.string.permission_images);
+            case android.Manifest.permission.READ_MEDIA_VIDEO:
+                return context.getString(R.string.permission_video);
+            case android.Manifest.permission.READ_MEDIA_AUDIO:
+                return context.getString(R.string.permission_audio);
             case android.Manifest.permission.CAMERA:
                 return context.getString(R.string.permission_camera);
             case Manifest.permission.RECORD_AUDIO:
@@ -178,6 +196,12 @@ public class WPPermissionUtils {
             case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
             case android.Manifest.permission.READ_EXTERNAL_STORAGE:
                 return resourceProvider.getString(R.string.permission_storage);
+            case android.Manifest.permission.READ_MEDIA_IMAGES:
+                return resourceProvider.getString(R.string.permission_images);
+            case android.Manifest.permission.READ_MEDIA_VIDEO:
+                return resourceProvider.getString(R.string.permission_video);
+            case android.Manifest.permission.READ_MEDIA_AUDIO:
+                return resourceProvider.getString(R.string.permission_audio);
             case android.Manifest.permission.CAMERA:
                 return resourceProvider.getString(R.string.permission_camera);
             case Manifest.permission.RECORD_AUDIO:
@@ -220,5 +244,21 @@ public class WPPermissionUtils {
         intent.setData(uri);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    /*
+     * open the device's notification settings page for this app so the user can edit permissions
+     */
+    public static void showNotificationsSettings(@NonNull Context context) {
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } else {
+            // We can't open notifications settings screen directly. Instead, open the app settings.
+            showAppSettings(context);
+        }
     }
 }
