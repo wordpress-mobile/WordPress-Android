@@ -200,11 +200,12 @@ class JetpackStore
 
     suspend fun fetchJetpackConnectionUrl(
         site: SiteModel,
-        autoRegisterSiteIfNeeded: Boolean = false
+        autoRegisterSiteIfNeeded: Boolean = false,
+        useApplicationPasswords: Boolean = false
     ): JetpackConnectionUrlResult {
         if (site.isUsingWpComRestApi) error("This function supports only self-hosted site using WPAPI")
         return coroutineEngine.withDefaultContext(T.API, this, "fetchJetpackConnectionUrl") {
-            val result = jetpackWPAPIRestClient.fetchJetpackConnectionUrl(site)
+            val result = jetpackWPAPIRestClient.fetchJetpackConnectionUrl(site, useApplicationPasswords)
 
             when {
                 result.isError -> JetpackConnectionUrlResult(
@@ -221,7 +222,7 @@ class JetpackStore
                 else -> {
                     val url = result.result.trim('"').replace("\\", "")
                     val connectionUri = URI.create(url)
-                    if (!autoRegisterSiteIfNeeded || connectionUri.host == JETPACK_DOMAIN) {
+                    if (!autoRegisterSiteIfNeeded || connectionUri.host == JETPACK_DOMAIN || useApplicationPasswords) {
                         JetpackConnectionUrlResult(url)
                     } else {
                         registerJetpackSite(url).fold(
@@ -260,10 +261,10 @@ class JetpackStore
         val errorCode: Int? = null
     ) : OnChangedError
 
-    suspend fun fetchJetpackUser(site: SiteModel): JetpackUserResult {
+    suspend fun fetchJetpackUser(site: SiteModel, useApplicationPasswords: Boolean = false): JetpackUserResult {
         if (site.isUsingWpComRestApi) error("This function is not implemented yet for Jetpack tunnel")
         return coroutineEngine.withDefaultContext(T.API, this, "fetchJetpackUser") {
-            val result = jetpackWPAPIRestClient.fetchJetpackUser(site)
+            val result = jetpackWPAPIRestClient.fetchJetpackUser(site, useApplicationPasswords)
 
             when {
                 result.isError -> JetpackUserResult(
