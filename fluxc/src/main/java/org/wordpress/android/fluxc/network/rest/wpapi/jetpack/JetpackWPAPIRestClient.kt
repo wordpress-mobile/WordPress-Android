@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIEncodedBodyRequestBui
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsNetwork
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -27,14 +28,29 @@ class JetpackWPAPIRestClient @Inject constructor(
     private val wpApiEncodedBodyRequestBuilder: WPAPIEncodedBodyRequestBuilder,
     private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
     private val cookieNonceAuthenticator: CookieNonceAuthenticator,
+    private val applicationPasswordsNetwork: ApplicationPasswordsNetwork,
     dispatcher: Dispatcher,
     @Named("custom-ssl") requestQueue: RequestQueue,
     @Named("no-redirects") private val noRedirectsRequestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
     suspend fun fetchJetpackConnectionUrl(
-        site: SiteModel
+        site: SiteModel,
+        useApplicationPasswords: Boolean = false
     ): JetpackWPAPIPayload<String> {
+        if (useApplicationPasswords) {
+            val url = JPAPI.connection.url.pathV4
+            val response = applicationPasswordsNetwork.executeGetGsonRequest(
+                    site = site,
+                    path = url,
+                    clazz = String::class.java
+            )
+            return when (response) {
+                is Success<String> -> JetpackWPAPIPayload(response.data)
+                is Error -> JetpackWPAPIPayload(response.error)
+            }
+        }
+
         val baseUrl = site.wpApiRestUrl ?: "${site.url}/wp-json"
         val url = "${baseUrl.trimEnd('/')}/${JPAPI.connection.url.pathV4.trimStart('/')}"
 
@@ -89,8 +105,25 @@ class JetpackWPAPIRestClient @Inject constructor(
     }
 
     suspend fun fetchJetpackUser(
-        site: SiteModel
+        site: SiteModel,
+        useApplicationPasswords: Boolean = false
     ): JetpackWPAPIPayload<JetpackUser> {
+        if (useApplicationPasswords) {
+            val url = JPAPI.connection.data.pathV4
+            val response = applicationPasswordsNetwork.executeGetGsonRequest(
+                    site = site,
+                    path = url,
+                    clazz = JetpackConnectionDataResponse::class.java
+            )
+            return when (response) {
+                is Success<JetpackConnectionDataResponse> -> JetpackWPAPIPayload(
+                        response.data?.toJetpackUser()
+                )
+
+                is Error -> JetpackWPAPIPayload(response.error)
+            }
+        }
+
         val url = site.buildUrl(JPAPI.connection.data.pathV4)
 
         val response = cookieNonceAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
@@ -104,20 +137,22 @@ class JetpackWPAPIRestClient @Inject constructor(
 
         return when (response) {
             is Success<JetpackConnectionDataResponse> -> JetpackWPAPIPayload(
-                response.data?.let {
-                    JetpackUser(
-                        isConnected = it.currentUser.isConnected ?: false,
-                        isMaster = it.currentUser.isMaster ?: false,
-                        username = it.currentUser.username.orEmpty(),
-                        wpcomEmail = it.currentUser.wpcomUser?.email.orEmpty(),
-                        wpcomId = it.currentUser.wpcomUser?.id ?: 0L,
-                        wpcomUsername = it.currentUser.wpcomUser?.login.orEmpty()
-                    )
-                }
+                    response.data?.toJetpackUser()
             )
 
             is Error -> JetpackWPAPIPayload(response.error)
         }
+    }
+
+    private fun JetpackConnectionDataResponse.toJetpackUser(): JetpackUser {
+        return JetpackUser(
+            isConnected = currentUser.isConnected ?: false,
+            isMaster = currentUser.isMaster ?: false,
+            username = currentUser.username.orEmpty(),
+            wpcomEmail = currentUser.wpcomUser?.email.orEmpty(),
+            wpcomId = currentUser.wpcomUser?.id ?: 0L,
+            wpcomUsername = currentUser.wpcomUser?.login.orEmpty()
+        )
     }
 
     private fun SiteModel.buildUrl(path: String): String {
