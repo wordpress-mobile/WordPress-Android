@@ -14,6 +14,6 @@ object BloggingPromptsPostTagProvider {
         promptIdTag(promptId),
         promptIdTag(promptId),
         "",
-        ReaderTagType.SEARCH,
+        ReaderTagType.FOLLOWED,
     )
 }
