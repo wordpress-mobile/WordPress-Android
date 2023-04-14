@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.domain
+package org.wordpress.android.ui.mysite.cards.dashboard.domain
 
 import android.view.View
 import android.view.ViewGroup

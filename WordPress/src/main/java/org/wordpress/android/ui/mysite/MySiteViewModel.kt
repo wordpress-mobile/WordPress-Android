@@ -45,7 +45,7 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
-import org.wordpress.android.ui.domains.DashboardCardDomainUtils
+import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.FEATURE_CARD
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
@@ -344,7 +344,8 @@ class MySiteViewModel @Inject constructor(
                     scanAvailable,
                     cardsUpdate,
                     bloggingPromptsUpdate,
-                    promoteWithBlazeUpdate
+                    promoteWithBlazeUpdate,
+                    hasSiteDomains
                 )
                 selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
@@ -353,13 +354,15 @@ class MySiteViewModel @Inject constructor(
                     viewModelScope,
                     state.dashboardCardsAndItems.filterIsInstance<DashboardCards>().firstOrNull()
                 )
-
+                
                 state
             } else {
                 buildNoSiteState()
             }
 
             bloggingPromptsCardTrackHelper.onSiteChanged(site?.id)
+
+            dashboardCardDomainUtils.onSiteChanged(site?.id, state as? SiteSelected)
 
             UiModel(currentAvatarUrl.orEmpty(), state)
         }
@@ -390,7 +393,8 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
-        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?
+        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?,
+        hasSiteDomains: Boolean
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
             site,
@@ -403,7 +407,8 @@ class MySiteViewModel @Inject constructor(
             scanAvailable,
             cardsUpdate,
             bloggingPromptUpdate,
-            promoteWithBlazeUpdate
+            promoteWithBlazeUpdate,
+            hasSiteDomains
         )
 
         val siteInfoCardBuilderParams = SiteInfoCardBuilderParams(
@@ -492,7 +497,8 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
-        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?
+        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?,
+        hasSiteDomains: Boolean
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
             InfoItemBuilderParams(
@@ -596,7 +602,7 @@ class MySiteViewModel @Inject constructor(
                 ),
                 dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
                     isEligible = dashboardCardDomainUtils.shouldShowCard(
-                        site, isDomainCreditAvailable
+                        site, isDomainCreditAvailable, hasSiteDomains
                     ),
                     onClick = this::onDashboardCardDomainClick,
                     onHideMenuItemClick = this::onDashboardCardDomainHideMenuItemClick,
@@ -1108,6 +1114,7 @@ class MySiteViewModel @Inject constructor(
         checkAndShowJetpackFullPluginInstallOnboarding()
         checkAndShowQuickStartNotice()
         bloggingPromptsCardTrackHelper.onResume(currentTab)
+        dashboardCardDomainUtils.onResume(currentTab, uiModel.value?.state as? SiteSelected)
     }
 
     private fun checkAndShowJetpackFullPluginInstallOnboarding() {
@@ -1592,17 +1599,17 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onDashboardCardDomainMoreMenuClick() {
-        // track
+        dashboardCardDomainUtils.trackDashboardCardDomainMoreMenuTapped(uiModel.value?.state as? SiteSelected)
     }
 
     private fun onDashboardCardDomainClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        // track
+        dashboardCardDomainUtils.trackDashboardCardDomainTapped(uiModel.value?.state as? SiteSelected)
         _onNavigation.value = Event(SiteNavigationAction.OpenDomainRegistration(selectedSite))
     }
 
     private fun onDashboardCardDomainHideMenuItemClick() {
-        // track
+        dashboardCardDomainUtils.trackDashboardCardDomainHiddenByUser(uiModel.value?.state as? SiteSelected)
         selectedSiteRepository.getSelectedSite()?.let {
             dashboardCardDomainUtils.hideCard(it.siteId)
         }
@@ -1688,6 +1695,7 @@ class MySiteViewModel @Inject constructor(
             .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
         siteSelected.cardAndItems.filterIsInstance<JetpackInstallFullPluginCard>()
             .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type, quickStartRepository.currentTab) }
+        dashboardCardDomainUtils.trackDashboardCardDomainShown(viewModelScope, siteSelected)
     }
 
     private fun resetShownTrackers() {
