@@ -245,12 +245,12 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `shows soft ask screen when storage permissions are turned off`() = test {
-        setupViewModel(listOf(), singleSelectBrowserType, hasStoragePermissions = false)
+    fun `shows soft ask screen when photos videos permissions are turned off`() = test {
+        setupViewModel(listOf(), singleSelectBrowserType, hasPhotosVideosPermissions = false)
         whenever(resourceProvider.getString(R.string.app_name)).thenReturn("WordPress")
-        whenever(resourceProvider.getString(R.string.photo_picker_soft_ask_label)).thenReturn("Soft ask label")
+        whenever(resourceProvider.getString(R.string.photo_picker_soft_ask_photos_label)).thenReturn("Soft ask label")
 
-        viewModel.checkStoragePermission(isAlwaysDenied = false)
+        viewModel.checkMediaPermissions(isPhotosVideosAlwaysDenied = false, isMusicAudioAlwaysDenied = false)
 
         assertThat(uiStates).hasSize(2)
 
@@ -380,9 +380,9 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     private suspend fun setupViewModel(
         domainModel: List<PhotoPickerItem>,
         browserType: MediaBrowserType,
-        hasStoragePermissions: Boolean = true
+        hasPhotosVideosPermissions: Boolean = true
     ) {
-        whenever(permissionsHandler.hasWriteStoragePermission()).thenReturn(hasStoragePermissions)
+        whenever(permissionsHandler.hasPhotosVideosPermission()).thenReturn(hasPhotosVideosPermissions)
         viewModel.start(listOf(), browserType, null, site)
         whenever(deviceMediaListBuilder.buildDeviceMedia(browserType)).thenReturn(domainModel)
         viewModel.uiState.observeForever {

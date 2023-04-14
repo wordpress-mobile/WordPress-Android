@@ -190,6 +190,7 @@ public class AppPrefs {
         // Jetpack Individual Plugin overlay for WordPress app
         WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_SHOWN_COUNT,
         WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_LAST_SHOWN_TIMESTAMP,
+        NOTIFICATIONS_PERMISSION_WARNING_DISMISSED,
     }
 
     /**
@@ -233,7 +234,12 @@ public class AppPrefs {
         // permission keys - set once a specific permission has been asked, regardless of response
         ASKED_PERMISSION_STORAGE_WRITE,
         ASKED_PERMISSION_STORAGE_READ,
+        ASKED_PERMISSION_IMAGES_READ,
+        ASKED_PERMISSION_VIDEO_READ,
+        ASKED_PERMISSION_AUDIO_READ,
         ASKED_PERMISSION_CAMERA,
+
+        ASKED_PERMISSION_NOTIFICATIONS,
 
         // Updated after WP.com themes have been fetched
         LAST_WP_COM_THEMES_SYNC,
@@ -1645,5 +1651,13 @@ public class AppPrefs {
 
     public static void setWPJetpackIndividualPluginOverlayLastShownTimestamp(long timestamp) {
         setLong(DeletablePrefKey.WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_LAST_SHOWN_TIMESTAMP, timestamp);
+    }
+
+    public static boolean getNotificationsPermissionsWarningDismissed() {
+        return getBoolean(DeletablePrefKey.NOTIFICATIONS_PERMISSION_WARNING_DISMISSED, false);
+    }
+
+    public static void setNotificationsPermissionWarningDismissed(boolean dismissed) {
+        setBoolean(DeletablePrefKey.NOTIFICATIONS_PERMISSION_WARNING_DISMISSED, dismissed);
     }
 }

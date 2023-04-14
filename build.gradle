@@ -11,21 +11,21 @@ plugins {
 ext {
     minSdkVersion = 24
     compileSdkVersion = 33
-    targetSdkVersion = 31
+    targetSdkVersion = 33
 }
 
 ext {
     // libs
-    automatticAboutVersion = '1.0.0'
+    automatticAboutVersion = '1.1.0'
     automatticRestVersion = '1.0.8'
-    automatticStoriesVersion = '2.0.0'
+    automatticStoriesVersion = '2.1.0'
     automatticTracksVersion = '2.2.0'
     gutenbergMobileVersion = 'v1.93.0'
     wordPressAztecVersion = 'v1.6.3'
-    wordPressFluxCVersion = 'trunk-1ca49e91927fd4bfb1a9b84dd90d8c794deb4fe7'
+    wordPressFluxCVersion = 'trunk-c4f88d5272c51d59cb7763681699b5925d76dace'
     wordPressLoginVersion = '1.3.0'
     wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressUtilsVersion = '3.3.0'
+    wordPressUtilsVersion = '3.6.0'
 
     // debug
     stethoVersion = '1.6.0'

@@ -1497,6 +1497,15 @@
     <string name="notifications_tab_title_follows">Follows</string>
     <string name="notifications_tab_title_likes">Likes</string>
 
+    <!-- Notification permission -->
+    <string name="notifications_permission_fix">Fix</string>
+    <string name="notifications_permission_dismiss_content_description">Dismiss notification permission warning.</string>
+    <string name="notifications_permission_off_desc">Push notifications are turned off.</string>
+    <string name="notifications_permission_bottom_sheet_title">Push notifications are turned off</string>
+    <string name="notifications_permission_bottom_sheet_description_1">You\'ll need to open the app to see notifications.</string>
+    <string name="notifications_permission_bottom_sheet_description_2">Go to Settings → Notifications → App Settings, and turn %1$s on to be notified immediately.</string>
+    <string name="notifications_permission_bottom_sheet_button">Turn on notifications</string>
+
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
     <string name="notification_settings_main_status_on">On</string>
@@ -2804,8 +2813,12 @@
     <string name="photo_picker_wordpress_media_library">Choose from WordPress Media Library</string>
     <string name="photo_picker_gif">Choose from Tenor</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
+    <string name="photo_picker_soft_ask_photos_videos_audio_label">%s needs permission to access your music, audio, photos and videos</string>
+    <string name="photo_picker_soft_ask_photos_videos_label">%s needs permission to access your photos and videos</string>
+    <string name="photo_picker_soft_ask_photos_label">%s needs permission to access your photos</string>
+    <string name="photo_picker_soft_ask_videos_label">%s needs permission to access your videos</string>
+    <string name="photo_picker_soft_ask_audios_label">%s needs permission to access your audios</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="photo_picker_use_photo">Use this photo</string>
     <string name="photo_picker_use_video">Use this video</string>
     <string name="photo_picker_use_audio">Use this audio</string>
@@ -2825,7 +2838,7 @@
     <string name="media_insert_failed_with_reason">Media insert failed: %s</string>
     <string name="media_insert_failed">Media insert failed.</string>
     <string name="media_loading_failed">Media loading failed</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s and %3$s.</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">%1$s was denied access to your media files. To fix this, edit your permissions and turn on %2$s.</string>
 
     <!-- GIFs -->
     <string name="gif_powered_by_tenor">Powered by Tenor</string>
@@ -2850,6 +2863,10 @@
     <string name="permissions_denied_title">Permissions</string>
     <string name="permissions_denied_message">It looks like you turned off permissions required for this feature.&lt;br/&gt;&lt;br/&gt;To change this, edit your permissions and make sure &lt;strong&gt;%s&lt;/strong&gt; is enabled.</string>
     <string name="permission_storage">Storage</string>
+    <string name="permission_images">Photos and videos</string>
+    <string name="permission_video" translatable="false">@string/permission_images</string>
+    <string name="permission_audio">Music and audio</string>
+    <string name="permission_images_video_audio">Photos and videos &amp; Music and audio</string>
     <string name="permission_camera">Camera</string>
     <string name="permission_microphone">Microphone</string>
 
@@ -4060,6 +4077,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_reminders_notify_me">Notify me</string>
     <string name="blogging_reminders_update">Update</string>
     <string name="blogging_reminders_done">Done</string>
+    <string name="blogging_reminders_notifications_permission_title">Turn on push notifications</string>
+    <string name="blogging_reminders_notifications_permission_caption">To use blogging reminders, you\'ll need to turn on push notifications.</string>
+    <string name="blogging_reminders_notifications_permission_description" translatable="false">@string/notifications_permission_bottom_sheet_description_2</string>
+    <string name="blogging_reminders_notifications_permission_primary_button" translatable="false">@string/notifications_permission_bottom_sheet_button</string>
     <string name="blogging_reminders_epilogue_title">All set!</string>
     <string name="blogging_reminders_epilogue_not_set_title">Reminders removed!</string>
     <string name="blogging_reminders_epilogue_body_days_with_time">You\'ll get reminders to blog %1$s a week on %2$s at %3$s.</string>
