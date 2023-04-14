@@ -56,8 +56,10 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
+import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFullPluginInstallOnboardingUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
@@ -325,7 +327,13 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
     @Mock
+    lateinit var dashboardCardDomainUtils: DashboardCardDomainUtils
+
+    @Mock
     lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
+    @Mock
+    lateinit var wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
@@ -546,7 +554,9 @@ class MySiteViewModelTest : BaseUnitTest() {
             getShowJetpackFullPluginInstallOnboardingUseCase,
             jetpackInstallFullPluginShownTracker,
             blazeFeatureUtils,
-            jetpackFeatureRemovalPhaseHelper
+            dashboardCardDomainUtils,
+            jetpackFeatureRemovalPhaseHelper,
+            wpJetpackIndividualPluginHelper,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -3273,6 +3283,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(blazeFeatureUtils).trackEntryPointTapped(BlazeFlowSource.DASHBOARD_CARD)
     }
+
     @Test
     fun `when promote with blaze card menu is accessed, then blaze card menu is accessed is tracked`() = test {
         initSelectedSite()
@@ -3296,6 +3307,28 @@ class MySiteViewModelTest : BaseUnitTest() {
             BlazeFlowSource.DASHBOARD_CARD
         )
     }
+
+    @Test
+    fun `when onActionableEmptyViewVisible is invoked then show jetpack individual plugin overlay`() =
+        test {
+            whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(true)
+
+            viewModel.onActionableEmptyViewVisible()
+            advanceUntilIdle()
+
+            assertThat(viewModel.onShowJetpackIndividualPluginOverlay.value?.peekContent()).isEqualTo(Unit)
+        }
+
+    @Test
+    fun `when onActionableEmptyViewVisible is invoked then don't show jetpack individual plugin overlay`() =
+        test {
+            whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(false)
+
+            viewModel.onActionableEmptyViewVisible()
+            advanceUntilIdle()
+
+            assertThat(viewModel.onShowJetpackIndividualPluginOverlay.value?.peekContent()).isNull()
+        }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 

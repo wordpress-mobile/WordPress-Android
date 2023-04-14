@@ -7,8 +7,10 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType.POST_
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardDomainCardBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import javax.inject.Inject
 
@@ -16,7 +18,9 @@ class CardsBuilder @Inject constructor(
     private val todaysStatsCardBuilder: TodaysStatsCardBuilder,
     private val postCardBuilder: PostCardBuilder,
     private val bloggingPromptCardBuilder: BloggingPromptCardBuilder,
-    private val promoteWithBlazeCardBuilder: PromoteWithBlazeCardBuilder
+    private val promoteWithBlazeCardBuilder: PromoteWithBlazeCardBuilder,
+    private val dashboardDomainCardBuilder: DashboardDomainCardBuilder,
+    private val pagesCardBuilder: PagesCardBuilder
 ) {
     fun build(
         dashboardCardsBuilderParams: DashboardCardsBuilderParams
@@ -36,6 +40,10 @@ class CardsBuilder @Inject constructor(
                     add(it)
                 }
 
+                dashboardDomainCardBuilder.build(dashboardCardsBuilderParams.dashboardCardDomainBuilderParams)?.let {
+                    add(it)
+                }
+
                 todaysStatsCardBuilder.build(dashboardCardsBuilderParams.todaysStatsCardBuilderParams)
                     ?.let { add(it) }
 
@@ -50,6 +58,8 @@ class CardsBuilder @Inject constructor(
                 if (showPostCards) {
                     addAll(postCards)
                 }
+
+                pagesCardBuilder.build(dashboardCardsBuilderParams.pagesCardBuilderParams)?.let { add(it) }
             }
         }.toList()
     )

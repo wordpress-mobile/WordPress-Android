@@ -4,10 +4,12 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
@@ -62,7 +64,9 @@ sealed class MySiteCardAndItemBuilderParams {
         val todaysStatsCardBuilderParams: TodaysStatsCardBuilderParams,
         val postCardBuilderParams: PostCardBuilderParams,
         val bloggingPromptCardBuilderParams: BloggingPromptCardBuilderParams,
-        val promoteWithBlazeCardBuilderParams: PromoteWithBlazeCardBuilderParams
+        val promoteWithBlazeCardBuilderParams: PromoteWithBlazeCardBuilderParams,
+        val dashboardCardDomainBuilderParams: DashboardCardDomainBuilderParams,
+        val pagesCardBuilderParams: PagesCardBuilderParams
     ) : MySiteCardAndItemBuilderParams()
 
     data class TodaysStatsCardBuilderParams(
@@ -80,6 +84,17 @@ sealed class MySiteCardAndItemBuilderParams {
         data class PostItemClickParams(
             val postCardType: PostCardType,
             val postId: Int
+        )
+    }
+
+    data class PagesCardBuilderParams(
+        val pageCard: PagesCardModel?,
+        val onPagesItemClick: (params: PagesItemClickParams) -> Unit,
+        val onFooterLinkClick: () -> Unit
+    ) : MySiteCardAndItemBuilderParams() {
+        data class PagesItemClickParams(
+            val pagesCardType: PagesCardContentType,
+            val pageId: Int
         )
     }
 
@@ -109,6 +124,13 @@ sealed class MySiteCardAndItemBuilderParams {
     ) : MySiteCardAndItemBuilderParams()
 
     data class PromoteWithBlazeCardBuilderParams(
+        val isEligible: Boolean = false,
+        val onClick: () -> Unit,
+        val onHideMenuItemClick: () -> Unit,
+        val onMoreMenuClick: () -> Unit
+    ) : MySiteCardAndItemBuilderParams()
+
+    data class DashboardCardDomainBuilderParams(
         val isEligible: Boolean = false,
         val onClick: () -> Unit,
         val onHideMenuItemClick: () -> Unit,

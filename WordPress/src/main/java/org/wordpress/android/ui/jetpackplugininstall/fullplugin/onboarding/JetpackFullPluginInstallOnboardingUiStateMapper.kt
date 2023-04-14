@@ -3,7 +3,7 @@ package org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.JetpackFullPluginInstallOnboardingViewModel.UiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.extensions.activeJetpackConnectionPluginNames
+import org.wordpress.android.util.extensions.activeIndividualJetpackPluginNames
 import javax.inject.Inject
 
 class JetpackFullPluginInstallOnboardingUiStateMapper @Inject constructor(
@@ -13,7 +13,7 @@ class JetpackFullPluginInstallOnboardingUiStateMapper @Inject constructor(
         val selectedSite = selectedSiteRepository.getSelectedSite()
         return UiState.Loaded(
             siteUrl = selectedSite?.let { SiteUtils.getHomeURLOrHostName(it) }.orEmpty(),
-            pluginNames = selectedSite?.activeJetpackConnectionPluginNames().orEmpty(),
+            pluginNames = selectedSite?.activeIndividualJetpackPluginNames().orEmpty(),
         )
     }
 }

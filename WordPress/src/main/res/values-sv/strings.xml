@@ -1,21 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-21 06:47:06+0000
+Translation-Revision-Date: 2023-04-05 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sv_SE
 -->
 <resources>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; använder %2$s enskilda Jetpack-tillägg</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; använder &lt;b&gt;%2$s&lt;/b&gt;-tillägget</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">Webbplatser med enskilda Jetpack-tillägg stöds inte av WordPress-appen.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt; använder sig av enskilda Jetpack-tillägg vilket inte stöds av WordPress-appen.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt; använder sig av &lt;b&gt;%2$s&lt;/b&gt;-tillägget vilket inte stöds av WordPress-appen.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">Det går inte att komma åt några av dina webbplatser</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">Det går inte att komma åt en av dina webbplatser</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">Gå till Jetpack-appen där vi guidar dig igenom hur du ansluter det fullständiga Jetpack-tillägget så att du kan använda den här webbplatsen med appen.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">Byt till Jetpack-appen</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s använder %2$s, som inte stöder alla funktioner i appen än.\n\nInstallera %3$s för att använda appen med den här webbplatsen.</string>
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Denna webbplats</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$sanvänder %2$s, som inte stöder alla funktioner i appen än. Installera %3$s.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s använder %2$s, som inte stöder alla funktioner i appen än. Installera %3$s.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Flyttar till Jetpack-appen om några dagar.</string>
+    <string name="wp_jp_static_poster_footnote">Att byta är gratis och tar bara en minut.</string>
+    <string name="wp_jp_static_poster_message">Statistik, Tittaren, Notiser och andra Jetpack-drivna funktioner har tagits bort från WordPress-appen och finns nu bara i Jetpack-appen.</string>
     <string name="wp_jp_static_poster_button_secondary">Lär dig mer på Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Byt till Jetpack-appen</string>
     <string name="wp_jp_static_poster_title_plural">%s har flyttat till Jetpack-appen.</string>
     <string name="wp_jp_static_poster_title">%s har flyttat till Jetpack-appen.</string>
+    <string name="my_site_btn_wp_admin">WP-Adminpanel</string>
     <string name="my_site_header_manage">Hantera</string>
     <string name="my_site_header_traffic">Trafik</string>
     <string name="my_site_header_content">Innehåll</string>
     <string name="jetpack_plugin_install_remote_plugin_done_button">Ställ in</string>
     <string name="jetpack_plugin_install_full_plugin_done_button">Klar</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Nu när Jetpack är installerat behöver vi bara konfigurera det. Detta tar bara en minut.</string>
     <string name="blaze_overlay_site_promotional_button">Marknadsför ett inlägg nu</string>
     <string name="blaze_overlay_page_promotional_button">Marknadsför den här sidan</string>
     <string name="blaze_overlay_post_promotional_button">Marknadsför det här inlägget</string>
@@ -55,11 +72,13 @@ Language: sv_SE
     <string name="jetpack_plugin_install_error_button_retry">Försök igen</string>
     <string name="jetpack_plugin_install_error_description">Jetpack kunde inte installeras just nu.</string>
     <string name="jetpack_plugin_install_error_title">Det var ett problem</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Felikon</string>
     <string name="jetpack_plugin_install_full_plugin_done_description">Redo att använda denna webbplats med appen.</string>
     <string name="jetpack_plugin_install_done_title">Jetpack har installerats</string>
     <string name="jetpack_plugin_install_installing_description">Installerar Jetpack på din webbplats. Detta kan ta upp till några minuter att slutföra.</string>
     <string name="jetpack_plugin_install_installing_title">Installerar Jetpack</string>
     <string name="jetpack_plugin_install_initial_button">Fortsätt</string>
+    <string name="jetpack_plugin_install_initial_description">Din webbplats autentiseringsuppgifter används bara för att installera Jetpack säkert och kommer inte att sparas</string>
     <string name="jetpack_plugin_install_initial_title">Installera Jetpack</string>
     <string name="jetpack_plugin_install_jp_logo_content_description">Jetpack-ikon</string>
     <string name="button_promote_with_blaze">Marknadsför med Blaze</string>

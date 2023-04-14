@@ -30,13 +30,16 @@ data class MySiteUiState(
     val visibleDynamicCards: List<DynamicCardType> = listOf(),
     val cardsUpdate: CardsUpdate? = null,
     val bloggingPromptsUpdate: BloggingPromptUpdate? = null,
-    val promoteWithBlazeUpdate: PartialState.PromoteWithBlazeUpdate? = null
+    val promoteWithBlazeUpdate: PartialState.PromoteWithBlazeUpdate? = null,
+    val hasSiteDomains: Boolean = false
 ) {
     sealed class PartialState {
         data class CurrentAvatarUrl(val url: String) : PartialState()
         data class SelectedSite(val site: SiteModel?) : PartialState()
         data class ShowSiteIconProgressBar(val showSiteIconProgressBar: Boolean) : PartialState()
         data class DomainCreditAvailable(val isDomainCreditAvailable: Boolean) : PartialState()
+        data class DomainsAvailable(val hasSiteDomains: Boolean) : PartialState()
+
         data class JetpackCapabilities(val scanAvailable: Boolean, val backupAvailable: Boolean) : PartialState()
         data class QuickStartUpdate(
             val activeTask: QuickStartTask? = null,
@@ -72,6 +75,7 @@ data class MySiteUiState(
             is SelectedSite -> uiState.copy(site = partialState.site)
             is ShowSiteIconProgressBar -> uiState.copy(showSiteIconProgressBar = partialState.showSiteIconProgressBar)
             is DomainCreditAvailable -> uiState.copy(isDomainCreditAvailable = partialState.isDomainCreditAvailable)
+            is PartialState.DomainsAvailable -> uiState.copy(hasSiteDomains = partialState.hasSiteDomains)
             is JetpackCapabilities -> uiState.copy(
                 scanAvailable = partialState.scanAvailable,
                 backupAvailable = partialState.backupAvailable

@@ -9,6 +9,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
+import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainSource
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
@@ -31,7 +32,8 @@ class MySiteSourceManager @Inject constructor(
     siteIconProgressSource: SiteIconProgressSource,
     private val bloggingPromptCardSource: BloggingPromptCardSource,
     promoteWithBlazeCardSource: PromoteWithBlazeCardSource,
-    private val selectedSiteRepository: SelectedSiteRepository
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val dashboardCardDomainSource: DashboardCardDomainSource
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
         selectedSiteSource,
@@ -43,7 +45,8 @@ class MySiteSourceManager @Inject constructor(
         dynamicCardsSource,
         cardsSource,
         bloggingPromptCardSource,
-        promoteWithBlazeCardSource
+        promoteWithBlazeCardSource,
+        dashboardCardDomainSource
     )
 
     private val showDashboardCards: Boolean
@@ -98,6 +101,7 @@ class MySiteSourceManager @Inject constructor(
         domainRegistrationSource.clear()
         scanAndBackupSource.clear()
         selectedSiteSource.clear()
+        dashboardCardDomainSource.clear()
     }
 
     private fun refreshSubsetOfAllSources() {

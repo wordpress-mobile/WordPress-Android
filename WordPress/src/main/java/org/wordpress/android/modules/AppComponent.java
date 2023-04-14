@@ -3,14 +3,11 @@ package org.wordpress.android.modules;
 import com.automattic.android.tracks.crashlogging.CrashLogging;
 
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
-import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.JetpackConnectionResultActivity;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.about.UnifiedAboutActivity;
-import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
-import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
@@ -29,7 +26,6 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditFragment;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesFragment;
-import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment;
 import org.wordpress.android.ui.domains.DomainSuggestionsFragment;
@@ -49,7 +45,6 @@ import org.wordpress.android.ui.layoutpicker.LayoutsAdapter;
 import org.wordpress.android.ui.main.AddContentAdapter;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
-import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -140,9 +135,7 @@ import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
 import org.wordpress.android.ui.reader.CommentNotificationsBottomSheetFragment;
 import org.wordpress.android.ui.reader.ReaderBlogFragment;
-import org.wordpress.android.ui.reader.ReaderCommentListActivity;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
-import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.ReaderSearchActivity;
@@ -169,7 +162,6 @@ import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
-import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetBlockListProviderFactory;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListProvider;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget;
@@ -209,11 +201,7 @@ public interface AppComponent {
 
     void inject(PostUploadHandler object);
 
-    void inject(SignupEpilogueActivity object);
-
     void inject(SignupEpilogueFragment object);
-
-    void inject(PostSignupInterstitialActivity object);
 
     void inject(JetpackConnectionResultActivity object);
 
@@ -227,8 +215,6 @@ public interface AppComponent {
 
     void inject(CommentDetailFragment object);
 
-    void inject(CommentFullScreenDialogFragment object);
-
     void inject(EditCommentActivity object);
 
     void inject(CommentsDetailActivity object);
@@ -240,8 +226,6 @@ public interface AppComponent {
     void inject(MyProfileFragment object);
 
     void inject(AccountSettingsFragment object);
-
-    void inject(SitePickerActivity object);
 
     void inject(SitePickerAdapter object);
 
@@ -323,8 +307,6 @@ public interface AppComponent {
 
     void inject(NotificationsDetailListFragment object);
 
-    void inject(ReaderCommentListActivity object);
-
     void inject(ReaderSubsActivity object);
 
     void inject(ReaderUpdateLogic object);
@@ -358,8 +340,6 @@ public interface AppComponent {
     void inject(ReaderSimplePostContainerView object);
 
     void inject(ReaderPostPagerActivity object);
-
-    void inject(ReaderPostListActivity object);
 
     void inject(ReaderBlogFragment object);
 
@@ -444,10 +424,6 @@ public interface AppComponent {
     void inject(TodayWidgetListProvider object);
 
     void inject(TodayWidgetBlockListProviderFactory object);
-
-    void inject(StatsListFragment object);
-
-    void inject(DomainRegistrationActivity object);
 
     void inject(EditPostPublishSettingsFragment object);
 

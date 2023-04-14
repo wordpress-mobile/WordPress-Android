@@ -1,16 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-27 20:54:56+0000
+Translation-Revision-Date: 2023-04-10 09:35:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: gl_ES
 -->
 <resources>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; está usando %2$s plugins individuais de Jetpack</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; está usando o plugin &lt;b&gt;%2$s&lt;/b&gt;</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">A aplicación de WordPress non é compatible cos plugins individuais de Jetpack.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt; está usando plugins individuais de Jetpack que non son compatibles coa aplicación de WordPress.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt; está usando o plugin &lt;b&gt;%2$s&lt;/b&gt;, que non é compatible coa aplicación de WordPress.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">Non se puido acceder a algúns dos teus sitios</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">Non se puido acceder a un dos teus sitios</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">Por favor, pásate á aplicación Jetpack, onde te guiaremos para que conectes o plugin Jetpack para usar este sitio coa aplicación.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">Cambia á aplicación de Jetpack</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s usa %2$s, que aínda non é compatible con todas as funcións da aplicación.\n\nInstala o %3$s para usar a aplicación con este sitio.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">Este sitio</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s usa %2$s, que aínda non é compatible con todas as funcións da aplicación. Instala o %3$s.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s usa %2$s, que aínda non é compatible con todas as funcións da aplicación. Instala o %3$s.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Pásate á aplicación de Jetpack en poucos días.</string>
+    <string name="wp_jp_static_poster_footnote">O cambio é gratuíto e só che levará un minuto.</string>
+    <string name="wp_jp_static_poster_message">Eliminamos algunhas funcións (como Estatísticas, Lector ou Notificacións, entre outras) da aplicación de WordPress e, agora, só están dispoñibles na de Jetpack.</string>
+    <string name="wp_jp_static_poster_button_secondary">Encontrarás máis información en Jetpack.com</string>
+    <string name="wp_jp_static_poster_button_primary">Cambia á aplicación de Jetpack</string>
+    <string name="wp_jp_static_poster_title_plural">%s trasladáronse á aplicación de Jetpack.</string>
+    <string name="wp_jp_static_poster_title">%s trasladouse á aplicación de Jetpack.</string>
+    <string name="my_site_btn_wp_admin">WP Admin</string>
+    <string name="my_site_header_manage">Xestionar</string>
+    <string name="my_site_header_traffic">Tráfico</string>
+    <string name="my_site_header_content">Contido</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Configurar</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">Feito</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Agora que Jetpack está instalado, só tenemos que configuralo. Só che levará un minuto.</string>
+    <string name="blaze_overlay_site_promotional_button">Promover unha entrada con Blaze agora</string>
+    <string name="blaze_overlay_page_promotional_button">Promover esta páxina con Blaze</string>
+    <string name="blaze_overlay_post_promotional_button">Promover esta entrada con Blaze</string>
+    <string name="blaze_promotional_subtitle_3">Fai un seguimento do rendemento, inicia e para a actividade promocional de Blaze en calquera momento.</string>
+    <string name="blaze_promotional_subtitle_2">O teu contido aparecerá en millóns de sitios de WordPress e Tumblr.</string>
+    <string name="blaze_promotional_subtitle_1">Promove calquera entrada ou páxina en cuestión de minutos por só uns euros ao día.</string>
+    <string name="blaze_promotional_text">Xera máis tráfico cara o teu sitio con Blaze</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="site_creation_domain_tag_unavailable">Este dominio xa está rexistrado</string>
+    <string name="site_creation_domain_tag_sale">Oferta</string>
+    <string name="site_creation_domain_tag_recommended">Recomendado</string>
+    <string name="site_creation_domain_tag_best_alternative">Mellor alternativa</string>
+    <string name="site_creation_domain_cost">%s ao ano</string>
+    <string name="me_btn_help">Axuda</string>
+    <string name="support_faq_caption">Consulta o noso FAQ para obter respostas a preguntas habituais que poderías ter.</string>
+    <string name="support_faq_title">Grazas por cambiar á aplicación de Jetpack!</string>
+    <string name="logs_button">Rexistros</string>
+    <string name="tickets">Entradas</string>
+    <string name="free">Gratis</string>
+    <string name="help_buttons_screen_title">Axuda</string>
     <string name="gutenberg_native_blocks_menu">Menú de bloques</string>
     <string name="promote_blaze_card_menu_hide_this">Ocultar isto</string>
+    <string name="promote_blaze_card_sub_title">Amosa o teu traballo en millóns de sitios.</string>
+    <string name="promote_blaze_card_title">Promove o teu contido con Blaze</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Pechar</string>
     <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contactar con soporte</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Instalar o plugin completo</string>
     <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Termos e condicións</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Ao configurar Jetpack, aceptas os nosos </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">plugin completo de Jetpack</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">plugins individuais de Jetpack</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">o plugin %1$s</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s usa %2$s, que aínda non é compatible con todas as funcións da aplicación.\n\nInstala o %3$s para usar a aplicación con este sitio.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Por favor, instala o plugin completo de Jetpack</string>
+    <string name="only_one_primary_site_message">Só hai un sitio dispoñible, polo que non podes cambiar o teu sitio principal.</string>
+    <string name="jetpack_plugin_install_error_button_contact_support">Contactar con soporte</string>
+    <string name="jetpack_plugin_install_error_button_retry">Reintentar</string>
+    <string name="jetpack_plugin_install_error_description">Jetpack non se puido instalar agora.</string>
+    <string name="jetpack_plugin_install_error_title">Produciuse un problema</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Icona de erro</string>
+    <string name="jetpack_plugin_install_full_plugin_done_description">Todo listo para usar este sitio coa aplicación.</string>
+    <string name="jetpack_plugin_install_done_title">Jetpack instalado</string>
+    <string name="jetpack_plugin_install_installing_description">Instalando Jetpack no teu sitio. Isto pode levar uns minutos completarse.</string>
+    <string name="jetpack_plugin_install_installing_title">Instalando Jetpack</string>
+    <string name="jetpack_plugin_install_initial_button">Continuar</string>
+    <string name="jetpack_plugin_install_initial_description">As credenciais da túa web non se almacenarán, e só se utilizan para instalar Jetpack.</string>
+    <string name="jetpack_plugin_install_initial_title">Instalar Jetpack</string>
+    <string name="jetpack_plugin_install_jp_logo_content_description">Icona de Jetpack</string>
     <string name="button_promote_with_blaze">Promocionar con Blaze</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Libera todo o potencial do teu sitio. Obtén estatísticas, notificacións e máis con Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">O teu sitio ten o plugin de Jetpack</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-12 19:02:43+0000
+Translation-Revision-Date: 2023-04-03 14:27:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: el_GR
@@ -14,6 +14,8 @@ Language: el_GR
     <string name="help_buttons_screen_title">Βοήθεια</string>
     <string name="free">Δωρεάν</string>
     <string name="tickets">Εισιτήρια</string>
+    <string name="jetpack_plugin_install_error_title">Παρουσιάστηκε ένα πρόβλημα</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Εικονίδιο σφάλματος</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d Απαντήσεις</string>
     <string name="blogging_prompts_list_number_of_answers_one">1 απάντηση</string>
     <string name="blogging_prompts_list_number_of_answers_zero">0 απαντήσεις</string>
@@ -1249,9 +1251,11 @@ Language: el_GR
     <string name="tags_separate_with_commas">Διαχωρίστε τις ετικέτες με κόμματα</string>
     <string name="sdcard_title">Κάρτα SD Είναι Απαραίτητη</string>
     <string name="media">Πολυμέσα</string>
+    <string name="updating_cat_success">Επιτυχής ενημέρωση κατηγορίας</string>
     <string name="approve">Έγκριση</string>
     <string name="delete">Διαγραφή</string>
     <string name="none">Κανένα</string>
+    <string name="updating_cat_failed">Η ενημέρωση της κατηγορίας απέτυχε</string>
     <string name="reply">Απάντηση</string>
     <string name="yes">Ναι</string>
     <string name="no">Όχι</string>

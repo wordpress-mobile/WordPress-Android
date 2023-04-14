@@ -53,6 +53,7 @@ public class LocaleManager {
      * @param context current context used to access Shared Preferences.
      * @param configuration configuration that the locale should be applied to.
      */
+    @SuppressLint("AppBundleLocaleChanges")
     public static Configuration updatedConfigLocale(Context context, Configuration configuration) {
         Locale locale = languageLocale(getLanguage(context));
         Locale.setDefault(locale);
@@ -154,6 +155,7 @@ public class LocaleManager {
      * @param language The 2-letter language code (example "en")
      * @return The modified context containing the updated localized resources
      */
+    @SuppressLint("AppBundleLocaleChanges")
     private static Context updateResources(Context context, String language) {
         Locale locale = languageLocale(language);
         Locale.setDefault(locale);

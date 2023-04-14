@@ -3,10 +3,11 @@ package org.wordpress.android.ui.stats.refresh.lists.detail
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsDetailFragmentBinding
@@ -23,7 +24,8 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-class StatsDetailFragment : DaggerFragment(R.layout.stats_detail_fragment) {
+@AndroidEntryPoint
+class StatsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
