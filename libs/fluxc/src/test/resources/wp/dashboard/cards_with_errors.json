@@ -4,5 +4,8 @@
   },
   "posts": {
     "error": "unauthorized"
+  },
+  "activity": {
+    "error": "unauthorized"
   }
 }

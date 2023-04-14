@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.model.dashboard
 
+import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
 import java.util.Date
@@ -13,8 +15,14 @@ sealed class CardModel(
     ) {
         TODAYS_STATS(TodaysStatsCardModel::class.java, "todays_stats"),
         POSTS(PostsCardModel::class.java, "posts"),
-        PAGES(PagesCardModel::class.java, "pages")
+        PAGES(PagesCardModel::class.java, "pages"),
+        ACTIVITY(ActivityCardModel::class.java, "activity")
     }
+
+    data class ActivityCardModel(
+        val activities: List<ActivityLogModel> = emptyList(),
+        val error: ActivityCardError? = null
+    )  : CardModel(Type.ACTIVITY)
 
     data class PagesCardModel(
         val pages: List<PageCardModel> = emptyList(),
