@@ -110,6 +110,15 @@ class CardsStore @Inject constructor(
         val message: String? = null
     ) : OnChangedError
 
+    enum class ActivityCardErrorType {
+        UNAUTHORIZED,
+        GENERIC_ERROR
+    }
+    class ActivityCardError(
+        val type: ActivityCardErrorType,
+        val message: String? = null
+    ) : OnChangedError
+
     enum class CardsErrorType {
         GENERIC_ERROR,
         AUTHORIZATION_REQUIRED,
