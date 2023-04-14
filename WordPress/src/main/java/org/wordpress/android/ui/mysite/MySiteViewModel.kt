@@ -354,9 +354,7 @@ class MySiteViewModel @Inject constructor(
                     viewModelScope,
                     state.dashboardCardsAndItems.filterIsInstance<DashboardCards>().firstOrNull()
                 )
-
-                dashboardCardDomainUtils.trackDashboardCardDomainShown(viewModelScope, state as? SiteSelected)
-
+                
                 state
             } else {
                 buildNoSiteState()
@@ -1697,6 +1695,7 @@ class MySiteViewModel @Inject constructor(
             .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
         siteSelected.cardAndItems.filterIsInstance<JetpackInstallFullPluginCard>()
             .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type, quickStartRepository.currentTab) }
+        dashboardCardDomainUtils.trackDashboardCardDomainShown(viewModelScope, siteSelected)
     }
 
     private fun resetShownTrackers() {

@@ -14,7 +14,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource
@@ -34,7 +34,7 @@ class DashboardCardDomainSource @Inject constructor(
 ) : MySiteSource.MySiteRefreshSource<MySiteUiState.PartialState.DomainsAvailable> {
     override val refresh = MutableLiveData(false)
 
-    private val continuations = mutableMapOf<Int, CancellableContinuation<SiteStore.FetchedDomainsPayload>?>()
+    private val continuations = mutableMapOf<Int, CancellableContinuation<FetchedDomainsPayload>?>()
 
     init {
         dispatcher.register(this)
@@ -96,7 +96,7 @@ class DashboardCardDomainSource @Inject constructor(
         selectedSite: SiteModel
     ) {
         try {
-            val event = suspendCancellableCoroutine<SiteStore.FetchedDomainsPayload> { cancellableContinuation ->
+            val event = suspendCancellableCoroutine<FetchedDomainsPayload> { cancellableContinuation ->
                 continuations[siteLocalId] = cancellableContinuation
                 dispatchFetchDomains(selectedSite)
             }
@@ -121,7 +121,7 @@ class DashboardCardDomainSource @Inject constructor(
     private fun dispatchFetchDomains(site: SiteModel) = dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onDomainsFetched(event: SiteStore.FetchedDomainsPayload) {
+    fun onDomainsFetched(event: FetchedDomainsPayload) {
         continuations[event.site.id]?.resume(event)
         continuations[event.site.id] = null
     }
