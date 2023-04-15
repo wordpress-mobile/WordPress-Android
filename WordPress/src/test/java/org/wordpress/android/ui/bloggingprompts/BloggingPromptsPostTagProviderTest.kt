@@ -7,7 +7,6 @@ import org.wordpress.android.ui.reader.services.post.ReaderPostLogic
 import kotlin.test.assertEquals
 
 class BloggingPromptsPostTagProviderTest {
-
     @Test
     fun `Should return the expected ReaderTag when promptIdSearchReaderTag is called`() {
         val promptId = 1234
