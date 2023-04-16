@@ -38,10 +38,10 @@ class DashboardCardDomainSource @Inject constructor(
     }
 
     private fun shouldFetchDomains(selectedSite: SiteModel): Boolean {
-        // By assuming that "isDomainCreditAvailable" and "hasSiteDomain" are true, we are checking other cases for
+        // By assuming that "isDomainCreditAvailable" and "hasSiteDomain" are false, we are checking other cases for
         // "shouldShowCard". If "shouldShowCard" still returns false, then we do not need to fetch domains.
-        val isDomainCreditAvailable = true
-        val hasSiteDomain = true
+        val isDomainCreditAvailable = false
+        val hasSiteDomain = false
 
         return domainUtils.shouldShowCard(selectedSite, isDomainCreditAvailable, hasSiteDomain)
     }
