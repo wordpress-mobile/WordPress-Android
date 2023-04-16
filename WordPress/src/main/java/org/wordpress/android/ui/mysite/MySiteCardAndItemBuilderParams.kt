@@ -101,6 +101,7 @@ sealed class MySiteCardAndItemBuilderParams {
     }
 
     data class ActivityCardBuilderParams(
+        val site: SiteModel,
         val activityCardModel: CardModel.ActivityCardModel?,
         val onActivityItemClick: (activityId: String) -> Unit,
         val onFooterLinkClick: () -> Unit
