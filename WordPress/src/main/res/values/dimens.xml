@@ -745,6 +745,6 @@
     <dimen name="menu_item_icon_size">24dp</dimen>
 
     <!-- Activity Log Card -->
-    <dimen name="activity_card_icon_size">40dp</dimen>
+    <dimen name="activity_card_icon_size">48dp</dimen>
 
 </resources>

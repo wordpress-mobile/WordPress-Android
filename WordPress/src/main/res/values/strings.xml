@@ -4515,4 +4515,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Jetpack - Dashboard cards - Activity Card -->
     <string name="dashboard_activity_card_title">Recent activity</string>
     <string name="dashboard_activity_card_footer_link">View all activity</string>
+    <string name="dashboard_activity_card_dot_separator" translatable="false">@string/reader_dot_separator</string>
 </resources>
