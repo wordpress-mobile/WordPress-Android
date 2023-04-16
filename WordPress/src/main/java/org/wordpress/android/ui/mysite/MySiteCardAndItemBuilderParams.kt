@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
@@ -66,7 +67,8 @@ sealed class MySiteCardAndItemBuilderParams {
         val bloggingPromptCardBuilderParams: BloggingPromptCardBuilderParams,
         val promoteWithBlazeCardBuilderParams: PromoteWithBlazeCardBuilderParams,
         val dashboardCardDomainBuilderParams: DashboardCardDomainBuilderParams,
-        val pagesCardBuilderParams: PagesCardBuilderParams
+        val pagesCardBuilderParams: PagesCardBuilderParams,
+        val activityBuilderParams: ActivityCardBuilderParams
     ) : MySiteCardAndItemBuilderParams()
 
     data class TodaysStatsCardBuilderParams(
@@ -97,6 +99,12 @@ sealed class MySiteCardAndItemBuilderParams {
             val pageId: Int
         )
     }
+
+    data class ActivityCardBuilderParams(
+        val activityCardModel: CardModel.ActivityCardModel?,
+        val onActivityItemClick: (activityId: String) -> Unit,
+        val onFooterLinkClick: () -> Unit
+    ) : MySiteCardAndItemBuilderParams()
 
     data class SiteItemsBuilderParams(
         val site: SiteModel,
