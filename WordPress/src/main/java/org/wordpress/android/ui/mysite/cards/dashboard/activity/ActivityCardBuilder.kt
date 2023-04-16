@@ -24,17 +24,14 @@ class ActivityCardBuilder @Inject constructor(
     private val siteUtilsWrapper: SiteUtilsWrapper,
 ) {
     fun build(params: ActivityCardBuilderParams): ActivityCard? {
-        if (!shouldBuildActivityCard(params)) return null
-
-        if (!dashboardCardActivityLogConfig.isEnabled() ||
-            params.activityCardModel == null ||
-            params.activityCardModel.activities.isEmpty()) {
-            return null
+        return if (shouldBuildActivityCard(params)) {
+            buildActivityCard(params)
+        } else {
+            null
         }
-        return convertToActivityItems(params)
     }
 
-    private fun convertToActivityItems(params: ActivityCardBuilderParams): ActivityCardWithItems {
+    private fun buildActivityCard(params: ActivityCardBuilderParams): ActivityCardWithItems {
         val activities = params.activityCardModel?.activities
         val content = activities?.take(MAX_ITEMS_IN_CARD)?.mapToActivityItems(params.onActivityItemClick) ?: emptyList()
         return ActivityCardWithItems(
