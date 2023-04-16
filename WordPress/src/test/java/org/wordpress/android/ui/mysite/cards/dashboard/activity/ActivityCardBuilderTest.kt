@@ -168,12 +168,7 @@ class ActivityCardBuilderTest : BaseUnitTest() {
     @Test
     fun `given activities list size is greater than 3, when build is called, then only 3 activities are selected`() {
         setShouldBuildActivityCard()
-        val activityModelWithFiveItems = ActivityCardModel(activities =
-            listOf(activityLogModel,
-                activityLogModel,
-                activityLogModel,
-                activityLogModel,
-                activityLogModel))
+        val activityModelWithFiveItems = ActivityCardModel(activities = List(5) { activityLogModel })
 
         val result = buildActivityCard(activityModelWithFiveItems)
 
