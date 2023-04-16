@@ -23,14 +23,14 @@ class DashboardCardDomainSource @Inject constructor(
     private val siteStore: SiteStore,
     private val domainUtils: DashboardCardDomainUtils,
     private val appLogWrapper: AppLogWrapper
-) : MySiteSource.MySiteRefreshSource<MySiteUiState.PartialState.DomainsAvailable> {
+) : MySiteSource.MySiteRefreshSource<MySiteUiState.PartialState.CustomDomainsAvailable> {
     override val refresh = MutableLiveData(false)
 
     override fun build(
         coroutineScope: CoroutineScope,
         siteLocalId: Int
-    ): LiveData<MySiteUiState.PartialState.DomainsAvailable> {
-        val data = MediatorLiveData<MySiteUiState.PartialState.DomainsAvailable>()
+    ): LiveData<MySiteUiState.PartialState.CustomDomainsAvailable> {
+        val data = MediatorLiveData<MySiteUiState.PartialState.CustomDomainsAvailable>()
         data.addSource(refresh) { data.refreshData(coroutineScope, siteLocalId, refresh.value) }
         refresh()
         return data
@@ -45,7 +45,7 @@ class DashboardCardDomainSource @Inject constructor(
         return domainUtils.shouldShowCard(selectedSite, isDomainCreditAvailable, hasSiteDomain)
     }
 
-    private fun MediatorLiveData<MySiteUiState.PartialState.DomainsAvailable>.refreshData(
+    private fun MediatorLiveData<MySiteUiState.PartialState.CustomDomainsAvailable>.refreshData(
         coroutineScope: CoroutineScope,
         siteLocalId: Int,
         isRefresh: Boolean? = null
@@ -57,19 +57,19 @@ class DashboardCardDomainSource @Inject constructor(
         }
     }
 
-    private fun MediatorLiveData<MySiteUiState.PartialState.DomainsAvailable>.refreshData(
+    private fun MediatorLiveData<MySiteUiState.PartialState.CustomDomainsAvailable>.refreshData(
         coroutineScope: CoroutineScope,
         siteLocalId: Int,
         selectedSite: SiteModel?
     ) {
         if (selectedSite == null || selectedSite.id != siteLocalId || !shouldFetchDomains(selectedSite)) {
-            postState(MySiteUiState.PartialState.DomainsAvailable(false))
+            postState(MySiteUiState.PartialState.CustomDomainsAvailable(false))
         } else {
             fetchDomainsAndRefreshData(coroutineScope, selectedSite)
         }
     }
 
-    private fun MediatorLiveData<MySiteUiState.PartialState.DomainsAvailable>.fetchDomainsAndRefreshData(
+    private fun MediatorLiveData<MySiteUiState.PartialState.CustomDomainsAvailable>.fetchDomainsAndRefreshData(
         coroutineScope: CoroutineScope,
         selectedSite: SiteModel
     ) {
@@ -85,7 +85,7 @@ class DashboardCardDomainSource @Inject constructor(
                 )
             }
 
-            postState(MySiteUiState.PartialState.DomainsAvailable(domainUtils.hasCustomDomain(domains)))
+            postState(MySiteUiState.PartialState.CustomDomainsAvailable(domainUtils.hasCustomDomain(domains)))
         }
     }
 }

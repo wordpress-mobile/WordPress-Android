@@ -31,14 +31,14 @@ data class MySiteUiState(
     val cardsUpdate: CardsUpdate? = null,
     val bloggingPromptsUpdate: BloggingPromptUpdate? = null,
     val promoteWithBlazeUpdate: PartialState.PromoteWithBlazeUpdate? = null,
-    val hasSiteDomains: Boolean = false
+    val hasSiteCustomDomains: Boolean = false
 ) {
     sealed class PartialState {
         data class CurrentAvatarUrl(val url: String) : PartialState()
         data class SelectedSite(val site: SiteModel?) : PartialState()
         data class ShowSiteIconProgressBar(val showSiteIconProgressBar: Boolean) : PartialState()
         data class DomainCreditAvailable(val isDomainCreditAvailable: Boolean) : PartialState()
-        data class DomainsAvailable(val hasSiteDomains: Boolean) : PartialState()
+        data class CustomDomainsAvailable(val hasSiteCustomDomains: Boolean) : PartialState()
 
         data class JetpackCapabilities(val scanAvailable: Boolean, val backupAvailable: Boolean) : PartialState()
         data class QuickStartUpdate(
@@ -75,7 +75,7 @@ data class MySiteUiState(
             is SelectedSite -> uiState.copy(site = partialState.site)
             is ShowSiteIconProgressBar -> uiState.copy(showSiteIconProgressBar = partialState.showSiteIconProgressBar)
             is DomainCreditAvailable -> uiState.copy(isDomainCreditAvailable = partialState.isDomainCreditAvailable)
-            is PartialState.DomainsAvailable -> uiState.copy(hasSiteDomains = partialState.hasSiteDomains)
+            is PartialState.CustomDomainsAvailable -> uiState.copy(hasSiteCustomDomains = partialState.hasSiteCustomDomains)
             is JetpackCapabilities -> uiState.copy(
                 scanAvailable = partialState.scanAvailable,
                 backupAvailable = partialState.backupAvailable
