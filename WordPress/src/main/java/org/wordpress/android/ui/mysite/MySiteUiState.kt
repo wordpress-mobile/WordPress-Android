@@ -75,7 +75,9 @@ data class MySiteUiState(
             is SelectedSite -> uiState.copy(site = partialState.site)
             is ShowSiteIconProgressBar -> uiState.copy(showSiteIconProgressBar = partialState.showSiteIconProgressBar)
             is DomainCreditAvailable -> uiState.copy(isDomainCreditAvailable = partialState.isDomainCreditAvailable)
-            is PartialState.CustomDomainsAvailable -> uiState.copy(hasSiteCustomDomains = partialState.hasSiteCustomDomains)
+            is PartialState.CustomDomainsAvailable -> uiState.copy(
+                hasSiteCustomDomains = partialState.hasSiteCustomDomains
+            )
             is JetpackCapabilities -> uiState.copy(
                 scanAvailable = partialState.scanAvailable,
                 backupAvailable = partialState.backupAvailable
