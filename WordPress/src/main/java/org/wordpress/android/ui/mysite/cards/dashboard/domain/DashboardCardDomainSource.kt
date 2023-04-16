@@ -13,7 +13,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource
 import org.wordpress.android.ui.mysite.MySiteUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.plans.hasSiteDomains
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Named
@@ -86,7 +85,7 @@ class DashboardCardDomainSource @Inject constructor(
                 )
             }
 
-            postState(MySiteUiState.PartialState.DomainsAvailable(hasSiteDomains(domains)))
+            postState(MySiteUiState.PartialState.DomainsAvailable(domainUtils.hasCustomDomain(domains)))
         }
     }
 }
