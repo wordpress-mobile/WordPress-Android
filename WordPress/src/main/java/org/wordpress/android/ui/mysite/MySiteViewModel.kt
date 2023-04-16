@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
@@ -61,6 +62,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
@@ -354,7 +356,7 @@ class MySiteViewModel @Inject constructor(
                     viewModelScope,
                     state.dashboardCardsAndItems.filterIsInstance<DashboardCards>().firstOrNull()
                 )
-                
+
                 state
             } else {
                 buildNoSiteState()
@@ -613,6 +615,11 @@ class MySiteViewModel @Inject constructor(
                     onPagesItemClick = this::onPagesItemClick,
                     onFooterLinkClick = this::onPagesCardFooterLinkClick
                 ),
+                activityBuilderParams = ActivityCardBuilderParams(
+                    activityCardModel = cardsUpdate?.cards?.firstOrNull { it is ActivityCardModel } as? ActivityCardModel,
+                    onActivityItemClick = this::onActivityItemClick,
+                    onFooterLinkClick = this::onActivityCardFooterLinkClick
+                ),
             ),
             QuickLinkRibbonBuilderParams(
                 siteModel = site,
@@ -704,6 +711,16 @@ class MySiteViewModel @Inject constructor(
     @Suppress("UNUSED_PARAMETER")
     private fun onPagesCardFooterLinkClick() {
         // implement navigation logic for create page
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun onActivityItemClick(activityId: String) {
+        // implement navigation logic for activity item
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun onActivityCardFooterLinkClick() {
+        // implement navigation logic for activity card footer link
     }
 
     private fun buildJetpackBadgeIfEnabled(): JetpackBadge? {
