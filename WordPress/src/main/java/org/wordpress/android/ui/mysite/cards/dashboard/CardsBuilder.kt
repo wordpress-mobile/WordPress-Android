@@ -6,6 +6,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
@@ -20,7 +21,8 @@ class CardsBuilder @Inject constructor(
     private val bloggingPromptCardBuilder: BloggingPromptCardBuilder,
     private val promoteWithBlazeCardBuilder: PromoteWithBlazeCardBuilder,
     private val dashboardDomainCardBuilder: DashboardDomainCardBuilder,
-    private val pagesCardBuilder: PagesCardBuilder
+    private val pagesCardBuilder: PagesCardBuilder,
+    private val activityCardBuilder: ActivityCardBuilder
 ) {
     fun build(
         dashboardCardsBuilderParams: DashboardCardsBuilderParams
@@ -60,6 +62,8 @@ class CardsBuilder @Inject constructor(
                 }
 
                 pagesCardBuilder.build(dashboardCardsBuilderParams.pagesCardBuilderParams)?.let { add(it) }
+
+                activityCardBuilder.build(dashboardCardsBuilderParams.activityBuilderParams)?.let { add(it) }
             }
         }.toList()
     )
