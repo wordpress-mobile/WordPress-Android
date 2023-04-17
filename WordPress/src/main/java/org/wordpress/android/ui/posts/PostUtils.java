@@ -266,7 +266,7 @@ public class PostUtils {
             return null;
         }
 
-        // Remove Gutenberg blocks.
+        // Remove certain Gutenberg blocks that would display markup, rather than their associated media, in the excerpt.
         String s = removeWPGallery(description);
         s = removeWPVideoPress(s);
         s = HtmlUtils.fastStripHtml(s);
