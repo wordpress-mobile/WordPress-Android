@@ -2,6 +2,7 @@ package org.wordpress.android.ui.bloggingprompts
 
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.ui.reader.services.post.ReaderPostLogic
 
 object BloggingPromptsPostTagProvider {
     const val BLOGGING_PROMPT_TAG = "dailyprompt"
@@ -13,7 +14,7 @@ object BloggingPromptsPostTagProvider {
         promptIdTag(promptId),
         promptIdTag(promptId),
         promptIdTag(promptId),
-        "",
-        ReaderTagType.SEARCH,
+        ReaderPostLogic.formatFullEndpointForTag(promptIdTag(promptId)),
+        ReaderTagType.FOLLOWED,
     )
 }

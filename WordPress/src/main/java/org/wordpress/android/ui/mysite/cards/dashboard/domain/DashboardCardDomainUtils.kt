@@ -7,6 +7,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardDomainCard
@@ -34,12 +35,12 @@ class DashboardCardDomainUtils @Inject constructor(
     private val waitingToTrack = AtomicBoolean(false)
     private val currentSite = AtomicReference<Int?>(null)
 
-    fun shouldShowCard(siteModel: SiteModel, isDomainCreditAvailable: Boolean, hasSiteDomains: Boolean): Boolean {
+    fun shouldShowCard(siteModel: SiteModel, isDomainCreditAvailable: Boolean, hasSiteCustomDomains: Boolean): Boolean {
         return isDashboardCardDomainEnabled() &&
                 !isDashboardCardDomainHiddenByUser(siteModel.siteId) &&
                 (siteModel.isWPCom || siteModel.isWPComAtomic) &&
                 siteModel.isAdmin &&
-                !hasSiteDomains &&
+                !hasSiteCustomDomains &&
                 !isDomainCreditAvailable
     }
 
@@ -147,6 +148,8 @@ class DashboardCardDomainUtils @Inject constructor(
             waitingToTrack.set(true)
         }
     }
+
+    fun hasCustomDomain(domains: List<Domain>?) = domains?.any { !it.wpcomDomain } == true
 
     companion object {
         const val POSITION_INDEX = "position_index"
