@@ -1,2 +1,0 @@
-22.0:
-Du kan nu omvandla de flesta typer av block till andra blocktyper, exempelvis citat, kolumner och grupper.

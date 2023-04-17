@@ -1,2 +1,0 @@
-22.0:
-Kini Anda dapat mengubah mayoritas jenis blok menjadi jenis blok lain, seperti kutipan, kolom, dan grup.
