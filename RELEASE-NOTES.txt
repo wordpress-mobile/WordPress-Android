@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+22.3
+-----
+
+
 22.2
 -----
 * [*] Adds runtime notifications permission [https://github.com/wordpress-mobile/WordPress-Android/pull/18239]
