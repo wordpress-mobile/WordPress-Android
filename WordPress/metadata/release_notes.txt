@@ -1,1 +1,5 @@
-When you log in to a self-hosted site that connects to Jetpack through individual plugins, you’ll see a pop-up stating that this type of connection doesn’t support the app’s core features yet. You can get around that problem by switching over to the Jetpack app. Up, up, and away.
+* [*] Adds runtime notifications permission [https://github.com/wordpress-mobile/WordPress-Android/pull/18239]
+* [**] Adds media permissions support for Android 13 [https://github.com/wordpress-mobile/WordPress-Android/pull/18183]
+* [**] [Jetpack-only] Adds a dashboard card for purchasing domains. [https://github.com/wordpress-mobile/WordPress-Android/pull/18240]
+* [**] [Jetpack-only] Blogging Prompts: adds the ability to view other users' responses to a prompt. [https://github.com/wordpress-mobile/WordPress-Android/pull/18265]
+
