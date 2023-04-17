@@ -182,7 +182,7 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.toggleEditorMode(mHtmlModeEnabled);
     }
 
-    public void sendToJSPostSaveEvent () {
+    public void sendToJSPostSaveEvent() {
         mWPAndroidGlueCode.sendToJSPostSaveEvent();
     }
 
