@@ -1884,7 +1884,7 @@
     </style>
 
     <!-- My Site Activity Card  -->
-    <style name="MySiteCardItemActivityCardContent">
+    <style name="MySiteCardItemActivityCardLabel">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
