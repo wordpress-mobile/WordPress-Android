@@ -101,7 +101,6 @@ class MySiteSourceManager @Inject constructor(
         domainRegistrationSource.clear()
         scanAndBackupSource.clear()
         selectedSiteSource.clear()
-        dashboardCardDomainSource.clear()
     }
 
     private fun refreshSubsetOfAllSources() {

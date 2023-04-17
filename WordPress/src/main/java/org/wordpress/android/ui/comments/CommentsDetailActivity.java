@@ -32,8 +32,8 @@ import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.comments.unified.CommentConstants;
-import org.wordpress.android.ui.comments.unified.OnLoadMoreListener;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
+import org.wordpress.android.ui.comments.unified.OnLoadMoreListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -47,12 +47,15 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.ui.comments.unified.CommentConstants.COMMENTS_PER_PAGE;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * @deprecated
  * Comments are being refactored as part of Comments Unification project. If you are adding any
  * features or modifying this class, please ping develric or klymyam
  */
 @Deprecated
+@AndroidEntryPoint
 public class CommentsDetailActivity extends LocaleAwareActivity
         implements OnLoadMoreListener,
         CommentActions.OnCommentActionListener, ScrollableViewInitializedListener {
@@ -78,7 +81,6 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
         mCommentsStoreAdapter.register(this);
         AppLog.i(AppLog.T.COMMENTS, "Creating CommentsDetailActivity");
 

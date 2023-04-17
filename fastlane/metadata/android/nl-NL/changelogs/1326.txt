@@ -1,2 +1,0 @@
-22.0:
-You can now transform most types of blocks into other block types, like quotes, columns, and groups.

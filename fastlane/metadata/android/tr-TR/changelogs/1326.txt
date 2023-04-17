@@ -1,2 +1,0 @@
-22.0:
-Artık bir çok blok tipini diğer blok tiplerine dönüştürebilirsiniz, alıntı, sütunlar ve gruplar gibi.
