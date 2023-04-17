@@ -4511,4 +4511,14 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="dashboard_pages_card_no_pages_create_page_button">Add Pages to your site</string>
     <string name="dashboard_pages_card_create_another_page_button">Create Another Page</string>
     <string name="dashboard_pages_card_create_another_page_description">Start with bespoke, mobile friendly layouts</string>
+    <string name="gutenberg_native_add_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Add description</string>
+    <string name="gutenberg_native_add_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Add title</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Describe the purpose of the image. Leave empty if decorative.</string>
+    <string name="gutenberg_native_dynamic" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dynamic</string>
+    <string name="gutenberg_native_manual" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Manual</string>
+    <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">More</string>
+    <string name="gutenberg_native_playback_bar_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Playback Bar Color</string>
+    <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Playback Settings</string>
+    <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Privacy and Rating</string>
+    <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Remove blocks</string>
 </resources>
