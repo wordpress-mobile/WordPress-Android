@@ -47,8 +47,8 @@ class ActivityCardBuilder @Inject constructor(
     private fun List<ActivityLogModel>.mapToActivityItems(onClick: (activityId: String) -> Unit) =
         map {
             ActivityItem(
-                title =  UiString.UiStringText(it.summary),
-                content = it.content?.text?:"",
+                label = UiString.UiStringText(it.content?.text?:""),
+                subLabel = it.summary,
                 displayDate = buildDateLine(it.published),
                 icon = ActivityLogListItem.Icon.fromValue(it.gridicon).drawable,
                 iconBackgroundColor = ActivityLogListItem.Status.fromValue(it.status).color,
