@@ -37,7 +37,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/activity_card_item_title"
+            android:id="@+id/activity_card_item_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             style="@style/MySitePostItemTitle"
@@ -49,8 +49,8 @@
             tools:text="Image Added"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/activity_card_item_content"
-            style="@style/MySiteCardItemActivityCardContent"
+            android:id="@+id/activity_card_item_sub_label"
+            style="@style/MySiteCardItemActivityCardLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
@@ -61,12 +61,12 @@
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/activity_card_item_title"
+            app:layout_constraintTop_toBottomOf="@id/activity_card_item_label"
             tools:text="dogs_this_is_really_long_line.jpg" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/activity_card_item_dot_separator"
-            style="@style/MySiteCardItemActivityCardContent"
+            style="@style/MySiteCardItemActivityCardLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
@@ -74,13 +74,13 @@
             android:text="@string/dashboard_activity_card_dot_separator"
             app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toStartOf="@id/activity_card_item_display_date"
-            app:layout_constraintStart_toEndOf="@id/activity_card_item_content"
-            app:layout_constraintTop_toBottomOf="@id/activity_card_item_title"
+            app:layout_constraintStart_toEndOf="@id/activity_card_item_sub_label"
+            app:layout_constraintTop_toBottomOf="@id/activity_card_item_label"
             tools:text="@string/reader_dot_separator" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/activity_card_item_display_date"
-            style="@style/MySiteCardItemActivityCardContent"
+            style="@style/MySiteCardItemActivityCardLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
@@ -88,7 +88,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@id/activity_card_item_dot_separator"
-            app:layout_constraintTop_toBottomOf="@id/activity_card_item_title"
+            app:layout_constraintTop_toBottomOf="@id/activity_card_item_label"
             tools:text="3 min ago" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
