@@ -8,10 +8,7 @@
     android:clipChildren="false"
     android:clipToPadding="false"
     android:foreground="?attr/selectableItemBackground"
-    android:paddingBottom="@dimen/my_site_card_row_padding"
-    android:paddingEnd="@dimen/my_site_card_row_padding"
-    android:paddingStart="@dimen/my_site_card_row_padding"
-    android:paddingTop="@dimen/my_site_card_row_padding">
+    android:padding="@dimen/my_site_card_row_padding">
 
     <ImageView
         android:id="@+id/icon"
@@ -29,8 +26,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginHorizontal="@dimen/margin_extra_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/icon"
@@ -38,13 +34,13 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/activity_card_item_label"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/MySitePostItemTitle"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_default="wrap"
+            app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_bias="0"
             tools:text="Image Added"/>
 
