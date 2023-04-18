@@ -1,1 +1,5 @@
-No updates this week. In the meantime, we're just over here cooling our jets.
+* [*] Adds runtime notifications permission [https://github.com/wordpress-mobile/WordPress-Android/pull/18239]
+* [**] Adds media permissions support for Android 13 [https://github.com/wordpress-mobile/WordPress-Android/pull/18183]
+* [**] [Jetpack-only] Adds a dashboard card for purchasing domains. [https://github.com/wordpress-mobile/WordPress-Android/pull/18240]
+* [**] [Jetpack-only] Blogging Prompts: adds the ability to view other users' responses to a prompt. [https://github.com/wordpress-mobile/WordPress-Android/pull/18265]
+
