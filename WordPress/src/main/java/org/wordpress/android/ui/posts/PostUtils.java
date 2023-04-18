@@ -266,7 +266,13 @@ public class PostUtils {
             return null;
         }
 
-        String s = HtmlUtils.fastStripHtml(removeWPGallery(description));
+        /**
+         * Remove certain Gutenberg blocks that would display markup, rather than their associated
+         * media, in the excerpt.
+         */
+        String s = removeWPGallery(description);
+        s = removeWPVideoPress(s);
+        s = HtmlUtils.fastStripHtml(s);
         if (s.length() < MAX_EXCERPT_LEN) {
             return trimEx(s);
         }
@@ -301,6 +307,13 @@ public class PostUtils {
      */
     public static String removeWPGallery(String str) {
         return str.replaceAll("(?s)<!--\\swp:gallery?(.*?)wp:gallery\\s-->", "");
+    }
+
+    /**
+     * Removes the VideoPress block tag from the given string.
+     */
+    public static String removeWPVideoPress(String str) {
+        return str.replaceAll("(?s)\\n?<!--\\swp:videopress/video?(.*?)wp:videopress/video\\s-->", "");
     }
 
     public static String getFormattedDate(PostModel post) {
