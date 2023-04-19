@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <permission
         android:name="${applicationId}.permission.DISABLE_NOTIFICATIONS"
@@ -10,7 +11,8 @@
         <provider
             android:name=".localcontentmigration.LocalMigrationContentProvider"
             android:authorities="${applicationId}.LocalMigrationContentProvider"
-            android:exported="true" />
+            android:exported="true"
+            tools:ignore="ExportedContentProvider" />
 
         <receiver
             android:name=".ui.mysite.jetpackbadge.JetpackAppInstallReceiver"

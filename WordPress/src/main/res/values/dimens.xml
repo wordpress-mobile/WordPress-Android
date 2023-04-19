@@ -488,8 +488,6 @@
 
     <dimen name="jetpack_terms_and_conditions_width">250dp</dimen>
     <dimen name="jetpack_text_width">290dp</dimen>
-    <dimen name="jetpack_remote_install_container_padding">30dp</dimen>
-    <dimen name="jetpack_remote_install_icon_size">88dp</dimen>
     <dimen name="jetpack_new_remote_install_icon_size">64dp</dimen>
 
     <!-- pages -->
@@ -745,5 +743,8 @@
     <dimen name="jetpack_full_screen_overlay_new_users_content_margin_land">16dp</dimen>
     <dimen name="jetpack_full_screen_overlay_new_users_content_text_size">15sp</dimen>
     <dimen name="menu_item_icon_size">24dp</dimen>
+
+    <!-- Activity Log Card -->
+    <dimen name="activity_card_icon_size">40dp</dimen>
 
 </resources>

@@ -1,11 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-01 09:54:13+0000
+Translation-Revision-Date: 2023-04-07 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_CN
 -->
 <resources>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; 正在使用 %2$s 个独立的 Jetpack 插件</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; 正在使用 &lt;b&gt;%2$s&lt;/b&gt; 插件</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">WordPress 应用不支持使用独立的 Jetpack 插件的站点。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt; 正在使用独立的 Jetpack 插件，而 WordPress 应用不支持该插件。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt; 正在使用 &lt;b&gt;%2$s&lt;/b&gt; 插件，而 WordPress 应用不支持该插件。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">无法访问您的一些站点</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">无法访问您的其中一个站点</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">请切换到 Jetpack 应用，我们将在其中指导您连接完整的 Jetpack 插件，以便结合使用此站点和该应用。</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">切换到 Jetpack 应用</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。\n\n请安装 %3$s，通过此站点使用该应用程序。</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">此站点</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。 请安装 %3$s。</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。 请安装 %3$s。</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">几天后将移动至 Jetpack 应用程序。</string>
+    <string name="wp_jp_static_poster_footnote">切换免费，只需一会儿。</string>
+    <string name="wp_jp_static_poster_message">统计信息、阅读器、通知和其他由 Jetpack 提供支持的功能已从 WordPress 应用程序上删除，现在只能在 Jetpack 应用程序中使用。</string>
+    <string name="wp_jp_static_poster_button_secondary">请访问 Jetpack.com 了解详情</string>
+    <string name="wp_jp_static_poster_button_primary">切换到 Jetpack 应用程序</string>
+    <string name="wp_jp_static_poster_title_plural">%s 已移至 Jetpack 应用程序。</string>
+    <string name="wp_jp_static_poster_title">%s 已移至 Jetpack 应用程序。</string>
+    <string name="my_site_btn_wp_admin">WP 管理</string>
+    <string name="my_site_header_manage">管理</string>
+    <string name="my_site_header_traffic">流量</string>
+    <string name="my_site_header_content">内容</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">设置</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">完成</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">安装 Jetpack 后，我们只需进行设置即可。 这只需要一分钟时间。</string>
+    <string name="blaze_overlay_site_promotional_button">立即通过 Blaze 宣传文章</string>
+    <string name="blaze_overlay_page_promotional_button">立即通过 Blaze 宣传此页面</string>
+    <string name="blaze_overlay_post_promotional_button">立即通过 Blaze 宣传此文章</string>
+    <string name="blaze_promotional_subtitle_3">随时跟踪表现、开始和停止您的 Blaze。</string>
+    <string name="blaze_promotional_subtitle_2">数百万个 WordPress 和 Tumblr 站点上都会显示您的内容。</string>
+    <string name="blaze_promotional_subtitle_1">每天只需几美元即可在几分钟内推广任意文章或页面。</string>
+    <string name="blaze_promotional_text">通过 Blaze 为您的站点吸引更多流量</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="site_creation_domain_tag_unavailable">此域名已注册</string>
+    <string name="site_creation_domain_tag_sale">销售</string>
+    <string name="site_creation_domain_tag_recommended">推荐</string>
+    <string name="site_creation_domain_tag_best_alternative">更好的替代方案</string>
+    <string name="site_creation_domain_cost">%s/年</string>
+    <string name="me_btn_help">帮助</string>
+    <string name="support_faq_caption">查看我们的常见问题解答，为您可能遇到的常见问题寻找答案。</string>
+    <string name="support_faq_title">感谢您切换至 Jetpack 应用程序！</string>
+    <string name="logs_button">日志</string>
+    <string name="tickets">票据</string>
+    <string name="free">免费</string>
+    <string name="help_buttons_screen_title">帮助</string>
     <string name="gutenberg_native_blocks_menu">区块菜单</string>
     <string name="promote_blaze_card_menu_hide_this">隐藏此内容</string>
     <string name="promote_blaze_card_sub_title">在数以百万计的站点上展示您的作品。</string>
@@ -18,26 +65,24 @@ Language: zh_CN
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">完整的 Jetpack 插件</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">独立的 Jetpack 插件</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">%1$s 插件</string>
-    <string name="jetpack_full_plugin_install_onboarding_description">%1$s 使用 %2$s 插件，尚不支持该应用程序的全部功能。\n\n请安装 %3$s，通过此站点使用该应用程序。</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。\n\n请安装 %3$s，通过此站点使用该应用程序。</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">请安装完整的 Jetpack 插件</string>
     <string name="only_one_primary_site_message">只有一个站点可用，因此您不能更改您的主站点。</string>
-    <string name="my_site_jp_install_full_plugin_card_content">此站点使用独立插件，尚不支持该应用程序的全部功能。 请安装完整的 Jetpack 插件。</string>
-    <string name="jetpack_full_plugin_install_error_button_contact_support">联系支持人员</string>
-    <string name="jetpack_full_plugin_install_error_button_retry">重试</string>
-    <string name="jetpack_full_plugin_install_error_description">目前无法安装 Jetpack</string>
-    <string name="jetpack_full_plugin_install_error_title">出现问题</string>
-    <string name="jetpack_full_plugin_install_error_image_content_description">错误图标</string>
-    <string name="jetpack_full_plugin_install_done_button">完成</string>
-    <string name="jetpack_full_plugin_install_done_description">已准备好通过应用程序使用此站点。</string>
-    <string name="jetpack_full_plugin_install_done_title">Jetpack 已安装</string>
-    <string name="jetpack_full_plugin_install_installing_description">正在您的站点上安装 Jetpack。 这将花费几分钟的时间才能完成。</string>
-    <string name="jetpack_full_plugin_install_installing_title">正在安装 Jetpack</string>
-    <string name="jetpack_full_plugin_install_initial_button">继续</string>
-    <string name="jetpack_full_plugin_install_initial_description">系统将不会存储您的网站凭据，并且仅将其用于安装 Jetpack。</string>
-    <string name="jetpack_full_plugin_install_initial_title">安装 Jetpack</string>
-    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack 图标</string>
+    <string name="jetpack_plugin_install_error_button_contact_support">联系支持人员</string>
+    <string name="jetpack_plugin_install_error_button_retry">重试</string>
+    <string name="jetpack_plugin_install_error_description">目前无法安装 Jetpack。</string>
+    <string name="jetpack_plugin_install_error_title">出现问题</string>
+    <string name="jetpack_plugin_install_error_image_content_description">错误图标</string>
+    <string name="jetpack_plugin_install_full_plugin_done_description">已准备好通过应用程序使用此站点。</string>
+    <string name="jetpack_plugin_install_done_title">Jetpack 已安装</string>
+    <string name="jetpack_plugin_install_installing_description">正在您的站点上安装 Jetpack。 这将花费几分钟的时间才能完成。</string>
+    <string name="jetpack_plugin_install_installing_title">正在安装 Jetpack</string>
+    <string name="jetpack_plugin_install_initial_button">继续</string>
+    <string name="jetpack_plugin_install_initial_description">系统将不会存储您的网站凭据，并且仅将其用于安装 Jetpack。</string>
+    <string name="jetpack_plugin_install_initial_title">安装 Jetpack</string>
+    <string name="jetpack_plugin_install_jp_logo_content_description">Jetpack 图标</string>
     <string name="button_promote_with_blaze">大力宣传并推广</string>
-    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">释放站点的全部潜力。 使用 Jetpack，获得统计信息、通知等功能。</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">释放站点的全部潜力。 通过 Jetpack，获取统计信息、通知和更多功能。</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">您的站点已安装 Jetpack 插件</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack 移动应用程序旨在与 Jetpack 插件配合使用。 立即切换，访问统计信息、通知、阅读器以及更多功能。</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">接收有关新评论、点赞、查看等内容的通知。</string>
@@ -80,6 +125,7 @@ Language: zh_CN
     <string name="my_site_blogging_prompt_card_attribution_dayone">从&lt;b&gt;第一天&lt;/b&gt;开始</string>
     <string name="jetpack_feature_card_menu_item_hide_this">隐藏此内容</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">稍后提醒我</string>
+    <string name="jetpack_feature_card_content_phase_three">统计信息、阅读器、通知和其他功能即将移至 Jetpack 移动应用。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">切换到 Jetpack 应用</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">请访问 jetpack.com 以了解详情</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">切换免费，只需一会儿。</string>
@@ -102,7 +148,9 @@ Language: zh_CN
     <string name="blogging_prompts_list_title">提示</string>
     <string name="close_desc">关闭</string>
     <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">或者，您可以轻点“转换为常规区块”分离和编辑此区块。</string>
+    <string name="dlg_confirm_delete_category">是否永久删除“%s”分类？</string>
     <string name="deleting_cat_success">已成功删除分类</string>
+    <string name="deleting_cat_failed">删除分类失败</string>
     <string name="reader_toast_user_blocked">此用户的文章不会再显示</string>
     <string name="reader_menu_block_user">屏蔽用户</string>
     <string name="reader_menu_report_user">举报此用户</string>
@@ -1832,7 +1880,6 @@ Language: zh_CN
     <string name="domain_suggestions_search_hint">请输入关键字以获取更多想法</string>
     <string name="domains_suggestions_empty_list">未找到任何建议</string>
     <string name="register_domain">注册域</string>
-    <string name="jetpack_installed_message">安装 Jetpack 后，我们只需进行设置即可。这只需要一分钟时间。</string>
     <string name="stats_menu_remove">从见解中删除</string>
     <string name="stats_menu_move_down">下移</string>
     <string name="stats_menu_move_up">上移</string>
@@ -2098,15 +2145,6 @@ Language: zh_CN
     <string name="reader_empty_followed_tags_title">无已关注的主题</string>
     <string name="reader_empty_followed_tags_subtitle">在此处添加主题，以查找有关您喜爱的主题的博文</string>
     <string name="login_to_to_connect_jetpack">登录用于关联 Jetpack 的 WordPress.com 账户。</string>
-    <string name="install_jetpack_retry">重试</string>
-    <string name="install_jetpack_continue">设置</string>
-    <string name="jetpack_installation_problem_message">目前无法安装 Jetpack。</string>
-    <string name="jetpack_installation_problem">出现问题</string>
-    <string name="jetpack_installed">已安装 Jetpack</string>
-    <string name="installing_jetpack_message">正在您的站点上安装 Jetpack。这将花费几分钟的时间才能完成。</string>
-    <string name="installing_jetpack">正在安装 Jetpack</string>
-    <string name="install_jetpack_message">系统将不会存储您的网站凭据，并且仅将其用于安装 Jetpack。</string>
-    <string name="install_jetpack">安装 Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack 常见问题解答</string>
     <string name="stats_jetpack_connection_setup_info">要在 WordPress 站点中使用统计功能，您需要安装 Jetpack 插件。</string>

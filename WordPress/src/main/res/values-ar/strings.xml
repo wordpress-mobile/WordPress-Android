@@ -1,11 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-28 15:54:11+0000
+Translation-Revision-Date: 2023-04-05 13:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.4
 Language: ar
 -->
 <resources>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">تستخدم &lt;b&gt;%1$s&lt;/b&gt; ⁦%2$s⁩ من إضافات Jetpack الفردية</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">تستخدم &lt;b&gt;%1$s&lt;/b&gt; إضافة &lt;b&gt;%2$s&lt;/b&gt;</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">المواقع ذات إضافات Jetpack الفردية غير مدعومة من تطبيق ووردبريس.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">تستخدم &lt;b&gt;%1$s&lt;/b&gt; إضافات Jetpack الفردية، غير المدعومة من تطبيق ووردبريس.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">تستخدم &lt;b&gt;%1$s&lt;/b&gt; إضافة &lt;b&gt;%2$s&lt;/b&gt;، غير المدعومة من تطبيق ووردبريس.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">يتعذر الوصول إلى بعض مواقعك</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">يتعذر الوصول إلى أحد مواقعك</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">يرجى التبديل إلى تطبيق Jetpack، حيث سنرشدك خلال الاتصال بإضافة Jetpack الكاملة لاستخدام هذا الموقع مع التطبيق.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">التبديل إلى تطبيق Jetpack</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">يستخدم ⁦%1$s⁩ ⁦%2$s⁩، التي لا تدعم كل ميزات التطبيق حتى الآن.\n\nيرجى تثبيت ⁦%3$s⁩ لاستخدام التطبيق من خلال هذا الموقع.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">هذا الموقع</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">يستخدم ⁦%1$s⁩ ⁦%2$s⁩، التي لا تدعم كل ميزات التطبيق حتى الآن. Please install the %3$s.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">يستخدم ⁦%1$s⁩ ⁦%2$s⁩، التي لا تدعم كل ميزات التطبيق حتى الآن. Please install the %3$s.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Moving to the Jetpack app in a few days.</string>
+    <string name="wp_jp_static_poster_footnote">التبديل مجاني، ولا يستغرق سوى بضع دقائق.</string>
+    <string name="wp_jp_static_poster_message">تمت إزالة ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات التي يدعمها Jetpack من تطبيق ووردبريس.</string>
+    <string name="wp_jp_static_poster_button_secondary">معرفة المزيد على jetpack.com</string>
+    <string name="wp_jp_static_poster_button_primary">التبديل إلى تطبيق Jetpack</string>
+    <string name="wp_jp_static_poster_title_plural">%s have moved to the Jetpack app.</string>
+    <string name="wp_jp_static_poster_title">%s has moved to the Jetpack app.</string>
+    <string name="my_site_btn_wp_admin">مسؤول ووردبريس</string>
+    <string name="my_site_header_manage">إدارة المحتويات</string>
+    <string name="my_site_header_traffic">حركة المرور</string>
+    <string name="my_site_header_content">المحتوى</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">إعداد</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">تم</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">والآن بعد تثبيت Jetpack، ما علينا سوى مساعدتك على الإعداد. لن يستغرق هذا إلا دقيقة.</string>
+    <string name="blaze_overlay_site_promotional_button">إبراز تدوينة الآن</string>
+    <string name="blaze_overlay_page_promotional_button">إبراز هذه الصفحة</string>
+    <string name="blaze_overlay_post_promotional_button">إبراز هذه التدوينة</string>
+    <string name="blaze_promotional_subtitle_3">تعقّب الأداء، وابدأ Blaze الخاصة بك وأوقفها في أي وقت.</string>
+    <string name="blaze_promotional_subtitle_2">سيظهر محتواك على ملايين من مواقع ووردبريس وTumblr.</string>
+    <string name="blaze_promotional_subtitle_1">روّج لأي تدوينة أو صفحة في غضون دقائق قليلة فقط مقابل بضعة دولارات فقط في اليوم.</string>
+    <string name="blaze_promotional_text">جذب مزيد من حركة المرور إلى موقعك باستخدام Blaze</string>
+    <string name="blaze_activity_title">التوهج</string>
+    <string name="site_creation_domain_tag_unavailable">هذا النطاق مسجّل بالفعل</string>
+    <string name="site_creation_domain_tag_sale">تخفيض</string>
+    <string name="site_creation_domain_tag_recommended">موصى به</string>
+    <string name="site_creation_domain_tag_best_alternative">أفضل بديل</string>
+    <string name="site_creation_domain_cost">%s سنويًا</string>
+    <string name="me_btn_help">مساعدة</string>
+    <string name="support_faq_caption">ارجع إلى قسم الأسئلة المتداولة لدينا للحصول على إجابات عن الأسئلة الشائعة التي قد تطرحها.</string>
+    <string name="support_faq_title">شكرًا لك للتبديل إلى تطبيق Jetpack!</string>
+    <string name="logs_button">السجلات</string>
+    <string name="tickets">التذاكر</string>
+    <string name="free">مجانًا</string>
+    <string name="help_buttons_screen_title">مساعدة</string>
     <string name="gutenberg_native_blocks_menu">قائمة المكوّنات</string>
     <string name="promote_blaze_card_menu_hide_this">إخفاء هذا</string>
     <string name="promote_blaze_card_sub_title">اعرض عملك عبر ملايين المواقع.</string>
@@ -18,24 +65,23 @@ Language: ar
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">إضافة Jetpack الكاملة</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">إضافات Jetpack الفردية</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">إضافة ⁦%1$s⁩</string>
-    <string name="jetpack_full_plugin_install_onboarding_description">يستخدم ⁦%1$s⁩ ⁦%2$s⁩، التي لا تدعم كل ميزات التطبيق حتى الآن.\n\nيرجى تثبيت ⁦%3$s⁩ لاستخدام التطبيق من خلال هذا الموقع.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">يستخدم ⁦%1$s⁩ ⁦%2$s⁩، التي لا تدعم كل ميزات التطبيق حتى الآن.\n\nيرجى تثبيت ⁦%3$s⁩ لاستخدام التطبيق من خلال هذا الموقع.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">يرجى تثبيت إضافة Jetpack الكاملة</string>
     <string name="only_one_primary_site_message">لا يتوافر سوى موقع واحد، لذا يتعذر عليك تغيير موقعك الأساسي.</string>
-    <string name="my_site_jp_install_full_plugin_card_content">يستخدم هذا الموقع إضافة فردية، لا تدعم كل ميزات التطبيق حتى الآن. يرجى تثبيت إضافة Jetpack الكاملة.</string>
-    <string name="jetpack_full_plugin_install_error_button_contact_support">الاتصال بالدعم</string>
-    <string name="jetpack_full_plugin_install_error_button_retry">إعادة المحاولة</string>
-    <string name="jetpack_full_plugin_install_error_description">يتعذر تنصيب Jetpack في الوقت الحالي.</string>
-    <string name="jetpack_full_plugin_install_error_title">حدثت مشكلة</string>
-    <string name="jetpack_full_plugin_install_error_image_content_description">أيقونة الخطأ</string>
-    <string name="jetpack_full_plugin_install_done_button">تم</string>
-    <string name="jetpack_full_plugin_install_done_description">مستعد لاستخدام هذا الموقع من خلال التطبيق.</string>
-    <string name="jetpack_full_plugin_install_done_title">تم تثبيت Jetpack</string>
-    <string name="jetpack_full_plugin_install_installing_description">تثبيت Jetpack على موقعك. قد يستغرق هذا الأمر بضع دقائق حتى يكتمل.</string>
-    <string name="jetpack_full_plugin_install_installing_title">تثبيت Jetpack</string>
-    <string name="jetpack_full_plugin_install_initial_button">متابعة</string>
-    <string name="jetpack_full_plugin_install_initial_description">لن يتم تخزين بيانات اعتمادك وستُستخدم فقط بغرض تنصيب Jetpack.</string>
-    <string name="jetpack_full_plugin_install_jp_logo_content_description">أيقونة Jetpack</string>
+    <string name="jetpack_plugin_install_error_button_contact_support">الاتصال بالدعم</string>
+    <string name="jetpack_plugin_install_error_button_retry">إعادة المحاولة</string>
+    <string name="jetpack_plugin_install_error_description">يتعذر تنصيب Jetpack في الوقت الحالي.</string>
+    <string name="jetpack_plugin_install_error_title">حدثت مشكلة</string>
+    <string name="jetpack_plugin_install_error_image_content_description">أيقونة الخطأ</string>
+    <string name="jetpack_plugin_install_full_plugin_done_description">مستعد لاستخدام هذا الموقع من خلال التطبيق.</string>
+    <string name="jetpack_plugin_install_done_title">تم تثبيت Jetpack</string>
+    <string name="jetpack_plugin_install_installing_description">تثبيت Jetpack على موقعك. قد يستغرق هذا الأمر بضع دقائق حتى يكتمل.</string>
+    <string name="jetpack_plugin_install_installing_title">تثبيت Jetpack</string>
+    <string name="jetpack_plugin_install_initial_button">متابعة</string>
+    <string name="jetpack_plugin_install_initial_description">لن يتم تخزين بيانات اعتمادك وستُستخدم فقط بغرض تنصيب Jetpack.</string>
+    <string name="jetpack_plugin_install_jp_logo_content_description">أيقونة Jetpack</string>
     <string name="button_promote_with_blaze">الترويج مع الإبراز</string>
+    <string name="jetpack_plugin_install_initial_title">تثبيت Jetpack</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">افتح إمكانات موقعك بالكامل. احصل على ميزات الإحصاءات والتنبيهات والمزيد من خلال Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">يتضمن موقعك إضافة Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">تم تصميم تطبيق Jetpack للهاتف المحمول للعمل إلى جانب إضافة Jetpack. قم بالتبديل الآن لكي تحظى بإمكانية الوصول إلى ميزات الإحصاءات والتنبيهات والقارئ والمزيد.</string>
@@ -63,6 +109,7 @@ Language: ar
     <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">ستنتقل ⁦%1$s⁩ في غضون ⁦%2$s⁩</string>
     <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">ستنتقل ⁦%1$s⁩ قريبًا</string>
     <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">سينتقل ⁦%1$s⁩ قريبًا</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">سينتقل ⁦%1$s⁩ في غضون ⁦%2$s⁩</string>
     <string name="wp_jetpack_powered_phase_2">تنزيل تطبيق Jetpack</string>
     <string name="my_site_blogging_prompt_card_view_answers">عرض كل الردود</string>
     <string name="stats_insights_total_stats_seven_days_negative">⁦%1$s⁩ أقل من الأيام الـ 7 السابقة</string>
@@ -82,6 +129,7 @@ Language: ar
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">معرفة المزيد على jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">التبديل مجاني، ولا يستغرق سوى بضع دقائق.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">ستتم إزالة ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات التي يدعمها Jetpack من تطبيق ووردبريس قريبًا.</string>
+    <string name="jetpack_feature_card_content_phase_three">ستنتقل ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات قريبًا إلى تطبيق Jetpack للهاتف المحمول.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">ستتم إزالة ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات التي يدعمها Jetpack من تطبيق ووردبريس في %s.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">ستنتقل ميزات Jetpack قريبًا.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">ستنتقل ميزة التنبيهات إلى Jetpack</string>
@@ -1831,7 +1879,6 @@ Language: ar
     <string name="stats_insights_social">اجتماعي</string>
     <string name="stats_insights_annual_site_stats">إحصاءات الموقع السنوية</string>
     <string name="register_domain">تسجيل نطاق</string>
-    <string name="jetpack_installed_message">والآن بعد تثبيت Jetpack، ما علينا سوى مساعدتك على الإعداد. لن يستغرق هذا إلا دقيقة.</string>
     <string name="domain_suggestions_fetch_error">تعذّر تحميل اقتراحات النطاق</string>
     <string name="domain_suggestions_search_hint">كتابة كلمة مفتاحية للحصول على مزيد من الأفكار</string>
     <string name="domains_suggestions_empty_list">لم يتم العثور على أي اقتراحات</string>
@@ -2100,18 +2147,9 @@ Language: ar
     <string name="content_description_more">المزيد</string>
     <string name="reader_empty_followed_tags_subtitle">أضف موضوعًا هنا للعثور على مقالات حول موضوعاتك المفضلة</string>
     <string name="reader_empty_followed_tags_title">لا توجد مواضيع تمت متابعتها</string>
-    <string name="install_jetpack_retry">إعادة المحاولة</string>
-    <string name="jetpack_installation_problem">حدثت مشكلة</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">الأسئلة الشائعة عن Jetpack</string>
-    <string name="jetpack_installed">تمّ تنصيب Jetpack</string>
-    <string name="install_jetpack">تنصيب Jetpack</string>
-    <string name="installing_jetpack">تنصيب Jetpack</string>
     <string name="login_to_to_connect_jetpack">سجّل الدخول إلى حساب WordPress.com الذي تستخدمه للاتصال بـ Jetpack.</string>
-    <string name="jetpack_installation_problem_message">يتعذر تنصيب Jetpack في الوقت الحالي.</string>
-    <string name="installing_jetpack_message">تنصيب Jetpack على موقعك. قد يستغرق هذا الأمر وقتًا يصل إلى بضع دقائق لاكتماله.</string>
-    <string name="install_jetpack_message">لن يتم تخزين بيانات اعتمادك وستُستخدم فقط بغرض تنصيب Jetpack.</string>
-    <string name="install_jetpack_continue">الإعداد</string>
     <string name="stats_jetpack_connection_setup_info">لاستخدام الإحصاءات على موقع ووردبريس الخاص بك، سيتعين عليك تنصيب إضافة Jetpack.</string>
     <string name="themes_empty_list">لا توجد سمات مطابقة لبحثك</string>
     <string name="reader_label_post_search_explainer">ما الذي ترغب في إيجاده؟</string>

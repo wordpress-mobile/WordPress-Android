@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -34,6 +35,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IntegerRes;
 import androidx.annotation.NonNull;
@@ -74,7 +76,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
@@ -86,9 +87,11 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -214,6 +217,15 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.media_settings_activity);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                saveChanges();
+                CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         setSupportActionBar(findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
@@ -508,12 +520,6 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
-    public void onBackPressed() {
-        saveChanges();
-        super.onBackPressed();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.media_settings, menu);
         return super.onCreateOptionsMenu(menu);
@@ -545,7 +551,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.menu_save) {
             saveMediaToDevice();
@@ -982,14 +988,14 @@ public class MediaSettingsActivity extends LocaleAwareActivity
      * saves the media to the local device using the Android DownloadManager
      */
     private void saveMediaToDevice() {
-        // must request permissions even though they're already defined in the manifest
-        String[] permissionList = {
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-        };
-        if (!PermissionUtils.checkAndRequestPermissions(this, WPPermissionUtils.MEDIA_PREVIEW_PERMISSION_REQUEST_CODE,
-                permissionList)) {
-            return;
+        // must request the permission even though it's already defined in the manifest
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            String[] permissionList = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            if (!PermissionUtils.checkAndRequestPermissions(this,
+                    WPPermissionUtils.MEDIA_PREVIEW_PERMISSION_REQUEST_CODE,
+                    permissionList)) {
+                return;
+            }
         }
 
         if (!NetworkUtils.checkConnection(this)) {

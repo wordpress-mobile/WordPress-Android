@@ -20,6 +20,7 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.BUTTON
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.FEATURE
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.HEADER
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.ROW
+import org.wordpress.android.ui.debug.previews.PREVIEWS
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -49,7 +50,7 @@ class DebugSettingsViewModel
     private val weeklyRoundupNotifier: WeeklyRoundupNotifier,
     private val notificationManager: NotificationManagerWrapper,
     private val contextProvider: ContextProvider,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
@@ -65,7 +66,11 @@ class DebugSettingsViewModel
 
     private fun refresh() {
         val uiItems = mutableListOf<UiItem>()
-        val remoteFeatures = buildRemoteFeatures()
+        val remoteFeatures = buildRemoteFeatures().map {
+            it.apply {
+                preview = { onFeaturePreviewClick(title) }.takeIf { state == ENABLED && PREVIEWS.contains(title) }
+            }
+        }
         if (remoteFeatures.isNotEmpty()) {
             uiItems.add(Header(R.string.debug_settings_remote_features))
             uiItems.addAll(remoteFeatures)
@@ -94,8 +99,12 @@ class DebugSettingsViewModel
         _onNavigation.value = Event(DebugCookies)
     }
 
+    private fun onFeaturePreviewClick(key: String) {
+        _onNavigation.value = Event(NavigationAction.PreviewFragment(key))
+    }
+
     private fun onForceShowWeeklyRoundupClick() = launch(bgDispatcher) {
-        if(!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications())
+        if (!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications())
             return@launch
         weeklyRoundupNotifier.buildNotifications().forEach {
             notificationManager.notify(it.id, it.asNotificationCompatBuilder(contextProvider.getContext()).build())
@@ -165,6 +174,9 @@ class DebugSettingsViewModel
             )
 
             enum class State { ENABLED, DISABLED, UNKNOWN }
+
+            @Suppress("DataClassShouldBeImmutable") // We're not in prod code or diffing here, the rule is moot
+            var preview: (() -> Unit)? = null
         }
 
         data class Field(val remoteFieldKey: String, val remoteFieldValue: String, val remoteFieldSource: String) :
@@ -187,5 +199,6 @@ class DebugSettingsViewModel
 
     sealed class NavigationAction {
         object DebugCookies : NavigationAction()
+        data class PreviewFragment(val name: String) : NavigationAction()
     }
 }

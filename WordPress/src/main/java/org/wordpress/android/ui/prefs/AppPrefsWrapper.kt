@@ -86,6 +86,17 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.shouldScheduleCreateSiteNotification()
         set(shouldSchedule) = AppPrefs.setShouldScheduleCreateSiteNotification(shouldSchedule)
 
+    val wpJetpackIndividualPluginOverlayShownCount: Int
+        get() = AppPrefs.getWPJetpackIndividualPluginOverlayShownCount()
+
+    var wpJetpackIndividualPluginOverlayLastShownTimestamp: Long
+        get() = AppPrefs.getWPJetpackIndividualPluginOverlayLastShownTimestamp()
+        set(timestamp) = AppPrefs.setWPJetpackIndividualPluginOverlayLastShownTimestamp(timestamp)
+
+    var notificationPermissionsWarningDismissed: Boolean
+        get() = AppPrefs.getNotificationsPermissionsWarningDismissed()
+        set(dismissed) = AppPrefs.setNotificationsPermissionWarningDismissed(dismissed)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
@@ -326,6 +337,15 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setShouldHidePromoteWithBlazeCard(siteId: Long, isHidden: Boolean) =
         AppPrefs.setShouldHidePromoteWithBlazeCard(siteId, isHidden)
+
+    fun getShouldHideDashboardDomainCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideDashboardDomainCard(siteId)
+
+    fun setShouldHideDashboardDomainCard(siteId: Long, isHidden: Boolean) =
+        AppPrefs.setShouldHideDashboardDomainCard(siteId, isHidden)
+
+    fun incrementWPJetpackIndividualPluginOverlayShownCount() =
+        AppPrefs.incrementWPJetpackIndividualPluginOverlayShownCount()
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 

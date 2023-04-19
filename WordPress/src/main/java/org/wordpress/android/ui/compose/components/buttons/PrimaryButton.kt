@@ -1,19 +1,24 @@
 package org.wordpress.android.ui.compose.components.buttons
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -26,19 +31,20 @@ fun PrimaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isInProgress: Boolean = false,
-    useDefaultMargins: Boolean = true,
+    colors: ButtonColors = ButtonDefaults.buttonColors(
+        contentColor = AppColor.White,
+        disabledContentColor = AppColor.White.copy(alpha = ContentAlpha.disabled),
+        disabledBackgroundColor = colorResource(R.color.jetpack_green_70),
+    ),
+    padding: PaddingValues = PaddingValues(
+        start = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal),
+        top = 20.dp,
+        end = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal),
+        bottom = 10.dp
+    ),
+    textStyle: TextStyle = LocalTextStyle.current,
     buttonSize: ButtonSize = ButtonSize.NORMAL,
 ) {
-    var computedModifier: Modifier = modifier
-
-    if (useDefaultMargins) {
-        computedModifier = computedModifier
-            .padding(top = 20.dp, bottom = 10.dp)
-            .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
-    }
-
-    computedModifier = computedModifier.defaultMinSize(minHeight = buttonSize.height)
-
     Button(
         onClick = onClick,
         enabled = !isInProgress,
@@ -46,21 +52,20 @@ fun PrimaryButton(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
         ),
-        colors = ButtonDefaults.buttonColors(
-            contentColor = AppColor.White,
-            disabledBackgroundColor = colorResource(R.color.jetpack_green_70),
-        ),
-        modifier = computedModifier
+        colors = colors,
+        modifier = modifier
+            .padding(padding)
+            .defaultMinSize(minHeight = buttonSize.height)
             .fillMaxWidth(),
     ) {
         if (isInProgress) {
             CircularProgressIndicator(
-                color = MaterialTheme.colors.onPrimary,
+                color = LocalContentColor.current,
                 strokeWidth = 2.dp,
                 modifier = Modifier.size(20.dp),
             )
         } else {
-            Text(text = text)
+            Text(text, style = textStyle)
         }
     }
 }
@@ -80,15 +85,6 @@ private fun PrimaryButtonPreview() {
 private fun PrimaryButtonInProgressPreview() {
     AppTheme {
         PrimaryButton(text = "Continue", onClick = {}, isInProgress = true)
-    }
-}
-
-@Preview
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun PrimaryButtonNoDefaultMarginsPreview() {
-    AppTheme {
-        PrimaryButton(text = "Continue", onClick = {}, useDefaultMargins = false)
     }
 }
 

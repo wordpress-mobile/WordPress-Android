@@ -53,6 +53,7 @@ import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
@@ -114,10 +115,10 @@ class StatsViewModel
     fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
 
-        val launchedFrom = intent.getSerializableExtra(StatsActivity.ARG_LAUNCHED_FROM)
+        val launchedFrom = intent.getSerializableExtraCompat<Serializable>(StatsActivity.ARG_LAUNCHED_FROM)
         val initialTimeFrame = getInitialTimeFrame(intent)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
-        val notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as? NotificationType
+        val notificationType = intent.getSerializableExtraCompat<NotificationType>(ARG_NOTIFICATION_TYPE)
         start(localSiteId, launchedFrom, initialTimeFrame, initialSelectedPeriod, restart, notificationType)
     }
 
@@ -135,7 +136,7 @@ class StatsViewModel
     }
 
     private fun getInitialTimeFrame(intent: Intent): StatsSection? {
-        return when (intent.getSerializableExtra(StatsActivity.ARG_DESIRED_TIMEFRAME)) {
+        return when (intent.getSerializableExtraCompat<Serializable>(StatsActivity.ARG_DESIRED_TIMEFRAME)) {
             StatsTimeframe.INSIGHTS -> StatsSection.INSIGHTS
             DAY -> StatsSection.DAYS
             WEEK -> StatsSection.WEEKS

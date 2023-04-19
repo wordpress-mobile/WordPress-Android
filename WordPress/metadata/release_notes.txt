@@ -1,4 +1,3 @@
-Good words are read
-The WordPress logo is blue
-There are no new updates
-Sorry to disappoint you
+* [*] Adds runtime notifications permission [https://github.com/wordpress-mobile/WordPress-Android/pull/18239]
+* [**] Adds media permissions support for Android 13 [https://github.com/wordpress-mobile/WordPress-Android/pull/18183]
+

@@ -296,6 +296,16 @@ class JetpackFeatureRemovalBrandingUtilTest {
         verifyNoInteractions(dateTimeUtilsWrapper)
     }
 
+    @Test
+    fun `given static posters phase started, all banners and badges should be Jetpack powered`() {
+        givenPhase(JetpackFeatureRemovalPhase.PhaseStaticPosters)
+
+        val actual = allJpScreens.map(classToTest::getBrandingTextByPhase)
+
+        actual.assertAllMatch(R.string.wp_jetpack_feature_removal_static_posters_phase)
+        verifyNoInteractions(dateTimeUtilsWrapper)
+    }
+
     // endregion
 
     // region Helpers
@@ -305,7 +315,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     }
 
     private fun whenJpDeadlineIs(daysAway: Int?) {
-        whenever(jpDeadlineConfig.appConfig.getRemoteFieldConfigValue(any())).thenReturn(daysAway?.toString())
+        whenever(jpDeadlineConfig.appConfig.getRemoteFieldConfigValue(any())).thenReturn(daysAway?.toString() ?: "")
         daysAway?.toLong()?.let {
             val today = Date(System.currentTimeMillis())
             val deadline = Date.from(today.toInstant().atZone(ZoneId.systemDefault()).plusDays(it).toInstant())

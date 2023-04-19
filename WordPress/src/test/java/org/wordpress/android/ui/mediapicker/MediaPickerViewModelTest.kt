@@ -116,11 +116,32 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private var uiStates = mutableListOf<MediaPickerUiState>()
     private lateinit var actions: Channel<LoadAction>
     private var navigateEvents = mutableListOf<Event<MediaNavigationEvent>>()
-    private val singleSelectMediaPickerSetup = buildMediaPickerSetup(false, setOf(IMAGE))
-    private val multiSelectMediaPickerSetup = buildMediaPickerSetup(true, setOf(IMAGE, VIDEO))
-    private val singleSelectVideoPickerSetup = buildMediaPickerSetup(false, setOf(VIDEO))
-    private val singleSelectAudioPickerSetup = buildMediaPickerSetup(false, setOf(AUDIO))
-    private val multiSelectFilePickerSetup = buildMediaPickerSetup(true, setOf(IMAGE, VIDEO, AUDIO, DOCUMENT))
+    private val singleSelectMediaPickerSetup = buildMediaPickerSetup(
+        false,
+        setOf(IMAGE),
+        requiresPhotosVideosPermission = true
+    )
+    private val multiSelectMediaPickerSetup = buildMediaPickerSetup(
+        true,
+        setOf(IMAGE, VIDEO),
+        requiresPhotosVideosPermission = true
+    )
+    private val singleSelectVideoPickerSetup = buildMediaPickerSetup(
+        false,
+        setOf(VIDEO),
+        requiresPhotosVideosPermission = true
+    )
+    private val singleSelectAudioPickerSetup = buildMediaPickerSetup(
+        false,
+        setOf(AUDIO),
+        requiresMusicAudioPermission = true
+    )
+    private val multiSelectFilePickerSetup = buildMediaPickerSetup(
+        true,
+        setOf(IMAGE, VIDEO, AUDIO, DOCUMENT),
+        requiresPhotosVideosPermission = true,
+        requiresMusicAudioPermission = true
+    )
     private val site = SiteModel()
     private lateinit var firstItem: MediaItem
     private lateinit var secondItem: MediaItem
@@ -320,13 +341,21 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `shows soft ask screen when storage permissions are turned off`() = test {
-        setupViewModel(listOf(), singleSelectMediaPickerSetup, hasStoragePermissions = false)
+    fun `shows soft ask screen when photos videos permissions are turned off`() = test {
+        setupViewModel(
+            listOf(),
+            singleSelectMediaPickerSetup,
+            hasPhotosVideosPermission = false
+        )
         whenever(resourceProvider.getString(R.string.app_name)).thenReturn("WordPress")
-        whenever(resourceProvider.getString(R.string.photo_picker_soft_ask_label)).thenReturn("Soft ask label")
+        whenever(resourceProvider.getString(R.string.photo_picker_soft_ask_photos_label))
+            .thenReturn("Soft ask label")
         val isAlwaysDenied = false
 
-        viewModel.checkStoragePermission(isAlwaysDenied = isAlwaysDenied)
+        viewModel.checkMediaPermissions(
+            isPhotosVideosAlwaysDenied = isAlwaysDenied,
+            isMusicAudioAlwaysDenied = isAlwaysDenied
+        )
 
         assertThat(uiStates).hasSize(3)
 
@@ -682,7 +711,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     fun `empty state is emitted when no items in picker`() = test {
         setupViewModel(null, singleSelectMediaPickerSetup, numberOfStates = 1)
 
-        viewModel.checkStoragePermission(isAlwaysDenied = false)
+        viewModel.checkMediaPermissions(isPhotosVideosAlwaysDenied = false, isMusicAudioAlwaysDenied = false)
 
         assertThat(uiStates).hasSize(2)
         assertPhotoListUiStateEmpty()
@@ -690,11 +719,15 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `hidden state is emitted when when need to ask permission in picker`() = test {
-        setupViewModel(listOf(firstItem), singleSelectMediaPickerSetup, hasStoragePermissions = false)
+        setupViewModel(
+            listOf(firstItem),
+            singleSelectMediaPickerSetup,
+            hasPhotosVideosPermission = false
+        )
         whenever(resourceProvider.getString(R.string.app_name)).thenReturn("WordPress")
-        whenever(resourceProvider.getString(R.string.photo_picker_soft_ask_label)).thenReturn("Soft ask label")
+        whenever(resourceProvider.getString(R.string.photo_picker_soft_ask_photos_label)).thenReturn("Soft ask label")
 
-        viewModel.checkStoragePermission(isAlwaysDenied = false)
+        viewModel.checkMediaPermissions(isPhotosVideosAlwaysDenied = false, isMusicAudioAlwaysDenied = false)
 
         assertThat(uiStates).hasSize(3)
         assertPhotoListUiStateHidden()
@@ -702,7 +735,11 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `data items state is emitted when items available in picker and have permissions`() = test {
-        setupViewModel(listOf(firstItem), singleSelectMediaPickerSetup, hasStoragePermissions = true)
+        setupViewModel(
+            listOf(firstItem),
+            singleSelectMediaPickerSetup,
+            hasPhotosVideosPermission = true
+        )
 
         viewModel.refreshData(false)
 
@@ -711,33 +748,36 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `does not start loading without storage permissions`() = test {
+    fun `does not start loading without media permission`() = test {
         setupViewModel(
             listOf(firstItem),
-            singleSelectMediaPickerSetup.copy(requiresStoragePermissions = true),
-            hasStoragePermissions = false
+            singleSelectMediaPickerSetup.copy(requiresPhotosVideosPermissions = true),
+            hasPhotosVideosPermission = false
         )
 
         assertThat(actions.tryReceive().getOrNull()).isNull()
     }
 
     @Test
-    fun `starts loading with storage permissions`() = test {
+    fun `starts loading with media permissions`() = test {
         setupViewModel(
             listOf(firstItem),
-            singleSelectMediaPickerSetup.copy(requiresStoragePermissions = true),
-            hasStoragePermissions = true
+            singleSelectMediaPickerSetup.copy(requiresPhotosVideosPermissions = true),
+            hasPhotosVideosPermission = true
         )
 
         assertThat(actions.tryReceive().getOrNull()).isEqualTo(LoadAction.Start(null))
     }
 
     @Test
-    fun `starts loading when storage permissions not necessary`() = test {
+    fun `starts loading when no permission necessary`() = test {
         setupViewModel(
             listOf(firstItem),
-            singleSelectMediaPickerSetup.copy(requiresStoragePermissions = false),
-            hasStoragePermissions = false
+            singleSelectMediaPickerSetup.copy(
+                requiresPhotosVideosPermissions = false,
+                requiresMusicAudioPermissions = false
+            ),
+            hasPhotosVideosPermission = false
         )
 
         assertThat(actions.tryReceive().getOrNull()).isEqualTo(LoadAction.Start(null))
@@ -833,12 +873,12 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private suspend fun setupViewModel(
         domainModel: List<MediaItem>?,
         mediaPickerSetup: MediaPickerSetup,
-        hasStoragePermissions: Boolean = true,
+        hasPhotosVideosPermission: Boolean = true,
         filter: String? = null,
         numberOfStates: Int = 2,
         hasMore: Boolean = false
     ) {
-        whenever(permissionsHandler.hasStoragePermission()).thenReturn(hasStoragePermissions)
+        whenever(permissionsHandler.hasPhotosVideosPermission()).thenReturn(hasPhotosVideosPermission)
         whenever(mediaLoaderFactory.build(mediaPickerSetup, site)).thenReturn(mediaLoader)
         doAnswer {
             actions = it.getArgument(0)
@@ -931,12 +971,14 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         allowedTypes: Set<MediaType>,
         cameraSetup: CameraSetup = HIDDEN,
         editingEnabled: Boolean = true,
-        requiresStoragePermissions: Boolean = true
+        requiresPhotosVideosPermission: Boolean = false,
+        requiresMusicAudioPermission: Boolean = false
     ) = MediaPickerSetup(
         primaryDataSource = DEVICE,
         availableDataSources = setOf(),
         canMultiselect = canMultiselect,
-        requiresStoragePermissions = requiresStoragePermissions,
+        requiresPhotosVideosPermissions = requiresPhotosVideosPermission,
+        requiresMusicAudioPermissions = requiresMusicAudioPermission,
         allowedTypes = allowedTypes,
         cameraSetup = cameraSetup,
         systemPickerEnabled = true,

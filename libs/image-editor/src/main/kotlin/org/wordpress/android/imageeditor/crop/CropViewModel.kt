@@ -23,6 +23,8 @@ import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveStat
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiLoadedState
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
+import org.wordpress.android.imageeditor.utils.getParcelableCompat
+import org.wordpress.android.imageeditor.utils.getParcelableExtraCompat
 import org.wordpress.android.imageeditor.viewmodel.Event
 import java.io.File
 import java.io.Serializable
@@ -158,10 +160,10 @@ class CropViewModel : ViewModel() {
     private fun createCropResult(cropResultCode: Int, cropData: Intent) = CropResult(cropResultCode, cropData)
 
     private fun getOutputPath(): String =
-        cropOptionsBundleWithFilesInfo.getParcelable<Uri?>(UCrop.EXTRA_OUTPUT_URI)?.path ?: ""
+        cropOptionsBundleWithFilesInfo.getParcelableCompat<Uri>(UCrop.EXTRA_OUTPUT_URI)?.path ?: ""
 
     fun getOutputData(cropResult: CropResult): ArrayList<OutputData> {
-        val imageUri: Uri? = cropResult.data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI)
+        val imageUri = cropResult.data.getParcelableExtraCompat<Uri>(UCrop.EXTRA_OUTPUT_URI)
 
         return if (imageUri != null) {
             arrayListOf(OutputData(imageUri.toString()))
