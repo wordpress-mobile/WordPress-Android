@@ -672,6 +672,8 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
     const val newPostImage = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val oldPostVideo = paragraphBlock + newImageBlock + oldVideoBlock + newMediaTextBlock + newGalleryBlock
     const val newPostVideo = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
+    const val oldPostVideoPress = paragraphBlock + newImageBlock + oldVideoPressBlockWithDefaultAttrs + newMediaTextBlock + newGalleryBlock
+    const val newPostVideoPress = paragraphBlock + newImageBlock + newVideoPressBlockWithDefaultAttrs + newMediaTextBlock + newGalleryBlock
     const val oldPostMediaText = paragraphBlock + newImageBlock + newVideoBlock + oldMediaTextBlock + newGalleryBlock
     const val newPostMediaText = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val oldPostGallery = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + oldGalleryBlock
