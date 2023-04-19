@@ -2,8 +2,10 @@
 
 package org.wordpress.android.ui.notifications
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Menu
@@ -13,6 +15,7 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +33,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_F
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL
 import org.wordpress.android.databinding.NotificationsListFragmentBinding
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity
@@ -54,8 +58,10 @@ import org.wordpress.android.ui.notifications.services.NotificationsUpdateServic
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.PermissionUtils
+import org.wordpress.android.util.WPPermissionUtils
+import org.wordpress.android.util.WPPermissionUtils.NOTIFICATIONS_PERMISSION_REQUEST_CODE
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.observeEvent
@@ -174,6 +180,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 }
             }
             setSelectedTab(lastTabPosition)
+            setNotificationPermissionWarning()
         }
         viewModel.onResume()
     }
@@ -200,6 +207,57 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     private fun NotificationsListFragmentBinding.setSelectedTab(position: Int) {
         lastTabPosition = position
         tabLayout.getTabAt(lastTabPosition)?.select()
+    }
+
+    private fun NotificationsListFragmentBinding.setNotificationPermissionWarning() {
+        val hasPermission = PermissionUtils.checkNotificationsPermission(activity)
+        if (hasPermission) {
+            // If the permissions is granted, we should reset the state of the warning. Because the permission may be
+            // disabled later, then we should be able to show the warning again to inform the user.
+            viewModel.resetNotificationsPermissionWarningDismissState()
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || hasPermission ||
+            viewModel.isNotificationsPermissionsWarningDismissed
+        ) {
+            // If the user dismissed the warning, don't show it again.
+            notificationPermissionWarning.isVisible = false
+        } else {
+            notificationPermissionWarning.isVisible = true
+            notificationPermissionWarning.setOnClickListener {
+                val isAlwaysDenied = WPPermissionUtils.isPermissionAlwaysDenied(
+                    requireActivity(),
+                    Manifest.permission.POST_NOTIFICATIONS
+                )
+                if (isAlwaysDenied) {
+                    NotificationsPermissionBottomSheetFragment().show(
+                        parentFragmentManager,
+                        NotificationsPermissionBottomSheetFragment.TAG
+                    )
+                } else {
+                    requestPermissions(
+                        arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                        NOTIFICATIONS_PERMISSION_REQUEST_CODE
+                    )
+                }
+            }
+            permissionDismissButton.setOnClickListener {
+                notificationPermissionWarning.isVisible = false
+                viewModel.onNotificationsPermissionWarningDismissed()
+            }
+        }
+    }
+
+    @Suppress("OVERRIDE_DEPRECATION")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        WPPermissionUtils.setPermissionListAsked(
+            requireActivity(),
+            requestCode,
+            permissions,
+            grantResults,
+            false
+        )
+        viewModel.resetNotificationsPermissionWarningDismissState()
     }
 
     private fun NotificationsListFragmentBinding.showConnectJetpackView() {

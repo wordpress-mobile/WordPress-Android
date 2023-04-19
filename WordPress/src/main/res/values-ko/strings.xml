@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-31 20:51:11+0000
+Translation-Revision-Date: 2023-04-05 16:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ko_KR
 -->
 <resources>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">개별 젯팩 플러그인 %2$s개를 &lt;b&gt;%1$s&lt;/b&gt;에서 사용하고 있습니다.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%2$s&lt;/b&gt; 플러그인을 &lt;b&gt;%1$s&lt;/b&gt;에서 사용하고 있습니다.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">개별 젯팩 플러그인을 사용하는 사이트는 워드프레스 앱에서 지원되지 않습니다.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">워드프레스 앱에서 지원되지 않는 개별 젯팩 플러그인을 &lt;b&gt;%1$s&lt;/b&gt;에서 사용하고 있습니다.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">워드프레스 앱에서 지원되지 않는 &lt;b&gt;%2$s&lt;/b&gt; 플러그인을 &lt;b&gt;%1$s&lt;/b&gt;에서 사용하고 있습니다.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">사이트 중 일부에 접근할 수 없음</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">사이트 중 하나에 접근할 수 없음</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">전체 젯팩 플러그인 연결 방법을 안내해 드리는 젯팩 앱으로 전환하여 앱으로 이 사이트를 이용하세요.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">젯팩 앱으로 전환</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s에서는 %2$s을(를) 사용하고 있으며 여기에서는 아직 앱의 모든 기능이 지원되지 않습니다.\n\n이 사이트에서 앱을 사용하려면 %3$s을(를) 설치하세요.</string>
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">이 사이트</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s에서는 %2$s을(를) 사용하고 있으며 여기에서는 아직 앱의 모든 기능이 지원되지 않습니다. %3$s을(를) 설치하세요.</string>

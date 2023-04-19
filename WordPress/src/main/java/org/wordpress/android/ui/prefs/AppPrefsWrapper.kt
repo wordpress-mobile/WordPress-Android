@@ -93,6 +93,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getWPJetpackIndividualPluginOverlayLastShownTimestamp()
         set(timestamp) = AppPrefs.setWPJetpackIndividualPluginOverlayLastShownTimestamp(timestamp)
 
+    var notificationPermissionsWarningDismissed: Boolean
+        get() = AppPrefs.getNotificationsPermissionsWarningDismissed()
+        set(dismissed) = AppPrefs.setNotificationsPermissionWarningDismissed(dismissed)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)

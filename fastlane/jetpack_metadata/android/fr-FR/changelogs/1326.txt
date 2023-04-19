@@ -1,2 +1,0 @@
-22.0 :
-Vous pouvez désormais transformer la plupart des types de bloc en d’autres types de bloc, comme des extraits, des colonnes et des groupes.

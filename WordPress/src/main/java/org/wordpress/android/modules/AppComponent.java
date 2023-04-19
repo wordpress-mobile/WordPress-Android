@@ -16,7 +16,6 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderBottomSheetFragment;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderTimePicker;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
-import org.wordpress.android.ui.comments.CommentsDetailActivity;
 import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.comments.unified.EditCancelDialogFragment;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsFragment;
@@ -136,7 +135,6 @@ import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
 import org.wordpress.android.ui.reader.CommentNotificationsBottomSheetFragment;
 import org.wordpress.android.ui.reader.ReaderBlogFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
-import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.ReaderSearchActivity;
@@ -217,8 +215,6 @@ public interface AppComponent {
     void inject(CommentDetailFragment object);
 
     void inject(EditCommentActivity object);
-
-    void inject(CommentsDetailActivity object);
 
     void inject(MeFragment object);
 
@@ -341,8 +337,6 @@ public interface AppComponent {
     void inject(ReaderSimplePostContainerView object);
 
     void inject(ReaderPostPagerActivity object);
-
-    void inject(ReaderPostListActivity object);
 
     void inject(ReaderBlogFragment object);
 

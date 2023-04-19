@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-12 21:30:22+0000
+Translation-Revision-Date: 2023-04-13 22:57:08+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: sr_RS
@@ -1251,8 +1251,10 @@ Language: sr_RS
     <string name="max_thumbnail_px_size">Највећа величина слике</string>
     <string name="reader_excerpt_link">Посети %s за више</string>
     <string name="add_media_progress">Додавање садржаја</string>
+    <string name="error_publish_empty_page">Није могуће објавити празну страницу</string>
     <string name="upload_failed_param">Отпремање неуспело за \"%s\"</string>
     <string name="cant_open_url">Није могуће отворити везу</string>
+    <string name="error_post_does_not_exist">Овај чланак више не постоји</string>
     <string name="error_media_canceled">Отпремање садржаја је отказано</string>
     <string name="editor_uploading_post">Ваш чланак се отпрема</string>
     <string name="uploading_media">Отпремање садржаја…</string>
@@ -1294,6 +1296,7 @@ Language: sr_RS
     <string name="post_status_pending_review">Чека рецензију</string>
     <string name="post_status_publish_post">Објави</string>
     <string name="now">Сада</string>
+    <string name="post_settings_password_dialog_hint">Само они са овом лозинком могу видети овај чланак</string>
     <string name="post_settings_tags">Ознаке</string>
     <string name="post_settings_post_format">Облик чланка</string>
     <string name="post_settings_slug">Подложак</string>

@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -987,14 +988,14 @@ public class MediaSettingsActivity extends LocaleAwareActivity
      * saves the media to the local device using the Android DownloadManager
      */
     private void saveMediaToDevice() {
-        // must request permissions even though they're already defined in the manifest
-        String[] permissionList = {
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-        };
-        if (!PermissionUtils.checkAndRequestPermissions(this, WPPermissionUtils.MEDIA_PREVIEW_PERMISSION_REQUEST_CODE,
-                permissionList)) {
-            return;
+        // must request the permission even though it's already defined in the manifest
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            String[] permissionList = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            if (!PermissionUtils.checkAndRequestPermissions(this,
+                    WPPermissionUtils.MEDIA_PREVIEW_PERMISSION_REQUEST_CODE,
+                    permissionList)) {
+                return;
+            }
         }
 
         if (!NetworkUtils.checkConnection(this)) {

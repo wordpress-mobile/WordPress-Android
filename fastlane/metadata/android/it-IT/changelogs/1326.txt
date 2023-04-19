@@ -1,2 +1,0 @@
-22.0:
-Ora puoi trasformare la maggior parte dei tipi di blocchi in altri tipi di blocchi, come virgolette, colonne e gruppi.

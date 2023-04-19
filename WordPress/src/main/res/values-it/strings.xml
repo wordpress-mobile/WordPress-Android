@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-31 20:45:15+0000
+Translation-Revision-Date: 2023-04-05 16:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: it
 -->
 <resources>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; sta usando %2$s plugin Jetpack individuali</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; sta usando il plugin &lt;b&gt;%2$s&lt;/b&gt;</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">I siti con plugin Jetpack individuali non sono supportati dall\'app WordPress.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt; sta usando plugin Jetpack individuali non supportati dall\'app WordPress.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt; sta usando il plugin &lt;b&gt;%2$s&lt;/b&gt; non supportato dall\'app WordPress.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">Impossibile accedere ad alcuni dei tuoi siti.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">Impossibile accedere a uno dei tuoi siti</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">Passa all\'app Jetpack dove ti guideremo attraverso il collegamento del plugin Jetpack completo per poter utilizzare questo sito con l\'app.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">Passa all\'app Jetpack</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s utilizza %2$s, che non supportano ancora tutte le funzionalità dell\'app.\n\nInstalla %3$s per usare l\'app coon questo sito.</string>
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Questo sito</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s utilizza %2$s, che non supportano ancora tutte le funzionalità dell\'app. Please install the %3$s.</string>
