@@ -35,7 +35,6 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     private int mConnectionId;
     private WebView mWebView;
     private ProgressBar mProgress;
-    private View mNestedScrollView;
 
     @Inject AccountStore mAccountStore;
 
@@ -98,7 +97,6 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
 
         mProgress = rootView.findViewById(R.id.progress);
         mWebView = rootView.findViewById(R.id.webView);
-        mNestedScrollView = rootView.findViewById(R.id.publicize_webview_nested_scroll_view);
 
         mWebView.setWebViewClient(new PublicizeWebViewClient());
         mWebView.setWebChromeClient(new PublicizeWebChromeClient());
@@ -127,7 +125,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         super.onResume();
         setNavigationIcon(R.drawable.ic_close_white_24dp);
         if (getActivity() instanceof ScrollableViewInitializedListener) {
-            ((ScrollableViewInitializedListener) getActivity()).onScrollableViewInitialized(mNestedScrollView.getId());
+            ((ScrollableViewInitializedListener) getActivity()).onScrollableViewInitialized(mWebView.getId());
         }
     }
 
