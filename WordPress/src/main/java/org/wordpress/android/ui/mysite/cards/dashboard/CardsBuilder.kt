@@ -63,7 +63,7 @@ class CardsBuilder @Inject constructor(
 
                 pagesCardBuilder.build(dashboardCardsBuilderParams.pagesCardBuilderParams)?.let { add(it) }
 
-                activityCardBuilder.build(dashboardCardsBuilderParams.activityBuilderParams)?.let { add(it) }
+                activityCardBuilder.build(dashboardCardsBuilderParams.activityCardBuilderParams)?.let { add(it) }
             }
         }.toList()
     )
