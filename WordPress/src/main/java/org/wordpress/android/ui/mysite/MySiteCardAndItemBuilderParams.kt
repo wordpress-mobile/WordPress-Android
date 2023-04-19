@@ -68,7 +68,7 @@ sealed class MySiteCardAndItemBuilderParams {
         val promoteWithBlazeCardBuilderParams: PromoteWithBlazeCardBuilderParams,
         val dashboardCardDomainBuilderParams: DashboardCardDomainBuilderParams,
         val pagesCardBuilderParams: PagesCardBuilderParams,
-        val activityBuilderParams: ActivityCardBuilderParams
+        val activityCardBuilderParams: ActivityCardBuilderParams
     ) : MySiteCardAndItemBuilderParams()
 
     data class TodaysStatsCardBuilderParams(

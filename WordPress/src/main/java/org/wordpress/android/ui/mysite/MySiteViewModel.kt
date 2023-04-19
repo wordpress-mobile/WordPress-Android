@@ -615,7 +615,7 @@ class MySiteViewModel @Inject constructor(
                     onPagesItemClick = this::onPagesItemClick,
                     onFooterLinkClick = this::onPagesCardFooterLinkClick
                 ),
-                activityBuilderParams = ActivityCardBuilderParams(
+                activityCardBuilderParams = ActivityCardBuilderParams(
                     site = site,
                     activityCardModel = cardsUpdate?.cards?.firstOrNull {
                         it is ActivityCardModel
