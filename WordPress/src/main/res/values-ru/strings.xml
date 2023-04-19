@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-07 10:54:08+0000
+Translation-Revision-Date: 2023-04-19 09:54:07+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_remove_blocks">Удалить блоки</string>
+    <string name="gutenberg_native_privacy_and_rating">Конфиденциальность и рейтинг</string>
+    <string name="gutenberg_native_playback_settings">Настройки воспроизведения</string>
+    <string name="gutenberg_native_playback_bar_color">Цвет панели воспроизведения</string>
+    <string name="gutenberg_native_manual">Вручную</string>
+    <string name="gutenberg_native_dynamic">Динамический</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">Опишите назначение изображения. Оставьте поле пустым, если элемент декоративный.</string>
+    <string name="dashboard_pages_card_create_another_page_description">Начните с макетов для мобильных устройств</string>
+    <string name="dashboard_pages_card_create_another_page_button">Создать еще страницу</string>
+    <string name="dashboard_pages_card_no_pages_create_page_button">Добавление новых страниц на сайт</string>
+    <string name="dashboard_card_domain_menu_hide_this">Скрыть это</string>
+    <string name="dashboard_card_domain_sub_title">Займите себе место в Интернете: зарегистрируйте адрес сайта, который будет легко запомнить и порекомендовать друзьям.</string>
+    <string name="dashboard_card_domain_title">Чтобы выделиться, вам нужен уникальный домен</string>
+    <string name="blogging_reminders_notifications_permission_caption">Для использования напоминаний следует включить push-уведомления.</string>
+    <string name="blogging_reminders_notifications_permission_title">Включить push-уведомления</string>
+    <string name="site_creation_domain_button_continue_with_subdomain">Продолжить с поддоменом</string>
+    <string name="site_creation_domain_button_purchase_domain">Купить домен</string>
+    <string name="permission_images_video_audio">Фотографии и видеозаписи, музыка и аудиозаписи</string>
+    <string name="permission_audio">Музыка и аудиозаписи</string>
+    <string name="permission_images">Фотографии и видео</string>
+    <string name="photo_picker_soft_ask_audios_label">%s нужно разрешение для доступа к вашим аудиозаписям.</string>
+    <string name="photo_picker_soft_ask_videos_label">%s нужно разрешение для доступа к вашим видеозаписям.</string>
+    <string name="photo_picker_soft_ask_photos_label">%s нужно разрешение для доступа к вашим фотографиям.</string>
+    <string name="photo_picker_soft_ask_photos_videos_label">%s нужно разрешение для доступа к вашим фотографиям и видеозаписям.</string>
+    <string name="photo_picker_soft_ask_photos_videos_audio_label">%s нужно разрешение для доступа к вашей музыке, аудиозаписям, фотографиям и видеозаписям.</string>
+    <string name="notifications_permission_bottom_sheet_button">Включить уведомления</string>
+    <string name="notifications_permission_bottom_sheet_description_2">Перейдите в \"Настройки\" &amp;rarr; \"Уведомления\" &amp;rarr; \"Настройки приложения\" и включите %1$s, чтобы сразу получать уведомления.</string>
+    <string name="notifications_permission_bottom_sheet_description_1">Для просмотра уведомлений нужно открыть приложение.</string>
+    <string name="notifications_permission_bottom_sheet_title">Push-уведомления отключены</string>
+    <string name="notifications_permission_off_desc">Push-уведомления отключены</string>
+    <string name="notifications_permission_dismiss_content_description">Скрывать предупреждение о разрешении на уведомления.</string>
+    <string name="notifications_permission_fix">Исправить</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">На &lt;b&gt;%1$s&lt;/b&gt; используются отдельные плагины Jetpack (%2$s)</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">На &lt;b&gt;%1$s&lt;/b&gt; используется плагин &lt;b&gt;%2$s&lt;/b&gt;</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">Приложение WordPress не поддерживает сайты с отдельными плагинами Jetpack.</string>
@@ -774,6 +806,7 @@ Language: ru
     <string name="gutenberg_native_retry">Повторить</string>
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Один</string>
+    <string name="gutenberg_native_add_title">Добавить заголовок</string>
     <string name="gutenberg_native_no_preview_available">Предварительный просмотр недоступен</string>
     <string name="gutenberg_native_text_color">Цвет текста</string>
     <string name="gutenberg_native_padding">Отступ</string>
@@ -782,6 +815,7 @@ Language: ru
     <string name="gutenberg_native_custom_url">Произвольный URL</string>
     <string name="gutenberg_native_create_embed">Создать встроенный объект</string>
     <string name="gutenberg_native_column_d">Столбец %d</string>
+    <string name="gutenberg_native_more">Далее</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Кратко опишите ссылку, чтобы помочь пользователям с программой чтения с экрана</string>
     <string name="gutenberg_native_add_blocks">Добавить блоки</string>
     <string name="login_no_jetpack_sites">Нет сайтов с Jetpack</string>
@@ -1198,7 +1232,6 @@ Language: ru
     <string name="stories_intro_main_title">Представляем записи-истории</string>
     <string name="mlp_notice_blank_page_created">Создана пустая страница</string>
     <string name="mlp_notice_page_created">Страница создана</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s было отказано в доступе к вашим фотографиям. Чтобы исправить это, измените настройки доступа и включите %2$s и %3$s.</string>
     <string name="media_insert_failed">Вставка мультимедиа не удалась.</string>
     <string name="media_insert_failed_with_reason">Вставка мультимедиа не удалась: %s</string>
     <string name="photo_picker_wordpress_media_library">Выберите из медиатеки WordPress</string>
@@ -1678,6 +1711,7 @@ Language: ru
     <string name="gutenberg_native_add_image_or_video">ДОБАВИТЬ ИЗОБРАЖЕНИЕ ИЛИ ВИДЕО</string>
     <string name="gutenberg_native_add_image">ДОБАВИТЬ ИЗОБРАЖЕНИЕ</string>
     <string name="gutenberg_native_add_block_here">ДОБАВИТЬ БЛОК ЗДЕСЬ</string>
+    <string name="gutenberg_native_add_description">Добавить описание</string>
     <string name="reader_empty_saved_posts_content_description">Нажмите на кнопку добавления в сохраненные записи для сохранения записи в ваш список.</string>
     <string name="reader_acessibility_list_loaded">\"Загружен список из %1$d элементов.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Уведомления</string>
@@ -2701,7 +2735,7 @@ Language: ru
     <string name="media_documents">Документы</string>
     <string name="media_images">Изображения</string>
     <string name="media_all">Все</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s было отказано в доступе к вашим фотографиям. Чтобы исправить это, измените настройки доступа и запустите %2$s.</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">%1$s было отказано в доступе к вашим медиафайлам. Чтобы исправить это, измените настройки доступа и включите %2$s.</string>
     <string name="reader_view_comments">Посмотреть комментарии</string>
     <string name="site_settings_video_quality_hint">Качество видео. Чем выше значение, тем выше качество видео.</string>
     <string name="site_settings_video_width_hint">Приведение видео в записях к этому размеру</string>

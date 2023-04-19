@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-22 12:54:18+0000
+Translation-Revision-Date: 2023-04-19 07:58:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_remove_blocks">Hiqi blloqet</string>
+    <string name="gutenberg_native_privacy_and_rating">Privatësi dhe Vlerësim</string>
+    <string name="gutenberg_native_playback_settings">Rregullime Luajtjeje</string>
+    <string name="gutenberg_native_playback_bar_color">Ngjyrë Shtylle Luajtjeje</string>
+    <string name="gutenberg_native_manual">Dorazi</string>
+    <string name="gutenberg_native_dynamic">Dinamike</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">Përshkruani qëllimin e figurës. Lëreni të zbrazët, në qoftë dekorative.</string>
+    <string name="dashboard_pages_card_create_another_page_description">Fillojani me skema të qepura me porosi, të përshtatshme për celular</string>
+    <string name="dashboard_pages_card_create_another_page_button">Krijoni Një Faqe Tjetër</string>
+    <string name="dashboard_pages_card_no_pages_create_page_button">Shtoni Faqe te sajti juaj</string>
+    <string name="dashboard_card_domain_menu_hide_this">Fshihe këtë</string>
+    <string name="dashboard_card_domain_sub_title">Afirmoni pretendimin tuaj për qoshen tuaj në internet, me një adresë sajti që është kollaj të gjendet, jepet dhe ndiqet.</string>
+    <string name="dashboard_card_domain_title">Bëhuni zot i identitetin tuaj internetor, përmes një përkatësie vetjake</string>
+    <string name="blogging_reminders_notifications_permission_caption">Që të përdorni kujtues blogimi, do t’ju duhet të aktivizoni njoftime push.</string>
+    <string name="blogging_reminders_notifications_permission_title">Aktivizo njoftime push</string>
+    <string name="site_creation_domain_button_continue_with_subdomain">Vazhdo me nënpërkatësi</string>
+    <string name="site_creation_domain_button_purchase_domain">Blini përkatësi</string>
+    <string name="permission_images_video_audio">Foto dhe video &amp; Muzikë dhe audio</string>
+    <string name="permission_audio">Muzikë dhe audio</string>
+    <string name="permission_images">Foto dhe video</string>
+    <string name="photo_picker_soft_ask_audios_label">%s lyp leje hyrjeje te pjesët tuaja audio</string>
+    <string name="photo_picker_soft_ask_videos_label">%s lyp leje hyrjeje te videot tuaja</string>
+    <string name="photo_picker_soft_ask_photos_label">%s lyp leje hyrjeje te fotot tuaja</string>
+    <string name="photo_picker_soft_ask_photos_videos_label">%s lyp leje hyrjeje te fotot dhe videot tuaja</string>
+    <string name="photo_picker_soft_ask_photos_videos_audio_label">%s lyp leje hyrjeje te muzika, pjesët audio, fotot dhe videot tuaja</string>
+    <string name="notifications_permission_bottom_sheet_button">Aktivizo njoftime</string>
+    <string name="notifications_permission_bottom_sheet_description_2">Kaloni te Rregullime → Njoftime → Rregullime Aplikacioni dhe aktivizoni %1$s, që të njoftoheni menjëherë.</string>
+    <string name="notifications_permission_bottom_sheet_description_1">Do t’ju duhet të hapni aplikacionin, që të shihni njoftime.</string>
+    <string name="notifications_permission_bottom_sheet_title">Njoftimet push janë çaktivizuar</string>
+    <string name="notifications_permission_off_desc">Njoftimet Push janë çaktivizuar.</string>
+    <string name="notifications_permission_dismiss_content_description">Mos merr parasysh sinjalizim mbi lejet.</string>
+    <string name="notifications_permission_fix">Ndreqe</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; po përdor %2$s shtojca Jetpack individuale</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; po përdor shtojcën &lt;b&gt;%2$s&lt;/b&gt;</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">Sajtet me shtojca Jetpack individuale nuk mbulohen nga aplikacioni WordPress.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt; po përdor shtojca Jetpack individuale, çka nuk mbulohet nga aplikacioni WordPress.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt; po përdor shtojcën &lt;b&gt;%2$s&lt;/b&gt;, e cila nuk mbulohet nga aplikacioni WordPress.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">S’arrihet të hyhet në disa nga sajtet tuaj</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">S’arrihet të hyhet në një nga sajtet tuaj</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">Ju lutemi, kaloni te aplikacioni Jetpack, prej nga do t’ju drejtojmë nëpër lidhjen e shtojcës së plotë Jetpack, për të përdorur këtë sajt me aplikacionin.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">Kaloni te aplikacioni Jetpack</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s po përdor %2$s, i cili nuk i mbulon ende krejt veçoritë e aplikacionit.\n\nJu lutemi, që të përdorni aplikacionin me këtë sajt, instaloni %3$s.</string>
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Këtë sajt</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s po përdor %2$s, të cilat nuk i mbulojnë ende krejt veçoritë e aplikacionit. Ju lutemi, instaloni %3$s.</string>
@@ -72,6 +113,7 @@ Language: sq_AL
     <string name="jetpack_plugin_install_initial_title">Instaloni Jetpack-un</string>
     <string name="jetpack_plugin_install_jp_logo_content_description">Ikonë Jetpack</string>
     <string name="button_promote_with_blaze">Promovojeni me Blaze</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Çlironi potencialin e plotë të sajtit tuaj. Merrni statistika, njoftime, etj, me Jetpack-un.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Sajti juaj e ka shtojcën Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Aplikacioni Jetpack për celular është menduar të punojë tok me shtojcën Jetpack. Kaloni që tani në të, që të mund të përdorni statistikat, njoftimet, lexuesin, etj.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Merrni njoftime për komente, pëlqime, parje të reja, etj.</string>
@@ -757,6 +799,7 @@ Language: sq_AL
     <string name="gutenberg_native_retry">Riprovoni</string>
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Një</string>
+    <string name="gutenberg_native_add_title">Shtoni titull</string>
     <string name="gutenberg_native_no_preview_available">S’ka paraparje gati</string>
     <string name="gutenberg_native_text_color">Ngjyrë teksti</string>
     <string name="gutenberg_native_padding">Mbushje</string>
@@ -765,6 +808,7 @@ Language: sq_AL
     <string name="gutenberg_native_custom_url">URL Vetjake</string>
     <string name="gutenberg_native_create_embed">Krijo trupëzim</string>
     <string name="gutenberg_native_column_d">Shtylla %d</string>
+    <string name="gutenberg_native_more">Më tepër</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Përshkruajeni shkurt lidhjen, që të ndihmoni përdoruesin e lexuesit të ekranit</string>
     <string name="gutenberg_native_add_blocks">Shtoni blloqe</string>
     <string name="login_no_jetpack_sites">S’u gjetën sajte Jetpack</string>
@@ -1180,7 +1224,6 @@ Language: sq_AL
     <string name="stories_intro_main_title">Ju Paraqesim Postime Shkrimesh</string>
     <string name="mlp_notice_blank_page_created">U krijua faqe e zbrazët</string>
     <string name="mlp_notice_page_created">Faqja u krijua</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s-it iu mohua hyrja te fotot tuaj. Që të ndreqet kjo, përpunoni lejet tuaj dhe aktivizoni %2$s dhe %3$s.</string>
     <string name="media_insert_failed">Dështoi futje medie.</string>
     <string name="media_insert_failed_with_reason">Dështoi futje medie: %s</string>
     <string name="photo_picker_wordpress_media_library">Zgjidhni prej Mediatekës WordPress</string>
@@ -1660,6 +1703,7 @@ Language: sq_AL
     <string name="gutenberg_native_add_image_or_video">SHTONI FIGURË OSE VIDEO</string>
     <string name="gutenberg_native_add_image">SHTONI FIGURË</string>
     <string name="gutenberg_native_add_block_here">SHTONI BLLOK KËTU</string>
+    <string name="gutenberg_native_add_description">Shtoni përshkrim</string>
     <string name="reader_empty_saved_posts_content_description">Prekni butonin “Shtoje te Postime të Ruajtur” që të ruhet një postim te lista juaj.</string>
     <string name="reader_acessibility_list_loaded">\"Lista është ngarkuar me %1$d zëra.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Njoftime</string>
@@ -2683,7 +2727,7 @@ Language: sq_AL
     <string name="media_documents">Dokumente</string>
     <string name="media_images">Figura</string>
     <string name="media_all">Krejt</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s-it iu mohua hyrja te fotot tuaj. Që të ndreqet kjo, përpunoni lejet tuaj dhe aktivizoni %2$s.</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">%1$s-it iu mohua hyrja te kartelat tuaja media. Që të ndreqet kjo, përpunoni lejet tuaj dhe aktivizoni %2$s.</string>
     <string name="reader_view_comments">Shihni komentet</string>
     <string name="site_settings_video_quality_hint">Cilësi videosh. Vlera më të mëdha do të thotë cilësi më e lartë videosh.</string>
     <string name="site_settings_video_width_hint">Ripërmason video në postime sa kjo madhësi</string>

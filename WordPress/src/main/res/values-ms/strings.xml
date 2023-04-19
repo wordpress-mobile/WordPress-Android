@@ -181,7 +181,6 @@ Language: ms
     <string name="media_documents">Dokumen</string>
     <string name="media_images">Imej</string>
     <string name="media_videos">Video</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s telah menolak capaian ke gambar-gambar anda. Untuk membaikinya, sunting keizinan anda dan hidupkan %2$s.</string>
     <string name="reader_view_comments">Lihat ulasan</string>
     <string name="site_settings_video_quality_hint">Kualiti video. Nilai lebih tinggi bermakna kualiti video yang lebih baik.</string>
     <string name="site_settings_optimize_video_summary">Bolehkan untuk saiz semula dan mempatkan video</string>

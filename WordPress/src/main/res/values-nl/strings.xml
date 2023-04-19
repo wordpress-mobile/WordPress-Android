@@ -1197,7 +1197,6 @@ Language: nl
     <string name="stories_intro_main_title">Introductie verhalen</string>
     <string name="mlp_notice_blank_page_created">Blanco pagina aangemaakt</string>
     <string name="mlp_notice_page_created">Pagina aangemaakt</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s heeft geen toegang tot je foto\'s. Om dit op te lossen, bewerk je je rechten en schakel je %2$s en %3$s in.</string>
     <string name="media_insert_failed">Media invoegen mislukt.</string>
     <string name="media_insert_failed_with_reason">Invoegen media mislukt: %s</string>
     <string name="photo_picker_wordpress_media_library">Kies uit WordPress mediabibliotheek</string>
@@ -2700,7 +2699,6 @@ Language: nl
     <string name="media_documents">Documenten</string>
     <string name="media_images">Afbeeldingen</string>
     <string name="media_all">Alles</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s kreeg geen toegang tot je foto\'s. Om dit te verhelpen, pas de rechten aan en schakel %2$s in.</string>
     <string name="reader_view_comments">Reacties bekijken</string>
     <string name="site_settings_video_quality_hint">Kwaliteit van video\'s. Hoe hoger de waarde, hoe beter de kwaliteit van je video\'s.</string>
     <string name="site_settings_video_width_hint">De afmeting van video\'s in berichten wijzigen naar dit formaat</string>

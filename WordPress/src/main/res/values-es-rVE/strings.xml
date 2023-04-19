@@ -973,7 +973,6 @@ Language: es_VE
     <string name="stories_intro_main_title">Presentación de las entradas de historias</string>
     <string name="mlp_notice_blank_page_created">Página en blanco creada</string>
     <string name="mlp_notice_page_created">Página creada</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s ha denegado el acceso a tus fotos. Para corregirlo, edita tus permisos y activa %2$s y %3$s.</string>
     <string name="media_insert_failed">Inserción del medio fallida.</string>
     <string name="media_insert_failed_with_reason">Ha fallado la inserción del medio: %s</string>
     <string name="photo_picker_wordpress_media_library">Elige desde la biblioteca de medios de WordPress</string>
@@ -2470,7 +2469,6 @@ Language: es_VE
     <string name="media_documents">Documentos</string>
     <string name="media_images">Imágenes</string>
     <string name="media_all">Todos</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s denegó el acceso a tus fotos. Para solucionar esto modifica tus permisos y activa %2$s.</string>
     <string name="reader_view_comments">Ver comentarios</string>
     <string name="site_settings_video_quality_hint">Calidad de los videos. Valores más altos implican videos de mejor calidad.</string>
     <string name="site_settings_video_width_hint">Redimensiona los videos en las entradas a este tamaño</string>
