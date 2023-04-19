@@ -54,7 +54,7 @@ public class TextInputDialogFragment extends DialogFragment {
     @Override
     @SuppressWarnings("deprecation")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         //noinspection InflateParams
         View promptView = layoutInflater.inflate(R.layout.text_input_dialog, null);
         AlertDialog.Builder alertDialogBuilder = new MaterialAlertDialogBuilder(getActivity());
