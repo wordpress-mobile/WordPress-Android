@@ -660,7 +660,7 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 <figure class="wp-block-audio"><audio controls src="$remoteAudioUrl"></audio></figure>
 <!-- /wp:audio -->"""
 
-    const val oldVideoPressBlockWithDefaultAttrs = """<!-- wp:videopress/video {"id":${localMediaId}} /-->"""
+    const val oldVideoPressBlockWithDefaultAttrs = """<!-- wp:videopress/video {"id":${localMediaId}, "src":"${localVideoUrl}"} /-->"""
 
     const val newVideoPressBlockWithDefaultAttrs = """<!-- wp:videopress/video {"id":${remoteMediaId},"guid":"${videoPressGuid}"} /-->"""
 
