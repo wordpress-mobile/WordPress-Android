@@ -301,7 +301,7 @@ class CardsBuilderTest : BaseUnitTest() {
         showErrorCard: Boolean = false,
         isEligibleForBlaze: Boolean = false,
         isEligibleForDomainCard: Boolean = false,
-        hasPagesCard:Boolean = false,
+        hasPagesCard: Boolean = false,
         hasActivityCard: Boolean = false
     ): DashboardCards {
         doAnswer { if (hasTodaysStats) todaysStatsCard else null }.whenever(todaysStatsCardBuilder).build(any())
@@ -312,8 +312,8 @@ class CardsBuilderTest : BaseUnitTest() {
             .build(any())
         doAnswer { if (isEligibleForDomainCard) dashboardDomainCard else null }.whenever(dashboardDomainCardBuilder)
             .build(any())
-        doAnswer { if(hasPagesCard) pagesCard else null }.whenever(pagesCardBuilder).build(any())
-        doAnswer { if(hasActivityCard) activityCard else null }.whenever(activityCardBuilder).build(any())
+        doAnswer { if (hasPagesCard) pagesCard else null }.whenever(pagesCardBuilder).build(any())
+        doAnswer { if (hasActivityCard) activityCard else null }.whenever(activityCardBuilder).build(any())
         return cardsBuilder.build(
             dashboardCardsBuilderParams = DashboardCardsBuilderParams(
                 showErrorCard = showErrorCard,
