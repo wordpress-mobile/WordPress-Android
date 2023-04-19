@@ -32,6 +32,7 @@ import org.wordpress.android.util.AniUtils.Duration.MEDIUM
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.WPMediaUtils
@@ -472,13 +473,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
     @Suppress("DEPRECATION")
     private fun requestCameraPermission() {
-        // For devices lower than API 30, in addition to CAMERA permission we also need a storage permission, to store
-        // media from the camera
-        val permissions = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            arrayOf(permission.CAMERA, permission.WRITE_EXTERNAL_STORAGE)
-        } else {
-            arrayOf(permission.CAMERA)
-        }
+        val permissions = PermissionUtils.getCameraAndStoragePermissions()
         requestPermissions(permissions, WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE)
     }
 

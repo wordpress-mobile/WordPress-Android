@@ -1005,12 +1005,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         if (item != AddMenuItem.ITEM_CHOOSE_STOCK_MEDIA) {
             String[] permissions = null;
             if (item == AddMenuItem.ITEM_CAPTURE_PHOTO || item == AddMenuItem.ITEM_CAPTURE_VIDEO) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    permissions = new String[]{Manifest.permission.CAMERA};
-                } else {
-                    permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                }
-            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+                permissions = PermissionUtils.getCameraAndStoragePermissions();
+            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
             }
             if (permissions != null && !PermissionUtils.checkAndRequestPermissions(
