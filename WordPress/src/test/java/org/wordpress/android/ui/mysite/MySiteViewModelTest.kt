@@ -2684,7 +2684,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
         initSelectedSite()
 
-        val expected = R.drawable.ic_wordpress_blue_32dp
+        val expected = R.drawable.ic_wordpress_jetpack_appicon
         assertThat((getSiteMenuTabLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
         assertThat((getLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
         assertThat((getDashboardTabLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)

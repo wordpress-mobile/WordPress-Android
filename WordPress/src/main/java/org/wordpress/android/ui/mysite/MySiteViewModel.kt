@@ -528,7 +528,7 @@ class MySiteViewModel @Inject constructor(
 
         val migrationSuccessCard = SingleActionCard(
             textResource = R.string.jp_migration_success_card_message,
-            imageResource = R.drawable.ic_wordpress_blue_32dp,
+            imageResource = R.drawable.ic_wordpress_jetpack_appicon,
             onActionClick = ::onPleaseDeleteWordPressAppCardClick
         ).takeIf {
             val isJetpackApp = buildConfigWrapper.isJetpackApp
