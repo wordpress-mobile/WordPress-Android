@@ -24,7 +24,7 @@ class ActivityCardBuilder @Inject constructor(
     private val siteUtilsWrapper: SiteUtilsWrapper,
 ) {
     fun build(params: ActivityCardBuilderParams): ActivityCard? {
-        return buildActivityCard(params).takeIf { shouldBuildActivityCard(params) }
+        return shouldBuildActivityCard(params).takeIf { it }?.let { buildActivityCard(params) }
     }
 
     private fun buildActivityCard(params: ActivityCardBuilderParams): ActivityCardWithItems {
