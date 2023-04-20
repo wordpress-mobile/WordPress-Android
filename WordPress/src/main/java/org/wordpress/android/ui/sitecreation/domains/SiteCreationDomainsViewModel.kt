@@ -122,6 +122,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 result.isError -> {
                     AppLog.e(AppLog.T.DOMAIN_REGISTRATION, "Error while fetching domain products: ${result.error}")
                 }
+
                 else -> {
                     AppLog.d(AppLog.T.DOMAIN_REGISTRATION, result.products.toString())
                     products = result.products.orEmpty().associateBy { it.productId }
@@ -323,6 +324,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
                         product.isOnSale() -> Cost.OnSale(product?.combinedSaleCostDisplay.orEmpty(), domain.cost)
                         else -> Cost.Paid(domain.cost)
                     },
+                    isSelected = domain == selectedDomain,
                     onClick = { onDomainSelected(domain) },
                     variant = when {
                         index == 0 -> Variant.Recommended
@@ -332,6 +334,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
                     },
                 )
             }
+
             else -> {
                 Old.DomainUiState.AvailableDomain(
                     domainSanitizer.getName(domain.domainName),
@@ -468,6 +471,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             data class DomainUiState(
                 val domainName: String,
                 val cost: Cost,
+                val isSelected: Boolean = false,
                 val onClick: () -> Unit,
                 val variant: Variant? = null,
             ) : New(Type.DOMAIN_V2) {
