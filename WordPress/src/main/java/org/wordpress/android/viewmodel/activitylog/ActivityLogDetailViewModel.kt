@@ -91,10 +91,16 @@ class ActivityLogDetailViewModel @Inject constructor(
         _multisiteVisible.value = if (isRestoreHidden) Pair(true, getMultisiteMessage()) else Pair(false, null)
 
         if (activityLogId != _item.value?.activityID) {
-            _item.value = activityLogStore
-                .getActivityLogForSite(site)
-                .find { it.activityID == activityLogId }?.toActivityLogDetailModel()
+            findAndPostActivityLogItemDetail()
         }
+    }
+
+    private fun findAndPostActivityLogItemDetail() {
+        activityLogStore
+            .getActivityLogForSite(site)
+            .find { it.activityID == activityLogId }?.toActivityLogDetailModel()?.let {
+                _item.postValue(it)
+            }
     }
 
     private fun ActivityLogModel.toActivityLogDetailModel() =
