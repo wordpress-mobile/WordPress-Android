@@ -24,9 +24,11 @@ import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntit
 import org.wordpress.android.fluxc.persistence.coverters.StringListConverter
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
+import org.wordpress.android.fluxc.persistence.domains.DomainDao
+import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
 
 @Database(
-        version = 13,
+        version = 14,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -39,10 +41,12 @@ import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
             RemoteConfig::class,
             BlazeStatus::class,
             JetpackCPConnectedSiteEntity::class,
+            DomainEntity::class
         ],
         autoMigrations = [
             AutoMigration(from = 11, to = 12),
-            AutoMigration(from = 12, to = 13)
+            AutoMigration(from = 12, to = 13),
+            AutoMigration(from = 13, to = 14)
         ]
 )
 @TypeConverters(
@@ -66,6 +70,8 @@ abstract class WPAndroidDatabase : RoomDatabase() {
     abstract fun remoteConfigDao(): RemoteConfigDao
 
     abstract fun blazeStatusDao(): BlazeStatusDao
+
+    abstract fun domainDao(): DomainDao
 
     abstract fun jetpackCPConnectedSitesDao(): JetpackCPConnectedSitesDao
 
