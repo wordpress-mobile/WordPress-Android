@@ -721,9 +721,10 @@ class MySiteViewModel @Inject constructor(
         // implement navigation logic for activity item
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun onActivityCardFooterLinkClick() {
-        // implement navigation logic for activity card footer link
+        // implement track event for activity card footer link
+        _onNavigation.value =
+            Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
     }
 
     private fun buildJetpackBadgeIfEnabled(): JetpackBadge? {
