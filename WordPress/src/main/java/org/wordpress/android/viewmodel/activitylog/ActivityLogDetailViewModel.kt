@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel.ActivityActor
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.tools.FormattableRange
@@ -92,24 +93,24 @@ class ActivityLogDetailViewModel @Inject constructor(
         if (activityLogId != _item.value?.activityID) {
             _item.value = activityLogStore
                 .getActivityLogForSite(site)
-                .find { it.activityID == activityLogId }
-                ?.let {
-                    ActivityLogDetailModel(
-                        activityID = it.activityID,
-                        rewindId = it.rewindID,
-                        actorIconUrl = it.actor?.avatarURL,
-                        showJetpackIcon = it.actor?.showJetpackIcon(),
-                        isRewindButtonVisible = it.rewindable ?: false,
-                        actorName = it.actor?.displayName,
-                        actorRole = it.actor?.role,
-                        content = it.content,
-                        summary = it.summary,
-                        createdDate = it.published.toFormattedDateString(),
-                        createdTime = it.published.toFormattedTimeString()
-                    )
-                }
+                .find { it.activityID == activityLogId }?.toActivityLogDetailModel()
         }
     }
+
+    private fun ActivityLogModel.toActivityLogDetailModel() =
+        ActivityLogDetailModel(
+            activityID = activityID,
+            rewindId = rewindID,
+            actorIconUrl = actor?.avatarURL,
+            showJetpackIcon = actor?.showJetpackIcon(),
+            isRewindButtonVisible = rewindable ?: false,
+            actorName = actor?.displayName,
+            actorRole = actor?.role,
+            content = content,
+            summary = summary,
+            createdDate = published.toFormattedDateString(),
+            createdTime = published.toFormattedTimeString()
+        )
 
     private fun getMultisiteMessage(): SpannableString {
         val clickableText = resourceProvider.getString(R.string.activity_log_visit_our_documentation_page)
