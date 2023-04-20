@@ -324,7 +324,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
                         product.isOnSale() -> Cost.OnSale(product?.combinedSaleCostDisplay.orEmpty(), domain.cost)
                         else -> Cost.Paid(domain.cost)
                     },
-                    isSelected = domain == selectedDomain,
+                    isSelected = domain.domainName == selectedDomain?.domainName,
                     onClick = { onDomainSelected(domain) },
                     variant = when {
                         index == 0 -> Variant.Recommended
