@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
+import org.wordpress.android.fluxc.persistence.domains.DomainDao;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.UpdateSitesResult;
 import org.wordpress.android.fluxc.tools.CoroutineEngineUtilsKt;
@@ -66,6 +67,7 @@ public class SiteStoreUnitTest {
             Mockito.mock(PrivateAtomicCookie.class),
             mSiteSqlUtils,
             Mockito.mock(JetpackCPConnectedSitesDao.class),
+            Mockito.mock(DomainDao.class),
             CoroutineEngineUtilsKt.initCoroutineEngine()
     );
 
