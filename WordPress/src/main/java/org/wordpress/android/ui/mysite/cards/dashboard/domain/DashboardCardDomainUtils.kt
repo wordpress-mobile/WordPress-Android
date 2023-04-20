@@ -35,12 +35,16 @@ class DashboardCardDomainUtils @Inject constructor(
     private val waitingToTrack = AtomicBoolean(false)
     private val currentSite = AtomicReference<Int?>(null)
 
-    fun shouldShowCard(siteModel: SiteModel, isDomainCreditAvailable: Boolean, hasSiteCustomDomains: Boolean): Boolean {
+    fun shouldShowCard(
+        siteModel: SiteModel,
+        isDomainCreditAvailable: Boolean,
+        hasSiteCustomDomains: Boolean?
+    ): Boolean {
         return isDashboardCardDomainEnabled() &&
                 !isDashboardCardDomainHiddenByUser(siteModel.siteId) &&
                 (siteModel.isWPCom || siteModel.isWPComAtomic) &&
                 siteModel.isAdmin &&
-                !hasSiteCustomDomains &&
+                hasSiteCustomDomains == false &&
                 !isDomainCreditAvailable
     }
 

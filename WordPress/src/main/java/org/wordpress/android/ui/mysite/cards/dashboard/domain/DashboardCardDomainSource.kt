@@ -36,13 +36,17 @@ class DashboardCardDomainSource @Inject constructor(
         return data
     }
 
-    private fun shouldFetchDomains(selectedSite: SiteModel): Boolean {
-        // By assuming that "isDomainCreditAvailable" and "hasSiteDomain" are false, we are checking other cases for
-        // "shouldShowCard". If "shouldShowCard" still returns false, then we do not need to fetch domains.
-        val isDomainCreditAvailable = false
-        val hasSiteDomain = false
+    private fun shouldFetchDomains(siteLocalId: Int): Boolean {
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        if (selectedSite != null && selectedSite.id == siteLocalId) {
+            // By assuming that "isDomainCreditAvailable" and "hasSiteDomain" are false, we are checking other cases for
+            // "shouldShowCard". If "shouldShowCard" still returns false, then we do not need to fetch domains.
+            val isDomainCreditAvailable = false
+            val hasSiteDomain = false
 
-        return domainUtils.shouldShowCard(selectedSite, isDomainCreditAvailable, hasSiteDomain)
+            return domainUtils.shouldShowCard(selectedSite, isDomainCreditAvailable, hasSiteDomain)
+        }
+        return false
     }
 
     private fun MediatorLiveData<MySiteUiState.PartialState.CustomDomainsAvailable>.refreshData(
@@ -62,8 +66,8 @@ class DashboardCardDomainSource @Inject constructor(
         siteLocalId: Int,
         selectedSite: SiteModel?
     ) {
-        if (selectedSite == null || selectedSite.id != siteLocalId || !shouldFetchDomains(selectedSite)) {
-            postState(MySiteUiState.PartialState.CustomDomainsAvailable(false))
+        if (selectedSite == null || selectedSite.id != siteLocalId || !shouldFetchDomains(siteLocalId)) {
+            postState(buildErrorState())
         } else {
             fetchDomainsAndRefreshData(coroutineScope, selectedSite)
         }
@@ -88,4 +92,6 @@ class DashboardCardDomainSource @Inject constructor(
             postState(MySiteUiState.PartialState.CustomDomainsAvailable(domainUtils.hasCustomDomain(domains)))
         }
     }
+
+    private fun buildErrorState() = MySiteUiState.PartialState.CustomDomainsAvailable(null)
 }
