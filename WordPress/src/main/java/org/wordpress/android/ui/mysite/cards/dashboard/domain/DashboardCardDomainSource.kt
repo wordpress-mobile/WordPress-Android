@@ -6,8 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.model.DomainModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.asDomainModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
@@ -33,10 +36,35 @@ class DashboardCardDomainSource @Inject constructor(
         coroutineScope: CoroutineScope,
         siteLocalId: Int
     ): LiveData<MySiteUiState.PartialState.CustomDomainsAvailable> {
-        val data = MediatorLiveData<MySiteUiState.PartialState.CustomDomainsAvailable>()
-        data.addSource(refresh) { data.refreshData(coroutineScope, siteLocalId, refresh.value) }
+        val result = MediatorLiveData<MySiteUiState.PartialState.CustomDomainsAvailable>()
+        if (shouldFetchDomains(siteLocalId)) {
+            result.getDomainsAndPost(coroutineScope, siteLocalId)
+        }
+        result.addSource(refresh) { result.refreshData(coroutineScope, siteLocalId, refresh.value) }
         refresh()
-        return data
+        return result
+    }
+
+    private fun MediatorLiveData<MySiteUiState.PartialState.CustomDomainsAvailable>.getDomainsAndPost(
+        coroutineScope: CoroutineScope,
+        siteLocalId: Int
+    ) {
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        if (selectedSite != null && selectedSite.id == siteLocalId) {
+            coroutineScope.launch(bgDispatcher) {
+                siteStore.getSiteDomains(siteLocalId)
+                    .map {
+                        if (it.isEmpty()) {
+                            buildErrorState()
+                        } else {
+                            buildState(it)
+                        }
+                    }
+                    .collect { result -> postValue(result) }
+            }
+        } else {
+            postState(buildErrorState())
+        }
     }
 
     private fun shouldFetchDomains(siteLocalId: Int): Boolean {
@@ -72,29 +100,35 @@ class DashboardCardDomainSource @Inject constructor(
         if (selectedSite == null || selectedSite.id != siteLocalId || !shouldFetchDomains(siteLocalId)) {
             postState(buildErrorState())
         } else {
-            fetchDomainsAndRefreshData(coroutineScope, selectedSite)
+            fetchDomainsAndPost(coroutineScope, selectedSite)
         }
     }
 
-    private fun MediatorLiveData<MySiteUiState.PartialState.CustomDomainsAvailable>.fetchDomainsAndRefreshData(
+    private fun MediatorLiveData<MySiteUiState.PartialState.CustomDomainsAvailable>.fetchDomainsAndPost(
         coroutineScope: CoroutineScope,
         selectedSite: SiteModel
     ) {
         coroutineScope.launch(bgDispatcher) {
             delay(REFRESH_DELAY) // This is necessary to wait response of "getDomainsAndPost()"
             val result = siteStore.fetchSiteDomains(selectedSite)
-            val domains = result.domains
-            val error = result.error
+            val domains = result.domains?.map { it.asDomainModel() }
 
             if (result.isError) {
                 appLogWrapper.e(
                     AppLog.T.DOMAIN_REGISTRATION,
-                    "An error occurred while fetching domains: ${error.message}"
+                    "An error occurred while fetching domains: ${result.error.message}"
                 )
+                // If there is error, don't post any state and trust getDomainsAndPost()
+            } else {
+                postState(buildState(domains))
             }
-
-            postState(MySiteUiState.PartialState.CustomDomainsAvailable(domainUtils.hasCustomDomain(domains)))
         }
+    }
+
+    private fun buildState(domainModels: List<DomainModel>?) = if (domainModels.isNullOrEmpty()) {
+        MySiteUiState.PartialState.CustomDomainsAvailable(false)
+    } else {
+        MySiteUiState.PartialState.CustomDomainsAvailable(domainUtils.hasCustomDomain(domainModels))
     }
 
     private fun buildErrorState() = MySiteUiState.PartialState.CustomDomainsAvailable(null)

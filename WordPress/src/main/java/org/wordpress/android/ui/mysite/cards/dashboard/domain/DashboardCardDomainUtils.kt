@@ -6,8 +6,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.DomainModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardDomainCard
@@ -153,7 +153,7 @@ class DashboardCardDomainUtils @Inject constructor(
         }
     }
 
-    fun hasCustomDomain(domains: List<Domain>?) = domains?.any { !it.wpcomDomain } == true
+    fun hasCustomDomain(domains: List<DomainModel>?) = domains?.any { !it.wpcomDomain } == true
 
     companion object {
         const val POSITION_INDEX = "position_index"
