@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.store
 
 import android.text.TextUtils
 import androidx.annotation.VisibleForTesting
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.ASYNC
 import org.wordpress.android.fluxc.Dispatcher
@@ -66,12 +68,14 @@ import org.wordpress.android.fluxc.action.SiteAction.SUGGEST_DOMAINS
 import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITE
 import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITES
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.DomainModel
 import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.PostFormatModel
 import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
+import org.wordpress.android.fluxc.model.asDomainModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
@@ -103,6 +107,7 @@ import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSitesDao.Jetpac
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException
+import org.wordpress.android.fluxc.persistence.domains.DomainDao
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.NON_PRIVATE_AT_SITE
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.SITE_MISSING_FROM_STORE
@@ -142,6 +147,7 @@ open class SiteStore @Inject constructor(
     private val privateAtomicCookie: PrivateAtomicCookie,
     private val siteSqlUtils: SiteSqlUtils,
     private val jetpackCPConnectedSitesDao: JetpackCPConnectedSitesDao,
+    private val domainDao: DomainDao,
     private val coroutineEngine: CoroutineEngine
 ) : Store(dispatcher) {
     @Inject internal lateinit var applicationPasswordsManagerProvider: Provider<ApplicationPasswordsManager>
@@ -2066,7 +2072,9 @@ open class SiteStore @Inject constructor(
                 return@withDefaultContext when (val response =
                         siteRestClient.fetchSiteDomains(siteModel)) {
                             is Success -> {
-                                FetchedDomainsPayload(siteModel, response.data.domains)
+                                val domains = response.data.domains
+                                insertDomainModels(siteModel, domains)
+                                FetchedDomainsPayload(siteModel, domains)
                             }
                             is Error -> {
                                 val siteErrorType = when (response.error.apiError) {
@@ -2077,8 +2085,19 @@ open class SiteStore @Inject constructor(
                                 val domainsError = SiteError(siteErrorType, response.error.message)
                                 FetchedDomainsPayload(siteModel, domainsError)
                             }
-                        }
+                }
             }
+
+    private suspend fun insertDomainModels(siteModel: SiteModel, domains: List<Domain>) {
+        val domainModels = domains.map { it.asDomainModel() }
+        domainDao.insert(siteModel.id, domainModels)
+    }
+
+    fun getSiteDomains(siteLocalId: Int): Flow<List<DomainModel>> {
+        return domainDao.getDomains(siteLocalId).map { result ->
+            result.map { it.toDomainModel() }
+        }
+    }
 
     suspend fun deleteApplicationPassword(site: SiteModel): OnApplicationPasswordDeleted =
         coroutineEngine.withDefaultContext(T.API, this, "Delete Application Password") {
