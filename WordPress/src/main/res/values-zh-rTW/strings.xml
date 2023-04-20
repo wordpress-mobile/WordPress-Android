@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-07 10:54:08+0000
+Translation-Revision-Date: 2023-04-19 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_remove_blocks">移除區塊</string>
+    <string name="gutenberg_native_privacy_and_rating">隱私權和評分</string>
+    <string name="gutenberg_native_playback_settings">播放設定</string>
+    <string name="gutenberg_native_playback_bar_color">播放列顏色</string>
+    <string name="gutenberg_native_manual">手動</string>
+    <string name="gutenberg_native_dynamic">動態</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">請說明圖片用途。 如果是為了裝飾，請保留空白。</string>
+    <string name="dashboard_pages_card_create_another_page_description">從適合行動裝置瀏覽的可自訂版面開始</string>
+    <string name="dashboard_pages_card_create_another_page_button">建立其他頁面</string>
+    <string name="dashboard_pages_card_no_pages_create_page_button">在網站上新增頁面</string>
+    <string name="dashboard_card_domain_menu_hide_this">隱藏此訊息</string>
+    <string name="dashboard_card_domain_sub_title">建立易於搜尋、分享和追蹤的網站位址，打造屬於自己的網路園地。</string>
+    <string name="dashboard_card_domain_title">自訂網域讓你擁有專屬的網路身分</string>
+    <string name="blogging_reminders_notifications_permission_caption">你需要開啟推播通知才能使用網誌提醒。</string>
+    <string name="blogging_reminders_notifications_permission_title">開啟推播通知</string>
+    <string name="site_creation_domain_button_continue_with_subdomain">繼續使用子網域</string>
+    <string name="site_creation_domain_button_purchase_domain">購買網域</string>
+    <string name="permission_images_video_audio">相片和影片以及音樂和音訊</string>
+    <string name="permission_audio">音樂和音訊</string>
+    <string name="permission_images">相片和影片</string>
+    <string name="photo_picker_soft_ask_audios_label">%s 需要權限才能存取你的音訊</string>
+    <string name="photo_picker_soft_ask_videos_label">%s 需要權限才能存取你的影片</string>
+    <string name="photo_picker_soft_ask_photos_label">%s 需要權限才能存取你的相片</string>
+    <string name="photo_picker_soft_ask_photos_videos_label">%s 需要權限才能存取你的相片和影片</string>
+    <string name="photo_picker_soft_ask_photos_videos_audio_label">%s 需要權限才能存取你的音樂、音訊、相片和影片</string>
+    <string name="notifications_permission_bottom_sheet_button">開啟通知</string>
+    <string name="notifications_permission_bottom_sheet_description_2">前往「設定」&amp;rarr;「通知」&amp;rarr;「應用程式設定」，開啟「%1$s」將能立即收到通知。</string>
+    <string name="notifications_permission_bottom_sheet_description_1">你需要開啟應用程式才能查看通知。</string>
+    <string name="notifications_permission_bottom_sheet_title">推播通知已關閉</string>
+    <string name="notifications_permission_off_desc">推播通知已關閉。</string>
+    <string name="notifications_permission_dismiss_content_description">關閉通知權限警告。</string>
+    <string name="notifications_permission_fix">修正</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; 正在使用 %2$s 個 Jetpack 個別外掛程式</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; 正在使用 &lt;b&gt;%2$s&lt;/b&gt; 外掛程式</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">WordPress 應用程式不支援安裝 Jetpack 個別外掛程式的網站。</string>
@@ -775,6 +807,7 @@ Language: zh_TW
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">壹</string>
     <string name="gutenberg_native_no_preview_available">未提供預覽</string>
+    <string name="gutenberg_native_add_title">新增標題</string>
     <string name="gutenberg_native_text_color">文字顏色</string>
     <string name="gutenberg_native_padding">邊框間距</string>
     <string name="gutenberg_native_featured">精選內容</string>
@@ -782,6 +815,7 @@ Language: zh_TW
     <string name="gutenberg_native_create_embed">建立嵌入內容</string>
     <string name="gutenberg_native_custom_url">自訂 URL</string>
     <string name="gutenberg_native_column_d">欄 %d</string>
+    <string name="gutenberg_native_more">更多</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">簡述連結以協助螢幕閱讀器使用者</string>
     <string name="gutenberg_native_add_blocks">新增區塊</string>
     <string name="login_no_jetpack_sites">找不到任何 Jetpack 網站</string>
@@ -1198,7 +1232,6 @@ Language: zh_TW
     <string name="stories_intro_main_title">限時動態文章介紹</string>
     <string name="mlp_notice_blank_page_created">已建立空白頁面</string>
     <string name="mlp_notice_page_created">已建立頁面</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s 存取你的相片時遭拒絕。 若要解決此問題，請編輯存取權限並開啟 %2$s 和 %3$s。</string>
     <string name="media_insert_failed">媒體插入失敗。</string>
     <string name="media_insert_failed_with_reason">媒體插入失敗：%s</string>
     <string name="photo_picker_wordpress_media_library">從 WordPress 媒體庫選擇</string>
@@ -1678,6 +1711,7 @@ Language: zh_TW
     <string name="gutenberg_native_add_image">新增圖片</string>
     <string name="gutenberg_native_add_block_here">在此新增區塊</string>
     <string name="gutenberg_native_add_alt_text">新增替代文字</string>
+    <string name="gutenberg_native_add_description">新增說明</string>
     <string name="reader_empty_saved_posts_content_description">點選「新增至儲存文章」按鈕即可將文章儲存至你的清單。</string>
     <string name="reader_acessibility_list_loaded">「此清單已載入 %1$d 個項目。」</string>
     <string name="notifications_tab_dialog_switch_desc">通知</string>
@@ -2701,7 +2735,7 @@ Language: zh_TW
     <string name="media_documents">文件</string>
     <string name="media_images">圖片</string>
     <string name="media_all">全部</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s 無法存取你的相片。若要解決此問題，請編輯存取權限並開啟 %2$s。</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">%1$s 要求存取你的媒體檔案時遭拒絕。 若要解決此問題，請編輯存取權限並開啟「%2$s」。</string>
     <string name="reader_view_comments">檢視留言</string>
     <string name="site_settings_video_quality_hint">影片的品質。數值愈高，表示影片品質愈好。</string>
     <string name="site_settings_video_width_hint">將文章中的影片調整到符合以下大小</string>

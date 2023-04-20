@@ -1765,7 +1765,6 @@ Language: nb_NO
     <string name="media_documents">Dokumenter</string>
     <string name="media_images">Bilder</string>
     <string name="media_all">Alle</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s ble nektet tilgang til bildene dine. For å fikse dette, rediger tillatelsene dine og skru på %2$s.</string>
     <string name="reader_view_comments">Vis kommentarer</string>
     <string name="site_settings_video_quality_hint">Kvaliteten til videoer. Høyere verdier = bedre kvalitet.</string>
     <string name="site_settings_video_width_hint">Endrer størrelsen til videoer i innlegg til denne størrelsen</string>

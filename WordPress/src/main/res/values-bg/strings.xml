@@ -154,7 +154,6 @@ Language: bg
     <string name="media_all">Всички</string>
     <string name="media_audio">Аудио</string>
     <string name="media_videos">Видео файлове</string>
-    <string name="photo_picker_soft_ask_permissions_denied">Достъпът на %1$s до вашите снимки беше ограничен. За да поправите това редактирайте вашите правомощия и включете %2$s.</string>
     <string name="reader_view_comments">Преглед на коментарите</string>
     <string name="site_settings_video_width_hint">Променя размера на видеоклиповете в публикациите до този</string>
     <string name="site_settings_optimize_video_summary">Включва преоразмеряването и компресията на видеото</string>

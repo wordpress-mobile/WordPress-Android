@@ -825,7 +825,6 @@ Language: pl
     <string name="stories_intro_title_first">Nowe relacje są dla każdego</string>
     <string name="mlp_notice_blank_page_created">Utworzono pustą stronę</string>
     <string name="mlp_notice_page_created">Utworzono stronę</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s nie ma dostępu do twoich zdjęć. Aby to naprawić, edytuj uprawnienia i włącz %2$s i %3$s.</string>
     <string name="media_insert_failed">Nie udało się osadzić plików mediów.</string>
     <string name="media_insert_failed_with_reason">Nie udało się osadzić plików mediów: %s</string>
     <string name="photo_picker_wordpress_media_library">Wybierz z biblioteki mediów WordPressa</string>
@@ -2327,7 +2326,6 @@ Language: pl
     <string name="media_videos">Filmy</string>
     <string name="media_documents">Dokumenty</string>
     <string name="media_audio">Plik dźwiękowy</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s nie ma dostępu do twoich zdjęć. Aby to naprawić, edytuj uprawnienia i włącz %2$s.</string>
     <string name="reader_view_comments">Zobacz komentarze</string>
     <string name="site_settings_video_quality_hint">Jakość filmów. Wyższa wartość oznacza lepszą jakość filmów.</string>
     <string name="site_settings_video_width_hint">Zmień rozmiar filmów we wpisie do tego rozmiaru</string>

@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-05 13:54:09+0000
+Translation-Revision-Date: 2023-04-18 13:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_remove_blocks">Ta bort block</string>
+    <string name="gutenberg_native_privacy_and_rating">Integritet och klassificering</string>
+    <string name="gutenberg_native_playback_settings">Uppspelningsinställningar</string>
+    <string name="gutenberg_native_playback_bar_color">Färg på uppspelningsfältet</string>
+    <string name="gutenberg_native_manual">Manuellt</string>
+    <string name="gutenberg_native_dynamic">Dynamisk</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">Beskriv syftet med bilden. Lämna blankt om det är för dekorativa ändamål.</string>
+    <string name="dashboard_pages_card_create_another_page_description">Kom igång med skräddarsydda, mobilvänliga layouter</string>
+    <string name="dashboard_pages_card_create_another_page_button">Skapa en ny sida</string>
+    <string name="dashboard_pages_card_no_pages_create_page_button">Lägg till sidor på din webbplats</string>
+    <string name="dashboard_card_domain_menu_hide_this">Dölj detta</string>
+    <string name="dashboard_card_domain_sub_title">Gör anspråk på din del av webben med en webbadress som är lätt att hitta, dela och följa.</string>
+    <string name="dashboard_card_domain_title">Äg din onlineidentitet med en anpassad domän</string>
+    <string name="blogging_reminders_notifications_permission_caption">För att kunna använda bloggningspåminnelser behöver du aktivera push-meddelanden.</string>
+    <string name="blogging_reminders_notifications_permission_title">Slå på push-meddelanden</string>
+    <string name="site_creation_domain_button_continue_with_subdomain">Fortsätt med underdomän</string>
+    <string name="site_creation_domain_button_purchase_domain">Köp domän</string>
+    <string name="permission_images_video_audio">Bilder och videoklipp &amp; Musik och ljud</string>
+    <string name="permission_audio">Musik och ljud</string>
+    <string name="permission_images">Foton och videoklipp</string>
+    <string name="photo_picker_soft_ask_audios_label">%s behöver behörighet för att öppna dina ljudfiler</string>
+    <string name="photo_picker_soft_ask_videos_label">%s behöver behörighet för att öppna dina videoklipp</string>
+    <string name="photo_picker_soft_ask_photos_label">%s behöver behörighet för att öppna dina foton</string>
+    <string name="photo_picker_soft_ask_photos_videos_label">%s behöver behörighet för att öppna dina foton och videoklipp</string>
+    <string name="photo_picker_soft_ask_photos_videos_audio_label">%s behöver behörighet för att öppna din musik, dina ljudfiler, foton och videoklipp</string>
+    <string name="notifications_permission_bottom_sheet_button">Slå på aviseringar</string>
+    <string name="notifications_permission_bottom_sheet_description_2">Navigera till Inställningar &amp;rarr; Aviseringar &amp;rarr; Appinställningar och slå på %1$s för att få omedelbar information.</string>
+    <string name="notifications_permission_bottom_sheet_description_1">Du måste öppna appen för att se aviseringar.</string>
+    <string name="notifications_permission_bottom_sheet_title">Push-notiser är avstängda</string>
+    <string name="notifications_permission_off_desc">Push-notiser är avstängda.</string>
+    <string name="notifications_permission_dismiss_content_description">Avfärda varning för behörighetsavisering.</string>
+    <string name="notifications_permission_fix">Åtgärda</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; använder %2$s enskilda Jetpack-tillägg</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; använder &lt;b&gt;%2$s&lt;/b&gt;-tillägget</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">Webbplatser med enskilda Jetpack-tillägg stöds inte av WordPress-appen.</string>
@@ -774,6 +806,7 @@ Language: sv_SE
     <string name="gutenberg_native_retry">Försök igen</string>
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Ett</string>
+    <string name="gutenberg_native_add_title">Lägg till rubrik</string>
     <string name="gutenberg_native_no_preview_available">Ingen förhandsgranskning tillgänglig</string>
     <string name="gutenberg_native_text_color">Textfärg</string>
     <string name="gutenberg_native_padding">Padding</string>
@@ -782,6 +815,7 @@ Language: sv_SE
     <string name="gutenberg_native_custom_url">Anpassad URL</string>
     <string name="gutenberg_native_create_embed">Skapa inbäddning</string>
     <string name="gutenberg_native_column_d">Kolumn %d</string>
+    <string name="gutenberg_native_more">Mer</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beskriv kortfattat länken för den som använder skärmläsare.</string>
     <string name="gutenberg_native_add_blocks">Lägg till block</string>
     <string name="login_no_jetpack_sites">Inga Jetpack-webbplatser hittades</string>
@@ -1198,7 +1232,6 @@ Language: sv_SE
     <string name="stories_intro_main_title">Lär känna berättelseinlägg</string>
     <string name="mlp_notice_blank_page_created">En blank sida har skapats</string>
     <string name="mlp_notice_page_created">Sidan har skapats</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s nekades åtkomst till dina bilder. Korrigera genom att redigera dina rättigheter och aktivera %2$s och %3$s.</string>
     <string name="media_insert_failed">Infogning av media misslyckades.</string>
     <string name="media_insert_failed_with_reason">Infogning av media misslyckades: %s</string>
     <string name="photo_picker_wordpress_media_library">Välj ur mediabiblioteket i WordPress</string>
@@ -1678,6 +1711,7 @@ Language: sv_SE
     <string name="gutenberg_native_add_image_or_video">LÄGG TILL BILD ELLER VIDEO</string>
     <string name="gutenberg_native_add_image">LÄGG TILL BILD</string>
     <string name="gutenberg_native_add_block_here">LÄGG TILL BLOCK HÄR</string>
+    <string name="gutenberg_native_add_description">Lägg till beskrivning</string>
     <string name="reader_empty_saved_posts_content_description">Tryck på knappen ”Lägg till i sparade inlägg” för att lägga till inlägget i din lista.</string>
     <string name="reader_acessibility_list_loaded">”Listan har lästs in med %1$d objekt.”</string>
     <string name="notifications_tab_dialog_switch_desc">Aviseringar</string>
@@ -2701,7 +2735,7 @@ Language: sv_SE
     <string name="media_documents">Dokument</string>
     <string name="media_images">Bilder</string>
     <string name="media_all">Allt</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s nekades åtkomst till dina bilder. Korrigera genom att redigera dina rättigheter och aktivera %2$s.</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">%1$s nekades åtkomst till dina mediefiler. För att åtgärda detta, redigera dina behörigheter och aktivera %2$s.</string>
     <string name="reader_view_comments">Visa kommentarer</string>
     <string name="site_settings_video_quality_hint">Videokvalitet. Högre värde innebär video med högre kvalitet.</string>
     <string name="site_settings_video_width_hint">Ändrar storleken på videoklipp i inlägg till denna storlek</string>

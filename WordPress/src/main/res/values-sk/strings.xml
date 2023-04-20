@@ -732,7 +732,6 @@ Language: sk
     <string name="media_documents">Dokumenty</string>
     <string name="media_images">Obrázky</string>
     <string name="media_all">Všetko</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s bol zamietnutý prístup k vašim fotografiám. Ak to chcete napraviť, upravte svoje povolenia a zapnite %2$s.</string>
     <string name="reader_view_comments">Zobraziť komentáre</string>
     <string name="site_settings_video_quality_hint">Kvalita videí. Čím vyššie hodnoty, tým kvalitnejšie videá.</string>
     <string name="site_settings_video_width_hint">Zmeňte veľkosť článkov na požadovanú veľkosť</string>

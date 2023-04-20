@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-04 13:18:04+0000
+Translation-Revision-Date: 2023-04-18 08:27:06+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_privacy_and_rating">Confidențialitate și evaluare</string>
+    <string name="gutenberg_native_remove_blocks">Înlătură blocurile</string>
+    <string name="dashboard_pages_card_no_pages_create_page_button">Adaugă pagini pe site-ul tău</string>
+    <string name="dashboard_card_domain_menu_hide_this">Ascunde asta</string>
+    <string name="dashboard_card_domain_sub_title">Rezervă-ți partea ta pe web cu o adresă de site ușor de găsit, partajat și urmărit.</string>
+    <string name="dashboard_card_domain_title">Cu un domeniu personalizat, ai o identitate proprie online</string>
+    <string name="blogging_reminders_notifications_permission_caption">Ca să folosești reamintirile pentru publicare, trebuie să activezi notificările imediate.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">Descrie scopul imaginii. Lasă gol dacă imaginea este doar decorativă.</string>
+    <string name="dashboard_pages_card_create_another_page_button">Creează o altă pagină</string>
+    <string name="gutenberg_native_manual">Manual</string>
+    <string name="gutenberg_native_dynamic">Dinamic</string>
+    <string name="gutenberg_native_playback_settings">Setări redare</string>
+    <string name="gutenberg_native_playback_bar_color">Culoare pentru bara de redare</string>
+    <string name="dashboard_pages_card_create_another_page_description">Începe cu aranjamente personalizate, prietenoase pentru dispozitivele mobile</string>
+    <string name="site_creation_domain_button_continue_with_subdomain">Continuă cu un subdomeniu</string>
+    <string name="site_creation_domain_button_purchase_domain">Cumpără domeniul</string>
+    <string name="permission_images_video_audio">Fotografii și videouri plus muzică și audio</string>
+    <string name="permission_audio">Muzică și audio</string>
+    <string name="permission_images">Fotografii și videouri</string>
+    <string name="photo_picker_soft_ask_audios_label">%s are nevoie de permisiuni pentru a-ți accesa fișierele audio</string>
+    <string name="photo_picker_soft_ask_videos_label">%s are nevoie de permisiuni pentru a-ți accesa videourile</string>
+    <string name="photo_picker_soft_ask_photos_label">%s are nevoie de permisiuni pentru a-ți accesa fotografiile</string>
+    <string name="photo_picker_soft_ask_photos_videos_label">%s are nevoie de permisiuni pentru a-ți accesa fotografiile și videourile</string>
+    <string name="photo_picker_soft_ask_photos_videos_audio_label">%s are nevoie de permisiuni pentru a-ți accesa fotografiile și videourile plus muzica și fișierele audio</string>
+    <string name="notifications_permission_bottom_sheet_button">Activează notificările</string>
+    <string name="blogging_reminders_notifications_permission_title">Activează notificările imediate</string>
+    <string name="notifications_permission_bottom_sheet_description_2">Mergi la Setări → Notificări → Setări aplicație și activează %1$s ca să primești notificări imediat.</string>
+    <string name="notifications_permission_fix">Corectează</string>
+    <string name="notifications_permission_dismiss_content_description">Respinge avertizarea pentru permisiuni notificări.</string>
+    <string name="notifications_permission_bottom_sheet_description_1">Pentru a vedea notificările, trebuie să deschizi aplicația.</string>
+    <string name="notifications_permission_bottom_sheet_title">Notificările imediate sunt dezactivate</string>
+    <string name="notifications_permission_off_desc">Notificările imediate sunt dezactivate.</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; folosește %2$s module Jetpack individuale</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">Site-urile cu module Jetpack individuale nu sunt acceptate de aplicația WordPress.</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; folosește modulul &lt;b&gt;%2$s&lt;/b&gt;</string>
@@ -775,6 +807,7 @@ Language: ro
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Unu</string>
     <string name="gutenberg_native_no_preview_available">Nu este disponibilă nicio previzualizare</string>
+    <string name="gutenberg_native_add_title">Adaugă titlu</string>
     <string name="gutenberg_native_text_color">Culoare text</string>
     <string name="gutenberg_native_padding">Distanțare</string>
     <string name="gutenberg_native_featured">Reprezentativ</string>
@@ -782,6 +815,7 @@ Language: ro
     <string name="gutenberg_native_create_embed">Creează înglobare</string>
     <string name="gutenberg_native_custom_url">URL personalizat</string>
     <string name="gutenberg_native_column_d">Coloana %d</string>
+    <string name="gutenberg_native_more">Mai mult</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descrie pe scurt legătura pentru a ajuta utilizatorii care folosesc cititorul de ecran</string>
     <string name="gutenberg_native_add_blocks">Adaugă blocuri</string>
     <string name="login_no_jetpack_sites">Nu am găsit niciun site Jetpack</string>
@@ -1198,7 +1232,6 @@ Language: ro
     <string name="stories_intro_main_title">Prezentăm Articole narațiune</string>
     <string name="mlp_notice_blank_page_created">A fost creată o pagină goală</string>
     <string name="mlp_notice_page_created">A fost creată o pagină</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s a fost refuzat accesul la fotografiile tale. Pentru a corecta asta, editează-ți permisiunile și pornește %2$s și %3$s.</string>
     <string name="media_insert_failed">Inserarea media a eșuat.</string>
     <string name="media_insert_failed_with_reason">Inserarea media a eșuat: %s</string>
     <string name="photo_picker_wordpress_media_library">Alege din biblioteca Media din WordPress</string>
@@ -1678,6 +1711,7 @@ Language: ro
     <string name="gutenberg_native_add_url">Adaugă URL</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">A apărut o eroare necunoscută. Te rog încearcă din nou.</string>
     <string name="gutenberg_native_add_alt_text">Adaugă text alternativ</string>
+    <string name="gutenberg_native_add_description">Adaugă o descriere</string>
     <string name="reader_acessibility_list_loaded">„Lista a fost încărcată și are %1$d elemente.”</string>
     <string name="reader_empty_saved_posts_content_description">Pentru a salva un articol în listă atinge butonul Adaugă în articole salvate.</string>
     <string name="notifications_tab_dialog_switch_desc">Notificări</string>
@@ -2701,7 +2735,7 @@ Language: ro
     <string name="media_documents">Documente</string>
     <string name="media_images">Imagini</string>
     <string name="media_all">Toată</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s a fost refuzat accesul la fotografiile tale. Pentru a corecta asta, editează-ți permisiunile și pornește %2$s.</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">Accesul la fișierele tale Media a fost refuzat pentru %1$s. Pentru a corecta asta, editează-ți permisiunile și activează %2$s.</string>
     <string name="reader_view_comments">Vezi comentariile</string>
     <string name="site_settings_video_quality_hint">Calitatea videourilor. Valorile mai mari înseamnă videouri de calitate mai bună.</string>
     <string name="site_settings_video_width_hint">Redimensionează videourile în articole la această dimensiune</string>

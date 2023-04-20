@@ -932,7 +932,6 @@ Language: vi_VN
     <string name="stories_intro_main_title">Giới thiệu Bài Story</string>
     <string name="mlp_notice_blank_page_created">Đã tạo trang trống</string>
     <string name="mlp_notice_page_created">Đã tạo trang</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s không thể truy cập album ảnh của bạn. Để sửa vấn đề này, mở quyền truy cập %2$s và %3$s.</string>
     <string name="media_insert_failed">Chèn media thất bại.</string>
     <string name="media_insert_failed_with_reason">Chèn media thất bại: %s</string>
     <string name="photo_picker_wordpress_media_library">Chọn từ Thư viện Media WordPress</string>
@@ -2428,7 +2427,6 @@ Language: vi_VN
     <string name="media_documents">Tài liệu</string>
     <string name="media_images">Ảnh</string>
     <string name="media_all">Tất cả</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s bị từ chối truy cập vào ảnh của bạn. Hãy cấp quyền và bật %2$s.</string>
     <string name="reader_view_comments">Đọc bình luận</string>
     <string name="site_settings_video_quality_hint">Chất lượng video. Thông số càng cao thì chất lượng video càng tốt.</string>
     <string name="site_settings_video_width_hint">Thay đổi video trong bài đăng thành kích thước này</string>
