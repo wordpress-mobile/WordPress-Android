@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitecreation.domains.compose
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Unspecified
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -32,13 +34,14 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant.Sale
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant.Unavailable
 
-private val SecondaryTextColor @Composable get() = MaterialTheme.colors.onSurface.copy(alpha = 0.46f)
+private val HighlightBgColor @Composable get() = MaterialTheme.colors.primary.copy(0.1f)
+private val SecondaryTextColor @Composable get() = MaterialTheme.colors.onSurface.copy(0.46f)
 private val SecondaryFontSize = 13.sp
 private val PrimaryFontSize = 17.sp
 
 @Composable
 fun DomainItem(uiState: DomainUiState) = with(uiState) {
-    Column {
+    Column(Modifier.background(if (isSelected) HighlightBgColor else Unspecified)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
