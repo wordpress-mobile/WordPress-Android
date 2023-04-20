@@ -41,6 +41,8 @@ private val HighlightBgColor @Composable get() = MaterialTheme.colors.primary.co
 private val SecondaryTextColor @Composable get() = MaterialTheme.colors.onSurface.copy(0.46f)
 private val SecondaryFontSize = 13.sp
 private val PrimaryFontSize = 17.sp
+private val StartPadding = 40.dp
+private val TitleBottomPadding = 2.dp
 
 @Composable
 fun DomainItem(uiState: DomainUiState) = with(uiState) {
@@ -58,7 +60,7 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
         ) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.width(Margin.ExtraMediumLarge.value)
+                modifier = Modifier.width(StartPadding)
             ) {
                 variant?.dotColor?.let {
                     SolidCircle(size = 8.dp, colorResource(it))
@@ -71,6 +73,7 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
                     fontSize = PrimaryFontSize,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
+                    modifier = Modifier.padding(bottom = TitleBottomPadding)
                 )
                 variant?.run {
                     Text(
