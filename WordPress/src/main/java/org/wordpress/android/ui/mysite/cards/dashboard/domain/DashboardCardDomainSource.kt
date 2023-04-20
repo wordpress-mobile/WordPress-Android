@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
@@ -16,6 +17,8 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Named
+
+const val REFRESH_DELAY = 500L
 
 class DashboardCardDomainSource @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -78,6 +81,7 @@ class DashboardCardDomainSource @Inject constructor(
         selectedSite: SiteModel
     ) {
         coroutineScope.launch(bgDispatcher) {
+            delay(REFRESH_DELAY) // This is necessary to wait response of "getDomainsAndPost()"
             val result = siteStore.fetchSiteDomains(selectedSite)
             val domains = result.domains
             val error = result.error
