@@ -14,8 +14,8 @@ class ActivityItemViewHolder(parent: ViewGroup,
 ) {
     fun bind(item: ActivityItem) = with(binding) {
         activityContentContainer.setOnClickListener { item.onClick.click() }
-        uiHelpers.setTextOrHide(activityCardItemTitle, item.title)
-        uiHelpers.setTextOrHide(activityCardItemContent, item.content)
+        uiHelpers.setTextOrHide(activityCardItemLabel, item.label)
+        uiHelpers.setTextOrHide(activityCardItemSubLabel, item.subLabel)
         uiHelpers.setTextOrHide(activityCardItemDisplayDate, item.displayDate)
         icon.setImageResource(item.icon)
         icon.setBackgroundResource(item.iconBackgroundColor)
