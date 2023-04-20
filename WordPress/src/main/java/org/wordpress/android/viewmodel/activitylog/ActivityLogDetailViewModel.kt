@@ -30,6 +30,7 @@ import javax.inject.Inject
 const val ACTIVITY_LOG_ID_KEY: String = "activity_log_id_key"
 const val ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY: String = "activity_log_are_buttons_visible_key"
 const val ACTIVITY_LOG_IS_RESTORE_HIDDEN_KEY: String = "activity_log_is_restore_hidden_key"
+const val ACTIVITY_LOG_IS_DASHBOARD_CARD_ENTRY_KEY: String = "activity_log_is_dashboard_card_entry_key"
 
 @HiltViewModel
 class ActivityLogDetailViewModel @Inject constructor(
