@@ -4515,6 +4515,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Jetpack - Dashboard cards - Activity Card -->
     <string name="dashboard_activity_card_title">Recent activity</string>
     <string name="dashboard_activity_card_footer_link">View all activity</string>
+    <string name="dashboard_activity_card_dot_separator" translatable="false">@string/reader_dot_separator</string>
 
     <string name="gutenberg_native_add_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Add description</string>
     <string name="gutenberg_native_add_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Add title</string>
