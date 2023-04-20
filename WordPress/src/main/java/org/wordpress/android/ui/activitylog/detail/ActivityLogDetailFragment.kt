@@ -113,21 +113,21 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
     }
 
     private fun ActivityLogItemDetailBinding.setupObservers() {
-        viewModel.activityLogItem.observe(viewLifecycleOwner, { activityLogModel ->
+        viewModel.activityLogItem.observe(viewLifecycleOwner) { activityLogModel ->
             loadLogItem(activityLogModel, requireActivity())
-        })
+        }
 
-        viewModel.restoreVisible.observe(viewLifecycleOwner, { available ->
+        viewModel.restoreVisible.observe(viewLifecycleOwner) { available ->
             activityRestoreButton.visibility = if (available == true) View.VISIBLE else View.GONE
-        })
-        viewModel.downloadBackupVisible.observe(viewLifecycleOwner, { available ->
+        }
+        viewModel.downloadBackupVisible.observe(viewLifecycleOwner) { available ->
             activityDownloadBackupButton.visibility = if (available == true) View.VISIBLE else View.GONE
-        })
-        viewModel.multisiteVisible.observe(viewLifecycleOwner, { available ->
+        }
+        viewModel.multisiteVisible.observe(viewLifecycleOwner) { available ->
             checkAndShowMultisiteMessage(available)
-        })
+        }
 
-        viewModel.navigationEvents.observeEvent(viewLifecycleOwner, {
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner) {
             when (it) {
                 is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
                     requireActivity(),
@@ -145,9 +145,9 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
                 )
                 is ShowDocumentationPage -> ActivityLauncher.openUrlExternal(requireContext(), it.url)
             }
-        })
+        }
 
-        viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner, { range ->
+        viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner) { range ->
             if (range != null) {
                 formattableContentClickHandler.onClick(
                     requireActivity(),
@@ -155,7 +155,7 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
                     ReaderTracker.SOURCE_ACTIVITY_LOG_DETAIL
                 )
             }
-        })
+        }
 
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
             JetpackPoweredBottomSheetFragment
