@@ -151,6 +151,7 @@ private fun DomainItemPreview() {
                 5 -> Sale
                 else -> null
             },
+            isSelected = it == 5,
             onClick = {}
         )
     }
