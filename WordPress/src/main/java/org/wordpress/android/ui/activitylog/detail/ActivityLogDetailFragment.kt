@@ -35,6 +35,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
+import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_IS_DASHBOARD_CARD_ENTRY_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_IS_RESTORE_HIDDEN_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel
 import org.wordpress.android.viewmodel.observeEvent
@@ -85,8 +86,9 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
             val (site, activityLogId) = sideAndActivityId(savedInstanceState, activity.intent)
             val areButtonsVisible = areButtonsVisible(savedInstanceState, activity.intent)
             val isRestoreHidden = isRestoreHidden(savedInstanceState, activity.intent)
+            val isDashboardCardEntry = isDashboardCardEntry(savedInstanceState, activity.intent)
 
-            viewModel.start(site, activityLogId, areButtonsVisible, isRestoreHidden)
+            viewModel.start(site, activityLogId, areButtonsVisible, isRestoreHidden, isDashboardCardEntry)
         }
 
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
@@ -259,12 +261,21 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
         else -> throw Throwable("Couldn't initialize Activity Log view model")
     }
 
+    private fun isDashboardCardEntry(savedInstanceState: Bundle?, intent: Intent?) = when {
+        savedInstanceState != null ->
+            requireNotNull(savedInstanceState.getBoolean(ACTIVITY_LOG_IS_DASHBOARD_CARD_ENTRY_KEY, false))
+        intent != null ->
+            intent.getBooleanExtra(ACTIVITY_LOG_IS_DASHBOARD_CARD_ENTRY_KEY, false)
+        else -> throw Throwable("Couldn't initialize Activity Log view model")
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, viewModel.site)
         outState.putString(ACTIVITY_LOG_ID_KEY, viewModel.activityLogId)
         outState.putBoolean(ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY, viewModel.areButtonsVisible)
         outState.putBoolean(ACTIVITY_LOG_IS_RESTORE_HIDDEN_KEY, viewModel.isRestoreHidden)
+        outState.putBoolean(ACTIVITY_LOG_IS_DASHBOARD_CARD_ENTRY_KEY, viewModel.isDashboardCardEntry)
     }
 
     private fun ActivityLogItemDetailBinding.setActorIcon(actorIcon: String?, showJetpackIcon: Boolean?) {

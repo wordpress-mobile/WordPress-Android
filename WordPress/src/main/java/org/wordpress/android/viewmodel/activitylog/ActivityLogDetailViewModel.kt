@@ -43,6 +43,7 @@ class ActivityLogDetailViewModel @Inject constructor(
     lateinit var activityLogId: String
     var areButtonsVisible = false
     var isRestoreHidden = false
+    var isDashboardCardEntry = false
 
     private val _navigationEvents = MutableLiveData<Event<ActivityLogDetailNavigationEvents>>()
     val navigationEvents: LiveData<Event<ActivityLogDetailNavigationEvents>>
@@ -75,12 +76,14 @@ class ActivityLogDetailViewModel @Inject constructor(
         site: SiteModel,
         activityLogId: String,
         areButtonsVisible: Boolean,
-        isRestoreHidden: Boolean
+        isRestoreHidden: Boolean,
+        isDashboardCardEntry: Boolean
     ) {
         this.site = site
         this.activityLogId = activityLogId
         this.areButtonsVisible = areButtonsVisible
         this.isRestoreHidden = isRestoreHidden
+        this.isDashboardCardEntry = isDashboardCardEntry
 
         _restoreVisible.value = areButtonsVisible && !isRestoreHidden
         _downloadBackupVisible.value = areButtonsVisible
