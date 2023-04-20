@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-07 10:54:08+0000
+Translation-Revision-Date: 2023-04-19 12:54:29+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_remove_blocks">ブロックを削除</string>
+    <string name="gutenberg_native_privacy_and_rating">プライバシーと評価</string>
+    <string name="gutenberg_native_playback_settings">再生設定</string>
+    <string name="gutenberg_native_playback_bar_color">再生バーの色</string>
+    <string name="gutenberg_native_manual">手動</string>
+    <string name="gutenberg_native_dynamic">ダイナミック</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">画像の目的を説明します。 デザインである場合は、空欄のままにします。</string>
+    <string name="dashboard_pages_card_create_another_page_description">カスタムメイドのスマートフォンに対応したレイアウトから始める</string>
+    <string name="dashboard_pages_card_create_another_page_button">別のページを作成</string>
+    <string name="dashboard_pages_card_no_pages_create_page_button">サイトにページを追加</string>
+    <string name="dashboard_card_domain_menu_hide_this">非表示</string>
+    <string name="dashboard_card_domain_sub_title">見つけやすく、共有やフォローがしやすいサイトアドレスを使って自分のサイトであることを示しましょう。</string>
+    <string name="dashboard_card_domain_title">カスタムドメインで自分のデジタルアイデンティティを手に入れましょう</string>
+    <string name="blogging_reminders_notifications_permission_caption">ブログ投稿のリマインダーを使用するには、プッシュ通知を有効にする必要があります</string>
+    <string name="blogging_reminders_notifications_permission_title">プッシュ通知を有効にする</string>
+    <string name="site_creation_domain_button_continue_with_subdomain">サブドメインで続行</string>
+    <string name="site_creation_domain_button_purchase_domain">ドメインを購入する</string>
+    <string name="permission_images_video_audio">写真と動画 &amp; 音楽と音声ファイル</string>
+    <string name="permission_audio">音楽と音声ファイル</string>
+    <string name="permission_images">写真と動画</string>
+    <string name="photo_picker_soft_ask_audios_label">%s は音声ファイルにアクセスするための権限が必要です</string>
+    <string name="photo_picker_soft_ask_videos_label">%s は動画にアクセスするための権限が必要です</string>
+    <string name="photo_picker_soft_ask_photos_label">%s は写真にアクセスするための権限が必要です</string>
+    <string name="photo_picker_soft_ask_photos_videos_label">%s は写真と動画にアクセスするための権限が必要です</string>
+    <string name="photo_picker_soft_ask_photos_videos_audio_label">%s は音楽、音声ファイル、写真、動画にアクセスするための権限が必要です</string>
+    <string name="notifications_permission_bottom_sheet_button">通知を有効にする</string>
+    <string name="notifications_permission_bottom_sheet_description_2">「設定」&amp;rarr;「通知」&amp;rarr;「アプリ設定」の順に移動し、すぐに通知を受け取れるよう%1$sをオンにします。</string>
+    <string name="notifications_permission_bottom_sheet_description_1">通知を表示するにはアプリを開く必要があります。</string>
+    <string name="notifications_permission_bottom_sheet_title">プッシュ通知はオフになっています</string>
+    <string name="notifications_permission_off_desc">プッシュ通知はオフになっています。</string>
+    <string name="notifications_permission_dismiss_content_description">通知権限の警告を無視します。</string>
+    <string name="notifications_permission_fix">修正</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; は個々の%2$s個の Jetpack プラグインを使用しています</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; は &lt;b&gt;%2$s&lt;/b&gt; プラグインを使用しています</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">個々の Jetpack プラグインを使用するサイトは WordPress アプリでサポートされていません。</string>
@@ -775,6 +807,7 @@ Language: ja_JP
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">1</string>
     <string name="gutenberg_native_no_preview_available">利用できるプレビューがありません</string>
+    <string name="gutenberg_native_add_title">タイトルを追加</string>
     <string name="gutenberg_native_text_color">テキスト色</string>
     <string name="gutenberg_native_padding">パディング</string>
     <string name="gutenberg_native_featured">おすすめ</string>
@@ -782,6 +815,7 @@ Language: ja_JP
     <string name="gutenberg_native_create_embed">埋め込みを作成</string>
     <string name="gutenberg_native_custom_url">カスタム URL</string>
     <string name="gutenberg_native_column_d">カラム %d</string>
+    <string name="gutenberg_native_more">詳細</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">スクリーンリーダーのユーザーを支援するため、リンクについて簡単に説明してください</string>
     <string name="gutenberg_native_add_blocks">ブロックを追加</string>
     <string name="login_no_jetpack_sites">Jetpack サイトが見つかりませんでした</string>
@@ -1198,7 +1232,6 @@ Language: ja_JP
     <string name="stories_intro_main_title">ストーリー投稿の紹介</string>
     <string name="mlp_notice_blank_page_created">空白ページが作成されました</string>
     <string name="mlp_notice_page_created">ページが作成されました</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s は写真へのアクセスを拒否されました。 これを解決するには、権限を編集して%2$sと%3$sをオンにしてください。</string>
     <string name="media_insert_failed">メディアの挿入に失敗しました。</string>
     <string name="media_insert_failed_with_reason">メディアの挿入に失敗しました : %s</string>
     <string name="photo_picker_wordpress_media_library">WordPress メディアライブラリから選択</string>
@@ -1678,6 +1711,7 @@ Language: ja_JP
     <string name="gutenberg_native_add_block_here">ここにブロックを追加</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">不明なエラーが発生しました。もう一度お試しください。</string>
     <string name="gutenberg_native_add_alt_text">代替テキストを追加</string>
+    <string name="gutenberg_native_add_description">説明を追加</string>
     <string name="reader_empty_saved_posts_content_description">「Add to Save Posts」ボタンをタップし、投稿をリストに保存します。</string>
     <string name="reader_acessibility_list_loaded">「リストに %1$d 項目が読み込まれました」</string>
     <string name="notifications_tab_dialog_switch_desc">通知</string>
@@ -2701,7 +2735,7 @@ Language: ja_JP
     <string name="media_documents">文書</string>
     <string name="media_images">画像</string>
     <string name="media_all">すべて</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$sは写真へのアクセスを拒否されました。これを解決するには、権限を編集して、%2$sをオンにしてください。</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">%1$s はメディアファイルへのアクセスを拒否されました。 これを解決するには、権限を編集して %2$s をオンにします。</string>
     <string name="reader_view_comments">コメントを表示</string>
     <string name="site_settings_video_quality_hint">動画の画質。値が高いほど、画質が良いことを意味します。</string>
     <string name="site_settings_optimize_video_summary">サイズ変更と動画圧縮を可能にするには有効化してください</string>

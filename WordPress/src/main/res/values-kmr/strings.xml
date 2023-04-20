@@ -143,7 +143,6 @@ Language: ku_TR
     <string name="stories_intro_image_caption_first">Şandiya çîrokî çawa tê afirandin</string>
     <string name="mlp_notice_blank_page_created">Rûpela vala hat afirandin</string>
     <string name="stories_intro_main_title">Danasîna Şandiyên Çîrokî</string>
-    <string name="media_picker_soft_ask_permissions_denied">Hewla %1$s\'ê ya ji bo bigihîje wêneyên te hat redkirin. Ji bo vêya çareser bikî, destûrên xwe sererast bike, %2$s û %3$s\'ê veke.</string>
     <string name="media_insert_failed">Tevlîkirina medyayê bi ser neket.</string>
     <string name="media_insert_failed_with_reason">Tevlîkirina medyayê bi ser neket: %s</string>
     <string name="photo_picker_wordpress_media_library">Ji Medyageha WordPressê Hilbijêre</string>
@@ -1583,7 +1582,6 @@ Language: ku_TR
     <string name="media_images">Wêne</string>
     <string name="media_all">Hemû</string>
     <string name="media_documents">Dosye</string>
-    <string name="photo_picker_soft_ask_permissions_denied">Hewla %1$s\'ê ya ji bo bigihîje wêneyên te hat redkirin. Ji bo vê çareser bikî, destûrên xwe sererast bike û %2$s\'ê veke.</string>
     <string name="reader_view_comments">Şîroveyan bibîne</string>
     <string name="site_settings_video_quality_hint">Kalîteya vîdeoyan. Nirxên bilind tê wateya vîdyoyên kalîteya çêtir.</string>
     <string name="site_settings_video_width_hint">Mezinahiya vîdeoyên di şandiyê de dike bi qasî vê mezinahiyê</string>

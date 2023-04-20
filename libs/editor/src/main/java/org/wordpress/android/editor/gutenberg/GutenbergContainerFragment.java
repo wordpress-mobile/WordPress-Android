@@ -182,6 +182,10 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.toggleEditorMode(mHtmlModeEnabled);
     }
 
+    public void sendToJSPostSaveEvent() {
+        mWPAndroidGlueCode.sendToJSPostSaveEvent();
+    }
+
     /**
      * Returns the contents of the content field from the JavaScript editor. Should be called from a background thread
      * where possible.

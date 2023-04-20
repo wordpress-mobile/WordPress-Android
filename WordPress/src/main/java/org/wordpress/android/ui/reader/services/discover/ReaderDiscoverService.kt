@@ -8,6 +8,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverServiceStarter.ARG_DISCOVER_TASK
@@ -25,7 +26,7 @@ import kotlin.coroutines.CoroutineContext
 @AndroidEntryPoint
 class ReaderDiscoverService : Service(), ServiceCompletionListener, CoroutineScope {
     @Inject
-    @field:Named("IO_THREAD")
+    @Named(IO_THREAD)
     lateinit var ioDispatcher: CoroutineDispatcher
 
     @Inject

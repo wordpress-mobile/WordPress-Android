@@ -1198,7 +1198,6 @@ Language: lv
     <string name="stories_intro_main_title">Iepazīstinām ar stāstu ziņām</string>
     <string name="mlp_notice_blank_page_created">Izveidota tukša lapa</string>
     <string name="mlp_notice_page_created">Lapa ir izveidota</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s tika liegta piekļuve jūsu fotoattēliem. Lai to labotu, rediģējiet savas atļaujas un ieslēdziet %2$s un %3$s.</string>
     <string name="media_insert_failed">Multivides ievietošana neizdevās.</string>
     <string name="media_insert_failed_with_reason">Multivides ievietošana neizdevās: %s</string>
     <string name="photo_picker_wordpress_media_library">Izvēlieties no WordPress multivides bibliotēkas</string>
@@ -2701,7 +2700,6 @@ Language: lv
     <string name="media_documents">Dokumenti</string>
     <string name="media_images">Attēli</string>
     <string name="media_all">Viss</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s tika liegta piekļuve jūsu fotoattēliem. Lai to novērstu, rediģējiet savas atļaujas un ieslēdziet %2$s.</string>
     <string name="reader_view_comments">Skatīt komentārus</string>
     <string name="site_settings_video_quality_hint">Video kvalitāte. Augstākas vērtības nozīmē labākas kvalitātes videoklipus.</string>
     <string name="site_settings_video_width_hint">Maina videoklipu izmērus ziņās līdz šim izmēram</string>

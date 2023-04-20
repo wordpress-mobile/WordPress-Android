@@ -20,12 +20,13 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '2.1.0'
     automatticTracksVersion = '2.2.0'
-    gutenbergMobileVersion = '5589-deaee752b3b16fac49767bcf34d4b10bf55e898f'
+    gutenbergMobileVersion = '5589-d7648442bc6b75dfa364e1a886ef414332eef282'
     wordPressAztecVersion = 'v1.6.3'
-    wordPressFluxCVersion = 'trunk-c4f88d5272c51d59cb7763681699b5925d76dace'
+    wordPressFluxCVersion = '2.25.0'
     wordPressLoginVersion = '1.3.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.6.0'
+    indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 
     // debug
     stethoVersion = '1.6.0'

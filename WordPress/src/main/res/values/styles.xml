@@ -1882,4 +1882,12 @@
         <item name="iconSize">@dimen/text_sz_medium</item>
         <item name="iconTint">@color/jetpack_green_50</item>
     </style>
+
+    <!-- My Site Activity Card  -->
+    <style name="MySiteCardItemActivityCardContent">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+    </style>
 </resources>

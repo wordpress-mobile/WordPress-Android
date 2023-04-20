@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-05 13:54:09+0000
+Translation-Revision-Date: 2023-04-18 15:54:27+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.4
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_remove_blocks">إزالة المكوّنات</string>
+    <string name="gutenberg_native_privacy_and_rating">الخصوصية والتصنيف</string>
+    <string name="gutenberg_native_playback_settings">إعدادات التشغيل</string>
+    <string name="gutenberg_native_playback_bar_color">لون شريط التشغيل</string>
+    <string name="gutenberg_native_manual">يدوي</string>
+    <string name="gutenberg_native_dynamic">ديناميكية</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">صف غرض الصورة. اترك ذلك الحقل فارغًا إذا كان للزخرفة.</string>
+    <string name="dashboard_pages_card_create_another_page_description">البدء بتخطيطات معدة حسب الطلب ومناسبة للهواتف المحمولة</string>
+    <string name="dashboard_pages_card_create_another_page_button">إنشاء صفحة أخرى</string>
+    <string name="dashboard_pages_card_no_pages_create_page_button">إضافة صفحات إلى موقعك</string>
+    <string name="dashboard_card_domain_menu_hide_this">إخفاء هذا</string>
+    <string name="dashboard_card_domain_sub_title">شارك مطالبتك في زاوية الويب مع عنوان الموقع الذي يسهل العثور عليه ومشاركته ومتابعته.</string>
+    <string name="dashboard_card_domain_title">امتلاك هويتك على الإنترنت مع نطاق مخصص</string>
+    <string name="blogging_reminders_notifications_permission_caption">لاستخدام تذكيرات التدوين، سيتعيَّن عليك تشغيل التنبيهات المؤقتة.</string>
+    <string name="blogging_reminders_notifications_permission_title">تشغيل التنبيهات المؤقتة</string>
+    <string name="site_creation_domain_button_continue_with_subdomain">الاستمرار في النطاف الفرعي</string>
+    <string name="site_creation_domain_button_purchase_domain">شراء النطاق</string>
+    <string name="permission_images_video_audio">الصور والفيديوهات والموسيقى والملفات الصوتية</string>
+    <string name="permission_audio">الموسيقى والملفات الصوتية</string>
+    <string name="permission_images">الصور والفيديوهات</string>
+    <string name="photo_picker_soft_ask_audios_label">يحتاج %s إلى صلاحية للوصول إلى ملفاتك الصوتية</string>
+    <string name="photo_picker_soft_ask_videos_label">يحتاج %s إلى صلاحية للوصول إلى فيديوهاتك</string>
+    <string name="photo_picker_soft_ask_photos_label">يحتاج %s إلى صلاحية للوصول إلى صورك</string>
+    <string name="photo_picker_soft_ask_photos_videos_label">يحتاج %s إلى صلاحية للوصول إلى صورك وفيديوهاتك</string>
+    <string name="photo_picker_soft_ask_photos_videos_audio_label">يحتاج %s إلى صلاحية للوصول إلى الموسيقى والملفات الصوتية والصور والفيديوهات الخاصة بك</string>
+    <string name="notifications_permission_bottom_sheet_button">تشغيل التنبيهات</string>
+    <string name="notifications_permission_bottom_sheet_description_2">انتقل إلى الإعدادات ← التنبيهات ← إعدادات التطبيق، وشغّل ⁦%1$s⁩ لتلقي الإخطارات على الفور.</string>
+    <string name="notifications_permission_fix">إصلاح</string>
+    <string name="notifications_permission_bottom_sheet_description_1">سيتعين عليك فتح التطبيق للاطلاع على التنبيهات.</string>
+    <string name="notifications_permission_bottom_sheet_title">تم إيقاف تشغيل تنبيهات الدفع</string>
+    <string name="notifications_permission_off_desc">تم إيقاف تشغيل تنبيهات الدفع.</string>
+    <string name="notifications_permission_dismiss_content_description">تجاهَل تحذير صلاحية التنبيه.</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">تستخدم &lt;b&gt;%1$s&lt;/b&gt; ⁦%2$s⁩ من إضافات Jetpack الفردية</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">تستخدم &lt;b&gt;%1$s&lt;/b&gt; إضافة &lt;b&gt;%2$s&lt;/b&gt;</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">المواقع ذات إضافات Jetpack الفردية غير مدعومة من تطبيق ووردبريس.</string>
@@ -775,6 +807,7 @@ Language: ar
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">واحد</string>
     <string name="gutenberg_native_no_preview_available">لا توجد معاينة متاحة</string>
+    <string name="gutenberg_native_add_title">أضف عنواناً</string>
     <string name="gutenberg_native_text_color">لون النص</string>
     <string name="gutenberg_native_padding">الهوامش الداخلية</string>
     <string name="gutenberg_native_featured">مميز</string>
@@ -782,6 +815,7 @@ Language: ar
     <string name="gutenberg_native_create_embed">إنشاء تضمين</string>
     <string name="gutenberg_native_custom_url">رابط (URL) مخصّص</string>
     <string name="gutenberg_native_column_d">عمود %d</string>
+    <string name="gutenberg_native_more">المزيد</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">قدّم وصفاً موجزًا للرابط لمساعدة مستخدم قارئ الشاشة</string>
     <string name="gutenberg_native_add_blocks">إضافة مكوِّنات</string>
     <string name="login_no_jetpack_sites">لم يتم العثور على أي مواقع Jetpack</string>
@@ -1198,7 +1232,6 @@ Language: ar
     <string name="stories_intro_main_title">مقدمة لمقالات القصص</string>
     <string name="mlp_notice_blank_page_created">تم إنشاء صفحة فارغة</string>
     <string name="mlp_notice_page_created">تم إنشاء صفحة</string>
-    <string name="media_picker_soft_ask_permissions_denied">⁦%1$s⁩ تم رفض الوصول إلى صورك. لإصلاح هذا، حرِّر صلاحياتك وشغِّل ⁦%2$s⁩ و⁦%3$s⁩.</string>
     <string name="media_insert_failed">فشل إدراج الوسائط.</string>
     <string name="media_insert_failed_with_reason">فشل إدراج الوسائط: %s</string>
     <string name="photo_picker_wordpress_media_library">الاختيار من مكتبة وسائط ووردبريس </string>
@@ -1678,6 +1711,7 @@ Language: ar
     <string name="gutenberg_native_add_block_here">إضافة مكوّن هنا</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">حدث خطأ غير معروف. يُرجى المحاولة مرة أخرى.</string>
     <string name="gutenberg_native_add_alt_text">إضافة نصّ بديل للرابط</string>
+    <string name="gutenberg_native_add_description">إضافة وصف</string>
     <string name="reader_acessibility_list_loaded">\"تم تحميل القائمة بعناصر %1$d.\"</string>
     <string name="reader_empty_saved_posts_content_description">أنقر فوق الزرّ \"حفظ المقالات\" لحفظ مقالةٍ في قائمتك.</string>
     <string name="main_switch_default_title_off">إيقاف التشغيل</string>
@@ -2701,7 +2735,7 @@ Language: ar
     <string name="media_documents">المستندات</string>
     <string name="media_images">الصور</string>
     <string name="media_all">الكل</string>
-    <string name="photo_picker_soft_ask_permissions_denied">تم رفض وصول %1$s إلى صورك. لإصلاح هذا، حرر أذوناتك وشغّل %2$s.</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">تم رفض وصول ⁦%1$s⁩ إلى ملفات الوسائط الاجتماعية الخاصة بك. لإصلاح ذلك، حرّر صلاحياتك وشغِّل ⁦%2$s⁩.</string>
     <string name="reader_view_comments">عرض التعليقات</string>
     <string name="site_settings_video_quality_hint">جودة الفيديوهات تُشير القيم الأعلى إلى الفيديوهات ذات الجودة الأفضل.</string>
     <string name="site_settings_video_width_hint">تغيير حجم الفيديوهات في المقالات إلى هذا الحجم</string>

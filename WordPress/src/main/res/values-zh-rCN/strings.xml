@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-07 10:54:08+0000
+Translation-Revision-Date: 2023-04-18 15:54:26+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_remove_blocks">移除区块</string>
+    <string name="gutenberg_native_privacy_and_rating">隐私和评级</string>
+    <string name="gutenberg_native_playback_settings">播放设置</string>
+    <string name="gutenberg_native_playback_bar_color">播放栏颜色</string>
+    <string name="gutenberg_native_manual">手动</string>
+    <string name="gutenberg_native_dynamic">动态</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">描述图片的用途。 如果图片仅作装饰用，请留空。</string>
+    <string name="dashboard_pages_card_create_another_page_description">从适用于移动设备的定制布局开始</string>
+    <string name="dashboard_pages_card_create_another_page_button">创建其他页面</string>
+    <string name="dashboard_pages_card_no_pages_create_page_button">向您的站点添加页面</string>
+    <string name="dashboard_card_domain_menu_hide_this">隐藏此内容</string>
+    <string name="dashboard_card_domain_sub_title">通过易于查找、共享和关注的站点地址，在网络上创建自己的一席之地。</string>
+    <string name="dashboard_card_domain_title">使用自定义域名，拥有您的在线身份</string>
+    <string name="blogging_reminders_notifications_permission_caption">要使用博客发布提醒，您需要开启推送通知。</string>
+    <string name="blogging_reminders_notifications_permission_title">开启推送通知</string>
+    <string name="site_creation_domain_button_continue_with_subdomain">继续使用子域名</string>
+    <string name="site_creation_domain_button_purchase_domain">购买域名</string>
+    <string name="permission_images_video_audio">照片与视频和音乐与音频</string>
+    <string name="permission_audio">音乐与音频</string>
+    <string name="permission_images">照片与视频</string>
+    <string name="photo_picker_soft_ask_audios_label">%s 需要权限才能访问您的音频</string>
+    <string name="photo_picker_soft_ask_videos_label">%s 需要权限才能访问您的视频</string>
+    <string name="photo_picker_soft_ask_photos_label">%s 需要权限才能访问您的照片</string>
+    <string name="photo_picker_soft_ask_photos_videos_label">%s 需要权限才能访问您的照片和视频</string>
+    <string name="photo_picker_soft_ask_photos_videos_audio_label">%s 需要权限才能访问您的音乐、音频、照片和视频</string>
+    <string name="notifications_permission_bottom_sheet_button">开启通知</string>
+    <string name="notifications_permission_bottom_sheet_description_2">转至“设置 &amp;rarr; 通知 &amp;rarr; 应用设置”，然后启用“%1$s”以立即接收通知。</string>
+    <string name="notifications_permission_bottom_sheet_description_1">您需要打开应用才能看到通知。</string>
+    <string name="notifications_permission_bottom_sheet_title">推送通知已关闭</string>
+    <string name="notifications_permission_off_desc">推送通知已关闭。</string>
+    <string name="notifications_permission_dismiss_content_description">忽略通知权限警告。</string>
+    <string name="notifications_permission_fix">修复</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; 正在使用 %2$s 个独立的 Jetpack 插件</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; 正在使用 &lt;b&gt;%2$s&lt;/b&gt; 插件</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">WordPress 应用不支持使用独立的 Jetpack 插件的站点。</string>
@@ -771,6 +803,7 @@ Language: zh_CN
     <string name="gutenberg_native_retry">重试</string>
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">一</string>
+    <string name="gutenberg_native_add_title">添加标题</string>
     <string name="gutenberg_native_no_preview_available">无可用预览</string>
     <string name="gutenberg_native_text_color">文字颜色</string>
     <string name="gutenberg_native_padding">内边距</string>
@@ -779,6 +812,7 @@ Language: zh_CN
     <string name="gutenberg_native_custom_url">自定义 URL</string>
     <string name="gutenberg_native_create_embed">创建嵌入</string>
     <string name="gutenberg_native_column_d">列 %d</string>
+    <string name="gutenberg_native_more">更多</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">简短描述此链接以帮助使用读屏软件的用户。</string>
     <string name="gutenberg_native_add_blocks">添加区块</string>
     <string name="login_no_jetpack_sites">未找到Jetpack站点</string>
@@ -1195,7 +1229,6 @@ Language: zh_CN
     <string name="stories_intro_main_title">故事文章简介</string>
     <string name="mlp_notice_blank_page_created">创建了空白页面</string>
     <string name="mlp_notice_page_created">页面已创建</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s 已被拒绝访问您的照片。 要解决此问题，请编辑您的权限，然后启用“%2$s”和“%3$s”。</string>
     <string name="media_insert_failed">媒体插入失败。</string>
     <string name="media_insert_failed_with_reason">媒体插入失败： %s</string>
     <string name="photo_picker_wordpress_media_library">从 WordPress 媒体库中选择</string>
@@ -1675,6 +1708,7 @@ Language: zh_CN
     <string name="gutenberg_native_add_image_or_video">添加图片或视频</string>
     <string name="gutenberg_native_add_image">添加图片</string>
     <string name="gutenberg_native_add_block_here">在此处添加区块</string>
+    <string name="gutenberg_native_add_description">添加描述</string>
     <string name="reader_empty_saved_posts_content_description">轻按“添加以保存文章”按钮，将文章保存到您的列表中。</string>
     <string name="reader_acessibility_list_loaded">“列表已加载 %1$d 项。”</string>
     <string name="notifications_tab_dialog_switch_desc">通知</string>
@@ -2698,7 +2732,7 @@ Language: zh_CN
     <string name="media_documents">文档</string>
     <string name="media_images">图片</string>
     <string name="media_all">全部</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s 访问您的照片时被拒绝。要解决此问题，请编辑您的权限并开启 %2$s。</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">已拒绝 %1$s 访问您的媒体文件。 要解决此问题，请编辑您的权限，然后启用“%2$s”。</string>
     <string name="reader_view_comments">查看评论</string>
     <string name="site_settings_video_quality_hint">视频画质。值越高，视频画质越好。</string>
     <string name="site_settings_video_width_hint">将文章中的视频调整为此大小</string>

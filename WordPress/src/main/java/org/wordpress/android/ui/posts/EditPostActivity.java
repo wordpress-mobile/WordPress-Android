@@ -1738,6 +1738,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private ActivityFinishState savePostOnline(boolean isFirstTimePublish) {
+        if (mEditorFragment instanceof GutenbergEditorFragment) {
+            ((GutenbergEditorFragment) mEditorFragment).sendToJSPostSaveEvent();
+        }
         return mViewModel.savePostOnline(isFirstTimePublish, this, mEditPostRepository, mSite);
     }
 
