@@ -6,11 +6,20 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/sitePreviewTitle"
-        style="@style/SiteCreationPreviewHeaderTitle"
-        app:fixWidowWords="true" />
+        style="@style/SiteCreationHeaderV2Title"
+        android:lineSpacingExtra="-4sp"
+        android:letterSpacing="0.01"
+        android:paddingBottom="@dimen/margin_large"
+        android:text="@string/new_site_creation_preview_title"
+        app:fixWidowWords="true"
+        app:autoSizeTextType="uniform" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/sitePreviewSubtitle"
-        style="@style/SiteCreationPreviewHeaderSubtitle"
+        style="@style/SiteCreationHeaderV2Subtitle"
+        android:paddingBottom="@dimen/margin_large"
+        android:lineSpacingExtra="5sp"
+        android:letterSpacing="0.01"
+        android:text="@string/new_site_creation_preview_subtitle"
         app:fixWidowWords="true" />
 </LinearLayout>
