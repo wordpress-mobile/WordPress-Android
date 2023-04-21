@@ -126,12 +126,14 @@ class ActivityLogDetailViewModel @Inject constructor(
             cardsStore.getCards(site, listOf(CardModel.Type.ACTIVITY))
                 .map { it.model }
                 .collect { result ->
-                    (result?.get(0) as? CardModel.ActivityCardModel)
-                        ?.activities
-                        ?.firstOrNull { it.activityID == activityLogId }
-                        ?.toActivityLogDetailModel()?.let {
-                            _item.postValue(it)
-                        }?.let { _item.postValue(null) }
+                    _item.postValue(
+                        result.takeIf { !it.isNullOrEmpty() }
+                            ?.let { activityCardModelList ->
+                                (activityCardModelList[0] as CardModel.ActivityCardModel)
+                                    .activities
+                                    .find { it.activityID == activityLogId }
+                                    ?.toActivityLogDetailModel()
+                            })
                 }
         }
     }
