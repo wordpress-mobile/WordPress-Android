@@ -342,7 +342,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
         val suggestions = List(size) {
             DomainSuggestionResponse().apply {
-                domain_name = "$query-$it.com"
+                domain_name = if (it == 0) query else  "$query-$it.com"
                 is_free = it % 2 == 0
                 cost = if (is_free) "Free" else "$$it.00"
                 product_id = it
@@ -474,6 +474,17 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(uiDomains.map { it.variant }).containsOnlyOnce(Variant.BestAlternative)
+    }
+
+    @Test
+    fun `verify selected domain is propagated to UI on click`() = testWithSuccessResultNewUi { (query) ->
+        viewModel.start()
+
+        viewModel.onQueryChanged(query)
+        advanceUntilIdle()
+        viewModel.onDomainSelected(mockDomain(query))
+
+        assertThat(uiDomains.map { it.isSelected }).containsOnlyOnce(true)
     }
 
     // endregion

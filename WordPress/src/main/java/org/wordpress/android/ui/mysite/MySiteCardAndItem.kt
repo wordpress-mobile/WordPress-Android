@@ -289,8 +289,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         footerLink = footerLink
                     ) {
                         data class ActivityItem(
-                            val title: UiString,
-                            val content: String?,
+                            val label: UiString,
+                            val subLabel: String?,
                             val displayDate: String,
                             @DrawableRes val icon: Int,
                             @DrawableRes val iconBackgroundColor: Int,
