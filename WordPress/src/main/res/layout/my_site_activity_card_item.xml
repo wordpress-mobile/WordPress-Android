@@ -8,7 +8,8 @@
     android:clipChildren="false"
     android:clipToPadding="false"
     android:foreground="?attr/selectableItemBackground"
-    android:padding="@dimen/my_site_card_row_padding">
+    android:paddingHorizontal="@dimen/activity_card_row_start_end_padding"
+    android:paddingVertical="@dimen/activity_card_row_top_bottom_padding">
 
     <ImageView
         android:id="@+id/icon"
