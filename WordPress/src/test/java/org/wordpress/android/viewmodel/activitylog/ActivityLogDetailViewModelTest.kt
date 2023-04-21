@@ -32,6 +32,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
+
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogDetailViewModelTest : BaseUnitTest() {
@@ -126,7 +127,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = false
         val isRestoreHidden = false
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, false)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertEquals(false, restoreVisible)
     }
@@ -136,7 +137,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = false
         val isRestoreHidden = true
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, false)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertEquals(false, restoreVisible)
     }
@@ -146,7 +147,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = true
         val isRestoreHidden = false
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, false)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertEquals(true, restoreVisible)
     }
@@ -156,7 +157,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = true
         val isRestoreHidden = true
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, false)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertEquals(false, restoreVisible)
     }
@@ -166,7 +167,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = false
         val isRestoreHidden = false
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, false)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertEquals(false, downloadBackupVisible)
     }
@@ -176,7 +177,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = true
         val isRestoreHidden = false
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, false)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertEquals(true, downloadBackupVisible)
     }
@@ -186,7 +187,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = true
         val isRestoreHidden = false
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, false)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertFalse(multisiteVisible.first)
         assertNull(multisiteVisible.second)
@@ -197,7 +198,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = true
         val isRestoreHidden = true
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, false)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertTrue(multisiteVisible.first)
         assertNotNull(multisiteVisible.second)
@@ -207,7 +208,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
     fun emitsUIModelOnStart() {
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(activityLogModel))
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, false)
+        startViewModel()
 
         assertNotNull(lastEmittedItem)
         lastEmittedItem?.let {
@@ -226,7 +227,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         )
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(updatedActivity))
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, false)
+        startViewModel()
 
         assertNotNull(lastEmittedItem)
         lastEmittedItem?.let {
@@ -246,7 +247,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         )
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(updatedActivity))
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, false)
+        startViewModel()
 
         assertNotNull(lastEmittedItem)
         lastEmittedItem?.let {
@@ -259,11 +260,11 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
     fun doesNotReemitUIModelOnStartWithTheSameActivityID() {
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(activityLogModel))
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, false)
+        startViewModel()
 
         lastEmittedItem = null
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, false)
+        startViewModel()
 
         assertNull(lastEmittedItem)
     }
@@ -276,11 +277,11 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val secondActivity = activityLogModel.copy(activityID = activityID2, content = updatedContent)
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(activityLogModel, secondActivity))
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, false)
+        startViewModel()
 
         lastEmittedItem = null
 
-        viewModel.start(site, activityID2, areButtonsVisible, isRestoreHidden, false)
+        startViewModel(activityID = activityID2)
 
         assertNotNull(lastEmittedItem)
         lastEmittedItem?.let {
@@ -295,7 +296,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
 
         lastEmittedItem = mock()
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, false)
+        startViewModel()
 
         assertNull(lastEmittedItem)
     }
@@ -351,5 +352,15 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         navigationEvents.last().peekContent()?.let {
             assertEquals(model, (it as ActivityLogDetailNavigationEvents.ShowBackupDownload).model)
         }
+    }
+
+    private fun startViewModel(
+        site: SiteModel = this.site,
+        activityID: String = this.activityID,
+        areButtonsVisible: Boolean = this.areButtonsVisible,
+        isRestoreHidden: Boolean = this.isRestoreHidden,
+        isDashboardCardEntry: Boolean = false
+    ) {
+        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, isDashboardCardEntry)
     }
 }
