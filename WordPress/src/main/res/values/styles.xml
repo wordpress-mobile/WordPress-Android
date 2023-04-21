@@ -1553,7 +1553,7 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="SiteCreationHeaderV2Title" parent="SiteCreationHeaderV2Text">
+    <style name="SiteCreationHeaderV2Title.Base" parent="SiteCreationHeaderV2Text">
         <item name="android:paddingTop">@dimen/mlp_titles_top_margin</item>
         <item name="android:paddingBottom">@dimen/margin_small_medium</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
@@ -1561,6 +1561,8 @@
         <item name="android:maxLines">3</item>
         <item name="fontFamily">serif</item>
     </style>
+
+    <style name="SiteCreationHeaderV2Title" parent="SiteCreationHeaderV2Title.Base" />
 
     <style name="SiteCreationHeaderV2Subtitle" parent="SiteCreationHeaderV2Text">
         <item name="android:paddingTop">@dimen/margin_small</item>
