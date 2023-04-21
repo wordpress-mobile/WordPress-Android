@@ -35,6 +35,7 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -864,7 +865,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory ->
                 replaceRelatedPostDetailWithHistory(postId = this.postId, blogId = this.blogId)
 
-            is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post)
+            is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post, this@ReaderPostDetailFragment)
             is ReaderNavigationEvents.ShowEngagedPeopleList -> {
                 ActivityLauncher.viewPostLikesListActivity(
                     activity,
@@ -1505,14 +1506,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     @Suppress("DEPRECATION")
-    private fun ReaderPostDetailFragment.showPostInWebView(post: ReaderPost) {
+    private fun showPostInWebView(post: ReaderPost, fragment: Fragment) {
         readerWebView.setIsPrivatePost(post.isPrivate)
         readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))
         renderer = ReaderPostRenderer(readerWebView, viewModel.post, readerCssProvider)
 
         // if the post is from private atomic site postpone render until we have a special access cookie
         if (post.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
-            PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager, this@ReaderPostDetailFragment)
+            PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager, fragment)
             requestPrivateAtomicCookie()
         } else if (post.isPrivateAtomic && privateAtomicCookie.exists()) {
             // make sure we add cookie to the cookie manager if it exists before starting render
