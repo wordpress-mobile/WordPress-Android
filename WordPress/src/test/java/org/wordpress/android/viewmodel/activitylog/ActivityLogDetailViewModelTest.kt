@@ -441,7 +441,6 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         startViewModel(activityID = ACTIVITY_ID, isDashboardCardEntry = true)
 
         assertNotNull(lastEmittedItem)
-        //verify(mySiteSourceManager).refresh()
     }
 
     @Test
