@@ -449,7 +449,6 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val updatedContent = FormattableContent(text = changedText)
         val secondActivity = activityLogModel.copy(activityID = ACTIVITY_ID, content = updatedContent)
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(activityLogModel, secondActivity))
-        whenever(cardsStore.getCards(any(), any())).thenReturn(flowOf(data))
 
         lastEmittedItem = null
 
