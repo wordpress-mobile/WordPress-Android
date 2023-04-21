@@ -1605,7 +1605,7 @@ class MySiteViewModel @Inject constructor(
     private fun onDashboardCardDomainClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         dashboardCardDomainUtils.trackDashboardCardDomainTapped(uiModel.value?.state as? SiteSelected)
-        _onNavigation.value = Event(SiteNavigationAction.OpenDomainRegistration(selectedSite))
+        _onNavigation.value = Event(SiteNavigationAction.OpenPaidDomainSearch(selectedSite))
     }
 
     private fun onDashboardCardDomainHideMenuItemClick() {
