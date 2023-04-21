@@ -361,22 +361,31 @@ class SiteCreationDomainsViewModel @Inject constructor(
         } else null
     }
 
-    private fun createHeaderUiState(
-        isVisible: Boolean
-    ): SiteCreationHeaderUiState? {
-        return if (isVisible) SiteCreationHeaderUiState(
-            UiStringRes(R.string.new_site_creation_domain_header_title),
-            UiStringRes(R.string.new_site_creation_domain_header_subtitle)
-        ) else null
-    }
+    private fun createHeaderUiState(isVisible: Boolean) = if (!isVisible) null else
+        purchasingFeatureConfig.isEnabledOrManuallyOverridden().let { isPurchasingEnabled ->
+            SiteCreationHeaderUiState(
+                title = UiStringRes(R.string.new_site_creation_domain_header_title),
+                subtitle = UiStringRes(
+                    if (isPurchasingEnabled) R.string.site_creation_domain_header_subtitle
+                    else R.string.new_site_creation_domain_header_subtitle,
+                ),
+                isStartAligned = isPurchasingEnabled
+            )
+        }
 
-    private fun createSearchInputUiState(
+private fun createSearchInputUiState(
         showProgress: Boolean,
         showClearButton: Boolean,
         showDivider: Boolean,
     ): SiteCreationSearchInputUiState {
+        val hint = UiStringRes(
+            if (purchasingFeatureConfig.isEnabledOrManuallyOverridden())
+                R.string.site_creation_domain_search_input_hint
+            else
+                R.string.new_site_creation_search_domain_input_hint
+        )
         return SiteCreationSearchInputUiState(
-            hint = UiStringRes(R.string.new_site_creation_search_domain_input_hint),
+            hint = hint,
             showProgress = showProgress,
             showClearButton = showClearButton,
             showDivider = showDivider,
