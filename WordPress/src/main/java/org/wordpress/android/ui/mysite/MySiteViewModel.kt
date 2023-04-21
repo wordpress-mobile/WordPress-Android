@@ -718,7 +718,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onActivityCardItemClick(activityCardItemClickParams: ActivityCardItemClickParams) {
-        // implement track event for activity item click
+        cardsTracker.trackActivityCardItemClicked()
         _onNavigation.value =
             Event(
                 SiteNavigationAction.OpenActivityLogDetail(
@@ -730,7 +730,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onActivityCardFooterLinkClick() {
-        // implement track event for activity card footer link
+        cardsTracker.trackActivityCardFooterClicked()
         _onNavigation.value =
             Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
     }
