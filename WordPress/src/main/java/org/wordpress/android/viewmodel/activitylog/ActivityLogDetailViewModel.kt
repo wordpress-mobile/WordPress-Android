@@ -6,15 +6,20 @@ import android.text.style.ClickableSpan
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.map
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel.ActivityActor
+import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
+import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.fluxc.tools.FormattableRange
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowDocumentationPage
@@ -25,8 +30,10 @@ import org.wordpress.android.util.extensions.toFormattedDateString
 import org.wordpress.android.util.extensions.toFormattedTimeString
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
+import javax.inject.Named
 
 const val ACTIVITY_LOG_ID_KEY: String = "activity_log_id_key"
 const val ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY: String = "activity_log_are_buttons_visible_key"
@@ -38,8 +45,11 @@ class ActivityLogDetailViewModel @Inject constructor(
     val dispatcher: Dispatcher,
     private val activityLogStore: ActivityLogStore,
     private val resourceProvider: ResourceProvider,
-    private val htmlMessageUtils: HtmlMessageUtils
-) : ViewModel() {
+    private val htmlMessageUtils: HtmlMessageUtils,
+    private val cardsStore: CardsStore,
+    @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+) : ScopedViewModel(mainDispatcher) {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
     var areButtonsVisible = false
@@ -54,8 +64,8 @@ class ActivityLogDetailViewModel @Inject constructor(
     val handleFormattableRangeClick: LiveData<FormattableRange>
         get() = _handleFormattableRangeClick
 
-    private val _item = MutableLiveData<ActivityLogDetailModel>()
-    val activityLogItem: LiveData<ActivityLogDetailModel>
+    private val _item = MutableLiveData<ActivityLogDetailModel?>()
+    val activityLogItem: LiveData<ActivityLogDetailModel?>
         get() = _item
 
     private val _restoreVisible = MutableLiveData<Boolean>()
@@ -90,17 +100,40 @@ class ActivityLogDetailViewModel @Inject constructor(
         _downloadBackupVisible.value = areButtonsVisible
         _multisiteVisible.value = if (isRestoreHidden) Pair(true, getMultisiteMessage()) else Pair(false, null)
 
-        if (activityLogId != _item.value?.activityID) {
+        activityLogId.takeIf { it != _item.value?.activityID }?.let {
             findAndPostActivityLogItemDetail()
         }
     }
 
+
     private fun findAndPostActivityLogItemDetail() {
         activityLogStore
             .getActivityLogForSite(site)
-            .find { it.activityID == activityLogId }?.toActivityLogDetailModel()?.let {
-                _item.postValue(it)
-            }
+            .find { it.activityID == activityLogId }
+            ?.toActivityLogDetailModel()
+            ?.let {
+                _item.value = it
+            }?: findAndPostActivityLogItemDetailViaDashboardCardsIfNeeded()
+    }
+
+    private fun findAndPostActivityLogItemDetailViaDashboardCardsIfNeeded() {
+        if (!isDashboardCardEntry) {
+            _item.value = null
+            return
+        }
+
+        launch(bgDispatcher) {
+            cardsStore.getCards(site, listOf(CardModel.Type.ACTIVITY))
+                .map { it.model }
+                .collect { result ->
+                    (result?.get(0) as? CardModel.ActivityCardModel)
+                        ?.activities
+                        ?.firstOrNull { it.activityID == activityLogId }
+                        ?.toActivityLogDetailModel()?.let {
+                            _item.postValue(it)
+                        }?.let { _item.postValue(null) }
+                }
+        }
     }
 
     private fun ActivityLogModel.toActivityLogDetailModel() =
