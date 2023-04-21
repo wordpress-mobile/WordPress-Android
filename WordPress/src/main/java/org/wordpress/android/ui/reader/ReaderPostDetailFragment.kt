@@ -1756,6 +1756,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         trackRelatedPostsIfShowing()
     }
 
+    @Suppress("SameParameterValue")
     private fun setRefreshing(refreshing: Boolean) {
         swipeToRefreshHelper.isRefreshing = refreshing
     }
