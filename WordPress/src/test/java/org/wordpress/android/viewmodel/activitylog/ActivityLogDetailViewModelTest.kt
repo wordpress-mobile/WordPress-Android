@@ -35,7 +35,6 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
-
 /* ACTIVITY */
 const val ACTIVITY_ID = "activity123"
 const val ACTIVITY_SUMMARY = "activity"
