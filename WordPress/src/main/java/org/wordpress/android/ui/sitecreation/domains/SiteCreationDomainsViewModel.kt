@@ -276,7 +276,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         return if (items.isEmpty()) {
             if (isNonEmptyUserQuery(query) && (state is Success || state is Ready)) {
                 DomainsUiContentState.Empty(emptyListMessage)
-            } else DomainsUiContentState.Initial
+            } else DomainsUiContentState.Initial(purchasingFeatureConfig.isEnabledOrManuallyOverridden())
         } else {
             DomainsUiContentState.VisibleItems(items)
         }
@@ -394,29 +394,33 @@ class SiteCreationDomainsViewModel @Inject constructor(
     data class DomainsUiState(
         val headerUiState: SiteCreationHeaderUiState?,
         val searchInputUiState: SiteCreationSearchInputUiState,
-        val contentState: DomainsUiContentState = DomainsUiContentState.Initial,
+        val contentState: DomainsUiContentState,
         val createSiteButtonState: CreateSiteButtonState?
     ) {
         sealed class DomainsUiContentState(
             val emptyViewVisibility: Boolean,
             val exampleViewVisibility: Boolean,
+            val updatedExampleViewVisibility: Boolean,
             val items: List<ListItemUiState>
         ) {
-            object Initial : DomainsUiContentState(
+            class Initial(isUpdatedExample: Boolean) : DomainsUiContentState(
                 emptyViewVisibility = false,
-                exampleViewVisibility = true,
+                exampleViewVisibility = !isUpdatedExample,
+                updatedExampleViewVisibility = isUpdatedExample,
                 items = emptyList()
             )
 
             class Empty(val message: UiString?) : DomainsUiContentState(
                 emptyViewVisibility = true,
                 exampleViewVisibility = false,
+                updatedExampleViewVisibility = false,
                 items = emptyList()
             )
 
             class VisibleItems(items: List<ListItemUiState>) : DomainsUiContentState(
                 emptyViewVisibility = false,
                 exampleViewVisibility = false,
+                updatedExampleViewVisibility = false,
                 items = items
             )
         }

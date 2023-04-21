@@ -109,6 +109,10 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
             domainListEmptyViewMessage.text = uiHelpers.getTextOfUiString(requireContext(), contentState.message)
         }
         uiHelpers.updateVisibility(siteCreationDomainsScreenExample.root, contentState.exampleViewVisibility)
+        uiHelpers.updateVisibility(
+            siteCreationDomainsScreenExampleUpdated.root,
+            contentState.updatedExampleViewVisibility
+        )
         (recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
 
         if (contentState.items.isNotEmpty()) {
