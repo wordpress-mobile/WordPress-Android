@@ -1559,6 +1559,8 @@
         <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">3</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:lineSpacingExtra">-4sp</item>
         <item name="fontFamily">serif</item>
     </style>
 
@@ -1570,6 +1572,8 @@
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
         <item name="android:maxLines">5</item>
         <item name="android:alpha">0.6</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:lineSpacingExtra">5sp</item>
         <item name="fontFamily">sans-serif</item>
     </style>
 

@@ -38,9 +38,7 @@
         layout="@layout/site_creation_preview_web_view_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/margin_large"
-        android:layout_marginTop="@dimen/margin_extra_medium_large"
-        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_margin="@dimen/margin_large"
         android:layout_toStartOf="@+id/sitePreviewTitleAndButtonContainer" />
 </RelativeLayout>
 
