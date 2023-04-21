@@ -1198,7 +1198,6 @@ Language: he_IL
     <string name="stories_intro_main_title">אנו שמחים להציג את האפשרות \'פוסטים של סטורי\'</string>
     <string name="mlp_notice_blank_page_created">נוצר עמוד ריק</string>
     <string name="mlp_notice_page_created">העמוד נוצר</string>
-    <string name="media_picker_soft_ask_permissions_denied">הגישה של ⁦%1$s⁩ אל תמונות שלך נדחתה. כדי לתקן זאת, יש לערוך את ההרשאות ולהפעיל את ⁦%2$s⁩ ואת ⁦%3$s⁩.</string>
     <string name="media_insert_failed">הכנסת המדיה נכשלה.</string>
     <string name="media_insert_failed_with_reason">הכנסת המדיה נכשלה: %s</string>
     <string name="photo_picker_wordpress_media_library">לבחור מתוך ספריית המדיה של WordPress</string>
@@ -2701,7 +2700,6 @@ Language: he_IL
     <string name="media_images"> תמונות</string>
     <string name="media_videos">וידאו</string>
     <string name="media_all">הכל</string>
-    <string name="photo_picker_soft_ask_permissions_denied">ל-%1$s אין אפשרות גישה לתמונות שלך. כדי לתקן זאת, יש לערוך את ההרשאות ולהפעיל את %2$s.</string>
     <string name="reader_view_comments">הצגת התגובות</string>
     <string name="site_settings_video_quality_hint">איכות קובצי הווידאו. ערכים גבוהים יותר מאפשרים איכות טובה יותר של קובצי הווידאו.</string>
     <string name="site_settings_video_width_hint">שינוי גודל של קובצי וידאו בפוסטים לממדים אלו</string>

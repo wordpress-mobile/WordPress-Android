@@ -1193,7 +1193,6 @@ Language: cs_CZ
     <string name="stories_intro_description_first">Zkombinujte fotografie, videa a text a vytvořte poutavé příběhy příspěvků, na které lze klepnout, které se vašim návštěvníkům budou líbit.</string>
     <string name="stories_intro_title_second">Příběhový příspěvek nezmizí</string>
     <string name="mlp_notice_page_created">Stránka byla vytvořena</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s byl odepřen přístup k vašim fotkám. Chcete-li to opravit, upravte svá oprávnění a zapněte %2$s a %3$s.</string>
     <string name="mlp_notice_blank_page_created">Prázdná stránka vytvořena</string>
     <string name="stories_intro_main_title">Představujeme příběhy</string>
     <string name="stories_intro_image_caption_first">Jak vytvořit příběhový příspěvek</string>
@@ -2701,7 +2700,6 @@ Language: cs_CZ
     <string name="media_documents">Dokumenty</string>
     <string name="media_videos">Videa</string>
     <string name="media_images">Obrázky</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s byl odepřen přístup k vašim fotografiím. Chcete-li to vyřešit, upravte oprávnění a zapněte %2$s.</string>
     <string name="reader_view_comments">Zobrazit komentáře</string>
     <string name="site_settings_video_quality_hint">Kvalita videí. Vyšší hodnoty znamenají lepší kvalitu videí.</string>
     <string name="site_settings_video_width_hint">Změní velikost videí v příspěvcích na tuto velikost</string>

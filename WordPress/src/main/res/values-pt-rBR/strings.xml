@@ -1198,7 +1198,6 @@ Language: pt_BR
     <string name="stories_intro_main_title">Apresentando os posts de Story</string>
     <string name="mlp_notice_blank_page_created">Página vazia criada</string>
     <string name="mlp_notice_page_created">Página criada</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s teve o acesso negado às suas fotos. Para corrigir, edite suas permissões e habilite %2$s e %3$s.</string>
     <string name="media_insert_failed">Inserção de imagem falhou.</string>
     <string name="media_insert_failed_with_reason">Inserção de imagem com falha: %s</string>
     <string name="photo_picker_wordpress_media_library">Escolher da biblioteca de mídias do WordPress</string>
@@ -2701,7 +2700,6 @@ Language: pt_BR
     <string name="media_documents">Documentos</string>
     <string name="media_images">Imagens</string>
     <string name="media_all">Todos</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s teve o acesso às suas fotos negado. Edite suas permissões e habilite %2$s para corrigir.</string>
     <string name="reader_view_comments">Ver comentários</string>
     <string name="site_settings_video_quality_hint">Qualidade dos vídeos. Valores maiores significam vídeos com mais qualidade.</string>
     <string name="site_settings_video_width_hint">Redimensiona vídeos nos posts para este tamanho</string>

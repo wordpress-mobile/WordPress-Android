@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
@@ -60,6 +61,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
@@ -528,7 +530,7 @@ class MySiteViewModel @Inject constructor(
 
         val migrationSuccessCard = SingleActionCard(
             textResource = R.string.jp_migration_success_card_message,
-            imageResource = R.drawable.ic_wordpress_blue_32dp,
+            imageResource = R.drawable.ic_wordpress_jetpack_appicon,
             onActionClick = ::onPleaseDeleteWordPressAppCardClick
         ).takeIf {
             val isJetpackApp = buildConfigWrapper.isJetpackApp
@@ -612,6 +614,14 @@ class MySiteViewModel @Inject constructor(
                     pageCard = cardsUpdate?.cards?.firstOrNull { it is PagesCardModel } as? PagesCardModel,
                     onPagesItemClick = this::onPagesItemClick,
                     onFooterLinkClick = this::onPagesCardFooterLinkClick
+                ),
+                activityCardBuilderParams = ActivityCardBuilderParams(
+                    site = site,
+                    activityCardModel = cardsUpdate?.cards?.firstOrNull {
+                        it is ActivityCardModel
+                    } as? ActivityCardModel,
+                    onActivityItemClick = this::onActivityItemClick,
+                    onFooterLinkClick = this::onActivityCardFooterLinkClick
                 ),
             ),
             QuickLinkRibbonBuilderParams(
@@ -704,6 +714,16 @@ class MySiteViewModel @Inject constructor(
     @Suppress("UNUSED_PARAMETER")
     private fun onPagesCardFooterLinkClick() {
         // implement navigation logic for create page
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun onActivityItemClick(activityId: String) {
+        // implement navigation logic for activity item
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun onActivityCardFooterLinkClick() {
+        // implement navigation logic for activity card footer link
     }
 
     private fun buildJetpackBadgeIfEnabled(): JetpackBadge? {

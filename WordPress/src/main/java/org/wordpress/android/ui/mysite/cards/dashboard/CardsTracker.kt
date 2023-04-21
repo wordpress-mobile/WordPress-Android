@@ -25,8 +25,9 @@ class CardsTracker @Inject constructor(
         POST("post"),
         BLOGGING_PROMPT("blogging_prompt"),
         PROMOTE_WITH_BLAZE("promote_with_blaze"),
+        PAGES("pages"),
+        ACTIVITY("activity"),
         DASHBOARD_CARD_DOMAIN("dashboard_card_domain"),
-        PAGES("pages")
     }
 
     enum class QuickStartSubtype(val label: String) {
@@ -124,6 +125,7 @@ fun DashboardCardType.toTypeValue(): Type {
         DashboardCardType.DASHBOARD_DOMAIN_CARD -> Type.DASHBOARD_CARD_DOMAIN
         DashboardCardType.PAGES_CARD -> Type.PAGES
         DashboardCardType.PAGES_CARD_ERROR -> Type.ERROR
+        DashboardCardType.ACTIVITY_CARD -> Type.ACTIVITY
     }
 }
 

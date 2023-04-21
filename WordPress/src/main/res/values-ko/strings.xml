@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-05 16:54:09+0000
+Translation-Revision-Date: 2023-04-18 16:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_remove_blocks">블록 제거</string>
+    <string name="gutenberg_native_privacy_and_rating">개인정보 보호 및 평점</string>
+    <string name="gutenberg_native_playback_settings">재생 설정</string>
+    <string name="gutenberg_native_playback_bar_color">재생 표시줄 색상</string>
+    <string name="gutenberg_native_manual">수동</string>
+    <string name="gutenberg_native_dynamic">동적</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">이미지의 용도를 설명합니다. 장식용이면 비워둡니다.</string>
+    <string name="dashboard_pages_card_create_another_page_description">모바일 친화적인 맞춤형 레이아웃으로 시작</string>
+    <string name="dashboard_pages_card_create_another_page_button">다른 페이지 생성</string>
+    <string name="dashboard_pages_card_no_pages_create_page_button">사이트에 페이지 추가</string>
+    <string name="dashboard_card_domain_menu_hide_this">숨기기</string>
+    <string name="dashboard_card_domain_sub_title">찾고 공유하고 팔로우하기 쉬운 사이트 주소로 웹 코너에 대한 권리를 주장하세요.</string>
+    <string name="dashboard_card_domain_title">사용자 정의 도메인으로 온라인 정체성 소유</string>
+    <string name="blogging_reminders_notifications_permission_caption">블로깅 알림을 사용하려면 푸시 알림을 켜야 합니다.</string>
+    <string name="blogging_reminders_notifications_permission_title">푸시 알림 켜기</string>
+    <string name="site_creation_domain_button_continue_with_subdomain">하위 도메인으로 계속</string>
+    <string name="site_creation_domain_button_purchase_domain">도메인 구매</string>
+    <string name="permission_images_video_audio">사진과 비디오 및 음악과 오디오</string>
+    <string name="permission_audio">음악과 오디오</string>
+    <string name="permission_images">사진과 비디오</string>
+    <string name="photo_picker_soft_ask_audios_label">오디오에 접근하는 권한이 %s에 필요</string>
+    <string name="photo_picker_soft_ask_videos_label">비디오에 접근하는 권한이 %s에 필요</string>
+    <string name="photo_picker_soft_ask_photos_label">사진에 접근하는 권한이 %s에 필요</string>
+    <string name="photo_picker_soft_ask_photos_videos_label">사진과 비디오에 접근하는 권한이 %s에 필요</string>
+    <string name="photo_picker_soft_ask_photos_videos_audio_label">음악, 오디오, 사진 및 비디오에 접근하는 권한이 %s에 필요</string>
+    <string name="notifications_permission_bottom_sheet_button">알림 켜기</string>
+    <string name="notifications_permission_bottom_sheet_description_2">설정 &amp;rarr; 알림 &amp;rarr; 앱 설정으로 이동하여 즉시 %1$s의 알림을 켜세요.</string>
+    <string name="notifications_permission_bottom_sheet_description_1">앱을 열어야 알림이 표시됩니다.</string>
+    <string name="notifications_permission_bottom_sheet_title">푸시 알림이 꺼져 있음</string>
+    <string name="notifications_permission_off_desc">푸시 알림이 꺼져 있습니다.</string>
+    <string name="notifications_permission_dismiss_content_description">알림 권한 경고를 해제하세요.</string>
+    <string name="notifications_permission_fix">해결</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">개별 젯팩 플러그인 %2$s개를 &lt;b&gt;%1$s&lt;/b&gt;에서 사용하고 있습니다.</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%2$s&lt;/b&gt; 플러그인을 &lt;b&gt;%1$s&lt;/b&gt;에서 사용하고 있습니다.</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">개별 젯팩 플러그인을 사용하는 사이트는 워드프레스 앱에서 지원되지 않습니다.</string>
@@ -774,6 +806,7 @@ Language: ko_KR
     <string name="gutenberg_native_retry">재시도</string>
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">1</string>
+    <string name="gutenberg_native_add_title">제목 추가</string>
     <string name="gutenberg_native_no_preview_available">사용 가능한 미리보기 없음</string>
     <string name="gutenberg_native_text_color">텍스트 색상</string>
     <string name="gutenberg_native_padding">안쪽 여백</string>
@@ -782,6 +815,7 @@ Language: ko_KR
     <string name="gutenberg_native_custom_url">사용자 정의 URL</string>
     <string name="gutenberg_native_create_embed">임베드 생성</string>
     <string name="gutenberg_native_column_d">열 %d</string>
+    <string name="gutenberg_native_more">더 보기</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">화면 리더 사용자에게 도움이 되도록 간략하게 링크 설명</string>
     <string name="gutenberg_native_add_blocks">블록 추가</string>
     <string name="login_no_jetpack_sites">젯팩 사이트를 찾을 수 없음</string>
@@ -1198,7 +1232,6 @@ Language: ko_KR
     <string name="stories_intro_main_title">이야기 글 소개</string>
     <string name="mlp_notice_blank_page_created">빈 페이지를 만들었습니다</string>
     <string name="mlp_notice_page_created">페이지를 만들었습니다</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s의 사진 접근이 거부되었습니다. 이를 고치려면, 권한을 고치고 %2$s와(과) %3$s을(를) 켜세요.</string>
     <string name="media_insert_failed">미디어 삽입을 실패했습니다.</string>
     <string name="media_insert_failed_with_reason">미디어 삽입을 실패했습니다: %s</string>
     <string name="photo_picker_wordpress_media_library">워드프레스 미디어 라이브러리에서 선택하기</string>
@@ -1678,6 +1711,7 @@ Language: ko_KR
     <string name="gutenberg_native_add_image_or_video">이미지 또는 비디오 추가</string>
     <string name="gutenberg_native_add_image">이미지 추가</string>
     <string name="gutenberg_native_add_block_here">블록을 여기에 추가</string>
+    <string name="gutenberg_native_add_description">설명 추가</string>
     <string name="reader_empty_saved_posts_content_description">“글을 목록에 저장하려면 글 저장 버튼을 탭합니다.”</string>
     <string name="reader_acessibility_list_loaded">\"목록에 %1$d개 항목이 로드되었습니다. \"</string>
     <string name="notifications_tab_dialog_switch_desc">알림</string>
@@ -2701,7 +2735,7 @@ Language: ko_KR
     <string name="media_documents">문서</string>
     <string name="media_images">이미지</string>
     <string name="media_all">모두</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s의 사진 액세스가 거부되었습니다. 이를 해결하려면 권한을 편집하고 %2$s을(를) 켜세요.</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">%1$s의 미디어 파일 접근이 거부되었습니다. 이 문제를 해결하려면 권한을 편집하고 %2$s을(를) 켜세요.</string>
     <string name="reader_view_comments">댓글 보기</string>
     <string name="site_settings_video_quality_hint">비디오 품질. 값이 클수록 비디오가 고품질이라는 것을 의미합니다.</string>
     <string name="site_settings_video_width_hint">글의 비디오를 이 크기로 조정</string>

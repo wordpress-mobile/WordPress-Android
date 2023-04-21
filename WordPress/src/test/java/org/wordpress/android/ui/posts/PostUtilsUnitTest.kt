@@ -46,6 +46,51 @@ class PostUtilsUnitTest {
     }
 
     @Test
+    fun `removeWPVideoPress removes VideoPress block tags and its internals without affecting content in between`() {
+        val content = """
+<!-- wp:paragraph -->
+<p>Before</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:videopress/video {"title":"demo","description":"","id":5297,"guid":"AbCDe","videoRatio":56.333333333333336,"privacySetting":2,"allowDownload":false,"rating":"G","isPrivate":true,"duration":1673} -->
+<figure class="wp-block-videopress-video wp-block-jetpack-videopress jetpack-videopress-player"><div class="jetpack-videopress-player__wrapper">
+https://videopress.com/v/AbCDe?resizeToParent=true&amp;cover=true&amp;preloadContent=metadata&amp;useAverageColor=true
+</div></figure>
+<!-- /wp:videopress/video -->
+
+<!-- wp:paragraph -->
+<p>Between</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:videopress/video {"title":"demo","description":"","id":5297,"guid":"AbCDe","videoRatio":56.333333333333336,"privacySetting":2,"allowDownload":false,"rating":"G","isPrivate":true,"duration":1673} -->
+<figure class="wp-block-videopress-video wp-block-jetpack-videopress jetpack-videopress-player"><div class="jetpack-videopress-player__wrapper">
+https://videopress.com/v/AbCDe?resizeToParent=true&amp;cover=true&amp;preloadContent=metadata&amp;useAverageColor=true
+</div></figure>
+<!-- /wp:videopress/video -->
+
+<!-- wp:paragraph -->
+<p>After</p>
+<!-- /wp:paragraph -->
+"""
+        val expectedResult = """
+<!-- wp:paragraph -->
+<p>Before</p>
+<!-- /wp:paragraph -->
+
+
+<!-- wp:paragraph -->
+<p>Between</p>
+<!-- /wp:paragraph -->
+
+
+<!-- wp:paragraph -->
+<p>After</p>
+<!-- /wp:paragraph -->
+"""
+        assertThat(PostUtils.removeWPVideoPress(content)).isEqualTo(expectedResult)
+    }
+
+    @Test
     fun `prepareForPublish updates dateLocallyChanged`() {
         val post = invokePreparePostForPublish()
         assertThat(post.dateLocallyChanged).isNotEmpty()

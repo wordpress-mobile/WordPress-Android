@@ -763,7 +763,6 @@ Language: es_CL
     <string name="media_images">Imágenes</string>
     <string name="media_all">Todo</string>
     <string name="media_audio">Audio</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s le negó el acceso a sus fotos. Para solucionarlo, edita tus permisos y activa %2$s.</string>
     <string name="reader_view_comments">Ver comentarios</string>
     <string name="site_settings_video_quality_hint">Calidad de los vídeos. Los valores más altos significan una mejor calidad de video.</string>
     <string name="site_settings_optimize_video_summary">Habilitar para cambiar el tamaño y comprimir vídeos</string>
