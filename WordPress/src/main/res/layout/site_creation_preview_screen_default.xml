@@ -24,8 +24,7 @@
         android:layout_above="@+id/sitePreviewOkButtonContainer"
         android:layout_below="@id/site_creation_preview_header_item"
         android:layout_marginBottom="@dimen/negative_margin_medium"
-        android:layout_marginLeft="@dimen/site_creation_preview_web_view_side_margin"
-        android:layout_marginRight="@dimen/site_creation_preview_web_view_side_margin" />
+        android:layout_marginHorizontal="@dimen/margin_extra_large" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/sitePreviewOkButtonContainer"
