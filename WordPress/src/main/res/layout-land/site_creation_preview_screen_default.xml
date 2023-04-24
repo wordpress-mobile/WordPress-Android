@@ -23,6 +23,13 @@
             android:id="@+id/site_creation_preview_header_item"
             layout="@layout/site_creation_preview_header_item" />
 
+        <TextView
+            android:id="@+id/sitePreviewCaption"
+            style="@style/SiteCreationHeaderV2Subtitle"
+            android:lineSpacingExtra="@null"
+            android:paddingBottom="@null"
+            android:text="@string/new_site_creation_preview_caption_paid" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/okButton"
             style="@style/WordPress.Button.Primary"
@@ -38,7 +45,10 @@
         layout="@layout/site_creation_preview_web_view_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_large"
         android:layout_toStartOf="@+id/sitePreviewTitleAndButtonContainer" />
 </RelativeLayout>
 

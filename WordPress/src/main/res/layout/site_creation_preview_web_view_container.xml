@@ -6,7 +6,6 @@
     style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/margin_small"
     app:cardCornerRadius="@dimen/margin_large"
     app:cardElevation="@dimen/card_elevation"
     app:strokeColor="@color/site_creation_preview_card_border"

@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
@@ -22,8 +23,12 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewWebErrorUiState
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.UrlData
 import org.wordpress.android.ui.sitecreation.services.FetchWpComSiteUseCase
 import org.wordpress.android.ui.sitecreation.usecases.isWordPressComSubDomain
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.UrlUtilsWrapper
@@ -60,6 +65,7 @@ class SitePreviewViewModel @Inject constructor(
 
     private var siteDesign: String? = null
     private var urlWithoutScheme: String? = null
+    private var isFree: Boolean = true
 
     private lateinit var result: Created
 
@@ -78,6 +84,7 @@ class SitePreviewViewModel @Inject constructor(
         siteDesign = siteCreationState.siteDesign
         result = siteCreationState.result
         urlWithoutScheme = result.site.url
+        isFree = requireNotNull(siteCreationState.domain).isFree
         startPreLoadingWebView()
         if (result is CreatedButNotFetched) {
             launch {
@@ -103,7 +110,7 @@ class SitePreviewViewModel @Inject constructor(
             withContext(mainDispatcher) {
                 if (uiState.value !is SitePreviewContentUiState) {
                     tracker.trackPreviewWebviewShown(siteDesign)
-                    updateUiState(SitePreviewLoadingShimmerState(createSitePreviewData()))
+                    updateUiState(SitePreviewLoadingShimmerState(isFree, createSitePreviewData()))
                 }
             }
         }
@@ -142,23 +149,23 @@ class SitePreviewViewModel @Inject constructor(
          * In other words don't update it after a configuration change.
          */
         if (uiState.value !is SitePreviewContentUiState) {
-            updateUiState(SitePreviewContentUiState(createSitePreviewData()))
+            updateUiState(SitePreviewContentUiState(isFree, createSitePreviewData()))
         }
     }
 
     fun onWebViewError() {
         if (uiState.value !is SitePreviewWebErrorUiState) {
-            updateUiState(SitePreviewWebErrorUiState(createSitePreviewData()))
+            updateUiState(SitePreviewWebErrorUiState(isFree, createSitePreviewData()))
         }
     }
 
-    private fun createSitePreviewData(): SitePreviewData {
+    private fun createSitePreviewData(): UrlData {
         val url = urlWithoutScheme ?: ""
         val subDomain = urlUtils.extractSubDomain(url)
         val fullUrl = urlUtils.addUrlSchemeIfNeeded(url, true)
         val subDomainIndices = 0 to subDomain.length
         val domainIndices = subDomainIndices.second.coerceAtMost(url.length) to url.length
-        return SitePreviewData(
+        return UrlData(
             fullUrl,
             url,
             subDomainIndices,
@@ -171,29 +178,67 @@ class SitePreviewViewModel @Inject constructor(
     }
 
     sealed class SitePreviewUiState(
+        open val urlData: UrlData,
         val webViewVisibility: Boolean = false,
         val webViewErrorVisibility: Boolean = false,
         val shimmerVisibility: Boolean = false,
+        val subtitle: UiString,
+        val caption: UiString?,
     ) {
-        data class SitePreviewContentUiState(val data: SitePreviewData) : SitePreviewUiState(
+        data class SitePreviewContentUiState(
+            val isFree: Boolean,
+            override val urlData: UrlData,
+        ) : SitePreviewUiState(
+            urlData = urlData,
             webViewVisibility = true,
-            webViewErrorVisibility = false
+            webViewErrorVisibility = false,
+            subtitle = getSubtitle(isFree),
+            caption = getCaption(isFree),
         )
 
-        data class SitePreviewWebErrorUiState(val data: SitePreviewData) : SitePreviewUiState(
+        data class SitePreviewWebErrorUiState(
+            val isFree: Boolean,
+            override val urlData: UrlData,
+        ) : SitePreviewUiState(
+            urlData = urlData,
             webViewVisibility = false,
-            webViewErrorVisibility = true
+            webViewErrorVisibility = true,
+            subtitle = getSubtitle(isFree),
+            caption = getCaption(isFree),
         )
 
-        data class SitePreviewLoadingShimmerState(val data: SitePreviewData) : SitePreviewUiState(
-            shimmerVisibility = true
+        data class SitePreviewLoadingShimmerState(
+            val isFree: Boolean,
+            override val urlData: UrlData,
+        ) : SitePreviewUiState(
+            urlData = urlData,
+            shimmerVisibility = true,
+            subtitle = getSubtitle(isFree),
+            caption = getCaption(isFree),
+        )
+
+        companion object {
+            private fun getSubtitle(isFree: Boolean): UiString {
+                return if (isFree) {
+                    UiStringRes(R.string.new_site_creation_preview_subtitle)
+                } else {
+                    UiStringResWithParams(
+                        R.string.new_site_creation_preview_subtitle_paid,
+                        UiStringRes(R.string.new_site_creation_preview_subtitle),
+                    )
+                }
+            }
+
+            private fun getCaption(isFree: Boolean): UiStringRes? {
+                return UiStringRes(R.string.new_site_creation_preview_caption_paid).takeIf { !isFree }
+            }
+        }
+
+        data class UrlData(
+            val fullUrl: String,
+            val shortUrl: String,
+            val domainIndices: Pair<Int, Int>,
+            val subDomainIndices: Pair<Int, Int>
         )
     }
-
-    data class SitePreviewData(
-        val fullUrl: String,
-        val shortUrl: String,
-        val domainIndices: Pair<Int, Int>,
-        val subDomainIndices: Pair<Int, Int>
-    )
 }
