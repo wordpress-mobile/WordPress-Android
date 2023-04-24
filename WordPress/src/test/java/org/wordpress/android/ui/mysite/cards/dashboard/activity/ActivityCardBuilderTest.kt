@@ -62,7 +62,7 @@ class ActivityCardBuilderTest : BaseUnitTest() {
     private val activityCardModel = ActivityCardModel(activities = listOf(activityLogModel))
 
     private val onActivityCardFooterLinkClick: () -> Unit = {}
-    private val onActivityItemClick: (String) -> Unit = {}
+    private val onActivityItemClick: (ActivityCardBuilderParams.ActivityCardItemClickParams) -> Unit = {}
 
     @Before
     fun setUp() {

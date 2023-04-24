@@ -62,6 +62,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams.ActivityCardItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
@@ -620,7 +621,7 @@ class MySiteViewModel @Inject constructor(
                     activityCardModel = cardsUpdate?.cards?.firstOrNull {
                         it is ActivityCardModel
                     } as? ActivityCardModel,
-                    onActivityItemClick = this::onActivityItemClick,
+                    onActivityItemClick = this::onActivityCardItemClick,
                     onFooterLinkClick = this::onActivityCardFooterLinkClick
                 ),
             ),
@@ -716,14 +717,22 @@ class MySiteViewModel @Inject constructor(
         // implement navigation logic for create page
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    private fun onActivityItemClick(activityId: String) {
-        // implement navigation logic for activity item
+    private fun onActivityCardItemClick(activityCardItemClickParams: ActivityCardItemClickParams) {
+        // implement track event for activity item click
+        _onNavigation.value =
+            Event(
+                SiteNavigationAction.OpenActivityLogDetail(
+                    requireNotNull(selectedSiteRepository.getSelectedSite()),
+                    activityCardItemClickParams.activityId,
+                    activityCardItemClickParams.isRewindable
+                )
+            )
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun onActivityCardFooterLinkClick() {
-        // implement navigation logic for activity card footer link
+        // implement track event for activity card footer link
+        _onNavigation.value =
+            Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
     }
 
     private fun buildJetpackBadgeIfEnabled(): JetpackBadge? {
