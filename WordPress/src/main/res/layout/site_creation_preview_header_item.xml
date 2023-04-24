@@ -16,7 +16,7 @@
         android:id="@+id/sitePreviewSubtitle"
         style="@style/SiteCreationHeaderV2Subtitle"
         android:lineSpacingExtra="@null"
-        android:paddingBottom="@dimen/margin_large"
+        android:paddingBottom="@null"
         android:text="@string/new_site_creation_preview_subtitle"
         app:fixWidowWords="true" />
 </LinearLayout>
