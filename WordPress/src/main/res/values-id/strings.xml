@@ -209,9 +209,6 @@ Language: id
     <string name="preference_open_links_in_jetpack">Buka tautan di Jetpack</string>
     <string name="jp_migration_need_help_button">Butuh bantuan?</string>
     <string name="jp_migration_got_it_button">Saya mengerti</string>
-    <string name="jp_migration_delete_message">Harap &lt;b&gt;hapus aplikasi WordPress&lt;/b&gt; untuk mencegah terjadinya konflik data.</string>
-    <string name="jp_migration_delete_subtitle">Aplikasi WordPress sepertinya masih terinstal. Kami sarankan untuk menghapus aplikasi WordPress guna mencegah terjadinya konflik data.</string>
-    <string name="jp_migration_delete_title">Anda tidak lagi membutuhkan aplikasi WordPress</string>
     <string name="jp_migration_network_error_message">Tanpa koneksi internet, kami tidak dapat mentransfer data dan pengaturan.</string>
     <string name="jp_migration_network_error_subtitle">Pastikan koneksi internet berfungsi lalu coba kembali.</string>
     <string name="jp_migration_network_error_title">Tidak dapat menyambung ke internet.</string>
@@ -221,13 +218,11 @@ Language: id
     <string name="jp_migration_try_again_button">Coba lagi</string>
     <string name="jp_migration_finish_button">Selesai</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Hapus ikon Aplikasi WordPress</string>
-    <string name="jp_migration_done_delete_wp_message">Harap &lt;b&gt;hapus aplikasi WordPress&lt;/b&gt; untuk mencegah terjadinya konflik data.</string>
     <string name="jp_migration_done_subtitle">Kami telah mentransfer semua data dan pengaturan Anda. Semua percis seperti terakhir Anda tinggalkan.</string>
     <string name="jp_migration_done_title">Terima kasih telah beralih ke Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Kami akan menonaktifkan pemberitahuan dari aplikasi WordPress.</string>
     <string name="jp_migration_notifications_subtitle">Anda akan tetap menerima pemberitahuan tersebut, tetapi dari aplikasi Jetpack.</string>
     <string name="jp_migration_notifications_title">Pemberitahuan kini dikirimkan lewat Jetpack</string>
-    <string name="jp_migration_success_card_message">Harap hapus aplikasi WordPress</string>
     <string name="wordpress_help_center_button">Pusat bantuan WordPress</string>
     <string name="support_title">Dukungan</string>
     <string name="notification_disable_broadcast_permission_desc">Mengizinkan aplikasi untuk menonaktifkan pemberitahuan WordPress.</string>

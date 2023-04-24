@@ -209,9 +209,6 @@ Language: ru
     <string name="preference_open_links_in_jetpack">Открывать ссылки в Jetpack</string>
     <string name="jp_migration_need_help_button">Нужна помощь?</string>
     <string name="jp_migration_got_it_button">Понятно</string>
-    <string name="jp_migration_delete_message">&lt;b&gt;Удалите приложение WordPress&lt;/b&gt;, чтобы &lt;br&gt;избежать конфликтов данных.</string>
-    <string name="jp_migration_delete_subtitle">Кажется, у вас всё ещё установлено приложение WordPress. Рекомендуем удалить приложение WordPress, чтобы избежать конфликтов данных.</string>
-    <string name="jp_migration_delete_title">Вам больше не требуется приложение WordPress</string>
     <string name="jp_migration_network_error_message">Не удаётся перенести ваши данные и настройки без подключения к сети.</string>
     <string name="jp_migration_network_error_subtitle">Убедитесь, что сетевое подключение работает, и повторите попытку.</string>
     <string name="jp_migration_network_error_title">Не удаётся подключиться к Интернету.</string>
@@ -221,13 +218,11 @@ Language: ru
     <string name="jp_migration_try_again_button">Повторить попытку</string>
     <string name="jp_migration_finish_button">Завершить</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Удаление значка приложения WordPress</string>
-    <string name="jp_migration_done_delete_wp_message">&lt;b&gt;Удалите приложение WordPress&lt;/b&gt;, чтобы &lt;br&gt;избежать конфликтов данных.</string>
     <string name="jp_migration_done_subtitle">Все данные и настройки перенесены. Всё осталось по-прежнему.</string>
     <string name="jp_migration_done_title">Благодарим за переход в Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Уведомления из приложения WordPress будут отключены.</string>
     <string name="jp_migration_notifications_subtitle">Вам будут приходить те же уведомления, но теперь из приложения Jetpack.</string>
     <string name="jp_migration_notifications_title">Теперь уведомления будут поступать из Jetpack</string>
-    <string name="jp_migration_success_card_message">Удалите приложение WordPress</string>
     <string name="wordpress_help_center_button">Справочный центр WordPress</string>
     <string name="support_title">Поддержка</string>
     <string name="notification_disable_broadcast_permission_desc">Позволяет отключить уведомления WordPress в приложении.</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-13 22:57:08+0000
+Translation-Revision-Date: 2023-04-23 11:20:34+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: sr_RS
@@ -501,6 +501,7 @@ Language: sr_RS
     <string name="gutenberg_native_add_image_or_video">ДОДАЈ СЛИКУ ИЛИ ВИДЕО ЗАПИС</string>
     <string name="gutenberg_native_add_image">ДОДАЈ СЛИКУ</string>
     <string name="gutenberg_native_add_block_here">ДОДАЈ БЛОК ОВДЕ</string>
+    <string name="gutenberg_native_add_description">Додај опис</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Јавила се непозната грешка. Молимо вас да покушате поново касније.</string>
     <string name="gutenberg_native_add_alt_text">Додај алтернативни текст</string>
     <string name="notifications_tab_dialog_switch_desc">Обавештења</string>

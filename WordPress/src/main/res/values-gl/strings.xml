@@ -209,9 +209,6 @@ Language: gl_ES
     <string name="preference_open_links_in_jetpack">Abrir ligazóns en Jetpack</string>
     <string name="jp_migration_need_help_button">Necesitas axuda?</string>
     <string name="jp_migration_got_it_button">De acordo</string>
-    <string name="jp_migration_delete_message">Por favor, &lt;b&gt;borra a aplicación de WordPress&lt;/b&gt; para evitar conflitos de datos.</string>
-    <string name="jp_migration_delete_subtitle">Parece que tes instalada a aplicación de WordPress. Recomendámosche que elimines a aplicación de WordPress para evitar conflitos de datos.</string>
-    <string name="jp_migration_delete_title">Xa non necesitas a aplicación de WordPress</string>
     <string name="jp_migration_network_error_message">Non podemos transferir os teus datos e axustes sen unha conexión de rede.</string>
     <string name="jp_migration_network_error_subtitle">Comproba a túa conexión de rede para asegurarte de que funcione e volve a intentalo.</string>
     <string name="jp_migration_network_error_title">Non se puido conectar a Internet.</string>
@@ -221,13 +218,11 @@ Language: gl_ES
     <string name="jp_migration_try_again_button">Volver a intentalo</string>
     <string name="jp_migration_finish_button">Terminar</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Icona para quitar a aplicación de WordPress</string>
-    <string name="jp_migration_done_delete_wp_message">Por favor, &lt;b&gt;borra a aplicación de WordPress&lt;/b&gt; para evitar conflitos de datos.</string>
     <string name="jp_migration_done_subtitle">Transferimos todos os teus datos e axustes. Todo está tal e como o deixaches.</string>
     <string name="jp_migration_done_title">Grazas por cambiar a Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Desactivaremos as notificacións da aplicación de WordPress.</string>
     <string name="jp_migration_notifications_subtitle">Recibirás as mesmas notificacións, pero a partir de agora desde a aplicación de Jetpack.</string>
     <string name="jp_migration_notifications_title">Agora as notificacións chegan de Jetpack</string>
-    <string name="jp_migration_success_card_message">Elimina a aplicación de WordPress</string>
     <string name="wordpress_help_center_button">Centro de axuda de WordPress</string>
     <string name="support_title">Soporte</string>
     <string name="notification_disable_broadcast_permission_desc">Permite que a aplicación desactive as notificacións de WordPress.</string>

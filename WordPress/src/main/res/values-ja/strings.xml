@@ -209,9 +209,6 @@ Language: ja_JP
     <string name="preference_open_links_in_jetpack">Jetpack でリンクを開く</string>
     <string name="jp_migration_need_help_button">ヘルプが必要ですか ?</string>
     <string name="jp_migration_got_it_button">OK</string>
-    <string name="jp_migration_delete_message">データの競合を避けるため、&lt;b&gt;WordPress アプリを削除&lt;/b&gt;してください。</string>
-    <string name="jp_migration_delete_subtitle">WordPress アプリがまだインストールされているようです。 データの競合を避けるため、WordPress アプリを削除することをお勧めします。</string>
-    <string name="jp_migration_delete_title">WordPress アプリは不要になりました</string>
     <string name="jp_migration_network_error_message">ネットワークに接続しないと、データと設定を転送できません。</string>
     <string name="jp_migration_network_error_subtitle">ネットワーク接続が有効であることを確認し、もう一度お試しください。</string>
     <string name="jp_migration_network_error_title">インターネットに接続できません。</string>
@@ -221,13 +218,11 @@ Language: ja_JP
     <string name="jp_migration_try_again_button">再試行</string>
     <string name="jp_migration_finish_button">完了</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">WordPress アプリのアイコンを削除</string>
-    <string name="jp_migration_done_delete_wp_message">データの競合を避けるため、&lt;b&gt;WordPress アプリを削除&lt;/b&gt;してください。</string>
     <string name="jp_migration_done_subtitle">すべてのデータと設定を転送しました。 すべて移行先にあります。</string>
     <string name="jp_migration_done_title">Jetpack にお切り替えいただきありがとうございます。</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">WordPress アプリからの通知をオフにします。</string>
     <string name="jp_migration_notifications_subtitle">通知内容はすべて同じですが、Jetpack アプリから送信されるようになりました。</string>
     <string name="jp_migration_notifications_title">Jetpack から通知が届くようになりました</string>
-    <string name="jp_migration_success_card_message">WordPress アプリを削除してください</string>
     <string name="wordpress_help_center_button">WordPress ヘルプセンター</string>
     <string name="support_title">サポート</string>
     <string name="notification_disable_broadcast_permission_desc">アプリが WordPress の通知を無効にすることを許可します。</string>

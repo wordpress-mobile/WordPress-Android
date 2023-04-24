@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-18 13:54:07+0000
+Translation-Revision-Date: 2023-04-20 08:29:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sv_SE
 -->
 <resources>
+    <string name="jp_migration_delete_message">Vi rekommenderar att du &lt;b&gt;avinstallerar WordPress-appen&lt;/b&gt; på din enhet för att undvika datakonflikter.</string>
+    <string name="jp_migration_delete_subtitle">Det ser ut som att du fortfarande har WordPress-appen installerad.</string>
+    <string name="jp_migration_delete_title">Du behöver inte längre WordPress-appen på din enhet</string>
+    <string name="jp_migration_done_delete_wp_message">Vi rekommenderar att du &lt;b&gt;avinstallerar WordPress-appen&lt;/b&gt; på din enhet för att undvika datakonflikter.</string>
+    <string name="jp_migration_success_card_message">Välkommen till Jetpack-appen. Du kan avinstallera WordPress-appen.</string>
     <string name="gutenberg_native_remove_blocks">Ta bort block</string>
     <string name="gutenberg_native_privacy_and_rating">Integritet och klassificering</string>
     <string name="gutenberg_native_playback_settings">Uppspelningsinställningar</string>
@@ -209,9 +214,6 @@ Language: sv_SE
     <string name="preference_open_links_in_jetpack">Öppna länkar i Jetpack</string>
     <string name="jp_migration_need_help_button">Behöver du hjälp?</string>
     <string name="jp_migration_got_it_button">Jag förstår</string>
-    <string name="jp_migration_delete_message">&lt;b&gt;Ta bort WordPress-appen&lt;/b&gt; för att undvika datakonflikter.</string>
-    <string name="jp_migration_delete_subtitle">Det verkar som att du fortfarande har WordPress-appen installerad. Vi rekommenderar att du tar bort WordPress-appen för att undvika datakonflikter.</string>
-    <string name="jp_migration_delete_title">Du behöver inte längre WordPress-appen</string>
     <string name="jp_migration_network_error_message">Vi kan inte överföra dina data och inställningar utan en nätverksanslutning.</string>
     <string name="jp_migration_network_error_subtitle">Kontrollera att din internetanslutning fungerar och försök igen.</string>
     <string name="jp_migration_network_error_title">Det går inte att ansluta till Internet.</string>
@@ -221,13 +223,11 @@ Language: sv_SE
     <string name="jp_migration_try_again_button">Försök igen</string>
     <string name="jp_migration_finish_button">Slutför</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Ta bort WordPress-appens ikon</string>
-    <string name="jp_migration_done_delete_wp_message">&lt;b&gt;Ta bort WordPress-appen&lt;/b&gt; för att undvika datakonflikter.</string>
     <string name="jp_migration_done_subtitle">Vi har flyttat över alla data och dina inställningar, så allt är precis som förut.</string>
     <string name="jp_migration_done_title">Tack för att du bytt till Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Aviseringar från WordPress-appent kommer att stängas av.</string>
     <string name="jp_migration_notifications_subtitle">Du kommer att få samma aviseringar som tidigare, men nu från Jetpack-appen.</string>
     <string name="jp_migration_notifications_title">Aviseringar kommer nu från Jetpack</string>
-    <string name="jp_migration_success_card_message">Ta bort WordPress-appen</string>
     <string name="wordpress_help_center_button">WordPress hjälpcenter</string>
     <string name="support_title">Support</string>
     <string name="notification_disable_broadcast_permission_desc">Tillåter att appen inaktiverar WordPress-aviseringar.</string>
