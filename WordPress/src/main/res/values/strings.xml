@@ -3344,7 +3344,8 @@
     <string name="new_site_creation_site_name_header_subtitle">A good name is short and memorable.\nYou can change it later.</string>
 
     <!-- Site Creation : Domains -->
-    <string name="site_creation_domain_cost">%s/yr</string>
+    <string name="site_creation_domain_cost">per year</string>
+    <string name="site_creation_domain_cost_sale">for the first year</string>
     <string name="site_creation_domain_tag_best_alternative">Best Alternative</string>
     <string name="site_creation_domain_tag_recommended">Recommended</string>
     <string name="site_creation_domain_tag_sale">Sale</string>

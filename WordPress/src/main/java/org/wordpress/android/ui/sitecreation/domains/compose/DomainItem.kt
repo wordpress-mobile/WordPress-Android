@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R.string
 import org.wordpress.android.ui.compose.components.SolidCircle
-import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.asString
@@ -48,7 +47,6 @@ private val SecondaryTextColor @Composable get() = colors.onSurface.copy(0.46f)
 private val SecondaryFontSize = 13.sp
 private val PrimaryFontSize = 17.sp
 private val StartPadding = 40.dp
-private val TitleBottomPadding = 2.dp
 
 @Composable
 fun DomainItem(uiState: DomainUiState) = with(uiState) {
@@ -88,7 +86,7 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
                     fontSize = PrimaryFontSize,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
-                    modifier = Modifier.padding(bottom = TitleBottomPadding)
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
                 tags.forEach { tag ->
                     tag.run {
@@ -103,7 +101,7 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
             if (tags.none { it is Unavailable }) {
                 if (cost is Cost.OnSale) {
                     SalePrince(
-                        cost.title.asString(),
+                        cost.strikeoutTitle.asString() to cost.title.asString(),
                         cost.subtitle.asString(),
                         modifier = Modifier.padding(start = Margin.ExtraLarge.value)
                     )
@@ -130,26 +128,37 @@ private fun Price(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun SalePrince(title: String, subtitle: String, modifier: Modifier = Modifier) {
+private fun SalePrince(title: Pair<String, String>, subtitle: String, modifier: Modifier = Modifier) {
     Column(
         modifier,
         horizontalAlignment = Alignment.End,
     ) {
-        Text(
-            title,
-            color = AppColor.JetpackGreen50,
-            fontSize = PrimaryFontSize,
-        )
+        title.let { (strikethroughText, normalText) ->
+            Row(verticalAlignment = Alignment.Bottom) {
+                Text(
+                    strikethroughText,
+                    color = SecondaryTextColor,
+                    fontSize = SecondaryFontSize,
+                    textDecoration = TextDecoration.LineThrough,
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+                Text(
+                    normalText,
+                    color = colors.primary,
+                    fontSize = PrimaryFontSize,
+                )
+            }
+        }
         Text(
             subtitle,
-            color = SecondaryTextColor,
+            color = colors.primary,
             fontSize = SecondaryFontSize,
-            textDecoration = TextDecoration.LineThrough,
+            modifier = Modifier.padding(top = 4.dp)
         )
     }
 }
 
-@Preview
+//@Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun DomainItemPreview() {

@@ -44,7 +44,6 @@ import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_MOBIL
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -508,17 +507,15 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 sealed class Cost(val title: UiString) {
                     object Free : Cost(UiStringRes(R.string.free))
 
-                    data class Paid(val cost: String) : Cost(
-                        UiStringResWithParams(R.string.site_creation_domain_cost, UiStringText(cost))
-                    )
+                    data class Paid(private val titleCost: String) : Cost(UiStringText(titleCost)) {
+                        val subtitle = UiStringRes(R.string.site_creation_domain_cost)
+                    }
 
-                    data class OnSale(val titleCost: String, val subtitleCost: String) : Cost(
-                        UiStringResWithParams(R.string.site_creation_domain_cost, UiStringText(titleCost))
+                    data class OnSale(private val titleCost: String, private val strikeoutTitleCost: String) : Cost(
+                        UiStringText(titleCost)
                     ) {
-                        val subtitle = UiStringResWithParams(
-                            R.string.site_creation_domain_cost,
-                            UiStringText(subtitleCost)
-                        )
+                        val strikeoutTitle = UiStringText(strikeoutTitleCost)
+                        val subtitle = UiStringRes(R.string.site_creation_domain_cost_sale)
                     }
                 }
             }
