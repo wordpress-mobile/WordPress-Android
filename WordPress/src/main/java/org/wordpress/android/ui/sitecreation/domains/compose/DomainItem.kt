@@ -170,7 +170,7 @@ private fun DomainItemPreview() {
             },
             cost = when {
                 it % 3 == 0 -> Cost.Paid("$${it * 5}")
-                it == 1 -> Cost.OnSale("$${it * 2}", "$${it * 3}")
+                it in 1..2 -> Cost.OnSale("$${it * 2}", "$${it * 3}")
                 else -> Cost.Free
             },
             tags = listOfNotNull(
