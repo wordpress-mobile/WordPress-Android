@@ -7,6 +7,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard.ActivityCardWithItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard.ActivityCardWithItems.ActivityItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams.ActivityCardItemClickParams
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -40,17 +41,21 @@ class ActivityCardBuilder @Inject constructor(
         )
     }
 
-    private fun List<ActivityLogModel>.mapToActivityItems(onClick: (activityId: String) -> Unit) =
-        map {
-            ActivityItem(
-                label = UiString.UiStringText(it.content?.text?:""),
-                subLabel = it.summary,
-                displayDate = buildDateLine(it.published),
-                icon = ActivityLogListItem.Icon.fromValue(it.gridicon).drawable,
-                iconBackgroundColor = ActivityLogListItem.Status.fromValue(it.status).color,
-                onClick = ListItemInteraction.create(it.activityID, onClick),
+    private fun List<ActivityLogModel>.mapToActivityItems(
+        onClick: (activityCardItemClickParams: ActivityCardItemClickParams) -> Unit
+    ) = map {
+        ActivityItem(
+            label = UiString.UiStringText(it.content?.text ?: ""),
+            subLabel = it.summary,
+            displayDate = buildDateLine(it.published),
+            icon = ActivityLogListItem.Icon.fromValue(it.gridicon).drawable,
+            iconBackgroundColor = ActivityLogListItem.Status.fromValue(it.status).color,
+            onClick = ListItemInteraction.create(
+                ActivityCardItemClickParams(it.activityID, it.rewindable ?: false),
+                onClick
             )
-        }
+        )
+    }
 
     private fun buildDateLine(published: Date) = dateTimeUtilsWrapper.javaDateToTimeSpan(published)
 
