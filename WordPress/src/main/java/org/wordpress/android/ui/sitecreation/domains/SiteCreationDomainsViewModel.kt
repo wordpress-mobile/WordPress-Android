@@ -33,7 +33,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
@@ -326,12 +326,14 @@ class SiteCreationDomainsViewModel @Inject constructor(
                     },
                     isSelected = domain.domainName == selectedDomain?.domainName,
                     onClick = { onDomainSelected(domain) },
-                    variant = when {
-                        index == 0 -> Variant.Recommended
-                        index == 1 -> Variant.BestAlternative
-                        product.isOnSale() -> Variant.Sale
-                        else -> null
-                    },
+                    tags = listOfNotNull(
+                        when (index) {
+                            0 -> Tag.Recommended
+                            1 -> Tag.BestAlternative
+                            else -> null
+                        },
+                        if (product.isOnSale()) Tag.Sale else null,
+                    ),
                 )
             }
 
@@ -473,31 +475,31 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 val cost: Cost,
                 val isSelected: Boolean = false,
                 val onClick: () -> Unit,
-                val variant: Variant? = null,
+                val tags: List<Tag> = emptyList(),
             ) : New(Type.DOMAIN_V2) {
-                sealed class Variant(
+                sealed class Tag(
                     @ColorRes val dotColor: Int,
                     @ColorRes val subtitleColor: Int? = null,
                     val subtitle: UiString,
                 ) {
                     constructor(@ColorRes color: Int, subtitle: UiString) : this(color, color, subtitle)
 
-                    object Unavailable : Variant(
+                    object Unavailable : Tag(
                         R.color.red_50,
                         UiStringRes(R.string.site_creation_domain_tag_unavailable),
                     )
 
-                    object Recommended : Variant(
+                    object Recommended : Tag(
                         R.color.jetpack_green_50,
                         UiStringRes(R.string.site_creation_domain_tag_recommended),
                     )
 
-                    object BestAlternative : Variant(
+                    object BestAlternative : Tag(
                         R.color.purple_50,
                         UiStringRes(R.string.site_creation_domain_tag_best_alternative),
                     )
 
-                    object Sale : Variant(
+                    object Sale : Tag(
                         R.color.yellow_50,
                         UiStringRes(R.string.site_creation_domain_tag_sale)
                     )
