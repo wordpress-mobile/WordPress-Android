@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.pages
 
+import android.view.View
 import android.view.ViewGroup
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.databinding.MySitePagesCardWithPageItemsBinding
@@ -22,7 +23,10 @@ class PagesCardViewHolder(
 
     fun bind(card: PagesCard) = with(binding) {
         val pagesCard = card as PagesCardWithData
-        (pagesItems.adapter as PagesItemsAdapter).update(pagesCard.pages)
+        if(pagesCard.pages.isEmpty()) pagesItems.visibility = View.GONE
+        else {
+            (pagesItems.adapter as PagesItemsAdapter).update(pagesCard.pages)
+        }
         mySiteToolbar.update(pagesCard.title)
         uiHelpers.setTextOrHide(mySiteCardFooterLink.linkLabel,pagesCard.footerLink.label)
         uiHelpers.setTextOrHide(mySiteCardFooterLink.linkDescription,pagesCard.footerLink.description)
