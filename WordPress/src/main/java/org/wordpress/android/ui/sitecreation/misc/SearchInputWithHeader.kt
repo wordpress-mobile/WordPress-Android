@@ -57,6 +57,10 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
             uiHelpers.updateVisibility(headerLayout, true)
             headerTitle.text = uiHelpers.getTextOfUiString(context, uiState.title)
             headerSubtitle.text = uiHelpers.getTextOfUiString(context, uiState.subtitle)
+            if (uiState.isStartAligned) {
+                headerTitle.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+                headerSubtitle.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+            }
         } ?: uiHelpers.updateVisibility(headerLayout, false)
     }
 

@@ -103,9 +103,14 @@ sealed class MySiteCardAndItemBuilderParams {
     data class ActivityCardBuilderParams(
         val site: SiteModel,
         val activityCardModel: CardModel.ActivityCardModel?,
-        val onActivityItemClick: (activityId: String) -> Unit,
+        val onActivityItemClick: (activityCardItemClickParams: ActivityCardItemClickParams) -> Unit,
         val onFooterLinkClick: () -> Unit
-    ) : MySiteCardAndItemBuilderParams()
+    ) : MySiteCardAndItemBuilderParams() {
+        data class ActivityCardItemClickParams(
+            val activityId: String,
+            val isRewindable: Boolean
+        )
+    }
 
     data class SiteItemsBuilderParams(
         val site: SiteModel,

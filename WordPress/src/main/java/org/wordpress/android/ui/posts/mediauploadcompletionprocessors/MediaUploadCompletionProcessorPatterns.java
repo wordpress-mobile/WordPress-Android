@@ -11,7 +11,7 @@ public class MediaUploadCompletionProcessorPatterns {
     public static final Pattern PATTERN_BLOCK_HEADER = Pattern.compile(new StringBuilder()
             .append(PATTERN_BLOCK_PREFIX)
             .append(MediaBlockType.getMatchingGroup())
-            .append(").*? -->\n?")
+            .append(").*? (/?-->)\n?")
             .toString(), Pattern.DOTALL);
 
     /**
@@ -38,5 +38,12 @@ public class MediaUploadCompletionProcessorPatterns {
             .append(" (\\{.*?\\}) -->\n?") // group: block header json
             .append("(.*)") // group: html content
             .append("(<!-- /wp:\\1 -->.*)") // group: closing-comment (name must match group 1: block type)
+            .toString(), Pattern.DOTALL);
+
+    public static final Pattern PATTERN_SELF_CLOSING_BLOCK_CAPTURES = Pattern.compile(new StringBuilder()
+            .append(PATTERN_BLOCK_PREFIX) // start-of-group: block type
+            .append(MediaBlockType.getMatchingGroup())
+            .append(")") // end-of-group: block type
+            .append(" (\\{.*?\\}) /-->\n?") // group: block header json
             .toString(), Pattern.DOTALL);
 }

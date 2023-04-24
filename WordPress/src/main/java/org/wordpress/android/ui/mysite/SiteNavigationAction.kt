@@ -85,4 +85,6 @@ sealed class SiteNavigationAction {
     data class OpenJetpackFeatureOverlay(val source: JetpackFeatureCollectionOverlaySource) : SiteNavigationAction()
     data class OpenPromoteWithBlazeOverlay(val source: BlazeFlowSource) : SiteNavigationAction()
     object ShowJetpackRemovalStaticPostersView : SiteNavigationAction()
+    data class OpenActivityLogDetail(val site: SiteModel, val activityId: String, val isRewindable: Boolean) :
+        SiteNavigationAction()
 }

@@ -165,6 +165,7 @@ import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_LAUNCHE
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_POST_LOCAL_ID;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
+import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_IS_DASHBOARD_CARD_ENTRY_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_IS_RESTORE_HIDDEN_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogViewModelKt.ACTIVITY_LOG_REWINDABLE_ONLY_KEY;
 
@@ -819,6 +820,26 @@ public class ActivityLauncher {
         intent.putExtra(ACTIVITY_LOG_IS_RESTORE_HIDDEN_KEY, isRestoreHidden);
         intent.putExtra(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
         activity.startActivityForResult(intent, RequestCodes.ACTIVITY_LOG_DETAIL);
+    }
+
+    public static void viewActivityLogDetailFromDashboardCard(
+            Activity activity,
+            SiteModel site,
+            String activityId,
+            Boolean isRewindable
+    ) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(ACTIVITY_LOG_ACTIVITY_ID_KEY, activityId);
+        properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_DETAIL_OPENED, site, properties);
+
+        Intent intent = new Intent(activity, ActivityLogDetailActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(ACTIVITY_LOG_ID_KEY, activityId);
+        intent.putExtra(ACTIVITY_LOG_IS_DASHBOARD_CARD_ENTRY_KEY, true);
+        intent.putExtra(ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY, isRewindable);
+        intent.putExtra(SOURCE_TRACK_EVENT_PROPERTY_KEY, ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE);
+        activity.startActivity(intent);
     }
 
     public static void viewScan(Activity activity, SiteModel site) {

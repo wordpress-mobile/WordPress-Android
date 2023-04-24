@@ -2,6 +2,7 @@ package org.wordpress.android.viewmodel.activitylog
 
 import android.text.SpannableString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -21,7 +22,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.fluxc.store.ActivityLogStore
+import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
@@ -31,6 +35,59 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
+/* ACTIVITY */
+const val ACTIVITY_ID = "activity123"
+const val ACTIVITY_SUMMARY = "activity"
+const val ACTIVITY_NAME = "name"
+const val ACTIVITY_TYPE = "create a blog"
+const val ACTIVITY_IS_REWINDABLE = false
+const val ACTIVITY_REWIND_ID = "10.0"
+const val ACTIVITY_GRID_ICON = "gridicon.jpg"
+const val ACTIVITY_STATUS = "OK"
+const val ACTIVITY_ACTOR_TYPE = "author"
+const val ACTIVITY_ACTOR_NAME = "John Smith"
+const val ACTIVITY_ACTOR_WPCOM_USER_ID = 15L
+const val ACTIVITY_ACTOR_ROLE = "admin"
+const val ACTIVITY_ACTOR_ICON_URL = "dog.jpg"
+const val ACTIVITY_PUBLISHED_DATE = "2021-12-27 11:33:55"
+const val ACTIVITY_CONTENT = "content"
+
+private val ACTIVITY_LOG_MODEL = ActivityLogModel(
+    summary = ACTIVITY_SUMMARY,
+    content = FormattableContent(text = ACTIVITY_CONTENT),
+    name = ACTIVITY_NAME,
+    actor = ActivityLogModel.ActivityActor(
+        displayName = ACTIVITY_ACTOR_NAME,
+        type = ACTIVITY_ACTOR_TYPE,
+        wpcomUserID = ACTIVITY_ACTOR_WPCOM_USER_ID,
+        avatarURL = ACTIVITY_ACTOR_ICON_URL,
+        role = ACTIVITY_ACTOR_ROLE,
+    ),
+    type = ACTIVITY_TYPE,
+    published = CardsUtils.fromDate(ACTIVITY_PUBLISHED_DATE),
+    rewindable = ACTIVITY_IS_REWINDABLE,
+    rewindID = ACTIVITY_REWIND_ID,
+    gridicon = ACTIVITY_GRID_ICON,
+    status = ACTIVITY_STATUS,
+    activityID = ACTIVITY_ID
+)
+
+private val ACTIVITY_CARD_MODEL = CardModel.ActivityCardModel(
+    activities = listOf(ACTIVITY_LOG_MODEL)
+)
+
+private val CARDS_MODEL: List<CardModel> = listOf(
+    ACTIVITY_CARD_MODEL
+)
+
+
+private val data = CardsStore.CardsResult(
+    model = CARDS_MODEL
+)
+
+private val emptyData = CardsStore.CardsResult(
+    model = emptyList<CardModel>()
+)
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogDetailViewModelTest : BaseUnitTest() {
@@ -48,6 +105,10 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var site: SiteModel
+
+    @Mock
+    private lateinit var cardsStore: CardsStore
+
     private lateinit var viewModel: ActivityLogDetailViewModel
 
     private val areButtonsVisible = true
@@ -92,7 +153,10 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
             dispatcher,
             activityLogStore,
             resourceProvider,
-            htmlMessageUtils
+            htmlMessageUtils,
+            cardsStore,
+            testDispatcher(),
+            testDispatcher()
         )
         viewModel.activityLogItem.observeForever { lastEmittedItem = it }
         viewModel.restoreVisible.observeForever { restoreVisible = it }
@@ -117,7 +181,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = false
         val isRestoreHidden = false
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertEquals(false, restoreVisible)
     }
@@ -127,7 +191,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = false
         val isRestoreHidden = true
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertEquals(false, restoreVisible)
     }
@@ -137,7 +201,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = true
         val isRestoreHidden = false
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertEquals(true, restoreVisible)
     }
@@ -147,7 +211,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = true
         val isRestoreHidden = true
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertEquals(false, restoreVisible)
     }
@@ -157,7 +221,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = false
         val isRestoreHidden = false
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertEquals(false, downloadBackupVisible)
     }
@@ -167,7 +231,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = true
         val isRestoreHidden = false
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertEquals(true, downloadBackupVisible)
     }
@@ -177,7 +241,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = true
         val isRestoreHidden = false
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertFalse(multisiteVisible.first)
         assertNull(multisiteVisible.second)
@@ -188,7 +252,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val areButtonsVisible = true
         val isRestoreHidden = true
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+        startViewModel(areButtonsVisible = areButtonsVisible, isRestoreHidden = isRestoreHidden)
 
         assertTrue(multisiteVisible.first)
         assertNotNull(multisiteVisible.second)
@@ -198,7 +262,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
     fun emitsUIModelOnStart() {
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(activityLogModel))
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+        startViewModel()
 
         assertNotNull(lastEmittedItem)
         lastEmittedItem?.let {
@@ -217,7 +281,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         )
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(updatedActivity))
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+        startViewModel()
 
         assertNotNull(lastEmittedItem)
         lastEmittedItem?.let {
@@ -237,7 +301,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         )
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(updatedActivity))
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+        startViewModel()
 
         assertNotNull(lastEmittedItem)
         lastEmittedItem?.let {
@@ -250,11 +314,11 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
     fun doesNotReemitUIModelOnStartWithTheSameActivityID() {
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(activityLogModel))
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+        startViewModel()
 
         lastEmittedItem = null
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+        startViewModel()
 
         assertNull(lastEmittedItem)
     }
@@ -267,11 +331,11 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         val secondActivity = activityLogModel.copy(activityID = activityID2, content = updatedContent)
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(activityLogModel, secondActivity))
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+        startViewModel()
 
         lastEmittedItem = null
 
-        viewModel.start(site, activityID2, areButtonsVisible, isRestoreHidden)
+        startViewModel(activityID = activityID2)
 
         assertNotNull(lastEmittedItem)
         lastEmittedItem?.let {
@@ -286,7 +350,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
 
         lastEmittedItem = mock()
 
-        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+        startViewModel()
 
         assertNull(lastEmittedItem)
     }
@@ -342,5 +406,68 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
         navigationEvents.last().peekContent()?.let {
             assertEquals(model, (it as ActivityLogDetailNavigationEvents.ShowBackupDownload).model)
         }
+    }
+
+    @Test
+    fun `given card entry, when no results exist, then emits null`() {
+        whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf())
+        whenever(cardsStore.getCards(any(), any())).thenReturn(flowOf(emptyData))
+
+        lastEmittedItem = mock()
+
+        startViewModel(isDashboardCardEntry = true)
+
+        assertNull(lastEmittedItem)
+    }
+
+    @Test
+    fun `given card entry, when activityLog is empty, then emits value from dashboard table`() {
+        whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf())
+        whenever(cardsStore.getCards(any(), any())).thenReturn(flowOf(data))
+
+        lastEmittedItem = null
+
+        startViewModel(activityID = ACTIVITY_ID, isDashboardCardEntry = true)
+
+        assertNotNull(lastEmittedItem)
+    }
+
+    @Test
+    fun `given card entry, when activityId is not found in activity log, then emits value from dashboard table`() {
+        whenever(cardsStore.getCards(any(), any())).thenReturn(flowOf(data))
+
+        lastEmittedItem = null
+
+        startViewModel(activityID = ACTIVITY_ID, isDashboardCardEntry = true)
+
+        assertNotNull(lastEmittedItem)
+    }
+
+    @Test
+    fun `given card entry, when activityId is found in activity log, then emits value from activity log`() {
+        val changedText = "new text"
+        val updatedContent = FormattableContent(text = changedText)
+        val secondActivity = activityLogModel.copy(activityID = ACTIVITY_ID, content = updatedContent)
+        whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(activityLogModel, secondActivity))
+
+        lastEmittedItem = null
+
+        startViewModel(activityID = ACTIVITY_ID, isDashboardCardEntry = true)
+
+        assertNotNull(lastEmittedItem)
+        lastEmittedItem?.let {
+            assertEquals(it.activityID, ACTIVITY_ID)
+            assertEquals(it.content, updatedContent)
+        }
+    }
+
+    private fun startViewModel(
+        site: SiteModel = this.site,
+        activityID: String = this.activityID,
+        areButtonsVisible: Boolean = this.areButtonsVisible,
+        isRestoreHidden: Boolean = this.isRestoreHidden,
+        isDashboardCardEntry: Boolean = false
+    ) {
+        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden, isDashboardCardEntry)
     }
 }
