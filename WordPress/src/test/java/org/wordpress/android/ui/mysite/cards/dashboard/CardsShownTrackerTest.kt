@@ -9,11 +9,14 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard.ActivityCardWithItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.ActivityLogSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
@@ -77,6 +80,13 @@ class CardsShownTrackerTest {
         )
     }
 
+    @Test
+    fun `when activity card is shown, then activity log shown event is tracked`() {
+        cardsShownTracker.track(buildActivityDashboardCards())
+
+        verifyCardShownTracked(Type.ACTIVITY.label, ActivityLogSubtype.ACTIVITY_LOG.label)
+    }
+
     private fun verifyCardShownTracked(type: String, subtype: String) {
         verify(analyticsTracker).track(
             Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
@@ -124,6 +134,21 @@ class CardsShownTrackerTest {
             footerLink = FooterLink(UiStringText(""), onClick = mock())
         )
     )
+
+    private fun buildActivityDashboardCards() = DashboardCards(
+        cards = mutableListOf<DashboardCard>().apply {
+            addAll(buildActivityCard())
+        }
+    )
+
+    private fun buildActivityCard() =
+        listOf(
+            ActivityCardWithItems(
+                title = UiStringText("title"),
+                footerLink = ActivityCard.FooterLink(UiStringText("footer"), onClick = mock()),
+                activityItems = emptyList()
+            )
+        )
 
     private fun buildErrorCard(): DashboardCards {
         val cards = listOf(ErrorCard(onRetryClick = mock()))
