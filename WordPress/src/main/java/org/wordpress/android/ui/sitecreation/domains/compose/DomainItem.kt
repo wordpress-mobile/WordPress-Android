@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -32,23 +32,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R.string
 import org.wordpress.android.ui.compose.components.SolidCircle
-import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.asString
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant.BestAlternative
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant.Recommended
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant.Sale
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant.Unavailable
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.BestAlternative
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.Recommended
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.Sale
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.Unavailable
 
-private val HighlightBgColor @Composable get() = MaterialTheme.colors.primary.copy(0.1f)
-private val SecondaryTextColor @Composable get() = MaterialTheme.colors.onSurface.copy(0.46f)
+private val HighlightBgColor @Composable get() = colors.primary.copy(0.1f)
+private val SecondaryTextColor @Composable get() = colors.onSurface.copy(0.46f)
 private val SecondaryFontSize = 13.sp
 private val PrimaryFontSize = 17.sp
 private val StartPadding = 40.dp
-private val TitleBottomPadding = 2.dp
 
 @Composable
 fun DomainItem(uiState: DomainUiState) = with(uiState) {
@@ -72,11 +70,11 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = stringResource(string.selected),
-                        tint = MaterialTheme.colors.primary,
+                        tint = colors.primary,
                         modifier = Modifier.size(16.dp),
                     )
                 } else {
-                    variant?.dotColor?.let {
+                    tags.firstOrNull()?.dotColor?.let {
                         SolidCircle(size = 8.dp, colorResource(it))
                     }
                 }
@@ -84,24 +82,26 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp), modifier = Modifier.weight(1f)) {
                 Text(
                     text = domainName,
-                    color = MaterialTheme.colors.onSurface.takeIf { variant !is Unavailable } ?: SecondaryTextColor,
+                    color = colors.onSurface.takeIf { tags.none { it is Unavailable } } ?: SecondaryTextColor,
                     fontSize = PrimaryFontSize,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
-                    modifier = Modifier.padding(bottom = TitleBottomPadding)
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
-                variant?.run {
-                    Text(
-                        text = subtitle.asString(),
-                        color = subtitleColor?.let { colorResource(it) } ?: SecondaryTextColor,
-                        fontSize = SecondaryFontSize,
-                    )
+                tags.forEach { tag ->
+                    tag.run {
+                        Text(
+                            text = subtitle.asString(),
+                            color = subtitleColor?.let { colorResource(it) } ?: SecondaryTextColor,
+                            fontSize = SecondaryFontSize,
+                        )
+                    }
                 }
             }
-            if (variant !is Unavailable) {
+            if (tags.none { it is Unavailable }) {
                 if (cost is Cost.OnSale) {
                     SalePrince(
-                        cost.title.asString(),
+                        cost.strikeoutTitle.asString() to cost.title.asString(),
                         cost.subtitle.asString(),
                         modifier = Modifier.padding(start = Margin.ExtraLarge.value)
                     )
@@ -128,21 +128,32 @@ private fun Price(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun SalePrince(title: String, subtitle: String, modifier: Modifier = Modifier) {
+private fun SalePrince(title: Pair<String, String>, subtitle: String, modifier: Modifier = Modifier) {
     Column(
         modifier,
         horizontalAlignment = Alignment.End,
     ) {
-        Text(
-            title,
-            color = AppColor.JetpackGreen50,
-            fontSize = PrimaryFontSize,
-        )
+        title.let { (strikethroughText, normalText) ->
+            Row(verticalAlignment = Alignment.Bottom) {
+                Text(
+                    strikethroughText,
+                    color = SecondaryTextColor,
+                    fontSize = SecondaryFontSize,
+                    textDecoration = TextDecoration.LineThrough,
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+                Text(
+                    normalText,
+                    color = colors.primary,
+                    fontSize = PrimaryFontSize,
+                )
+            }
+        }
         Text(
             subtitle,
-            color = SecondaryTextColor,
+            color = colors.primary,
             fontSize = SecondaryFontSize,
-            textDecoration = TextDecoration.LineThrough,
+            modifier = Modifier.padding(top = 4.dp)
         )
     }
 }
@@ -159,16 +170,18 @@ private fun DomainItemPreview() {
             },
             cost = when {
                 it % 3 == 0 -> Cost.Paid("$${it * 5}")
-                it == 5 -> Cost.OnSale("$${it * 2}", "$${it * 3}")
+                it in 1..2 -> Cost.OnSale("$${it * 2}", "$${it * 3}")
                 else -> Cost.Free
             },
-            variant = when (it) {
-                0 -> Unavailable
-                1 -> Recommended
-                2 -> BestAlternative
-                5 -> Sale
-                else -> null
-            },
+            tags = listOfNotNull(
+                when (it) {
+                    0 -> Unavailable
+                    1 -> Recommended
+                    2 -> BestAlternative
+                    else -> null
+                },
+                if (it in 1..2) Sale else null,
+            ),
             isSelected = it == 5,
             onClick = {}
         )

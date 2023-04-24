@@ -77,7 +77,6 @@ Language: zh_TW
     <string name="site_creation_domain_tag_sale">特價</string>
     <string name="site_creation_domain_tag_recommended">推薦</string>
     <string name="site_creation_domain_tag_best_alternative">最佳替代選項</string>
-    <string name="site_creation_domain_cost">%s/年</string>
     <string name="me_btn_help">說明</string>
     <string name="support_faq_caption">請查看我們的常見問題集，瞭解你可能想知道的一般問題的解答。</string>
     <string name="support_faq_title">感謝你改用 Jetpack 應用程式！</string>
