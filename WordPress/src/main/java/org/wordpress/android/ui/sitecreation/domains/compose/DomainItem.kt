@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -43,8 +43,8 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.Sale
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.Unavailable
 
-private val HighlightBgColor @Composable get() = MaterialTheme.colors.primary.copy(0.1f)
-private val SecondaryTextColor @Composable get() = MaterialTheme.colors.onSurface.copy(0.46f)
+private val HighlightBgColor @Composable get() = colors.primary.copy(0.1f)
+private val SecondaryTextColor @Composable get() = colors.onSurface.copy(0.46f)
 private val SecondaryFontSize = 13.sp
 private val PrimaryFontSize = 17.sp
 private val StartPadding = 40.dp
@@ -72,7 +72,7 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = stringResource(string.selected),
-                        tint = MaterialTheme.colors.primary,
+                        tint = colors.primary,
                         modifier = Modifier.size(16.dp),
                     )
                 } else {
@@ -84,8 +84,7 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp), modifier = Modifier.weight(1f)) {
                 Text(
                     text = domainName,
-                    color = MaterialTheme.colors.onSurface
-                        .takeIf { tags.none { it is Unavailable } } ?: SecondaryTextColor,
+                    color = colors.onSurface.takeIf { tags.none { it is Unavailable } } ?: SecondaryTextColor,
                     fontSize = PrimaryFontSize,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
