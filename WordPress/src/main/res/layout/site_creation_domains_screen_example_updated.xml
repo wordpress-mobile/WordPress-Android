@@ -57,6 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_medium"
+            android:textAlignment="viewStart"
             android:text="@string/site_creation_search_domain_example_body" />
     </LinearLayout>
 </FrameLayout>
