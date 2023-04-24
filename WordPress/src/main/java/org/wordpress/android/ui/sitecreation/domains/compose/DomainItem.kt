@@ -158,7 +158,7 @@ private fun SalePrince(title: Pair<String, String>, subtitle: String, modifier: 
     }
 }
 
-//@Preview
+@Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun DomainItemPreview() {
@@ -170,7 +170,7 @@ private fun DomainItemPreview() {
             },
             cost = when {
                 it % 3 == 0 -> Cost.Paid("$${it * 5}")
-                it == 5 -> Cost.OnSale("$${it * 2}", "$${it * 3}")
+                it == 1 -> Cost.OnSale("$${it * 2}", "$${it * 3}")
                 else -> Cost.Free
             },
             tags = listOfNotNull(
