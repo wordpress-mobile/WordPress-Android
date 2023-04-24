@@ -178,7 +178,6 @@ private fun DomainItemPreview() {
                     0 -> Unavailable
                     1 -> Recommended
                     2 -> BestAlternative
-                    5 -> Sale
                     else -> null
                 },
                 if (it in 1..2) Sale else null,
