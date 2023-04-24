@@ -64,10 +64,10 @@ class SitePreviewViewModel @Inject constructor(
     private var webviewFullyLoadedTracked = false
 
     private var siteDesign: String? = null
-    private var urlWithoutScheme: String? = null
     private var isFree: Boolean = true
 
     private lateinit var result: Created
+    private lateinit var domainName: String
 
     private val _uiState: MutableLiveData<SitePreviewUiState> = MutableLiveData()
     val uiState: LiveData<SitePreviewUiState> = _uiState
@@ -83,8 +83,8 @@ class SitePreviewViewModel @Inject constructor(
         require(siteCreationState.result is Created)
         siteDesign = siteCreationState.siteDesign
         result = siteCreationState.result
-        urlWithoutScheme = result.site.url
         isFree = requireNotNull(siteCreationState.domain).isFree
+        domainName = requireNotNull(siteCreationState.domain).domainName
         startPreLoadingWebView()
         if (result is CreatedButNotFetched) {
             launch {
@@ -115,7 +115,7 @@ class SitePreviewViewModel @Inject constructor(
             }
         }
         // Load the newly created site in the webview
-        urlWithoutScheme?.let { url ->
+        result.site.url?.let { url ->
             val urlToLoad = urlUtils.addUrlSchemeIfNeeded(
                 url = url,
                 addHttps = isWordPressComSubDomain(url)
@@ -160,7 +160,7 @@ class SitePreviewViewModel @Inject constructor(
     }
 
     private fun createSitePreviewData(): UrlData {
-        val url = urlWithoutScheme ?: ""
+        val url = domainName
         val subDomain = urlUtils.extractSubDomain(url)
         val fullUrl = urlUtils.addUrlSchemeIfNeeded(url, true)
         val subDomainIndices = 0 to subDomain.length
