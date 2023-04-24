@@ -1191,29 +1191,6 @@
         <item name="android:focusable">true</item>
     </style>
 
-    <style name="SiteCreationHeaderBaseTextStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-    </style>
-
-    <style name="SiteCreationHeaderSubtitle" parent="SiteCreationHeaderBaseTextStyle">
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-    </style>
-
-    <style name="SiteCreationPreviewHeaderTitle" parent="SiteCreationHeaderBaseTextStyle">
-        <item name="android:layout_marginBottom">@dimen/margin_small</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
-        <item name="android:text">@string/new_site_creation_preview_title</item>
-    </style>
-
-    <style name="SiteCreationPreviewHeaderSubtitle" parent="SiteCreationHeaderSubtitle">
-        <item name="android:text">@string/new_site_creation_preview_subtitle</item>
-    </style>
-
     <style name="SitePreviewSkeletonView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
