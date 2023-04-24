@@ -106,7 +106,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         return view
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityCreated(bundle: Bundle?) {
         super.onActivityCreated(bundle)
         val listView = listView
@@ -455,6 +455,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             return pingbackUrl
         }
 
+        @Suppress("OVERRIDE_DEPRECATION")
         override fun doInBackground(vararg params: Void): List<NoteBlock>? {
             if (notification == null) {
                 return null
@@ -519,6 +520,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             )
         }
 
+        @Suppress("OVERRIDE_DEPRECATION")
         override fun onPostExecute(noteList: List<NoteBlock>?) {
             if (!isAdded || noteList == null) {
                 return

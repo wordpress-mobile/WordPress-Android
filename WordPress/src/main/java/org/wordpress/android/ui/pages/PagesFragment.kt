@@ -558,6 +558,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         )
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_search, menu)

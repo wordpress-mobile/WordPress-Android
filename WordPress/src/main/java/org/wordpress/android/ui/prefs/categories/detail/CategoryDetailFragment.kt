@@ -173,17 +173,20 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         categoryAdapter.replaceItems(categoryLevels)
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.tag_detail, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         menu.findItem(R.id.menu_trash).isVisible = isInEditMode
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_trash) {
             confirmDeleteCategory()
