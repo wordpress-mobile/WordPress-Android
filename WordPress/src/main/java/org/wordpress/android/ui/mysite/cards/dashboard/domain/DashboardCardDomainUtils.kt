@@ -40,6 +40,7 @@ class DashboardCardDomainUtils @Inject constructor(
                 !isDashboardCardDomainHiddenByUser(siteModel.siteId) &&
                 (siteModel.isWPCom || siteModel.isWPComAtomic) &&
                 siteModel.isAdmin &&
+                !siteModel.isWpForTeamsSite &&
                 !hasSiteCustomDomains &&
                 !isDomainCreditAvailable
     }
