@@ -9,7 +9,6 @@ Language: el_GR
     <string name="site_creation_domain_tag_sale">Προσφορά</string>
     <string name="site_creation_domain_tag_recommended">Προτεινόμενο</string>
     <string name="site_creation_domain_tag_best_alternative">Καλύτερη Εναλλακτική</string>
-    <string name="site_creation_domain_cost">%s/χρ</string>
     <string name="me_btn_help">Βοήθεια</string>
     <string name="help_buttons_screen_title">Βοήθεια</string>
     <string name="free">Δωρεάν</string>

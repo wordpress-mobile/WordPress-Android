@@ -44,7 +44,6 @@ Language: nl
     <string name="site_creation_domain_tag_sale">Aanbieding!</string>
     <string name="site_creation_domain_tag_recommended">Aanbevolen</string>
     <string name="site_creation_domain_tag_best_alternative">Beste alternatief</string>
-    <string name="site_creation_domain_cost">%s/jr</string>
     <string name="me_btn_help">Hulp</string>
     <string name="support_faq_caption">Bekijk onze pagina met veelgestelde vragen om mogelijke antwoorden te vinden op jouw vragen.</string>
     <string name="support_faq_title">Bedankt voor het overschakelen naar de Jetpack-app!</string>

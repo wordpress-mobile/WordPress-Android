@@ -77,7 +77,6 @@ Language: tr
     <string name="site_creation_domain_tag_sale">İndirim</string>
     <string name="site_creation_domain_tag_recommended">Önerilen</string>
     <string name="site_creation_domain_tag_best_alternative">En İyi Alternatif</string>
-    <string name="site_creation_domain_cost">%s/y</string>
     <string name="me_btn_help">Yardım</string>
     <string name="support_faq_caption">Sık sorulan soruların yanıtları için SSS bölümümüze bakın.</string>
     <string name="support_faq_title">Jetpack uygulamasına geçtiğiniz için teşekkür ederiz!</string>

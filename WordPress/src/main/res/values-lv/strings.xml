@@ -45,7 +45,6 @@ Language: lv
     <string name="site_creation_domain_tag_sale">Izpārdošana</string>
     <string name="site_creation_domain_tag_recommended">Ieteicams</string>
     <string name="site_creation_domain_tag_best_alternative">Labākā alternatīva</string>
-    <string name="site_creation_domain_cost">%s/gadā</string>
     <string name="me_btn_help">Palīdzība</string>
     <string name="support_faq_caption">Atbildes uz bieži uzdotajiem jautājumiem skatiet mūsu BUJ.</string>
     <string name="support_faq_title">Paldies, ka pārslēdzāties uz Jetpack lietotni!</string>
