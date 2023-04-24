@@ -5,7 +5,8 @@
     android:id="@+id/my_site_card_footer_link"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding = "@dimen/my_site_card_footer_link_padding"
+    android:paddingVertical = "@dimen/my_site_card_footer_link_padding_top"
+    android:paddingHorizontal="@dimen/my_site_card_footer_link_padding"
     android:minHeight="@dimen/my_site_dashboard_card_page_height">
 
     <com.google.android.material.textview.MaterialTextView
@@ -13,24 +14,25 @@
         style="@style/MySiteCardPagesCardFooter"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:text="@string/dashboard_pages_card_create_another_page_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/link_icon"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        android:text="@string/dashboard_pages_card_create_another_page_button" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/link_description"
         style="@style/MySiteCardPagesCardFooterDescription"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:textAlignment="viewStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/link_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/link_label"
+        app:layout_constraintVertical_bias="0.0"
         tools:text="@string/dashboard_pages_card_create_another_page_description" />
 
     <ImageView
