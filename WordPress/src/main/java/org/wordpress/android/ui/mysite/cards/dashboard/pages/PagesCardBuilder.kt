@@ -82,7 +82,7 @@ class PagesCardBuilder @Inject constructor(
 
     private fun createNewPageCardWithAddPageMessage(params: PagesCardBuilderParams): CreatNewPageItem {
         return CreatNewPageItem(
-            label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
+            label = UiString.UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
             description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
             imageRes = R.drawable.illustration_pages_card_create_page,
             onClick = params.onFooterLinkClick
@@ -100,7 +100,7 @@ class PagesCardBuilder @Inject constructor(
 
     private fun createNewPageCardWithOnlyButton(params: PagesCardBuilderParams): CreatNewPageItem {
         return CreatNewPageItem(
-            label = UiString.UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
+            label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
             onClick = params.onFooterLinkClick
         )
     }

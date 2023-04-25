@@ -1,17 +1,21 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.pages
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams.PagesItemClickParams
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.config.DashboardCardPagesConfig
+import kotlin.test.assertEquals
 
 const val PAGE_ID = 1
 const val PAGE_TITLE = "title"
@@ -66,7 +70,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given there is no page, when card is built, then no pages item is present`(){
+    fun `given there is no page, when card is built, then no pages item is present`() {
         whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
             pageCard = null,
@@ -78,4 +82,26 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
         assert(result.pages.isEmpty())
     }
+
+    /* CREATE NEW PAGE CARD CASES */
+    @Test
+    fun `given there is no page, when card is built, then create page card has image`() {
+        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
+        val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
+            pageCard = null,
+            onFooterLinkClick = onPagesCardFooterClick,
+            onPagesItemClick = onPagesItemClick
+        )
+
+        val result = builder.build(params) as PagesCardWithData
+
+        assertEquals(result.footerLink,createPageCardWhenNoPagesIsPresent)
+    }
+
+    private val createPageCardWhenNoPagesIsPresent = PagesCardWithData.CreatNewPageItem(
+        label = UiString.UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
+        description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
+        imageRes = R.drawable.illustration_pages_card_create_page,
+        onClick = onPagesCardFooterClick
+    )
 }
