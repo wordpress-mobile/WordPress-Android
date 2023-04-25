@@ -8,6 +8,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams.PagesItemClickParams
 import org.wordpress.android.util.config.DashboardCardPagesConfig
@@ -62,5 +63,19 @@ class PagesCardBuilderTest : BaseUnitTest() {
         val result = builder.build(params)
 
         assert(result == null)
+    }
+
+    @Test
+    fun `given there is no page, when card is built, then no pages item is present`(){
+        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
+        val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
+            pageCard = null,
+            onFooterLinkClick = onPagesCardFooterClick,
+            onPagesItemClick = onPagesItemClick
+        )
+
+        val result = builder.build(params) as PagesCardWithData
+
+        assert(result.pages.isEmpty())
     }
 }
