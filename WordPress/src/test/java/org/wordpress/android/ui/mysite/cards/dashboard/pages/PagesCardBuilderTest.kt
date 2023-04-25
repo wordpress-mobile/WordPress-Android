@@ -53,7 +53,6 @@ private val PAGES_MODEL_3 = CardModel.PagesCardModel(
 
 @ExperimentalCoroutinesApi
 class PagesCardBuilderTest : BaseUnitTest() {
-
     @Mock
     private lateinit var dashboardCardPagesConfig: DashboardCardPagesConfig
 
@@ -62,12 +61,10 @@ class PagesCardBuilderTest : BaseUnitTest() {
     private val onPagesCardFooterClick: () -> Unit = { }
     private val onPagesItemClick: (params: PagesItemClickParams) -> Unit = {}
 
-
     @Before
     fun build() {
         builder = PagesCardBuilder(dashboardCardPagesConfig)
     }
-
 
     @Test
     fun `given config is false, when card is built, then return null`() {

@@ -52,7 +52,7 @@ class PagesCardBuilder @Inject constructor(
     @Suppress("UNUSED_PARAMETER")
     private fun getStatusIcon(status: String): Int {
         // implement the logic to get the correct icon
-        return 0
+        return R.drawable.ic_pages_white_24dp
     }
 
     @Suppress("UNUSED_PARAMETER")
