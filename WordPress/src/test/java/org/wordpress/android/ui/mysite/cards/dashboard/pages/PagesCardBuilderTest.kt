@@ -103,7 +103,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
         val result = builder.build(params) as PagesCardWithData
 
-        assertEquals(result.footerLink,createPageCardWhenNoPagesPresent)
+        assertEquals(expected = createPageCardWhenNoPagesPresent, actual = result.footerLink)
     }
 
     @Test
