@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
@@ -244,6 +245,19 @@ public class ReaderUtils {
             return StringUtils.stringToLong(strBlogId);
         } else {
             return 0;
+        }
+    }
+
+    public static boolean isTagUrl(String url) {
+        return (url != null && url.matches("^https?://wordpress\\.com/tag/[^/]+$"));
+    }
+
+    @Nullable
+    public static String getTagFromTagUrl(String url) {
+        if (isTagUrl(url)) {
+            return url.substring(url.lastIndexOf("/") + 1);
+        } else {
+            return null;
         }
     }
 

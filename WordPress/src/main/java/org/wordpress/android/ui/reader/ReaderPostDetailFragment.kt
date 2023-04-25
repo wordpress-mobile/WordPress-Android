@@ -1625,6 +1625,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return true
         }
 
+        // if this is a tag URL (some link pointing to a tag or the daily prompt block, for instance), then open it in
+        // the reader directly
+        if (ReaderUtils.isTagUrl(url)) {
+            ReaderUtils.getTagFromTagUrl(url)?.let {
+                viewModel.onTagItemClicked(it)
+                return true
+            }
+        }
+
         if (isFile(url)) {
             onFileDownloadClick(url)
         } else {
