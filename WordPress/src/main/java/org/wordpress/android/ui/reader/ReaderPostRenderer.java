@@ -540,12 +540,13 @@ public class ReaderPostRenderer {
     private void appendMappedColors(StringBuilder sb) {
         sb.append(" :root { ")
           .append("--color-text: ").append(mResourceVars.mTextColor).append("; ")
-          .append("--color-neutral-70: ").append(mResourceVars.mTextColor).append("; ")
           .append("--color-neutral-0: ").append(mResourceVars.mGreyMediumDarkStr).append("; ")
-          .append("--color-neutral-50: ").append(mResourceVars.mGreyLightStr).append("; ")
-          .append("--color-neutral-20: ").append(mResourceVars.mGreyExtraLightStr).append("; ")
-          .append("--main-link-color: ").append(mResourceVars.mLinkColorStr).append("; ")
+          .append("--color-neutral-5: ").append(mResourceVars.mGreyExtraLightStr).append("; ")
           .append("--color-neutral-10: ").append(mResourceVars.mGreyDisabledStr).append("; ")
+          .append("--color-neutral-20: ").append(mResourceVars.mGreyExtraLightStr).append("; ")
+          .append("--color-neutral-50: ").append(mResourceVars.mGreyLightStr).append("; ")
+          .append("--color-neutral-70: ").append(mResourceVars.mTextColor).append("; ")
+          .append("--main-link-color: ").append(mResourceVars.mLinkColorStr).append("; ")
           .append("} ");
     }
 
