@@ -84,7 +84,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     /* CREATE NEW PAGE CARD CASES */
     @Test
-    fun `given there is no page, when card is built, then create page card has image`() {
+    fun `given there is no page, when card is built, then create new page card is correct`() {
         whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
             pageCard = null,
