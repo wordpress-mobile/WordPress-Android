@@ -88,7 +88,6 @@ Language: es
     <string name="free">Gratis</string>
     <string name="help_buttons_screen_title">Ayuda</string>
     <string name="blaze_activity_title">Blaze</string>
-    <string name="site_creation_domain_cost">%s al año</string>
     <string name="support_faq_caption">Con nuestras preguntas frecuentes podrás resolver algunas de tus dudas.</string>
     <string name="gutenberg_native_blocks_menu">Menú de bloques</string>
     <string name="promote_blaze_card_menu_hide_this">Ocultar esto</string>
