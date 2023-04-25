@@ -55,7 +55,7 @@ class PagesCardBuilder @Inject constructor(
         return CreatNewPageItem(
             label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
             description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
-            imageRes = R.drawable.img_illustration_create_pages,
+            imageRes = R.drawable.illustration_pages_card_create_page,
             onClick = params.onFooterLinkClick
         )
     }
@@ -64,6 +64,7 @@ class PagesCardBuilder @Inject constructor(
         return CreatNewPageItem(
             label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
             description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
+            imageRes = R.drawable.illustration_pages_card_create_page,
             onClick = params.onFooterLinkClick
         )
     }

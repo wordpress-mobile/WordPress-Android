@@ -6,14 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingVertical = "@dimen/my_site_card_footer_link_padding_top"
-    android:paddingHorizontal="@dimen/my_site_card_footer_link_padding"
-    android:minHeight="@dimen/my_site_dashboard_card_page_height">
+    android:paddingHorizontal="@dimen/my_site_card_footer_link_padding">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/link_label"
         style="@style/MySiteCardPagesCardFooter"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/my_site_card_footer_link_padding"
         android:text="@string/dashboard_pages_card_create_another_page_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/link_icon"
@@ -26,7 +26,9 @@
         android:id="@+id/link_description"
         style="@style/MySiteCardPagesCardFooterDescription"
         android:layout_width="0dp"
+        android:visibility="visible"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/my_site_card_footer_link_padding"
         android:textAlignment="viewStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/link_icon"
@@ -37,11 +39,14 @@
 
     <ImageView
         android:id="@+id/link_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/my_site_dashboard_card_page_create_page_illustration_width"
+        android:layout_height="0dp"
+        android:visibility="visible"
         android:contentDescription="@string/dashboard_pages_card_create_another_page_description"
-        android:src="@drawable/img_illustration_create_pages"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        tools:src="@drawable/illustration_pages_card_create_page"
+        app:layout_constraintBottom_toBottomOf="@+id/link_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

@@ -751,5 +751,5 @@
 
     <!-- Dashboard card pages -->
     <dimen name="my_site_dashboard_card_page_height">80dp</dimen>
-
+    <dimen name="my_site_dashboard_card_page_create_page_illustration_width">120dp</dimen>
 </resources>
