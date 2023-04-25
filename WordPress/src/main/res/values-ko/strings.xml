@@ -208,9 +208,6 @@ Language: ko_KR
     <string name="preference_open_links_in_jetpack">젯팩에서 링크 열기</string>
     <string name="jp_migration_need_help_button">도움말이 필요하신가요?</string>
     <string name="jp_migration_got_it_button">알겠습니다.</string>
-    <string name="jp_migration_delete_message">데이터가 충돌하지 않도록 &lt;b&gt;워드프레스 앱&lt;/b&gt;을 삭제하세요.</string>
-    <string name="jp_migration_delete_subtitle">아직 워드프레스 앱이 설치되어 있는 것 같습니다. 데이터가 충돌하지 않도록 워드프레스 앱을 삭제하는 것이 좋습니다.</string>
-    <string name="jp_migration_delete_title">더는 워드프레스 앱 필요 없음</string>
     <string name="jp_migration_network_error_message">네트워크 연결 없이 데이터와 설정을 이전할 수 없습니다.</string>
     <string name="jp_migration_network_error_subtitle">네트워크 연결이 작동하도록 점검하고 다시 시도하세요.</string>
     <string name="jp_migration_network_error_title">인터넷에 연결할 수 없습니다.</string>
@@ -220,13 +217,11 @@ Language: ko_KR
     <string name="jp_migration_try_again_button">다시 시도</string>
     <string name="jp_migration_finish_button">마침</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">워드프레스 앱 아이콘 제거</string>
-    <string name="jp_migration_done_delete_wp_message">데이터가 충돌하지 않도록 &lt;b&gt;워드프레스 앱&lt;/b&gt;을 삭제하세요.</string>
     <string name="jp_migration_done_subtitle">모든 데이터와 설정을 이전했습니다. 모든 것이 그대로 다 남아 있습니다.</string>
     <string name="jp_migration_done_title">젯팩으로 전환해 주셔서 감사합니다!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">워드프레스 앱의 알림을 해제하겠습니다.</string>
     <string name="jp_migration_notifications_subtitle">동일한 알림을 모두 받겠지만, 이제는 젯팩 앱에서 알림을 보냅니다.</string>
     <string name="jp_migration_notifications_title">이제 젯팩에서 알림 전송</string>
-    <string name="jp_migration_success_card_message">워드프레스 앱 삭제 요망</string>
     <string name="wordpress_help_center_button">워드프레스 도움말 센터</string>
     <string name="support_title">지원</string>
     <string name="notification_disable_broadcast_permission_desc">앱에 워드프레스 알림 비활성화를 허용하세요.</string>

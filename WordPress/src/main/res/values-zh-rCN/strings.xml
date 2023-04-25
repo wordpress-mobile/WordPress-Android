@@ -205,9 +205,6 @@ Language: zh_CN
     <string name="preference_open_links_in_jetpack">在 Jetpack 中打开链接</string>
     <string name="jp_migration_need_help_button">需要帮助？</string>
     <string name="jp_migration_got_it_button">知道了</string>
-    <string name="jp_migration_delete_message">请&lt;b&gt;删除 WordPress 应用&lt;/b&gt;以避免发生数据冲突。</string>
-    <string name="jp_migration_delete_subtitle">似乎您仍然安装了 WordPress 应用。 我们建议您删除 WordPress 应用以避免发生数据冲突。</string>
-    <string name="jp_migration_delete_title">您不再需要 WordPress 应用</string>
     <string name="jp_migration_network_error_message">如果没有网络连接，我们将无法传输您的数据和设置。</string>
     <string name="jp_migration_network_error_subtitle">请检查以确保您的网络连接正常，然后重试。</string>
     <string name="jp_migration_network_error_title">无法连接到互联网。</string>
@@ -217,13 +214,11 @@ Language: zh_CN
     <string name="jp_migration_try_again_button">重试</string>
     <string name="jp_migration_finish_button">完成</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">删除 WordPress 应用图标</string>
-    <string name="jp_migration_done_delete_wp_message">请&lt;b&gt;删除 WordPress 应用&lt;/b&gt;以避免发生数据冲突。</string>
     <string name="jp_migration_done_subtitle">我们已传输您的所有数据和设置。 一切都完好如初。</string>
     <string name="jp_migration_done_title">感谢您切换至 Jetpack！</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">我们将关闭 WordPress 应用中的通知功能。</string>
     <string name="jp_migration_notifications_subtitle">您将收到所有相同的通知，但现在这些通知来自 Jetpack 应用。</string>
     <string name="jp_migration_notifications_title">现在通知来自 Jetpack 应用</string>
-    <string name="jp_migration_success_card_message">请删除 WordPress 应用</string>
     <string name="wordpress_help_center_button">WordPress 帮助中心</string>
     <string name="support_title">支持</string>
     <string name="notification_disable_broadcast_permission_desc">允许此应用禁用 WordPress 通知功能。</string>
