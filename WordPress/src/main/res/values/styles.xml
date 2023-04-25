@@ -1191,29 +1191,6 @@
         <item name="android:focusable">true</item>
     </style>
 
-    <style name="SiteCreationHeaderBaseTextStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-    </style>
-
-    <style name="SiteCreationHeaderSubtitle" parent="SiteCreationHeaderBaseTextStyle">
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-    </style>
-
-    <style name="SiteCreationPreviewHeaderTitle" parent="SiteCreationHeaderBaseTextStyle">
-        <item name="android:layout_marginBottom">@dimen/margin_small</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
-        <item name="android:text">@string/new_site_creation_preview_title</item>
-    </style>
-
-    <style name="SiteCreationPreviewHeaderSubtitle" parent="SiteCreationHeaderSubtitle">
-        <item name="android:text">@string/new_site_creation_preview_subtitle</item>
-    </style>
-
     <style name="SitePreviewSkeletonView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
@@ -1553,14 +1530,18 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="SiteCreationHeaderV2Title" parent="SiteCreationHeaderV2Text">
+    <style name="SiteCreationHeaderV2Title.Base" parent="SiteCreationHeaderV2Text">
         <item name="android:paddingTop">@dimen/mlp_titles_top_margin</item>
         <item name="android:paddingBottom">@dimen/margin_small_medium</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">3</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:lineSpacingExtra">-4sp</item>
         <item name="fontFamily">serif</item>
     </style>
+
+    <style name="SiteCreationHeaderV2Title" parent="SiteCreationHeaderV2Title.Base" />
 
     <style name="SiteCreationHeaderV2Subtitle" parent="SiteCreationHeaderV2Text">
         <item name="android:paddingTop">@dimen/margin_small</item>
@@ -1568,6 +1549,8 @@
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
         <item name="android:maxLines">5</item>
         <item name="android:alpha">0.6</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:lineSpacingExtra">5sp</item>
         <item name="fontFamily">sans-serif</item>
     </style>
 
