@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation.progress
+﻿package org.wordpress.android.ui.sitecreation.progress
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -180,7 +180,7 @@ class SiteCreationProgressViewModel @Inject constructor(
         require(payload is Pair<*, *>) { "Expected Pair in Payload, got: $payload" }
         val (blogId, blogUrl) = payload
         require(blogId is Long) { "Expected the 1st element in the Payload Pair to be a Long, got: $blogId" }
-        require(blogUrl is String)  { "Expected the 2nd element in the Payload Pair to be a Long, got: $blogUrl" }
+        require(blogUrl is String) { "Expected the 2nd element in the Payload Pair to be a Long, got: $blogUrl" }
         return SiteModel().apply { siteId = blogId; url = blogUrl }
     }
 
