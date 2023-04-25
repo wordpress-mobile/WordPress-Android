@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.pages
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -95,10 +94,10 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
         val result = builder.build(params) as PagesCardWithData
 
-        assertEquals(result.footerLink,createPageCardWhenNoPagesIsPresent)
+        assertEquals(result.footerLink,createPageCardWhenNoPagesPresent)
     }
 
-    private val createPageCardWhenNoPagesIsPresent = PagesCardWithData.CreatNewPageItem(
+    private val createPageCardWhenNoPagesPresent = PagesCardWithData.CreatNewPageItem(
         label = UiString.UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
         description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
         imageRes = R.drawable.illustration_pages_card_create_page,
