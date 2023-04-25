@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.blaze.ui.blazeoverlay
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -99,6 +100,7 @@ class BlazeOverlayFragment : Fragment() {
     }
 
     @Composable
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     fun BlazeOverlayScreen(
         content: BlazeUiState.PromoteScreen,
         isDarkTheme: Boolean = isSystemInDarkTheme()
