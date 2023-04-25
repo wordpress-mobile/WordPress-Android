@@ -58,6 +58,7 @@ import org.wordpress.android.fluxc.store.AccountStore.SubscriptionType;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateSubscriptionPayload.SubscriptionFrequency;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
@@ -76,7 +77,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -545,7 +545,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
     // Updates the UI for preference screens based on if notifications are enabled or not
     private void updateUIForNotificationsEnabledState() {
-        if (mTypePreferenceCategories == null || mTypePreferenceCategories.size() == 0) {
+        if (mTypePreferenceCategories.size() == 0) {
             return;
         }
 
