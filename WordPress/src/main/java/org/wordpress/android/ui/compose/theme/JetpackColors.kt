@@ -9,9 +9,9 @@ import androidx.compose.runtime.Composable
 @SuppressLint("ConflictingOnColor")
 val JpLightColorPalette = lightColors(
     primary = AppColor.JetpackGreen50,
-    primaryVariant = AppColor.JetpackGreen40,
+    primaryVariant = AppColor.JetpackGreen30,
     secondary = AppColor.JetpackGreen50,
-    secondaryVariant = AppColor.JetpackGreen40,
+    secondaryVariant = AppColor.JetpackGreen30,
     background = AppColor.White,
     surface = AppColor.White,
     error = AppColor.Red50,
@@ -24,9 +24,9 @@ val JpLightColorPalette = lightColors(
 
 @SuppressLint("ConflictingOnColor")
 val JpDarkColorPalette = darkColors(
-    primary = AppColor.JetpackGreen40,
+    primary = AppColor.JetpackGreen30,
     primaryVariant = AppColor.JetpackGreen50,
-    secondary = AppColor.JetpackGreen40,
+    secondary = AppColor.JetpackGreen30,
     secondaryVariant = AppColor.JetpackGreen50,
     background = AppColor.DarkGray,
     surface = AppColor.DarkGray,

@@ -77,7 +77,6 @@ Language: it
     <string name="site_creation_domain_tag_sale">Offerta</string>
     <string name="site_creation_domain_tag_recommended">Consigliato</string>
     <string name="site_creation_domain_tag_best_alternative">Alternativa migliore</string>
-    <string name="site_creation_domain_cost">%s/anno</string>
     <string name="me_btn_help">Aiuto</string>
     <string name="support_faq_caption">Consulta le domande frequenti per ricevere risposte ai dubbi più comuni che potresti avere.</string>
     <string name="support_faq_title">Grazie per essere passato all\'app di Jetpack.</string>

@@ -6,6 +6,9 @@
     <issue id="PluralsCandidate" severity="ignore" /> <!-- GlotPress doesn't support plurals -->
     <!-- TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/18226 -->
     <issue id="LocaleFolder">
+        <!-- MAIN -->
+        <ignore path="**/src/main/res/values-he" />
+        <ignore path="**/src/main/res/values-id" />
         <!-- JETPACK -->
         <ignore path="**/src/jetpack/res/values-he" />
         <ignore path="**/src/jetpack/res/values-id" />

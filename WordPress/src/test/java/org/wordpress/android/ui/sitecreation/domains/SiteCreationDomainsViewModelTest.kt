@@ -36,7 +36,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old.DomainUiState.UnavailableDomain
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -342,7 +342,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
         val suggestions = List(size) {
             DomainSuggestionResponse().apply {
-                domain_name = "$query-$it.com"
+                domain_name = if (it == 0) query else "$query-$it.com"
                 is_free = it % 2 == 0
                 cost = if (is_free) "Free" else "$$it.00"
                 product_id = it
@@ -445,7 +445,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify sale domain results from api have variant 'Sale'`() = testWithSuccessResultNewUi { (query) ->
+    fun `verify sale domain results from api have tag 'Sale'`() = testWithSuccessResultNewUi { (query) ->
         whenever(productsStore.fetchProducts(any())).thenReturn(OnProductsFetched(SALE_PRODUCTS))
 
         viewModel.start()
@@ -453,7 +453,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         viewModel.onQueryChanged(query)
         advanceUntilIdle()
 
-        assertThat(uiDomains).filteredOn { it.variant is Variant.Sale }.hasSameSizeAs(SALE_PRODUCTS)
+        assertThat(uiDomains.flatMap { it.tags }).filteredOn { it is Tag.Sale }.hasSameSizeAs(SALE_PRODUCTS)
     }
 
     @Test
@@ -463,7 +463,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         viewModel.onQueryChanged(query)
         advanceUntilIdle()
 
-        assertThat(uiDomains.map { it.variant }).containsOnlyOnce(Variant.Recommended)
+        assertThat(uiDomains.flatMap { it.tags }).filteredOn { it is Tag.Recommended }.singleElement()
     }
 
     @Test
@@ -473,7 +473,18 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         viewModel.onQueryChanged(query)
         advanceUntilIdle()
 
-        assertThat(uiDomains.map { it.variant }).containsOnlyOnce(Variant.BestAlternative)
+        assertThat(uiDomains.flatMap { it.tags }).filteredOn { it is Tag.BestAlternative }.singleElement()
+    }
+
+    @Test
+    fun `verify selected domain is propagated to UI on click`() = testWithSuccessResultNewUi { (query) ->
+        viewModel.start()
+
+        viewModel.onQueryChanged(query)
+        advanceUntilIdle()
+        viewModel.onDomainSelected(mockDomain(query))
+
+        assertThat(uiDomains.map { it.isSelected }).containsOnlyOnce(true)
     }
 
     // endregion

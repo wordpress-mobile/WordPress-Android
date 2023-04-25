@@ -25,8 +25,9 @@ class CardsTracker @Inject constructor(
         POST("post"),
         BLOGGING_PROMPT("blogging_prompt"),
         PROMOTE_WITH_BLAZE("promote_with_blaze"),
+        PAGES("pages"),
+        ACTIVITY("activity_log"),
         DASHBOARD_CARD_DOMAIN("dashboard_card_domain"),
-        PAGES("pages")
     }
 
     enum class QuickStartSubtype(val label: String) {
@@ -46,6 +47,10 @@ class CardsTracker @Inject constructor(
         CREATE_NEXT("create_next"),
         DRAFT("draft"),
         SCHEDULED("scheduled")
+    }
+
+    enum class ActivityLogSubtype(val label: String) {
+        ACTIVITY_LOG("activity_log"),
     }
 
     fun trackQuickStartCardItemClicked(quickStartTaskType: QuickStartTaskType) {
@@ -70,6 +75,14 @@ class CardsTracker @Inject constructor(
 
     fun trackPostItemClicked(postCardType: PostCardType) {
         trackCardItemClicked(Type.POST.label, postCardType.toSubtypeValue().label)
+    }
+
+    fun trackActivityCardItemClicked() {
+        trackCardItemClicked(Type.ACTIVITY.label, ActivityLogSubtype.ACTIVITY_LOG.label)
+    }
+
+    fun trackActivityCardFooterClicked() {
+        trackCardFooterLinkClicked(Type.ACTIVITY.label, ActivityLogSubtype.ACTIVITY_LOG.label)
     }
 
     private fun trackCardFooterLinkClicked(type: String, subtype: String) {
@@ -124,6 +137,7 @@ fun DashboardCardType.toTypeValue(): Type {
         DashboardCardType.DASHBOARD_DOMAIN_CARD -> Type.DASHBOARD_CARD_DOMAIN
         DashboardCardType.PAGES_CARD -> Type.PAGES
         DashboardCardType.PAGES_CARD_ERROR -> Type.ERROR
+        DashboardCardType.ACTIVITY_CARD -> Type.ACTIVITY
     }
 }
 

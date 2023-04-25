@@ -33,7 +33,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
@@ -44,7 +44,6 @@ import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_MOBIL
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -122,6 +121,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 result.isError -> {
                     AppLog.e(AppLog.T.DOMAIN_REGISTRATION, "Error while fetching domain products: ${result.error}")
                 }
+
                 else -> {
                     AppLog.d(AppLog.T.DOMAIN_REGISTRATION, result.products.toString())
                     products = result.products.orEmpty().associateBy { it.productId }
@@ -276,7 +276,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         return if (items.isEmpty()) {
             if (isNonEmptyUserQuery(query) && (state is Success || state is Ready)) {
                 DomainsUiContentState.Empty(emptyListMessage)
-            } else DomainsUiContentState.Initial
+            } else DomainsUiContentState.Initial(purchasingFeatureConfig.isEnabledOrManuallyOverridden())
         } else {
             DomainsUiContentState.VisibleItems(items)
         }
@@ -323,15 +323,19 @@ class SiteCreationDomainsViewModel @Inject constructor(
                         product.isOnSale() -> Cost.OnSale(product?.combinedSaleCostDisplay.orEmpty(), domain.cost)
                         else -> Cost.Paid(domain.cost)
                     },
+                    isSelected = domain.domainName == selectedDomain?.domainName,
                     onClick = { onDomainSelected(domain) },
-                    variant = when {
-                        index == 0 -> Variant.Recommended
-                        index == 1 -> Variant.BestAlternative
-                        product.isOnSale() -> Variant.Sale
-                        else -> null
-                    },
+                    tags = listOfNotNull(
+                        when (index) {
+                            0 -> Tag.Recommended
+                            1 -> Tag.BestAlternative
+                            else -> null
+                        },
+                        if (product.isOnSale()) Tag.Sale else null,
+                    ),
                 )
             }
+
             else -> {
                 Old.DomainUiState.AvailableDomain(
                     domainSanitizer.getName(domain.domainName),
@@ -361,22 +365,31 @@ class SiteCreationDomainsViewModel @Inject constructor(
         } else null
     }
 
-    private fun createHeaderUiState(
-        isVisible: Boolean
-    ): SiteCreationHeaderUiState? {
-        return if (isVisible) SiteCreationHeaderUiState(
-            UiStringRes(R.string.new_site_creation_domain_header_title),
-            UiStringRes(R.string.new_site_creation_domain_header_subtitle)
-        ) else null
-    }
+    private fun createHeaderUiState(isVisible: Boolean) = if (!isVisible) null else
+        purchasingFeatureConfig.isEnabledOrManuallyOverridden().let { isPurchasingEnabled ->
+            SiteCreationHeaderUiState(
+                title = UiStringRes(R.string.new_site_creation_domain_header_title),
+                subtitle = UiStringRes(
+                    if (isPurchasingEnabled) R.string.site_creation_domain_header_subtitle
+                    else R.string.new_site_creation_domain_header_subtitle,
+                ),
+                isStartAligned = isPurchasingEnabled
+            )
+        }
 
-    private fun createSearchInputUiState(
+private fun createSearchInputUiState(
         showProgress: Boolean,
         showClearButton: Boolean,
         showDivider: Boolean,
     ): SiteCreationSearchInputUiState {
+        val hint = UiStringRes(
+            if (purchasingFeatureConfig.isEnabledOrManuallyOverridden())
+                R.string.site_creation_domain_search_input_hint
+            else
+                R.string.new_site_creation_search_domain_input_hint
+        )
         return SiteCreationSearchInputUiState(
-            hint = UiStringRes(R.string.new_site_creation_search_domain_input_hint),
+            hint = hint,
             showProgress = showProgress,
             showClearButton = showClearButton,
             showDivider = showDivider,
@@ -394,29 +407,33 @@ class SiteCreationDomainsViewModel @Inject constructor(
     data class DomainsUiState(
         val headerUiState: SiteCreationHeaderUiState?,
         val searchInputUiState: SiteCreationSearchInputUiState,
-        val contentState: DomainsUiContentState = DomainsUiContentState.Initial,
+        val contentState: DomainsUiContentState,
         val createSiteButtonState: CreateSiteButtonState?
     ) {
         sealed class DomainsUiContentState(
             val emptyViewVisibility: Boolean,
             val exampleViewVisibility: Boolean,
+            val updatedExampleViewVisibility: Boolean,
             val items: List<ListItemUiState>
         ) {
-            object Initial : DomainsUiContentState(
+            class Initial(isUpdatedExample: Boolean) : DomainsUiContentState(
                 emptyViewVisibility = false,
-                exampleViewVisibility = true,
+                exampleViewVisibility = !isUpdatedExample,
+                updatedExampleViewVisibility = isUpdatedExample,
                 items = emptyList()
             )
 
             class Empty(val message: UiString?) : DomainsUiContentState(
                 emptyViewVisibility = true,
                 exampleViewVisibility = false,
+                updatedExampleViewVisibility = false,
                 items = emptyList()
             )
 
             class VisibleItems(items: List<ListItemUiState>) : DomainsUiContentState(
                 emptyViewVisibility = false,
                 exampleViewVisibility = false,
+                updatedExampleViewVisibility = false,
                 items = items
             )
         }
@@ -468,32 +485,33 @@ class SiteCreationDomainsViewModel @Inject constructor(
             data class DomainUiState(
                 val domainName: String,
                 val cost: Cost,
+                val isSelected: Boolean = false,
                 val onClick: () -> Unit,
-                val variant: Variant? = null,
+                val tags: List<Tag> = emptyList(),
             ) : New(Type.DOMAIN_V2) {
-                sealed class Variant(
+                sealed class Tag(
                     @ColorRes val dotColor: Int,
                     @ColorRes val subtitleColor: Int? = null,
                     val subtitle: UiString,
                 ) {
                     constructor(@ColorRes color: Int, subtitle: UiString) : this(color, color, subtitle)
 
-                    object Unavailable : Variant(
+                    object Unavailable : Tag(
                         R.color.red_50,
                         UiStringRes(R.string.site_creation_domain_tag_unavailable),
                     )
 
-                    object Recommended : Variant(
+                    object Recommended : Tag(
                         R.color.jetpack_green_50,
                         UiStringRes(R.string.site_creation_domain_tag_recommended),
                     )
 
-                    object BestAlternative : Variant(
+                    object BestAlternative : Tag(
                         R.color.purple_50,
                         UiStringRes(R.string.site_creation_domain_tag_best_alternative),
                     )
 
-                    object Sale : Variant(
+                    object Sale : Tag(
                         R.color.yellow_50,
                         UiStringRes(R.string.site_creation_domain_tag_sale)
                     )
@@ -502,17 +520,15 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 sealed class Cost(val title: UiString) {
                     object Free : Cost(UiStringRes(R.string.free))
 
-                    data class Paid(val cost: String) : Cost(
-                        UiStringResWithParams(R.string.site_creation_domain_cost, UiStringText(cost))
-                    )
+                    data class Paid(private val titleCost: String) : Cost(UiStringText(titleCost)) {
+                        val subtitle = UiStringRes(R.string.site_creation_domain_cost)
+                    }
 
-                    data class OnSale(val titleCost: String, val subtitleCost: String) : Cost(
-                        UiStringResWithParams(R.string.site_creation_domain_cost, UiStringText(titleCost))
+                    data class OnSale(private val titleCost: String, private val strikeoutTitleCost: String) : Cost(
+                        UiStringText(titleCost)
                     ) {
-                        val subtitle = UiStringResWithParams(
-                            R.string.site_creation_domain_cost,
-                            UiStringText(subtitleCost)
-                        )
+                        val strikeoutTitle = UiStringText(strikeoutTitleCost)
+                        val subtitle = UiStringRes(R.string.site_creation_domain_cost_sale)
                     }
                 }
             }

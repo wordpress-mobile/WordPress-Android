@@ -744,4 +744,9 @@
     <dimen name="jetpack_full_screen_overlay_new_users_content_text_size">15sp</dimen>
     <dimen name="menu_item_icon_size">24dp</dimen>
 
+    <!-- Activity Log Card -->
+    <dimen name="activity_card_icon_size">40dp</dimen>
+    <dimen name="activity_card_row_start_end_padding">16dp</dimen>
+    <dimen name="activity_card_row_top_bottom_padding">12dp</dimen>
+
 </resources>

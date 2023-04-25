@@ -45,7 +45,6 @@ Language: cs_CZ
     <string name="site_creation_domain_tag_sale">Prodej</string>
     <string name="site_creation_domain_tag_recommended">Doporučeno</string>
     <string name="site_creation_domain_tag_best_alternative">Nejlepší alternativa</string>
-    <string name="site_creation_domain_cost">%s/yr</string>
     <string name="me_btn_help">Nápověda</string>
     <string name="support_faq_caption">Odpovědi na běžné otázky, které můžete mít, najdete v našich FAQ.</string>
     <string name="support_faq_title">Děkujeme, že jste přešli na aplikaci Jetpack!</string>
