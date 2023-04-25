@@ -1609,38 +1609,33 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onUrlClick(url: String): Boolean {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_LINK_TAPPED)
-        // if this is a "wordpress://blogpreview?" link, show blog preview for the blog - this is
-        // used for Discover posts that highlight a blog
-        if (ReaderUtils.isBlogPreviewUrl(url)) {
-            val siteId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url)
-            if (siteId != 0L) {
-                ReaderActivityLauncher.showReaderBlogPreview(
-                    activity,
-                    siteId,
-                    viewModel.post?.isFollowedByCurrentUser,
-                    ReaderTracker.SOURCE_POST_DETAIL,
-                    readerTracker
-                )
-            }
-            return true
-        }
 
-        // if this is a tag URL (some link pointing to a tag or the daily prompt block, for instance), then open it in
-        // the reader directly
-        if (ReaderUtils.isTagUrl(url)) {
-            ReaderUtils.getTagFromTagUrl(url)?.let {
-                viewModel.onTagItemClicked(it)
-                return true
+        when {
+            ReaderUtils.isBlogPreviewUrl(url) -> onBlogPreviewUrlClick(url)
+            ReaderUtils.isTagUrl(url) -> viewModel.onTagItemClicked(ReaderUtils.getTagFromTagUrl(url))
+            isFile(url) -> onFileDownloadClick(url)
+            else -> {
+                val openUrlType = if (shouldOpenExternal(url)) OpenUrlType.EXTERNAL else OpenUrlType.INTERNAL
+                ReaderActivityLauncher.openUrl(activity, url, openUrlType)
             }
         }
 
-        if (isFile(url)) {
-            onFileDownloadClick(url)
-        } else {
-            val openUrlType = if (shouldOpenExternal(url)) OpenUrlType.EXTERNAL else OpenUrlType.INTERNAL
-            ReaderActivityLauncher.openUrl(activity, url, openUrlType)
-        }
         return true
+    }
+
+    // if this is a "wordpress://blogpreview?" link, show blog preview for the blog - this is
+    // used for Discover posts that highlight a blog
+    private fun onBlogPreviewUrlClick(url: String) {
+        val siteId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url)
+        if (siteId != 0L) {
+            ReaderActivityLauncher.showReaderBlogPreview(
+                activity,
+                siteId,
+                viewModel.post?.isFollowedByCurrentUser,
+                ReaderTracker.SOURCE_POST_DETAIL,
+                readerTracker
+            )
+        }
     }
 
     override fun onPageJumpClick(pageJump: String?): Boolean {

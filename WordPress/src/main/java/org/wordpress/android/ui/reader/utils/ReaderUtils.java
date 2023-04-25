@@ -252,12 +252,11 @@ public class ReaderUtils {
         return (url != null && url.matches("^https?://wordpress\\.com/tag/[^/]+$"));
     }
 
-    @Nullable
     public static String getTagFromTagUrl(String url) {
         if (isTagUrl(url)) {
             return url.substring(url.lastIndexOf("/") + 1);
         } else {
-            return null;
+            return "";
         }
     }
 
