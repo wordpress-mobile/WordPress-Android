@@ -45,7 +45,6 @@ Language: pt_BR
     <string name="site_creation_domain_tag_sale">Promoção</string>
     <string name="site_creation_domain_tag_recommended">Recomendado</string>
     <string name="site_creation_domain_tag_best_alternative">Melhor alternativa</string>
-    <string name="site_creation_domain_cost">%s/ano</string>
     <string name="me_btn_help">Ajuda</string>
     <string name="support_faq_caption">Nossas Perguntas Frequentes podem responder algumas de suas dúvidas.</string>
     <string name="support_faq_title">Agradecemos pela preferência pelo aplicativo Jetpack.</string>

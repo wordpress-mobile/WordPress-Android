@@ -77,7 +77,6 @@ Language: ko_KR
     <string name="site_creation_domain_tag_sale">세일</string>
     <string name="site_creation_domain_tag_recommended">권장</string>
     <string name="site_creation_domain_tag_best_alternative">최선의 대안</string>
-    <string name="site_creation_domain_cost">%s/년</string>
     <string name="me_btn_help">도움말</string>
     <string name="support_faq_caption">궁금할 수도 있는 일반적인 질문에 대한 답변은 FAQ를 참조하세요.</string>
     <string name="support_faq_title">젯팩 앱으로 전환해 주셔서 감사합니다!</string>

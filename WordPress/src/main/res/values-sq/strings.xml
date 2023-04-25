@@ -76,7 +76,6 @@ Language: sq_AL
     <string name="site_creation_domain_tag_sale">Ulje çmimesh</string>
     <string name="site_creation_domain_tag_recommended">E rekomanduar</string>
     <string name="site_creation_domain_tag_best_alternative">Alternativa Më e Mirë</string>
-    <string name="site_creation_domain_cost">%s/vit</string>
     <string name="me_btn_help">Ndihmë</string>
     <string name="support_faq_caption">Për përgjigje pyetjesh të rëndomta që mund të keni, shihni PBR-të tona.</string>
     <string name="support_faq_title">Faleminderit që kaloni te aplikacioni Jetpack!</string>

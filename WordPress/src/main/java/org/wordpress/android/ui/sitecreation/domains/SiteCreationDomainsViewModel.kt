@@ -33,7 +33,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
@@ -44,7 +44,6 @@ import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_MOBIL
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -326,12 +325,14 @@ class SiteCreationDomainsViewModel @Inject constructor(
                     },
                     isSelected = domain.domainName == selectedDomain?.domainName,
                     onClick = { onDomainSelected(domain) },
-                    variant = when {
-                        index == 0 -> Variant.Recommended
-                        index == 1 -> Variant.BestAlternative
-                        product.isOnSale() -> Variant.Sale
-                        else -> null
-                    },
+                    tags = listOfNotNull(
+                        when (index) {
+                            0 -> Tag.Recommended
+                            1 -> Tag.BestAlternative
+                            else -> null
+                        },
+                        if (product.isOnSale()) Tag.Sale else null,
+                    ),
                 )
             }
 
@@ -486,31 +487,31 @@ private fun createSearchInputUiState(
                 val cost: Cost,
                 val isSelected: Boolean = false,
                 val onClick: () -> Unit,
-                val variant: Variant? = null,
+                val tags: List<Tag> = emptyList(),
             ) : New(Type.DOMAIN_V2) {
-                sealed class Variant(
+                sealed class Tag(
                     @ColorRes val dotColor: Int,
                     @ColorRes val subtitleColor: Int? = null,
                     val subtitle: UiString,
                 ) {
                     constructor(@ColorRes color: Int, subtitle: UiString) : this(color, color, subtitle)
 
-                    object Unavailable : Variant(
+                    object Unavailable : Tag(
                         R.color.red_50,
                         UiStringRes(R.string.site_creation_domain_tag_unavailable),
                     )
 
-                    object Recommended : Variant(
+                    object Recommended : Tag(
                         R.color.jetpack_green_50,
                         UiStringRes(R.string.site_creation_domain_tag_recommended),
                     )
 
-                    object BestAlternative : Variant(
+                    object BestAlternative : Tag(
                         R.color.purple_50,
                         UiStringRes(R.string.site_creation_domain_tag_best_alternative),
                     )
 
-                    object Sale : Variant(
+                    object Sale : Tag(
                         R.color.yellow_50,
                         UiStringRes(R.string.site_creation_domain_tag_sale)
                     )
@@ -519,17 +520,15 @@ private fun createSearchInputUiState(
                 sealed class Cost(val title: UiString) {
                     object Free : Cost(UiStringRes(R.string.free))
 
-                    data class Paid(val cost: String) : Cost(
-                        UiStringResWithParams(R.string.site_creation_domain_cost, UiStringText(cost))
-                    )
+                    data class Paid(private val titleCost: String) : Cost(UiStringText(titleCost)) {
+                        val subtitle = UiStringRes(R.string.site_creation_domain_cost)
+                    }
 
-                    data class OnSale(val titleCost: String, val subtitleCost: String) : Cost(
-                        UiStringResWithParams(R.string.site_creation_domain_cost, UiStringText(titleCost))
+                    data class OnSale(private val titleCost: String, private val strikeoutTitleCost: String) : Cost(
+                        UiStringText(titleCost)
                     ) {
-                        val subtitle = UiStringResWithParams(
-                            R.string.site_creation_domain_cost,
-                            UiStringText(subtitleCost)
-                        )
+                        val strikeoutTitle = UiStringText(strikeoutTitleCost)
+                        val subtitle = UiStringRes(R.string.site_creation_domain_cost_sale)
                     }
                 }
             }

@@ -13,21 +13,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/margin_extra_medium_large"
-        android:layout_marginEnd="@dimen/margin_large"
-        android:layout_marginStart="@dimen/margin_large"
-        android:layout_marginTop="@dimen/margin_extra_medium_large" />
+        android:layout_marginHorizontal="@dimen/margin_extra_large"
+        android:layout_marginVertical="@dimen/margin_large" />
 
     <include
         android:id="@+id/site_creation_preview_web_view_container"
         layout="@layout/site_creation_preview_web_view_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/sitePreviewOkButtonContainer"
+        android:layout_above="@+id/sitePreviewCaption"
         android:layout_below="@id/site_creation_preview_header_item"
-        android:layout_marginBottom="@dimen/negative_margin_medium"
-        android:layout_marginLeft="@dimen/site_creation_preview_web_view_side_margin"
-        android:layout_marginRight="@dimen/site_creation_preview_web_view_side_margin" />
+        android:layout_marginHorizontal="@dimen/margin_extra_large" />
+
+    <TextView
+        android:id="@+id/sitePreviewCaption"
+        style="@style/SiteCreationHeaderV2Subtitle"
+        android:layout_above="@+id/sitePreviewOkButtonContainer"
+        android:lineSpacingExtra="@null"
+        android:layout_marginHorizontal="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_large"
+        android:paddingBottom="@null"
+        android:text="@string/new_site_creation_preview_caption_paid" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/sitePreviewOkButtonContainer"
@@ -35,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/site_creation_preview_ok_button_container_height"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_large"
         app:cardElevation="@dimen/site_creation_container_elevation"
         tools:ignore="InconsistentLayout">
 

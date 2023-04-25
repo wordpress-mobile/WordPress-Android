@@ -77,7 +77,6 @@ Language: gl_ES
     <string name="site_creation_domain_tag_sale">Oferta</string>
     <string name="site_creation_domain_tag_recommended">Recomendado</string>
     <string name="site_creation_domain_tag_best_alternative">Mellor alternativa</string>
-    <string name="site_creation_domain_cost">%s ao ano</string>
     <string name="me_btn_help">Axuda</string>
     <string name="support_faq_caption">Consulta o noso FAQ para obter respostas a preguntas habituais que poderías ter.</string>
     <string name="support_faq_title">Grazas por cambiar á aplicación de Jetpack!</string>

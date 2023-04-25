@@ -76,7 +76,6 @@ Language: fr
     <string name="site_creation_domain_tag_sale">Promo</string>
     <string name="site_creation_domain_tag_recommended">Recommandé</string>
     <string name="site_creation_domain_tag_best_alternative">Meilleure alternative</string>
-    <string name="site_creation_domain_cost">%s/an</string>
     <string name="me_btn_help">Aide</string>
     <string name="support_faq_caption">Notre FAQ comporte les réponses aux questions fréquentes que vous vous posez peut-être.</string>
     <string name="support_faq_title">Merci d’être passé à l’application Jetpack !</string>
