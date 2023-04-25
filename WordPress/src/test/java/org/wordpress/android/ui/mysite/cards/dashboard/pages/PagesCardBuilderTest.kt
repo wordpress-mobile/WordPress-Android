@@ -32,8 +32,17 @@ private val PAGE_MODEL = CardModel.PagesCardModel.PageCardModel(
     date = CardsUtils.fromDate(PAGE_DATE)
 )
 
+private val PAGE_MODEL_2 = PAGE_MODEL.copy(id = 2)
+
+
+// pages with one item
 private val PAGES_MODEL = CardModel.PagesCardModel(
     pages = listOf(PAGE_MODEL)
+)
+
+// pages card with two items
+private val PAGES_MODEL_2 = CardModel.PagesCardModel(
+    pages = listOf(PAGE_MODEL, PAGE_MODEL_2)
 )
 
 @ExperimentalCoroutinesApi
@@ -97,8 +106,43 @@ class PagesCardBuilderTest : BaseUnitTest() {
         assertEquals(result.footerLink,createPageCardWhenNoPagesPresent)
     }
 
+    @Test
+    fun `given there is one page, when card is built, then create new page card is correct`() {
+        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
+        val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
+            pageCard = PAGES_MODEL,
+            onFooterLinkClick = onPagesCardFooterClick,
+            onPagesItemClick = onPagesItemClick
+        )
+
+        val result = builder.build(params) as PagesCardWithData
+
+        assertEquals(expected = createPageCardWhenLessThanThreePagePresent, actual = result.footerLink)
+    }
+
+    @Test
+    fun `given there is two pages, when card is built, then create new page card is correct`() {
+        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
+        val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
+            pageCard = PAGES_MODEL_2,
+            onFooterLinkClick = onPagesCardFooterClick,
+            onPagesItemClick = onPagesItemClick
+        )
+
+        val result = builder.build(params) as PagesCardWithData
+
+        assertEquals(expected = createPageCardWhenLessThanThreePagePresent, actual = result.footerLink)
+    }
+
     private val createPageCardWhenNoPagesPresent = PagesCardWithData.CreatNewPageItem(
         label = UiString.UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
+        description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
+        imageRes = R.drawable.illustration_pages_card_create_page,
+        onClick = onPagesCardFooterClick
+    )
+
+    private val createPageCardWhenLessThanThreePagePresent = PagesCardWithData.CreatNewPageItem(
+        label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
         description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
         imageRes = R.drawable.illustration_pages_card_create_page,
         onClick = onPagesCardFooterClick
