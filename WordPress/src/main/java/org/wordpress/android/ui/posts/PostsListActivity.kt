@@ -300,6 +300,7 @@ class PostsListActivity : LocaleAwareActivity(),
                 ActionType.CREATE_NEW_PAGE -> Unit // Do nothing
                 ActionType.NO_ACTION -> Unit // Do nothing
                 ActionType.ANSWER_BLOGGING_PROMPT -> Unit // Do nothing
+                ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD -> Unit // Do nothing
                 null -> Unit // Do nothing
             }
         })
