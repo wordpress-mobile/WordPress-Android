@@ -93,7 +93,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     private boolean mDeleted;
 
     // Default fields to update upon request
-    private String[] fieldsToUpdate = {"parent_id", "title", "description", "caption", "alt"};
+    private String[] mFieldsToUpdate = {"parent_id", "title", "description", "caption", "alt"};
 
     @Override
     public boolean equals(Object other) {
@@ -331,11 +331,11 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     }
 
     public String[] getFieldsToUpdate() {
-        return fieldsToUpdate;
+        return mFieldsToUpdate;
     }
 
     public void setFieldsToUpdate(String[] fieldsToUpdate) {
-        this.fieldsToUpdate = fieldsToUpdate;
+        this.mFieldsToUpdate = fieldsToUpdate;
     }
 
     //
