@@ -305,6 +305,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
         is SiteNavigationAction.OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
         is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken, action.source)
+        is SiteNavigationAction.TriggerCreatePageFlow -> wpMainActivityViewModel.triggerCreatePageFlow()
         else -> {
             /* Pass all other navigationAction on to the child fragment, so they can be handled properly.
                Added brief delay before passing action to nested (view pager) tab fragments to give them time to get

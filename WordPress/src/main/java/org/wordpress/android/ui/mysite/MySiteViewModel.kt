@@ -715,7 +715,11 @@ class MySiteViewModel @Inject constructor(
     private fun onPagesCardFooterLinkClick() {
         cardsTracker.trackPagesCardFooterClicked()
         _onNavigation.value =
-            Event(SiteNavigationAction.OpenEditorToCreateNewPage(requireNotNull(selectedSiteRepository.getSelectedSite())))
+            Event(
+                SiteNavigationAction.TriggerCreatePageFlow(
+                    requireNotNull(selectedSiteRepository.getSelectedSite())
+                )
+            )
     }
 
     private fun onActivityCardItemClick(activityCardItemClickParams: ActivityCardItemClickParams) {
