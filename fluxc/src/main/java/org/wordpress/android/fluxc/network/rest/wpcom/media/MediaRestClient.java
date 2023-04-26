@@ -47,6 +47,7 @@ import org.wordpress.android.util.StringUtils;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -621,21 +622,37 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     private Map<String, Object> getEditRequestParams(final MediaModel media) {
         if (media == null) return null;
 
+        String[] fieldsToUpdate = media.getFieldsToUpdate();
+
         final Map<String, Object> params = new HashMap<>();
-        if (media.getPostId() > 0) {
-            params.put("parent_id", String.valueOf(media.getPostId()));
-        }
-        if (!TextUtils.isEmpty(media.getTitle())) {
-            params.put("title", media.getTitle());
-        }
-        if (!TextUtils.isEmpty(media.getDescription())) {
-            params.put("description", media.getDescription());
-        }
-        if (!TextUtils.isEmpty(media.getCaption())) {
-            params.put("caption", media.getCaption());
-        }
-        if (!TextUtils.isEmpty(media.getAlt())) {
-            params.put("alt", media.getAlt());
+        for (String field : fieldsToUpdate) {
+            switch (field) {
+                case "parent_id":
+                    if (media.getPostId() > 0) {
+                        params.put("parent_id", String.valueOf(media.getPostId()));
+                    }
+                    break;
+                case "title":
+                    if (!TextUtils.isEmpty(media.getTitle())) {
+                        params.put("title", media.getTitle());
+                    }
+                    break;
+                case "description":
+                    if (!TextUtils.isEmpty(media.getDescription())) {
+                        params.put("description", media.getDescription());
+                    }
+                    break;
+                case "caption":
+                    if (!TextUtils.isEmpty(media.getCaption())) {
+                        params.put("caption", media.getCaption());
+                    }
+                    break;
+                case "alt":
+                    if (!TextUtils.isEmpty(media.getAlt())) {
+                        params.put("alt", media.getAlt());
+                    }
+                    break;
+            }
         }
         return params;
     }
