@@ -91,7 +91,7 @@ class SiteCreationProgressViewModel @Inject constructor(
     fun start(siteCreationState: SiteCreationState) {
         if (siteCreationState.result is CreatedButNotFetched.InCart) {
             // reuse the previously blog when returning with the same domain
-            if (siteCreationState.domain == this.siteCreationState.domain) {
+            if (siteCreationState.domain == domain) {
                 createCart(siteCreationState.result.site)
                 return
             }
