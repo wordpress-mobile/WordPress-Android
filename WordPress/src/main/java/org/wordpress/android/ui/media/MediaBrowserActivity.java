@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -639,7 +640,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
                 return true;
             case R.id.menu_new_media:
                 // Do Nothing (handled in action view click listener)
@@ -1002,13 +1003,13 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
         // stock photos item requires no permission, all other items do
         if (item != AddMenuItem.ITEM_CHOOSE_STOCK_MEDIA) {
-            String[] permissions;
+            String[] permissions = null;
             if (item == AddMenuItem.ITEM_CAPTURE_PHOTO || item == AddMenuItem.ITEM_CAPTURE_VIDEO) {
-                permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-            } else {
+                permissions = PermissionUtils.getCameraAndStoragePermissions();
+            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
             }
-            if (!PermissionUtils.checkAndRequestPermissions(
+            if (permissions != null && !PermissionUtils.checkAndRequestPermissions(
                     this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE, permissions)) {
                 return;
             }

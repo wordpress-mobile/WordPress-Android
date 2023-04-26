@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -49,6 +50,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayVi
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -78,6 +80,7 @@ import org.wordpress.android.util.UrlUtilsWrapper;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
@@ -93,6 +96,9 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+
+import static org.wordpress.android.ui.main.WPMainActivity.ARG_OPEN_PAGE;
+import static org.wordpress.android.ui.main.WPMainActivity.ARG_READER;
 
 /*
  * shows reader post detail fragments in a ViewPager - primarily used for easy swiping between
@@ -176,6 +182,24 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
 
         setContentView(R.layout.reader_activity_post_pager);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                ReaderPostDetailFragment fragment = getActiveDetailFragment();
+                if (fragment != null && fragment.isCustomViewShowing()) {
+                    // if full screen video is showing, hide the custom view rather than navigate back
+                    fragment.hideCustomView();
+                } else {
+                    if (fragment != null && fragment.goBackInPostHistory()) {
+                        // noop - fragment moved back to a previous post
+                    } else {
+                        CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                    }
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         // Start migration flow passing deep link data if requirements are met
         if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
@@ -299,12 +323,22 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             host = uri.getHost();
         }
 
-        if (uri == null || mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+        if (uri == null
+            || mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
+            || mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
             mReaderTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action, host, uri);
             // invalid uri so, just show the entry screen
-            Intent intent = new Intent(this, WPLaunchActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            if (mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+                Intent intent = new Intent(this, WPMainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(ARG_OPEN_PAGE, ARG_READER);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(this, WPLaunchActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(ARG_OPEN_PAGE, ARG_READER);
+                startActivity(intent);
+            }
             finish();
             return;
         }
@@ -691,21 +725,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             return null;
         }
         return adapter.getBlogIdPostIdAtPosition(position);
-    }
-
-    @Override
-    public void onBackPressed() {
-        ReaderPostDetailFragment fragment = getActiveDetailFragment();
-        if (fragment != null && fragment.isCustomViewShowing()) {
-            // if full screen video is showing, hide the custom view rather than navigate back
-            fragment.hideCustomView();
-        } else {
-            if (fragment != null && fragment.goBackInPostHistory()) {
-                // noop - fragment moved back to a previous post
-            } else {
-                super.onBackPressed();
-            }
-        }
     }
 
     /*

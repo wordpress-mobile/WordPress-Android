@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
@@ -150,6 +151,7 @@ import org.wordpress.android.util.analytics.service.InstallationReferrerServiceS
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig;
 import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig;
 import org.wordpress.android.util.config.QRCodeAuthFlowFeatureConfig;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
@@ -309,6 +311,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
+        initBackPressHandler();
 
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(v -> {
@@ -328,7 +331,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         boolean canShowAppRatingPrompt = savedInstanceState != null;
 
         mBottomNav = findViewById(R.id.bottom_navigation);
-        mBottomNav.init(getSupportFragmentManager(), this);
+        mBottomNav.init(getSupportFragmentManager(), this, mJetpackFeatureRemovalPhaseHelper);
 
         if (savedInstanceState == null) {
             if (!AppPrefs.isInstallationReferrerObtained()) {
@@ -366,10 +369,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     }
                 } else if (openedFromShortcut) {
                     initSelectedSite();
-                    mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
-                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
-                    showJetpackOverlayIfNeeded(getIntent().getStringExtra(
-                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
+                        mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
+                                ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
+                        showJetpackOverlayIfNeeded(getIntent().getStringExtra(
+                                ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
                 } else if (isQuickStartRequestedFromPush) {
@@ -488,6 +491,30 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         displayJetpackFeatureCollectionOverlayIfNeeded();
+    }
+
+    private void initBackPressHandler() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // let the fragment handle the back button if it implements our OnParentBackPressedListener
+                if (mBottomNav != null) {
+                    Fragment fragment = mBottomNav.getActiveFragment();
+                    if (fragment instanceof OnActivityBackPressedListener) {
+                        boolean handled = ((OnActivityBackPressedListener) fragment).onActivityBackPressed();
+                        if (handled) {
+                            return;
+                        }
+                    }
+                }
+
+                if (isTaskRoot() && DeviceUtils.getInstance().isChromebook(WPMainActivity.this)) {
+                    return; // don't close app in Main Activity
+                }
+                CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     private void showJetpackOverlayIfNeeded(String action) {
@@ -665,7 +692,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     break;
                 case CREATE_NEW_PAGE:
                     if (mMLPViewModel.canShowModalLayoutPicker()
-                        && !mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                        && mJetpackFeatureRemovalPhaseHelper.shouldShowTemplateSelectionInPages()) {
                         mMLPViewModel.createPageFlowTriggered();
                     } else {
                         handleNewPageAction("", "", null,
@@ -861,6 +888,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_stats");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
+                        break;
+                    }
+                    if (mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+                        ActivityLauncher.showJetpackStaticPoster(this);
                         break;
                     }
                     if (intent.hasExtra(ARG_STATS_TIMEFRAME)) {
@@ -1105,25 +1136,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void announceTitleForAccessibility(PageType pageType) {
         getWindow().getDecorView().announceForAccessibility(mBottomNav.getContentDescriptionForPageType(pageType));
-    }
-
-    @Override
-    public void onBackPressed() {
-        // let the fragment handle the back button if it implements our OnParentBackPressedListener
-        if (mBottomNav != null) {
-            Fragment fragment = mBottomNav.getActiveFragment();
-            if (fragment instanceof OnActivityBackPressedListener) {
-                boolean handled = ((OnActivityBackPressedListener) fragment).onActivityBackPressed();
-                if (handled) {
-                    return;
-                }
-            }
-        }
-
-        if (isTaskRoot() && DeviceUtils.getInstance().isChromebook(this)) {
-            return; // don't close app in Main Activity
-        }
-        super.onBackPressed();
     }
 
     @Override

@@ -30,6 +30,7 @@ object TestContent {
     const val remoteMediaId = "97629"
     const val remoteMediaId2 = "97630"
     const val attachmentPageUrl = "https://wordpress.org?p=${remoteMediaId}"
+    const val videoPressGuid = "AbCdE"
 
     const val oldImageBlock = """<!-- wp:image {"id":${localMediaId},"align":"full"} -->
 <figure class="wp-block-image alignfull">
@@ -659,10 +660,20 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 <figure class="wp-block-audio"><audio controls src="$remoteAudioUrl"></audio></figure>
 <!-- /wp:audio -->"""
 
+    const val oldVideoPressBlockWithDefaultAttrs = """<!-- wp:videopress/video {"id":${localMediaId}, "src":"${localVideoUrl}"} /-->"""
+
+    const val newVideoPressBlockWithDefaultAttrs = """<!-- wp:videopress/video {"id":${remoteMediaId},"guid":"${videoPressGuid}"} /-->"""
+
+    const val oldVideoPressBlockWithAttrs = """<!-- wp:videopress/video {"autoplay":true,"controls":false,"description":"","id":${localMediaId},"loop":true,"muted":true,"playsinline":true,"poster":"https://test.files.wordpress.com/2022/02/265-5000x5000-1.jpeg","preload":"none","seekbarColor":"#abb8c3","seekbarLoadingColor":"#cf2e2e","seekbarPlayedColor":"#9b51e0","title":"Demo title","useAverageColor":false} /-->"""
+
+    const val newVideoPressBlockWithAttrs = """<!-- wp:videopress/video {"autoplay":true,"controls":false,"description":"","id":${remoteMediaId},"loop":true,"muted":true,"playsinline":true,"poster":"https://test.files.wordpress.com/2022/02/265-5000x5000-1.jpeg","preload":"none","seekbarColor":"#abb8c3","seekbarLoadingColor":"#cf2e2e","seekbarPlayedColor":"#9b51e0","title":"Demo title","useAverageColor":false,"guid":"${videoPressGuid}"} /-->"""
+
     const val oldPostImage = paragraphBlock + oldImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val newPostImage = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val oldPostVideo = paragraphBlock + newImageBlock + oldVideoBlock + newMediaTextBlock + newGalleryBlock
     const val newPostVideo = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
+    const val oldPostVideoPress = paragraphBlock + newImageBlock + oldVideoPressBlockWithDefaultAttrs + newMediaTextBlock + newGalleryBlock
+    const val newPostVideoPress = paragraphBlock + newImageBlock + newVideoPressBlockWithDefaultAttrs + newMediaTextBlock + newGalleryBlock
     const val oldPostMediaText = paragraphBlock + newImageBlock + newVideoBlock + oldMediaTextBlock + newGalleryBlock
     const val newPostMediaText = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val oldPostGallery = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + oldGalleryBlock

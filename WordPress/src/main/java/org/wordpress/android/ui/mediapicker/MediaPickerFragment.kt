@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent.ACTION_GET_CONTENT
 import android.content.Intent.ACTION_OPEN_DOCUMENT
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -52,8 +53,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiMod
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.SYSTEM_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.STORAGE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
@@ -65,6 +64,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
+import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
@@ -74,6 +74,9 @@ import org.wordpress.android.util.WPLinkMovementMethod
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.extensions.getParcelableArrayListCompat
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -199,6 +202,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
     lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: MediaPickerViewModel
     private var binding: MediaPickerFragmentBinding? = null
+    private lateinit var mediaPickerSetup: MediaPickerSetup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -223,14 +227,14 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().addMenuProvider(this, viewLifecycleOwner)
 
-        val mediaPickerSetup = MediaPickerSetup.fromBundle(requireArguments())
-        val site = requireArguments().getSerializable(WordPress.SITE) as? SiteModel
+        mediaPickerSetup = MediaPickerSetup.fromBundle(requireArguments())
+        val site = requireArguments().getSerializableCompat<SiteModel>(WordPress.SITE)
         var selectedIds: List<Identifier>? = null
         var lastTappedIcon: MediaPickerIcon? = null
         if (savedInstanceState != null) {
             lastTappedIcon = MediaPickerIcon.fromBundle(savedInstanceState)
             if (savedInstanceState.containsKey(KEY_SELECTED_IDS)) {
-                selectedIds = savedInstanceState.getParcelableArrayList<Identifier>(KEY_SELECTED_IDS)?.map { it }
+                selectedIds = savedInstanceState.getParcelableArrayListCompat<Identifier>(KEY_SELECTED_IDS)?.map { it }
             }
         }
 
@@ -239,7 +243,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
             NUM_COLUMNS
         )
 
-        savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
+        savedInstanceState?.getParcelableCompat<Parcelable>(KEY_LIST_STATE)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
         with(MediaPickerFragmentBinding.bind(view)) {
@@ -273,12 +277,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                 navigateEvent(navigationEvent)
             }
 
-            viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner) {
-                when (it) {
-                    CAMERA -> requestCameraPermission()
-                    STORAGE -> requestStoragePermission()
-                }
-            }
+            viewModel.onCameraPermissionsRequested.observeEvent(viewLifecycleOwner) { requestCameraPermission() }
             viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner) { messageHolder ->
                 showSnackbar(messageHolder)
             }
@@ -416,13 +415,13 @@ class MediaPickerFragment : Fragment(), MenuProvider {
     private fun initializeSearchView(actionMenuItem: MenuItem) {
         var isExpanding = false
         actionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 viewModel.onSearchExpanded()
                 isExpanding = true
                 return true
             }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 viewModel.onSearchCollapsed()
                 return true
             }
@@ -453,7 +452,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                     if (uiModel.isAlwaysDenied) {
                         WPPermissionUtils.showAppSettings(requireActivity())
                     } else {
-                        requestStoragePermission()
+                        requestMediaPermission()
                     }
                 }
 
@@ -618,44 +617,69 @@ class MediaPickerFragment : Fragment(), MenuProvider {
 
     override fun onResume() {
         super.onResume()
-        checkStoragePermission()
+        checkMediaPermission()
     }
 
     fun setMediaPickerListener(listener: MediaPickerListener?) {
         this.listener = listener
     }
 
-    private val isStoragePermissionAlwaysDenied: Boolean
-        get() = WPPermissionUtils.isPermissionAlwaysDenied(
-            requireActivity(), permission.WRITE_EXTERNAL_STORAGE
-        )
-
     /*
      * load the photos if we have the necessary permission, otherwise show the "soft ask" view
      * which asks the user to allow the permission
      */
-    private fun checkStoragePermission() {
+    private fun checkMediaPermission() {
         if (!isAdded) {
             return
         }
-        viewModel.checkStoragePermission(isStoragePermissionAlwaysDenied)
+
+        // Storage permission is available only for API lower than 33
+        val isStoragePermissionAlwaysDenied = WPPermissionUtils.isPermissionAlwaysDenied(
+            requireActivity(),
+            permission.WRITE_EXTERNAL_STORAGE
+        )
+
+        val isPhotosVideosPermissionAlwaysDenied = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            WPPermissionUtils.isPermissionAlwaysDenied(requireActivity(), permission.READ_MEDIA_IMAGES) ||
+                    WPPermissionUtils.isPermissionAlwaysDenied(requireActivity(), permission.READ_MEDIA_VIDEO)
+        } else {
+            // For devices lower than API 33, storage permission is the equivalent of Photos and Videos permission
+            isStoragePermissionAlwaysDenied
+        }
+        val isMusicAudioPermissionAlwaysDenied = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            WPPermissionUtils.isPermissionAlwaysDenied(
+                requireActivity(),
+                permission.READ_MEDIA_AUDIO
+            )
+        } else {
+            // For devices lower than API 33, storage permission is the equivalent of Music and Audio permission
+            isStoragePermissionAlwaysDenied
+        }
+        viewModel.checkMediaPermissions(isPhotosVideosPermissionAlwaysDenied, isMusicAudioPermissionAlwaysDenied)
     }
 
     @Suppress("DEPRECATION")
-    private fun requestStoragePermission() {
-        val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE)
-        requestPermissions(
-            permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE
-        )
+    private fun requestMediaPermission() {
+        val permissions = arrayListOf<String>()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (mediaPickerSetup.requiresPhotosVideosPermissions) {
+                permissions.add(permission.READ_MEDIA_IMAGES)
+                permissions.add(permission.READ_MEDIA_VIDEO)
+            }
+            if (mediaPickerSetup.requiresMusicAudioPermissions) {
+                permissions.add(permission.READ_MEDIA_AUDIO)
+            }
+        } else {
+            // READ_EXTERNAL_STORAGE is the equivalent of READ_MEDIA_IMAGES, READ_MEDIA_VIDEO and READ_MEDIA_AUDIO on
+            // devices lower than API 33.
+            permissions.add(permission.READ_EXTERNAL_STORAGE)
+        }
+        requestPermissions(permissions.toTypedArray(), WPPermissionUtils.PHOTO_PICKER_MEDIA_PERMISSION_REQUEST_CODE)
     }
 
     @Suppress("DEPRECATION")
     private fun requestCameraPermission() {
-        // in addition to CAMERA permission we also need a storage permission, to store media from the camera
-        val permissions = arrayOf(
-            permission.CAMERA,
-            permission.WRITE_EXTERNAL_STORAGE
-        )
+        val permissions = PermissionUtils.getCameraAndStoragePermissions()
         requestPermissions(permissions, WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE)
     }
 
@@ -670,7 +694,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
             requireActivity(), requestCode, permissions, grantResults, checkForAlwaysDenied
         )
         when (requestCode) {
-            WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE -> checkStoragePermission()
+            WPPermissionUtils.PHOTO_PICKER_MEDIA_PERMISSION_REQUEST_CODE -> checkMediaPermission()
             WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE -> if (allGranted) {
                 viewModel.clickOnLastTappedIcon()
             }

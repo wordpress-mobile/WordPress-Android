@@ -1,8 +1,25 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-22.0
+22.3
 -----
 
+
+22.2
+-----
+* [*] Adds runtime notifications permission [https://github.com/wordpress-mobile/WordPress-Android/pull/18239]
+* [**] Adds media permissions support for Android 13 [https://github.com/wordpress-mobile/WordPress-Android/pull/18183]
+* [**] [Jetpack-only] Adds a dashboard card for purchasing domains. [https://github.com/wordpress-mobile/WordPress-Android/pull/18240]
+* [**] [Jetpack-only] Blogging Prompts: adds the ability to view other users' responses to a prompt. [https://github.com/wordpress-mobile/WordPress-Android/pull/18265]
+* [*] [internal] [Jetpack-only] Redesigned the migration success card. [https://github.com/wordpress-mobile/WordPress-Android/pull/18271]
+
+22.1
+-----
+* [**] [WordPress-only] Warns user about sites with only individual plugins not supporting core app features and offers the option to switch to the Jetpack app. [https://github.com/wordpress-mobile/WordPress-Android/pull/18199]
+* [*] Block editor: Avoid empty Gallery block error [https://github.com/WordPress/gutenberg/pull/49557]
+
+22.0
+-----
+* [*] Block editor: Allow new block transforms for most blocks. [https://github.com/WordPress/gutenberg/pull/48792]
 
 21.9
 -----

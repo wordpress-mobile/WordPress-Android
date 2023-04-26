@@ -975,7 +975,6 @@ Language: nb_NO
     <string name="domain_suggestions_search_hint">Skriv inn et nøkkelord for flere detaljer</string>
     <string name="domains_suggestions_empty_list">Ingen forslag funnet</string>
     <string name="register_domain">Registrer domene</string>
-    <string name="jetpack_installed_message">Nå som Jetpack er installert trenger vi bare å få satt deg opp. Dette vil bare ta et minutt.</string>
     <string name="stats_menu_remove">Fjern fra innsikter</string>
     <string name="stats_menu_move_down">Flytt ned</string>
     <string name="stats_menu_move_up">Flytt opp</string>
@@ -1237,15 +1236,6 @@ Language: nb_NO
     <string name="reader_empty_followed_tags_title">Ingen fulgte emner</string>
     <string name="reader_empty_followed_tags_subtitle">Legg til emner for å finne innlegg om dine favoritt-emner</string>
     <string name="login_to_to_connect_jetpack">Logg inn på dem WordPres.com-kontoen du brukte til koble til Jetpack.</string>
-    <string name="install_jetpack_retry">Prøv på nytt</string>
-    <string name="install_jetpack_continue">Sett opp</string>
-    <string name="jetpack_installation_problem_message">Jetpack kunne ikke installeres nå.</string>
-    <string name="jetpack_installation_problem">Det oppsto et problem</string>
-    <string name="jetpack_installed">Jetpack installert</string>
-    <string name="installing_jetpack_message">Installerer Jetpack på ditt nettsted. Dette kan ta opp til et par minutter å fullføre</string>
-    <string name="installing_jetpack">Installerer Jetpack</string>
-    <string name="install_jetpack_message">Din innlogging til nettstedet må lagres og vil kun bli brukt for å installere Jetpack.</string>
-    <string name="install_jetpack">Installer Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="stats_jetpack_connection_setup_info">For å se statistikk på ditt nettsted trenger du å installere utvidelsen Jetpack.</string>
@@ -1775,7 +1765,6 @@ Language: nb_NO
     <string name="media_documents">Dokumenter</string>
     <string name="media_images">Bilder</string>
     <string name="media_all">Alle</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s ble nektet tilgang til bildene dine. For å fikse dette, rediger tillatelsene dine og skru på %2$s.</string>
     <string name="reader_view_comments">Vis kommentarer</string>
     <string name="site_settings_video_quality_hint">Kvaliteten til videoer. Høyere verdier = bedre kvalitet.</string>
     <string name="site_settings_video_width_hint">Endrer størrelsen til videoer i innlegg til denne størrelsen</string>

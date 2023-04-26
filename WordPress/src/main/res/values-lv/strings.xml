@@ -1,11 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-03 09:26:43+0000
+Translation-Revision-Date: 2023-04-12 16:13:32+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: lv
 -->
 <resources>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; izmanto %2$s atsevišķus Jetpack spraudņus</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; izmanto spraudni &lt;b&gt;%2$s&lt;/b&gt;</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">WordPress lietotne neatbalsta vietnes ar atsevišķiem Jetpack spraudņiem.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt; izmanto atsevišķus Jetpack spraudņus, kurus neatbalsta WordPress lietotne.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt; izmanto spraudni &lt;b&gt;%2$s&lt;/b&gt;, ko neatbalsta WordPress lietotne.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">Nevar piekļūt dažām jūsu vietnēm</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">Nevar piekļūt vienai no jūsu vietnēm</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">Lūdzu, pārslēdzieties uz lietotni Jetpack, kur mēs jums palīdzēsim pievienot visu Jetpack spraudni, lai izmantotu šo vietni ar lietotni.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">Pārslēdzieties uz Jetpack lietotni</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s izmanto %2$s, kas vēl neatbalsta visas lietotnes funkcijas. Lūdzu, instalējiet %3$s, lai izmantotu lietotni šajā vietnē.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">Šī vietne</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s izmanto %2$s, kas vēl neatbalsta visas lietotnes funkcijas. Lūdzu, instalējiet %3$s.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s izmanto %2$s, kas vēl neatbalsta visas lietotnes funkcijas. Lūdzu, instalējiet %3$s.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Pāreja uz Jetpack lietotni pēc dažām dienām.</string>
+    <string name="wp_jp_static_poster_footnote">Pārslēgšanās ir bezmaksas un aizņem tikai minūti.</string>
+    <string name="wp_jp_static_poster_message">Statistika, lasītājs, paziņojumi un citas Jetpack darbināmas funkcijas ir noņemtas no WordPress lietotnes, un tagad tās var atrast tikai Jetpack lietotnē.</string>
+    <string name="wp_jp_static_poster_button_secondary">Uzziniet vairāk vietnē Jetpack.com</string>
+    <string name="wp_jp_static_poster_button_primary">Pārslēdzieties uz Jetpack lietotni</string>
+    <string name="wp_jp_static_poster_title_plural">%s ir pārcēlušies uz Jetpack lietotni.</string>
+    <string name="wp_jp_static_poster_title">%s ir pārcēlies uz Jetpack lietotni.</string>
+    <string name="my_site_btn_wp_admin">WP administrators</string>
+    <string name="my_site_header_manage">Pārvaldīt</string>
+    <string name="my_site_header_traffic">Satiksme</string>
+    <string name="my_site_header_content">Saturs</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Uzstādīt</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">Gatavs</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Tagad, kad Jetpack ir instalēts, mums ir tikai jāveic iestatīšana. Tas prasīs tikai minūti.</string>
+    <string name="blaze_overlay_site_promotional_button">Izgaismojiet šo ziņu tūlīt</string>
+    <string name="blaze_overlay_page_promotional_button">Izgaismojiet šo lapu</string>
+    <string name="blaze_overlay_post_promotional_button">Izgaismojiet šo ziņu</string>
+    <string name="blaze_promotional_subtitle_3">Sekojiet veiktspējai, iedarbiniet un apturiet savu Blaze jebkurā laikā.</string>
+    <string name="blaze_promotional_subtitle_2">Jūsu saturs parādīsies miljoniem WordPress un Tumblr vietņu.</string>
+    <string name="blaze_promotional_subtitle_1">Popularizējiet jebkuru ziņu vai lapu tikai dažu minūšu laikā par dažiem dolāriem dienā.</string>
+    <string name="blaze_promotional_text">Palieliniet datplūsmu uz savu vietni, izmantojot Blaze</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="site_creation_domain_tag_unavailable">Šis domēns jau ir reģistrēts</string>
+    <string name="site_creation_domain_tag_sale">Izpārdošana</string>
+    <string name="site_creation_domain_tag_recommended">Ieteicams</string>
+    <string name="site_creation_domain_tag_best_alternative">Labākā alternatīva</string>
+    <string name="me_btn_help">Palīdzība</string>
+    <string name="support_faq_caption">Atbildes uz bieži uzdotajiem jautājumiem skatiet mūsu BUJ.</string>
+    <string name="support_faq_title">Paldies, ka pārslēdzāties uz Jetpack lietotni!</string>
+    <string name="logs_button">Žurnāli</string>
+    <string name="tickets">Biļetes</string>
+    <string name="free">Bezmaksas</string>
+    <string name="help_buttons_screen_title">Palīdzība</string>
+    <string name="gutenberg_native_blocks_menu">Bloku izvēlne</string>
+    <string name="promote_blaze_card_menu_hide_this">Slēpt šo</string>
+    <string name="promote_blaze_card_sub_title">Parādiet savu darbu miljoniem vietņu.</string>
+    <string name="promote_blaze_card_title">Reklamēt savu saturu, izmantojot Blaze</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Aizvērt</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Sazināties ar atbalsta dienestu</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Instalēt pilnu spraudni</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Noteikumi un nosacījumi</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Iestatot Jetpack, jūs piekrītat mūsu </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">pilns Jetpack spraudnis</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">atsevišķi Jetpack spraudņi</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">spraudnis %1$s</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s izmanto %2$s, kas vēl neatbalsta visas lietotnes funkcijas. Lūdzu, instalējiet %3$s, lai izmantotu lietotni šajā vietnē.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Lūdzu, instalējiet pilno Jetpack spraudņa versiju</string>
+    <string name="only_one_primary_site_message">Ir pieejama tikai viena vietne, tāpēc jūs nevarat mainīt savu galveno vietni.</string>
+    <string name="jetpack_plugin_install_error_button_contact_support">Sazinieties ar atbalsta dienestu</string>
+    <string name="jetpack_plugin_install_error_button_retry">Mēģiniet vēlreiz</string>
+    <string name="jetpack_plugin_install_error_description">Jetpack pašlaik nevarēja instalēt.</string>
+    <string name="jetpack_plugin_install_error_title">Radās problēma</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Kļūdas ikona</string>
+    <string name="jetpack_plugin_install_full_plugin_done_description">Gatavs šīs vietnes izmantošanai ar lietotni.</string>
+    <string name="jetpack_plugin_install_done_title">Instalēts Jetpack</string>
+    <string name="jetpack_plugin_install_installing_description">Jetpack instalēšana jūsu vietnē. Tas var ilgt dažas minūtes.</string>
+    <string name="jetpack_plugin_install_installing_title">Jetpack instalēšana</string>
+    <string name="jetpack_plugin_install_initial_button">Turpināt</string>
+    <string name="jetpack_plugin_install_initial_description">Jūsu vietnes akreditācijas dati netiks saglabāti un tiek izmantoti tikai Jetpack instalēšanai.</string>
+    <string name="jetpack_plugin_install_initial_title">Instalēt Jetpack</string>
+    <string name="jetpack_plugin_install_jp_logo_content_description">Jetpack ikona</string>
+    <string name="button_promote_with_blaze">Reklamējiet ar Blaze</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Atbrīvojiet visu savas vietnes potenciālu. Iegūstiet statistiku, paziņojumus un daudz ko citu, izmantojot Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Jūsu vietnei ir spraudnis Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack mobilā lietotne ir paredzēta darbam kopā ar Jetpack spraudni. Pārslēdziet tagad, lai piekļūtu statistikai, paziņojumiem, lasītājam un daudz kam citam.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Saņemiet paziņojumus par jauniem komentāriem, atzīmēm Patīk, skatījumiem un daudz ko citu.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Atrodiet un sekojiet savām iecienītākajām vietnēm un kopienām, kā arī kopīgojiet savu saturu.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Vērojiet, kā jūsu datplūsma pieaug, izmantojot noderīgus ieskatus un visaptverošu statistiku.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistika un ieskati</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack ļauj paveikt vairāk savā WordPress vietnē. Pārslēgšanās ir bezmaksas un aizņem tikai minūti.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_title">Sniedziet atbalstu WordPress ar Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Emuāru rakstīšanas uzvednes un atgādinājumus varat kontrolēt katrā laikā sadaļā Mana vietne &gt; Iestatījumi &gt; Emuāri</string>
@@ -94,9 +176,6 @@ Language: lv
     <string name="preference_open_links_in_jetpack">Atveriet saites pakalpojumā Jetpack</string>
     <string name="jp_migration_need_help_button">Vajadzīga palīdzība?</string>
     <string name="jp_migration_got_it_button">Sapratu</string>
-    <string name="jp_migration_delete_message">Lūdzu, &lt;b&gt;izdzēsiet WordPress lietotni&lt;/b&gt;, lai izvairītos no datu konfliktiem.</string>
-    <string name="jp_migration_delete_subtitle">Šķiet, ka jums joprojām ir instalēta WordPress lietotne. Mēs iesakām dzēst WordPress lietotni, lai izvairītos no datu konfliktiem.</string>
-    <string name="jp_migration_delete_title">Jums vairs nav nepieciešama WordPress lietotne</string>
     <string name="jp_migration_network_error_message">Mēs nevaram pārsūtīt jūsu datus un iestatījumus bez tīkla savienojuma.</string>
     <string name="jp_migration_network_error_subtitle">Lūdzu, pārbaudiet, vai tīkla savienojums darbojas, un mēģiniet vēlreiz.</string>
     <string name="jp_migration_network_error_title">Nevar izveidot savienojumu ar internetu.</string>
@@ -106,13 +185,11 @@ Language: lv
     <string name="jp_migration_try_again_button">Mēģini vēlreiz</string>
     <string name="jp_migration_finish_button">Pabeigt</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Noņemiet WordPress lietotnes ikonu</string>
-    <string name="jp_migration_done_delete_wp_message">Lūdzu, &lt;b&gt;izdzēsiet WordPress lietotni&lt;/b&gt;, lai izvairītos no datu konfliktiem.</string>
     <string name="jp_migration_done_subtitle">Mēs esam pārsūtījuši visus jūsu datus un iestatījumus. Viss ir tieši tur, kur tas tika atstāts.</string>
     <string name="jp_migration_done_title">Paldies, ka pārgājāt uz Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Mēs izslēgsim paziņojumus no WordPress lietotnes.</string>
     <string name="jp_migration_notifications_subtitle">Jūs saņemsiet visus tos pašus paziņojumus, taču tagad tie tiks saņemti no lietotnes Jetpack.</string>
     <string name="jp_migration_notifications_title">Paziņojumi tagad nāk no Jetpack</string>
-    <string name="jp_migration_success_card_message">Lūdzu, izdzēsiet WordPress lietotni</string>
     <string name="wordpress_help_center_button">WordPress palīdzības centrs</string>
     <string name="support_title">Atbalsts</string>
     <string name="notification_disable_broadcast_permission_desc">Ļauj lietotnei atspējot WordPress paziņojumus.</string>
@@ -1115,7 +1192,6 @@ Language: lv
     <string name="stories_intro_main_title">Iepazīstinām ar stāstu ziņām</string>
     <string name="mlp_notice_blank_page_created">Izveidota tukša lapa</string>
     <string name="mlp_notice_page_created">Lapa ir izveidota</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s tika liegta piekļuve jūsu fotoattēliem. Lai to labotu, rediģējiet savas atļaujas un ieslēdziet %2$s un %3$s.</string>
     <string name="media_insert_failed">Multivides ievietošana neizdevās.</string>
     <string name="media_insert_failed_with_reason">Multivides ievietošana neizdevās: %s</string>
     <string name="photo_picker_wordpress_media_library">Izvēlieties no WordPress multivides bibliotēkas</string>
@@ -1800,7 +1876,6 @@ Language: lv
     <string name="domain_suggestions_search_hint">Ierakstiet atslēgvārdu, lai iegūtu vairāk ideju</string>
     <string name="domains_suggestions_empty_list">Ieteikumi netika atrasti</string>
     <string name="register_domain">Reģistrēt domēnu</string>
-    <string name="jetpack_installed_message">Tagad, kad Jetpack ir instalēts, mums ir jāveic iestatīšana. Tas prasīs tikai minūti.</string>
     <string name="stats_menu_remove">Noņemt no ieskatiem</string>
     <string name="stats_menu_move_down">Pārvietojieties uz leju</string>
     <string name="stats_menu_move_up">Pārvietojieties uz augšu</string>
@@ -2066,15 +2141,6 @@ Language: lv
     <string name="reader_empty_followed_tags_title">Nav tēmas, kurām sekoju</string>
     <string name="reader_empty_followed_tags_subtitle">Pievienojiet tematus šeit, lai atrastu ziņas par iecienītākajām tēmām</string>
     <string name="login_to_to_connect_jetpack">Piesakieties WordPress.com kontā, kuru izmantojāt, lai izveidotu savienojumu ar Jetpack.</string>
-    <string name="install_jetpack_retry">Mēģiniet vēlreiz</string>
-    <string name="install_jetpack_continue">Uzstādīt</string>
-    <string name="jetpack_installation_problem_message">Jetpack pašlaik nebija iespējams instalēt.</string>
-    <string name="jetpack_installation_problem">Radās problēma</string>
-    <string name="jetpack_installed">Jetpack uzstādīts</string>
-    <string name="installing_jetpack_message">Notiek Jetpack instalēšana jūsu vietnē. Tas var aizņemt dažas minūtes.</string>
-    <string name="installing_jetpack">Sociālā kopīgošana</string>
-    <string name="install_jetpack_message">Jūsu vietnes akreditācijas dati netiks saglabāti un tiks izmantoti tikai Jetpack instalēšanai.</string>
-    <string name="install_jetpack">Instalējiet Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack BUJ</string>
     <string name="stats_jetpack_connection_setup_info">Lai savā WordPress vietnē izmantotu statistiku, jums būs jāinstalē Jetpack spraudnis.</string>
@@ -2628,7 +2694,6 @@ Language: lv
     <string name="media_documents">Dokumenti</string>
     <string name="media_images">Attēli</string>
     <string name="media_all">Viss</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s tika liegta piekļuve jūsu fotoattēliem. Lai to novērstu, rediģējiet savas atļaujas un ieslēdziet %2$s.</string>
     <string name="reader_view_comments">Skatīt komentārus</string>
     <string name="site_settings_video_quality_hint">Video kvalitāte. Augstākas vērtības nozīmē labākas kvalitātes videoklipus.</string>
     <string name="site_settings_video_width_hint">Maina videoklipu izmērus ziņās līdz šim izmēram</string>

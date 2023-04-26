@@ -8,6 +8,7 @@ import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
@@ -18,9 +19,11 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTrac
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.merge
 import org.wordpress.android.util.perform
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import java.time.DayOfWeek
@@ -34,11 +37,13 @@ class BloggingRemindersViewModel @Inject constructor(
     private val prologueBuilder: PrologueBuilder,
     private val daySelectionBuilder: DaySelectionBuilder,
     private val epilogueBuilder: EpilogueBuilder,
+    private val notificationsPermissionBuilder: NotificationsPermissionBuilder,
     private val dayLabelUtils: DayLabelUtils,
     private val analyticsTracker: BloggingRemindersAnalyticsTracker,
     private val reminderScheduler: ReminderScheduler,
     private val mapper: BloggingRemindersModelMapper,
-    private val siteStore: SiteStore
+    private val siteStore: SiteStore,
+    private val resourceProvider: ResourceProvider
 ) : ScopedViewModel(mainDispatcher) {
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing = _isBottomSheetShowing as LiveData<Event<Boolean>>
@@ -49,11 +54,19 @@ class BloggingRemindersViewModel @Inject constructor(
     private val _showBloggingPromptHelpDialogVisible = MutableLiveData<Event<Boolean>>()
     val showBloggingPromptHelpDialogVisible = _showBloggingPromptHelpDialogVisible as LiveData<Event<Boolean>>
 
+    private val _requestPermission = MutableLiveData<Event<Boolean>>()
+    val requestPermission = _requestPermission as LiveData<Event<Boolean>>
+
+    private val _showDevicePermissionSettings = MutableLiveData<Event<Boolean>>()
+    val showDevicePermissionSettings = _showDevicePermissionSettings as LiveData<Event<Boolean>>
+
     private val _selectedScreen = MutableLiveData<Screen>()
     private val selectedScreen = _selectedScreen.perform { onScreenChanged(it) }
 
     private val _bloggingRemindersModel = MutableLiveData<BloggingRemindersUiModel>()
     private val _isFirstTimeFlow = MutableLiveData<Boolean>()
+    private var hasNotificationsPermissionState = false
+    private var notificationsPermissionAlwaysDeniedState = false
 
     val uiState: LiveData<UiState> = merge(
         selectedScreen,
@@ -71,6 +84,12 @@ class BloggingRemindersViewModel @Inject constructor(
                     this::togglePromptSwitch,
                     this::showBloggingPromptDialog
                 )
+                Screen.NOTIFICATIONS_PERMISSION -> {
+                    notificationsPermissionBuilder.buildUiItems(
+                        appName = resourceProvider.getString(R.string.app_name),
+                        showAppSettingsGuide = notificationsPermissionAlwaysDeniedState
+                    )
+                }
                 Screen.EPILOGUE -> epilogueBuilder.buildUiItems(bloggingRemindersModel)
             }
             val primaryButton = when (screen) {
@@ -83,6 +102,9 @@ class BloggingRemindersViewModel @Inject constructor(
                     isFirstTimeFlow == true,
                     this::onSelectionButtonClick
                 )
+                Screen.NOTIFICATIONS_PERMISSION -> {
+                    notificationsPermissionBuilder.buildPrimaryButton(onPermissionButtonTapped)
+                }
                 Screen.EPILOGUE -> epilogueBuilder.buildPrimaryButton(finish)
             }
             UiState(uiItems, primaryButton)
@@ -100,6 +122,14 @@ class BloggingRemindersViewModel @Inject constructor(
     private val finish: () -> Unit = {
         analyticsTracker.trackPrimaryButtonPressed(Screen.EPILOGUE)
         _isBottomSheetShowing.value = Event(false)
+    }
+
+    private val onPermissionButtonTapped: () -> Unit = {
+        if (notificationsPermissionAlwaysDeniedState) {
+            _showDevicePermissionSettings.value = Event(true)
+        } else {
+            _requestPermission.value = Event(true)
+        }
     }
 
     private fun onScreenChanged(screen: Screen) {
@@ -134,7 +164,7 @@ class BloggingRemindersViewModel @Inject constructor(
         }
     }
 
-    fun selectDay(day: DayOfWeek) {
+    private fun selectDay(day: DayOfWeek) {
         val currentState = _bloggingRemindersModel.value!!
         val enabledDays = currentState.enabledDays.toMutableSet()
         if (enabledDays.contains(day)) {
@@ -145,7 +175,12 @@ class BloggingRemindersViewModel @Inject constructor(
         _bloggingRemindersModel.value = currentState.copy(enabledDays = enabledDays)
     }
 
-    fun selectTime() {
+    fun setPermissionState(hasNotificationsPermission: Boolean, notificationsPermissionAlwaysDenied: Boolean) {
+        hasNotificationsPermissionState = hasNotificationsPermission
+        notificationsPermissionAlwaysDeniedState = notificationsPermissionAlwaysDenied
+    }
+
+    private fun selectTime() {
         _isTimePickerShowing.value = Event(true)
     }
 
@@ -177,12 +212,16 @@ class BloggingRemindersViewModel @Inject constructor(
         analyticsTracker.trackPrimaryButtonPressed(Screen.SELECTION)
         if (bloggingRemindersModel != null) {
             launch {
+                val daysCount = bloggingRemindersModel.enabledDays.size
+                if (!checkPermission()) {
+                    // There is no permission
+                    return@launch
+                }
                 bloggingRemindersStore.updateBloggingReminders(
                     mapper.toDomainModel(
                         bloggingRemindersModel
                     )
                 )
-                val daysCount = bloggingRemindersModel.enabledDays.size
                 if (daysCount > 0) {
                     reminderScheduler.schedule(
                         bloggingRemindersModel.siteId,
@@ -199,6 +238,20 @@ class BloggingRemindersViewModel @Inject constructor(
                 }
                 _selectedScreen.value = Screen.EPILOGUE
             }
+        }
+    }
+
+    private fun checkPermission(): Boolean {
+        return when {
+            !hasNotificationsPermissionState && notificationsPermissionAlwaysDeniedState -> {
+                _selectedScreen.value = Screen.NOTIFICATIONS_PERMISSION
+                false
+            }
+            !hasNotificationsPermissionState -> {
+                _requestPermission.value = Event(true)
+                false
+            }
+            else -> true // Already has permission
         }
     }
 
@@ -220,9 +273,7 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     fun restoreState(state: Bundle) {
-        state.getSerializable(SELECTED_SCREEN)?.let {
-            _selectedScreen.value = it as Screen
-        }
+        state.getSerializableCompat<Screen>(SELECTED_SCREEN)?.let { _selectedScreen.value = it }
         val siteId = state.getInt(SITE_ID)
         if (siteId != 0) {
             val enabledDays = state.getStringArrayList(SELECTED_DAYS)?.map { DayOfWeek.valueOf(it) }?.toSet() ?: setOf()
@@ -275,16 +326,37 @@ class BloggingRemindersViewModel @Inject constructor(
         when (val screen = selectedScreen.value) {
             Screen.PROLOGUE,
             Screen.PROLOGUE_SETTINGS,
+            Screen.NOTIFICATIONS_PERMISSION,
             Screen.SELECTION -> analyticsTracker.trackFlowDismissed(screen)
             Screen.EPILOGUE -> analyticsTracker.trackFlowCompleted()
             null -> Unit // Do nothing
         }
     }
 
+    fun onPermissionGranted() {
+        if (!hasNotificationsPermissionState) {
+            // Permission state is changed.
+            hasNotificationsPermissionState = true
+            notificationsPermissionAlwaysDeniedState = false
+
+            if (_selectedScreen.value == Screen.NOTIFICATIONS_PERMISSION) {
+                onSelectionButtonClick(_bloggingRemindersModel.value)
+            }
+        }
+    }
+
+    fun onPermissionDenied(isAlwaysDenied: Boolean) {
+        hasNotificationsPermissionState = false
+        notificationsPermissionAlwaysDeniedState = isAlwaysDenied
+
+        _selectedScreen.value = Screen.NOTIFICATIONS_PERMISSION
+    }
+
     enum class Screen(val trackingName: String) {
         PROLOGUE("main"), // displayed after post is published
         PROLOGUE_SETTINGS("main"), // displayed from Site Settings before showing cadence selector
         SELECTION("day_picker"), // cadence selector
+        NOTIFICATIONS_PERMISSION("notifications_permission"),
         EPILOGUE("all_set")
     }
 

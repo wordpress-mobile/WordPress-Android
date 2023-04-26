@@ -143,7 +143,6 @@ Language: ku_TR
     <string name="stories_intro_image_caption_first">Şandiya çîrokî çawa tê afirandin</string>
     <string name="mlp_notice_blank_page_created">Rûpela vala hat afirandin</string>
     <string name="stories_intro_main_title">Danasîna Şandiyên Çîrokî</string>
-    <string name="media_picker_soft_ask_permissions_denied">Hewla %1$s\'ê ya ji bo bigihîje wêneyên te hat redkirin. Ji bo vêya çareser bikî, destûrên xwe sererast bike, %2$s û %3$s\'ê veke.</string>
     <string name="media_insert_failed">Tevlîkirina medyayê bi ser neket.</string>
     <string name="media_insert_failed_with_reason">Tevlîkirina medyayê bi ser neket: %s</string>
     <string name="photo_picker_wordpress_media_library">Ji Medyageha WordPressê Hilbijêre</string>
@@ -795,7 +794,6 @@ Language: ku_TR
     <string name="domain_suggestions_fetch_error">Pêşniyarên navperê(domain) nehatin barkirin</string>
     <string name="domain_suggestions_search_hint">Ji bo fikrên zêdetir, peyvkilîdekê binivîse</string>
     <string name="register_domain">Domain\'ê Tomar Bike</string>
-    <string name="jetpack_installed_message">Va ye Jetpack hate sazkirin, îja divê em sazkariyên te temam bikin. Ev ê tenê xulekekê bigire.</string>
     <string name="post_restored">Şandî hat vegerandin</string>
     <string name="post_restoring">Şandî tê vegerandin</string>
     <string name="post_trashing">Şandî tê jêbirin</string>
@@ -1045,18 +1043,9 @@ Language: ku_TR
     <string name="my_site_create_new_site_title">Ti malperên te tune ye</string>
     <string name="reader_empty_followed_tags_title">Mijarên şopandî tune ye</string>
     <string name="reader_empty_followed_tags_subtitle">Ji bo ku tu şandiyên têkildarî mijarên xwe yên favorî bibinî, mijaran tevlî vir bike</string>
-    <string name="install_jetpack_retry">Dîsa Biceribîne</string>
-    <string name="install_jetpack_continue">Bidomîne</string>
-    <string name="jetpack_installation_problem">Pirsgirêkek hebû</string>
-    <string name="installing_jetpack">Jetpack tê sazkirin</string>
     <string name="jetpack">Jetpack</string>
-    <string name="jetpack_installed">Jetpack hat sazkirin</string>
-    <string name="install_jetpack">Jetpack\'ê Saz Bike</string>
     <string name="stats_jetpack_connection_faq">Jetpack PPP</string>
     <string name="login_to_to_connect_jetpack">Ji bo Jetpackê girêbidî têkeve hesabê xwe yê WordPress.com\'ê yê tu bi kar tînî.</string>
-    <string name="jetpack_installation_problem_message">Jetpack niha nayê sazkirin.</string>
-    <string name="installing_jetpack_message">Jetpack li malpera te tê sazkirin. Qedandina vê kirariyê dê çend xulekan bigire.</string>
-    <string name="install_jetpack_message">Dê agahiyên nasnameya malpera te neyê veşartin ew ê tenê ji bo sazkirina Jetpackê werin bi kar anîn.</string>
     <string name="stats_jetpack_connection_setup_info">Ji bo ku tu Amarên malpera xwe ya WordPressê bi kar bînî divê tu pêveka Jetpackê saz bikî.</string>
     <string name="reader_label_post_search_explainer">Tu dixwazî çi bibînî?</string>
     <string name="media_empty_search_list">Lêgerîna te û ti medya li hev nayên</string>
@@ -1593,7 +1582,6 @@ Language: ku_TR
     <string name="media_images">Wêne</string>
     <string name="media_all">Hemû</string>
     <string name="media_documents">Dosye</string>
-    <string name="photo_picker_soft_ask_permissions_denied">Hewla %1$s\'ê ya ji bo bigihîje wêneyên te hat redkirin. Ji bo vê çareser bikî, destûrên xwe sererast bike û %2$s\'ê veke.</string>
     <string name="reader_view_comments">Şîroveyan bibîne</string>
     <string name="site_settings_video_quality_hint">Kalîteya vîdeoyan. Nirxên bilind tê wateya vîdyoyên kalîteya çêtir.</string>
     <string name="site_settings_video_width_hint">Mezinahiya vîdeoyên di şandiyê de dike bi qasî vê mezinahiyê</string>

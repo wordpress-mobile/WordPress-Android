@@ -43,6 +43,7 @@ import org.wordpress.android.ui.utils.ListItemInteraction.Companion
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import java.time.DayOfWeek
@@ -62,6 +63,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     lateinit var epilogueBuilder: EpilogueBuilder
 
     @Mock
+    lateinit var notificationsPermissionBuilder: NotificationsPermissionBuilder
+
+    @Mock
     lateinit var daySelectionBuilder: DaySelectionBuilder
 
     @Mock
@@ -75,6 +79,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var siteStore: SiteStore
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
     private lateinit var viewModel: BloggingRemindersViewModel
     private val siteId = 123
     private val hour = 10
@@ -91,12 +98,15 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
             prologueBuilder,
             daySelectionBuilder,
             epilogueBuilder,
+            notificationsPermissionBuilder,
             dayLabelUtils,
             analyticsTracker,
             reminderScheduler,
             BloggingRemindersModelMapper(),
-            siteStore
+            siteStore,
+            resourceProvider
         )
+        viewModel.setPermissionState(hasNotificationsPermission = true, notificationsPermissionAlwaysDenied = true)
         events = mutableListOf()
         events = viewModel.isBottomSheetShowing.eventToList()
         uiState = viewModel.uiState.toList()

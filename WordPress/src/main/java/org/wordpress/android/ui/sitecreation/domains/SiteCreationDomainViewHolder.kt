@@ -10,7 +10,7 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.SiteCreationDomainsItemBinding
 import org.wordpress.android.databinding.SiteCreationDomainsItemV2Binding
 import org.wordpress.android.databinding.SiteCreationSuggestionsErrorItemBinding
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old.DomainUiState.AvailableDomain
@@ -72,7 +72,7 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
 
         fun onBind(uiState: New.DomainUiState) = with(binding) {
             composeView.setContent {
-                AppTheme {
+                AppThemeWithoutBackground {
                     DomainItem(uiState)
                 }
             }

@@ -932,7 +932,6 @@ Language: vi_VN
     <string name="stories_intro_main_title">Giới thiệu Bài Story</string>
     <string name="mlp_notice_blank_page_created">Đã tạo trang trống</string>
     <string name="mlp_notice_page_created">Đã tạo trang</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s không thể truy cập album ảnh của bạn. Để sửa vấn đề này, mở quyền truy cập %2$s và %3$s.</string>
     <string name="media_insert_failed">Chèn media thất bại.</string>
     <string name="media_insert_failed_with_reason">Chèn media thất bại: %s</string>
     <string name="photo_picker_wordpress_media_library">Chọn từ Thư viện Media WordPress</string>
@@ -1614,7 +1613,6 @@ Language: vi_VN
     <string name="domain_suggestions_search_hint">Nhập một từ khóa để có thêm ý tưởng</string>
     <string name="domains_suggestions_empty_list">Không có gợi ý</string>
     <string name="register_domain">Đăng ký tên miền</string>
-    <string name="jetpack_installed_message">Đã cài đặt Jetpack, đang thiết lập mọi thứ. Điều này sẽ mất vài phút.</string>
     <string name="stats_menu_remove">Xóa khỏi phân tích</string>
     <string name="stats_menu_move_down">Chuyển xuống</string>
     <string name="stats_menu_move_up">Chuyển lên</string>
@@ -1877,15 +1875,6 @@ Language: vi_VN
     <string name="reader_empty_followed_tags_title">Chưa theo dõi thẻ nào</string>
     <string name="reader_empty_followed_tags_subtitle">Thêm thẻ ở đây để tìm bài viết liên quan những đề tài mà bạn yêu thích</string>
     <string name="login_to_to_connect_jetpack">Đăng nhập tài khoản WordPress.com mà bạn có kết nối Jetpack.</string>
-    <string name="install_jetpack_retry">Thử lại</string>
-    <string name="install_jetpack_continue">Cài ngay</string>
-    <string name="jetpack_installation_problem_message">Không thể cài đặt Jetpack vào lúc này.</string>
-    <string name="jetpack_installation_problem">Đã xảy ra lỗi</string>
-    <string name="jetpack_installed">Đã cài đặt Jetpack</string>
-    <string name="installing_jetpack_message">Đang cài đặt Jetpack trên trang web của bạn. Phải mất vài phút để xong.</string>
-    <string name="installing_jetpack">Đang cài đặt Jetpack</string>
-    <string name="install_jetpack_message">Thông số trang web của bạn sẽ không được lưu trữ và chỉ dùng với mục đích cài đặt Jetpack.</string>
-    <string name="install_jetpack">Cài đặt Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="stats_jetpack_connection_setup_info">Để xem Thống Kê trên trang WordPress, bạn phải cài đặt plugin Jetpack.</string>
@@ -2438,7 +2427,6 @@ Language: vi_VN
     <string name="media_documents">Tài liệu</string>
     <string name="media_images">Ảnh</string>
     <string name="media_all">Tất cả</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s bị từ chối truy cập vào ảnh của bạn. Hãy cấp quyền và bật %2$s.</string>
     <string name="reader_view_comments">Đọc bình luận</string>
     <string name="site_settings_video_quality_hint">Chất lượng video. Thông số càng cao thì chất lượng video càng tốt.</string>
     <string name="site_settings_video_width_hint">Thay đổi video trong bài đăng thành kích thước này</string>

@@ -973,7 +973,6 @@ Language: es_VE
     <string name="stories_intro_main_title">Presentación de las entradas de historias</string>
     <string name="mlp_notice_blank_page_created">Página en blanco creada</string>
     <string name="mlp_notice_page_created">Página creada</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s ha denegado el acceso a tus fotos. Para corregirlo, edita tus permisos y activa %2$s y %3$s.</string>
     <string name="media_insert_failed">Inserción del medio fallida.</string>
     <string name="media_insert_failed_with_reason">Ha fallado la inserción del medio: %s</string>
     <string name="photo_picker_wordpress_media_library">Elige desde la biblioteca de medios de WordPress</string>
@@ -1655,7 +1654,6 @@ Language: es_VE
     <string name="domain_suggestions_search_hint">Teclea una palabra clave para más ideas</string>
     <string name="domains_suggestions_empty_list">No se han encontrado sugerencias</string>
     <string name="register_domain">Registrar dominio</string>
-    <string name="jetpack_installed_message">Ahora que está instalado Jetpack, solo necesitamos que lo configures. Esto solo te llevará un minuto.</string>
     <string name="stats_menu_remove">Quitar de los detalles</string>
     <string name="stats_menu_move_down">Mover abajo</string>
     <string name="stats_menu_move_up">Mover arriba</string>
@@ -1918,15 +1916,6 @@ Language: es_VE
     <string name="reader_empty_followed_tags_title">Temas no seguidos</string>
     <string name="reader_empty_followed_tags_subtitle">Añade aquí temas para descubrir entradas sobre tus temáticas favoritas</string>
     <string name="login_to_to_connect_jetpack">Accede a la cuenta de WordPress.com que usaste para conectar Jetpack.</string>
-    <string name="install_jetpack_retry">Reintentar</string>
-    <string name="install_jetpack_continue">Configurar</string>
-    <string name="jetpack_installation_problem_message">Jetpack no se pudo instalar en este momento.</string>
-    <string name="jetpack_installation_problem">Hubo un problema</string>
-    <string name="jetpack_installed">Jetpack instalado</string>
-    <string name="installing_jetpack_message">Instalando Jetpack en tu sitio. Esto puede llevar unos minutos completarse.</string>
-    <string name="installing_jetpack">Instalando Jetpack</string>
-    <string name="install_jetpack_message">Las credenciales de tu web no se almacenarán, y solo se utilizan para instalar Jetpack.</string>
-    <string name="install_jetpack">Instala Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ de Jetpack</string>
     <string name="stats_jetpack_connection_setup_info">Para usar las estadísticas en tu sitio WordPress necesitas instalar el plugin Jetpack.</string>
@@ -2480,7 +2469,6 @@ Language: es_VE
     <string name="media_documents">Documentos</string>
     <string name="media_images">Imágenes</string>
     <string name="media_all">Todos</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s denegó el acceso a tus fotos. Para solucionar esto modifica tus permisos y activa %2$s.</string>
     <string name="reader_view_comments">Ver comentarios</string>
     <string name="site_settings_video_quality_hint">Calidad de los videos. Valores más altos implican videos de mejor calidad.</string>
     <string name="site_settings_video_width_hint">Redimensiona los videos en las entradas a este tamaño</string>

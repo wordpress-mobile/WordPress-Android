@@ -206,7 +206,6 @@ Language: en_AU
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
     <string name="register_domain">Register Domain</string>
-    <string name="jetpack_installed_message">Now that Jetpack is installed, we just need to get you set up. This will only take a minute.</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
@@ -455,18 +454,9 @@ Language: en_AU
     <string name="quick_start_button_positive">Go</string>
     <string name="quick_start_button_negative_short">Cancel</string>
     <string name="content_description_more">More</string>
-    <string name="jetpack_installation_problem">There was a problem</string>
-    <string name="install_jetpack_retry">Retry</string>
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
-    <string name="jetpack_installed">Jetpack installed</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="jetpack">Jetpack</string>
-    <string name="installing_jetpack">Installing Jetpack</string>
-    <string name="install_jetpack">Install Jetpack</string>
-    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack.</string>
-    <string name="install_jetpack_continue">Set up</string>
-    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time.</string>
-    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete.</string>
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
     <string name="themes_empty_list">No themes matching your search</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
@@ -997,7 +987,6 @@ Language: en_AU
     <string name="media_documents">Documents</string>
     <string name="media_images">Images</string>
     <string name="media_all">All</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="reader_view_comments">View comments</string>
     <string name="site_settings_video_quality_hint">Quality of videos. Higher values mean better quality videos.</string>
     <string name="site_settings_video_width_hint">Resizes videos in posts to this size</string>

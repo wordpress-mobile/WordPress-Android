@@ -22,6 +22,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.MySiteFragmentBinding
 import org.wordpress.android.databinding.MySiteInfoHeaderCardBinding
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
@@ -100,7 +101,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         toolbarMain.let { toolbar ->
             toolbar.inflateMenu(R.menu.my_site_menu)
             toolbar.menu.findItem(R.id.me_item)?.let { meMenu ->
-                meMenu.actionView.let { actionView ->
+                meMenu.actionView?.let { actionView ->
                     actionView.contentDescription = meMenu.title
                     actionView.setOnClickListener { viewModel.onAvatarPressed() }
                     TooltipCompat.setTooltipText(actionView, meMenu.title)
@@ -187,6 +188,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         viewModel.selectTab.observeEvent(viewLifecycleOwner) { navTarget ->
             viewPager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
         }
+        viewModel.onShowJetpackIndividualPluginOverlay.observeEvent(viewLifecycleOwner) {
+            WPJetpackIndividualPluginFragment.show(requireActivity().supportFragmentManager)
+        }
     }
 
     private fun MySiteFragmentBinding.loadGravatar(avatarUrl: String) =
@@ -204,9 +208,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
         tabLayout.setVisible(state.tabsUiState.showTabs)
         updateTabs(state.tabsUiState)
-        actionableEmptyView.setVisible(false)
-        viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
+        if (actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
+            viewModel.onActionableEmptyViewGone()
         }
         if (state.siteInfoHeaderState.hasUpdates || !header.isVisible) {
             siteInfo.loadMySiteDetails(state.siteInfoHeaderState.siteInfoHeader)
@@ -259,11 +263,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
         tabLayout.setVisible(state.tabsUiState.showTabs)
-        viewModel.setActionableEmptyViewVisible(actionableEmptyView.isVisible) {
+        if (!actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(true)
             actionableEmptyView.image.setVisible(state.shouldShowImage)
+            viewModel.onActionableEmptyViewVisible()
         }
-        actionableEmptyView.image.setVisible(state.shouldShowImage)
         siteTitle = getString(R.string.my_site_section_screen_title)
         updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
         appbarMain.setExpanded(false, true)

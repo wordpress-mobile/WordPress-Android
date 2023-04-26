@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- CORRECTNESS -->
+    <issue id="MissingTranslation" severity="ignore" />
+    <issue id="ExtraTranslation" severity="ignore" />
+    <issue id="PluralsCandidate" severity="ignore" /> <!-- GlotPress doesn't support plurals -->
+    <!-- TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/18226 -->
+    <issue id="LocaleFolder">
+        <!-- MAIN -->
+        <ignore path="**/src/main/res/values-he" />
+        <ignore path="**/src/main/res/values-id" />
+        <!-- JETPACK -->
+        <ignore path="**/src/jetpack/res/values-he" />
+        <ignore path="**/src/jetpack/res/values-id" />
+    </issue>
+    <issue id="Typos">
+        <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
+    </issue>
+    <!-- TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/18185 -->
+    <issue id="MissingFirebaseInstanceTokenRefresh">
+        <!-- GCM -->
+        <ignore path="**/generated/source/kapt/**/org/wordpress/android/push/Hilt_GCMMessageService.java" />
+    </issue>
+    <issue id="GradleDependency" severity="ignore" /> <!-- Dependabot will take care of this -->
+    <!-- SECURITY -->
+    <issue id="TrustAllX509TrustManager">
+        <!-- EDITOR -->
+        <ignore path="**/libs/editor/org/jsoup/helper/HttpConnection$Response$2.class" /> <!-- jsoup -->
+    </issue>
+    <!-- PERFORMANCE -->
+    <issue id="UnusedResources">
+        <!-- EDITOR -->
+        <ignore path="**/libs/editor/src/main/res/drawable/**" /> <!-- 9 errors -->
+        <ignore path="**/libs/editor/src/main/res/drawable-hdpi/**" />  <!-- 6 errors -->
+        <!-- GOOGLE SERVICES -->
+        <ignore path="**/generated/res/google-services/**/values/values.xml" />
+        <ignore path="**/generated/res/google-services/**/xml/global_tracker.xml" />
+        <!-- LOCALIZATION -->
+        <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
+        <ignore regexp=".*\/values\/strings\.xml$"/>
+    </issue>
+    <!-- USABILITY -->
+    <issue id="IconDipSize">
+        <!-- EDITOR -->
+        <ignore path="**/libs/editor/src/main/res/drawable-hdpi/format_bar_chevron.png" />
+    </issue>
+    <issue id="IconMissingDensityFolder">
+        <!-- EDITOR -->
+        <ignore path="**/libs/editor/src/main/res" /> <!-- drawable-mdpi -->
+        <!-- WORDPRESS -->
+        <ignore path="**/src/wordpress/res" /> <!-- drawable-hdpi, drawable-xxhdpi -->
+    </issue>
+</lint>

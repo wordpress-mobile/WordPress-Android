@@ -56,8 +56,11 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
+import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.jpfullplugininstall.GetShowJetpackFullPluginInstallOnboardingUseCase
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
+import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFullPluginInstallOnboardingUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
@@ -323,6 +326,15 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
+    @Mock
+    lateinit var dashboardCardDomainUtils: DashboardCardDomainUtils
+
+    @Mock
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
+    @Mock
+    lateinit var wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -489,6 +501,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL))
             .thenReturn(QuickStartNewSiteTask.VIEW_SITE)
         whenever(jetpackBrandingUtils.getBrandingTextForScreen(any())).thenReturn(mock())
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()).thenReturn(true)
         viewModel = MySiteViewModel(
             networkUtilsWrapper,
             testDispatcher(),
@@ -540,7 +553,10 @@ class MySiteViewModelTest : BaseUnitTest() {
             bloggingPromptsCardTrackHelper,
             getShowJetpackFullPluginInstallOnboardingUseCase,
             jetpackInstallFullPluginShownTracker,
-            blazeFeatureUtils
+            blazeFeatureUtils,
+            dashboardCardDomainUtils,
+            jetpackFeatureRemovalPhaseHelper,
+            wpJetpackIndividualPluginHelper,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1400,6 +1416,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given dynamic cards enabled + new site, when check & start QS triggered, then new site QS starts`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = true)
 
@@ -1416,6 +1433,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given dynamic cards enabled + existing site, when check & start QS triggered, then existing site QS starts`() {
         whenever(quickStartRepository.quickStartType).thenReturn(ExistingSiteQuickStartType)
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = false)
 
@@ -1432,6 +1450,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given no selected site, when check and start QS is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = false)
 
@@ -1443,6 +1462,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = true)
 
@@ -1454,6 +1474,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = false)
 
@@ -1465,6 +1486,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = true)
 
@@ -1483,6 +1505,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = false)
 
@@ -2661,7 +2684,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
         initSelectedSite()
 
-        val expected = R.drawable.ic_wordpress_blue_32dp
+        val expected = R.drawable.ic_wordpress_jetpack_appicon
         assertThat((getSiteMenuTabLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
         assertThat((getLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
         assertThat((getDashboardTabLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
@@ -3260,6 +3283,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(blazeFeatureUtils).trackEntryPointTapped(BlazeFlowSource.DASHBOARD_CARD)
     }
+
     @Test
     fun `when promote with blaze card menu is accessed, then blaze card menu is accessed is tracked`() = test {
         initSelectedSite()
@@ -3283,6 +3307,28 @@ class MySiteViewModelTest : BaseUnitTest() {
             BlazeFlowSource.DASHBOARD_CARD
         )
     }
+
+    @Test
+    fun `when onActionableEmptyViewVisible is invoked then show jetpack individual plugin overlay`() =
+        test {
+            whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(true)
+
+            viewModel.onActionableEmptyViewVisible()
+            advanceUntilIdle()
+
+            assertThat(viewModel.onShowJetpackIndividualPluginOverlay.value?.peekContent()).isEqualTo(Unit)
+        }
+
+    @Test
+    fun `when onActionableEmptyViewVisible is invoked then don't show jetpack individual plugin overlay`() =
+        test {
+            whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(false)
+
+            viewModel.onActionableEmptyViewVisible()
+            advanceUntilIdle()
+
+            assertThat(viewModel.onShowJetpackIndividualPluginOverlay.value?.peekContent()).isNull()
+        }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
@@ -3374,8 +3420,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsEnhancementsEnabled)
         whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsSocialEnabled)
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsEnabled)
-        whenever(jetpackBrandingUtils.shouldShowJetpackBranding()).thenReturn(shouldShowJetpackBranding)
-        whenever(blazeFeatureUtils.shouldShowBlazeEntryPoint(any(), any())).thenReturn(isBlazeEnabled)
+        whenever(jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard()).thenReturn(shouldShowJetpackBranding)
+        whenever(blazeFeatureUtils.shouldShowBlazeCardEntryPoint(any(), any())).thenReturn(isBlazeEnabled)
         if (isSiteUsingWpComRestApi) {
             site.setIsWPCom(true)
             site.setIsJetpackConnected(true)
@@ -3548,7 +3594,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                     add(initPostCard(mockInvocation))
                     add(initTodaysStatsCard(mockInvocation))
                     if (bloggingPromptsFeatureConfig.isEnabled()) add(initBloggingPromptCard(mockInvocation))
-                    if (blazeFeatureUtils.shouldShowBlazeEntryPoint(
+                    if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(
                             BlazeStatusModel(1, true), 1)
                     ) add(
                         initPromoteWithBlazeCard(mockInvocation)

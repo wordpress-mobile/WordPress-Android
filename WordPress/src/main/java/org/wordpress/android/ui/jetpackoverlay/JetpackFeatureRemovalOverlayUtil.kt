@@ -14,6 +14,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseO
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseStaticPosters
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
@@ -85,7 +86,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
                 when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
                     null -> false
                     PhaseOne, PhaseTwo, PhaseThree -> true
-                    PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> false
+                    PhaseStaticPosters, PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> false
                 }
     }
 

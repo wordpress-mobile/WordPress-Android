@@ -17,6 +17,8 @@ import org.wordpress.android.ui.prefs.categories.list.CategoryDetailNavigation.E
 import org.wordpress.android.ui.prefs.categories.list.UiState.Content
 import org.wordpress.android.ui.prefs.categories.list.UiState.Loading
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -68,11 +70,14 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
     }
 
     private fun getSite(savedInstanceState: Bundle?): SiteModel {
-        return if (savedInstanceState == null) {
-            requireActivity().intent.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
+        val site = requireNotNull(
+            if (savedInstanceState == null) {
+                requireActivity().intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+            } else {
+                savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)
+            }
+        )
+        return site
     }
 
     private fun SiteSettingsCategoriesListFragmentBinding.setupObservers() {

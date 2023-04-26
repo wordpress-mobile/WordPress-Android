@@ -20,6 +20,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
@@ -30,6 +32,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActio
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonBuilder
@@ -175,6 +178,7 @@ class CardsBuilderTest {
     private fun List<MySiteCardAndItem>.findQuickLinkRibbon() =
         this.find { it is QuickLinkRibbon } as QuickLinkRibbon?
 
+    @Suppress("LongMethod")
     private fun buildCards(
         isQuickActionEnabled: Boolean = true,
         activeTask: QuickStartTask? = null,
@@ -218,7 +222,10 @@ class CardsBuilderTest {
                     mock(),
                     mock(),
                 ),
-                promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(true, mock(), mock(), mock())
+                promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(true, mock(), mock(), mock()),
+                dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(true, mock(), mock(), mock()),
+                pagesCardBuilderParams = PagesCardBuilderParams(mock(), mock(), mock()),
+                activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock(), mock()),
             ),
             quickLinkRibbonBuilderParams = QuickLinkRibbonBuilderParams(
                 siteModel = mock(),

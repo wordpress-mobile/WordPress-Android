@@ -1,13 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-28 11:16:23+0000
+Translation-Revision-Date: 2023-04-21 07:37:11+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: cs_CZ
 -->
 <resources>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; používá %2$s jednotlivé pluginy Jetpack</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; používá plugin &lt;b&gt;%2$s&lt;/b&gt;</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">Aplikace WordPress nepodporuje weby s jednotlivými pluginy Jetpack.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt; používá jednotlivé pluginy Jetpack, které aplikace WordPress nepodporuje.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt; používá plugin &lt;b&gt;%2$s&lt;/b&gt;, který aplikace WordPress nepodporuje.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">Nelze získat přístup k některým z vašich stránek</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">Nelze získat přístup k jednomu z vašich stránek</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">Přepněte prosím do aplikace Jetpack, kde vás provedeme připojením úplného pluginu Jetpack, abyste mohli používat tuto stránku s aplikací.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">Přepněte do aplikace Jetpack</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s používá aplikaci %2$s, která zatím nepodporuje všechny funkce aplikace.\nChcete-li aplikaci používat s tímto webem, nainstalujte si prosím %3$s.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">Tento web</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s používá aplikaci %2$s, která zatím nepodporuje všechny funkce aplikace. Nainstalujte prosím %3$s.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s používá aplikaci %2$s, která zatím nepodporuje všechny funkce aplikace. Nainstalujte %3$s.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Přesun do aplikace Jetpack za pár dní.</string>
+    <string name="wp_jp_static_poster_footnote">Přepínání je zdarma a trvá jen minutu.</string>
+    <string name="wp_jp_static_poster_message">Statistiky, čtečka, upozornění a další funkce poháněné Jetpack byly z aplikace WordPress odstraněny a nyní je lze nalézt pouze v aplikaci Jetpack.</string>
+    <string name="wp_jp_static_poster_button_secondary">Více se dozvíte na Jetpack.com</string>
+    <string name="wp_jp_static_poster_button_primary">Přepněte do aplikace Jetpack</string>
+    <string name="wp_jp_static_poster_title_plural">%s se přesunuly do aplikace Jetpack.</string>
+    <string name="wp_jp_static_poster_title">%s se přesunul do aplikace Jetpack.</string>
+    <string name="my_site_btn_wp_admin">WP Admin</string>
+    <string name="my_site_header_manage">Správa</string>
+    <string name="my_site_header_traffic">Návštěvnost</string>
+    <string name="my_site_header_content">Obsah</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Nastavit</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">Hotovo</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Nyní, když je nainstalován Jetpack, musíme vás ho nechat nastavit. Bude to trvat jen minutu.</string>
+    <string name="blaze_overlay_site_promotional_button">Nyní zvýrazněte příspěvek</string>
+    <string name="blaze_overlay_page_promotional_button">Zvýrazněte tuto stránku</string>
+    <string name="blaze_overlay_post_promotional_button">Zvýrazněte tento příspěvek</string>
+    <string name="blaze_promotional_subtitle_3">Sledujte výkon, spusťte a zastavte svůj Blaze kdykoli.</string>
+    <string name="blaze_promotional_subtitle_2">Váš obsah se objeví na milionech webů WordPress a Tumblr.</string>
+    <string name="blaze_promotional_subtitle_1">Propagujte jakýkoli příspěvek nebo stránku během několika minut za pouhých pár dolarů denně.</string>
+    <string name="blaze_promotional_text">Přiveďte na svůj web větší návštěvnost se zvýrazněním</string>
+    <string name="blaze_activity_title">Zvýraznění</string>
+    <string name="site_creation_domain_tag_unavailable">Tato doména je již registrována</string>
+    <string name="site_creation_domain_tag_sale">Prodej</string>
+    <string name="site_creation_domain_tag_recommended">Doporučeno</string>
+    <string name="site_creation_domain_tag_best_alternative">Nejlepší alternativa</string>
+    <string name="me_btn_help">Nápověda</string>
+    <string name="support_faq_caption">Odpovědi na běžné otázky, které můžete mít, najdete v našich FAQ.</string>
+    <string name="support_faq_title">Děkujeme, že jste přešli na aplikaci Jetpack!</string>
+    <string name="logs_button">Protokoly</string>
+    <string name="tickets">Vstupenky</string>
+    <string name="free">Zdarma</string>
+    <string name="help_buttons_screen_title">Nápověda</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Zavřít</string>
     <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Kontaktovat podporu</string>
+    <string name="gutenberg_native_blocks_menu">Menu bloků</string>
+    <string name="promote_blaze_card_menu_hide_this">Skrýt toto</string>
+    <string name="promote_blaze_card_sub_title">Zobrazte svou práci na milionech webů.</string>
+    <string name="promote_blaze_card_title">Propagujte svůj zvýrazněný obsah</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Nainstalujte celý plugin</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Pravidla a podmínky</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Nastavením Jetpacku souhlasíte s našimi </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">plný plugin Jetpack</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">individuální Jetpack pluginy</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">plugin %1$s</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s používá aplikaci %2$s, která zatím nepodporuje všechny funkce aplikace.\nChcete-li aplikaci používat s tímto webem, nainstalujte si prosím %3$s.</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Ikona chyby</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Nainstalujte si celý Jetpack plugin</string>
+    <string name="only_one_primary_site_message">K dispozici je pouze jeden web, takže nemůžete změnit svůj primární web.</string>
+    <string name="jetpack_plugin_install_error_button_contact_support">Kontaktujte podporu</string>
+    <string name="jetpack_plugin_install_error_button_retry">Znovu</string>
+    <string name="jetpack_plugin_install_error_description">Jetpack v tuto chvíli nelze nainstalovat.</string>
+    <string name="jetpack_plugin_install_error_title">Vyskytl se problém</string>
+    <string name="jetpack_plugin_install_full_plugin_done_description">Připraveno k použití tohoto webu s aplikací.</string>
+    <string name="jetpack_plugin_install_done_title">Jetpack nainstalován</string>
+    <string name="jetpack_plugin_install_installing_description">Instalace Jetpack na vaše stránky. To může trvat až několik minut.</string>
+    <string name="jetpack_plugin_install_installing_title">Instalování Jetpacku</string>
+    <string name="jetpack_plugin_install_initial_button">Pokračovat</string>
+    <string name="jetpack_plugin_install_initial_description">Pověření na vašem webu nebudou uložena a budou použita pouze za účelem instalace Jetpack.</string>
+    <string name="jetpack_plugin_install_initial_title">Instalovat Jetpack</string>
+    <string name="jetpack_plugin_install_jp_logo_content_description">Ikona Jetpack</string>
+    <string name="button_promote_with_blaze">Propagujte zvýrazněním</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Odemkněte plný potenciál svého webu. Získejte statistiky, upozornění a další s Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Vaše stránky mají plugin Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Mobilní aplikace Jetpack je navržena tak, aby fungovala společně s pluginem Jetpack. Přepněte nyní a získejte přístup ke statistikám, oznámením, čtečce a dalším.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Dostávejte upozornění na nové komentáře, hodnocení Líbí se mi, zhlédnutí a další.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Najděte a sledujte své oblíbené stránky a komunity a sdílejte svůj obsah.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Sledujte, jak vaše návštěvnost roste, pomocí užitečných statistik a komplexních statistik.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistiky a postřehy</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack vám umožní udělat více s vaším webem WordPress. Přepínání je zdarma a trvá jen minutu.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Dejte WordPressu podporu s Jetpackem</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Předvolby pro návrhy a připomenutí psaní blogu můžete kdykoli nastavit v části Můj web &gt; Nastavení &gt; Blogování</string>
+    <string name="blogging_reminders_prompt_subtitle">Oznámení bude obsahovat slovo nebo krátkou frázi pro inspiraci</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Navštivte &lt;b&gt;nastavení webu&lt;/b&gt; a znovu jej zapněte</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Výzvy k blogování jsou skryté</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Vypněte výzvy</string>
+    <string name="support_forum_caption">Získejte pomoc od naší skupiny dobrovolníků.</string>
+    <string name="support_forum_title">Komunitní fóra</string>
+    <string name="site_settings_blogging_reminders_notification_title">Připomenutí blogů</string>
+    <string name="site_settings_blogging_prompts_title">Zobrazit výzvy</string>
+    <string name="site_settings_blogging">Blogování</string>
     <string name="install_play_store_to_get_jetpack">Chcete-li získat aplikaci Jetpack, nainstalujte si obchod Google Play</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Odložit na později</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Přejděte na Jetpack </string>
@@ -37,6 +129,7 @@ Language: cs_CZ
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Přepínání je zdarma a trvá jen minutu.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Statistiky, čtečka, upozornění a další funkce poháněné Jetpack budou z aplikace WordPress brzy odstraněny.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statistiky, čtečka, upozornění a další funkce poháněné Jetpack budou z aplikace WordPress odstraněny na %s.</string>
+    <string name="jetpack_feature_card_content_phase_three">Statistiky, čtečka, upozornění a další funkce se brzy přesunou do mobilní aplikace Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Funkce Jetpacku se brzy přesunou.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Oznámení se přesouvají do Jetpacku</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Čtečka se přesouvá do aplikace Jetpack</string>
@@ -83,9 +176,6 @@ Language: cs_CZ
     <string name="preference_open_links_in_jetpack">Otevřít odkazy v Jetpacku</string>
     <string name="jp_migration_need_help_button">Potřebujete pomoci?</string>
     <string name="jp_migration_got_it_button">Mám to</string>
-    <string name="jp_migration_delete_message">&lt;b&gt;Smažte aplikaci WordPress&lt;/b&gt;, abyste předešli konfliktům dat.</string>
-    <string name="jp_migration_delete_title">Už nepotřebujete WordPress aplikaci</string>
-    <string name="jp_migration_delete_subtitle">Vypadá to, že máte stále nainstalovanou aplikaci WordPress. Doporučujeme smazat WordPress aplikaci, abyste předešli konfliktům dat.</string>
     <string name="jp_migration_network_error_message">Bez připojení k síti nemůžeme přenést vaše data a nastavení.</string>
     <string name="jp_migration_network_error_subtitle">Zkontrolujte, zda vaše síťové připojení funguje, a zkuste to znovu.</string>
     <string name="jp_migration_network_error_title">Nelze se připojit k internetu.</string>
@@ -95,7 +185,6 @@ Language: cs_CZ
     <string name="jp_migration_try_again_button">Zkuste to znovu</string>
     <string name="jp_migration_finish_button">Dokončit</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Odstranit ikonu aplikace WordPress</string>
-    <string name="jp_migration_done_delete_wp_message">&lt;b&gt;Smažte aplikaci WordPress&lt;/b&gt;, abyste předešli konfliktům dat.</string>
     <string name="jp_migration_done_subtitle">Přenesli jsme všechna vaše data a nastavení. Všechno je tam, kde jsi to nechal.</string>
     <string name="jp_migration_done_title">Děkujeme, že jste přešli na Jetpack!</string>
     <string name="jp_migration_notifications_subtitle">Budete dostávat všechna stejná oznámení, ale nyní budou pocházet z aplikace Jetpack.</string>
@@ -105,7 +194,6 @@ Language: cs_CZ
     <string name="support_title">Podpora</string>
     <string name="notification_disable_broadcast_permission_desc">Umožňuje aplikaci zakázat WordPress oznámení.</string>
     <string name="notification_disable_broadcast_permission_label">zakázat WordPress oznámení</string>
-    <string name="jp_migration_success_card_message">Odstraňte WordPress aplikaci</string>
     <string name="jp_migration_help_button">Potřebujete pomoci?</string>
     <string name="jp_migration_continue_button">Pokračovat</string>
     <string name="jp_migration_welcome_site_found_message">Našli jsme vaše stránky. Pokračujte v přenosu všech dat a automaticky se přihlaste k Jetpacku.</string>
@@ -313,6 +401,8 @@ Language: cs_CZ
     <string name="blogging_prompts_onboarding_content_top">Nejlepší způsob, jak se stát lepším spisovatelem, je vybudovat si návyk na psaní a sdílet ho s ostatními – to je místo, kde přicházejí výzvy!</string>
     <string name="blogging_prompt_set_reminders">Nastavit připomenutí</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Publikování pravidelně přitahuje nové čtenáře. Řekněte nám, kdy chcete psát, a my vám zašleme připomenutí!</string>
+    <string name="blogging_prompts_onboarding_header_title">Představujeme\nVýzvy k blogování</string>
+    <string name="blogging_reminders_prompt_title">Zahrňte výzvu k blogování</string>
     <string name="site_creation_intent_writing_poetry">Psaní poezie</string>
     <string name="site_creation_intent_travel">Cestování</string>
     <string name="site_creation_intent_technology">Technologie</string>
@@ -618,6 +708,7 @@ Language: cs_CZ
     <string name="site_settings_categories_hint">Spravujte rubriky svého webu</string>
     <string name="site_settings_categories_title">Rubriky</string>
     <string name="page_is_posts_page_warning">Obsah stránky s nejnovějšími příspěvky je generován automaticky a nelze jej upravovat.</string>
+    <string name="site_settings_blogging_reminders_title">Připomenutí</string>
     <string name="gutenberg_native_border_settings">Nastavení okrajů</string>
     <string name="storage_utils_dialog_dont_show_button">Neptat se znovu</string>
     <string name="storage_utils_dialog_ok_button">Zobrazit úložiště</string>
@@ -685,6 +776,7 @@ Language: cs_CZ
     <string name="gutenberg_native_custom_url">Vlastní URL</string>
     <string name="gutenberg_native_create_embed">Vytvořit vložení</string>
     <string name="gutenberg_native_column_d">Sloupec %d</string>
+    <string name="gutenberg_native_more">Více</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Stručně popište odkaz, abyste pomohli uživatelům s čtečkou obrazovky.</string>
     <string name="gutenberg_native_add_blocks">Přidat bloky</string>
     <string name="login_no_jetpack_sites">Nebyly nalezeny žádné stránky Jetpack</string>
@@ -937,8 +1029,8 @@ Language: cs_CZ
     <string name="suggestion_none">Nejsou k dispozici žádné návrhy %s.</string>
     <string name="suggestion_problem">Při načítání návrhů došlo k problému.</string>
     <string name="suggestion_no_matching">Bez shody %s.</string>
-    <string name="threat_fix_current_not_fixable_description">Jetpack Scan nemůže tuto hrozbu automaticky opravit.\n         Doporučujeme hrozbu vyřešit ručně: ujistěte se, že WordPress, vaše téma a všechny vaše doplňky jsou aktuální, a odstraňte z webu nevhodný kód, téma nebo plugin.\n \n\n         Pokud potřebujete další pomoc při řešení této hrozby, doporučujeme &lt;b&gt;Codeable+&lt;/b&gt;, důvěryhodné tržiště nezávislých odborníků s vysoce prověřenými odborníky na WordPress.\n         Identifikovali vybranou skupinu bezpečnostních odborníků, kteří s těmito projekty pomohli. Ceny se pohybují od 70–120 USD / hodinu a můžete získat bezplatný odhad bez povinnosti najmout.</string>
     <string name="threat_fix_fixable_replace">Jetpack Scan nahradí ovlivněný soubor nebo adresář.</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan nemůže tuto hrozbu automaticky opravit.\n         Doporučujeme hrozbu vyřešit ručně: ujistěte se, že WordPress, vaše téma a všechny vaše doplňky jsou aktuální, a odstraňte z webu nevhodný kód, téma nebo plugin.\n \n\n         Pokud potřebujete další pomoc při řešení této hrozby, doporučujeme &lt;b&gt;Codeable+&lt;/b&gt;, důvěryhodné tržiště nezávislých odborníků s vysoce prověřenými odborníky na WordPress.\n         Identifikovali vybranou skupinu bezpečnostních odborníků, kteří s těmito projekty pomohli. Ceny se pohybují od 70–120 USD / hodinu a můžete získat bezplatný odhad bez povinnosti najmout.</string>
     <string name="threat_problem_header">Jaký byl problém?</string>
     <string name="threat_technical_details_header">Technické podrobnosti</string>
     <string name="threat_file_description">V souboru nalezena hrozba:</string>
@@ -1096,7 +1188,6 @@ Language: cs_CZ
     <string name="stories_intro_description_first">Zkombinujte fotografie, videa a text a vytvořte poutavé příběhy příspěvků, na které lze klepnout, které se vašim návštěvníkům budou líbit.</string>
     <string name="stories_intro_title_second">Příběhový příspěvek nezmizí</string>
     <string name="mlp_notice_page_created">Stránka byla vytvořena</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s byl odepřen přístup k vašim fotkám. Chcete-li to opravit, upravte svá oprávnění a zapněte %2$s a %3$s.</string>
     <string name="mlp_notice_blank_page_created">Prázdná stránka vytvořena</string>
     <string name="stories_intro_main_title">Představujeme příběhy</string>
     <string name="stories_intro_image_caption_first">Jak vytvořit příběhový příspěvek</string>
@@ -1581,6 +1672,7 @@ Language: cs_CZ
     <string name="gutenberg_native_alt_text">Alternativní text</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Nastala neznámá chyba. Prosím zkuste to znovu.</string>
     <string name="gutenberg_native_add_alt_text">Přidejte alternativní text</string>
+    <string name="gutenberg_native_add_description">Přidat popis</string>
     <string name="reader_acessibility_list_loaded">\"Seznam má načteno %1$d položek.\"</string>
     <string name="reader_empty_saved_posts_content_description">Klepnutím na tlačítko Přidat k uložení příspěvků uložíte příspěvek do svého seznamu.</string>
     <string name="notifications_tab_dialog_main_off_message">Vypnutím oznámení pro tento web zakážete zobrazování oznámení na kartě oznámení pro tento web. Po zapnutí oznámení pro tento web můžete doladit, jaký druh oznámení se vám zobrazí.</string>
@@ -1777,7 +1869,6 @@ Language: cs_CZ
     <string name="post_uploading_draft">Nahrávám koncept</string>
     <string name="post_list_tab_drafts">Koncepty</string>
     <string name="error_restoring_post">Při obnovování příspěvku došlo k chybě</string>
-    <string name="jetpack_installed_message">Nyní, když je nainstalován Jetpack, musíme vás ho nechat nastavit. Bude to trvat jen minutu.</string>
     <string name="register_domain">Registrovat doménu</string>
     <string name="domains_suggestions_empty_list">Nebyly nalezeny žádné návrhy</string>
     <string name="domain_suggestions_search_hint">Napište klíčové slovo pro více nápadů</string>
@@ -2053,15 +2144,6 @@ Language: cs_CZ
     <string name="my_site_create_new_site_title">Nemáte žádné stránky</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
-    <string name="install_jetpack">Instalovat Jetpack</string>
-    <string name="install_jetpack_retry">Odpověď</string>
-    <string name="install_jetpack_continue">Pokračovat</string>
-    <string name="installing_jetpack">Instalování Jetpacku</string>
-    <string name="jetpack_installation_problem">Vyskytl se problém</string>
-    <string name="jetpack_installed">Jetpack nainstalován</string>
-    <string name="install_jetpack_message">Pověření na vašem webu nebudou uložena a budou použita pouze za účelem instalace Jetpack.</string>
-    <string name="installing_jetpack_message">Instalace Jetpack na vaše stránky. To může trvat až několik minut.</string>
-    <string name="jetpack_installation_problem_message">Jetpack v tuto chvíli nelze nainstalovat.</string>
     <string name="login_to_to_connect_jetpack">Přihlaste se k účtu WordPress.com, který jste použili k připojení Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">K zobrazení statistik je třeba mít nainstalovaný Jetpack plugin.</string>
     <string name="themes_empty_list">Žádné šablony neodpovídají hledanému výrazu</string>
@@ -2614,7 +2696,7 @@ Language: cs_CZ
     <string name="media_documents">Dokumenty</string>
     <string name="media_videos">Videa</string>
     <string name="media_images">Obrázky</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s byl odepřen přístup k vašim fotografiím. Chcete-li to vyřešit, upravte oprávnění a zapněte %2$s.</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">%1$s byl odepřen přístup k vašim fotografiím. Chcete-li to vyřešit, upravte oprávnění a zapněte %2$s.</string>
     <string name="reader_view_comments">Zobrazit komentáře</string>
     <string name="site_settings_video_quality_hint">Kvalita videí. Vyšší hodnoty znamenají lepší kvalitu videí.</string>
     <string name="site_settings_video_width_hint">Změní velikost videí v příspěvcích na tuto velikost</string>

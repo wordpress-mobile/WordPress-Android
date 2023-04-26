@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="SiteCreationHeaderV2Title" parent="SiteCreationHeaderV2Title.Base">
+        <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
+        <item name="android:lineSpacingExtra">@null</item>
+    </style>
+</resources>

@@ -26,8 +26,6 @@ Language: es_MX
     <string name="preference_open_links_in_jetpack">Abrir las ligas en Jetpack.</string>
     <string name="jp_migration_need_help_button">¿Necesita ayuda?</string>
     <string name="jp_migration_got_it_button">Entendido</string>
-    <string name="jp_migration_delete_subtitle">Parece que todavía tiene instalada la aplicación WordPress. Recomendamos que la elimines para evitar conflictos de datos.</string>
-    <string name="jp_migration_delete_title">Ya no necesita la aplicación WordPress.</string>
     <string name="jp_migration_network_error_message">No pudimos cambiar sus datos y configuraciones sin conexión con la red.</string>
     <string name="jp_migration_network_error_subtitle">Por favor, cheque para asegurar que su conexión de red está funcionando y inténtelo de nuevo.</string>
     <string name="jp_migration_network_error_title">No se puede conectar al internet.</string>
@@ -194,7 +192,6 @@ Language: es_MX
     <string name="gutenberg_native_help_button">Botón de ayuda</string>
     <string name="stories_intro_description_first">Combina fotos, vídeos y texto para crear entradas de historias atractivas y accesibles que les encantarán a tus visitantes.</string>
     <string name="stories_intro_title_second">Las entradas de historias no desaparecen</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s ha denegado el acceso a tus fotos. Para corregirlo, edita tus permisos y activa %2$s y %3$s.</string>
     <string name="mlp_notice_page_created">Página creada</string>
     <string name="mlp_notice_blank_page_created">Página en blanco creada</string>
     <string name="stories_intro_main_title">Presentación de las entradas de historias</string>
@@ -869,7 +866,6 @@ Language: es_MX
     <string name="stats_insights_annual_site_stats">Estadísticas anuales del sitio</string>
     <string name="stats_view_follower_totals">Seguidores totales</string>
     <string name="register_domain">Registrar dominio</string>
-    <string name="jetpack_installed_message">Ahora que está instalado Jetpack, solo necesitamos que lo configures. Esto solo te llevará un minuto.</string>
     <string name="stats_menu_move_down">Mover abajo</string>
     <string name="stats_menu_move_up">Mover arriba</string>
     <string name="stats_item_settings">Ajustes de los parámetros de las estadísticas</string>
@@ -1120,17 +1116,8 @@ Language: es_MX
     <string name="reader_empty_followed_tags_subtitle">Añade aquí temas para descubrir entradas sobre tus temáticas favoritas</string>
     <string name="reader_empty_followed_tags_title">Temas no seguidos</string>
     <string name="login_to_to_connect_jetpack">Accede a la cuenta de WordPress.com que usaste para conectar Jetpack.</string>
-    <string name="install_jetpack_retry">Reintentar</string>
-    <string name="jetpack_installation_problem">Hubo un problema</string>
-    <string name="jetpack_installed">Jetpack instalado</string>
-    <string name="installing_jetpack">Instalando Jetpack</string>
-    <string name="install_jetpack">Instala Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ de Jetpack</string>
-    <string name="install_jetpack_continue">Configurar</string>
-    <string name="jetpack_installation_problem_message">Jetpack no se pudo instalar en este momento.</string>
-    <string name="installing_jetpack_message">Instalando Jetpack en tu sitio. Esto puede llevar unos minutos completarse.</string>
-    <string name="install_jetpack_message">Las credenciales de tu web no se almacenarán, y solo se utilizan para instalar Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">Para usar las estadísticas en tu sitio WordPress necesitas instalar el plugin Jetpack.</string>
     <string name="themes_empty_list">No hay temas que coincidan con tu búsqueda</string>
     <string name="reader_label_post_search_explainer">¿Que te gustaría encontrar?</string>
@@ -1675,7 +1662,6 @@ Language: es_MX
     <string name="media_images">Imágenes</string>
     <string name="media_all">Todos</string>
     <string name="media_videos">Videos</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s denegó el acceso a tus fotos. Para solucionar esto modifica tus permisos y activa %2$s.</string>
     <string name="reader_view_comments">Ver comentarios</string>
     <string name="site_settings_video_quality_hint">Calidad de los videos. Valores más altos implican videos de mejor calidad.</string>
     <string name="site_settings_video_width_hint">Redimensiona los videos en las entradas a este tamaño</string>

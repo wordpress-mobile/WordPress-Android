@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.ViewConfiguration;
@@ -121,8 +122,9 @@ public class WPMediaUtils {
         }
 
         // Check we can access storage before asking for optimizing image
-        boolean hasStoreAccess = ContextCompat.checkSelfPermission(
-                context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        boolean hasStoreAccess = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+                                 || ContextCompat.checkSelfPermission(context,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
         if (!hasStoreAccess) {
             return false;
         }

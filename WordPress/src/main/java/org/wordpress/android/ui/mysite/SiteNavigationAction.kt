@@ -60,6 +60,7 @@ sealed class SiteNavigationAction {
     ) : SiteNavigationAction()
 
     data class OpenDomainRegistration(val site: SiteModel) : SiteNavigationAction()
+    data class OpenPaidDomainSearch(val site: SiteModel) : SiteNavigationAction()
     data class AddNewSite(val hasAccessToken: Boolean, val source: SiteCreationSource) : SiteNavigationAction()
     data class ShowQuickStartDialog(
         @StringRes val title: Int,
@@ -84,4 +85,7 @@ sealed class SiteNavigationAction {
     object OpenJetpackMigrationDeleteWP : SiteNavigationAction()
     data class OpenJetpackFeatureOverlay(val source: JetpackFeatureCollectionOverlaySource) : SiteNavigationAction()
     data class OpenPromoteWithBlazeOverlay(val source: BlazeFlowSource) : SiteNavigationAction()
+    object ShowJetpackRemovalStaticPostersView : SiteNavigationAction()
+    data class OpenActivityLogDetail(val site: SiteModel, val activityId: String, val isRewindable: Boolean) :
+        SiteNavigationAction()
 }

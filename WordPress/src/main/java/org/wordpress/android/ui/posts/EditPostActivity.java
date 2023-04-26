@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -524,6 +525,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                handleBackPressed();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
         mDispatcher.register(this);
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorePostViewModel.class);
         mStorageUtilsViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorageUtilsViewModel.class);
@@ -1335,8 +1345,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (helpMenuItem != null) {
             // Support section will be disabled in WordPress app when Jetpack-powered features are removed.
             // Therefore, we have to update the Help menu item accordingly.
-            boolean jetpackFeaturesRemoved = mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures();
-            int helpMenuTitle = jetpackFeaturesRemoved ? R.string.help : R.string.help_and_support;
+            boolean showHelpAndSupport = mJetpackFeatureRemovalPhaseHelper.shouldShowHelpAndSupportOnEditor();
+            int helpMenuTitle = showHelpAndSupport ? R.string.help_and_support : R.string.help;
             helpMenuItem.setTitle(helpMenuTitle);
 
             if (mEditorFragment instanceof GutenbergEditorFragment
@@ -1728,6 +1738,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private ActivityFinishState savePostOnline(boolean isFirstTimePublish) {
+        if (mEditorFragment instanceof GutenbergEditorFragment) {
+            ((GutenbergEditorFragment) mEditorFragment).sendToJSPostSaveEvent();
+        }
         return mViewModel.savePostOnline(isFirstTimePublish, this, mEditPostRepository, mSite);
     }
 
@@ -1966,11 +1979,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     public interface OnPostUpdatedFromUIListener {
         void onPostUpdatedFromUI(@Nullable UpdatePostResult updatePostResult);
-    }
-
-    @Override
-    public void onBackPressed() {
-        handleBackPressed();
     }
 
     @Override
@@ -2272,7 +2280,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 gutenbergWebViewAuthorizationData,
                                 gutenbergPropsBuilder,
                                 RequestCodes.EDIT_STORY,
-                                !mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
+                                mJetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures()
                         );
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
@@ -2360,7 +2368,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         String hostAppNamespace = mBuildConfigWrapper.isJetpackApp() ? "Jetpack" : "WordPress";
 
         // Disable Jetpack-powered editor features in WordPress app based on Jetpack Features Removal Phase helper
-        boolean jetpackFeaturesRemoved = mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures();
+        boolean jetpackFeaturesRemoved = !mJetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures();
         if (jetpackFeaturesRemoved) {
             return new GutenbergPropsBuilder(
                     false,
@@ -3127,6 +3135,17 @@ public class EditPostActivity extends LocaleAwareActivity implements
     ) {
         if (mSite != null) {
             mReactNativeRequestHandler.performGetRequest(path, mSite, enableCaching, onResult, onError);
+        }
+    }
+
+    @Override public void onPerformPost(
+            String path,
+            Map<String, Object> body,
+            Consumer<String> onResult,
+            Consumer<Bundle> onError
+    ) {
+        if (mSite != null) {
+            mReactNativeRequestHandler.performPostRequest(path, body, mSite, onResult, onError);
         }
     }
 

@@ -1,11 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-25 18:05:42+0000
+Translation-Revision-Date: 2023-03-14 10:15:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: en_GB
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">Blaze a Post now</string>
+    <string name="blaze_overlay_page_promotional_button">Blaze this Page</string>
+    <string name="blaze_overlay_post_promotional_button">Blaze this Post</string>
+    <string name="blaze_promotional_subtitle_3">Track performance, start, and stop your Blaze at any time.</string>
+    <string name="site_creation_domain_tag_best_alternative">Best Alternative</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="blaze_promotional_text">Drive more traffic to your site with Blaze</string>
+    <string name="free">Free</string>
+    <string name="help_buttons_screen_title">Help</string>
+    <string name="me_btn_help">Help</string>
+    <string name="logs_button">Logs</string>
+    <string name="blaze_promotional_subtitle_1">Promote any post or page in only a few minutes for just a few dollars a day.</string>
+    <string name="site_creation_domain_tag_recommended">Recommended</string>
+    <string name="site_creation_domain_tag_sale">Sale</string>
+    <string name="support_faq_caption">See our FAQ for answers to common questions you may have.</string>
+    <string name="support_faq_title">Thank you for switching to the Jetpack app!</string>
+    <string name="site_creation_domain_tag_unavailable">This domain is already registered</string>
+    <string name="tickets">Tickets</string>
+    <string name="blaze_promotional_subtitle_2">Your content will appear on millions of WordPress and Tumblr sites.</string>
+    <string name="gutenberg_native_blocks_menu">Blocks menu</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">By setting up Jetpack you agree to our </string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Close</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contact support</string>
+    <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
+    <string name="promote_blaze_card_menu_hide_this">Hide this</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Install the full plugin</string>
+    <string name="promote_blaze_card_title">Promote your content with Blaze</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Terms and conditions</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">full Jetpack plugin</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">individual Jetpack plugins</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">the %1$s plugin</string>
+    <string name="only_one_primary_site_message">Only one site is available, so you can\'t change your primary site.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Please install the full Jetpack plugin</string>
+    <string name="button_promote_with_blaze">Promote with Blaze</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Your site has the Jetpack plugin</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Get notifications for new comments, likes, views, and more.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Find and follow your favourite sites and communities, and share you content.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Watch your traffic grow with helpful insights and comprehensive stats.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">The Jetpack mobile app is designed to work in companion with the Jetpack plugin. Switch now to get access to stats, notifications, reader, and more.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Stats &amp; Insights</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Blogging Prompts hidden</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Visit &lt;b&gt;Site Settings&lt;/b&gt; to turn back on</string>
+    <string name="blogging_reminders_prompt_subtitle">Notification will include a word or short phrase for inspiration</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Give WordPress a boost with Jetpack</string>
+    <string name="blogging_prompts_onboarding_content_note_content">You can control Blogging Prompts and Reminders at any time in My Site &gt; Settings &gt; Blogging</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack lets you do more with your WordPress site. Switching is free and only takes a minute.</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Turn off prompts</string>
+    <string name="support_forum_caption">Get help from our group of volunteers.</string>
+    <string name="support_forum_title">Community forums</string>
+    <string name="site_settings_blogging_reminders_notification_title">Blogging reminders</string>
+    <string name="site_settings_blogging_prompts_title">Show prompts</string>
+    <string name="site_settings_blogging">Blogging</string>
     <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s are moving in %2$s</string>
     <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s are moving soon</string>
     <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s is moving in %2$s</string>
@@ -35,6 +87,7 @@ Language: en_GB
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Stats, Reader, Notifications and other Jetpack-powered features will be removed from the WordPress app soon.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Switch to the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
+    <string name="jetpack_feature_card_content_phase_three">Stats, Reader, Notifications and other features will soon move to the Jetpack mobile app.</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d answers</string>
     <string name="blogging_prompts_list_number_of_answers_zero">0 answers</string>
     <string name="blogging_prompts_list_number_of_answers_one">1 answer</string>
@@ -81,19 +134,15 @@ Language: en_GB
     <string name="preference_open_links_in_jetpack">Open links in Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Unable to disable open links in Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Unable to enable open links in Jetpack</string>
-    <string name="jp_migration_delete_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to avoid data conflicts.</string>
-    <string name="jp_migration_delete_subtitle">It looks like you still have the WordPress app installed. We recommend you delete the WordPress app to avoid data conflicts.</string>
     <string name="jp_migration_network_error_subtitle">Please check to make sure your network connection is working and try again.</string>
     <string name="jp_migration_generic_error_message">Please contact support or try again later.</string>
     <string name="jp_migration_network_error_title">Unable to connect to the internet.</string>
     <string name="jp_migration_network_error_message">We are unable to transfer your data and settings without a network connection.</string>
     <string name="jp_migration_generic_error_subtitle">We’re sorry but something didn’t go as planned. Your data is safe, but we’re unable to transfer it at this time.</string>
-    <string name="jp_migration_delete_title">You no longer need the WordPress app</string>
     <string name="jp_migration_finish_button">Finish</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Remove WordPress App icon</string>
     <string name="jp_migration_try_again_button">Try again</string>
     <string name="jp_migration_generic_error_title">Uh oh, something went wrong..</string>
-    <string name="jp_migration_done_delete_wp_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to avoid data conflicts.</string>
     <string name="jp_migration_done_subtitle">We’ve transferred all your data and settings. Everything is right where you left it.</string>
     <string name="jp_migration_done_title">Thanks for switching to Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">We\'ll turn off notifications from the WordPress app.</string>
@@ -101,7 +150,6 @@ Language: en_GB
     <string name="notification_disable_broadcast_permission_desc">Allows the app to disable WordPress notifications.</string>
     <string name="notification_disable_broadcast_permission_label">disable WordPress notifications</string>
     <string name="jp_migration_notifications_title">Notifications now come from Jetpack</string>
-    <string name="jp_migration_success_card_message">Please delete the WordPress app</string>
     <string name="support_title">Support</string>
     <string name="wordpress_help_center_button">WordPress help centre</string>
     <string name="jp_migration_continue_button">Continue</string>
@@ -311,6 +359,8 @@ Language: en_GB
     <string name="blogging_prompts_onboarding_content_top">The best way to become a better writer is to build a writing habit and share with others - that’s where Prompts come in!</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Posting regularly attracts new readers. Tell us when you want to write and we’ll send you a reminder!</string>
     <string name="blogging_prompt_set_reminders">Set reminders</string>
+    <string name="blogging_reminders_prompt_title">Include a Blogging Prompt</string>
+    <string name="blogging_prompts_onboarding_header_title">Introducing\nBlogging Prompts</string>
     <string name="set_your_blogging_prompts_title">Become a better writer by building a habit</string>
     <string name="site_creation_intent_writing_poetry">Writing &amp; Poetry</string>
     <string name="site_creation_intent_travel">Travel</string>
@@ -616,6 +666,7 @@ Language: en_GB
     <string name="site_settings_categories_hint">Manage your site\'s categories</string>
     <string name="page_is_posts_page_warning">The content of your latest posts page is automatically generated and cannot be edited.</string>
     <string name="site_settings_categories_title">Categories</string>
+    <string name="site_settings_blogging_reminders_title">Reminders</string>
     <string name="gutenberg_native_border_settings">Border settings</string>
     <string name="storage_utils_dialog_message">We need to save your content on the device before it can be published. Review your storage settings and remove files to free up space.</string>
     <string name="storage_utils_dialog_ok_button">View storage</string>
@@ -935,8 +986,8 @@ Language: en_GB
     <string name="suggestion_none">No %s suggestions available.</string>
     <string name="suggestion_problem">There was a problem loading suggestions.</string>
     <string name="suggestion_no_matching">No matching %s.</string>
-    <string name="threat_fix_fixable_replace">Jetpack Scan will replace the affected file or directory.</string>
     <string name="threat_fix_current_not_fixable_description">Jetpack Scan cannot automatically fix this threat.\n        We suggest that you resolve the threat manually: ensure that WordPress, your theme, and all of your plugins are up to date, and remove the offending code, theme, or plugin from your site. \n \n\n        If you need more help to resolve this threat, we recommend &lt;b&gt;Codeable&lt;/b&gt;, a trusted freelancer marketplace of highly vetted WordPress experts.\n        They have identified a select group of security experts to help with these projects. Pricing ranges from $70–120/hour, and you can get a free estimate with no obligation to hire.\n    </string>
+    <string name="threat_fix_fixable_replace">Jetpack Scan will replace the affected file or directory.</string>
     <string name="threat_problem_header">What was the problem?</string>
     <string name="threat_technical_details_header">The technical details</string>
     <string name="threat_file_description">Threat found in file:</string>
@@ -1093,7 +1144,6 @@ Language: en_GB
     <string name="gutenberg_native_help_button">Help button</string>
     <string name="stories_intro_description_first">Combine photos, videos, and text to create engaging and tappable story posts that your visitors will love.</string>
     <string name="stories_intro_title_second">Story posts don\'t disappear</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s and %3$s.</string>
     <string name="mlp_notice_page_created">Page created</string>
     <string name="mlp_notice_blank_page_created">Blank page created</string>
     <string name="stories_intro_main_title">Introducing Story Posts</string>
@@ -1783,7 +1833,6 @@ Language: en_GB
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
     <string name="register_domain">Register Domain</string>
-    <string name="jetpack_installed_message">Now that Jetpack is installed, we just need to get you set up. This will only take a minute.</string>
     <string name="stats_view_follower_totals">Follower totals</string>
     <string name="stats_menu_remove">Remove from insights</string>
     <string name="stats_menu_move_down">Move down</string>
@@ -2049,18 +2098,9 @@ Language: en_GB
     <string name="content_description_more">More</string>
     <string name="reader_empty_followed_tags_subtitle">Add topics here to find posts about your favourite topics</string>
     <string name="reader_empty_followed_tags_title">No followed topics</string>
-    <string name="install_jetpack">Install Jetpack</string>
-    <string name="installing_jetpack">Installing Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
-    <string name="jetpack_installed">Jetpack installed</string>
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
-    <string name="install_jetpack_retry">Retry</string>
-    <string name="jetpack_installation_problem">There was a problem</string>
-    <string name="install_jetpack_continue">Set up</string>
-    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time.</string>
-    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete.</string>
-    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
     <string name="themes_empty_list">No themes matching your search</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
@@ -2612,7 +2652,6 @@ Language: en_GB
     <string name="media_documents">Documents</string>
     <string name="media_images">Images</string>
     <string name="media_all">All</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="reader_view_comments">View comments</string>
     <string name="site_settings_video_quality_hint">Quality of videos. Higher values mean better quality videos.</string>
     <string name="site_settings_optimize_video_summary">Enable to resize and compress videos</string>

@@ -4,9 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.fragment.app.commit
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
 import org.wordpress.android.R
@@ -15,6 +16,7 @@ import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
+import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayViewModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.DismissDialog
@@ -26,21 +28,24 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.INTENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.PROGRESS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_DESIGNS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_NAME
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
+import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewScreenListener
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteNotCreated
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressFragment
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameFragment
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewModel
 import org.wordpress.android.ui.sitecreation.sitename.SiteNameScreenListener
@@ -53,6 +58,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.config.SiteNameFeatureConfig
 import org.wordpress.android.util.extensions.exhaustive
+import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -62,7 +68,6 @@ class SiteCreationActivity : LocaleAwareActivity(),
     IntentsScreenListener,
     SiteNameScreenListener,
     DomainsScreenListener,
-    SitePreviewScreenListener,
     OnHelpClickedListener,
     BasicDialogPositiveClickInterface,
     BasicDialogNegativeClickInterface {
@@ -76,12 +81,31 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private val siteCreationIntentsViewModel: SiteCreationIntentsViewModel by viewModels()
     private val siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel by viewModels()
     private val jetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel by viewModels()
-    @Inject internal lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
-    @Inject internal lateinit var activityLauncherWrapper: ActivityLauncherWrapper
+    private val progressViewModel: SiteCreationProgressViewModel by viewModels()
+    private val previewViewModel: SitePreviewViewModel by viewModels()
+
+    @Inject
+    internal lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+
+    @Inject
+    internal lateinit var activityLauncherWrapper: ActivityLauncherWrapper
+
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            mainViewModel.onBackPressed()
+        }
+    }
+
+    private val domainCheckoutActivityLauncher = registerForActivityResult(OpenCheckout()) {
+        mainViewModel.onCheckoutResult(it)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.site_creation_activity)
+
+        onBackPressedDispatcher.addCallback(this, backPressedCallback)
+
         mainViewModel.start(savedInstanceState, getSiteCreationSource())
         mainViewModel.preloadThumbnails(this)
 
@@ -95,77 +119,66 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     @Suppress("LongMethod")
     private fun observeVMState() {
-        mainViewModel.navigationTargetObservable
-            .observe(this, Observer { target -> target?.let { showStep(target) } })
-        mainViewModel.wizardFinishedObservable.observe(this, Observer { createSiteState ->
-            createSiteState?.let {
-                val intent = Intent()
-                val (siteCreated, localSiteId, titleTaskComplete) = when (createSiteState) {
-                    // site creation flow was canceled
-                    is SiteNotCreated -> Triple(false, null, false)
-                    is SiteNotInLocalDb -> {
-                        // Site was created, but we haven't been able to fetch it, let `SitePickerActivity` handle
-                        // this with a Snackbar message.
-                        intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
-                        Triple(true, null, createSiteState.isSiteTitleTaskComplete)
-                    }
-                    is SiteCreationCompleted -> Triple(
-                            true, createSiteState.localSiteId,
-                            createSiteState.isSiteTitleTaskComplete
-                    )
-                }
-                intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, localSiteId)
-                intent.putExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, titleTaskComplete)
-                setResult(if (siteCreated) Activity.RESULT_OK else Activity.RESULT_CANCELED, intent)
-                finish()
+        mainViewModel.navigationTargetObservable.observe(this) { it?.let(::showStep) }
+        mainViewModel.onCompleted.observe(this) { (result, isTitleTaskComplete) ->
+            val intent = Intent().apply {
+                putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, (result as? Created)?.site?.id)
+                putExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, isTitleTaskComplete)
+                // Let `SitePickerActivity` handle this with a SnackBar message
+                putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, result is CreatedButNotFetched)
             }
-        })
-        mainViewModel.dialogActionObservable.observe(this, Observer { dialogHolder ->
-            dialogHolder?.let {
-                val supportFragmentManager = requireNotNull(supportFragmentManager) {
-                    "FragmentManager can't be null at this point"
-                }
-                dialogHolder.show(this, supportFragmentManager, uiHelpers)
-            }
-        })
-        mainViewModel.exitFlowObservable.observe(this, Observer {
+            setResult(if (result is Completed) Activity.RESULT_OK else Activity.RESULT_CANCELED, intent)
+            finish()
+        }
+        mainViewModel.dialogActionObservable.observe(this) {
+            it?.show(this, supportFragmentManager, uiHelpers)
+        }
+        mainViewModel.exitFlowObservable.observe(this) {
             setResult(Activity.RESULT_CANCELED)
             finish()
-        })
-        mainViewModel.onBackPressedObservable.observe(this, Observer {
+        }
+        mainViewModel.onBackPressedObservable.observe(this) {
             ActivityUtils.hideKeyboard(this)
-            super.onBackPressed()
-        })
-        siteCreationIntentsViewModel.onBackButtonPressed.observe(this, Observer {
+            onBackPressedDispatcher.onBackPressedCompat(backPressedCallback)
+        }
+        mainViewModel.showDomainCheckout.observe(this, domainCheckoutActivityLauncher::launch)
+        siteCreationIntentsViewModel.onBackButtonPressed.observe(this) {
             mainViewModel.onBackPressed()
-        })
-        siteCreationIntentsViewModel.onSkipButtonPressed.observe(this, Observer {
+        }
+        siteCreationIntentsViewModel.onSkipButtonPressed.observe(this) {
             mainViewModel.onSiteIntentSkipped()
-        })
-        siteCreationSiteNameViewModel.onBackButtonPressed.observe(this, Observer {
+        }
+        siteCreationSiteNameViewModel.onBackButtonPressed.observe(this) {
             mainViewModel.onBackPressed()
             ActivityUtils.hideKeyboard(this)
-        })
-        siteCreationSiteNameViewModel.onSkipButtonPressed.observe(this, Observer {
+        }
+        siteCreationSiteNameViewModel.onSkipButtonPressed.observe(this) {
             ActivityUtils.hideKeyboard(this)
             mainViewModel.onSiteNameSkipped()
-        })
-        hppViewModel.onBackButtonPressed.observe(this, Observer {
+        }
+        hppViewModel.onBackButtonPressed.observe(this) {
             mainViewModel.onBackPressed()
-        })
-        hppViewModel.onDesignActionPressed.observe(this, Observer { design ->
+        }
+        hppViewModel.onDesignActionPressed.observe(this) { design ->
             mainViewModel.onSiteDesignSelected(design.template)
-        })
-
+        }
+        progressViewModel.onCancelWizardClicked.observe(this) {
+            mainViewModel.onWizardCancelled()
+        }
+        progressViewModel.onFreeSiteCreated.observe(this, mainViewModel::onFreeSiteCreated)
+        progressViewModel.onCartCreated.observe(this, mainViewModel::onCartCreated)
+        previewViewModel.onOkButtonClicked.observe(this) { result ->
+            mainViewModel.onWizardFinished(result)
+        }
         observeOverlayEvents()
     }
 
     private fun observeOverlayEvents() {
         val fragment = JetpackFeatureFullScreenOverlayFragment
-                .newInstance(
-                        isSiteCreationOverlay = true,
-                        siteCreationSource = getSiteCreationSource()
-                )
+            .newInstance(
+                isSiteCreationOverlay = true,
+                siteCreationSource = getSiteCreationSource()
+            )
 
         jetpackFullScreenViewModel.action.observe(this) { action ->
             if (mainViewModel.siteCreationDisabled) finish()
@@ -183,7 +196,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
         mainViewModel.showJetpackOverlay.observeEvent(this) {
             if (mainViewModel.siteCreationDisabled)
-                slideInFragment(fragment, JetpackFeatureFullScreenOverlayFragment.TAG)
+                showFragment(fragment, JetpackFeatureFullScreenOverlayFragment.TAG)
             else fragment.show(supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
         }
     }
@@ -205,16 +218,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
         ActivityUtils.hideKeyboard(this)
     }
 
-    override fun onDomainSelected(domain: String) {
+    override fun onDomainSelected(domain: DomainModel) {
         mainViewModel.onDomainsScreenFinished(domain)
-    }
-
-    override fun onSiteCreationCompleted() {
-        mainViewModel.onSiteCreationCompleted()
-    }
-
-    override fun onSitePreviewScreenDismissed(createSiteState: CreateSiteState) {
-        mainViewModel.onSitePreviewScreenFinished(createSiteState)
     }
 
     override fun onHelpClicked(origin: Origin) {
@@ -231,12 +236,11 @@ class SiteCreationActivity : LocaleAwareActivity(),
                 mainViewModel.preloadingJob?.cancel("Preload did not complete before theme picker was shown.")
                 HomePagePickerFragment.newInstance(target.wizardState.siteIntent)
             }
-            DOMAINS -> SiteCreationDomainsFragment.newInstance(
-                screenTitle
-            )
+            DOMAINS -> SiteCreationDomainsFragment.newInstance(screenTitle)
+            PROGRESS -> SiteCreationProgressFragment.newInstance(target.wizardState)
             SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState)
         }
-        slideInFragment(fragment, target.wizardStep.toString())
+        showFragment(fragment, target.wizardStep.toString(), target.wizardStep != SITE_PREVIEW)
     }
 
     private fun getScreenTitle(step: SiteCreationStep): String {
@@ -251,17 +255,22 @@ class SiteCreationActivity : LocaleAwareActivity(),
         }
     }
 
-    private fun slideInFragment(fragment: Fragment, tag: String) {
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        if (supportFragmentManager.findFragmentById(R.id.fragment_container) != null) {
-            // add to back stack and animate all screen except of the first one
-            fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
-            )
+    private fun showFragment(fragment: Fragment, tag: String, slideIn: Boolean = true) {
+        supportFragmentManager.commit {
+            if (supportFragmentManager.findFragmentById(R.id.fragment_container) != null) {
+                // add to back stack and animate all screen except of the first one
+                addToBackStack(null)
+                if (slideIn) {
+                    setCustomAnimations(
+                        R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+                        R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
+                    )
+                } else {
+                    setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                }
+            }
+            replace(R.id.fragment_container, fragment, tag)
         }
-        fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
-        fragmentTransaction.commit()
     }
 
     override fun onPositiveClicked(instanceTag: String) {
@@ -274,17 +283,14 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
             return true
         }
         return false
     }
 
-    override fun onBackPressed() {
-        mainViewModel.onBackPressed()
-    }
-
     companion object {
         const val ARG_CREATE_SITE_SOURCE = "ARG_CREATE_SITE_SOURCE"
+        const val ARG_STATE = "ARG_SITE_CREATION_STATE"
     }
 }

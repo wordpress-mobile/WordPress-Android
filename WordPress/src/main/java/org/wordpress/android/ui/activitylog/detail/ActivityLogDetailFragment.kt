@@ -28,11 +28,14 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
+import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_IS_DASHBOARD_CARD_ENTRY_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_IS_RESTORE_HIDDEN_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel
 import org.wordpress.android.viewmodel.observeEvent
@@ -83,8 +86,9 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
             val (site, activityLogId) = sideAndActivityId(savedInstanceState, activity.intent)
             val areButtonsVisible = areButtonsVisible(savedInstanceState, activity.intent)
             val isRestoreHidden = isRestoreHidden(savedInstanceState, activity.intent)
+            val isDashboardCardEntry = isDashboardCardEntry(savedInstanceState, activity.intent)
 
-            viewModel.start(site, activityLogId, areButtonsVisible, isRestoreHidden)
+            viewModel.start(site, activityLogId, areButtonsVisible, isRestoreHidden, isDashboardCardEntry)
         }
 
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
@@ -109,21 +113,21 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
     }
 
     private fun ActivityLogItemDetailBinding.setupObservers() {
-        viewModel.activityLogItem.observe(viewLifecycleOwner, { activityLogModel ->
+        viewModel.activityLogItem.observe(viewLifecycleOwner) { activityLogModel ->
             loadLogItem(activityLogModel, requireActivity())
-        })
+        }
 
-        viewModel.restoreVisible.observe(viewLifecycleOwner, { available ->
+        viewModel.restoreVisible.observe(viewLifecycleOwner) { available ->
             activityRestoreButton.visibility = if (available == true) View.VISIBLE else View.GONE
-        })
-        viewModel.downloadBackupVisible.observe(viewLifecycleOwner, { available ->
+        }
+        viewModel.downloadBackupVisible.observe(viewLifecycleOwner) { available ->
             activityDownloadBackupButton.visibility = if (available == true) View.VISIBLE else View.GONE
-        })
-        viewModel.multisiteVisible.observe(viewLifecycleOwner, { available ->
+        }
+        viewModel.multisiteVisible.observe(viewLifecycleOwner) { available ->
             checkAndShowMultisiteMessage(available)
-        })
+        }
 
-        viewModel.navigationEvents.observeEvent(viewLifecycleOwner, {
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner) {
             when (it) {
                 is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
                     requireActivity(),
@@ -141,9 +145,9 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
                 )
                 is ShowDocumentationPage -> ActivityLauncher.openUrlExternal(requireContext(), it.url)
             }
-        })
+        }
 
-        viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner, { range ->
+        viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner) { range ->
             if (range != null) {
                 formattableContentClickHandler.onClick(
                     requireActivity(),
@@ -151,7 +155,7 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
                     ReaderTracker.SOURCE_ACTIVITY_LOG_DETAIL
                 )
             }
-        })
+        }
 
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
             JetpackPoweredBottomSheetFragment
@@ -221,7 +225,9 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
 
     private fun sideAndActivityId(savedInstanceState: Bundle?, intent: Intent?) = when {
         savedInstanceState != null -> {
-            val site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            val site = requireNotNull(
+                savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)
+            )
             val activityLogId = requireNotNull(
                 savedInstanceState.getString(
                     ACTIVITY_LOG_ID_KEY
@@ -230,7 +236,9 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
             site to activityLogId
         }
         intent != null -> {
-            val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            val site = requireNotNull(
+                intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+            )
             val activityLogId = intent.getStringExtra(ACTIVITY_LOG_ID_KEY) as String
             site to activityLogId
         }
@@ -253,12 +261,21 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
         else -> throw Throwable("Couldn't initialize Activity Log view model")
     }
 
+    private fun isDashboardCardEntry(savedInstanceState: Bundle?, intent: Intent?) = when {
+        savedInstanceState != null ->
+            requireNotNull(savedInstanceState.getBoolean(ACTIVITY_LOG_IS_DASHBOARD_CARD_ENTRY_KEY, false))
+        intent != null ->
+            intent.getBooleanExtra(ACTIVITY_LOG_IS_DASHBOARD_CARD_ENTRY_KEY, false)
+        else -> throw Throwable("Couldn't initialize Activity Log view model")
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, viewModel.site)
         outState.putString(ACTIVITY_LOG_ID_KEY, viewModel.activityLogId)
         outState.putBoolean(ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY, viewModel.areButtonsVisible)
         outState.putBoolean(ACTIVITY_LOG_IS_RESTORE_HIDDEN_KEY, viewModel.isRestoreHidden)
+        outState.putBoolean(ACTIVITY_LOG_IS_DASHBOARD_CARD_ENTRY_KEY, viewModel.isDashboardCardEntry)
     }
 
     private fun ActivityLogItemDetailBinding.setActorIcon(actorIcon: String?, showJetpackIcon: Boolean?) {

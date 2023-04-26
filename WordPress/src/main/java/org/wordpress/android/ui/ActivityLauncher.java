@@ -69,6 +69,8 @@ import org.wordpress.android.ui.jetpack.restore.RestoreActivity;
 import org.wordpress.android.ui.jetpack.scan.ScanActivity;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsActivity;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryActivity;
+import org.wordpress.android.ui.jetpackoverlay.JetpackStaticPosterActivity;
+import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallActivity;
 import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
@@ -145,6 +147,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTIC
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
+import static org.wordpress.android.login.LoginMode.JETPACK_LOGIN_ONLY;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
@@ -162,6 +165,7 @@ import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_LAUNCHE
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_POST_LOCAL_ID;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
+import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_IS_DASHBOARD_CARD_ENTRY_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_IS_RESTORE_HIDDEN_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogViewModelKt.ACTIVITY_LOG_REWINDABLE_ONLY_KEY;
 
@@ -289,7 +293,7 @@ public class ActivityLauncher {
     public static void startJetpackInstall(Context context, JetpackConnectionSource source, SiteModel site) {
         Intent intent = new Intent(context, JetpackRemoteInstallActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(JetpackRemoteInstallFragment.TRACKING_SOURCE_KEY, source);
+        intent.putExtra(JetpackRemoteInstallActivity.TRACKING_SOURCE_KEY, source);
         context.startActivity(intent);
     }
 
@@ -816,6 +820,26 @@ public class ActivityLauncher {
         intent.putExtra(ACTIVITY_LOG_IS_RESTORE_HIDDEN_KEY, isRestoreHidden);
         intent.putExtra(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
         activity.startActivityForResult(intent, RequestCodes.ACTIVITY_LOG_DETAIL);
+    }
+
+    public static void viewActivityLogDetailFromDashboardCard(
+            Activity activity,
+            SiteModel site,
+            String activityId,
+            Boolean isRewindable
+    ) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(ACTIVITY_LOG_ACTIVITY_ID_KEY, activityId);
+        properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_DETAIL_OPENED, site, properties);
+
+        Intent intent = new Intent(activity, ActivityLogDetailActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(ACTIVITY_LOG_ID_KEY, activityId);
+        intent.putExtra(ACTIVITY_LOG_IS_DASHBOARD_CARD_ENTRY_KEY, true);
+        intent.putExtra(ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY, isRewindable);
+        intent.putExtra(SOURCE_TRACK_EVENT_PROPERTY_KEY, ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE);
+        activity.startActivity(intent);
     }
 
     public static void viewScan(Activity activity, SiteModel site) {
@@ -1469,6 +1493,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, LoginActivity.class);
         intent.setFlags(
                 Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        JETPACK_LOGIN_ONLY.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
@@ -1847,6 +1872,11 @@ public class ActivityLauncher {
                 null);
         intent.putExtra(ARG_EXTRA_BLAZE_UI_MODEL, pageUIModel);
         intent.putExtra(ARG_BLAZE_FLOW_SOURCE, source);
+        context.startActivity(intent);
+    }
+
+    public static void showJetpackStaticPoster(@NonNull Context context) {
+        Intent intent = new Intent(context, JetpackStaticPosterActivity.class);
         context.startActivity(intent);
     }
 }

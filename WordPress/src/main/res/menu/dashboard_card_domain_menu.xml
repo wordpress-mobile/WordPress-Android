@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/dashboard_card_domain_menu_item_hide_this"
+        android:title="@string/dashboard_card_domain_menu_hide_this"
+        android:icon="@drawable/ic_not_visible_white_24dp"/>
+</menu>

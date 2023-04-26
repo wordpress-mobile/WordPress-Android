@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-09 19:17:00+0000
+Translation-Revision-Date: 2023-04-09 10:22:41+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: sk
@@ -179,14 +179,9 @@ Language: sk
     <string name="content_description_more">Viac</string>
     <string name="reader_empty_followed_tags_title">Žiadne sledované témy</string>
     <string name="reader_empty_followed_tags_subtitle">Pridajte témy a nájdite články vašich obľúbených témach</string>
-    <string name="jetpack_installed">Jetpack nainštalovaný</string>
-    <string name="installing_jetpack">Inštalovanie Jetpack</string>
-    <string name="install_jetpack">Inštalovať Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Najčastejšie otázky Jetpack</string>
     <string name="login_to_to_connect_jetpack">Prihláste sa do účtu WordPress.com. ktorý používate na pripojenie Jetpack.</string>
-    <string name="install_jetpack_retry">Znova</string>
-    <string name="jetpack_installation_problem">Vyskytol sa problém</string>
     <string name="stats_jetpack_connection_setup_info">Budete si musieť nainštalovať Jetpack plugin, keď chcete používať Štatistiky na vašej webovej stránke WordPress.</string>
     <string name="themes_empty_list">Žiadne témy nezodpovedajú vášmu vyhľadávaniu</string>
     <string name="reader_label_post_search_explainer">Čo by ste chceli nájsť?</string>
@@ -737,7 +732,6 @@ Language: sk
     <string name="media_documents">Dokumenty</string>
     <string name="media_images">Obrázky</string>
     <string name="media_all">Všetko</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s bol zamietnutý prístup k vašim fotografiám. Ak to chcete napraviť, upravte svoje povolenia a zapnite %2$s.</string>
     <string name="reader_view_comments">Zobraziť komentáre</string>
     <string name="site_settings_video_quality_hint">Kvalita videí. Čím vyššie hodnoty, tým kvalitnejšie videá.</string>
     <string name="site_settings_video_width_hint">Zmeňte veľkosť článkov na požadovanú veľkosť</string>
@@ -1512,9 +1506,11 @@ Language: sk
     <string name="tags_separate_with_commas">Oddeľujte značky čiarkami</string>
     <string name="sdcard_title">Vyžadovaná SD karta</string>
     <string name="media">Súbory</string>
+    <string name="updating_cat_success">Kategória bola úspešne aktualizovaná.</string>
     <string name="delete">Zmazať</string>
     <string name="approve">Schváliť</string>
     <string name="none">Žiadny</string>
+    <string name="updating_cat_failed">Aktualizácia kategórie zlyhala</string>
     <string name="reply">Odpovedať</string>
     <string name="preview">Preview</string>
     <string name="on">na</string>

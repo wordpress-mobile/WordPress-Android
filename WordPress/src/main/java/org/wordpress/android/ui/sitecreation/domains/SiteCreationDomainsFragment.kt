@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -48,10 +49,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         return R.layout.site_creation_domains_screen
     }
 
-    @Suppress("UseCheckOrError")
-    override val screenTitle: String
-        get() = arguments?.getString(EXTRA_SCREEN_TITLE)
-            ?: throw IllegalStateException("Required argument screen title is missing.")
+    override val screenTitle get() = requireArguments().getString(EXTRA_SCREEN_TITLE).orEmpty()
 
     override fun setBindingViewStubListener(parentBinding: SiteCreationFormScreenBinding) {
         parentBinding.siteCreationFormContentStub.setOnInflateListener { _, inflated ->
@@ -83,25 +81,25 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     }
 
     private fun SiteCreationDomainsScreenBinding.initViewModel() {
-        viewModel.uiState.observe(this@SiteCreationDomainsFragment, { uiState ->
+        viewModel.uiState.observe(this@SiteCreationDomainsFragment) { uiState ->
             uiState?.let {
                 searchInputWithHeader?.updateHeader(requireActivity(), uiState.headerUiState)
                 searchInputWithHeader?.updateSearchInput(requireActivity(), uiState.searchInputUiState)
                 updateContentUiState(uiState.contentState)
-                uiHelpers.updateVisibility(createSiteButtonContainer, uiState.createSiteButtonContainerVisibility)
-                uiHelpers.updateVisibility(createSiteButtonShadow, uiState.createSiteButtonContainerVisibility)
+                createSiteButtonContainer.isVisible = uiState.createSiteButtonState != null
+                createSiteButton.text = uiState.createSiteButtonState?.stringRes?.let(::getString)
                 updateTitleVisibility(uiState.headerUiState == null)
             }
-        })
-        viewModel.clearBtnClicked.observe(this@SiteCreationDomainsFragment, {
+        }
+        viewModel.clearBtnClicked.observe(this@SiteCreationDomainsFragment) {
             searchInputWithHeader?.setInputText("")
-        })
-        viewModel.createSiteBtnClicked.observe(this@SiteCreationDomainsFragment, { domain ->
+        }
+        viewModel.createSiteBtnClicked.observe(this@SiteCreationDomainsFragment) { domain ->
             domain?.let { (requireActivity() as DomainsScreenListener).onDomainSelected(domain) }
-        })
-        viewModel.onHelpClicked.observe(this@SiteCreationDomainsFragment, {
+        }
+        viewModel.onHelpClicked.observe(this@SiteCreationDomainsFragment) {
             (requireActivity() as OnHelpClickedListener).onHelpClicked(HelpActivity.Origin.SITE_CREATION_DOMAINS)
-        })
+        }
         viewModel.start()
     }
 
@@ -111,6 +109,10 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
             domainListEmptyViewMessage.text = uiHelpers.getTextOfUiString(requireContext(), contentState.message)
         }
         uiHelpers.updateVisibility(siteCreationDomainsScreenExample.root, contentState.exampleViewVisibility)
+        uiHelpers.updateVisibility(
+            siteCreationDomainsScreenExampleUpdated.root,
+            contentState.updatedExampleViewVisibility
+        )
         (recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
 
         if (contentState.items.isNotEmpty()) {

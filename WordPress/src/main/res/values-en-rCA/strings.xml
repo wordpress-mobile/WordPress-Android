@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-31 12:32:57+0000
+Translation-Revision-Date: 2023-04-07 20:35:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: en_CA
 -->
 <resources>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Your site has the Jetpack plugin</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Get notifications for new comments, likes, views, and more.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Watch your traffic grow with helpful insights and comprehensive stats.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Find and follow your favourite sites and communities, and share you content.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Stats &amp; Insights</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Blogging Prompts hidden</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Give WordPress a boost with Jetpack</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Visit &lt;b&gt;Site Settings&lt;/b&gt; to turn back on</string>
+    <string name="blogging_reminders_prompt_subtitle">Notification will include a word or short phrase for inspiration</string>
+    <string name="site_settings_blogging">Blogging</string>
+    <string name="site_settings_blogging_prompts_title">Show prompts</string>
+    <string name="support_forum_title">Community forums</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Turn off prompts</string>
+    <string name="site_settings_blogging_reminders_notification_title">Blogging reminders</string>
+    <string name="support_forum_caption">Get help from our group of volunteers.</string>
     <string name="install_play_store_to_get_jetpack">Please install Google Play Store to get the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Stats, Reader, Notifications and other Jetpack powered features have been removed from the WordPress app.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack features have moved.</string>
@@ -73,7 +88,6 @@ Language: en_CA
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Create a new WordPress site with the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Switch to the Jetpack app to find, follow, and like all your favorite sites and posts with Reader.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Switch to the Jetpack app to watch your site’s traffic grow with stats and insights.</string>
-    <string name="jp_migration_delete_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to avoid data conflicts.</string>
     <string name="jp_migration_got_it_button">Got it</string>
     <string name="jp_migration_need_help_button">Need help?</string>
     <string name="preference_open_links_in_jetpack">Open links in Jetpack</string>
@@ -82,14 +96,11 @@ Language: en_CA
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Get your notifications with the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Follow any site with the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Get your stats using the new Jetpack app</string>
-    <string name="jp_migration_delete_subtitle">It looks like you still have the WordPress app installed. We recommend you delete the WordPress app to avoid data conflicts.</string>
-    <string name="jp_migration_delete_title">You no longer need the WordPress app</string>
     <string name="jp_migration_generic_error_message">Please contact support or try again later.</string>
     <string name="jp_migration_generic_error_subtitle">We’re sorry but something didn’t go as planned. Your data is safe, but we’re unable to transfer it at this time.</string>
     <string name="jp_migration_network_error_message">We are unable to transfer your data and settings without a network connection.</string>
     <string name="jp_migration_network_error_subtitle">Please check to make sure your network connection is working and try again.</string>
     <string name="jp_migration_network_error_title">Unable to connect to the internet.</string>
-    <string name="jp_migration_done_delete_wp_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to avoid data conflicts.</string>
     <string name="jp_migration_finish_button">Finish</string>
     <string name="jp_migration_generic_error_title">Uh oh, something went wrong..</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Remove WordPress App icon</string>
@@ -99,7 +110,6 @@ Language: en_CA
     <string name="jp_migration_notifications_disabled_in_wp_message">We\'ll turn off notifications from the WordPress app.</string>
     <string name="jp_migration_notifications_subtitle">You’ll get all the same notifications but now they’ll come from the Jetpack app.</string>
     <string name="jp_migration_notifications_title">Notifications now come from Jetpack</string>
-    <string name="jp_migration_success_card_message">Please delete the WordPress app</string>
     <string name="notification_disable_broadcast_permission_desc">Allows the app to disable WordPress notifications.</string>
     <string name="notification_disable_broadcast_permission_label">disable WordPress notifications</string>
     <string name="support_title">Support</string>
@@ -1095,7 +1105,6 @@ Language: en_CA
     <string name="stories_intro_description_first">Combine photos, videos, and text to create engaging and tappable story posts that your visitors will love.</string>
     <string name="mlp_notice_blank_page_created">Blank page created</string>
     <string name="mlp_notice_page_created">Page created</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s and %3$s.</string>
     <string name="stories_intro_title_first">Now stories are for everyone</string>
     <string name="stories_intro_image_caption_second">Example story title</string>
     <string name="stories_intro_image_caption_first">How to create a story post</string>
@@ -1780,7 +1789,6 @@ Language: en_CA
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
     <string name="register_domain">Register Domain</string>
-    <string name="jetpack_installed_message">Now that Jetpack is installed, we just need to get you set up. This will only take a minute.</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
@@ -2050,17 +2058,8 @@ Language: en_CA
     <string name="reader_empty_followed_tags_title">No followed topics</string>
     <string name="reader_empty_followed_tags_subtitle">Add topics here to find posts about your favourite topics</string>
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
-    <string name="install_jetpack_retry">Retry</string>
-    <string name="jetpack_installation_problem">There was a problem</string>
-    <string name="jetpack_installed">Jetpack installed</string>
-    <string name="installing_jetpack">Installing Jetpack</string>
-    <string name="install_jetpack">Install Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
-    <string name="install_jetpack_continue">Set up</string>
-    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time.</string>
-    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete.</string>
-    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
     <string name="themes_empty_list">No themes matching your search</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
@@ -2612,7 +2611,6 @@ Language: en_CA
     <string name="media_documents">Documents</string>
     <string name="media_images">Images</string>
     <string name="media_all">All</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="reader_view_comments">View comments</string>
     <string name="site_settings_video_quality_hint">Quality of videos. Higher values mean better quality videos.</string>
     <string name="site_settings_video_width_hint">Resizes videos in posts to this size</string>

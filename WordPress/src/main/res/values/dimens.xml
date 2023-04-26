@@ -115,6 +115,7 @@
     <dimen name="margin_extra_extra_large">48dp</dimen>
     <dimen name="margin_64dp">64dp</dimen>
     <dimen name="margin_68dp">68dp</dimen>
+    <dimen name="margin_114dp">114dp</dimen>
     <dimen name="margin_filter_spinner">16dp</dimen>
     <dimen name="margin_theme_browser_top">160dp</dimen>
     <dimen name="negative_margin_medium">-8dp</dimen>
@@ -173,6 +174,7 @@
     <dimen name="text_sz_extra_small">10sp</dimen>
     <dimen name="text_sz_small">12sp</dimen>
     <dimen name="text_sz_medium">14sp</dimen>
+    <dimen name="text_sz_medium_large">15sp</dimen>
     <dimen name="text_sz_large">16sp</dimen>
     <dimen name="text_sz_larger">18sp</dimen>
     <dimen name="text_sz_extra_large">20sp</dimen>
@@ -488,8 +490,6 @@
 
     <dimen name="jetpack_terms_and_conditions_width">250dp</dimen>
     <dimen name="jetpack_text_width">290dp</dimen>
-    <dimen name="jetpack_remote_install_container_padding">30dp</dimen>
-    <dimen name="jetpack_remote_install_icon_size">88dp</dimen>
     <dimen name="jetpack_new_remote_install_icon_size">64dp</dimen>
 
     <!-- pages -->
@@ -530,7 +530,6 @@
     <dimen name="site_creation_verticals_clear_search_icon_size">24dp</dimen>
     <dimen name="site_creation_verticals_clear_search_clickable_area_width">48dp</dimen>
 
-    <dimen name="site_creation_preview_web_view_side_margin">40dp</dimen>
     <dimen name="site_creation_preview_ok_button_container_height">68dp</dimen>
     <dimen name="site_creation_container_elevation">6dp</dimen>
 
@@ -745,5 +744,10 @@
     <dimen name="jetpack_full_screen_overlay_new_users_content_margin_land">16dp</dimen>
     <dimen name="jetpack_full_screen_overlay_new_users_content_text_size">15sp</dimen>
     <dimen name="menu_item_icon_size">24dp</dimen>
+
+    <!-- Activity Log Card -->
+    <dimen name="activity_card_icon_size">40dp</dimen>
+    <dimen name="activity_card_row_start_end_padding">16dp</dimen>
+    <dimen name="activity_card_row_top_bottom_padding">12dp</dimen>
 
 </resources>

@@ -2,66 +2,57 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <include
-        android:id="@+id/fullscreen_error_with_retry"
-        layout="@layout/fullscreen_error_with_retry"
-        tools:visibility="gone" />
+        android:id="@+id/site_creation_preview_header_item"
+        layout="@layout/site_creation_preview_header_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="@dimen/margin_extra_large"
+        android:layout_marginVertical="@dimen/margin_large" />
 
     <include
-        android:id="@+id/site_creation_progress_creating_site"
-        layout="@layout/site_creation_progress_creating_site"
-        tools:visibility="gone" />
-
-    <RelativeLayout
-        android:id="@+id/content_layout"
+        android:id="@+id/site_creation_preview_web_view_container"
+        layout="@layout/site_creation_preview_web_view_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/sitePreviewCaption"
+        android:layout_below="@id/site_creation_preview_header_item"
+        android:layout_marginHorizontal="@dimen/margin_extra_large" />
 
-        <include
-            android:id="@+id/site_creation_preview_header_item"
-            layout="@layout/site_creation_preview_header_item"
-            android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/sitePreviewCaption"
+        style="@style/SiteCreationHeaderV2Subtitle"
+        android:layout_above="@+id/sitePreviewOkButtonContainer"
+        android:lineSpacingExtra="@null"
+        android:layout_marginHorizontal="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_large"
+        android:paddingBottom="@null"
+        android:text="@string/new_site_creation_preview_caption_paid" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/sitePreviewOkButtonContainer"
+        style="@style/Widget.MaterialComponents.CardView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/site_creation_preview_ok_button_container_height"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/margin_large"
+        app:cardElevation="@dimen/site_creation_container_elevation"
+        tools:ignore="InconsistentLayout">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/okButton"
+            style="@style/WordPress.Button.Primary"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/margin_extra_medium_large"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:layout_marginStart="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_extra_medium_large" />
-
-        <include
-            android:id="@+id/site_creation_preview_web_view_container"
-            layout="@layout/site_creation_preview_web_view_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/sitePreviewOkButtonContainer"
-            android:layout_below="@id/site_creation_preview_header_item"
-            android:layout_marginBottom="@dimen/negative_margin_medium"
-            android:layout_marginLeft="@dimen/site_creation_preview_web_view_side_margin"
-            android:layout_marginRight="@dimen/site_creation_preview_web_view_side_margin" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/sitePreviewOkButtonContainer"
-            style="@style/Widget.MaterialComponents.CardView"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/site_creation_preview_ok_button_container_height"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="@dimen/margin_medium"
-            app:cardElevation="@dimen/site_creation_container_elevation"
-            tools:ignore="InconsistentLayout">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/okButton"
-                style="@style/WordPress.Button.Primary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/margin_extra_large"
-                android:layout_marginStart="@dimen/margin_extra_large"
-                android:text="@string/dialog_button_ok" />
-        </com.google.android.material.card.MaterialCardView>
-    </RelativeLayout>
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:text="@string/dialog_button_ok" />
+    </com.google.android.material.card.MaterialCardView>
 </RelativeLayout>

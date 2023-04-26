@@ -2,9 +2,11 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.views
 
 import android.os.Bundle
 import android.view.MenuItem
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.StatsViewsWidgetConfigureActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 
+@AndroidEntryPoint
 class StatsViewsWidgetConfigureActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +23,7 @@ class StatsViewsWidgetConfigureActivity : LocaleAwareActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
             return true
         }
         return super.onOptionsItemSelected(item)

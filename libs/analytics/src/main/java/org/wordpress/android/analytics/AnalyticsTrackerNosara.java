@@ -2405,6 +2405,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_powered_banner_tapped";
             case JETPACK_POWERED_BADGE_TAPPED:
                 return "jetpack_powered_badge_tapped";
+            case REMOVE_STATIC_POSTER_DISPLAYED:
+                return "remove_static_poster_displayed";
+            case REMOVE_STATIC_POSTER_GET_JETPACK_TAPPED:
+                return "remove_static_poster_get_jetpack_tapped";
+            case REMOVE_STATIC_POSTER_LINK_TAPPED:
+                return "remove_static_poster_link_tapped";
             case JETPACK_POWERED_BOTTOM_SHEET_GET_JETPACK_APP_TAPPED:
                 return "jetpack_powered_bottom_sheet_get_jetpack_app_tapped";
             case JETPACK_POWERED_BOTTOM_SHEET_CONTINUE_TAPPED:
@@ -2557,6 +2563,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blaze_flow_canceled";
             case BLAZE_FLOW_ERROR:
                 return "blaze_flow_error";
+            case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_SHOWN:
+                return "wp_individual_site_overlay_viewed";
+            case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_DISMISSED:
+                return "wp_individual_site_overlay_dismissed";
+            case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_PRIMARY_TAPPED:
+                return "wp_individual_site_overlay_primary_tapped";
+            case DASHBOARD_CARD_DOMAIN_SHOWN:
+                return "direct_domains_purchase_dashboard_card_shown";
+            case DASHBOARD_CARD_DOMAIN_TAPPED:
+                return "direct_domains_purchase_dashboard_card_tapped";
+            case DASHBOARD_CARD_DOMAIN_MORE_MENU_TAPPED:
+                return "direct_domains_purchase_dashboard_card_menu_tapped";
+            case DASHBOARD_CARD_DOMAIN_HIDDEN:
+                return "direct_domains_purchase_dashboard_card_hidden";
         }
         return null;
     }

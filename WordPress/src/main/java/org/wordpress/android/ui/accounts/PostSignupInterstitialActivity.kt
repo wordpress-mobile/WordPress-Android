@@ -1,21 +1,25 @@
 package org.wordpress.android.ui.accounts
 
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.button.MaterialButton
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostSignupInterstitialActivityBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.DISMISS
+import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.SHOW_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.START_SITE_CONNECTION_FLOW
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.START_SITE_CREATION_FLOW
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class PostSignupInterstitialActivity : LocaleAwareActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -23,7 +27,6 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as WordPress).component().inject(this)
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(theme)
 
@@ -31,6 +34,9 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
             .get(PostSignupInterstitialViewModel::class.java)
         val binding = PostSignupInterstitialActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        onBackPressedDispatcher.addCallback(this) { viewModel.onBackButtonPressed() }
+
         with(binding) {
             viewModel.onInterstitialShown()
             createNewSiteButton().setOnClickListener { viewModel.onCreateNewSiteButtonPressed() }
@@ -38,7 +44,7 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
             dismissButton().setOnClickListener { viewModel.onDismissButtonPressed() }
         }
 
-        viewModel.navigationAction.observe(this, { executeAction(it) })
+        viewModel.navigationAction.observe(this) { executeAction(it) }
     }
 
     private fun PostSignupInterstitialActivityBinding.createNewSiteButton() =
@@ -50,13 +56,10 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
     private fun PostSignupInterstitialActivityBinding.dismissButton() =
         root.findViewById<MaterialButton>(R.id.dismiss_button)
 
-    override fun onBackPressed() {
-        viewModel.onBackButtonPressed()
-    }
-
     private fun executeAction(navigationAction: NavigationAction) = when (navigationAction) {
         START_SITE_CREATION_FLOW -> startSiteCreationFlow()
         START_SITE_CONNECTION_FLOW -> startSiteConnectionFlow()
+        SHOW_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY -> showJetpackIndividualPluginOverlay()
         DISMISS -> dismiss()
     }
 
@@ -73,5 +76,9 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
     private fun dismiss() {
         ActivityLauncher.viewReader(this)
         finish()
+    }
+
+    private fun showJetpackIndividualPluginOverlay() {
+        WPJetpackIndividualPluginFragment.show(supportFragmentManager)
     }
 }

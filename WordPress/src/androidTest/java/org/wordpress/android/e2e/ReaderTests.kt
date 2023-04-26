@@ -1,19 +1,13 @@
 package org.wordpress.android.e2e
 
-import android.Manifest.permission
-import androidx.test.rule.GrantPermissionRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.wordpress.android.e2e.pages.ReaderPage
 import org.wordpress.android.support.BaseTest
 
 @HiltAndroidTest
 class ReaderTests : BaseTest() {
-    @JvmField @Rule
-    var mRuntimeImageAccessRule = GrantPermissionRule.grant(permission.WRITE_EXTERNAL_STORAGE)
-
     @Before
     fun setUp() {
         logoutIfNecessary()
@@ -21,18 +15,16 @@ class ReaderTests : BaseTest() {
         ReaderPage().go()
     }
 
-    var mCoachingPostTitle = "Let's check out the coaching team!"
-    var mCompetitionPostTitle = "Let's focus on the competition."
     @Test
     fun e2eNavigateThroughPosts() {
         ReaderPage()
             .tapFollowingTab()
-            .openPost(mCoachingPostTitle)
-            .verifyPostDisplayed(mCoachingPostTitle)
+            .openBlogOrPost(TITLE_COACHING_POST)
+            .verifyPostDisplayed(TITLE_COACHING_POST)
             .slideToPreviousPost()
-            .verifyPostDisplayed(mCompetitionPostTitle)
+            .verifyPostDisplayed(TITLE_COMPETITION_POST)
             .slideToNextPost()
-            .verifyPostDisplayed(mCoachingPostTitle)
+            .verifyPostDisplayed(TITLE_COACHING_POST)
             .goBackToReader()
     }
 
@@ -40,11 +32,29 @@ class ReaderTests : BaseTest() {
     fun e2eLikePost() {
         ReaderPage()
             .tapFollowingTab()
-            .openPost(mCoachingPostTitle)
+            .openBlogOrPost(TITLE_COACHING_POST)
             .likePost()
             .verifyPostLiked()
             .unlikePost()
             .verifyPostNotLiked()
             .goBackToReader()
+    }
+
+    @Test
+    fun e2eBookmarkPost() {
+        ReaderPage()
+            .tapFollowingTab()
+            .openBlogOrPost(TITLE_LONGREADS_BLOG)
+            .bookmarkPost()
+            .verifyPostBookmarked()
+            .removeBookmarkPost()
+            .verifyPostNotBookmarked()
+            .goBackToReader()
+    }
+
+    companion object {
+        private const val TITLE_LONGREADS_BLOG = "Longreads"
+        private const val TITLE_COACHING_POST = "Let's check out the coaching team!"
+        private const val TITLE_COMPETITION_POST = "Let's focus on the competition."
     }
 }

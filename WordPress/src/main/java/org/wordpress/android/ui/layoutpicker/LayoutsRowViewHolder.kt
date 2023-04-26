@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.setVisible
 
 sealed class LayoutsRowViewHolder(view: View) : RecyclerView.ViewHolder(view)
@@ -100,7 +101,7 @@ class LayoutsItemViewHolder(
 
     private fun restoreScrollState(recyclerView: RecyclerView, key: String) {
         recyclerView.layoutManager?.apply {
-            val scrollState = nestedScrollStates.getParcelable<Parcelable>(key)
+            val scrollState = nestedScrollStates.getParcelableCompat<Parcelable>(key)
             if (scrollState != null) {
                 onRestoreInstanceState(scrollState)
             } else {

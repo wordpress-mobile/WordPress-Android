@@ -59,6 +59,7 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 import java.util.Date
@@ -121,6 +122,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var blazeStore: BlazeStore
 
+    @Mock
+    private lateinit var siteUtilsWrapper: SiteUtilsWrapper
+
     private val featureAnnouncement = FeatureAnnouncement(
         "14.7",
         2,
@@ -169,7 +173,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(false)
         whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(bloggingPrompt))
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
+        whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(true)
         viewModel = WPMainActivityViewModel(
             featureAnnouncementProvider,
             buildConfigWrapper,
@@ -184,7 +188,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             NoDelayCoroutineDispatcher(),
             jetpackFeatureRemovalPhaseHelper,
             blazeFeatureUtils,
-            blazeStore
+            blazeStore,
+            siteUtilsWrapper
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
             onFeatureAnnouncementRequestedObserver
@@ -537,6 +542,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `new post action is triggered from FAB when no full access to content if stories unavailable`() {
         startViewModelWithDefaultParameters()
+        whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(false)
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = false, isWpcomOrJpSite = false))
         assertThat(viewModel.isBottomSheetShowing.value).isNull()
         assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_POST)
@@ -604,7 +610,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `onResume set expected content message when user has not full access to content`() {
         startViewModelWithDefaultParameters()
+        whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(true)
         viewModel.onResume(site = initSite(hasFullAccessToContent = false), isOnMySitePageWithValidSite = true)
+
         assertThat(fabUiState!!.CreateContentMessageId)
             .isEqualTo(R.string.create_post_page_fab_tooltip_contributors_stories_enabled)
     }

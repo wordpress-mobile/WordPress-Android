@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
 
     <dimen name="format_bar_height">44dp</dimen>
     <dimen name="format_bar_height_tablet">49dp</dimen>

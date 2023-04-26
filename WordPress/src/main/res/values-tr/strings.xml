@@ -1,11 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-08 18:08:06+0000
+Translation-Revision-Date: 2023-04-18 15:54:26+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_remove_blocks">Blokları kaldır</string>
+    <string name="gutenberg_native_privacy_and_rating">Gizlilik ve Derecelendirme</string>
+    <string name="gutenberg_native_playback_settings">Oynatma Ayarları</string>
+    <string name="gutenberg_native_playback_bar_color">Oynatma Çubuğu Rengi</string>
+    <string name="gutenberg_native_manual">Manuel</string>
+    <string name="gutenberg_native_dynamic">Dinamik</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">Görselin amacını açıklayın. Dekoratif amaçlıysa boş bırakın.</string>
+    <string name="dashboard_pages_card_create_another_page_description">Sipariş üzerine oluşturulan mobil uyumlu düzenlerle başlayın</string>
+    <string name="dashboard_pages_card_create_another_page_button">Başka Bir Sayfa Oluştur</string>
+    <string name="dashboard_pages_card_no_pages_create_page_button">Sitenize Sayfalar ekleyin</string>
+    <string name="dashboard_card_domain_menu_hide_this">Bunu gizle</string>
+    <string name="dashboard_card_domain_sub_title">Bulması, paylaşması ve takip etmesi kolay bir site adresiyle internetin her yerini sahiplenin.</string>
+    <string name="dashboard_card_domain_title">Özel alan adıyla kişisel online kimliğiniz olsun</string>
+    <string name="blogging_reminders_notifications_permission_caption">Blog hatırlatıcılarını kullanmak için anlık bildirimleri açmanız gerekir.</string>
+    <string name="blogging_reminders_notifications_permission_title">Anlık bildirimleri aç</string>
+    <string name="site_creation_domain_button_continue_with_subdomain">Alt alan adı ile devam et</string>
+    <string name="site_creation_domain_button_purchase_domain">Alan adı satın al</string>
+    <string name="permission_images_video_audio">Fotoğraflar ve videolar - Müzik ve ses</string>
+    <string name="permission_audio">Müzik ve ses</string>
+    <string name="permission_images">Fotoğraflar ve videolar</string>
+    <string name="photo_picker_soft_ask_audios_label">%s seslerinize erişebilmek için izin gerektiriyor</string>
+    <string name="photo_picker_soft_ask_videos_label">%s videolarınıza erişebilmek için izin gerektiriyor</string>
+    <string name="photo_picker_soft_ask_photos_label">%s fotoğraflarınıza erişebilmek için izin gerektiriyor</string>
+    <string name="photo_picker_soft_ask_photos_videos_label">%s fotoğraflarınıza ve videolarınıza erişebilmek için izin gerektiriyor</string>
+    <string name="photo_picker_soft_ask_photos_videos_audio_label">%s müziğinize, sesinize, fotoğraflarınıza ve videolarınıza erişebilmek için izin gerektiriyor</string>
+    <string name="notifications_permission_bottom_sheet_button">Bildirimleri aç</string>
+    <string name="notifications_permission_bottom_sheet_description_2">Hemen bildirim almak için Ayarlar &amp;rarr; Bildirimler &amp;rarr; Uygulama Ayarları\'na gidin ve %1$s özelliğini açın.</string>
+    <string name="notifications_permission_bottom_sheet_description_1">Bildirimleri görmek için uygulamayı açmanız gerekecek.</string>
+    <string name="notifications_permission_bottom_sheet_title">Anlık bildirimler kapalı</string>
+    <string name="notifications_permission_off_desc">Anlık bildirimler kapalı.</string>
+    <string name="notifications_permission_dismiss_content_description">Bildirim izni uyarısını kapat.</string>
+    <string name="notifications_permission_fix">Düzelt</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt;, %2$s özel Jetpack eklentisini kullanıyor</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt;, &lt;b&gt;%2$s&lt;/b&gt; eklentisini kullanıyor</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">Özel Jetpack eklentilerini kullanan siteler WordPress uygulaması tarafından desteklenmemektedir.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt;, WordPress uygulaması tarafından desteklenmeyen özel Jetpack eklentilerini kullanıyor.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt;, WordPress uygulaması tarafından desteklenmeyen &lt;b&gt;%2$s&lt;/b&gt; eklentisini kullanıyor.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">Web sitelerinizin bazılarına ulaşılamıyor</string>
+    <string name="wp_jetpack_individual_plugin_overlay_single_site_title">Web sitelerinizin birine ulaşılamıyor</string>
+    <string name="wp_jetpack_individual_plugin_overlay_content_2">Bu web sitesini uygulamayla kullanabilmek için lütfen tam Jetpack eklentisini bağlamada size yardımcı olacağımız Jetpack uygulamasına geçiş yapın.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_primary_button">Jetpack uygulamasına geçiş yapın</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s, henüz uygulamanın tüm özelliklerini desteklemeyen %2$s kullanıyor.\n\nUygulamayı bu siteyle kullanmak için lütfen %3$s öğesini yükleyin.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">Bu site</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s, henüz uygulamanın tüm özelliklerini desteklemeyen %2$s kullanıyor. Lütfen %3$s öğesini yükleyin.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s, henüz uygulamanın tüm özelliklerini desteklemeyen %2$s kullanıyor. Lütfen %3$s öğesini yükleyin.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Birkaç gün içinde Jetpack uygulamasına geçiş.</string>
+    <string name="wp_jp_static_poster_footnote">Geçiş ücretsizdir ve yalnızca bir dakika sürer.</string>
+    <string name="wp_jp_static_poster_message">İstatistikler, Okuyucu, Bildirimler ve Jetpack destekli diğer özellikler WordPress uygulamasından kaldırıldı ve artık yalnızca Jetpack uygulamasında bulunuyor.</string>
+    <string name="wp_jp_static_poster_button_secondary">Jetpack.com\'da daha fazla bilgi edinin</string>
+    <string name="wp_jp_static_poster_button_primary">Jetpack uygulamasına geçiş yapın</string>
+    <string name="wp_jp_static_poster_title_plural">%s, Jetpack uygulamasına geçti.</string>
+    <string name="wp_jp_static_poster_title">%s, Jetpack uygulamasına geçti.</string>
+    <string name="my_site_btn_wp_admin">Pano</string>
+    <string name="my_site_header_manage">Yönet</string>
+    <string name="my_site_header_traffic">Trafik</string>
+    <string name="my_site_header_content">İçerik</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Ayarla</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">Bitti</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Jetpack yüklendiğine göre artık sadece ayarlarınızı tamamlamanız yeterli. Bu işlem sadece bir dakika sürer.</string>
     <string name="blaze_overlay_site_promotional_button">Şimdi bir yazı yaz</string>
     <string name="blaze_overlay_page_promotional_button">Bu sayfayı Blazeleyin</string>
     <string name="blaze_overlay_post_promotional_button">Bu yazıyı Blazeleyin</string>
@@ -18,7 +77,6 @@ Language: tr
     <string name="site_creation_domain_tag_sale">İndirim</string>
     <string name="site_creation_domain_tag_recommended">Önerilen</string>
     <string name="site_creation_domain_tag_best_alternative">En İyi Alternatif</string>
-    <string name="site_creation_domain_cost">%s/y</string>
     <string name="me_btn_help">Yardım</string>
     <string name="support_faq_caption">Sık sorulan soruların yanıtları için SSS bölümümüze bakın.</string>
     <string name="support_faq_title">Jetpack uygulamasına geçtiğiniz için teşekkür ederiz!</string>
@@ -38,24 +96,22 @@ Language: tr
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">tam Jetpack eklentisi</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">bireysel Jetpack eklentileri</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">%1$s eklentisi</string>
-    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s, uygulamanın tüm özelliklerini henüz desteklemeyen %2$s kullanıyor.\n\nUygulamayı bu siteyle birlikte kullanmak için lütfen %3$s yükleyin.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s, henüz uygulamanın tüm özelliklerini desteklemeyen %2$s kullanıyor.\n\nUygulamayı bu siteyle kullanmak için lütfen %3$s öğesini yükleyin.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">Lütfen Jetpack eklentisinin tamamını yükleyin</string>
     <string name="only_one_primary_site_message">Yalnızca bir site kullanılabilir, bu nedenle birincil sitenizi değiştiremezsiniz.</string>
-    <string name="my_site_jp_install_full_plugin_card_content">Bu site, uygulamanın tüm özelliklerini henüz desteklemeyen ayrı bir eklenti kullanmaktadır. Lütfen Jetpack eklentisinin tamamını kurun.</string>
-    <string name="jetpack_full_plugin_install_error_button_contact_support">Destek ile iletişim kur</string>
-    <string name="jetpack_full_plugin_install_error_button_retry">Yeniden dene</string>
-    <string name="jetpack_full_plugin_install_error_description">Jetpack şu anda kurulamıyor.</string>
-    <string name="jetpack_full_plugin_install_error_title">Bir sorun vardı</string>
-    <string name="jetpack_full_plugin_install_error_image_content_description">Hata simgesi</string>
-    <string name="jetpack_full_plugin_install_done_button">Bitti</string>
-    <string name="jetpack_full_plugin_install_done_description">Bu siteyi uygulama ile kullanmaya hazır.</string>
-    <string name="jetpack_full_plugin_install_done_title">Jetpack kuruldu</string>
-    <string name="jetpack_full_plugin_install_installing_description">Sitenize Jetpack kuruluyor. Bu işlemin tamamlanması birkaç dakika sürebilir.</string>
-    <string name="jetpack_full_plugin_install_installing_title">Jetpack kuruluyor</string>
-    <string name="jetpack_full_plugin_install_initial_button">Devam et</string>
-    <string name="jetpack_full_plugin_install_initial_description">Web sitesi kimlik bilgileriniz depolanmayacak ve yalnızca Jetpack\'i kurma amacıyla kullanılacak</string>
-    <string name="jetpack_full_plugin_install_initial_title">Jetpack\'i kur</string>
-    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack simgesi</string>
+    <string name="jetpack_plugin_install_error_button_contact_support">Desteğe Başvurun</string>
+    <string name="jetpack_plugin_install_error_button_retry">Tekrar dene</string>
+    <string name="jetpack_plugin_install_error_description">Jetpack şu anda yüklenemiyor.</string>
+    <string name="jetpack_plugin_install_error_title">Bir hata oluştu</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Hata simgesi</string>
+    <string name="jetpack_plugin_install_full_plugin_done_description">Bu site uygulamayla kullanılmaya hazır</string>
+    <string name="jetpack_plugin_install_done_title">Jetpack yüklendi</string>
+    <string name="jetpack_plugin_install_installing_description">Sitenize Jetpack yükleniyor. Bu işlemin tamamlanması birkaç dakika sürebilir.</string>
+    <string name="jetpack_plugin_install_installing_title">Jetpack yükleniyor</string>
+    <string name="jetpack_plugin_install_initial_button">Devam</string>
+    <string name="jetpack_plugin_install_initial_description">Web sitenizin kimlik bilgileri depolanmayacak ve yalnızca güvenli şekilde Jetpack yüklemek amacıyla kullanılacaktır.</string>
+    <string name="jetpack_plugin_install_initial_title">Jetpack\'i yükleyin</string>
+    <string name="jetpack_plugin_install_jp_logo_content_description">Jetpack simgesi</string>
     <string name="button_promote_with_blaze">Blaze ile Tanıt</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Sitenizin potansiyelinin tamamını ortaya çıkarın. Jetpack ile istatistikler, bildirimler ve daha fazlasını elde edin.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Sitenizde Jetpack eklentisi var</string>
@@ -152,9 +208,6 @@ Language: tr
     <string name="preference_open_links_in_jetpack">Bağlantıları Jetpack\'te aç</string>
     <string name="jp_migration_need_help_button">Yardıma mı ihtiyacınız var?</string>
     <string name="jp_migration_got_it_button">Anladım</string>
-    <string name="jp_migration_delete_message">Veri çakışmalarını önlemek için lütfen &lt;b&gt;WordPress uygulamasını silin&lt;/b&gt;.</string>
-    <string name="jp_migration_delete_subtitle">Görünüşe göre WordPress uygulaması hâlâ yüklü. Veri çakışmalarını önlemek için WordPress uygulamasını silmenizi öneririz.</string>
-    <string name="jp_migration_delete_title">Artık WordPress uygulamasına ihtiyacınız yok</string>
     <string name="jp_migration_network_error_message">Ağ bağlantısı olmadığı için verilerinizi ve ayarlarınızı aktaramıyoruz.</string>
     <string name="jp_migration_network_error_subtitle">Lütfen ağ bağlantınızın çalışıp çalışmadığını kontrol edip yeniden deneyin.</string>
     <string name="jp_migration_network_error_title">İnternete bağlanılamıyor.</string>
@@ -164,13 +217,11 @@ Language: tr
     <string name="jp_migration_try_again_button">Tekrar deneyin</string>
     <string name="jp_migration_finish_button">Bitir</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">WordPress Uygulaması simgesini kaldır</string>
-    <string name="jp_migration_done_delete_wp_message">Veri çakışmalarını önlemek için lütfen &lt;b&gt;WordPress uygulamasını silin&lt;/b&gt;.</string>
     <string name="jp_migration_done_subtitle">Tüm verilerinizi ve ayarlarınızı aktardık. Her şey bıraktığınız yerde.</string>
     <string name="jp_migration_done_title">Jetpack\'e geçtiğiniz için teşekkürler!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">WordPress uygulamasından gelen bildirimleri kapatacağız.</string>
     <string name="jp_migration_notifications_subtitle">Aynı bildirimleri alacaksınız, ancak bunlar artık Jetpack uygulamasından gelecek.</string>
     <string name="jp_migration_notifications_title">Artık bildirimler Jetpack\'ten geliyor</string>
-    <string name="jp_migration_success_card_message">Lütfen WordPress uygulamasını silin</string>
     <string name="wordpress_help_center_button">WordPress yardım merkezi</string>
     <string name="support_title">Destek</string>
     <string name="notification_disable_broadcast_permission_desc">Uygulamanın WordPress bildirimlerini devre dışı bırakmasına izin verir.</string>
@@ -749,6 +800,7 @@ Language: tr
     <string name="gutenberg_native_retry">Tekrar dene</string>
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Bir</string>
+    <string name="gutenberg_native_add_title">Başlık ekle</string>
     <string name="gutenberg_native_no_preview_available">Önizleme yok</string>
     <string name="gutenberg_native_text_color">Metin rengi</string>
     <string name="gutenberg_native_padding">Dolgu</string>
@@ -757,6 +809,7 @@ Language: tr
     <string name="gutenberg_native_custom_url">Özel adres</string>
     <string name="gutenberg_native_create_embed">Gömülü içerik oluştur</string>
     <string name="gutenberg_native_column_d">Sütun %d</string>
+    <string name="gutenberg_native_more">Daha fazla</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Ekran okuyucu kullanıcısına yardımcı olmak için bağlantıyı kısaca açıklayın</string>
     <string name="gutenberg_native_add_blocks">Blok ekle</string>
     <string name="login_no_jetpack_sites">Hiçbir Jetpack sitesi bulunamadı</string>
@@ -1173,7 +1226,6 @@ Language: tr
     <string name="stories_intro_main_title">Öykü Yayınlarına Giriş</string>
     <string name="mlp_notice_blank_page_created">Boş sayfa oluşturuldu</string>
     <string name="mlp_notice_page_created">Sayfa oluşturuldu</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s fotoğraflarınıza erişimi reddedildi. Bunu düzeltmek için izinlerinizi düzenleyip %2$s ve %3$s özelliklerini açın.</string>
     <string name="media_insert_failed">Medya eklenemedi.</string>
     <string name="media_insert_failed_with_reason">Medya eklenemedi: %s</string>
     <string name="photo_picker_wordpress_media_library">WordPress Ortam Kütüphanesi\'nden seçin</string>
@@ -1653,6 +1705,7 @@ Language: tr
     <string name="gutenberg_native_add_image_or_video">GÖRSEL VEYA VİDEO EKLE</string>
     <string name="gutenberg_native_add_image">GÖRSEL EKLE</string>
     <string name="gutenberg_native_add_block_here">BURAYA BLOK EKLE</string>
+    <string name="gutenberg_native_add_description">Açıklama ekle</string>
     <string name="reader_empty_saved_posts_content_description">Bir gönderiyi listenize kaydetmek için Gönderileri Kaydetmek için Ekle düğmesine dokunun.</string>
     <string name="reader_acessibility_list_loaded">\"Listeye %1$d öğe yüklendi.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Bildirimler</string>
@@ -1858,7 +1911,6 @@ Language: tr
     <string name="domain_suggestions_search_hint">Daha fazla fikir edinmek için anahtar sözcük girin</string>
     <string name="domains_suggestions_empty_list">Hiçir öneri bulunamadı</string>
     <string name="register_domain">Alan Adını Kaydet</string>
-    <string name="jetpack_installed_message">Jetpack yüklendiğine göre artık sadece ayarlarınızı tamamlamanız yeterli. Bu işlem sadece bir dakika sürer.</string>
     <string name="stats_menu_remove">Tek bakıştan çıkar</string>
     <string name="stats_menu_move_down">Aşağı taşı</string>
     <string name="stats_menu_move_up">Yukarı taşı</string>
@@ -2124,15 +2176,6 @@ Language: tr
     <string name="reader_empty_followed_tags_title">Takip edilen konu yok</string>
     <string name="reader_empty_followed_tags_subtitle">En sevdiğiniz konularla ilgili yazıları bulmak için buraya konu ekleyin</string>
     <string name="login_to_to_connect_jetpack">Jetpack\'i bağlamak için kullandığınız WordPress.com hesabına giriş yapın.</string>
-    <string name="install_jetpack_retry">Tekrar dene</string>
-    <string name="install_jetpack_continue">Devam et</string>
-    <string name="jetpack_installation_problem_message">Jetpack şu anda yüklenemedi.</string>
-    <string name="jetpack_installation_problem">Bir sorun vardı</string>
-    <string name="jetpack_installed">Jetpack kuruldu</string>
-    <string name="installing_jetpack_message">Jetpack sitenize yükleniyor. Bu işlemin tamamlanması birkaç dakika sürebilir.</string>
-    <string name="installing_jetpack">Jetpack kuruluyor</string>
-    <string name="install_jetpack_message">Web sitesi kimlik bilgileriniz depolanmayacak ve yalnızca Jetpack\'i kurma amacıyla kullanılacak.</string>
-    <string name="install_jetpack">Jetpack\'i kur</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack SSS</string>
     <string name="stats_jetpack_connection_setup_info">WordPress sitenizdeki istatistikleri kullanmak için Jetpack eklentisini yüklemeniz gerekir.</string>
@@ -2686,7 +2729,7 @@ Language: tr
     <string name="media_documents">Belgeler</string>
     <string name="media_images">Görseller</string>
     <string name="media_all">Tümü</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s’un fotoğraflarınıza erişimi reddedildi. Bunu düzeltmek için izinlerinizi düzenleyip %2$s özelliğini açın.</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">%1$s için ortam dosyalarınıza erişim reddedildi. Bunu düzeltmek için izinlerinizi düzenleyip %2$s özelliğini açın.</string>
     <string name="reader_view_comments">Yorumları görüntüle</string>
     <string name="site_settings_video_quality_hint">Videoların kalitesi. Daha yüksek değerler daha kaliteli videolar demektir.</string>
     <string name="site_settings_video_width_hint">Yazılardaki videoların boyutunu bu boyuta değiştirir</string>

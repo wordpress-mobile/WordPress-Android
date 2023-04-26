@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
@@ -31,13 +32,14 @@ import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.comments.unified.CommentConstants;
-import org.wordpress.android.ui.comments.unified.OnLoadMoreListener;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
+import org.wordpress.android.ui.comments.unified.OnLoadMoreListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 
@@ -45,12 +47,15 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.ui.comments.unified.CommentConstants.COMMENTS_PER_PAGE;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * @deprecated
  * Comments are being refactored as part of Comments Unification project. If you are adding any
  * features or modifying this class, please ping develric or klymyam
  */
 @Deprecated
+@AndroidEntryPoint
 public class CommentsDetailActivity extends LocaleAwareActivity
         implements OnLoadMoreListener,
         CommentActions.OnCommentActionListener, ScrollableViewInitializedListener {
@@ -74,25 +79,27 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     private boolean mCanLoadMoreComments = true;
 
     @Override
-    public void onBackPressed() {
-        CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
-                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
-
-        if (fragment != null) {
-            fragment.onBackPressed();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
         mCommentsStoreAdapter.register(this);
         AppLog.i(AppLog.T.COMMENTS, "Creating CommentsDetailActivity");
 
         setContentView(R.layout.comments_detail_activity);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
+                        getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
+
+                if (fragment != null) {
+                    fragment.collapse();
+                } else {
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);

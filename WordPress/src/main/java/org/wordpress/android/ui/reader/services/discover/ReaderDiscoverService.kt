@@ -8,12 +8,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverServiceStarter.ARG_DISCOVER_TASK
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -24,7 +26,7 @@ import kotlin.coroutines.CoroutineContext
 @AndroidEntryPoint
 class ReaderDiscoverService : Service(), ServiceCompletionListener, CoroutineScope {
     @Inject
-    @field:Named("IO_THREAD")
+    @Named(IO_THREAD)
     lateinit var ioDispatcher: CoroutineDispatcher
 
     @Inject
@@ -56,7 +58,7 @@ class ReaderDiscoverService : Service(), ServiceCompletionListener, CoroutineSco
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null && intent.hasExtra(ARG_DISCOVER_TASK)) {
-            val task = intent.getSerializableExtra(ARG_DISCOVER_TASK) as DiscoverTasks
+            val task = requireNotNull(intent.getSerializableExtraCompat<DiscoverTasks>(ARG_DISCOVER_TASK))
             readerDiscoverLogic.performTasks(task, null, this, this)
         }
         return START_NOT_STICKY
