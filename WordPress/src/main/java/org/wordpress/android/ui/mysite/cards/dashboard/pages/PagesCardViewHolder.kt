@@ -3,9 +3,11 @@ package org.wordpress.android.ui.mysite.cards.dashboard.pages
 import android.view.View
 import android.view.ViewGroup
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
+import org.wordpress.android.databinding.MySitePagesCardFooterLinkBinding
 import org.wordpress.android.databinding.MySitePagesCardWithPageItemsBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.CreatNewPageItem
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
@@ -23,17 +25,22 @@ class PagesCardViewHolder(
 
     fun bind(card: PagesCard) = with(binding) {
         val pagesCard = card as PagesCardWithData
-        if(pagesCard.pages.isEmpty()) pagesItems.visibility = View.GONE
+        mySiteToolbar.update(pagesCard.title)
+        if (pagesCard.pages.isEmpty()) pagesItems.visibility = View.GONE
         else {
             (pagesItems.adapter as PagesItemsAdapter).update(pagesCard.pages)
         }
-        mySiteToolbar.update(pagesCard.title)
-        uiHelpers.setTextOrHide(mySiteCardFooterLink.linkLabel,pagesCard.footerLink.label)
-        uiHelpers.setTextOrHide(mySiteCardFooterLink.linkDescription,pagesCard.footerLink.description)
-        uiHelpers.setImageOrHide(mySiteCardFooterLink.linkIcon,pagesCard.footerLink.imageRes)
+        mySiteCardFooterLink.setUpFooter(pagesCard.footerLink)
     }
 
     private fun MySiteCardToolbarBinding.update(title: UiString?) {
         uiHelpers.setTextOrHide(mySiteCardToolbarTitle, title)
+    }
+
+    private fun MySitePagesCardFooterLinkBinding.setUpFooter(footer: CreatNewPageItem) {
+        uiHelpers.setTextOrHide(linkLabel, footer.label)
+        uiHelpers.setTextOrHide(linkDescription, footer.description)
+        uiHelpers.setImageOrHide(linkIcon, footer.imageRes)
+        linkLabel.setOnClickListener { footer.onClick.invoke() }
     }
 }
