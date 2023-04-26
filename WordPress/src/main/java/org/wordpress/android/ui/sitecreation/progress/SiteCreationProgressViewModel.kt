@@ -31,6 +31,7 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.S
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -40,7 +41,6 @@ import javax.inject.Named
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
 const val LOADING_STATE_TEXT_ANIMATION_DELAY = 2000L
 private const val ERROR_CONTEXT = "site_preview"
-private val LOG_TAG = AppLog.T.SITE_CREATION
 
 private val loadingTexts = listOf(
     UiStringRes(R.string.new_site_creation_creating_site_loading_1),
@@ -186,7 +186,7 @@ class SiteCreationProgressViewModel @Inject constructor(
     }
 
     private fun createCart(site: SiteModel) = launch {
-        AppLog.d(LOG_TAG, "Creating cart: $domain")
+        AppLog.d(T.SITE_CREATION, "Creating cart: $domain")
 
         val event = createCartUseCase.execute(
             site,
@@ -197,10 +197,10 @@ class SiteCreationProgressViewModel @Inject constructor(
         )
 
         if (event.isError) {
-            AppLog.e(LOG_TAG, "Failed cart creation: ${event.error.message}")
-            updateUiStateAsync(GenericError)
+            AppLog.e(T.SITE_CREATION, "Failed cart creation: ${event.error.message}")
+            updateUiStateAsync(CartError)
         } else {
-            AppLog.d(LOG_TAG, "Successful cart creation: ${event.cartDetails}")
+            AppLog.d(T.SITE_CREATION, "Successful cart creation: ${event.cartDetails}")
             _onCartCreated.postValue(CheckoutDetails(site, domain.domainName))
         }
     }
