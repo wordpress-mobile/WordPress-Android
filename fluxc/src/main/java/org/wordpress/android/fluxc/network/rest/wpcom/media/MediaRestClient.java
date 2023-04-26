@@ -47,7 +47,6 @@ import org.wordpress.android.util.StringUtils;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
