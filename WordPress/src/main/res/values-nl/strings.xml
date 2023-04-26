@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-06 15:54:08+0000
+Translation-Revision-Date: 2023-04-20 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_remove_blocks">Blokken verwijderen</string>
+    <string name="gutenberg_native_privacy_and_rating">Privacy en beoordeling</string>
+    <string name="gutenberg_native_manual">Handmatig</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">Beschrijf het doel van de afbeelding. Laat dit veld leeg als de afbeelding decoratief is.</string>
+    <string name="dashboard_pages_card_create_another_page_description">Ga aan de slag met op maat gemaakte lay-outs die geschikt zijn voor mobiele apparaten</string>
+    <string name="dashboard_pages_card_create_another_page_button">Nog een pagina aanmaken</string>
+    <string name="dashboard_pages_card_no_pages_create_page_button">Voeg pagina\'s toe aan je site</string>
+    <string name="dashboard_card_domain_menu_hide_this">Dit verbergen</string>
+    <string name="dashboard_card_domain_sub_title">Eis je eigen hoekje van het internet op met een site-adres dat eenvoudig te vinden, te delen en te volgen is.</string>
+    <string name="dashboard_card_domain_title">Bemachtig je eigen online identiteit met een aangepast domein</string>
+    <string name="blogging_reminders_notifications_permission_caption">Als je blog herinneringen wilt gebruiken, moet je berichtgeving inschakelen.</string>
+    <string name="site_creation_domain_button_purchase_domain">Domein aanschaffen</string>
+    <string name="permission_images_video_audio">Foto’s en video\'s + Muziek en audio</string>
+    <string name="photo_picker_soft_ask_audios_label">%s heeft toestemming nodig om je audio te openen</string>
+    <string name="photo_picker_soft_ask_videos_label">%s heeft toestemming nodig om je video\'s te openen</string>
+    <string name="photo_picker_soft_ask_photos_label">%s heeft toestemming nodig om je foto\'s te openen</string>
+    <string name="photo_picker_soft_ask_photos_videos_label">%s heeft toestemming nodig om je foto\'s en video\'s te openen</string>
+    <string name="photo_picker_soft_ask_photos_videos_audio_label">%s heeft toestemming nodig om je muziek, audio, foto\'s en video\'s te openen</string>
+    <string name="notifications_permission_bottom_sheet_description_2">Ga naar Instellingen &amp;rarr; Meldingen &amp;rarr; App-instellingen, en zet %1$s aan om direct op de hoogte te worden gesteld.</string>
+    <string name="notifications_permission_bottom_sheet_description_1">Je moet de app openen om meldingen te kunnen zien.</string>
+    <string name="notifications_permission_bottom_sheet_title">Pushmeldingen zijn uitgeschakeld</string>
+    <string name="notifications_permission_off_desc">Pushmeldingen zijn uitgeschakeld.</string>
+    <string name="notifications_permission_dismiss_content_description">Toestemmingswaarschuwing voor meldingen negeren.</string>
+    <string name="notifications_permission_fix">Oplossing</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; gebruikt %2$s individuele Jetpack-plugins</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; gebruikt de &lt;b&gt;%2$s&lt;/b&gt;-plugin</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">Sites met individuele Jetpack-plugins worden niet ondersteund door de WordPress-app.</string>
@@ -175,9 +199,6 @@ Language: nl
     <string name="preference_open_links_in_jetpack">Links openen in Jetpack</string>
     <string name="jp_migration_need_help_button">Hulp nodig?</string>
     <string name="jp_migration_got_it_button">Duidelijk</string>
-    <string name="jp_migration_delete_message">&lt;b&gt;Verwijder de WordPress-app&lt;/b&gt; om gegevensconflicten te vermijden.</string>
-    <string name="jp_migration_delete_subtitle">Het lijkt erop dat je de WordPress-app nog steeds geïnstalleerd hebt. We raden je aan om de WordPress-app te verwijderen om gegevensconflicten te vermijden.</string>
-    <string name="jp_migration_delete_title">Je hebt de WordPress-app niet meer nodig</string>
     <string name="jp_migration_network_error_message">We kunnen je gegevens en instellingen niet overdragen zonder netwerkverbinding.</string>
     <string name="jp_migration_network_error_subtitle">Controleer of je een netwerkverbinding hebt en probeer het opnieuw.</string>
     <string name="jp_migration_network_error_title">Kan geen verbinding maken met het internet.</string>
@@ -187,13 +208,11 @@ Language: nl
     <string name="jp_migration_try_again_button">Opnieuw proberen</string>
     <string name="jp_migration_finish_button">Afronden</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Verwijder pictogram WordPress-app</string>
-    <string name="jp_migration_done_delete_wp_message">&lt;b&gt;Verwijder de WordPress-app&lt;/b&gt; om gegevensconflicten te vermijden.</string>
     <string name="jp_migration_done_subtitle">We hebben al je gegevens en instellingen overgedragen. Alles staat precies waar je het gelaten hebt.</string>
     <string name="jp_migration_done_title">Bedankt dat je bent overgestapt naar Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">We zullen meldingen van de WordPress-app uitschakelen.</string>
     <string name="jp_migration_notifications_subtitle">Je krijgt dezelfde meldingen, maar ze komen nu van de Jetpack-app.</string>
     <string name="jp_migration_notifications_title">Je krijgt nu meldingen van Jetpack</string>
-    <string name="jp_migration_success_card_message">Verwijder de WordPress-app</string>
     <string name="wordpress_help_center_button">WordPress help centrum</string>
     <string name="support_title">Ondersteuning</string>
     <string name="notification_disable_broadcast_permission_desc">Staat de app toe om meldingen van WordPress uit te schakelen.</string>
@@ -2698,6 +2717,7 @@ Language: nl
     <string name="media_documents">Documenten</string>
     <string name="media_images">Afbeeldingen</string>
     <string name="media_all">Alles</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">%1$s kon geen toegang krijgen tot je mediabestanden. Bewerk je toestemmingen en schakel %2$s in om dit op te lossen.</string>
     <string name="reader_view_comments">Reacties bekijken</string>
     <string name="site_settings_video_quality_hint">Kwaliteit van video\'s. Hoe hoger de waarde, hoe beter de kwaliteit van je video\'s.</string>
     <string name="site_settings_video_width_hint">De afmeting van video\'s in berichten wijzigen naar dit formaat</string>

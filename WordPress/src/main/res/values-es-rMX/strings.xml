@@ -26,8 +26,6 @@ Language: es_MX
     <string name="preference_open_links_in_jetpack">Abrir las ligas en Jetpack.</string>
     <string name="jp_migration_need_help_button">¿Necesita ayuda?</string>
     <string name="jp_migration_got_it_button">Entendido</string>
-    <string name="jp_migration_delete_subtitle">Parece que todavía tiene instalada la aplicación WordPress. Recomendamos que la elimines para evitar conflictos de datos.</string>
-    <string name="jp_migration_delete_title">Ya no necesita la aplicación WordPress.</string>
     <string name="jp_migration_network_error_message">No pudimos cambiar sus datos y configuraciones sin conexión con la red.</string>
     <string name="jp_migration_network_error_subtitle">Por favor, cheque para asegurar que su conexión de red está funcionando y inténtelo de nuevo.</string>
     <string name="jp_migration_network_error_title">No se puede conectar al internet.</string>

@@ -208,9 +208,6 @@ Language: ar
     <string name="preference_open_links_in_jetpack">فتح الروابط في Jetpack</string>
     <string name="jp_migration_need_help_button">هل تحتاج إلى مساعدة؟</string>
     <string name="jp_migration_got_it_button">فهمت</string>
-    <string name="jp_migration_delete_message">يرجى &lt;b&gt;حذف تطبيق ووردبريس&lt;/b&gt; لتفادي تعارضات البيانات.</string>
-    <string name="jp_migration_delete_subtitle">يبدو أن تطبيق ووردبريس لا يزال مثبتًا لديك. نوصي بأن تحذف تطبيق ووردبريس لتفادي تعارضات البيانات.</string>
-    <string name="jp_migration_delete_title">لن تحتاج إلى تطبيق ووردبريس بعد الآن</string>
     <string name="jp_migration_network_error_message">يتعذر علينا نقل بياناتك وإعداداتك من دون اتصال الشبكة.</string>
     <string name="jp_migration_network_error_subtitle">يرجى التحقق للتأكد من أن اتصال الشبكة لديك قيد العمل، وحاول مجددًا.</string>
     <string name="jp_migration_network_error_title">يتعذر الاتصال بالإنترنت.</string>
@@ -220,13 +217,11 @@ Language: ar
     <string name="jp_migration_try_again_button">المحاولة مجددًا</string>
     <string name="jp_migration_finish_button">إنهاء</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">إزالة أيقونة تطبيق ووردبريس</string>
-    <string name="jp_migration_done_delete_wp_message">يرجى &lt;b&gt;حذف تطبيق ووردبريس&lt;/b&gt; لتفادي تعارضات البيانات.</string>
     <string name="jp_migration_done_subtitle">لقد نقلنا كل بياناتك وإعداداتك. يصبح كل شيء صحيحًا عندما تتركه.</string>
     <string name="jp_migration_done_title">شكرًا على التبديل إلى Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">سنقوم بإيقاف تشغيل التنبيهات من تطبيق ووردبريس.</string>
     <string name="jp_migration_notifications_subtitle">ستتلقى كل التنبيهات نفسها ولكنها ستأتي الآن من تطبيق Jetpack.</string>
     <string name="jp_migration_notifications_title">تأتي التنبيهات الآن من Jetpack</string>
-    <string name="jp_migration_success_card_message">يرجى حذف تطبيق ووردبريس</string>
     <string name="wordpress_help_center_button">مركز مساعدة ووردبريس</string>
     <string name="support_title">دعم</string>
     <string name="notification_disable_broadcast_permission_desc">يسمح للتطبيق بتعطيل تنبيهات ووردبريس.</string>

@@ -176,9 +176,6 @@ Language: lv
     <string name="preference_open_links_in_jetpack">Atveriet saites pakalpojumā Jetpack</string>
     <string name="jp_migration_need_help_button">Vajadzīga palīdzība?</string>
     <string name="jp_migration_got_it_button">Sapratu</string>
-    <string name="jp_migration_delete_message">Lūdzu, &lt;b&gt;izdzēsiet WordPress lietotni&lt;/b&gt;, lai izvairītos no datu konfliktiem.</string>
-    <string name="jp_migration_delete_subtitle">Šķiet, ka jums joprojām ir instalēta WordPress lietotne. Mēs iesakām dzēst WordPress lietotni, lai izvairītos no datu konfliktiem.</string>
-    <string name="jp_migration_delete_title">Jums vairs nav nepieciešama WordPress lietotne</string>
     <string name="jp_migration_network_error_message">Mēs nevaram pārsūtīt jūsu datus un iestatījumus bez tīkla savienojuma.</string>
     <string name="jp_migration_network_error_subtitle">Lūdzu, pārbaudiet, vai tīkla savienojums darbojas, un mēģiniet vēlreiz.</string>
     <string name="jp_migration_network_error_title">Nevar izveidot savienojumu ar internetu.</string>
@@ -188,13 +185,11 @@ Language: lv
     <string name="jp_migration_try_again_button">Mēģini vēlreiz</string>
     <string name="jp_migration_finish_button">Pabeigt</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Noņemiet WordPress lietotnes ikonu</string>
-    <string name="jp_migration_done_delete_wp_message">Lūdzu, &lt;b&gt;izdzēsiet WordPress lietotni&lt;/b&gt;, lai izvairītos no datu konfliktiem.</string>
     <string name="jp_migration_done_subtitle">Mēs esam pārsūtījuši visus jūsu datus un iestatījumus. Viss ir tieši tur, kur tas tika atstāts.</string>
     <string name="jp_migration_done_title">Paldies, ka pārgājāt uz Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Mēs izslēgsim paziņojumus no WordPress lietotnes.</string>
     <string name="jp_migration_notifications_subtitle">Jūs saņemsiet visus tos pašus paziņojumus, taču tagad tie tiks saņemti no lietotnes Jetpack.</string>
     <string name="jp_migration_notifications_title">Paziņojumi tagad nāk no Jetpack</string>
-    <string name="jp_migration_success_card_message">Lūdzu, izdzēsiet WordPress lietotni</string>
     <string name="wordpress_help_center_button">WordPress palīdzības centrs</string>
     <string name="support_title">Atbalsts</string>
     <string name="notification_disable_broadcast_permission_desc">Ļauj lietotnei atspējot WordPress paziņojumus.</string>
