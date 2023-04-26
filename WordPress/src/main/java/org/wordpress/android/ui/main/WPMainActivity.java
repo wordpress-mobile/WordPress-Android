@@ -715,11 +715,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
         );
 
         mMLPViewModel.getOnCreateNewPageRequested().observe(this, request -> {
-            if(mMLPViewModel.getCreatePageDashboardSource() == CreatePageDashboardSource.PAGES_CARD)
+            if (mMLPViewModel.getCreatePageDashboardSource() == CreatePageDashboardSource.PAGES_CARD) {
                 handleNewPageAction(request.getTitle(), "", request.getTemplate(),
-                    PagePostCreationSourcesDetail.PAGE_FROM_PAGES_CARD_MY_SITE_DASHBOARD);
-            else handleNewPageAction(request.getTitle(), "", request.getTemplate(),
-                    PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+                        PagePostCreationSourcesDetail.PAGE_FROM_PAGES_CARD_MY_SITE_DASHBOARD);
+            } else {
+                handleNewPageAction(request.getTitle(), "", request.getTemplate(),
+                        PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+            }
         });
 
         mViewModel.getOnFeatureAnnouncementRequested().observe(this, action -> {
@@ -830,16 +832,19 @@ public class WPMainActivity extends LocaleAwareActivity implements
             if (actionType == ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD) {
                 handleNewPageAction("", "", null,
                         PagePostCreationSourcesDetail.PAGE_FROM_PAGES_CARD_MY_SITE_DASHBOARD);
+            } else {
+                handleNewPageAction("", "", null,
+                        PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
             }
-            else handleNewPageAction("", "", null,
-                    PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
         }
     }
 
     private CreatePageDashboardSource getCreatePageDashboardSourceFromActionType(ActionType actionType) {
-        if (actionType == ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD)
+        if (actionType == ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD) {
             return CreatePageDashboardSource.PAGES_CARD;
-        else return CreatePageDashboardSource.FLOATING_ACTION_BUTTON;
+        } else {
+            return CreatePageDashboardSource.FLOATING_ACTION_BUTTON;
+        }
     }
 
     private @Nullable String getAuthToken() {

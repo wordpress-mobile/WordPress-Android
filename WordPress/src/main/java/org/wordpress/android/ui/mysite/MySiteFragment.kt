@@ -98,7 +98,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteViewModel::class.java)
-        wpMainActivityViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(WPMainActivityViewModel::class.java)
+        wpMainActivityViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+            .get(WPMainActivityViewModel::class.java)
     }
 
     private fun MySiteFragmentBinding.setupToolbar() {
