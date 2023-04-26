@@ -10,8 +10,7 @@
 </style>
 
 <style name="dashboard_card_sub_title">
-    <item name="android:textSize">15sp</item>
-    <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    <item name="android:textSize">@dimen/text_sz_medium_large</item>
     <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     <item name="android:textAlignment">viewStart</item>
 </style>

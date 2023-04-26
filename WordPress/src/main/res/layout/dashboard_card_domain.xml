@@ -26,10 +26,10 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/dashboard_card_domain_title"
+                style="@style/dashboard_card_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/dashboard_card_domain_title"
-                android:textAppearance="@style/dashboard_card_title"
                 app:layout_constraintEnd_toStartOf="@+id/dashboard_domain_card_more"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -48,11 +48,11 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/dashboard_card_domain_sub_title"
+                style="@style/dashboard_card_sub_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_114dp"
                 android:text="@string/dashboard_card_domain_sub_title"
-                android:textAppearance="@style/dashboard_card_sub_title"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
