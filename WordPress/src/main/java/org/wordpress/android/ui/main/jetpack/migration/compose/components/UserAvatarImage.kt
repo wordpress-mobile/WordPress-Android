@@ -13,13 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R.dimen
-import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.ui.compose.unit.Margin.MediumLarge
 
@@ -34,8 +32,6 @@ fun BoxScope.UserAvatarImage(
             .data(avatarUrl)
             .crossfade(true)
             .build(),
-        placeholder = painterResource(drawable.bg_rectangle_placeholder_globe_32dp),
-        error = painterResource(drawable.bg_rectangle_placeholder_globe_32dp),
         contentDescription = stringResource(string.jp_migration_avatar_content_description),
         modifier = modifier
             .align(Alignment.TopEnd)

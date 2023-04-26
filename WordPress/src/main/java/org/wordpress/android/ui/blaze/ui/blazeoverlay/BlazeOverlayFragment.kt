@@ -291,8 +291,6 @@ class BlazeOverlayFragment : Fragment() {
                 .data(url)
                 .crossfade(true)
                 .build(),
-            placeholder = painterResource(R.drawable.bg_rectangle_placeholder_globe_margin_8dp),
-            error = painterResource(R.drawable.bg_rectangle_placeholder_globe_margin_8dp),
             contentScale = ContentScale.Crop,
             contentDescription = stringResource(R.string.blavatar_desc),
             modifier = modifier

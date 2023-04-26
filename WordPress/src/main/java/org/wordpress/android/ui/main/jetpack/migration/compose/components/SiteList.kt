@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -122,8 +121,6 @@ private fun SiteIcon(iconUrl: String) {
             .data(iconUrl)
             .crossfade(true)
             .build(),
-        placeholder = painterResource(R.drawable.bg_rectangle_placeholder_globe_margin_8dp),
-        error = painterResource(R.drawable.bg_rectangle_placeholder_globe_margin_8dp),
         contentDescription = stringResource(R.string.blavatar_desc),
         modifier = Modifier
             .padding(vertical = 15.dp)
