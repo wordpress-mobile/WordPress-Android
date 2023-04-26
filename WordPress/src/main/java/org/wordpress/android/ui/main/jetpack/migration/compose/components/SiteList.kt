@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.main.jetpack.migration.compose.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,15 +20,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.text.Message
 import org.wordpress.android.ui.compose.components.text.Subtitle
@@ -115,13 +117,13 @@ private fun SiteListHeader(uiState: UiState.Content.Welcome) = with(uiState) {
 
 @Composable
 private fun SiteIcon(iconUrl: String) {
-    val painter = rememberImagePainter(iconUrl) {
-        placeholder(R.drawable.bg_rectangle_placeholder_globe_margin_8dp)
-        error(R.drawable.bg_rectangle_placeholder_globe_margin_8dp)
-        crossfade(true)
-    }
-    Image(
-        painter = painter,
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(iconUrl)
+            .crossfade(true)
+            .build(),
+        placeholder = painterResource(R.drawable.bg_rectangle_placeholder_globe_margin_8dp),
+        error = painterResource(R.drawable.bg_rectangle_placeholder_globe_margin_8dp),
         contentDescription = stringResource(R.string.blavatar_desc),
         modifier = Modifier
             .padding(vertical = 15.dp)
