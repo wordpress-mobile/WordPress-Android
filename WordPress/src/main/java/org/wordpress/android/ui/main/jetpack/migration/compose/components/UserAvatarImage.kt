@@ -17,8 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import org.wordpress.android.R.dimen
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.ui.compose.unit.Margin.MediumLarge
 
 @Composable
@@ -32,11 +31,11 @@ fun BoxScope.UserAvatarImage(
             .data(avatarUrl)
             .crossfade(true)
             .build(),
-        contentDescription = stringResource(string.jp_migration_avatar_content_description),
+        contentDescription = stringResource(R.string.jp_migration_avatar_content_description),
         modifier = modifier
             .align(Alignment.TopEnd)
             .padding(top = MediumLarge.value, end = 30.dp)
-            .size(dimensionResource(dimen.jp_migration_user_avatar_size))
+            .size(dimensionResource(R.dimen.jp_migration_user_avatar_size))
             .clip(CircleShape)
             .background(MaterialTheme.colors.surface)
             .clickable { onClick() }
