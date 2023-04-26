@@ -15,6 +15,7 @@ class PostMediaHandler
             val mediaForPost = mediaStore.getMediaForPost(post)
             mediaForPost.filter { it.postId == 0L }.forEach { media ->
                 media.postId = post.remotePostId
+                media.fieldsToUpdate = arrayOf("parent_id")
                 dispatcher.dispatch(MediaActionBuilder.newPushMediaAction(MediaPayload(site, media)))
             }
         }
