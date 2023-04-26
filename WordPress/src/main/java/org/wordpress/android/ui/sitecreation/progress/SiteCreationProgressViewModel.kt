@@ -128,7 +128,9 @@ class SiteCreationProgressViewModel @Inject constructor(
 
     fun retry() {
         when (uiState.value) {
-            is GenericError -> startCreateSiteService(serviceStateForRetry)
+            is GenericError,
+            is ConnectionError -> startCreateSiteService(serviceStateForRetry)
+
             is CartError -> createCart()
             else -> error("Unexpected state for retry: ${uiState.value}")
         }

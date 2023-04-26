@@ -154,6 +154,15 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `on retry click after network error restarts site creation service`() = test {
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(false, true)
+        startViewModel()
+        advanceUntilIdle()
+        viewModel.retry()
+        verify(startServiceObserver).onChanged(any())
+    }
+
+    @Test
     fun `on retry click after cart error retries to create cart`() = testWith(CART_ERROR) {
         startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
