@@ -41,6 +41,7 @@ import org.wordpress.android.ui.sitecreation.SITE_SLUG
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.CartError
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.ConnectionError
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.GenericError
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Loading
@@ -145,11 +146,19 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on retry click emits service event with the previous result`() {
+    fun `on retry click after service error emits service event with the previous result`() = test {
         startViewModel()
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_ERROR)
         viewModel.retry()
         assertEquals(viewModel.startCreateSiteService.value?.previousState, SERVICE_ERROR.payload)
+    }
+
+    @Test
+    fun `on retry click after cart error retries to create cart`() = testWith(CART_ERROR) {
+        startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
+        viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
+        viewModel.retry()
+        verify(createCartUseCase, times(2)).execute(any(), any(), any(), any(), eq(false))
     }
 
     @Test
@@ -201,10 +210,10 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on cart failure shows generic error`() = testWith(CART_ERROR) {
+    fun `on cart failure shows cart error`() = testWith(CART_ERROR) {
         startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
-        assertIs<GenericError>(viewModel.uiState.value)
+        assertIs<CartError>(viewModel.uiState.value)
     }
 
     @Test
