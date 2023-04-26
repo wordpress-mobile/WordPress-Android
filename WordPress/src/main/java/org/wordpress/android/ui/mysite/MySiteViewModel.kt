@@ -712,9 +712,9 @@ class MySiteViewModel @Inject constructor(
         // implement navigation logic for pages
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun onPagesCardFooterLinkClick() {
-        // implement navigation logic for create page
+        _onNavigation.value =
+            Event(SiteNavigationAction.OpenEditorToCreateNewPage(requireNotNull(selectedSiteRepository.getSelectedSite())))
     }
 
     private fun onActivityCardItemClick(activityCardItemClickParams: ActivityCardItemClickParams) {

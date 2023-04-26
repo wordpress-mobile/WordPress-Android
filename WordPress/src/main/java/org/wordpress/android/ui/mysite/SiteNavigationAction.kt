@@ -87,4 +87,5 @@ sealed class SiteNavigationAction {
     object ShowJetpackRemovalStaticPostersView : SiteNavigationAction()
     data class OpenActivityLogDetail(val site: SiteModel, val activityId: String, val isRewindable: Boolean) :
         SiteNavigationAction()
+    data class OpenEditorToCreateNewPage(val site: SiteModel):SiteNavigationAction()
 }
