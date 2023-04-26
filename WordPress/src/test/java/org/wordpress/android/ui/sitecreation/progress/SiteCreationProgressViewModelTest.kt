@@ -32,6 +32,7 @@ import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.ui.sitecreation.CART_ERROR
 import org.wordpress.android.ui.sitecreation.CART_SUCCESS
 import org.wordpress.android.ui.sitecreation.PAID_DOMAIN
+import org.wordpress.android.ui.sitecreation.RESULT_CREATED
 import org.wordpress.android.ui.sitecreation.RESULT_IN_CART
 import org.wordpress.android.ui.sitecreation.SERVICE_ERROR
 import org.wordpress.android.ui.sitecreation.SERVICE_SUCCESS
@@ -236,7 +237,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     fun `on restart with same paid domain reuses previous blog to create new cart`() = testWith(CART_SUCCESS) {
         val state = SITE_CREATION_STATE.copy(domain = PAID_DOMAIN)
         startViewModel(state)
-        val previous = SiteModel().apply { siteId = 9L;url = "blog.wordpress.com" }
+        val previous = SiteModel().apply { siteId = 9L; url = "blog.wordpress.com" }
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS.copy(payload = previous.siteId to previous.url))
 
         startViewModel(state.copy(result = RESULT_IN_CART))
@@ -249,6 +250,18 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
             eq(PAID_DOMAIN.supportsPrivacy),
             any()
         )
+    }
+
+    @Test
+    fun `on restart with same free domain reuses it`() = testWith(CART_SUCCESS) {
+        val state = SITE_CREATION_STATE
+        startViewModel(state)
+        val previous = SiteModel().apply { siteId = 9L; url = "blog.wordpress.com" }
+        viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS.copy(payload = previous.siteId to previous.url))
+
+        startViewModel(state.copy(result = RESULT_CREATED))
+
+        verify(startServiceObserver, atMost(1)).onChanged(any())
     }
 
     @Test

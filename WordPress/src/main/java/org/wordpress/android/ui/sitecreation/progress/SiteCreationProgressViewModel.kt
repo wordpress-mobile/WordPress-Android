@@ -13,7 +13,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched.InCart
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
@@ -91,11 +93,14 @@ class SiteCreationProgressViewModel @Inject constructor(
     }
 
     fun start(siteCreationState: SiteCreationState) {
-        if (siteCreationState.result is CreatedButNotFetched.InCart) {
+        if (siteCreationState.result is Created) {
+            check(siteCreationState.result !is Completed) { "Unexpected state on progress screen." }
             // reuse the previously blog when returning with the same domain
             if (siteCreationState.domain == domain) {
                 site = siteCreationState.result.site
-                createCart()
+                if (siteCreationState.result is InCart) {
+                    createCart()
+                }
                 return
             }
         }
