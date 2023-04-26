@@ -158,12 +158,13 @@ class SiteCreationProgressViewModel @Inject constructor(
             IDLE, CREATE_SITE -> Unit
             SUCCESS -> {
                 val site = mapPayloadToSiteModel(event.payload)
-                if (domain.isFree) {
-                    _onFreeSiteCreated.postValue(site)
-                } else {
+                // MainVM will navigate forward if the domain is free
+                _onFreeSiteCreated.postValue(site)
+                if (!domain.isFree) {
                     createCart(site)
                 }
             }
+
             FAILURE -> {
                 serviceStateForRetry = event.payload as SiteCreationServiceState
                 tracker.trackErrorShown(
