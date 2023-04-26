@@ -92,6 +92,9 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     // Set to true on a successful response to delete via WP.com REST API, not stored locally
     private boolean mDeleted;
 
+    // Default fields to update upon request
+    private String[] fieldsToUpdate = {"parent_id", "title", "description", "caption", "alt"};
+
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -325,6 +328,14 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
 
     public void setUploadState(MediaUploadState uploadState) {
         mUploadState = uploadState.toString();
+    }
+
+    public String[] getFieldsToUpdate() {
+        return fieldsToUpdate;
+    }
+
+    public void setFieldsToUpdate(String[] fieldsToUpdate) {
+        this.fieldsToUpdate = fieldsToUpdate;
     }
 
     //
