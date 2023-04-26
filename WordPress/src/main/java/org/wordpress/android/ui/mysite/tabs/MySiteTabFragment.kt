@@ -447,6 +447,14 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             action.activityId,
             action.isRewindable
         )
+        is SiteNavigationAction.OpenEditorToCreateNewPage -> ActivityLauncher.addNewPageForResult(
+            this,
+            action.site,
+            "",
+            "",
+            "",
+            PagePostCreationSourcesDetail.PAGE_FROM_PAGES_CARD_MY_SITE_DASHBOARD
+        )
     }
 
     private fun showJetpackPoweredBottomSheet() {
