@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-18 15:54:26+0000
+Translation-Revision-Date: 2023-04-25 10:54:25+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_CN
 -->
 <resources>
+    <string name="jp_migration_delete_message">我们建议您&lt;b&gt;卸载设备上的 WordPress 应用&lt;/b&gt;以避免发生数据冲突。</string>
+    <string name="jp_migration_delete_subtitle">似乎您仍然安装了 WordPress 应用。</string>
+    <string name="jp_migration_delete_title">您的设备上不再需要 WordPress 应用</string>
+    <string name="jp_migration_done_delete_wp_message">我们建议您&lt;b&gt;卸载设备上的 WordPress 应用&lt;/b&gt;以避免发生数据冲突。</string>
+    <string name="jp_migration_success_card_message">欢迎使用 Jetpack app。您可以卸载 WordPress 应用。</string>
     <string name="gutenberg_native_remove_blocks">移除区块</string>
     <string name="gutenberg_native_privacy_and_rating">隐私和评级</string>
     <string name="gutenberg_native_playback_settings">播放设置</string>
