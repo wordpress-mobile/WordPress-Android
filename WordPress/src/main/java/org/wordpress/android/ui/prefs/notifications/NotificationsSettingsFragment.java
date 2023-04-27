@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs.notifications;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -81,6 +82,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 
@@ -99,6 +101,7 @@ import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpda
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionEmailPostFrequencyAction;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 import static org.wordpress.android.ui.RequestCodes.NOTIFICATION_SETTINGS;
+import static org.wordpress.android.util.WPPermissionUtils.NOTIFICATIONS_PERMISSION_REQUEST_CODE;
 
 public class NotificationsSettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -554,21 +557,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                 category.removePreference(category.getPreference(TYPE_COUNT));
             } else if (!mNotificationsEnabled && category.getPreferenceCount() == TYPE_COUNT) {
                 Preference disabledMessage = new Preference(getActivity());
-                disabledMessage.setSummary(R.string.notifications_disabled);
-                disabledMessage.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        Intent intent = new Intent();
-                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri =
-                                Uri.fromParts("package", getActivity().getApplicationContext().getPackageName(), null);
-                        intent.setData(uri);
-
-                        startActivity(intent);
-                        return true;
-                    }
-                });
-
                 category.addPreference(disabledMessage);
             }
 
@@ -576,7 +564,53 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                 && category.getPreference(TYPE_COUNT - 1) != null) {
                 category.getPreference(TYPE_COUNT - 1).setEnabled(mNotificationsEnabled);
             }
+
+            if (category.getPreferenceCount() > TYPE_COUNT
+                && category.getPreference(TYPE_COUNT) != null) {
+                updateDisabledMessagePreference(category.getPreference(TYPE_COUNT));
+            }
         }
+    }
+
+    private void updateDisabledMessagePreference(Preference disabledMessagePreference) {
+        boolean isAlwaysDenied = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                                 WPPermissionUtils.isPermissionAlwaysDenied(
+                                         getActivity(),
+                                         Manifest.permission.POST_NOTIFICATIONS
+                                 );
+        int summaryResId;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !isAlwaysDenied) {
+            summaryResId = R.string.notifications_disabled_permission_dialog;
+        } else {
+            summaryResId = R.string.notifications_disabled;
+        }
+        disabledMessagePreference.setSummary(summaryResId);
+        disabledMessagePreference.setOnPreferenceClickListener(preference -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !isAlwaysDenied) {
+                // Request runtime permission.
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        NOTIFICATIONS_PERMISSION_REQUEST_CODE);
+            } else {
+                // Navigate to app settings.
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri =
+                        Uri.fromParts("package", getActivity().getApplicationContext().getPackageName(), null);
+                intent.setData(uri);
+
+                startActivity(intent);
+            }
+            return true;
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        WPPermissionUtils.setPermissionListAsked(getActivity(), requestCode, permissions, grantResults, false);
     }
 
     private void configureBlogsSettings(PreferenceCategory blogsCategory, boolean showAll) {
