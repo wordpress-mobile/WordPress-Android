@@ -36,4 +36,7 @@ object BloggingPromptsUtils {
             Date()
         }
     }
+
+    @Suppress("MagicNumber")
+    fun yearForDate(date: Date): String = dateToString(date).substring(0, 4)
 }

@@ -34,7 +34,6 @@ abstract class BloggingPromptsDao {
     @Query("DELETE FROM BloggingPrompts")
     abstract fun clear()
 
-    // TODO #2710: update this entity to match the new response and model format
     @Entity(
         tableName = "BloggingPrompts",
         primaryKeys = ["id"]
@@ -44,24 +43,22 @@ abstract class BloggingPromptsDao {
         val id: Int,
         val siteLocalId: Int,
         val text: String,
-        val title: String,
-        val content: String,
         val date: Date,
         val isAnswered: Boolean,
         val respondentsCount: Int,
         val attribution: String,
-        val respondentsAvatars: List<String>
+        val respondentsAvatars: List<String>,
+        val answeredLink: String
     ) {
         fun toBloggingPrompt() = BloggingPromptModel(
             id = id,
             text = text,
-            title = title,
-            content = content,
             date = date,
             isAnswered = isAnswered,
             attribution = attribution,
             respondentsCount = respondentsCount,
-            respondentsAvatarUrls = respondentsAvatars
+            respondentsAvatarUrls = respondentsAvatars,
+            answeredLink = answeredLink,
         )
 
         companion object {
@@ -72,13 +69,12 @@ abstract class BloggingPromptsDao {
                 id = prompt.id,
                 siteLocalId = siteLocalId,
                 text = prompt.text,
-                title = prompt.title,
-                content = prompt.content,
                 date = prompt.date,
                 isAnswered = prompt.isAnswered,
-                attribution = prompt.attribution,
                 respondentsCount = prompt.respondentsCount,
-                respondentsAvatars = prompt.respondentsAvatarUrls
+                attribution = prompt.attribution,
+                respondentsAvatars = prompt.respondentsAvatarUrls,
+                answeredLink = prompt.answeredLink,
             )
         }
     }
