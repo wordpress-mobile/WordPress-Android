@@ -316,7 +316,7 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onFreeSiteCreated(site: SiteModel) {
         siteCreationState = siteCreationState.copy(result = CreatedButNotFetched.NotInLocalDb(site))
-        if (requireNotNull(siteCreationState.domain).isFree) {
+        if (checkNotNull(siteCreationState.domain).isFree) {
             wizardManager.showNextStep()
         }
     }
