@@ -54,7 +54,7 @@
                 android:gravity="start|center_vertical"
                 android:text="@string/notifications_permission_off_desc"
                 android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="@android:color/black" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
                 android:contentDescription="@string/notifications_permission_dismiss_content_description"
                 android:padding="@dimen/margin_large"
                 android:src="@drawable/ic_cross_small_white_24dp"
-                app:tint="?attr/colorOnSurface" />
+                app:tint="@android:color/black" />
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
