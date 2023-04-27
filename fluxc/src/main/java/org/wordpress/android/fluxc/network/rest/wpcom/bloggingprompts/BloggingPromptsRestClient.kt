@@ -37,13 +37,20 @@ class BloggingPromptsRestClient @Inject constructor(
         site: SiteModel,
         perPage: Int,
         after: Date,
-        ignoresYear: Boolean = true, // TODO #2710 maybe this should default to false
+        ignoresYear: Boolean = true,
     ): BloggingPromptsPayload<BloggingPromptsListResponse> {
         val url = WPCOMV3.sites.site(site.siteId).blogging_prompts.url
         val params = mutableMapOf(
             "per_page" to perPage.toString(),
             "after" to BloggingPromptsUtils.dateToString(after, ignoresYear)
         )
+        if (ignoresYear) {
+            // when ignoring the year we force the response to be for the current year
+            // we also need to use order desc to get the latest prompt for each date, even though
+            // the list of actual prompts is ordered ascending by date
+            params["force_year"] = BloggingPromptsUtils.yearForDate(after)
+            params["order"] = "desc"
+        }
         val response = wpComGsonRequestBuilder.syncGetRequest<BloggingPromptsListResponse>(
             this,
             url,
@@ -51,15 +58,7 @@ class BloggingPromptsRestClient @Inject constructor(
             BloggingPromptsListResponseTypeToken.type
         )
         return when (response) {
-            is Success -> BloggingPromptsPayload(
-                response.data.map {
-                    // TODO #2710 make this looks better, this replaces the actual date coming from the endpoint, which
-                    //  is the prompt post date (e.g.: 2020) with 2023, but it should be the "current year", if we want
-                    //  to just keep the workaround of considering the prompts for current dates
-                    it.copy(date = it.date.replaceRange(0, 4, "2023"))
-                }
-            )
-
+            is Success -> BloggingPromptsPayload(response.data)
             is Error -> BloggingPromptsPayload(response.error.toBloggingPromptsError())
         }
     }
