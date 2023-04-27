@@ -57,7 +57,7 @@ class BloggingPromptsDaoTest {
     }
 
     @Test
-    fun `test prompt insert and update with site Id`(): Unit = runBlocking {
+    fun `test prompt insertForSite and update`(): Unit = runBlocking {
         // when
         var promptEntity = generateBloggingPrompt()
 
@@ -108,6 +108,36 @@ class BloggingPromptsDaoTest {
         val specificPrompt = prompts.first()
         assertThat(specificPrompt).isNotNull
         assertThat(specificPrompt.toBloggingPrompt()).isEqualTo(prompt2)
+    }
+
+    @Test
+    fun `getPromptForDate returns correct prompt after update`(): Unit = runBlocking {
+        // when
+        val prompt1 = generateBloggingPrompt().copy(
+            id = 1,
+            date = BloggingPromptsUtils.stringToDate("2015-04-20")
+        )
+            .toBloggingPrompt()
+        val prompt2 = generateBloggingPrompt().copy(
+            id = 2,
+            date = BloggingPromptsUtils.stringToDate("2015-04-21")
+        )
+            .toBloggingPrompt()
+
+        promptsDao.insertForSite(localSideId, listOf(prompt1, prompt2))
+
+        val updatedPrompt2 = prompt2.copy(id = 3, text = "updated text")
+        promptsDao.insertForSite(localSideId, listOf(updatedPrompt2))
+
+        // then
+        val prompts = promptsDao.getPromptForDate(
+            localSideId,
+            BloggingPromptsUtils.stringToDate("2015-04-21")
+        ).first()
+
+        val specificPrompt = prompts.first()
+        assertThat(specificPrompt).isNotNull
+        assertThat(specificPrompt.toBloggingPrompt()).isEqualTo(updatedPrompt2)
     }
 
     @Test
@@ -210,6 +240,7 @@ class BloggingPromptsDaoTest {
             siteLocalId = localSideId,
             text = "Cast the movie of your life.",
             date = BloggingPromptsUtils.stringToDate("2015-01-12"),
+            dateString = "2015-01-12",
             isAnswered = false,
             respondentsCount = 5,
             attribution = "dayone",
