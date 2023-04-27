@@ -5,7 +5,7 @@
     android:id="@+id/my_site_card_footer_link_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical = "@dimen/my_site_card_footer_link_padding_top"
+    android:paddingVertical = "@dimen/my_site_dashboard_card_page_create_page_padding_vertical"
     android:paddingHorizontal="@dimen/my_site_card_footer_link_padding">
 
     <com.google.android.material.textview.MaterialTextView
@@ -37,18 +37,19 @@
         app:layout_constraintVertical_bias="0.0"
         tools:text="@string/dashboard_pages_card_create_another_page_description" />
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/link_icon"
         android:layout_width="@dimen/my_site_dashboard_card_page_create_page_illustration_width"
         android:layout_height="0dp"
-        android:visibility="visible"
+        android:adjustViewBounds="true"
+        app:shapeAppearance="@style/ShapeAppearance.QuickStartTaskCardIllustration"
         android:contentDescription="@string/dashboard_pages_card_create_another_page_description"
         android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
-        tools:src="@drawable/illustration_page_card_create_page"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/link_description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/illustration_page_card_create_page" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
