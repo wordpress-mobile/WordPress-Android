@@ -573,11 +573,9 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     }
 
     private void updateDisabledMessagePreference(Preference disabledMessagePreference) {
-        boolean isAlwaysDenied = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                                 WPPermissionUtils.isPermissionAlwaysDenied(
-                                         getActivity(),
-                                         Manifest.permission.POST_NOTIFICATIONS
-                                 );
+        boolean isAlwaysDenied =
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && WPPermissionUtils.isPermissionAlwaysDenied(
+                        getActivity(), Manifest.permission.POST_NOTIFICATIONS);
         int summaryResId;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !isAlwaysDenied) {
             summaryResId = R.string.notifications_disabled_permission_dialog;
