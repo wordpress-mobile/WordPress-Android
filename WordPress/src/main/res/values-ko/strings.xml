@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-18 16:54:08+0000
+Translation-Revision-Date: 2023-04-25 13:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ko_KR
 -->
 <resources>
+    <string name="jp_migration_delete_message">데이터가 충돌하지 않도록 기기에서 &lt;b&gt;워드프레스 앱을 제거&lt;/b&gt;하는 것이 좋습니다.</string>
+    <string name="jp_migration_delete_subtitle">아직 워드프레스 앱이 설치되어 있는 것 같습니다.</string>
+    <string name="jp_migration_delete_title">더는 기기에 워드프레스 앱이 필요하지 않습니다.</string>
+    <string name="jp_migration_done_delete_wp_message">데이터가 충돌하지 않도록 기기에서 &lt;b&gt;워드프레스 앱을 제거&lt;/b&gt;하는 것이 좋습니다.</string>
+    <string name="jp_migration_success_card_message">젯팩 앱에 오신 것을 환영합니다. 워드프레스 앱을 제거하실 수 있습니다.</string>
     <string name="gutenberg_native_remove_blocks">블록 제거</string>
     <string name="gutenberg_native_privacy_and_rating">개인정보 보호 및 평점</string>
     <string name="gutenberg_native_playback_settings">재생 설정</string>

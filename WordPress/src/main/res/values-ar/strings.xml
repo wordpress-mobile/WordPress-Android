@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-18 15:54:27+0000
+Translation-Revision-Date: 2023-04-24 21:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.4
 Language: ar
 -->
 <resources>
+    <string name="jp_migration_delete_message">نوصي &lt;b&gt;بإلغاء تثبيت تطبيق ووردبريس&lt;/b&gt; على جهازك لتفادي تعارضات البيانات.</string>
+    <string name="jp_migration_delete_subtitle">يبدو أن تطبيق ووردبريس لا يزال مثبتًا لديك.</string>
+    <string name="jp_migration_delete_title">لن تحتاج إلى تطبيق ووردبريس على جهازك بعد الآن</string>
+    <string name="jp_migration_done_delete_wp_message">نوصي &lt;b&gt;بإلغاء تثبيت تطبيق ووردبريس&lt;/b&gt; على جهازك لتفادي تعارضات البيانات.</string>
+    <string name="jp_migration_success_card_message">مرحبًا في تطبيق Jetpack. يمكنك إلغاء تثبيت تطبيق ووردبريس.</string>
     <string name="gutenberg_native_remove_blocks">إزالة المكوّنات</string>
     <string name="gutenberg_native_privacy_and_rating">الخصوصية والتصنيف</string>
     <string name="gutenberg_native_playback_settings">إعدادات التشغيل</string>

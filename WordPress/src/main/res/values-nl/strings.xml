@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-20 15:54:08+0000
+Translation-Revision-Date: 2023-04-25 13:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: nl
 -->
 <resources>
+    <string name="jp_migration_delete_message">We raden je aan om &lt;b&gt;de WordPress-app van je apparaat te verwijderen&lt;/b&gt; om gegevensconflicten te vermijden.</string>
+    <string name="jp_migration_delete_subtitle">Het lijkt erop dat je de WordPress-app nog steeds geïnstalleerd hebt.</string>
+    <string name="jp_migration_delete_title">Je hebt de WordPress-app niet meer nodig op je apparaat</string>
+    <string name="jp_migration_done_delete_wp_message">We raden je aan om &lt;b&gt;de WordPress-app van je apparaat te verwijderen&lt;/b&gt; om gegevensconflicten te vermijden.</string>
+    <string name="jp_migration_success_card_message">Welkom bij de Jetpack-app. Je kan de WordPress-app verwijderen.</string>
     <string name="gutenberg_native_remove_blocks">Blokken verwijderen</string>
     <string name="gutenberg_native_privacy_and_rating">Privacy en beoordeling</string>
     <string name="gutenberg_native_manual">Handmatig</string>
