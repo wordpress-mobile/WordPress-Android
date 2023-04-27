@@ -41,6 +41,6 @@ class PagesCardViewHolder(
         uiHelpers.setTextOrHide(linkLabel, footer.label)
         uiHelpers.setTextOrHide(linkDescription, footer.description)
         uiHelpers.setImageOrHide(linkIcon, footer.imageRes)
-        linkLabel.setOnClickListener { footer.onClick.invoke() }
+        mySiteCardFooterLinkLayout.setOnClickListener { footer.onClick.invoke() }
     }
 }
