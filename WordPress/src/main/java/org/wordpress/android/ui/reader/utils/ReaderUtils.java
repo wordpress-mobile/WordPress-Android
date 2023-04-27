@@ -247,6 +247,18 @@ public class ReaderUtils {
         }
     }
 
+    public static boolean isTagUrl(String url) {
+        return (url != null && url.matches("^https?://wordpress\\.com/tag/[^/]+$"));
+    }
+
+    public static String getTagFromTagUrl(String url) {
+        if (isTagUrl(url)) {
+            return url.substring(url.lastIndexOf("/") + 1);
+        } else {
+            return "";
+        }
+    }
+
     /*
      * returns the passed string prefixed with a "#" if it's non-empty and isn't already
      * prefixed with a "#"
