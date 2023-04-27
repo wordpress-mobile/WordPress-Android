@@ -45,7 +45,7 @@
         android:contentDescription="@string/dashboard_pages_card_create_another_page_description"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
-        tools:src="@drawable/illustration_pages_card_create_page"
+        tools:src="@drawable/illustration_page_card_create_page"
         app:layout_constraintBottom_toBottomOf="@+id/link_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
