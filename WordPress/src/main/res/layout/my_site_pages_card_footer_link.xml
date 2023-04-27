@@ -42,7 +42,7 @@
         android:layout_width="@dimen/my_site_dashboard_card_page_create_page_illustration_width"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
-        app:shapeAppearance="@style/ShapeAppearance.QuickStartTaskCardIllustration"
+        app:shapeAppearance="@style/ShapeAppearance.PagesCardIllustration"
         android:contentDescription="@string/dashboard_pages_card_create_another_page_description"
         android:scaleType="centerCrop"
         android:visibility="visible"
