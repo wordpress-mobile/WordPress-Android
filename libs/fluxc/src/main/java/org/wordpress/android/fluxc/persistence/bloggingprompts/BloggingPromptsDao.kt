@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.TypeConverters
 import kotlinx.coroutines.flow.Flow
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
+import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsUtils
 import org.wordpress.android.fluxc.persistence.coverters.BloggingPromptDateConverter
 import java.util.Date
 
@@ -36,7 +37,7 @@ abstract class BloggingPromptsDao {
 
     @Entity(
         tableName = "BloggingPrompts",
-        primaryKeys = ["id"]
+        primaryKeys = ["dateString"]
     )
     @TypeConverters(BloggingPromptDateConverter::class)
     data class BloggingPromptEntity(
@@ -44,6 +45,7 @@ abstract class BloggingPromptsDao {
         val siteLocalId: Int,
         val text: String,
         val date: Date,
+        val dateString: String,
         val isAnswered: Boolean,
         val respondentsCount: Int,
         val attribution: String,
@@ -70,6 +72,7 @@ abstract class BloggingPromptsDao {
                 siteLocalId = siteLocalId,
                 text = prompt.text,
                 date = prompt.date,
+                dateString = BloggingPromptsUtils.dateToString(prompt.date),
                 isAnswered = prompt.isAnswered,
                 respondentsCount = prompt.respondentsCount,
                 attribution = prompt.attribution,
