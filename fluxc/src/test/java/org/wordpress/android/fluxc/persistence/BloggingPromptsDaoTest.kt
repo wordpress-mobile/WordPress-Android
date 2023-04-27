@@ -185,12 +185,11 @@ class BloggingPromptsDaoTest {
 
         assertThat(promptEntity.id).isEqualTo(prompt.id)
         assertThat(promptEntity.text).isEqualTo(prompt.text)
-        assertThat(promptEntity.title).isEqualTo(prompt.title)
-        assertThat(promptEntity.content).isEqualTo(prompt.content)
         assertThat(promptEntity.date).isEqualTo(prompt.date)
         assertThat(promptEntity.isAnswered).isEqualTo(prompt.isAnswered)
         assertThat(promptEntity.respondentsCount).isEqualTo(prompt.respondentsCount)
         assertThat(promptEntity.respondentsAvatars).isEqualTo(prompt.respondentsAvatarUrls)
+        assertThat(promptEntity.answeredLink).isEqualTo(prompt.answeredLink)
     }
 
     @Test
@@ -210,13 +209,12 @@ class BloggingPromptsDaoTest {
             id = 1,
             siteLocalId = localSideId,
             text = "Cast the movie of your life.",
-            title = "Prompt Title",
-            content = "content of the prompt",
             date = BloggingPromptsUtils.stringToDate("2015-01-12"),
-            attribution = "dayone",
             isAnswered = false,
             respondentsCount = 5,
-            respondentsAvatars = emptyList()
+            attribution = "dayone",
+            respondentsAvatars = emptyList(),
+            answeredLink = "https://wordpress.com/tag/dailyprompt-1"
         )
     }
 }
