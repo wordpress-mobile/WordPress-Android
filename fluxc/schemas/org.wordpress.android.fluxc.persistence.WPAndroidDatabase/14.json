@@ -1,7 +1,7 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 13,
+    "version": 14,
     "identityHash": "a2c8ec99016bc1700343f338874f89d1",
     "entities": [
       {
@@ -613,44 +613,6 @@
         "foreignKeys": []
       },
       {
-        "tableName": "Domains",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`siteLocalId` INTEGER NOT NULL, `domain` TEXT NOT NULL, `primaryDomain` INTEGER NOT NULL, `wpcomDomain` INTEGER NOT NULL, PRIMARY KEY(`domain`))",
-        "fields": [
-          {
-            "fieldPath": "siteLocalId",
-            "columnName": "siteLocalId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "domain",
-            "columnName": "domain",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "primaryDomain",
-            "columnName": "primaryDomain",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "wpcomDomain",
-            "columnName": "wpcomDomain",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "domain"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
         "tableName": "JetpackCPConnectedSites",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`remoteSiteId` INTEGER, `localSiteId` INTEGER NOT NULL, `url` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `activeJetpackConnectionPlugins` TEXT NOT NULL, PRIMARY KEY(`remoteSiteId`))",
         "fields": [
@@ -694,6 +656,44 @@
         "primaryKey": {
           "columnNames": [
             "remoteSiteId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Domains",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`siteLocalId` INTEGER NOT NULL, `domain` TEXT NOT NULL, `primaryDomain` INTEGER NOT NULL, `wpcomDomain` INTEGER NOT NULL, PRIMARY KEY(`domain`))",
+        "fields": [
+          {
+            "fieldPath": "siteLocalId",
+            "columnName": "siteLocalId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "domain",
+            "columnName": "domain",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "primaryDomain",
+            "columnName": "primaryDomain",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wpcomDomain",
+            "columnName": "wpcomDomain",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "domain"
           ],
           "autoGenerate": false
         },
