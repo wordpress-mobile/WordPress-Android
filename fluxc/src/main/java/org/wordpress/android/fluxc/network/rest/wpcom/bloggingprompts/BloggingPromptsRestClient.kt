@@ -71,19 +71,18 @@ class BloggingPromptsRestClient @Inject constructor(
         @SerializedName("attribution") val attribution: String,
         @SerializedName("answered_users_count") val respondentsCount: Int,
         @SerializedName("answered_users_sample") val respondentsAvatars: List<BloggingPromptsRespondentAvatar>,
-        @SerializedName("answered_link") val answeredLink: String?,
+        @SerializedName("answered_link") val answeredLink: String,
         @SerializedName("answered_link_text") val answeredLinkText: String,
     ) {
         fun toBloggingPromptModel() = BloggingPromptModel(
             id = id,
             text = text,
-            title = "", // TODO #2710 remove the title field from the model
-            content = "",  // TODO #2710 remove the content field from the model
             date = BloggingPromptsUtils.stringToDate(date),
             isAnswered = isAnswered,
             attribution = attribution,
             respondentsCount = respondentsCount,
-            respondentsAvatarUrls = respondentsAvatars.map { it.avatarUrl }
+            respondentsAvatarUrls = respondentsAvatars.map { it.avatarUrl },
+            answeredLink = answeredLink,
         )
     }
 
