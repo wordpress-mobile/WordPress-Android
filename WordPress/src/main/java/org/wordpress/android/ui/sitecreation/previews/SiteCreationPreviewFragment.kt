@@ -23,10 +23,8 @@ import org.wordpress.android.databinding.SiteCreationPreviewScreenDefaultBinding
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity.Companion.ARG_STATE
 import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.SiteCreationState
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewData
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewWebErrorUiState
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.UrlData
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener
 import org.wordpress.android.util.URLFilteredWebViewClient
@@ -85,11 +83,9 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private fun SiteCreationPreviewScreenDefaultBinding.observeState() {
         viewModel.uiState.observe(this@SiteCreationPreviewFragment) {
             it?.let { ui ->
-                when (ui) {
-                    is SitePreviewContentUiState -> updateContentLayout(ui.data)
-                    is SitePreviewWebErrorUiState -> updateContentLayout(ui.data)
-                    is SitePreviewLoadingShimmerState -> updateContentLayout(ui.data, isFirstContent = true)
-                }
+                uiHelpers.setTextOrHide(siteCreationPreviewHeaderItem.sitePreviewSubtitle, ui.subtitle)
+                uiHelpers.setTextOrHide(sitePreviewCaption, ui.caption)
+                updateContentLayout(ui.urlData, isFirstContent = ui is SitePreviewLoadingShimmerState)
                 siteCreationPreviewWebViewContainer.apply {
                     uiHelpers.updateVisibility(sitePreviewWebView, ui.webViewVisibility)
                     uiHelpers.updateVisibility(sitePreviewWebError, ui.webViewErrorVisibility)
@@ -110,10 +106,10 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     private fun SiteCreationPreviewScreenDefaultBinding.updateContentLayout(
-        sitePreviewData: SitePreviewData,
+        urlData: UrlData,
         isFirstContent: Boolean = false,
     ) {
-        sitePreviewData.apply {
+        urlData.apply {
             siteCreationPreviewWebViewContainer.sitePreviewWebUrlTitle.text = createSpannableUrl(
                 requireNotNull(activity),
                 shortUrl,

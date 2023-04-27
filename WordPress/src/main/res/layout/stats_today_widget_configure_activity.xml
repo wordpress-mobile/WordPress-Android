@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -17,7 +18,8 @@
             android:layout_height="match_parent"
             android:layout_below="@id/toolbar"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:viewType="today" />
+            app:viewType="today"
+            tools:ignore="FragmentTagUsage" />
 
         <include android:id="@+id/toolbar" layout="@layout/toolbar_main" />
 

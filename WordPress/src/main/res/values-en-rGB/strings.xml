@@ -10,7 +10,6 @@ Language: en_GB
     <string name="blaze_overlay_page_promotional_button">Blaze this Page</string>
     <string name="blaze_overlay_post_promotional_button">Blaze this Post</string>
     <string name="blaze_promotional_subtitle_3">Track performance, start, and stop your Blaze at any time.</string>
-    <string name="site_creation_domain_cost">%s/yr</string>
     <string name="site_creation_domain_tag_best_alternative">Best Alternative</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="blaze_promotional_text">Drive more traffic to your site with Blaze</string>

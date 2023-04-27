@@ -3331,9 +3331,12 @@
     <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
     <string name="new_site_creation_preview_title">Your site has been created!</string>
     <string name="new_site_creation_preview_subtitle">You\'ll be able to customize the look and feel of your site later</string>
+    <string name="new_site_creation_preview_subtitle_paid">We’ve emailed your receipt. %s</string>
+    <string name="new_site_creation_preview_caption_paid">It may take up to 30 minutes for your custom domain to start working.</string>
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
+    <string name="site_creation_error_cart_subtitle">Your website has been created successfully, but we encountered an issue while preparing your custom domain for checkout. Please try again or contact support for assistance.</string>
     <string name="new_site_creation_intents_title">Site topic</string>
     <string name="new_site_creation_intents_header_title">What’s your website about?</string>
     <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own.</string>
@@ -3344,7 +3347,8 @@
     <string name="new_site_creation_site_name_header_subtitle">A good name is short and memorable.\nYou can change it later.</string>
 
     <!-- Site Creation : Domains -->
-    <string name="site_creation_domain_cost">%s/yr</string>
+    <string name="site_creation_domain_cost">per year</string>
+    <string name="site_creation_domain_cost_sale">for the first year</string>
     <string name="site_creation_domain_tag_best_alternative">Best Alternative</string>
     <string name="site_creation_domain_tag_recommended">Recommended</string>
     <string name="site_creation_domain_tag_sale">Sale</string>
@@ -3363,6 +3367,13 @@
     <string name="notification_new_site_creation_title">Create Site</string>
     <string name="notification_new_site_creation_failed">There was a problem</string>
     <string name="notification_new_site_creation_creating_site_subtitle">We\'re creating your new site</string>
+
+    <!-- Site Creation : Domains - Updated designs -->
+    <string name="site_creation_domain_header_subtitle">Search for a short and memorable domain to help people find and visit your site.</string>
+    <string name="site_creation_domain_search_input_hint">Search with keywords</string>
+    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
+    <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
+    <string name="site_creation_search_domain_example_body">Like the example above, a domain allows people to find and visit your site from their web browser.</string>
 
     <string name="new_site_creation_creating_site_loading_title">Hooray!\nAlmost done</string>
     <string name="new_site_creation_creating_site_loading_subtitle">Your site will be ready shortly</string>
@@ -4457,7 +4468,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Close</string>
 
     <!-- Dashboard Card Domain-->
-    <string name="dashboard_card_domain_title">Own your online identity with a custom domain</string>
+    <string name="dashboard_card_domain_title">Find a custom domain</string>
     <string name="dashboard_card_domain_sub_title">Stake your claim on your corner of the web with a site address that\'s easy to find, share, and follow.</string>
     <string name="dashboard_card_domain_menu_hide_this">Hide this</string>
 
@@ -4511,6 +4522,12 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="dashboard_pages_card_no_pages_create_page_button">Add Pages to your site</string>
     <string name="dashboard_pages_card_create_another_page_button">Create Another Page</string>
     <string name="dashboard_pages_card_create_another_page_description">Start with bespoke, mobile friendly layouts</string>
+
+    <!-- Jetpack - Dashboard cards - Activity Card -->
+    <string name="dashboard_activity_card_title">Recent activity</string>
+    <string name="dashboard_activity_card_footer_link">View all activity</string>
+    <string name="dashboard_activity_card_dot_separator" translatable="false">@string/reader_dot_separator</string>
+
     <string name="gutenberg_native_add_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Add description</string>
     <string name="gutenberg_native_add_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Add title</string>
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Describe the purpose of the image. Leave empty if decorative.</string>

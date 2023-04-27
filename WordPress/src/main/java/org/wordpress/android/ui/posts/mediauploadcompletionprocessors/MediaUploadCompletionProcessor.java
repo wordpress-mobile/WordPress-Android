@@ -40,23 +40,30 @@ public class MediaUploadCompletionProcessor {
         if (headerMatcher.find()) {
             positionBlockStart = headerMatcher.start();
             String blockType = headerMatcher.group(1);
-            Matcher blockBoundaryMatcher = Pattern.compile(String.format(PATTERN_TEMPLATE_BLOCK_BOUNDARY, blockType),
-                    Pattern.DOTALL).matcher(content.substring(headerMatcher.end()));
+            String blockTagSuffix = headerMatcher.group(2);
+            Boolean isSelfClosingTag = blockTagSuffix.equals("/-->");
+            if (isSelfClosingTag) {
+                positionBlockEnd = headerMatcher.end();
+            } else {
+                Matcher blockBoundaryMatcher =
+                        Pattern.compile(String.format(PATTERN_TEMPLATE_BLOCK_BOUNDARY, blockType),
+                                Pattern.DOTALL).matcher(content.substring(headerMatcher.end()));
 
-            int nestLevel = 1;
+                int nestLevel = 1;
 
-            while (0 < nestLevel && blockBoundaryMatcher.find()) {
-                if (blockBoundaryMatcher.group(1).equals("/")) {
-                    positionBlockEnd = headerMatcher.end() + blockBoundaryMatcher.end();
-                    nestLevel--;
-                } else {
-                    nestLevel++;
+                while (0 < nestLevel && blockBoundaryMatcher.find()) {
+                    if (blockBoundaryMatcher.group(1).equals("/")) {
+                        positionBlockEnd = headerMatcher.end() + blockBoundaryMatcher.end();
+                        nestLevel--;
+                    } else {
+                        nestLevel++;
+                    }
                 }
             }
 
             return new StringBuilder()
                     .append(content.substring(0, positionBlockStart))
-                    .append(processBlock(content.substring(positionBlockStart, positionBlockEnd)))
+                    .append(processBlock(content.substring(positionBlockStart, positionBlockEnd), isSelfClosingTag))
                     .append(processContent(content.substring(positionBlockEnd)))
                     .toString();
         } else {
@@ -70,12 +77,12 @@ public class MediaUploadCompletionProcessor {
      * @param block The raw block contents
      * @return A string containing content with ids and urls replaced
      */
-    private String processBlock(String block) {
+    private String processBlock(String block, Boolean isSelfClosingTag) {
         final MediaBlockType blockType = MediaBlockType.detectBlockType(block);
         final BlockProcessor blockProcessor = mBlockProcessorFactory.getProcessorForMediaBlockType(blockType);
 
         if (blockProcessor != null) {
-            return blockProcessor.processBlock(block);
+            return blockProcessor.processBlock(block, isSelfClosingTag);
         }
 
         return block;

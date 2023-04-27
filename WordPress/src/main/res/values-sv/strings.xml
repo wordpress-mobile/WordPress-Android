@@ -82,7 +82,6 @@ Language: sv_SE
     <string name="site_creation_domain_tag_sale">Rea</string>
     <string name="site_creation_domain_tag_recommended">Rekommenderat</string>
     <string name="site_creation_domain_tag_best_alternative">Bästa alternativ</string>
-    <string name="site_creation_domain_cost">%s/år</string>
     <string name="me_btn_help">Hjälp</string>
     <string name="support_faq_caption">Se våra vanliga frågor för svar på vanliga frågor du kan ha.</string>
     <string name="support_faq_title">Tack för att du byter till Jetpack-appen!</string>

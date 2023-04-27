@@ -81,7 +81,6 @@ Language: id
     <string name="site_creation_domain_tag_sale">Obral</string>
     <string name="site_creation_domain_tag_recommended">Disarankan</string>
     <string name="site_creation_domain_tag_best_alternative">Alternatif Terbaik</string>
-    <string name="site_creation_domain_cost">%s/th</string>
     <string name="me_btn_help">Bantuan</string>
     <string name="support_faq_caption">Tanya Jawab Umum akan menjawab berbagai pertanyaan yang umum diajukan.</string>
     <string name="support_faq_title">Terima kasih sudah beralih ke aplikasi Jetpack.</string>

@@ -82,7 +82,6 @@ Language: ru
     <string name="site_creation_domain_tag_sale">Распродажа</string>
     <string name="site_creation_domain_tag_recommended">Рекомендуемые</string>
     <string name="site_creation_domain_tag_best_alternative">Лучшая альтернатива</string>
-    <string name="site_creation_domain_cost">%s/г.</string>
     <string name="me_btn_help">Справка</string>
     <string name="support_faq_caption">Ищите ответы на типовые вопросы в разделе \"Часто задаваемые вопросы\".</string>
     <string name="support_faq_title">Благодарим за переход на приложение Jetpack!</string>

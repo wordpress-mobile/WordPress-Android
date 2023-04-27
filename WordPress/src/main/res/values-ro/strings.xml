@@ -81,7 +81,6 @@ Language: ro
     <string name="support_faq_title">Îți mulțumim că ai comutat la aplicația Jetpack!</string>
     <string name="support_faq_caption">Vezi întrebările frecvente pentru răspunsuri la întrebările pe care le ai.</string>
     <string name="me_btn_help">Ajutor</string>
-    <string name="site_creation_domain_cost">%s/an</string>
     <string name="site_creation_domain_tag_best_alternative">Cea mai bună alternativă</string>
     <string name="site_creation_domain_tag_recommended">Recomandat</string>
     <string name="site_creation_domain_tag_sale">Reducere</string>
