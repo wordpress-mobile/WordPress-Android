@@ -28,13 +28,17 @@ class PagesCardBuilder @Inject constructor(
 
     private fun convertToPagesItems(params: PagesCardBuilderParams): PagesCard.PagesCardWithData {
         val pages = params.pageCard?.pages
-        val content = pages?.let { getPagesContentItems(pages) } ?: emptyList()
-        val createPageCard = getCreatePageCard(params)
+        val content = pages?.filterByPagesCardSupportedStatus()?.let { getPagesContentItems(pages) } ?: emptyList()
+        val createPageCard = getCreatePageCard(content, params.onFooterLinkClick)
         return PagesCard.PagesCardWithData(
             title = UiString.UiStringRes(R.string.dashboard_pages_card_title),
             pages = content,
             footerLink = createPageCard
         )
+    }
+
+    private fun List<PagesCardModel.PageCardModel>.filterByPagesCardSupportedStatus(): List<PagesCardModel.PageCardModel> {
+        return this.filter { it.status in PagesCardContentType.getList() }
     }
 
     private fun getPagesContentItems(pages: List<PagesCardModel.PageCardModel>): List<PageContentItem> {

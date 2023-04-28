@@ -5,4 +5,12 @@ enum class PagesCardContentType(val status: String) {
     DRAFT("draft"),
     PUBLISH("publish"),
     SCHEDULED("future");
+
+    companion object {
+        fun getList(): List<String> {
+            return values().map {
+                it.toString()
+            }
+        }
+    }
 }
