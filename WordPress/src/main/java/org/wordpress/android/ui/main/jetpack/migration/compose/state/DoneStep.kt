@@ -35,7 +35,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.ScreenIcon
 
 @Composable
-fun DoneStep(uiState: UiState.Content.Done) = with(uiState) {
+fun doneStep(uiState: UiState.Content.Done) = with(uiState) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -87,6 +87,6 @@ fun DoneStep(uiState: UiState.Content.Done) = with(uiState) {
 private fun PreviewDoneStep() {
     AppTheme {
         val uiState = UiState.Content.Done(DonePrimaryButton {})
-        DoneStep(uiState)
+        doneStep(uiState)
     }
 }
