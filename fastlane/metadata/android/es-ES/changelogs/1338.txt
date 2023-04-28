@@ -1,0 +1,3 @@
+22.2:
+- Hemos añadido una caja de advertencia amarilla que te dice cuándo los avisos y los recordatorios de bloguear ya se están enviando a tu dispositivo como avisos instantáneos.
+- Hemos actualizado los permisos de subida de medios para fotos, vídeos y audio, para alinearlos con la actualización de Android 13.

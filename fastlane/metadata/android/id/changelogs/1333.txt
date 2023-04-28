@@ -1,2 +1,0 @@
-22.1:
-Saat Anda login ke situs yang dihosting sendiri yang terhubung ke Jetpack dari plugin terpisah, Anda akan melihat pop-up yang menginformasikan bahwa koneksi jenis ini belum mendukung fitur inti aplikasi. Solusinya, Anda dapat beralih ke aplikasi Jetpack. Semudah itu.

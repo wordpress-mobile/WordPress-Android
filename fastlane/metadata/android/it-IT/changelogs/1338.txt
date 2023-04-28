@@ -1,0 +1,3 @@
+22.2:
+- Abbiamo aggiunto una casella di avviso gialla che ti informa quando le notifiche e i promemoria sui blog non vengono più inviati al tuo dispositivo come notifiche push.
+- Abbiamo aggiornato le autorizzazioni di accesso ai contenuti multimediali aggiornate per foto, video e audio per allinearci all'aggiornamento di Android 13

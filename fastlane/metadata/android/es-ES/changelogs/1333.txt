@@ -1,2 +1,0 @@
-22.1:
-Cuando accedes a un sitio autoalojado que se conecta a Jetpackmediante plugins individuales, verás una ventana emergente que te avisa de que este tipo de conexión aun no es compatible con las funcionalidades base de la aplicación. Puedes evitar ese problema pasándote a la aplicación de Jetpack. Hasta el infinito y más allá.
