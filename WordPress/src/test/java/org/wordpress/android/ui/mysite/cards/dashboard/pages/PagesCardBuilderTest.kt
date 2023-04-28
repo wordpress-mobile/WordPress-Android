@@ -94,6 +94,21 @@ class PagesCardBuilderTest : BaseUnitTest() {
         assert(result.pages.isEmpty())
     }
 
+    @Test
+    fun `given there is a page with published status, when card is built, then pages item has published icon and text`() {
+        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
+        val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
+            pageCard = PAGES_MODEL,
+            onFooterLinkClick = onPagesCardFooterClick,
+            onPagesItemClick = onPagesItemClick
+        )
+
+        val result = builder.build(params) as PagesCardWithData
+
+        assertEquals(UiString.UiStringRes(R.string.dashboard_card_page_item_status_published),result.pages[0].status)
+        assertEquals(R.drawable.ic_published_page_dashboard_card,result.pages[0].statusIcon)
+    }
+
     /* CREATE NEW PAGE CARD CASES */
     @Test
     fun `given there is no page, when card is built, then create new page card is correct`() {
