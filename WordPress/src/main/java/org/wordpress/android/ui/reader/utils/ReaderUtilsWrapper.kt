@@ -61,4 +61,6 @@ class ReaderUtilsWrapper @Inject constructor(
     )
 
     fun isSelfHosted(authorBlogId: Long) = ReaderUtils.isSelfHosted(authorBlogId)
+
+    fun getTagFromTagUrl(url: String): String = ReaderUtils.getTagFromTagUrl(url)
 }

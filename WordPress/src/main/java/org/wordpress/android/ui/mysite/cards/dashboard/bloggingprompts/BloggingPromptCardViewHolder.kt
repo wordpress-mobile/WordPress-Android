@@ -91,7 +91,7 @@ class BloggingPromptCardViewHolder(
             adapter.loadData(card.respondents)
 
             card.onViewAnswersClick?.let { onClick ->
-                answeredUsersContainer.setOnClickListener { onClick(card.promptId) }
+                answeredUsersContainer.setOnClickListener { onClick(card.tagUrl) }
             }
             answeredUsersContainer.contentDescription = createViewAnswersContentDescription(
                 answeredUsersContainer.context,

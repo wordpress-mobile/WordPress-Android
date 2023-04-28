@@ -19,6 +19,7 @@ class EditorBloggingPromptsViewModel
     private val bloggingPromptsStore: BloggingPromptsStore,
     private val bloggingPromptsEditorBlockMapper: BloggingPromptsEditorBlockMapper,
     private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig,
+    private val bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private val _onBloggingPromptLoaded = MutableLiveData<Event<EditorLoadedPrompt>>()
@@ -46,17 +47,17 @@ class EditorBloggingPromptsViewModel
                     EditorLoadedPrompt(
                         promptId,
                         content,
-                        createPromptTags(promptId)
+                        createPromptTags(prompt.answeredLink)
                     )
                 )
             )
         }
     }
 
-    private fun createPromptTags(promptId: Int): List<String> = mutableListOf<String>().apply {
+    private fun createPromptTags(tagUrl: String): List<String> = mutableListOf<String>().apply {
         add(BloggingPromptsPostTagProvider.BLOGGING_PROMPT_TAG)
         if (bloggingPromptsEnhancementsFeatureConfig.isEnabled()) {
-            add(BloggingPromptsPostTagProvider.promptIdTag(promptId))
+            add(bloggingPromptsPostTagProvider.promptIdTag(tagUrl))
         }
     }
 

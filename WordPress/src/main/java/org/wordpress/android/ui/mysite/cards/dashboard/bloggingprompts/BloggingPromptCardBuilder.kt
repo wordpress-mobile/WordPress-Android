@@ -36,6 +36,7 @@ class BloggingPromptCardBuilder @Inject constructor() {
             numberOfAnswers = params.bloggingPrompt.respondentsCount,
             isAnswered = params.bloggingPrompt.isAnswered,
             promptId = params.bloggingPrompt.id,
+            tagUrl = params.bloggingPrompt.answeredLink,
             attribution = BloggingPromptAttribution.fromString(params.bloggingPrompt.attribution),
             showViewMoreAction = params.showViewMoreAction,
             showRemoveAction = params.showRemoveAction,

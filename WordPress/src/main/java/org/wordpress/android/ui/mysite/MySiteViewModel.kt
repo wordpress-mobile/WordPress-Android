@@ -215,6 +215,7 @@ class MySiteViewModel @Inject constructor(
     private val dashboardCardDomainUtils: DashboardCardDomainUtils,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
+    private val bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider,
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -1531,9 +1532,9 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun onBloggingPromptViewAnswersClick(promptId: Int) {
+    private fun onBloggingPromptViewAnswersClick(tagUrl: String) {
         bloggingPromptsCardAnalyticsTracker.trackMySiteCardViewAnswersClicked()
-        val tag = BloggingPromptsPostTagProvider.promptIdSearchReaderTag(promptId)
+        val tag = bloggingPromptsPostTagProvider.promptIdSearchReaderTag(tagUrl)
         _onBloggingPromptsViewAnswers.value = Event(tag)
     }
 
