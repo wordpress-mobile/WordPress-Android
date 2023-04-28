@@ -81,7 +81,6 @@ Language: ja_JP
     <string name="site_creation_domain_tag_sale">セール</string>
     <string name="site_creation_domain_tag_recommended">おすすめ</string>
     <string name="site_creation_domain_tag_best_alternative">こちらもおすすめ</string>
-    <string name="site_creation_domain_cost">%s/ 年</string>
     <string name="me_btn_help">ヘルプ</string>
     <string name="support_faq_title">Jetpack アプリにお切り替えいただきありがとうございます !</string>
     <string name="logs_button">ログ</string>

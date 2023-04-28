@@ -448,6 +448,13 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         is SiteNavigationAction.ShowJetpackRemovalStaticPostersView -> {
             ActivityLauncher.showJetpackStaticPoster(requireActivity())
         }
+        is SiteNavigationAction.OpenActivityLogDetail -> ActivityLauncher.viewActivityLogDetailFromDashboardCard(
+            activity,
+            action.site,
+            action.activityId,
+            action.isRewindable
+        )
+        is SiteNavigationAction.TriggerCreatePageFlow -> Unit // no-op
     }
 
     private fun showJetpackPoweredBottomSheet() {

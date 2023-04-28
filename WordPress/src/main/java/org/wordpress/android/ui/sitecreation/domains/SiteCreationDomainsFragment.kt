@@ -81,7 +81,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     }
 
     private fun SiteCreationDomainsScreenBinding.initViewModel() {
-        viewModel.uiState.observe(this@SiteCreationDomainsFragment, { uiState ->
+        viewModel.uiState.observe(this@SiteCreationDomainsFragment) { uiState ->
             uiState?.let {
                 searchInputWithHeader?.updateHeader(requireActivity(), uiState.headerUiState)
                 searchInputWithHeader?.updateSearchInput(requireActivity(), uiState.searchInputUiState)
@@ -90,16 +90,16 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                 createSiteButton.text = uiState.createSiteButtonState?.stringRes?.let(::getString)
                 updateTitleVisibility(uiState.headerUiState == null)
             }
-        })
-        viewModel.clearBtnClicked.observe(this@SiteCreationDomainsFragment, {
+        }
+        viewModel.clearBtnClicked.observe(this@SiteCreationDomainsFragment) {
             searchInputWithHeader?.setInputText("")
-        })
-        viewModel.createSiteBtnClicked.observe(this@SiteCreationDomainsFragment, { domain ->
+        }
+        viewModel.createSiteBtnClicked.observe(this@SiteCreationDomainsFragment) { domain ->
             domain?.let { (requireActivity() as DomainsScreenListener).onDomainSelected(domain) }
-        })
-        viewModel.onHelpClicked.observe(this@SiteCreationDomainsFragment, {
+        }
+        viewModel.onHelpClicked.observe(this@SiteCreationDomainsFragment) {
             (requireActivity() as OnHelpClickedListener).onHelpClicked(HelpActivity.Origin.SITE_CREATION_DOMAINS)
-        })
+        }
         viewModel.start()
     }
 
@@ -109,6 +109,10 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
             domainListEmptyViewMessage.text = uiHelpers.getTextOfUiString(requireContext(), contentState.message)
         }
         uiHelpers.updateVisibility(siteCreationDomainsScreenExample.root, contentState.exampleViewVisibility)
+        uiHelpers.updateVisibility(
+            siteCreationDomainsScreenExampleUpdated.root,
+            contentState.updatedExampleViewVisibility
+        )
         (recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
 
         if (contentState.items.isNotEmpty()) {

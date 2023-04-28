@@ -6,8 +6,10 @@
     style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardCornerRadius="0dp"
-    app:cardElevation="@dimen/card_elevation">
+    app:cardCornerRadius="@dimen/margin_large"
+    app:cardElevation="@dimen/card_elevation"
+    app:strokeColor="@color/site_creation_preview_card_border"
+    app:strokeWidth="@dimen/margin_extra_extra_small">
 
     <LinearLayout
         android:layout_width="match_parent"

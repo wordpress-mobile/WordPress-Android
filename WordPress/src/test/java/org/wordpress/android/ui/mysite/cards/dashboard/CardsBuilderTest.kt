@@ -13,6 +13,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard.ActivityCardWithItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardDomainCard
@@ -31,6 +32,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardC
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
@@ -61,6 +63,9 @@ class CardsBuilderTest : BaseUnitTest() {
     @Mock
     lateinit var pagesCardBuilder: PagesCardBuilder
 
+    @Mock
+    lateinit var activityCardBuilder: ActivityCardBuilder
+
     private lateinit var cardsBuilder: CardsBuilder
 
     @Before
@@ -71,7 +76,8 @@ class CardsBuilderTest : BaseUnitTest() {
             bloggingPromptCardsBuilder,
             promoteWithBlazeCardBuilder,
             dashboardDomainCardBuilder,
-            pagesCardBuilder
+            pagesCardBuilder,
+            activityCardBuilder
         )
     }
 
@@ -216,6 +222,20 @@ class CardsBuilderTest : BaseUnitTest() {
         assertThat(cards.findPagesCard()).isNotNull
     }
 
+    @Test
+    fun `given no activities, when cards are built, then activity card is not built`() {
+        val cards = buildDashboardCards(hasActivityCard = false)
+
+        assertThat(cards.findActivityCard()).isNull()
+    }
+
+    @Test
+    fun `given has activities, when cards are built, then activity card is built`() {
+        val cards = buildDashboardCards(hasActivityCard = true)
+
+        assertThat(cards.findActivityCard()).isNotNull
+    }
+
     private fun DashboardCards.findTodaysStatsCard() =
         this.cards.find { it is TodaysStatsCardWithData } as? TodaysStatsCardWithData
 
@@ -237,6 +257,9 @@ class CardsBuilderTest : BaseUnitTest() {
     private fun DashboardCards.findPagesCard() =
         this.cards.find { it is PagesCardWithData } as? PagesCardWithData
 
+    private fun DashboardCards.findActivityCard() =
+        this.cards.find { it is ActivityCardWithItems } as? ActivityCardWithItems
+
     private fun DashboardCards.findErrorCard() = this.cards.find { it is ErrorCard } as? ErrorCard
 
     private val todaysStatsCard = mock<TodaysStatsCardWithData>()
@@ -248,6 +271,8 @@ class CardsBuilderTest : BaseUnitTest() {
     private val dashboardDomainCard = mock<DashboardDomainCard>()
 
     private val pagesCard = mock<PagesCardWithData>()
+
+    private val activityCard = mock<ActivityCardWithItems>()
 
     private fun createPostCards() = listOf(
         PostCardWithPostItems(
@@ -276,7 +301,8 @@ class CardsBuilderTest : BaseUnitTest() {
         showErrorCard: Boolean = false,
         isEligibleForBlaze: Boolean = false,
         isEligibleForDomainCard: Boolean = false,
-        hasPagesCard:Boolean = false
+        hasPagesCard: Boolean = false,
+        hasActivityCard: Boolean = false
     ): DashboardCards {
         doAnswer { if (hasTodaysStats) todaysStatsCard else null }.whenever(todaysStatsCardBuilder).build(any())
         doAnswer { if (hasPostsForPostCard) createPostCards() else createPostPromptCards() }.whenever(postCardBuilder)
@@ -286,7 +312,8 @@ class CardsBuilderTest : BaseUnitTest() {
             .build(any())
         doAnswer { if (isEligibleForDomainCard) dashboardDomainCard else null }.whenever(dashboardDomainCardBuilder)
             .build(any())
-        doAnswer { if(hasPagesCard) pagesCard else null }.whenever(pagesCardBuilder).build(any())
+        doAnswer { if (hasPagesCard) pagesCard else null }.whenever(pagesCardBuilder).build(any())
+        doAnswer { if (hasActivityCard) activityCard else null }.whenever(activityCardBuilder).build(any())
         return cardsBuilder.build(
             dashboardCardsBuilderParams = DashboardCardsBuilderParams(
                 showErrorCard = showErrorCard,
@@ -306,6 +333,12 @@ class CardsBuilderTest : BaseUnitTest() {
                     isEligibleForDomainCard, mock(), mock(), mock()
                 ),
                 pagesCardBuilderParams = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
+                    mock(),
+                    mock(),
+                    mock()
+                ),
+                activityCardBuilderParams = MySiteCardAndItemBuilderParams.ActivityCardBuilderParams(
+                    mock(),
                     mock(),
                     mock(),
                     mock()

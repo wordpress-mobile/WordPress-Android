@@ -1130,6 +1130,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         getGutenbergContainerFragment().toggleHtmlMode();
     }
 
+    public void sendToJSPostSaveEvent() {
+        getGutenbergContainerFragment().sendToJSPostSaveEvent();
+    }
+
     /*
      * TODO: REMOVE THIS ONCE AZTEC COMPLETELY REPLACES THE VISUAL EDITOR IN WPANDROID APP
      */

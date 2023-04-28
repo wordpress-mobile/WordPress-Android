@@ -17,6 +17,8 @@ import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -35,6 +37,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.ReaderCommentList
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.engagement.EngageItem.Liker
@@ -250,7 +253,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         whenever(readerPostCardActionsHandler.snackbarEvents).thenReturn(fakeSnackBarFeed)
         whenever(siteStore.getSiteBySiteId(readerPost.blogId)).thenReturn(site)
 
-        whenever(readerUtilsWrapper.getTagFromTagName(anyOrNull(), anyOrNull())).thenReturn(mock())
+        whenever(readerUtilsWrapper.getTagFromTagName(anyOrNull(), anyOrNull())).doAnswer<ReaderTag> {
+            val tagSlug = it.getArgument<String>(0)
+            mock { on { it.tagSlug } doReturn tagSlug }
+        }
 
         whenever(
             readerPostTableWrapper.getBlogPost(
@@ -550,6 +556,18 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         viewModel.onUpdatePost(readerPost)
 
         assertThat(uiStates.filterIsInstance<ReaderPostDetailsUiState>().size).isEqualTo(2)
+    }
+
+    /* TAG CLICKED */
+    @Test
+    fun `when tag item is clicked, then tag navigation event is emitted`() = test {
+        val observers = init()
+
+        viewModel.onTagItemClicked("tag")
+
+        val navigationEvent = observers.navigation.last().peekContent()
+        assertThat(navigationEvent).isInstanceOf(ShowPostsByTag::class.java)
+        assertThat((navigationEvent as ShowPostsByTag).tag.tagSlug).isEqualTo("tag")
     }
 
     /* READER POST FEATURED IMAGE */

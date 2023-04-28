@@ -82,7 +82,6 @@ Language: ar
     <string name="site_creation_domain_tag_sale">تخفيض</string>
     <string name="site_creation_domain_tag_recommended">موصى به</string>
     <string name="site_creation_domain_tag_best_alternative">أفضل بديل</string>
-    <string name="site_creation_domain_cost">%s سنويًا</string>
     <string name="me_btn_help">مساعدة</string>
     <string name="support_faq_caption">ارجع إلى قسم الأسئلة المتداولة لدينا للحصول على إجابات عن الأسئلة الشائعة التي قد تطرحها.</string>
     <string name="support_faq_title">شكرًا لك للتبديل إلى تطبيق Jetpack!</string>

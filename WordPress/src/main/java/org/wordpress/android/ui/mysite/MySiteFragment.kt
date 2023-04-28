@@ -39,6 +39,7 @@ import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
+import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.QuickStartFocusPoint
 import javax.inject.Inject
@@ -57,6 +58,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Inject
     lateinit var imageManager: ImageManager
     private lateinit var viewModel: MySiteViewModel
+
+    private lateinit var wpMainActivityViewModel: WPMainActivityViewModel
 
     private var binding: MySiteFragmentBinding? = null
     private var siteTitle: String? = null
@@ -95,6 +98,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteViewModel::class.java)
+        wpMainActivityViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+            .get(WPMainActivityViewModel::class.java)
     }
 
     private fun MySiteFragmentBinding.setupToolbar() {
@@ -305,6 +310,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
         is SiteNavigationAction.OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
         is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken, action.source)
+        is SiteNavigationAction.TriggerCreatePageFlow -> wpMainActivityViewModel.triggerCreatePageFlow()
         else -> {
             /* Pass all other navigationAction on to the child fragment, so they can be handled properly.
                Added brief delay before passing action to nested (view pager) tab fragments to give them time to get

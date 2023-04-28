@@ -8,6 +8,8 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.ActivityLogSubtype
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PagesSubType
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.QuickStartSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.StatsSubtype
@@ -117,6 +119,27 @@ class CardsTrackerTest {
         cardsTracker.trackPostItemClicked(PostCardType.SCHEDULED)
 
         verifyCardItemClickedTracked(Type.POST, PostSubtype.SCHEDULED.label)
+    }
+
+    @Test
+    fun `when activity log item is clicked, then activity card item event is tracked`() {
+        cardsTracker.trackActivityCardItemClicked()
+
+        verifyCardItemClickedTracked(Type.ACTIVITY, ActivityLogSubtype.ACTIVITY_LOG.label)
+    }
+
+    @Test
+    fun `when activity card footer link is clicked, then footer link clicked is tracked`() {
+        cardsTracker.trackActivityCardFooterClicked()
+
+        verifyFooterLinkClickedTracked(Type.ACTIVITY, ActivityLogSubtype.ACTIVITY_LOG.label)
+    }
+
+    @Test
+    fun `when pages card footer link is clicked, then footer link clicked is tracked`() {
+        cardsTracker.trackPagesCardFooterClicked()
+
+        verifyFooterLinkClickedTracked(Type.PAGES, PagesSubType.CREATE_PAGE.label)
     }
 
     private fun verifyFooterLinkClickedTracked(
