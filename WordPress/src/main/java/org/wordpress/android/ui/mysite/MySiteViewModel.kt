@@ -397,7 +397,7 @@ class MySiteViewModel @Inject constructor(
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
         promoteWithBlazeUpdate: PromoteWithBlazeUpdate?,
-        hasSiteCustomDomains: Boolean
+        hasSiteCustomDomains: Boolean?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
             site,
@@ -501,7 +501,7 @@ class MySiteViewModel @Inject constructor(
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
         promoteWithBlazeUpdate: PromoteWithBlazeUpdate?,
-        hasSiteCustomDomains: Boolean
+        hasSiteCustomDomains: Boolean?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
             InfoItemBuilderParams(

@@ -31,14 +31,14 @@ data class MySiteUiState(
     val cardsUpdate: CardsUpdate? = null,
     val bloggingPromptsUpdate: BloggingPromptUpdate? = null,
     val promoteWithBlazeUpdate: PartialState.PromoteWithBlazeUpdate? = null,
-    val hasSiteCustomDomains: Boolean = false
+    val hasSiteCustomDomains: Boolean? = null
 ) {
     sealed class PartialState {
         data class CurrentAvatarUrl(val url: String) : PartialState()
         data class SelectedSite(val site: SiteModel?) : PartialState()
         data class ShowSiteIconProgressBar(val showSiteIconProgressBar: Boolean) : PartialState()
         data class DomainCreditAvailable(val isDomainCreditAvailable: Boolean) : PartialState()
-        data class CustomDomainsAvailable(val hasSiteCustomDomains: Boolean) : PartialState()
+        data class CustomDomainsAvailable(val hasSiteCustomDomains: Boolean?) : PartialState()
 
         data class JetpackCapabilities(val scanAvailable: Boolean, val backupAvailable: Boolean) : PartialState()
         data class QuickStartUpdate(
