@@ -28,7 +28,7 @@ import org.wordpress.android.fluxc.persistence.domains.DomainDao
 import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
 
 @Database(
-        version = 14,
+        version = 15,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -90,6 +90,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 .addMigrations(MIGRATION_3_4)
                 .addMigrations(MIGRATION_5_6)
                 .addMigrations(MIGRATION_7_8)
+                .addMigrations(MIGRATION_14_15)
                 .build()
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -208,6 +209,29 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                     execSQL(
                         "ALTER TABLE BloggingReminders ADD COLUMN isPromptRemindersOptedIn" +
                             " INTEGER DEFAULT 0 NOT NULL"
+                    )
+                }
+            }
+        }
+
+        val MIGRATION_14_15 = object : Migration(14, 15) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.apply {
+                    execSQL("DROP TABLE `BloggingPrompts`")
+                    execSQL(
+                        "CREATE TABLE IF NOT EXISTS `BloggingPrompts` (" +
+                            "`id` INTEGER NOT NULL," +
+                            "`siteLocalId` INTEGER NOT NULL," +
+                            "`text` TEXT NOT NULL," +
+                            "`date` TEXT NOT NULL," +
+                            "`dateString` TEXT NOT NULL," +
+                            "`isAnswered` INTEGER NOT NULL," +
+                            "`respondentsCount` INTEGER NOT NULL," +
+                            "`attribution` TEXT NOT NULL," +
+                            "`respondentsAvatars` TEXT NOT NULL," +
+                            "`answeredLink` TEXT NOT NULL," +
+                            "PRIMARY KEY(`dateString`)" +
+                            ")"
                     )
                 }
             }
