@@ -16,11 +16,16 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.config.DashboardCardPagesConfig
 import kotlin.test.assertEquals
 
+
+const val PAGE_STATUS_PUBLISH = "publish"
+const val PAGE_STATUS_DRAFT = "draft"
+const val PAGE_STATUS_SCHEDULED = "future"
+
 const val PAGE_ID = 1
 const val PAGE_TITLE = "title"
 const val PAGE_CONTENT = "content"
 const val PAGE_MODIFIED_ON = "2023-03-02 10:26:53"
-const val PAGE_STATUS = "publish"
+const val PAGE_STATUS = PAGE_STATUS_PUBLISH
 const val PAGE_DATE = "2023-03-02 10:30:53"
 
 private val PAGE_MODEL = CardModel.PagesCardModel.PageCardModel(
@@ -32,9 +37,9 @@ private val PAGE_MODEL = CardModel.PagesCardModel.PageCardModel(
     date = CardsUtils.fromDate(PAGE_DATE)
 )
 
-private val PAGE_MODEL_2 = PAGE_MODEL.copy(id = 2)
+private val PAGE_MODEL_2 = PAGE_MODEL.copy(id = 2, status = PAGE_STATUS_DRAFT)
 
-private val PAGE_MODEL_3 = PAGE_MODEL.copy(id = 3)
+private val PAGE_MODEL_3 = PAGE_MODEL.copy(id = 3, status = PAGE_STATUS_SCHEDULED)
 
 // pages with one item
 private val PAGES_MODEL = CardModel.PagesCardModel(
@@ -107,6 +112,36 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
         assertEquals(UiString.UiStringRes(R.string.dashboard_card_page_item_status_published),result.pages[0].status)
         assertEquals(R.drawable.ic_published_page_dashboard_card,result.pages[0].statusIcon)
+    }
+
+    @Test
+    fun `given there is a page with draft status, when card is built, then pages item has draft icon and text`() {
+        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
+        val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
+            pageCard = PAGES_MODEL_2,
+            onFooterLinkClick = onPagesCardFooterClick,
+            onPagesItemClick = onPagesItemClick
+        )
+
+        val result = builder.build(params) as PagesCardWithData
+
+        assertEquals(UiString.UiStringRes(R.string.dashboard_card_page_item_status_draft),result.pages[1].status)
+        assertEquals(R.drawable.ic_draft_page_draft_dashboard_card,result.pages[1].statusIcon)
+    }
+
+    @Test
+    fun `given there is a page with scheduled status, when card is built, then pages item has scheduled icon and text`() {
+        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
+        val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
+            pageCard = PAGES_MODEL_3,
+            onFooterLinkClick = onPagesCardFooterClick,
+            onPagesItemClick = onPagesItemClick
+        )
+
+        val result = builder.build(params) as PagesCardWithData
+
+        assertEquals(UiString.UiStringRes(R.string.dashboard_card_page_item_status_scheduled),result.pages[2].status)
+        assertEquals(R.drawable.ic_scheduled_page_dashboard_card,result.pages[2].statusIcon)
     }
 
     /* CREATE NEW PAGE CARD CASES */
