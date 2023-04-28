@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-19 12:54:29+0000
+Translation-Revision-Date: 2023-04-26 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ja_JP
 -->
 <resources>
+    <string name="jp_migration_delete_message">データの競合を避けるため、お使いの端末から &lt;b&gt;WordPress アプリをアンインストール&lt;/b&gt;することをおすすめします。</string>
+    <string name="jp_migration_delete_subtitle">WordPress アプリがまだインストールされているようです。</string>
+    <string name="jp_migration_delete_title">お使いの端末に WordPress アプリは不要になりました</string>
+    <string name="jp_migration_done_delete_wp_message">データの競合を避けるため、お使いの端末から &lt;b&gt;WordPress アプリをアンインストール&lt;/b&gt;することをおすすめします。</string>
+    <string name="jp_migration_success_card_message">Jetpack アプリへようこそ。WordPress アプリはアンインストールできます。</string>
     <string name="gutenberg_native_remove_blocks">ブロックを削除</string>
     <string name="gutenberg_native_privacy_and_rating">プライバシーと評価</string>
     <string name="gutenberg_native_playback_settings">再生設定</string>

@@ -53,6 +53,10 @@ class CardsTracker @Inject constructor(
         ACTIVITY_LOG("activity_log"),
     }
 
+    enum class PagesSubType(val label: String) {
+        CREATE_PAGE("create_page"),
+    }
+
     fun trackQuickStartCardItemClicked(quickStartTaskType: QuickStartTaskType) {
         trackCardItemClicked(Type.QUICK_START.label, quickStartTaskType.toSubtypeValue().label)
     }
@@ -83,6 +87,10 @@ class CardsTracker @Inject constructor(
 
     fun trackActivityCardFooterClicked() {
         trackCardFooterLinkClicked(Type.ACTIVITY.label, ActivityLogSubtype.ACTIVITY_LOG.label)
+    }
+
+    fun trackPagesCardFooterClicked() {
+        trackCardFooterLinkClicked(Type.PAGES.label, PagesSubType.CREATE_PAGE.label)
     }
 
     private fun trackCardFooterLinkClicked(type: String, subtype: String) {

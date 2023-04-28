@@ -1536,6 +1536,7 @@
     <string name="error_loading_notifications">Couldn\'t load notification settings</string>
     <string name="notification_types">Notification Types</string>
     <string name="notifications_disabled">App notifications have been disabled. Tap here to enable them in Settings.</string>
+    <string name="notifications_disabled_permission_dialog">App notifications have been disabled. Tap here to enable them.</string>
     <string name="notifications_tab_summary">Settings for notifications that appear in the Notifications tab.</string>
     <string name="notifications_email_summary">Settings for notifications that are sent to the email tied to your account.</string>
     <string name="notifications_push_summary">Settings for notifications that appear on your device.</string>
@@ -3336,6 +3337,7 @@
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
+    <string name="site_creation_error_cart_subtitle">Your website has been created successfully, but we encountered an issue while preparing your custom domain for checkout. Please try again or contact support for assistance.</string>
     <string name="new_site_creation_intents_title">Site topic</string>
     <string name="new_site_creation_intents_header_title">What’s your website about?</string>
     <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own.</string>

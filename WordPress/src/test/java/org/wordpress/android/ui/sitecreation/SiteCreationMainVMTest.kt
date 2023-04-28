@@ -203,15 +203,24 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on progress screen finished updates result`() {
+    fun `on site created updates result`() = test {
+        viewModel.onDomainsScreenFinished(FREE_DOMAIN)
         viewModel.onFreeSiteCreated(SITE_MODEL)
         assertThat(currentWizardState(viewModel).result).isEqualTo(RESULT_NOT_IN_LOCAL_DB)
     }
 
     @Test
-    fun `on progress screen finished shows next step`() {
+    fun `on site created for free domain shows next step`() {
+        viewModel.onDomainsScreenFinished(FREE_DOMAIN).run { clearInvocations(wizardManager) }
         viewModel.onFreeSiteCreated(SITE_MODEL)
         verify(wizardManager).showNextStep()
+    }
+
+    @Test
+    fun `on site created for paid domain does not show next step`() {
+        viewModel.onDomainsScreenFinished(PAID_DOMAIN).run { clearInvocations(wizardManager) }
+        viewModel.onFreeSiteCreated(SITE_MODEL)
+        verifyNoMoreInteractions(wizardManager)
     }
 
     @Test

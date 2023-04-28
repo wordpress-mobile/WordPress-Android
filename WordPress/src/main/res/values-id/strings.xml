@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-18 13:54:07+0000
+Translation-Revision-Date: 2023-04-26 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: id
 -->
 <resources>
+    <string name="jp_migration_delete_message">Kami menyarankan agar &lt;b&gt;aplikasi WordPress&lt;/b&gt; di perangkat Anda di-uninstall untuk mencegah konflik data.</string>
+    <string name="jp_migration_delete_subtitle">Aplikasi WordPress sepertinya masih terinstal.</string>
+    <string name="jp_migration_delete_title">Anda tidak lagi membutuhkan aplikasi WordPress di perangkat Anda</string>
+    <string name="jp_migration_done_delete_wp_message">Kami sarankan untuk menghapus aplikasi WordPress guna mencegah terjadinya konflik data.&lt;b&gt;&lt;/b&gt;</string>
     <string name="gutenberg_native_remove_blocks">Hapus blok</string>
     <string name="gutenberg_native_privacy_and_rating">Privasi dan rating</string>
     <string name="gutenberg_native_playback_settings">Pengaturan Playback</string>
