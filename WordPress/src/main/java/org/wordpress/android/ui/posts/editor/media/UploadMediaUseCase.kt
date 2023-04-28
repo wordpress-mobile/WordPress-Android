@@ -21,15 +21,12 @@ class UploadMediaUseCase @Inject constructor(
                     "be initiated only on MediaModels with UploadStatus set to QUEUED."
         }
 
-        // it's only necessary to update a media item's parent ID when status is set to queued.
-        val queuedMediaModels = mediaModels.map { mediaModel ->
-            mediaModel.apply { fieldsToUpdate = arrayOf("parent_id") }
+        mediaModels.let { queuedMediaModels ->
+            // before starting the service, we need to update the posts' contents so we are sure the service
+            // can retrieve it from there on
+            editorMediaListener.syncPostObjectWithUiAndSaveIt(EditPostActivity.OnPostUpdatedFromUIListener {
+                uploadServiceFacade.uploadMediaFromEditor(ArrayList(queuedMediaModels))
+            })
         }
-
-        // before starting the service, we need to update the posts' contents so we are sure the service
-        // can retrieve it from there on
-        editorMediaListener.syncPostObjectWithUiAndSaveIt(EditPostActivity.OnPostUpdatedFromUIListener {
-            uploadServiceFacade.uploadMediaFromEditor(ArrayList(queuedMediaModels))
-        })
     }
 }
