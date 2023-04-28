@@ -5,6 +5,7 @@ import org.wordpress.android.databinding.PagesItemBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.PageContentItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.extensions.viewBinding
 
 class PagesItemViewHolder(
@@ -15,5 +16,13 @@ class PagesItemViewHolder(
 ) {
     fun bind(item: PageContentItem) = with(binding) {
         uiHelpers.setTextOrHide(title, item.title)
+        setStatusIcon(item.status, item.statusIcon)
+    }
+
+    private fun setStatusIcon(statusText: UiString?, statusIcon: Int?) = with(binding) {
+        statusText?.let {
+            uiHelpers.setTextOrHide(status, it)
+            statusIcon?.let { status.setCompoundDrawablesWithIntrinsicBounds(statusIcon, 0, 0, 0) }
+        }
     }
 }
