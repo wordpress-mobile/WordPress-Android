@@ -38,7 +38,7 @@ class PagesCardBuilder @Inject constructor(
     }
 
     private fun getPagesContentItems(pages: List<PagesCardModel.PageCardModel>): List<PageContentItem> {
-        return pages.map{ page ->
+        return pages.map { page ->
             PageContentItem(
                 title = getPageTitle(page.title),
                 statusIcon = getStatusIcon(page.status),
@@ -52,10 +52,13 @@ class PagesCardBuilder @Inject constructor(
     private fun getPageTitle(title: String) =
         if (title.isEmpty()) UiString.UiStringRes(R.string.my_site_untitled_post) else UiString.UiStringText(title)
 
-    @Suppress("UNUSED_PARAMETER")
-    private fun getStatusIcon(status: String): Int {
-        // implement the logic to get the correct icon
-        return R.drawable.ic_pages_white_24dp
+    private fun getStatusIcon(status: String): Int? {
+        return when (status) {
+            DRAFT.status -> R.drawable.ic_draft_page_draft_dashboard_card
+            PUBLISHED.status -> R.drawable.ic_published_page_dashboard_card
+            SCHEDULED.status -> R.drawable.ic_scheduled_page_dashboard_card
+            else -> null
+        }
     }
 
     private fun getStatusText(status: String): UiString.UiStringRes? {
