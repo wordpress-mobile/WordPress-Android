@@ -40,11 +40,7 @@ class EditorBloggingPromptsViewModel
     private fun loadPrompt(site: SiteModel, promptId: Int) = launch {
         val prompt = bloggingPromptsStore.getPromptById(site, promptId).first().model
         prompt?.let {
-            val content = if (bloggingPromptsEnhancementsFeatureConfig.isEnabled()) {
-                bloggingPromptsEditorBlockMapper.map(it)
-            } else {
-                it.content
-            }
+            val content = bloggingPromptsEditorBlockMapper.map(it)
             _onBloggingPromptLoaded.postValue(
                 Event(
                     EditorLoadedPrompt(
