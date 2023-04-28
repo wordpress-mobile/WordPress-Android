@@ -43,7 +43,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
         initDagger()
         with(StatsJetpackConnectionActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
-            setActionBar()
+            initActionBar()
             setTitle(string.stats)
             checkAndContinueJetpackConnectionFlow(savedInstanceState)
             initViews()
@@ -54,7 +54,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
         (application as WordPress).component().inject(this)
     }
 
-    private fun StatsJetpackConnectionActivityBinding.setActionBar() {
+    private fun StatsJetpackConnectionActivityBinding.initActionBar() {
         setSupportActionBar(toolbarLayout.toolbarMain)
         val actionBar = supportActionBar
         if (actionBar != null) {
