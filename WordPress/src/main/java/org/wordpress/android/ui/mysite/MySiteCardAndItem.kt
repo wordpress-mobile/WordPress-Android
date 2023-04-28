@@ -218,7 +218,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         data class PageContentItem(
                             val title: UiString,
                             @DrawableRes val statusIcon: Int,
-                            val status: UiString,
+                            val status: UiString?,
                             val lastEditedOrScheduledTime: UiString,
                             val onCardClick: () -> Unit
                         )

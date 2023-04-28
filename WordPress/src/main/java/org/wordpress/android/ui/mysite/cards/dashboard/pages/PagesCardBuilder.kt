@@ -10,6 +10,9 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.config.DashboardCardPagesConfig
 import java.util.Date
 import javax.inject.Inject
+import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.DRAFT
+import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.PUBLISHED
+import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.SCHEDULED
 
 private const val REQUIRED_PAGES_IN_CARD: Int = 3
 
@@ -55,10 +58,13 @@ class PagesCardBuilder @Inject constructor(
         return R.drawable.ic_pages_white_24dp
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    private fun getStatusText(status: String): UiString {
-        // implement the logic to get the correct text
-        return UiString.UiStringText("")
+    private fun getStatusText(status: String): UiString.UiStringRes? {
+        return when (status) {
+            DRAFT.status -> UiString.UiStringRes(R.string.dashboard_card_page_item_status_draft)
+            PUBLISHED.status -> UiString.UiStringRes(R.string.dashboard_card_page_item_status_published)
+            SCHEDULED.status -> UiString.UiStringRes(R.string.dashboard_card_page_item_status_scheduled)
+            else -> null
+        }
     }
 
     @Suppress("UNUSED_PARAMETER")
