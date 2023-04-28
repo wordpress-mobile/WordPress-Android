@@ -76,41 +76,40 @@ class PagesCardBuilder @Inject constructor(
         return UiString.UiStringText("")
     }
 
-    private fun getCreatePageCard(params: PagesCardBuilderParams): CreatNewPageItem {
+    private fun getCreatePageCard(pages: List<PageContentItem>, onFooterLinkClick: () -> Unit): CreatNewPageItem {
         // Create new page button is shown with image if there is
         // less than three pages for a user
-        val pages = params.pageCard?.pages ?: emptyList()
         return if (pages.isEmpty()) {
-            createNewPageCardWithAddPageMessage(params)
+            createNewPageCardWithAddPageMessage(onFooterLinkClick)
         } else if (pages.size < REQUIRED_PAGES_IN_CARD) {
-            createNewPageCardWithAddAnotherPageMessage(params)
+            createNewPageCardWithAddAnotherPageMessage(onFooterLinkClick)
         } else {
-            createNewPageCardWithOnlyButton(params)
+            createNewPageCardWithOnlyButton(onFooterLinkClick)
         }
     }
 
-    private fun createNewPageCardWithAddPageMessage(params: PagesCardBuilderParams): CreatNewPageItem {
+    private fun createNewPageCardWithAddPageMessage(onFooterLinkClick: () -> Unit): CreatNewPageItem {
         return CreatNewPageItem(
             label = UiString.UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
             description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
             imageRes = R.drawable.illustration_page_card_create_page,
-            onClick = params.onFooterLinkClick
+            onClick = onFooterLinkClick
         )
     }
 
-    private fun createNewPageCardWithAddAnotherPageMessage(params: PagesCardBuilderParams): CreatNewPageItem {
+    private fun createNewPageCardWithAddAnotherPageMessage(onFooterLinkClick: () -> Unit): CreatNewPageItem {
         return CreatNewPageItem(
             label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
             description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
             imageRes = R.drawable.illustration_page_card_create_page,
-            onClick = params.onFooterLinkClick
+            onClick = onFooterLinkClick
         )
     }
 
-    private fun createNewPageCardWithOnlyButton(params: PagesCardBuilderParams): CreatNewPageItem {
+    private fun createNewPageCardWithOnlyButton(onFooterLinkClick: () -> Unit): CreatNewPageItem {
         return CreatNewPageItem(
             label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
-            onClick = params.onFooterLinkClick
+            onClick = onFooterLinkClick
         )
     }
 }
