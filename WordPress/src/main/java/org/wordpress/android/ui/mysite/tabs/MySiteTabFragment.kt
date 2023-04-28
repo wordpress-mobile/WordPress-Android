@@ -454,6 +454,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             action.activityId,
             action.isRewindable
         )
+        is SiteNavigationAction.TriggerCreatePageFlow -> Unit // no-op
     }
 
     private fun showJetpackPoweredBottomSheet() {

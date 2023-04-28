@@ -27,6 +27,7 @@ import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
@@ -411,6 +412,10 @@ class WPMainActivityViewModel @Inject constructor(
 
     fun handleSiteRemoved() {
         selectedSiteRepository.removeSite()
+    }
+
+    fun triggerCreatePageFlow(){
+        _createAction.postValue(CREATE_NEW_PAGE_FROM_PAGES_CARD)
     }
 
     data class FocusPointInfo(
