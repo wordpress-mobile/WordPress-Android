@@ -37,9 +37,8 @@ class PagesCardBuilder @Inject constructor(
         )
     }
 
-    private fun List<PagesCardModel.PageCardModel>.filterByPagesCardSupportedStatus(): List<PagesCardModel.PageCardModel> {
-        return this.filter { it.status in PagesCardContentType.getList() }
-    }
+    private fun List<PagesCardModel.PageCardModel>.filterByPagesCardSupportedStatus() =
+        this.filter { it.status in PagesCardContentType.getList() }
 
     private fun getPagesContentItems(pages: List<PagesCardModel.PageCardModel>): List<PageContentItem> {
         return pages.map { page ->
