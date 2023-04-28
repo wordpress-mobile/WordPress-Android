@@ -24,6 +24,7 @@ import android.widget.ListView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.ViewCompat;
@@ -571,18 +572,9 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     }
 
     private void updateDisabledMessagePreference(Preference disabledMessagePreference) {
-        boolean isAlwaysDenied =
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && WPPermissionUtils.isPermissionAlwaysDenied(
-                        getActivity(), Manifest.permission.POST_NOTIFICATIONS);
-        int summaryResId;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !isAlwaysDenied) {
-            summaryResId = R.string.notifications_disabled_permission_dialog;
-        } else {
-            summaryResId = R.string.notifications_disabled;
-        }
-        disabledMessagePreference.setSummary(summaryResId);
+        disabledMessagePreference.setSummary(getDisabledMessageResId());
         disabledMessagePreference.setOnPreferenceClickListener(preference -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !isAlwaysDenied) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && shouldRequestRuntimePermission()) {
                 // Request runtime permission.
                 requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},
                         NOTIFICATIONS_PERMISSION_REQUEST_CODE);
@@ -592,6 +584,20 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             }
             return true;
         });
+    }
+
+    private boolean shouldRequestRuntimePermission() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+               && !WPPermissionUtils.isPermissionAlwaysDenied(getActivity(), Manifest.permission.POST_NOTIFICATIONS);
+    }
+
+    @StringRes
+    private int getDisabledMessageResId() {
+        if (shouldRequestRuntimePermission()) {
+            return R.string.notifications_disabled_permission_dialog;
+        } else {
+            return R.string.notifications_disabled;
+        }
     }
 
     @Override
