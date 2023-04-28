@@ -2,7 +2,7 @@
 
 22.3
 -----
-
+* [*] [internal] Allow updating specific fields when updating media details. [https://github.com/wordpress-mobile/WordPress-Android/pull/18327]
 
 22.2
 -----
