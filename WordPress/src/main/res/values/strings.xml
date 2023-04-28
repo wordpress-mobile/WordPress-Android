@@ -1536,6 +1536,7 @@
     <string name="error_loading_notifications">Couldn\'t load notification settings</string>
     <string name="notification_types">Notification Types</string>
     <string name="notifications_disabled">App notifications have been disabled. Tap here to enable them in Settings.</string>
+    <string name="notifications_disabled_permission_dialog">App notifications have been disabled. Tap here to enable them.</string>
     <string name="notifications_tab_summary">Settings for notifications that appear in the Notifications tab.</string>
     <string name="notifications_email_summary">Settings for notifications that are sent to the email tied to your account.</string>
     <string name="notifications_push_summary">Settings for notifications that appear on your device.</string>
