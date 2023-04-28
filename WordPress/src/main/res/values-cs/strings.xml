@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-13 19:36:51+0000
+Translation-Revision-Date: 2023-04-21 07:37:11+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: cs_CZ
@@ -45,7 +45,6 @@ Language: cs_CZ
     <string name="site_creation_domain_tag_sale">Prodej</string>
     <string name="site_creation_domain_tag_recommended">Doporučeno</string>
     <string name="site_creation_domain_tag_best_alternative">Nejlepší alternativa</string>
-    <string name="site_creation_domain_cost">%s/yr</string>
     <string name="me_btn_help">Nápověda</string>
     <string name="support_faq_caption">Odpovědi na běžné otázky, které můžete mít, najdete v našich FAQ.</string>
     <string name="support_faq_title">Děkujeme, že jste přešli na aplikaci Jetpack!</string>
@@ -177,9 +176,6 @@ Language: cs_CZ
     <string name="preference_open_links_in_jetpack">Otevřít odkazy v Jetpacku</string>
     <string name="jp_migration_need_help_button">Potřebujete pomoci?</string>
     <string name="jp_migration_got_it_button">Mám to</string>
-    <string name="jp_migration_delete_message">&lt;b&gt;Smažte aplikaci WordPress&lt;/b&gt;, abyste předešli konfliktům dat.</string>
-    <string name="jp_migration_delete_title">Už nepotřebujete WordPress aplikaci</string>
-    <string name="jp_migration_delete_subtitle">Vypadá to, že máte stále nainstalovanou aplikaci WordPress. Doporučujeme smazat WordPress aplikaci, abyste předešli konfliktům dat.</string>
     <string name="jp_migration_network_error_message">Bez připojení k síti nemůžeme přenést vaše data a nastavení.</string>
     <string name="jp_migration_network_error_subtitle">Zkontrolujte, zda vaše síťové připojení funguje, a zkuste to znovu.</string>
     <string name="jp_migration_network_error_title">Nelze se připojit k internetu.</string>
@@ -189,7 +185,6 @@ Language: cs_CZ
     <string name="jp_migration_try_again_button">Zkuste to znovu</string>
     <string name="jp_migration_finish_button">Dokončit</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Odstranit ikonu aplikace WordPress</string>
-    <string name="jp_migration_done_delete_wp_message">&lt;b&gt;Smažte aplikaci WordPress&lt;/b&gt;, abyste předešli konfliktům dat.</string>
     <string name="jp_migration_done_subtitle">Přenesli jsme všechna vaše data a nastavení. Všechno je tam, kde jsi to nechal.</string>
     <string name="jp_migration_done_title">Děkujeme, že jste přešli na Jetpack!</string>
     <string name="jp_migration_notifications_subtitle">Budete dostávat všechna stejná oznámení, ale nyní budou pocházet z aplikace Jetpack.</string>
@@ -199,7 +194,6 @@ Language: cs_CZ
     <string name="support_title">Podpora</string>
     <string name="notification_disable_broadcast_permission_desc">Umožňuje aplikaci zakázat WordPress oznámení.</string>
     <string name="notification_disable_broadcast_permission_label">zakázat WordPress oznámení</string>
-    <string name="jp_migration_success_card_message">Odstraňte WordPress aplikaci</string>
     <string name="jp_migration_help_button">Potřebujete pomoci?</string>
     <string name="jp_migration_continue_button">Pokračovat</string>
     <string name="jp_migration_welcome_site_found_message">Našli jsme vaše stránky. Pokračujte v přenosu všech dat a automaticky se přihlaste k Jetpacku.</string>
@@ -782,6 +776,7 @@ Language: cs_CZ
     <string name="gutenberg_native_custom_url">Vlastní URL</string>
     <string name="gutenberg_native_create_embed">Vytvořit vložení</string>
     <string name="gutenberg_native_column_d">Sloupec %d</string>
+    <string name="gutenberg_native_more">Více</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Stručně popište odkaz, abyste pomohli uživatelům s čtečkou obrazovky.</string>
     <string name="gutenberg_native_add_blocks">Přidat bloky</string>
     <string name="login_no_jetpack_sites">Nebyly nalezeny žádné stránky Jetpack</string>
@@ -1677,6 +1672,7 @@ Language: cs_CZ
     <string name="gutenberg_native_alt_text">Alternativní text</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Nastala neznámá chyba. Prosím zkuste to znovu.</string>
     <string name="gutenberg_native_add_alt_text">Přidejte alternativní text</string>
+    <string name="gutenberg_native_add_description">Přidat popis</string>
     <string name="reader_acessibility_list_loaded">\"Seznam má načteno %1$d položek.\"</string>
     <string name="reader_empty_saved_posts_content_description">Klepnutím na tlačítko Přidat k uložení příspěvků uložíte příspěvek do svého seznamu.</string>
     <string name="notifications_tab_dialog_main_off_message">Vypnutím oznámení pro tento web zakážete zobrazování oznámení na kartě oznámení pro tento web. Po zapnutí oznámení pro tento web můžete doladit, jaký druh oznámení se vám zobrazí.</string>
@@ -2700,6 +2696,7 @@ Language: cs_CZ
     <string name="media_documents">Dokumenty</string>
     <string name="media_videos">Videa</string>
     <string name="media_images">Obrázky</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">%1$s byl odepřen přístup k vašim fotografiím. Chcete-li to vyřešit, upravte oprávnění a zapněte %2$s.</string>
     <string name="reader_view_comments">Zobrazit komentáře</string>
     <string name="site_settings_video_quality_hint">Kvalita videí. Vyšší hodnoty znamenají lepší kvalitu videí.</string>
     <string name="site_settings_video_width_hint">Změní velikost videí v příspěvcích na tuto velikost</string>

@@ -34,6 +34,7 @@ import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.JetpackFullPluginInstallOnboardingDialogFragment
@@ -399,6 +400,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             action.site,
             CTA_DOMAIN_CREDIT_REDEMPTION
         )
+        is SiteNavigationAction.OpenPaidDomainSearch -> ActivityLauncher.viewDomainRegistrationActivityForResult(
+            this,
+            action.site,
+            DOMAIN_PURCHASE
+        )
+
         is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken, action.source)
         is SiteNavigationAction.ShowQuickStartDialog -> showQuickStartDialog(
             action.title,
@@ -441,6 +448,13 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         is SiteNavigationAction.ShowJetpackRemovalStaticPostersView -> {
             ActivityLauncher.showJetpackStaticPoster(requireActivity())
         }
+        is SiteNavigationAction.OpenActivityLogDetail -> ActivityLauncher.viewActivityLogDetailFromDashboardCard(
+            activity,
+            action.site,
+            action.activityId,
+            action.isRewindable
+        )
+        is SiteNavigationAction.TriggerCreatePageFlow -> Unit // no-op
     }
 
     private fun showJetpackPoweredBottomSheet() {

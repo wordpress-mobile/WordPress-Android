@@ -8,6 +8,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.config.DashboardCardPagesConfig
+import java.util.Date
 import javax.inject.Inject
 
 private const val REQUIRED_PAGES_IN_CARD: Int = 3
@@ -33,9 +34,37 @@ class PagesCardBuilder @Inject constructor(
         )
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun getPagesContentItems(pages: List<PagesCardModel.PageCardModel>): List<PageContentItem> {
-        return emptyList()
+        return pages.map{ page ->
+            PageContentItem(
+                title = getPageTitle(page.title),
+                statusIcon = getStatusIcon(page.status),
+                status = getStatusText(page.status),
+                lastEditedOrScheduledTime = getLastEditedOrScheduledTime(page.lastModifiedOrScheduledOn),
+                onCardClick = { }
+            )
+        }
+    }
+
+    private fun getPageTitle(title: String) =
+        if (title.isEmpty()) UiString.UiStringRes(R.string.my_site_untitled_post) else UiString.UiStringText(title)
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun getStatusIcon(status: String): Int {
+        // implement the logic to get the correct icon
+        return R.drawable.ic_pages_white_24dp
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun getStatusText(status: String): UiString {
+        // implement the logic to get the correct text
+        return UiString.UiStringText("")
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun getLastEditedOrScheduledTime(lastModifiedOrScheduledOn: Date): UiString {
+        // implement the logic to get the text
+        return UiString.UiStringText("")
     }
 
     private fun getCreatePageCard(params: PagesCardBuilderParams): CreatNewPageItem {
@@ -53,8 +82,9 @@ class PagesCardBuilder @Inject constructor(
 
     private fun createNewPageCardWithAddPageMessage(params: PagesCardBuilderParams): CreatNewPageItem {
         return CreatNewPageItem(
-            label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
+            label = UiString.UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
             description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
+            imageRes = R.drawable.illustration_page_card_create_page,
             onClick = params.onFooterLinkClick
         )
     }
@@ -63,13 +93,14 @@ class PagesCardBuilder @Inject constructor(
         return CreatNewPageItem(
             label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
             description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
+            imageRes = R.drawable.illustration_page_card_create_page,
             onClick = params.onFooterLinkClick
         )
     }
 
     private fun createNewPageCardWithOnlyButton(params: PagesCardBuilderParams): CreatNewPageItem {
         return CreatNewPageItem(
-            label = UiString.UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
+            label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
             onClick = params.onFooterLinkClick
         )
     }

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-18 13:54:07+0000
+Translation-Revision-Date: 2023-04-26 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: id
 -->
 <resources>
+    <string name="jp_migration_delete_message">Kami menyarankan agar &lt;b&gt;aplikasi WordPress&lt;/b&gt; di perangkat Anda di-uninstall untuk mencegah konflik data.</string>
+    <string name="jp_migration_delete_subtitle">Aplikasi WordPress sepertinya masih terinstal.</string>
+    <string name="jp_migration_delete_title">Anda tidak lagi membutuhkan aplikasi WordPress di perangkat Anda</string>
+    <string name="jp_migration_done_delete_wp_message">Kami sarankan untuk menghapus aplikasi WordPress guna mencegah terjadinya konflik data.&lt;b&gt;&lt;/b&gt;</string>
     <string name="gutenberg_native_remove_blocks">Hapus blok</string>
     <string name="gutenberg_native_privacy_and_rating">Privasi dan rating</string>
     <string name="gutenberg_native_playback_settings">Pengaturan Playback</string>
@@ -77,7 +81,6 @@ Language: id
     <string name="site_creation_domain_tag_sale">Obral</string>
     <string name="site_creation_domain_tag_recommended">Disarankan</string>
     <string name="site_creation_domain_tag_best_alternative">Alternatif Terbaik</string>
-    <string name="site_creation_domain_cost">%s/th</string>
     <string name="me_btn_help">Bantuan</string>
     <string name="support_faq_caption">Tanya Jawab Umum akan menjawab berbagai pertanyaan yang umum diajukan.</string>
     <string name="support_faq_title">Terima kasih sudah beralih ke aplikasi Jetpack.</string>
@@ -209,9 +212,6 @@ Language: id
     <string name="preference_open_links_in_jetpack">Buka tautan di Jetpack</string>
     <string name="jp_migration_need_help_button">Butuh bantuan?</string>
     <string name="jp_migration_got_it_button">Saya mengerti</string>
-    <string name="jp_migration_delete_message">Harap &lt;b&gt;hapus aplikasi WordPress&lt;/b&gt; untuk mencegah terjadinya konflik data.</string>
-    <string name="jp_migration_delete_subtitle">Aplikasi WordPress sepertinya masih terinstal. Kami sarankan untuk menghapus aplikasi WordPress guna mencegah terjadinya konflik data.</string>
-    <string name="jp_migration_delete_title">Anda tidak lagi membutuhkan aplikasi WordPress</string>
     <string name="jp_migration_network_error_message">Tanpa koneksi internet, kami tidak dapat mentransfer data dan pengaturan.</string>
     <string name="jp_migration_network_error_subtitle">Pastikan koneksi internet berfungsi lalu coba kembali.</string>
     <string name="jp_migration_network_error_title">Tidak dapat menyambung ke internet.</string>
@@ -221,13 +221,11 @@ Language: id
     <string name="jp_migration_try_again_button">Coba lagi</string>
     <string name="jp_migration_finish_button">Selesai</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Hapus ikon Aplikasi WordPress</string>
-    <string name="jp_migration_done_delete_wp_message">Harap &lt;b&gt;hapus aplikasi WordPress&lt;/b&gt; untuk mencegah terjadinya konflik data.</string>
     <string name="jp_migration_done_subtitle">Kami telah mentransfer semua data dan pengaturan Anda. Semua percis seperti terakhir Anda tinggalkan.</string>
     <string name="jp_migration_done_title">Terima kasih telah beralih ke Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Kami akan menonaktifkan pemberitahuan dari aplikasi WordPress.</string>
     <string name="jp_migration_notifications_subtitle">Anda akan tetap menerima pemberitahuan tersebut, tetapi dari aplikasi Jetpack.</string>
     <string name="jp_migration_notifications_title">Pemberitahuan kini dikirimkan lewat Jetpack</string>
-    <string name="jp_migration_success_card_message">Harap hapus aplikasi WordPress</string>
     <string name="wordpress_help_center_button">Pusat bantuan WordPress</string>
     <string name="support_title">Dukungan</string>
     <string name="notification_disable_broadcast_permission_desc">Mengizinkan aplikasi untuk menonaktifkan pemberitahuan WordPress.</string>

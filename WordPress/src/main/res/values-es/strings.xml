@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-18 11:54:07+0000
+Translation-Revision-Date: 2023-04-20 08:54:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: es
 -->
 <resources>
+    <string name="jp_migration_delete_message">Recomendamos &lt;b&gt;desinstalar la aplicación WordPress&lt;/b&gt; en tu dispositivo para evitar conflictos de datos.</string>
+    <string name="jp_migration_delete_subtitle">Parece que todavía tienes la aplicación WordPress instalada.</string>
+    <string name="jp_migration_delete_title">Ya no necesitas la aplicación WordPress en tu dispositivo</string>
+    <string name="jp_migration_done_delete_wp_message">Recomendamos &lt;b&gt;desinstalar la aplicación WordPress&lt;/b&gt; en tu dispositivo para evitar conflictos de datos.</string>
+    <string name="jp_migration_success_card_message">Bienvenido a la aplicación Jetpack. Puedes desinstalar la aplicación WordPress.</string>
     <string name="gutenberg_native_remove_blocks">Eliminar bloques</string>
     <string name="gutenberg_native_privacy_and_rating">Privacidad y valoraciones</string>
     <string name="gutenberg_native_playback_settings">Ajustes de reproducción</string>
@@ -77,7 +82,6 @@ Language: es
     <string name="site_creation_domain_tag_sale">Oferta</string>
     <string name="site_creation_domain_tag_recommended">Recomendado</string>
     <string name="site_creation_domain_tag_best_alternative">Mejor alternativa</string>
-    <string name="site_creation_domain_cost">%s al año</string>
     <string name="me_btn_help">Ayuda</string>
     <string name="support_faq_caption">Con nuestras preguntas frecuentes podrás resolver algunas de tus dudas.</string>
     <string name="support_faq_title">¡Gracias por cambiar a la aplicación Jetpack!</string>
@@ -209,9 +213,6 @@ Language: es
     <string name="preference_open_links_in_jetpack">Abrir enlaces en Jetpack</string>
     <string name="jp_migration_need_help_button">¿Necesitas ayuda?</string>
     <string name="jp_migration_got_it_button">De acuerdo</string>
-    <string name="jp_migration_delete_message">Por favor, &lt;b&gt;borra la aplicación de WordPress&lt;/b&gt; para evitar conflictos de datos.</string>
-    <string name="jp_migration_delete_subtitle">Parece que tienes instalada la aplicación de WordPress. Te recomendamos que elimines la aplicación de WordPress para evitar conflictos de datos.</string>
-    <string name="jp_migration_delete_title">Ya no necesitas la aplicación de WordPress</string>
     <string name="jp_migration_network_error_message">No podemos transferir tus datos y ajustes sin una conexión de red.</string>
     <string name="jp_migration_network_error_subtitle">Comprueba tu conexión de red para asegurarte de que funcione y vuelve a intentarlo.</string>
     <string name="jp_migration_network_error_title">No se ha podido conectar a Internet.</string>
@@ -221,13 +222,11 @@ Language: es
     <string name="jp_migration_try_again_button">Volver a intentarlo</string>
     <string name="jp_migration_finish_button">Terminar</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Icono Quitar aplicación de WordPress</string>
-    <string name="jp_migration_done_delete_wp_message">Por favor, &lt;b&gt;borra la aplicación de WordPress&lt;/b&gt; para evitar conflictos de datos.</string>
     <string name="jp_migration_done_subtitle">Hemos transferido todos tus datos y ajustes. Todo está tal y como lo dejaste.</string>
     <string name="jp_migration_done_title">¡Gracias por cambiar a Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Desactivaremos las notificaciones de la aplicación de WordPress.</string>
     <string name="jp_migration_notifications_subtitle">Recibirás las mismas notificaciones, pero a partir de ahora desde la aplicación de Jetpack.</string>
     <string name="jp_migration_notifications_title">Ahora las notificaciones llegan de Jetpack</string>
-    <string name="jp_migration_success_card_message">Elimina la aplicación de WordPress</string>
     <string name="wordpress_help_center_button">Centro de Ayuda de WordPress</string>
     <string name="support_title">Soporte</string>
     <string name="notification_disable_broadcast_permission_desc">Permite que la aplicación desactive las notificaciones de WordPress.</string>

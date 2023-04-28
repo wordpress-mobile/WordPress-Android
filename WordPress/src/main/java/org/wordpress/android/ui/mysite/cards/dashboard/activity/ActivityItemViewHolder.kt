@@ -13,7 +13,11 @@ class ActivityItemViewHolder(parent: ViewGroup,
     parent.viewBinding(MySiteActivityCardItemBinding::inflate)
 ) {
     fun bind(item: ActivityItem) = with(binding) {
-        uiHelpers.setTextOrHide(activityCardItemTitle, item.title)
-        uiHelpers.setTextOrHide(activityCardItemSubtitle, item.subtitle)
+        activityContentContainer.setOnClickListener { item.onClick.click() }
+        uiHelpers.setTextOrHide(activityCardItemLabel, item.label)
+        uiHelpers.setTextOrHide(activityCardItemSubLabel, item.subLabel)
+        uiHelpers.setTextOrHide(activityCardItemDisplayDate, item.displayDate)
+        icon.setImageResource(item.icon)
+        icon.setBackgroundResource(item.iconBackgroundColor)
     }
 }

@@ -97,7 +97,7 @@ class CardsShownTracker @Inject constructor(
                 Type.PAGES.label
             )
         )
-        is DashboardCard.ActivityCard -> trackCardShown(
+        is DashboardCard.ActivityCard.ActivityCardWithItems -> trackCardShown(
             Pair(
                 card.dashboardCardType.toTypeValue().label,
                 Type.ACTIVITY.label

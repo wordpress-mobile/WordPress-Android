@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-19 09:54:07+0000
+Translation-Revision-Date: 2023-04-25 15:54:09+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ru
 -->
 <resources>
+    <string name="jp_migration_delete_message">Рекомендуем &lt;b&gt;удалить приложение WordPress&lt;/b&gt; с устройства, чтобы избежать конфликтов данных.</string>
+    <string name="jp_migration_delete_subtitle">Кажется, у вас всё ещё установлено приложение WordPress.</string>
+    <string name="jp_migration_delete_title">Вам больше не нужно приложение WordPress</string>
+    <string name="jp_migration_done_delete_wp_message">Рекомендуем &lt;b&gt;удалить приложение WordPress&lt;/b&gt; с устройства, чтобы избежать конфликтов данных.</string>
+    <string name="jp_migration_success_card_message">Добро пожаловать в приложение Jetpack. Можете удалить приложение WordPress.</string>
     <string name="gutenberg_native_remove_blocks">Удалить блоки</string>
     <string name="gutenberg_native_privacy_and_rating">Конфиденциальность и рейтинг</string>
     <string name="gutenberg_native_playback_settings">Настройки воспроизведения</string>
@@ -77,7 +82,6 @@ Language: ru
     <string name="site_creation_domain_tag_sale">Распродажа</string>
     <string name="site_creation_domain_tag_recommended">Рекомендуемые</string>
     <string name="site_creation_domain_tag_best_alternative">Лучшая альтернатива</string>
-    <string name="site_creation_domain_cost">%s/г.</string>
     <string name="me_btn_help">Справка</string>
     <string name="support_faq_caption">Ищите ответы на типовые вопросы в разделе \"Часто задаваемые вопросы\".</string>
     <string name="support_faq_title">Благодарим за переход на приложение Jetpack!</string>
@@ -209,9 +213,6 @@ Language: ru
     <string name="preference_open_links_in_jetpack">Открывать ссылки в Jetpack</string>
     <string name="jp_migration_need_help_button">Нужна помощь?</string>
     <string name="jp_migration_got_it_button">Понятно</string>
-    <string name="jp_migration_delete_message">&lt;b&gt;Удалите приложение WordPress&lt;/b&gt;, чтобы &lt;br&gt;избежать конфликтов данных.</string>
-    <string name="jp_migration_delete_subtitle">Кажется, у вас всё ещё установлено приложение WordPress. Рекомендуем удалить приложение WordPress, чтобы избежать конфликтов данных.</string>
-    <string name="jp_migration_delete_title">Вам больше не требуется приложение WordPress</string>
     <string name="jp_migration_network_error_message">Не удаётся перенести ваши данные и настройки без подключения к сети.</string>
     <string name="jp_migration_network_error_subtitle">Убедитесь, что сетевое подключение работает, и повторите попытку.</string>
     <string name="jp_migration_network_error_title">Не удаётся подключиться к Интернету.</string>
@@ -221,13 +222,11 @@ Language: ru
     <string name="jp_migration_try_again_button">Повторить попытку</string>
     <string name="jp_migration_finish_button">Завершить</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Удаление значка приложения WordPress</string>
-    <string name="jp_migration_done_delete_wp_message">&lt;b&gt;Удалите приложение WordPress&lt;/b&gt;, чтобы &lt;br&gt;избежать конфликтов данных.</string>
     <string name="jp_migration_done_subtitle">Все данные и настройки перенесены. Всё осталось по-прежнему.</string>
     <string name="jp_migration_done_title">Благодарим за переход в Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Уведомления из приложения WordPress будут отключены.</string>
     <string name="jp_migration_notifications_subtitle">Вам будут приходить те же уведомления, но теперь из приложения Jetpack.</string>
     <string name="jp_migration_notifications_title">Теперь уведомления будут поступать из Jetpack</string>
-    <string name="jp_migration_success_card_message">Удалите приложение WordPress</string>
     <string name="wordpress_help_center_button">Справочный центр WordPress</string>
     <string name="support_title">Поддержка</string>
     <string name="notification_disable_broadcast_permission_desc">Позволяет отключить уведомления WordPress в приложении.</string>

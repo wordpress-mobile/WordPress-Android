@@ -505,7 +505,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         _uiState.value = convertPostToUiState(post)
     }
 
-    private fun onTagItemClicked(tagSlug: String) {
+    fun onTagItemClicked(tagSlug: String) {
         launch(ioDispatcher) {
             val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, FOLLOWED)
             _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))

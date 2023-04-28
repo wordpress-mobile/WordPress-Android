@@ -26,7 +26,7 @@ class CardsTracker @Inject constructor(
         BLOGGING_PROMPT("blogging_prompt"),
         PROMOTE_WITH_BLAZE("promote_with_blaze"),
         PAGES("pages"),
-        ACTIVITY("activity"),
+        ACTIVITY("activity_log"),
         DASHBOARD_CARD_DOMAIN("dashboard_card_domain"),
     }
 
@@ -47,6 +47,14 @@ class CardsTracker @Inject constructor(
         CREATE_NEXT("create_next"),
         DRAFT("draft"),
         SCHEDULED("scheduled")
+    }
+
+    enum class ActivityLogSubtype(val label: String) {
+        ACTIVITY_LOG("activity_log"),
+    }
+
+    enum class PagesSubType(val label: String) {
+        CREATE_PAGE("create_page"),
     }
 
     fun trackQuickStartCardItemClicked(quickStartTaskType: QuickStartTaskType) {
@@ -71,6 +79,18 @@ class CardsTracker @Inject constructor(
 
     fun trackPostItemClicked(postCardType: PostCardType) {
         trackCardItemClicked(Type.POST.label, postCardType.toSubtypeValue().label)
+    }
+
+    fun trackActivityCardItemClicked() {
+        trackCardItemClicked(Type.ACTIVITY.label, ActivityLogSubtype.ACTIVITY_LOG.label)
+    }
+
+    fun trackActivityCardFooterClicked() {
+        trackCardFooterLinkClicked(Type.ACTIVITY.label, ActivityLogSubtype.ACTIVITY_LOG.label)
+    }
+
+    fun trackPagesCardFooterClicked() {
+        trackCardFooterLinkClicked(Type.PAGES.label, PagesSubType.CREATE_PAGE.label)
     }
 
     private fun trackCardFooterLinkClicked(type: String, subtype: String) {

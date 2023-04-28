@@ -76,7 +76,6 @@ Language: sq_AL
     <string name="site_creation_domain_tag_sale">Ulje çmimesh</string>
     <string name="site_creation_domain_tag_recommended">E rekomanduar</string>
     <string name="site_creation_domain_tag_best_alternative">Alternativa Më e Mirë</string>
-    <string name="site_creation_domain_cost">%s/vit</string>
     <string name="me_btn_help">Ndihmë</string>
     <string name="support_faq_caption">Për përgjigje pyetjesh të rëndomta që mund të keni, shihni PBR-të tona.</string>
     <string name="support_faq_title">Faleminderit që kaloni te aplikacioni Jetpack!</string>
@@ -208,9 +207,6 @@ Language: sq_AL
     <string name="preference_open_links_in_jetpack">Lidhjet hapi në Jetpack</string>
     <string name="jp_migration_need_help_button">Ju duhet ndihmë?</string>
     <string name="jp_migration_got_it_button">E kuptova</string>
-    <string name="jp_migration_delete_message">Ju lutemi, &lt;b&gt;fshini aplikacionin WordPress&lt;/b&gt;, që të shmangen përplasje të dhënash.</string>
-    <string name="jp_migration_delete_subtitle">Duket sikur keni ende të instaluar aplikacionin WordPress. Rekomandojmë ta fshini aplikacionin WordPress, për të shmangur përplasje të dhënash.</string>
-    <string name="jp_migration_delete_title">S’ju duhet më aplikacioni WordPress</string>
     <string name="jp_migration_network_error_message">S’jeni në gjendje të shpërngulim të dhënat dhe rregullimet tuaja pa një lidhje në rrjet.</string>
     <string name="jp_migration_network_error_subtitle">JU lutemi, kontrolloni për t’u siguruar se lidhja juaj në rrjet funksionon dhe riprovoni.</string>
     <string name="jp_migration_network_error_title">S’arrihet të lidhet në internet.</string>
@@ -220,13 +216,11 @@ Language: sq_AL
     <string name="jp_migration_try_again_button">Riprovoni</string>
     <string name="jp_migration_finish_button">Përfundoje</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Hiqni ikonë aplikacioni WordPress</string>
-    <string name="jp_migration_done_delete_wp_message">Ju lutemi, &lt;b&gt;fshini aplikacionin WordPress&lt;/b&gt;, që të shmangen përplasje të dhënash.</string>
     <string name="jp_migration_done_subtitle">Kemi shpërngulur krejt të dhënat dhe rregullimet tuaja. Gjithçka është mu atje ku e latë.</string>
     <string name="jp_migration_done_title">Faleminderit që kaloni në Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Do t’i çaktivizojmë njoftimet prej aplikacionit WordPress.</string>
     <string name="jp_migration_notifications_subtitle">Do të merrni të njëjtat njoftime, por tani do të vijnë nga aplikacioni Jetpack.</string>
     <string name="jp_migration_notifications_title">Njoftimet tani vijnë prej Jetpack-ut</string>
-    <string name="jp_migration_success_card_message">Ju lutemi, fshini aplikacionin WordPress</string>
     <string name="wordpress_help_center_button">Qendër ndihme WordPress</string>
     <string name="support_title">Asistencë</string>
     <string name="notification_disable_broadcast_permission_desc">E lejon aplikacionin të çaktivizojë njoftimet nga WordPress-i.</string>

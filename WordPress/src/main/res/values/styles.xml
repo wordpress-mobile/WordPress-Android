@@ -886,6 +886,29 @@
         <item name="autoSizeMinTextSize">12sp</item>
     </style>
 
+
+    <!--My Site Card - Pages card -->
+    <style name="MySiteCardPagesCardFooter">
+        <item name="android:textColor">@color/primary_emphasis_medium_selector</item>
+        <item name="android:paddingBottom">@dimen/my_site_dashboard_card_page_create_page_title_description_padding_bottom</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+    </style>
+
+    <style name="MySiteCardPagesCardFooterDescription">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:paddingBottom">@dimen/my_site_dashboard_card_page_create_page_title_description_padding_bottom</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+
+    <style name="ShapeAppearance.PagesCardIllustration" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/my_site_dashboard_card_page_create_page_illustration_image_view_corner_radius</item>
+    </style>
+
     <!--People Management Styles-->
     <style name="PersonAvatar">
         <item name="android:layout_width">@dimen/people_avatar_sz</item>
@@ -1189,29 +1212,6 @@
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:orientation">vertical</item>
         <item name="android:focusable">true</item>
-    </style>
-
-    <style name="SiteCreationHeaderBaseTextStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-    </style>
-
-    <style name="SiteCreationHeaderSubtitle" parent="SiteCreationHeaderBaseTextStyle">
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-    </style>
-
-    <style name="SiteCreationPreviewHeaderTitle" parent="SiteCreationHeaderBaseTextStyle">
-        <item name="android:layout_marginBottom">@dimen/margin_small</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
-        <item name="android:text">@string/new_site_creation_preview_title</item>
-    </style>
-
-    <style name="SiteCreationPreviewHeaderSubtitle" parent="SiteCreationHeaderSubtitle">
-        <item name="android:text">@string/new_site_creation_preview_subtitle</item>
     </style>
 
     <style name="SitePreviewSkeletonView">
@@ -1553,14 +1553,18 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="SiteCreationHeaderV2Title" parent="SiteCreationHeaderV2Text">
+    <style name="SiteCreationHeaderV2Title.Base" parent="SiteCreationHeaderV2Text">
         <item name="android:paddingTop">@dimen/mlp_titles_top_margin</item>
         <item name="android:paddingBottom">@dimen/margin_small_medium</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">3</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:lineSpacingExtra">-4sp</item>
         <item name="fontFamily">serif</item>
     </style>
+
+    <style name="SiteCreationHeaderV2Title" parent="SiteCreationHeaderV2Title.Base" />
 
     <style name="SiteCreationHeaderV2Subtitle" parent="SiteCreationHeaderV2Text">
         <item name="android:paddingTop">@dimen/margin_small</item>
@@ -1568,6 +1572,8 @@
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
         <item name="android:maxLines">5</item>
         <item name="android:alpha">0.6</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:lineSpacingExtra">5sp</item>
         <item name="fontFamily">sans-serif</item>
     </style>
 
@@ -1881,5 +1887,13 @@
         <item name="iconGravity">textEnd</item>
         <item name="iconSize">@dimen/text_sz_medium</item>
         <item name="iconTint">@color/jetpack_green_50</item>
+    </style>
+
+    <!-- My Site Activity Card  -->
+    <style name="MySiteCardItemActivityCardLabel">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:layout_marginTop">@dimen/margin_small</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 </resources>

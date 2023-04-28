@@ -20,12 +20,12 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '2.1.0'
     automatticTracksVersion = '2.2.0'
-    gutenbergMobileVersion = 'v1.93.0'
+    gutenbergMobileVersion = 'v1.94.0'
     wordPressAztecVersion = 'v1.6.3'
     wordPressFluxCVersion = 'trunk-5805ef65e9cebb0153c38ebf98a8f6fab646648c'
     wordPressLoginVersion = '1.3.0'
     wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressUtilsVersion = '3.6.0'
+    wordPressUtilsVersion = '3.6.1'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 
     // debug
@@ -75,7 +75,7 @@ ext {
     lottieVersion = '5.2.0'
     philjayMpAndroidChartVersion = 'v3.1.0'
     squareupKotlinPoetVersion = '1.6.0'
-    squareupOkioVersion = '2.8.0'
+    squareupOkioVersion = '3.2.0'
     squareupRetrofitVersion = '2.9.0'
     uCropVersion = '2.2.8'
     zendeskVersion = '5.1.1'

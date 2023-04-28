@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
-import org.wordpress.android.util.UriEncoder;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.HashMap;
@@ -18,7 +17,6 @@ import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.Med
 class BlockProcessorFactory {
     private final MediaUploadCompletionProcessor mMediaUploadCompletionProcessor;
     private final Map<MediaBlockType, BlockProcessor> mMediaBlockTypeBlockProcessorMap;
-    private final UriEncoder mUriEncoder;
 
     /**
      * This factory initializes block processors for all media block types and provides a method to retrieve a block
@@ -27,7 +25,6 @@ class BlockProcessorFactory {
     BlockProcessorFactory(MediaUploadCompletionProcessor mediaUploadCompletionProcessor) {
         mMediaUploadCompletionProcessor = mediaUploadCompletionProcessor;
         mMediaBlockTypeBlockProcessorMap = new HashMap<>();
-        mUriEncoder = new UriEncoder();
     }
 
     /**
@@ -38,7 +35,7 @@ class BlockProcessorFactory {
      */
     BlockProcessorFactory init(String localId, MediaFile mediaFile, String siteUrl) {
         mMediaBlockTypeBlockProcessorMap.put(IMAGE, new ImageBlockProcessor(localId, mediaFile));
-        mMediaBlockTypeBlockProcessorMap.put(VIDEOPRESS, new VideoPressBlockProcessor(localId, mediaFile, mUriEncoder));
+        mMediaBlockTypeBlockProcessorMap.put(VIDEOPRESS, new VideoPressBlockProcessor(localId, mediaFile));
         mMediaBlockTypeBlockProcessorMap.put(VIDEO, new VideoBlockProcessor(localId, mediaFile));
         mMediaBlockTypeBlockProcessorMap.put(MEDIA_TEXT, new MediaTextBlockProcessor(localId, mediaFile));
         mMediaBlockTypeBlockProcessorMap.put(GALLERY, new GalleryBlockProcessor(localId, mediaFile, siteUrl,

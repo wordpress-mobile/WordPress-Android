@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-18 08:27:06+0000
+Translation-Revision-Date: 2023-04-20 13:56:44+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ro
 -->
 <resources>
+    <string name="jp_migration_success_card_message">Bine ai venit la aplicația Jetpack. Acum poți să dezinstalezi aplicația WordPress.</string>
+    <string name="jp_migration_delete_message">Recomandăm &lt;b&gt;să dezinstalezi aplicația WordPress&lt;/b&gt; pe dispozitivul tău ca să eviți conflictele.</string>
+    <string name="jp_migration_delete_subtitle">Se pare că încă ai instalată aplicația WordPress.</string>
+    <string name="jp_migration_delete_title">Nu mai ai nevoie de aplicația WordPress pe dispozitivul tău</string>
+    <string name="jp_migration_done_delete_wp_message">Recomandăm &lt;b&gt;să dezinstalezi aplicația WordPress&lt;/b&gt; pe dispozitivul tău ca să eviți conflictele.</string>
     <string name="gutenberg_native_privacy_and_rating">Confidențialitate și evaluare</string>
     <string name="gutenberg_native_remove_blocks">Înlătură blocurile</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Adaugă pagini pe site-ul tău</string>
@@ -76,7 +81,6 @@ Language: ro
     <string name="support_faq_title">Îți mulțumim că ai comutat la aplicația Jetpack!</string>
     <string name="support_faq_caption">Vezi întrebările frecvente pentru răspunsuri la întrebările pe care le ai.</string>
     <string name="me_btn_help">Ajutor</string>
-    <string name="site_creation_domain_cost">%s/an</string>
     <string name="site_creation_domain_tag_best_alternative">Cea mai bună alternativă</string>
     <string name="site_creation_domain_tag_recommended">Recomandat</string>
     <string name="site_creation_domain_tag_sale">Reducere</string>
@@ -208,11 +212,8 @@ Language: ro
     <string name="preference_open_links_in_jetpack">Deschide legăturile în Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Cu aplicația Jetpack, primești notificări</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Cu aplicația Jetpack, poți să urmărești orice site</string>
-    <string name="jp_migration_delete_message">Te rog &lt;b&gt;șterge aplicația WordPress&lt;/b&gt; pentru a evita conflictele de date.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Cu aplicația Jetpack, îți vezi statisticile</string>
     <string name="jp_migration_network_error_title">Nu mă pot conecta la internet.</string>
-    <string name="jp_migration_delete_title">Nu mai ai nevoie de aplicația WordPress</string>
-    <string name="jp_migration_delete_subtitle">Se pare că încă ai aplicația WordPress instalată. Îți recomandăm să ștergi aplicația WordPress pentru a evita conflictele de date.</string>
     <string name="jp_migration_generic_error_subtitle">Ne pare rău, dar ceva nu a mers conform planului. Datele tale sunt în siguranță, dar nu le putem transfera momentan.</string>
     <string name="jp_migration_generic_error_message">Te rog contactează suportul sau încearcă din nou mai târziu.</string>
     <string name="jp_migration_network_error_subtitle">Te rog verifică dacă ai o conexiunea la rețea care funcționează și încearcă din nou.</string>
@@ -221,14 +222,12 @@ Language: ro
     <string name="jp_migration_try_again_button">Încearcă din nou</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Înlătură iconul aplicației WordPress</string>
     <string name="jp_migration_generic_error_title">Of nu, ceva nu a mers bine…</string>
-    <string name="jp_migration_done_delete_wp_message">Te rog &lt;b&gt;șterge aplicația WordPress&lt;/b&gt; pentru a evita conflictele de date.</string>
     <string name="jp_migration_done_subtitle">Am transferat toate datele și setările tale. Toate sunt acolo, exact unde erau.</string>
     <string name="jp_migration_notifications_subtitle">Vei primi aceleași notificări, dar acum vor veni din aplicația Jetpack.</string>
     <string name="jp_migration_done_title">Îți mulțumim că ai comutat la Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Vom dezactiva notificările din aplicația WordPress.</string>
     <string name="support_title">Suport</string>
     <string name="wordpress_help_center_button">Centru de ajutor WordPress</string>
-    <string name="jp_migration_success_card_message">Te rog șterge aplicația WordPress</string>
     <string name="notification_disable_broadcast_permission_label">dezactivează notificările WordPress</string>
     <string name="notification_disable_broadcast_permission_desc">Permite aplicației să dezactiveze notificările WordPress.</string>
     <string name="jp_migration_notifications_title">Notificările vin acum de la Jetpack</string>

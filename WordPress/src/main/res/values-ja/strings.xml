@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-19 12:54:29+0000
+Translation-Revision-Date: 2023-04-26 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ja_JP
 -->
 <resources>
+    <string name="jp_migration_delete_message">データの競合を避けるため、お使いの端末から &lt;b&gt;WordPress アプリをアンインストール&lt;/b&gt;することをおすすめします。</string>
+    <string name="jp_migration_delete_subtitle">WordPress アプリがまだインストールされているようです。</string>
+    <string name="jp_migration_delete_title">お使いの端末に WordPress アプリは不要になりました</string>
+    <string name="jp_migration_done_delete_wp_message">データの競合を避けるため、お使いの端末から &lt;b&gt;WordPress アプリをアンインストール&lt;/b&gt;することをおすすめします。</string>
+    <string name="jp_migration_success_card_message">Jetpack アプリへようこそ。WordPress アプリはアンインストールできます。</string>
     <string name="gutenberg_native_remove_blocks">ブロックを削除</string>
     <string name="gutenberg_native_privacy_and_rating">プライバシーと評価</string>
     <string name="gutenberg_native_playback_settings">再生設定</string>
@@ -76,7 +81,6 @@ Language: ja_JP
     <string name="site_creation_domain_tag_sale">セール</string>
     <string name="site_creation_domain_tag_recommended">おすすめ</string>
     <string name="site_creation_domain_tag_best_alternative">こちらもおすすめ</string>
-    <string name="site_creation_domain_cost">%s/ 年</string>
     <string name="me_btn_help">ヘルプ</string>
     <string name="support_faq_title">Jetpack アプリにお切り替えいただきありがとうございます !</string>
     <string name="logs_button">ログ</string>
@@ -209,9 +213,6 @@ Language: ja_JP
     <string name="preference_open_links_in_jetpack">Jetpack でリンクを開く</string>
     <string name="jp_migration_need_help_button">ヘルプが必要ですか ?</string>
     <string name="jp_migration_got_it_button">OK</string>
-    <string name="jp_migration_delete_message">データの競合を避けるため、&lt;b&gt;WordPress アプリを削除&lt;/b&gt;してください。</string>
-    <string name="jp_migration_delete_subtitle">WordPress アプリがまだインストールされているようです。 データの競合を避けるため、WordPress アプリを削除することをお勧めします。</string>
-    <string name="jp_migration_delete_title">WordPress アプリは不要になりました</string>
     <string name="jp_migration_network_error_message">ネットワークに接続しないと、データと設定を転送できません。</string>
     <string name="jp_migration_network_error_subtitle">ネットワーク接続が有効であることを確認し、もう一度お試しください。</string>
     <string name="jp_migration_network_error_title">インターネットに接続できません。</string>
@@ -221,13 +222,11 @@ Language: ja_JP
     <string name="jp_migration_try_again_button">再試行</string>
     <string name="jp_migration_finish_button">完了</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">WordPress アプリのアイコンを削除</string>
-    <string name="jp_migration_done_delete_wp_message">データの競合を避けるため、&lt;b&gt;WordPress アプリを削除&lt;/b&gt;してください。</string>
     <string name="jp_migration_done_subtitle">すべてのデータと設定を転送しました。 すべて移行先にあります。</string>
     <string name="jp_migration_done_title">Jetpack にお切り替えいただきありがとうございます。</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">WordPress アプリからの通知をオフにします。</string>
     <string name="jp_migration_notifications_subtitle">通知内容はすべて同じですが、Jetpack アプリから送信されるようになりました。</string>
     <string name="jp_migration_notifications_title">Jetpack から通知が届くようになりました</string>
-    <string name="jp_migration_success_card_message">WordPress アプリを削除してください</string>
     <string name="wordpress_help_center_button">WordPress ヘルプセンター</string>
     <string name="support_title">サポート</string>
     <string name="notification_disable_broadcast_permission_desc">アプリが WordPress の通知を無効にすることを許可します。</string>

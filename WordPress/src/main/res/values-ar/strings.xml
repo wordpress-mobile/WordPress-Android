@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-18 15:54:27+0000
+Translation-Revision-Date: 2023-04-24 21:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.4
 Language: ar
 -->
 <resources>
+    <string name="jp_migration_delete_message">نوصي &lt;b&gt;بإلغاء تثبيت تطبيق ووردبريس&lt;/b&gt; على جهازك لتفادي تعارضات البيانات.</string>
+    <string name="jp_migration_delete_subtitle">يبدو أن تطبيق ووردبريس لا يزال مثبتًا لديك.</string>
+    <string name="jp_migration_delete_title">لن تحتاج إلى تطبيق ووردبريس على جهازك بعد الآن</string>
+    <string name="jp_migration_done_delete_wp_message">نوصي &lt;b&gt;بإلغاء تثبيت تطبيق ووردبريس&lt;/b&gt; على جهازك لتفادي تعارضات البيانات.</string>
+    <string name="jp_migration_success_card_message">مرحبًا في تطبيق Jetpack. يمكنك إلغاء تثبيت تطبيق ووردبريس.</string>
     <string name="gutenberg_native_remove_blocks">إزالة المكوّنات</string>
     <string name="gutenberg_native_privacy_and_rating">الخصوصية والتصنيف</string>
     <string name="gutenberg_native_playback_settings">إعدادات التشغيل</string>
@@ -77,7 +82,6 @@ Language: ar
     <string name="site_creation_domain_tag_sale">تخفيض</string>
     <string name="site_creation_domain_tag_recommended">موصى به</string>
     <string name="site_creation_domain_tag_best_alternative">أفضل بديل</string>
-    <string name="site_creation_domain_cost">%s سنويًا</string>
     <string name="me_btn_help">مساعدة</string>
     <string name="support_faq_caption">ارجع إلى قسم الأسئلة المتداولة لدينا للحصول على إجابات عن الأسئلة الشائعة التي قد تطرحها.</string>
     <string name="support_faq_title">شكرًا لك للتبديل إلى تطبيق Jetpack!</string>
@@ -209,9 +213,6 @@ Language: ar
     <string name="preference_open_links_in_jetpack">فتح الروابط في Jetpack</string>
     <string name="jp_migration_need_help_button">هل تحتاج إلى مساعدة؟</string>
     <string name="jp_migration_got_it_button">فهمت</string>
-    <string name="jp_migration_delete_message">يرجى &lt;b&gt;حذف تطبيق ووردبريس&lt;/b&gt; لتفادي تعارضات البيانات.</string>
-    <string name="jp_migration_delete_subtitle">يبدو أن تطبيق ووردبريس لا يزال مثبتًا لديك. نوصي بأن تحذف تطبيق ووردبريس لتفادي تعارضات البيانات.</string>
-    <string name="jp_migration_delete_title">لن تحتاج إلى تطبيق ووردبريس بعد الآن</string>
     <string name="jp_migration_network_error_message">يتعذر علينا نقل بياناتك وإعداداتك من دون اتصال الشبكة.</string>
     <string name="jp_migration_network_error_subtitle">يرجى التحقق للتأكد من أن اتصال الشبكة لديك قيد العمل، وحاول مجددًا.</string>
     <string name="jp_migration_network_error_title">يتعذر الاتصال بالإنترنت.</string>
@@ -221,13 +222,11 @@ Language: ar
     <string name="jp_migration_try_again_button">المحاولة مجددًا</string>
     <string name="jp_migration_finish_button">إنهاء</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">إزالة أيقونة تطبيق ووردبريس</string>
-    <string name="jp_migration_done_delete_wp_message">يرجى &lt;b&gt;حذف تطبيق ووردبريس&lt;/b&gt; لتفادي تعارضات البيانات.</string>
     <string name="jp_migration_done_subtitle">لقد نقلنا كل بياناتك وإعداداتك. يصبح كل شيء صحيحًا عندما تتركه.</string>
     <string name="jp_migration_done_title">شكرًا على التبديل إلى Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">سنقوم بإيقاف تشغيل التنبيهات من تطبيق ووردبريس.</string>
     <string name="jp_migration_notifications_subtitle">ستتلقى كل التنبيهات نفسها ولكنها ستأتي الآن من تطبيق Jetpack.</string>
     <string name="jp_migration_notifications_title">تأتي التنبيهات الآن من Jetpack</string>
-    <string name="jp_migration_success_card_message">يرجى حذف تطبيق ووردبريس</string>
     <string name="wordpress_help_center_button">مركز مساعدة ووردبريس</string>
     <string name="support_title">دعم</string>
     <string name="notification_disable_broadcast_permission_desc">يسمح للتطبيق بتعطيل تنبيهات ووردبريس.</string>
