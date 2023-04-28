@@ -36,13 +36,12 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
         model = BloggingPromptModel(
             id = 123,
             text = "title",
-            title = "",
-            content = "content",
             date = Date(),
             isAnswered = false,
             attribution = "",
             respondentsCount = 5,
-            respondentsAvatarUrls = listOf()
+            respondentsAvatarUrls = listOf(),
+            answeredLink = "https://wordpress.com/tag/dailyprompt-123",
         )
     )
     private val bloggingPromptsStore: BloggingPromptsStore = mock {
@@ -53,6 +52,7 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
         on { it.map(any()) } doReturn bloggingPromptsBlock
     }
     private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig = mock()
+    private val bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider = mock()
 
     @Before
     fun setUp() {
@@ -60,6 +60,7 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
             bloggingPromptsStore,
             bloggingPromptsEditorBlockMapper,
             bloggingPromptsEnhancementsFeatureConfig,
+            bloggingPromptsPostTagProvider,
             testDispatcher(),
         )
 
@@ -86,13 +87,6 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `should load blogging prompt content if enhancements feature flag is DISABLED`() {
-        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(false)
-        viewModel.start(siteModel, 123)
-        assertThat(loadedPrompt?.content).isEqualTo(bloggingPrompt.model?.content)
-    }
-
-    @Test
     fun `should load blogging prompt mapped block if enhancements feature flag is ENABLED`() {
         whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
         viewModel.start(siteModel, 123)
@@ -109,10 +103,11 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     @Test
     fun `should add prompt id tag if enhancements feature flag is ENABLED`() {
         whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(bloggingPromptsPostTagProvider.promptIdTag(any())).thenReturn("promptIdTag")
         viewModel.start(siteModel, 123)
         assertThat(loadedPrompt?.tags).containsOnly(
             BloggingPromptsPostTagProvider.BLOGGING_PROMPT_TAG,
-            BloggingPromptsPostTagProvider.promptIdTag(123)
+            "promptIdTag"
         )
     }
 }

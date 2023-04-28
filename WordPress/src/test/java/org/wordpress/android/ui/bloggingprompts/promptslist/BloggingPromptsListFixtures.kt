@@ -10,13 +10,12 @@ object BloggingPromptsListFixtures {
     val DOMAIN_MODEL = BloggingPromptModel(
         id = 123,
         text = "Text",
-        title = "Title",
-        content = "Content",
         date = Date(1671678000000), // December 22, 2022
         isAnswered = true,
         attribution = "Attribution",
         respondentsCount = 321,
         respondentsAvatarUrls = emptyList(),
+        answeredLink = "https://wordpress.com/tag/dailyprompt-123",
     )
 
     val UI_MODEL = BloggingPromptsListItemModel(
@@ -44,12 +43,10 @@ object BloggingPromptsListFixtures {
         date = date,
         isAnswered = id % 2 == 0,
         respondentsCount = id,
-        title = "Title $id",
-        content = "Content $id",
         attribution = "Attribution $id",
         respondentsAvatarUrls = listOf(),
-
-        )
+        answeredLink = "https://wordpress.com/tag/dailyprompt-$id",
+    )
 
     private fun generateFakePromptUiModel(id: Int, date: Date) = BloggingPromptsListItemModel(
         id = id,

@@ -335,6 +335,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper
 
+    @Mock
+    lateinit var bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -401,7 +404,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onBloggingPromptAnswerClicked: ((promptId: Int) -> Unit)? = null
     private var onBloggingPromptSkipClicked: (() -> Unit)? = null
     private var onBloggingPromptViewMoreClicked: (() -> Unit)? = null
-    private var onBloggingPromptViewAnswersClicked: ((promptId: Int) -> Unit)? = null
+    private var onBloggingPromptViewAnswersClicked: ((tagUrl: String) -> Unit)? = null
     private var onBloggingPromptRemoveClicked: (() -> Unit)? = null
     private var onPromoteWithBlazeCardClick: (() -> Unit) = {}
     private var onPromoteWithBlazeCardMenuClicked: (() -> Unit) = {}
@@ -446,13 +449,12 @@ class MySiteViewModelTest : BaseUnitTest() {
             promptModel = BloggingPromptModel(
                 id = bloggingPromptId,
                 text = "text",
-                title = "",
-                content = "content",
                 date = Date(),
                 isAnswered = false,
                 attribution = "dayone",
                 respondentsCount = 5,
-                respondentsAvatarUrls = listOf()
+                respondentsAvatarUrls = listOf(),
+                answeredLink = "https://wordpress.com/tag/$bloggingPromptId"
             )
         )
     )
@@ -557,6 +559,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             dashboardCardDomainUtils,
             jetpackFeatureRemovalPhaseHelper,
             wpJetpackIndividualPluginHelper,
+            bloggingPromptsPostTagProvider,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1947,10 +1950,12 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given blogging prompt card, when view answers is clicked, view more action is called`() = test {
         initSelectedSite()
 
-        val promptId = 123
-        val expectedTag = BloggingPromptsPostTagProvider.promptIdSearchReaderTag(promptId)
+        val expectedTag = mock<ReaderTag>()
+        whenever(bloggingPromptsPostTagProvider.promptIdSearchReaderTag("valid-url")).thenReturn(expectedTag)
 
-        requireNotNull(onBloggingPromptViewAnswersClicked).invoke(promptId)
+        val tagUrl = "valid-url"
+
+        requireNotNull(onBloggingPromptViewAnswersClicked).invoke(tagUrl)
 
         assertThat(bloggingPromptsViewAnswersRequests.last()).isEqualTo(expectedTag)
     }
@@ -1959,7 +1964,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given blogging prompt card, when view answers is clicked, the action is tracked`() = test {
         initSelectedSite()
 
-        requireNotNull(onBloggingPromptViewAnswersClicked).invoke(123)
+        requireNotNull(onBloggingPromptViewAnswersClicked).invoke("valid-url")
 
         verify(bloggingPromptsCardAnalyticsTracker).trackMySiteCardViewAnswersClicked()
     }
@@ -3667,6 +3672,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             numberOfAnswers = 5,
             isAnswered = false,
             promptId = bloggingPromptId,
+            tagUrl = "https://wordpress.com/tag/dailyprompt-$bloggingPromptId",
             attribution = BloggingPromptAttribution.DAY_ONE,
             showViewMoreAction = params.bloggingPromptCardBuilderParams.showViewMoreAction,
             showRemoveAction = params.bloggingPromptCardBuilderParams.showRemoveAction,
