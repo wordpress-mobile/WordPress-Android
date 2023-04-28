@@ -11,7 +11,7 @@ import org.wordpress.android.util.config.DashboardCardPagesConfig
 import java.util.Date
 import javax.inject.Inject
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.DRAFT
-import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.PUBLISHED
+import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.PUBLISH
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.SCHEDULED
 
 private const val REQUIRED_PAGES_IN_CARD: Int = 3
@@ -55,7 +55,7 @@ class PagesCardBuilder @Inject constructor(
     private fun getStatusIcon(status: String): Int? {
         return when (status) {
             DRAFT.status -> R.drawable.ic_draft_page_draft_dashboard_card
-            PUBLISHED.status -> R.drawable.ic_published_page_dashboard_card
+            PUBLISH.status -> R.drawable.ic_published_page_dashboard_card
             SCHEDULED.status -> R.drawable.ic_scheduled_page_dashboard_card
             else -> null
         }
@@ -64,7 +64,7 @@ class PagesCardBuilder @Inject constructor(
     private fun getStatusText(status: String): UiString.UiStringRes? {
         return when (status) {
             DRAFT.status -> UiString.UiStringRes(R.string.dashboard_card_page_item_status_draft)
-            PUBLISHED.status -> UiString.UiStringRes(R.string.dashboard_card_page_item_status_published)
+            PUBLISH.status -> UiString.UiStringRes(R.string.dashboard_card_page_item_status_published)
             SCHEDULED.status -> UiString.UiStringRes(R.string.dashboard_card_page_item_status_scheduled)
             else -> null
         }
