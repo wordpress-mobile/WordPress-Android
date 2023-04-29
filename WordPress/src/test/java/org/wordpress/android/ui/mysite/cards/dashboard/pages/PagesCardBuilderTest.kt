@@ -4,6 +4,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -13,9 +14,9 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams.PagesItemClickParams
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.config.DashboardCardPagesConfig
 import kotlin.test.assertEquals
-
 
 const val PAGE_STATUS_PUBLISH = "publish"
 const val PAGE_STATUS_DRAFT = "draft"
@@ -61,6 +62,9 @@ class PagesCardBuilderTest : BaseUnitTest() {
     @Mock
     private lateinit var dashboardCardPagesConfig: DashboardCardPagesConfig
 
+    @Mock
+    private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
     private lateinit var builder: PagesCardBuilder
 
     private val onPagesCardFooterClick: () -> Unit = { }
@@ -68,7 +72,12 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Before
     fun build() {
-        builder = PagesCardBuilder(dashboardCardPagesConfig)
+        builder = PagesCardBuilder(dashboardCardPagesConfig, dateTimeUtilsWrapper)
+        setupMocks()
+    }
+
+    private fun setupMocks() {
+        whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("")
     }
 
     @Test
@@ -100,7 +109,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given there is a page with published status, when card is built, then pages item has published icon and text`() {
+    fun `given a page with published status, when card is built, then pages item has published icon and text`() {
         whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
             pageCard = PAGES_MODEL,
@@ -110,8 +119,8 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
         val result = builder.build(params) as PagesCardWithData
 
-        assertEquals(UiString.UiStringRes(R.string.dashboard_card_page_item_status_published),result.pages[0].status)
-        assertEquals(R.drawable.ic_published_page_dashboard_card,result.pages[0].statusIcon)
+        assertEquals(UiString.UiStringRes(R.string.dashboard_card_page_item_status_published), result.pages[0].status)
+        assertEquals(R.drawable.ic_published_page_dashboard_card, result.pages[0].statusIcon)
     }
 
     @Test
@@ -125,12 +134,12 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
         val result = builder.build(params) as PagesCardWithData
 
-        assertEquals(UiString.UiStringRes(R.string.dashboard_card_page_item_status_draft),result.pages[1].status)
-        assertEquals(R.drawable.ic_draft_page_draft_dashboard_card,result.pages[1].statusIcon)
+        assertEquals(UiString.UiStringRes(R.string.dashboard_card_page_item_status_draft), result.pages[1].status)
+        assertEquals(R.drawable.ic_draft_page_draft_dashboard_card, result.pages[1].statusIcon)
     }
 
     @Test
-    fun `given there is a page with scheduled status, when card is built, then pages item has scheduled icon and text`() {
+    fun `given a page with scheduled status, when card is built, then pages item has scheduled icon and text`() {
         whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
             pageCard = PAGES_MODEL_3,
@@ -140,8 +149,8 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
         val result = builder.build(params) as PagesCardWithData
 
-        assertEquals(UiString.UiStringRes(R.string.dashboard_card_page_item_status_scheduled),result.pages[2].status)
-        assertEquals(R.drawable.ic_scheduled_page_dashboard_card,result.pages[2].statusIcon)
+        assertEquals(UiString.UiStringRes(R.string.dashboard_card_page_item_status_scheduled), result.pages[2].status)
+        assertEquals(R.drawable.ic_scheduled_page_dashboard_card, result.pages[2].statusIcon)
     }
 
     /* CREATE NEW PAGE CARD CASES */
