@@ -38,4 +38,16 @@
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/lastEditedOrScheduledTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="in 2 hours"
+        android:textColor="#666666"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/status"
+        app:layout_constraintStart_toEndOf="@+id/status"
+        app:layout_constraintTop_toTopOf="@+id/status" />
 </androidx.constraintlayout.widget.ConstraintLayout>
