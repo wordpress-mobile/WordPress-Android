@@ -17,6 +17,7 @@ class PagesItemViewHolder(
     fun bind(item: PageContentItem) = with(binding) {
         uiHelpers.setTextOrHide(title, item.title)
         setStatusIcon(item.status, item.statusIcon)
+        uiHelpers.setTextOrHide(lastEditedOrScheduledTime, item.lastEditedOrScheduledTime)
     }
 
     private fun setStatusIcon(statusText: UiString?, statusIcon: Int?) = with(binding) {

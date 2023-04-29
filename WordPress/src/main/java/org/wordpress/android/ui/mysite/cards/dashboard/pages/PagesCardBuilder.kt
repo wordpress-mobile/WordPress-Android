@@ -8,16 +8,17 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.config.DashboardCardPagesConfig
-import java.util.Date
 import javax.inject.Inject
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.DRAFT
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.PUBLISH
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.SCHEDULED
+import org.wordpress.android.util.DateTimeUtilsWrapper
 
 private const val REQUIRED_PAGES_IN_CARD: Int = 3
 
 class PagesCardBuilder @Inject constructor(
-    private val dashboardCardPagesConfig: DashboardCardPagesConfig
+    private val dashboardCardPagesConfig: DashboardCardPagesConfig,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
     fun build(params: PagesCardBuilderParams): PagesCard? {
         if (!dashboardCardPagesConfig.isEnabled()) {
@@ -46,7 +47,7 @@ class PagesCardBuilder @Inject constructor(
                 title = getPageTitle(page.title),
                 statusIcon = getStatusIcon(page.status),
                 status = getStatusText(page.status),
-                lastEditedOrScheduledTime = getLastEditedOrScheduledTime(page.lastModifiedOrScheduledOn),
+                lastEditedOrScheduledTime = getLastEditedOrScheduledTime(page),
                 onCardClick = { }
             )
         }
@@ -73,10 +74,13 @@ class PagesCardBuilder @Inject constructor(
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    private fun getLastEditedOrScheduledTime(lastModifiedOrScheduledOn: Date): UiString {
-        // implement the logic to get the text
-        return UiString.UiStringText("")
+    private fun getLastEditedOrScheduledTime(page: PagesCardModel.PageCardModel,): UiString {
+        return when(page.status) {
+            DRAFT.status, PUBLISH.status -> UiString.
+            UiStringText(dateTimeUtilsWrapper.javaDateToTimeSpan(page.lastModifiedOrScheduledOn))
+            SCHEDULED.status -> UiString.UiStringText(dateTimeUtilsWrapper.javaDateToTimeSpan(page.date))
+            else -> UiString.UiStringText("")
+        }
     }
 
     private fun getCreatePageCard(pages: List<PageContentItem>, onFooterLinkClick: () -> Unit): CreatNewPageItem {
