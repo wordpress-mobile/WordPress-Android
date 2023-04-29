@@ -911,7 +911,7 @@
 
     <style name="MySiteCardPagesCardPagesItemStatus">
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:textColor">#666666</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
