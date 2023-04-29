@@ -74,13 +74,14 @@ class PagesCardBuilder @Inject constructor(
         }
     }
 
-    private fun getLastEditedOrScheduledTime(page: PagesCardModel.PageCardModel,): UiString {
-        return when(page.status) {
-            DRAFT.status, PUBLISH.status -> UiString.
-            UiStringText(dateTimeUtilsWrapper.javaDateToTimeSpan(page.lastModifiedOrScheduledOn))
-            SCHEDULED.status -> UiString.UiStringText(dateTimeUtilsWrapper.javaDateToTimeSpan(page.date))
-            else -> UiString.UiStringText("")
-        }
+    private fun getLastEditedOrScheduledTime(page: PagesCardModel.PageCardModel): UiString {
+        return UiString.UiStringText(
+            when (page.status) {
+                DRAFT.status, PUBLISH.status -> dateTimeUtilsWrapper.javaDateToTimeSpan(page.lastModifiedOrScheduledOn)
+                SCHEDULED.status -> dateTimeUtilsWrapper.javaDateToTimeSpan(page.date)
+                else -> ""
+            }
+        )
     }
 
     private fun getCreatePageCard(pages: List<PageContentItem>, onFooterLinkClick: () -> Unit): CreatNewPageItem {
