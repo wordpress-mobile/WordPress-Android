@@ -1,0 +1,3 @@
+22.2:
+- Bildirimlerin ve blog hatırlatıcılarının artık cihazınıza push bildirimleri olarak gönderilmediğini size bildiren sarı bir uyarı kutusu ekledik.
+- Fotoğraflar, videolar ve ses için medya erişim izinlerini Android 13 güncellemesiyle uyumlu olacak şekilde güncelledik.

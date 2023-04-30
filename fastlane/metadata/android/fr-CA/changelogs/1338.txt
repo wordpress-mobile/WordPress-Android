@@ -1,0 +1,3 @@
+22.2 :
+- Nous avons ajouté un encadré d’avertissement jaune qui vous informe lorsque les notifications et les rappels de blog ne sont plus envoyés sur votre appareil sous forme de notifications Push.
+- Nous avons mis à jour les droits d’accès multimédias concernant les photos, les vidéos et l’audio pour respecter la mise à jour d’Android 13.

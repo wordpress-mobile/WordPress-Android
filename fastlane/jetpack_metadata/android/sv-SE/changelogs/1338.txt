@@ -1,0 +1,5 @@
+22.2:
+- Ett varningsmeddelande har lagts till för när push-notiser stängs av
+- Behörigheterna för mediaåtkomst har uppdaterats för att passa med Android 13-uppdateringen
+- Ett kort för att köpa anpassade domäner har lagts till i adminpanelen
+- Andra användares svar har lagts till för bloggningsförslag

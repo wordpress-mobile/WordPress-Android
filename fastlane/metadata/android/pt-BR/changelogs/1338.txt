@@ -1,0 +1,3 @@
+22.2:
+- Adicionamos uma caixa de aviso amarela para avisar quando notificações e lembretes não estão mais sendo enviados como notificações push para seu dispositivo.
+- Atualizamos as permissões de acesso de mídia para fotos, vídeos e áudio para estar de acordo com as atualizações do Android 13.

@@ -1,0 +1,5 @@
+22.2:
+- Mensagens de aviso adicionadas para quando as notificações por push estiverem desativadas
+- Permissões de acesso à mídia atualizadas de acordo com a atualização do Android 13
+- Cartão adicionado ao painel para compra de domínio personalizado
+- Adicionadas respostas de outros usuários para sugestões de publicação

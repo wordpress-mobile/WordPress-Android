@@ -1,0 +1,5 @@
+22.2:
+- Se ha añadido un mensaje de advertencia para cuando se desactiven las notificaciones emergentes
+- Se han actualizado los permisos de acceso a los medios de acuerdo con la actualización de Android 13
+- Se ha añadido una tarjeta al escritorio para comprar dominios personalizados
+- Se han añadido las respuestas de otros usuarios a las sugerencias para bloguear
