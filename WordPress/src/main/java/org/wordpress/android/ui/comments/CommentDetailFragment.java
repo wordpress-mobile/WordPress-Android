@@ -119,6 +119,7 @@ import javax.inject.Inject;
 
 import kotlinx.coroutines.BuildersKt;
 import kotlinx.coroutines.CoroutineStart;
+import kotlinx.coroutines.DelicateCoroutinesApi;
 import kotlinx.coroutines.Dispatchers;
 import kotlinx.coroutines.GlobalScope;
 
@@ -1424,6 +1425,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
+    @kotlinx.coroutines.DelicateCoroutinesApi
     public void onCommentChanged(OnCommentChanged event) {
         setProgressVisible(false);
         // requesting local comment cache refresh
