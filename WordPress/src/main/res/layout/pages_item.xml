@@ -7,9 +7,6 @@
     android:clipChildren="false"
     android:clipToPadding="false"
     android:foreground="?attr/selectableItemBackground"
-    android:paddingBottom="@dimen/my_site_card_row_padding"
-    android:paddingEnd="@dimen/my_site_card_row_padding"
-    android:paddingStart="@dimen/my_site_card_row_padding"
     android:paddingTop="@dimen/my_site_card_row_padding">
 
     <com.google.android.material.textview.MaterialTextView
@@ -17,6 +14,7 @@
         style="@style/MySitePostItemTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/my_site_card_row_padding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -29,15 +27,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:background="#F2F2F7"
-        tools:drawableStart="@drawable/ic_published_page_dashboard_card"
-        tools:text="@string/dashboard_card_page_item_status_published"
         android:drawablePadding="@dimen/margin_medium"
-        app:layout_constraintStart_toStartOf="parent"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        android:paddingVertical="4dp"
+        android:paddingHorizontal="10dp"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        tools:drawableStart="@drawable/ic_published_page_dashboard_card"
+        tools:text="@string/dashboard_card_page_item_status_published" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/lastEditedOrScheduledTime"
@@ -45,9 +41,21 @@
         android:layout_height="wrap_content"
         tools:text="in 2 hours"
         android:textColor="#666666"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
+        android:paddingHorizontal="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/status"
         app:layout_constraintStart_toEndOf="@+id/status"
         app:layout_constraintTop_toTopOf="@+id/status" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="@dimen/list_divider_height"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/my_site_card_row_padding"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/status"
+        app:layout_constraintTop_toBottomOf="@+id/status"
+        app:layout_constraintVertical_bias="1.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
