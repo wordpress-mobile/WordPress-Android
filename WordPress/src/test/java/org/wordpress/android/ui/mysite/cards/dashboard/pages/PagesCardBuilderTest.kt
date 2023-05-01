@@ -109,7 +109,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
         val result = builder.build(params) as PagesCardWithData
 
         assertEquals(UiStringRes(R.string.dashboard_card_page_item_status_published), result.pages[0].status)
-        assertEquals(R.drawable.ic_published_page_dashboard_card, result.pages[0].statusIcon)
+        assertEquals(R.drawable.ic_dashboard_card_pages_published_page_status, result.pages[0].statusIcon)
     }
 
     @Test
@@ -119,7 +119,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
         val result = builder.build(params) as PagesCardWithData
 
         assertEquals(UiStringRes(R.string.dashboard_card_page_item_status_draft), result.pages[0].status)
-        assertEquals(R.drawable.ic_draft_page_draft_dashboard_card, result.pages[0].statusIcon)
+        assertEquals(R.drawable.ic_dashboard_card_pages_draft_page_status, result.pages[0].statusIcon)
     }
 
     @Test
@@ -129,7 +129,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
         val result = builder.build(params) as PagesCardWithData
 
         assertEquals(UiStringRes(R.string.dashboard_card_page_item_status_scheduled), result.pages[0].status)
-        assertEquals(R.drawable.ic_scheduled_page_dashboard_card, result.pages[0].statusIcon)
+        assertEquals(R.drawable.ic_dashboard_card_pages_scheduled_page_status, result.pages[0].statusIcon)
     }
 
     /* LAST MODIFIED OR SCHEDULED ON TIME*/

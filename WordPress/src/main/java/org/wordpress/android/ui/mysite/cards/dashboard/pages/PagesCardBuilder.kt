@@ -59,9 +59,9 @@ class PagesCardBuilder @Inject constructor(
 
     private fun getStatusIcon(status: String): Int? {
         return when (status) {
-            DRAFT.status -> R.drawable.ic_draft_page_draft_dashboard_card
-            PUBLISH.status -> R.drawable.ic_published_page_dashboard_card
-            SCHEDULED.status -> R.drawable.ic_scheduled_page_dashboard_card
+            DRAFT.status -> R.drawable.ic_dashboard_card_pages_draft_page_status
+            PUBLISH.status -> R.drawable.ic_dashboard_card_pages_published_page_status
+            SCHEDULED.status -> R.drawable.ic_dashboard_card_pages_scheduled_page_status
             else -> null
         }
     }

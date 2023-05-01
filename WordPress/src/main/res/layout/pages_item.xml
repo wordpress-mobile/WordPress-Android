@@ -32,7 +32,7 @@
         android:paddingHorizontal="10dp"
         app:layout_constraintStart_toStartOf="@+id/title"
         app:layout_constraintTop_toBottomOf="@+id/title"
-        tools:drawableStart="@drawable/ic_published_page_dashboard_card"
+        tools:drawableStart="@drawable/ic_dashboard_card_pages_published_page_status"
         tools:text="@string/dashboard_card_page_item_status_published" />
 
     <com.google.android.material.textview.MaterialTextView
