@@ -15,6 +15,7 @@ class PagesItemViewHolder(
     parent.viewBinding(PagesItemBinding::inflate)
 ) {
     fun bind(item: PageContentItem) = with(binding) {
+        pagesContentContainer.setOnClickListener { item.onClick.click() }
         uiHelpers.setTextOrHide(title, item.title)
         setStatusIcon(item.status, item.statusIcon)
         uiHelpers.setTextOrHide(lastEditedOrScheduledTime, item.lastEditedOrScheduledTime)
