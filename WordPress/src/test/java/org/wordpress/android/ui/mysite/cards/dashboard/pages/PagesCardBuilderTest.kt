@@ -13,10 +13,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams.PagesItemClickParams
-import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.config.DashboardCardPagesConfig
 import kotlin.test.assertEquals
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 const val PAGE_STATUS_PUBLISH = "publish"
 const val PAGE_STATUS_DRAFT = "draft"
@@ -119,7 +119,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
         val result = builder.build(params) as PagesCardWithData
 
-        assertEquals(UiString.UiStringRes(R.string.dashboard_card_page_item_status_published), result.pages[0].status)
+        assertEquals(UiStringRes(R.string.dashboard_card_page_item_status_published), result.pages[0].status)
         assertEquals(R.drawable.ic_published_page_dashboard_card, result.pages[0].statusIcon)
     }
 
@@ -134,7 +134,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
         val result = builder.build(params) as PagesCardWithData
 
-        assertEquals(UiString.UiStringRes(R.string.dashboard_card_page_item_status_draft), result.pages[1].status)
+        assertEquals(UiStringRes(R.string.dashboard_card_page_item_status_draft), result.pages[1].status)
         assertEquals(R.drawable.ic_draft_page_draft_dashboard_card, result.pages[1].statusIcon)
     }
 
@@ -149,7 +149,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
         val result = builder.build(params) as PagesCardWithData
 
-        assertEquals(UiString.UiStringRes(R.string.dashboard_card_page_item_status_scheduled), result.pages[2].status)
+        assertEquals(UiStringRes(R.string.dashboard_card_page_item_status_scheduled), result.pages[2].status)
         assertEquals(R.drawable.ic_scheduled_page_dashboard_card, result.pages[2].statusIcon)
     }
 
@@ -211,21 +211,21 @@ class PagesCardBuilderTest : BaseUnitTest() {
     }
 
     private val createPageCardWhenNoPagesPresent = PagesCardWithData.CreatNewPageItem(
-        label = UiString.UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
-        description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
+        label = UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
+        description = UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
         imageRes = R.drawable.illustration_page_card_create_page,
         onClick = onPagesCardFooterClick
     )
 
     private val createPageCardWhenLessThanThreePagePresent = PagesCardWithData.CreatNewPageItem(
-        label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
-        description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
+        label = UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
+        description = UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
         imageRes = R.drawable.illustration_page_card_create_page,
         onClick = onPagesCardFooterClick
     )
 
     private val createPageCardWhenThreePagePresent = PagesCardWithData.CreatNewPageItem(
-        label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
+        label = UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
         onClick = onPagesCardFooterClick
     )
 }
