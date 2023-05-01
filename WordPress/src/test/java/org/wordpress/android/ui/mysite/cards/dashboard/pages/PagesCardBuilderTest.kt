@@ -86,11 +86,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
     @Test
     fun `given config is false, when card is built, then return null`() {
         whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(false)
-        val params = PagesCardBuilderParams(
-            pageCard = PAGES_MODEL,
-            onFooterLinkClick = onPagesCardFooterClick,
-            onPagesItemClick = onPagesItemClick
-        )
+        val params = getPagesBuildParams(PAGES_MODEL)
 
         val result = builder.build(params)
 
@@ -99,11 +95,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given there is no page, when card is built, then no pages item is present`() {
-        val params = PagesCardBuilderParams(
-            pageCard = null,
-            onFooterLinkClick = onPagesCardFooterClick,
-            onPagesItemClick = onPagesItemClick
-        )
+        val params = getPagesBuildParams(PagesCardModel(pages = emptyList()))
 
         val result = builder.build(params) as PagesCardWithData
 
@@ -112,11 +104,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given a page with published status, when card is built, then pages item has published icon and text`() {
-        val params = PagesCardBuilderParams(
-            pageCard = PAGES_MODEL,
-            onFooterLinkClick = onPagesCardFooterClick,
-            onPagesItemClick = onPagesItemClick
-        )
+        val params = getPagesBuildParams(PagesCardModel(pages = listOf(PAGE_MODEL_PUBLISHED)))
 
         val result = builder.build(params) as PagesCardWithData
 
@@ -126,40 +114,28 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given there is a page with draft status, when card is built, then pages item has draft icon and text`() {
-        val params = PagesCardBuilderParams(
-            pageCard = PAGES_MODEL_2,
-            onFooterLinkClick = onPagesCardFooterClick,
-            onPagesItemClick = onPagesItemClick
-        )
+        val params = getPagesBuildParams(PagesCardModel(pages = listOf(PAGE_MODEL_DRAFT)))
 
         val result = builder.build(params) as PagesCardWithData
 
-        assertEquals(UiStringRes(R.string.dashboard_card_page_item_status_draft), result.pages[1].status)
-        assertEquals(R.drawable.ic_draft_page_draft_dashboard_card, result.pages[1].statusIcon)
+        assertEquals(UiStringRes(R.string.dashboard_card_page_item_status_draft), result.pages[0].status)
+        assertEquals(R.drawable.ic_draft_page_draft_dashboard_card, result.pages[0].statusIcon)
     }
 
     @Test
     fun `given a page with scheduled status, when card is built, then pages item has scheduled icon and text`() {
-        val params = PagesCardBuilderParams(
-            pageCard = PAGES_MODEL_3,
-            onFooterLinkClick = onPagesCardFooterClick,
-            onPagesItemClick = onPagesItemClick
-        )
+        val params = getPagesBuildParams(PagesCardModel(pages = listOf(PAGE_MODEL_SCHEDULED)))
 
         val result = builder.build(params) as PagesCardWithData
 
-        assertEquals(UiStringRes(R.string.dashboard_card_page_item_status_scheduled), result.pages[2].status)
-        assertEquals(R.drawable.ic_scheduled_page_dashboard_card, result.pages[2].statusIcon)
+        assertEquals(UiStringRes(R.string.dashboard_card_page_item_status_scheduled), result.pages[0].status)
+        assertEquals(R.drawable.ic_scheduled_page_dashboard_card, result.pages[0].statusIcon)
     }
 
     /* LAST MODIFIED OR SCHEDULED ON TIME*/
     @Test
     fun `given a scheduled page, when card is built, then relative time shown is based on scheduled time`() {
-        val params = PagesCardBuilderParams(
-            pageCard = PagesCardModel(pages = listOf(PAGE_MODEL_SCHEDULED)),
-            onFooterLinkClick = onPagesCardFooterClick,
-            onPagesItemClick = onPagesItemClick
-        )
+        val params = getPagesBuildParams(PagesCardModel(pages = listOf(PAGE_MODEL_SCHEDULED)))
 
         builder.build(params) as PagesCardWithData
 
@@ -168,11 +144,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given a published page, when card is built, then relative time shown is based on last modified time`() {
-        val params = PagesCardBuilderParams(
-            pageCard = PagesCardModel(pages = listOf(PAGE_MODEL_DRAFT)),
-            onFooterLinkClick = onPagesCardFooterClick,
-            onPagesItemClick = onPagesItemClick
-        )
+        val params = getPagesBuildParams(PagesCardModel(pages = listOf(PAGE_MODEL_DRAFT)))
 
         builder.build(params) as PagesCardWithData
 
@@ -182,11 +154,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
     /* CREATE NEW PAGE CARD CASES */
     @Test
     fun `given there is no page, when card is built, then create new page card is correct`() {
-        val params = PagesCardBuilderParams(
-            pageCard = null,
-            onFooterLinkClick = onPagesCardFooterClick,
-            onPagesItemClick = onPagesItemClick
-        )
+        val params = getPagesBuildParams(null)
 
         val result = builder.build(params) as PagesCardWithData
 
@@ -195,11 +163,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given there is one page, when card is built, then create new page card is correct`() {
-        val params = PagesCardBuilderParams(
-            pageCard = PAGES_MODEL,
-            onFooterLinkClick = onPagesCardFooterClick,
-            onPagesItemClick = onPagesItemClick
-        )
+        val params = getPagesBuildParams(PAGES_MODEL)
 
         val result = builder.build(params) as PagesCardWithData
 
@@ -208,11 +172,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given there is two pages, when card is built, then create new page card is correct`() {
-        val params = PagesCardBuilderParams(
-            pageCard = PAGES_MODEL_2,
-            onFooterLinkClick = onPagesCardFooterClick,
-            onPagesItemClick = onPagesItemClick
-        )
+        val params = getPagesBuildParams(PAGES_MODEL_2)
 
         val result = builder.build(params) as PagesCardWithData
 
@@ -221,18 +181,14 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given there are three pages, when card is built, then create new page card is correct`() {
-        val params = PagesCardBuilderParams(
-            pageCard = PAGES_MODEL_3,
-            onFooterLinkClick = onPagesCardFooterClick,
-            onPagesItemClick = onPagesItemClick
-        )
+        val params = getPagesBuildParams(PAGES_MODEL_3)
 
         val result = builder.build(params) as PagesCardWithData
 
         assertEquals(expected = createPageCardWhenThreePagePresent, actual = result.footerLink)
     }
 
-    private fun getPagesBuildParams(pagesCardModel: PagesCardModel): PagesCardBuilderParams {
+    private fun getPagesBuildParams(pagesCardModel: PagesCardModel?): PagesCardBuilderParams {
         return PagesCardBuilderParams(
             pageCard = pagesCardModel,
             onFooterLinkClick = onPagesCardFooterClick,
