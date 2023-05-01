@@ -6,6 +6,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.CreateNewPageItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.PageContentItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams.PagesItemClickParams
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.config.DashboardCardPagesConfig
@@ -13,6 +14,7 @@ import javax.inject.Inject
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.DRAFT
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.PUBLISH
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.SCHEDULED
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.DateTimeUtilsWrapper
 
 private const val REQUIRED_PAGES_IN_CARD: Int = 3
@@ -30,7 +32,9 @@ class PagesCardBuilder @Inject constructor(
 
     private fun convertToPagesItems(params: PagesCardBuilderParams): PagesCard.PagesCardWithData {
         val pages = params.pageCard?.pages
-        val content = pages?.filterByPagesCardSupportedStatus()?.let { getPagesContentItems(pages) } ?: emptyList()
+        val content =
+            pages?.filterByPagesCardSupportedStatus()?.let { getPagesContentItems(pages, params.onPagesItemClick) }
+                ?: emptyList()
         val createPageCard = getCreatePageCard(content, params.onFooterLinkClick)
         return PagesCard.PagesCardWithData(
             title = UiStringRes(R.string.dashboard_pages_card_title),
@@ -42,14 +46,21 @@ class PagesCardBuilder @Inject constructor(
     private fun List<PagesCardModel.PageCardModel>.filterByPagesCardSupportedStatus() =
         this.filter { it.status in PagesCardContentType.getList() }
 
-    private fun getPagesContentItems(pages: List<PagesCardModel.PageCardModel>): List<PageContentItem> {
+    private fun getPagesContentItems(
+        pages: List<PagesCardModel.PageCardModel>,
+        onPageItemClick: (params: PagesItemClickParams) -> Unit
+    ): List<PageContentItem> {
+        PagesCardContentType
         return pages.map { page ->
             PageContentItem(
                 title = getPageTitle(page.title),
                 statusIcon = getStatusIcon(page.status),
                 status = getStatusText(page.status),
                 lastEditedOrScheduledTime = getLastEditedOrScheduledTime(page),
-                onCardClick = { }
+                onClick = ListItemInteraction.create(
+                    PagesItemClickParams(PagesCardContentType.fromString(page.status), page.id),
+                    onPageItemClick
+                )
             )
         }
     }
