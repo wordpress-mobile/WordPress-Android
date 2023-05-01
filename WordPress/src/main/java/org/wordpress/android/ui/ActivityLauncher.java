@@ -130,6 +130,7 @@ import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -688,6 +689,21 @@ public class ActivityLauncher {
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
+
+    public static void viewCurrentBlogPagesOfType(Context context, SiteModel site, PageListType pageListType) {
+        if (pageListType == null) {
+            Intent intent = new Intent(context, PagesActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            context.startActivity(intent);
+        } else {
+            // todo: - PagesActivity must be updated to support PageListType and opening tabs
+            Intent intent = new Intent(context, PagesActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            context.startActivity(intent);
+        }
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
+    }
+
 
     public static void viewPageParentForResult(@NonNull Fragment fragment, @NonNull SiteModel site,
                                                @NonNull Long pageRemoteId) {
