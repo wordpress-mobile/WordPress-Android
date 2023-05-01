@@ -21,5 +21,6 @@ class DashboardTests : BaseTest() {
             .scrollToDomainsCard()
             .assertDomainsCard()
             .tapDomainsCard()
+            .assertDomainsScreenLoaded()
     }
 }

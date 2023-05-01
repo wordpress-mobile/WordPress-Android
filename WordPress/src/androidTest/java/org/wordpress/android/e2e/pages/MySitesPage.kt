@@ -294,9 +294,13 @@ class MySitesPage {
         return scrollToCard(R.id.dashboard_card_domain_cta)
     }
 
-    fun tapDomainsCard(): MySitesPage {
-        WPSupportUtils.clickOn(R.id.dashboard_card_domain_cta)
-        return this
+    private fun tapCard(elementID: Int) {
+        WPSupportUtils.clickOn(elementID)
+    }
+
+    fun tapDomainsCard(): DomainsScreen {
+        tapCard(R.id.dashboard_card_domain_cta)
+        return DomainsScreen()
     }
 
     fun assertDomainsCard(): MySitesPage {
