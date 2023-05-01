@@ -6,12 +6,14 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.CreatNewPageItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.PageContentItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
-import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.config.DashboardCardPagesConfig
 import javax.inject.Inject
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.DRAFT
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.PUBLISH
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.SCHEDULED
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.DateTimeUtilsWrapper
 
 private const val REQUIRED_PAGES_IN_CARD: Int = 3
@@ -54,7 +56,7 @@ class PagesCardBuilder @Inject constructor(
     }
 
     private fun getPageTitle(title: String) =
-        if (title.isEmpty()) UiString.UiStringRes(R.string.my_site_untitled_post) else UiString.UiStringText(title)
+        if (title.isEmpty()) UiStringRes(R.string.my_site_untitled_post) else UiStringText(title)
 
     private fun getStatusIcon(status: String): Int? {
         return when (status) {
@@ -65,17 +67,17 @@ class PagesCardBuilder @Inject constructor(
         }
     }
 
-    private fun getStatusText(status: String): UiString.UiStringRes? {
+    private fun getStatusText(status: String): UiStringRes? {
         return when (status) {
-            DRAFT.status -> UiString.UiStringRes(R.string.dashboard_card_page_item_status_draft)
-            PUBLISH.status -> UiString.UiStringRes(R.string.dashboard_card_page_item_status_published)
-            SCHEDULED.status -> UiString.UiStringRes(R.string.dashboard_card_page_item_status_scheduled)
+            DRAFT.status -> UiStringRes(R.string.dashboard_card_page_item_status_draft)
+            PUBLISH.status -> UiStringRes(R.string.dashboard_card_page_item_status_published)
+            SCHEDULED.status -> UiStringRes(R.string.dashboard_card_page_item_status_scheduled)
             else -> null
         }
     }
 
-    private fun getLastEditedOrScheduledTime(page: PagesCardModel.PageCardModel): UiString {
-        return UiString.UiStringText(
+    private fun getLastEditedOrScheduledTime(page: PagesCardModel.PageCardModel): UiStringText {
+        return UiStringText(
             when (page.status) {
                 DRAFT.status, PUBLISH.status -> dateTimeUtilsWrapper.javaDateToTimeSpan(page.lastModifiedOrScheduledOn)
                 SCHEDULED.status -> dateTimeUtilsWrapper.javaDateToTimeSpan(page.date)
@@ -98,8 +100,8 @@ class PagesCardBuilder @Inject constructor(
 
     private fun createNewPageCardWithAddPageMessage(onFooterLinkClick: () -> Unit): CreatNewPageItem {
         return CreatNewPageItem(
-            label = UiString.UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
-            description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
+            label = UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
+            description = UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
             imageRes = R.drawable.illustration_page_card_create_page,
             onClick = onFooterLinkClick
         )
@@ -107,8 +109,8 @@ class PagesCardBuilder @Inject constructor(
 
     private fun createNewPageCardWithAddAnotherPageMessage(onFooterLinkClick: () -> Unit): CreatNewPageItem {
         return CreatNewPageItem(
-            label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
-            description = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
+            label = UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
+            description = UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
             imageRes = R.drawable.illustration_page_card_create_page,
             onClick = onFooterLinkClick
         )
@@ -116,7 +118,7 @@ class PagesCardBuilder @Inject constructor(
 
     private fun createNewPageCardWithOnlyButton(onFooterLinkClick: () -> Unit): CreatNewPageItem {
         return CreatNewPageItem(
-            label = UiString.UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
+            label = UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
             onClick = onFooterLinkClick
         )
     }
