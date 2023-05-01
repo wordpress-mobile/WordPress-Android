@@ -30,7 +30,7 @@ val PAGE_MODIFIED_ON = CardsUtils.fromDate("2023-03-02 10:26:53")
 const val PAGE_STATUS = PAGE_STATUS_PUBLISH
 val PAGE_DATE = CardsUtils.fromDate("2023-03-02 10:30:53")
 
-private val PAGE_MODEL = PagesCardModel.PageCardModel(
+private val PAGE_MODEL_PUBLISHED = PagesCardModel.PageCardModel(
     id = PAGE_ID,
     title = PAGE_TITLE,
     content = PAGE_CONTENT,
@@ -39,23 +39,23 @@ private val PAGE_MODEL = PagesCardModel.PageCardModel(
     date = PAGE_DATE
 )
 
-private val PAGE_MODEL_2 = PAGE_MODEL.copy(id = 2, status = PAGE_STATUS_DRAFT)
+private val PAGE_MODEL_DRAFT = PAGE_MODEL_PUBLISHED.copy(id = 2, status = PAGE_STATUS_DRAFT)
 
-private val PAGE_MODEL_3 = PAGE_MODEL.copy(id = 3, status = PAGE_STATUS_SCHEDULED)
+private val PAGE_MODEL_SCHEDULED = PAGE_MODEL_PUBLISHED.copy(id = 3, status = PAGE_STATUS_SCHEDULED)
 
 // pages with one item
 private val PAGES_MODEL = PagesCardModel(
-    pages = listOf(PAGE_MODEL)
+    pages = listOf(PAGE_MODEL_PUBLISHED)
 )
 
 // pages card with two items
 private val PAGES_MODEL_2 = PagesCardModel(
-    pages = listOf(PAGE_MODEL, PAGE_MODEL_2)
+    pages = listOf(PAGE_MODEL_PUBLISHED, PAGE_MODEL_DRAFT)
 )
 
 // pages card with three items
 private val PAGES_MODEL_3 = PagesCardModel(
-    pages = listOf(PAGE_MODEL, PAGE_MODEL_2, PAGE_MODEL_3)
+    pages = listOf(PAGE_MODEL_PUBLISHED, PAGE_MODEL_DRAFT, PAGE_MODEL_SCHEDULED)
 )
 
 @ExperimentalCoroutinesApi
@@ -78,6 +78,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
     }
 
     private fun setupMocks() {
+        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("")
         whenever(dateTimeUtilsWrapper.getRelativeTimeSpanString(any())).thenReturn("")
     }
@@ -98,7 +99,6 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given there is no page, when card is built, then no pages item is present`() {
-        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
             pageCard = null,
             onFooterLinkClick = onPagesCardFooterClick,
@@ -112,7 +112,6 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given a page with published status, when card is built, then pages item has published icon and text`() {
-        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
             pageCard = PAGES_MODEL,
             onFooterLinkClick = onPagesCardFooterClick,
@@ -127,7 +126,6 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given there is a page with draft status, when card is built, then pages item has draft icon and text`() {
-        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
             pageCard = PAGES_MODEL_2,
             onFooterLinkClick = onPagesCardFooterClick,
@@ -142,7 +140,6 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given a page with scheduled status, when card is built, then pages item has scheduled icon and text`() {
-        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
             pageCard = PAGES_MODEL_3,
             onFooterLinkClick = onPagesCardFooterClick,
@@ -158,9 +155,8 @@ class PagesCardBuilderTest : BaseUnitTest() {
     /* LAST MODIFIED OR SCHEDULED ON TIME*/
     @Test
     fun `given a scheduled page, when card is built, then relative time shown is based on scheduled time`() {
-        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
-            pageCard = PagesCardModel(pages = listOf(PAGE_MODEL_3)),
+            pageCard = PagesCardModel(pages = listOf(PAGE_MODEL_SCHEDULED)),
             onFooterLinkClick = onPagesCardFooterClick,
             onPagesItemClick = onPagesItemClick
         )
@@ -172,9 +168,8 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given a published page, when card is built, then relative time shown is based on last modified time`() {
-        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
-            pageCard = PagesCardModel(pages = listOf(PAGE_MODEL_2)),
+            pageCard = PagesCardModel(pages = listOf(PAGE_MODEL_DRAFT)),
             onFooterLinkClick = onPagesCardFooterClick,
             onPagesItemClick = onPagesItemClick
         )
@@ -187,7 +182,6 @@ class PagesCardBuilderTest : BaseUnitTest() {
     /* CREATE NEW PAGE CARD CASES */
     @Test
     fun `given there is no page, when card is built, then create new page card is correct`() {
-        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
             pageCard = null,
             onFooterLinkClick = onPagesCardFooterClick,
@@ -201,7 +195,6 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given there is one page, when card is built, then create new page card is correct`() {
-        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
             pageCard = PAGES_MODEL,
             onFooterLinkClick = onPagesCardFooterClick,
@@ -215,7 +208,6 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given there is two pages, when card is built, then create new page card is correct`() {
-        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
             pageCard = PAGES_MODEL_2,
             onFooterLinkClick = onPagesCardFooterClick,
@@ -229,7 +221,6 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given there are three pages, when card is built, then create new page card is correct`() {
-        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
             pageCard = PAGES_MODEL_3,
             onFooterLinkClick = onPagesCardFooterClick,
