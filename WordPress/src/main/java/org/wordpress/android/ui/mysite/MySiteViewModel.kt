@@ -94,6 +94,7 @@ import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
+import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
@@ -707,9 +708,32 @@ class MySiteViewModel @Inject constructor(
         )
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun onPagesItemClick(params: PagesCardBuilderParams.PagesItemClickParams) {
-        // implement navigation logic for pages
+        cardsTracker.trackPagesItemClicked(params.pagesCardType)
+        when (params.pagesCardType) {
+            PagesCardContentType.SCHEDULED -> {
+                _onNavigation.value =
+                    Event(
+                        SiteNavigationAction.OpenPagesScheduledTab(
+                            requireNotNull(selectedSiteRepository.getSelectedSite()),
+                            params.pageId
+                        )
+                    )
+            }
+            PagesCardContentType.DRAFT -> {
+                _onNavigation.value =
+                    Event(
+                        SiteNavigationAction.OpenPagesDraftsTab(
+                            requireNotNull(selectedSiteRepository.getSelectedSite()),
+                            params.pageId
+                        )
+                    )
+            }
+            PagesCardContentType.PUBLISH -> {
+                _onNavigation.value =
+                    Event(SiteNavigationAction.OpenPages(requireNotNull(selectedSiteRepository.getSelectedSite())))
+            }
+        }
     }
 
     private fun onPagesCardFooterLinkClick() {
