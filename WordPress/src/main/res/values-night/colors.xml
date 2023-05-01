@@ -109,4 +109,6 @@
 
     <!-- dashboard card pages -->
     <color name="bg_dashboard_card_page_status_text">#2C2C2E</color>
+    <color name="dashboard_card_page_status_and_time_text_color">#99EBEBF5</color>
+    <color name="dashboard_card_page_status_icon_color">#9F9FA5</color>
 </resources>

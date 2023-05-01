@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="in 2 hours"
-        android:textColor="#666666"
+        android:textColor="@color/dashboard_card_page_status_and_time_text_color"
         android:paddingHorizontal="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/status"
         app:layout_constraintStart_toEndOf="@+id/status"
