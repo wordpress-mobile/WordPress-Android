@@ -15,10 +15,11 @@ class DashboardTests : BaseTest() {
     }
 
     @Test
-    fun e2ePublishSimplePost() {
+    fun e2eDomainsCardNavigation() {
         MySitesPage()
             .go()
             .scrollToDomainsCard()
             .assertDomainsCard()
+            .tapDomainsCard()
     }
 }

@@ -294,6 +294,11 @@ class MySitesPage {
         return scrollToCard(R.id.dashboard_card_domain_cta)
     }
 
+    fun tapDomainsCard(): MySitesPage {
+        WPSupportUtils.clickOn(R.id.dashboard_card_domain_cta)
+        return this
+    }
+
     fun assertDomainsCard(): MySitesPage {
         Espresso.onView(
             Matchers.allOf(
