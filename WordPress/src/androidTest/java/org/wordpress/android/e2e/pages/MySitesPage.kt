@@ -22,6 +22,7 @@ import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.wordpress.android.R
+import org.wordpress.android.support.BetterScrollToAction.Companion.scrollTo
 import org.wordpress.android.support.WPSupportUtils
 import org.wordpress.android.ui.prefs.WPPreference
 
@@ -279,6 +280,18 @@ class MySitesPage {
                 }
             }
         }
+    }
+
+    private fun scrollToCard(elementID: Int): MySitesPage {
+        WPSupportUtils.waitForElementToBeDisplayed(elementID)
+        Espresso.onView(ViewMatchers.withId(elementID))
+            .perform(scrollTo())
+
+        return this
+    }
+
+    fun scrollToDomainsCard(): MySitesPage {
+        return scrollToCard(R.id.dashboard_card_domain_cta)
     }
 
     fun assertDomainsCard(): MySitesPage {

@@ -18,8 +18,7 @@ class DashboardTests : BaseTest() {
     fun e2ePublishSimplePost() {
         MySitesPage()
             .go()
+            .scrollToDomainsCard()
             .assertDomainsCard()
-
-        //Thread.sleep(999999)
     }
 }
