@@ -106,4 +106,7 @@
 
     <!-- Jetpack feture removal overlay secondary button color -->
     <color name="jp_feature_removal_overlay_secondary_button_color">@color/white</color>
+
+    <!-- dashboard card pages -->
+    <color name="bg_dashboard_card_page_status_text">#2C2C2E</color>
 </resources>
