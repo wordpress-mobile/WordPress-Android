@@ -12,5 +12,9 @@ enum class PagesCardContentType(val status: String) {
                 it.toString()
             }
         }
+
+        fun fromString(status: String): PagesCardContentType {
+            return values().first { it.status == status }
+        }
     }
 }
