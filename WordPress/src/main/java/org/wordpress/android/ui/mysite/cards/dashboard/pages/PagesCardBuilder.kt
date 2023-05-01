@@ -80,7 +80,7 @@ class PagesCardBuilder @Inject constructor(
         return UiStringText(
             when (page.status) {
                 DRAFT.status, PUBLISH.status -> dateTimeUtilsWrapper.javaDateToTimeSpan(page.lastModifiedOrScheduledOn)
-                SCHEDULED.status -> dateTimeUtilsWrapper.javaDateToTimeSpan(page.date)
+                SCHEDULED.status -> dateTimeUtilsWrapper.getRelativeTimeSpanString(page.date)
                 else -> ""
             }
         )
