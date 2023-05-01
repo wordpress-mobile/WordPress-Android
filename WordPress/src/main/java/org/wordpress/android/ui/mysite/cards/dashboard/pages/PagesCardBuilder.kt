@@ -13,7 +13,6 @@ import javax.inject.Inject
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.DRAFT
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.PUBLISH
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.SCHEDULED
-import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.DateTimeUtilsWrapper
 
 private const val REQUIRED_PAGES_IN_CARD: Int = 3
@@ -34,7 +33,7 @@ class PagesCardBuilder @Inject constructor(
         val content = pages?.filterByPagesCardSupportedStatus()?.let { getPagesContentItems(pages) } ?: emptyList()
         val createPageCard = getCreatePageCard(content, params.onFooterLinkClick)
         return PagesCard.PagesCardWithData(
-            title = UiString.UiStringRes(R.string.dashboard_pages_card_title),
+            title = UiStringRes(R.string.dashboard_pages_card_title),
             pages = content,
             footerLink = createPageCard
         )
