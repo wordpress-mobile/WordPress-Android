@@ -1424,6 +1424,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
+    @kotlinx.coroutines.DelicateCoroutinesApi
     public void onCommentChanged(OnCommentChanged event) {
         setProgressVisible(false);
         // requesting local comment cache refresh
