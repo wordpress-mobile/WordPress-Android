@@ -220,7 +220,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                             @DrawableRes val statusIcon: Int?,
                             val status: UiString?,
                             val lastEditedOrScheduledTime: UiString,
-                            val onCardClick: () -> Unit
+                            val onClick: ListItemInteraction
                         )
 
                         data class CreateNewPageItem(
