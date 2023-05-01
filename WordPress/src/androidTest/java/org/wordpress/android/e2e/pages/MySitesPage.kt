@@ -280,4 +280,33 @@ class MySitesPage {
             }
         }
     }
+
+    fun assertDomainsCard(): MySitesPage {
+        Espresso.onView(
+            Matchers.allOf(
+                ViewMatchers.withId(R.id.dashboard_card_domain_cta),
+                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.dashboard_cards)),
+                ViewMatchers.hasDescendant(ViewMatchers.withId(R.id.dashboard_domain_card_more)),
+                ViewMatchers.hasDescendant(ViewMatchers.withId(R.id.dashboard_card_domain_image)),
+
+                ViewMatchers.hasDescendant(
+                    Matchers.allOf(
+                        ViewMatchers.withText("Find a custom domain"),
+                        ViewMatchers.withId(R.id.dashboard_card_domain_title),
+                    )
+                ),
+
+                ViewMatchers.hasDescendant(
+                    Matchers.allOf(
+                        ViewMatchers.withText("Stake your claim on your corner of the web with a site address that's easy to find, share, and follow."),
+                        ViewMatchers.withId(R.id.dashboard_card_domain_sub_title),
+                    )
+                ),
+
+            )
+        )
+            .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+
+        return this
+    }
 }
