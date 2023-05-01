@@ -93,9 +93,11 @@ import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
+import org.wordpress.android.viewmodel.pages.PageListViewModel
 import java.io.File
 import javax.inject.Inject
 
+@Suppress("LargeClass")
 class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     TextInputDialogFragment.Callback,
     QuickStartPromptClickInterface,
@@ -455,6 +457,16 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             action.isRewindable
         )
         is SiteNavigationAction.TriggerCreatePageFlow -> Unit // no-op
+        is SiteNavigationAction.OpenPagesDraftsTab -> ActivityLauncher.viewCurrentBlogPagesOfType(
+            requireActivity(),
+            action.site,
+            PageListViewModel.PageListType.DRAFTS
+        )
+        is SiteNavigationAction.OpenPagesScheduledTab -> ActivityLauncher.viewCurrentBlogPagesOfType(
+            requireActivity(),
+            action.site,
+            PageListViewModel.PageListType.SCHEDULED
+        )
     }
 
     private fun showJetpackPoweredBottomSheet() {
