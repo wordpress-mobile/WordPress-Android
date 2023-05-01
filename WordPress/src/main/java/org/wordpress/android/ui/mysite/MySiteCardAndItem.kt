@@ -213,7 +213,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     data class PagesCardWithData(
                         val title: UiString,
                         val pages: List<PageContentItem>,
-                        val footerLink: CreatNewPageItem
+                        val footerLink: CreateNewPageItem
                     ) : PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD) {
                         data class PageContentItem(
                             val title: UiString,
@@ -223,7 +223,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                             val onCardClick: () -> Unit
                         )
 
-                        data class CreatNewPageItem(
+                        data class CreateNewPageItem(
                             val label: UiString,
                             val description: UiString? = null,
                             @DrawableRes val imageRes: Int? = null,

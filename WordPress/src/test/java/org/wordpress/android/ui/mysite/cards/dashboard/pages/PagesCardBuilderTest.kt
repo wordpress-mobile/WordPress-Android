@@ -196,21 +196,21 @@ class PagesCardBuilderTest : BaseUnitTest() {
         )
     }
 
-    private val createPageCardWhenNoPagesPresent = PagesCardWithData.CreatNewPageItem(
+    private val createPageCardWhenNoPagesPresent = PagesCardWithData.CreateNewPageItem(
         label = UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
         description = UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
         imageRes = R.drawable.illustration_page_card_create_page,
         onClick = onPagesCardFooterClick
     )
 
-    private val createPageCardWhenLessThanThreePagePresent = PagesCardWithData.CreatNewPageItem(
+    private val createPageCardWhenLessThanThreePagePresent = PagesCardWithData.CreateNewPageItem(
         label = UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
         description = UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
         imageRes = R.drawable.illustration_page_card_create_page,
         onClick = onPagesCardFooterClick
     )
 
-    private val createPageCardWhenThreePagePresent = PagesCardWithData.CreatNewPageItem(
+    private val createPageCardWhenThreePagePresent = PagesCardWithData.CreateNewPageItem(
         label = UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
         onClick = onPagesCardFooterClick
     )

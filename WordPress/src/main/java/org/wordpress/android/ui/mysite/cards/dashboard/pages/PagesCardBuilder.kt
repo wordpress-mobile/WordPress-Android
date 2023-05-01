@@ -3,7 +3,7 @@ package org.wordpress.android.ui.mysite.cards.dashboard.pages
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.CreatNewPageItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.CreateNewPageItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.PageContentItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -85,7 +85,7 @@ class PagesCardBuilder @Inject constructor(
         )
     }
 
-    private fun getCreatePageCard(pages: List<PageContentItem>, onFooterLinkClick: () -> Unit): CreatNewPageItem {
+    private fun getCreatePageCard(pages: List<PageContentItem>, onFooterLinkClick: () -> Unit): CreateNewPageItem {
         // Create new page button is shown with image if there is
         // less than three pages for a user
         return if (pages.isEmpty()) {
@@ -97,8 +97,8 @@ class PagesCardBuilder @Inject constructor(
         }
     }
 
-    private fun createNewPageCardWithAddPageMessage(onFooterLinkClick: () -> Unit): CreatNewPageItem {
-        return CreatNewPageItem(
+    private fun createNewPageCardWithAddPageMessage(onFooterLinkClick: () -> Unit): CreateNewPageItem {
+        return CreateNewPageItem(
             label = UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
             description = UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
             imageRes = R.drawable.illustration_page_card_create_page,
@@ -106,8 +106,8 @@ class PagesCardBuilder @Inject constructor(
         )
     }
 
-    private fun createNewPageCardWithAddAnotherPageMessage(onFooterLinkClick: () -> Unit): CreatNewPageItem {
-        return CreatNewPageItem(
+    private fun createNewPageCardWithAddAnotherPageMessage(onFooterLinkClick: () -> Unit): CreateNewPageItem {
+        return CreateNewPageItem(
             label = UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
             description = UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
             imageRes = R.drawable.illustration_page_card_create_page,
@@ -115,8 +115,8 @@ class PagesCardBuilder @Inject constructor(
         )
     }
 
-    private fun createNewPageCardWithOnlyButton(onFooterLinkClick: () -> Unit): CreatNewPageItem {
-        return CreatNewPageItem(
+    private fun createNewPageCardWithOnlyButton(onFooterLinkClick: () -> Unit): CreateNewPageItem {
+        return CreateNewPageItem(
             label = UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
             onClick = onFooterLinkClick
         )
