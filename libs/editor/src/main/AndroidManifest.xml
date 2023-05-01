@@ -2,9 +2,9 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.wordpress.android.editor">
-
     <application>
         <activity
+            android:hardwareAccelerated="true"
             android:name=".WPGutenbergWebViewActivity"
             android:theme="@style/Base.GutenbergWebView" />
     </application>
