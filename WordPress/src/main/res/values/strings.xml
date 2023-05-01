@@ -4523,6 +4523,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="dashboard_pages_card_no_pages_create_page_button">Add Pages to your site</string>
     <string name="dashboard_pages_card_create_another_page_button">Create Another Page</string>
     <string name="dashboard_pages_card_create_another_page_description">Start with bespoke, mobile friendly layouts</string>
+    <string name="dashboard_card_page_item_status_draft" translatable="false" >@string/pages_drafts</string>
+    <string name="dashboard_card_page_item_status_published" translatable="false" >@string/pages_published</string>
+    <string name="dashboard_card_page_item_status_scheduled" translatable="false" >@string/pages_scheduled</string>
 
     <!-- Jetpack - Dashboard cards - Activity Card -->
     <string name="dashboard_activity_card_title">Recent activity</string>
