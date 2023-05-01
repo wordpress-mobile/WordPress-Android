@@ -5,18 +5,19 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.dashboard.CardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams.PagesItemClickParams
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.config.DashboardCardPagesConfig
 import kotlin.test.assertEquals
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 const val PAGE_STATUS_PUBLISH = "publish"
 const val PAGE_STATUS_DRAFT = "draft"
@@ -25,17 +26,17 @@ const val PAGE_STATUS_SCHEDULED = "future"
 const val PAGE_ID = 1
 const val PAGE_TITLE = "title"
 const val PAGE_CONTENT = "content"
-const val PAGE_MODIFIED_ON = "2023-03-02 10:26:53"
+val PAGE_MODIFIED_ON = CardsUtils.fromDate("2023-03-02 10:26:53")
 const val PAGE_STATUS = PAGE_STATUS_PUBLISH
-const val PAGE_DATE = "2023-03-02 10:30:53"
+val PAGE_DATE = CardsUtils.fromDate("2023-03-02 10:30:53")
 
-private val PAGE_MODEL = CardModel.PagesCardModel.PageCardModel(
+private val PAGE_MODEL = PagesCardModel.PageCardModel(
     id = PAGE_ID,
     title = PAGE_TITLE,
     content = PAGE_CONTENT,
-    lastModifiedOrScheduledOn = CardsUtils.fromDate(PAGE_MODIFIED_ON),
+    lastModifiedOrScheduledOn = PAGE_MODIFIED_ON,
     status = PAGE_STATUS,
-    date = CardsUtils.fromDate(PAGE_DATE)
+    date = PAGE_DATE
 )
 
 private val PAGE_MODEL_2 = PAGE_MODEL.copy(id = 2, status = PAGE_STATUS_DRAFT)
@@ -43,17 +44,17 @@ private val PAGE_MODEL_2 = PAGE_MODEL.copy(id = 2, status = PAGE_STATUS_DRAFT)
 private val PAGE_MODEL_3 = PAGE_MODEL.copy(id = 3, status = PAGE_STATUS_SCHEDULED)
 
 // pages with one item
-private val PAGES_MODEL = CardModel.PagesCardModel(
+private val PAGES_MODEL = PagesCardModel(
     pages = listOf(PAGE_MODEL)
 )
 
 // pages card with two items
-private val PAGES_MODEL_2 = CardModel.PagesCardModel(
+private val PAGES_MODEL_2 = PagesCardModel(
     pages = listOf(PAGE_MODEL, PAGE_MODEL_2)
 )
 
 // pages card with three items
-private val PAGES_MODEL_3 = CardModel.PagesCardModel(
+private val PAGES_MODEL_3 = PagesCardModel(
     pages = listOf(PAGE_MODEL, PAGE_MODEL_2, PAGE_MODEL_3)
 )
 
@@ -78,6 +79,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     private fun setupMocks() {
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("")
+        whenever(dateTimeUtilsWrapper.getRelativeTimeSpanString(any())).thenReturn("")
     }
 
     @Test
@@ -151,6 +153,35 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
         assertEquals(UiStringRes(R.string.dashboard_card_page_item_status_scheduled), result.pages[2].status)
         assertEquals(R.drawable.ic_scheduled_page_dashboard_card, result.pages[2].statusIcon)
+    }
+
+    /* LAST MODIFIED OR SCHEDULED ON TIME*/
+    @Test
+    fun `given a scheduled page, when card is built, then relative time shown is based on scheduled time`() {
+        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
+        val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
+            pageCard = PagesCardModel(pages = listOf(PAGE_MODEL_3)),
+            onFooterLinkClick = onPagesCardFooterClick,
+            onPagesItemClick = onPagesItemClick
+        )
+
+        builder.build(params) as PagesCardWithData
+
+        verify(dateTimeUtilsWrapper).getRelativeTimeSpanString(PAGE_DATE)
+    }
+
+    @Test
+    fun `given a published page, when card is built, then relative time shown is based on last modified time`() {
+        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
+        val params = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
+            pageCard = PagesCardModel(pages = listOf(PAGE_MODEL_2)),
+            onFooterLinkClick = onPagesCardFooterClick,
+            onPagesItemClick = onPagesItemClick
+        )
+
+        builder.build(params) as PagesCardWithData
+
+        verify(dateTimeUtilsWrapper).javaDateToTimeSpan(PAGE_MODIFIED_ON)
     }
 
     /* CREATE NEW PAGE CARD CASES */
