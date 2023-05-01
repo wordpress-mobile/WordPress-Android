@@ -50,7 +50,7 @@ class DateTimeUtilsWrapper @Inject constructor(
     * Time spans in future are formatted like "In 42 minutes | In 2 days".
     * */
     fun getRelativeTimeSpanString(date: Date): String {
-        return DateUtils.getRelativeTimeSpanString(date.time, System.currentTimeMillis(), DateUtils.DAY_IN_MILLIS)
+        return DateUtils.getRelativeTimeSpanString(date.time, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
             .toString()
     }
 }
