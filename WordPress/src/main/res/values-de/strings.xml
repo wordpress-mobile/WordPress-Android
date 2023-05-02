@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-18 13:54:07+0000
+Translation-Revision-Date: 2023-04-25 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: de
 -->
 <resources>
+    <string name="jp_migration_delete_message">Wir empfehlen dir, &lt;b&gt;die WordPress-App auf deinem Gerät zu deinstallieren&lt;/b&gt;, um Datenkonflikte zu vermeiden.</string>
+    <string name="jp_migration_delete_subtitle">Offenbar hast du die WordPress-App noch installiert.</string>
+    <string name="jp_migration_delete_title">Du brauchst die WordPress-App nicht mehr auf deinem Gerät</string>
+    <string name="jp_migration_done_delete_wp_message">Wir empfehlen dir, &lt;b&gt;die WordPress-App auf deinem Gerät zu deinstallieren&lt;/b&gt;, um Datenkonflikte zu vermeiden.</string>
+    <string name="jp_migration_success_card_message">Willkommen bei der Jetpack-App. Du kannst die WordPress-App deinstallieren.</string>
     <string name="gutenberg_native_remove_blocks">Blöcke entfernen</string>
     <string name="gutenberg_native_privacy_and_rating">Datenschutz und Bewertung</string>
     <string name="gutenberg_native_dynamic">Dynamisch</string>

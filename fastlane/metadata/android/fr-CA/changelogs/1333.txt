@@ -1,2 +1,0 @@
-22.1 :
-Si vous vous connectez à un site auto-hébergé qui se connecte à Jetpack via des extensions individuelles, une fenêtre contextuelle s’affiche pour vous indiquer que ce type de connexion ne prend pas encore en charge les fonctionnalités principales de l’application. Vous pouvez contourner ce problème en basculant vers l’application Jetpack. Toujours plus haut, toujours plus loin.

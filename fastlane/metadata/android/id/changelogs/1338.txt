@@ -1,0 +1,3 @@
+22.2:
+- Kami menambahkan kotak peringatan kuning untuk memberi tahu bahwa pemberitahuan dan pengingat blogging tidak lagi dikirimkan ke perangkat Anda sebagai pemberitahuan push.
+- Kami memperbarui izin akses media untuk foto, video, dan audio agar sesuai dengan pembaruan Android 13.

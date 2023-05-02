@@ -61,6 +61,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _onCreateNewPageRequested = SingleLiveEvent<PageRequest.Create>()
     val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
 
+    var createPageDashboardSource: CreatePageDashboardSource?=null
+
     private val site: SiteModel? by lazy {
         siteStore.getSiteByLocalId(selectedSiteRepository.getSelectedSiteLocalId(true))
     }
@@ -147,7 +149,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
     /**
      * Triggers the create page flow and shows the MLP
      */
-    fun createPageFlowTriggered() {
+    fun createPageFlowTriggered(createPageDashboardSource: CreatePageDashboardSource? = null) {
+        this.createPageDashboardSource = createPageDashboardSource
         _isModalLayoutPickerShowing.value = Event(true)
         initializePreviewMode(displayUtilsWrapper.isTablet())
         fetchLayouts()
@@ -183,5 +186,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
             return
         }
         _onCreateNewPageRequested.value = PageRequest.Blank
+    }
+
+    enum class CreatePageDashboardSource {
+        FLOATING_ACTION_BUTTON,
+        PAGES_CARD
     }
 }

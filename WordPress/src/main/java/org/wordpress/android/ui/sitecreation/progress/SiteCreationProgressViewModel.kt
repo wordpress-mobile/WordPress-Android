@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation.progress
+﻿package org.wordpress.android.ui.sitecreation.progress
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,12 +13,15 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched.InCart
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.CartError
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.ConnectionError
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.GenericError
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Loading
@@ -31,6 +34,7 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.S
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -40,7 +44,6 @@ import javax.inject.Named
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
 const val LOADING_STATE_TEXT_ANIMATION_DELAY = 2000L
 private const val ERROR_CONTEXT = "site_preview"
-private val LOG_TAG = AppLog.T.SITE_CREATION
 
 private val loadingTexts = listOf(
     UiStringRes(R.string.new_site_creation_creating_site_loading_1),
@@ -60,6 +63,7 @@ class SiteCreationProgressViewModel @Inject constructor(
 
     private lateinit var siteCreationState: SiteCreationState
     private lateinit var domain: DomainModel
+    private lateinit var site: SiteModel
 
     private var lastReceivedServiceState: SiteCreationServiceState? = null
     private var serviceStateForRetry: SiteCreationServiceState? = null
@@ -89,10 +93,14 @@ class SiteCreationProgressViewModel @Inject constructor(
     }
 
     fun start(siteCreationState: SiteCreationState) {
-        if (siteCreationState.result is CreatedButNotFetched.InCart) {
+        if (siteCreationState.result is Created) {
+            check(siteCreationState.result !is Completed) { "Unexpected state on progress screen." }
             // reuse the previously blog when returning with the same domain
-            if (siteCreationState.domain == this.siteCreationState.domain) {
-                createCart(siteCreationState.result.site)
+            if (siteCreationState.domain == domain) {
+                site = siteCreationState.result.site
+                if (siteCreationState.result is InCart) {
+                    createCart()
+                }
                 return
             }
         }
@@ -124,8 +132,14 @@ class SiteCreationProgressViewModel @Inject constructor(
     }
 
     fun retry() {
+        when (uiState.value) {
+            is GenericError,
+            is ConnectionError -> startCreateSiteService(serviceStateForRetry)
+
+            is CartError -> createCart()
+            else -> error("Unexpected state for retry: ${uiState.value}")
+        }
         runLoadingAnimationUi()
-        startCreateSiteService(serviceStateForRetry)
     }
 
     fun onHelpClicked() = _onHelpClicked.call()
@@ -157,13 +171,13 @@ class SiteCreationProgressViewModel @Inject constructor(
         when (event.step) {
             IDLE, CREATE_SITE -> Unit
             SUCCESS -> {
-                val site = mapPayloadToSiteModel(event.payload)
-                if (domain.isFree) {
-                    _onFreeSiteCreated.postValue(site)
-                } else {
-                    createCart(site)
+                site = mapPayloadToSiteModel(event.payload)
+                _onFreeSiteCreated.postValue(site) // MainVM will navigate forward if the domain is free
+                if (!domain.isFree) {
+                    createCart()
                 }
             }
+
             FAILURE -> {
                 serviceStateForRetry = event.payload as SiteCreationServiceState
                 tracker.trackErrorShown(
@@ -180,12 +194,12 @@ class SiteCreationProgressViewModel @Inject constructor(
         require(payload is Pair<*, *>) { "Expected Pair in Payload, got: $payload" }
         val (blogId, blogUrl) = payload
         require(blogId is Long) { "Expected the 1st element in the Payload Pair to be a Long, got: $blogId" }
-        require(blogUrl is String)  { "Expected the 2nd element in the Payload Pair to be a Long, got: $blogUrl" }
+        require(blogUrl is String) { "Expected the 2nd element in the Payload Pair to be a Long, got: $blogUrl" }
         return SiteModel().apply { siteId = blogId; url = blogUrl }
     }
 
-    private fun createCart(site: SiteModel) = launch {
-        AppLog.d(LOG_TAG, "Creating cart: $domain")
+    private fun createCart() = launch {
+        AppLog.d(T.SITE_CREATION, "Creating cart: $domain")
 
         val event = createCartUseCase.execute(
             site,
@@ -196,10 +210,10 @@ class SiteCreationProgressViewModel @Inject constructor(
         )
 
         if (event.isError) {
-            AppLog.e(LOG_TAG, "Failed cart creation: ${event.error.message}")
-            updateUiStateAsync(GenericError)
+            AppLog.e(T.SITE_CREATION, "Failed cart creation: ${event.error.message}")
+            updateUiStateAsync(CartError)
         } else {
-            AppLog.d(LOG_TAG, "Successful cart creation: ${event.cartDetails}")
+            AppLog.d(T.SITE_CREATION, "Successful cart creation: ${event.cartDetails}")
             _onCartCreated.postValue(CheckoutDetails(site, domain.domainName))
         }
     }
@@ -245,6 +259,12 @@ class SiteCreationProgressViewModel @Inject constructor(
             object GenericError : Error(
                 R.string.site_creation_error_generic_title,
                 R.string.site_creation_error_generic_subtitle,
+                showContactSupport = true
+            )
+
+            object CartError : Error(
+                R.string.site_creation_error_generic_title,
+                R.string.site_creation_error_cart_subtitle,
                 showContactSupport = true
             )
 

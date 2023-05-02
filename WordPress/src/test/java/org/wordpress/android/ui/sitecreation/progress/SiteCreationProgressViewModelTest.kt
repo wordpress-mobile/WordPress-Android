@@ -32,6 +32,7 @@ import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.ui.sitecreation.CART_ERROR
 import org.wordpress.android.ui.sitecreation.CART_SUCCESS
 import org.wordpress.android.ui.sitecreation.PAID_DOMAIN
+import org.wordpress.android.ui.sitecreation.RESULT_CREATED
 import org.wordpress.android.ui.sitecreation.RESULT_IN_CART
 import org.wordpress.android.ui.sitecreation.SERVICE_ERROR
 import org.wordpress.android.ui.sitecreation.SERVICE_SUCCESS
@@ -41,6 +42,7 @@ import org.wordpress.android.ui.sitecreation.SITE_SLUG
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.CartError
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.ConnectionError
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.GenericError
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Loading
@@ -145,11 +147,28 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on retry click emits service event with the previous result`() {
+    fun `on retry click after service error emits service event with the previous result`() = test {
         startViewModel()
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_ERROR)
         viewModel.retry()
         assertEquals(viewModel.startCreateSiteService.value?.previousState, SERVICE_ERROR.payload)
+    }
+
+    @Test
+    fun `on retry click after network error restarts site creation service`() = test {
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(false, true)
+        startViewModel()
+        advanceUntilIdle()
+        viewModel.retry()
+        verify(startServiceObserver).onChanged(any())
+    }
+
+    @Test
+    fun `on retry click after cart error retries to create cart`() = testWith(CART_ERROR) {
+        startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
+        viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
+        viewModel.retry()
+        verify(createCartUseCase, times(2)).execute(any(), any(), any(), any(), eq(false))
     }
 
     @Test
@@ -201,10 +220,10 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on cart failure shows generic error`() = testWith(CART_ERROR) {
+    fun `on cart failure shows cart error`() = testWith(CART_ERROR) {
         startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
-        assertIs<GenericError>(viewModel.uiState.value)
+        assertIs<CartError>(viewModel.uiState.value)
     }
 
     @Test
@@ -218,7 +237,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     fun `on restart with same paid domain reuses previous blog to create new cart`() = testWith(CART_SUCCESS) {
         val state = SITE_CREATION_STATE.copy(domain = PAID_DOMAIN)
         startViewModel(state)
-        val previous = SiteModel().apply { siteId = 9L;url = "blog.wordpress.com" }
+        val previous = SiteModel().apply { siteId = 9L; url = "blog.wordpress.com" }
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS.copy(payload = previous.siteId to previous.url))
 
         startViewModel(state.copy(result = RESULT_IN_CART))
@@ -231,6 +250,18 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
             eq(PAID_DOMAIN.supportsPrivacy),
             any()
         )
+    }
+
+    @Test
+    fun `on restart with same free domain reuses it`() = testWith(CART_SUCCESS) {
+        val state = SITE_CREATION_STATE
+        startViewModel(state)
+        val previous = SiteModel().apply { siteId = 9L; url = "blog.wordpress.com" }
+        viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS.copy(payload = previous.siteId to previous.url))
+
+        startViewModel(state.copy(result = RESULT_CREATED))
+
+        verify(startServiceObserver, atMost(1)).onChanged(any())
     }
 
     @Test

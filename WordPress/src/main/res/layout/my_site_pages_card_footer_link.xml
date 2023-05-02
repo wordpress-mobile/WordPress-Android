@@ -2,19 +2,54 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/my_site_card_footer_link"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:id="@+id/my_site_card_footer_link_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/my_site_dashboard_card_page_create_page_padding_vertical"
+    android:paddingHorizontal="@dimen/my_site_card_footer_link_padding">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/link_label"
-        style="@style/MySiteCardFooterLinkItem"
-        android:layout_width="wrap_content"
+        style="@style/MySiteCardPagesCardFooter"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/my_site_card_footer_link_padding"
+        android:text="@string/dashboard_pages_card_create_another_page_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/link_icon"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/my_site_post_card_link_go_to_drafts" />
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/link_description"
+        style="@style/MySiteCardPagesCardFooterDescription"
+        android:layout_width="0dp"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/my_site_card_footer_link_padding"
+        android:textAlignment="viewStart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/link_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/link_label"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="@string/dashboard_pages_card_create_another_page_description" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/link_icon"
+        android:layout_width="@dimen/my_site_dashboard_card_page_create_page_illustration_width"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        app:shapeAppearance="@style/ShapeAppearance.PagesCardIllustration"
+        android:contentDescription="@string/dashboard_pages_card_create_another_page_description"
+        android:scaleType="centerCrop"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/link_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/illustration_page_card_create_page" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

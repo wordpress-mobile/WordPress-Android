@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-18 13:54:07+0000
+Translation-Revision-Date: 2023-04-27 09:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: id
 -->
 <resources>
+    <string name="jp_migration_delete_message">Kami sarankan untuk &lt;b&gt;menghapus instalan aplikasi WordPress&lt;/b&gt; di perangkat Anda guna mencegah terjadinya konflik data.</string>
+    <string name="jp_migration_delete_subtitle">Aplikasi WordPress sepertinya masih terinstal.</string>
+    <string name="jp_migration_delete_title">Anda tidak lagi membutuhkan aplikasi WordPress di perangkat Anda</string>
+    <string name="jp_migration_done_delete_wp_message">Kami sarankan untuk &lt;b&gt;menghapus instalan aplikasi WordPress&lt;/b&gt; di perangkat Anda guna mencegah terjadinya konflik data.</string>
+    <string name="jp_migration_success_card_message">Selamat datang di aplikasi Jetpack. Anda dapat menghapus instalan aplikasi WordPress.</string>
     <string name="gutenberg_native_remove_blocks">Hapus blok</string>
     <string name="gutenberg_native_privacy_and_rating">Privasi dan rating</string>
     <string name="gutenberg_native_playback_settings">Pengaturan Playback</string>

@@ -22,6 +22,9 @@ enum class PagePostCreationSourcesDetail(val label: String) {
     // page created from bottom sheet in my site screen
     PAGE_FROM_MY_SITE("page-from-my-site"),
 
+    // page created from pages card in my site dashboard
+    PAGE_FROM_PAGES_CARD_MY_SITE_DASHBOARD("page-from-my-site-dashboard-pages-card"),
+
     // story created from bottom sheet in my site screen
     STORY_FROM_MY_SITE("story-from-my-site"),
 

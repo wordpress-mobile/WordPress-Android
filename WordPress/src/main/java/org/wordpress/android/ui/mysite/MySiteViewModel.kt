@@ -397,7 +397,7 @@ class MySiteViewModel @Inject constructor(
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
         promoteWithBlazeUpdate: PromoteWithBlazeUpdate?,
-        hasSiteCustomDomains: Boolean
+        hasSiteCustomDomains: Boolean?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
             site,
@@ -501,7 +501,7 @@ class MySiteViewModel @Inject constructor(
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
         promoteWithBlazeUpdate: PromoteWithBlazeUpdate?,
-        hasSiteCustomDomains: Boolean
+        hasSiteCustomDomains: Boolean?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
             InfoItemBuilderParams(
@@ -712,9 +712,14 @@ class MySiteViewModel @Inject constructor(
         // implement navigation logic for pages
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun onPagesCardFooterLinkClick() {
-        // implement navigation logic for create page
+        cardsTracker.trackPagesCardFooterClicked()
+        _onNavigation.value =
+            Event(
+                SiteNavigationAction.TriggerCreatePageFlow(
+                    requireNotNull(selectedSiteRepository.getSelectedSite())
+                )
+            )
     }
 
     private fun onActivityCardItemClick(activityCardItemClickParams: ActivityCardItemClickParams) {

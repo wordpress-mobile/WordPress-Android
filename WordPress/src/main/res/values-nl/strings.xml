@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-20 15:54:08+0000
+Translation-Revision-Date: 2023-04-27 20:42:53+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: nl
 -->
 <resources>
+    <string name="jp_migration_delete_message">We raden je aan om &lt;b&gt;de WordPress-app van je apparaat te verwijderen&lt;/b&gt; om gegevensconflicten te vermijden.</string>
+    <string name="jp_migration_delete_subtitle">Het lijkt erop dat je de WordPress-app nog steeds geïnstalleerd hebt.</string>
+    <string name="jp_migration_delete_title">Je hebt de WordPress-app niet meer nodig op je apparaat</string>
+    <string name="jp_migration_done_delete_wp_message">We raden je aan om &lt;b&gt;de WordPress-app van je apparaat te verwijderen&lt;/b&gt; om gegevensconflicten te vermijden.</string>
+    <string name="jp_migration_success_card_message">Welkom bij de Jetpack-app. Je kan de WordPress-app verwijderen.</string>
     <string name="gutenberg_native_remove_blocks">Blokken verwijderen</string>
     <string name="gutenberg_native_privacy_and_rating">Privacy en beoordeling</string>
+    <string name="gutenberg_native_playback_settings">Afspeelinstellingen</string>
+    <string name="gutenberg_native_playback_bar_color">Kleur afspeelbalk</string>
     <string name="gutenberg_native_manual">Handmatig</string>
+    <string name="gutenberg_native_dynamic">Dynamisch</string>
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">Beschrijf het doel van de afbeelding. Laat dit veld leeg als de afbeelding decoratief is.</string>
     <string name="dashboard_pages_card_create_another_page_description">Ga aan de slag met op maat gemaakte lay-outs die geschikt zijn voor mobiele apparaten</string>
     <string name="dashboard_pages_card_create_another_page_button">Nog een pagina aanmaken</string>
@@ -17,13 +25,18 @@ Language: nl
     <string name="dashboard_card_domain_sub_title">Eis je eigen hoekje van het internet op met een site-adres dat eenvoudig te vinden, te delen en te volgen is.</string>
     <string name="dashboard_card_domain_title">Bemachtig je eigen online identiteit met een aangepast domein</string>
     <string name="blogging_reminders_notifications_permission_caption">Als je blog herinneringen wilt gebruiken, moet je berichtgeving inschakelen.</string>
+    <string name="blogging_reminders_notifications_permission_title">Zet berichtgeving aan</string>
+    <string name="site_creation_domain_button_continue_with_subdomain">Doorgaan met subdomein</string>
     <string name="site_creation_domain_button_purchase_domain">Domein aanschaffen</string>
     <string name="permission_images_video_audio">Foto’s en video\'s + Muziek en audio</string>
+    <string name="permission_audio">Muziek en audio</string>
+    <string name="permission_images">Foto\'s en video\'s</string>
     <string name="photo_picker_soft_ask_audios_label">%s heeft toestemming nodig om je audio te openen</string>
     <string name="photo_picker_soft_ask_videos_label">%s heeft toestemming nodig om je video\'s te openen</string>
     <string name="photo_picker_soft_ask_photos_label">%s heeft toestemming nodig om je foto\'s te openen</string>
     <string name="photo_picker_soft_ask_photos_videos_label">%s heeft toestemming nodig om je foto\'s en video\'s te openen</string>
     <string name="photo_picker_soft_ask_photos_videos_audio_label">%s heeft toestemming nodig om je muziek, audio, foto\'s en video\'s te openen</string>
+    <string name="notifications_permission_bottom_sheet_button">Zet meldingen aan</string>
     <string name="notifications_permission_bottom_sheet_description_2">Ga naar Instellingen &amp;rarr; Meldingen &amp;rarr; App-instellingen, en zet %1$s aan om direct op de hoogte te worden gesteld.</string>
     <string name="notifications_permission_bottom_sheet_description_1">Je moet de app openen om meldingen te kunnen zien.</string>
     <string name="notifications_permission_bottom_sheet_title">Pushmeldingen zijn uitgeschakeld</string>
@@ -35,6 +48,7 @@ Language: nl
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">Sites met individuele Jetpack-plugins worden niet ondersteund door de WordPress-app.</string>
     <string name="wp_jetpack_individual_plugin_overlay_single_site_multiple_plugins_content_1">&lt;b&gt;%1$s&lt;/b&gt; gebruikt individuele Jetpack-plugins, deze worden niet ondersteund door de WordPress-app.</string>
     <string name="wp_jetpack_individual_plugin_overlay_single_site_single_plugin_content_1">&lt;b&gt;%1$s&lt;/b&gt; gebruikt de &lt;b&gt;%2$s&lt;/b&gt;-plugin, deze wordt niet ondersteund door de WordPress-app.</string>
+    <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_title">Kan sommige van je sites niet openen</string>
     <string name="wp_jetpack_individual_plugin_overlay_single_site_title">Kan een van je sites niet openen</string>
     <string name="wp_jetpack_individual_plugin_overlay_content_2">Schakel over naar de Jetpack-app waarin we je helpen de volledige Jetpack-plugin te koppelen, zodat je deze site kunt gebruiken met de app.</string>
     <string name="wp_jetpack_individual_plugin_overlay_primary_button">Schakel over naar de Jetpack-app</string>
@@ -791,6 +805,7 @@ Language: nl
     <string name="gutenberg_native_retry">Opnieuw proberen</string>
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Eén</string>
+    <string name="gutenberg_native_add_title">Titel toevoegen</string>
     <string name="gutenberg_native_no_preview_available">Geen voorbeeld beschikbaar</string>
     <string name="gutenberg_native_text_color">Tekstkleur</string>
     <string name="gutenberg_native_padding">Padding</string>
@@ -799,6 +814,7 @@ Language: nl
     <string name="gutenberg_native_custom_url">Aangepaste URL</string>
     <string name="gutenberg_native_create_embed">Maak insluiting</string>
     <string name="gutenberg_native_column_d">Kolom %d</string>
+    <string name="gutenberg_native_more">Meer</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beschrijf kort de link om de scherm reader gebruiker te helpen</string>
     <string name="gutenberg_native_add_blocks">Blokken toevoegen</string>
     <string name="login_no_jetpack_sites">Geen Jetpack sites gevonden</string>
@@ -1694,6 +1710,7 @@ Language: nl
     <string name="gutenberg_native_add_image_or_video">AFBEELDING OF VIDEO TOEVOEGEN</string>
     <string name="gutenberg_native_add_image">AFBEELDING TOEVOEGEN</string>
     <string name="gutenberg_native_add_block_here">BLOK HIER TOEVOEGEN</string>
+    <string name="gutenberg_native_add_description">Beschrijving toevoegen</string>
     <string name="reader_empty_saved_posts_content_description">Tik op de knop \'Toevoegen om berichten op te slaan\' om een bericht op te slaan in je lijst.</string>
     <string name="reader_acessibility_list_loaded">\"De lijst is geladen met %1$d items.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Meldingen</string>

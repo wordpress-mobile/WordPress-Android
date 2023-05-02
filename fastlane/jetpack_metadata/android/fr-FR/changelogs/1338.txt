@@ -1,0 +1,5 @@
+22.2 :
+- Ajout d’un message d’avertissement lorsque les notifications Push sont désactivées
+- Mise à jour des droits d’accès aux outils multimédias pour respecter la mise à jour d’Android 13
+- Ajout d’une carte au tableau de bord pour l’achat de domaines personnalisés
+- Intégration des réponses des autres utilisateurs aux invites de blog

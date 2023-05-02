@@ -92,6 +92,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFr
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
+import org.wordpress.android.ui.main.MainActionListItem.ActionType;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
@@ -156,6 +157,7 @@ import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.CreatePageDashboardSource;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationScheduler;
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
@@ -691,13 +693,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, -1, null);
                     break;
                 case CREATE_NEW_PAGE:
-                    if (mMLPViewModel.canShowModalLayoutPicker()
-                        && mJetpackFeatureRemovalPhaseHelper.shouldShowTemplateSelectionInPages()) {
-                        mMLPViewModel.createPageFlowTriggered();
-                    } else {
-                        handleNewPageAction("", "", null,
-                                PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
-                    }
+                case CREATE_NEW_PAGE_FROM_PAGES_CARD:
+                    triggerCreatePageFlow(createAction);
                     break;
                 case CREATE_NEW_STORY:
                     handleNewStoryAction();
@@ -718,8 +715,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
         );
 
         mMLPViewModel.getOnCreateNewPageRequested().observe(this, request -> {
-            handleNewPageAction(request.getTitle(), "", request.getTemplate(),
-                    PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+            if (mMLPViewModel.getCreatePageDashboardSource() == CreatePageDashboardSource.PAGES_CARD) {
+                handleNewPageAction(request.getTitle(), "", request.getTemplate(),
+                        PagePostCreationSourcesDetail.PAGE_FROM_PAGES_CARD_MY_SITE_DASHBOARD);
+            } else {
+                handleNewPageAction(request.getTitle(), "", request.getTemplate(),
+                        PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+            }
         });
 
         mViewModel.getOnFeatureAnnouncementRequested().observe(this, action -> {
@@ -820,6 +822,29 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // to normalize the UI state whenever mSelectedSite changes.
         // It also means that the ViewModel must accept a nullable SiteModel.
         mViewModel.start(getSelectedSite());
+    }
+
+    private void triggerCreatePageFlow(ActionType actionType) {
+        if (mMLPViewModel.canShowModalLayoutPicker()
+            && mJetpackFeatureRemovalPhaseHelper.shouldShowTemplateSelectionInPages()) {
+            mMLPViewModel.createPageFlowTriggered(getCreatePageDashboardSourceFromActionType(actionType));
+        } else {
+            if (actionType == ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD) {
+                handleNewPageAction("", "", null,
+                        PagePostCreationSourcesDetail.PAGE_FROM_PAGES_CARD_MY_SITE_DASHBOARD);
+            } else {
+                handleNewPageAction("", "", null,
+                        PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+            }
+        }
+    }
+
+    private CreatePageDashboardSource getCreatePageDashboardSourceFromActionType(ActionType actionType) {
+        if (actionType == ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD) {
+            return CreatePageDashboardSource.PAGES_CARD;
+        } else {
+            return CreatePageDashboardSource.FLOATING_ACTION_BUTTON;
+        }
     }
 
     private @Nullable String getAuthToken() {

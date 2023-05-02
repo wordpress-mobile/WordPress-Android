@@ -1,0 +1,3 @@
+22.2:
+- We hebben een gele waarschuwingsmelding toegevoegd waarin staat dat meldingen en blogherinneringen niet meer als pushmeldingen naar je apparaat worden gestuurd.
+- We hebben de toegangsmachtigingen voor foto's, video's en audio bijgewerkt zodat ze aansluiten op de Android 13-update.

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-18 15:54:28+0000
+Translation-Revision-Date: 2023-04-27 20:43:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: it
 -->
 <resources>
+    <string name="jp_migration_delete_message">Ti consigliamo di &lt;b&gt;disinstallare l\'app WordPress&lt;/b&gt; sul dispositivo per evitare conflitti di dati.</string>
+    <string name="jp_migration_delete_subtitle">Sembra che tu abbia ancora l\'app WordPress installata.</string>
+    <string name="jp_migration_delete_title">Non hai più bisogno dell\'app WordPress sul dispositivo</string>
+    <string name="jp_migration_done_delete_wp_message">Ti consigliamo di &lt;b&gt;disinstallare l\'app WordPress&lt;/b&gt; sul dispositivo per evitare conflitti di dati.</string>
+    <string name="jp_migration_success_card_message">Ti diamo il benvenuto nell\'app Jetpack. Puoi disinstallare l\'app WordPress.</string>
     <string name="gutenberg_native_remove_blocks">Rimuovi i blocchi</string>
     <string name="gutenberg_native_privacy_and_rating">Prezzo e valutazione</string>
     <string name="gutenberg_native_playback_settings">Impostazioni di riproduzione</string>
@@ -809,6 +814,7 @@ Language: it
     <string name="gutenberg_native_custom_url">URL personalizzata</string>
     <string name="gutenberg_native_create_embed">Crea l\'incorporamento</string>
     <string name="gutenberg_native_column_d">Colonna %d</string>
+    <string name="gutenberg_native_more">Ulteriori informazioni</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descrivi brevemente il link per aiutare l\'utente del lettore di schermo</string>
     <string name="gutenberg_native_add_blocks">Aggiungi blocchi</string>
     <string name="login_no_jetpack_sites">Nessun sito Jetpack trovato</string>

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-18 15:54:26+0000
+Translation-Revision-Date: 2023-04-25 08:42:43+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: tr
 -->
 <resources>
+    <string name="jp_migration_delete_message">Veri çakışmalarını önlemek için cihazınızdan &lt;b&gt;WordPress uygulamasını kaldırmanızı&lt;/b&gt; öneririz.</string>
+    <string name="jp_migration_delete_subtitle">Görünüşe göre WordPress uygulaması hala yüklü.</string>
+    <string name="jp_migration_delete_title">Artık cihazınızda WordPress uygulamasına ihtiyacınız yok</string>
+    <string name="jp_migration_done_delete_wp_message">Veri çakışmalarını önlemek için cihazınızdan &lt;b&gt;WordPress uygulamasını kaldırmanızı&lt;/b&gt; öneririz.</string>
+    <string name="jp_migration_success_card_message">Jetpack uygulamasına hoş geldiniz. WordPress uygulamasını kaldırabilirsiniz.</string>
     <string name="gutenberg_native_remove_blocks">Blokları kaldır</string>
     <string name="gutenberg_native_privacy_and_rating">Gizlilik ve Derecelendirme</string>
     <string name="gutenberg_native_playback_settings">Oynatma Ayarları</string>
