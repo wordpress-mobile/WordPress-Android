@@ -713,7 +713,10 @@ class MySiteViewModel @Inject constructor(
         _onNavigation.value = Event(getNavigationActionForPagesItem(params.pagesCardType, params.pageId))
     }
 
-    private fun getNavigationActionForPagesItem(pagesCardType: PagesCardContentType, pageId: Int): SiteNavigationAction {
+    private fun getNavigationActionForPagesItem(
+        pagesCardType: PagesCardContentType,
+        pageId: Int
+    ): SiteNavigationAction {
         return when (pagesCardType) {
             PagesCardContentType.SCHEDULED -> {
                 SiteNavigationAction.OpenPagesScheduledTab(
@@ -721,12 +724,14 @@ class MySiteViewModel @Inject constructor(
                     pageId
                 )
             }
+
             PagesCardContentType.DRAFT -> {
                 SiteNavigationAction.OpenPagesDraftsTab(
                     requireNotNull(selectedSiteRepository.getSelectedSite()),
                     pageId
                 )
             }
+
             PagesCardContentType.PUBLISH -> {
                 SiteNavigationAction.OpenPages(requireNotNull(selectedSiteRepository.getSelectedSite()))
             }
