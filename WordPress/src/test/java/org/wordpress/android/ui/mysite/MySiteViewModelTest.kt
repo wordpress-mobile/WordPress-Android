@@ -2795,9 +2795,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given site select exists, then cardAndItem lists are not empty`() {
         initSelectedSite(isQuickStartDynamicCardEnabled = false)
 
-        assertThat(getLastItems().isNotEmpty())
-        assertThat(getDashboardTabLastItems().isNotEmpty())
-        assertThat(getSiteMenuTabLastItems().isNotEmpty())
+        assertThat(getLastItems()).isNotEmpty
+        assertThat(getDashboardTabLastItems()).isNotEmpty
+        assertThat(getSiteMenuTabLastItems()).isNotEmpty
     }
 
     @Test
@@ -3041,7 +3041,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsEnabled = false)
 
         viewModel.refresh(true)
-        assertThat(analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH))
+
+        verify(analyticsTrackerWrapper).track(Stat.MY_SITE_PULL_TO_REFRESH, emptyMap())
     }
 
     @Test
@@ -3087,7 +3088,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(quickActionsStatsClickAction).invoke()
 
         assertThat(trackWithTabSource).isEmpty()
-        assertThat(analyticsTrackerWrapper.track(Stat.QUICK_ACTION_STATS_TAPPED))
+        verify(analyticsTrackerWrapper).track(Stat.QUICK_ACTION_STATS_TAPPED, emptyMap())
     }
 
     @Test
@@ -3097,7 +3098,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(quickActionsPagesClickAction).invoke()
 
         assertThat(trackWithTabSource).isEmpty()
-        assertThat(analyticsTrackerWrapper.track(Stat.QUICK_ACTION_PAGES_TAPPED))
+
+        verify(analyticsTrackerWrapper).track(Stat.QUICK_ACTION_PAGES_TAPPED, emptyMap())
     }
 
     @Test
@@ -3107,7 +3109,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(quickActionsPostsClickAction).invoke()
 
         assertThat(trackWithTabSource).isEmpty()
-        assertThat(analyticsTrackerWrapper.track(Stat.QUICK_ACTION_POSTS_TAPPED))
+
+        verify(analyticsTrackerWrapper).track(Stat.QUICK_ACTION_POSTS_TAPPED, emptyMap())
     }
 
     @Test
@@ -3117,7 +3120,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(quickActionsMediaClickAction).invoke()
 
         assertThat(trackWithTabSource).isEmpty()
-        assertThat(analyticsTrackerWrapper.track(Stat.QUICK_ACTION_MEDIA_TAPPED))
+
+        verify(analyticsTrackerWrapper).track(Stat.QUICK_ACTION_MEDIA_TAPPED, emptyMap())
     }
 
     @Test
