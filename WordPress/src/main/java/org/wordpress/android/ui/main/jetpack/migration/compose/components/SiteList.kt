@@ -119,6 +119,7 @@ private fun SiteIcon(iconUrl: String) {
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data(iconUrl)
+            .error(R.drawable.ic_site_icon_placeholder_primary_24)
             .crossfade(true)
             .build(),
         contentDescription = stringResource(R.string.blavatar_desc),

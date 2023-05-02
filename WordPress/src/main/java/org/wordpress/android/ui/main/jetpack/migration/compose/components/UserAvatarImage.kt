@@ -29,6 +29,7 @@ fun BoxScope.UserAvatarImage(
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data(avatarUrl)
+            .error(R.drawable.ic_user_placeholder_primary_24)
             .crossfade(true)
             .build(),
         contentDescription = stringResource(R.string.jp_migration_avatar_content_description),
