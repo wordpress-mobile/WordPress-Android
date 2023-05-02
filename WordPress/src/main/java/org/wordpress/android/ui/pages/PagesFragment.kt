@@ -201,6 +201,10 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         viewModel.onSpecificPageRequested(remotePageId)
     }
 
+    fun onSpecificPageListTypeRequested(pageListType: PageListType) {
+        viewModel.onSpecificPageListTypeRequested(pageListType)
+    }
+
     private fun onPageParentSet(pageId: Long, parentId: Long) {
         viewModel.onPageParentSet(pageId, parentId)
     }
@@ -438,6 +442,13 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                 val pagerIndex = PagesPagerAdapter.pageTypes.indexOf(PageListType.fromPageStatus(page.status))
                 pagesPager.currentItem = pagerIndex
                 (pagesPager.adapter as PagesPagerAdapter).scrollToPage(page)
+            }
+        })
+
+        viewModel.launchPageListType.observe(viewLifecycleOwner, { pageListType ->
+            pageListType?.let {
+                val pagerIndex = PagesPagerAdapter.pageTypes.indexOf(pageListType)
+                pagesPager.currentItem = pagerIndex
             }
         })
     }
