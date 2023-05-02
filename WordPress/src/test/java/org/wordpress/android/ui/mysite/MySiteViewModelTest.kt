@@ -704,7 +704,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             isSiteUsingWpComRestApi = true
         )
 
-        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isTrue()
+        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isTrue
     }
 
     @Test
@@ -3848,7 +3848,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T = this@invokeOnCleared as T
         })
-        viewModelProvider.get(this@invokeOnCleared::class.java)
+        viewModelProvider[this@invokeOnCleared::class.java]
         viewModelStore.clear()
     }
 }
