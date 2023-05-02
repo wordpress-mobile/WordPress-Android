@@ -49,7 +49,7 @@ private val PrimaryFontSize = 17.sp
 private val StartPadding = 40.dp
 
 @Composable
-fun DomainItem(uiState: DomainUiState) = with(uiState) {
+fun domainItem(uiState: DomainUiState) = with(uiState) {
     Column(Modifier.background(if (isSelected) HighlightBgColor else Unspecified)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -188,7 +188,7 @@ private fun DomainItemPreview() {
     }
     AppThemeWithoutBackground {
         Column {
-            uiStates.forEach { DomainItem(it) }
+            uiStates.forEach { domainItem(it) }
         }
     }
 }
