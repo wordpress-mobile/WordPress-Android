@@ -710,28 +710,25 @@ class MySiteViewModel @Inject constructor(
 
     private fun onPagesItemClick(params: PagesCardBuilderParams.PagesItemClickParams) {
         cardsTracker.trackPagesItemClicked(params.pagesCardType)
-        when (params.pagesCardType) {
+        _onNavigation.value = Event(getNavigationActionForPagesItem(params.pagesCardType, params.pageId))
+    }
+
+    private fun getNavigationActionForPagesItem(pagesCardType: PagesCardContentType, pageId: Int): SiteNavigationAction {
+        return when (pagesCardType) {
             PagesCardContentType.SCHEDULED -> {
-                _onNavigation.value =
-                    Event(
-                        SiteNavigationAction.OpenPagesScheduledTab(
-                            requireNotNull(selectedSiteRepository.getSelectedSite()),
-                            params.pageId
-                        )
-                    )
+                SiteNavigationAction.OpenPagesScheduledTab(
+                    requireNotNull(selectedSiteRepository.getSelectedSite()),
+                    pageId
+                )
             }
             PagesCardContentType.DRAFT -> {
-                _onNavigation.value =
-                    Event(
-                        SiteNavigationAction.OpenPagesDraftsTab(
-                            requireNotNull(selectedSiteRepository.getSelectedSite()),
-                            params.pageId
-                        )
-                    )
+                SiteNavigationAction.OpenPagesDraftsTab(
+                    requireNotNull(selectedSiteRepository.getSelectedSite()),
+                    pageId
+                )
             }
             PagesCardContentType.PUBLISH -> {
-                _onNavigation.value =
-                    Event(SiteNavigationAction.OpenPages(requireNotNull(selectedSiteRepository.getSelectedSite())))
+                SiteNavigationAction.OpenPages(requireNotNull(selectedSiteRepository.getSelectedSite()))
             }
         }
     }
