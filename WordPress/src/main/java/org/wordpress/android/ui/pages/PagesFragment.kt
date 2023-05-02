@@ -24,7 +24,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.snackbar.Snackbar
@@ -378,6 +377,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         )
     }
 
+    @Suppress("LongMethod")
     private fun PagesFragmentBinding.setupObservers(activity: FragmentActivity) {
         viewModel.listState.observe(viewLifecycleOwner) {
             refreshProgressBars(it)
