@@ -35,8 +35,8 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Error
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Loading
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Scanning
-import org.wordpress.android.ui.qrcodeauth.compose.state.ContentState
-import org.wordpress.android.ui.qrcodeauth.compose.state.ErrorState
+import org.wordpress.android.ui.qrcodeauth.compose.state.contentState
+import org.wordpress.android.ui.qrcodeauth.compose.state.errorState
 import org.wordpress.android.ui.qrcodeauth.compose.state.LoadingState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.observeEvent
@@ -136,8 +136,8 @@ private fun QRCodeAuthScreen(viewModel: QRCodeAuthViewModel = viewModel()) {
 
         @Suppress("UnnecessaryVariable") // See: https://stackoverflow.com/a/69558316/4129245
         when (val state = uiState) {
-            is Content -> ContentState(state)
-            is Error -> ErrorState(state)
+            is Content -> contentState(state)
+            is Error -> errorState(state)
             is Loading -> LoadingState()
             is Scanning -> Unit
         }

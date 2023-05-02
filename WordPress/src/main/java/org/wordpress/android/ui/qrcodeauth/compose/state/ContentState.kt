@@ -30,7 +30,7 @@ import org.wordpress.android.ui.qrcodeauth.compose.components.Subtitle
 import org.wordpress.android.ui.qrcodeauth.compose.components.Title
 
 @Composable
-fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
+fun contentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -98,6 +98,6 @@ private fun ContentStatePreview() {
             primaryActionButton = ValidatedPrimaryActionButton {},
             secondaryActionButton = ValidatedSecondaryActionButton {},
         )
-        ContentState(state)
+        contentState(state)
     }
 }

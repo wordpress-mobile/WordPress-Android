@@ -34,12 +34,12 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
-import org.wordpress.android.ui.main.jetpack.migration.compose.state.DeleteStep
-import org.wordpress.android.ui.main.jetpack.migration.compose.state.DoneStep
-import org.wordpress.android.ui.main.jetpack.migration.compose.state.ErrorStep
+import org.wordpress.android.ui.main.jetpack.migration.compose.state.deleteStep
+import org.wordpress.android.ui.main.jetpack.migration.compose.state.doneStep
+import org.wordpress.android.ui.main.jetpack.migration.compose.state.errorStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
-import org.wordpress.android.ui.main.jetpack.migration.compose.state.NotificationsStep
-import org.wordpress.android.ui.main.jetpack.migration.compose.state.WelcomeStep
+import org.wordpress.android.ui.main.jetpack.migration.compose.state.notificationsStep
+import org.wordpress.android.ui.main.jetpack.migration.compose.state.welcomeStep
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.util.AppThemeUtils
 import org.wordpress.android.util.LocaleManager
@@ -157,11 +157,11 @@ private fun JetpackMigrationScreen(viewModel: JetpackMigrationViewModel = viewMo
 
         Crossfade(targetState = uiState) { state ->
             when (state) {
-                is Content.Welcome -> WelcomeStep(state)
-                is Content.Notifications -> NotificationsStep(state)
-                is Content.Done -> DoneStep(state)
-                is Content.Delete -> DeleteStep(state)
-                is Error -> ErrorStep(state)
+                is Content.Welcome -> welcomeStep(state)
+                is Content.Notifications -> notificationsStep(state)
+                is Content.Done -> doneStep(state)
+                is Content.Delete -> deleteStep(state)
+                is Error -> errorStep(state)
                 is Loading -> LoadingState()
             }
         }
