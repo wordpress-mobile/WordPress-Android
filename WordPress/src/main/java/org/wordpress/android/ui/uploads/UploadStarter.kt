@@ -6,6 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ProcessLifecycleOwner
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -13,6 +14,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.UploadActionBuilder
@@ -145,46 +147,44 @@ class UploadStarter @Inject constructor(
      */
     private suspend fun upload(site: SiteModel) = coroutineScope {
         try {
-            mutex.lock()
+            mutex.withLock {
+                val posts = async { postStore.getPostsWithLocalChanges(site) }
+                val pages = async { pageStore.getPagesWithLocalChanges(site) }
+                val list = posts.await() + pages.await()
 
-            val posts = async { postStore.getPostsWithLocalChanges(site) }
-            val pages = async { pageStore.getPagesWithLocalChanges(site) }
-            val list = posts.await() + pages.await()
-
-            list.asSequence()
-                .map { post ->
-                    val action = uploadActionUseCase.getAutoUploadAction(post, site)
-                    Pair(post, action)
-                }
-                .filter { (_, action) ->
-                    action != DO_NOTHING
-                }
-                .toList()
-                .forEach { (post, action) ->
-                    trackAutoUploadAction(action, post.status, post.isPage)
-                    AppLog.d(
-                        AppLog.T.POSTS,
-                        "UploadStarter for post (isPage: ${post.isPage}) title: ${post.title}, action: $action"
-                    )
-                    dispatcher.dispatch(
-                        UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(
-                            post
+                list.asSequence()
+                    .map { post ->
+                        val action = uploadActionUseCase.getAutoUploadAction(post, site)
+                        Pair(post, action)
+                    }
+                    .filter { (_, action) ->
+                        action != DO_NOTHING
+                    }
+                    .toList()
+                    .forEach { (post, action) ->
+                        trackAutoUploadAction(action, post.status, post.isPage)
+                        AppLog.d(
+                            AppLog.T.POSTS,
+                            "UploadStarter for post (isPage: ${post.isPage}) title: ${post.title}, action: $action"
                         )
-                    )
-                    uploadServiceFacade.uploadPost(
-                        context = context,
-                        post = post,
-                        trackAnalytics = false
-                    )
-                }
-        } finally {
-            // If the job of the current coroutine is cancelled while the `lock()` call is suspended,
-            // it results in the mutex ending up unlocked.
-            // We introduced this check to prevent IllegalStateExceptions when `unlock` is called in those cases.
-            // See: https://github.com/wordpress-mobile/WordPress-Android/issues/17463
-            if (mutex.isLocked) {
-                mutex.unlock()
+                        dispatcher.dispatch(
+                            UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(
+                                post
+                            )
+                        )
+                        uploadServiceFacade.uploadPost(
+                            context = context,
+                            post = post,
+                            trackAnalytics = false
+                        )
+                    }
             }
+        } catch (e: CancellationException) {
+            AppLog.e(T.MEDIA, e)
+            // Do any needed actions while we are still holding the mutex lock, then release it and rethrow the
+            // exception so it can be handled upstream
+            mutex.unlock()
+            throw e
         }
     }
 
