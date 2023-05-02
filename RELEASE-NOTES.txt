@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+22.4
+-----
+
+
 22.3
 -----
 * [*] [internal] Allow updating specific fields when updating media details. [https://github.com/wordpress-mobile/WordPress-Android/pull/18327]

@@ -4523,6 +4523,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="dashboard_pages_card_no_pages_create_page_button">Add Pages to your site</string>
     <string name="dashboard_pages_card_create_another_page_button">Create Another Page</string>
     <string name="dashboard_pages_card_create_another_page_description">Start with bespoke, mobile friendly layouts</string>
+    <string name="dashboard_card_page_item_status_draft" translatable="false">@string/pages_drafts</string>
+    <string name="dashboard_card_page_item_status_published" translatable="false">@string/pages_published</string>
+    <string name="dashboard_card_page_item_status_scheduled" translatable="false">@string/pages_scheduled</string>
 
     <!-- Jetpack - Dashboard cards - Activity Card -->
     <string name="dashboard_activity_card_title">Recent activity</string>
@@ -4539,4 +4542,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Playback Settings</string>
     <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Privacy and Rating</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Remove blocks</string>
+    <string name="gutenberg_native_loading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Loading</string>
+    <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Unlabeled color. %s</string>
 </resources>
