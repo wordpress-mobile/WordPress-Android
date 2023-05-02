@@ -313,14 +313,15 @@ class MySitesPage {
 
                 ViewMatchers.hasDescendant(
                     Matchers.allOf(
-                        ViewMatchers.withText("Find a custom domain"),
+
+                        ViewMatchers.withText(R.string.dashboard_card_domain_title),
                         ViewMatchers.withId(R.id.dashboard_card_domain_title),
                     )
                 ),
 
                 ViewMatchers.hasDescendant(
                     Matchers.allOf(
-                        ViewMatchers.withText("Stake your claim on your corner of the web with a site address that's easy to find, share, and follow."),
+                        ViewMatchers.withText(R.string.dashboard_card_domain_sub_title),
                         ViewMatchers.withId(R.id.dashboard_card_domain_sub_title),
                     )
                 ),
