@@ -63,6 +63,8 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FET
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.SortedMap
@@ -119,6 +121,7 @@ class PagesViewModelTest : BaseUnitTest() {
     private lateinit var authorSelectionUpdated: MutableLiveData<AuthorFilterSelection>
     private lateinit var authorUIState: MutableLiveData<PagesAuthorFilterUIState>
     private lateinit var blazeSiteEligibility: MutableLiveData<Boolean>
+    private lateinit var launchPageListType: MutableLiveData<PageListType>
     private lateinit var postStore: PostStore
 
     private val mockedPageId = 1
@@ -161,12 +164,14 @@ class PagesViewModelTest : BaseUnitTest() {
         authorSelectionUpdated = MutableLiveData<AuthorFilterSelection>()
         authorUIState = MutableLiveData<PagesAuthorFilterUIState>()
         blazeSiteEligibility = MutableLiveData<Boolean>()
+        launchPageListType = MutableLiveData<PageListType>()
         viewModel.listState.observeForever { if (it != null) listStates.add(it) }
         viewModel.pages.observeForever { if (it != null) pages.add(it) }
         viewModel.searchPages.observeForever { if (it != null) searchPages.add(it) }
         viewModel.authorSelectionUpdated.observeForever { if (it != null) authorSelectionUpdated.value = it }
         viewModel.authorUIState.observeForever { if (it != null) authorUIState.value = it }
         viewModel.blazeSiteEligibility.observeForever { if (it != null) blazeSiteEligibility.value = it }
+        viewModel.launchPageListType.observeForever { if (it != null) launchPageListType.value = it }
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
         whenever(postSqlUtils.insertPostForResult(any())).thenAnswer { invocation ->
             (invocation.arguments[0] as PostModel).apply { setId(copyPageId) }
@@ -591,5 +596,32 @@ class PagesViewModelTest : BaseUnitTest() {
         // Assert
         val message = snackbarMessages[0].message as UiStringRes
         assertThat(message.stringRes).isEqualTo(R.string.page_is_posts_page_warning)
+    }
+
+    @Test
+    fun `given draft tab requested, when view is launched, then darft is shown`() = test {
+        // Act
+        viewModel.onSpecificPageListTypeRequested(DRAFTS)
+
+        // Assert
+        assertThat(launchPageListType.value).isEqualTo(DRAFTS)
+    }
+
+    @Test
+    fun `given published tab requested, when view is launched, then published is shown`() = test {
+        // Act
+        viewModel.onSpecificPageListTypeRequested(PUBLISHED)
+
+        // Assert
+        assertThat(launchPageListType.value).isEqualTo(PUBLISHED)
+    }
+
+    @Test
+    fun `given scheduled tab requested, when view is launched, then scheduled is shown`() = test {
+        // Act
+        viewModel.onSpecificPageListTypeRequested(SCHEDULED)
+
+        // Assert
+        assertThat(launchPageListType.value).isEqualTo(SCHEDULED)
     }
 }

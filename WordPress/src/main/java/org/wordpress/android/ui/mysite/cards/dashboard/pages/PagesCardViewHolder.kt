@@ -6,7 +6,7 @@ import org.wordpress.android.databinding.MySitePagesCardFooterLinkBinding
 import org.wordpress.android.databinding.MySitePagesCardWithPageItemsBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.CreatNewPageItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.CreateNewPageItem
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
@@ -37,7 +37,7 @@ class PagesCardViewHolder(
         uiHelpers.setTextOrHide(mySiteCardToolbarTitle, title)
     }
 
-    private fun MySitePagesCardFooterLinkBinding.setUpFooter(footer: CreatNewPageItem) {
+    private fun MySitePagesCardFooterLinkBinding.setUpFooter(footer: CreateNewPageItem) {
         uiHelpers.setTextOrHide(linkLabel, footer.label)
         uiHelpers.setTextOrHide(linkDescription, footer.description)
         uiHelpers.setImageOrHide(linkIcon, footer.imageRes)

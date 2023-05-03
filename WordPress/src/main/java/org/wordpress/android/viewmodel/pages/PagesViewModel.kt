@@ -176,6 +176,9 @@ class PagesViewModel
     private val _publishAction = SingleLiveEvent<PageModel>()
     val publishAction = _publishAction
 
+    private val _launchPageListType = SingleLiveEvent<PageListType>()
+    val launchPageListType = _launchPageListType
+
     private val _navigateToBlazeOverlay = SingleLiveEvent<PageModel>()
     val navigateToBlazeOverlay = _navigateToBlazeOverlay
 
@@ -345,6 +348,10 @@ class PagesViewModel
                 setParent(page, parentId)
             }
         }
+    }
+
+    fun onSpecificPageListTypeRequested(pageListType: PageListType) {
+        _launchPageListType.postValue(pageListType)
     }
 
     fun onPageTypeChanged(type: PageListType) {
