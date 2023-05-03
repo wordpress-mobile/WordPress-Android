@@ -40,9 +40,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         check(context is OnHelpClickedListener) { "Parent activity must implement OnHelpClickedListener." }
     }
 
-    override fun getContentLayout(): Int {
-        return R.layout.site_creation_domains_screen
-    }
+    override fun getContentLayout() = R.layout.site_creation_domains_screen
 
     override val screenTitle get() = requireArguments().getString(EXTRA_SCREEN_TITLE).orEmpty()
 
