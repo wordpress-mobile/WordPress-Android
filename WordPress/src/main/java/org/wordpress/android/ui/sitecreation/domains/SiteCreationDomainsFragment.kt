@@ -65,12 +65,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
     private fun SiteCreationDomainsScreenBinding.initRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        initAdapter()
-    }
-
-    private fun SiteCreationDomainsScreenBinding.initAdapter() {
-        val adapter = SiteCreationDomainsAdapter(uiHelpers)
-        recyclerView.adapter = adapter
+        recyclerView.adapter = SiteCreationDomainsAdapter(uiHelpers)
     }
 
     private fun SiteCreationDomainsScreenBinding.initViewModel() {
