@@ -121,14 +121,14 @@ class WPMainActivityViewModel @Inject constructor(
     private val _switchToMySite = MutableLiveData<Event<Unit>>()
     val switchToMySite: LiveData<Event<Unit>> = _switchToMySite
 
-    private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
-    val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
+    private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit?>()
+    val onFeatureAnnouncementRequested: LiveData<Unit?> = _onFeatureAnnouncementRequested
 
     private val _createPostWithBloggingPrompt = SingleLiveEvent<Int>()
     val createPostWithBloggingPrompt: LiveData<Int> = _createPostWithBloggingPrompt
 
-    private val _openBloggingPromptsOnboarding = SingleLiveEvent<Unit>()
-    val openBloggingPromptsOnboarding: LiveData<Unit> = _openBloggingPromptsOnboarding
+    private val _openBloggingPromptsOnboarding = SingleLiveEvent<Unit?>()
+    val openBloggingPromptsOnboarding: LiveData<Unit?> = _openBloggingPromptsOnboarding
 
     val onFocusPointVisibilityChange = quickStartRepository.activeTask
         .mapNullable { getExternalFocusPointInfo(it) }

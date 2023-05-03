@@ -42,11 +42,11 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
     private val _showProgressView = SingleLiveEvent<Boolean>()
     val showProgressView: LiveData<Boolean> = _showProgressView
 
-    private val _dismissWithError = SingleLiveEvent<Unit>()
-    val dismissWithError: LiveData<Unit> = _dismissWithError
+    private val _dismissWithError = SingleLiveEvent<Unit?>()
+    val dismissWithError: LiveData<Unit?> = _dismissWithError
 
-    private val _dismissBottomSheet = SingleLiveEvent<Unit>()
-    val dismissBottomSheet: LiveData<Unit> = _dismissBottomSheet
+    private val _dismissBottomSheet = SingleLiveEvent<Unit?>()
+    val dismissBottomSheet: LiveData<Unit?> = _dismissBottomSheet
 
     private val _suggestedTimezone = MutableLiveData<String>()
     val suggestedTimezone = _suggestedTimezone

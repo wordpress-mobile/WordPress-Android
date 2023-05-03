@@ -145,11 +145,11 @@ class SiteCreationMainVM @Inject constructor(
     private val _onCompleted = SingleLiveEvent<SiteCreationCompletionEvent>()
     val onCompleted: LiveData<SiteCreationCompletionEvent> = _onCompleted
 
-    private val _exitFlowObservable = SingleLiveEvent<Unit>()
-    val exitFlowObservable: LiveData<Unit> = _exitFlowObservable
+    private val _exitFlowObservable = SingleLiveEvent<Unit?>()
+    val exitFlowObservable: LiveData<Unit?> = _exitFlowObservable
 
-    private val _onBackPressedObservable = SingleLiveEvent<Unit>()
-    val onBackPressedObservable: LiveData<Unit> = _onBackPressedObservable
+    private val _onBackPressedObservable = SingleLiveEvent<Unit?>()
+    val onBackPressedObservable: LiveData<Unit?> = _onBackPressedObservable
 
     private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
     val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay

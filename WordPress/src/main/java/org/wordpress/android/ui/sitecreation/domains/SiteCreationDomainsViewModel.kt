@@ -91,11 +91,11 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val _createSiteBtnClicked = SingleLiveEvent<DomainModel>()
     val createSiteBtnClicked: LiveData<DomainModel> = _createSiteBtnClicked
 
-    private val _clearBtnClicked = SingleLiveEvent<Unit>()
+    private val _clearBtnClicked = SingleLiveEvent<Unit?>()
     val clearBtnClicked = _clearBtnClicked
 
-    private val _onHelpClicked = SingleLiveEvent<Unit>()
-    val onHelpClicked: LiveData<Unit> = _onHelpClicked
+    private val _onHelpClicked = SingleLiveEvent<Unit?>()
+    val onHelpClicked: LiveData<Unit?> = _onHelpClicked
 
     init {
         dispatcher.register(fetchDomainsUseCase)

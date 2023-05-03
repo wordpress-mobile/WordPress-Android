@@ -143,8 +143,8 @@ class PagesViewModel
     private val _searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>?> = MutableLiveData()
     val searchPages: LiveData<SortedMap<PageListType, List<PageModel>>?> = _searchPages
 
-    private val _createNewPage = SingleLiveEvent<Unit>()
-    val createNewPage: LiveData<Unit> = _createNewPage
+    private val _createNewPage = SingleLiveEvent<Unit?>()
+    val createNewPage: LiveData<Unit?> = _createNewPage
 
     private val _editPage = SingleLiveEvent<Triple<SiteModel, PostModel?, LoadAutoSaveRevision>>()
     val editPage: LiveData<Triple<SiteModel, PostModel?, LoadAutoSaveRevision>> = _editPage

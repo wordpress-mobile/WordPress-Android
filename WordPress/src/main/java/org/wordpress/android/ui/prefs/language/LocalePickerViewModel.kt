@@ -21,17 +21,17 @@ class LocalePickerViewModel @Inject constructor(
 ) : ViewModel() {
     private val cachedLocales = mutableListOf<LocalePickerListItem>()
 
-    private val _expandBottomSheet = SingleLiveEvent<Unit>()
-    val expandBottomSheet: LiveData<Unit> = _expandBottomSheet
+    private val _expandBottomSheet = SingleLiveEvent<Unit?>()
+    val expandBottomSheet: LiveData<Unit?> = _expandBottomSheet
 
-    private val _hideKeyboard = SingleLiveEvent<Unit>()
-    val hideKeyboard: LiveData<Unit> = _hideKeyboard
+    private val _hideKeyboard = SingleLiveEvent<Unit?>()
+    val hideKeyboard: LiveData<Unit?> = _hideKeyboard
 
-    private val _clearSearchField = SingleLiveEvent<Unit>()
-    val clearSearchField: LiveData<Unit> = _clearSearchField
+    private val _clearSearchField = SingleLiveEvent<Unit?>()
+    val clearSearchField: LiveData<Unit?> = _clearSearchField
 
-    private val _dismissBottomSheet = SingleLiveEvent<Unit>()
-    val dismissBottomSheet: LiveData<Unit> = _dismissBottomSheet
+    private val _dismissBottomSheet = SingleLiveEvent<Unit?>()
+    val dismissBottomSheet: LiveData<Unit?> = _dismissBottomSheet
 
     private val _isEmptyViewVisible = SingleLiveEvent<Boolean>()
     private val _suggestedLocale = MutableLiveData<CurrentLocale>()

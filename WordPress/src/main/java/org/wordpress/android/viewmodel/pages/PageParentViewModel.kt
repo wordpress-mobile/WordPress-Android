@@ -52,8 +52,8 @@ class PageParentViewModel
     private val _isSaveButtonVisible = MutableLiveData<Boolean>()
     val isSaveButtonVisible: LiveData<Boolean> = _isSaveButtonVisible
 
-    private val _saveParent = SingleLiveEvent<Unit>()
-    val saveParent: LiveData<Unit> = _saveParent
+    private val _saveParent = SingleLiveEvent<Unit?>()
+    val saveParent: LiveData<Unit?> = _saveParent
 
     private val _searchPages: MutableLiveData<List<PageItem>?> = MutableLiveData()
     val searchPages: LiveData<List<PageItem>?> = _searchPages

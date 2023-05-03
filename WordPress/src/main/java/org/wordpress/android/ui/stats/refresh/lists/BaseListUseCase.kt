@@ -74,8 +74,8 @@ class BaseListUseCase(
         it?.let { SnackbarMessageHolder(UiStringRes(it)) }
     }
 
-    private val mutableListSelected = SingleLiveEvent<Unit>()
-    val listSelected: LiveData<Unit> = mutableListSelected
+    private val mutableListSelected = SingleLiveEvent<Unit?>()
+    val listSelected: LiveData<Unit?> = mutableListSelected
 
     private val mutableScrollTo = MutableLiveData<Event<StatsType>>()
     val scrollTo: LiveData<Event<StatsType>> = mutableScrollTo
