@@ -85,6 +85,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams.ActivityCardItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
@@ -363,6 +364,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val pageId = 100
     private val localHomepageId = 1
     private val bloggingPromptId = 123
+    private val activityId = "activityId"
+    private val isRewindable = false
     private lateinit var site: SiteModel
     private lateinit var siteInfoHeader: SiteInfoHeaderCard
     private lateinit var homepage: PageModel
@@ -411,6 +414,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onPromoteWithBlazeCardHideThisClick: (() -> Unit) = {}
     private var onPageCardFooterLinkClick: (() -> Unit)? = null
     private var onPageItemClick: ((params: PagesItemClickParams) -> Unit)? = null
+    private var onActivityCardFooterLinkClick: (() -> Unit)? = null
+    private var onActivityItemClick: ((params: ActivityCardItemClickParams) -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
             taskType = QuickStartTaskType.CUSTOMIZE,
@@ -2212,6 +2217,53 @@ class MySiteViewModelTest : BaseUnitTest() {
             verify(cardsTracker).trackPagesItemClicked(PagesCardContentType.PUBLISH)
         }
 
+    /* DASHBOARD ACTIVITY CARD */
+    @Test
+    fun `given activity card, when footer is clicked, then trigger navigate to activity log list`() =
+        test {
+            initSelectedSite()
+
+            requireNotNull(onActivityCardFooterLinkClick).invoke()
+
+            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenActivityLog(site))
+        }
+
+    @Test
+    fun `given activity card, when footer clicked, then event is tracked`() =
+        test {
+            initSelectedSite()
+
+            requireNotNull(onActivityCardFooterLinkClick).invoke()
+
+            verify(cardsTracker).trackActivityCardFooterClicked()
+        }
+
+    @Test
+    fun `given activity card, when activity item is clicked, then navigate to activity detail`() =
+        test {
+            initSelectedSite()
+
+            // requireNotNull(onActivityItemClick).invoke(ActivityCardItemClickParams(activityId, isRewindable))
+            requireNotNull(onActivityItemClick).invoke(ActivityCardItemClickParams(activityId, isRewindable))
+
+            assertThat(navigationActions).containsOnly(
+                SiteNavigationAction.OpenActivityLogDetail(
+                    site,
+                    activityId,
+                    isRewindable
+                )
+            )
+        }
+
+    @Test
+    fun `given activity card, when activity item is clicked, then event is tracked`() =
+        test {
+            initSelectedSite()
+
+            requireNotNull(onActivityItemClick).invoke(ActivityCardItemClickParams(activityId, isRewindable))
+
+            verify(cardsTracker).trackActivityCardItemClicked()
+        }
 
     /* DASHBOARD ERROR SNACKBAR */
 
@@ -3680,6 +3732,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                         initPromoteWithBlazeCard(mockInvocation)
                     )
                     add(initPageCard(mockInvocation))
+                    add(initActivityCard(mockInvocation))
                 }
             }
         )
@@ -3838,6 +3891,29 @@ class MySiteViewModelTest : BaseUnitTest() {
             footerLink = DashboardCard.PagesCard.PagesCardWithData.CreateNewPageItem(
                 label = UiStringRes(0),
                 onClick = onPageCardFooterLinkClick as (() -> Unit)
+            )
+        )
+    }
+
+    private fun initActivityCard(mockInvocation: InvocationOnMock): DashboardCard.ActivityCard.ActivityCardWithItems {
+        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
+        onActivityItemClick = params.activityCardBuilderParams.onActivityItemClick
+        onActivityCardFooterLinkClick = params.activityCardBuilderParams.onFooterLinkClick
+        return DashboardCard.ActivityCard.ActivityCardWithItems(
+            title = UiStringRes(0),
+            activityItems = listOf(
+                DashboardCard.ActivityCard.ActivityCardWithItems.ActivityItem(
+                    label = UiStringRes(0),
+                    subLabel = "",
+                    displayDate = "",
+                    icon = 0,
+                    iconBackgroundColor = 0,
+                    onClick = mock()
+                )
+            ),
+            footerLink = DashboardCard.ActivityCard.FooterLink(
+                label = UiStringRes(0),
+                onClick = onActivityCardFooterLinkClick as (() -> Unit)
             )
         )
     }
