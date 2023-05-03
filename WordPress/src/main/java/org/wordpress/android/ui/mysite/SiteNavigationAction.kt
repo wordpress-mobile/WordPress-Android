@@ -89,4 +89,6 @@ sealed class SiteNavigationAction {
     data class OpenActivityLogDetail(val site: SiteModel, val activityId: String, val isRewindable: Boolean) :
         SiteNavigationAction()
     data class TriggerCreatePageFlow(val site: SiteModel):SiteNavigationAction()
+    data class OpenPagesDraftsTab(val site: SiteModel, val pageId: Int) : SiteNavigationAction()
+    data class OpenPagesScheduledTab(val site: SiteModel, val pageId: Int) : SiteNavigationAction()
 }

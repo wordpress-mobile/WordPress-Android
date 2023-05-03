@@ -130,6 +130,7 @@ import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -159,6 +160,7 @@ import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
 import static org.wordpress.android.ui.main.WPMainActivity.ARG_BYPASS_MIGRATION;
 import static org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity.KEY_DEEP_LINK_DATA;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
+import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_LIST_TYPE_KEY;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_ALL_UNFLATTENED_LOADED_SLIDES;
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_LAUNCHED_FROM_GUTENBERG;
@@ -688,6 +690,21 @@ public class ActivityLauncher {
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
+
+    public static void viewCurrentBlogPagesOfType(Context context, SiteModel site, PageListType pageListType) {
+        if (pageListType == null) {
+            Intent intent = new Intent(context, PagesActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            context.startActivity(intent);
+        } else {
+            Intent intent = new Intent(context, PagesActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            intent.putExtra(EXTRA_PAGE_LIST_TYPE_KEY, pageListType);
+            context.startActivity(intent);
+        }
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
+    }
+
 
     public static void viewPageParentForResult(@NonNull Fragment fragment, @NonNull SiteModel site,
                                                @NonNull Long pageRemoteId) {

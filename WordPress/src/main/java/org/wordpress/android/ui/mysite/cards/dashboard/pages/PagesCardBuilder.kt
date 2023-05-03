@@ -3,9 +3,10 @@ package org.wordpress.android.ui.mysite.cards.dashboard.pages
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.CreatNewPageItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.CreateNewPageItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.PageContentItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams.PagesItemClickParams
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.config.DashboardCardPagesConfig
@@ -13,6 +14,7 @@ import javax.inject.Inject
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.DRAFT
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.PUBLISH
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.SCHEDULED
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.DateTimeUtilsWrapper
 
 private const val REQUIRED_PAGES_IN_CARD: Int = 3
@@ -30,7 +32,9 @@ class PagesCardBuilder @Inject constructor(
 
     private fun convertToPagesItems(params: PagesCardBuilderParams): PagesCard.PagesCardWithData {
         val pages = params.pageCard?.pages
-        val content = pages?.filterByPagesCardSupportedStatus()?.let { getPagesContentItems(pages) } ?: emptyList()
+        val content =
+            pages?.filterByPagesCardSupportedStatus()?.let { getPagesContentItems(pages, params.onPagesItemClick) }
+                ?: emptyList()
         val createPageCard = getCreatePageCard(content, params.onFooterLinkClick)
         return PagesCard.PagesCardWithData(
             title = UiStringRes(R.string.dashboard_pages_card_title),
@@ -42,14 +46,21 @@ class PagesCardBuilder @Inject constructor(
     private fun List<PagesCardModel.PageCardModel>.filterByPagesCardSupportedStatus() =
         this.filter { it.status in PagesCardContentType.getList() }
 
-    private fun getPagesContentItems(pages: List<PagesCardModel.PageCardModel>): List<PageContentItem> {
+    private fun getPagesContentItems(
+        pages: List<PagesCardModel.PageCardModel>,
+        onPageItemClick: (params: PagesItemClickParams) -> Unit
+    ): List<PageContentItem> {
+        PagesCardContentType
         return pages.map { page ->
             PageContentItem(
                 title = getPageTitle(page.title),
                 statusIcon = getStatusIcon(page.status),
                 status = getStatusText(page.status),
                 lastEditedOrScheduledTime = getLastEditedOrScheduledTime(page),
-                onCardClick = { }
+                onClick = ListItemInteraction.create(
+                    PagesItemClickParams(PagesCardContentType.fromString(page.status), page.id),
+                    onPageItemClick
+                )
             )
         }
     }
@@ -85,7 +96,7 @@ class PagesCardBuilder @Inject constructor(
         )
     }
 
-    private fun getCreatePageCard(pages: List<PageContentItem>, onFooterLinkClick: () -> Unit): CreatNewPageItem {
+    private fun getCreatePageCard(pages: List<PageContentItem>, onFooterLinkClick: () -> Unit): CreateNewPageItem {
         // Create new page button is shown with image if there is
         // less than three pages for a user
         return if (pages.isEmpty()) {
@@ -97,8 +108,8 @@ class PagesCardBuilder @Inject constructor(
         }
     }
 
-    private fun createNewPageCardWithAddPageMessage(onFooterLinkClick: () -> Unit): CreatNewPageItem {
-        return CreatNewPageItem(
+    private fun createNewPageCardWithAddPageMessage(onFooterLinkClick: () -> Unit): CreateNewPageItem {
+        return CreateNewPageItem(
             label = UiStringRes(R.string.dashboard_pages_card_no_pages_create_page_button),
             description = UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
             imageRes = R.drawable.illustration_page_card_create_page,
@@ -106,8 +117,8 @@ class PagesCardBuilder @Inject constructor(
         )
     }
 
-    private fun createNewPageCardWithAddAnotherPageMessage(onFooterLinkClick: () -> Unit): CreatNewPageItem {
-        return CreatNewPageItem(
+    private fun createNewPageCardWithAddAnotherPageMessage(onFooterLinkClick: () -> Unit): CreateNewPageItem {
+        return CreateNewPageItem(
             label = UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
             description = UiStringRes(R.string.dashboard_pages_card_create_another_page_description),
             imageRes = R.drawable.illustration_page_card_create_page,
@@ -115,8 +126,8 @@ class PagesCardBuilder @Inject constructor(
         )
     }
 
-    private fun createNewPageCardWithOnlyButton(onFooterLinkClick: () -> Unit): CreatNewPageItem {
-        return CreatNewPageItem(
+    private fun createNewPageCardWithOnlyButton(onFooterLinkClick: () -> Unit): CreateNewPageItem {
+        return CreateNewPageItem(
             label = UiStringRes(R.string.dashboard_pages_card_create_another_page_button),
             onClick = onFooterLinkClick
         )
