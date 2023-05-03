@@ -6,9 +6,9 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.switchMap
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
@@ -57,7 +57,7 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
     private val _timezones = MutableLiveData<List<TimezonesList>>()
 
     private val searchInput = MutableLiveData<String>()
-    private val timezoneSearch: LiveData<List<TimezonesList>> = Transformations.switchMap(searchInput) { term ->
+    private val timezoneSearch: LiveData<List<TimezonesList>> = searchInput.switchMap { term ->
         filterTimezones(term)
     }
 

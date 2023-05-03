@@ -3,9 +3,9 @@ package org.wordpress.android.ui.prefs.language
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.switchMap
 import org.wordpress.android.R.array
 import org.wordpress.android.ui.prefs.language.LocalePickerListItem.ClickAction
 import org.wordpress.android.ui.prefs.language.LocalePickerListItem.LocaleRow
@@ -43,7 +43,7 @@ class LocalePickerViewModel @Inject constructor(
 
     private val searchInput = MutableLiveData<String>()
     private val _filteredLocales: LiveData<List<LocalePickerListItem>> =
-        Transformations.switchMap(searchInput) { term ->
+        searchInput.switchMap { term ->
             filterLocales(term)
         }
 

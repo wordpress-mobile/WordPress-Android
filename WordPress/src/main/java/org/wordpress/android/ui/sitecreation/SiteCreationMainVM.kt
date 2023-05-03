@@ -6,8 +6,8 @@ import android.os.Parcelable
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -132,7 +132,7 @@ class SiteCreationMainVM @Inject constructor(
 
     val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
         SingleEventObservable(
-            Transformations.map(wizardManager.navigatorLiveData) {
+            wizardManager.navigatorLiveData.map {
                 clearOldSiteCreationState(it)
                 WizardNavigationTarget(it, siteCreationState)
             }

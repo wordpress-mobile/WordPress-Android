@@ -5,7 +5,7 @@ import androidx.annotation.ColorRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -63,7 +63,7 @@ class PageListViewModel @Inject constructor(
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = Transformations.map(_pages) {
+    val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = _pages.map {
         Triple(it, isSitePhotonCapable, isSitePrivateAt)
     }
     private val _scrollToPosition = SingleLiveEvent<Int>()
