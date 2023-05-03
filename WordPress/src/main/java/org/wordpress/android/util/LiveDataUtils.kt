@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -332,7 +332,7 @@ fun <T, U> LiveData<T>.mapAsync(scope: CoroutineScope, mapper: suspend (T) -> U?
  * Calls the specified function [block] with `this` value as its receiver and returns new instance of LiveData.
  */
 fun <T> LiveData<T>.perform(block: LiveData<T>.(T) -> Unit): LiveData<T> {
-    return Transformations.map(this) {
+    return this.map {
         block(it)
         return@map it
     }
@@ -342,7 +342,7 @@ fun <T> LiveData<T>.perform(block: LiveData<T>.(T) -> Unit): LiveData<T> {
  * Simple wrapper of the map utility method that is null safe
  */
 fun <T, U> LiveData<T>.mapNullable(mapper: (T?) -> U?): LiveData<U> {
-    return Transformations.map(this) { mapper(it) }
+    return this.map { mapper(it)!! }
 }
 
 /**
