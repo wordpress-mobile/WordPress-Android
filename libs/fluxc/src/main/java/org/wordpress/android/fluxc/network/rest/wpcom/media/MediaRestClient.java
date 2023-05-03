@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.MediaFields;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
@@ -621,34 +622,34 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     private Map<String, Object> getEditRequestParams(final MediaModel media) {
         if (media == null) return null;
 
-        String[] fieldsToUpdate = media.getFieldsToUpdate();
+        MediaFields[] fieldsToUpdate = media.getFieldsToUpdate();
 
         final Map<String, Object> params = new HashMap<>();
-        for (String field : fieldsToUpdate) {
+        for (MediaFields field : fieldsToUpdate) {
             switch (field) {
-                case "parent_id":
+                case PARENT_ID:
                     if (media.getPostId() > 0) {
-                        params.put("parent_id", String.valueOf(media.getPostId()));
+                        params.put(MediaFields.PARENT_ID.getFieldName(), String.valueOf(media.getPostId()));
                     }
                     break;
-                case "title":
+                case TITLE:
                     if (!TextUtils.isEmpty(media.getTitle())) {
-                        params.put("title", media.getTitle());
+                        params.put(MediaFields.TITLE.getFieldName(), media.getTitle());
                     }
                     break;
-                case "description":
+                case DESCRIPTION:
                     if (!TextUtils.isEmpty(media.getDescription())) {
-                        params.put("description", media.getDescription());
+                        params.put(MediaFields.DESCRIPTION.getFieldName(), media.getDescription());
                     }
                     break;
-                case "caption":
+                case CAPTION:
                     if (!TextUtils.isEmpty(media.getCaption())) {
-                        params.put("caption", media.getCaption());
+                        params.put(MediaFields.CAPTION.getFieldName(), media.getCaption());
                     }
                     break;
-                case "alt":
+                case ALT:
                     if (!TextUtils.isEmpty(media.getAlt())) {
-                        params.put("alt", media.getAlt());
+                        params.put(MediaFields.ALT.getFieldName(), media.getAlt());
                     }
                     break;
             }
