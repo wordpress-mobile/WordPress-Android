@@ -75,5 +75,5 @@ class PhotoPickerActionModeCallback(
         lifecycleRegistry.handleLifecycleEvent(ON_STOP)
     }
 
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+    override val lifecycle: Lifecycle = lifecycleRegistry
 }

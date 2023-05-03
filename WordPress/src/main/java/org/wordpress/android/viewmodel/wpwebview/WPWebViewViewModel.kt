@@ -66,7 +66,7 @@ class WPWebViewViewModel
 
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
-        override fun getLifecycle(): Lifecycle = lifecycleRegistry
+        override val lifecycle: Lifecycle = lifecycleRegistry
     }
 
     private val defaultPreviewMode: PreviewMode

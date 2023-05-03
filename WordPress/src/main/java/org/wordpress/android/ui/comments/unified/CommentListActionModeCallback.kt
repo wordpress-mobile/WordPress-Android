@@ -130,7 +130,7 @@ class CommentListActionModeCallback(
         lifecycleRegistry.handleLifecycleEvent(ON_STOP)
     }
 
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+    override val lifecycle: Lifecycle = lifecycleRegistry
 
     companion object {
         const val ICON_ALPHA_ENABLED = 255

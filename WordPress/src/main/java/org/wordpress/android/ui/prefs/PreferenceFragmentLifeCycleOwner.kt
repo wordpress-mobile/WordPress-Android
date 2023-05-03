@@ -61,7 +61,5 @@ open class PreferenceFragmentLifeCycleOwner : PreferenceFragment(), LifecycleOwn
         lifecycleRegistry.handleLifecycleEvent(ON_DESTROY)
     }
 
-    override fun getLifecycle(): Lifecycle {
-        return lifecycleRegistry
-    }
+    override val lifecycle: Lifecycle = lifecycleRegistry
 }
