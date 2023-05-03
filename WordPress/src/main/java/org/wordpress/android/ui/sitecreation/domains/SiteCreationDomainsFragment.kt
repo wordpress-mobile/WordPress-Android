@@ -55,7 +55,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
             searchInputWithHeader = SearchInputWithHeader(
                 uiHelpers = uiHelpers,
                 rootView = it.root as ViewGroup,
-                onClear = { viewModel.onClearTextBtnClicked() }
+                onClear = viewModel::onClearTextBtnClicked,
             )
             it.createSiteButton.setOnClickListener { viewModel.onCreateSiteBtnClicked() }
             it.initRecyclerView()
