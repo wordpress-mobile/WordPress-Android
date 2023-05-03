@@ -3,6 +3,7 @@ package org.wordpress.android.ui.bloggingprompts.promptslist.usecase
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.config.BloggingPromptsEndpointConfig
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
@@ -11,6 +12,7 @@ import javax.inject.Inject
 class FetchBloggingPromptsListUseCase @Inject constructor(
     private val bloggingPromptsStore: BloggingPromptsStore,
     private val selectedSiteRepository: SelectedSiteRepository,
+    private val bloggingPromptsEndpointConfig: BloggingPromptsEndpointConfig,
 ) {
     suspend fun execute(): Result {
         return fetchBloggingPrompts()
@@ -35,7 +37,12 @@ class FetchBloggingPromptsListUseCase @Inject constructor(
             .let { Date.from(it) }
 
         return selectedSiteRepository.getSelectedSite()?.let { site ->
-            bloggingPromptsStore.fetchPrompts(site, NUMBER_OF_PROMPTS, fromDate)
+            bloggingPromptsStore.fetchPrompts(
+                site,
+                NUMBER_OF_PROMPTS,
+                fromDate,
+                bloggingPromptsEndpointConfig.shouldUseV2()
+            )
                 .takeUnless { it.isError }
                 ?.model
         }

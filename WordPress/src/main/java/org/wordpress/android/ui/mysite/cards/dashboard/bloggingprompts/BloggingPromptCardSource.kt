@@ -15,6 +15,7 @@ import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.config.BloggingPromptsEndpointConfig
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import java.time.LocalDate
 import java.time.ZoneId
@@ -29,6 +30,7 @@ class BloggingPromptCardSource @Inject constructor(
     private val promptsStore: BloggingPromptsStore,
     private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
+    private val bloggingPromptsEndpointConfig: BloggingPromptsEndpointConfig,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MySiteRefreshSource<BloggingPromptUpdate> {
     override val refresh = MutableLiveData(false)
@@ -118,7 +120,12 @@ class BloggingPromptCardSource @Inject constructor(
         coroutineScope.launch(bgDispatcher) {
             delay(REFRESH_DELAY)
             val numOfPromptsToFetch = if (isSinglePromptRefresh) 1 else NUM_PROMPTS_TO_REQUEST
-            val result = promptsStore.fetchPrompts(selectedSite, numOfPromptsToFetch, Date())
+            val result = promptsStore.fetchPrompts(
+                selectedSite,
+                numOfPromptsToFetch,
+                Date(),
+                bloggingPromptsEndpointConfig.shouldUseV2()
+            )
             when {
                 result.isError -> postLastState()
                 else -> {
