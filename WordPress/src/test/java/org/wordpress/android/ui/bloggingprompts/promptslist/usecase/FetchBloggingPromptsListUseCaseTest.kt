@@ -7,7 +7,9 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doSuspendableAnswer
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
@@ -17,6 +19,7 @@ import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListF
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Failure
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Success
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.config.BloggingPromptsEndpointConfig
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -26,13 +29,16 @@ class FetchBloggingPromptsListUseCaseTest : BaseUnitTest() {
 
     @Mock
     lateinit var bloggingPromptsStore: BloggingPromptsStore
+    @Mock
+    lateinit var bloggingPromptsEndpointConfig: BloggingPromptsEndpointConfig
     lateinit var useCase: FetchBloggingPromptsListUseCase
 
     @Before
     fun setUp() {
         useCase = FetchBloggingPromptsListUseCase(
             bloggingPromptsStore = bloggingPromptsStore,
-            selectedSiteRepository = selectedSiteRepository
+            selectedSiteRepository = selectedSiteRepository,
+            bloggingPromptsEndpointConfig = bloggingPromptsEndpointConfig
         )
     }
 
@@ -48,7 +54,8 @@ class FetchBloggingPromptsListUseCaseTest : BaseUnitTest() {
     @Test
     fun `given fetching prompts fails, when execute is called, then return failure`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(SiteModel().apply { id = 1 })
-        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any()))
+        whenever(bloggingPromptsEndpointConfig.shouldUseV2()).thenReturn(false)
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any(), any()))
             .thenReturn(BloggingPromptsResult(error = mock()))
 
         val result = useCase.execute()
@@ -57,12 +64,37 @@ class FetchBloggingPromptsListUseCaseTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when execute is called for v2, then call fetchPrompts from the store for v2 endpoint`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(SiteModel().apply { id = 1 })
+        whenever(bloggingPromptsEndpointConfig.shouldUseV2()).thenReturn(true)
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any(), any()))
+            .thenReturn(BloggingPromptsResult(model = mock()))
+
+        useCase.execute()
+
+        verify(bloggingPromptsStore).fetchPrompts(any(), any(), any(), eq(true))
+    }
+
+    @Test
+    fun `when execute is called for v3, then call fetchPrompts from the store for v3 endpoint`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(SiteModel().apply { id = 1 })
+        whenever(bloggingPromptsEndpointConfig.shouldUseV2()).thenReturn(false)
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any(), any()))
+            .thenReturn(BloggingPromptsResult(model = mock()))
+
+        useCase.execute()
+
+        verify(bloggingPromptsStore).fetchPrompts(any(), any(), any(), eq(false))
+    }
+
+    @Test
     fun `when execute is called, then return success with the correct items in descending date order`() = test {
         val now = Date()
         var initialDate: Date = now
         var count: Int = 0
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(SiteModel().apply { id = 1 })
-        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any()))
+        whenever(bloggingPromptsEndpointConfig.shouldUseV2()).thenReturn(false)
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any(), any()))
             .doSuspendableAnswer {
                 count = it.getArgument(1)
                 initialDate = it.getArgument(2)
@@ -97,7 +129,8 @@ class FetchBloggingPromptsListUseCaseTest : BaseUnitTest() {
         var initialDate: Date = now
         var count: Int = 0
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(SiteModel().apply { id = 1 })
-        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any()))
+        whenever(bloggingPromptsEndpointConfig.shouldUseV2()).thenReturn(false)
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any(), any()))
             .doSuspendableAnswer {
                 count = it.getArgument(1)
                 initialDate = it.getArgument(2)

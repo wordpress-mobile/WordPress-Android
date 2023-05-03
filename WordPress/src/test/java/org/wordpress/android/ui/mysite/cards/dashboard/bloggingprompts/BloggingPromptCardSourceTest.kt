@@ -24,6 +24,7 @@ import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.config.BloggingPromptsEndpointConfig
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import java.util.Date
 
@@ -60,6 +61,10 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
 
     @Mock
     private lateinit var bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper
+
+    @Mock
+    private lateinit var bloggingPromptsEndpointConfig: BloggingPromptsEndpointConfig
+
     private lateinit var bloggingPromptCardSource: BloggingPromptCardSource
 
     private val data = BloggingPromptsResult(
@@ -86,6 +91,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
             bloggingPromptsStore,
             bloggingPromptsFeatureConfig,
             bloggingPromptsSettingsHelper,
+            bloggingPromptsEndpointConfig,
             testDispatcher()
         )
     }
@@ -95,6 +101,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(null)
         whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(isBloggingPromptFeatureEnabled)
+        whenever(bloggingPromptsEndpointConfig.shouldUseV2()).thenReturn(false)
     }
 
     /* GET DATA */
@@ -120,7 +127,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.refresh()
 
         verify(bloggingPromptsStore, never()).getPrompts(eq(siteModel))
-        verify(bloggingPromptsStore, never()).fetchPrompts(any(), any(), any())
+        verify(bloggingPromptsStore, never()).fetchPrompts(any(), any(), any(), any())
     }
 
     @Test
@@ -140,21 +147,34 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     /* REFRESH DATA */
 
     @Test
-    fun `when build is invoked, then prompts are fetched from store (network)`() = test {
+    fun `when build is invoked for v2, then prompts are fetched from store (network) using v2 endpoint`() = test {
         whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
+        whenever(bloggingPromptsEndpointConfig.shouldUseV2()).thenReturn(true)
         bloggingPromptCardSource.refresh.observeForever { }
 
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
         advanceUntilIdle()
 
-        verify(bloggingPromptsStore).fetchPrompts(eq(siteModel), eq(20), any())
+        verify(bloggingPromptsStore).fetchPrompts(eq(siteModel), eq(20), any(), eq(true))
+    }
+
+    @Test
+    fun `when build is invoked for v3, then prompts are fetched from store (network) using v3 endpoint`() = test {
+        whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
+        whenever(bloggingPromptsEndpointConfig.shouldUseV2()).thenReturn(false)
+        bloggingPromptCardSource.refresh.observeForever { }
+
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
+        advanceUntilIdle()
+
+        verify(bloggingPromptsStore).fetchPrompts(eq(siteModel), eq(20), any(), eq(false))
     }
 
     @Test
     fun `given no error, when build is invoked, then data is only loaded from get prompts (database)`() = test {
         val result = mutableListOf<BloggingPromptUpdate>()
         whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
-        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(BloggingPromptsResult())
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any(), any())).thenReturn(BloggingPromptsResult())
         bloggingPromptCardSource.refresh.observeForever { }
 
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
@@ -169,7 +189,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     fun `given no error, when refresh is invoked, then data is only loaded from get prompts (database)`() = test {
         val result = mutableListOf<BloggingPromptUpdate>()
         whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
-        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(success).thenReturn(success)
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any(), any())).thenReturn(success).thenReturn(success)
         bloggingPromptCardSource.refresh.observeForever { }
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
             it?.let { result.add(it) }
@@ -256,7 +276,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     fun `when refresh is invoked, then refresh is set to false`() = test {
         val result = mutableListOf<Boolean>()
         whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
-        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(success).thenReturn(success)
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any(), any())).thenReturn(success).thenReturn(success)
         bloggingPromptCardSource.refresh.observeForever { result.add(it) }
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
@@ -277,7 +297,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         val regularRefreshResult = mutableListOf<Boolean>()
         val singlePromptRefreshResult = mutableListOf<Boolean>()
         whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
-        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(success).thenReturn(success)
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any(), any())).thenReturn(success).thenReturn(success)
         bloggingPromptCardSource.singleRefresh.observeForever { singlePromptRefreshResult.add(it) }
         bloggingPromptCardSource.refresh.observeForever { regularRefreshResult.add(it) }
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
@@ -309,7 +329,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     fun `given no error, when data has been refreshed, then refresh is set to true`() = test {
         val result = mutableListOf<Boolean>()
         whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
-        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(success)
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any(), any())).thenReturn(success)
         bloggingPromptCardSource.refresh.observeForever { result.add(it) }
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
@@ -328,7 +348,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     fun `given error, when data has been refreshed, then refresh is set to false`() = test {
         val result = mutableListOf<Boolean>()
         whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
-        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(apiError)
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any(), any())).thenReturn(apiError)
         bloggingPromptCardSource.refresh.observeForever {
             result.add(it)
         }
