@@ -92,8 +92,32 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     // Set to true on a successful response to delete via WP.com REST API, not stored locally
     private boolean mDeleted;
 
-    // Default fields to update upon request
-    private String[] mFieldsToUpdate = {"parent_id", "title", "description", "caption", "alt"};
+    /**
+     * Enum representing various media fields with their default field names.
+     * The default values can be changed by modifying the string parameter
+     * passed to the enum constructor.
+     */
+    public enum MediaFields {
+        PARENT_ID("parent_id"),
+        TITLE("title"),
+        DESCRIPTION("description"),
+        CAPTION("caption"),
+        ALT("alt");
+
+        private String fieldName;
+
+        // Constructor
+        MediaFields(String fieldName) {
+            this.fieldName = fieldName;
+        }
+
+        // Getter
+        public String getFieldName() {
+            return this.fieldName;
+        }
+    }
+
+    private MediaFields[] mFieldsToUpdate = MediaFields.values();
 
     @Override
     public boolean equals(Object other) {
@@ -330,18 +354,17 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         mUploadState = uploadState.toString();
     }
 
-    public String[] getFieldsToUpdate() {
+    public MediaFields[] getFieldsToUpdate() {
         return mFieldsToUpdate;
     }
 
-    public void setFieldsToUpdate(String[] fieldsToUpdate) {
+    public void setFieldsToUpdate(MediaFields[] fieldsToUpdate) {
         this.mFieldsToUpdate = fieldsToUpdate;
     }
 
     //
     // Legacy methods
     //
-
     public boolean isVideo() {
         return MediaUtils.isVideoMimeType(getMimeType());
     }
