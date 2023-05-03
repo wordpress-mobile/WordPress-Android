@@ -174,20 +174,16 @@ class PageListViewModel @Inject constructor(
     }
 
     private val pagesObserver = Observer<List<PageModel>> { pages ->
-        pages?.let {
-            loadPagesAsync(pages)
-            pagesViewModel.checkIfNewPageButtonShouldBeVisible()
-        }
+        loadPagesAsync(pages)
+        pagesViewModel.checkIfNewPageButtonShouldBeVisible()
     }
 
     private val uploadStatusObserver = Observer<List<LocalId>> { ids ->
         pagesViewModel.uploadStatusTracker.invalidateUploadStatus(ids.map { localId -> localId.value })
     }
 
-    private val authorSelectionChangedObserver = Observer<AuthorFilterSelection> { authorSelection ->
-        authorSelection?.let {
-            pagesViewModel.pages.value?.let { loadPagesAsync(it) }
-        }
+    private val authorSelectionChangedObserver = Observer<AuthorFilterSelection> {
+        pagesViewModel.pages.value?.let { loadPagesAsync(it) }
     }
 
     private val blazeSiteEligibilityObserver = Observer<Boolean> { _ ->

@@ -510,20 +510,16 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
             }
         }
 
-        viewModel.publishAction.observe(viewLifecycleOwner) {
-            it?.let {
-                uploadUtilsWrapper.publishPost(activity, it.post, it.site)
-            }
+        viewModel.publishAction.observe(viewLifecycleOwner) { page ->
+            uploadUtilsWrapper.publishPost(activity, page.post, page.site)
         }
 
-        viewModel.navigateToBlazeOverlay.observe(viewLifecycleOwner) {
-            it?.let { page ->
-                ActivityLauncher.openPromoteWithBlaze(
-                    activity,
-                    page,
-                    BlazeFlowSource.PAGES_LIST
-                )
-            }
+        viewModel.navigateToBlazeOverlay.observe(viewLifecycleOwner) { page ->
+            ActivityLauncher.openPromoteWithBlaze(
+                activity,
+                page,
+                BlazeFlowSource.PAGES_LIST
+            )
         }
 
         viewModel.uploadFinishedAction.observe(viewLifecycleOwner) {
