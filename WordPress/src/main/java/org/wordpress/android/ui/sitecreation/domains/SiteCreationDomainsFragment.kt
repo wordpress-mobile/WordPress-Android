@@ -34,15 +34,10 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
     private var binding: SiteCreationDomainsScreenBinding? = null
 
-    @Suppress("UseCheckOrError")
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context !is DomainsScreenListener) {
-            throw IllegalStateException("Parent activity must implement DomainsScreenListener.")
-        }
-        if (context !is OnHelpClickedListener) {
-            throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
-        }
+        check(context is DomainsScreenListener) { "Parent activity must implement DomainsScreenListener." }
+        check(context is OnHelpClickedListener) { "Parent activity must implement OnHelpClickedListener." }
     }
 
     override fun getContentLayout(): Int {
