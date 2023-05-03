@@ -25,7 +25,7 @@ import androidx.lifecycle.coroutineScope
  */
 @Suppress("DEPRECATION")
 open class PreferenceFragmentLifeCycleOwner : PreferenceFragment(), LifecycleOwner {
-    private val lifecycleRegistry = LifecycleRegistry(this)
+    @Suppress("LeakingThis") private val lifecycleRegistry = LifecycleRegistry(this)
 
     val lifecycleScope: LifecycleCoroutineScope
         get() = lifecycle.coroutineScope
