@@ -69,7 +69,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     }
 
     private fun SiteCreationDomainsScreenBinding.initViewModel() {
-        viewModel.uiState.observe(this@SiteCreationDomainsFragment) { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             uiState?.let {
                 searchInputWithHeader?.updateHeader(requireActivity(), uiState.headerUiState)
                 searchInputWithHeader?.updateSearchInput(requireActivity(), uiState.searchInputUiState)
@@ -79,13 +79,11 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                 updateTitleVisibility(uiState.headerUiState == null)
             }
         }
-        viewModel.clearBtnClicked.observe(this@SiteCreationDomainsFragment) {
-            searchInputWithHeader?.setInputText("")
+        viewModel.clearBtnClicked.observe(viewLifecycleOwner) { searchInputWithHeader?.setInputText("") }
+        viewModel.createSiteBtnClicked.observe(viewLifecycleOwner) { domain ->
+            domain?.let { (requireActivity() as DomainsScreenListener).onDomainSelected(it) }
         }
-        viewModel.createSiteBtnClicked.observe(this@SiteCreationDomainsFragment) { domain ->
-            domain?.let { (requireActivity() as DomainsScreenListener).onDomainSelected(domain) }
-        }
-        viewModel.onHelpClicked.observe(this@SiteCreationDomainsFragment) {
+        viewModel.onHelpClicked.observe(viewLifecycleOwner) {
             (requireActivity() as OnHelpClickedListener).onHelpClicked(HelpActivity.Origin.SITE_CREATION_DOMAINS)
         }
         viewModel.start()
