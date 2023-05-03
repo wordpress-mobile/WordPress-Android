@@ -138,7 +138,4 @@
     <!-- Jetpack feture removal overlay secondary button color -->
     <color name="jp_feature_removal_overlay_secondary_button_color">@color/jetpack_green_50</color>
 
-    <!-- dashboard card pages -->
-    <color name="dashboard_card_page_status_and_time_text_color">#993C3C43</color>
-    <color name="dashboard_card_page_status_icon_color">#8A8A8E</color>
 </resources>
