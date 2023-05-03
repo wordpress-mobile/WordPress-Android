@@ -25,12 +25,11 @@ class CommentListActionModeCallback(
     private val activityViewModel: UnifiedCommentActivityViewModel
 ) : Callback,
     LifecycleOwner {
-    private lateinit var lifecycleRegistry: LifecycleRegistry
+    private val lifecycleRegistry = LifecycleRegistry(this)
     override fun onCreateActionMode(
         actionMode: ActionMode,
         menu: Menu
     ): Boolean {
-        lifecycleRegistry = LifecycleRegistry(this)
         lifecycleRegistry.handleLifecycleEvent(ON_START)
         val inflater = actionMode.menuInflater
         inflater.inflate(R.menu.menu_unified_comments_list, menu)

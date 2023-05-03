@@ -25,7 +25,7 @@ import androidx.lifecycle.coroutineScope
  */
 @Suppress("DEPRECATION")
 open class PreferenceFragmentLifeCycleOwner : PreferenceFragment(), LifecycleOwner {
-    private lateinit var lifecycleRegistry: LifecycleRegistry
+    private val lifecycleRegistry = LifecycleRegistry(this)
 
     val lifecycleScope: LifecycleCoroutineScope
         get() = lifecycle.coroutineScope
@@ -33,7 +33,6 @@ open class PreferenceFragmentLifeCycleOwner : PreferenceFragment(), LifecycleOwn
     @Suppress("OVERRIDE_DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleRegistry = LifecycleRegistry(this)
         lifecycleRegistry.handleLifecycleEvent(ON_CREATE)
     }
 
