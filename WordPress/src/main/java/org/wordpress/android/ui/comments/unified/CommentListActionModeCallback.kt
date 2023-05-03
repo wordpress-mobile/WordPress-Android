@@ -35,6 +35,7 @@ class CommentListActionModeCallback(
         val inflater = actionMode.menuInflater
         inflater.inflate(R.menu.menu_unified_comments_list, menu)
 
+        @Suppress("DEPRECATION")
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { uiState ->
                 when (val uiModel = uiState.actionModeUiModel) {
