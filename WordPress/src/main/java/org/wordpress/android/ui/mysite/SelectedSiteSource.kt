@@ -10,7 +10,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.util.filter
-import org.wordpress.android.util.map
+import org.wordpress.android.util.mapSafe
 import javax.inject.Inject
 
 class SelectedSiteSource @Inject constructor(
@@ -33,7 +33,7 @@ class SelectedSiteSource @Inject constructor(
     ) = selectedSiteRepository.selectedSiteChange
         .filter { it == null || it.id == siteLocalId }
         .apply { onRefreshedMainThread() }
-        .map { SelectedSite(it) }
+        .mapSafe { SelectedSite(it) }
 
     override fun refresh() {
         updateSiteSettingsIfNecessary()
