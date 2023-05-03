@@ -113,9 +113,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         actionBar?.setDisplayShowTitleEnabled(displayUtils.isLandscapeBySize() || visible)
     }
 
-    override fun onHelp() {
-        viewModel.onHelpClicked()
-    }
+    override fun onHelp() = viewModel.onHelpClicked()
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
