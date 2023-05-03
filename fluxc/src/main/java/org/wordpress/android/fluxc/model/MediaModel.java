@@ -365,7 +365,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     //
     // Legacy methods
     //
-    
+
     public boolean isVideo() {
         return MediaUtils.isVideoMimeType(getMimeType());
     }
