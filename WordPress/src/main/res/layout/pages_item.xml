@@ -8,7 +8,7 @@
     android:clipChildren="false"
     android:clipToPadding="false"
     android:foreground="?attr/selectableItemBackground"
-    android:paddingTop="@dimen/my_site_card_row_padding">
+    android:paddingTop="@dimen/my_site_dashboard_card_page_create_page_top_padding">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"
@@ -51,7 +51,7 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/list_divider_height"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="@dimen/my_site_card_row_padding"
+        android:layout_marginTop="@dimen/my_site_dashboard_card_page_create_page_divider_top_padding"
         android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

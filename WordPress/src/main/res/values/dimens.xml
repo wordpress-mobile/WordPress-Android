@@ -763,4 +763,6 @@
     <item name="dashboard_card_pages_status_background_alpha"  format="float" type="dimen">
         @dimen/emphasis_extra_extra_low
     </item>
+    <dimen name="my_site_dashboard_card_page_create_page_top_padding">14dp</dimen>
+    <dimen name="my_site_dashboard_card_page_create_page_divider_top_padding">18dp</dimen>
 </resources>
