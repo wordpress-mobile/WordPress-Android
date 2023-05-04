@@ -13,8 +13,10 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.SiteCreationDomainsScreenBinding
 import org.wordpress.android.databinding.SiteCreationFormScreenBinding
 import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
+import org.wordpress.android.ui.sitecreation.domains.compose.SiteExample
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SearchInputWithHeader
 import org.wordpress.android.ui.utils.UiHelpers
@@ -60,6 +62,11 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
             it.createSiteButton.setOnClickListener { viewModel.onCreateSiteBtnClicked() }
             it.initRecyclerView()
             it.initViewModel()
+            it.siteExampleComposeView.setContent {
+                AppTheme {
+                    SiteExample()
+                }
+            }
         }
     }
 
@@ -95,10 +102,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
             domainListEmptyViewMessage.text = uiHelpers.getTextOfUiString(requireContext(), contentState.message)
         }
         uiHelpers.updateVisibility(siteCreationDomainsScreenExample.root, contentState.exampleViewVisibility)
-        uiHelpers.updateVisibility(
-            siteCreationDomainsScreenExampleUpdated.root,
-            contentState.updatedExampleViewVisibility
-        )
+        uiHelpers.updateVisibility(siteExampleComposeView, contentState.updatedExampleViewVisibility)
         (recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
 
         if (contentState.items.isNotEmpty()) {
