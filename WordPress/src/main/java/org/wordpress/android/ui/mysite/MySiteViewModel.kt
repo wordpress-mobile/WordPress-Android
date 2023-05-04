@@ -613,7 +613,6 @@ class MySiteViewModel @Inject constructor(
                     onMoreMenuClick = this::onDashboardCardDomainMoreMenuClick
                 ),
                 pagesCardBuilderParams = PagesCardBuilderParams(
-                    site = site,
                     pageCard = cardsUpdate?.cards?.firstOrNull { it is PagesCardModel } as? PagesCardModel,
                     onPagesItemClick = this::onPagesItemClick,
                     onFooterLinkClick = this::onPagesCardFooterLinkClick

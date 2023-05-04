@@ -35,7 +35,7 @@ class PagesCardBuilder @Inject constructor(
             params.pageCard == null
         ) return false
 
-        return params.site.isSelfHostedAdmin || params.site.hasCapabilityEditPages
+        return true
     }
 
     private fun convertToPagesItems(params: PagesCardBuilderParams): PagesCard.PagesCardWithData {
