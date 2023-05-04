@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<style name="dashboard_card_title">
-    <item name="android:textSize">@dimen/text_sz_medium</item>
-    <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-    <item name="android:textColor">?attr/wpColorOnSurfaceHigh</item>
-    <item name="android:textStyle">bold</item>
-    <item name="android:textAlignment">viewStart</item>
-</style>
+    <style name="dashboard_card_small_title">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceHigh</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
-<style name="dashboard_card_sub_title">
-    <item name="android:textSize">@dimen/text_sz_medium_large</item>
-    <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-    <item name="android:textAlignment">viewStart</item>
-</style>
+    <style name="dashboard_card_large_title">
+        <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceHigh</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="dashboard_card_sub_title">
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceHigh</item>
+    </style>
+
+    <style name="dashboard_card_card_detail">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+    </style>
+
+    <style name="dashboard_card_footer">
+        <item name="android:textColor">@color/primary_emphasis_medium_selector</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+    </style>
+
 </resources>
