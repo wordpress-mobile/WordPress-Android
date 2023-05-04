@@ -469,8 +469,9 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given pages feature enabled, when build is invoked, then pages from store(database)`() = test {
+    fun `given pages enabled and site is capable, when build is invoked, then pages from store(database)`() = test {
         init(isDashboardCardPagesConfigEnabled = true)
+        whenever(siteModel.hasCapabilityEditPages).thenReturn(true)
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)).thenReturn(flowOf(data))
 
@@ -482,10 +483,37 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given pages enabled and site is not capable, when build is invoked, then pages not requested`() = test {
+        init(isDashboardCardPagesConfigEnabled = true)
+        val result = mutableListOf<CardsUpdate>()
+        whenever(siteModel.hasCapabilityEditPages).thenReturn(false)
+
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
+
+        verify(cardsStore).getCards(siteModel, DEFAULT_CARD_TYPE)
+    }
+
+    @Test
+    fun `given pages enabled and hosted site not capable, when build is invoked, then pages not requested`() = test {
+        init(isDashboardCardPagesConfigEnabled = true)
+        val result = mutableListOf<CardsUpdate>()
+        whenever(siteModel.isSelfHostedAdmin).thenReturn(false)
+
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
+
+        verify(cardsStore).getCards(siteModel, DEFAULT_CARD_TYPE)
+    }
+
+    @Test
     fun `given pages feature enabled, when refresh is invoked, then pages are requested from network`() =
         test {
             init(isDashboardCardPagesConfigEnabled = true)
             val result = mutableListOf<CardsUpdate>()
+            whenever(siteModel.hasCapabilityEditPages).thenReturn(true)
             whenever(cardsStore.getCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)).thenReturn(flowOf(data))
             whenever(cardsStore.fetchCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)).thenReturn(success)
             cardSource.refresh.observeForever { }

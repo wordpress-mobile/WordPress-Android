@@ -154,7 +154,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
     /* CREATE NEW PAGE CARD CASES */
     @Test
     fun `given there is no page, when card is built, then create new page card is correct`() {
-        val params = getPagesBuildParams(null)
+        val params = getPagesBuildParams(PagesCardModel(pages = emptyList()))
 
         val result = builder.build(params) as PagesCardWithData
 
