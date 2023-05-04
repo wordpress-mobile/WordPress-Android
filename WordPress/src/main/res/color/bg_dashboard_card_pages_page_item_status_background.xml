@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- This is a special color with different alpha values in light and dark mode
+    for a chip in expandable tags view -->
+    <item android:alpha="@dimen/dashboard_card_pages_status_background_alpha" android:color="?attr/colorOnSurface" />
+</selector>

@@ -912,9 +912,15 @@
     <style name="MySiteCardPagesCardPagesItemStatus">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="android:textColor">@color/dashboard_card_page_status_and_time_text_color</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MySiteCardPagesCardPagesItemModifiedTime">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:layout_marginTop">@dimen/margin_small</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <!--People Management Styles-->
