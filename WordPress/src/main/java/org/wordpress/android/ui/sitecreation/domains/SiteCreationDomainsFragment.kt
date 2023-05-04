@@ -2,7 +2,14 @@ package org.wordpress.android.ui.sitecreation.domains
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -18,8 +25,10 @@ import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.compose.SiteExample
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
-import org.wordpress.android.ui.sitecreation.misc.SearchInputWithHeader
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.DisplayUtilsWrapper
 import javax.inject.Inject
 
@@ -128,6 +137,79 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         super.onDestroyView()
         searchInputWithHeader = null
         binding = null
+    }
+
+    private class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, onClear: () -> Unit) {
+        private val headerLayout = rootView.findViewById<ViewGroup>(R.id.site_creation_header_item)
+        private val headerTitle = rootView.findViewById<TextView>(R.id.title)
+        private val headerSubtitle = rootView.findViewById<TextView>(R.id.subtitle)
+        private val searchInput = rootView.findViewById<EditText>(R.id.input)
+        private val progressBar = rootView.findViewById<View>(R.id.progress_bar)
+        private val clearAllLayout = rootView.findViewById<View>(R.id.clear_all_layout)
+        private val divider = rootView.findViewById<View>(R.id.divider)
+        private val showKeyboardHandler = Handler(Looper.getMainLooper())
+
+        var onTextChanged: ((String) -> Unit)? = null
+
+        init {
+            clearAllLayout.setOnClickListener {
+                onClear()
+            }
+
+            searchInput.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {}
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    onTextChanged?.invoke(s?.toString() ?: "")
+                }
+            })
+        }
+
+        fun setInputText(text: String) {
+            // If the text hasn't changed avoid triggering the text watcher
+            if (searchInput.text.toString() != text) {
+                searchInput.setText(text)
+            }
+        }
+
+        fun updateHeader(context: Context, uiState: SiteCreationHeaderUiState?) {
+            val headerShouldBeVisible = uiState != null
+            if (!headerShouldBeVisible && headerLayout.visibility == View.VISIBLE) {
+                headerLayout.animate().translationY(-headerLayout.height.toFloat())
+            } else if (headerShouldBeVisible && headerLayout.visibility == View.GONE) {
+                headerLayout.animate().translationY(0f)
+            }
+            uiState?.let {
+                uiHelpers.updateVisibility(headerLayout, true)
+                headerTitle.text = uiHelpers.getTextOfUiString(context, uiState.title)
+                headerSubtitle.text = uiHelpers.getTextOfUiString(context, uiState.subtitle)
+                if (uiState.isStartAligned) {
+                    headerTitle.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+                    headerSubtitle.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+                }
+            } ?: uiHelpers.updateVisibility(headerLayout, false)
+        }
+
+        fun updateSearchInput(context: Context, uiState: SiteCreationSearchInputUiState) {
+            searchInput.hint = uiHelpers.getTextOfUiString(context, uiState.hint)
+            uiHelpers.updateVisibility(progressBar, uiState.showProgress)
+            uiHelpers.updateVisibility(clearAllLayout, uiState.showClearButton)
+            uiHelpers.updateVisibility(divider, uiState.showDivider)
+            showKeyboard(uiState.showKeyboard)
+        }
+
+        private fun showKeyboard(shouldShow: Boolean) {
+            if (shouldShow) {
+                searchInput.requestFocus()
+                /**
+                 * This workaround handles the case where the SiteCreationDomainsFragment appears after the
+                 * DesignPreviewFragment dismisses and the keyboard fails to appear
+                 */
+                showKeyboardHandler.postDelayed({
+                    ActivityUtils.showKeyboard(searchInput)
+                }, 200)
+            }
+        }
     }
 
     companion object {
