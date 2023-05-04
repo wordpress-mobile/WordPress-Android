@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 15,
-    "identityHash": "459992f6b1940737167fae683f31c9ee",
+    "identityHash": "456f6549d7dc0d015412f7aecbf728d5",
     "entities": [
       {
         "tableName": "BloggingReminders",
@@ -426,7 +426,7 @@
       },
       {
         "tableName": "BloggingPrompts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `siteLocalId` INTEGER NOT NULL, `text` TEXT NOT NULL, `date` TEXT NOT NULL, `dateString` TEXT NOT NULL, `isAnswered` INTEGER NOT NULL, `respondentsCount` INTEGER NOT NULL, `attribution` TEXT NOT NULL, `respondentsAvatars` TEXT NOT NULL, `answeredLink` TEXT NOT NULL, PRIMARY KEY(`dateString`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `siteLocalId` INTEGER NOT NULL, `text` TEXT NOT NULL, `date` TEXT NOT NULL, `isAnswered` INTEGER NOT NULL, `respondentsCount` INTEGER NOT NULL, `attribution` TEXT NOT NULL, `respondentsAvatars` TEXT NOT NULL, `answeredLink` TEXT NOT NULL, PRIMARY KEY(`date`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -449,12 +449,6 @@
           {
             "fieldPath": "date",
             "columnName": "date",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "dateString",
-            "columnName": "dateString",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -491,7 +485,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "dateString"
+            "date"
           ],
           "autoGenerate": false
         },
@@ -704,7 +698,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '459992f6b1940737167fae683f31c9ee')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '456f6549d7dc0d015412f7aecbf728d5')"
     ]
   }
 }
