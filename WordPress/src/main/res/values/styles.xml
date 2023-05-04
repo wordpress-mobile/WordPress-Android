@@ -342,6 +342,12 @@
         <item name="tint">?attr/colorOnSurface</item>
     </style>
 
+    <style name="WordPress.ToolBar.Title.Serif" parent="TextAppearance.App.Toolbar.Title">
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">serif</item>
+    </style>
+
     <style name="WordPress.Snackbar" parent="@style/Widget.MaterialComponents.Snackbar">
         <item name="android:layout_margin">@dimen/margin_medium</item>
         <item name="actionTextColorAlpha">1.0</item>

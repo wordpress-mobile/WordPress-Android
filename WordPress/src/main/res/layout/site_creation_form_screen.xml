@@ -16,7 +16,8 @@
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:theme="@style/WordPress.ActionBar" />
+            app:theme="@style/WordPress.ActionBar"
+            app:titleTextAppearance="@style/WordPress.ToolBar.Title.Serif" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
