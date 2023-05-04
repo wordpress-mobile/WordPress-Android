@@ -157,8 +157,8 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
             }
 
             searchInput.addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(s: Editable?) {}
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun afterTextChanged(s: Editable?) = Unit
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     onTextChanged?.invoke(s?.toString() ?: "")
                 }
@@ -207,13 +207,14 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                  */
                 showKeyboardHandler.postDelayed({
                     ActivityUtils.showKeyboard(searchInput)
-                }, 200)
+                }, SHOW_KEYBOARD_DELAY)
             }
         }
     }
 
     companion object {
         const val TAG = "site_creation_domains_fragment_tag"
+        const val SHOW_KEYBOARD_DELAY = 200L
 
         fun newInstance(screenTitle: String): SiteCreationDomainsFragment {
             val fragment = SiteCreationDomainsFragment()
