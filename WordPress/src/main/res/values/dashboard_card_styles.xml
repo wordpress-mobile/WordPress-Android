@@ -30,4 +30,10 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
+    <!--My Site Card - Pages card -->
+    <style name="ShapeAppearance.PagesCardIllustration" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/my_site_dashboard_card_page_create_page_illustration_image_view_corner_radius</item>
+    </style>
+
 </resources>

@@ -904,24 +904,7 @@
         <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 
-    <style name="ShapeAppearance.PagesCardIllustration" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">@dimen/my_site_dashboard_card_page_create_page_illustration_image_view_corner_radius</item>
-    </style>
 
-    <style name="MySiteCardPagesCardPagesItemStatus">
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <style name="MySiteCardPagesCardPagesItemModifiedTime">
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="android:layout_marginTop">@dimen/margin_small</item>
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-    </style>
 
     <!--People Management Styles-->
     <style name="PersonAvatar">
