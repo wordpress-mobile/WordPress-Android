@@ -9,12 +9,12 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/title"
-        style="@style/ModalLayoutPickerTitle"
+        style="@style/SiteCreationLeftAlignedTitle"
         android:visibility="gone" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/subtitle"
-        style="@style/ModalLayoutPickerSubtitle"
+        style="@style/SiteCreationLeftAlignedSubtitle"
         app:fixWidowWords="true"
         tools:text="We’ll use your answer to add sections to your website." />
 </LinearLayout>

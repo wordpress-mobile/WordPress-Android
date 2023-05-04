@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -174,19 +175,15 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
         fun updateHeader(context: Context, uiState: SiteCreationHeaderUiState?) {
             val headerShouldBeVisible = uiState != null
-            if (!headerShouldBeVisible && headerLayout.visibility == View.VISIBLE) {
+            if (!headerShouldBeVisible && headerLayout.isVisible) {
                 headerLayout.animate().translationY(-headerLayout.height.toFloat())
-            } else if (headerShouldBeVisible && headerLayout.visibility == View.GONE) {
+            } else if (headerShouldBeVisible && headerLayout.isGone) {
                 headerLayout.animate().translationY(0f)
             }
             uiState?.let {
                 uiHelpers.updateVisibility(headerLayout, true)
                 headerTitle.text = uiHelpers.getTextOfUiString(context, uiState.title)
                 headerSubtitle.text = uiHelpers.getTextOfUiString(context, uiState.subtitle)
-                if (uiState.isStartAligned) {
-                    headerTitle.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
-                    headerSubtitle.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
-                }
             } ?: uiHelpers.updateVisibility(headerLayout, false)
         }
 
@@ -205,9 +202,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                  * This workaround handles the case where the SiteCreationDomainsFragment appears after the
                  * DesignPreviewFragment dismisses and the keyboard fails to appear
                  */
-                showKeyboardHandler.postDelayed({
-                    ActivityUtils.showKeyboard(searchInput)
-                }, SHOW_KEYBOARD_DELAY)
+                showKeyboardHandler.postDelayed({ ActivityUtils.showKeyboard(searchInput) }, SHOW_KEYBOARD_DELAY)
             }
         }
     }
