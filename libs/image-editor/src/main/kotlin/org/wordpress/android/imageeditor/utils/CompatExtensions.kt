@@ -8,6 +8,8 @@ import androidx.activity.OnBackPressedDispatcher
 import androidx.core.content.IntentCompat
 import androidx.core.os.BundleCompat
 
+/* ON BACK PRESSED */
+
 /**
  * This is a temporary workaround for the issue described here: https://issuetracker.google.com/issues/247982487
  * This function temporary disables the callback to allow the system to handle the back pressed event.
@@ -24,6 +26,8 @@ fun OnBackPressedDispatcher.onBackPressedCompat(onBackPressedCallback: OnBackPre
     onBackPressedCallback.isEnabled = true
 }
 
+/* INTENT */
+
 inline fun <reified T : Parcelable> Intent.getParcelableExtraCompat(key: String): T? =
     IntentCompat.getParcelableExtra(
         this,
@@ -37,6 +41,8 @@ inline fun <reified T : Parcelable> Intent.getParcelableArrayListExtraCompat(key
         key,
         T::class.java
     )
+
+/* BUNDLE */
 
 inline fun <reified T : Parcelable> Bundle.getParcelableCompat(key: String): T? =
     BundleCompat.getParcelable(

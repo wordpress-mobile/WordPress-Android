@@ -16,6 +16,8 @@ import androidx.core.os.BundleCompat
 import androidx.core.os.ParcelCompat
 import java.io.Serializable
 
+/* ON BACK PRESSED */
+
 /**
  * This is a temporary workaround for the issue described here: https://issuetracker.google.com/issues/247982487
  * This function temporary disables the callback to allow the system to handle the back pressed event.
@@ -31,6 +33,8 @@ fun OnBackPressedDispatcher.onBackPressedCompat(onBackPressedCallback: OnBackPre
     onBackPressed()
     onBackPressedCallback.isEnabled = true
 }
+
+/* INTENT */
 
 inline fun <reified T : Parcelable> Intent.getParcelableExtraCompat(key: String): T? =
     IntentCompat.getParcelableExtra(
@@ -49,6 +53,8 @@ inline fun <reified T : Serializable> Intent.getSerializableExtraCompat(key: Str
         @Suppress("DEPRECATION")
         getSerializableExtra(key) as T?
     }
+
+/* BUNDLE */
 
 inline fun <reified T : Parcelable> Bundle.getParcelableCompat(key: String): T? =
     BundleCompat.getParcelable(
@@ -75,6 +81,8 @@ inline fun <reified T : Serializable?> Bundle.getSerializableCompat(key: String)
         getSerializable(key) as T?
     }
 
+/* PARCEL */
+
 inline fun <reified T : Parcelable> Parcel.readParcelableCompat(loader: ClassLoader?): T? =
     ParcelCompat.readParcelable(
         this,
@@ -90,6 +98,8 @@ inline fun <reified T> Parcel.readListCompat(outVal: MutableList<T?>, loader: Cl
         T::class.java
     )
 }
+
+/* PACKAGE MANAGER */
 
 fun PackageManager.getActivityInfoCompat(componentName: ComponentName, flags: Int): ActivityInfo =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
