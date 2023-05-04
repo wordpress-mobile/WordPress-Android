@@ -240,7 +240,6 @@ class BloggingPromptsDaoTest {
             siteLocalId = localSideId,
             text = "Cast the movie of your life.",
             date = BloggingPromptsUtils.stringToDate("2015-01-12"),
-            dateString = "2015-01-12",
             isAnswered = false,
             respondentsCount = 5,
             attribution = "dayone",
