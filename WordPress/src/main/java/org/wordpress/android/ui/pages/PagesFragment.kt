@@ -447,10 +447,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         }
 
         viewModel.launchPageListType.observe(viewLifecycleOwner) { pageListType ->
-            pageListType?.let {
-                val pagerIndex = PagesPagerAdapter.pageTypes.indexOf(pageListType)
-                pagesPager.currentItem = pagerIndex
-            }
+            val pagerIndex = PagesPagerAdapter.pageTypes.indexOf(pageListType)
+            pagesPager.currentItem = pagerIndex
         }
     }
 
