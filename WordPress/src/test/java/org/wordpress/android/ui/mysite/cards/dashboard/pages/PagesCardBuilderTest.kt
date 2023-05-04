@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.pages
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -9,6 +10,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData
@@ -66,6 +68,9 @@ class PagesCardBuilderTest : BaseUnitTest() {
     @Mock
     private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
 
+    @Mock
+    private lateinit var siteModel: SiteModel
+
     private lateinit var builder: PagesCardBuilder
 
     private val onPagesCardFooterClick: () -> Unit = { }
@@ -79,6 +84,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     private fun setupMocks() {
         whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
+        whenever(siteModel.hasCapabilityEditPages).thenReturn(true)
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("")
         whenever(dateTimeUtilsWrapper.getRelativeTimeSpanString(any())).thenReturn("")
     }
@@ -91,6 +97,28 @@ class PagesCardBuilderTest : BaseUnitTest() {
         val result = builder.build(params)
 
         assert(result == null)
+    }
+
+    @Test
+    fun `given site accessed is not via wpComOrJetpack, card is built, then return null`() {
+        whenever(siteModel.isSelfHostedAdmin).thenReturn(false)
+        whenever(siteModel.hasCapabilityEditPages).thenReturn(false)
+        val params = getPagesBuildParams(PAGES_MODEL)
+
+        val result = builder.build(params)
+
+        Assertions.assertThat(result).isNull()
+    }
+
+    @Test
+    fun `given site hasNoEditPages capability, card is built, then null is returned`() {
+        whenever(siteModel.hasCapabilityEditPages).thenReturn(false)
+        whenever(siteModel.isSelfHostedAdmin).thenReturn(false)
+        val params = getPagesBuildParams(PAGES_MODEL)
+
+        val result = builder.build(params)
+
+        Assertions.assertThat(result).isNull()
     }
 
     @Test
@@ -154,7 +182,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
     /* CREATE NEW PAGE CARD CASES */
     @Test
     fun `given there is no page, when card is built, then create new page card is correct`() {
-        val params = getPagesBuildParams(null)
+        val params = getPagesBuildParams(PagesCardModel(pages = emptyList()))
 
         val result = builder.build(params) as PagesCardWithData
 
@@ -190,6 +218,7 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     private fun getPagesBuildParams(pagesCardModel: PagesCardModel?): PagesCardBuilderParams {
         return PagesCardBuilderParams(
+            site = siteModel,
             pageCard = pagesCardModel,
             onFooterLinkClick = onPagesCardFooterClick,
             onPagesItemClick = onPagesItemClick
