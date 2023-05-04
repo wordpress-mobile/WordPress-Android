@@ -54,7 +54,7 @@ class CardsSource @Inject constructor(
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
             coroutineScope.launch(bgDispatcher) {
-                cardsStore.getCards(selectedSite, getCardTypes())
+                cardsStore.getCards(selectedSite, getCardTypes(selectedSite))
                     .map { it.model }
                     .collect { result ->
                         postValue(CardsUpdate(result))
@@ -94,7 +94,7 @@ class CardsSource @Inject constructor(
     ) {
         coroutineScope.launch(bgDispatcher) {
             delay(REFRESH_DELAY)
-            val result = cardsStore.fetchCards(selectedSite, getCardTypes())
+            val result = cardsStore.fetchCards(selectedSite, getCardTypes(selectedSite))
             val model = result.model
             val error = result.error
             when {
@@ -105,12 +105,17 @@ class CardsSource @Inject constructor(
         }
     }
 
-    private fun getCardTypes() = mutableListOf<Type>().apply {
+    private fun getCardTypes(selectedSite: SiteModel) = mutableListOf<Type>().apply {
         if (isTodaysStatsCardFeatureConfigEnabled) add(Type.TODAYS_STATS)
-        if (isDashboardCardPagesConfigEnabled) add(Type.PAGES)
+        if (shouldRequestPagesCard(selectedSite)) add(Type.PAGES)
         if (isDashboardCardActivityLogConfigEnabled) add(Type.ACTIVITY)
         add(Type.POSTS)
     }.toList()
+
+    private fun shouldRequestPagesCard(selectedSite: SiteModel): Boolean {
+        return isDashboardCardPagesConfigEnabled &&
+                (selectedSite.hasCapabilityEditPages || selectedSite.isSelfHostedAdmin)
+    }
 
     private fun MediatorLiveData<CardsUpdate>.postErrorState() {
         val lastStateCards = this.value?.cards
