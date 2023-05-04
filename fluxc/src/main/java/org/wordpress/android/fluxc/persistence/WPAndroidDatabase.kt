@@ -216,23 +216,35 @@ abstract class WPAndroidDatabase : RoomDatabase() {
 
         val MIGRATION_14_15 = object : Migration(14, 15) {
             override fun migrate(database: SupportSQLiteDatabase) {
+                // migrate old data to new table schema
                 database.apply {
-                    execSQL("DROP TABLE `BloggingPrompts`")
                     execSQL(
-                        "CREATE TABLE IF NOT EXISTS `BloggingPrompts` (" +
+                        "CREATE TABLE IF NOT EXISTS `BloggingPrompts_new` (" +
                             "`id` INTEGER NOT NULL," +
                             "`siteLocalId` INTEGER NOT NULL," +
                             "`text` TEXT NOT NULL," +
                             "`date` TEXT NOT NULL," +
-                            "`dateString` TEXT NOT NULL," +
                             "`isAnswered` INTEGER NOT NULL," +
                             "`respondentsCount` INTEGER NOT NULL," +
                             "`attribution` TEXT NOT NULL," +
                             "`respondentsAvatars` TEXT NOT NULL," +
                             "`answeredLink` TEXT NOT NULL," +
-                            "PRIMARY KEY(`dateString`)" +
+                            "PRIMARY KEY(`date`)" +
                             ")"
                     )
+
+                    val tagPrefix = "https://wordpress.com/tag/dailyprompt-"
+                    execSQL(
+                        "INSERT INTO BloggingPrompts_new (" +
+                            "id, siteLocalId, text, date, isAnswered, " +
+                            "respondentsCount, attribution, respondentsAvatars, answeredLink) " +
+                            "SELECT id, siteLocalId, text, date, isAnswered, " +
+                            "respondentsCount, attribution, respondentsAvatars, " +
+                            "'$tagPrefix' || id FROM BloggingPrompts"
+                    )
+
+                    execSQL("DROP TABLE `BloggingPrompts`")
+                    execSQL("ALTER TABLE `BloggingPrompts_new` RENAME TO `BloggingPrompts`")
                 }
             }
         }
