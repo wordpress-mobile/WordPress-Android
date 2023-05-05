@@ -287,4 +287,19 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             }
         }
     }
+
+    class VirtualHomepageViewHolder(
+        parentView: ViewGroup,
+        private val onItemTapped: () -> Unit,
+    ) : PageItemViewHolder(parentView, R.layout.page_virtual_homepage_item) {
+        private val pageItemContainer = itemView.findViewById<ViewGroup>(R.id.page_item)
+
+        override fun onBind(pageItem: PageItem) {
+            // TODO thomashorta check if we need to support the menu and/or disabled overlay
+            itemView.setOnClickListener {
+                QuickStartUtils.removeQuickStartFocusPoint(pageItemContainer)
+                onItemTapped()
+            }
+        }
+    }
 }
