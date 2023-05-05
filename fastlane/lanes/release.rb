@@ -90,10 +90,17 @@ platform :android do
     update_frozen_strings_for_translation
     download_translations()
     android_bump_version_beta()
-    next unless UI.confirm('Ready for CI build')
 
-    new_version = android_get_app_version()
-    trigger_beta_build(branch_to_build: "release/#{new_version}")
+    app_version = android_get_app_version()
+    release_branch = "release/#{app_version}"
+    release_version = android_get_release_version()["name"]
+
+    # Create an intermediate branch
+    new_beta_branch_name = "new_beta/#{release_version}"
+    Fastlane::Helper::GitHelper.create_branch(new_beta_branch_name)
+    trigger_beta_build(branch_to_build: intermediate_branch_name)
+
+    create_release_management_pull_request(release_branch, "Merge #{release_version} to #{release_branch}")
   end
 
   #####################################################################################
