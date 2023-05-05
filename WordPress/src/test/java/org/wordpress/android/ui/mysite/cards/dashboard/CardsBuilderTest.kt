@@ -340,7 +340,6 @@ class CardsBuilderTest : BaseUnitTest() {
                 activityCardBuilderParams = MySiteCardAndItemBuilderParams.ActivityCardBuilderParams(
                     mock(),
                     mock(),
-                    mock(),
                     mock()
                 )
             )
