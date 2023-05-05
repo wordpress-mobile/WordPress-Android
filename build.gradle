@@ -53,7 +53,7 @@ ext {
     androidxViewpager2Version = '1.0.0'
     androidxWorkManagerVersion = "2.7.1"
     apacheCommonsTextVersion = '1.10.0'
-    coilComposeVersion = '2.2.2'
+    coilComposeVersion = '2.3.0'
     chrisbanesPhotoviewVersion = '2.3.0'
     eventBusVersion = '3.3.1'
     facebookShimmerVersion = '0.5.0'
