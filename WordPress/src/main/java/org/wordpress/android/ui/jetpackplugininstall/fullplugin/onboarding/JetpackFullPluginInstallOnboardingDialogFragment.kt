@@ -29,7 +29,7 @@ import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.Jetpa
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.OpenInstallJetpackFullPlugin
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.OpenTermsAndConditions
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.JetpackFullPluginInstallOnboardingViewModel.UiState
-import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.compose.state.LoadedState
+import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.compose.state.loadedState
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.onBackPressedCompat
@@ -78,7 +78,7 @@ class JetpackFullPluginInstallOnboardingDialogFragment : DialogFragment() {
         val uiState by viewModel.uiState.collectAsState()
         uiState.apply {
             when (this) {
-                is UiState.Loaded -> LoadedState(
+                is UiState.Loaded -> loadedState(
                     content = this,
                     onTermsAndConditionsClick = { viewModel.onTermsAndConditionsClick() },
                     onInstallFullPluginClick = { viewModel.onInstallFullPluginClick() },

@@ -33,7 +33,7 @@ import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.compo
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.compose.component.TermsAndConditions
 
 @Composable
-fun LoadedState(
+fun loadedState(
     content: UiState.Loaded,
     onTermsAndConditionsClick: () -> Unit,
     onInstallFullPluginClick: () -> Unit,
@@ -118,6 +118,6 @@ private fun PreviewLoadedState() {
             siteUrl = "wordpress.com",
             pluginNames = listOf("Jetpack Search"),
         )
-        LoadedState(uiState, {}, {}, {}, {})
+        loadedState(uiState, {}, {}, {}, {})
     }
 }
