@@ -36,11 +36,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-<<<<<<< HEAD
         return 184
-=======
-        return 181
->>>>>>> 107b19ca2 (Rename FSE site settings flag to block based theme)
     }
 
     override fun getDbName(): String {
@@ -1909,6 +1905,7 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 184 -> migrate(version) {
                     db.execSQL("ALTER TABLE EditorTheme RENAME COLUMN IS_FSETHEME TO IS_BLOCK_BASED_THEME ")
+                    db.execSQL("ALTER TABLE EditorTheme ADD IS_BLOCK_TEMPLATES BOOLEAN")
                 }
             }
         }
