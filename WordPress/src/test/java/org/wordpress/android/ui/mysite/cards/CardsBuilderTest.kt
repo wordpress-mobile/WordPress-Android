@@ -225,7 +225,7 @@ class CardsBuilderTest {
                 promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(true, mock(), mock(), mock()),
                 dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(true, mock(), mock(), mock()),
                 pagesCardBuilderParams = PagesCardBuilderParams(mock(), mock(), mock()),
-                activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock(), mock()),
+                activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock()),
             ),
             quickLinkRibbonBuilderParams = QuickLinkRibbonBuilderParams(
                 siteModel = mock(),

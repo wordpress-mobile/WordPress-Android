@@ -15,7 +15,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.util.config.DashboardCardActivityLogConfig
+import org.wordpress.android.ui.mysite.cards.dashboard.activity.DashboardActivityLogCardFeatureUtils
 import org.wordpress.android.util.config.DashboardCardPagesConfig
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 import javax.inject.Inject
@@ -26,16 +26,14 @@ const val REFRESH_DELAY = 500L
 class CardsSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val cardsStore: CardsStore,
+    private val dashboardActivityLogCardFeatureUtils: DashboardActivityLogCardFeatureUtils,
     todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
     dashboardCardPagesConfig: DashboardCardPagesConfig,
-    dashboardCardActivityLogConfig: DashboardCardActivityLogConfig,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MySiteRefreshSource<CardsUpdate> {
     private val isTodaysStatsCardFeatureConfigEnabled = todaysStatsCardFeatureConfig.isEnabled()
 
     private val isDashboardCardPagesConfigEnabled = dashboardCardPagesConfig.isEnabled()
-
-    private val isDashboardCardActivityLogConfigEnabled = dashboardCardActivityLogConfig.isEnabled()
 
     override val refresh = MutableLiveData(false)
 
@@ -108,7 +106,7 @@ class CardsSource @Inject constructor(
     private fun getCardTypes(selectedSite: SiteModel) = mutableListOf<Type>().apply {
         if (isTodaysStatsCardFeatureConfigEnabled) add(Type.TODAYS_STATS)
         if (shouldRequestPagesCard(selectedSite)) add(Type.PAGES)
-        if (isDashboardCardActivityLogConfigEnabled) add(Type.ACTIVITY)
+        if (dashboardActivityLogCardFeatureUtils.shouldRequestActivityCard(selectedSite)) add(Type.ACTIVITY)
         add(Type.POSTS)
     }.toList()
 

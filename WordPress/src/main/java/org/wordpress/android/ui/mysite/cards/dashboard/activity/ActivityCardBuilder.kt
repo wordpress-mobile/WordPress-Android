@@ -12,17 +12,13 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.SiteUtilsWrapper
-import org.wordpress.android.util.config.DashboardCardActivityLogConfig
 import java.util.Date
 import javax.inject.Inject
 
 private const val MAX_ITEMS_IN_CARD: Int = 3
 
 class ActivityCardBuilder @Inject constructor(
-    private val dashboardCardActivityLogConfig: DashboardCardActivityLogConfig,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val siteUtilsWrapper: SiteUtilsWrapper,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
     fun build(params: ActivityCardBuilderParams): ActivityCard? {
         return shouldBuildActivityCard(params).takeIf { it }?.let { buildActivityCard(params) }
@@ -60,15 +56,11 @@ class ActivityCardBuilder @Inject constructor(
     private fun buildDateLine(published: Date) = dateTimeUtilsWrapper.javaDateToTimeSpan(published)
 
     private fun shouldBuildActivityCard(params: ActivityCardBuilderParams) : Boolean {
-        if (!dashboardCardActivityLogConfig.isEnabled() ||
-            params.activityCardModel == null ||
+        if (params.activityCardModel == null ||
             params.activityCardModel.activities.isEmpty()) {
             return false
         }
 
-        val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
-            params.site
-        ) || params.site.isJetpackConnected
-        return params.site.hasCapabilityManageOptions && isWpComOrJetpack && !params.site.isWpForTeamsSite
+       return true
     }
 }
