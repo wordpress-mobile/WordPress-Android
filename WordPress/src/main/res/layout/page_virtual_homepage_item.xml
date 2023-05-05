@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/page_item"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/page_list_content_margin"
+    android:layout_marginStart="@dimen/page_list_content_margin">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/page_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="@dimen/page_list_row_min_height"
+        android:background="?selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/page_home_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/page_item_horizontal_padding"
+            android:src="@drawable/ic_homepage_16dp"
+            app:tint="?attr/wpColorOnSurfaceHigh"
+            android:importantForAccessibility="no"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/page_title"
+            app:layout_constraintBottom_toBottomOf="@+id/page_subtitle" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/page_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/page_item_horizontal_padding"
+            android:ellipsize="end"
+            android:fontFamily="serif"
+            android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textAlignment="textStart"
+            android:textStyle="bold"
+            android:text="@string/virtual_homepage_title"
+            app:layout_goneMarginEnd="@dimen/page_item_horizontal_padding"
+            app:layout_constraintBottom_toTopOf="@+id/page_subtitle"
+            app:layout_constraintEnd_toStartOf="@+id/page_more"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@+id/page_home_icon"
+            app:layout_constraintTop_toBottomOf="@+id/disabled_overlay"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/page_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
+            android:text="@string/virtual_homepage_subtitle"
+            app:layout_goneMarginBottom="@dimen/margin_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/page_title"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/page_title"
+            app:layout_constraintTop_toBottomOf="@+id/page_title" />
+
+        <!-- TODO thomashorta check if we will need this -->
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/page_more"
+            android:layout_width="@dimen/page_list_menu_button_size"
+            android:layout_height="@dimen/page_list_menu_button_size"
+            android:layout_marginEnd="@dimen/page_item_horizontal_padding"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/more"
+            android:src="@drawable/ic_ellipsis_vertical_white_24dp"
+            app:tint="?attr/wpColorOnSurfaceMedium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/page_subtitle"
+            app:layout_constraintTop_toTopOf="@+id/page_title"/>
+
+        <!-- TODO thomashorta check if we will need this -->
+        <FrameLayout
+            android:id="@+id/disabled_overlay"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/white_translucent_65"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+
+</LinearLayout>
+
