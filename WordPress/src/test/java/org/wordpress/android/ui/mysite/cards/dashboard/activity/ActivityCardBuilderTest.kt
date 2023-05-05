@@ -100,7 +100,6 @@ class ActivityCardBuilderTest : BaseUnitTest() {
 
     private fun buildActivityCard(model: ActivityCardModel) = builder.build(
         ActivityCardBuilderParams(
-            site = siteModel,
             activityCardModel = model,
             onFooterLinkClick = onActivityCardFooterLinkClick,
             onActivityItemClick = onActivityItemClick
