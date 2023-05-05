@@ -21,8 +21,7 @@ private const val MAX_ITEMS_IN_CARD: Int = 3
 
 class ActivityCardBuilder @Inject constructor(
     private val dashboardCardActivityLogConfig: DashboardCardActivityLogConfig,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val siteUtilsWrapper: SiteUtilsWrapper,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
     fun build(params: ActivityCardBuilderParams): ActivityCard? {
         return shouldBuildActivityCard(params).takeIf { it }?.let { buildActivityCard(params) }
@@ -66,9 +65,6 @@ class ActivityCardBuilder @Inject constructor(
             return false
         }
 
-        val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
-            params.site
-        ) || params.site.isJetpackConnected
-        return params.site.hasCapabilityManageOptions && isWpComOrJetpack && !params.site.isWpForTeamsSite
+       return true
     }
 }
