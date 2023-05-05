@@ -26,7 +26,7 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.util.config.DashboardCardActivityLogConfig
+import org.wordpress.android.ui.mysite.cards.dashboard.activity.DashboardActivityLogCardFeatureUtils
 import org.wordpress.android.util.config.DashboardCardPagesConfig
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 
@@ -164,7 +164,7 @@ class CardsSourceTest : BaseUnitTest() {
     private lateinit var dashboardCardPagesConfig: DashboardCardPagesConfig
 
     @Mock
-    private lateinit var dashboardCardActivityLogConfig: DashboardCardActivityLogConfig
+    private lateinit var dashboardActivityLogCardFeatureUtils: DashboardActivityLogCardFeatureUtils
 
     private lateinit var cardSource: CardsSource
 
@@ -184,19 +184,19 @@ class CardsSourceTest : BaseUnitTest() {
     private fun init(
         isTodaysStatsCardFeatureConfigEnabled: Boolean = false,
         isDashboardCardPagesConfigEnabled: Boolean = false,
-        isDashboardCardActivityLogConfigEnabled: Boolean = false
+        isDashboardCardActivityLogEnabled: Boolean = false
     ) {
         setUpMocks(
             isTodaysStatsCardFeatureConfigEnabled,
             isDashboardCardPagesConfigEnabled,
-            isDashboardCardActivityLogConfigEnabled
+            isDashboardCardActivityLogEnabled
         )
         cardSource = CardsSource(
             selectedSiteRepository,
             cardsStore,
+            dashboardActivityLogCardFeatureUtils,
             todaysStatsCardFeatureConfig,
             dashboardCardPagesConfig,
-            dashboardCardActivityLogConfig,
             testDispatcher()
         )
     }
@@ -204,13 +204,14 @@ class CardsSourceTest : BaseUnitTest() {
     private fun setUpMocks(
         isTodaysStatsCardFeatureConfigEnabled: Boolean,
         isDashboardCardPagesConfigEnabled: Boolean = false,
-        isDashboardCardActivityLogConfig: Boolean = false
+        isDashboardCardActivityLogEnabled: Boolean = false
     ) {
         whenever(todaysStatsCardFeatureConfig.isEnabled()).thenReturn(isTodaysStatsCardFeatureConfigEnabled)
         whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(isDashboardCardPagesConfigEnabled)
-        whenever(dashboardCardActivityLogConfig.isEnabled()).thenReturn(isDashboardCardActivityLogConfig)
         whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
+        whenever(dashboardActivityLogCardFeatureUtils.shouldRequestActivityCard(siteModel))
+            .thenReturn(isDashboardCardActivityLogEnabled)
     }
 
     /* GET DATA */
@@ -528,7 +529,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given activity feature enabled, when build is invoked, then activity from store(database)`() = test {
-        init(isDashboardCardActivityLogConfigEnabled = true)
+        init(isDashboardCardActivityLogEnabled = true)
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel, ACTIVITY_FEATURED_ENABLED_CARD_TYPE)).thenReturn(flowOf(data))
 
@@ -542,7 +543,7 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `given activity feature enabled, when refresh is invoked, then activity are requested from network`() =
         test {
-            init(isDashboardCardActivityLogConfigEnabled = true)
+            init(isDashboardCardActivityLogEnabled = true)
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel, ACTIVITY_FEATURED_ENABLED_CARD_TYPE)).thenReturn(flowOf(data))
             whenever(cardsStore.fetchCards(siteModel, ACTIVITY_FEATURED_ENABLED_CARD_TYPE)).thenReturn(success)
@@ -554,5 +555,34 @@ class CardsSourceTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(cardsStore).fetchCards(siteModel, ACTIVITY_FEATURED_ENABLED_CARD_TYPE)
+        }
+
+    @Test
+    fun `given activity feature disabled, when build is invoked, then activity not requested`() = test {
+        init(isDashboardCardActivityLogEnabled = false)
+        val result = mutableListOf<CardsUpdate>()
+
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
+
+        verify(cardsStore).getCards(siteModel, DEFAULT_CARD_TYPE)
+    }
+
+    @Test
+    fun `given activity feature disabled, when refresh is invoked, then activity not requested`() =
+        test {
+            init(isDashboardCardActivityLogEnabled = false)
+            val result = mutableListOf<CardsUpdate>()
+            whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
+            whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(success)
+            cardSource.refresh.observeForever { }
+
+            cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+                it?.let { result.add(it) }
+            }
+            advanceUntilIdle()
+
+            verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
         }
 }
