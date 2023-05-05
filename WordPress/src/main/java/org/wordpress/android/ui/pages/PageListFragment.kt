@@ -142,11 +142,7 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
             adapter = PageListAdapter(
                 { action, page -> viewModel.onMenuAction(action, page, requireContext()) },
                 { page -> viewModel.onItemTapped(page) },
-                {
-//                    viewModel.onVirtualHomepageTapped()
-                    // TODO thomashorta remove the toast
-                    Toast.makeText(requireContext(), "Virtual Homepage Tapped", Toast.LENGTH_SHORT).show()
-                },
+                { viewModel.onVirtualHomepageTapped() },
                 { viewModel.onEmptyListNewPageButtonTapped() },
                 isSitePhotonCapable,
                 isSitePrivateAt,

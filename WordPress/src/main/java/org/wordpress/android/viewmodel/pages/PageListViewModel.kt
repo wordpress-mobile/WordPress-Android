@@ -90,6 +90,11 @@ class PageListViewModel @Inject constructor(
         pagesViewModel.site.isPrivateWPComAtomic
     }
 
+    private fun isUsingTemplateHomepage(pages: Collection<PageModel>): Boolean {
+        // TODO thomashorta check if this is the best way to check for this
+        return pagesViewModel.site.pageOnFront == 0L || pages.none { it.isHomepage }
+    }
+
     enum class PageListType(val pageStatuses: List<PageStatus>) {
         PUBLISHED(listOf(PageStatus.PUBLISHED, PageStatus.PRIVATE)),
         DRAFTS(listOf(PageStatus.DRAFT, PageStatus.PENDING)),
@@ -158,6 +163,10 @@ class PageListViewModel @Inject constructor(
         }
     }
 
+    fun onVirtualHomepageTapped() {
+        // TODO thomashorta open webview to site editor
+    }
+
     fun onEmptyListNewPageButtonTapped() {
         pagesViewModel.onNewPageButtonTapped()
     }
@@ -191,7 +200,7 @@ class PageListViewModel @Inject constructor(
     }
 
     private val blazeSiteEligibilityObserver = Observer<Boolean> { _ ->
-            pagesViewModel.pages.value?.let { loadPagesAsync(it) }
+        pagesViewModel.pages.value?.let { loadPagesAsync(it) }
     }
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
@@ -312,6 +321,19 @@ class PageListViewModel @Inject constructor(
                     author = author,
                     showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                 )
+            }
+            .let {
+                // add a virtual homepage sending to site editor in case site is using a theme template as homepage
+                val isBlockBasedTheme = true // TODO thomashorta get it from the appropriate site field (WIP)
+                val isFeatureFlagEnabled = true // TODO thomashorta get it from the appropriate feature flag (WIP)
+                val showVirtualHomepage = isFeatureFlagEnabled &&
+                        isBlockBasedTheme &&
+                        isUsingTemplateHomepage(sortedPages)
+                if (showVirtualHomepage) {
+                    listOf(PageItem.VirtualHomepage) + it
+                } else {
+                    it
+                }
             }
     }
 
@@ -504,7 +526,7 @@ class PageListViewModel @Inject constructor(
     private fun isPageBlazeEligible(pageModel: PageModel): Boolean {
         val pageStatus = PageStatus.fromPost(pageModel.post)
 
-       return listType == PUBLISHED && pageStatus != PageStatus.PRIVATE
+        return listType == PUBLISHED && pageStatus != PageStatus.PRIVATE
                 && pagesViewModel.blazeSiteEligibility.value ?: false && pageModel.post.password.isEmpty()
     }
 
