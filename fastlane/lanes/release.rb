@@ -64,6 +64,8 @@ platform :android do
 
     new_version = android_get_app_version()
     trigger_beta_build(branch_to_build: "release/#{new_version}")
+
+    create_release_management_pull_request('trunk', "Merge #{new_version} code freeze to trunk")
   end
 
   #####################################################################################
