@@ -28,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,6 +58,7 @@ fun SiteExample() {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
+                .fillMaxWidth()
                 .border(0.5.dp, grayColor.copy(0.1f), RoundedCornerShape(regularRadius))
                 .background(grayColor.copy(0.025f), RoundedCornerShape(regularRadius))
                 .padding(16.dp)
@@ -92,7 +92,7 @@ private fun AddressBar(domainText: String) {
             .padding(8.dp)
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy((8).dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .weight(1f)
@@ -106,9 +106,9 @@ private fun AddressBar(domainText: String) {
                     .size(22.dp)
             ) {
                 Icon(
-                    Icons.Outlined.Lock,
-                    stringResource(R.string.icon),
-                    Modifier
+                    imageVector = Icons.Outlined.Lock,
+                    contentDescription = null,
+                    modifier = Modifier
                         .size(16.dp)
                         .alpha(0.8f)
                 )
@@ -128,9 +128,9 @@ private fun AddressBar(domainText: String) {
                 .background(MaterialTheme.colors.surface, RoundedCornerShape(radius2x))
         ) {
             Icon(
-                Icons.Default.Add,
-                stringResource(R.string.icon),
-                Modifier
+                imageVector = Icons.Default.Add,
+                contentDescription = null,
+                modifier = Modifier
                     .size(16.dp)
                     .alpha(0.8f)
             )
@@ -149,9 +149,10 @@ private fun AddressBar(domainText: String) {
 }
 
 @Composable
-@Preview(device = Devices.PIXEL)
-@Preview("RTL", device = Devices.PIXEL, locale = "ar")
-@Preview("Dark", device = Devices.PIXEL, uiMode = UI_MODE_NIGHT_YES)
+@Preview(widthDp = 415, heightDp = 900)
+@Preview(widthDp = 415, heightDp = 900, name = "Dark", uiMode = UI_MODE_NIGHT_YES)
+@Preview(widthDp = 900, heightDp = 415, name = "Landscape")
+@Preview(widthDp = 415, heightDp = 900, name = "RTL", locale = "ar")
 private fun SiteExamplePreview() {
     AppTheme {
         SiteExample()
