@@ -8,7 +8,6 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
@@ -23,9 +22,6 @@ import org.wordpress.android.util.DateTimeUtilsWrapper
 class ActivityCardBuilderTest : BaseUnitTest() {
     @Mock
     private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
-
-    @Mock
-    private lateinit var siteModel: SiteModel
 
     private lateinit var builder: ActivityCardBuilder
 
