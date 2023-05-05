@@ -2,13 +2,15 @@ package org.wordpress.android.ui.mysite.cards.dashboard.activity
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.config.DashboardCardActivityLogConfig
+import javax.inject.Inject
 
-class ActivityFeatureUtils(
-    private val isDashboardCardActivityLogConfigEnabled: Boolean,
+class DashboardActivityLogCardFeatureUtils @Inject constructor(
+    private val dashboardCardActivityLogConfig: DashboardCardActivityLogConfig,
     private val siteUtilsWrapper: SiteUtilsWrapper
 ) {
     fun shouldRequestActivityCard(selectedSite: SiteModel): Boolean {
-        if (!isDashboardCardActivityLogConfigEnabled) return false
+        if (!dashboardCardActivityLogConfig.isEnabled()) return false
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(selectedSite) ||
                 selectedSite.isJetpackConnected
         return selectedSite.hasCapabilityManageOptions
