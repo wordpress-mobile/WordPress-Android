@@ -1,0 +1,16 @@
+# Nodes with values to reuse in the pipeline.
+common_params:
+  # Common plugin settings to use with the `plugins` key.
+  - &common_plugins
+    - automattic/a8c-ci-toolkit#2.15.1
+
+steps:
+  - label: "Update release notes"
+    plugins: *common_plugins
+    command: |
+      .buildkite/commands/configure-git-for-release-management.sh
+      .buildkite/commands/checkout-editorial-branch.sh
+
+      install_gems
+
+      bundle exec fastlane update_appstore_strings version:${RELEASE_VERSION}
