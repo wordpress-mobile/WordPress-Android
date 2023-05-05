@@ -89,6 +89,11 @@ class EditorThemeSqlUtils {
         @Column var version: String? = null
         @Column var rawStyles: String? = null
         @Column var rawFeatures: String? = null
+        @Column var isBlockTemplates: Boolean = false
+            @JvmName("isBlockTemplates")
+            get
+            @JvmName("setIsBlockTemplates")
+            set
         @Column var isBlockBasedTheme: Boolean = false
             @JvmName("isBlockBasedTheme")
             get
@@ -121,6 +126,7 @@ class EditorThemeSqlUtils {
             val editorThemeSupport = EditorThemeSupport(
                     colors,
                     gradients,
+                    isBlockTemplates,
                     rawStyles,
                     rawFeatures,
                     isBlockBasedTheme,

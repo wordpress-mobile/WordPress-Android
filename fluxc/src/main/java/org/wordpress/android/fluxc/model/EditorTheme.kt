@@ -23,6 +23,7 @@ const val MAP_KEY_IS_BLOCK_BASED_THEME: String = "isBlockBasedTheme"
 const val MAP_KEY_GALLERY_WITH_IMAGE_BLOCKS: String = "galleryWithImageBlocks"
 const val MAP_KEY_QUOTE_BLOCK_V2: String = "quoteBlockV2"
 const val MAP_KEY_LIST_BLOCK_V2: String = "listBlockV2"
+const val MAP_KEY_IS_BLOCK_TEMPLATES: String = "isBlockTemplates"
 
 data class EditorTheme(
     @SerializedName("theme_supports") val themeSupport: EditorThemeSupport,
@@ -33,6 +34,7 @@ data class EditorTheme(
             themeSupport = EditorThemeSupport(
                     blockEditorSettings.colors,
                     blockEditorSettings.gradients,
+                    null,
                     blockEditorSettings.styles?.toString(),
                     blockEditorSettings.features?.toString(),
                     blockEditorSettings.isBlockBasedTheme,
@@ -86,6 +88,8 @@ data class EditorThemeSupport(
     @JsonAdapter(EditorThemeElementListSerializer::class)
     @SerializedName("editor-gradient-presets")
     val gradients: List<EditorThemeElement>?,
+    @SerializedName("block-templates")
+    val isBlockTemplates: Boolean?,
     val rawStyles: String?,
     val rawFeatures: String?,
     val isBlockBasedTheme: Boolean,
@@ -116,6 +120,7 @@ data class EditorThemeSupport(
         bundle.putBoolean(MAP_KEY_GALLERY_WITH_IMAGE_BLOCKS, galleryWithImageBlocks)
         bundle.putBoolean(MAP_KEY_QUOTE_BLOCK_V2, quoteBlockV2)
         bundle.putBoolean(MAP_KEY_LIST_BLOCK_V2, listBlockV2)
+        bundle.putBoolean(MAP_KEY_IS_BLOCK_TEMPLATES, isBlockTemplates ?: false)
 
         return bundle
     }
