@@ -3,6 +3,7 @@ package org.wordpress.android.editor.gutenberg;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 
 import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
@@ -25,6 +26,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOpt
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentInterrupted;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestEmbedFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
@@ -73,6 +75,8 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnMediaEditorListener onMediaEditorListener,
                                   OnGutenbergDidRequestUnsupportedBlockFallbackListener
                                           onGutenbergDidRequestUnsupportedBlockFallbackListener,
+                                  OnGutenbergDidRequestEmbedFullscreenPreviewListener
+                                          onGutenbergDidRequestEmbedFullscreenPreviewListener,
                                   OnGutenbergDidSendButtonPressedActionListener
                                           onGutenbergDidSendButtonPressedActionListener,
                                   ShowSuggestionsUtil showSuggestionsUtil,
@@ -98,6 +102,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onImageFullscreenPreviewListener,
                     onMediaEditorListener,
                     onGutenbergDidRequestUnsupportedBlockFallbackListener,
+                    onGutenbergDidRequestEmbedFullscreenPreviewListener,
                     onGutenbergDidSendButtonPressedActionListener,
                     showSuggestionsUtil,
                     onMediaFilesCollectionBasedBlockEditorListener,
@@ -111,6 +116,7 @@ public class GutenbergContainerFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        WebView.setWebContentsDebuggingEnabled(true);
         super.onCreate(savedInstanceState);
 
         GutenbergPropsBuilder gutenbergPropsBuilder = getArguments().getParcelable(ARG_GUTENBERG_PROPS_BUILDER);
