@@ -65,7 +65,7 @@ class EditorThemeStore
 
     fun getIsBlockBasedTheme(site: SiteModel) =
         getEditorThemeForSite(site)?.themeSupport?.let { themeSupport ->
-            themeSupport.isBlockBasedTheme || themeSupport.isBlockBasedTheme
+            themeSupport.isBlockBasedTheme || (themeSupport.isBlockTemplates ?: false)
         }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
