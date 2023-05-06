@@ -57,6 +57,7 @@ data class EditorTheme(
         element.galleryWithImageBlocks = themeSupport.galleryWithImageBlocks
         element.quoteBlockV2 = themeSupport.quoteBlockV2
         element.listBlockV2 = themeSupport.listBlockV2
+        element.isBlockTemplates = themeSupport.isBlockTemplates ?: false
 
         return element
     }
