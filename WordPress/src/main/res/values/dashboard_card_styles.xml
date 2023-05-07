@@ -18,6 +18,7 @@
     </style>
 
     <style name="dashboard_card_footer" parent="Base.TextAppearance.Material3.TitleMedium">
+        <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/primary_emphasis_medium_selector</item>
         <item name="fontWeight">500</item>
     </style>
