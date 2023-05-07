@@ -26,7 +26,23 @@
     <!--My Site Card - Pages card -->
     <style name="ShapeAppearance.PagesCardIllustration" parent="">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">@dimen/my_site_dashboard_card_page_create_page_illustration_image_view_corner_radius</item>
+        <item name="cornerSize">
+            @dimen/my_site_dashboard_card_page_create_page_illustration_image_view_corner_radius
+        </item>
+    </style>
+
+    <style name="MySitePostItemTitle" parent="dashboard_card_sub_title">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MySitePostItemSubtitle" parent="dashboard_card_card_detail">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 
 </resources>

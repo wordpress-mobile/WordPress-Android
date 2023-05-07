@@ -14,7 +14,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title"
-            style="@style/MySiteCardItemTitle"
+            style="@style/MySitePostItemTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_large"
@@ -27,7 +27,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/excerpt"
-            style="@style/MySiteCardItemSubtitle"
+            style="@style/MySitePostItemSubtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_large"

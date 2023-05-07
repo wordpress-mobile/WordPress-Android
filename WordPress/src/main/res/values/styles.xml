@@ -858,10 +858,6 @@
     </style>
 
     <!--My Site Card - Post Item-->
-    <style name="MySitePostItemTitle" parent="MySiteCardItemTitle"/>
-
-    <style name="MySitePostItemExcerpt"  parent="MySiteCardItemSubtitle"/>
-
     <style name="MySitePostItemTimeIcon">
         <item name="android:layout_width">@dimen/my_site_post_item_time_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_post_item_time_icon_size</item>
