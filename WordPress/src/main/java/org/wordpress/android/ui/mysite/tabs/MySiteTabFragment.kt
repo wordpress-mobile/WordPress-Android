@@ -10,6 +10,9 @@ import android.os.Parcelable
 import android.view.View
 import android.view.WindowManager
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +26,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.MySiteTabFragmentBinding
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.news.News
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
@@ -166,6 +170,19 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             setupContentViews(savedInstanceState)
             setupObservers()
             swipeToRefreshHelper.isRefreshing = true
+        }
+        loadRelayNews()
+    }
+
+    private fun loadRelayNews() {
+        binding?.apply {
+            relayNewsCard.setContent {
+                News(
+                    headline = "Relay worked!!!",
+                    author = "Thomas Horta",
+                    date = "Mon 8 May 2023",
+                )
+            }
         }
     }
 

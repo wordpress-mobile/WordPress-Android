@@ -2,6 +2,7 @@ import se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitH
 import se.bjurr.violations.lib.model.SEVERITY
 
 plugins {
+    id 'com.google.relay'
     id "com.android.application"
     id "org.jetbrains.kotlin.android"
     id "org.jetbrains.kotlin.kapt"

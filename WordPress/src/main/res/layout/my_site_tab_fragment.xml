@@ -11,14 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/relay_news_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/relay_news_card"
             app:layout_constraintWidth_max="@dimen/my_site_content_area">
 
             <androidx.recyclerview.widget.RecyclerView
