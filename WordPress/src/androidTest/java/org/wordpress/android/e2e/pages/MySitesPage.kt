@@ -22,6 +22,7 @@ import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.wordpress.android.R
+import org.wordpress.android.support.BetterScrollToAction.Companion.scrollTo
 import org.wordpress.android.support.WPSupportUtils
 import org.wordpress.android.ui.prefs.WPPreference
 
@@ -279,5 +280,56 @@ class MySitesPage {
                 }
             }
         }
+    }
+
+    private fun scrollToCard(elementID: Int): MySitesPage {
+        WPSupportUtils.waitForElementToBeDisplayed(elementID)
+        Espresso.onView(ViewMatchers.withId(elementID))
+            .perform(scrollTo())
+
+        return this
+    }
+
+    fun scrollToDomainsCard(): MySitesPage {
+        return scrollToCard(R.id.dashboard_card_domain_cta)
+    }
+
+    private fun tapCard(elementID: Int) {
+        WPSupportUtils.clickOn(elementID)
+    }
+
+    fun tapDomainsCard(): DomainsScreen {
+        tapCard(R.id.dashboard_card_domain_cta)
+        return DomainsScreen()
+    }
+
+    fun assertDomainsCard(): MySitesPage {
+        Espresso.onView(
+            Matchers.allOf(
+                ViewMatchers.withId(R.id.dashboard_card_domain_cta),
+                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.dashboard_cards)),
+                ViewMatchers.hasDescendant(ViewMatchers.withId(R.id.dashboard_domain_card_more)),
+                ViewMatchers.hasDescendant(ViewMatchers.withId(R.id.dashboard_card_domain_image)),
+
+                ViewMatchers.hasDescendant(
+                    Matchers.allOf(
+
+                        ViewMatchers.withText(R.string.dashboard_card_domain_title),
+                        ViewMatchers.withId(R.id.dashboard_card_domain_title),
+                    )
+                ),
+
+                ViewMatchers.hasDescendant(
+                    Matchers.allOf(
+                        ViewMatchers.withText(R.string.dashboard_card_domain_sub_title),
+                        ViewMatchers.withId(R.id.dashboard_card_domain_sub_title),
+                    )
+                ),
+
+            )
+        )
+            .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+
+        return this
     }
 }
