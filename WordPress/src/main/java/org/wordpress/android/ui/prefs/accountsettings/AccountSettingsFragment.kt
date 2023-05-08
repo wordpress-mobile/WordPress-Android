@@ -44,7 +44,7 @@ import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.C
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.EmailSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.PrimarySiteSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.UserNameSettingsUiState
-import org.wordpress.android.ui.prefs.accountsettings.components.CloseAccountButton
+import org.wordpress.android.ui.prefs.accountsettings.components.AccountClosureUi
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SETTINGS
@@ -165,7 +165,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
                     AppTheme {
-                        CloseAccountButton()
+                        AccountClosureUi(viewModel)
                     }
                 }
             })

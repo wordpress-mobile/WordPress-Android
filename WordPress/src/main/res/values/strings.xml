@@ -2755,6 +2755,8 @@
     <string name="export_your_content">Export your content</string>
     <string name="export_your_content_message">Your posts, pages, and settings will be emailed to you at %s.</string>
     <string name="close_account">Close Account</string>
+    <string name="account_closure_dialog_message">To confirm, please re-enter your username before closing.</string>
+    <string name="account_closure_dialog_title">Confirm Close Account…</string>
 
     <!-- Plans -->
     <string name="plan">Plan</string>
