@@ -341,8 +341,8 @@ fun <T> LiveData<T>.perform(block: LiveData<T>.(T) -> Unit): LiveData<T> {
 /**
  * Simple wrapper of the map utility method that is null safe
  */
-fun <T, U> LiveData<T>.mapNullable(mapper: (T?) -> U?): LiveData<U> {
-    return this.map { mapper(it)!! }
+fun <T, U> LiveData<T>.mapNullable(mapper: (T?) -> U): LiveData<U> {
+    return this.map { mapper(it) }
 }
 
 /**
