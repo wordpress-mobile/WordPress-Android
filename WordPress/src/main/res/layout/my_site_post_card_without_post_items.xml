@@ -27,7 +27,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/excerpt"
-            style="@style/MySitePostItemSubtitle"
+            style="@style/MySitePostItemExcerpt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_large"
