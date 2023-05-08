@@ -34,6 +34,7 @@
         </item>
     </style>
 
+    <!--My Site Card - Post Item-->
     <style name="MySitePostItemTitle" parent="dashboard_card_sub_title">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:maxLines">1</item>
@@ -53,6 +54,13 @@
         <item name="android:paddingEnd">@dimen/my_site_card_footer_link_padding</item>
         <item name="android:paddingStart">@dimen/my_site_card_footer_link_padding</item>
         <item name="android:paddingTop">@dimen/my_site_card_footer_link_padding_top</item>
+    </style>
+
+    <style name="MySitePostItemTimeIcon">
+        <item name="android:layout_width">@dimen/my_site_post_item_time_icon_size</item>
+        <item name="android:layout_height">@dimen/my_site_post_item_time_icon_size</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
+        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <!--My Site Card - Today's Stats Item-->
@@ -88,4 +96,22 @@
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
     </style>
 
+    <!--My Site Card - Blogging Prompt-->
+
+    <style name="MySiteCardAnswerButton" parent="@style/MySiteCardFooterLinkItem">
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+    </style>
+
+    <style name="MySiteCardAnsweredButton" parent="@style/MySiteCardAnswerButton">
+        <item name="android:paddingStart">@dimen/margin_medium</item>
+        <item name="android:paddingEnd">@dimen/margin_medium</item>
+    </style>
+
+    <style name="MySiteCardBloggingPromptTitle" parent="dashboard_card_sub_title">
+        <item name="android:maxLines">3</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 </resources>
