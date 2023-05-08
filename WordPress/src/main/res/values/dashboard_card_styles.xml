@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="dashboard_card_large_title" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textColor">?attr/wpColorOnSurfaceHigh</item>
+    </style>
+
     <style name="dashboard_card_small_title" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:textColor">?attr/wpColorOnSurfaceHigh</item>
         <item name="fontWeight">400</item>
@@ -23,7 +27,6 @@
         <item name="fontWeight">500</item>
     </style>
 
-    <!--My Site Card - Pages card -->
     <style name="ShapeAppearance.PagesCardIllustration" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">
@@ -52,5 +55,37 @@
         <item name="android:paddingTop">@dimen/my_site_card_footer_link_padding_top</item>
     </style>
 
+    <!--My Site Card - Today's Stats Item-->
+    <style name="MySiteTodaysStatsCardTitle" parent="dashboard_card_small_title">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:layout_marginStart">@dimen/margin_medium</item>
+        <item name="android:lineSpacingExtra">@dimen/my_site_todays_stats_card_title_line_spacing_extra</item>
+    </style>
+
+    <style name="MySiteTodaysStatsCardStatTitle" parent="dashboard_card_card_detail" >
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:lineSpacingExtra">@dimen/my_site_todays_stats_card_stat_title_line_spacing_extra</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MySiteTodaysStatsCardStatCountText" parent="dashboard_card_large_title">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_small</item>
+        <item name="android:layout_marginBottom">@dimen/margin_large</item>
+        <item name="android:minWidth">@dimen/my_site_today_stats_card_stat_title_min_width</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MySiteTodaysStatsCardMessage" parent="dashboard_card_card_detail">
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:paddingBottom">@dimen/margin_medium</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingTop">@dimen/margin_extra_large</item>
+    </style>
 
 </resources>
