@@ -9,10 +9,13 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -100,6 +103,7 @@ import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import java.io.File
 import javax.inject.Inject
+import org.wordpress.android.news.View as NewsView
 
 @Suppress("LargeClass")
 class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
@@ -177,10 +181,19 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     private fun loadRelayNews() {
         binding?.apply {
             relayNewsCard.setContent {
+                var viewState by remember { mutableStateOf(0) }
+                val context = LocalContext.current
                 News(
+                    view = NewsView.values()[viewState],
                     headline = "Relay worked!!!",
                     author = "Thomas Horta",
                     date = "Mon 8 May 2023",
+                    onViewHeroItemTapped = {
+                        viewState = (viewState + 1) % NewsView.values().size
+                    },
+                    onIconButtonTapped = {
+                        Toast.makeText(context, "Relay icon button tapped", Toast.LENGTH_SHORT).show()
+                    },
                 )
             }
         }
@@ -367,6 +380,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         is SiteNavigationAction.OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
         is SiteNavigationAction.OpenMediaPicker ->
             mediaPickerLauncher.showSiteIconPicker(this@MySiteTabFragment, action.site)
+
         is SiteNavigationAction.OpenCropActivity -> startCropActivity(action.imageUri)
         is SiteNavigationAction.OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
         is SiteNavigationAction.OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
@@ -380,6 +394,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             action.homepageLocalId,
             action.isNewSite
         )
+
         is SiteNavigationAction.OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
         is SiteNavigationAction.OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
         is SiteNavigationAction.OpenSharing -> ActivityLauncher.viewBlogSharing(activity, action.site)
@@ -391,34 +406,42 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
         is SiteNavigationAction.ConnectJetpackForStats ->
             ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
+
         is SiteNavigationAction.StartWPComLoginForJetpackStats ->
             ActivityLauncher.loginForJetpackStats(this@MySiteTabFragment)
+
         is SiteNavigationAction.OpenJetpackSettings ->
             ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
+
         is SiteNavigationAction.OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
         is SiteNavigationAction.AddNewStory ->
             ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)
+
         is SiteNavigationAction.AddNewStoryWithMediaIds -> ActivityLauncher.addNewStoryWithMediaIdsForResult(
             activity,
             action.site,
             action.source,
             action.mediaIds.toLongArray()
         )
+
         is SiteNavigationAction.AddNewStoryWithMediaUris -> ActivityLauncher.addNewStoryWithMediaUrisForResult(
             activity,
             action.site,
             action.source,
             action.mediaUris.toTypedArray()
         )
+
         is SiteNavigationAction.OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
             activity,
             action.site
         )
+
         is SiteNavigationAction.OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
             activity,
             action.site,
             CTA_DOMAIN_CREDIT_REDEMPTION
         )
+
         is SiteNavigationAction.OpenPaidDomainSearch -> ActivityLauncher.viewDomainRegistrationActivityForResult(
             this,
             action.site,
@@ -432,11 +455,14 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             action.positiveButtonLabel,
             action.negativeButtonLabel
         )
+
         is SiteNavigationAction.OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
         is SiteNavigationAction.OpenDraftsPosts ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
+
         is SiteNavigationAction.OpenScheduledPosts ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
+
         is SiteNavigationAction.OpenEditorToCreateNewPost ->
             ActivityLauncher.addNewPostForResult(
                 requireActivity(),
@@ -450,12 +476,16 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         // 'Edit Post' screen. Instead, it fallbacks to navigating to the 'Posts' screen and targeting a specific tab.
         is SiteNavigationAction.EditDraftPost ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
+
         is SiteNavigationAction.EditScheduledPost ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
+
         is SiteNavigationAction.OpenStatsInsights ->
             ActivityLauncher.viewBlogStatsForTimeframe(requireActivity(), action.site, StatsTimeframe.INSIGHTS)
+
         is SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl ->
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
+
         is SiteNavigationAction.OpenJetpackPoweredBottomSheet -> showJetpackPoweredBottomSheet()
         is SiteNavigationAction.OpenJetpackMigrationDeleteWP -> showJetpackMigrationDeleteWP()
         is SiteNavigationAction.OpenJetpackFeatureOverlay -> showJetpackFeatureOverlay(action.source)
@@ -464,21 +494,25 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             null,
             action.source
         )
+
         is SiteNavigationAction.ShowJetpackRemovalStaticPostersView -> {
             ActivityLauncher.showJetpackStaticPoster(requireActivity())
         }
+
         is SiteNavigationAction.OpenActivityLogDetail -> ActivityLauncher.viewActivityLogDetailFromDashboardCard(
             activity,
             action.site,
             action.activityId,
             action.isRewindable
         )
+
         is SiteNavigationAction.TriggerCreatePageFlow -> Unit // no-op
         is SiteNavigationAction.OpenPagesDraftsTab -> ActivityLauncher.viewCurrentBlogPagesOfType(
             requireActivity(),
             action.site,
             PageListViewModel.PageListType.DRAFTS
         )
+
         is SiteNavigationAction.OpenPagesScheduledTab -> ActivityLauncher.viewCurrentBlogPagesOfType(
             requireActivity(),
             action.site,
@@ -531,6 +565,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 site = itemUploadedModel.site
             )
         }
+
         is ItemUploadedModel.MediaUploaded -> {
             uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
                 activity,
@@ -597,6 +632,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             RequestCodes.DO_LOGIN -> if (resultCode == Activity.RESULT_OK) {
                 viewModel.handleSuccessfulLoginResult()
             }
+
             RequestCodes.SITE_ICON_PICKER -> {
                 if (resultCode != Activity.RESULT_OK) {
                     return
@@ -606,6 +642,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                         val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0)
                         viewModel.handleSelectedSiteIcon(mediaId)
                     }
+
                     data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) -> {
                         val mediaUriStringsArray = data.getStringArrayExtra(
                             MediaPickerConstants.EXTRA_MEDIA_URIS
@@ -617,6 +654,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                         val iconUrl = mediaUriStringsArray.getOrNull(0) ?: return
                         viewModel.handleTakenSiteIcon(iconUrl, source)
                     }
+
                     else -> {
                         AppLog.e(
                             UTILS,
@@ -625,10 +663,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                     }
                 }
             }
+
             RequestCodes.STORIES_PHOTO_PICKER,
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK) {
                 viewModel.handleStoriesPhotoPickerResult(data)
             }
+
             UCrop.REQUEST_CROP -> {
                 if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(
@@ -639,9 +679,11 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 }
                 viewModel.handleCropResult(UCrop.getOutput(data), resultCode == Activity.RESULT_OK)
             }
+
             RequestCodes.DOMAIN_REGISTRATION -> if (resultCode == Activity.RESULT_OK) {
                 viewModel.handleSuccessfulDomainRegistrationResult(data.getStringExtra(RESULT_REGISTERED_DOMAIN_EMAIL))
             }
+
             RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
                 val isNewSite = requestCode == RequestCodes.CREATE_SITE ||
@@ -653,6 +695,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                     isNewSite = isNewSite
                 )
             }
+
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                     viewModel.onCreateSiteResult()
@@ -665,6 +708,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                     viewModel.onSitePicked()
                 }
             }
+
             RequestCodes.EDIT_LANDING_PAGE -> {
                 viewModel.checkAndStartQuickStart(
                     data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
