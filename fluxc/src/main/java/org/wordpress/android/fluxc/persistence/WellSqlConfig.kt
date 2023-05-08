@@ -1908,7 +1908,7 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 185 -> migrate(version) {
                     db.execSQL("ALTER TABLE EditorTheme RENAME COLUMN IS_FSETHEME TO IS_BLOCK_BASED_THEME ")
-                    db.execSQL("ALTER TABLE EditorTheme ADD IS_BLOCK_TEMPLATES BOOLEAN")
+                    db.execSQL("ALTER TABLE EditorTheme ADD HAS_BLOCK_TEMPLATES BOOLEAN")
                 }
             }
         }
