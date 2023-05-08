@@ -6,7 +6,7 @@ public class WPGutenbergEmbedWebViewActivity extends GutenbergEmbedWebViewActivi
     @Override
     protected void load() {
         String content = getIntent().getExtras().getString(ARG_CONTENT);
-        mWebView.loadData(content,"text/html", "UTF-8" );
+        mWebView.loadData(content, "text/html", "UTF-8");
     }
 
     protected String getToolbarTitle() {
