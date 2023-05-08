@@ -59,9 +59,4 @@ class LoginTests : BaseTest() {
             )
             .confirmLogin(true)
     }
-
-    @After
-    fun tearDown() {
-        logoutIfNecessary()
-    }
 }

@@ -20,6 +20,10 @@ import org.wordpress.android.util.StatsVisitsData
 class StatsTests : BaseTest() {
     @Before
     fun setUp() {
+        // We're not running Stats tests for JP.
+        // See https://github.com/wordpress-mobile/WordPress-Android/issues/18065
+        assumeTrue(!BuildConfig.IS_JETPACK_APP)
+
         logoutIfNecessary()
         wpLogin()
     }
@@ -35,10 +39,6 @@ class StatsTests : BaseTest() {
 
     @Test
     fun e2eAllDayStatsLoad() {
-        // We're not running this test on JP.
-        // See https://github.com/wordpress-mobile/WordPress-Android/issues/18065
-        assumeTrue(!BuildConfig.IS_JETPACK_APP)
-
         val todayVisits = StatsVisitsData("97", "28", "14", "11")
         val postsList: List<StatsKeyValueData> = StatsMocksReader().readDayTopPostsToList()
         val referrersList: List<StatsKeyValueData> = StatsMocksReader().readDayTopReferrersToList()

@@ -67,10 +67,7 @@ class LoginFlow {
         if (!isSelfHosted) {
             // Quick Start Prompt Dialog - Click the "No thanks" negative button to continue.
             // See QuickStartPromptDialogFragment
-            val negativeButton =
-                Espresso.onView(ViewMatchers.withId(R.id.quick_start_prompt_dialog_button_negative))
-            WPSupportUtils.waitForElementToBeDisplayed(negativeButton)
-            WPSupportUtils.clickOn(negativeButton)
+            WPSupportUtils.clickOn(R.id.quick_start_prompt_dialog_button_negative)
         }
         if (BuildConfig.IS_JETPACK_APP) {
             dismissNewFeaturesDialogIfDisplayed()
