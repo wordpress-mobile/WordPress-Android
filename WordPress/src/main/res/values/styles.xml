@@ -342,6 +342,12 @@
         <item name="tint">?attr/colorOnSurface</item>
     </style>
 
+    <style name="WordPress.ToolBar.Title.Serif" parent="TextAppearance.App.Toolbar.Title">
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">serif</item>
+    </style>
+
     <style name="WordPress.Snackbar" parent="@style/Widget.MaterialComponents.Snackbar">
         <item name="android:layout_margin">@dimen/margin_medium</item>
         <item name="actionTextColorAlpha">1.0</item>
@@ -1651,9 +1657,13 @@
         <item name="fontFamily">serif</item>
     </style>
 
+    <style name="SiteCreationLeftAlignedTitle" parent="ModalLayoutPickerTitle">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+    </style>
+
     <style name="ModalLayoutPickerSubtitle" parent="ModalLayoutPickerTitle">
-        <item name="android:layout_marginEnd">@dimen/margin_extra_extra_medium_large</item>
-        <item name="android:layout_marginStart">@dimen/margin_extra_extra_medium_large</item>
         <item name="android:paddingTop">@dimen/margin_small</item>
         <item name="android:paddingBottom">@dimen/mlp_titles_bottom_margin</item>
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
@@ -1662,6 +1672,12 @@
         <item name="android:alpha">0.6</item>
         <item name="android:maxLines">5</item>
         <item name="fontFamily">sans-serif</item>
+    </style>
+
+    <style name="SiteCreationLeftAlignedSubtitle" parent="ModalLayoutPickerSubtitle">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
     </style>
 
     <style name="Widget.ModalLayoutPicker.Button.Primary" parent="Widget.MaterialComponents.Button.UnelevatedButton">
