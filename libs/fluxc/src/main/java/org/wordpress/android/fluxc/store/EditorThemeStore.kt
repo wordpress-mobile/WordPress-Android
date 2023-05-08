@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.action.EditorThemeAction.FETCH_EDITOR_THEME
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.BlockEditorSettings
 import org.wordpress.android.fluxc.model.EditorTheme
+import org.wordpress.android.fluxc.model.EditorThemeSupport
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NOT_FOUND
@@ -63,10 +64,13 @@ class EditorThemeStore
         return editorThemeSqlUtils.getEditorThemeForSite(site)
     }
 
-    fun getIsBlockBasedTheme(site: SiteModel) =
-        getEditorThemeForSite(site)?.themeSupport?.let { themeSupport ->
-            themeSupport.isBlockBasedTheme || (themeSupport.isBlockTemplates ?: false)
-        }
+    fun getIsBlockBasedTheme(site: SiteModel): Boolean =
+        getEditorThemeForSite(site)?.themeSupport?.let { editorThemeSupport ->
+            getIsBlockBasedTheme(editorThemeSupport)
+        } ?: false
+
+    fun getIsBlockBasedTheme(editorThemeSupport: EditorThemeSupport): Boolean =
+        editorThemeSupport.isBlockBasedTheme || (editorThemeSupport.hasBlockTemplates ?: false)
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     override fun onAction(action: Action<*>) {
