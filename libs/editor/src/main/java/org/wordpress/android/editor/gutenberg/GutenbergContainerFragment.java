@@ -3,7 +3,6 @@ package org.wordpress.android.editor.gutenberg;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 
 import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
@@ -116,7 +115,6 @@ public class GutenbergContainerFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        WebView.setWebContentsDebuggingEnabled(true);
         super.onCreate(savedInstanceState);
 
         GutenbergPropsBuilder gutenbergPropsBuilder = getArguments().getParcelable(ARG_GUTENBERG_PROPS_BUILDER);
