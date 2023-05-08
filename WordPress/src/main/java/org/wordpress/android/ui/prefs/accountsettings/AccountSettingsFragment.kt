@@ -14,6 +14,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -21,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.signup.BaseUsernameChangerFullScreenDialogFragment
+import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.DetailListPreference
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
@@ -41,6 +44,7 @@ import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.C
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.EmailSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.PrimarySiteSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.UserNameSettingsUiState
+import org.wordpress.android.ui.prefs.accountsettings.components.CloseAccountButton
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SETTINGS
@@ -151,6 +155,21 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         }
         coordinator.addView(preferenceView)
         return coordinatorView
+    }
+
+    @Deprecated("Deprecated")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (view.findViewById<View>(android.R.id.list) as? ListView)?.let { listView ->
+            listView.addFooterView(ComposeView(context).apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    AppTheme {
+                        CloseAccountButton()
+                    }
+                }
+            })
+        }
     }
 
     @Deprecated("Deprecated")

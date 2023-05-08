@@ -2754,6 +2754,7 @@
     <string name="export_email_sent">Export email sent!</string>
     <string name="export_your_content">Export your content</string>
     <string name="export_your_content_message">Your posts, pages, and settings will be emailed to you at %s.</string>
+    <string name="close_account">Close Account</string>
 
     <!-- Plans -->
     <string name="plan">Plan</string>
