@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.AccountStore
@@ -92,7 +93,7 @@ class PageListViewModel @Inject constructor(
 
     private fun isUsingTemplateHomepage(pages: Collection<PageModel>): Boolean {
         // TODO thomashorta check if this is the best way to check for this
-        return pagesViewModel.site.pageOnFront == 0L || pages.none { it.isHomepage }
+        return pagesViewModel.site.showOnFront == ShowOnFront.POSTS.value || pages.none { it.isHomepage }
     }
 
     enum class PageListType(val pageStatuses: List<PageStatus>) {
