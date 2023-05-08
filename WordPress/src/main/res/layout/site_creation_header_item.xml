@@ -9,13 +9,13 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/title"
-        style="@style/ModalLayoutPickerTitle"
+        style="@style/SiteCreationLeftAlignedTitle"
         app:fixWidowWords="true"
         tools:text="What's the focus of your business?" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/subtitle"
-        style="@style/ModalLayoutPickerSubtitle"
+        style="@style/SiteCreationLeftAlignedSubtitle"
         app:fixWidowWords="true"
         tools:text="We’ll use your answer to add sections to your website." />
 </LinearLayout>
