@@ -117,10 +117,6 @@ public class BaseTest {
     }
 
     protected void logoutIfNecessary() {
-        if (isElementDisplayed(R.id.continue_with_wpcom_button) || isElementDisplayed(R.id.login_open_email_client)) {
-            return;
-        }
-
         if (isElementDisplayed(R.id.nav_sites)) {
             logout();
         }
