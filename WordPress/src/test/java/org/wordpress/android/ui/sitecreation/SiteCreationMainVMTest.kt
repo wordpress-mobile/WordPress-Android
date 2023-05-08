@@ -67,13 +67,13 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     lateinit var onCompletedObserver: Observer<SiteCreationCompletionEvent>
 
     @Mock
-    lateinit var wizardExitedObserver: Observer<Unit>
+    lateinit var wizardExitedObserver: Observer<Unit?>
 
     @Mock
     lateinit var dialogActionsObserver: Observer<DialogHolder>
 
     @Mock
-    lateinit var onBackPressedObserver: Observer<Unit>
+    lateinit var onBackPressedObserver: Observer<Unit?>
 
     @Mock
     lateinit var savedInstanceState: Bundle

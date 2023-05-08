@@ -45,7 +45,7 @@ import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.map
+import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -121,19 +121,19 @@ class WPMainActivityViewModel @Inject constructor(
     private val _switchToMySite = MutableLiveData<Event<Unit>>()
     val switchToMySite: LiveData<Event<Unit>> = _switchToMySite
 
-    private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
-    val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
+    private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit?>()
+    val onFeatureAnnouncementRequested: LiveData<Unit?> = _onFeatureAnnouncementRequested
 
     private val _createPostWithBloggingPrompt = SingleLiveEvent<Int>()
     val createPostWithBloggingPrompt: LiveData<Int> = _createPostWithBloggingPrompt
 
-    private val _openBloggingPromptsOnboarding = SingleLiveEvent<Unit>()
-    val openBloggingPromptsOnboarding: LiveData<Unit> = _openBloggingPromptsOnboarding
+    private val _openBloggingPromptsOnboarding = SingleLiveEvent<Unit?>()
+    val openBloggingPromptsOnboarding: LiveData<Unit?> = _openBloggingPromptsOnboarding
 
     val onFocusPointVisibilityChange = quickStartRepository.activeTask
         .mapNullable { getExternalFocusPointInfo(it) }
         .distinctUntilChanged()
-        .map { Event(it) } as LiveData<Event<List<FocusPointInfo>>>
+        .mapSafe { Event(it) } as LiveData<Event<List<FocusPointInfo>>>
 
     val hasMultipleSites: Boolean
         get() = siteStore.sitesCount > ONE_SITE

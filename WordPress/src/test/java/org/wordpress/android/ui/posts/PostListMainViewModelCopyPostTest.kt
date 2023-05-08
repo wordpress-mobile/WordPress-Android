@@ -35,7 +35,7 @@ class PostListMainViewModelCopyPostTest : BaseUnitTest() {
     lateinit var postSqlUtils: PostSqlUtils
 
     @Mock
-    lateinit var onPostListActionObserver: Observer<PostListAction>
+    lateinit var onPostListActionObserver: Observer<PostListAction?>
 
     private lateinit var viewModel: PostListMainViewModel
     private lateinit var postStore: PostStore

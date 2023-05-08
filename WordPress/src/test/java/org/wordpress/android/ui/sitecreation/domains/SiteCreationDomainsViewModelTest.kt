@@ -72,16 +72,16 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     private lateinit var tracker: SiteCreationTracker
 
     @Mock
-    private lateinit var uiStateObserver: Observer<DomainsUiState>
+    private lateinit var uiStateObserver: Observer<DomainsUiState?>
 
     @Mock
     private lateinit var createSiteBtnObserver: Observer<DomainModel>
 
     @Mock
-    private lateinit var clearBtnObserver: Observer<Unit>
+    private lateinit var clearBtnObserver: Observer<Unit?>
 
     @Mock
-    private lateinit var onHelpClickedObserver: Observer<Unit>
+    private lateinit var onHelpClickedObserver: Observer<Unit?>
 
     @Mock
     private lateinit var networkUtils: NetworkUtilsWrapper

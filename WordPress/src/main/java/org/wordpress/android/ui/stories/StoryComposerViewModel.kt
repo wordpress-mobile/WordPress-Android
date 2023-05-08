@@ -45,7 +45,7 @@ class StoryComposerViewModel @Inject constructor(
 ) : ViewModel() {
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
-        override fun getLifecycle(): Lifecycle = lifecycleRegistry
+        override val lifecycle: Lifecycle = lifecycleRegistry
     }
 
     private lateinit var editPostRepository: EditPostRepository

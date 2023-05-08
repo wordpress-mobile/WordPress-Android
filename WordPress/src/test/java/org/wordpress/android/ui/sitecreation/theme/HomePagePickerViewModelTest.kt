@@ -54,16 +54,16 @@ class HomePagePickerViewModelTest : BaseUnitTest() {
     lateinit var fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
 
     @Mock
-    lateinit var uiStateObserver: Observer<LayoutPickerUiState>
+    lateinit var uiStateObserver: Observer<LayoutPickerUiState?>
 
     @Mock
-    lateinit var onDesignActionObserver: Observer<DesignSelectionAction>
+    lateinit var onDesignActionObserver: Observer<DesignSelectionAction?>
 
     @Mock
-    lateinit var onPreviewActionObserver: Observer<DesignPreviewAction>
+    lateinit var onPreviewActionObserver: Observer<DesignPreviewAction?>
 
     @Mock
-    lateinit var previewModeObserver: Observer<PreviewMode>
+    lateinit var previewModeObserver: Observer<PreviewMode?>
 
     @Mock
     lateinit var analyticsTracker: SiteCreationTracker
