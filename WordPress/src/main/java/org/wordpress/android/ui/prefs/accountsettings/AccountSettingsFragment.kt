@@ -22,6 +22,8 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.accounts.signup.BaseUsernameChangerFullScreenDialogFragment
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -165,7 +167,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
                     AppTheme {
-                        AccountClosureUi(viewModel)
+                        AccountClosureUi(viewModel, ::viewHelp)
                     }
                 }
             })
@@ -368,4 +370,11 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
             }
         }
     }
+
+    fun viewHelp() = ActivityLauncher.viewHelp(
+        context,
+        HelpActivity.Origin.ACCOUNT_CLOSURE_DIALOG,
+        null,
+        null,
+    )
 }

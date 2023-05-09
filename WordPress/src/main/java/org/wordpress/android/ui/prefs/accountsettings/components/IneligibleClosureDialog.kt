@@ -29,6 +29,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 @Composable
 fun IneligibleClosureDialog(
     onDismissRequest: () -> Unit,
+    onHelpRequested: () -> Unit,
 ) {
     val padding = 10.dp
     Dialog(onDismissRequest = onDismissRequest) {
@@ -60,7 +61,7 @@ fun IneligibleClosureDialog(
             Spacer(Modifier.size(padding))
             FlatButton(
                 text = stringResource(R.string.contact_support),
-                onClick = {},
+                onClick = onHelpRequested,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
@@ -74,6 +75,7 @@ fun PreviewIneligibleClosureDialog() {
     AppTheme {
         IneligibleClosureDialog(
             onDismissRequest = {},
+            onHelpRequested = {},
         )
     }
 }
