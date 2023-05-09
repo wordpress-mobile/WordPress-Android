@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
@@ -36,6 +35,8 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 fun AccountClosureDialog(
     onDismissRequest: () -> Unit,
     currentUsername: String,
+    onConfirm: () -> Unit,
+    isPending: Boolean,
 ) {
     var username by remember { mutableStateOf("") }
     val padding = 10.dp
@@ -82,7 +83,8 @@ fun AccountClosureDialog(
                     text = stringResource(R.string.confirm),
                     modifier = Modifier.weight(1f),
                     enabled = username.isNotEmpty() && username == currentUsername,
-                    onClick = {},
+                    isPending = isPending,
+                    onClick = onConfirm,
                     colors = ButtonDefaults.buttonColors(
                         contentColor = MaterialTheme.colors.error,
                         backgroundColor = Color.Transparent,
@@ -101,6 +103,8 @@ fun PreviewAccountClosureDialog() {
         AccountClosureDialog(
             onDismissRequest = {},
             currentUsername = "previewUser",
+            onConfirm = {},
+            isPending = false,
         )
     }
 }
