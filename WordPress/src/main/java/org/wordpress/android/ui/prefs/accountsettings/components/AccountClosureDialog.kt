@@ -9,9 +9,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Button
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -66,20 +68,26 @@ fun AccountClosureDialog(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround,
             ) {
-                Button(
-                    modifier = Modifier.weight(1f),
+                FlatOutlinedButton(
+                    text = stringResource(R.string.cancel),
                     onClick = onDismissRequest,
-                ) {
-                    Text("Cancel")
-                }
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = MaterialTheme.colors.onSurface,
+                        backgroundColor = Color.Transparent,
+                    ),
+                )
                 Spacer(Modifier.size(padding))
-                Button(
+                FlatOutlinedButton(
+                    text = stringResource(R.string.confirm),
                     modifier = Modifier.weight(1f),
                     enabled = username.isNotEmpty() && username == currentUsername,
                     onClick = {},
-                ) {
-                    Text("Confirm")
-                }
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = MaterialTheme.colors.error,
+                        backgroundColor = Color.Transparent,
+                    ),
+                )
             }
         }
     }
