@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.AccountStore
@@ -31,6 +30,7 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
+import org.wordpress.android.ui.pages.PageItem.VirtualHomepage
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.utils.UiString
@@ -89,11 +89,6 @@ class PageListViewModel @Inject constructor(
 
     private val isSitePrivateAt: Boolean by lazy {
         pagesViewModel.site.isPrivateWPComAtomic
-    }
-
-    private fun isUsingTemplateHomepage(pages: Collection<PageModel>): Boolean {
-        // TODO thomashorta check if this is the best way to check for this
-        return pagesViewModel.site.showOnFront == ShowOnFront.POSTS.value || pages.none { it.isHomepage }
     }
 
     enum class PageListType(val pageStatuses: List<PageStatus>) {
@@ -291,7 +286,12 @@ class PageListViewModel @Inject constructor(
             filteredPages.sortedByDescending { it.date }.sortedBy { !it.isHomepage }
         })
 
+        val isBlockBasedTheme = true // TODO thomashorta get it from the appropriate site field (WIP)
+        val isVirtualHomepageFlagEnabled = true // TODO thomashorta get it from the correct feature flag (WIP)
+        val showVirtualHomepage = isVirtualHomepageFlagEnabled && isBlockBasedTheme
+
         return sortedPages
+            .let { if (showVirtualHomepage) it.filterNot { page -> page.isHomepage } else it }
             .map {
                 val pageItemIndent = if (shouldSortTopologically) {
                     getPageItemIndent(it)
@@ -324,14 +324,8 @@ class PageListViewModel @Inject constructor(
                 )
             }
             .let {
-                // add a virtual homepage sending to site editor in case site is using a theme template as homepage
-                val isBlockBasedTheme = true // TODO thomashorta get it from the appropriate site field (WIP)
-                val isFeatureFlagEnabled = true // TODO thomashorta get it from the appropriate feature flag (WIP)
-                val showVirtualHomepage = isFeatureFlagEnabled &&
-                        isBlockBasedTheme &&
-                        isUsingTemplateHomepage(sortedPages)
                 if (showVirtualHomepage) {
-                    listOf(PageItem.VirtualHomepage) + it
+                    listOf(VirtualHomepage) + it
                 } else {
                     it
                 }

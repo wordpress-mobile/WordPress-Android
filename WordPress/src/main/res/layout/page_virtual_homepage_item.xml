@@ -16,11 +16,13 @@
         android:minHeight="@dimen/page_list_row_min_height"
         android:background="?selectableItemBackground">
 
+        <!-- TODO thomashorta remove this icon if we are really not using it -->
         <ImageView
             android:id="@+id/page_home_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/page_item_horizontal_padding"
+            android:visibility="gone"
             android:src="@drawable/ic_homepage_16dp"
             app:tint="?attr/wpColorOnSurfaceHigh"
             android:importantForAccessibility="no"
@@ -56,11 +58,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_extra_small"
-            android:ellipsize="end"
-            android:maxLines="1"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?attr/wpColorOnSurfaceMedium"
             android:text="@string/virtual_homepage_subtitle"
+            app:layout_constrainedWidth="true"
             app:layout_goneMarginBottom="@dimen/margin_large"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/page_title"
