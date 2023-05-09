@@ -53,6 +53,7 @@ class DomainRegistrationMainViewModel @Inject constructor(
     }
 
     fun completeDomainRegistration(event: DomainRegistrationCompletedEvent) {
+        // Called on checkout result
         _onNavigation.value = when (domainRegistrationPurpose) {
             CTA_DOMAIN_CREDIT_REDEMPTION, DOMAIN_PURCHASE -> {
                 analyticsTracker.trackDomainsRegistrationFormSubmitted()
