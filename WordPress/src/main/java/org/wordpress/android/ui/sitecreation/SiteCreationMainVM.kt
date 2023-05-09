@@ -301,6 +301,7 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onCheckoutResult(event: DomainRegistrationCompletedEvent?) {
         if (event == null) return onBackPressed()
+        domainsRegistrationTracker.trackDomainsPurchaseDomainSuccess(isSiteCreation = true)
         siteCreationState = siteCreationState.run {
             check(result is CreatedButNotFetched.InCart)
             copy(
