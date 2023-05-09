@@ -1,9 +1,13 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.text.TextUtils
 import androidx.annotation.DrawableRes
 import androidx.annotation.VisibleForTesting
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,8 +25,8 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -44,9 +48,9 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.NotificationsPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FinishActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FinishActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.Logout
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Delete
@@ -293,10 +297,19 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }
 
+    private fun hasNotificationPermission(): Boolean {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || ContextCompat.checkSelfPermission(
+            contextProvider.getContext(),
+            Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
     private fun onContinueFromNotificationsClicked() {
         if (preventDuplicateNotifsFeatureConfig.isEnabled()) disableNotificationsOnWP()
         migrationAnalyticsTracker.trackNotificationsScreenContinueButtonTapped()
-        notificationContinueClickedFlow.value = true
+        if (hasNotificationPermission()) {
+            notificationContinueClickedFlow.value = true
+        }
     }
 
     private fun disableNotificationsOnWP() {
