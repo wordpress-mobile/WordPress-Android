@@ -18,6 +18,9 @@ import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Dismissed
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened.Atomic
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened.Default
 import org.wordpress.android.ui.prefs.accountsettings.usecase.FetchAccountSettingsUseCase
 import org.wordpress.android.ui.prefs.accountsettings.usecase.GetAccountUseCase
 import org.wordpress.android.ui.prefs.accountsettings.usecase.GetSitesUseCase
@@ -47,6 +50,8 @@ class AccountSettingsViewModel @Inject constructor(
     private var fetchNewSettingsJob: Job? = null
     private var _accountSettingsUiState = MutableStateFlow(getAccountSettingsUiState(true))
     val accountSettingsUiState: StateFlow<AccountSettingsUiState> = _accountSettingsUiState.asStateFlow()
+    private var _accountClosureUiState = MutableStateFlow<AccountClosureUiState>(Dismissed)
+    val accountClosureUiState: StateFlow<AccountClosureUiState> = _accountClosureUiState
 
     init {
         viewModelScope.launch {
@@ -287,6 +292,28 @@ class AccountSettingsViewModel @Inject constructor(
         val changePasswordSettingsUiState: ChangePasswordSettingsUiState,
         val toastMessage: String?
     )
+
+    sealed class AccountClosureUiState {
+        object Dismissed: AccountClosureUiState()
+
+        sealed class Opened: AccountClosureUiState() {
+            data class Default(val username: String?): Opened()
+            object Atomic: Opened()
+        }
+    }
+
+    fun openAccountClosureDialog() {
+        launch {
+            _accountClosureUiState.value = if (getSitesUseCase.getAtomic().isNotEmpty()) {
+                Atomic
+            } else {
+                Default(username = getAccountUseCase.account.userName)
+            }
+        }
+    }
+    fun dismissAccountClosureDialog() {
+        _accountClosureUiState.value = Dismissed
+    }
 
     override fun onCleared() {
         pushAccountSettingsUseCase.onCleared()
