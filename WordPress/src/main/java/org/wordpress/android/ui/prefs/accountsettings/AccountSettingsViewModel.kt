@@ -322,6 +322,7 @@ class AccountSettingsViewModel @Inject constructor(
             _accountClosureUiState.value = uiState.copy(isPending = true)
 
             launch {
+                @Suppress("MagicNumber")
                 delay(3000)
                 _accountClosureUiState.value = uiState.copy(isPending = false)
             }
