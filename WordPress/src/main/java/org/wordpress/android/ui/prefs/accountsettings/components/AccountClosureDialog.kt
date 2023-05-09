@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -19,7 +20,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,13 +40,17 @@ fun AccountClosureDialog(
     Dialog(onDismissRequest = onDismissRequest) {
         Column(
             modifier = Modifier
+                .clip(shape = RoundedCornerShape(padding))
                 .background(MaterialTheme.colors.background)
-                .padding(padding)
+                .padding(padding),
         ) {
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = padding),
                 textAlign = TextAlign.Center,
                 text = stringResource(R.string.account_closure_dialog_title),
+                fontWeight = FontWeight.Bold,
             )
             Text(stringResource(R.string.account_closure_dialog_message))
             TextField(
@@ -85,8 +92,7 @@ fun PreviewAccountClosureDialog() {
     AppTheme {
         AccountClosureDialog(
             onDismissRequest = {},
-            currentUsername = "previewUser"
+            currentUsername = "previewUser",
         )
     }
 }
-
