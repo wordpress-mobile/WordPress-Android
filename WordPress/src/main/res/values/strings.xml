@@ -4347,7 +4347,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_welcome_site_found_message">We found your site. Continue to transfer all your data and sign in to Jetpack automatically.</string>
     <string name="jp_migration_continue_button">Continue</string>
     <string name="jp_migration_help_button">Need help?</string>
-    <string name="jp_migration_notifications_title">Notifications now come from Jetpack</string>
+    <string name="jp_migration_notifications_allow_title">Allow notifications to keep up with your site</string>
     <string name="jp_migration_notifications_subtitle">You’ll get all the same notifications but now they’ll come from the Jetpack app.</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">We\'ll turn off notifications from the WordPress app.</string>
     <string name="jp_migration_done_title">Thanks for switching to Jetpack!</string>
