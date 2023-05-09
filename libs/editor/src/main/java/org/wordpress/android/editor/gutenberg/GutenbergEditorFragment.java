@@ -48,7 +48,6 @@ import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.LiveTextWatcher;
 import org.wordpress.android.editor.R;
 import org.wordpress.android.editor.WPGutenbergWebViewActivity;
-import org.wordpress.android.editor.WPGutenbergEmbedWebViewActivity;
 import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface;
 import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogNegativeClickInterface;
 import org.wordpress.android.util.AppLog;
@@ -61,6 +60,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
+import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergEmbedWebViewActivity;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
@@ -649,9 +649,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private void openGutenbergEmbedWebViewActivity(String html, String title) {
         Activity activity = getActivity();
 
-        Intent intent = new Intent(activity, WPGutenbergEmbedWebViewActivity.class);
-        intent.putExtra(WPGutenbergEmbedWebViewActivity.ARG_CONTENT, html);
-        intent.putExtra(WPGutenbergEmbedWebViewActivity.ARG_TITLE, title);
+        Intent intent = new Intent(activity, GutenbergEmbedWebViewActivity.class);
+        intent.putExtra(GutenbergEmbedWebViewActivity.ARG_CONTENT, html);
+        intent.putExtra(GutenbergEmbedWebViewActivity.ARG_TITLE, title);
         activity.startActivityForResult(intent, EMBED_FULLSCREEN_PREVIEW_CODE);
     }
 
