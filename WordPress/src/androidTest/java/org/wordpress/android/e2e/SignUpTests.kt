@@ -15,6 +15,11 @@ class SignUpTests : BaseTest() {
         logoutIfNecessary()
     }
 
+    @After
+    fun tearDown() {
+        logoutIfNecessary()
+    }
+
     @Test
     fun e2eSignUpWithMagicLink() {
         SignupFlow().chooseContinueWithWpCom(super.mComposeTestRule)
