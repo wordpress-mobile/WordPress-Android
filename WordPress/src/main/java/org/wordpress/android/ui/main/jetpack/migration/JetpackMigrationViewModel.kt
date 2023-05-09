@@ -309,7 +309,13 @@ class JetpackMigrationViewModel @Inject constructor(
         migrationAnalyticsTracker.trackNotificationsScreenContinueButtonTapped()
         if (hasNotificationPermission()) {
             notificationContinueClickedFlow.value = true
+        } else {
+            postActionEvent(JetpackMigrationActionEvent.RequestNotificationPermission)
         }
+    }
+
+    fun onPermissionChange() {
+        notificationContinueClickedFlow.value = true
     }
 
     private fun disableNotificationsOnWP() {
@@ -542,6 +548,8 @@ class JetpackMigrationViewModel @Inject constructor(
 
     sealed class JetpackMigrationActionEvent {
         object ShowHelp : JetpackMigrationActionEvent()
+
+        object RequestNotificationPermission : JetpackMigrationActionEvent()
 
         data class CompleteFlow(
             val deepLinkData: PreMigrationDeepLinkData? = null,

@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +32,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FinishActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.Logout
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.RequestNotificationPermission
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error
@@ -44,6 +47,7 @@ import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.util.AppThemeUtils
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 
@@ -113,6 +117,7 @@ class JetpackMigrationFragment : Fragment() {
             }
             is Logout -> (requireActivity().application as? WordPress)?.let { viewModel.signOutWordPress(it) }
             is ShowHelp -> launchHelpScreen()
+            is RequestNotificationPermission -> requestNotificationPermission()
             is FinishActivity -> requireActivity().finish()
         }
     }
@@ -124,6 +129,23 @@ class JetpackMigrationFragment : Fragment() {
             null,
             null
         )
+    }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            @Suppress("DEPRECATION")
+            requestPermissions(
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                WPPermissionUtils.NOTIFICATIONS_PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == WPPermissionUtils.NOTIFICATIONS_PERMISSION_REQUEST_CODE) {
+            WPPermissionUtils.setPermissionListAsked(requireActivity(), requestCode, permissions, grantResults, false)
+            viewModel.onPermissionChange()
+        }
     }
 
     private fun initBackPressHandler(showDeleteWpState: Boolean) {
