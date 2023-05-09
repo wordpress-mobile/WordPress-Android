@@ -11,7 +11,11 @@ import org.wordpress.android.util.image.ImageType
 class AvatarViewHolder(
     parent: ViewGroup,
     private val imageManager: ImageManager
-) : TrainOfAvatarsViewHolder<MySiteBloggingPromptCardAvatarItemBinding>(parent.viewBinding(MySiteBloggingPromptCardAvatarItemBinding::inflate)) {
+) : TrainOfAvatarsViewHolder<MySiteBloggingPromptCardAvatarItemBinding>(
+    parent.viewBinding(
+        MySiteBloggingPromptCardAvatarItemBinding::inflate
+    )
+) {
     fun bind(avatarDetails: AvatarItem) = with(binding) {
         val likerAvatarUrl = GravatarUtils.fixGravatarUrl(
             avatarDetails.userAvatarUrl,
