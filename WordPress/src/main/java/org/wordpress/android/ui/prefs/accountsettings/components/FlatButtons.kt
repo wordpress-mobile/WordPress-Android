@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.prefs.accountsettings.components
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +41,7 @@ fun FlatOutlinedButton(
     modifier: Modifier = Modifier,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
     enabled: Boolean = true,
+    isPending: Boolean = false,
 ) = OutlinedButton(
     modifier = modifier,
     onClick = onClick,
@@ -47,7 +50,14 @@ fun FlatOutlinedButton(
         defaultElevation = 0.dp,
         pressedElevation = 0.dp,
     ),
-    enabled = enabled,
+    enabled = enabled && !isPending,
 ) {
-    Text(text)
+    if (isPending) {
+        CircularProgressIndicator(
+            strokeWidth = 2.dp,
+            modifier = Modifier.size(20.dp),
+        )
+    } else {
+        Text(text)
+    }
 }

@@ -17,6 +17,8 @@ fun AccountClosureUi(viewModel: AccountSettingsViewModel, onHelpRequested: () ->
                AccountClosureDialog(
                    onDismissRequest = { viewModel.dismissAccountClosureDialog() },
                    currentUsername,
+                   onConfirm = { viewModel.closeAccount() },
+                   isPending = it.isPending,
                )
            }
 

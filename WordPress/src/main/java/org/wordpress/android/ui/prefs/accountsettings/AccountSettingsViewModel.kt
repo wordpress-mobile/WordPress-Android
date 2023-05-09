@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -297,7 +298,8 @@ class AccountSettingsViewModel @Inject constructor(
         object Dismissed: AccountClosureUiState()
 
         sealed class Opened: AccountClosureUiState() {
-            data class Default(val username: String?): Opened()
+            data class Default(val username: String?, val isPending: Boolean = false): Opened()
+
             object Atomic: Opened()
         }
     }
@@ -313,6 +315,18 @@ class AccountSettingsViewModel @Inject constructor(
     }
     fun dismissAccountClosureDialog() {
         _accountClosureUiState.value = Dismissed
+    }
+
+    fun closeAccount() {
+        (accountClosureUiState.value as? Default)?.let { uiState ->
+            _accountClosureUiState.value = uiState.copy(isPending = true)
+
+            launch {
+                @Suppress("MagicNumber")
+                delay(3000)
+                _accountClosureUiState.value = uiState.copy(isPending = false)
+            }
+        }
     }
 
     override fun onCleared() {
