@@ -297,7 +297,8 @@ class AccountSettingsViewModel @Inject constructor(
         object Dismissed: AccountClosureUiState()
 
         sealed class Opened: AccountClosureUiState() {
-            data class Default(val username: String?): Opened()
+            data class Default(val username: String?, val isPending: Boolean = false): Opened()
+
             object Atomic: Opened()
         }
     }
