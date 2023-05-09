@@ -111,6 +111,7 @@
     <string name="update_now">Update Now</string>
     <string name="status_and_visibility">Status &amp; Visibility</string>
     <string name="free">Free</string>
+    <string name="dismiss">Dismiss</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>
@@ -2757,6 +2758,7 @@
     <string name="close_account">Close Account</string>
     <string name="account_closure_dialog_message">To confirm, please re-enter your username before closing.</string>
     <string name="account_closure_dialog_title">Confirm Close Account…</string>
+    <string name="account_closure_dialog_active_purchases">This user account cannot be closed immediately because it has active purchases. Please contact our support team to finish deleting the account.</string>
 
     <!-- Plans -->
     <string name="plan">Plan</string>
