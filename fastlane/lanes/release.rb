@@ -157,6 +157,12 @@ platform :android do
     android_finalize_prechecks(skip_confirm: options[:skip_confirm])
     configure_apply(force: is_ci)
 
+    app_version = android_get_app_version()
+    release_branch = "release/#{app_version}"
+
+    # Remove branch protection first, so that we can push the final commits directly to the release branch
+    removebranchprotection(repository: GHHELPER_REPO, branch: release_branch)
+
     check_translations_coverage()
     download_translations()
 
@@ -164,14 +170,17 @@ platform :android do
     version = android_get_release_version()
     download_metadata_strings(version: version['name'], build_number: version['code'])
 
+    push_to_git_remote(tags: false)
+
     # Wrap up
-    removebranchprotection(repository: GHHELPER_REPO, branch: "release/#{version['name']}")
     setfrozentag(repository: GHHELPER_REPO, milestone: version['name'], freeze: false)
     create_new_milestone(repository: GHHELPER_REPO)
     close_milestone(repository: GHHELPER_REPO, milestone: version['name'])
 
     # Trigger release build
     trigger_release_build(branch_to_build: "release/#{version['name']}")
+
+    create_release_management_pull_request('trunk', "Merge #{app_version} final to trunk")
   end
 
   lane :check_translations_coverage do |options|
