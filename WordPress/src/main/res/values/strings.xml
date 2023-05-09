@@ -4332,11 +4332,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="login">Check your email on this device!</string>
     <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">We just sent a magic link to</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link Rel</string>
-    <string name="wp_jp_static_poster_title">%s has moved to the Jetpack app.</string>
-    <string name="wp_jp_static_poster_title_plural">%s have moved to the Jetpack app.</string>
+    <string name="wp_jp_static_poster_title">Switch to the Jetpack app for %s (and everything else)</string>
+    <string name="wp_jp_static_poster_title_plural">Switch to the Jetpack app for %s (and everything else)</string>
     <string name="wp_jp_static_poster_button_primary">Switch to the Jetpack app</string>
     <string name="wp_jp_static_poster_button_secondary">Learn more at Jetpack.com</string>
-    <string name="wp_jp_static_poster_message">Stats, Reader, Notifications and other Jetpack powered features have been removed from the WordPress app, and can now only be found in the Jetpack app.</string>
+    <string name="wp_jp_static_poster_message">The Jetpack app does everything the WordPress app can do, and now exclusive access to Stats, Reader, Notifications and more.</string>
     <string name="wp_jp_static_poster_footnote">Switching is free and only takes a minute.</string>
 
     <!-- Jetpack Welcome Screen -->
