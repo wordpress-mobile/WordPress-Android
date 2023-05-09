@@ -323,9 +323,7 @@ class AccountSettingsViewModel @Inject constructor(
 
             launch {
                 delay(3000)
-                (accountClosureUiState.value as? Default)?.let { uiState ->
-                    _accountClosureUiState.value = uiState.copy(isPending = false)
-                }
+                _accountClosureUiState.value = uiState.copy(isPending = false)
             }
         }
     }
