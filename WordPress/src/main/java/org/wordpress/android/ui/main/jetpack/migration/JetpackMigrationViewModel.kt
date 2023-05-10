@@ -411,7 +411,7 @@ class JetpackMigrationViewModel @Inject constructor(
             ) : Content(
                 primaryActionButton = primaryActionButton,
                 screenIconRes = R.drawable.ic_jetpack_migration_notifications,
-                title = UiStringRes(R.string.jp_migration_notifications_title),
+                title = UiStringRes(R.string.jp_migration_notifications_allow_title),
                 subtitle = UiStringRes(R.string.jp_migration_notifications_subtitle),
                 message = UiStringRes(R.string.jp_migration_notifications_disabled_in_wp_message),
             )
