@@ -132,12 +132,18 @@ class JetpackMigrationFragment : Fragment() {
     }
 
     private fun requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            !WPPermissionUtils.isPermissionAlwaysDenied(requireActivity(), Manifest.permission.POST_NOTIFICATIONS)
+        ) {
             @Suppress("DEPRECATION")
             requestPermissions(
                 arrayOf(Manifest.permission.POST_NOTIFICATIONS),
                 WPPermissionUtils.NOTIFICATIONS_PERMISSION_REQUEST_CODE
             )
+        } else {
+            // This case is not expected. But just in case, behave as if permission has been changed to continue the
+            // flow.
+            viewModel.onPermissionChange()
         }
     }
 
