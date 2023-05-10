@@ -12,20 +12,24 @@ fun AccountClosureUi(viewModel: AccountSettingsViewModel, onHelpRequested: () ->
     CloseAccountButton(onClick = { viewModel.openAccountClosureDialog() })
 
     (uiState.value as? Opened)?.let {
-        when(it) {
-           is Opened.Default -> it.username?.let { currentUsername ->
-               AccountClosureDialog(
-                   onDismissRequest = { viewModel.dismissAccountClosureDialog() },
-                   currentUsername,
-                   onConfirm = { viewModel.closeAccount() },
-                   isPending = it.isPending,
-               )
-           }
+        AccountClosureDialog(
+            onDismissRequest = { viewModel.dismissAccountClosureDialog() },
+        ) {
+            when(it) {
+                is Opened.Default -> it.username?.let { currentUsername ->
+                    DialogUi(
+                        currentUsername = currentUsername,
+                        isPending = it.isPending,
+                        onCancel = { viewModel.dismissAccountClosureDialog() },
+                        onConfirm = { viewModel.closeAccount() },
+                    )
+                }
 
-            Opened.Atomic -> IneligibleClosureDialog(
-                onDismissRequest = { viewModel.dismissAccountClosureDialog() },
-                onHelpRequested = onHelpRequested,
-            )
+                Opened.Atomic -> DialogErrorUi(
+                    onDismissRequest = { viewModel.dismissAccountClosureDialog() },
+                    onHelpRequested = onHelpRequested,
+                )
+            }
         }
     }
 }
