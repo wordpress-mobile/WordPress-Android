@@ -309,7 +309,6 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private var onActionRunnable: OnActionRunnable? = null
 
         override fun onBind(pageItem: PageItem) {
-            // TODO thomashorta check if we need to support the disabled overlay
             itemView.setOnClickListener {
                 QuickStartUtils.removeQuickStartFocusPoint(pageItemContainer)
                 onActionDebounced(VirtualHomepage.Action.OPEN_SITE_EDITOR)

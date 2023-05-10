@@ -55,7 +55,6 @@
             app:layout_constraintStart_toStartOf="@+id/page_title"
             app:layout_constraintTop_toBottomOf="@+id/page_title" />
 
-        <!-- TODO thomashorta remove this icon if we are really not using it -->
         <ImageView
             android:id="@+id/page_home_icon"
             android:layout_width="24dp"
@@ -67,20 +66,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/page_title"
             app:layout_constraintBottom_toBottomOf="@+id/page_subtitle" />
-
-        <!-- TODO thomashorta check if we will need this -->
-        <FrameLayout
-            android:id="@+id/disabled_overlay"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/white_translucent_65"
-            android:clickable="true"
-            android:focusable="true"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
