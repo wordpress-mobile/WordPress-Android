@@ -125,7 +125,9 @@ data class EditorThemeSupport(
 
         return bundle
     }
+    fun isEditorThemeBlockBased(): Boolean = isBlockBasedTheme || (hasBlockTemplates ?: false)
 }
+
 
 data class EditorThemeElement(
     val name: String?,
