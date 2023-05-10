@@ -15,11 +15,7 @@ sealed interface JetpackPoweredScreen {
     }
 
     @Parcelize
-    enum class WithStaticPoster(
-        val screen: WithDynamicText,
-        val animResLtr: Int = R.raw.wp2jp_left,
-        val animResRtl: Int = R.raw.wp2jp_rtl,
-    ) : Parcelable {
+    enum class WithStaticPoster(val screen: WithDynamicText) : Parcelable {
         STATS(screen = WithDynamicText.STATS),
         READER(screen = WithDynamicText.READER),
         NOTIFICATIONS(screen = WithDynamicText.NOTIFICATIONS),
