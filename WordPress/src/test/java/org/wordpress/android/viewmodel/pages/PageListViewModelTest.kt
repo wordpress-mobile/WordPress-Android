@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
@@ -473,6 +474,23 @@ class PageListViewModelTest : BaseUnitTest() {
         val pageItems = pagesResult[1].first
         val pageItem = pageItems[0] as PublishedPage
         assertThat(pageItem.author).isNull()
+    }
+
+    @Test
+    fun `onVirtualHomepageAction delegates to parent view model`() {
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+        val authorFilterSelection = MutableLiveData<AuthorFilterSelection>()
+        whenever(pagesViewModel.authorSelectionUpdated).thenReturn(authorFilterSelection)
+        val authorFilterState = MutableLiveData<PagesAuthorFilterUIState>()
+        whenever(pagesViewModel.authorUIState).thenReturn(authorFilterState)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+
+        val action = PageItem.VirtualHomepage.Action.OPEN_SITE_EDITOR
+        viewModel.onVirtualHomepageAction(action)
+
+        verify(pagesViewModel).onVirtualHomepageAction(action)
     }
 
     private fun buildPageModel(
