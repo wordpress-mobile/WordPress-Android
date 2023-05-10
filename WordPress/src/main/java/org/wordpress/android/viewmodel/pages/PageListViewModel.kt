@@ -159,8 +159,8 @@ class PageListViewModel @Inject constructor(
         }
     }
 
-    fun onVirtualHomepageTapped() {
-        // TODO thomashorta open webview to site editor
+    fun onVirtualHomepageAction(action: VirtualHomepage.Action) {
+        pagesViewModel.onVirtualHomepageAction(action)
     }
 
     fun onEmptyListNewPageButtonTapped() {

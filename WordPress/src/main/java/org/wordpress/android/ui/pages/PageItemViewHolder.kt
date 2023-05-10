@@ -1,6 +1,12 @@
 package org.wordpress.android.ui.pages
 
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +27,7 @@ import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
+import org.wordpress.android.ui.pages.PageItem.VirtualHomepage
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DateTimeUtils
@@ -29,6 +36,7 @@ import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.extensions.capitalizeWithLocaleWithoutLint
 import org.wordpress.android.util.extensions.currentLocale
+import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getDrawableFromAttribute
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
@@ -137,6 +145,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     uploadProgressBar.isIndeterminate = false
                     uploadProgressBar.progress = progressBarUiState.progress
                 }
+
                 is ProgressBarUiState.Hidden -> Unit // Do nothing
             }
         }
@@ -290,16 +299,43 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
     class VirtualHomepageViewHolder(
         parentView: ViewGroup,
-        private val onItemTapped: () -> Unit,
+        private val onAction: (VirtualHomepage.Action) -> Unit,
     ) : PageItemViewHolder(parentView, R.layout.page_virtual_homepage_item) {
         private val pageItemContainer = itemView.findViewById<ViewGroup>(R.id.page_item)
+        private val pageItemSubtitle = itemView.findViewById<TextView>(R.id.page_subtitle)
+        private val linkColor = itemView.context.getColorFromAttribute(R.attr.colorPrimary)
 
         override fun onBind(pageItem: PageItem) {
-            // TODO thomashorta check if we need to support the menu and/or disabled overlay
+            // TODO thomashorta check if we need to support the disabled overlay
             itemView.setOnClickListener {
                 QuickStartUtils.removeQuickStartFocusPoint(pageItemContainer)
-                onItemTapped()
+                onAction(VirtualHomepage.Action.OPEN_SITE_EDITOR)
             }
+            setupLearnMoreClickableSpan()
+        }
+
+        private fun setupLearnMoreClickableSpan() {
+            val learnMoreText = itemView.context.getString(R.string.virtual_homepage_learn_more)
+            val subtitleSpan = SpannableString(pageItemSubtitle.text)
+            val clickableSpan = object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    onAction(VirtualHomepage.Action.OPEN_LEARN_MORE_URL)
+                }
+
+                override fun updateDrawState(ds: TextPaint) {
+                    ds.color = linkColor
+                    ds.typeface = Typeface.create(
+                        Typeface.DEFAULT_BOLD,
+                        Typeface.BOLD
+                    )
+                    ds.isUnderlineText = false
+                }
+            }
+            val startIndex = subtitleSpan.indexOf(learnMoreText)
+            val endIndex = startIndex + learnMoreText.length
+            subtitleSpan.setSpan(clickableSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            pageItemSubtitle.text = subtitleSpan
+            pageItemSubtitle.movementMethod = LinkMovementMethod.getInstance()
         }
     }
 }

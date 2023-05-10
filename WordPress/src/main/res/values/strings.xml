@@ -3298,7 +3298,8 @@
     <string name="error_unknown_page_type">Unknown page format</string>
 
     <string name="virtual_homepage_title">Homepage</string>
-    <string name="virtual_homepage_subtitle">Your homepage uses a theme template</string>
+    <string name="virtual_homepage_subtitle">Your homepage is using a Theme template and will open in the web editor.</string>
+    <string name="virtual_homepage_learn_more">Theme template</string>
 
     <!-- Posts -->
     <string name="post_list_author">Post author</string>

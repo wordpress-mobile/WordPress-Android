@@ -53,6 +53,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
+import org.wordpress.android.ui.pages.PageItem.VirtualHomepage
 import org.wordpress.android.ui.pages.PagesAuthorFilterUIState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AuthorFilterListItemUIState
@@ -67,6 +68,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.PAGES
 import org.wordpress.android.util.EventBusWrapper
@@ -74,6 +76,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.extensions.clipboardManager
+import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -720,6 +723,20 @@ class PagesViewModel
         }
 
         editPage(RemoteId(page.remoteId))
+    }
+
+    fun onVirtualHomepageAction(action: VirtualHomepage.Action) {
+        when (action) {
+            VirtualHomepage.Action.OPEN_LEARN_MORE_URL -> {
+                // TODO thomashorta open external URL to learn more link
+                _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringText("OPEN_LEARN_MORE_URL")))
+            }
+
+            VirtualHomepage.Action.OPEN_SITE_EDITOR -> {
+                // TODO thomashorta open webview to site editor
+                _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringText("OPEN_SITE_EDITOR")))
+            }
+        }.exhaustive
     }
 
     fun onNewPageButtonTapped() {

@@ -16,7 +16,7 @@ import org.wordpress.android.util.image.ImageManager
 class PageListAdapter(
     private val onMenuAction: (PageItem.Action, Page) -> Boolean,
     private val onItemTapped: (Page) -> Unit,
-    private val onVirtualHomepageTapped: () -> Unit,
+    private val onVirtualHomepageAction: (VirtualHomepage.Action) -> Unit,
     private val onEmptyActionButtonTapped: () -> Unit,
     private val isSitePhotonCapable: Boolean,
     private val isPrivateAtSite: Boolean,
@@ -33,7 +33,7 @@ class PageListAdapter(
             )
             PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
             PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent, onEmptyActionButtonTapped)
-            PageItem.Type.VIRTUAL_HOMEPAGE.viewType -> VirtualHomepageViewHolder(parent, onVirtualHomepageTapped)
+            PageItem.Type.VIRTUAL_HOMEPAGE.viewType -> VirtualHomepageViewHolder(parent, onVirtualHomepageAction)
             else -> throw Throwable("Unexpected view type")
         }
     }

@@ -189,7 +189,12 @@ sealed class PageItem(open val type: Type) {
         val isImageVisible: Boolean = true
     ) : PageItem(EMPTY)
 
-    object VirtualHomepage : PageItem(VIRTUAL_HOMEPAGE)
+    object VirtualHomepage : PageItem(VIRTUAL_HOMEPAGE) {
+        enum class Action {
+            OPEN_SITE_EDITOR,
+            OPEN_LEARN_MORE_URL,
+        }
+    }
 
     enum class Type(val viewType: Int) {
         PAGE(1),

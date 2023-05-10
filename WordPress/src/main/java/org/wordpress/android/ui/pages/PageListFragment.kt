@@ -3,7 +3,6 @@ package org.wordpress.android.ui.pages
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -142,7 +141,7 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
             adapter = PageListAdapter(
                 { action, page -> viewModel.onMenuAction(action, page, requireContext()) },
                 { page -> viewModel.onItemTapped(page) },
-                { viewModel.onVirtualHomepageTapped() },
+                { action -> viewModel.onVirtualHomepageAction(action) },
                 { viewModel.onEmptyListNewPageButtonTapped() },
                 isSitePhotonCapable,
                 isSitePrivateAt,
