@@ -305,11 +305,14 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val pageItemSubtitle = itemView.findViewById<TextView>(R.id.page_subtitle)
         private val linkColor = itemView.context.getColorFromAttribute(R.attr.colorPrimary)
 
+        // variable for debounce implementation with internal link priority
+        private var onActionRunnable: OnActionRunnable? = null
+
         override fun onBind(pageItem: PageItem) {
             // TODO thomashorta check if we need to support the disabled overlay
             itemView.setOnClickListener {
                 QuickStartUtils.removeQuickStartFocusPoint(pageItemContainer)
-                onAction(VirtualHomepage.Action.OPEN_SITE_EDITOR)
+                onActionDebounced(VirtualHomepage.Action.OPEN_SITE_EDITOR)
             }
             setupLearnMoreClickableSpan()
         }
@@ -319,7 +322,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             val subtitleSpan = SpannableString(pageItemSubtitle.text)
             val clickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
-                    onAction(VirtualHomepage.Action.OPEN_LEARN_MORE_URL)
+                    onActionDebounced(VirtualHomepage.Action.OPEN_LEARN_MORE_URL)
                 }
 
                 override fun updateDrawState(ds: TextPaint) {
@@ -334,8 +337,49 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             val startIndex = subtitleSpan.indexOf(learnMoreText)
             val endIndex = startIndex + learnMoreText.length
             subtitleSpan.setSpan(clickableSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            pageItemSubtitle.text = subtitleSpan
-            pageItemSubtitle.movementMethod = LinkMovementMethod.getInstance()
+
+            pageItemSubtitle.apply {
+                text = subtitleSpan
+                movementMethod = LinkMovementMethod.getInstance()
+
+                // due to an issue with TextView and ClickableSpan touch handling, we need to set the OnClickListener
+                // of the TextView to call the parent's onClickListener, so a tap inside the text but outside the link
+                // will still trigger the parent's onClickListener
+                // https://stackoverflow.com/questions/53459151/android-issue-with-clickablespan-and-textview
+                setOnClickListener { itemView.performClick() }
+            }
+        }
+
+        /**
+         * Debounces the action to be executed after [DEBOUNCE_DELAY] milliseconds. If another action is received
+         * before the delay, the previous one is cancelled and the new one is queued BUT only if the previous one
+         * is not a [VirtualHomepage.Action.OPEN_LEARN_MORE_URL] and was still not executed. Otherwise the same action
+         * will be queued again. This is to prioritize the [VirtualHomepage.Action.OPEN_LEARN_MORE_URL] over the
+         * [VirtualHomepage.Action.OPEN_SITE_EDITOR] action in case both actions are received less than [DEBOUNCE_DELAY]
+         * milliseconds apart due to an issue with TextView and ClickableSpan touch handling.
+         */
+        private fun onActionDebounced(action: VirtualHomepage.Action) {
+            onActionRunnable?.let { itemView.removeCallbacks(it) }
+            if (onActionRunnable?.action != VirtualHomepage.Action.OPEN_LEARN_MORE_URL) {
+                // only take the new action if the current queued one is NOT OPEN_LEARN_MORE_URL. This is to make sure
+                // we don't open the site editor when the user clicks on the learn more link. So it prioritizes the
+                // OPEN_LEARN_MORE_URL action over the OPEN_SITE_EDITOR action if both are received in less than
+                // DEBOUNCE_DELAY time
+                onActionRunnable = OnActionRunnable(action)
+            }
+            itemView.postDelayed(onActionRunnable, DEBOUNCE_DELAY)
+        }
+
+        inner class OnActionRunnable(val action: VirtualHomepage.Action) : Runnable {
+            override fun run() {
+                // remove runnable reference when it is executed
+                onActionRunnable = null
+                onAction(action)
+            }
+        }
+
+        companion object {
+            private const val DEBOUNCE_DELAY = 200L
         }
     }
 }
