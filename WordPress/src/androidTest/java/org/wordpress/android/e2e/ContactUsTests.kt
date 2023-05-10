@@ -1,5 +1,6 @@
 package org.wordpress.android.e2e
 
+import androidx.test.espresso.Espresso
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
 import org.junit.Test
@@ -30,7 +31,8 @@ class ContactUsTests : BaseTest() {
                 .setMessageText("")
                 .assertSendButtonDisabled()
         } finally {
-            ContactSupportScreen().goBackAndDeleteUnsentMessageIfNeeded()
+            ContactSupportScreen().setMessageText("")
+            Espresso.pressBack()
         }
     }
 

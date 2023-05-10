@@ -1,7 +1,6 @@
 package org.wordpress.android.e2e.pages
 
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.Matchers
@@ -17,21 +16,6 @@ class ContactSupportScreen {
         // low-fps test video recordings from CI.
         WPSupportUtils.sleep()
         return this
-    }
-
-    fun goBackAndDeleteUnsentMessageIfNeeded(): HelpScreen {
-        Espresso.pressBack()
-        val unsentMessageAlert = Espresso.onView(
-            ViewMatchers.withText(
-                "Going back will delete your message. "
-                        + "Are you sure you want to delete it?"
-            )
-        )
-        if (WPSupportUtils.waitForElementToBeDisplayedWithoutFailure(unsentMessageAlert)) {
-            Espresso.onView(ViewMatchers.withText("Delete"))
-                .perform(ViewActions.click())
-        }
-        return HelpScreen()
     }
 
     // Assertions:
