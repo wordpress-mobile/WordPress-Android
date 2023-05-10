@@ -4332,8 +4332,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="login">Check your email on this device!</string>
     <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">We just sent a magic link to</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link Rel</string>
-    <string name="wp_jp_static_poster_title">Use WordPress with %s in the Jetpack app.</string>
-    <string name="wp_jp_static_poster_title_plural">Use WordPress with %s in the Jetpack app.</string>
+    <string name="wp_jp_static_poster_title">Use WordPress with %s in the Jetpack\u00A0app.</string>
+    <string name="wp_jp_static_poster_title_plural">Use WordPress with %s in the Jetpack\u00A0app.</string>
     <string name="wp_jp_static_poster_button_primary">Switch to the Jetpack app</string>
     <string name="wp_jp_static_poster_button_secondary">Learn more at Jetpack.com</string>
     <string name="wp_jp_static_poster_message">The Jetpack app has all the WordPress app’s functionality, and now exclusive access to Stats, Reader, Notifications and more.</string>
