@@ -164,7 +164,7 @@ class PageListViewModel @Inject constructor(
     fun onEditorThemeChanged(event: OnEditorThemeChanged) {
         if (pagesViewModel.site.id == event.siteId) {
             event.editorTheme?.themeSupport?.let { themeSupport ->
-                isBlockBasedTheme.value = editorThemeStore.getIsBlockBasedTheme(themeSupport)
+                isBlockBasedTheme.value = themeSupport.isEditorThemeBlockBased()
             }
         }
     }
