@@ -61,6 +61,7 @@ platform :android do
       message: 'Update release notes',
       environment: { RELEASE_VERSION: release_version, EDITORIAL_BRANCH: editorial_branch }
     )
+  end
 
   #####################################################################################
   # Release Management Utils
