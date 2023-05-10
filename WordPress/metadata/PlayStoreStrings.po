@@ -13,7 +13,7 @@ msgstr ""
 msgctxt "release_note_223"
 msgid ""
 "22.3:\n"
-"No updates this week, but we’re hard at work on a pressing feature we know you’ll enjoy.\n"
+"Testing new update_app_store_strings lane\n"
 msgstr ""
 
 msgctxt "release_note_222"
@@ -92,7 +92,7 @@ msgid ""
 "\n"
 "Whether you need a website builder to create your website, or a simple blog maker, WordPress can help. It gives you beautiful designs, powerful features, and the freedom to build anything you want.\n"
 "\n"
-"California users privacy notice: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.\n"
+"California users privacy notice: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa."
 msgstr ""
 
 #. translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!
