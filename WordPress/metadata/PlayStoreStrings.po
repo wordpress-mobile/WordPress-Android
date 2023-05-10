@@ -13,7 +13,7 @@ msgstr ""
 msgctxt "release_note_223"
 msgid ""
 "22.3:\n"
-"No updates this week, but we’re hard at work on a pressing feature we know you’ll enjoy.\n"
+"Testing new update_app_store_strings lane\n"
 msgstr ""
 
 msgctxt "release_note_222"
