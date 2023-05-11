@@ -66,7 +66,7 @@ fun DialogUi(
                 backgroundColor = Color.Transparent,
                 disabledContentColor = MaterialTheme.colors.onSurface,
             ),
-            isPending = isPending,
+            enabled = !isPending,
         )
         Spacer(Modifier.size(padding))
         FlatOutlinedButton(
