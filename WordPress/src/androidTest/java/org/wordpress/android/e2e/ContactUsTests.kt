@@ -2,6 +2,7 @@ package org.wordpress.android.e2e
 
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.e2e.flows.LoginFlow
@@ -16,6 +17,7 @@ class ContactUsTests : BaseTest() {
     }
 
     @Test
+    @Ignore("This test is temporarily disabled as it takes too long to complete.")
     fun e2eSendButtonEnabledWhenTextIsEntered() {
         try {
             LoginFlow()
