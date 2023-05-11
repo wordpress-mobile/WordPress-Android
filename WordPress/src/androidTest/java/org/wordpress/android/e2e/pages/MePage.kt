@@ -11,12 +11,12 @@ import org.wordpress.android.support.WPSupportUtils
 class MePage {
     fun go(): MePage {
         // Using the settings button as a marker for successfully navigating to the page
-        while (!WPSupportUtils.isElementClickable(appSettings)) {
+        while (!WPSupportUtils.isElementDisplayed(appSettings)) {
             WPSupportUtils.clickOn(R.id.nav_sites)
             WPSupportUtils.clickOn(R.id.me_item)
         }
         if (!isSelfHosted) {
-            displayName.check(ViewAssertions.matches(ViewMatchers.isClickable()))
+            displayName.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         }
         return this
     }
@@ -33,7 +33,8 @@ class MePage {
 
     val isSelfHosted: Boolean
         get() {
-            return WPSupportUtils.isElementClickable(Espresso.onView(ViewMatchers.withText(R.string.sign_in_wpcom)))
+            WPSupportUtils.waitForElementToBeDisplayed(R.id.row_app_settings)
+            return WPSupportUtils.isElementDisplayed(Espresso.onView(ViewMatchers.withText(R.string.sign_in_wpcom)))
         }
 
     fun openAppSettings() {
@@ -50,7 +51,7 @@ class MePage {
                 )
             )
         )
-        while (!WPSupportUtils.isElementClickable(android.R.id.button1)) {
+        while (!WPSupportUtils.isElementDisplayed(android.R.id.button1)) {
             WPSupportUtils.scrollToThenClickOn(logOutButton)
         }
         WPSupportUtils.clickOn(android.R.id.button1)

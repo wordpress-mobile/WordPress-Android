@@ -47,7 +47,6 @@ import static org.hamcrest.Matchers.is;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
-import static org.wordpress.android.support.WPSupportUtils.isElementClickable;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 
 import dagger.hilt.android.testing.HiltAndroidRule;
@@ -118,7 +117,7 @@ public class BaseTest {
     }
 
     protected void logoutIfNecessary() {
-        if (isElementClickable(R.id.nav_sites)) {
+        if (isElementDisplayed(R.id.nav_sites)) {
             logout();
         }
     }
