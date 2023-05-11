@@ -6,7 +6,11 @@ import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened
 
 @Composable
-fun AccountClosureUi(viewModel: AccountSettingsViewModel, onHelpRequested: () -> Unit) {
+fun AccountClosureUi(
+    viewModel: AccountSettingsViewModel,
+    onHelpRequested: () -> Unit,
+    onAccountClosed: () -> Unit,
+) {
     val uiState = viewModel.accountClosureUiState.collectAsState()
 
     CloseAccountButton(onClick = { viewModel.openAccountClosureDialog() })
@@ -29,6 +33,9 @@ fun AccountClosureUi(viewModel: AccountSettingsViewModel, onHelpRequested: () ->
                     onDismissRequest = { viewModel.dismissAccountClosureDialog() },
                     onHelpRequested = onHelpRequested,
                     it.errorType,
+                )
+                is Opened.Success -> DialogSuccessUi(
+                    onDismissRequest = onAccountClosed
                 )
             }
         }

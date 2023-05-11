@@ -167,7 +167,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
                     AppTheme {
-                        AccountClosureUi(viewModel, ::viewHelp)
+                        AccountClosureUi(viewModel, ::viewHelp, ::signOut)
                     }
                 }
             })
@@ -377,4 +377,8 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         null,
         null,
     )
+
+    fun signOut() {
+        (activity.application as? WordPress)?.wordPressComSignOut()
+    }
 }

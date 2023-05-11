@@ -303,6 +303,7 @@ class AccountSettingsViewModel @Inject constructor(
         sealed class Opened: AccountClosureUiState() {
             data class Default(val username: String?, val isPending: Boolean = false): Opened()
             data class Error(val errorType: CloseAccountResult.ErrorType): Opened()
+            object Success: Opened()
         }
     }
 
