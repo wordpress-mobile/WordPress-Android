@@ -427,19 +427,23 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
-        openWPCOMURL(context, url, null, null, false, false);
+        openWPCOMURL(context, url, null, null, false, false, null);
+    }
+
+    public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url, String cssToInject) {
+        openWPCOMURL(context, url, null, null, false, false, cssToInject);
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context,
                                                             String url,
                                                             boolean allowPreviewModeSelection) {
-        openWPCOMURL(context, url, null, null, allowPreviewModeSelection, false);
+        openWPCOMURL(context, url, null, null, allowPreviewModeSelection, false, null);
     }
 
     public static void openPostUrlByUsingGlobalWPCOMCredentials(Context context, String url, String shareableUrl,
                                                                 String shareSubject, boolean allowPreviewModeSelection,
                                                                 boolean startPreviewForResult) {
-        openWPCOMURL(context, url, shareableUrl, shareSubject, allowPreviewModeSelection, startPreviewForResult);
+        openWPCOMURL(context, url, shareableUrl, shareSubject, allowPreviewModeSelection, startPreviewForResult, null);
     }
 
     // frameNonce is used to show drafts, without it "no page found" error would be thrown
@@ -608,7 +612,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     private static void openWPCOMURL(Context context, String url, String shareableUrl, String shareSubject) {
-        openWPCOMURL(context, url, shareableUrl, shareSubject, false, false);
+        openWPCOMURL(context, url, shareableUrl, shareSubject, false, false, null);
     }
 
     private static void openWPCOMURL(
@@ -617,7 +621,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             String shareableUrl,
             String shareSubject,
             boolean allowPreviewModeSelection,
-            boolean startPreviewForResult
+            boolean startPreviewForResult,
+            String cssToInject
     ) {
         if (!checkContextAndUrl(context, url)) {
             return;
@@ -633,6 +638,9 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
         if (!TextUtils.isEmpty(shareSubject)) {
             intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, shareSubject);
+        }
+        if (!TextUtils.isEmpty(cssToInject)) {
+            intent.putExtra(WPWebViewActivity.CSS_TO_INJECT, cssToInject);
         }
 
         if (startPreviewForResult) {

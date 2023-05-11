@@ -250,6 +250,7 @@ class PagesViewModel
     data class SiteEditorData(
         val url: String,
         val css: String,
+        val isSelfHostedAdmin: Boolean,
     )
 
     fun start(site: SiteModel) {
@@ -744,7 +745,9 @@ class PagesViewModel
             }
 
             is VirtualHomepage.Action.OpenSiteEditor -> {
-                _openSiteEditorWebView.postValue(SiteEditorData(action.getUrl(site), action.customCss))
+                _openSiteEditorWebView.postValue(
+                    SiteEditorData(action.getUrl(site), action.customCss, site.isSelfHostedAdmin)
+                )
             }
         }.exhaustive
     }

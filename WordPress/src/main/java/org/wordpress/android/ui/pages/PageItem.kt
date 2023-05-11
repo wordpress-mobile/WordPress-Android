@@ -193,19 +193,10 @@ sealed class PageItem(open val type: Type) {
     object VirtualHomepage : PageItem(VIRTUAL_HOMEPAGE) {
         sealed class Action {
             class OpenSiteEditor : Action() {
-                val customCss: String = """
-                        .edit-site-header-edit-mode {
-                            padding-left: 0px
-                        }
-
-                        .edit-site-site-hub {
-                            display: none
-                        }
-
-                        .edit-site-template-details .edit-site-template-details__show-all-button.components-button {
-                            display: none
-                        }
-                    """.trimIndent()
+                val customCss: String = ".edit-site-header-edit-mode { padding-left: 0px } " +
+                        ".edit-site-site-hub { display: none } " +
+                        ".edit-site-template-details .edit-site-template-details__show-all-button.components-button " +
+                        "{ display: none }"
 
                 fun getUrl(site: SiteModel): String = site.adminUrl + "site-editor.php?canvas=edit"
             }
