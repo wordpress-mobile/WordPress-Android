@@ -2766,6 +2766,7 @@
     <string name="account_closure_dialog_error_active_subscriptions">This user account cannot be closed while it has active subscriptions.</string>
     <string name="account_closure_dialog_error_active_memberships">This user account cannot be closed while it has active purchases.</string>
     <string name="account_closure_dialog_error_unknown">An error occurred while closing account.</string>
+    <string name="account_closure_dialog_success_message">Account closed.</string>
 
     <!-- Plans -->
     <string name="plan">Plan</string>
