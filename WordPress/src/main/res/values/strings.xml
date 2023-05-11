@@ -2759,7 +2759,13 @@
     <string name="close_account">Close Account</string>
     <string name="account_closure_dialog_message">To confirm, please re-enter your username before closing.</string>
     <string name="account_closure_dialog_title">Confirm Close Account…</string>
-    <string name="account_closure_dialog_active_purchases">This user account cannot be closed immediately because it has active purchases. Please contact our support team to finish deleting the account.</string>
+    <string name="account_closure_dialog_error_title">Couldn\'t close account automatically"</string>
+    <string name="account_closure_dialog_error_unauthorized">You\'re not authorized to close the account.</string>
+    <string name="account_closure_dialog_error_atomic_site">This user account cannot be closed immediately because it has active purchases. Please contact our support team to finish deleting the account.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">This user account cannot be closed if there are unresolved chargebacks.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">This user account cannot be closed while it has active subscriptions.</string>
+    <string name="account_closure_dialog_error_active_memberships">This user account cannot be closed while it has active purchases.</string>
+    <string name="account_closure_dialog_error_unknown">An error occurred while closing account.</string>
 
     <!-- Plans -->
     <string name="plan">Plan</string>
