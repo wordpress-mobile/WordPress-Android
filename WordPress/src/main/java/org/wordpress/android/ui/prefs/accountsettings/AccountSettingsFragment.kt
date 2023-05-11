@@ -18,8 +18,11 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
@@ -46,6 +49,7 @@ import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.C
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.EmailSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.PrimarySiteSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.UserNameSettingsUiState
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.Companion.AccountClosureAction
 import org.wordpress.android.ui.prefs.accountsettings.components.AccountClosureUi
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
@@ -167,7 +171,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
                     AppTheme {
-                        AccountClosureUi(viewModel, ::viewHelp, ::signOut)
+                        AccountClosureUi(viewModel)
                     }
                 }
             })
@@ -183,6 +187,11 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     private fun observeAccountSettingsViewState() {
         this.lifecycleScope.launchWhenStarted {
             viewModel.accountSettingsUiState.collect { updateAccountSettings(it) }
+        }
+        this.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.userActionEvents.collect { handleUserAction(it) }
+            }
         }
     }
 
@@ -371,14 +380,25 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         }
     }
 
-    fun viewHelp() = ActivityLauncher.viewHelp(
+    private fun handleUserAction(action: AccountClosureAction) {
+        when (action) {
+            AccountClosureAction.HELP_VIEWED -> viewHelp()
+            AccountClosureAction.ACCOUNT_CLOSED -> signOut()
+            AccountClosureAction.USER_LOGGED_OUT -> {
+                ActivityLauncher.showMainActivity(context, true)
+            }
+        }
+    }
+    private fun viewHelp() = ActivityLauncher.viewHelp(
         context,
         HelpActivity.Origin.ACCOUNT_CLOSURE_DIALOG,
         null,
         null,
     )
 
-    fun signOut() {
-        (activity.application as? WordPress)?.wordPressComSignOut()
+    private fun signOut() {
+        (activity.application as? WordPress)?.let {
+            viewModel.signOutWordPress(it)
+        }
     }
 }

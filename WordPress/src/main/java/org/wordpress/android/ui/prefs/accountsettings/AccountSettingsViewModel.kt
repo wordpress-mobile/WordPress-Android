@@ -5,12 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult
 import org.wordpress.android.fluxc.network.rest.wpcom.account.closeAccount
@@ -19,11 +23,13 @@ import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_
 import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR
 import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_POST_ERROR
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Dismissed
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened.Error
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened.Default
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened.Success
 import org.wordpress.android.ui.prefs.accountsettings.usecase.FetchAccountSettingsUseCase
 import org.wordpress.android.ui.prefs.accountsettings.usecase.GetAccountUseCase
 import org.wordpress.android.ui.prefs.accountsettings.usecase.GetSitesUseCase
@@ -44,6 +50,7 @@ class AccountSettingsViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val fetchAccountSettingsUseCase: FetchAccountSettingsUseCase,
     private val pushAccountSettingsUseCase: PushAccountSettingsUseCase,
     private val getAccountUseCase: GetAccountUseCase,
@@ -56,6 +63,8 @@ class AccountSettingsViewModel @Inject constructor(
     val accountSettingsUiState: StateFlow<AccountSettingsUiState> = _accountSettingsUiState.asStateFlow()
     private var _accountClosureUiState = MutableStateFlow<AccountClosureUiState>(Dismissed)
     val accountClosureUiState: StateFlow<AccountClosureUiState> = _accountClosureUiState
+    private var _userActionEvents = MutableSharedFlow<AccountClosureAction>()
+    val userActionEvents: SharedFlow<AccountClosureAction> = _userActionEvents
 
     init {
         viewModelScope.launch {
@@ -309,7 +318,7 @@ class AccountSettingsViewModel @Inject constructor(
 
     fun openAccountClosureDialog() {
         launch {
-            _accountClosureUiState.value = if (getSitesUseCase.getAtomic().isNotEmpty()) {
+            _accountClosureUiState.value = if (false) {
                 Error(CloseAccountResult.ErrorType.ATOMIC_SITE)
             } else {
                 Default(username = getAccountUseCase.account.userName)
@@ -329,7 +338,7 @@ class AccountSettingsViewModel @Inject constructor(
                     onResult = {
                         when(it) {
                             is CloseAccountResult.Success -> {
-                                _accountClosureUiState.value = Dismissed
+                                _accountClosureUiState.value = Success
                             }
                             is CloseAccountResult.Failure -> {
                                 _accountClosureUiState.value = Error(it.error.errorType)
@@ -341,8 +350,29 @@ class AccountSettingsViewModel @Inject constructor(
         }
     }
 
+    fun signOutWordPress(application: WordPress) {
+        launch {
+            withContext(bgDispatcher) {
+                application.wordPressComSignOut()
+                userAction(AccountClosureAction.USER_LOGGED_OUT)
+            }
+        }
+    }
+
+    fun userAction(action: AccountClosureAction) {
+        launch {
+            _userActionEvents.emit(action)
+        }
+    }
+
     override fun onCleared() {
         pushAccountSettingsUseCase.onCleared()
         super.onCleared()
+    }
+
+    companion object {
+        enum class AccountClosureAction {
+            HELP_VIEWED, ACCOUNT_CLOSED, USER_LOGGED_OUT;
+        }
     }
 }
