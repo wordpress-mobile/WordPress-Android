@@ -138,8 +138,10 @@ public class MediaPreviewFragment extends Fragment {
         mAutoPlay = args.getBoolean(ARG_AUTOPLAY);
         mVideoThumbnailUrl = args.getString(ARG_VIDEO_THUMB);
 
-        mIsVideo = MediaUtils.isVideo(mContentUri);
-        mIsAudio = MediaUtils.isAudio(mContentUri);
+        Uri contentUri = Uri.parse(mContentUri);
+        String contentFilePath = contentUri.getLastPathSegment();
+        mIsVideo = MediaUtils.isVideo(contentFilePath);
+        mIsAudio = MediaUtils.isAudio(contentFilePath);
 
         if (savedInstanceState != null) {
             mPosition = savedInstanceState.getInt(ARG_POSITION, 0);
