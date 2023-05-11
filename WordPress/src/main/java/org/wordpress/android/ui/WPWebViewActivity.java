@@ -132,8 +132,13 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public static final String ACTION_BAR_TITLE = "action_bar_title";
     public static final String SHOW_PREVIEW_MODE_TOGGLE = "SHOW_PREVIEW_MODE_TOGGLE";
     public static final String PRIVATE_AT_SITE_ID = "PRIVATE_AT_SITE_ID";
+    public static final String CSS_TO_INJECT = "CSS_TO_INJECT";
     private static final int PREVIEW_INITIAL_SCALE = 90;
     private static final long PREVIEW_JS_EVALUATION_DELAY = 250L;
+    private static final long CSS_JS_EVALUATION_DELAY = 250L;
+    private static final String CSS_INJECTION_SCRIPT_TEMPLATE = "var style = document.createElement('style'); "
+                                                                + "style.innerHTML = '%s'; "
+                                                                + "document.head.appendChild(style);";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -545,6 +550,10 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         openURL(context, url, referrer, false, 0);
     }
 
+    public static void openURL(Context context, String url, String referrer, String cssToInject) {
+        openURL(context, url, referrer, false, 0, cssToInject);
+    }
+
     public static void openURL(Context context, String url, boolean allowPreviewModeSelection,
                                long privateSiteId) {
         openURL(context, url, null, allowPreviewModeSelection, privateSiteId);
@@ -552,6 +561,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
     public static void openURL(Context context, String url, String referrer,
                                boolean allowPreviewModeSelection, long privateSiteId) {
+        openURL(context, url, referrer, allowPreviewModeSelection, privateSiteId, null);
+    }
+
+    public static void openURL(Context context, String url, String referrer,
+                               boolean allowPreviewModeSelection, long privateSiteId,
+                               String cssToInject) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -571,6 +586,9 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
         if (!TextUtils.isEmpty(referrer)) {
             intent.putExtra(REFERRER_URL, referrer);
+        }
+        if (!TextUtils.isEmpty(cssToInject)) {
+            intent.putExtra(CSS_TO_INJECT, cssToInject);
         }
         context.startActivity(intent);
     }
@@ -696,12 +714,26 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
     @Override
     public void onWebViewPageLoaded() {
+        if (getIntent().hasExtra(CSS_TO_INJECT)) {
+            String css = getIntent().getStringExtra(CSS_TO_INJECT);
+            injectCss(css);
+        }
+
         if (mPreviewModeChangeAllowed) {
             enforcePreviewMode();
         } else {
             mViewModel.onUrlLoaded();
         }
         refreshBackForwardNavButtons();
+    }
+
+    private void injectCss(String css) {
+        String script = String.format(CSS_INJECTION_SCRIPT_TEMPLATE, css);
+
+        new Handler().postDelayed(
+                () -> mWebView.evaluateJavascript(script, null),
+                CSS_JS_EVALUATION_DELAY
+        );
     }
 
     private void refreshBackForwardNavButtons() {

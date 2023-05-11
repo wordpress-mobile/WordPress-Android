@@ -39,6 +39,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
@@ -320,6 +321,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         setupObservers(activity)
         setupActions(activity)
         setupMlpObservers(activity)
+        setupVirtualHomepageObservers(activity)
 
         val site = requireNotNull(
             if (savedInstanceState == null) {
@@ -554,6 +556,16 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
             } else if (!isShowing && mlpFragment != null) {
                 mlpFragment.dismiss()
             }
+        }
+    }
+
+    private fun setupVirtualHomepageObservers(activity: FragmentActivity) {
+        viewModel.openExternalLink.observe(viewLifecycleOwner) { url ->
+            ActivityLauncher.openUrlExternal(activity, url)
+        }
+
+        viewModel.openSiteEditorWebView.observe(viewLifecycleOwner) { data ->
+            WPWebViewActivity.openURL(activity, data.url, null, data.css)
         }
     }
 
