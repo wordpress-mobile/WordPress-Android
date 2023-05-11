@@ -17,23 +17,40 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult.ErrorType
+import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult.ErrorType.UNAUTHORIZED
+import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult.ErrorType.ATOMIC_SITE
+import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult.ErrorType.CHARGEBACKED_SITE
+import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult.ErrorType.ACTIVE_SUBSCRIPTIONS
+import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult.ErrorType.ACTIVE_MEMBERSHIPS
+import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult.ErrorType.INVALID_TOKEN
+import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult.ErrorType.UNKNOWN
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
 fun DialogErrorUi(
     onDismissRequest: () -> Unit,
     onHelpRequested: () -> Unit,
+    errorType: ErrorType,
 ) {
     val padding = 10.dp
+    val messageId = when(errorType) {
+        UNAUTHORIZED -> R.string.account_closure_dialog_error_unauthorized
+        ATOMIC_SITE -> R.string.account_closure_dialog_error_atomic_site
+        CHARGEBACKED_SITE -> R.string.account_closure_dialog_error_chargebacked_site
+        ACTIVE_SUBSCRIPTIONS -> R.string.account_closure_dialog_error_active_subscriptions
+        ACTIVE_MEMBERSHIPS -> R.string.account_closure_dialog_error_active_memberships
+        INVALID_TOKEN, UNKNOWN -> R.string.account_closure_dialog_error_unknown
+    }
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = padding),
         textAlign = TextAlign.Center,
-        text = stringResource(R.string.account_closure_dialog_title),
+        text = stringResource(R.string.account_closure_dialog_error_title),
         fontWeight = FontWeight.Bold,
     )
-    Text(stringResource(R.string.account_closure_dialog_active_purchases))
+    Text(stringResource(messageId))
     Spacer(Modifier.size(padding))
     FlatOutlinedButton(
         text = stringResource(R.string.dismiss),
@@ -63,6 +80,7 @@ fun PreviewIneligibleClosureDialog() {
             DialogErrorUi(
                 onDismissRequest = {},
                 onHelpRequested = {},
+                errorType = ATOMIC_SITE,
             )
         }
     }
