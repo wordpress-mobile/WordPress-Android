@@ -28,12 +28,14 @@ msgstr ""
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 #. translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!
 msgctxt "play_store_app_title"
-msgid "Jetpack – Website Builder"
+msgid "Jetpack – Website Builder
+"
 msgstr ""
 
 #. translators: Short description of the Jetpack app to be displayed in the Play Store. Limit to 80 characters including spaces and commas!
 msgctxt "play_store_promo"
-msgid "Build your WordPress website & blog; create posts, add photos & track analytics!"
+msgid "Build your WordPress website & blog; create posts, add photos & track analytics!
+"
 msgstr ""
 
 #. translators: Multi-paragraph text used to display in the Play Store. Limit to 4000 characters including spaces and commas!
@@ -85,7 +87,7 @@ msgid ""
 "\n"
 "Learn more at https://jetpack.com/mobile\n"
 "\n"
-"California users privacy notice: https://automattic.com/privacy/#california-consumer-privacy-act-ccpa\n"
+"California users privacy notice: https://automattic.com/privacy/#california-consumer-privacy-act-ccpa"
 msgstr ""
 
 #. Description for the first app store image
