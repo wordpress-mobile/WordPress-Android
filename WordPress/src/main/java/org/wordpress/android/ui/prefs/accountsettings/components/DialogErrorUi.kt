@@ -72,7 +72,7 @@ fun DialogErrorUi(
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun PreviewIneligibleClosureDialog() {
+fun PreviewDialogErrorUi() {
     AppTheme {
         AccountClosureDialog(
             onDismissRequest = {},
