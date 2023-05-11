@@ -55,6 +55,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.core.internal.deps.guava.base.Preconditions.checkNotNull;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
+import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -75,6 +76,19 @@ import static org.wordpress.android.support.BetterScrollToAction.scrollTo;
 public class WPSupportUtils {
     // HIGH-LEVEL METHODS
     public static final int DEFAULT_TIMEOUT = 10000;
+
+    public static boolean isElementClickable(Integer elementID) {
+        return isElementClickable(onView(withId(elementID)));
+    }
+
+    public static boolean isElementClickable(ViewInteraction element) {
+        try {
+            element.check(matches(isClickable()));
+            return true;
+        } catch (Throwable e) {
+            return false;
+        }
+    }
 
     public static boolean isElementDisplayed(Integer elementID) {
         return isElementDisplayed(onView(withId(elementID)));
