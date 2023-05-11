@@ -12,11 +12,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +37,7 @@ fun DialogUi(
     onConfirm: () -> Unit,
 ) {
     var username by remember { mutableStateOf("") }
+    val focusRequester = remember { FocusRequester() }
     val padding = 10.dp
     Text(
         modifier = Modifier
@@ -47,7 +51,8 @@ fun DialogUi(
     TextField(
         modifier = Modifier
             .padding(vertical = padding)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .focusRequester(focusRequester),
         value = username,
         onValueChange = { username = it },
     )
@@ -80,6 +85,10 @@ fun DialogUi(
                 backgroundColor = Color.Transparent,
             ),
         )
+    }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 }
 
