@@ -64,7 +64,9 @@ fun DialogUi(
             colors = ButtonDefaults.buttonColors(
                 contentColor = MaterialTheme.colors.onSurface,
                 backgroundColor = Color.Transparent,
+                disabledContentColor = MaterialTheme.colors.onSurface,
             ),
+            isPending = isPending,
         )
         Spacer(Modifier.size(padding))
         FlatOutlinedButton(
