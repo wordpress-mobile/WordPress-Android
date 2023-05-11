@@ -36,7 +36,7 @@ ext {
     androidVolleyVersion = '1.2.1'
     androidxAppcompatVersion = '1.6.1'
     androidxArchCoreVersion = '2.2.0'
-    androidxComposeBomVersion = '2023.05.00'
+    androidxComposeBomVersion = '2023.05.01'
     androidxComposeCompilerVersion = '1.4.7'
     androidxCardviewVersion = '1.0.0'
     androidxConstraintlayoutVersion = '1.1.3'
