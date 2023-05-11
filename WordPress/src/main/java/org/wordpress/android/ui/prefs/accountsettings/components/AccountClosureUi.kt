@@ -25,9 +25,10 @@ fun AccountClosureUi(viewModel: AccountSettingsViewModel, onHelpRequested: () ->
                     )
                 }
 
-                Opened.Atomic -> DialogErrorUi(
+                is Opened.Error -> DialogErrorUi(
                     onDismissRequest = { viewModel.dismissAccountClosureDialog() },
                     onHelpRequested = onHelpRequested,
+                    it.errorType,
                 )
             }
         }
