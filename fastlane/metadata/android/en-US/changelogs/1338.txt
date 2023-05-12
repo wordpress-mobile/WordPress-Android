@@ -1,2 +1,0 @@
-- We added a yellow warning box telling you when notifications and blogging reminders are no longer being sent to your device as push notifications.
-- We updated media access permissions for photos, videos, and audio to align with the Android 13 update.
