@@ -587,7 +587,7 @@ class PageListViewModelTest : BaseUnitTest() {
 
         viewModel.start(PUBLISHED, pagesViewModel)
 
-        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor
+        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor()
         viewModel.onVirtualHomepageAction(action)
 
         verify(pagesViewModel).onVirtualHomepageAction(action)
