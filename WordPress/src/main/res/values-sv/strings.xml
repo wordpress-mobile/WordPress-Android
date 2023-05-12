@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-20 08:29:37+0000
+Translation-Revision-Date: 2023-05-03 12:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_unlabeled_color_s">Omärkt färg. %s</string>
+    <string name="dashboard_activity_card_footer_link">Visa all aktivitet</string>
+    <string name="dashboard_activity_card_title">Senaste aktivitet</string>
+    <string name="dashboard_card_domain_title">Hitta en anpassad domän</string>
+    <string name="site_creation_search_domain_example_body">Precis som i exemplet ovan så låter en domän människor hitta och besöka din webbplats från sina webbläsare.</string>
+    <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
+    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
+    <string name="site_creation_domain_search_input_hint">Sök med nyckelord</string>
+    <string name="site_creation_domain_header_subtitle">Leta efter en kort domän som är lätt att komma ihåg för att hjälpa människor hitta och besöka din webbplats.</string>
+    <string name="site_creation_domain_cost_sale">för första året</string>
+    <string name="site_creation_error_cart_subtitle">Din webbplats har skapats, men vi stötte på ett problem när vi skulle förbereda din anpassade domän för utcheckning. Försök igen eller kontakta supporten för hjälp.</string>
+    <string name="new_site_creation_preview_caption_paid">Det kan dröja upp till 30 minuter innan din anpassade domän börjar fungera.</string>
+    <string name="new_site_creation_preview_subtitle_paid">Vi har skickat ditt kvitto via e-post. %s</string>
+    <string name="notifications_disabled_permission_dialog">App-notiser har inaktiverats. Tryck här för att aktivera dem.</string>
     <string name="jp_migration_delete_message">Vi rekommenderar att du &lt;b&gt;avinstallerar WordPress-appen&lt;/b&gt; på din enhet för att undvika datakonflikter.</string>
     <string name="jp_migration_delete_subtitle">Det ser ut som att du fortfarande har WordPress-appen installerad.</string>
     <string name="jp_migration_delete_title">Du behöver inte längre WordPress-appen på din enhet</string>
@@ -23,7 +37,6 @@ Language: sv_SE
     <string name="dashboard_pages_card_no_pages_create_page_button">Lägg till sidor på din webbplats</string>
     <string name="dashboard_card_domain_menu_hide_this">Dölj detta</string>
     <string name="dashboard_card_domain_sub_title">Gör anspråk på din del av webben med en webbadress som är lätt att hitta, dela och följa.</string>
-    <string name="dashboard_card_domain_title">Äg din onlineidentitet med en anpassad domän</string>
     <string name="blogging_reminders_notifications_permission_caption">För att kunna använda bloggningspåminnelser behöver du aktivera push-meddelanden.</string>
     <string name="blogging_reminders_notifications_permission_title">Slå på push-meddelanden</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Fortsätt med underdomän</string>
@@ -82,6 +95,7 @@ Language: sv_SE
     <string name="site_creation_domain_tag_sale">Rea</string>
     <string name="site_creation_domain_tag_recommended">Rekommenderat</string>
     <string name="site_creation_domain_tag_best_alternative">Bästa alternativ</string>
+    <string name="site_creation_domain_cost">per år</string>
     <string name="me_btn_help">Hjälp</string>
     <string name="support_faq_caption">Se våra vanliga frågor för svar på vanliga frågor du kan ha.</string>
     <string name="support_faq_title">Tack för att du byter till Jetpack-appen!</string>
@@ -807,6 +821,7 @@ Language: sv_SE
     <string name="gutenberg_native_one">Ett</string>
     <string name="gutenberg_native_add_title">Lägg till rubrik</string>
     <string name="gutenberg_native_no_preview_available">Ingen förhandsgranskning tillgänglig</string>
+    <string name="gutenberg_native_loading">Laddar in …</string>
     <string name="gutenberg_native_text_color">Textfärg</string>
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_four">Fyra</string>
