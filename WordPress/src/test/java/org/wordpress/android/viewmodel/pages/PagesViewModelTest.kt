@@ -624,4 +624,36 @@ class PagesViewModelTest : BaseUnitTest() {
         // Assert
         assertThat(launchPageListType.value).isEqualTo(SCHEDULED)
     }
+
+    @Test
+    fun `when OpenSiteEditor action requested,then openSiteEditorWebView is set correctly`() = test {
+        // Arrange
+        setUpPageStoreWithEmptyPages()
+        whenever(site.adminUrl).thenReturn("https://example.com/wp-admin/")
+        whenever(site.isSelfHostedAdmin).thenReturn(true)
+        viewModel.start(site)
+
+        // Act
+        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor()
+        viewModel.onVirtualHomepageAction(action)
+
+        // Assert
+        val expected = PagesViewModel.SiteEditorData(
+            "https://example.com/wp-admin/site-editor.php?canvas=edit",
+            PageItem.VirtualHomepage.Action.OpenSiteEditor.SITE_EDITOR_CSS,
+            true
+        )
+        assertThat(viewModel.openSiteEditorWebView.value).isEqualTo(expected)
+    }
+
+    @Test
+    fun `when OpenExternalLink action requested,then openExternalLink is set correctly`() = test {
+        // Act
+        val action = PageItem.VirtualHomepage.Action.OpenExternalLink()
+        viewModel.onVirtualHomepageAction(action)
+
+        // Assert
+        val expected = PageItem.VirtualHomepage.Action.OpenExternalLink.TEMPLATE_SUPPORT_URL
+        assertThat(viewModel.openExternalLink.value).isEqualTo(expected)
+    }
 }
