@@ -32,7 +32,6 @@ class BlockEditorTests : BaseTest() {
     fun e2ePublishSimplePost() {
         val title = "publishSimplePost"
         MySitesPage()
-            .go()
             .startNewPost()
         BlockEditorPage()
             .waitForTitleDisplayed()
@@ -47,7 +46,6 @@ class BlockEditorTests : BaseTest() {
     fun e2ePublishFullPost() {
         val title = "publishFullPost"
         MySitesPage()
-            .go()
             .startNewPost()
         BlockEditorPage()
             .waitForTitleDisplayed()
@@ -65,7 +63,6 @@ class BlockEditorTests : BaseTest() {
     fun e2eBlockEditorCanDisplayElementAddedInHtmlMode() {
         val title = "blockEditorCanDisplayElementAddedInHtmlMode"
         MySitesPage()
-            .go()
             .startNewPost()
         BlockEditorPage()
             .waitForTitleDisplayed()

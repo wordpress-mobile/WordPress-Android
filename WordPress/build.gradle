@@ -136,6 +136,7 @@ android {
         buildConfigField "boolean", "DASHBOARD_CARD_PAGES", "false"
         buildConfigField "boolean", "DASHBOARD_CARD_ACTIVITY_LOG", "false"
         buildConfigField "boolean", "DASHBOARD_CARD_DOMAIN", "false"
+        buildConfigField "boolean", "SITE_EDITOR_MVP", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -199,7 +200,7 @@ android {
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
             buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "false"
-            buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
+            buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "true"
 
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
 

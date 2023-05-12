@@ -373,7 +373,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
                     if (isPurchasingEnabled) R.string.site_creation_domain_header_subtitle
                     else R.string.new_site_creation_domain_header_subtitle,
                 ),
-                isStartAligned = isPurchasingEnabled
             )
         }
 
