@@ -201,7 +201,7 @@ sealed class PageItem(open val type: Type) {
                 fun getUrl(site: SiteModel): String = site.adminUrl + "site-editor.php?canvas=edit"
             }
 
-            class OpenLearnMoreUrl(
+            class OpenExternalLink(
                 val url: String = "https://wordpress.com/support/templates/"
             ) : Action()
         }

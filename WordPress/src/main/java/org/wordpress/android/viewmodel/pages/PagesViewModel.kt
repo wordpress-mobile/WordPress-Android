@@ -740,7 +740,7 @@ class PagesViewModel
 
     fun onVirtualHomepageAction(action: VirtualHomepage.Action) {
         when (action) {
-            is VirtualHomepage.Action.OpenLearnMoreUrl -> {
+            is VirtualHomepage.Action.OpenExternalLink -> {
                 _openExternalLink.postValue(action.url)
             }
 

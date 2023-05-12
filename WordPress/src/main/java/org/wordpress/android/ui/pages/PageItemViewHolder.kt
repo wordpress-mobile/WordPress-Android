@@ -303,7 +303,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 onAction(VirtualHomepage.Action.OpenSiteEditor())
             }
             pageItemInfo.setOnClickListener {
-                onAction(VirtualHomepage.Action.OpenLearnMoreUrl())
+                onAction(VirtualHomepage.Action.OpenExternalLink())
             }
         }
     }
