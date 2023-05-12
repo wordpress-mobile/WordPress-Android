@@ -193,17 +193,26 @@ sealed class PageItem(open val type: Type) {
     object VirtualHomepage : PageItem(VIRTUAL_HOMEPAGE) {
         sealed class Action {
             class OpenSiteEditor : Action() {
-                val customCss: String = ".edit-site-header-edit-mode { padding-left: 0px } " +
-                        ".edit-site-site-hub { display: none } " +
-                        ".edit-site-template-details .edit-site-template-details__show-all-button.components-button " +
-                        "{ display: none }"
+                val customCss: String get() = SITE_EDITOR_CSS
 
                 fun getUrl(site: SiteModel): String = site.adminUrl + "site-editor.php?canvas=edit"
+
+                companion object {
+                    const val SITE_EDITOR_CSS = ".edit-site-header-edit-mode { padding-left: 0px } " +
+                            ".edit-site-site-hub { display: none } " +
+                            ".edit-site-template-details " +
+                            ".edit-site-template-details__show-all-button.components-button " +
+                            "{ display: none }"
+                }
             }
 
             class OpenExternalLink(
-                val url: String = "https://wordpress.com/support/templates/"
-            ) : Action()
+                val url: String = TEMPLATE_SUPPORT_URL
+            ) : Action() {
+                companion object {
+                    const val TEMPLATE_SUPPORT_URL = "https://wordpress.com/support/templates/"
+                }
+            }
         }
     }
 
