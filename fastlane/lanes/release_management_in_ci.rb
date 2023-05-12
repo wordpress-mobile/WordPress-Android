@@ -10,7 +10,7 @@ platform :android do
       buildkite_pipeline: BUILDKITE_PIPELINE,
       branch: 'trunk',
       pipeline_file: 'code-freeze.yml',
-      message: 'Code Freeze in CI'
+      message: 'Code Freeze'
     )
   end
 
@@ -21,7 +21,7 @@ platform :android do
       buildkite_pipeline: BUILDKITE_PIPELINE,
       branch: "release/#{release_version}",
       pipeline_file: 'complete-code-freeze.yml',
-      message: 'Complete Code Freeze in CI',
+      message: 'Complete Code Freeze',
       environment: { RELEASE_VERSION: release_version }
     )
   end
@@ -33,7 +33,7 @@ platform :android do
       buildkite_pipeline: BUILDKITE_PIPELINE,
       branch: "release/#{release_version}",
       pipeline_file: 'finalize-release.yml',
-      message: 'Finalize release',
+      message: 'Finalize Release',
       environment: { RELEASE_VERSION: release_version }
     )
   end
@@ -45,7 +45,7 @@ platform :android do
       buildkite_pipeline: BUILDKITE_PIPELINE,
       branch: "release/#{release_version}",
       pipeline_file: 'new-beta-release.yml',
-      message: 'New beta release',
+      message: 'New Beta Release',
       environment: { RELEASE_VERSION: release_version }
     )
   end
@@ -58,7 +58,7 @@ platform :android do
       buildkite_pipeline: BUILDKITE_PIPELINE,
       branch: "#{editorial_branch}",
       pipeline_file: 'update-release-notes.yml',
-      message: 'Update release notes',
+      message: 'Update Release Notes',
       environment: { RELEASE_VERSION: release_version, EDITORIAL_BRANCH: editorial_branch }
     )
   end
