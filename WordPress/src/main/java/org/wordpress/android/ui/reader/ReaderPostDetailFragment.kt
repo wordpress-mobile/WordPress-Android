@@ -1505,14 +1505,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     @Suppress("DEPRECATION")
-    private fun ReaderPostDetailFragment.showPostInWebView(post: ReaderPost) {
+    private fun showPostInWebView(post: ReaderPost) {
         readerWebView.setIsPrivatePost(post.isPrivate)
         readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))
         renderer = ReaderPostRenderer(readerWebView, viewModel.post, readerCssProvider)
 
         // if the post is from private atomic site postpone render until we have a special access cookie
         if (post.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
-            PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager, this@ReaderPostDetailFragment)
+            PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager, this)
             requestPrivateAtomicCookie()
         } else if (post.isPrivateAtomic && privateAtomicCookie.exists()) {
             // make sure we add cookie to the cookie manager if it exists before starting render
