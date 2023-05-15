@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-25 11:54:08+0000
+Translation-Revision-Date: 2023-05-12 14:32:52+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_unlabeled_color_s">Couleur sans libellé. %s</string>
+    <string name="dashboard_activity_card_footer_link">Voir toute l’activité</string>
+    <string name="dashboard_activity_card_title">Activité récente</string>
+    <string name="dashboard_card_domain_title">Trouver un domaine personnalisé</string>
+    <string name="site_creation_search_domain_example_body">Comme le montre l’exemple ci-dessus, un domaine permet aux internautes de trouver et de visiter votre site depuis leur navigateur Web.</string>
+    <string name="site_creation_search_domain_example_title">NomDeVotreSite.com</string>
+    <string name="site_creation_search_domain_example_url">https://nomdevotresite.com</string>
+    <string name="site_creation_domain_search_input_hint">Effectuer une recherche à l’aide de mots-clés</string>
+    <string name="site_creation_domain_header_subtitle">Recherchez un domaine court et facile à retenir pour aider les internautes à trouver et visiter votre site.</string>
+    <string name="site_creation_domain_cost_sale">la première année</string>
+    <string name="site_creation_error_cart_subtitle">Votre site Web a été créé, mais nous avons rencontré un problème lors de la préparation de votre domaine personnalisé pour la validation de la commande. Réessayez ou contactez l’assistance pour obtenir de l’aide.</string>
+    <string name="new_site_creation_preview_caption_paid">Un délai de 30 minutes peut être nécessaire pour que votre domaine personnalisé soit opérationnel.</string>
+    <string name="new_site_creation_preview_subtitle_paid">Nous vous avons envoyé le reçu par e-mail. %s</string>
+    <string name="notifications_disabled_permission_dialog">Les notifications de l’application ont été désactivées. Appuyez ici pour les activer.</string>
     <string name="jp_migration_delete_message">Nous vous recommandons de &lt;b&gt;désinstaller l’application WordPress&lt;/b&gt; sur votre appareil pour éviter les conflits de données.</string>
     <string name="jp_migration_delete_subtitle">Il semblerait que l’application WordPress soit toujours installée.</string>
     <string name="jp_migration_delete_title">Vous n’avez plus besoin de l’application WordPress sur votre appareil.</string>
@@ -23,7 +37,6 @@ Language: fr
     <string name="dashboard_pages_card_no_pages_create_page_button">Ajouter des pages à votre site</string>
     <string name="dashboard_card_domain_menu_hide_this">Masquer ceci</string>
     <string name="dashboard_card_domain_sub_title">Affirmez votre présence sur Internet avec une adresse Web facile à trouver, à partager et à suivre.</string>
-    <string name="dashboard_card_domain_title">Maîtrisez votre identité en ligne grâce à un domaine personnalisé</string>
     <string name="blogging_reminders_notifications_permission_caption">Pour utiliser les rappels de blog, vous devez activer les notifications push.</string>
     <string name="blogging_reminders_notifications_permission_title">Activer les notifications push</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Continuer avec le sous-domaine</string>
@@ -89,6 +102,7 @@ Language: fr
     <string name="help_buttons_screen_title">Aide</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="tickets">Billets</string>
+    <string name="site_creation_domain_cost">par an</string>
     <string name="gutenberg_native_blocks_menu">Menu Blocs</string>
     <string name="promote_blaze_card_menu_hide_this">Masquer ceci</string>
     <string name="promote_blaze_card_sub_title">Diffusez votre contenu sur des millions de sites.</string>
@@ -807,6 +821,7 @@ Language: fr
     <string name="gutenberg_native_one">Un</string>
     <string name="gutenberg_native_no_preview_available">Aucun aperçu disponible</string>
     <string name="gutenberg_native_add_title">Ajouter un titre</string>
+    <string name="gutenberg_native_loading">En cours de chargement…</string>
     <string name="gutenberg_native_text_color">Couleur du texte</string>
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_featured">À la Une</string>

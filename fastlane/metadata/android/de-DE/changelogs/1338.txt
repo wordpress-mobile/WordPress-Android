@@ -1,3 +1,0 @@
-22.2:
-- Wir haben ein gelbes Warnfeld hinzugefügt, das dich darauf hinweist, wenn Benachrichtigungen und Blog-Erinnerungen nicht mehr als Push-Benachrichtigungen an dein Gerät gesendet werden.
-- Wir haben die Medienzugriffsberechtigungen für Fotos, Videos und Audio aktualisiert, um sie an das Android 13-Update anzupassen.

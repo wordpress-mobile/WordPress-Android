@@ -1,5 +1,0 @@
-22.2:
-- Anlık bildirimlerin kapalı olduğuna ilişkin uyarı mesajı eklendi
-- Android 13 güncellemesiyle uyumlu hale getirmek için ortam erişim izinleri güncellendi
-- Özel alan adları satın almak için panoya kart eklendi
-- Blog istemlerine diğer kullanıcıların yanıtları eklendi
