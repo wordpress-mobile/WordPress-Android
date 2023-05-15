@@ -63,6 +63,9 @@ class EditorThemeStore
         return editorThemeSqlUtils.getEditorThemeForSite(site)
     }
 
+    fun getIsBlockBasedTheme(site: SiteModel): Boolean =
+        getEditorThemeForSite(site)?.themeSupport?.isEditorThemeBlockBased() ?: false
+
     @Subscribe(threadMode = ThreadMode.ASYNC)
     override fun onAction(action: Action<*>) {
         val actionType = action.type as? EditorThemeAction ?: return
