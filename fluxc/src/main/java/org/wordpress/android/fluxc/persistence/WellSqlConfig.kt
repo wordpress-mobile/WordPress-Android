@@ -36,7 +36,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 185
+        return 186
     }
 
     override fun getDbName(): String {
@@ -1905,6 +1905,10 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 184 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCProductModel ADD SPECIAL_STOCK_STATUS TEXT")
+                }
+                185 -> migrate(version) {
+                    db.execSQL("ALTER TABLE EditorTheme RENAME COLUMN IS_FSETHEME TO IS_BLOCK_BASED_THEME ")
+                    db.execSQL("ALTER TABLE EditorTheme ADD HAS_BLOCK_TEMPLATES BOOLEAN")
                 }
             }
         }
