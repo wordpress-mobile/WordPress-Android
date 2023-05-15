@@ -43,6 +43,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig
+import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
 import org.wordpress.android.util.extensions.toFormattedDateString
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -67,9 +68,10 @@ class PageListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val accountStore: AccountStore,
-    @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
     private val globalStyleSupportFeatureConfig: GlobalStyleSupportFeatureConfig,
     private val editorThemeStore: EditorThemeStore,
+    private val siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig,
+    @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = Transformations.map(_pages) {
@@ -316,9 +318,7 @@ class PageListViewModel @Inject constructor(
             filteredPages.sortedByDescending { it.date }.sortedBy { !it.isHomepage }
         })
 
-        val isBlockBasedTheme = true // TODO thomashorta get it from the appropriate site field (WIP)
-        val isVirtualHomepageFlagEnabled = true // TODO thomashorta get it from the correct feature flag (WIP)
-        val showVirtualHomepage = isVirtualHomepageFlagEnabled && isBlockBasedTheme
+        val showVirtualHomepage = siteEditorMVPFeatureConfig.isEnabled() && isBlockBasedTheme.value
 
         return sortedPages
             .let { if (showVirtualHomepage) it.filterNot { page -> page.isHomepage } else it }
