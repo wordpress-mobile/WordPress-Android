@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-19 07:58:42+0000
+Translation-Revision-Date: 2023-05-10 11:26:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_unlabeled_color_s">Ngjyrë pa etiketë. %s</string>
+    <string name="dashboard_activity_card_footer_link">Shihni krejt veprimtarinë</string>
+    <string name="dashboard_activity_card_title">Veprimtari së fundi</string>
+    <string name="dashboard_card_domain_title">Gjeni një përkatësi vetjake</string>
+    <string name="site_creation_search_domain_example_body">Në ngjashmëri me shembullin më sipër, një përkatësi u lejon njerëzve të gjejnë dhe vizitojnë sajtin tuaj që nga shfletuesi.</string>
+    <string name="site_creation_search_domain_example_title">EmriiSajtitTuaj.com</string>
+    <string name="site_creation_search_domain_example_url">https://emriisajtittuaj.com</string>
+    <string name="site_creation_domain_search_input_hint">Kërkoni me fjalëkyçe</string>
+    <string name="site_creation_domain_header_subtitle">Kërkoni për një përkatësi të shkurtër dhe që mund të mbahet mend, për t’i ndihmuar njerëzit të gjejnë dhe vizitojnë sajtin tuaj.</string>
+    <string name="site_creation_domain_cost_sale">për vitin e parë</string>
+    <string name="site_creation_error_cart_subtitle">Sajti juaj është krijuar me sukses, por hasëm një problem, teksa përgatisnim përkatësinë tuaj vetjake për blerje. Ju lutemi, riprovoni, ose lidhuni me asistencën për ndihmë.</string>
+    <string name="new_site_creation_preview_caption_paid">Mund të duhen deri në 30 minuta që përkatësia juaj vetjake të fillojë të funksionojë.</string>
+    <string name="new_site_creation_preview_subtitle_paid">Ju dërguam faturën tuaj me email. %s</string>
+    <string name="notifications_disabled_permission_dialog">Njoftimet nga aplikacioni janë çaktivizuar. Prekni këtu, që të aktivizohen.</string>
+    <string name="jp_migration_delete_message">Rekomandojmë &lt;b&gt;çinstalimin e aplikacionit WordPress&lt;/b&gt; në pajisjen tuaj, për të shmangur përplasje të dhënash.</string>
+    <string name="jp_migration_delete_subtitle">Duket sikur ende keni të instaluar aplikacionin WordPress.</string>
+    <string name="jp_migration_delete_title">S’ju duhet më aplikacioni WordPress në pajisjen tuaj</string>
+    <string name="jp_migration_done_delete_wp_message">Rekomandojmë &lt;b&gt;çinstalimin e aplikacionit WordPress&lt;/b&gt; në pajisjen tuaj, për të shmangur përplasje të dhënash.</string>
+    <string name="jp_migration_success_card_message">Mirë se vini te aplikacioni Jetpack. Mund të çinstaloni aplikacionin WordPress.</string>
     <string name="gutenberg_native_remove_blocks">Hiqi blloqet</string>
     <string name="gutenberg_native_privacy_and_rating">Privatësi dhe Vlerësim</string>
     <string name="gutenberg_native_playback_settings">Rregullime Luajtjeje</string>
@@ -18,7 +37,6 @@ Language: sq_AL
     <string name="dashboard_pages_card_no_pages_create_page_button">Shtoni Faqe te sajti juaj</string>
     <string name="dashboard_card_domain_menu_hide_this">Fshihe këtë</string>
     <string name="dashboard_card_domain_sub_title">Afirmoni pretendimin tuaj për qoshen tuaj në internet, me një adresë sajti që është kollaj të gjendet, jepet dhe ndiqet.</string>
-    <string name="dashboard_card_domain_title">Bëhuni zot i identitetin tuaj internetor, përmes një përkatësie vetjake</string>
     <string name="blogging_reminders_notifications_permission_caption">Që të përdorni kujtues blogimi, do t’ju duhet të aktivizoni njoftime push.</string>
     <string name="blogging_reminders_notifications_permission_title">Aktivizo njoftime push</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Vazhdo me nënpërkatësi</string>
@@ -76,6 +94,7 @@ Language: sq_AL
     <string name="site_creation_domain_tag_sale">Ulje çmimesh</string>
     <string name="site_creation_domain_tag_recommended">E rekomanduar</string>
     <string name="site_creation_domain_tag_best_alternative">Alternativa Më e Mirë</string>
+    <string name="site_creation_domain_cost">në vit</string>
     <string name="me_btn_help">Ndihmë</string>
     <string name="support_faq_caption">Për përgjigje pyetjesh të rëndomta që mund të keni, shihni PBR-të tona.</string>
     <string name="support_faq_title">Faleminderit që kaloni te aplikacioni Jetpack!</string>
@@ -795,6 +814,7 @@ Language: sq_AL
     <string name="gutenberg_native_one">Një</string>
     <string name="gutenberg_native_add_title">Shtoni titull</string>
     <string name="gutenberg_native_no_preview_available">S’ka paraparje gati</string>
+    <string name="gutenberg_native_loading">Po ngarkohet</string>
     <string name="gutenberg_native_text_color">Ngjyrë teksti</string>
     <string name="gutenberg_native_padding">Mbushje</string>
     <string name="gutenberg_native_four">Katër</string>

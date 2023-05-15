@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-24 11:54:07+0000
+Translation-Revision-Date: 2023-05-03 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_unlabeled_color_s">未標記的顏色。 %s</string>
+    <string name="dashboard_activity_card_footer_link">檢視所有活動</string>
+    <string name="dashboard_activity_card_title">最近活動</string>
+    <string name="dashboard_card_domain_title">尋找自訂網域</string>
+    <string name="site_creation_search_domain_example_body">如同上方範例，網域可讓使用者從網頁瀏覽器找到並造訪你的網站。</string>
+    <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
+    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
+    <string name="site_creation_domain_search_input_hint">透過關鍵字搜尋</string>
+    <string name="site_creation_domain_header_subtitle">搜尋簡短好記的網域，有助於使用者找到並造訪你的網站。</string>
+    <string name="site_creation_domain_cost_sale">第一年</string>
+    <string name="site_creation_error_cart_subtitle">你的網站已成功建立，但準備你的自訂網域以結帳時發生問題。 請再試一次，或聯絡支援團隊取得協助。</string>
+    <string name="new_site_creation_preview_caption_paid">你的自訂網域最多可能需要 30 分鐘才能開始運作。</string>
+    <string name="new_site_creation_preview_subtitle_paid">我們已將收據透過電子郵件傳送給你了。 %s</string>
+    <string name="notifications_disabled_permission_dialog">應用程式通知已停用。 點選此處以啟用。</string>
     <string name="jp_migration_delete_message">建議&lt;b&gt;解除安裝裝置上的 WordPress 應用程式&lt;/b&gt;以避免資料衝突。</string>
     <string name="jp_migration_delete_subtitle">你似乎仍有安裝 WordPress 應用程式。</string>
     <string name="jp_migration_delete_title">你的裝置不再需要 WordPress 應用程式了</string>
@@ -23,7 +37,6 @@ Language: zh_TW
     <string name="dashboard_pages_card_no_pages_create_page_button">在網站上新增頁面</string>
     <string name="dashboard_card_domain_menu_hide_this">隱藏此訊息</string>
     <string name="dashboard_card_domain_sub_title">建立易於搜尋、分享和追蹤的網站位址，打造屬於自己的網路園地。</string>
-    <string name="dashboard_card_domain_title">自訂網域讓你擁有專屬的網路身分</string>
     <string name="blogging_reminders_notifications_permission_caption">你需要開啟推播通知才能使用網誌提醒。</string>
     <string name="blogging_reminders_notifications_permission_title">開啟推播通知</string>
     <string name="site_creation_domain_button_continue_with_subdomain">繼續使用子網域</string>
@@ -82,6 +95,7 @@ Language: zh_TW
     <string name="site_creation_domain_tag_sale">特價</string>
     <string name="site_creation_domain_tag_recommended">推薦</string>
     <string name="site_creation_domain_tag_best_alternative">最佳替代選項</string>
+    <string name="site_creation_domain_cost">每年</string>
     <string name="me_btn_help">說明</string>
     <string name="support_faq_caption">請查看我們的常見問題集，瞭解你可能想知道的一般問題的解答。</string>
     <string name="support_faq_title">感謝你改用 Jetpack 應用程式！</string>
@@ -807,6 +821,7 @@ Language: zh_TW
     <string name="gutenberg_native_one">壹</string>
     <string name="gutenberg_native_add_title">新增標題</string>
     <string name="gutenberg_native_no_preview_available">未提供預覽</string>
+    <string name="gutenberg_native_loading">載入中</string>
     <string name="gutenberg_native_text_color">文字顏色</string>
     <string name="gutenberg_native_padding">邊框間距</string>
     <string name="gutenberg_native_four">肆</string>
