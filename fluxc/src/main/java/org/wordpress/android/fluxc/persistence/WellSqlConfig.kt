@@ -8,6 +8,7 @@ import android.preference.PreferenceManager
 import android.view.Gravity
 import android.widget.Toast
 import androidx.annotation.StringDef
+import com.wellsql.generated.EditorThemeTable
 import com.yarolegovich.wellsql.DefaultWellConfig
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.WellTableManager
@@ -36,7 +37,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 185
+        return 186
     }
 
     override fun getDbName(): String {
@@ -1905,6 +1906,42 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 184 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCProductModel ADD SPECIAL_STOCK_STATUS TEXT")
+                }
+                185 -> migrate(version) {
+                    // renaming tables is not supported by SQLite in some versions, so we need to:
+                    // 1. create a new table
+                    // 2. copy data from old table to new table, mapping to the new column names
+                    // 3. drop the old table
+                    // 4. rename the new table to the old table name
+                    db.execSQL(
+                        "CREATE TABLE IF NOT EXISTS EditorTheme_new (" +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "LOCAL_SITE_ID INTEGER," +
+                            "STYLESHEET TEXT," +
+                            "VERSION TEXT," +
+                            "RAW_STYLES TEXT," +
+                            "RAW_FEATURES TEXT," +
+                            "HAS_BLOCK_TEMPLATES INTEGER," +
+                            "IS_BLOCK_BASED_THEME INTEGER," +
+                            "GALLERY_WITH_IMAGE_BLOCKS INTEGER," +
+                            "QUOTE_BLOCK_V2 INTEGER," +
+                            "LIST_BLOCK_V2 INTEGER)"
+                    )
+
+                    db.execSQL(
+                        "INSERT INTO EditorTheme_new (" +
+                            "_id, LOCAL_SITE_ID, STYLESHEET, VERSION, RAW_STYLES, RAW_FEATURES, " +
+                            "HAS_BLOCK_TEMPLATES, IS_BLOCK_BASED_THEME, GALLERY_WITH_IMAGE_BLOCKS, " +
+                            "QUOTE_BLOCK_V2, LIST_BLOCK_V2) " +
+                            "SELECT " +
+                            "_id, LOCAL_SITE_ID, STYLESHEET, VERSION, RAW_STYLES, RAW_FEATURES, " +
+                            "0, IS_FSETHEME, GALLERY_WITH_IMAGE_BLOCKS, " +
+                            "QUOTE_BLOCK_V2, LIST_BLOCK_V2 " +
+                            "FROM EditorTheme"
+                    )
+
+                    db.execSQL("DROP TABLE EditorTheme")
+                    db.execSQL("ALTER TABLE EditorTheme_new RENAME TO EditorTheme")
                 }
             }
         }
