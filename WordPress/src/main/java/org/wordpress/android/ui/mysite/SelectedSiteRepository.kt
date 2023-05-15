@@ -4,14 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
-import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig
 import org.wordpress.android.util.mapSafe
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,8 +17,7 @@ import javax.inject.Singleton
 class SelectedSiteRepository @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory,
-    private val appPrefsWrapper: AppPrefsWrapper,
-    private val globalStyleSupportFeatureConfig: GlobalStyleSupportFeatureConfig,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) {
     private var siteSettings: SiteSettingsInterfaceWrapper? = null
     private val _selectedSiteChange = MutableLiveData<SiteModel?>(null)
@@ -29,7 +25,6 @@ class SelectedSiteRepository @Inject constructor(
     val selectedSiteChange = _selectedSiteChange as LiveData<SiteModel?>
     val siteSelected = _selectedSiteChange.mapSafe { it?.id }.distinctUntilChanged()
     val showSiteIconProgressBar = _showSiteIconProgressBar as LiveData<Boolean>
-
     fun updateSite(selectedSite: SiteModel) {
         if (getSelectedSite()?.iconUrl != selectedSite.iconUrl) {
             showSiteIconProgressBar(false)
@@ -84,12 +79,6 @@ class SelectedSiteRepository @Inject constructor(
         getSelectedSite()?.id ?: UNAVAILABLE
     }
 
-    private fun fetchEditorTheme(site: SiteModel) {
-        EditorThemeStore.FetchEditorThemePayload(site, globalStyleSupportFeatureConfig.isEnabled()).let {
-            dispatcher.dispatch(EditorThemeActionBuilder.newFetchEditorThemeAction(it))
-        }
-    }
-
     fun updateSiteSettingsIfNecessary() {
         // If the selected site is null, we can't update its site settings
         val selectedSite = getSelectedSite() ?: return
@@ -115,8 +104,6 @@ class SelectedSiteRepository @Inject constructor(
 
             siteSettings?.init(true)
         }
-        // Fetch editor theme to update block-based-theme flag
-        fetchEditorTheme(selectedSite)
     }
 
     fun isSiteIconUploadInProgress(): Boolean {

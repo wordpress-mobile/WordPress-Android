@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-25 15:54:09+0000
+Translation-Revision-Date: 2023-05-12 14:34:32+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_unlabeled_color_s">Цвет без ярлыка. %s</string>
+    <string name="dashboard_activity_card_footer_link">Просмотреть все действия</string>
+    <string name="dashboard_activity_card_title">Недавние действия</string>
+    <string name="dashboard_card_domain_title">Найти пользовательский домен</string>
+    <string name="site_creation_search_domain_example_body">Зная домен, пользователи могут найти сайт с помощью браузера, как в примере выше.</string>
+    <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
+    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
+    <string name="site_creation_domain_search_input_hint">Поиск по ключевым словам</string>
+    <string name="site_creation_domain_header_subtitle">Выберите короткий и запоминающийся домен, который поможет посетителям найти ваш сайт.</string>
+    <string name="site_creation_domain_cost_sale">на первый год</string>
+    <string name="site_creation_error_cart_subtitle">Веб-сайт создан, но возникла проблема с подготовкой пользовательского домена для оформления заказа. Повторите попытку или обратитесь в службу поддержки.</string>
+    <string name="new_site_creation_preview_caption_paid">Это может занять до 30 минут, после чего пользовательский домен начнёт работать.</string>
+    <string name="new_site_creation_preview_subtitle_paid">Чек отправлен вам на почту. %s</string>
+    <string name="notifications_disabled_permission_dialog">Уведомления в приложении отключены. Нажмите здесь, чтобы включить.</string>
     <string name="jp_migration_delete_message">Рекомендуем &lt;b&gt;удалить приложение WordPress&lt;/b&gt; с устройства, чтобы избежать конфликтов данных.</string>
     <string name="jp_migration_delete_subtitle">Кажется, у вас всё ещё установлено приложение WordPress.</string>
     <string name="jp_migration_delete_title">Вам больше не нужно приложение WordPress</string>
@@ -23,7 +37,6 @@ Language: ru
     <string name="dashboard_pages_card_no_pages_create_page_button">Добавление новых страниц на сайт</string>
     <string name="dashboard_card_domain_menu_hide_this">Скрыть это</string>
     <string name="dashboard_card_domain_sub_title">Займите себе место в Интернете: зарегистрируйте адрес сайта, который будет легко запомнить и порекомендовать друзьям.</string>
-    <string name="dashboard_card_domain_title">Чтобы выделиться, вам нужен уникальный домен</string>
     <string name="blogging_reminders_notifications_permission_caption">Для использования напоминаний следует включить push-уведомления.</string>
     <string name="blogging_reminders_notifications_permission_title">Включить push-уведомления</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Продолжить с поддоменом</string>
@@ -82,6 +95,7 @@ Language: ru
     <string name="site_creation_domain_tag_sale">Распродажа</string>
     <string name="site_creation_domain_tag_recommended">Рекомендуемые</string>
     <string name="site_creation_domain_tag_best_alternative">Лучшая альтернатива</string>
+    <string name="site_creation_domain_cost">в год</string>
     <string name="me_btn_help">Справка</string>
     <string name="support_faq_caption">Ищите ответы на типовые вопросы в разделе \"Часто задаваемые вопросы\".</string>
     <string name="support_faq_title">Благодарим за переход на приложение Jetpack!</string>
@@ -807,6 +821,7 @@ Language: ru
     <string name="gutenberg_native_one">Один</string>
     <string name="gutenberg_native_add_title">Добавить заголовок</string>
     <string name="gutenberg_native_no_preview_available">Предварительный просмотр недоступен</string>
+    <string name="gutenberg_native_loading">Загрузка</string>
     <string name="gutenberg_native_text_color">Цвет текста</string>
     <string name="gutenberg_native_padding">Отступ</string>
     <string name="gutenberg_native_four">Четыре</string>
