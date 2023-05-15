@@ -89,10 +89,15 @@ class EditorThemeSqlUtils {
         @Column var version: String? = null
         @Column var rawStyles: String? = null
         @Column var rawFeatures: String? = null
-        @Column var isFSETheme: Boolean = false
-            @JvmName("isFSETheme")
+        @Column var hasBlockTemplates: Boolean = false
+            @JvmName("getHasBlockTemplates")
             get
-            @JvmName("setIsFSETheme")
+            @JvmName("setHasBlockTemplates")
+            set
+        @Column var isBlockBasedTheme: Boolean = false
+            @JvmName("isBlockBasedTheme")
+            get
+            @JvmName("setIsBlockBasedTheme")
             set
         @Column var galleryWithImageBlocks: Boolean = false
         @Column var quoteBlockV2: Boolean = false
@@ -121,9 +126,10 @@ class EditorThemeSqlUtils {
             val editorThemeSupport = EditorThemeSupport(
                     colors,
                     gradients,
+                    hasBlockTemplates,
                     rawStyles,
                     rawFeatures,
-                    isFSETheme,
+                    isBlockBasedTheme,
                     galleryWithImageBlocks,
                     quoteBlockV2,
                     listBlockV2
