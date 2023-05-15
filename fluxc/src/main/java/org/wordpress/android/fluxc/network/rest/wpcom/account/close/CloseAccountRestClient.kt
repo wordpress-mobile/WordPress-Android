@@ -27,10 +27,11 @@ class CloseAccountRestClient @Inject constructor(
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun closeAccount(): CloseAccountWPAPIPayload<Unit> {
         val url = WPCOMREST.me.account.close.urlV1_1
-        val response = wpComGsonRequestBuilder.syncGetRequest(
+        val response = wpComGsonRequestBuilder.syncPostRequest(
             restClient = this,
             url = url,
             params = emptyMap(),
+            body = emptyMap(),
             clazz = Unit::class.java
         )
         return when (response) {
