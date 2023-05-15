@@ -599,6 +599,7 @@
     <string name="days_quantity_other">%d days</string>
     <string name="weeks_quantity_one">1 week</string>
     <string name="weeks_quantity_other">%d weeks</string>
+    <string name="https" translatable="false">https:\/\/</string>
 
     <!-- PreferenceCategory Headers -->
     <string name="site_settings_general_header">General</string>
@@ -3372,7 +3373,6 @@
     <!-- Site Creation : Domains - Updated designs -->
     <string name="site_creation_domain_header_subtitle">Search for a short and memorable domain to help people find and visit your site.</string>
     <string name="site_creation_domain_search_input_hint">Search with keywords</string>
-    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_search_domain_example_body">Like the example above, a domain allows people to find and visit your site from their web browser.</string>
 
@@ -4332,11 +4332,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="login">Check your email on this device!</string>
     <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">We just sent a magic link to</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link Rel</string>
-    <string name="wp_jp_static_poster_title">%s has moved to the Jetpack app.</string>
-    <string name="wp_jp_static_poster_title_plural">%s have moved to the Jetpack app.</string>
+    <string name="wp_jp_static_poster_title">Use WordPress with %s in the Jetpack\u00A0app.</string>
+    <string name="wp_jp_static_poster_title_plural">Use WordPress with %s in the Jetpack\u00A0app.</string>
     <string name="wp_jp_static_poster_button_primary">Switch to the Jetpack app</string>
     <string name="wp_jp_static_poster_button_secondary">Learn more at Jetpack.com</string>
-    <string name="wp_jp_static_poster_message">Stats, Reader, Notifications and other Jetpack powered features have been removed from the WordPress app, and can now only be found in the Jetpack app.</string>
+    <string name="wp_jp_static_poster_message">The Jetpack app has all the WordPress app’s functionality, and now exclusive access to Stats, Reader, Notifications and more.</string>
     <string name="wp_jp_static_poster_footnote">Switching is free and only takes a minute.</string>
 
     <!-- Jetpack Welcome Screen -->
@@ -4347,7 +4347,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_welcome_site_found_message">We found your site. Continue to transfer all your data and sign in to Jetpack automatically.</string>
     <string name="jp_migration_continue_button">Continue</string>
     <string name="jp_migration_help_button">Need help?</string>
-    <string name="jp_migration_notifications_title">Notifications now come from Jetpack</string>
+    <string name="jp_migration_notifications_allow_title">Allow notifications to keep up with your site</string>
     <string name="jp_migration_notifications_subtitle">You’ll get all the same notifications but now they’ll come from the Jetpack app.</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">We\'ll turn off notifications from the WordPress app.</string>
     <string name="jp_migration_done_title">Thanks for switching to Jetpack!</string>
@@ -4544,4 +4544,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Remove blocks</string>
     <string name="gutenberg_native_loading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Loading</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Unlabeled color. %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editing reusable blocks is not yet supported on %s for Android</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editing reusable blocks is not yet supported on %s for iOS</string>
 </resources>
