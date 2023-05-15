@@ -8,10 +8,15 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.EditorThemeAction
+import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
@@ -20,6 +25,7 @@ import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -30,6 +36,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
@@ -68,9 +75,16 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var accountStore: AccountStore
 
+    @Mock
+    lateinit var globalStyleSupportFeatureConfig: GlobalStyleSupportFeatureConfig
+
+    @Mock
+    lateinit var editorThemeStore: EditorThemeStore
+
     private lateinit var viewModel: PageListViewModel
     private val site = SiteModel()
     private val pageListState = MutableLiveData<PageListState>()
+    private lateinit var actions: MutableList<Action<*>>
 
     @Before
     fun setUp() {
@@ -83,7 +97,9 @@ class PageListViewModelTest : BaseUnitTest() {
             dispatcher,
             localeManagerWrapper,
             accountStore,
-            testDispatcher()
+            testDispatcher(),
+            globalStyleSupportFeatureConfig,
+            editorThemeStore,
         )
 
         whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(
@@ -115,6 +131,11 @@ class PageListViewModelTest : BaseUnitTest() {
 
         val blazeSiteEligibility = MutableLiveData<Boolean>()
         whenever(pagesViewModel.blazeSiteEligibility).thenReturn(blazeSiteEligibility)
+
+        doAnswer {
+            actions.add(it.getArgument(0))
+        }.whenever(dispatcher).dispatch(any())
+        actions = mutableListOf()
     }
 
     @Test
@@ -473,6 +494,22 @@ class PageListViewModelTest : BaseUnitTest() {
         val pageItems = pagesResult[1].first
         val pageItem = pageItems[0] as PublishedPage
         assertThat(pageItem.author).isNull()
+    }
+
+    @Test
+    fun `Should refresh EditorTheme when start is called the first time`() {
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+        viewModel.start(PUBLISHED, pagesViewModel)
+        assertThat(actions.last().type).isEqualTo(EditorThemeAction.FETCH_EDITOR_THEME)
+    }
+
+    @Test
+    fun `Should call EditorThemeStore getIsBlockBasedTheme when start is called the first time`() {
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+        viewModel.start(PUBLISHED, pagesViewModel)
+        verify(editorThemeStore).getIsBlockBasedTheme(site)
     }
 
     private fun buildPageModel(
