@@ -7,6 +7,7 @@ import com.automattic.android.tracks.crashlogging.EventLevel
 import com.automattic.android.tracks.crashlogging.ExtraKnownKey
 import com.automattic.android.tracks.crashlogging.PerformanceMonitoringConfig
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
@@ -36,7 +37,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
     override val sentryDSN: String = BuildConfig.SENTRY_DSN
 
     override val applicationContextProvider: Flow<Map<String, String>>
-        get() = flow { emit(emptyMap()) }
+        get() = MutableStateFlow(emptyMap())
 
     override fun crashLoggingEnabled(): Boolean {
         if (buildConfig.isDebug()) {
@@ -99,16 +100,14 @@ class WPCrashLoggingDataProvider @Inject constructor(
     }
 
     override val user: Flow<CrashLoggingUser?>
-        get() = flow {
-            val user = accountStore.account?.let { accountModel ->
+        get() = MutableStateFlow(
+            accountStore.account?.let { accountModel ->
                 CrashLoggingUser(
                     userID = accountModel.userId.toString(),
                     email = accountModel.email,
                     username = accountModel.userName
                 )
-            }
-            emit(user)
-        }
+            })
 
     override val performanceMonitoringConfig: PerformanceMonitoringConfig
         get() = PerformanceMonitoringConfig.Disabled
