@@ -17,6 +17,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.DashboardCardDomainFeatureConfig
+import org.wordpress.android.util.config.DashboardCardFreeToPaidPlansFeatureConfig
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -25,6 +26,7 @@ import javax.inject.Named
 class DashboardCardDomainUtils @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val dashboardCardDomainFeatureConfig: DashboardCardDomainFeatureConfig,
+    private val plansFreeToPaidFeatureConfig: DashboardCardFreeToPaidPlansFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -131,6 +133,7 @@ class DashboardCardDomainUtils @Inject constructor(
 
     private fun isDashboardCardDomainEnabled(): Boolean {
         return buildConfigWrapper.isJetpackApp &&
+                !plansFreeToPaidFeatureConfig.isEnabled() &&
                 dashboardCardDomainFeatureConfig.isEnabled()
     }
 

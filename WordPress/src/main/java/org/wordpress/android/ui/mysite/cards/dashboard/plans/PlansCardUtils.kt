@@ -6,11 +6,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.DomainModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardPlansCard
-import org.wordpress.android.ui.mysite.MySiteViewModel
+import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
@@ -53,14 +55,14 @@ class PlansCardUtils @Inject constructor(
         appPrefsWrapper.setShouldHideDashboardPlansCard(siteId, true)
     }
 
-    fun trackCardShown(scope: CoroutineScope, siteSelected: MySiteViewModel.State.SiteSelected?) {
+    fun trackCardShown(scope: CoroutineScope, siteSelected: SiteSelected?) {
         // cancel any existing job (debouncing mechanism)
         dashboardUpdateDebounceJob?.cancel()
 
         dashboardUpdateDebounceJob = scope.launch(bgDispatcher) {
             val isVisible = siteSelected
                 ?.dashboardCardsAndItems
-                ?.filterIsInstance<MySiteCardAndItem.Card.DashboardCards>()
+                ?.filterIsInstance<DashboardCards>()
                 ?.firstOrNull()
                 ?.cards
                 ?.any {
@@ -82,7 +84,7 @@ class PlansCardUtils @Inject constructor(
         }
     }
 
-    fun onResume(currentTab: MySiteTabType, siteSelected: MySiteViewModel.State.SiteSelected?) {
+    fun onResume(currentTab: MySiteTabType, siteSelected: SiteSelected?) {
         if (currentTab == MySiteTabType.DASHBOARD) {
             onDashboardRefreshed(siteSelected)
         } else {
@@ -91,27 +93,27 @@ class PlansCardUtils @Inject constructor(
         }
     }
 
-    fun onSiteChanged(siteId: Int?, siteSelected: MySiteViewModel.State.SiteSelected?) {
+    fun onSiteChanged(siteId: Int?, siteSelected: SiteSelected?) {
         if (currentSite.getAndSet(siteId) != siteId) {
             plansCardVisible.set(null)
             onDashboardRefreshed(siteSelected)
         }
     }
 
-    fun trackCardTapped(siteSelected: MySiteViewModel.State.SiteSelected?) {
+    fun trackCardTapped(siteSelected: SiteSelected?) {
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_TAPPED,
             mapOf(POSITION_INDEX to positionIndex(siteSelected))
         )
     }
 
-    fun trackCardMoreMenuTapped(siteSelected: MySiteViewModel.State.SiteSelected?) {
+    fun trackCardMoreMenuTapped(siteSelected: SiteSelected?) {
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_MORE_MENU_TAPPED,
             mapOf(POSITION_INDEX to positionIndex(siteSelected))
         )
     }
-    fun trackCardHiddenByUser(siteSelected: MySiteViewModel.State.SiteSelected?) {
+    fun trackCardHiddenByUser(siteSelected: SiteSelected?) {
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_HIDDEN,
             mapOf(POSITION_INDEX to positionIndex(siteSelected))
@@ -134,7 +136,7 @@ class PlansCardUtils @Inject constructor(
                 plansFreeToPaidFeatureConfig.isEnabled()
     }
 
-    private fun positionIndex(siteSelected: MySiteViewModel.State.SiteSelected?): Int {
+    private fun positionIndex(siteSelected: SiteSelected?): Int {
         return siteSelected
             ?.dashboardCardsAndItems
             ?.filterIsInstance<MySiteCardAndItem.Card.DashboardCards>()
@@ -145,7 +147,7 @@ class PlansCardUtils @Inject constructor(
             } ?: -1
     }
 
-    private fun onDashboardRefreshed(siteSelected: MySiteViewModel.State.SiteSelected?) {
+    private fun onDashboardRefreshed(siteSelected: SiteSelected?) {
         plansCardVisible.get()?.let { isVisible ->
             if (isVisible) trackCardShown(positionIndex(siteSelected))
             waitingToTrack.set(false)
@@ -153,6 +155,8 @@ class PlansCardUtils @Inject constructor(
             waitingToTrack.set(true)
         }
     }
+
+    fun hasCustomDomain(domains: List<DomainModel>?) = domains?.any { !it.wpcomDomain } == true
 
     companion object {
         const val POSITION_INDEX = "position_index"
