@@ -237,7 +237,7 @@ class SiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
-    fun onSiteDesignSelected(siteDesign: String) {
+    fun onDesignSelected(siteDesign: String) {
         siteCreationState = siteCreationState.copy(siteDesign = siteDesign)
         wizardManager.showNextStep()
     }
@@ -301,6 +301,7 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onCheckoutResult(event: DomainRegistrationCompletedEvent?) {
         if (event == null) return onBackPressed()
+        domainsRegistrationTracker.trackDomainsPurchaseDomainSuccess(isSiteCreation = true)
         siteCreationState = siteCreationState.run {
             check(result is CreatedButNotFetched.InCart)
             copy(

@@ -303,6 +303,30 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `click on the create site button tracks the selected free domain`() = testWithSuccessResponse {
+        val selectedDomain = mockDomain("test.domain")
+        val expectedCost = "Free"
+        whenever(selectedDomain.cost).thenReturn(expectedCost)
+        viewModel.onDomainSelected(selectedDomain)
+
+        viewModel.onCreateSiteBtnClicked()
+
+        verify(tracker).trackDomainSelected(selectedDomain.domainName, "", expectedCost)
+    }
+
+    @Test
+    fun `click on the create site button tracks the selected paid domain`() = testWithSuccessResponse {
+        val selectedDomain = mockDomain("test.domain", free = false)
+        val expectedCost = "1.23 USD"
+        whenever(selectedDomain.cost).thenReturn(expectedCost)
+        viewModel.onDomainSelected(selectedDomain)
+
+        viewModel.onCreateSiteBtnClicked()
+
+        verify(tracker).trackDomainSelected(selectedDomain.domainName, "", expectedCost)
+    }
+
+    @Test
     fun verifyFetchFreeDomainsWhenPurchasingFeatureConfigIsDisabled() = testWithSuccessResponse {
         viewModel.start()
 

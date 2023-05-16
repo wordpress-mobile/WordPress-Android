@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
@@ -33,7 +34,8 @@ class MySiteSourceManager @Inject constructor(
     private val bloggingPromptCardSource: BloggingPromptCardSource,
     promoteWithBlazeCardSource: PromoteWithBlazeCardSource,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val dashboardCardDomainSource: DashboardCardDomainSource
+    private val dashboardCardDomainSource: DashboardCardDomainSource,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
         selectedSiteSource,
@@ -50,7 +52,8 @@ class MySiteSourceManager @Inject constructor(
     )
 
     private val showDashboardCards: Boolean
-        get() = selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi == true
+        get() = selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi == true &&
+                jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()
 
     private val allSupportedMySiteSources: List<MySiteSource<*>>
         get() = if (showDashboardCards) {
