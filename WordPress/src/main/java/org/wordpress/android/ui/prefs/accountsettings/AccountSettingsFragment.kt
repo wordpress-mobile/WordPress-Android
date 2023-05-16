@@ -45,6 +45,7 @@ import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.USERN
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.USERNAME_CHANGE_SCREEN_DISPLAYED
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.WEB_ADDRESS_CHANGED
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountSettingsUiState
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.ChangePasswordSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.EmailSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.PrimarySiteSettingsUiState
@@ -100,6 +101,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         addPreferencesFromResource(R.xml.account_settings)
         bindPreferences()
         setUpListeners()
+        observeAccountClosureEvents()
         emailPreference.configure(
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
             validationType = EMAIL
@@ -125,6 +127,30 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         changePasswordPreference = findPreference(getString(R.string.pref_key_change_password))
                 as EditTextPreferenceWithValidation
         changePasswordPreference.summary = EMPTY_STRING
+    }
+
+    private fun observeAccountClosureEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.userActionEvents.collect { handleUserAction(it) }
+            }
+        }
+        lifecycleScope.launch {
+            // Using `CREATED` state here prevents tracking duplicate events
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.accountClosureUiState.collect {
+                    when (it) {
+                        is AccountClosureUiState.Opened.Error -> {
+                            analyticsTracker.trackAccountClosureFailure(it.errorType.token)
+                        }
+                        is AccountClosureUiState.Opened.Success -> {
+                            analyticsTracker.trackAccountClosureSuccess()
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
     }
 
     private fun setUpListeners() {
@@ -187,11 +213,6 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     private fun observeAccountSettingsViewState() {
         this.lifecycleScope.launchWhenStarted {
             viewModel.accountSettingsUiState.collect { updateAccountSettings(it) }
-        }
-        this.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.userActionEvents.collect { handleUserAction(it) }
-            }
         }
     }
 
