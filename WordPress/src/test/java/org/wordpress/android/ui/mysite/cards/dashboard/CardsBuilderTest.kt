@@ -26,6 +26,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
@@ -40,6 +41,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.CREATE
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.DRAFT
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardDomainCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @ExperimentalCoroutinesApi
@@ -61,6 +63,9 @@ class CardsBuilderTest : BaseUnitTest() {
     lateinit var dashboardDomainCardBuilder: DashboardDomainCardBuilder
 
     @Mock
+    lateinit var plansCardBuilder: PlansCardBuilder
+
+    @Mock
     lateinit var pagesCardBuilder: PagesCardBuilder
 
     @Mock
@@ -76,6 +81,7 @@ class CardsBuilderTest : BaseUnitTest() {
             bloggingPromptCardsBuilder,
             promoteWithBlazeCardBuilder,
             dashboardDomainCardBuilder,
+            plansCardBuilder,
             pagesCardBuilder,
             activityCardBuilder
         )
@@ -330,6 +336,9 @@ class CardsBuilderTest : BaseUnitTest() {
                     mock()
                 ),
                 dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
+                    isEligibleForDomainCard, mock(), mock(), mock()
+                ),
+                dashboardCardPlansBuilderParams = DashboardCardPlansBuilderParams(
                     isEligibleForDomainCard, mock(), mock(), mock()
                 ),
                 pagesCardBuilderParams = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
