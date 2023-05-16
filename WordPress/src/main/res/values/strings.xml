@@ -3300,7 +3300,7 @@
 
     <string name="virtual_homepage_title">Homepage</string>
     <string name="virtual_homepage_subtitle">Your homepage is using a Theme template and will open in the web editor.</string>
-    <string name="virtual_homepage_learn_more">Theme template</string>
+    <string name="virtual_homepage_learn_more">Learn more about templates</string>
 
     <!-- Posts -->
     <string name="post_list_author">Post author</string>
