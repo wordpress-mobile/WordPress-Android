@@ -2,7 +2,7 @@
 
 22.5
 -----
-
+* [**] [Jetpack-only] Block Editor: Enable VideoPress block (only on Simple WPCOM sites) [https://github.com/wordpress-mobile/WordPress-Android/pull/18440]
 
 22.4
 -----
