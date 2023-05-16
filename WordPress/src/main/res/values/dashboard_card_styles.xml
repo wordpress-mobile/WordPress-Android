@@ -41,6 +41,13 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="MySiteCardWithoutPostTitle" parent="dashboard_card_small_title">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+
     <style name="MySitePostItemExcerpt" parent="dashboard_card_card_detail">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:maxLines">1</item>
