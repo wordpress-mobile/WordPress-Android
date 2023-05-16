@@ -72,6 +72,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBL
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PagesViewModel
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewSource
 import org.wordpress.android.widgets.WPSnackbar
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -567,9 +568,14 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         viewModel.openSiteEditorWebView.observe(viewLifecycleOwner) { data ->
             with(data) {
                 if (isSelfHostedAdmin) {
-                    WPWebViewActivity.openURL(activity, url, null, css)
+                    WPWebViewActivity.openURL(activity, url, css, WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE)
                 } else {
-                    WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(activity, url, css)
+                    WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
+                        activity,
+                        url,
+                        css,
+                        WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE
+                    )
                 }
             }
         }
