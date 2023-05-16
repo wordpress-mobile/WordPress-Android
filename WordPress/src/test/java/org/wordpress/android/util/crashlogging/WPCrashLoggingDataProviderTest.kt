@@ -2,6 +2,9 @@ package org.wordpress.android.util.crashlogging
 
 import android.content.SharedPreferences
 import com.automattic.android.tracks.crashlogging.EventLevel.DEBUG
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.Before
@@ -31,6 +34,7 @@ import java.io.File
 import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
+@ExperimentalCoroutinesApi
 class WPCrashLoggingDataProviderTest {
     lateinit var sut: WPCrashLoggingDataProvider
 
@@ -72,10 +76,10 @@ class WPCrashLoggingDataProviderTest {
     }
 
     @Test
-    fun `should correctly reads and maps user`() {
+    fun `should correctly reads and maps user`() = runTest {
         whenever(accountStore.account).thenReturn(TEST_ACCOUNT)
 
-        val user = sut.userProvider()
+        val user = sut.user.first()
 
         assertSoftly { softly ->
             softly.assertThat(user?.username).isEqualTo(TEST_ACCOUNT.userName)
@@ -85,17 +89,17 @@ class WPCrashLoggingDataProviderTest {
     }
 
     @Test
-    fun `should not provide user if user does not exist`() {
+    fun `should not provide user if user does not exist`() = runTest {
         whenever(accountStore.account).thenReturn(null)
 
-        val user = sut.userProvider()
+        val user = sut.user.first()
 
         assertThat(user).isNull()
     }
 
     @Test
-    fun `should provide empty application context`() {
-        assertThat(sut.applicationContextProvider()).isEmpty()
+    fun `should provide empty application context`() = runTest {
+        assertThat(sut.applicationContextProvider.first()).isEmpty()
     }
 
     @Test
