@@ -127,4 +127,47 @@
         <item name="android:layout_height">@dimen/avatar_sz_extra_small</item>
     </style>
 
+    <!--My Site Card - Quick start card -->
+    <style name="MySiteCardQuickStartItemTitle" parent="dashboard_card_sub_title">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingEnd">@dimen/content_margin</item>
+    </style>
+
+    <style name="MySiteCardItemSubtitle" parent="dashboard_card_card_detail">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+    </style>
+
+    <style name="NewQuickStartTypeTitle" parent="MySiteCardQuickStartItemTitle">
+        <item name="android:singleLine">false</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
+    <style name="QuickStartTypeSubtitle" parent="MySiteCardItemSubtitle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingEnd">@dimen/content_margin</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_small</item>
+    </style>
+
+    <style name="ShapeAppearance.QuickStartTaskCardIllustration" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/quick_start_task_card_corner_radius</item>
+    </style>
+
+    <style name="DomainRegistrationCardTitle" parent="dashboard_card_sub_title">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingEnd">@dimen/content_margin</item>
+    </style>
+
 </resources>
