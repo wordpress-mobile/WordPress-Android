@@ -10,7 +10,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -18,6 +17,8 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.EditorThemeAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.AccountModel
+import org.wordpress.android.fluxc.model.EditorTheme
+import org.wordpress.android.fluxc.model.EditorThemeSupport
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -37,6 +38,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig
+import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
@@ -79,6 +81,9 @@ class PageListViewModelTest : BaseUnitTest() {
     lateinit var globalStyleSupportFeatureConfig: GlobalStyleSupportFeatureConfig
 
     @Mock
+    lateinit var siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig
+
+    @Mock
     lateinit var editorThemeStore: EditorThemeStore
 
     private lateinit var viewModel: PageListViewModel
@@ -97,9 +102,10 @@ class PageListViewModelTest : BaseUnitTest() {
             dispatcher,
             localeManagerWrapper,
             accountStore,
-            testDispatcher(),
             globalStyleSupportFeatureConfig,
             editorThemeStore,
+            siteEditorMVPFeatureConfig,
+            testDispatcher(),
         )
 
         whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(
@@ -162,6 +168,66 @@ class PageListViewModelTest : BaseUnitTest() {
         assertThat(firstItem.actionsEnabled).isEqualTo(false)
         assertDivider(pageItems[1])
         assertDivider(pageItems[2])
+    }
+
+    @Test
+    fun `on pages updates published model for Site Editor MVP and non block-based theme`() {
+        whenever(siteEditorMVPFeatureConfig.isEnabled()).thenReturn(true)
+        mockEditorThemeIsBlockBased(false)
+
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+
+        val result = mutableListOf<Triple<List<PageItem>, Boolean, Boolean>>()
+
+        viewModel.pages.observeForever { result.add(it) }
+
+        val date = Date()
+
+        pages.value = listOf(buildPageModel(1, date))
+
+        assertThat(result).hasSize(1)
+        val pageItems = result[0].first
+        assertThat(pageItems).hasSize(3)
+        val firstItem = pageItems[0] as PublishedPage
+        assertThat(firstItem.title).isEqualTo("Title 01")
+        assertThat(firstItem.date).isEqualTo(date)
+        assertThat(firstItem.actionsEnabled).isEqualTo(false)
+        assertDivider(pageItems[1])
+        assertDivider(pageItems[2])
+    }
+
+    @Test
+    fun `on pages updates published model for Site Editor MVP and block-based theme`() {
+        whenever(siteEditorMVPFeatureConfig.isEnabled()).thenReturn(true)
+        mockEditorThemeIsBlockBased(true)
+
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+
+        val result = mutableListOf<Triple<List<PageItem>, Boolean, Boolean>>()
+
+        viewModel.pages.observeForever { result.add(it) }
+
+        val date = Date()
+
+        pages.value = listOf(buildPageModel(1, date))
+
+        assertThat(result).hasSize(1)
+        val pageItems = result[0].first
+        assertThat(pageItems).hasSize(4)
+        assertThat(pageItems[0]).isInstanceOf(PageItem.VirtualHomepage::class.java)
+
+        val firstItem = pageItems[1] as PublishedPage
+        assertThat(firstItem.title).isEqualTo("Title 01")
+        assertThat(firstItem.date).isEqualTo(date)
+        assertThat(firstItem.actionsEnabled).isEqualTo(false)
+        assertDivider(pageItems[2])
+        assertDivider(pageItems[3])
     }
 
     @Test
@@ -512,6 +578,21 @@ class PageListViewModelTest : BaseUnitTest() {
         verify(editorThemeStore).getIsBlockBasedTheme(site)
     }
 
+    @Test
+    fun `onVirtualHomepageAction delegates to parent view model`() {
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+        val authorFilterSelection = MutableLiveData<AuthorFilterSelection>()
+        whenever(pagesViewModel.authorSelectionUpdated).thenReturn(authorFilterSelection)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
+
+        val action = PageItem.VirtualHomepage.Action.OPEN_SITE_EDITOR
+        viewModel.onVirtualHomepageAction(action)
+
+        verify(pagesViewModel).onVirtualHomepageAction(action)
+    }
+
     private fun buildPageModel(
         id: Int,
         date: Date = Date(0),
@@ -545,5 +626,35 @@ class PageListViewModelTest : BaseUnitTest() {
         assertThat(publishedPage.date).isEqualTo(pageModel.date)
         assertThat(publishedPage.indent).isEqualTo(indent)
         assertThat(publishedPage.actionsEnabled).isEqualTo(false)
+    }
+
+    private fun mockEditorThemeIsBlockBased(isBlockBased: Boolean) {
+        whenever(dispatcher.dispatch(any())).thenAnswer {
+            val action = it.getArgument<Action<*>>(0)
+            if (action.type == EditorThemeAction.FETCH_EDITOR_THEME) {
+                val response = EditorThemeStore.OnEditorThemeChanged(
+                    editorTheme = EditorTheme(
+                        themeSupport = EditorThemeSupport(
+                            colors = listOf(),
+                            gradients = listOf(),
+                            hasBlockTemplates = null,
+                            rawStyles = null,
+                            rawFeatures = null,
+                            isBlockBasedTheme = isBlockBased,
+                            galleryWithImageBlocks = false,
+                            quoteBlockV2 = false,
+                            listBlockV2 = false
+                        ),
+                        stylesheet = null,
+                        version = null
+                    ),
+                    siteId = site.id,
+                    causeOfChange = mock(),
+                    endpoint = mock()
+                )
+                viewModel.onEditorThemeChanged(response)
+            }
+            Unit
+        }
     }
 }

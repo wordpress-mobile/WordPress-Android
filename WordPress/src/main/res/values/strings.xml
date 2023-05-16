@@ -3298,6 +3298,10 @@
     <string name="error_media_recover_page" translatable="false">@string/error_media_recover_post</string>
     <string name="error_unknown_page_type">Unknown page format</string>
 
+    <string name="virtual_homepage_title">Homepage</string>
+    <string name="virtual_homepage_subtitle">Your homepage is using a Theme template and will open in the web editor.</string>
+    <string name="virtual_homepage_learn_more">Learn more about templates</string>
+
     <!-- Posts -->
     <string name="post_list_author">Post author</string>
     <string name="post_list_tab_published_posts">Published</string>
