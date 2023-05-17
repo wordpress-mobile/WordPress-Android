@@ -1943,6 +1943,9 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("DROP TABLE EditorTheme")
                     db.execSQL("ALTER TABLE EditorTheme_new RENAME TO EditorTheme")
                 }
+                186 -> migrate(version) {
+                    db.execSQL("ALTER TABLE AccountModel ADD USER_IP_COUNTRY_CODE TEXT")
+                }
             }
         }
         db.setTransactionSuccessful()
