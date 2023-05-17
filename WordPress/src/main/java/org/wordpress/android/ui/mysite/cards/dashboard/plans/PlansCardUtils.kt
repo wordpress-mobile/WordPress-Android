@@ -9,7 +9,6 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.DomainModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
@@ -139,7 +138,7 @@ class PlansCardUtils @Inject constructor(
     private fun positionIndex(siteSelected: SiteSelected?): Int {
         return siteSelected
             ?.dashboardCardsAndItems
-            ?.filterIsInstance<MySiteCardAndItem.Card.DashboardCards>()
+            ?.filterIsInstance<DashboardCards>()
             ?.firstOrNull()
             ?.cards
             ?.indexOfFirst {
