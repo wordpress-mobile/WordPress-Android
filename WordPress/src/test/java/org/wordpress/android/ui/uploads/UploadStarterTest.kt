@@ -193,6 +193,25 @@ class UploadStarterTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when uploading all sites, posts & pages of the sites are uploaded`() {
+        // Given
+        val connectionStatus = createConnectionStatusLiveData(null)
+        val uploadServiceFacade = createMockedUploadServiceFacade()
+        val starter = createUploadStarter(connectionStatus, uploadServiceFacade)
+
+        // When
+        starter.queueUploadFromAllSites()
+
+        // Then
+        val expectedUploadPostExecutions = draftPosts.size + draftPages.size
+        verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
+        )
+    }
+
+    @Test
     fun `when uploading a single site, only posts & pages of that site are uploaded`() {
         // Given
         val site: SiteModel = sites[1]
