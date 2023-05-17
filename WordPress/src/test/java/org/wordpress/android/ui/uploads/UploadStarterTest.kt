@@ -6,6 +6,7 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ProcessLifecycleOwner
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Test
@@ -198,6 +199,28 @@ class UploadStarterTest : BaseUnitTest() {
         val connectionStatus = createConnectionStatusLiveData(null)
         val uploadServiceFacade = createMockedUploadServiceFacade()
         val starter = createUploadStarter(connectionStatus, uploadServiceFacade)
+
+        // When
+        starter.queueUploadFromAllSites()
+
+        // Then
+        val expectedUploadPostExecutions = draftPosts.size + draftPages.size
+        verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
+        )
+    }
+
+    @Test
+    fun `given a failure, when uploading all sites, all other uploads could succeed`() {
+        // Given
+        val connectionStatus = createConnectionStatusLiveData(null)
+        val uploadServiceFacade = createMockedUploadServiceFacade()
+
+        val starter = createUploadStarter(connectionStatus, uploadServiceFacade)
+        whenever(uploadServiceFacade.uploadPost(any(), eq(draftPosts.first()), any()))
+            .thenThrow(CancellationException("fake upload error"))
 
         // When
         starter.queueUploadFromAllSites()

@@ -99,25 +99,12 @@ class UploadStarter @Inject constructor(
         processLifecycleOwner.lifecycle.addObserver(processLifecycleObserver)
     }
 
-    fun queueUploadFromAllSites() = launch {
-        val sites = siteStore.sites
-        try {
-            checkConnectionAndUpload(sites = sites)
-        } catch (e: Exception) {
-            AppLog.e(T.MEDIA, e)
-        }
-    }
+    fun queueUploadFromAllSites() = launch { checkConnectionAndUpload(sites = siteStore.sites) }
 
     /**
      * Upload all local drafts from the given [site].
      */
-    fun queueUploadFromSite(site: SiteModel) = launch {
-        try {
-            checkConnectionAndUpload(sites = listOf(site))
-        } catch (e: Exception) {
-            AppLog.e(T.MEDIA, e)
-        }
-    }
+    fun queueUploadFromSite(site: SiteModel) = launch { checkConnectionAndUpload(sites = listOf(site)) }
 
     /**
      * If there is an internet connection, uploads all posts with local changes belonging to [sites].
@@ -126,14 +113,15 @@ class UploadStarter @Inject constructor(
      * and queuing attempts ([upload]) will be canceled. The exception will be thrown by this method.
      */
     private suspend fun checkConnectionAndUpload(sites: List<SiteModel>) = coroutineScope {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            return@coroutineScope
-        }
-
-        sites.forEach {
-            launch(ioDispatcher) {
-                upload(site = it)
+        if (!networkUtilsWrapper.isNetworkAvailable()) return@coroutineScope
+        try {
+            sites.forEach {
+                launch(ioDispatcher) {
+                    upload(site = it)
+                }
             }
+        } catch (e: Exception) {
+            AppLog.e(T.MEDIA, e)
         }
     }
 
@@ -141,22 +129,23 @@ class UploadStarter @Inject constructor(
      * This is meant to be used by [checkConnectionAndUpload] only.
      */
     private suspend fun upload(site: SiteModel) = coroutineScope {
-        try {
-            mutex.withLock {
-                val posts = async { postStore.getPostsWithLocalChanges(site) }
-                val pages = async { pageStore.getPagesWithLocalChanges(site) }
-                val list = posts.await() + pages.await()
+        mutex.withLock {
+            val posts = async { postStore.getPostsWithLocalChanges(site) }
+            val pages = async { pageStore.getPagesWithLocalChanges(site) }
+            val list = posts.await() + pages.await()
+            var throwable: Throwable? = null
 
-                list.asSequence()
-                    .map { post ->
-                        val action = uploadActionUseCase.getAutoUploadAction(post, site)
-                        Pair(post, action)
-                    }
-                    .filter { (_, action) ->
-                        action != DO_NOTHING
-                    }
-                    .toList()
-                    .forEach { (post, action) ->
+            list.asSequence()
+                .map { post ->
+                    val action = uploadActionUseCase.getAutoUploadAction(post, site)
+                    Pair(post, action)
+                }
+                .filter { (_, action) ->
+                    action != DO_NOTHING
+                }
+                .toList()
+                .forEach { (post, action) ->
+                    try {
                         trackAutoUploadAction(action, post.status, post.isPage)
                         AppLog.d(
                             T.POSTS,
@@ -172,14 +161,14 @@ class UploadStarter @Inject constructor(
                             post = post,
                             trackAnalytics = false
                         )
+                    } catch (exception: CancellationException) {
+                        AppLog.e(T.POSTS, exception)
+                        throwable = exception
                     }
+                }
+            throwable?.let {
+                throw it
             }
-        } catch (e: CancellationException) {
-            AppLog.e(T.MEDIA, e)
-            // Do any needed actions while we are still holding the mutex lock, then release it and rethrow the
-            // exception so it can be handled upstream
-            mutex.unlock()
-            throw e
         }
     }
 
