@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.dashboard.domain
+package org.wordpress.android.ui.mysite.cards.dashboard.plans
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -10,22 +10,20 @@ import org.wordpress.android.fluxc.model.DomainModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardDomainCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.DashboardCardDomainFeatureConfig
 import org.wordpress.android.util.config.DashboardCardFreeToPaidPlansFeatureConfig
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 import javax.inject.Named
 
-class DashboardCardDomainUtils @Inject constructor(
+class PlansCardUtils @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val dashboardCardDomainFeatureConfig: DashboardCardDomainFeatureConfig,
     private val plansFreeToPaidFeatureConfig: DashboardCardFreeToPaidPlansFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
@@ -33,7 +31,7 @@ class DashboardCardDomainUtils @Inject constructor(
 ) {
     private var dashboardUpdateDebounceJob: Job? = null
 
-    private val domainCardVisible = AtomicReference<Boolean?>(null)
+    private val plansCardVisible = AtomicReference<Boolean?>(null)
     private val waitingToTrack = AtomicBoolean(false)
     private val currentSite = AtomicReference<Int?>(null)
 
@@ -42,8 +40,9 @@ class DashboardCardDomainUtils @Inject constructor(
         isDomainCreditAvailable: Boolean,
         hasSiteCustomDomains: Boolean?
     ): Boolean {
-        return isDashboardCardDomainEnabled() &&
-                !isDashboardCardDomainHiddenByUser(siteModel.siteId) &&
+        return isCardEnabled() &&
+                !isCardHiddenByUser(siteModel.siteId) &&
+                siteModel.hasFreePlan &&
                 (siteModel.isWPCom || siteModel.isWPComAtomic) &&
                 siteModel.isAdmin &&
                 !siteModel.isWpForTeamsSite &&
@@ -52,10 +51,10 @@ class DashboardCardDomainUtils @Inject constructor(
     }
 
     fun hideCard(siteId: Long) {
-        appPrefsWrapper.setShouldHideDashboardDomainCard(siteId, true)
+        appPrefsWrapper.setShouldHideDashboardPlansCard(siteId, true)
     }
 
-    fun trackDashboardCardDomainShown(scope: CoroutineScope, siteSelected: SiteSelected?) {
+    fun trackCardShown(scope: CoroutineScope, siteSelected: SiteSelected?) {
         // cancel any existing job (debouncing mechanism)
         dashboardUpdateDebounceJob?.cancel()
 
@@ -66,15 +65,15 @@ class DashboardCardDomainUtils @Inject constructor(
                 ?.firstOrNull()
                 ?.cards
                 ?.any {
-                        card -> card is DashboardDomainCard
+                        card -> card is DashboardPlansCard
                 } ?: false
 
             // add a delay (debouncing mechanism)
             delay(CARD_VISIBLE_DEBOUNCE)
 
-            domainCardVisible.set(isVisible)
+            plansCardVisible.set(isVisible)
             if (isVisible && waitingToTrack.getAndSet(false)) {
-                trackDomainCardShown(positionIndex(siteSelected))
+                trackCardShown(positionIndex(siteSelected))
             }
         }.also {
             it.invokeOnCompletion { cause ->
@@ -95,46 +94,45 @@ class DashboardCardDomainUtils @Inject constructor(
 
     fun onSiteChanged(siteId: Int?, siteSelected: SiteSelected?) {
         if (currentSite.getAndSet(siteId) != siteId) {
-            domainCardVisible.set(null)
+            plansCardVisible.set(null)
             onDashboardRefreshed(siteSelected)
         }
     }
 
-    fun trackDashboardCardDomainTapped(siteSelected: SiteSelected?) {
+    fun trackCardTapped(siteSelected: SiteSelected?) {
         analyticsTrackerWrapper.track(
-            AnalyticsTracker.Stat.DASHBOARD_CARD_DOMAIN_TAPPED,
+            AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_TAPPED,
             mapOf(POSITION_INDEX to positionIndex(siteSelected))
         )
     }
 
-    fun trackDashboardCardDomainMoreMenuTapped(siteSelected: SiteSelected?) {
+    fun trackCardMoreMenuTapped(siteSelected: SiteSelected?) {
         analyticsTrackerWrapper.track(
-            AnalyticsTracker.Stat.DASHBOARD_CARD_DOMAIN_MORE_MENU_TAPPED,
+            AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_MORE_MENU_TAPPED,
             mapOf(POSITION_INDEX to positionIndex(siteSelected))
         )
     }
-    fun trackDashboardCardDomainHiddenByUser(siteSelected: SiteSelected?) {
+    fun trackCardHiddenByUser(siteSelected: SiteSelected?) {
         analyticsTrackerWrapper.track(
-            AnalyticsTracker.Stat.DASHBOARD_CARD_DOMAIN_HIDDEN,
+            AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_HIDDEN,
             mapOf(POSITION_INDEX to positionIndex(siteSelected))
         )
     }
 
-    private fun trackDomainCardShown(positionIndex: Int) {
+    private fun trackCardShown(positionIndex: Int) {
         analyticsTrackerWrapper.track(
-            AnalyticsTracker.Stat.DASHBOARD_CARD_DOMAIN_SHOWN,
+            AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_SHOWN,
             mapOf(POSITION_INDEX to  positionIndex)
         )
     }
 
-    private fun isDashboardCardDomainHiddenByUser(siteId: Long): Boolean {
-        return appPrefsWrapper.getShouldHideDashboardDomainCard(siteId)
+    private fun isCardHiddenByUser(siteId: Long): Boolean {
+        return appPrefsWrapper.getShouldHideDashboardPlansCard(siteId)
     }
 
-    private fun isDashboardCardDomainEnabled(): Boolean {
+    private fun isCardEnabled(): Boolean {
         return buildConfigWrapper.isJetpackApp &&
-                !plansFreeToPaidFeatureConfig.isEnabled() &&
-                dashboardCardDomainFeatureConfig.isEnabled()
+                plansFreeToPaidFeatureConfig.isEnabled()
     }
 
     private fun positionIndex(siteSelected: SiteSelected?): Int {
@@ -144,13 +142,13 @@ class DashboardCardDomainUtils @Inject constructor(
             ?.firstOrNull()
             ?.cards
             ?.indexOfFirst {
-                it is DashboardDomainCard
+                it is DashboardPlansCard
             } ?: -1
     }
 
     private fun onDashboardRefreshed(siteSelected: SiteSelected?) {
-        domainCardVisible.get()?.let { isVisible ->
-            if (isVisible) trackDomainCardShown(positionIndex(siteSelected))
+        plansCardVisible.get()?.let { isVisible ->
+            if (isVisible) trackCardShown(positionIndex(siteSelected))
             waitingToTrack.set(false)
         } ?: run {
             waitingToTrack.set(true)

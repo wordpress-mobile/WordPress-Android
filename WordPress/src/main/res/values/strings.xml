@@ -3298,6 +3298,10 @@
     <string name="error_media_recover_page" translatable="false">@string/error_media_recover_post</string>
     <string name="error_unknown_page_type">Unknown page format</string>
 
+    <string name="virtual_homepage_title">Homepage</string>
+    <string name="virtual_homepage_subtitle">Your homepage is using a Theme template and will open in the web editor.</string>
+    <string name="virtual_homepage_learn_more">Learn more about templates</string>
+
     <!-- Posts -->
     <string name="post_list_author">Post author</string>
     <string name="post_list_tab_published_posts">Published</string>
@@ -4473,6 +4477,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="dashboard_card_domain_sub_title">Stake your claim on your corner of the web with a site address that\'s easy to find, share, and follow.</string>
     <string name="dashboard_card_domain_menu_hide_this">Hide this</string>
 
+    <!-- Dashboard Card Plans-->
+    <string name="dashboard_card_plans_title">Free domain with annual plan</string>
+    <string name="dashboard_card_plans_sub_title">Get a free domain for the first year, remove ads on your site, and increase your storage.</string>
+    <string name="dashboard_card_plans_menu_hide_this">Hide this</string>
+
     <!-- Promote Blaze Card-->
     <string name="promote_blaze_card_title">Promote your content with Blaze</string>
     <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
@@ -4544,4 +4553,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Remove blocks</string>
     <string name="gutenberg_native_loading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Loading</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Unlabeled color. %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editing reusable blocks is not yet supported on %s for Android</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editing reusable blocks is not yet supported on %s for iOS</string>
 </resources>

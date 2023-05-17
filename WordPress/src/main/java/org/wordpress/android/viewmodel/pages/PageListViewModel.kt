@@ -35,6 +35,7 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
+import org.wordpress.android.ui.pages.PageItem.VirtualHomepage
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.utils.UiString
@@ -42,6 +43,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig
+import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
 import org.wordpress.android.util.extensions.toFormattedDateString
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -66,9 +68,10 @@ class PageListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val accountStore: AccountStore,
-    @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
     private val globalStyleSupportFeatureConfig: GlobalStyleSupportFeatureConfig,
     private val editorThemeStore: EditorThemeStore,
+    private val siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig,
+    @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = _pages.map {
@@ -188,6 +191,10 @@ class PageListViewModel @Inject constructor(
         }
     }
 
+    fun onVirtualHomepageAction(action: VirtualHomepage.Action) {
+        pagesViewModel.onVirtualHomepageAction(action)
+    }
+
     fun onEmptyListNewPageButtonTapped() {
         pagesViewModel.onNewPageButtonTapped()
     }
@@ -217,7 +224,7 @@ class PageListViewModel @Inject constructor(
     }
 
     private val blazeSiteEligibilityObserver = Observer<Boolean> { _ ->
-            pagesViewModel.pages.value?.let { loadPagesAsync(it) }
+        pagesViewModel.pages.value?.let { loadPagesAsync(it) }
     }
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
@@ -307,7 +314,10 @@ class PageListViewModel @Inject constructor(
             filteredPages.sortedByDescending { it.date }.sortedBy { !it.isHomepage }
         })
 
+        val showVirtualHomepage = siteEditorMVPFeatureConfig.isEnabled() && isBlockBasedTheme.value
+
         return sortedPages
+            .let { if (showVirtualHomepage) it.filterNot { page -> page.isHomepage } else it }
             .map {
                 val pageItemIndent = if (shouldSortTopologically) {
                     getPageItemIndent(it)
@@ -338,6 +348,13 @@ class PageListViewModel @Inject constructor(
                     author = author,
                     showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                 )
+            }
+            .let {
+                if (showVirtualHomepage) {
+                    listOf(VirtualHomepage) + it
+                } else {
+                    it
+                }
             }
     }
 
@@ -530,7 +547,7 @@ class PageListViewModel @Inject constructor(
     private fun isPageBlazeEligible(pageModel: PageModel): Boolean {
         val pageStatus = PageStatus.fromPost(pageModel.post)
 
-       return listType == PUBLISHED && pageStatus != PageStatus.PRIVATE
+        return listType == PUBLISHED && pageStatus != PageStatus.PRIVATE
                 && pagesViewModel.blazeSiteEligibility.value ?: false && pageModel.post.password.isEmpty()
     }
 

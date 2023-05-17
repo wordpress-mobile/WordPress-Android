@@ -39,7 +39,7 @@ ext {
     androidxComposeBomVersion = '2023.05.01'
     androidxComposeCompilerVersion = '1.4.7'
     androidxCardviewVersion = '1.0.0'
-    androidxConstraintlayoutVersion = '1.1.3'
+    androidxConstraintlayoutVersion = '2.1.4'
     androidxConstraintlayoutComposeVersion = '1.0.1'
     androidxCoreVersion = '1.10.0'
     androidxActivityVersion = '1.7.1'
