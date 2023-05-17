@@ -567,15 +567,15 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
         viewModel.openSiteEditorWebView.observe(viewLifecycleOwner) { data ->
             with(data) {
-                if (isSelfHostedAdmin) {
-                    WPWebViewActivity.openURL(activity, url, css, WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE)
-                } else {
+                if (useWpComCredentials) {
                     WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
                         activity,
                         url,
                         css,
                         WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE
                     )
+                } else {
+                    WPWebViewActivity.openURL(activity, url, css, WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE)
                 }
             }
         }

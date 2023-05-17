@@ -250,7 +250,7 @@ class PagesViewModel
     data class SiteEditorData(
         val url: String,
         val css: String,
-        val isSelfHostedAdmin: Boolean,
+        val useWpComCredentials: Boolean,
     )
 
     fun start(site: SiteModel) {
@@ -746,7 +746,10 @@ class PagesViewModel
 
             is VirtualHomepage.Action.OpenSiteEditor -> {
                 _openSiteEditorWebView.postValue(
-                    SiteEditorData(action.getUrl(site), action.customCss, site.isSelfHostedAdmin)
+                    SiteEditorData(
+                        action.getUrl(site),
+                        action.customCss,
+                        useWpComCredentials = site.isWPCom || site.isWPComAtomic)
                 )
             }
         }.exhaustive
