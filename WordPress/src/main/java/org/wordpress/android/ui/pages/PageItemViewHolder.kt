@@ -21,7 +21,6 @@ import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
-import org.wordpress.android.ui.pages.PageItem.VirtualHomepage
 import org.wordpress.android.ui.pages.PageItem.VirtualHomepage.Action
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiHelpers
