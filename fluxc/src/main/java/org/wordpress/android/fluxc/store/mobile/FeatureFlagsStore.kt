@@ -48,7 +48,7 @@ class FeatureFlagsStore @Inject constructor(
 
     // This returns a list because there can be multiple values for a single key.
     // It will be the client's responsibility to decide which value to use.
-    fun getFeatureFlag(key: String): List<FeatureFlag> {
+    fun getFeatureFlagsByKey(key: String): List<FeatureFlag> {
         return featureFlagConfigDao.getFeatureFlag(key)
     }
 
