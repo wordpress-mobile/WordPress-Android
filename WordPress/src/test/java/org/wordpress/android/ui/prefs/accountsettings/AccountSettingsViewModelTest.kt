@@ -80,7 +80,7 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `The initial primarysite is shown from cached account settings`() = test {
+    fun `The initial primary site is shown from cached account settings`() = test {
         uiState.primarySiteSettingsUiState.primarySite?.siteId?.let {
             assertThat(it).isEqualTo(getAccountUseCase.account.primarySiteId)
         }
