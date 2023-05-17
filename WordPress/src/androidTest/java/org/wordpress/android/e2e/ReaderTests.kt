@@ -2,6 +2,7 @@ package org.wordpress.android.e2e
 
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.wordpress.android.e2e.pages.ReaderPage
 import org.wordpress.android.support.BaseTest
@@ -16,6 +17,7 @@ class ReaderTests : BaseTest() {
     }
 
     @Test
+    @Ignore("Skipped due to increased flakiness. See build-and-ship channel for 17.05.2023")
     fun e2eNavigateThroughPosts() {
         ReaderPage()
             .tapFollowingTab()
@@ -29,6 +31,7 @@ class ReaderTests : BaseTest() {
     }
 
     @Test
+    @Ignore("Skipped due to increased flakiness. See build-and-ship channel for 17.05.2023")
     fun e2eLikePost() {
         ReaderPage()
             .tapFollowingTab()

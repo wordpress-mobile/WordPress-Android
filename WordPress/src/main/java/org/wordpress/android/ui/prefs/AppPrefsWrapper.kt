@@ -344,6 +344,12 @@ class AppPrefsWrapper @Inject constructor() {
     fun setShouldHideDashboardDomainCard(siteId: Long, isHidden: Boolean) =
         AppPrefs.setShouldHideDashboardDomainCard(siteId, isHidden)
 
+    fun getShouldHideDashboardPlansCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideDashboardPlansCard(siteId)
+
+    fun setShouldHideDashboardPlansCard(siteId: Long, isHidden: Boolean) =
+        AppPrefs.setShouldHideDashboardPlansCard(siteId, isHidden)
+
     fun incrementWPJetpackIndividualPluginOverlayShownCount() =
         AppPrefs.incrementWPJetpackIndividualPluginOverlayShownCount()
 
