@@ -7,6 +7,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.pages.PageItem.Type.DIVIDER
 import org.wordpress.android.ui.pages.PageItem.Type.EMPTY
 import org.wordpress.android.ui.pages.PageItem.Type.PAGE
+import org.wordpress.android.ui.pages.PageItem.Type.VIRTUAL_HOMEPAGE
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
@@ -188,12 +189,20 @@ sealed class PageItem(open val type: Type) {
         val isImageVisible: Boolean = true
     ) : PageItem(EMPTY)
 
+    object VirtualHomepage : PageItem(VIRTUAL_HOMEPAGE) {
+        enum class Action {
+            OPEN_SITE_EDITOR,
+            OPEN_LEARN_MORE_URL,
+        }
+    }
+
     enum class Type(val viewType: Int) {
         PAGE(1),
         DIVIDER(2),
         EMPTY(3),
         PARENT(4),
-        TOP_LEVEL_PARENT(5)
+        TOP_LEVEL_PARENT(5),
+        VIRTUAL_HOMEPAGE(6),
     }
 
     enum class Action(@IdRes val itemId: Int) {

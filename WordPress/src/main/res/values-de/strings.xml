@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-25 11:54:07+0000
+Translation-Revision-Date: 2023-05-12 14:34:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_unlabeled_color_s">Unbenannte Farbe %s</string>
+    <string name="dashboard_activity_card_footer_link">Gesamte Aktivität anzeigen</string>
+    <string name="dashboard_activity_card_title">Letzte Aktivität</string>
+    <string name="dashboard_card_domain_title">Individuelle Domain finden</string>
+    <string name="site_creation_search_domain_example_body">Wie im Beispiel oben ermöglicht eine Domain Personen, deine Website über ihren Webbrowser zu finden.</string>
+    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
+    <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
+    <string name="site_creation_domain_search_input_hint">Mit Stichwörtern suchen</string>
+    <string name="site_creation_domain_header_subtitle">Suche nach einer kurzen und einprägsamen Domain, damit Personen deine Website leicht finden und besuchen können.</string>
+    <string name="site_creation_domain_cost_sale">für das erste Jahr</string>
+    <string name="site_creation_error_cart_subtitle">Deine Website wurde erfolgreich erstellt, wir haben jedoch ein Problem festgestellt, als wir deine individuelle Domain für den Bezahlvorgang vorbereitet haben. Bitte versuche es erneut oder kontaktiere den Support, um Hilfe zu erhalten.</string>
+    <string name="new_site_creation_preview_caption_paid">Es kann bis zu 30 Minuten dauern, bis deine individuelle Domain funktioniert.</string>
+    <string name="new_site_creation_preview_subtitle_paid">Wir haben dir deinen Beleg per E-Mail gesendet. %s</string>
+    <string name="notifications_disabled_permission_dialog">Anwendungsbenachrichtigungen wurden deaktiviert. Tippe hier, um sie zu aktivieren.</string>
     <string name="jp_migration_delete_message">Wir empfehlen dir, &lt;b&gt;die WordPress-App auf deinem Gerät zu deinstallieren&lt;/b&gt;, um Datenkonflikte zu vermeiden.</string>
     <string name="jp_migration_delete_subtitle">Offenbar hast du die WordPress-App noch installiert.</string>
     <string name="jp_migration_delete_title">Du brauchst die WordPress-App nicht mehr auf deinem Gerät</string>
@@ -23,7 +37,6 @@ Language: de
     <string name="dashboard_pages_card_create_another_page_description">Beginne mit maßgeschneiderten, für Mobilgeräte geeigneten Layouts</string>
     <string name="dashboard_card_domain_menu_hide_this">Ausblenden</string>
     <string name="dashboard_card_domain_sub_title">Erobere dir dein eigenes Stück vom Internet mit einer Website-Adresse, die man leicht finden, teilen und abonnieren kann.</string>
-    <string name="dashboard_card_domain_title">Personalisiere deine Online-Identität mit einer individuellen Domain</string>
     <string name="blogging_reminders_notifications_permission_caption">Aktiviere Push-Benachrichtigungen, um Blog-Erinnerungen zu erhalten.</string>
     <string name="site_creation_domain_button_purchase_domain">Domain kaufen</string>
     <string name="permission_images">Fotos und Videos</string>
@@ -89,6 +102,7 @@ Language: de
     <string name="free">Kostenlos</string>
     <string name="tickets">Tickets</string>
     <string name="blaze_activity_title">Blaze</string>
+    <string name="site_creation_domain_cost">pro Jahr</string>
     <string name="gutenberg_native_blocks_menu">Block-Menü</string>
     <string name="promote_blaze_card_menu_hide_this">Ausblenden</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Schließen</string>
@@ -807,6 +821,7 @@ Language: de
     <string name="gutenberg_native_one">Eins</string>
     <string name="gutenberg_native_no_preview_available">Keine Vorschau verfügbar</string>
     <string name="gutenberg_native_add_title">Titel hinzufügen</string>
+    <string name="gutenberg_native_loading">Wird geladen</string>
     <string name="gutenberg_native_text_color">Textfarbe</string>
     <string name="gutenberg_native_padding">Innenabstand</string>
     <string name="gutenberg_native_featured">Beitragsbild</string>
