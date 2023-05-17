@@ -206,12 +206,10 @@ sealed class PageItem(open val type: Type) {
                 }
             }
 
-            class OpenExternalLink(
-                val url: String = TEMPLATE_SUPPORT_URL
+            sealed class OpenExternalLink(
+                val url: String
             ) : Action() {
-                companion object {
-                    const val TEMPLATE_SUPPORT_URL = "https://wordpress.com/support/templates/"
-                }
+                object TemplateSupport : OpenExternalLink("https://wordpress.com/support/templates/")
             }
         }
     }
