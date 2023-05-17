@@ -23,6 +23,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -747,7 +748,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         refreshBackForwardNavButtons();
     }
 
-    private void injectCss(String css) {
+    private void injectCss(@NonNull final String css) {
         String script = String.format(CSS_INJECTION_SCRIPT_TEMPLATE, css);
 
         new Handler().postDelayed(
