@@ -24,6 +24,7 @@
 * [*] Block editor: [List block] Fix an issue when merging a list item into a Paragraph would remove its nested list items [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5785]
 * [*] Block editor: [Gallery block] Fixes a compatibility issue with Gallery block [https://github.com/wordpress-mobile/WordPress-Android/pull/18519]
 * [**] Block editor: Tapping any type of nested block moves focus to the nested block directly, rather than requiring multiple taps to navigate down each nesting levels. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5781]
+* [*] Fixed an error when syncing offline data to the cloud. [https://github.com/wordpress-mobile/WordPress-Android/pull/18449]
 
 22.4
 -----
