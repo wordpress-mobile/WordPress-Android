@@ -213,7 +213,7 @@ class UploadStarterTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given a failure, when uploading all sites, all other uploads could succeed`() {
+    fun `given a failure, when uploading all sites, all other posts & pages are uploaded`() {
         // Given
         val connectionStatus = createConnectionStatusLiveData(null)
         val uploadServiceFacade = createMockedUploadServiceFacade()
