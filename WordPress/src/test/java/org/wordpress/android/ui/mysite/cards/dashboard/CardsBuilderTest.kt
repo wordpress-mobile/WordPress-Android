@@ -17,6 +17,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardDomainCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
@@ -63,7 +64,7 @@ class CardsBuilderTest : BaseUnitTest() {
     lateinit var dashboardDomainCardBuilder: DashboardDomainCardBuilder
 
     @Mock
-    lateinit var plansCardBuilder: PlansCardBuilder
+    lateinit var dashboardPlansCardBuilder: PlansCardBuilder
 
     @Mock
     lateinit var pagesCardBuilder: PagesCardBuilder
@@ -81,7 +82,7 @@ class CardsBuilderTest : BaseUnitTest() {
             bloggingPromptCardsBuilder,
             promoteWithBlazeCardBuilder,
             dashboardDomainCardBuilder,
-            plansCardBuilder,
+            dashboardPlansCardBuilder,
             pagesCardBuilder,
             activityCardBuilder
         )
@@ -214,6 +215,21 @@ class CardsBuilderTest : BaseUnitTest() {
         assertThat(cards.findDashboardDomainCard()).isNotNull
     }
 
+    /* PLANS CARD */
+    @Test
+    fun `when is eligible for plans card, then plans card is built`() {
+        val cards = buildDashboardCards(isEligibleForPlansCard = true)
+
+        assertThat(cards.findDashboardPlansCard()).isNotNull
+    }
+
+    @Test
+    fun `when is not eligible for plans card, then plans card is not built`() {
+        val cards = buildDashboardCards(isEligibleForPlansCard = false)
+
+        assertThat(cards.findDashboardPlansCard()).isNull()
+    }
+
     @Test
     fun `given has pages, when cards are built, then pages card is not built`() {
         val cards = buildDashboardCards(hasPagesCard = false)
@@ -260,6 +276,9 @@ class CardsBuilderTest : BaseUnitTest() {
     private fun DashboardCards.findDashboardDomainCard() =
         this.cards.find { it is DashboardDomainCard } as? DashboardDomainCard
 
+    private fun DashboardCards.findDashboardPlansCard() =
+        this.cards.find { it is DashboardPlansCard } as? DashboardPlansCard
+
     private fun DashboardCards.findPagesCard() =
         this.cards.find { it is PagesCardWithData } as? PagesCardWithData
 
@@ -275,6 +294,8 @@ class CardsBuilderTest : BaseUnitTest() {
     private val promoteWithBlazeCard = mock<PromoteWithBlazeCard>()
 
     private val dashboardDomainCard = mock<DashboardDomainCard>()
+
+    private val dashboardPlansCard = mock<DashboardPlansCard>()
 
     private val pagesCard = mock<PagesCardWithData>()
 
@@ -307,6 +328,7 @@ class CardsBuilderTest : BaseUnitTest() {
         showErrorCard: Boolean = false,
         isEligibleForBlaze: Boolean = false,
         isEligibleForDomainCard: Boolean = false,
+        isEligibleForPlansCard: Boolean = false,
         hasPagesCard: Boolean = false,
         hasActivityCard: Boolean = false
     ): DashboardCards {
@@ -317,6 +339,8 @@ class CardsBuilderTest : BaseUnitTest() {
         doAnswer { if (isEligibleForBlaze) promoteWithBlazeCard else null }.whenever(promoteWithBlazeCardBuilder)
             .build(any())
         doAnswer { if (isEligibleForDomainCard) dashboardDomainCard else null }.whenever(dashboardDomainCardBuilder)
+            .build(any())
+        doAnswer { if (isEligibleForPlansCard) dashboardPlansCard else null }.whenever(dashboardPlansCardBuilder)
             .build(any())
         doAnswer { if (hasPagesCard) pagesCard else null }.whenever(pagesCardBuilder).build(any())
         doAnswer { if (hasActivityCard) activityCard else null }.whenever(activityCardBuilder).build(any())
@@ -339,7 +363,7 @@ class CardsBuilderTest : BaseUnitTest() {
                     isEligibleForDomainCard, mock(), mock(), mock()
                 ),
                 dashboardCardPlansBuilderParams = DashboardCardPlansBuilderParams(
-                    isEligibleForDomainCard, mock(), mock(), mock()
+                    isEligibleForPlansCard, mock(), mock(), mock()
                 ),
                 pagesCardBuilderParams = MySiteCardAndItemBuilderParams.PagesCardBuilderParams(
                     mock(),

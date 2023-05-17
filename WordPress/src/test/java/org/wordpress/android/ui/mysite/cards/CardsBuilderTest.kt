@@ -184,6 +184,8 @@ class CardsBuilderTest {
         isQuickActionEnabled: Boolean = true,
         activeTask: QuickStartTask? = null,
         isDomainCreditAvailable: Boolean = false,
+        isEligibleForDomainCard: Boolean = false,
+        isEligibleForPlansCard: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         isQuickStartDynamicCardEnabled: Boolean = false,
         isMySiteTabsEnabled: Boolean = false
@@ -224,9 +226,14 @@ class CardsBuilderTest {
                     mock(),
                 ),
                 promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(true, mock(), mock(), mock()),
-                dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(true, mock(), mock(), mock()),
+                dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
+                    isEligible = isEligibleForDomainCard,
+                    mock(),
+                    mock(),
+                    mock()
+                ),
                 dashboardCardPlansBuilderParams = DashboardCardPlansBuilderParams(
-                    true,
+                    isEligible = isEligibleForPlansCard,
                     mock(),
                     mock(),
                     mock()
