@@ -318,7 +318,7 @@ class AccountSettingsViewModel @Inject constructor(
 
     fun openAccountClosureDialog() {
         launch {
-            _accountClosureUiState.value = if (false) {
+            _accountClosureUiState.value = if (getSitesUseCase.getAtomic().isNotEmpty()) {
                 Error(CloseAccountResult.ErrorType.ATOMIC_SITE)
             } else {
                 Default(username = getAccountUseCase.account.userName)
