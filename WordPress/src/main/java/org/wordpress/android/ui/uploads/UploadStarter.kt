@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ProcessLifecycleOwner
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -48,6 +47,7 @@ import kotlin.coroutines.CoroutineContext
  */
 @Singleton
 @OpenForTesting
+@Suppress("LongParameterList")
 class UploadStarter @Inject constructor(
     private val appContext: Context,
     private val dispatcher: Dispatcher,
@@ -94,9 +94,7 @@ class UploadStarter @Inject constructor(
     fun activateAutoUploading(processLifecycleOwner: ProcessLifecycleOwner) {
         // We're skipping the first emitted value because the processLifecycleObserver below will also trigger an
         // immediate upload.
-        connectionStatus.skip(1).observe(processLifecycleOwner, Observer {
-            queueUploadFromAllSites()
-        })
+        connectionStatus.skip(1).observe(processLifecycleOwner) { queueUploadFromAllSites() }
 
         processLifecycleOwner.lifecycle.addObserver(processLifecycleObserver)
     }
@@ -161,7 +159,7 @@ class UploadStarter @Inject constructor(
                     .forEach { (post, action) ->
                         trackAutoUploadAction(action, post.status, post.isPage)
                         AppLog.d(
-                            AppLog.T.POSTS,
+                            T.POSTS,
                             "UploadStarter for post (isPage: ${post.isPage}) title: ${post.title}, action: $action"
                         )
                         dispatcher.dispatch(
