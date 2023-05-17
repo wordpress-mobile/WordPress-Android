@@ -1,5 +1,0 @@
-22.2:
-- Aggiunto messaggio di avviso per quando le notifiche push sono disattivate
-- Autorizzazioni di accesso ai contenuti multimediali aggiornate per allinearsi all'aggiornamento di Android 13
-- Aggiunta alla bacheca scheda per l'acquisto di domini personalizzati
-- Aggiunte le risposte di altri utenti alle richieste di blog

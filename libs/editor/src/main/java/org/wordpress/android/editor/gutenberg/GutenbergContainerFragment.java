@@ -25,6 +25,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOpt
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentInterrupted;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestEmbedFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
@@ -73,6 +74,8 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnMediaEditorListener onMediaEditorListener,
                                   OnGutenbergDidRequestUnsupportedBlockFallbackListener
                                           onGutenbergDidRequestUnsupportedBlockFallbackListener,
+                                  OnGutenbergDidRequestEmbedFullscreenPreviewListener
+                                          onGutenbergDidRequestEmbedFullscreenPreviewListener,
                                   OnGutenbergDidSendButtonPressedActionListener
                                           onGutenbergDidSendButtonPressedActionListener,
                                   ShowSuggestionsUtil showSuggestionsUtil,
@@ -98,6 +101,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onImageFullscreenPreviewListener,
                     onMediaEditorListener,
                     onGutenbergDidRequestUnsupportedBlockFallbackListener,
+                    onGutenbergDidRequestEmbedFullscreenPreviewListener,
                     onGutenbergDidSendButtonPressedActionListener,
                     showSuggestionsUtil,
                     onMediaFilesCollectionBasedBlockEditorListener,

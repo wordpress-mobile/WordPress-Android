@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-20 08:54:43+0000
+Translation-Revision-Date: 2023-05-02 10:06:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_unlabeled_color_s">Color sin etiquetar. %s</string>
+    <string name="dashboard_activity_card_footer_link">Ver toda la actividad</string>
+    <string name="dashboard_activity_card_title">Actividad reciente</string>
+    <string name="dashboard_card_domain_title">Encuentra un dominio personalizado</string>
+    <string name="site_creation_search_domain_example_body">Como en el ejemplo superior, un dominio le permite a la gente encontrar y visitar tu sitio desde su navegador.</string>
+    <string name="site_creation_search_domain_example_title">Elnombredetuweb.com</string>
+    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
+    <string name="site_creation_domain_search_input_hint">Buscar con palabras clave</string>
+    <string name="site_creation_domain_header_subtitle">Busca una dominio corto y memorable para ayudar a la gente a encontrar y visitar tu sitio.</string>
+    <string name="site_creation_domain_cost_sale">el primer año</string>
+    <string name="site_creation_error_cart_subtitle">Tu web ha sido creada con éxito, pero hemos encontrado un problema al preparar tu dominio personalizado al finalizar la compra. Por favor, inténtalo otra vez o contacta con nuestro soporte para obtener ayuda.</string>
+    <string name="new_site_creation_preview_caption_paid">Puede tardar hasta 30 minutos en que tu dominio personalizado empiece a funcionar.</string>
+    <string name="new_site_creation_preview_subtitle_paid">Te hemos mandado tu recibo por correo electrónico. %s</string>
+    <string name="notifications_disabled_permission_dialog">Las notificaciones de la App han sido desactivadas. Pulsa aquí para activarlas.</string>
     <string name="jp_migration_delete_message">Recomendamos &lt;b&gt;desinstalar la aplicación WordPress&lt;/b&gt; en tu dispositivo para evitar conflictos de datos.</string>
     <string name="jp_migration_delete_subtitle">Parece que todavía tienes la aplicación WordPress instalada.</string>
     <string name="jp_migration_delete_title">Ya no necesitas la aplicación WordPress en tu dispositivo</string>
@@ -23,7 +37,6 @@ Language: es
     <string name="dashboard_pages_card_no_pages_create_page_button">Añadir páginas a tu sitio</string>
     <string name="dashboard_card_domain_menu_hide_this">Ocultar esto</string>
     <string name="dashboard_card_domain_sub_title">Hazte con tu rincón en Internet con una dirección web fácil de encontrar, de compartir y de seguir.</string>
-    <string name="dashboard_card_domain_title">Sé el dueño de tu identidad online con un dominio propio</string>
     <string name="blogging_reminders_notifications_permission_caption">Para usar recordatorios para publicar tienes que activar los avisos instantáneos.</string>
     <string name="blogging_reminders_notifications_permission_title">Activar los avisos instantáneos</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Continuar con subdominio</string>
@@ -82,6 +95,7 @@ Language: es
     <string name="site_creation_domain_tag_sale">Oferta</string>
     <string name="site_creation_domain_tag_recommended">Recomendado</string>
     <string name="site_creation_domain_tag_best_alternative">Mejor alternativa</string>
+    <string name="site_creation_domain_cost">al año</string>
     <string name="me_btn_help">Ayuda</string>
     <string name="support_faq_caption">Con nuestras preguntas frecuentes podrás resolver algunas de tus dudas.</string>
     <string name="support_faq_title">¡Gracias por cambiar a la aplicación Jetpack!</string>
@@ -807,6 +821,7 @@ Language: es
     <string name="gutenberg_native_one">Uno</string>
     <string name="gutenberg_native_add_title">Añadir título</string>
     <string name="gutenberg_native_no_preview_available">Vista previa no disponible</string>
+    <string name="gutenberg_native_loading">Cargando</string>
     <string name="gutenberg_native_text_color">Color del texto</string>
     <string name="gutenberg_native_padding">Relleno</string>
     <string name="gutenberg_native_four">Cuatro</string>

@@ -202,6 +202,14 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         }
     }
 
+
+    @Test
+    fun `on checkout result when not null tracks domain purchase success`() {
+        viewModel.onCartCreated(CHECKOUT_DETAILS)
+        viewModel.onCheckoutResult(CHECKOUT_EVENT)
+        verify(domainsRegistrationTracker).trackDomainsPurchaseDomainSuccess(true)
+    }
+
     @Test
     fun `on site created updates result`() = test {
         viewModel.onDomainsScreenFinished(FREE_DOMAIN)

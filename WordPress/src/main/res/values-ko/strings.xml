@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-25 13:54:07+0000
+Translation-Revision-Date: 2023-05-03 14:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_unlabeled_color_s">레이블이 없는 색상입니다. %s</string>
+    <string name="dashboard_activity_card_footer_link">모든 활동 보기</string>
+    <string name="dashboard_activity_card_title">최근 활동</string>
+    <string name="dashboard_card_domain_title">사용자 정의 도메인 찾기</string>
+    <string name="site_creation_search_domain_example_body">위의 예와 같이 사용자가 웹 브라우저에서 도메인을 통해 사이트를 찾고 방문할 수 있습니다.</string>
+    <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
+    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
+    <string name="site_creation_domain_search_input_hint">키워드로 검색</string>
+    <string name="site_creation_domain_header_subtitle">사용자가 사이트를 찾고 방문하는 데 도움이 되는 짧고 기억하기 쉬운 도메인을 검색하세요.</string>
+    <string name="site_creation_domain_cost_sale">첫해 동안</string>
+    <string name="site_creation_error_cart_subtitle">웹사이트가 생성되었지만, 체크아웃용 사용자 정의 도메인을 준비하는 동안 문제가 발생했습니다. 다시 시도하거나 지원팀에 도움을 문의하세요.</string>
+    <string name="new_site_creation_preview_caption_paid">사용자 정의 도메인이 작동하기 시작하려면 30분 정도 걸릴 수 있습니다.</string>
+    <string name="new_site_creation_preview_subtitle_paid">영수증을 이메일로 보내드렸습니다. %s</string>
+    <string name="notifications_disabled_permission_dialog">앱 알림이 비활성화되었습니다. 활성화하려면 여기를 누르세요.</string>
     <string name="jp_migration_delete_message">데이터가 충돌하지 않도록 기기에서 &lt;b&gt;워드프레스 앱을 제거&lt;/b&gt;하는 것이 좋습니다.</string>
     <string name="jp_migration_delete_subtitle">아직 워드프레스 앱이 설치되어 있는 것 같습니다.</string>
     <string name="jp_migration_delete_title">더는 기기에 워드프레스 앱이 필요하지 않습니다.</string>
@@ -23,7 +37,6 @@ Language: ko_KR
     <string name="dashboard_pages_card_no_pages_create_page_button">사이트에 페이지 추가</string>
     <string name="dashboard_card_domain_menu_hide_this">숨기기</string>
     <string name="dashboard_card_domain_sub_title">찾고 공유하고 팔로우하기 쉬운 사이트 주소로 웹 코너에 대한 권리를 주장하세요.</string>
-    <string name="dashboard_card_domain_title">사용자 정의 도메인으로 온라인 정체성 소유</string>
     <string name="blogging_reminders_notifications_permission_caption">블로깅 알림을 사용하려면 푸시 알림을 켜야 합니다.</string>
     <string name="blogging_reminders_notifications_permission_title">푸시 알림 켜기</string>
     <string name="site_creation_domain_button_continue_with_subdomain">하위 도메인으로 계속</string>
@@ -82,6 +95,7 @@ Language: ko_KR
     <string name="site_creation_domain_tag_sale">세일</string>
     <string name="site_creation_domain_tag_recommended">권장</string>
     <string name="site_creation_domain_tag_best_alternative">최선의 대안</string>
+    <string name="site_creation_domain_cost">연간</string>
     <string name="me_btn_help">도움말</string>
     <string name="support_faq_caption">궁금할 수도 있는 일반적인 질문에 대한 답변은 FAQ를 참조하세요.</string>
     <string name="support_faq_title">젯팩 앱으로 전환해 주셔서 감사합니다!</string>
@@ -807,6 +821,7 @@ Language: ko_KR
     <string name="gutenberg_native_one">1</string>
     <string name="gutenberg_native_add_title">제목 추가</string>
     <string name="gutenberg_native_no_preview_available">사용 가능한 미리보기 없음</string>
+    <string name="gutenberg_native_loading">로드하는 중</string>
     <string name="gutenberg_native_text_color">텍스트 색상</string>
     <string name="gutenberg_native_padding">안쪽 여백</string>
     <string name="gutenberg_native_four">4</string>

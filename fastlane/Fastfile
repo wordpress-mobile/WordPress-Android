@@ -48,11 +48,13 @@ REPOSITORY_NAME = 'WordPress-Android'
 ########################################################################
 # Import domain-specific lanes
 ########################################################################
+import 'helpers/github.rb'
 import 'lanes/build.rb'
 import 'lanes/localization.rb'
 import 'lanes/release.rb'
 import 'lanes/screenshots.rb'
 import 'lanes/test.rb'
+import 'lanes/release_management_in_ci.rb'
 
 default_platform(:android)
 

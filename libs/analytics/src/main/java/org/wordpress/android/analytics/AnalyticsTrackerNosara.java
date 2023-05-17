@@ -2581,6 +2581,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "direct_domains_purchase_dashboard_card_menu_tapped";
             case DASHBOARD_CARD_DOMAIN_HIDDEN:
                 return "direct_domains_purchase_dashboard_card_hidden";
+            case DASHBOARD_CARD_PLANS_SHOWN:
+                return "free_to_paid_plan_dashboard_card_shown";
+            case DASHBOARD_CARD_PLANS_TAPPED:
+                return "free_to_paid_plan_dashboard_card_tapped";
+            case DASHBOARD_CARD_PLANS_MORE_MENU_TAPPED:
+                return "free_to_paid_plan_dashboard_card_menu_tapped";
+            case DASHBOARD_CARD_PLANS_HIDDEN:
+                return "free_to_paid_plan_dashboard_card_hidden";
         }
         return null;
     }
