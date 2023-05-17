@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
@@ -10,6 +11,7 @@ import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainSource
+import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardDomainSource
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
@@ -33,7 +35,9 @@ class MySiteSourceManager @Inject constructor(
     private val bloggingPromptCardSource: BloggingPromptCardSource,
     promoteWithBlazeCardSource: PromoteWithBlazeCardSource,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val dashboardCardDomainSource: DashboardCardDomainSource
+    dashboardCardDomainSource: DashboardCardDomainSource,
+    plansCardDomainSource: PlansCardDomainSource,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
         selectedSiteSource,
@@ -46,11 +50,13 @@ class MySiteSourceManager @Inject constructor(
         cardsSource,
         bloggingPromptCardSource,
         promoteWithBlazeCardSource,
-        dashboardCardDomainSource
+        dashboardCardDomainSource,
+        plansCardDomainSource
     )
 
     private val showDashboardCards: Boolean
-        get() = selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi == true
+        get() = selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi == true &&
+                jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()
 
     private val allSupportedMySiteSources: List<MySiteSource<*>>
         get() = if (showDashboardCards) {

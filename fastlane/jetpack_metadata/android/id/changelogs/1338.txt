@@ -1,5 +1,0 @@
-22.2:
-- Menambahkan pesan peringatan ketika pemberitahuan push dinonaktifkan
-- Memperbarui izin akses media agar sesuai dengan pembaruan Android 13
-- Menambahkan kartu ke dasbor untuk membeli domain kustom 
-- Menambahkan respons pengguna lain ke prompt blogging

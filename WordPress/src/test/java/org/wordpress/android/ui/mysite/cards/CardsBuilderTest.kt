@@ -22,6 +22,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
@@ -183,6 +184,8 @@ class CardsBuilderTest {
         isQuickActionEnabled: Boolean = true,
         activeTask: QuickStartTask? = null,
         isDomainCreditAvailable: Boolean = false,
+        isEligibleForDomainCard: Boolean = false,
+        isEligibleForPlansCard: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         isQuickStartDynamicCardEnabled: Boolean = false,
         isMySiteTabsEnabled: Boolean = false
@@ -223,7 +226,18 @@ class CardsBuilderTest {
                     mock(),
                 ),
                 promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(true, mock(), mock(), mock()),
-                dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(true, mock(), mock(), mock()),
+                dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
+                    isEligible = isEligibleForDomainCard,
+                    mock(),
+                    mock(),
+                    mock()
+                ),
+                dashboardCardPlansBuilderParams = DashboardCardPlansBuilderParams(
+                    isEligible = isEligibleForPlansCard,
+                    mock(),
+                    mock(),
+                    mock()
+                ),
                 pagesCardBuilderParams = PagesCardBuilderParams(mock(), mock(), mock()),
                 activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock()),
             ),

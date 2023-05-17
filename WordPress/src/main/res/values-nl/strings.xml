@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-27 20:42:53+0000
+Translation-Revision-Date: 2023-05-12 14:37:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_unlabeled_color_s">Niet-gelabelde kleur. %s</string>
+    <string name="dashboard_activity_card_footer_link">Alle activiteit bekijken</string>
+    <string name="dashboard_activity_card_title">Recente activiteit</string>
+    <string name="dashboard_card_domain_title">Een aangepast domein zoeken</string>
+    <string name="site_creation_search_domain_example_body">Zoals je kunt zien in het bovenstaande voorbeeld, helpt een domein mensen bij het vinden en bezoeken van jouw site vanuit hun internetbrowser.</string>
+    <string name="site_creation_search_domain_example_title">JouwSiteNaam.com</string>
+    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
+    <string name="site_creation_domain_search_input_hint">Zoeken op trefwoorden</string>
+    <string name="site_creation_domain_header_subtitle">Zoek naar een korte maar onvergetelijke domeinnaam die mensen helpt bij het vinden en bezoeken van jouw site.</string>
+    <string name="site_creation_domain_cost_sale">voor het eerste jaar</string>
+    <string name="site_creation_error_cart_subtitle">Je website is aangemaakt, maar er is een probleem opgetreden bij je aangepaste domein voorbereiden op het afrekenen. Probeer het nog eens of neem contact met ons op voor hulp.</string>
+    <string name="new_site_creation_preview_caption_paid">Het kan tot 30 minuten duren voor je aangepaste domein werkt.</string>
+    <string name="new_site_creation_preview_subtitle_paid">We hebben je betalingsbewijs naar je gemaild. %s</string>
+    <string name="notifications_disabled_permission_dialog">Appmeldingen zijn uitgeschakeld. Tik hier om ze in te schakelen.</string>
     <string name="jp_migration_delete_message">We raden je aan om &lt;b&gt;de WordPress-app van je apparaat te verwijderen&lt;/b&gt; om gegevensconflicten te vermijden.</string>
     <string name="jp_migration_delete_subtitle">Het lijkt erop dat je de WordPress-app nog steeds geïnstalleerd hebt.</string>
     <string name="jp_migration_delete_title">Je hebt de WordPress-app niet meer nodig op je apparaat</string>
@@ -23,7 +37,6 @@ Language: nl
     <string name="dashboard_pages_card_no_pages_create_page_button">Voeg pagina\'s toe aan je site</string>
     <string name="dashboard_card_domain_menu_hide_this">Dit verbergen</string>
     <string name="dashboard_card_domain_sub_title">Eis je eigen hoekje van het internet op met een site-adres dat eenvoudig te vinden, te delen en te volgen is.</string>
-    <string name="dashboard_card_domain_title">Bemachtig je eigen online identiteit met een aangepast domein</string>
     <string name="blogging_reminders_notifications_permission_caption">Als je blog herinneringen wilt gebruiken, moet je berichtgeving inschakelen.</string>
     <string name="blogging_reminders_notifications_permission_title">Zet berichtgeving aan</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Doorgaan met subdomein</string>
@@ -82,6 +95,7 @@ Language: nl
     <string name="site_creation_domain_tag_sale">Aanbieding!</string>
     <string name="site_creation_domain_tag_recommended">Aanbevolen</string>
     <string name="site_creation_domain_tag_best_alternative">Beste alternatief</string>
+    <string name="site_creation_domain_cost">per jaar</string>
     <string name="me_btn_help">Hulp</string>
     <string name="support_faq_caption">Bekijk onze pagina met veelgestelde vragen om mogelijke antwoorden te vinden op jouw vragen.</string>
     <string name="support_faq_title">Bedankt voor het overschakelen naar de Jetpack-app!</string>
@@ -807,6 +821,7 @@ Language: nl
     <string name="gutenberg_native_one">Eén</string>
     <string name="gutenberg_native_add_title">Titel toevoegen</string>
     <string name="gutenberg_native_no_preview_available">Geen voorbeeld beschikbaar</string>
+    <string name="gutenberg_native_loading">Laden</string>
     <string name="gutenberg_native_text_color">Tekstkleur</string>
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_four">Vier</string>

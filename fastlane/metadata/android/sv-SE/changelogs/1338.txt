@@ -1,3 +1,0 @@
-22.2:
-- Vi har lagt till en gul varningsruta som meddelar dig när aviseringar och bloggningspåminnelser inte längre skickas till din enhet som push-notiser.
-- Behörigheterna för mediaåtkomst har uppdaterats för foton, videoklipp och ljudfiler för att passa med Android 13-uppdateringen

@@ -1,5 +1,0 @@
-22.2:
-- Een waarschuwingsmelding toegevoegd voor wanneer pushmeldingen worden uitgeschakeld
-- De toegangsmachtigingen voor media bijgewerkt zodat ze aansluiten op de Android 13-update
-- Een kaart voor het kopen van aangepaste domeinen aan het dashboard toegevoegd
-- De reacties van anderen op blogmeldingen toegevoegd

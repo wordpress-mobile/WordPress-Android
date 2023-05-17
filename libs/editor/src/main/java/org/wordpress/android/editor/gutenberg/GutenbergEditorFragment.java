@@ -60,6 +60,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
+import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergEmbedWebViewActivity;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
@@ -71,6 +72,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOpt
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentInterrupted;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestEmbedFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
@@ -122,6 +124,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String USER_EVENT_KEY_TEMPLATE = "template";
 
     private static final int UNSUPPORTED_BLOCK_REQUEST_CODE = 1001;
+
+    private static final int EMBED_FULLSCREEN_PREVIEW_CODE = 1002;
 
     private static final String TAG_REPLACE_FEATURED_DIALOG = "REPLACE_FEATURED_DIALOG";
 
@@ -427,6 +431,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         );
                     }
                 },
+                new OnGutenbergDidRequestEmbedFullscreenPreviewListener() {
+                    @Override public void gutenbergDidRequestEmbedFullscreenPreview(String html, String title) {
+                        openGutenbergEmbedWebViewActivity(html, title);
+                    }
+                },
                 new OnGutenbergDidSendButtonPressedActionListener() {
                     @Override
                     public void gutenbergDidSendButtonPressedAction(String buttonType) {
@@ -635,6 +644,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.onTrackableEvent(
                 TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED,
                 properties);
+    }
+
+    private void openGutenbergEmbedWebViewActivity(String html, String title) {
+        Activity activity = getActivity();
+
+        Intent intent = new Intent(activity, GutenbergEmbedWebViewActivity.class);
+        intent.putExtra(GutenbergEmbedWebViewActivity.ARG_CONTENT, html);
+        intent.putExtra(GutenbergEmbedWebViewActivity.ARG_TITLE, title);
+        activity.startActivityForResult(intent, EMBED_FULLSCREEN_PREVIEW_CODE);
     }
 
     @Override

@@ -88,7 +88,7 @@ fun JetpackStaticPoster(
                     .padding(bottom = 20.dp)
                     .fillMaxWidth(),
             ) {
-                val animRes = if (LocalContext.current.isRtl()) animResLtrToRtl.second else animResLtrToRtl.first
+                val animRes = if (LocalContext.current.isRtl()) R.raw.wp2jp_rtl else R.raw.wp2jp_left
                 val lottieComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(animRes))
                 LottieAnimation(lottieComposition)
                 Text(
