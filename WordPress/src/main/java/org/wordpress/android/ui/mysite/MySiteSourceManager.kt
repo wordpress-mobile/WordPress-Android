@@ -35,8 +35,8 @@ class MySiteSourceManager @Inject constructor(
     private val bloggingPromptCardSource: BloggingPromptCardSource,
     promoteWithBlazeCardSource: PromoteWithBlazeCardSource,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val dashboardCardDomainSource: DashboardCardDomainSource,
-    private val plansCardDomainSource: PlansCardDomainSource,
+    dashboardCardDomainSource: DashboardCardDomainSource,
+    plansCardDomainSource: PlansCardDomainSource,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
