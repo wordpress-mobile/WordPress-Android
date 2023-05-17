@@ -498,7 +498,7 @@ class UploadStarterTest : BaseUnitTest() {
         uploadStore: UploadStore = createMockedUploadStore(0),
         dispatcher: Dispatcher = mock()
     ) = UploadStarter(
-        context = mock(),
+        appContext = mock(),
         postStore = postStore,
         pageStore = pageStore,
         siteStore = siteStore,

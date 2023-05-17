@@ -66,7 +66,7 @@ class UploadStarterConcurrentTest : BaseUnitTest() {
     }
 
     private fun createUploadStarter(uploadServiceFacade: UploadServiceFacade) = UploadStarter(
-        context = mock(),
+        appContext = mock(),
         postStore = postStore,
         pageStore = pageStore,
         siteStore = mock(),

@@ -49,10 +49,7 @@ import kotlin.coroutines.CoroutineContext
 @Singleton
 @OpenForTesting
 class UploadStarter @Inject constructor(
-    /**
-     * The Application context
-     */
-    private val context: Context,
+    private val appContext: Context,
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
     private val pageStore: PageStore,
@@ -173,7 +170,7 @@ class UploadStarter @Inject constructor(
                             )
                         )
                         uploadServiceFacade.uploadPost(
-                            context = context,
+                            context = appContext,
                             post = post,
                             trackAnalytics = false
                         )
