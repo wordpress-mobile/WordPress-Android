@@ -749,7 +749,8 @@ class PagesViewModel
                     SiteEditorData(
                         action.getUrl(site),
                         action.customCss,
-                        useWpComCredentials = site.isWPCom || site.isWPComAtomic)
+                        useWpComCredentials = site.isWPCom || site.isWPComAtomic || site.isPrivateWPComAtomic
+                    )
                 )
             }
         }.exhaustive
