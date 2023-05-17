@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-24 21:54:07+0000
+Translation-Revision-Date: 2023-05-12 14:35:31+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.4
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_unlabeled_color_s">لون غير مصنّف. %s</string>
+    <string name="dashboard_activity_card_footer_link">عرض كل النشاط</string>
+    <string name="dashboard_activity_card_title">آخر نشاط</string>
+    <string name="dashboard_card_domain_title">العثور على نطاق مخصص</string>
+    <string name="site_creation_search_domain_example_body">على غرار المثال أعلاه، يسمح النطاق للأشخاص بالعثور على موقعك وزيارته من متصفح الويب لديهم.</string>
+    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
+    <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
+    <string name="site_creation_domain_search_input_hint">البحث باستخدام الكلمات المفتاحية</string>
+    <string name="site_creation_domain_header_subtitle">ابحث عن نطاق قصير لا يُنسى لمساعدة الأشخاص على العثور على موقعك وزيارته.</string>
+    <string name="site_creation_domain_cost_sale">للعام الأول</string>
+    <string name="site_creation_error_cart_subtitle">تم إنشاء موقعك على الويب بنجاح، لكننا واجهنا مشكلة في أثناء إعداد نطاقك المخصص للسداد. يرجى المحاولة مجددًا أو الاتصال بالدعم للحصول على المساعدة.</string>
+    <string name="new_site_creation_preview_caption_paid">قد يستغرق الأمر ما يصل إلى 30 دقيقة لكي يبدأ نطاقك المخصص بالعمل.</string>
+    <string name="new_site_creation_preview_subtitle_paid">لقد أرسلنا إليك الإيصال الخاص بك في رسالة عبر البريد الإلكتروني. %s</string>
+    <string name="notifications_disabled_permission_dialog">تم تعطيل تنبيهات التطبيق. انقر هنا لتمكينها.</string>
     <string name="jp_migration_delete_message">نوصي &lt;b&gt;بإلغاء تثبيت تطبيق ووردبريس&lt;/b&gt; على جهازك لتفادي تعارضات البيانات.</string>
     <string name="jp_migration_delete_subtitle">يبدو أن تطبيق ووردبريس لا يزال مثبتًا لديك.</string>
     <string name="jp_migration_delete_title">لن تحتاج إلى تطبيق ووردبريس على جهازك بعد الآن</string>
@@ -23,7 +37,6 @@ Language: ar
     <string name="dashboard_pages_card_no_pages_create_page_button">إضافة صفحات إلى موقعك</string>
     <string name="dashboard_card_domain_menu_hide_this">إخفاء هذا</string>
     <string name="dashboard_card_domain_sub_title">شارك مطالبتك في زاوية الويب مع عنوان الموقع الذي يسهل العثور عليه ومشاركته ومتابعته.</string>
-    <string name="dashboard_card_domain_title">امتلاك هويتك على الإنترنت مع نطاق مخصص</string>
     <string name="blogging_reminders_notifications_permission_caption">لاستخدام تذكيرات التدوين، سيتعيَّن عليك تشغيل التنبيهات المؤقتة.</string>
     <string name="blogging_reminders_notifications_permission_title">تشغيل التنبيهات المؤقتة</string>
     <string name="site_creation_domain_button_continue_with_subdomain">الاستمرار في النطاف الفرعي</string>
@@ -89,6 +102,7 @@ Language: ar
     <string name="tickets">التذاكر</string>
     <string name="free">مجانًا</string>
     <string name="help_buttons_screen_title">مساعدة</string>
+    <string name="site_creation_domain_cost">سنوياً</string>
     <string name="gutenberg_native_blocks_menu">قائمة المكوّنات</string>
     <string name="promote_blaze_card_menu_hide_this">إخفاء هذا</string>
     <string name="promote_blaze_card_sub_title">اعرض عملك عبر ملايين المواقع.</string>
@@ -807,6 +821,7 @@ Language: ar
     <string name="gutenberg_native_one">واحد</string>
     <string name="gutenberg_native_no_preview_available">لا توجد معاينة متاحة</string>
     <string name="gutenberg_native_add_title">أضف عنواناً</string>
+    <string name="gutenberg_native_loading">تحميل</string>
     <string name="gutenberg_native_text_color">لون النص</string>
     <string name="gutenberg_native_padding">الهوامش الداخلية</string>
     <string name="gutenberg_native_featured">مميز</string>

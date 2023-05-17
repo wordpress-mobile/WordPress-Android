@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-24 15:54:23+0000
+Translation-Revision-Date: 2023-05-04 14:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_unlabeled_color_s">צבע ללא תווית. %s</string>
+    <string name="dashboard_activity_card_title">פעילות אחרונה</string>
+    <string name="dashboard_card_domain_title">למצוא דומיין אישי</string>
+    <string name="site_creation_search_domain_example_body">כמו הדוגמה שמוצגת למעלה, דומיין מאפשר לאנשים למצוא את האתר שלך ולבקר בו מדפדפן האינטרנט שלהם.</string>
+    <string name="dashboard_activity_card_footer_link">להציג את כל הפעילויות</string>
+    <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
+    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
+    <string name="site_creation_domain_cost_sale">בשנה הראשונה</string>
+    <string name="new_site_creation_preview_caption_paid">יידרשו עד 30 דקות להתחלת הפעילות של הדומיין האישי.</string>
+    <string name="new_site_creation_preview_subtitle_paid">שלחנו את הקבלה שלך באימייל. %s</string>
+    <string name="site_creation_domain_search_input_hint">לחפש באמצעות מילות מפתח</string>
+    <string name="site_creation_domain_header_subtitle">כדאי לחפש דומיין קצר וקליט כדי לעזור לאנשים למצוא את האתר שלך ולבקר בו.</string>
+    <string name="site_creation_error_cart_subtitle">האתר שלך נוצר בהצלחה, אבל נתקלנו בבעיה במהלך ההכנה של הדומיין האישי שלך לתשלום בקופה. יש לנסות שוב או לפנות לתמיכה לעזרה.</string>
+    <string name="notifications_disabled_permission_dialog">הודעות מהאפליקציה הושבתו. יש להקיש כאן כדי להפעיל אותן.</string>
     <string name="jp_migration_delete_message">אנחנו ממליצים &lt;b&gt;להסיר את ההתקנה של האפליקציה של WordPress&lt;/b&gt; כדי להימנע מהתנגשויות נתונים.</string>
     <string name="jp_migration_delete_subtitle">נראה שהאפליקציה של WordPress עדיין מותקנת אצלך.</string>
     <string name="jp_migration_delete_title">כבר אין לך צורך באפליקציה של WordPress במכשיר לך</string>
@@ -23,7 +37,6 @@ Language: he_IL
     <string name="dashboard_pages_card_no_pages_create_page_button">להוסיף עמודים לאתר שלך</string>
     <string name="dashboard_card_domain_menu_hide_this">להסתיר את המידע</string>
     <string name="dashboard_card_domain_sub_title">לבנות את הפינה האישית שלך באינטרנט בעזרת כתובת אתר שיהיה קל למצוא, לשתף ולעקוב אחריה.</string>
-    <string name="dashboard_card_domain_title">לשלוט בזהות המקוונת שלך באמצעות דומיין אישי</string>
     <string name="blogging_reminders_notifications_permission_caption">כדי להשתמש בתזכורות לכתיבת בלוג, יש להפעיל הודעות בדחיפה.</string>
     <string name="blogging_reminders_notifications_permission_title">הפעלה של הודעות בדחיפה</string>
     <string name="site_creation_domain_button_continue_with_subdomain">להמשיך עם דומיין משנה</string>
@@ -89,6 +102,7 @@ Language: he_IL
     <string name="tickets">כרטיסים</string>
     <string name="free">חינם</string>
     <string name="help_buttons_screen_title">עזרה</string>
+    <string name="site_creation_domain_cost">לשנה</string>
     <string name="gutenberg_native_blocks_menu">תפריט בלוקים</string>
     <string name="promote_blaze_card_menu_hide_this">להסתיר את המידע</string>
     <string name="promote_blaze_card_sub_title">להציג את העבודה שלך במיליוני אתרים.</string>
@@ -807,6 +821,7 @@ Language: he_IL
     <string name="gutenberg_native_one">אחד</string>
     <string name="gutenberg_native_no_preview_available">תצוגה מקדימה לא זמינה</string>
     <string name="gutenberg_native_add_title">להוסיף כותרת</string>
+    <string name="gutenberg_native_loading">טוען</string>
     <string name="gutenberg_native_text_color">צבע טקסט</string>
     <string name="gutenberg_native_padding">מרווחים</string>
     <string name="gutenberg_native_featured">מרכזיים</string>

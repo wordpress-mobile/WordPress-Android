@@ -15,6 +15,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainSource
+import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardDomainSource
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
@@ -72,7 +74,13 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     lateinit var dashboardCardDomainSource: DashboardCardDomainSource
 
     @Mock
+    lateinit var plansCardDomainSource: PlansCardDomainSource
+
+    @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Mock
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Mock
     lateinit var siteModel: SiteModel
@@ -88,6 +96,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     fun setUp() = test {
         selectedSite.value = null
         whenever(siteModel.isUsingWpComRestApi).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(true)
 
@@ -104,7 +113,9 @@ class MySiteSourceManagerTest : BaseUnitTest() {
             bloggingPromptCardSource,
             promoteWithBlazeCardSource,
             selectedSiteRepository,
-            dashboardCardDomainSource
+            dashboardCardDomainSource,
+            plansCardDomainSource,
+            jetpackFeatureRemovalPhaseHelper
         )
 
         allRefreshedMySiteSources = listOf(
@@ -193,6 +204,19 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     fun `given non wpcom site, when build, then all sources except cards source are built`() {
         val coroutineScope = testScope()
         whenever(siteModel.isUsingWpComRestApi).thenReturn(false)
+
+        mySiteSourceManager.build(coroutineScope, SITE_LOCAL_ID)
+
+        allRefreshedMySiteSourcesExceptCardsSource.forEach { verify(it).build(coroutineScope, SITE_LOCAL_ID) }
+        verify(cardsSource, times(0)).build(coroutineScope, SITE_LOCAL_ID)
+    }
+
+
+    @Test
+    fun `given jetpack removal phase, when build, then all sources except cards source are built`() {
+        val coroutineScope = testScope()
+        whenever(siteModel.isUsingWpComRestApi).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()).thenReturn(false)
 
         mySiteSourceManager.build(coroutineScope, SITE_LOCAL_ID)
 

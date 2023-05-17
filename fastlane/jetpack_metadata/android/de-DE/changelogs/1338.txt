@@ -1,5 +1,0 @@
-22.2:
-- Warnmeldung hinzugefügt, wenn Push-Benachrichtigungen deaktiviert sind
-- Medienzugriffsberechtigungen an das Android 13-Update angepasst
-- Karte zum Dashboard für den Kauf individueller Domains hinzugefügt
-- Antworten anderer Benutzer auf Blog-Schreibanregungen hinzugefügt
