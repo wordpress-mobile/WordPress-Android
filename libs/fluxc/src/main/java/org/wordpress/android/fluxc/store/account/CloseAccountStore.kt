@@ -3,6 +3,8 @@ package org.wordpress.android.fluxc.store.account
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.network.rest.wpcom.account.close.CloseAccountRestClient
 import org.wordpress.android.fluxc.store.Store.OnChangedError
+import org.wordpress.android.fluxc.store.account.CloseAccountStore.CloseAccountErrorType.EXISTING_ATOMIC_SITES
+import org.wordpress.android.fluxc.store.account.CloseAccountStore.CloseAccountErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
@@ -17,7 +19,19 @@ class CloseAccountStore @Inject constructor(
         return coroutineEngine.withDefaultContext(AppLog.T.API, this, "closeAccount") {
             val result = restClient.closeAccount()
             when {
-                result.isError -> CloseAccountResult(CloseAccountError(result.error?.message))
+                result.isError -> {
+                    val errorType = when (result.error?.apiError) {
+                        EXISTING_ATOMIC_SITES.errorKey -> EXISTING_ATOMIC_SITES
+                        else -> GENERIC_ERROR
+                    }
+                    CloseAccountResult(
+                        CloseAccountError(
+                            type = errorType,
+                            message = result.error?.message
+                        )
+                    )
+                }
+
                 else -> CloseAccountResult()
             }
         }
@@ -30,6 +44,13 @@ class CloseAccountStore @Inject constructor(
     }
 
     class CloseAccountError(
+        val type: CloseAccountErrorType,
         val message: String? = null
     ) : OnChangedError
+
+
+    enum class CloseAccountErrorType(val errorKey: String) {
+        EXISTING_ATOMIC_SITES("atomic-site"),
+        GENERIC_ERROR("generic-error")
+    }
 }
