@@ -5,7 +5,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ProcessLifecycleOwner
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -145,7 +144,7 @@ class UploadStarter @Inject constructor(
                 }
                 .toList()
                 .forEach { (post, action) ->
-                    try {
+                    runCatching {
                         trackAutoUploadAction(action, post.status, post.isPage)
                         AppLog.d(
                             T.POSTS,
@@ -161,9 +160,9 @@ class UploadStarter @Inject constructor(
                             post = post,
                             trackAnalytics = false
                         )
-                    } catch (exception: CancellationException) {
-                        AppLog.e(T.POSTS, exception)
-                        throwable = exception
+                    }.onFailure {
+                        AppLog.e(T.POSTS, it)
+                        throwable = it
                     }
                 }
             throwable?.let {
