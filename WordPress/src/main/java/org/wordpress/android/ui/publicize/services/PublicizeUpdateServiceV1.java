@@ -27,20 +27,20 @@ import static org.wordpress.android.JobServiceId.JOB_PUBLICIZE_UPDATE_SERVICE_ID
  * service which requests the user's available sharing services and publicize connections
  */
 
-public class PublicizeUpdateService extends JobIntentService {
+public class PublicizeUpdateServiceV1 extends JobIntentService {
     private static boolean mHasUpdatedServices;
 
     /*
      * update the publicize connections for the passed site
      */
     public static void updateConnectionsForSite(Context context, @NonNull SiteModel site) {
-        Intent intent = new Intent(context, PublicizeUpdateService.class);
+        Intent intent = new Intent(context, PublicizeUpdateServiceV1.class);
         intent.putExtra(WordPress.SITE, site);
         enqueueWork(context, intent);
     }
 
     public static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, PublicizeUpdateService.class, JOB_PUBLICIZE_UPDATE_SERVICE_ID, work);
+        enqueueWork(context, PublicizeUpdateServiceV1.class, JOB_PUBLICIZE_UPDATE_SERVICE_ID, work);
     }
 
     @Override
