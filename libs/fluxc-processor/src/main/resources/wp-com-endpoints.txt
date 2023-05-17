@@ -20,6 +20,7 @@
 /me/send-verification-email/
 /me/social-login/connect/
 /me/username/
+/me/account/close/
 
 /me/transactions/supported-countries/
 /me/transactions/
