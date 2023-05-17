@@ -113,9 +113,11 @@ class BlockEditorPage {
     }
 
     private fun dismissBloggingRemindersAlertIfNeeded() {
-        val bloggingRemindersAlertTitle = Espresso.onView(ViewMatchers.withId(R.id.title))
+        val bloggingRemindersButton = Espresso.onView(
+            ViewMatchers.withText(R.string.blogging_prompt_set_reminders)
+        )
 
-        if (WPSupportUtils.waitForElementToBeDisplayedWithoutFailure(bloggingRemindersAlertTitle)) {
+        if (WPSupportUtils.waitForElementToBeDisplayedWithoutFailure(bloggingRemindersButton)) {
             WPSupportUtils.clickOn(R.id.touch_outside)
         }
     }
