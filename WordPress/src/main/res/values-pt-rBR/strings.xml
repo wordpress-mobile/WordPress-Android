@@ -23,7 +23,6 @@ Language: pt_BR
     <string name="dashboard_pages_card_no_pages_create_page_button">Adicionar páginas ao seu site</string>
     <string name="dashboard_card_domain_menu_hide_this">Esconder isso</string>
     <string name="dashboard_card_domain_sub_title">Marque sua presença na Web com um endereço de site fácil de encontrar, compartilhar e seguir.</string>
-    <string name="dashboard_card_domain_title">Tenha sua identidade online com um domínio personalizado</string>
     <string name="blogging_reminders_notifications_permission_caption">Para usar lembretes para publicação, será necessário ativar as notificações por push.</string>
     <string name="blogging_reminders_notifications_permission_title">Ativar notificações por push</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Continuar com subdomínio</string>

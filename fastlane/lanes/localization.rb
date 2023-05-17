@@ -98,12 +98,12 @@ platform :android do
   lane :update_appstore_strings do |options|
     # If no `app:` is specified, call this for both WordPress and Jetpack
     apps = options[:app].nil? ? %i[wordpress jetpack] : Array(options[:app]&.downcase&.to_sym)
+    version = options.fetch(:version, android_get_app_version)
 
     apps.each do |app|
       app_values = APP_SPECIFIC_VALUES[app]
 
       metadata_folder = File.join(PROJECT_ROOT_FOLDER, 'WordPress', app_values[:metadata_dir])
-      version = options.fetch(:version, android_get_app_version)
 
       # <key in po file> => <path to txt file to read the content from>
       files = {
@@ -126,6 +126,11 @@ platform :android do
         commit_message: "Update #{app_values[:display_name]} `PlayStoreStrings.po` for version #{version}"
       )
     end
+
+    push_to_git_remote(tags: false)
+
+    release_branch = "release/#{version}"
+    create_release_management_pull_request(release_branch, "Merge #{version} editorialized release notes to #{release_branch}")
   end
 
   # Updates the metadata in the Play Store (Main store listing) from the content of `fastlane/{metadata|jetpack_metadata}/android/*/*.txt` files
@@ -173,7 +178,7 @@ platform :android do
 
     skip_commit = options.fetch(:skip_commit, false)
     skip_git_push = options.fetch(:skip_git_push, false)
-    
+
     # If no `app:` is specified, call this for both WordPress and Jetpack
     apps = options[:app].nil? ? %i[wordpress jetpack] : Array(options[:app]&.to_s&.downcase&.to_sym)
 
@@ -213,7 +218,7 @@ platform :android do
         source_file = key.to_s.start_with?('release_note_') ? 'release_notes.txt' : h[:desc]
         FileUtils.cp(File.join(metadata_source_dir, source_file), File.join(download_path, 'en-US', h[:desc]))
       end
-      
+
       unless skip_commit
         git_add(path: download_path)
         message = "Update #{app_values[:display_name]} metadata translations"

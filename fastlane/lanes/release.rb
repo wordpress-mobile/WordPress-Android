@@ -32,12 +32,14 @@ platform :android do
       sh('git', 'commit', '-m', "Update draft release notes for Jetpack #{new_version}.")
     end
     cleanup_release_files(files: release_notes_short_paths)
-
     android_update_release_notes(new_version: new_version) # Adds empty section for next version
-    setbranchprotection(repository: GHHELPER_REPO, branch: "release/#{new_version}")
-    setfrozentag(repository: GHHELPER_REPO, milestone: new_version)
 
     UI.message("Jetpack release notes were based on the same ones as WordPress. Don't forget to check #{release_notes_path('jetpack')} and amend them as necessary if any item does not apply for Jetpack before sending them to Editorial.")
+
+    push_to_git_remote(tags: false)
+
+    setbranchprotection(repository: GHHELPER_REPO, branch: "release/#{new_version}")
+    setfrozentag(repository: GHHELPER_REPO, milestone: new_version)
   end
 
   #####################################################################################
@@ -60,10 +62,12 @@ platform :android do
     update_frozen_strings_for_translation
 
     ensure_git_status_clean
-    push_to_git_remote
+    push_to_git_remote(tags: false)
 
     new_version = android_get_app_version()
     trigger_beta_build(branch_to_build: "release/#{new_version}")
+
+    create_release_management_pull_request('trunk', "Merge #{new_version} code freeze to trunk")
   end
 
   #####################################################################################
@@ -88,10 +92,20 @@ platform :android do
     update_frozen_strings_for_translation
     download_translations()
     android_bump_version_beta()
-    next unless UI.confirm('Ready for CI build')
 
-    new_version = android_get_app_version()
-    trigger_beta_build(branch_to_build: "release/#{new_version}")
+    app_version = android_get_app_version()
+    release_branch = "release/#{app_version}"
+    release_version = android_get_release_version()["name"]
+
+    # Create an intermediate branch
+    new_beta_branch_name = "new_beta/#{release_version}"
+    Fastlane::Helper::GitHelper.create_branch(new_beta_branch_name)
+
+    push_to_git_remote(tags: false)
+
+    trigger_beta_build(branch_to_build: new_beta_branch_name)
+
+    create_release_management_pull_request(release_branch, "Merge #{release_version} to #{release_branch}")
   end
 
   #####################################################################################
@@ -110,6 +124,7 @@ platform :android do
     hotfix_version = options[:version_name] || UI.input('Version number for the new hotfix?')
     previous_tag = android_hotfix_prechecks(version_name: hotfix_version, skip_confirm: options[:skip_confirm])
     android_bump_version_hotfix(previous_version_name: previous_tag, version_name: hotfix_version, version_code: options[:version_code])
+    push_to_git_remote(tags: false)
   end
 
   #####################################################################################
@@ -148,6 +163,12 @@ platform :android do
     android_finalize_prechecks(skip_confirm: options[:skip_confirm])
     configure_apply(force: is_ci)
 
+    app_version = android_get_app_version()
+    release_branch = "release/#{app_version}"
+
+    # Remove branch protection first, so that we can push the final commits directly to the release branch
+    removebranchprotection(repository: GHHELPER_REPO, branch: release_branch)
+
     check_translations_coverage()
     download_translations()
 
@@ -155,14 +176,17 @@ platform :android do
     version = android_get_release_version()
     download_metadata_strings(version: version['name'], build_number: version['code'])
 
+    push_to_git_remote(tags: false)
+
     # Wrap up
-    removebranchprotection(repository: GHHELPER_REPO, branch: "release/#{version['name']}")
     setfrozentag(repository: GHHELPER_REPO, milestone: version['name'], freeze: false)
     create_new_milestone(repository: GHHELPER_REPO)
     close_milestone(repository: GHHELPER_REPO, milestone: version['name'])
 
     # Trigger release build
     trigger_release_build(branch_to_build: "release/#{version['name']}")
+
+    create_release_management_pull_request('trunk', "Merge #{app_version} final to trunk")
   end
 
   lane :check_translations_coverage do |options|

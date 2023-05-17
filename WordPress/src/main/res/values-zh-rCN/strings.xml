@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-25 10:54:25+0000
+Translation-Revision-Date: 2023-05-12 14:36:32+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_unlabeled_color_s">未标记的颜色 %s</string>
+    <string name="dashboard_activity_card_footer_link">查看所有动态</string>
+    <string name="dashboard_activity_card_title">近期的动态</string>
+    <string name="dashboard_card_domain_title">查找自定义域名</string>
+    <string name="site_creation_search_domain_example_body">如以上示例所示，域名允许访客从其 Web 浏览器查找和访问您的站点。</string>
+    <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
+    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
+    <string name="site_creation_domain_search_input_hint">使用关键字搜索</string>
+    <string name="site_creation_domain_header_subtitle">搜索一个简短易记的域名，以帮助访客找到并访问您的站点。</string>
+    <string name="site_creation_domain_cost_sale">第一年</string>
+    <string name="site_creation_error_cart_subtitle">您的网站已成功创建，但我们在准备自定义域名以结账时遇到问题。 请重试或联系支持人员获取帮助。</string>
+    <string name="new_site_creation_preview_caption_paid">最多可能需花费 30 分钟时间，您的自定义域名才能开始运行。</string>
+    <string name="new_site_creation_preview_subtitle_paid">我们已将您的收据通过电子邮件发送给您。 %s</string>
+    <string name="notifications_disabled_permission_dialog">应用程序通知已禁用。 轻点此处以启用。</string>
     <string name="jp_migration_delete_message">我们建议您&lt;b&gt;卸载设备上的 WordPress 应用&lt;/b&gt;以避免发生数据冲突。</string>
     <string name="jp_migration_delete_subtitle">似乎您仍然安装了 WordPress 应用。</string>
     <string name="jp_migration_delete_title">您的设备上不再需要 WordPress 应用</string>
@@ -23,7 +37,6 @@ Language: zh_CN
     <string name="dashboard_pages_card_no_pages_create_page_button">向您的站点添加页面</string>
     <string name="dashboard_card_domain_menu_hide_this">隐藏此内容</string>
     <string name="dashboard_card_domain_sub_title">通过易于查找、共享和关注的站点地址，在网络上创建自己的一席之地。</string>
-    <string name="dashboard_card_domain_title">使用自定义域名，拥有您的在线身份</string>
     <string name="blogging_reminders_notifications_permission_caption">要使用博客发布提醒，您需要开启推送通知。</string>
     <string name="blogging_reminders_notifications_permission_title">开启推送通知</string>
     <string name="site_creation_domain_button_continue_with_subdomain">继续使用子域名</string>
@@ -82,6 +95,7 @@ Language: zh_CN
     <string name="site_creation_domain_tag_sale">销售</string>
     <string name="site_creation_domain_tag_recommended">推荐</string>
     <string name="site_creation_domain_tag_best_alternative">更好的替代方案</string>
+    <string name="site_creation_domain_cost">/年</string>
     <string name="me_btn_help">帮助</string>
     <string name="support_faq_caption">查看我们的常见问题解答，为您可能遇到的常见问题寻找答案。</string>
     <string name="support_faq_title">感谢您切换至 Jetpack 应用程序！</string>
@@ -187,6 +201,9 @@ Language: zh_CN
     <string name="dlg_confirm_delete_category">是否永久删除“%s”分类？</string>
     <string name="deleting_cat_success">已成功删除分类</string>
     <string name="deleting_cat_failed">删除分类失败</string>
+    <string name="deleting_cat">正在删除分类</string>
+    <string name="updating_cat">正在更新分类</string>
+    <string name="update_category">更新分类</string>
     <string name="reader_toast_user_blocked">此用户的文章不会再显示</string>
     <string name="reader_menu_block_user">屏蔽用户</string>
     <string name="reader_menu_report_user">举报此用户</string>
@@ -804,6 +821,7 @@ Language: zh_CN
     <string name="gutenberg_native_one">一</string>
     <string name="gutenberg_native_add_title">添加标题</string>
     <string name="gutenberg_native_no_preview_available">无可用预览</string>
+    <string name="gutenberg_native_loading">正在载入</string>
     <string name="gutenberg_native_text_color">文字颜色</string>
     <string name="gutenberg_native_padding">内边距</string>
     <string name="gutenberg_native_four">四</string>
@@ -1187,7 +1205,7 @@ Language: zh_CN
     <string name="mlp_network_error_title">离线时布局不可用</string>
     <string name="mlp_error_subtitle">点击“重试”或使用下面的按钮创建空白页。</string>
     <string name="mlp_error_title">由于发生错误，布局不可用</string>
-    <string name="prepublishing_nudges_add_category_button">添加类别</string>
+    <string name="prepublishing_nudges_add_category_button">添加分类</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">添加新分类目录</string>
     <string name="prepublishing_nudges_toolbar_title_categories">类别</string>
     <string name="prepublishing_nudges_home_categories_not_set">未设置</string>

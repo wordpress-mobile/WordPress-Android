@@ -53,6 +53,7 @@ class DomainRegistrationMainViewModel @Inject constructor(
     }
 
     fun completeDomainRegistration(event: DomainRegistrationCompletedEvent) {
+        // Called on checkout result
         _onNavigation.value = when (domainRegistrationPurpose) {
             CTA_DOMAIN_CREDIT_REDEMPTION, DOMAIN_PURCHASE -> {
                 analyticsTracker.trackDomainsRegistrationFormSubmitted()
@@ -62,9 +63,9 @@ class DomainRegistrationMainViewModel @Inject constructor(
         }
     }
 
-    @Suppress("ForbiddenComment")
     fun finishDomainRegistration(event: DomainRegistrationCompletedEvent) {
-        analyticsTracker.trackDomainsPurchaseDomainSuccess() // TODO: is it a success or just a back press
+        // In Menu→ Domains this gets called either on continue btn click or on back press
+        analyticsTracker.trackDomainsPurchaseDomainSuccess(isSiteCreation = false)
         _onNavigation.value = Event(FinishDomainRegistration(event))
     }
 }

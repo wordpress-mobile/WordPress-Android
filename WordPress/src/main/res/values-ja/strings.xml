@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-26 10:54:08+0000
+Translation-Revision-Date: 2023-05-12 14:33:34+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_unlabeled_color_s">ラベルない色。 %s</string>
+    <string name="dashboard_activity_card_footer_link">すべてのアクティビティを表示する</string>
+    <string name="dashboard_activity_card_title">最近のアクティビティ</string>
+    <string name="dashboard_card_domain_title">カスタムドメインを探す</string>
+    <string name="site_creation_search_domain_example_body">上記の例のように、ドメインを使用するとユーザーは、Web ブラウザーからサイトを見つけてアクセスできます。</string>
+    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
+    <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
+    <string name="site_creation_domain_search_input_hint">キーワードで検索</string>
+    <string name="site_creation_domain_header_subtitle">ユーザーがあなたのサイトを探してアクセスしやすくなる、短く覚えやすいドメインを検索します。</string>
+    <string name="site_creation_domain_cost_sale">最初の年</string>
+    <string name="site_creation_error_cart_subtitle">サイトは正常に作成されましたが、カスタムドメインの購入手続きの準備中に問題が発生しました。 もう一度お試しいただくか、ヘルプが必要な場合はサポートにご連絡ください。</string>
+    <string name="new_site_creation_preview_caption_paid">カスタムドメインが使用可能になるまでに最長30分かかる場合があります。</string>
+    <string name="new_site_creation_preview_subtitle_paid">領収書をメールで送信しました。 %s</string>
+    <string name="notifications_disabled_permission_dialog">アプリ通知が無効化されています。 ここをタップして有効化します。</string>
     <string name="jp_migration_delete_message">データの競合を避けるため、お使いの端末から &lt;b&gt;WordPress アプリをアンインストール&lt;/b&gt;することをおすすめします。</string>
     <string name="jp_migration_delete_subtitle">WordPress アプリがまだインストールされているようです。</string>
     <string name="jp_migration_delete_title">お使いの端末に WordPress アプリは不要になりました</string>
@@ -23,7 +37,6 @@ Language: ja_JP
     <string name="dashboard_pages_card_no_pages_create_page_button">サイトにページを追加</string>
     <string name="dashboard_card_domain_menu_hide_this">非表示</string>
     <string name="dashboard_card_domain_sub_title">見つけやすく、共有やフォローがしやすいサイトアドレスを使って自分のサイトであることを示しましょう。</string>
-    <string name="dashboard_card_domain_title">カスタムドメインで自分のデジタルアイデンティティを手に入れましょう</string>
     <string name="blogging_reminders_notifications_permission_caption">ブログ投稿のリマインダーを使用するには、プッシュ通知を有効にする必要があります</string>
     <string name="blogging_reminders_notifications_permission_title">プッシュ通知を有効にする</string>
     <string name="site_creation_domain_button_continue_with_subdomain">サブドメインで続行</string>
@@ -89,6 +102,7 @@ Language: ja_JP
     <string name="help_buttons_screen_title">ヘルプ</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="support_faq_caption">FAQ でよくある質問に対する回答をご確認ください。</string>
+    <string name="site_creation_domain_cost">/年</string>
     <string name="gutenberg_native_blocks_menu">ブロックのメニュー</string>
     <string name="promote_blaze_card_menu_hide_this">非表示</string>
     <string name="promote_blaze_card_sub_title">何百万ものサイトに作品を表示しましょう。</string>
@@ -807,6 +821,7 @@ Language: ja_JP
     <string name="gutenberg_native_one">1</string>
     <string name="gutenberg_native_no_preview_available">利用できるプレビューがありません</string>
     <string name="gutenberg_native_add_title">タイトルを追加</string>
+    <string name="gutenberg_native_loading">読み込み中</string>
     <string name="gutenberg_native_text_color">テキスト色</string>
     <string name="gutenberg_native_padding">パディング</string>
     <string name="gutenberg_native_featured">おすすめ</string>

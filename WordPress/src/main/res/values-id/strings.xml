@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-27 09:54:07+0000
+Translation-Revision-Date: 2023-05-02 08:11:15+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_unlabeled_color_s">Warna tanpa label. %s</string>
+    <string name="dashboard_activity_card_footer_link">Lihat semua aktivitas</string>
+    <string name="dashboard_activity_card_title">Aktivitas terbaru</string>
+    <string name="dashboard_card_domain_title">Cari domain khusus</string>
+    <string name="site_creation_search_domain_example_body">Seperti contoh di atas, domain mengizinkan Anda menemukan dan mengunjungi situs Anda dari web browser.</string>
+    <string name="site_creation_search_domain_example_title">NamaSitusAnda.com</string>
+    <string name="site_creation_search_domain_example_url">https://namasitusanda.com</string>
+    <string name="site_creation_domain_search_input_hint">Cari dengan kata kunci</string>
+    <string name="site_creation_domain_header_subtitle">Cari domain yang pendek dan mudah diingat agar siapa pun mudah menemukan dan mengunjungi situs Anda.</string>
+    <string name="site_creation_domain_cost_sale">untuk tahun pertama</string>
+    <string name="site_creation_error_cart_subtitle">Situs web Anda berhasil dibuat, namun kami menemukan kendala saat menyiapkan domain khusus Anda selama checkout. Mohon coba lagi atau hubungi bantuan jika diperlukan.</string>
+    <string name="new_site_creation_preview_caption_paid">Diperlukan 30 menit agar domain khusus Anda dapat berfungsi.</string>
+    <string name="new_site_creation_preview_subtitle_paid">Kami telah mengirim e-mail resi Anda. %s</string>
+    <string name="notifications_disabled_permission_dialog">Pemberitahuan aplikasi telah dinonaktifkan. Ketuk di sini untuk mengaktifkannya.</string>
     <string name="jp_migration_delete_message">Kami sarankan untuk &lt;b&gt;menghapus instalan aplikasi WordPress&lt;/b&gt; di perangkat Anda guna mencegah terjadinya konflik data.</string>
     <string name="jp_migration_delete_subtitle">Aplikasi WordPress sepertinya masih terinstal.</string>
     <string name="jp_migration_delete_title">Anda tidak lagi membutuhkan aplikasi WordPress di perangkat Anda</string>
@@ -23,7 +37,6 @@ Language: id
     <string name="dashboard_pages_card_no_pages_create_page_button">Tambahkan Halaman ke situs Anda</string>
     <string name="dashboard_card_domain_menu_hide_this">Tutup</string>
     <string name="dashboard_card_domain_sub_title">Ajukan klaim domain Anda dengan alamat situs yang mudah ditemukan, dibagikan, dan diikuti.</string>
-    <string name="dashboard_card_domain_title">Miliki identitas online Anda dengan domain khusus</string>
     <string name="blogging_reminders_notifications_permission_caption">Untuk menggunakan pengingat blogging, Anda harus mengaktfikan pemberitahuan push.</string>
     <string name="blogging_reminders_notifications_permission_title">Aktifkan pemberitahuan push</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Lanjutkan dengan subdomain</string>
@@ -82,6 +95,7 @@ Language: id
     <string name="site_creation_domain_tag_sale">Obral</string>
     <string name="site_creation_domain_tag_recommended">Disarankan</string>
     <string name="site_creation_domain_tag_best_alternative">Alternatif Terbaik</string>
+    <string name="site_creation_domain_cost">per tahun</string>
     <string name="me_btn_help">Bantuan</string>
     <string name="support_faq_caption">Tanya Jawab Umum akan menjawab berbagai pertanyaan yang umum diajukan.</string>
     <string name="support_faq_title">Terima kasih sudah beralih ke aplikasi Jetpack.</string>
@@ -807,6 +821,7 @@ Language: id
     <string name="gutenberg_native_one">Satu.</string>
     <string name="gutenberg_native_add_title">Tambahkan judul</string>
     <string name="gutenberg_native_no_preview_available">Pratinjau tidak tersedia</string>
+    <string name="gutenberg_native_loading">Memuat</string>
     <string name="gutenberg_native_text_color">Warna teks</string>
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_four">Empat.</string>
