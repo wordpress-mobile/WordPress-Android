@@ -35,8 +35,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
     override val releaseName: String = BuildConfig.VERSION_NAME
     override val sentryDSN: String = BuildConfig.SENTRY_DSN
 
-    override val applicationContextProvider: Flow<Map<String, String>>
-        get() = MutableStateFlow(emptyMap())
+    override val applicationContextProvider = MutableStateFlow<Map<String, String>>(emptyMap())
 
     override fun crashLoggingEnabled(): Boolean {
         if (buildConfig.isDebug()) {
@@ -98,8 +97,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
                 value == EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR
     }
 
-    override val user: Flow<CrashLoggingUser?>
-        get() = MutableStateFlow(
+    override val user = MutableStateFlow(
             accountStore.account?.let { accountModel ->
                 CrashLoggingUser(
                     userID = accountModel.userId.toString(),
