@@ -618,9 +618,7 @@ class MySiteViewModel @Inject constructor(
                     onMoreMenuClick = this::onDashboardCardDomainMoreMenuClick
                 ),
                 dashboardCardPlansBuilderParams = DashboardCardPlansBuilderParams(
-                    isEligible = dashboardCardPlansUtils.shouldShowCard(
-                        site, isDomainCreditAvailable, hasSiteCustomDomains
-                    ),
+                    isEligible = dashboardCardPlansUtils.shouldShowCard(site),
                     onClick = this::onDashboardCardPlansClick,
                     onHideMenuItemClick = this::onDashboardCardPlansHideMenuItemClick,
                     onMoreMenuClick = this::onDashboardCardPlansMoreMenuClick

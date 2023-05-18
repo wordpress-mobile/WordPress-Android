@@ -6,7 +6,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.DomainModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
@@ -15,6 +14,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.DashboardCardFreeToPaidPlansFeatureConfig
 import java.util.concurrent.atomic.AtomicBoolean
@@ -37,17 +37,14 @@ class PlansCardUtils @Inject constructor(
 
     fun shouldShowCard(
         siteModel: SiteModel,
-        isDomainCreditAvailable: Boolean,
-        hasSiteCustomDomains: Boolean?
     ): Boolean {
-        return isCardEnabled() &&
+        return buildConfigWrapper.isJetpackApp &&
+                plansFreeToPaidFeatureConfig.isEnabled() &&
                 !isCardHiddenByUser(siteModel.siteId) &&
                 siteModel.hasFreePlan &&
-                (siteModel.isWPCom || siteModel.isWPComAtomic) &&
                 siteModel.isAdmin &&
-                !siteModel.isWpForTeamsSite &&
-                hasSiteCustomDomains == false &&
-                !isDomainCreditAvailable
+                !SiteUtils.hasMappedDomains(siteModel) &&
+                !siteModel.isWpForTeamsSite
     }
 
     fun hideCard(siteId: Long) {
@@ -130,11 +127,6 @@ class PlansCardUtils @Inject constructor(
         return appPrefsWrapper.getShouldHideDashboardPlansCard(siteId)
     }
 
-    private fun isCardEnabled(): Boolean {
-        return buildConfigWrapper.isJetpackApp &&
-                plansFreeToPaidFeatureConfig.isEnabled()
-    }
-
     private fun positionIndex(siteSelected: SiteSelected?): Int {
         return siteSelected
             ?.dashboardCardsAndItems
@@ -154,8 +146,6 @@ class PlansCardUtils @Inject constructor(
             waitingToTrack.set(true)
         }
     }
-
-    fun hasCustomDomain(domains: List<DomainModel>?) = domains?.any { !it.wpcomDomain } == true
 
     companion object {
         const val POSITION_INDEX = "position_index"
