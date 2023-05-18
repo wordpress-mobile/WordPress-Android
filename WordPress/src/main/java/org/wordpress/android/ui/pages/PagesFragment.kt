@@ -39,6 +39,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
@@ -71,6 +72,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBL
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PagesViewModel
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewSource
 import org.wordpress.android.widgets.WPSnackbar
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -320,6 +322,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         setupObservers(activity)
         setupActions(activity)
         setupMlpObservers(activity)
+        setupVirtualHomepageObservers(activity)
 
         val site = requireNotNull(
             if (savedInstanceState == null) {
@@ -553,6 +556,27 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                 mlpFragment.show(fm, MODAL_LAYOUT_PICKER_TAG)
             } else if (!isShowing && mlpFragment != null) {
                 mlpFragment.dismiss()
+            }
+        }
+    }
+
+    private fun setupVirtualHomepageObservers(activity: FragmentActivity) {
+        viewModel.openExternalLink.observe(viewLifecycleOwner) { url ->
+            ActivityLauncher.openUrlExternal(activity, url)
+        }
+
+        viewModel.openSiteEditorWebView.observe(viewLifecycleOwner) { data ->
+            with(data) {
+                if (useWpComCredentials) {
+                    WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
+                        activity,
+                        url,
+                        css,
+                        WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE
+                    )
+                } else {
+                    WPWebViewActivity.openURL(activity, url, css, WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE)
+                }
             }
         }
     }
