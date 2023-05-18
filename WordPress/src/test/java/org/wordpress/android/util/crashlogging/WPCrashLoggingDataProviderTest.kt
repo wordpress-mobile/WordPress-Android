@@ -70,6 +70,10 @@ class WPCrashLoggingDataProviderTest {
         )
     }
 
+    private fun reinitialize() {
+        setUp()
+    }
+
     @Test
     fun `should contain encrypted logs key for extra known keys`() {
         assertThat(sut.extraKnownKeys()).contains(EXTRA_UUID)
@@ -78,6 +82,7 @@ class WPCrashLoggingDataProviderTest {
     @Test
     fun `should correctly reads and maps user`() = runTest {
         whenever(accountStore.account).thenReturn(TEST_ACCOUNT)
+        reinitialize()
 
         val user = sut.user.first()
 
@@ -91,6 +96,7 @@ class WPCrashLoggingDataProviderTest {
     @Test
     fun `should not provide user if user does not exist`() = runTest {
         whenever(accountStore.account).thenReturn(null)
+        reinitialize()
 
         val user = sut.user.first()
 
@@ -120,6 +126,7 @@ class WPCrashLoggingDataProviderTest {
     @Test
     fun `should not provide encrypted logging uuid to extras if log file is not available`() {
         whenever(logFileProvider.getLogFiles()).thenReturn(emptyList())
+        reinitialize()
 
         val extras = sut.provideExtrasForEvent(currentExtras = emptyMap(), eventLevel = DEBUG)
 
@@ -143,6 +150,7 @@ class WPCrashLoggingDataProviderTest {
     fun `should provide locale from locale manager`() {
         val testLocale = Locale.US
         whenever(localeManager.getLocale()).thenReturn(testLocale)
+        reinitialize()
 
         assertThat(sut.locale).isEqualTo(testLocale)
     }
@@ -150,6 +158,7 @@ class WPCrashLoggingDataProviderTest {
     @Test
     fun `should disable crash logging for debug builds`() {
         whenever(buildConfig.isDebug()).thenReturn(true)
+        reinitialize()
 
         assertThat(sut.crashLoggingEnabled()).isFalse
     }
@@ -158,6 +167,7 @@ class WPCrashLoggingDataProviderTest {
     fun `should disable crash logging if user has opt out in release`() {
         whenever(buildConfig.isDebug()).thenReturn(false)
         whenever(sharedPreferences.getBoolean(eq(SEND_CRASH_SAMPLE_KEY), any())).thenReturn(false)
+        reinitialize()
 
         assertThat(sut.crashLoggingEnabled()).isFalse
     }
@@ -166,6 +176,7 @@ class WPCrashLoggingDataProviderTest {
     fun `should enable crash logging if user has not opt out in release`() {
         whenever(buildConfig.isDebug()).thenReturn(false)
         whenever(sharedPreferences.getBoolean(eq(SEND_CRASH_SAMPLE_KEY), any())).thenReturn(true)
+        reinitialize()
 
         assertThat(sut.crashLoggingEnabled()).isTrue
     }
