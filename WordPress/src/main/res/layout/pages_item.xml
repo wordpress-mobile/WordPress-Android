@@ -12,7 +12,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"
-        style="@style/dashboard_card_sub_title"
+        style="@style/DashboardCardSubtitle"
         android:textAlignment="viewStart"
         android:maxLines="1"
         android:ellipsize="end"
@@ -26,7 +26,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/status"
-        style="@style/dashboard_card_card_detail"
+        style="@style/DashboardCardDetail"
         android:textAlignment="viewStart"
         android:maxLines="1"
         android:ellipsize="end"
@@ -47,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="in 2 hours"
-        style="@style/dashboard_card_card_detail"
+        style="@style/DashboardCardDetail"
         android:layout_marginTop="@dimen/margin_small"
         android:paddingHorizontal="@dimen/my_site_dashboard_card_page_page_modified_time_padding_horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/status"

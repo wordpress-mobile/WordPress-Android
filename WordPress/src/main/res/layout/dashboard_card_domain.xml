@@ -25,7 +25,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/dashboard_card_domain_title"
-                style="@style/dashboard_card_small_title"
+                style="@style/DashboardCardSmallTitle"
                 android:textAlignment="viewStart"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/dashboard_card_domain_sub_title"
-                style="@style/dashboard_card_card_detail"
+                style="@style/DashboardCardDetail"
                 android:textAlignment="viewStart"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

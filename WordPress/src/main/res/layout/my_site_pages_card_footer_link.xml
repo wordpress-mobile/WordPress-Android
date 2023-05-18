@@ -10,7 +10,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/link_label"
-        style="@style/dashboard_card_footer"
+        style="@style/DashboardCardFooter"
         android:paddingBottom="@dimen/my_site_dashboard_card_page_create_page_title_description_padding_bottom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/link_description"
-        style="@style/dashboard_card_card_detail"
+        style="@style/DashboardCardDetail"
         android:paddingBottom="@dimen/my_site_dashboard_card_page_create_page_title_description_padding_bottom"
         android:maxLines="2"
         android:ellipsize="end"

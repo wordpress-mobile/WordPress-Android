@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textAppearance="@style/dashboard_card_small_title"
+                android:textAppearance="@style/DashboardCardSmallTitle"
                 android:text="@string/my_site_blogging_prompt_card_title"
                 android:textAlignment="viewStart"
                 />

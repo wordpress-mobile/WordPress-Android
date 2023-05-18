@@ -17,7 +17,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textAlignment="viewStart"
-        android:textAppearance="@style/dashboard_card_small_title"
+        android:textAppearance="@style/DashboardCardSmallTitle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/my_site_card_toolbar_more"
         app:layout_constraintStart_toStartOf="parent"

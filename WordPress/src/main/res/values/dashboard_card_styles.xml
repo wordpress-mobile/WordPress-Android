@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="dashboard_card_large_title" parent="TextAppearance.Material3.HeadlineMedium">
+    <style name="DashboardCardLargeTitle" parent="TextAppearance.Material3.HeadlineMedium">
         <item name="android:textColor">?attr/wpColorOnSurfaceHigh</item>
     </style>
 
-    <style name="dashboard_card_small_title" parent="TextAppearance.MaterialComponents.Body2">
+    <style name="DashboardCardSmallTitle" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:textColor">?attr/wpColorOnSurfaceHigh</item>
         <item name="fontWeight">400</item>
     </style>
 
-    <style name="dashboard_card_sub_title" parent="Base.TextAppearance.Material3.TitleMedium">
+    <style name="DashboardCardSubtitle" parent="Base.TextAppearance.Material3.TitleMedium">
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceHigh</item>
         <item name="fontWeight">500</item>
     </style>
 
-    <style name="dashboard_card_card_detail" parent="TextAppearance.MaterialComponents.Body2">
+    <style name="DashboardCardDetail" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="fontWeight">400</item>
     </style>
 
-    <style name="dashboard_card_footer" parent="Base.TextAppearance.Material3.TitleMedium">
+    <style name="DashboardCardFooter" parent="Base.TextAppearance.Material3.TitleMedium">
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/primary_emphasis_medium_selector</item>
         <item name="fontWeight">500</item>
@@ -35,19 +35,19 @@
     </style>
 
     <!--My Site Card - Post Item-->
-    <style name="MySitePostItemTitle" parent="dashboard_card_sub_title">
+    <style name="MySitePostItemTitle" parent="DashboardCardSubtitle">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="MySiteCardWithoutPostTitle" parent="dashboard_card_small_title">
+    <style name="MySiteCardWithoutPostTitle" parent="DashboardCardSmallTitle">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="MySitePostItemExcerpt" parent="dashboard_card_card_detail">
+    <style name="MySitePostItemExcerpt" parent="DashboardCardDetail">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
@@ -55,7 +55,7 @@
         <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 
-    <style name="MySiteCardFooterLinkItem" parent="dashboard_card_footer">
+    <style name="MySiteCardFooterLinkItem" parent="DashboardCardFooter">
         <item name="android:paddingBottom">@dimen/my_site_card_footer_link_padding</item>
         <item name="android:paddingEnd">@dimen/my_site_card_footer_link_padding</item>
         <item name="android:paddingStart">@dimen/my_site_card_footer_link_padding</item>
@@ -70,20 +70,20 @@
     </style>
 
     <!--My Site Card - Today's Stats Item-->
-    <style name="MySiteTodaysStatsCardTitle" parent="dashboard_card_small_title">
+    <style name="MySiteTodaysStatsCardTitle" parent="DashboardCardSmallTitle">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:layout_marginStart">@dimen/margin_medium</item>
         <item name="android:lineSpacingExtra">@dimen/my_site_todays_stats_card_title_line_spacing_extra</item>
     </style>
 
-    <style name="MySiteTodaysStatsCardStatTitle" parent="dashboard_card_card_detail" >
+    <style name="MySiteTodaysStatsCardStatTitle" parent="DashboardCardDetail" >
         <item name="android:textAlignment">viewStart</item>
         <item name="android:lineSpacingExtra">@dimen/my_site_todays_stats_card_stat_title_line_spacing_extra</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="MySiteTodaysStatsCardStatCountText" parent="dashboard_card_large_title">
+    <style name="MySiteTodaysStatsCardStatCountText" parent="DashboardCardLargeTitle">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_small</item>
@@ -93,7 +93,7 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="MySiteTodaysStatsCardMessage" parent="dashboard_card_card_detail">
+    <style name="MySiteTodaysStatsCardMessage" parent="DashboardCardDetail">
         <item name="android:textAlignment">textStart</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
         <item name="android:paddingBottom">@dimen/margin_medium</item>
@@ -113,7 +113,7 @@
         <item name="android:paddingEnd">@dimen/margin_medium</item>
     </style>
 
-    <style name="MySiteCardBloggingPromptTitle" parent="dashboard_card_sub_title">
+    <style name="MySiteCardBloggingPromptTitle" parent="DashboardCardSubtitle">
         <item name="android:maxLines">3</item>
         <item name="autoSizeTextType">uniform</item>
         <item name="autoSizeMinTextSize">12sp</item>
@@ -127,7 +127,7 @@
     </style>
 
     <!--My Site Card - Quick start card -->
-    <style name="MySiteCardQuickStartItemTitle" parent="dashboard_card_sub_title">
+    <style name="MySiteCardQuickStartItemTitle" parent="DashboardCardSubtitle">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
@@ -136,7 +136,7 @@
         <item name="android:paddingEnd">@dimen/content_margin</item>
     </style>
 
-    <style name="MySiteCardItemSubtitle" parent="dashboard_card_card_detail">
+    <style name="MySiteCardItemSubtitle" parent="DashboardCardDetail">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
@@ -162,7 +162,7 @@
 
     <!--My Site Card - Domain Registration-->
 
-    <style name="DomainRegistrationCardTitle" parent="dashboard_card_sub_title">
+    <style name="DomainRegistrationCardTitle" parent="DashboardCardSubtitle">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
