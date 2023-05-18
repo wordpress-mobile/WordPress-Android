@@ -333,18 +333,17 @@ class AccountSettingsViewModel @Inject constructor(
             _accountClosureUiState.value = uiState.copy(isPending = true)
 
             launch {
-                accountClosureUseCase.closeAccount(
-                    onResult = {
-                        when(it) {
-                            is CloseAccountResult.Success -> {
-                                _accountClosureUiState.value = Success
-                            }
-                            is CloseAccountResult.Failure -> {
-                                _accountClosureUiState.value = Error(it.error.errorType)
-                            }
+                accountClosureUseCase.closeAccount { result ->
+                    when (result) {
+                        is CloseAccountResult.Success -> {
+                            _accountClosureUiState.value = Success
+                        }
+
+                        is CloseAccountResult.Failure -> {
+                            _accountClosureUiState.value = Error(result.error.errorType)
                         }
                     }
-                )
+                }
             }
         }
     }
