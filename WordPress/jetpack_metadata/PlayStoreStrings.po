@@ -15,7 +15,7 @@ msgid ""
 "22.4:\n"
 "- Added dashboard cards for Activity Log and Pages\n"
 "- Removed ability to convert deleted/undefined reusable blocks to regular blocks\n"
-"- Updated nested blocks to allow immediate editing without tapping through nested levels\n"
+"- Updated nested text blocks for faster editing without tapping through nested levels\n"
 "- Corrected “editing not supported” message in reusable blocks\n"
 msgstr ""
 
