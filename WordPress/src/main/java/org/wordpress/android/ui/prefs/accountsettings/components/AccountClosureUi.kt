@@ -2,11 +2,13 @@ package org.wordpress.android.ui.prefs.accountsettings.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.ExperimentalComposeUiApi
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.Companion.AccountClosureAction.ACCOUNT_CLOSED
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.Companion.AccountClosureAction.HELP_VIEWED
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AccountClosureUi(viewModel: AccountSettingsViewModel) {
     val uiState = viewModel.accountClosureUiState.collectAsState()
