@@ -437,11 +437,13 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
             resourceProvider,
             networkUtilsWrapper,
             testDispatcher(),
+            testDispatcher(),
             fetchAccountSettingsUseCase,
             pushAccountSettingsUseCase,
             getAccountUseCase,
             getSitesUseCase,
-            optimisticUpdateHandler
+            optimisticUpdateHandler,
+            mock(),
         )
     }
 

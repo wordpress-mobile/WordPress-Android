@@ -4,28 +4,38 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.Companion.AccountClosureAction.ACCOUNT_CLOSED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.Companion.AccountClosureAction.HELP_VIEWED
 
 @Composable
-fun AccountClosureUi(viewModel: AccountSettingsViewModel, onHelpRequested: () -> Unit) {
+fun AccountClosureUi(viewModel: AccountSettingsViewModel) {
     val uiState = viewModel.accountClosureUiState.collectAsState()
 
     CloseAccountButton(onClick = { viewModel.openAccountClosureDialog() })
 
     (uiState.value as? Opened)?.let {
-        when(it) {
-           is Opened.Default -> it.username?.let { currentUsername ->
-               AccountClosureDialog(
-                   onDismissRequest = { viewModel.dismissAccountClosureDialog() },
-                   currentUsername,
-                   onConfirm = { viewModel.closeAccount() },
-                   isPending = it.isPending,
-               )
-           }
+        AccountClosureDialog(
+            onDismissRequest = { viewModel.dismissAccountClosureDialog() },
+        ) {
+            when(it) {
+                is Opened.Default -> it.username?.let { currentUsername ->
+                    DialogUi(
+                        currentUsername = currentUsername,
+                        isPending = it.isPending,
+                        onCancel = { viewModel.dismissAccountClosureDialog() },
+                        onConfirm = { viewModel.closeAccount() },
+                    )
+                }
 
-            Opened.Atomic -> IneligibleClosureDialog(
-                onDismissRequest = { viewModel.dismissAccountClosureDialog() },
-                onHelpRequested = onHelpRequested,
-            )
+                is Opened.Error -> DialogErrorUi(
+                    onDismissRequest = { viewModel.dismissAccountClosureDialog() },
+                    onHelpRequested = { viewModel.userAction(HELP_VIEWED) },
+                    it.errorType,
+                )
+                is Opened.Success -> DialogSuccessUi(
+                    onDismissRequest = { viewModel.userAction(ACCOUNT_CLOSED) }
+                )
+            }
         }
     }
 }
