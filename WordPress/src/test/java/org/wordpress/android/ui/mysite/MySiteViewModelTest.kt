@@ -2960,13 +2960,13 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given selected site with domain credit, when dashboard cards + items, then domain reg card does not exist`() {
+    fun `given selected site with domain credit, when dashboard cards + items, then domain reg card exists`() {
         initSelectedSite()
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
-        assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isEmpty()
+        assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isNotEmpty
     }
 
     @Test
