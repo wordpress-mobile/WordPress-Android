@@ -11,7 +11,7 @@ import org.wordpress.android.ui.utils.UiString
 const val AVATAR_LEFT_OFFSET_DIMEN = R.dimen.margin_small_medium
 
 @DimenRes
-const val AVATAR_SIZE_DIMEN = R.dimen.avatar_sz_small
+const val AVATAR_SIZE_DIMEN = R.dimen.avatar_sz_extra_small
 
 sealed class TrainOfAvatarsItem(val type: TrainOfAvatarsViewType) {
     data class AvatarItem(val userAvatarUrl: String) : TrainOfAvatarsItem(AVATAR)
