@@ -448,6 +448,8 @@ public final class AnalyticsTracker {
         PAGES_TAB_PRESSED,
         PAGES_OPTIONS_PRESSED,
         PAGES_SEARCH_ACCESSED,
+        PAGES_EDIT_HOMEPAGE_INFO_PRESSED,
+        PAGES_EDIT_HOMEPAGE_ITEM_PRESSED,
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         SIGNUP_BUTTON_TAPPED,

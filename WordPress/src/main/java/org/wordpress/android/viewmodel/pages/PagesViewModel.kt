@@ -739,6 +739,7 @@ class PagesViewModel
     }
 
     fun onVirtualHomepageAction(action: VirtualHomepage.Action) {
+        trackVirtualHomepageAction(action)
         when (action) {
             is VirtualHomepage.Action.OpenExternalLink -> {
                 _openExternalLink.postValue(action.url)
@@ -754,6 +755,16 @@ class PagesViewModel
                 )
             }
         }.exhaustive
+    }
+
+    private fun trackVirtualHomepageAction(action: VirtualHomepage.Action) {
+        val stat = when (action) {
+            VirtualHomepage.Action.OpenExternalLink.TemplateSupport ->
+                AnalyticsTracker.Stat.PAGES_EDIT_HOMEPAGE_INFO_PRESSED
+
+            is VirtualHomepage.Action.OpenSiteEditor -> AnalyticsTracker.Stat.PAGES_EDIT_HOMEPAGE_ITEM_PRESSED
+        }
+        analyticsTracker.track(stat, site)
     }
 
     fun onNewPageButtonTapped() {
