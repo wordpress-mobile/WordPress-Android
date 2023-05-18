@@ -32,7 +32,7 @@ private val RESPONDENTS_IN_CARD = listOf(
             R.string.my_site_blogging_prompt_card_number_of_answers_other,
             NUMBER_OF_RESPONDENTS
         ),
-        R.attr.colorOnSurface
+        R.attr.wpColorOnSurfaceMedium
     )
 )
 
@@ -44,7 +44,7 @@ private val RESPONDENTS_IN_CARD_VIEW_ANSWERS = listOf(
         UiStringRes(
             R.string.my_site_blogging_prompt_card_view_answers
         ),
-        R.attr.colorOnSurface
+        R.attr.wpColorOnSurfaceMedium
     )
 )
 
