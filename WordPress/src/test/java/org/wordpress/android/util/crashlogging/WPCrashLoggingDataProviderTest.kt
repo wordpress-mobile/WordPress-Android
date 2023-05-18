@@ -20,6 +20,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.util.BuildConfigWrapper
@@ -68,7 +69,8 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
             encryptedLogging = encryptedLogging,
             logFileProvider = logFileProvider,
             buildConfig = buildConfig,
-            appScope = testScope()
+            appScope = testScope(),
+            dispatcher = Dispatcher()
         )
     }
 
