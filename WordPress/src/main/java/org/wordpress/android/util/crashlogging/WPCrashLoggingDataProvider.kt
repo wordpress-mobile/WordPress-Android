@@ -6,11 +6,16 @@ import com.automattic.android.tracks.crashlogging.CrashLoggingUser
 import com.automattic.android.tracks.crashlogging.EventLevel
 import com.automattic.android.tracks.crashlogging.ExtraKnownKey
 import com.automattic.android.tracks.crashlogging.PerformanceMonitoringConfig
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.EncryptedLogging
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -18,6 +23,7 @@ import org.wordpress.android.util.LogFileProviderWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Locale
 import javax.inject.Inject
+import javax.inject.Named
 
 class WPCrashLoggingDataProvider @Inject constructor(
     private val sharedPreferences: SharedPreferences,
@@ -26,7 +32,8 @@ class WPCrashLoggingDataProvider @Inject constructor(
     private val localeManager: LocaleManagerWrapper,
     private val encryptedLogging: EncryptedLogging,
     private val logFileProvider: LogFileProviderWrapper,
-    private val buildConfig: BuildConfigWrapper
+    private val buildConfig: BuildConfigWrapper,
+    @Named(APPLICATION_SCOPE) private val appScope: CoroutineScope
 ) : CrashLoggingDataProvider {
     override val buildType: String = BuildConfig.BUILD_TYPE
     override val enableCrashLoggingLogs: Boolean = BuildConfig.DEBUG
@@ -97,17 +104,28 @@ class WPCrashLoggingDataProvider @Inject constructor(
                 value == EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR
     }
 
-    override val user = MutableStateFlow(
-            accountStore.account?.let { accountModel ->
-                CrashLoggingUser(
-                    userID = accountModel.userId.toString(),
-                    email = accountModel.email,
-                    username = accountModel.userName
-                )
-            })
+    override val user = MutableStateFlow(accountStore.account?.toCrashLoggingUser())
 
     override val performanceMonitoringConfig: PerformanceMonitoringConfig
         get() = PerformanceMonitoringConfig.Disabled
+
+    @Suppress("unused", "unused_parameter")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onAccountChanged(event: AccountStore.OnAccountChanged) {
+        appScope.launch {
+            user.emit(accountStore.account.toCrashLoggingUser())
+        }
+    }
+
+    private fun AccountModel.toCrashLoggingUser(): CrashLoggingUser? {
+        if (userId == 0L) return null
+
+        return CrashLoggingUser(
+            userID = userId.toString(),
+            email = email,
+            username = userName
+        )
+    }
 
     companion object {
         const val EXTRA_UUID = "uuid"

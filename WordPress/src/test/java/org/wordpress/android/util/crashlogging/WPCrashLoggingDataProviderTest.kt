@@ -18,6 +18,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -35,7 +36,7 @@ import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
 @ExperimentalCoroutinesApi
-class WPCrashLoggingDataProviderTest {
+class WPCrashLoggingDataProviderTest : BaseUnitTest() {
     lateinit var sut: WPCrashLoggingDataProvider
 
     private val mockedFile: File = mock { on { exists() } doReturn true }
@@ -60,13 +61,14 @@ class WPCrashLoggingDataProviderTest {
     @Before
     fun setUp() {
         sut = WPCrashLoggingDataProvider(
-            sharedPreferences,
-            resourceProvider,
-            accountStore,
-            localeManager,
-            encryptedLogging,
-            logFileProvider,
-            buildConfig
+            sharedPreferences = sharedPreferences,
+            resourceProvider = resourceProvider,
+            accountStore = accountStore,
+            localeManager = localeManager,
+            encryptedLogging = encryptedLogging,
+            logFileProvider = logFileProvider,
+            buildConfig = buildConfig,
+            appScope = testScope()
         )
     }
 
