@@ -26,6 +26,8 @@
 /me/transactions/
 /me/shopping-cart/$site
 
+/me/account/close
+
 /notifications/
 /notifications/$note_id
 /notifications/seen/
