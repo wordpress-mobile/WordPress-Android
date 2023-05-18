@@ -54,6 +54,9 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var account: AccountModel
 
+    @Mock
+    lateinit var accountClosureUseCase: AccountClosureUseCase
+
     private val siteViewModels = mutableListOf<SiteUiModel>().apply {
         add(SiteUiModel("HappyDay", 1L, "http://happyday.wordpress.com"))
         add(SiteUiModel("WonderLand", 2L, "http://wonderland.wordpress.com"))
@@ -443,7 +446,7 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
             getAccountUseCase,
             getSitesUseCase,
             optimisticUpdateHandler,
-            mock(),
+            accountClosureUseCase,
         )
     }
 

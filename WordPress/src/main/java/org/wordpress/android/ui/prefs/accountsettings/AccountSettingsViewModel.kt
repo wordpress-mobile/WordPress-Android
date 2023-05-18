@@ -15,9 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult
-import org.wordpress.android.fluxc.network.rest.wpcom.account.closeAccount
 import org.wordpress.android.fluxc.store.AccountStore.AccountError
 import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_FETCH_GENERIC_ERROR
 import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR
@@ -30,6 +28,7 @@ import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.A
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened.Error
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened.Default
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened.Success
+import org.wordpress.android.ui.prefs.accountsettings.usecase.AccountClosureUseCase
 import org.wordpress.android.ui.prefs.accountsettings.usecase.FetchAccountSettingsUseCase
 import org.wordpress.android.ui.prefs.accountsettings.usecase.GetAccountUseCase
 import org.wordpress.android.ui.prefs.accountsettings.usecase.GetSitesUseCase
@@ -56,7 +55,7 @@ class AccountSettingsViewModel @Inject constructor(
     private val getAccountUseCase: GetAccountUseCase,
     private val getSitesUseCase: GetSitesUseCase,
     private val optimisticUpdateHandler: AccountSettingsOptimisticUpdateHandler,
-    private val accountRestClient: AccountRestClient,
+    private val accountClosureUseCase: AccountClosureUseCase,
 ) : ScopedViewModel(mainDispatcher) {
     private var fetchNewSettingsJob: Job? = null
     private var _accountSettingsUiState = MutableStateFlow(getAccountSettingsUiState(true))
@@ -334,7 +333,7 @@ class AccountSettingsViewModel @Inject constructor(
             _accountClosureUiState.value = uiState.copy(isPending = true)
 
             launch {
-                accountRestClient.closeAccount(
+                accountClosureUseCase.closeAccount(
                     onResult = {
                         when(it) {
                             is CloseAccountResult.Success -> {
