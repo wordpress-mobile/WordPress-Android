@@ -10,6 +10,7 @@ import org.wordpress.android.util.extensions.activeIndividualJetpackPluginNames
 import org.wordpress.android.util.extensions.isJetpackIndividualPluginConnectedWithoutFullPlugin
 import javax.inject.Inject
 
+@Suppress("UNUSED_PARAMETER")
 class JetpackInstallFullPluginCardBuilder @Inject constructor(
     private val installFullPluginFeatureConfig: JetpackInstallFullPluginFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
@@ -25,10 +26,8 @@ class JetpackInstallFullPluginCardBuilder @Inject constructor(
         )
     } else null
 
+    @Suppress("UNUSED_PARAMETER")
     private fun shouldShowCard(site: SiteModel): Boolean {
-        return site.id != 0 &&
-                installFullPluginFeatureConfig.isEnabled() &&
-                !appPrefsWrapper.getShouldHideJetpackInstallFullPluginCard(site.id) &&
-                site.isJetpackIndividualPluginConnectedWithoutFullPlugin()
+        return true
     }
 }
