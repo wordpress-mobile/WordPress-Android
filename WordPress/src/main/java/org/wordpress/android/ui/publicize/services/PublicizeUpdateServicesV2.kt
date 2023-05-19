@@ -16,7 +16,7 @@ class PublicizeUpdateServicesV2 @Inject constructor(
     private val restClientProvider: RestClientProvider,
     private val eventBusWrapper: EventBusWrapper,
 ) {
-    suspend fun execute(siteModel: SiteModel) {
+    fun execute(siteModel: SiteModel) {
         AppLog.d(AppLog.T.SHARING, "${PublicizeUpdateServicesV2::class.simpleName}: updating services and connections")
         updateServices(siteModel.siteId)
         updateConnections(siteModel.siteId)
