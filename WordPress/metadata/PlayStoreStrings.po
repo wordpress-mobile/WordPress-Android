@@ -10,17 +10,16 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
+msgctxt "release_note_224"
+msgid ""
+"22.4:\n"
+"When you tap on a nested text block, you can immediately edit content in that block—no more tapping through every nesting level to get where you want to go. (Our fingers were getting tired, too.)\n"
+msgstr ""
+
 msgctxt "release_note_223"
 msgid ""
 "22.3:\n"
 "No updates this week, but we’re hard at work on a pressing feature we know you’ll enjoy.\n"
-msgstr ""
-
-msgctxt "release_note_222"
-msgid ""
-"22.2:\n"
-"- We added a yellow warning box telling you when notifications and blogging reminders are no longer being sent to your device as push notifications.\n"
-"- We updated media access permissions for photos, videos, and audio to align with the Android 13 update.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
@@ -92,7 +91,7 @@ msgid ""
 "\n"
 "Whether you need a website builder to create your website, or a simple blog maker, WordPress can help. It gives you beautiful designs, powerful features, and the freedom to build anything you want.\n"
 "\n"
-"California users privacy notice: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.\n"
+"California users privacy notice: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa."
 msgstr ""
 
 #. translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!

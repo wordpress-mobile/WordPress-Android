@@ -14,7 +14,6 @@ import org.wordpress.android.ui.prefs.accountsettings.usecase.GetSitesUseCase
 
 @ExperimentalCoroutinesApi
 class GetSitesUseCaseTest: BaseUnitTest() {
-
     private lateinit var useCase: GetSitesUseCase
 
     @Mock
