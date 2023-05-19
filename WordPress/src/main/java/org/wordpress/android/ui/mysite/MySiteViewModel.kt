@@ -814,6 +814,7 @@ class MySiteViewModel @Inject constructor(
             }
             add(Type.QUICK_LINK_RIBBON)
             add(Type.JETPACK_INSTALL_FULL_PLUGIN_CARD)
+            add(Type.DOMAIN_REGISTRATION_CARD)
         }
 
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
