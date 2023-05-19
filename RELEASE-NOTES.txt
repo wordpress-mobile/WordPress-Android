@@ -2,7 +2,7 @@
 
 22.5
 -----
-
+* [*] Adds a button to enable account closure from the account settings screen [https://github.com/wordpress-mobile/WordPress-Android/pull/18412]
 
 22.4
 -----

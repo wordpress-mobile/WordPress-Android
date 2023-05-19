@@ -814,13 +814,13 @@ class MySiteViewModel @Inject constructor(
             }
             add(Type.QUICK_LINK_RIBBON)
             add(Type.JETPACK_INSTALL_FULL_PLUGIN_CARD)
+            add(Type.DOMAIN_REGISTRATION_CARD)
         }
 
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
             if (defaultTab == MySiteTabType.SITE_MENU) {
                 add(Type.QUICK_START_CARD)
             }
-            add(Type.DOMAIN_REGISTRATION_CARD)
             add(Type.QUICK_ACTIONS_CARD)
         }
 

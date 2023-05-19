@@ -4,6 +4,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.pages.PageItem.Type.DIVIDER
 import org.wordpress.android.ui.pages.PageItem.Type.EMPTY
 import org.wordpress.android.ui.pages.PageItem.Type.PAGE
@@ -190,9 +191,26 @@ sealed class PageItem(open val type: Type) {
     ) : PageItem(EMPTY)
 
     object VirtualHomepage : PageItem(VIRTUAL_HOMEPAGE) {
-        enum class Action {
-            OPEN_SITE_EDITOR,
-            OPEN_LEARN_MORE_URL,
+        sealed class Action {
+            class OpenSiteEditor : Action() {
+                val customCss: String get() = SITE_EDITOR_CSS
+
+                fun getUrl(site: SiteModel): String = site.adminUrl + "site-editor.php?canvas=edit"
+
+                companion object {
+                    const val SITE_EDITOR_CSS = ".edit-site-header-edit-mode { padding-left: 0px } " +
+                            ".edit-site-site-hub { display: none } " +
+                            ".edit-site-template-details " +
+                            ".edit-site-template-details__show-all-button.components-button " +
+                            "{ display: none }"
+                }
+            }
+
+            sealed class OpenExternalLink(
+                val url: String
+            ) : Action() {
+                object TemplateSupport : OpenExternalLink("https://wordpress.com/support/templates/")
+            }
         }
     }
 

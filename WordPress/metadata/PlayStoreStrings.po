@@ -13,7 +13,7 @@ msgstr ""
 msgctxt "release_note_224"
 msgid ""
 "22.4:\n"
-"When you tap on a nested block, you can immediately edit content in that block—no more tapping through every nesting level to get where you want to go. (Our fingers were getting tired, too.)\n"
+"When you tap on a nested text block, you can immediately edit content in that block—no more tapping through every nesting level to get where you want to go. (Our fingers were getting tired, too.)\n"
 msgstr ""
 
 msgctxt "release_note_223"
