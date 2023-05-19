@@ -207,8 +207,12 @@ class WPWebViewViewModel
         }
     }
 
-    fun track(stat: Stat) {
-        analyticsTrackerWrapper.track(stat)
+    @JvmOverloads
+    fun track(stat: Stat, source: WPWebViewSource? = null) {
+        source?.let {
+            val props = mapOf(WPWebViewSource.KEY to it.value)
+            analyticsTrackerWrapper.track(stat, props)
+        } ?: analyticsTrackerWrapper.track(stat)
     }
 
     private fun getPreviewHintResId(previewMode: PreviewMode) = when (previewMode) {

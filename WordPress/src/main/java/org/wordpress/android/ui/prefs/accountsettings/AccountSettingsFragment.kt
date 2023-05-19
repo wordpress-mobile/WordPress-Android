@@ -14,13 +14,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.accounts.signup.BaseUsernameChangerFullScreenDialogFragment
+import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.DetailListPreference
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
@@ -37,10 +45,13 @@ import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.USERN
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.USERNAME_CHANGE_SCREEN_DISPLAYED
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.WEB_ADDRESS_CHANGED
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountSettingsUiState
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.ChangePasswordSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.EmailSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.PrimarySiteSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.UserNameSettingsUiState
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.Companion.AccountClosureAction
+import org.wordpress.android.ui.prefs.accountsettings.components.AccountClosureUi
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SETTINGS
@@ -90,6 +101,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         addPreferencesFromResource(R.xml.account_settings)
         bindPreferences()
         setUpListeners()
+        observeAccountClosureEvents()
         emailPreference.configure(
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
             validationType = EMAIL
@@ -115,6 +127,30 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         changePasswordPreference = findPreference(getString(R.string.pref_key_change_password))
                 as EditTextPreferenceWithValidation
         changePasswordPreference.summary = EMPTY_STRING
+    }
+
+    private fun observeAccountClosureEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.userActionEvents.collect { handleUserAction(it) }
+            }
+        }
+        lifecycleScope.launch {
+            // Using `CREATED` state here prevents tracking duplicate events
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.accountClosureUiState.collect {
+                    when (it) {
+                        is AccountClosureUiState.Opened.Error -> {
+                            analyticsTracker.trackAccountClosureFailure(it.errorType.token)
+                        }
+                        is AccountClosureUiState.Opened.Success -> {
+                            analyticsTracker.trackAccountClosureSuccess()
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
     }
 
     private fun setUpListeners() {
@@ -151,6 +187,21 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         }
         coordinator.addView(preferenceView)
         return coordinatorView
+    }
+
+    @Deprecated("Deprecated")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (view.findViewById<View>(android.R.id.list) as? ListView)?.let { listView ->
+            listView.addFooterView(ComposeView(context).apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    AppTheme {
+                        AccountClosureUi(viewModel)
+                    }
+                }
+            })
+        }
     }
 
     @Deprecated("Deprecated")
@@ -347,6 +398,28 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 isIndeterminate = true
                 setMessage(getString(R.string.change_password_dialog_message))
             }
+        }
+    }
+
+    private fun handleUserAction(action: AccountClosureAction) {
+        when (action) {
+            AccountClosureAction.HELP_VIEWED -> viewHelp()
+            AccountClosureAction.ACCOUNT_CLOSED -> signOut()
+            AccountClosureAction.USER_LOGGED_OUT -> {
+                ActivityLauncher.showMainActivity(context, true)
+            }
+        }
+    }
+    private fun viewHelp() = ActivityLauncher.viewHelp(
+        context,
+        HelpActivity.Origin.ACCOUNT_CLOSURE_DIALOG,
+        null,
+        null,
+    )
+
+    private fun signOut() {
+        (activity.application as? WordPress)?.let {
+            viewModel.signOutWordPress(it)
         }
     }
 }
