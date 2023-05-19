@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.ui.compose.theme.AppColor
 
 @Composable
-fun FlatButton(
+fun flatButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -35,7 +35,7 @@ fun FlatButton(
 }
 
 @Composable
-fun FlatOutlinedButton(
+fun flatOutlinedButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
