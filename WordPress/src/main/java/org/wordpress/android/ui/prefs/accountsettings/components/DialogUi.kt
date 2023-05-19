@@ -56,6 +56,7 @@ fun DialogUi(
             .focusRequester(focusRequester),
         value = username,
         onValueChange = { username = it },
+        enabled = !isPending,
     )
     Row(
         modifier = Modifier
