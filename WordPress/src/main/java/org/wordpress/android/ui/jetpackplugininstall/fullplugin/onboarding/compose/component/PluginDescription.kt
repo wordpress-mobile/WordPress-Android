@@ -2,9 +2,11 @@ package org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.comp
 
 import android.content.res.Configuration
 import androidx.compose.material.Text
+import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -26,10 +28,19 @@ fun PluginDescription(
     Text(
         modifier = modifier,
         text = buildPluginDescriptionText(pluginNames, siteString, useConciseText),
-        fontSize = 17.sp,
-        style = TextStyle(letterSpacing = (-0.01).sp),
+        style = dashboardCardDetailText.body2,
+        color = colorResource(R.color.material_on_surface_emphasis_medium)
     )
 }
+// todo : improve this logic
+
+val dashboardCardDetail = TextStyle(
+        fontWeight = FontWeight.Normal,
+)
+
+val dashboardCardDetailText = Typography(
+    body2 = dashboardCardDetail,
+)
 
 @ReadOnlyComposable
 @Composable
