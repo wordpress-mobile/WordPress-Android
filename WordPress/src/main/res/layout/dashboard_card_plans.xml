@@ -25,7 +25,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/dashboard_card_plans_title"
-                style="@style/DashboardCardSmallTitle"
+                style="@style/DashboardCardSubtitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/dashboard_card_plans_title"
