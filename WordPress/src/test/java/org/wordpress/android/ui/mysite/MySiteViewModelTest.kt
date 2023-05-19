@@ -2970,7 +2970,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given selected site with domain credit, when site menu cards and items, then domain reg card does not exist`() {
+    fun `given selected site with domain credit, when site menu cards and items, then domain reg card doesn't exist`() {
         initSelectedSite()
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
