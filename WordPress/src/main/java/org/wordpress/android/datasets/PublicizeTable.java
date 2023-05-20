@@ -111,7 +111,7 @@ public class PublicizeTable {
                     + " is_jetpack_supported," // 7
                     + " is_multi_user_id_supported," // 8
                     + " is_external_users_only," // 9
-                    + " status)" //10
+                    + " status)" // 10
                     + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)");
             for (PublicizeService service : serviceList) {
                 stmt.bindString(1, service.getId());

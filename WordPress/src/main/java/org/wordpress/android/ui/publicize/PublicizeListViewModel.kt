@@ -15,7 +15,6 @@ class PublicizeListViewModel @Inject constructor(
     private val eventBusWrapper: EventBusWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
-
     fun onSiteAvailable(siteModel: SiteModel) {
         val siteId = siteModel.siteId
         updateServices(siteId)
