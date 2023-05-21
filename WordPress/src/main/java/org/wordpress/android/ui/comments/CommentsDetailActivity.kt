@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.comments
 
 import org.wordpress.android.util.extensions.onBackPressedCompat
@@ -53,8 +55,8 @@ import org.wordpress.android.util.ToastUtils
 class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnCommentActionListener,
     ScrollableViewInitializedListener {
 
-    @JvmField
-    @Inject
+    @Suppress("DEPRECATION")
+    @JvmField @Inject
     var mCommentsStoreAdapter: CommentsStoreAdapter? = null
     private lateinit var mViewPager: WPViewPager
     private var mAppBarLayout: AppBarLayout? = null
@@ -62,6 +64,8 @@ class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnComm
     private var mCommentId: Long = 0
     private var mStatusFilter: CommentStatus? = null
     private var mSite: SiteModel? = null
+
+    @Suppress("DEPRECATION")
     private var mAdapter: CommentDetailFragmentAdapter? = null
     private var mOnPageChangeListener: OnPageChangeListener? = null
     private var mIsLoadingComments = false
@@ -73,6 +77,7 @@ class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnComm
         const val COMMENT_STATUS_FILTER_EXTRA = "commentStatusFilter"
     }
 
+    @Suppress("DEPRECATION")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mCommentsStoreAdapter!!.register(this)
@@ -203,6 +208,7 @@ class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnComm
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun loadDataInViewPager() {
         if (mIsLoadingComments) {
             AppLog.w(AppLog.T.COMMENTS, "load comments task already active")
@@ -222,6 +228,7 @@ class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnComm
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun showCommentList(commentList: CommentList) {
         if (isFinishing) {
             return
