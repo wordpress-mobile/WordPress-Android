@@ -1,9 +1,6 @@
 package org.wordpress.android.ui.comments
 
-import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter.register
 import org.wordpress.android.util.extensions.onBackPressedCompat
-import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter.unregister
-import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter.dispatch
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener
@@ -14,12 +11,10 @@ import org.wordpress.android.widgets.WPViewPager
 import android.widget.ProgressBar
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.comments.CommentDetailFragmentAdapter
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import android.os.Bundle
 import org.wordpress.android.R
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment
-import org.wordpress.android.ui.comments.CommentsDetailActivity
 import org.wordpress.android.WordPress
 import org.wordpress.android.widgets.WPViewPagerTransformer
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -36,7 +31,6 @@ import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
 import org.wordpress.android.fluxc.model.CommentModel
 import android.content.Intent
 import org.wordpress.android.ui.comments.unified.CommentConstants
-import android.app.Activity
 import android.text.TextUtils
 import android.view.MenuItem
 import android.view.View
@@ -45,6 +39,7 @@ import androidx.appcompat.widget.Toolbar
 import com.google.android.material.appbar.AppBarLayout
 import org.greenrobot.eventbus.Subscribe
 import org.wordpress.android.models.CommentList
+import org.wordpress.android.ui.comments.unified.CommentConstants.COMMENTS_PER_PAGE
 import org.wordpress.android.ui.comments.unified.OnLoadMoreListener
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtils
@@ -60,7 +55,8 @@ class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnComm
     @JvmField
     @Inject
     var mCommentsStoreAdapter: CommentsStoreAdapter? = null
-    private var mViewPager: WPViewPager? = null
+    //private var mViewPager: WPViewPager? = null
+    private lateinit var mViewPager: WPViewPager
     private var mAppBarLayout: AppBarLayout? = null
     private var mProgressBar: ProgressBar? = null
     private var mCommentId: Long = 0
