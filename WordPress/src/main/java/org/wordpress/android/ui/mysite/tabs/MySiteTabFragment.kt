@@ -35,6 +35,7 @@ import org.wordpress.android.ui.accounts.LoginEpilogueActivity
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.FREE_DOMAIN_WITH_ANNUAL_PLAN
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.JetpackFullPluginInstallOnboardingDialogFragment
@@ -401,6 +402,11 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             activity,
             action.site,
             CTA_DOMAIN_CREDIT_REDEMPTION
+        )
+        is SiteNavigationAction.OpenFreeDomainSearch -> ActivityLauncher.viewDomainRegistrationActivityForResult(
+            activity,
+            action.site,
+            FREE_DOMAIN_WITH_ANNUAL_PLAN
         )
         is SiteNavigationAction.OpenPaidDomainSearch -> ActivityLauncher.viewDomainRegistrationActivityForResult(
             this,
