@@ -15,7 +15,7 @@ import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.main.jetpack.staticposter.compose.jetpackStaticPoster
+import org.wordpress.android.ui.main.jetpack.staticposter.compose.JetpackStaticPoster
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
@@ -36,7 +36,7 @@ class JetpackStaticPosterFragment : Fragment() {
             AppTheme {
                 val uiState by viewModel.uiState.collectAsState()
                 when (val state = uiState) {
-                    is UiState.Content -> jetpackStaticPoster(
+                    is UiState.Content -> JetpackStaticPoster(
                         uiState = state,
                         onPrimaryClick = viewModel::onPrimaryClick,
                         onSecondaryClick = viewModel::onSecondaryClick,

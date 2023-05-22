@@ -60,13 +60,13 @@ fun SiteList(
             .then(blurModifier),
     ) {
         item {
-            siteListHeader(uiState)
+            SiteListHeader(uiState)
         }
         items(
             items = uiState.sites,
             key = { it.id },
         ) { site ->
-            siteListItem(
+            SiteListItem(
                 uiState = site,
                 isDimmed = uiState.isProcessing,
             )
@@ -86,7 +86,7 @@ fun SiteList(
 }
 
 @Composable
-private fun siteListItem(uiState: SiteListItemUiState, isDimmed: Boolean) = with(uiState) {
+private fun SiteListItem(uiState: SiteListItemUiState, isDimmed: Boolean): Unit = with(uiState) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -102,7 +102,7 @@ private fun siteListItem(uiState: SiteListItemUiState, isDimmed: Boolean) = with
 }
 
 @Composable
-private fun siteListHeader(uiState: UiState.Content.Welcome) = with(uiState) {
+private fun SiteListHeader(uiState: UiState.Content.Welcome): Unit = with(uiState) {
     Column(
         modifier = Modifier
             .dimmed(uiState.isProcessing)

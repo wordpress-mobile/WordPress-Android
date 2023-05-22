@@ -1037,6 +1037,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 // This stat is part of a funnel that provides critical information.  Before
                 // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 return "account_created";
+            case CLOSE_ACCOUNT_FAILED:
+                return "close_account_failed";
+            case CLOSED_ACCOUNT:
+                return "closed_account";
             case SHARED_ITEM:
                 return "item_shared";
             case SHARED_ITEM_READER:
@@ -1315,6 +1319,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_pages_options_pressed";
             case PAGES_SEARCH_ACCESSED:
                 return "site_pages_search_accessed";
+            case PAGES_EDIT_HOMEPAGE_INFO_PRESSED:
+                return "site_pages_edit_homepage_info_pressed";
+            case PAGES_EDIT_HOMEPAGE_ITEM_PRESSED:
+                return "site_pages_edit_homepage_item_pressed";
             case SIGNUP_BUTTON_TAPPED:
                 // This stat is part of a funnel that provides critical information.  Before
                 // making ANY modification to this stat please refer to: p4qSXL-35X-p2
@@ -2577,6 +2585,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "direct_domains_purchase_dashboard_card_menu_tapped";
             case DASHBOARD_CARD_DOMAIN_HIDDEN:
                 return "direct_domains_purchase_dashboard_card_hidden";
+            case DASHBOARD_CARD_PLANS_SHOWN:
+                return "free_to_paid_plan_dashboard_card_shown";
+            case DASHBOARD_CARD_PLANS_TAPPED:
+                return "free_to_paid_plan_dashboard_card_tapped";
+            case DASHBOARD_CARD_PLANS_MORE_MENU_TAPPED:
+                return "free_to_paid_plan_dashboard_card_menu_tapped";
+            case DASHBOARD_CARD_PLANS_HIDDEN:
+                return "free_to_paid_plan_dashboard_card_hidden";
         }
         return null;
     }

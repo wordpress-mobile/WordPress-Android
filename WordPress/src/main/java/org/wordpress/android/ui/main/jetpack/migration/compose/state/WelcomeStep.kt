@@ -46,7 +46,7 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.dimmed
 
 @Composable
 @SuppressLint("FrequentlyChangedStateReadInComposition")
-fun welcomeStep(uiState: UiState.Content.Welcome) = with(uiState) {
+fun WelcomeStep(uiState: UiState.Content.Welcome): Unit = with(uiState) {
     Box {
         val listState = rememberLazyListState()
         val blurredListState = rememberLazyListState()
@@ -216,7 +216,7 @@ private val previewUiState = UiState.Content.Welcome(
 private fun PreviewWelcomeStep() {
     AppTheme {
         Box {
-            welcomeStep(previewUiState)
+            WelcomeStep(previewUiState)
         }
     }
 }
@@ -228,7 +228,7 @@ private fun PreviewWelcomeStepInProgress() {
     val uiState = previewUiState.copy(isProcessing = true)
     AppTheme {
         Box {
-            welcomeStep(uiState)
+            WelcomeStep(uiState)
         }
     }
 }

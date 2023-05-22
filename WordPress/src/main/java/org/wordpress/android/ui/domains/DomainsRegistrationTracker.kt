@@ -25,7 +25,7 @@ class DomainsRegistrationTracker @Inject constructor(
         if (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
             val origin = if (isSiteCreation) VALUE.ORIGIN_SITE_CREATION.key else VALUE.ORIGIN_MENU.key
             tracker.track(
-                AnalyticsTracker.Stat.DOMAINS_PURCHASE_WEBVIEW_VIEWED, site, mutableMapOf(PROPERTY.ORIGIN.key to origin)
+                AnalyticsTracker.Stat.DOMAINS_PURCHASE_WEBVIEW_VIEWED, site, mapOf(PROPERTY.ORIGIN.key to origin)
             )
         } else {
             tracker.track(AnalyticsTracker.Stat.DOMAINS_PURCHASE_WEBVIEW_VIEWED, site)
@@ -44,8 +44,9 @@ class DomainsRegistrationTracker @Inject constructor(
         tracker.track(AnalyticsTracker.Stat.DOMAINS_REGISTRATION_FORM_SUBMITTED)
     }
 
-    fun trackDomainsPurchaseDomainSuccess() {
-        tracker.track(AnalyticsTracker.Stat.DOMAINS_PURCHASE_DOMAIN_SUCCESS)
+    fun trackDomainsPurchaseDomainSuccess(isSiteCreation: Boolean) {
+        val origin = if (isSiteCreation) VALUE.ORIGIN_SITE_CREATION.key else VALUE.ORIGIN_MENU.key
+        tracker.track(AnalyticsTracker.Stat.DOMAINS_PURCHASE_DOMAIN_SUCCESS, mapOf(PROPERTY.ORIGIN.key to origin))
     }
 
     fun trackDomainCreditNameSelected() {

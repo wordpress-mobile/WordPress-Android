@@ -4,9 +4,11 @@ import androidx.annotation.ColorRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.pages.PageItem.Type.DIVIDER
 import org.wordpress.android.ui.pages.PageItem.Type.EMPTY
 import org.wordpress.android.ui.pages.PageItem.Type.PAGE
+import org.wordpress.android.ui.pages.PageItem.Type.VIRTUAL_HOMEPAGE
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
@@ -188,12 +190,37 @@ sealed class PageItem(open val type: Type) {
         val isImageVisible: Boolean = true
     ) : PageItem(EMPTY)
 
+    object VirtualHomepage : PageItem(VIRTUAL_HOMEPAGE) {
+        sealed class Action {
+            class OpenSiteEditor : Action() {
+                val customCss: String get() = SITE_EDITOR_CSS
+
+                fun getUrl(site: SiteModel): String = site.adminUrl + "site-editor.php?canvas=edit"
+
+                companion object {
+                    const val SITE_EDITOR_CSS = ".edit-site-header-edit-mode { padding-left: 0px } " +
+                            ".edit-site-site-hub { display: none } " +
+                            ".edit-site-template-details " +
+                            ".edit-site-template-details__show-all-button.components-button " +
+                            "{ display: none }"
+                }
+            }
+
+            sealed class OpenExternalLink(
+                val url: String
+            ) : Action() {
+                object TemplateSupport : OpenExternalLink("https://wordpress.com/support/templates/")
+            }
+        }
+    }
+
     enum class Type(val viewType: Int) {
         PAGE(1),
         DIVIDER(2),
         EMPTY(3),
         PARENT(4),
-        TOP_LEVEL_PARENT(5)
+        TOP_LEVEL_PARENT(5),
+        VIRTUAL_HOMEPAGE(6),
     }
 
     enum class Action(@IdRes val itemId: Int) {

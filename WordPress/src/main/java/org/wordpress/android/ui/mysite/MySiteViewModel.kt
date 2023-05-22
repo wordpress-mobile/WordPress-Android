@@ -65,6 +65,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCa
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams.ActivityCardItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
@@ -95,6 +96,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
+import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
@@ -214,6 +216,7 @@ class MySiteViewModel @Inject constructor(
     private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val dashboardCardDomainUtils: DashboardCardDomainUtils,
+    private val dashboardCardPlansUtils: PlansCardUtils,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
 ) : ScopedViewModel(mainDispatcher) {
@@ -367,6 +370,8 @@ class MySiteViewModel @Inject constructor(
             bloggingPromptsCardTrackHelper.onSiteChanged(site?.id)
 
             dashboardCardDomainUtils.onSiteChanged(site?.id, state as? SiteSelected)
+
+            dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
 
             UiModel(currentAvatarUrl.orEmpty(), state)
         }
@@ -612,6 +617,12 @@ class MySiteViewModel @Inject constructor(
                     onHideMenuItemClick = this::onDashboardCardDomainHideMenuItemClick,
                     onMoreMenuClick = this::onDashboardCardDomainMoreMenuClick
                 ),
+                dashboardCardPlansBuilderParams = DashboardCardPlansBuilderParams(
+                    isEligible = dashboardCardPlansUtils.shouldShowCard(site),
+                    onClick = this::onDashboardCardPlansClick,
+                    onHideMenuItemClick = this::onDashboardCardPlansHideMenuItemClick,
+                    onMoreMenuClick = this::onDashboardCardPlansMoreMenuClick
+                ),
                 pagesCardBuilderParams = PagesCardBuilderParams(
                     pageCard = cardsUpdate?.cards?.firstOrNull { it is PagesCardModel } as? PagesCardModel,
                     onPagesItemClick = this::onPagesItemClick,
@@ -801,13 +812,13 @@ class MySiteViewModel @Inject constructor(
             }
             add(Type.QUICK_LINK_RIBBON)
             add(Type.JETPACK_INSTALL_FULL_PLUGIN_CARD)
+            add(Type.DOMAIN_REGISTRATION_CARD)
         }
 
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
             if (defaultTab == MySiteTabType.SITE_MENU) {
                 add(Type.QUICK_START_CARD)
             }
-            add(Type.DOMAIN_REGISTRATION_CARD)
             add(Type.QUICK_ACTIONS_CARD)
         }
 
@@ -1174,6 +1185,7 @@ class MySiteViewModel @Inject constructor(
         checkAndShowQuickStartNotice()
         bloggingPromptsCardTrackHelper.onResume(currentTab)
         dashboardCardDomainUtils.onResume(currentTab, uiModel.value?.state as? SiteSelected)
+        dashboardCardPlansUtils.onResume(currentTab, uiModel.value?.state as? SiteSelected)
     }
 
     private fun checkAndShowJetpackFullPluginInstallOnboarding() {
@@ -1675,6 +1687,24 @@ class MySiteViewModel @Inject constructor(
         refresh()
     }
 
+    private fun onDashboardCardPlansClick() {
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        dashboardCardPlansUtils.trackCardTapped(uiModel.value?.state as? SiteSelected)
+        _onNavigation.value = Event(SiteNavigationAction.OpenFreeDomainSearch(selectedSite))
+    }
+
+    private fun onDashboardCardPlansMoreMenuClick() {
+        dashboardCardPlansUtils.trackCardMoreMenuTapped(uiModel.value?.state as? SiteSelected)
+    }
+
+    private fun onDashboardCardPlansHideMenuItemClick() {
+        dashboardCardPlansUtils.trackCardHiddenByUser(uiModel.value?.state as? SiteSelected)
+        selectedSiteRepository.getSelectedSite()?.let {
+            dashboardCardPlansUtils.hideCard(it.siteId)
+        }
+        refresh()
+    }
+
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
 
     fun onActionableEmptyViewGone() {
@@ -1755,6 +1785,7 @@ class MySiteViewModel @Inject constructor(
         siteSelected.cardAndItems.filterIsInstance<JetpackInstallFullPluginCard>()
             .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type, quickStartRepository.currentTab) }
         dashboardCardDomainUtils.trackDashboardCardDomainShown(viewModelScope, siteSelected)
+        dashboardCardPlansUtils.trackCardShown(viewModelScope, siteSelected)
     }
 
     private fun resetShownTrackers() {

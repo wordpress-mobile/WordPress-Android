@@ -1,1 +1,1 @@
-No updates this week, but we’re hard at work on a pressing feature we know you’ll enjoy.
+When you tap on a nested text block, you can immediately edit content in that block—no more tapping through every nesting level to get where you want to go. (Our fingers were getting tired, too.)

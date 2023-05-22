@@ -1,1 +1,4 @@
-No updates this week, but we’re hard at work on a pressing feature we know you’ll enjoy.
+- Added dashboard cards for Activity Log and Pages
+- Removed ability to convert deleted/undefined reusable blocks to regular blocks
+- Updated nested text blocks for faster editing without tapping through nested levels
+- Corrected “editing not supported” message in reusable blocks

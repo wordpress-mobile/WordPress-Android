@@ -61,6 +61,7 @@ sealed class SiteNavigationAction {
 
     data class OpenDomainRegistration(val site: SiteModel) : SiteNavigationAction()
     data class OpenPaidDomainSearch(val site: SiteModel) : SiteNavigationAction()
+    data class OpenFreeDomainSearch(val site: SiteModel) : SiteNavigationAction()
     data class AddNewSite(val hasAccessToken: Boolean, val source: SiteCreationSource) : SiteNavigationAction()
     data class ShowQuickStartDialog(
         @StringRes val title: Int,

@@ -27,7 +27,7 @@ import org.wordpress.android.ui.qrcodeauth.compose.components.Subtitle
 import org.wordpress.android.ui.qrcodeauth.compose.components.Title
 
 @Composable
-fun errorState(uiState: QRCodeAuthUiState.Error) = with(uiState) {
+fun ErrorState(uiState: QRCodeAuthUiState.Error): Unit = with(uiState) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -74,6 +74,6 @@ private fun ErrorStatePreview() {
             primaryActionButton = ErrorPrimaryActionButton {},
             secondaryActionButton = ErrorSecondaryActionButton {},
         )
-        errorState(state)
+        ErrorState(state)
     }
 }

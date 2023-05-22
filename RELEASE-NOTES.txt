@@ -1,5 +1,11 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+22.5
+-----
+* [**] [Jetpack-only] Block Editor: Enable VideoPress block (only on Simple WPCOM sites) [https://github.com/wordpress-mobile/WordPress-Android/pull/18440]
+* [***] Enables editing of the site homepage for sites using block-based themes directly from the pages list. [https://github.com/wordpress-mobile/WordPress-Android/pull/18454]
+* [*] Adds a button to enable account closure from the account settings screen [https://github.com/wordpress-mobile/WordPress-Android/pull/18412]
+
 22.4
 -----
 * [**] [Jetpack-only] Adds a dashboard card for viewing activity log [https://github.com/wordpress-mobile/WordPress-Android/pull/18306]
