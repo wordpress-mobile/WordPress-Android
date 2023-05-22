@@ -97,9 +97,7 @@ class PostListMainViewModel @Inject constructor(
 ) : ViewModel(), CoroutineScope {
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
-        override fun getLifecycle(): Lifecycle {
-            return lifecycleRegistry
-        }
+        override val lifecycle: Lifecycle = lifecycleRegistry
     }
     private var isSiteBlazeEligible = false
 

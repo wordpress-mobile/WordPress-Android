@@ -123,7 +123,7 @@ class PostListViewModel @Inject constructor(
 
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
-        override fun getLifecycle(): Lifecycle = lifecycleRegistry
+        override val lifecycle: Lifecycle = lifecycleRegistry
     }
 
     fun start(

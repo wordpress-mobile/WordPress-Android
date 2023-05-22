@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.prefs.accountsettings
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.CLOSED_ACCOUNT
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.CLOSE_ACCOUNT_FAILED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SETTINGS_DID_CHANGE
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.EMAIL_CHANGED
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.PASSWORD_CHANGED
@@ -17,6 +19,7 @@ private const val SOURCE_ACCOUNT_SETTINGS = "account_settings"
 private const val TRACK_PROPERTY_FIELD_NAME = "field_name"
 private const val TRACK_PROPERTY_PAGE = "page"
 private const val TRACK_PROPERTY_PAGE_ACCOUNT_SETTINGS = "account_settings"
+private const val KEY_ACCOUNT_CLOSURE_ERROR_CODE = "error_code"
 
 enum class AccountSettingsEvent(val trackProperty: String? = null) {
     EMAIL_CHANGED("email"),
@@ -49,5 +52,17 @@ class AccountSettingsAnalyticsTracker @Inject constructor(private val analyticsT
         val props = mutableMapOf<String, String?>()
         props[SOURCE] = SOURCE_ACCOUNT_SETTINGS
         analyticsTracker.track(stat, props)
+    }
+
+    fun trackAccountClosureFailure(errorCode: String?) {
+        mutableMapOf<String, String?>().apply {
+            put(KEY_ACCOUNT_CLOSURE_ERROR_CODE, errorCode ?: "unknown")
+        }.let { props ->
+            analyticsTracker.track(CLOSE_ACCOUNT_FAILED, props)
+        }
+    }
+
+    fun trackAccountClosureSuccess() {
+        analyticsTracker.track(CLOSED_ACCOUNT)
     }
 }

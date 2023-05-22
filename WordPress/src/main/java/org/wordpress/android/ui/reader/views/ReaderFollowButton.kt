@@ -6,6 +6,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -81,6 +82,7 @@ class ReaderFollowButton @JvmOverloads constructor(
         setIsFollowed(isFollowed, true)
     }
 
+    @SuppressLint("Recycle")
     private fun setIsFollowed(isFollowed: Boolean, animateChanges: Boolean) {
         if (isFollowed == this.isFollowed && isSelected == isFollowed) {
             return

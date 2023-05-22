@@ -88,8 +88,8 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     val handleCompletedDomainRegistration: LiveData<DomainRegistrationCompletedEvent>
         get() = _handleCompletedDomainRegistration
 
-    private val _showTos = SingleLiveEvent<Unit>()
-    val showTos: LiveData<Unit>
+    private val _showTos = SingleLiveEvent<Unit?>()
+    val showTos: LiveData<Unit?>
         get() = _showTos
 
     data class DomainRegistrationDetailsUiState(
