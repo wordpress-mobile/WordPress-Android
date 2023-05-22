@@ -354,7 +354,6 @@ public class PublicizeListActivity extends LocaleAwareActivity
             Map<String, Object> analyticsProperties = new HashMap<>();
             analyticsProperties.put("service", event.getService());
 
-
             if (event.getAction() == ConnectAction.CONNECT) {
                 AnalyticsUtils.trackWithSiteDetails(Stat.PUBLICIZE_SERVICE_CONNECTED, mSite, analyticsProperties);
             } else if (event.getAction() == ConnectAction.DISCONNECT) {
