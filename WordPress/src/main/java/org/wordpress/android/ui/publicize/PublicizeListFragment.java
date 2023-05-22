@@ -234,7 +234,8 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             twitterContainer.setVisibility(View.VISIBLE);
             final TextView title = rootView.findViewById(R.id.publicize_twitter_deprecation_notice_header_service);
             title.setText(uiState.getTitle());
-            final TextView description = rootView.findViewById(R.id.publicize_twitter_deprecation_notice_header_description);
+            final TextView description =
+                    rootView.findViewById(R.id.publicize_twitter_deprecation_notice_header_description);
             final String space = " ";
             final String descriptionText = getString(uiState.getDescription()) + space;
             final String findOutMoreText = getString(uiState.getFindOutMore());
