@@ -555,6 +555,10 @@ class UploadStarterTest : BaseUnitTest() {
     )
 
     private companion object Fixtures {
+
+        var postIdIndex = 0
+        fun makePostTitleFromId() = postIdIndex.toString().padStart(2, '0')
+
         fun createMockedNetworkUtilsWrapper() = mock<NetworkUtilsWrapper> {
             on { isNetworkAvailable() } doReturn true
         }
@@ -583,8 +587,8 @@ class UploadStarterTest : BaseUnitTest() {
         }
 
         fun createLocallyChangedPostModel(postStatus: PostStatus = DRAFT, page: Boolean = false) = PostModel().apply {
-            setId(Random.nextInt())
-            setTitle(UUID.randomUUID().toString())
+            setId(++postIdIndex)
+            setTitle(makePostTitleFromId())
             setStatus(postStatus.toString())
             setIsLocallyChanged(true)
             setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(Date().time / 1000))
