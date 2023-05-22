@@ -2,6 +2,8 @@ Fixes #
 
 To test:
 
+<!-- Test instructions per dependency update: https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/docs/test_instructions_per_dependency_update.md -->
+
 ## Regression Notes
 1. Potential unintended areas of impact
 
