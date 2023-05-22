@@ -148,7 +148,10 @@ class UploadStarter @Inject constructor(
                         trackAutoUploadAction(action, post.status, post.isPage)
                         AppLog.d(
                             T.POSTS,
-                            "UploadStarter for post (isPage: ${post.isPage}) title: ${post.title}, action: $action"
+                            "UploadStarter for post " +
+                                    "(isPage: ${post.isPage.compareTo(false)}) " +
+                                    "title: ${post.title}, " +
+                                    "action: $action"
                         )
                         dispatcher.dispatch(
                             UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(
