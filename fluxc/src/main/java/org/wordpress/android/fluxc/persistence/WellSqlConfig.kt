@@ -37,7 +37,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 186
+        return 187
     }
 
     override fun getDbName(): String {
@@ -1942,6 +1942,9 @@ open class WellSqlConfig : DefaultWellConfig {
 
                     db.execSQL("DROP TABLE EditorTheme")
                     db.execSQL("ALTER TABLE EditorTheme_new RENAME TO EditorTheme")
+                }
+                186 -> migrate(version) {
+                    db.execSQL("ALTER TABLE AccountModel ADD USER_IP_COUNTRY_CODE TEXT")
                 }
             }
         }
