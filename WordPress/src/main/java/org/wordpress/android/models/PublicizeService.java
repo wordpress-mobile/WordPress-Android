@@ -7,24 +7,29 @@ import org.wordpress.android.util.StringUtils;
 
 public class PublicizeService {
     public enum Status {
-        OK {
-            @NonNull public String toString() {
-                return "ok";
-            }
-        },
-        UNSUPPORTED {
-            @NonNull public String toString() {
-                return "unsupported";
-            }
-        };
+        OK("ok"),
+        UNSUPPORTED("unsupported");
 
+        @NonNull private final String value;
+
+        Status(@NonNull final String value) {
+            this.value = value;
+        }
+
+        @NonNull
         public static Status fromString(@Nullable final String value) {
-            if (OK.toString().equals(value)) {
-                return OK;
-            } else if (UNSUPPORTED.toString().equals(value)) {
-                return UNSUPPORTED;
+            for (Status status : Status.values()) {
+                if (status.value.equals(value)) {
+                    return status;
+                }
             }
+            // default to OK
             return OK;
+        }
+
+        @NonNull
+        public String getValue() {
+            return value;
         }
     }
 

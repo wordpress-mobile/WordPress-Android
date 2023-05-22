@@ -123,7 +123,7 @@ public class PublicizeTable {
                 stmt.bindLong(7, SqlUtils.boolToSql(service.isJetpackSupported()));
                 stmt.bindLong(8, SqlUtils.boolToSql(service.isMultiExternalUserIdSupported()));
                 stmt.bindLong(9, SqlUtils.boolToSql(service.isExternalUsersOnly()));
-                stmt.bindString(10, service.getStatus().toString());
+                stmt.bindString(10, service.getStatus().getValue());
                 stmt.executeInsert();
             }
 
