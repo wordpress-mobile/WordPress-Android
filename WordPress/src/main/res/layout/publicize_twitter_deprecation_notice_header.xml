@@ -2,47 +2,113 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/twitter_deprecation_notice_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/content_margin"
+    android:layout_marginStart="@dimen/content_margin"
     android:paddingBottom="@dimen/margin_large"
-    android:paddingEnd="@dimen/margin_medium"
-    android:paddingStart="@dimen/margin_medium"
-    android:paddingTop="@dimen/margin_large">
+    android:paddingEnd="@dimen/content_margin"
+    android:paddingStart="@dimen/content_margin"
+    android:paddingTop="@dimen/margin_large"
+    android:visibility="gone"
+    tools:visibility="visible">
 
     <ImageView
-        android:id="@+id/publicize_deprecation_notice_header_error"
+        android:id="@+id/publicize_twitter_deprecation_notice_header_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_medium"
         android:importantForAccessibility="no"
         android:src="@drawable/ic_notice_red_24dp"
-        app:layout_constraintEnd_toStartOf="@+id/publicize_deprecation_notice_header_title"
+        app:layout_constraintEnd_toStartOf="@+id/publicize_twitter_deprecation_notice_header_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/publicize_default_margin"
+        android:background="?attr/selectableItemBackground"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_description">
+
+        <ImageView
+            android:id="@+id/publicize_twitter_deprecation_notice_header_avatar"
+            android:layout_width="@dimen/avatar_sz_small"
+            android:layout_height="@dimen/avatar_sz_small"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:contentDescription="@null"
+            app:layout_constraintEnd_toStartOf="@+id/publicize_twitter_deprecation_notice_header_service"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
+
+        <View
+            android:id="@+id/publicize_twitter_deprecation_notice_header_divider"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/list_divider_height"
+            android:layout_marginBottom="@dimen/publicize_default_margin"
+            android:layout_marginTop="@dimen/publicize_default_margin"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/publicize_twitter_deprecation_notice_header_user"
+            app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_user" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/publicize_twitter_deprecation_notice_header_user"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAppearance="?attr/textAppearanceCaption"
+            app:layout_constraintBottom_toTopOf="@+id/publicize_twitter_deprecation_notice_header_divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/publicize_twitter_deprecation_notice_header_service"
+            app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_service"
+            tools:text="text_user" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/publicize_twitter_deprecation_notice_header_service"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            app:layout_constraintBottom_toTopOf="@+id/publicize_twitter_deprecation_notice_header_user"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/publicize_twitter_deprecation_notice_header_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="text_user" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/publicize_deprecation_notice_header_title"
+        android:id="@+id/publicize_twitter_deprecation_notice_header_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_error"
+        tools:text="@string/sharing_twitter_deprecation_notice_description" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/publicize_twitter_deprecation_notice_header_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginEnd=""
         android:text="@string/sharing_twitter_deprecation_notice_title"
         android:textAppearance="?attr/textAppearanceSubtitle1"
         android:textColor="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/publicize_deprecation_notice_header_error"
+        app:layout_constraintStart_toEndOf="@+id/publicize_twitter_deprecation_notice_header_error"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/publicize_deprecation_notice_header_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_large"
-        android:layout_marginTop="@dimen/a"
-        android:textAppearance="?attr/textAppearanceCaption"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/publicize_deprecation_notice_header_error"
-        tools:text="@string/sharing_twitter_deprecation_notice_description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
