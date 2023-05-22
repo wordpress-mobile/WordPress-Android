@@ -24,7 +24,7 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.components.Screen
 import org.wordpress.android.ui.main.jetpack.migration.compose.dimmed
 
 @Composable
-fun errorStep(uiState: UiState.Error) = with(uiState) {
+fun ErrorStep(uiState: UiState.Error): Unit = with(uiState) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -77,6 +77,6 @@ private fun PreviewErrorStep() {
             secondaryActionButton = ErrorSecondaryButton {},
             type = UiState.Error.Generic,
         )
-        errorStep(uiState)
+        ErrorStep(uiState)
     }
 }

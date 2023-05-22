@@ -53,12 +53,12 @@ import org.wordpress.android.util.extensions.isRtl
 
 @Composable
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-fun jetpackStaticPoster(
+fun JetpackStaticPoster(
     uiState: UiState.Content,
     onPrimaryClick: () -> Unit = {},
     onSecondaryClick: () -> Unit = {},
     onBackClick: () -> Unit = {},
-) = with(uiState) {
+): Unit = with(uiState) {
     Scaffold(
         topBar = {
             if (showTopBar) {
@@ -147,7 +147,7 @@ private fun PreviewJetpackStaticPoster() {
     AppTheme {
         Box {
             val uiState = UiData.STATS.toContentUiState()
-            jetpackStaticPoster(uiState)
+            JetpackStaticPoster(uiState)
         }
     }
 }

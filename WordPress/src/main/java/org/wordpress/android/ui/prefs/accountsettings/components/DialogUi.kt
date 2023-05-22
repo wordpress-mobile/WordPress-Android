@@ -64,7 +64,7 @@ fun DialogUi(
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceAround,
     ) {
-        flatOutlinedButton(
+        FlatOutlinedButton(
             text = stringResource(R.string.cancel),
             onClick = onCancel,
             modifier = Modifier.weight(1f),
@@ -76,7 +76,7 @@ fun DialogUi(
             enabled = !isPending,
         )
         Spacer(Modifier.size(padding))
-        flatOutlinedButton(
+        FlatOutlinedButton(
             text = stringResource(R.string.confirm),
             modifier = Modifier.weight(1f),
             enabled = username.isNotEmpty() && username == currentUsername,

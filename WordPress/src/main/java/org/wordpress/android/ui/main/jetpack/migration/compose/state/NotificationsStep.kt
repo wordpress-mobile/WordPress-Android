@@ -21,7 +21,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.ScreenIcon
 
 @Composable
-fun notificationsStep(uiState: UiState.Content.Notifications) = with(uiState) {
+fun NotificationsStep(uiState: UiState.Content.Notifications): Unit = with(uiState) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -52,6 +52,6 @@ fun notificationsStep(uiState: UiState.Content.Notifications) = with(uiState) {
 private fun PreviewNotificationsStep() {
     AppTheme {
         val uiState = UiState.Content.Notifications(NotificationsPrimaryButton {})
-        notificationsStep(uiState)
+        NotificationsStep(uiState)
     }
 }

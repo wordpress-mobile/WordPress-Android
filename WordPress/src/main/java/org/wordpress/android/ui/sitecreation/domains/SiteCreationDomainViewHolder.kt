@@ -13,7 +13,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old.DomainUiState.AvailableDomain
-import org.wordpress.android.ui.sitecreation.domains.compose.domainItem
+import org.wordpress.android.ui.sitecreation.domains.compose.DomainItem
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
 
@@ -66,7 +66,7 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
         fun onBind(uiState: New.DomainUiState) = with(binding) {
             composeView.setContent {
                 AppThemeWithoutBackground {
-                    domainItem(uiState)
+                    DomainItem(uiState)
                 }
             }
         }

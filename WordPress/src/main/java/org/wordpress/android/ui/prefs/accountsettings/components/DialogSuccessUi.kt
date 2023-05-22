@@ -30,7 +30,7 @@ fun DialogSuccessUi(
         text = stringResource(R.string.account_closure_dialog_success_message),
         fontWeight = FontWeight.Bold,
     )
-    flatOutlinedButton(
+    FlatOutlinedButton(
         text = stringResource(R.string.ok),
         onClick = onDismissRequest,
         modifier = Modifier.fillMaxWidth(),

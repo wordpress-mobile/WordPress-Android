@@ -17,7 +17,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
-fun closeAccountButton(onClick: () -> Unit = {}) = Button(
+fun CloseAccountButton(onClick: () -> Unit = {}): Unit = Button(
     elevation = ButtonDefaults.elevation(
         defaultElevation = 0.dp,
         pressedElevation = 0.dp,
@@ -44,7 +44,7 @@ fun closeAccountButton(onClick: () -> Unit = {}) = Button(
 @Composable
 fun PreviewCloseAccountButton() {
     AppTheme {
-        closeAccountButton()
+        CloseAccountButton()
     }
 }
 

@@ -52,7 +52,7 @@ fun DialogErrorUi(
     )
     Text(stringResource(messageId))
     Spacer(Modifier.size(padding))
-    flatOutlinedButton(
+    FlatOutlinedButton(
         text = stringResource(R.string.dismiss),
         onClick = onDismissRequest,
         modifier = Modifier.fillMaxWidth(),
@@ -62,7 +62,7 @@ fun DialogErrorUi(
         ),
     )
     Spacer(Modifier.size(padding))
-    flatButton(
+    FlatButton(
         text = stringResource(R.string.contact_support),
         onClick = onHelpRequested,
         modifier = Modifier.fillMaxWidth(),
