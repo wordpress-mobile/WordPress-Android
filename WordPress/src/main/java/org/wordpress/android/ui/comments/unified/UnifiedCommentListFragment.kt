@@ -107,6 +107,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
 
     private fun UnifiedCommentListFragmentBinding.setupObservers() {
         var isShowingActionMode = false
+        @Suppress("DEPRECATION")
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { uiState ->
                 setupCommentsList(uiState.commentsListUiModel)
@@ -126,6 +127,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
             }
         }
 
+        @Suppress("DEPRECATION")
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.onSnackbarMessage.collect { snackbarMessage ->
                 snackbarSequencer.enqueue(
@@ -151,6 +153,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
             }
         }
 
+        @Suppress("DEPRECATION")
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.onCommentDetailsRequested.collect { selectedComment ->
                 showCommentDetails(selectedComment.remoteCommentId, selectedComment.status)

@@ -2,7 +2,7 @@ package org.wordpress.android.ui.domains
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -60,7 +60,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private val _selectedSuggestion = MutableLiveData<DomainSuggestionItem?>()
 
-    val selectDomainButtonEnabledState = Transformations.map(_selectedSuggestion) { it is DomainSuggestionItem }
+    val selectDomainButtonEnabledState = _selectedSuggestion.map { it is DomainSuggestionItem }
 
     private val _isIntroVisible = MutableLiveData(true)
     val isIntroVisible: LiveData<Boolean> = _isIntroVisible

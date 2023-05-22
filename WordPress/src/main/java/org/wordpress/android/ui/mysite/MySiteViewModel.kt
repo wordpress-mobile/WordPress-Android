@@ -149,7 +149,7 @@ import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
-import org.wordpress.android.util.map
+import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.merge
 import org.wordpress.android.util.publicdata.AppStatus
 import org.wordpress.android.util.publicdata.WordPressPublicData
@@ -331,7 +331,7 @@ class MySiteViewModel @Inject constructor(
             }
             // We want to filter out the empty state where we have a site ID but site object is missing.
             // Without this check there is an emission of a NoSites state even if we have the site
-            result.filter { it.siteId == null || it.state.site != null }.map { it.state }
+            result.filter { it.siteId == null || it.state.site != null }.mapSafe { it.state }
         }
 
     val uiModel: LiveData<UiModel> = merge(tabsUiState, state) { tabsUiState, mySiteUiState ->

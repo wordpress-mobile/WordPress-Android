@@ -84,7 +84,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     private var lastTabPosition = 0
     private var binding: NotificationsListFragmentBinding? = null
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState != null) {
@@ -278,17 +278,20 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         }
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onPrepareOptionsMenu(menu: Menu) {
         val notificationSettings = menu.findItem(R.id.notifications_settings)
         notificationSettings.isVisible = accountStore.hasAccessToken()
         super.onPrepareOptionsMenu(menu)
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.notifications_list_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.notifications_settings) {
             ActivityLauncher.viewNotificationsSettings(activity)

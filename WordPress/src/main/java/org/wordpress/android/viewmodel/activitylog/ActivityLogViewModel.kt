@@ -103,8 +103,8 @@ class ActivityLogViewModel @Inject constructor(
     val showDateRangePicker: LiveData<ShowDateRangePicker>
         get() = _showDateRangePicker
 
-    private val _moveToTop = SingleLiveEvent<Unit>()
-    val moveToTop: SingleLiveEvent<Unit>
+    private val _moveToTop = SingleLiveEvent<Unit?>()
+    val moveToTop: SingleLiveEvent<Unit?>
         get() = _moveToTop
 
     private val _showItemDetail = SingleLiveEvent<ActivityLogListItem>()

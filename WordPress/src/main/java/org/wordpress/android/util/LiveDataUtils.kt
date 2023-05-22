@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -105,7 +105,7 @@ fun <T, U, V> merge(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T?, U?)
     mediator.addSource(sourceB) {
         mediator.value = Pair(mediator.value?.first, it)
     }
-    return mediator.map { (dataA, dataB) -> merger(dataA, dataB) }
+    return mediator.mapSafe { (dataA, dataB) -> merger(dataA, dataB) }
 }
 
 /**
@@ -161,7 +161,7 @@ fun <S, T, U, V> merge(
             mediator.value = container?.copy(third = it)
         }
     }
-    return mediator.map { (first, second, third) -> merger(first, second, third) }
+    return mediator.mapSafe { (first, second, third) -> merger(first, second, third) }
 }
 
 /**
@@ -214,7 +214,7 @@ fun <S, T, U, V, W> merge(
             mediator.value = container?.copy(fourth = it)
         }
     }
-    return mediator.map { (first, second, third, fourth) -> merger(first, second, third, fourth) }
+    return mediator.mapSafe { (first, second, third, fourth) -> merger(first, second, third, fourth) }
 }
 
 /**
@@ -276,7 +276,7 @@ fun <S, T, U, V, W, X> merge(
             mediator.value = container?.copy(fifth = it)
         }
     }
-    return mediator.map { (first, second, third, fourth, fifth) -> merger(first, second, third, fourth, fifth) }
+    return mediator.mapSafe { (first, second, third, fourth, fifth) -> merger(first, second, third, fourth, fifth) }
 }
 
 /**
@@ -300,13 +300,13 @@ fun <Key, Value> combineMap(sources: Map<Key, LiveData<Value>>): MediatorLiveDat
             }
         }
     }
-    return mediator.map { it.toMap() }
+    return mediator.mapSafe { it.toMap() }
 }
 
 /**
  * Simple wrapper of the map utility method that is null safe
  */
-fun <T, U> LiveData<T>.map(mapper: (T) -> U?): MediatorLiveData<U> {
+fun <T, U> LiveData<T>.mapSafe(mapper: (T) -> U?): MediatorLiveData<U> {
     val result = MediatorLiveData<U>()
     result.addSource(this) { x -> result.value = x?.let { mapper(x) } }
     return result
@@ -332,7 +332,7 @@ fun <T, U> LiveData<T>.mapAsync(scope: CoroutineScope, mapper: suspend (T) -> U?
  * Calls the specified function [block] with `this` value as its receiver and returns new instance of LiveData.
  */
 fun <T> LiveData<T>.perform(block: LiveData<T>.(T) -> Unit): LiveData<T> {
-    return Transformations.map(this) {
+    return this.map {
         block(it)
         return@map it
     }
@@ -341,8 +341,8 @@ fun <T> LiveData<T>.perform(block: LiveData<T>.(T) -> Unit): LiveData<T> {
 /**
  * Simple wrapper of the map utility method that is null safe
  */
-fun <T, U> LiveData<T>.mapNullable(mapper: (T?) -> U?): LiveData<U> {
-    return Transformations.map(this) { mapper(it) }
+fun <T, U> LiveData<T>.mapNullable(mapper: (T?) -> U): LiveData<U> {
+    return this.map { mapper(it) }
 }
 
 /**
