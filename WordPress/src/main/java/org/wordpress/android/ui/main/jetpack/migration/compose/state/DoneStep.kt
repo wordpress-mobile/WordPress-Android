@@ -35,7 +35,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.ScreenIcon
 
 @Composable
-fun DoneStep(uiState: UiState.Content.Done) = with(uiState) {
+fun DoneStep(uiState: UiState.Content.Done): Unit = with(uiState) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {

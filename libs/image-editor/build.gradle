@@ -39,6 +39,7 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation "androidx.core:core:$androidxCoreVersion"
     implementation "androidx.activity:activity:$androidxActivityVersion"
     implementation "androidx.activity:activity-ktx:$androidxActivityVersion"
     implementation "androidx.fragment:fragment:$androidxFragmentVersion"
@@ -71,5 +72,9 @@ dependencies {
     })
 
     androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspressoVersion"
+    androidTestImplementation("androidx.test.espresso:espresso-core:$androidxTestEspressoVersion") {
+        version {
+            strictly androidxTestEspressoVersion
+        }
+    }
 }

@@ -114,7 +114,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         }
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         with(requireActivity()) {

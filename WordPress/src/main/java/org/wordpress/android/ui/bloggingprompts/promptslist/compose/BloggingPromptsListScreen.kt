@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.bloggingprompts.promptslist.compose
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 fun BloggingPromptsListScreen(
     uiState: UiState,
     onNavigateUp: () -> Unit,

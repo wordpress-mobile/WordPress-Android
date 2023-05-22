@@ -39,6 +39,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
@@ -71,6 +72,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBL
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PagesViewModel
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewSource
 import org.wordpress.android.widgets.WPSnackbar
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -320,6 +322,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         setupObservers(activity)
         setupActions(activity)
         setupMlpObservers(activity)
+        setupVirtualHomepageObservers(activity)
 
         val site = requireNotNull(
             if (savedInstanceState == null) {
@@ -447,10 +450,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         }
 
         viewModel.launchPageListType.observe(viewLifecycleOwner) { pageListType ->
-            pageListType?.let {
-                val pagerIndex = PagesPagerAdapter.pageTypes.indexOf(pageListType)
-                pagesPager.currentItem = pagerIndex
-            }
+            val pagerIndex = PagesPagerAdapter.pageTypes.indexOf(pageListType)
+            pagesPager.currentItem = pagerIndex
         }
     }
 
@@ -510,20 +511,16 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
             }
         }
 
-        viewModel.publishAction.observe(viewLifecycleOwner) {
-            it?.let {
-                uploadUtilsWrapper.publishPost(activity, it.post, it.site)
-            }
+        viewModel.publishAction.observe(viewLifecycleOwner) { page ->
+            uploadUtilsWrapper.publishPost(activity, page.post, page.site)
         }
 
-        viewModel.navigateToBlazeOverlay.observe(viewLifecycleOwner) {
-            it?.let { page ->
-                ActivityLauncher.openPromoteWithBlaze(
-                    activity,
-                    page,
-                    BlazeFlowSource.PAGES_LIST
-                )
-            }
+        viewModel.navigateToBlazeOverlay.observe(viewLifecycleOwner) { page ->
+            ActivityLauncher.openPromoteWithBlaze(
+                activity,
+                page,
+                BlazeFlowSource.PAGES_LIST
+            )
         }
 
         viewModel.uploadFinishedAction.observe(viewLifecycleOwner) {
@@ -557,6 +554,27 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         }
     }
 
+    private fun setupVirtualHomepageObservers(activity: FragmentActivity) {
+        viewModel.openExternalLink.observe(viewLifecycleOwner) { url ->
+            ActivityLauncher.openUrlExternal(activity, url)
+        }
+
+        viewModel.openSiteEditorWebView.observe(viewLifecycleOwner) { data ->
+            with(data) {
+                if (useWpComCredentials) {
+                    WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
+                        activity,
+                        url,
+                        css,
+                        WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE
+                    )
+                } else {
+                    WPWebViewActivity.openURL(activity, url, css, WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE)
+                }
+            }
+        }
+    }
+
     /**
      * Triggers new page creation
      * @param title the page title
@@ -570,6 +588,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         )
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_search, menu)

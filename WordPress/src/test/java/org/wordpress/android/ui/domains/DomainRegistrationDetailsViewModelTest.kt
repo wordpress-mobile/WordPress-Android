@@ -86,7 +86,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     private lateinit var statePickerDialogObserver: Observer<List<SupportedStateResponse>>
 
     @Mock
-    private lateinit var tosLinkObserver: Observer<Unit>
+    private lateinit var tosLinkObserver: Observer<Unit?>
 
     @Mock
     private lateinit var completedDomainRegistrationObserver: Observer<DomainRegistrationCompletedEvent>
@@ -354,7 +354,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         validateFetchSupportedCountriesAction(actionsDispatched[0])
         validateFetchDomainContactAction(actionsDispatched[1])
 
-        verify(errorMessageObserver).onChanged(domainContactInformationFetchError.message)
+        verify(errorMessageObserver).onChanged(domainContactInformationFetchError.message ?: "")
 
         assertThat(uiStateResults.size).isEqualTo(3)
 
@@ -388,7 +388,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         validateFetchDomainContactAction(actionsDispatched[1])
         validateFetchStatesAction(actionsDispatched[2], primaryCountry.code)
 
-        verify(errorMessageObserver).onChanged(domainSupportedStatesFetchError.message)
+        verify(errorMessageObserver).onChanged(domainSupportedStatesFetchError.message ?: "")
 
         assertThat(uiStateResults.size).isEqualTo(5)
 
@@ -605,7 +605,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         val errorFetchingSiteState = uiStateResults[1]
         assertThat(errorFetchingSiteState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
 
-        verify(errorMessageObserver).onChanged(siteChangedError.message)
+        verify(errorMessageObserver).onChanged(siteChangedError.message ?: "")
 
         verify(completedDomainRegistrationObserver).onChanged(domainRegistrationCompletedEvent)
     }

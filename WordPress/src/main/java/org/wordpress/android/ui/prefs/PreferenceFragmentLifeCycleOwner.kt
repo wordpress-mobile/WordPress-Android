@@ -25,38 +25,40 @@ import androidx.lifecycle.coroutineScope
  */
 @Suppress("DEPRECATION")
 open class PreferenceFragmentLifeCycleOwner : PreferenceFragment(), LifecycleOwner {
-    private lateinit var lifecycleRegistry: LifecycleRegistry
+    @Suppress("LeakingThis") private val lifecycleRegistry = LifecycleRegistry(this)
 
     val lifecycleScope: LifecycleCoroutineScope
         get() = lifecycle.coroutineScope
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleRegistry = LifecycleRegistry(this)
         lifecycleRegistry.handleLifecycleEvent(ON_CREATE)
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onStart() {
         super.onStart()
         lifecycleRegistry.handleLifecycleEvent(ON_START)
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onPause() {
         super.onPause()
         lifecycleRegistry.handleLifecycleEvent(ON_PAUSE)
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onStop() {
         super.onStop()
         lifecycleRegistry.handleLifecycleEvent(ON_STOP)
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onDestroy() {
         super.onDestroy()
         lifecycleRegistry.handleLifecycleEvent(ON_DESTROY)
     }
 
-    override fun getLifecycle(): Lifecycle {
-        return lifecycleRegistry
-    }
+    override val lifecycle: Lifecycle = lifecycleRegistry
 }

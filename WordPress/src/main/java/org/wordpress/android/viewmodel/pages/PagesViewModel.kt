@@ -68,7 +68,6 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.PAGES
 import org.wordpress.android.util.EventBusWrapper
@@ -146,8 +145,8 @@ class PagesViewModel
     private val _searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>?> = MutableLiveData()
     val searchPages: LiveData<SortedMap<PageListType, List<PageModel>>?> = _searchPages
 
-    private val _createNewPage = SingleLiveEvent<Unit>()
-    val createNewPage: LiveData<Unit> = _createNewPage
+    private val _createNewPage = SingleLiveEvent<Unit?>()
+    val createNewPage: LiveData<Unit?> = _createNewPage
 
     private val _editPage = SingleLiveEvent<Triple<SiteModel, PostModel?, LoadAutoSaveRevision>>()
     val editPage: LiveData<Triple<SiteModel, PostModel?, LoadAutoSaveRevision>> = _editPage
@@ -184,6 +183,12 @@ class PagesViewModel
 
     private val _navigateToBlazeOverlay = SingleLiveEvent<PageModel>()
     val navigateToBlazeOverlay = _navigateToBlazeOverlay
+
+    private val _openExternalLink = SingleLiveEvent<String>()
+    val openExternalLink: LiveData<String> = _openExternalLink
+
+    private val _openSiteEditorWebView = SingleLiveEvent<SiteEditorData>()
+    val openSiteEditorWebView: LiveData<SiteEditorData> = _openSiteEditorWebView
 
     private var isInitialized = false
     private var scrollToPageId: Long? = null
@@ -240,6 +245,12 @@ class PagesViewModel
     data class BrowsePreview(
         val post: PostModel,
         val previewType: RemotePreviewType
+    )
+
+    data class SiteEditorData(
+        val url: String,
+        val css: String,
+        val useWpComCredentials: Boolean,
     )
 
     fun start(site: SiteModel) {
@@ -534,6 +545,7 @@ class PagesViewModel
                             appLogWrapper.d(PAGES, "${result.error.type}: ${result.error.message}")
                             R.string.page_homepage_update_failed
                         }
+
                         false -> {
                             R.string.page_homepage_successfully_updated
                         }
@@ -565,6 +577,7 @@ class PagesViewModel
                             appLogWrapper.d(PAGES, "${result.error.type}: ${result.error.message}")
                             R.string.page_posts_page_update_failed
                         }
+
                         false -> {
                             R.string.page_posts_page_successfully_updated
                         }
@@ -726,17 +739,32 @@ class PagesViewModel
     }
 
     fun onVirtualHomepageAction(action: VirtualHomepage.Action) {
+        trackVirtualHomepageAction(action)
         when (action) {
-            VirtualHomepage.Action.OPEN_LEARN_MORE_URL -> {
-                // TODO thomashorta open external URL to learn more link
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringText("OPEN_LEARN_MORE_URL")))
+            is VirtualHomepage.Action.OpenExternalLink -> {
+                _openExternalLink.postValue(action.url)
             }
 
-            VirtualHomepage.Action.OPEN_SITE_EDITOR -> {
-                // TODO thomashorta open webview to site editor
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringText("OPEN_SITE_EDITOR")))
+            is VirtualHomepage.Action.OpenSiteEditor -> {
+                _openSiteEditorWebView.postValue(
+                    SiteEditorData(
+                        action.getUrl(site),
+                        action.customCss,
+                        useWpComCredentials = site.isWPCom || site.isWPComAtomic || site.isPrivateWPComAtomic
+                    )
+                )
             }
         }.exhaustive
+    }
+
+    private fun trackVirtualHomepageAction(action: VirtualHomepage.Action) {
+        val stat = when (action) {
+            VirtualHomepage.Action.OpenExternalLink.TemplateSupport ->
+                AnalyticsTracker.Stat.PAGES_EDIT_HOMEPAGE_INFO_PRESSED
+
+            is VirtualHomepage.Action.OpenSiteEditor -> AnalyticsTracker.Stat.PAGES_EDIT_HOMEPAGE_ITEM_PRESSED
+        }
+        analyticsTracker.track(stat, site)
     }
 
     fun onNewPageButtonTapped() {

@@ -88,6 +88,7 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
     // The next 2 Composable(s) live in the fragment because they need access to the chromeClient outside of the fun
     // Also the clients needs access to activity and we are not holding on to that elsewhere
     @Composable
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     private fun BlazeWebViewScreen(
         viewModel: BlazeWebViewViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     ) {

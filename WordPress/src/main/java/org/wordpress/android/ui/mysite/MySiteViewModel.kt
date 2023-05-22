@@ -149,7 +149,7 @@ import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
-import org.wordpress.android.util.map
+import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.merge
 import org.wordpress.android.util.publicdata.AppStatus
 import org.wordpress.android.util.publicdata.WordPressPublicData
@@ -331,7 +331,7 @@ class MySiteViewModel @Inject constructor(
             }
             // We want to filter out the empty state where we have a site ID but site object is missing.
             // Without this check there is an emission of a NoSites state even if we have the site
-            result.filter { it.siteId == null || it.state.site != null }.map { it.state }
+            result.filter { it.siteId == null || it.state.site != null }.mapSafe { it.state }
         }
 
     val uiModel: LiveData<UiModel> = merge(tabsUiState, state) { tabsUiState, mySiteUiState ->
@@ -618,9 +618,7 @@ class MySiteViewModel @Inject constructor(
                     onMoreMenuClick = this::onDashboardCardDomainMoreMenuClick
                 ),
                 dashboardCardPlansBuilderParams = DashboardCardPlansBuilderParams(
-                    isEligible = dashboardCardPlansUtils.shouldShowCard(
-                        site, isDomainCreditAvailable, hasSiteCustomDomains
-                    ),
+                    isEligible = dashboardCardPlansUtils.shouldShowCard(site),
                     onClick = this::onDashboardCardPlansClick,
                     onHideMenuItemClick = this::onDashboardCardPlansHideMenuItemClick,
                     onMoreMenuClick = this::onDashboardCardPlansMoreMenuClick
@@ -814,13 +812,13 @@ class MySiteViewModel @Inject constructor(
             }
             add(Type.QUICK_LINK_RIBBON)
             add(Type.JETPACK_INSTALL_FULL_PLUGIN_CARD)
+            add(Type.DOMAIN_REGISTRATION_CARD)
         }
 
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
             if (defaultTab == MySiteTabType.SITE_MENU) {
                 add(Type.QUICK_START_CARD)
             }
-            add(Type.DOMAIN_REGISTRATION_CARD)
             add(Type.QUICK_ACTIONS_CARD)
         }
 
@@ -1692,7 +1690,7 @@ class MySiteViewModel @Inject constructor(
     private fun onDashboardCardPlansClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         dashboardCardPlansUtils.trackCardTapped(uiModel.value?.state as? SiteSelected)
-        _onNavigation.value = Event(SiteNavigationAction.OpenPaidDomainSearch(selectedSite))
+        _onNavigation.value = Event(SiteNavigationAction.OpenFreeDomainSearch(selectedSite))
     }
 
     private fun onDashboardCardPlansMoreMenuClick() {

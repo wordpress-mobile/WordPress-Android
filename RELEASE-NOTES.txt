@@ -2,7 +2,8 @@
 
 22.5
 -----
-
+* [***] Enables editing of the site homepage for sites using block-based themes directly from the pages list. [https://github.com/wordpress-mobile/WordPress-Android/pull/18454]
+* [*] Adds a button to enable account closure from the account settings screen [https://github.com/wordpress-mobile/WordPress-Android/pull/18412]
 
 22.4
 -----

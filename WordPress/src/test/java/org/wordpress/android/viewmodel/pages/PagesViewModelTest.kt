@@ -19,6 +19,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
@@ -57,6 +58,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
@@ -86,6 +88,9 @@ class PagesViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var networkUtils: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     @Mock
     lateinit var uploadStarter: UploadStarter
@@ -142,7 +147,7 @@ class PagesViewModelTest : BaseUnitTest() {
             actionPerformer = actionPerformer,
             networkUtils = networkUtils,
             previewStateHelper = mock(),
-            analyticsTracker = mock(),
+            analyticsTracker = analyticsTracker,
             uploadStatusTracker = mock(),
             autoSaveConflictResolver = mock(),
             uiDispatcher = testDispatcher(),
@@ -623,5 +628,116 @@ class PagesViewModelTest : BaseUnitTest() {
 
         // Assert
         assertThat(launchPageListType.value).isEqualTo(SCHEDULED)
+    }
+
+    @Test
+    fun `when OpenSiteEditor action requested, then openSiteEditorWebView is set correctly for wpcom`() = test {
+        // Arrange
+        setUpPageStoreWithEmptyPages()
+        whenever(site.adminUrl).thenReturn("https://example.com/wp-admin/")
+        whenever(site.isWPCom).thenReturn(true)
+        viewModel.start(site)
+
+        // Act
+        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor()
+        viewModel.onVirtualHomepageAction(action)
+
+        // Assert
+        val expected = PagesViewModel.SiteEditorData(
+            "https://example.com/wp-admin/site-editor.php?canvas=edit",
+            PageItem.VirtualHomepage.Action.OpenSiteEditor.SITE_EDITOR_CSS,
+            true
+        )
+        assertThat(viewModel.openSiteEditorWebView.value).isEqualTo(expected)
+    }
+
+    @Test
+    fun `when OpenSiteEditor action requested, then openSiteEditorWebView is set correctly for wpcom atomic`() = test {
+        // Arrange
+        setUpPageStoreWithEmptyPages()
+        whenever(site.adminUrl).thenReturn("https://example.com/wp-admin/")
+        whenever(site.isWPCom).thenReturn(false)
+        whenever(site.isWPComAtomic).thenReturn(true)
+        viewModel.start(site)
+
+        // Act
+        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor()
+        viewModel.onVirtualHomepageAction(action)
+
+        // Assert
+        val expected = PagesViewModel.SiteEditorData(
+            "https://example.com/wp-admin/site-editor.php?canvas=edit",
+            PageItem.VirtualHomepage.Action.OpenSiteEditor.SITE_EDITOR_CSS,
+            true
+        )
+        assertThat(viewModel.openSiteEditorWebView.value).isEqualTo(expected)
+    }
+
+    @Test
+    fun `when OpenSiteEditor action requested, then openSiteEditorWebView is set correctly for self-hosted`() = test {
+        // Arrange
+        setUpPageStoreWithEmptyPages()
+        whenever(site.adminUrl).thenReturn("https://example.com/wp-admin/")
+        whenever(site.isWPCom).thenReturn(false)
+        whenever(site.isWPComAtomic).thenReturn(false)
+        viewModel.start(site)
+
+        // Act
+        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor()
+        viewModel.onVirtualHomepageAction(action)
+
+        // Assert
+        val expected = PagesViewModel.SiteEditorData(
+            "https://example.com/wp-admin/site-editor.php?canvas=edit",
+            PageItem.VirtualHomepage.Action.OpenSiteEditor.SITE_EDITOR_CSS,
+            false
+        )
+        assertThat(viewModel.openSiteEditorWebView.value).isEqualTo(expected)
+    }
+
+    @Test
+    fun `when OpenExternalLink action requested, then openExternalLink is set correctly`() = test {
+        // Arrange
+        setUpPageStoreWithEmptyPages()
+        viewModel.start(site)
+
+        // Act
+        val action = PageItem.VirtualHomepage.Action.OpenExternalLink.TemplateSupport
+        viewModel.onVirtualHomepageAction(action)
+
+        // Assert
+        assertThat(viewModel.openExternalLink.value).isEqualTo(action.url)
+    }
+
+    @Test
+    fun `when OpenSiteEditor action requested, then event is tracked`() = test {
+        // Arrange
+        setUpPageStoreWithEmptyPages()
+        whenever(site.adminUrl).thenReturn("https://example.com/wp-admin/")
+        whenever(site.isWPCom).thenReturn(true)
+        viewModel.start(site)
+
+        // Act
+        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor()
+        viewModel.onVirtualHomepageAction(action)
+
+        // Assert
+        val expected = AnalyticsTracker.Stat.PAGES_EDIT_HOMEPAGE_ITEM_PRESSED
+        verify(analyticsTracker).track(expected, site)
+    }
+
+    @Test
+    fun `when OpenExternalLink action requested, the event is tracked`() = test {
+        // Arrange
+        setUpPageStoreWithEmptyPages()
+        viewModel.start(site)
+
+        // Act
+        val action = PageItem.VirtualHomepage.Action.OpenExternalLink.TemplateSupport
+        viewModel.onVirtualHomepageAction(action)
+
+        // Assert
+        val expected = AnalyticsTracker.Stat.PAGES_EDIT_HOMEPAGE_INFO_PRESSED
+        verify(analyticsTracker).track(expected, site)
     }
 }

@@ -53,15 +53,6 @@ class SiteCreationDomainsAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    @Suppress("ForbiddenComment")
-    override fun onViewRecycled(holder: SiteCreationDomainViewHolder<*>) {
-        if (holder is NewDomainViewHolder) {
-            // TODO: Remove this for Compose 1.2.0-beta02+ and RecyclerView 1.3.0-alpha02+
-            holder.composeView.disposeComposition()
-        }
-        super.onViewRecycled(holder)
-    }
-
     private class DomainsDiffUtils(
         val oldItems: List<ListItemUiState>,
         val newItems: List<ListItemUiState>
