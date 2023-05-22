@@ -618,9 +618,7 @@ class MySiteViewModel @Inject constructor(
                     onMoreMenuClick = this::onDashboardCardDomainMoreMenuClick
                 ),
                 dashboardCardPlansBuilderParams = DashboardCardPlansBuilderParams(
-                    isEligible = dashboardCardPlansUtils.shouldShowCard(
-                        site, isDomainCreditAvailable, hasSiteCustomDomains
-                    ),
+                    isEligible = dashboardCardPlansUtils.shouldShowCard(site),
                     onClick = this::onDashboardCardPlansClick,
                     onHideMenuItemClick = this::onDashboardCardPlansHideMenuItemClick,
                     onMoreMenuClick = this::onDashboardCardPlansMoreMenuClick
@@ -1692,7 +1690,7 @@ class MySiteViewModel @Inject constructor(
     private fun onDashboardCardPlansClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         dashboardCardPlansUtils.trackCardTapped(uiModel.value?.state as? SiteSelected)
-        _onNavigation.value = Event(SiteNavigationAction.OpenPaidDomainSearch(selectedSite))
+        _onNavigation.value = Event(SiteNavigationAction.OpenFreeDomainSearch(selectedSite))
     }
 
     private fun onDashboardCardPlansMoreMenuClick() {
