@@ -29,7 +29,6 @@ class BlockEditorTests : BaseTest() {
 """
 
     @Test
-    @Ignore("Skipped due to increased flakiness. See build-and-ship channel for 17.05.2023")
     fun e2ePublishSimplePost() {
         val title = "publishSimplePost"
         MySitesPage()
