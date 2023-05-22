@@ -24,8 +24,7 @@ import java.util.Date
 /**
  * Tests for structured concurrency in [UploadStarter].
  *
- * This is intentionally a separate class from [UploadStarterTest] because this contains non-deterministic
- * tests.
+ * Intentionally separated from [UploadStarterTest] because it contains non-deterministic tests.
  */
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
