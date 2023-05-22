@@ -127,6 +127,7 @@ public class AccountSqlUtilsTest {
         AccountModel testModel = new AccountModel();
         testModel.setId(1);
         testModel.setUserId(2);
+        testModel.setUserIpCountryCode("US");
         return testModel;
     }
 }
