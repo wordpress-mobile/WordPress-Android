@@ -26,17 +26,21 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/publicize_twitter_deprecation_notice_item_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/publicize_default_margin"
+        android:layout_marginTop="@dimen/margin_large"
         android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
         android:orientation="horizontal"
+        android:paddingTop="@dimen/margin_extra_small_large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_description">
 
         <ImageView
-            android:id="@+id/publicize_twitter_deprecation_notice_header_avatar"
+            android:id="@+id/publicize_twitter_deprecation_notice_header_icon"
             android:layout_width="@dimen/avatar_sz_small"
             android:layout_height="@dimen/avatar_sz_small"
             android:layout_marginEnd="@dimen/margin_large"
@@ -50,8 +54,7 @@
             android:id="@+id/publicize_twitter_deprecation_notice_header_divider"
             android:layout_width="0dp"
             android:layout_height="@dimen/list_divider_height"
-            android:layout_marginBottom="@dimen/publicize_default_margin"
-            android:layout_marginTop="@dimen/publicize_default_margin"
+            android:layout_marginTop="@dimen/margin_extra_small_large"
             android:background="?android:attr/listDivider"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -80,9 +83,9 @@
             android:textAppearance="?attr/textAppearanceSubtitle1"
             app:layout_constraintBottom_toTopOf="@+id/publicize_twitter_deprecation_notice_header_user"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/publicize_twitter_deprecation_notice_header_avatar"
+            app:layout_constraintStart_toEndOf="@+id/publicize_twitter_deprecation_notice_header_icon"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="text_user" />
+            tools:text="@string/twitter" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -90,9 +93,9 @@
         android:id="@+id/publicize_twitter_deprecation_notice_header_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_medium"
         android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintBottom_toTopOf="@+id/publicize_twitter_deprecation_notice_item_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_error"
@@ -102,7 +105,6 @@
         android:id="@+id/publicize_twitter_deprecation_notice_header_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd=""
         android:text="@string/sharing_twitter_deprecation_notice_title"
         android:textAppearance="?attr/textAppearanceSubtitle1"
         android:textColor="?attr/colorPrimary"

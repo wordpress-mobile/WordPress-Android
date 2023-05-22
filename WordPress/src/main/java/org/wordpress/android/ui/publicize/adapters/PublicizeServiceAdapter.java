@@ -20,6 +20,7 @@ import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeConnectionList;
 import org.wordpress.android.models.PublicizeService;
+import org.wordpress.android.models.PublicizeService.Status;
 import org.wordpress.android.models.PublicizeServiceList;
 import org.wordpress.android.ui.publicize.PublicizeConstants;
 import org.wordpress.android.util.PhotonUtils;
@@ -202,7 +203,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
 
             PublicizeServiceList services = PublicizeTable.getServiceList();
             for (PublicizeService service : services) {
-                if (!isHiddenService(service)) {
+                if (!isHiddenService(service) && service.getStatus() == PublicizeService.Status.OK ) {
                     mTmpServices.add(service);
                 }
             }

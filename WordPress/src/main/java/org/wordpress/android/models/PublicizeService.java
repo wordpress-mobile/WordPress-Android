@@ -1,5 +1,6 @@
 package org.wordpress.android.models;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.util.StringUtils;
@@ -7,12 +8,12 @@ import org.wordpress.android.util.StringUtils;
 public class PublicizeService {
     public enum Status {
         OK {
-            public String toString() {
+            @NonNull public String toString() {
                 return "ok";
             }
         },
         UNSUPPORTED {
-            public String toString() {
+            @NonNull public String toString() {
                 return "unsupported";
             }
         };
@@ -28,6 +29,7 @@ public class PublicizeService {
     }
 
     public static final String FACEBOOK_SERVICE_ID = "facebook";
+    public static final String TWITTER_SERVICE_ID = "twitter";
 
     private String mId;
     private String mLabel;

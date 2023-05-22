@@ -64,8 +64,7 @@
 
             </LinearLayout>
 
-            <include
-                android:layout="@layout/publicize_twitter_deprecation_notice_header" />
+            <include layout="@layout/publicize_twitter_deprecation_notice_header" />
 
             <RelativeLayout
                 android:id="@+id/manage_container"
