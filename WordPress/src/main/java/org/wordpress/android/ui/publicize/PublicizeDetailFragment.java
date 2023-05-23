@@ -21,7 +21,6 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeAnalyticsTracker.Source.Detail;
-import org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeAnalyticsTracker.Source.List;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.util.ToastUtils;
 

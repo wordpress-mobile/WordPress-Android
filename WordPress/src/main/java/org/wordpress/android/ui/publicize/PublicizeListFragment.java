@@ -35,7 +35,6 @@ import org.wordpress.android.ui.publicize.PublicizeListViewModel.ActionEvent;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel.ActionEvent.OpenServiceDetails;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel.UIState;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel.UIState.ShowTwitterDeprecationNotice;
-import org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeAnalyticsTracker.Source;
 import org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeAnalyticsTracker.Source.List;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
