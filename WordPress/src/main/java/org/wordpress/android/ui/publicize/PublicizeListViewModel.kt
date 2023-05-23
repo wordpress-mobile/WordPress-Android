@@ -71,7 +71,6 @@ class PublicizeListViewModel @Inject constructor(
                 val isTwitterDeprecated = twitterPublicizeService?.status == PublicizeService.Status.UNSUPPORTED
                 val twitterConnection = connections.find {
                     it.service == PublicizeService.TWITTER_SERVICE_ID
-                            && it.status == PublicizeConnection.ConnectStatus.OK.toString()
                 }
                 if (isTwitterDeprecated && twitterConnection != null) {
                     _uiState.value = UIState.ShowTwitterDeprecationNotice(
