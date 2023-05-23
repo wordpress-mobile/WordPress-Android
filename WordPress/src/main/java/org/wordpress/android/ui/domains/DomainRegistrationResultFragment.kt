@@ -10,13 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.DomainRegistrationResultFragmentBinding
-import org.wordpress.android.util.extensions.getColorFromAttribute
-import org.wordpress.android.util.extensions.setLightNavigationBar
-import org.wordpress.android.util.extensions.setLightStatusBar
+import org.wordpress.android.databinding.PlansPurchaseSuccessFragmentBinding
 import javax.inject.Inject
 
-class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_result_fragment) {
+class DomainRegistrationResultFragment : Fragment(R.layout.plans_purchase_success_fragment) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var mainViewModel: DomainRegistrationMainViewModel
@@ -44,10 +41,9 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
         val domainName = requireArguments().getString(EXTRA_REGISTERED_DOMAIN_NAME).orEmpty()
         val email = requireArguments().getString(EXTRA_REGISTERED_DOMAIN_EMAIL).orEmpty()
 
-        setupWindow()
         setupToolbar()
 
-        with(DomainRegistrationResultFragmentBinding.bind(view)) {
+        with(PlansPurchaseSuccessFragmentBinding.bind(view)) {
             setupViews(domainName, email)
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -55,27 +51,17 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
         }
     }
 
-    private fun setupWindow() = with(requireAppCompatActivity()) {
-        val colorPrimarySurface = getColorFromAttribute(R.attr.colorPrimarySurface)
-        window.apply {
-            statusBarColor = colorPrimarySurface
-            navigationBarColor = colorPrimarySurface
-            setLightStatusBar(false)
-            setLightNavigationBar(false)
-        }
-    }
-
     private fun setupToolbar() = with(requireAppCompatActivity()) {
         supportActionBar?.hide()
     }
 
-    private fun DomainRegistrationResultFragmentBinding.setupViews(domainName: String, email: String) {
-        continueButton.setOnClickListener {
+    private fun PlansPurchaseSuccessFragmentBinding.setupViews(domainName: String, email: String) {
+        doneButton.setOnClickListener {
             finishRegistration(domainName, email)
         }
 
-        domainRegistrationResultMessage.text = getString(
-            R.string.domain_registration_result_description,
+        subtitle.text = getString(
+            R.string.dashboard_card_plans_checkout_success_subtitle,
             domainName
         ).parseAsHtml(FROM_HTML_MODE_COMPACT)
     }
