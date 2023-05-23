@@ -45,7 +45,15 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor(
 
         val avatarsTrain = dummyRespondents.take(3).map { respondent -> AvatarItem(respondent) }
             .toMutableList<TrainOfAvatarsItem>()
-            .also { list -> list.add(TrailingLabelTextItem(trailingLabel, R.attr.colorOnSurface)) }
+            .also { list ->
+                val labelColor = if (bloggingPromptsSocialFeatureConfig.isEnabled()) {
+                    R.attr.colorPrimary
+                } else {
+                    R.attr.colorOnSurface
+                }
+
+                list.add(TrailingLabelTextItem(trailingLabel, labelColor))
+            }
 
         val primaryButtonLabel = when (dialogType) {
             ONBOARDING -> R.string.blogging_prompts_onboarding_try_it_now
