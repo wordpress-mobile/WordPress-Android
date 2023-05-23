@@ -30,7 +30,7 @@ class BloggingPromptCardBuilder @Inject constructor() {
             .toMutableList<TrainOfAvatarsItem>()
             .also { list ->
                 val labelColor = if (params.showViewAnswersAction) {
-                    R.attr.colorPrimary
+                    R.color.primary_emphasis_medium_selector
                 } else {
                     R.attr.wpColorOnSurfaceMedium
                 }

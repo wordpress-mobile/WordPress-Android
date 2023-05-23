@@ -47,7 +47,7 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor(
             .toMutableList<TrainOfAvatarsItem>()
             .also { list ->
                 val labelColor = if (bloggingPromptsSocialFeatureConfig.isEnabled()) {
-                    R.attr.colorPrimary
+                    R.color.primary_emphasis_medium_selector
                 } else {
                     R.attr.colorOnSurface
                 }
