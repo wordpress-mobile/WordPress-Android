@@ -44,7 +44,8 @@
             android:id="@+id/service_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_service"

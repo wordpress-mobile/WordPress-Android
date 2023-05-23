@@ -16,6 +16,7 @@ import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeService;
+import org.wordpress.android.models.PublicizeService.Status;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
@@ -113,10 +114,11 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
 
         setTitle(mService.getLabel());
 
-        // disable the ability to add another G+ connection
-        if (isGooglePlus()) {
+        // disable the ability to add another G+ or Twitter connection
+        if (isGooglePlus() || isTwitterUnsupported()) {
             mServiceContainer.setVisibility(View.GONE);
         } else {
+            mServiceContainer.setVisibility(View.VISIBLE);
             String serviceLabel = String.format(getString(R.string.connection_service_label), mService.getLabel());
             TextView txtService = mServiceContainer.findViewById(R.id.text_service);
             txtService.setText(serviceLabel);
@@ -138,6 +140,11 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
 
     private boolean isGooglePlus() {
         return mService.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID);
+    }
+
+    private boolean isTwitterUnsupported() {
+        return mService.getId().equals(PublicizeService.TWITTER_SERVICE_ID)
+               && mService.getStatus() == Status.UNSUPPORTED;
     }
 
     private boolean hasOnPublicizeActionListener() {
