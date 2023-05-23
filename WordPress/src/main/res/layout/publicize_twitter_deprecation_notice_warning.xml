@@ -33,11 +33,11 @@
         android:id="@+id/publicize_twitter_deprecation_notice_header_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/sharing_twitter_deprecation_notice_title"
         android:textAppearance="?attr/textAppearanceSubtitle1"
         android:textColor="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/publicize_twitter_deprecation_notice_header_error"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/sharing_twitter_deprecation_notice_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

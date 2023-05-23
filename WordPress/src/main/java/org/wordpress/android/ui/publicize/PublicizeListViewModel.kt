@@ -73,7 +73,8 @@ class PublicizeListViewModel @Inject constructor(
                 }
                 if (isTwitterDeprecated && twitterConnection != null) {
                     _uiState.value = UIState.ShowTwitterDeprecationNotice(
-                        title = twitterConnection.label,
+                        title = R.string.sharing_twitter_deprecation_notice_title,
+                        serviceName = twitterConnection.label,
                         description = R.string.sharing_twitter_deprecation_notice_description,
                         findOutMore = R.string.sharing_twitter_deprecation_notice_find_out_more,
                         findOutMoreUrl = TWITTER_DEPRECATION_FIND_OUT_MORE_URL,
@@ -89,7 +90,8 @@ class PublicizeListViewModel @Inject constructor(
 
     sealed class UIState {
         data class ShowTwitterDeprecationNotice(
-            val title: String,
+            @StringRes val title: Int,
+            val serviceName: String,
             @StringRes val description: Int,
             @StringRes val findOutMore: Int,
             val findOutMoreUrl: String,
@@ -100,10 +102,5 @@ class PublicizeListViewModel @Inject constructor(
 
     sealed class ActionEvent {
         data class OpenServiceDetails(val service: PublicizeService) : ActionEvent()
-    }
-
-    companion object {
-        private const val TWITTER_DEPRECATION_FIND_OUT_MORE_URL =
-            "https://wordpress.com/blog/2023/04/29/why-twitter-auto-sharing-is-coming-to-an-end/"
     }
 }

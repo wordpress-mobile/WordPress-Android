@@ -76,8 +76,12 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include
+    <org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeWarningView
         android:id="@+id/publicize_twitter_deprecation_notice_header_warning"
-        layout="@layout/publicize_twitter_deprecation_notice_warning" />
-    
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
