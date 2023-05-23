@@ -138,4 +138,8 @@
     <!-- Jetpack feture removal overlay secondary button color -->
     <color name="jp_feature_removal_overlay_secondary_button_color">@color/jetpack_green_50</color>
 
+    <!-- Dashboard Card Plans -->
+    <color name="dashboard_card_plans_info_background">@color/gray_0</color>
+    <color name="dashboard_card_plans_info_text_color">@color/gray_20</color>
+
 </resources>

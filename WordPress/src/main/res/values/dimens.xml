@@ -765,4 +765,9 @@
     </item>
     <dimen name="my_site_dashboard_card_page_create_page_top_padding">14dp</dimen>
     <dimen name="my_site_dashboard_card_page_create_page_divider_top_padding">18dp</dimen>
+
+    <!-- Dashboard card plans -->
+    <dimen name="dashboard_card_plans_layout_padding">16dp</dimen>
+    <dimen name="dashboard_card_plans_top_margin">48dp</dimen>
+    <dimen name="dashboard_card_plans_done_button_bottom_margin">64dp</dimen>
 </resources>
