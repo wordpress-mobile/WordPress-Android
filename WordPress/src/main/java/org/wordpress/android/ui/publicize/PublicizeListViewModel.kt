@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.models.PublicizeService
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateServicesV2
@@ -19,6 +21,7 @@ import javax.inject.Named
 class PublicizeListViewModel @Inject constructor(
     private val publicizeUpdateServicesV2: PublicizeUpdateServicesV2,
     private val eventBusWrapper: EventBusWrapper,
+    private val accountStore: AccountStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiState = MutableLiveData<UIState>()
@@ -71,20 +74,27 @@ class PublicizeListViewModel @Inject constructor(
                 val twitterConnection = connections.find {
                     it.service == PublicizeService.TWITTER_SERVICE_ID
                 }
-                if (isTwitterDeprecated && twitterConnection != null) {
-                    _uiState.value = UIState.ShowTwitterDeprecationNotice(
-                        title = R.string.sharing_twitter_deprecation_notice_title,
-                        serviceName = twitterConnection.label,
-                        description = R.string.sharing_twitter_deprecation_notice_description,
-                        findOutMore = R.string.sharing_twitter_deprecation_notice_find_out_more,
-                        findOutMoreUrl = TWITTER_DEPRECATION_FIND_OUT_MORE_URL,
-                        iconUrl = twitterPublicizeService?.iconUrl.orEmpty(),
-                        connectedUser = twitterConnection.externalDisplayName,
-                    )
+                val isConnectionAvailable = connections.getServiceConnectionsForUser(
+                    accountStore.account.userId, twitterPublicizeService?.id
+                ).isNotEmpty()
+                if (isTwitterDeprecated && twitterConnection != null && isConnectionAvailable) {
+                    showTwitterDeprecationNotice(twitterConnection)
                 }
                 eventBusWrapper.post(PublicizeEvents.ConnectionsChanged())
             },
             failure = { AppLog.e(AppLog.T.SHARING, "Error updating publicize connections", it) }
+        )
+    }
+
+    private fun showTwitterDeprecationNotice(twitterConnection: PublicizeConnection) {
+        _uiState.value = UIState.ShowTwitterDeprecationNotice(
+            title = R.string.sharing_twitter_deprecation_notice_title,
+            serviceName = twitterConnection.label,
+            description = R.string.sharing_twitter_deprecation_notice_description,
+            findOutMore = R.string.sharing_twitter_deprecation_notice_find_out_more,
+            findOutMoreUrl = TWITTER_DEPRECATION_FIND_OUT_MORE_URL,
+            iconUrl = twitterPublicizeService?.iconUrl.orEmpty(),
+            connectedUser = twitterConnection.externalDisplayName,
         )
     }
 
