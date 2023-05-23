@@ -37,7 +37,7 @@ class PublicizeListViewModel @Inject constructor(
         }
         shouldUpdateServices = false
         val siteId = siteModel.siteId
-        updateServices(siteId)
+        updateList(siteId)
     }
 
     fun onTwitterDeprecationNoticeItemClick() {
@@ -46,7 +46,7 @@ class PublicizeListViewModel @Inject constructor(
         }
     }
 
-    private fun updateServices(siteId: Long) {
+    private fun updateList(siteId: Long) {
         publicizeUpdateServicesV2.updateServices(
             siteId = siteId,
             success = { services ->
@@ -78,8 +78,7 @@ class PublicizeListViewModel @Inject constructor(
                         title = twitterConnection.label,
                         description = R.string.sharing_twitter_deprecation_notice_description,
                         findOutMore = R.string.sharing_twitter_deprecation_notice_find_out_more,
-                        findOutMoreUrl =
-                        "https://wordpress.com/blog/2023/04/29/why-twitter-auto-sharing-is-coming-to-an-end/",
+                        findOutMoreUrl = TWITTER_DEPRECATION_FIND_OUT_MORE_URL,
                         iconUrl = twitterPublicizeService?.iconUrl.orEmpty(),
                         connectedUser = twitterConnection.externalDisplayName,
                     )
@@ -103,5 +102,10 @@ class PublicizeListViewModel @Inject constructor(
 
     sealed class ActionEvent {
         data class OpenServiceDetails(val service: PublicizeService) : ActionEvent()
+    }
+
+    companion object {
+        private const val TWITTER_DEPRECATION_FIND_OUT_MORE_URL =
+            "https://wordpress.com/blog/2023/04/29/why-twitter-auto-sharing-is-coming-to-an-end/"
     }
 }

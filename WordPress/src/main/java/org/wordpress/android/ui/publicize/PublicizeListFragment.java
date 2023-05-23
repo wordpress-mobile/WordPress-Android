@@ -206,10 +206,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     private void observeActions() {
         mPublicizeListViewModel.getActionEvents().observe(getViewLifecycleOwner(), actionEvent -> {
             if (actionEvent instanceof ActionEvent.OpenServiceDetails) {
-                final Activity activity = getActivity();
-                if (activity instanceof PublicizeListActivity) {
-                    onServiceClick(((OpenServiceDetails) actionEvent).getService());
-                }
+                onServiceClick(((OpenServiceDetails) actionEvent).getService());
             }
         });
     }
@@ -249,7 +246,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             );
             spannableTitle.setSpan(
                     new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.jetpack_green)),
-                    descriptionText.length() + 1,
+                    descriptionText.length(),
                     spannableTitle.length(),
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             );

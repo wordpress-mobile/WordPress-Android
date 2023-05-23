@@ -10,16 +10,16 @@ public class PublicizeService {
         OK("ok"),
         UNSUPPORTED("unsupported");
 
-        @NonNull private final String value;
+        @NonNull private final String mValue;
 
         Status(@NonNull final String value) {
-            this.value = value;
+            this.mValue = value;
         }
 
         @NonNull
         public static Status fromString(@Nullable final String value) {
             for (Status status : Status.values()) {
-                if (status.value.equals(value)) {
+                if (status.mValue.equals(value)) {
                     return status;
                 }
             }
@@ -29,7 +29,7 @@ public class PublicizeService {
 
         @NonNull
         public String getValue() {
-            return value;
+            return mValue;
         }
     }
 
