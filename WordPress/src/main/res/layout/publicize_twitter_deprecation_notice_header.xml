@@ -19,6 +19,7 @@
         android:layout_marginEnd="@dimen/margin_medium"
         android:importantForAccessibility="no"
         android:src="@drawable/ic_notice_red_24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_title"
         app:layout_constraintEnd_toStartOf="@+id/publicize_twitter_deprecation_notice_header_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -82,7 +83,7 @@
             app:layout_constraintBottom_toTopOf="@+id/publicize_twitter_deprecation_notice_header_user"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/publicize_twitter_deprecation_notice_header_icon"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/publicize_twitter_deprecation_notice_header_icon"
             tools:text="@string/twitter" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -91,12 +92,12 @@
         android:id="@+id/publicize_twitter_deprecation_notice_header_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="8dp"
         android:textAppearance="?attr/textAppearanceCaption"
         app:layout_constraintBottom_toTopOf="@+id/publicize_twitter_deprecation_notice_item_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_error"
+        app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_title"
         tools:text="@string/sharing_twitter_deprecation_notice_description" />
 
     <org.wordpress.android.widgets.WPTextView
