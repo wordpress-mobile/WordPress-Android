@@ -18,10 +18,12 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.config.DashboardCardPagesConfig
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 const val PAGE_STATUS_PUBLISH = "publish"
 const val PAGE_STATUS_DRAFT = "draft"
 const val PAGE_STATUS_SCHEDULED = "future"
+const val PAGE_STATUS_DELETED = "deleted"
 
 const val PAGE_ID = 1
 const val PAGE_TITLE = "title"
@@ -42,6 +44,8 @@ private val PAGE_MODEL_PUBLISHED = PagesCardModel.PageCardModel(
 private val PAGE_MODEL_DRAFT = PAGE_MODEL_PUBLISHED.copy(id = 2, status = PAGE_STATUS_DRAFT)
 
 private val PAGE_MODEL_SCHEDULED = PAGE_MODEL_PUBLISHED.copy(id = 3, status = PAGE_STATUS_SCHEDULED)
+
+private val PAGE_MODEL_DELETED = PAGE_MODEL_PUBLISHED.copy(id = 3, status = PAGE_STATUS_DELETED)
 
 // pages with one item
 private val PAGES_MODEL = PagesCardModel(
@@ -100,6 +104,15 @@ class PagesCardBuilderTest : BaseUnitTest() {
         val result = builder.build(params) as PagesCardWithData
 
         assert(result.pages.isEmpty())
+    }
+
+    @Test
+    fun `given a page with unknown status, when card is built, then no pages item is present`() {
+        val params = getPagesBuildParams(PagesCardModel(pages = listOf(PAGE_MODEL_DELETED)))
+
+        val result = builder.build(params) as PagesCardWithData
+
+        assertTrue(result.pages.isEmpty())
     }
 
     @Test

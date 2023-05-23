@@ -41,7 +41,7 @@ class PagesCardBuilder @Inject constructor(
     private fun convertToPagesItems(params: PagesCardBuilderParams): PagesCard.PagesCardWithData {
         val pages = params.pageCard?.pages
         val content =
-            pages?.filterByPagesCardSupportedStatus()?.let { getPagesContentItems(pages, params.onPagesItemClick) }
+            pages?.filterByPagesCardSupportedStatus()?.let { getPagesContentItems(it, params.onPagesItemClick) }
                 ?: emptyList()
         val createPageCard = getCreatePageCard(content, params.onFooterLinkClick)
         return PagesCard.PagesCardWithData(
@@ -52,7 +52,7 @@ class PagesCardBuilder @Inject constructor(
     }
 
     private fun List<PagesCardModel.PageCardModel>.filterByPagesCardSupportedStatus() =
-        this.filter { it.status in PagesCardContentType.getList() }
+        this.filter { it.status.lowercase() in PagesCardContentType.getList() }
 
     private fun getPagesContentItems(
         pages: List<PagesCardModel.PageCardModel>,
