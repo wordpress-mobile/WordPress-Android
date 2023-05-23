@@ -21,6 +21,7 @@
         android:clickable="true"
         android:focusable="true"
         android:orientation="horizontal"
+        android:paddingBottom="@dimen/margin_extra_small_large"
         android:paddingTop="@dimen/margin_extra_small_large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,16 +38,6 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
 
-        <View
-            android:id="@+id/publicize_twitter_deprecation_notice_header_divider"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/list_divider_height"
-            android:layout_marginTop="@dimen/margin_extra_small_large"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/publicize_twitter_deprecation_notice_header_user"
-            app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_user" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/publicize_twitter_deprecation_notice_header_user"
@@ -56,7 +47,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:textAppearance="?attr/textAppearanceCaption"
-            app:layout_constraintBottom_toTopOf="@+id/publicize_twitter_deprecation_notice_header_divider"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/publicize_twitter_deprecation_notice_header_service"
             app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_service"
