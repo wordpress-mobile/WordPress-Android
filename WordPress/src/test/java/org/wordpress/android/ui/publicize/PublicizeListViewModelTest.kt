@@ -11,6 +11,7 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateServicesV2
 import org.wordpress.android.util.EventBusWrapper
 
@@ -18,9 +19,11 @@ import org.wordpress.android.util.EventBusWrapper
 class PublicizeListViewModelTest : BaseUnitTest() {
     private val publicizeUpdateServicesV2: PublicizeUpdateServicesV2 = mock()
     private val eventBusWrapper: EventBusWrapper = mock()
+    private val accountStore: AccountStore = mock()
     private val classToTest = PublicizeListViewModel(
         publicizeUpdateServicesV2 = publicizeUpdateServicesV2,
         eventBusWrapper = eventBusWrapper,
+        accountStore = accountStore,
         bgDispatcher = testDispatcher(),
     )
     private val actionObserver: Observer<PublicizeListViewModel.ActionEvent> = mock()

@@ -3,10 +3,6 @@ package org.wordpress.android.ui.publicize;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +12,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,6 +35,7 @@ import org.wordpress.android.ui.publicize.PublicizeListViewModel.ActionEvent;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel.ActionEvent.OpenServiceDetails;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel.UIState;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel.UIState.ShowTwitterDeprecationNotice;
+import org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeAnalyticsTracker.Source.List;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
@@ -63,6 +59,7 @@ import javax.inject.Inject;
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import kotlin.Unit;
 
 @AndroidEntryPoint
 public class PublicizeListFragment extends PublicizeBaseFragment {
@@ -87,6 +84,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     @Inject UiHelpers mUiHelpers;
     @Inject ImageManager mImageManager;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject PublicizeTwitterDeprecationNoticeAnalyticsTracker mPublicizeTwitterDeprecationNoticeAnalyticsTracker;
 
     PublicizeListViewModel mPublicizeListViewModel;
 
@@ -224,44 +222,25 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         }
     }
 
-    private void showTwitterDeprecationNotice(final ShowTwitterDeprecationNotice uiState) {
+    private void showTwitterDeprecationNotice(@NonNull final ShowTwitterDeprecationNotice uiState) {
         final View rootView = getView();
         if (rootView != null) {
             final View twitterContainer = rootView.findViewById(R.id.twitter_deprecation_notice_container);
             twitterContainer.setVisibility(View.VISIBLE);
-            final TextView title = rootView.findViewById(R.id.publicize_twitter_deprecation_notice_header_service);
+            final TextView title = rootView.findViewById(R.id.publicize_twitter_deprecation_notice_header_title);
             title.setText(uiState.getTitle());
-            final TextView description =
-                    rootView.findViewById(R.id.publicize_twitter_deprecation_notice_header_description);
-            final String space = " ";
-            final String descriptionText = getString(uiState.getDescription()) + space;
-            final String findOutMoreText = getString(uiState.getFindOutMore());
-            final SpannableString spannableTitle = new SpannableString(descriptionText + findOutMoreText);
-            final int descriptionColor = description.getCurrentTextColor();
-            spannableTitle.setSpan(
-                    new ForegroundColorSpan(descriptionColor),
-                    0,
-                    descriptionText.length(),
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            );
-            spannableTitle.setSpan(
-                    new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.jetpack_green)),
-                    descriptionText.length(),
-                    spannableTitle.length(),
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            );
-            spannableTitle.setSpan(
-                    new ClickableSpan() {
-                        @Override public void onClick(@NonNull View view) {
-                            WPWebViewActivity.openURL(getActivity(), uiState.getFindOutMoreUrl());
-                        }
-                    },
-                    descriptionText.length(),
-                    spannableTitle.length(),
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            );
-            description.setMovementMethod(LinkMovementMethod.getInstance());
-            description.setText(spannableTitle);
+            final TextView serviceName =
+                    rootView.findViewById(R.id.publicize_twitter_deprecation_notice_header_service);
+            serviceName.setText(uiState.getServiceName());
+            final PublicizeTwitterDeprecationNoticeWarningView warningView =
+                    rootView.findViewById(R.id.publicize_twitter_deprecation_notice_header_warning);
+            warningView.setTitle(getString(uiState.getTitle()));
+            warningView.setDescription(getString(uiState.getDescription()), getString(uiState.getFindOutMore()),
+                    () -> {
+                        mPublicizeTwitterDeprecationNoticeAnalyticsTracker.trackTwitterNoticeLinkTapped(List.INSTANCE);
+                        WPWebViewActivity.openURL(getActivity(), uiState.getFindOutMoreUrl());
+                        return Unit.INSTANCE;
+                    });
             final ImageView icon = rootView.findViewById(R.id.publicize_twitter_deprecation_notice_header_icon);
             mImageManager.load(icon, ImageType.AVATAR_WITH_BACKGROUND, uiState.getIconUrl());
             final TextView connectedUser = rootView.findViewById(R.id.publicize_twitter_deprecation_notice_header_user);

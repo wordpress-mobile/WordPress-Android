@@ -2577,6 +2577,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "direct_domains_purchase_dashboard_card_menu_tapped";
             case DASHBOARD_CARD_DOMAIN_HIDDEN:
                 return "direct_domains_purchase_dashboard_card_hidden";
+            case TWITTER_NOTICE_LINK_TAPPED:
+                return "twitter_notice_link_tapped";
         }
         return null;
     }

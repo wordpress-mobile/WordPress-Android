@@ -12,18 +12,6 @@
     android:visibility="gone"
     tools:visibility="visible">
 
-    <ImageView
-        android:id="@+id/publicize_twitter_deprecation_notice_header_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_medium"
-        android:importantForAccessibility="no"
-        android:src="@drawable/ic_notice_red_24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_title"
-        app:layout_constraintEnd_toStartOf="@+id/publicize_twitter_deprecation_notice_header_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/publicize_twitter_deprecation_notice_item_container"
         android:layout_width="0dp"
@@ -37,7 +25,7 @@
         android:paddingTop="@dimen/margin_extra_small_large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_description">
+        app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_warning">
 
         <ImageView
             android:id="@+id/publicize_twitter_deprecation_notice_header_icon"
@@ -79,28 +67,12 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/publicize_twitter_deprecation_notice_header_description"
+    <org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeWarningView
+        android:id="@+id/publicize_twitter_deprecation_notice_header_warning"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textAppearance="?attr/textAppearanceCaption"
-        app:layout_constraintBottom_toTopOf="@+id/publicize_twitter_deprecation_notice_item_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_title"
-        tools:text="@string/sharing_twitter_deprecation_notice_description" />
-
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/publicize_twitter_deprecation_notice_header_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/sharing_twitter_deprecation_notice_title"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
-        android:textColor="?attr/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/publicize_twitter_deprecation_notice_header_error"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

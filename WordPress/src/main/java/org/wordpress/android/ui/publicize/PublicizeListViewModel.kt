@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.models.PublicizeService
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateServicesV2
@@ -19,6 +21,7 @@ import javax.inject.Named
 class PublicizeListViewModel @Inject constructor(
     private val publicizeUpdateServicesV2: PublicizeUpdateServicesV2,
     private val eventBusWrapper: EventBusWrapper,
+    private val accountStore: AccountStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiState = MutableLiveData<UIState>()
@@ -71,15 +74,11 @@ class PublicizeListViewModel @Inject constructor(
                 val twitterConnection = connections.find {
                     it.service == PublicizeService.TWITTER_SERVICE_ID
                 }
-                if (isTwitterDeprecated && twitterConnection != null) {
-                    _uiState.value = UIState.ShowTwitterDeprecationNotice(
-                        title = twitterConnection.label,
-                        description = R.string.sharing_twitter_deprecation_notice_description,
-                        findOutMore = R.string.sharing_twitter_deprecation_notice_find_out_more,
-                        findOutMoreUrl = TWITTER_DEPRECATION_FIND_OUT_MORE_URL,
-                        iconUrl = twitterPublicizeService?.iconUrl.orEmpty(),
-                        connectedUser = twitterConnection.externalDisplayName,
-                    )
+                val isConnectionAvailable = connections.getServiceConnectionsForUser(
+                    accountStore.account.userId, twitterPublicizeService?.id
+                ).isNotEmpty()
+                if (isTwitterDeprecated && twitterConnection != null && isConnectionAvailable) {
+                    showTwitterDeprecationNotice(twitterConnection)
                 }
                 eventBusWrapper.post(PublicizeEvents.ConnectionsChanged())
             },
@@ -87,9 +86,22 @@ class PublicizeListViewModel @Inject constructor(
         )
     }
 
+    private fun showTwitterDeprecationNotice(twitterConnection: PublicizeConnection) {
+        _uiState.value = UIState.ShowTwitterDeprecationNotice(
+            title = R.string.sharing_twitter_deprecation_notice_title,
+            serviceName = twitterConnection.label,
+            description = R.string.sharing_twitter_deprecation_notice_description,
+            findOutMore = R.string.sharing_twitter_deprecation_notice_find_out_more,
+            findOutMoreUrl = TWITTER_DEPRECATION_FIND_OUT_MORE_URL,
+            iconUrl = twitterPublicizeService?.iconUrl.orEmpty(),
+            connectedUser = twitterConnection.externalDisplayName,
+        )
+    }
+
     sealed class UIState {
         data class ShowTwitterDeprecationNotice(
-            val title: String,
+            @StringRes val title: Int,
+            val serviceName: String,
             @StringRes val description: Int,
             @StringRes val findOutMore: Int,
             val findOutMoreUrl: String,
@@ -100,10 +112,5 @@ class PublicizeListViewModel @Inject constructor(
 
     sealed class ActionEvent {
         data class OpenServiceDetails(val service: PublicizeService) : ActionEvent()
-    }
-
-    companion object {
-        private const val TWITTER_DEPRECATION_FIND_OUT_MORE_URL =
-            "https://wordpress.com/blog/2023/04/29/why-twitter-auto-sharing-is-coming-to-an-end/"
     }
 }
