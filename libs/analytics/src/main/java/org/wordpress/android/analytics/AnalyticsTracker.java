@@ -1041,7 +1041,8 @@ public final class AnalyticsTracker {
         DASHBOARD_CARD_DOMAIN_SHOWN,
         DASHBOARD_CARD_DOMAIN_TAPPED,
         DASHBOARD_CARD_DOMAIN_MORE_MENU_TAPPED,
-        DASHBOARD_CARD_DOMAIN_HIDDEN
+        DASHBOARD_CARD_DOMAIN_HIDDEN,
+        TWITTER_NOTICE_LINK_TAPPED,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

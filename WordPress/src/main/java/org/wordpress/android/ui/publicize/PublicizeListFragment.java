@@ -35,6 +35,8 @@ import org.wordpress.android.ui.publicize.PublicizeListViewModel.ActionEvent;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel.ActionEvent.OpenServiceDetails;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel.UIState;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel.UIState.ShowTwitterDeprecationNotice;
+import org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeAnalyticsTracker.Source;
+import org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeAnalyticsTracker.Source.List;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
@@ -83,6 +85,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     @Inject UiHelpers mUiHelpers;
     @Inject ImageManager mImageManager;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject PublicizeTwitterDeprecationNoticeAnalyticsTracker mPublicizeTwitterDeprecationNoticeAnalyticsTracker;
 
     PublicizeListViewModel mPublicizeListViewModel;
 
@@ -235,6 +238,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             warningView.setTitle(getString(uiState.getTitle()));
             warningView.setDescription(getString(uiState.getDescription()), getString(uiState.getFindOutMore()),
                     () -> {
+                        mPublicizeTwitterDeprecationNoticeAnalyticsTracker.trackTwitterNoticeLinkTapped(List.INSTANCE);
                         WPWebViewActivity.openURL(getActivity(), uiState.getFindOutMoreUrl());
                         return Unit.INSTANCE;
                     });

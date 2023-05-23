@@ -20,6 +20,8 @@ import org.wordpress.android.models.PublicizeService.Status;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
+import org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeAnalyticsTracker.Source.Detail;
+import org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeAnalyticsTracker.Source.List;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.util.ToastUtils;
 
@@ -45,6 +47,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
     private TextView mConnectedAccounts;
 
     @Inject AccountStore mAccountStore;
+    @Inject PublicizeTwitterDeprecationNoticeAnalyticsTracker mPublicizeTwitterDeprecationNoticeAnalyticsTracker;
 
     public static PublicizeDetailFragment newInstance(@NonNull SiteModel site, @NonNull PublicizeService service) {
         Bundle args = new Bundle();
@@ -163,6 +166,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
                 getString(R.string.sharing_twitter_deprecation_notice_description),
                 getString(R.string.sharing_twitter_deprecation_notice_find_out_more),
                 () -> {
+                    mPublicizeTwitterDeprecationNoticeAnalyticsTracker.trackTwitterNoticeLinkTapped(Detail.INSTANCE);
                     WPWebViewActivity.openURL(getActivity(), TWITTER_DEPRECATION_FIND_OUT_MORE_URL);
                     return Unit.INSTANCE;
                 });
