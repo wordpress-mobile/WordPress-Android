@@ -206,8 +206,11 @@ android {
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
 
             // Limit string resources to Mag16 only for Jetpack
-            // Note: this only affects included _locales_; variants for `values-night`, `values-land` and other configs are _still_ preserved in Jetpack and not filtered by this.
+            // Note 1: this only affects included _locales_; variants for `values-night`, `values-land` and other configs are _still_ preserved in Jetpack and not filtered by this.
             resourceConfigurations = ["ar", "de", "es", "fr", "he", "id", "it", "ja", "ko", "nl", "pt-rBR", "ru", "sv", "tr", "zh-rCN", "zh-rTW"]
+            // Note 2: `in` is the legacy locale code for `id` and `iw` is the legacy locale code for `he`.
+            // We need to include those to make sure users with older Android versions and still using those legacy codes still have those translations show up at runtime.
+            resourceConfigurations += ["in", "iw"]
         }
 
         // Used for release/beta testing builds. Usually shouldn't be build locally.
