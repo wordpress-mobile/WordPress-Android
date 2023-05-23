@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.models.PublicizeService
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateServicesV2
@@ -70,6 +71,7 @@ class PublicizeListViewModel @Inject constructor(
                 val isTwitterDeprecated = twitterPublicizeService?.status == PublicizeService.Status.UNSUPPORTED
                 val twitterConnection = connections.find {
                     it.service == PublicizeService.TWITTER_SERVICE_ID
+                            && it.status == PublicizeConnection.ConnectStatus.OK.toString()
                 }
                 if (isTwitterDeprecated && twitterConnection != null) {
                     _uiState.value = UIState.ShowTwitterDeprecationNotice(
