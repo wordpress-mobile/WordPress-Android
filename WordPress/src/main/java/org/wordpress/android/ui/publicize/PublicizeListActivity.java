@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -33,7 +34,6 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
-import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -62,12 +62,16 @@ public class PublicizeListActivity extends LocaleAwareActivity
 
     @Inject SiteStore mSiteStore;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    PublicizeListViewModel mPublicizeListViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.publicize_list_activity);
+
+        initViewModel();
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -101,7 +105,7 @@ public class PublicizeListActivity extends LocaleAwareActivity
                 finish();
                 return;
             }
-            PublicizeUpdateService.updateConnectionsForSite(this, mSite);
+            mPublicizeListViewModel.onSiteAvailable(mSite);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
@@ -123,6 +127,10 @@ public class PublicizeListActivity extends LocaleAwareActivity
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
+    }
+
+    private void initViewModel() {
+        mPublicizeListViewModel = new ViewModelProvider(this, mViewModelFactory).get(PublicizeListViewModel.class);
     }
 
     private void showListFragment() {
@@ -345,7 +353,6 @@ public class PublicizeListActivity extends LocaleAwareActivity
         if (event.didSucceed()) {
             Map<String, Object> analyticsProperties = new HashMap<>();
             analyticsProperties.put("service", event.getService());
-
 
             if (event.getAction() == ConnectAction.CONNECT) {
                 AnalyticsUtils.trackWithSiteDetails(Stat.PUBLICIZE_SERVICE_CONNECTED, mSite, analyticsProperties);
