@@ -5,8 +5,6 @@
     android:id="@+id/twitter_deprecation_notice_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/content_margin"
-    android:layout_marginStart="@dimen/content_margin"
     android:paddingBottom="@dimen/margin_large"
     android:paddingEnd="@dimen/content_margin"
     android:paddingStart="@dimen/content_margin"
@@ -27,7 +25,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/publicize_twitter_deprecation_notice_item_container"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
         android:background="?attr/selectableItemBackground"
@@ -91,7 +89,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/publicize_twitter_deprecation_notice_header_description"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
         android:textAppearance="?attr/textAppearanceCaption"
