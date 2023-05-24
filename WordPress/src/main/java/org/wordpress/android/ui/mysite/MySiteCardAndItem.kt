@@ -59,6 +59,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         BLOGGING_PROMPT_CARD,
         PROMOTE_WITH_BLAZE_CARD,
         DASHBOARD_DOMAIN_CARD,
+        DASHBOARD_PLANS_CARD,
         PAGES_CARD_ERROR,
         PAGES_CARD,
         ACTIVITY_CARD,
@@ -340,6 +341,14 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     val onHideMenuItemClick: ListItemInteraction,
                     val onMoreMenuClick: ListItemInteraction,
                 ): DashboardCard(dashboardCardType = DashboardCardType.DASHBOARD_DOMAIN_CARD)
+
+                data class DashboardPlansCard(
+                    val title: UiString?,
+                    val subtitle: UiString?,
+                    val onClick: ListItemInteraction,
+                    val onHideMenuItemClick: ListItemInteraction,
+                    val onMoreMenuClick: ListItemInteraction,
+                ): DashboardCard(dashboardCardType = DashboardCardType.DASHBOARD_PLANS_CARD)
             }
         }
     }

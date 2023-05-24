@@ -29,8 +29,8 @@ class HelpViewModel @Inject constructor(
     private val _showSigningOutDialog = MutableLiveData<Event<Boolean>>()
     val showSigningOutDialog: LiveData<Event<Boolean>> = _showSigningOutDialog
 
-    private val _onSignOutCompleted = SingleLiveEvent<Unit>()
-    val onSignOutCompleted: LiveData<Unit> = _onSignOutCompleted
+    private val _onSignOutCompleted = SingleLiveEvent<Unit?>()
+    val onSignOutCompleted: LiveData<Unit?> = _onSignOutCompleted
 
     fun signOutWordPress(application: WordPress) {
         launch {

@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.OptIn;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -119,6 +120,7 @@ import javax.inject.Inject;
 
 import kotlinx.coroutines.BuildersKt;
 import kotlinx.coroutines.CoroutineStart;
+import kotlinx.coroutines.DelicateCoroutinesApi;
 import kotlinx.coroutines.Dispatchers;
 import kotlinx.coroutines.GlobalScope;
 
@@ -1424,6 +1426,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
+    @OptIn(markerClass = DelicateCoroutinesApi.class)
     public void onCommentChanged(OnCommentChanged event) {
         setProgressVisible(false);
         // requesting local comment cache refresh

@@ -51,7 +51,9 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
         super.onViewCreated(view, savedInstanceState)
         with(JetpackBackupRestoreFragmentBinding.bind(view)) {
             initDagger()
-            requireActivity().onBackPressedDispatcher.addCallback(this@RestoreFragment) { viewModel.onBackPressed() }
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+                viewModel.onBackPressed()
+            }
             initAdapter()
             initViewModel(savedInstanceState)
         }

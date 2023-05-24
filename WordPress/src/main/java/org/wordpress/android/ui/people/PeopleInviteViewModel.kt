@@ -35,7 +35,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
-import org.wordpress.android.util.map
+import org.wordpress.android.util.mapSafe
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -62,7 +62,7 @@ class PeopleInviteViewModel @Inject constructor(
 
     private val _inviteLinksState = MediatorLiveData<InviteLinksState>()
     val inviteLinksUiState: LiveData<InviteLinksUiState> =
-        _inviteLinksState.map { state -> buildInviteLinksUiState(state) }
+        _inviteLinksState.mapSafe { state -> buildInviteLinksUiState(state) }
 
     private val _shareLink = MutableLiveData<Event<InviteLinksItem>>()
     val shareLink: LiveData<Event<InviteLinksItem>> = _shareLink

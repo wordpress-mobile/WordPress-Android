@@ -23,14 +23,13 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 class PhotoPickerActionModeCallback(
     private val viewModel: PhotoPickerViewModel
 ) : Callback, LifecycleOwner {
-    private lateinit var lifecycleRegistry: LifecycleRegistry
+    private val lifecycleRegistry = LifecycleRegistry(this)
 
     @Suppress("DEPRECATION")
     override fun onCreateActionMode(
         actionMode: ActionMode,
         menu: Menu
     ): Boolean {
-        lifecycleRegistry = LifecycleRegistry(this)
         lifecycleRegistry.handleLifecycleEvent(ON_START)
         viewModel.uiState.observe(this, Observer { uiState ->
             when (val uiModel = uiState.actionModeUiModel) {
@@ -75,5 +74,5 @@ class PhotoPickerActionModeCallback(
         lifecycleRegistry.handleLifecycleEvent(ON_STOP)
     }
 
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+    override val lifecycle: Lifecycle = lifecycleRegistry
 }

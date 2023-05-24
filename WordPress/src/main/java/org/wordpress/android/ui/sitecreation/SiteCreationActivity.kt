@@ -119,7 +119,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     @Suppress("LongMethod")
     private fun observeVMState() {
-        mainViewModel.navigationTargetObservable.observe(this) { it?.let(::showStep) }
+        mainViewModel.navigationTargetObservable.observe(this, ::showStep)
         mainViewModel.onCompleted.observe(this) { (result, isTitleTaskComplete) ->
             val intent = Intent().apply {
                 putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, (result as? Created)?.site?.id)

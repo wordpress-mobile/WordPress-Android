@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main.jetpack.staticposter.compose
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,12 +52,13 @@ import org.wordpress.android.ui.main.jetpack.staticposter.toContentUiState
 import org.wordpress.android.util.extensions.isRtl
 
 @Composable
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 fun JetpackStaticPoster(
     uiState: UiState.Content,
     onPrimaryClick: () -> Unit = {},
     onSecondaryClick: () -> Unit = {},
     onBackClick: () -> Unit = {},
-) = with(uiState) {
+): Unit = with(uiState) {
     Scaffold(
         topBar = {
             if (showTopBar) {

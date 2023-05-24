@@ -70,7 +70,7 @@ class ModalLayoutPickerViewModelTest : BaseUnitTest() {
     lateinit var analyticsTracker: ModalLayoutPickerTracker
 
     @Mock
-    lateinit var onCreateNewPageRequestedObserver: Observer<Create>
+    lateinit var onCreateNewPageRequestedObserver: Observer<Create?>
 
     private val aboutCategory = GutenbergLayoutCategory(
         slug = "about",

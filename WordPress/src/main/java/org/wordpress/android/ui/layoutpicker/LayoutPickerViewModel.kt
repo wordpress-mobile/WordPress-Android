@@ -45,8 +45,8 @@ abstract class LayoutPickerViewModel(
     private val _previewState: MutableLiveData<PreviewUiState> = MutableLiveData()
     val previewState: LiveData<PreviewUiState> = _previewState
 
-    private val _onPreviewModeButtonPressed = SingleLiveEvent<Unit>()
-    val onPreviewModeButtonPressed: LiveData<Unit> = _onPreviewModeButtonPressed
+    private val _onPreviewModeButtonPressed = SingleLiveEvent<Unit?>()
+    val onPreviewModeButtonPressed: LiveData<Unit?> = _onPreviewModeButtonPressed
 
     private val _onPreviewActionPressed = SingleLiveEvent<DesignPreviewAction>()
     val onPreviewActionPressed: LiveData<DesignPreviewAction> = _onPreviewActionPressed
@@ -54,8 +54,8 @@ abstract class LayoutPickerViewModel(
     private val _onCategorySelectionChanged = MutableLiveData<Event<Unit>>()
     val onCategorySelectionChanged: LiveData<Event<Unit>> = _onCategorySelectionChanged
 
-    private val _onThumbnailModeButtonPressed = SingleLiveEvent<Unit>()
-    val onThumbnailModeButtonPressed: LiveData<Unit> = _onThumbnailModeButtonPressed
+    private val _onThumbnailModeButtonPressed = SingleLiveEvent<Unit?>()
+    val onThumbnailModeButtonPressed: LiveData<Unit?> = _onThumbnailModeButtonPressed
 
     val isLoading: Boolean
         get() = _uiState.value === LayoutPickerUiState.Loading

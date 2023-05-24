@@ -377,6 +377,8 @@ public final class AnalyticsTracker {
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         CREATED_ACCOUNT,
+        CLOSE_ACCOUNT_FAILED,
+        CLOSED_ACCOUNT,
         ACCOUNT_LOGOUT,
         SHARED_ITEM,
         SHARED_ITEM_READER,
@@ -448,6 +450,8 @@ public final class AnalyticsTracker {
         PAGES_TAB_PRESSED,
         PAGES_OPTIONS_PRESSED,
         PAGES_SEARCH_ACCESSED,
+        PAGES_EDIT_HOMEPAGE_INFO_PRESSED,
+        PAGES_EDIT_HOMEPAGE_ITEM_PRESSED,
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         SIGNUP_BUTTON_TAPPED,
@@ -1042,7 +1046,11 @@ public final class AnalyticsTracker {
         DASHBOARD_CARD_DOMAIN_TAPPED,
         DASHBOARD_CARD_DOMAIN_MORE_MENU_TAPPED,
         DASHBOARD_CARD_DOMAIN_HIDDEN,
-        TWITTER_NOTICE_LINK_TAPPED,
+        DASHBOARD_CARD_PLANS_SHOWN,
+        DASHBOARD_CARD_PLANS_TAPPED,
+        DASHBOARD_CARD_PLANS_MORE_MENU_TAPPED,
+        DASHBOARD_CARD_PLANS_HIDDEN,
+        TWITTER_NOTICE_LINK_TAPPED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
@@ -1056,6 +1064,10 @@ public final class AnalyticsTracker {
         if (hasUserOptedOut != mHasUserOptedOut) {
             mHasUserOptedOut = hasUserOptedOut;
         }
+    }
+
+    public static boolean hasUserOptedOut() {
+        return mHasUserOptedOut;
     }
 
     public static void setHasUserOptedOut(boolean hasUserOptedOut) {

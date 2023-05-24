@@ -38,3 +38,4 @@ updates:
       - dependency-name: "org.wordpress.aztec:glide-loader"
       - dependency-name: "org.wordpress.aztec:picasso-loader"
       - dependency-name: "com.automattic:about"
+      - dependency-name: "com.automattic:Automattic-Tracks-Android"
