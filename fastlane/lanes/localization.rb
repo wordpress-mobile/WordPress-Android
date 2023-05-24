@@ -385,7 +385,12 @@ platform :android do
       return
     end
 
-    expected_locales = locales_list.map { |l| l[:android] }.sort
+    expected_locales = locales_list.map { |l| l[:android] }
+    # Support for legacy locale codes
+    expected_locales << 'in' if expected_locales.include?('id')
+    expected_locales << 'iw' if expected_locales.include?('he')
+    expected_locales.sort!
+
     if resource_configs == expected_locales
       UI.message("The `resourceConfigurations` field set in `build.gradle` for the `#{app_flavor}` flavor matches what is set in our Fastfile. All is good!")
     else

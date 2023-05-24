@@ -77,18 +77,18 @@ ext {
     squareupOkioVersion = '3.2.0'
     squareupRetrofitVersion = '2.9.0'
     uCropVersion = '2.2.8'
-    zendeskVersion = '5.1.1'
+    zendeskVersion = '5.1.2'
 
     // test
     assertjVersion = '3.23.1'
     junitVersion = '4.13.2'
-    mockitoVersion = '5.1.1'
+    mockitoVersion = '5.3.1'
     mockitoKotlinVersion = '4.1.0'
 
     // android test
     androidxTestCoreVersion = '1.5.0'
     androidxTestEspressoVersion = '3.4.0'
-    androidxTestExtJunitVersion = '1.1.4'
+    androidxTestExtJunitVersion = '1.1.5'
     androidxTestUiAutomatorVersion = '2.2.0'
     screengrabVersion = '2.1.1'
     squareupMockWebServerVersion = '4.9.3'
