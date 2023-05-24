@@ -169,7 +169,8 @@ platform :android do
     # Remove branch protection first, so that we can push the final commits directly to the release branch
     removebranchprotection(repository: GHHELPER_REPO, branch: release_branch)
 
-    check_translations_coverage()
+    # Don't check translation coverage for now since we are finalizing the release in CI
+    # check_translations_coverage()
     download_translations()
 
     android_bump_version_final_release()
