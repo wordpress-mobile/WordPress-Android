@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-09 22:19:47+0000
+Translation-Revision-Date: 2023-05-15 01:34:59+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: sr_RS
@@ -67,6 +67,8 @@ Language: sr_RS
     <string name="my_site_untitled_post">Без наслова</string>
     <string name="my_site_post_card_scheduled_title">Предстојећи заказани чланци</string>
     <string name="gutenberg_native_create_link">Направи везу</string>
+    <string name="blogging_reminders_site_settings_label">%1$s недељно у %2$s</string>
+    <string name="gutenberg_native_selected_s">Одабрано: %s</string>
     <string name="gutenberg_native_use_icon_button">Користите дугме иконице</string>
     <string name="gutenberg_native_search_input_field">Поље за унос претраге</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Дугме за претрагу. Тренутни текст на дугмету је</string>
@@ -353,6 +355,7 @@ Language: sr_RS
     <string name="status_and_visibility">Статус &amp; Видљивост</string>
     <string name="update_now">Ажурирај сада</string>
     <string name="gutenberg_native_move_to_top">Помери на горе</string>
+    <string name="gutenberg_native_insert_mention">Уметни спомињање</string>
     <string name="pages_set_as_posts_page">Постави страницу чланака</string>
     <string name="pages_set_as_homepage">Постави почетну страницу</string>
     <string name="site_settings_select_page">Одабери страницу</string>
@@ -407,19 +410,28 @@ Language: sr_RS
     <string name="weekday_tuesday">уторак</string>
     <string name="weekday_monday">понедељак</string>
     <string name="weekday_sunday">недеља</string>
+    <string name="photo_picker_gif">Одабери из Tenor-а</string>
     <string name="preview_image_description">Приказ слике</string>
     <string name="error_unknown_page_type">Непознат облик странице</string>
+    <string name="page_queued">Страница на чекању</string>
+    <string name="page_uploading">Отпремање странице</string>
+    <string name="error_publish_page_no_network">Уређај је офлајн. Страница је сачувана локално.</string>
     <string name="app_theme_dark">Тамна</string>
     <string name="app_theme_light">Светла</string>
     <string name="app_theme">Изглед</string>
+    <string name="editor_uploading_page">Ваша страница се отпрема</string>
+    <string name="editor_page_saved_locally">Страница сачувана на уређају</string>
+    <string name="editor_page_saved_online">Страница сачувана онлајн</string>
     <string name="gutenberg_native_show_post_content">Прикажи садржај чланка</string>
     <string name="gutenberg_native_only_show_excerpt">Прикажи само одломак </string>
     <string name="gutenberg_native_link_to">Повежи са</string>
     <string name="gutenberg_native_link_settings">Подешавања веза</string>
+    <string name="gutenberg_native_customize">ПРИЛАГОДИ</string>
     <string name="post_list_tab_scheduled_posts">Заказано</string>
     <string name="post_list_tab_published_posts">Објављено</string>
     <string name="create_post_page_fab_tooltip_contributors">Направите чланак</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Није повезано</string>
+    <string name="post_list_tab_trashed_posts">Пребачено у отпад</string>
     <string name="notifications_tab_title_comments">Коментари</string>
     <string name="notifications_tab_title_follows">Праћења</string>
     <string name="notifications_tab_title_likes">Свиђања</string>

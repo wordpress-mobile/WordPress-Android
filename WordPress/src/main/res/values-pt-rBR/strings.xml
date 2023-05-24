@@ -57,11 +57,8 @@ Language: pt_BR
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s está usando %2$s, que ainda não é compatível com todas as funcionalidades do aplicativo. Instale o %3$s.</string>
     <string name="wp_jetpack_feature_removal_static_posters_phase">Indo para o aplicativo Jetpack em alguns dias.</string>
     <string name="wp_jp_static_poster_footnote">A mudança é gratuita e leva apenas um minuto.</string>
-    <string name="wp_jp_static_poster_message">As estatísticas, o leitor, as notificações e outras funcionalidades com tecnologia Jetpack foram removidas do aplicativo WordPress. Agora elas ficarão apenas no aplicativo Jetpack.</string>
     <string name="wp_jp_static_poster_button_secondary">Saiba mais em br.jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Mudar para o aplicativo do Jetpack</string>
-    <string name="wp_jp_static_poster_title_plural">%s migraram para o aplicativo do Jetpack.</string>
-    <string name="wp_jp_static_poster_title">%s migrou para o aplicativo do Jetpack.</string>
     <string name="my_site_btn_wp_admin">Painel WP Admin</string>
     <string name="my_site_header_manage">Gerenciar</string>
     <string name="my_site_header_traffic">Tráfego</string>
@@ -225,7 +222,6 @@ Language: pt_BR
     <string name="jp_migration_done_title">Agradecemos por mudar para o Jetpack.</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Vamos desativar as notificações do aplicativo WordPress.</string>
     <string name="jp_migration_notifications_subtitle">Você receberá as mesmas notificações, mas pelo aplicativo Jetpack.</string>
-    <string name="jp_migration_notifications_title">As notificações agora vêm do Jetpack</string>
     <string name="wordpress_help_center_button">Central de ajuda do WordPress</string>
     <string name="support_title">Suporte</string>
     <string name="notification_disable_broadcast_permission_desc">Permite que o aplicativo desative as notificações do WordPress.</string>

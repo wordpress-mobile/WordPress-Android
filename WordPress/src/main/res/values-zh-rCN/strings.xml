@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-12 14:36:32+0000
+Translation-Revision-Date: 2023-05-17 11:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Android 版 %s 尚不支持编辑可重用区块</string>
+    <string name="jp_migration_notifications_allow_title">允许通知，持续关注您的站点</string>
+    <string name="wp_jp_static_poster_message">Jetpack 应用拥有 WordPress 应用的所有功能，现在可以独家访问统计信息、阅读器、通知等功能。</string>
+    <string name="wp_jp_static_poster_title_plural">在 Jetpack\u00A0应用中结合使用 WordPress 和 %s。</string>
+    <string name="wp_jp_static_poster_title">在 Jetpack\u00A0应用中结合使用 WordPress 和 %s。</string>
     <string name="gutenberg_native_unlabeled_color_s">未标记的颜色 %s</string>
     <string name="dashboard_activity_card_footer_link">查看所有动态</string>
     <string name="dashboard_activity_card_title">近期的动态</string>
     <string name="dashboard_card_domain_title">查找自定义域名</string>
     <string name="site_creation_search_domain_example_body">如以上示例所示，域名允许访客从其 Web 浏览器查找和访问您的站点。</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
-    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
     <string name="site_creation_domain_search_input_hint">使用关键字搜索</string>
     <string name="site_creation_domain_header_subtitle">搜索一个简短易记的域名，以帮助访客找到并访问您的站点。</string>
     <string name="site_creation_domain_cost_sale">第一年</string>
@@ -71,11 +75,8 @@ Language: zh_CN
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。 请安装 %3$s。</string>
     <string name="wp_jetpack_feature_removal_static_posters_phase">几天后将移动至 Jetpack 应用程序。</string>
     <string name="wp_jp_static_poster_footnote">切换免费，只需一会儿。</string>
-    <string name="wp_jp_static_poster_message">统计信息、阅读器、通知和其他由 Jetpack 提供支持的功能已从 WordPress 应用程序上删除，现在只能在 Jetpack 应用程序中使用。</string>
     <string name="wp_jp_static_poster_button_secondary">请访问 Jetpack.com 了解详情</string>
     <string name="wp_jp_static_poster_button_primary">切换到 Jetpack 应用程序</string>
-    <string name="wp_jp_static_poster_title_plural">%s 已移至 Jetpack 应用程序。</string>
-    <string name="wp_jp_static_poster_title">%s 已移至 Jetpack 应用程序。</string>
     <string name="my_site_btn_wp_admin">WP 管理</string>
     <string name="my_site_header_manage">管理</string>
     <string name="my_site_header_traffic">流量</string>
@@ -240,7 +241,6 @@ Language: zh_CN
     <string name="jp_migration_done_title">感谢您切换至 Jetpack！</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">我们将关闭 WordPress 应用中的通知功能。</string>
     <string name="jp_migration_notifications_subtitle">您将收到所有相同的通知，但现在这些通知来自 Jetpack 应用。</string>
-    <string name="jp_migration_notifications_title">现在通知来自 Jetpack 应用</string>
     <string name="wordpress_help_center_button">WordPress 帮助中心</string>
     <string name="support_title">支持</string>
     <string name="notification_disable_broadcast_permission_desc">允许此应用禁用 WordPress 通知功能。</string>
