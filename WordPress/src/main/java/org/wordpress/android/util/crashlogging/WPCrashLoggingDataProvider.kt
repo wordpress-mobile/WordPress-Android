@@ -5,7 +5,6 @@ import com.automattic.android.tracks.crashlogging.CrashLoggingDataProvider
 import com.automattic.android.tracks.crashlogging.CrashLoggingUser
 import com.automattic.android.tracks.crashlogging.EventLevel
 import com.automattic.android.tracks.crashlogging.ExtraKnownKey
-import com.automattic.android.tracks.crashlogging.PerformanceMonitoringConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -36,6 +35,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
     private val logFileProvider: LogFileProviderWrapper,
     private val buildConfig: BuildConfigWrapper,
     @Named(APPLICATION_SCOPE) private val appScope: CoroutineScope,
+    wpPerformanceMonitoringConfig: WPPerformanceMonitoringConfig,
     dispatcher: Dispatcher,
 ) : CrashLoggingDataProvider {
     init {
@@ -113,8 +113,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
 
     override val user = MutableStateFlow(accountStore.account?.toCrashLoggingUser())
 
-    override val performanceMonitoringConfig: PerformanceMonitoringConfig
-        get() = PerformanceMonitoringConfig.Disabled
+    override val performanceMonitoringConfig = wpPerformanceMonitoringConfig()
 
     @Suppress("unused", "unused_parameter")
     @Subscribe(threadMode = ThreadMode.MAIN)

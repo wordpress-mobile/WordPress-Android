@@ -2,6 +2,7 @@ package org.wordpress.android.util.crashlogging
 
 import android.content.SharedPreferences
 import com.automattic.android.tracks.crashlogging.EventLevel.DEBUG
+import com.automattic.android.tracks.crashlogging.PerformanceMonitoringConfig
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -59,6 +60,10 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
     private val buildConfig: BuildConfigWrapper = mock()
     private val sharedPreferences: SharedPreferences = mock()
 
+    private val wpPerformanceMonitoringConfig: WPPerformanceMonitoringConfig = mock {
+        on { invoke() } doReturn PerformanceMonitoringConfig.Enabled(1.0)
+    }
+
     @Before
     fun setUp() {
         sut = WPCrashLoggingDataProvider(
@@ -70,6 +75,7 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
             logFileProvider = logFileProvider,
             buildConfig = buildConfig,
             appScope = testScope(),
+            wpPerformanceMonitoringConfig = wpPerformanceMonitoringConfig,
             dispatcher = Dispatcher()
         )
     }
