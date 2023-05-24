@@ -149,7 +149,6 @@ Language: en_GB
     <string name="jp_migration_notifications_subtitle">You’ll get all the same notifications but now they’ll come from the Jetpack app.</string>
     <string name="notification_disable_broadcast_permission_desc">Allows the app to disable WordPress notifications.</string>
     <string name="notification_disable_broadcast_permission_label">disable WordPress notifications</string>
-    <string name="jp_migration_notifications_title">Notifications now come from Jetpack</string>
     <string name="support_title">Support</string>
     <string name="wordpress_help_center_button">WordPress help centre</string>
     <string name="jp_migration_continue_button">Continue</string>

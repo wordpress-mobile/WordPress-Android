@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-07 11:55:45+0000
+Translation-Revision-Date: 2023-05-16 11:09:05+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: pl
 -->
 <resources>
+    <string name="dashboard_activity_card_title">Ostatnia aktywność</string>
+    <string name="dashboard_activity_card_footer_link">Zobacz pełną aktywność</string>
+    <string name="gutenberg_native_remove_blocks">Usuń bloki</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">Opisz zawartość obrazka. Pozostaw puste pole, jeśli jest on wyłącznie dekoracją.</string>
+    <string name="dashboard_pages_card_create_another_page_button">Utwórz kolejną stronę</string>
+    <string name="dashboard_card_domain_menu_hide_this">Ukryj</string>
+    <string name="blogging_reminders_notifications_permission_caption">Aby korzystać z przypomnień należy mieć włączone powiadomienia typu PUSH</string>
+    <string name="notifications_permission_bottom_sheet_button">Włącz powiadomienia</string>
+    <string name="notifications_permission_bottom_sheet_description_1">Aby zobaczyć powiadomienia będzie potrzebne otwarcie aplikacji</string>
+    <string name="notifications_permission_bottom_sheet_title">Powiadomienia typu PUSH są wyłączone</string>
+    <string name="notifications_permission_off_desc">Powiadomienia typu PUSH są wyłączone.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">Ta witryna</string>
+    <string name="weeks_quantity_other">%d tygodni</string>
+    <string name="stats_timeframe_last_seven_days">Ostatnie 7 dni</string>
+    <string name="stats_timeframe_previous_seven_days">Poprzednie 7 dni</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">Ukryj</string>
+    <string name="blogging_prompts_list_number_of_answers_other">%d odpowiedzi</string>
+    <string name="dlg_confirm_delete_category">Trwale usunąć kategorię \'%s\'?</string>
+    <string name="deleting_cat_success">Kategoria została pomyślnie usunięta!</string>
+    <string name="deleting_cat_failed">Nie udało się usunąć kategorii</string>
+    <string name="deleting_cat">Usuwanie kategorii</string>
+    <string name="updating_cat">Aktualizacja kategorii</string>
     <string name="reader_toast_user_blocked">Wpisy użytkownika nie będą więcej pokazywane</string>
     <string name="reader_menu_block_user">Zablokuj użytkownika</string>
     <string name="reader_menu_report_user">Zgłoś użytkownika</string>
@@ -14,11 +36,15 @@ Language: pl
     <string name="jp_migration_need_help_button">Potrzebujesz pomocy?</string>
     <string name="jp_migration_try_again_button">Spróbuj ponownie</string>
     <string name="jp_migration_finish_button">Koniec</string>
+    <string name="jp_migration_done_subtitle">Przenieśliśmy wszystkie twoje dane i ustawienia. Wszystko jest dokładnie tam, gdzie było.</string>
     <string name="support_title">Pomoc techniczna</string>
+    <string name="notification_disable_broadcast_permission_desc">Pozwala aplikacji wyłączyć powiadomienia od WordPressa.</string>
+    <string name="notification_disable_broadcast_permission_label">wyłącz powiadomienia od WordPressa</string>
     <string name="jp_migration_help_button">Potrzebujesz pomocy?</string>
     <string name="jp_migration_continue_button">Dalej</string>
     <string name="jp_migration_avatar_content_description">Twoje zdjęcie profilowe</string>
     <string name="jp_migration_welcome_subtitle">Wygląda na to, że przełączasz się z aplikacji WordPress.</string>
+    <string name="jp_migration_welcome_site_found_message">Znaleźliśmy twoją witrynę. Kontynuuj przesyłanie wszystkich danych i zaloguj się automatycznie do Jetpacka.</string>
     <string name="icon_desc">ikona</string>
     <string name="post_settings_parent">Strona nadrzędna</string>
     <string name="post_settings_page_attributes">Atrybuty strony</string>
@@ -49,6 +75,9 @@ Language: pl
     <string name="gutenberg_native_jetpack_powered">Obsługiwane przez Jetpack</string>
     <string name="wp_jetpack_continue_to_notifications">Przejdź do powiadomień</string>
     <string name="wp_jetpack_continue_to_stats">Przejdź do statystyk</string>
+    <string name="weekly_roundup_notification_text_all">W zeszłym tygodniu było %1$s wyświetleń %2$s polubień i %3$s komentarzy</string>
+    <string name="weekly_roundup_notification_text_views_only">W zeszłym tygodniu było %1$s wyświetleń.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Twój ostatni wpis %1$s otrzymał %2$s polubień.</string>
     <string name="qrcode_auth_flow_error_no_connection_title">Brak połączenia</string>
     <string name="qrcode_auth_flow_scan_again">Skanuj ponownie</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Nieudane uwierzytelnianie</string>
@@ -66,9 +95,11 @@ Language: pl
     <string name="stats_action_card_schedule_post_title">Zaplanuj swój wpis</string>
     <string name="stats_action_card_blogging_reminders_title">Ustaw przypomnienia o blogowaniu</string>
     <string name="gutenberg_native_drag_drop">Przeciągnij i upuść</string>
+    <string name="gutenberg_native_image_file_not_found">Nie znaleziono pliku obrazka.</string>
     <string name="quick_start_list_upload_media_title">Prześlij zdjęcia lub filmy</string>
     <string name="pages_copy_link">Skopiuj odnośnik</string>
     <string name="quick_start_dialog_check_notifications_title">Sprawdź swoje powiadomienia</string>
+    <string name="photo_picker_video_thumbnail_content_description">Miniatura filmu</string>
     <string name="stats_published_years_ago">Opublikowano %1$d lat temu</string>
     <string name="stats_published_a_year_ago">Opublikowano rok temu</string>
     <string name="stats_published_months_ago">Opublikowano %1$d miesięcy temu</string>
@@ -91,10 +122,14 @@ Language: pl
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="scan_vault_press_active_on_site_button_text">Przejdź do kokpitu</string>
     <string name="locale_picker_current_language">Aktualny język:</string>
+    <string name="gutenberg_native_add_blocks_11d0841f">Dodaj bloki</string>
     <string name="new_site_creation_site_name_title">Nazwa witryny</string>
     <string name="featured_image_confirmation_notice">Ustaw obrazek wyróżniający</string>
     <string name="featured_image_removed_notice">Usuń obrazek wyróżniający</string>
     <string name="featured_image_replace_dialog_confirm">Zastąp obrazek wyróżniający</string>
+    <string name="featured_image_replace_dialog_description">Twój obrazek wyróżniający już jest ustawiony. Czy chcesz go zastąpić nowym?</string>
+    <string name="featured_image_replace_dialog_title">Zmienić obecny obrazek wyróżniający?</string>
+    <string name="dialog_dismiss_try_block_editor">Odrzuć</string>
     <string name="dialog_button_ok">OK</string>
     <string name="stop_upload_dialog_button_no">Nie</string>
     <string name="stop_upload_dialog_button_yes">Tak</string>
@@ -107,6 +142,9 @@ Language: pl
     <string name="editor_title_beta">Beta</string>
     <string name="stop_save_dialog_ok_button">OK</string>
     <string name="pixel_suffix">%dpx</string>
+    <string name="media_bar_description_gallery">Wybierz media z biblioteki</string>
+    <string name="stop_save_dialog_message">Poczekaj aż wszystkie pliki zostaną zapisane</string>
+    <string name="stop_save_dialog_title">Zapisywanie plików</string>
     <string name="blogging_prompt_set_reminders">Ustaw przypomnienia</string>
     <string name="site_creation_intent_technology">Technologia</string>
     <string name="site_creation_intent_real_estate">Nieruchomości</string>
@@ -131,6 +169,13 @@ Language: pl
     <string name="site_creation_intent_beauty">Uroda</string>
     <string name="new_site_creation_intents_input_hint">Np. moda, poezja, polityka</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d odpowiedzi</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Ta kombinacja kolorów może zmniejszyć czytelność. Spróbuj użyć jaśniejszego koloru tła i/lub ciemniejszego koloru tekstu.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Ta kombinacja kolorów może zmniejszyć czytelność. Spróbuj użyć ciemniejszego koloru tła i/lub jaśniejszego koloru tekstu.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Nie udało się wstawić mediów. Kliknij po więcej informacji.</string>
+    <string name="new_site_creation_intents_header_subtitle">Wybierz temat z listy poniżej lub dodaj swój własny.</string>
+    <string name="new_site_creation_intents_header_title">O czym będzie Twoja witryna?</string>
+    <string name="adding_cat">Dodawanie kategorii</string>
+    <string name="login_select_email_client">Której aplikacji pocztowej używasz?</string>
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="login_error_xml_rpc_services_disabled">Usługa XML-RPC jest wyłączona.</string>
     <string name="my_site_todays_stat_card_title">Dzisiejsze statystyki</string>

@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-12 14:34:32+0000
+Translation-Revision-Date: 2023-05-17 13:54:09+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">Редактирование «моих блоков» пока не доступно в %s для iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Редактирование «моих блоков» пока не доступно в %s для Android</string>
+    <string name="jp_migration_notifications_allow_title">Разрешите уведомления, чтобы быть в курсе событий на сайте</string>
+    <string name="wp_jp_static_poster_message">Приложение Jetpack обладает всеми возможностями приложения WordPress, а теперь и исключительным доступом к статистике, «Чтиву», уведомлениям и другим функциям.</string>
+    <string name="wp_jp_static_poster_title_plural">Используйте WordPress с %s в приложении Jetpack.</string>
+    <string name="wp_jp_static_poster_title">Используйте WordPress с %s в приложении Jetpack.</string>
     <string name="gutenberg_native_unlabeled_color_s">Цвет без ярлыка. %s</string>
     <string name="dashboard_activity_card_footer_link">Просмотреть все действия</string>
     <string name="dashboard_activity_card_title">Недавние действия</string>
     <string name="dashboard_card_domain_title">Найти пользовательский домен</string>
     <string name="site_creation_search_domain_example_body">Зная домен, пользователи могут найти сайт с помощью браузера, как в примере выше.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
-    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
     <string name="site_creation_domain_search_input_hint">Поиск по ключевым словам</string>
     <string name="site_creation_domain_header_subtitle">Выберите короткий и запоминающийся домен, который поможет посетителям найти ваш сайт.</string>
     <string name="site_creation_domain_cost_sale">на первый год</string>
@@ -71,11 +76,8 @@ Language: ru
     <string name="jetpack_full_plugin_install_concise_description_single">На %1$s используется плагин %2$s, который пока поддерживает не все функции приложения. Установите %3$s.</string>
     <string name="wp_jetpack_feature_removal_static_posters_phase">Через несколько дней мы переходим на приложение Jetpack.</string>
     <string name="wp_jp_static_poster_footnote">Переход бесплатен и занимает всего минуту.</string>
-    <string name="wp_jp_static_poster_message">Статистика, Обозреватель, уведомления и другие функции на базе Jetpack удалены из приложения WordPress и теперь будут только в приложении Jetpack.</string>
     <string name="wp_jp_static_poster_button_secondary">Дополнительные сведения см. на Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Перейти в новое приложение Jetpack</string>
-    <string name="wp_jp_static_poster_title_plural">%s перемещены в приложение Jetpack.</string>
-    <string name="wp_jp_static_poster_title">%s перемещен в приложение Jetpack.</string>
     <string name="my_site_btn_wp_admin">Консоль</string>
     <string name="my_site_header_manage">Управление</string>
     <string name="my_site_header_traffic">Посещаемость</string>
@@ -240,7 +242,6 @@ Language: ru
     <string name="jp_migration_done_title">Благодарим за переход в Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Уведомления из приложения WordPress будут отключены.</string>
     <string name="jp_migration_notifications_subtitle">Вам будут приходить те же уведомления, но теперь из приложения Jetpack.</string>
-    <string name="jp_migration_notifications_title">Теперь уведомления будут поступать из Jetpack</string>
     <string name="wordpress_help_center_button">Справочный центр WordPress</string>
     <string name="support_title">Поддержка</string>
     <string name="notification_disable_broadcast_permission_desc">Позволяет отключить уведомления WordPress в приложении.</string>

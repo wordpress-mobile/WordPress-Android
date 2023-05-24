@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-05 20:09:57+0000
+Translation-Revision-Date: 2023-05-17 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">Tekrar kullanılabilir blokların düzenlenmesi iOS için %s sitesinde henüz desteklenmemektedir</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Tekrar kullanılabilir blokların düzenlenmesi Android için %s sitesinde henüz desteklenmemektedir</string>
+    <string name="jp_migration_notifications_allow_title">Bildirimleri sitenize göre özelleştirin</string>
+    <string name="wp_jp_static_poster_message">Jetpack uygulaması, WordPress uygulamasının tüm işlevlerine ve artık İstatistikler, Okuyucu, Bildirimler ve daha fazlasına özel erişime sahiptir.</string>
+    <string name="wp_jp_static_poster_title_plural">Jetpack\u00A0uygulamasında WordPress\'i %s ile kullanın.</string>
+    <string name="wp_jp_static_poster_title">Jetpack\u00A0uygulamasında WordPress\'i %s ile kullanın.</string>
     <string name="gutenberg_native_unlabeled_color_s">Etiketsiz renk. %s</string>
     <string name="dashboard_activity_card_footer_link">Tüm etkinliği görüntüleyin</string>
     <string name="dashboard_activity_card_title">Son etkinlik</string>
     <string name="dashboard_card_domain_title">Özel alan adı bulun</string>
     <string name="site_creation_search_domain_example_body">Yukarıdaki örnekte olduğu gibi, bir alan adı, kişilerin web sitenizi bir web tarayıcısı üzerinden bulmasını ve ziyaret etmesini sağlar.</string>
     <string name="site_creation_search_domain_example_title">SitenizinAdi.com</string>
-    <string name="site_creation_search_domain_example_url">https://siteadi.com</string>
     <string name="site_creation_domain_search_input_hint">Anahtar sözcük ile arayın</string>
     <string name="site_creation_domain_header_subtitle">Kişilerin sitenizi bulmasına ve ziyaret etmesine yardımcı olacak kısa ve akılda kalıcı bir alan adı arayın.</string>
     <string name="site_creation_domain_cost_sale">ilk yıl için</string>
@@ -71,11 +76,8 @@ Language: tr
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s, henüz uygulamanın tüm özelliklerini desteklemeyen %2$s kullanıyor. Lütfen %3$s öğesini yükleyin.</string>
     <string name="wp_jetpack_feature_removal_static_posters_phase">Birkaç gün içinde Jetpack uygulamasına geçiş.</string>
     <string name="wp_jp_static_poster_footnote">Geçiş ücretsizdir ve yalnızca bir dakika sürer.</string>
-    <string name="wp_jp_static_poster_message">İstatistikler, Okuyucu, Bildirimler ve Jetpack destekli diğer özellikler WordPress uygulamasından kaldırıldı ve artık yalnızca Jetpack uygulamasında bulunuyor.</string>
     <string name="wp_jp_static_poster_button_secondary">Jetpack.com\'da daha fazla bilgi edinin</string>
     <string name="wp_jp_static_poster_button_primary">Jetpack uygulamasına geçiş yapın</string>
-    <string name="wp_jp_static_poster_title_plural">%s, Jetpack uygulamasına geçti.</string>
-    <string name="wp_jp_static_poster_title">%s, Jetpack uygulamasına geçti.</string>
     <string name="my_site_btn_wp_admin">Pano</string>
     <string name="my_site_header_manage">Yönet</string>
     <string name="my_site_header_traffic">Trafik</string>
@@ -240,7 +242,6 @@ Language: tr
     <string name="jp_migration_done_title">Jetpack\'e geçtiğiniz için teşekkürler!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">WordPress uygulamasından gelen bildirimleri kapatacağız.</string>
     <string name="jp_migration_notifications_subtitle">Aynı bildirimleri alacaksınız, ancak bunlar artık Jetpack uygulamasından gelecek.</string>
-    <string name="jp_migration_notifications_title">Artık bildirimler Jetpack\'ten geliyor</string>
     <string name="wordpress_help_center_button">WordPress yardım merkezi</string>
     <string name="support_title">Destek</string>
     <string name="notification_disable_broadcast_permission_desc">Uygulamanın WordPress bildirimlerini devre dışı bırakmasına izin verir.</string>

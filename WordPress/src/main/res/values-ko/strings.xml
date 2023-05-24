@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-03 14:54:09+0000
+Translation-Revision-Date: 2023-05-17 15:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">재사용 가능한 블록 편집은 아직 iOS용 %s에서 지원되지 않습니다.</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">재사용 가능한 블록 편집은 아직 Android용 %s에서 지원되지 않습니다.</string>
+    <string name="jp_migration_notifications_allow_title">알림이 사이트에 계속 표시되도록 허용</string>
+    <string name="wp_jp_static_poster_message">젯팩 앱에서는 워드프레스 앱의 모든 기능을 보유하며, 이제 통계, 리더, 알림 등에 독점적으로 접근할 수 있습니다.</string>
+    <string name="wp_jp_static_poster_title_plural">젯팩\u00A0앱에서 %s과(와) 함께 워드프레스를 사용하세요.</string>
+    <string name="wp_jp_static_poster_title">젯팩\u00A0앱에서 %s과(와) 함께 워드프레스를 사용하세요.</string>
     <string name="gutenberg_native_unlabeled_color_s">레이블이 없는 색상입니다. %s</string>
     <string name="dashboard_activity_card_footer_link">모든 활동 보기</string>
     <string name="dashboard_activity_card_title">최근 활동</string>
     <string name="dashboard_card_domain_title">사용자 정의 도메인 찾기</string>
     <string name="site_creation_search_domain_example_body">위의 예와 같이 사용자가 웹 브라우저에서 도메인을 통해 사이트를 찾고 방문할 수 있습니다.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
-    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
     <string name="site_creation_domain_search_input_hint">키워드로 검색</string>
     <string name="site_creation_domain_header_subtitle">사용자가 사이트를 찾고 방문하는 데 도움이 되는 짧고 기억하기 쉬운 도메인을 검색하세요.</string>
     <string name="site_creation_domain_cost_sale">첫해 동안</string>
@@ -71,11 +76,8 @@ Language: ko_KR
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s에서는 %2$s을(를) 사용하고 있으며 여기에서는 아직 앱의 모든 기능이 지원되지 않습니다. %3$s을(를) 설치하세요.</string>
     <string name="wp_jetpack_feature_removal_static_posters_phase">며칠 후 젯팩 앱이 이동됩니다.</string>
     <string name="wp_jp_static_poster_footnote">전환은 무료이며 1분밖에 걸리지 않습니다.</string>
-    <string name="wp_jp_static_poster_message">통계, 리더, 알림 및 기타 젯팩에서는 워드프레스 앱에서 제거된 기능이 제공되며, 젯팩 앱에서만 찾을 수 있습니다.</string>
     <string name="wp_jp_static_poster_button_secondary">Jetpack.com에서 더 알아보기</string>
     <string name="wp_jp_static_poster_button_primary">젯팩 앱으로 전환</string>
-    <string name="wp_jp_static_poster_title_plural">%s이(가) 젯팩 앱으로 이동되었습니다.</string>
-    <string name="wp_jp_static_poster_title">%s이(가) 젯팩 앱으로 이동되었습니다.</string>
     <string name="my_site_btn_wp_admin">WP 관리자</string>
     <string name="my_site_header_manage">관리</string>
     <string name="my_site_header_traffic">트래픽</string>
@@ -240,7 +242,6 @@ Language: ko_KR
     <string name="jp_migration_done_title">젯팩으로 전환해 주셔서 감사합니다!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">워드프레스 앱의 알림을 해제하겠습니다.</string>
     <string name="jp_migration_notifications_subtitle">동일한 알림을 모두 받겠지만, 이제는 젯팩 앱에서 알림을 보냅니다.</string>
-    <string name="jp_migration_notifications_title">이제 젯팩에서 알림 전송</string>
     <string name="wordpress_help_center_button">워드프레스 도움말 센터</string>
     <string name="support_title">지원</string>
     <string name="notification_disable_broadcast_permission_desc">앱에 워드프레스 알림 비활성화를 허용하세요.</string>
