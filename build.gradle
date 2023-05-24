@@ -58,7 +58,7 @@ ext {
     eventBusVersion = '3.3.1'
     facebookShimmerVersion = '0.5.0'
     firebaseIidVersion = '21.1.0'
-    firebaseConfigVersion = '19.2.0'
+    firebaseConfigVersion = '20.0.4'
     firebaseMessagingVersion = '21.1.0'
     glideVersion = '4.10.0'
     glideVolleyVersion = '4.6.1@aar'
