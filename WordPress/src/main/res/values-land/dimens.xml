@@ -13,6 +13,6 @@
     <!-- Dashboard Card Plans -->
     <dimen name="dashboard_card_plans_layout_padding">32dp</dimen>
     <dimen name="dashboard_card_plans_top_margin">16dp</dimen>
-    <dimen name="dashboard_card_plans_done_button_bottom_margin">16dp</dimen>
+    <dimen name="dashboard_card_plans_done_button_bottom_margin">12dp</dimen>
 
 </resources>

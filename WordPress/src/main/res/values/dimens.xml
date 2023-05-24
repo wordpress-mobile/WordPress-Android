@@ -769,5 +769,5 @@
     <!-- Dashboard card plans -->
     <dimen name="dashboard_card_plans_layout_padding">16dp</dimen>
     <dimen name="dashboard_card_plans_top_margin">48dp</dimen>
-    <dimen name="dashboard_card_plans_done_button_bottom_margin">64dp</dimen>
+    <dimen name="dashboard_card_plans_done_button_bottom_margin">16dp</dimen>
 </resources>
