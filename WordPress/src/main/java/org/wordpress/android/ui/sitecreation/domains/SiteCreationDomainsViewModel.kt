@@ -91,11 +91,11 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val _createSiteBtnClicked = SingleLiveEvent<DomainModel>()
     val createSiteBtnClicked: LiveData<DomainModel> = _createSiteBtnClicked
 
-    private val _clearBtnClicked = SingleLiveEvent<Unit>()
+    private val _clearBtnClicked = SingleLiveEvent<Unit?>()
     val clearBtnClicked = _clearBtnClicked
 
-    private val _onHelpClicked = SingleLiveEvent<Unit>()
-    val onHelpClicked: LiveData<Unit> = _onHelpClicked
+    private val _onHelpClicked = SingleLiveEvent<Unit?>()
+    val onHelpClicked: LiveData<Unit?> = _onHelpClicked
 
     init {
         dispatcher.register(fetchDomainsUseCase)
@@ -134,7 +134,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         val domain = requireNotNull(selectedDomain) {
             "Create site button should not be visible if a domain is not selected"
         }
-        tracker.trackDomainSelected(domain.domainName, currentQuery?.value ?: "")
+        tracker.trackDomainSelected(domain.domainName, currentQuery?.value.orEmpty(), domain.cost)
         _createSiteBtnClicked.value = domain
     }
 
@@ -373,7 +373,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
                     if (isPurchasingEnabled) R.string.site_creation_domain_header_subtitle
                     else R.string.new_site_creation_domain_header_subtitle,
                 ),
-                isStartAligned = isPurchasingEnabled
             )
         }
 

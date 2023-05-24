@@ -24,7 +24,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.Foll
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Loading
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.UserNotAuthenticated
-import org.wordpress.android.util.map
+import org.wordpress.android.util.mapSafe
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -47,11 +47,11 @@ class ConversationNotificationsViewModel @Inject constructor(
 
     private val _updateFollowStatus = MediatorLiveData<FollowCommentsState>()
     val updateFollowUiState: LiveData<FollowConversationUiState> =
-        _updateFollowStatus.map { state -> buildFollowCommentsUiState(state) }
+        _updateFollowStatus.mapSafe { state -> buildFollowCommentsUiState(state) }
 
     private val _pushNotificationsStatusUpdate = MediatorLiveData<FollowStateChanged>()
     val pushNotificationsStatusUpdate: LiveData<Event<Boolean>> =
-        _pushNotificationsStatusUpdate.map { state -> buildPushNotificationsUiState(state) }
+        _pushNotificationsStatusUpdate.mapSafe { state -> buildPushNotificationsUiState(state) }
 
     private var blogId: Long = 0
     private var postId: Long = 0

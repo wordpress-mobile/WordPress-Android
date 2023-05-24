@@ -6,8 +6,8 @@ import android.os.Parcelable
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -132,7 +132,7 @@ class SiteCreationMainVM @Inject constructor(
 
     val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
         SingleEventObservable(
-            Transformations.map(wizardManager.navigatorLiveData) {
+            wizardManager.navigatorLiveData.map {
                 clearOldSiteCreationState(it)
                 WizardNavigationTarget(it, siteCreationState)
             }
@@ -145,11 +145,11 @@ class SiteCreationMainVM @Inject constructor(
     private val _onCompleted = SingleLiveEvent<SiteCreationCompletionEvent>()
     val onCompleted: LiveData<SiteCreationCompletionEvent> = _onCompleted
 
-    private val _exitFlowObservable = SingleLiveEvent<Unit>()
-    val exitFlowObservable: LiveData<Unit> = _exitFlowObservable
+    private val _exitFlowObservable = SingleLiveEvent<Unit?>()
+    val exitFlowObservable: LiveData<Unit?> = _exitFlowObservable
 
-    private val _onBackPressedObservable = SingleLiveEvent<Unit>()
-    val onBackPressedObservable: LiveData<Unit> = _onBackPressedObservable
+    private val _onBackPressedObservable = SingleLiveEvent<Unit?>()
+    val onBackPressedObservable: LiveData<Unit?> = _onBackPressedObservable
 
     private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
     val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
@@ -237,7 +237,7 @@ class SiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
-    fun onSiteDesignSelected(siteDesign: String) {
+    fun onDesignSelected(siteDesign: String) {
         siteCreationState = siteCreationState.copy(siteDesign = siteDesign)
         wizardManager.showNextStep()
     }
@@ -301,6 +301,7 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onCheckoutResult(event: DomainRegistrationCompletedEvent?) {
         if (event == null) return onBackPressed()
+        domainsRegistrationTracker.trackDomainsPurchaseDomainSuccess(isSiteCreation = true)
         siteCreationState = siteCreationState.run {
             check(result is CreatedButNotFetched.InCart)
             copy(

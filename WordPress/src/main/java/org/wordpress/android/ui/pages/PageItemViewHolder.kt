@@ -21,6 +21,7 @@ import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
+import org.wordpress.android.ui.pages.PageItem.VirtualHomepage.Action
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DateTimeUtils
@@ -137,6 +138,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     uploadProgressBar.isIndeterminate = false
                     uploadProgressBar.progress = progressBarUiState.progress
                 }
+
                 is ProgressBarUiState.Hidden -> Unit // Do nothing
             }
         }
@@ -284,6 +286,24 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 emptyView.image.visibility = if (pageItem.isImageVisible) View.VISIBLE else View.GONE
 
                 emptyView.updateLayoutForSearch(pageItem.isSearching, 0)
+            }
+        }
+    }
+
+    class VirtualHomepageViewHolder(
+        parentView: ViewGroup,
+        private val onAction: (Action) -> Unit,
+    ) : PageItemViewHolder(parentView, R.layout.page_virtual_homepage_item) {
+        private val pageItemContainer = itemView.findViewById<ViewGroup>(R.id.page_item)
+        private val pageItemInfo = itemView.findViewById<ImageButton>(R.id.page_info_icon)
+
+        override fun onBind(pageItem: PageItem) {
+            itemView.setOnClickListener {
+                QuickStartUtils.removeQuickStartFocusPoint(pageItemContainer)
+                onAction(Action.OpenSiteEditor())
+            }
+            pageItemInfo.setOnClickListener {
+                onAction(Action.OpenExternalLink.TemplateSupport)
             }
         }
     }

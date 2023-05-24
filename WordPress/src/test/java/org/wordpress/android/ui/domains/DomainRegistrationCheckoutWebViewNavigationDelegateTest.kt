@@ -14,6 +14,7 @@ class DomainRegistrationCheckoutWebViewNavigationDelegateTest : BaseUnitTest() {
     fun `checkout web view can navigate to checkout paths`() {
         assertThat(
             buildUrls(
+                "/plans/",
                 "/checkout/",
                 "/checkout/dummywpcomsite.wordpress.com",
                 "/checkout/thank-you/"
@@ -68,7 +69,6 @@ class DomainRegistrationCheckoutWebViewNavigationDelegateTest : BaseUnitTest() {
         assertThat(
             buildUrls(
                 "/blog/",
-                "/plans/",
                 "/themes/",
                 "/invalid/support/"
             )

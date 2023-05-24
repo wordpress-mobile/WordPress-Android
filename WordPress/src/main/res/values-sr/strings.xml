@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-23 11:20:34+0000
+Translation-Revision-Date: 2023-05-09 22:19:47+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: sr_RS
@@ -389,12 +389,16 @@ Language: sr_RS
     <string name="button_insert">Убаци</string>
     <string name="continue_label">Настави</string>
     <string name="copy_text">Копирај</string>
+    <string name="gutenberg_native_number_of_columns">Број колона</string>
     <string name="gutenberg_native_move_block_right">Помери блок удесно</string>
     <string name="gutenberg_native_move_block_left">Помери блок улево</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Помери блок улево од места %1$s на место %2$s</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Помери блок удесно од места %1$s на место %2$s</string>
     <string name="new_site_creation_creating_site_loading_title">Ура!\nСкоро готово</string>
     <string name="new_site_creation_creating_site_loading_subtitle">Ваш сајт ће ускоро бити спреман</string>
+    <string name="gutenberg_native_block_settings">Подешавања блокова</string>
+    <string name="new_site_creation_creating_site_loading_3">Постављање теме</string>
+    <string name="new_site_creation_creating_site_loading_2">Додавање могућности веб места</string>
     <string name="pages_and_posts_cancel_auto_upload">Откажи отпремање</string>
     <string name="weekday_saturday">субота</string>
     <string name="weekday_friday">петак</string>
@@ -403,6 +407,8 @@ Language: sr_RS
     <string name="weekday_tuesday">уторак</string>
     <string name="weekday_monday">понедељак</string>
     <string name="weekday_sunday">недеља</string>
+    <string name="preview_image_description">Приказ слике</string>
+    <string name="error_unknown_page_type">Непознат облик странице</string>
     <string name="app_theme_dark">Тамна</string>
     <string name="app_theme_light">Светла</string>
     <string name="app_theme">Изглед</string>
@@ -453,6 +459,7 @@ Language: sr_RS
     <string name="photo_picker_image_thumbnail_selected">Слика одабрана</string>
     <string name="my_site_bottom_sheet_add_post">Чланак блога</string>
     <string name="my_site_bottom_sheet_title">Додај нови</string>
+    <string name="photo_picker_image_thumbnail_content_description">Умањена слика</string>
     <string name="post_settings_publish">Објави</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">Синхронизуј сада</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Овај чланак ће бити одмах синхронизован.</string>
@@ -479,6 +486,7 @@ Language: sr_RS
     <string name="gutenberg_native_take_a_video">Направи видео запис</string>
     <string name="gutenberg_native_take_a_photo_or_video">Направи фотографију или видео запис</string>
     <string name="gutenberg_native_take_a_photo">Направи фотографију</string>
+    <string name="gutenberg_native_unsupported">Неподржано</string>
     <string name="gutenberg_native_cut_block">Исеци блок</string>
     <string name="gutenberg_native_s_block_empty">%s блок. Празно</string>
     <string name="gutenberg_native_post_title_s">Наслов чланка. %s</string>
@@ -636,6 +644,8 @@ Language: sr_RS
     <string name="stats_insights_annual_site_stats">Годишње статистике сајта</string>
     <string name="stats_insights_social">Друштвено</string>
     <string name="stats_view_follower_totals">Укупан број пратилаца</string>
+    <string name="domain_suggestions_fetch_error">Предлози домена се нису могли учитати</string>
+    <string name="domain_suggestions_search_hint">Укуцајте кључну реч за више идеја</string>
     <string name="stats_menu_move_down">Помери доле</string>
     <string name="stats_menu_move_up">Помери горе</string>
     <string name="post_restored">Чланак враћен</string>
@@ -698,6 +708,7 @@ Language: sr_RS
     <string name="quick_start_dialog_remove_next_steps_title">Уклони наредне кораке</string>
     <string name="quick_start_remove_next_steps_menu_title">Уклони ово</string>
     <string name="quick_start_dialog_check_stats_title">Провери статистику свог сајта</string>
+    <string name="quick_start_dialog_check_stats_message">Прати редовно перформансе свог веб места.</string>
     <string name="quick_start_task_skip_menu_title">Прескочи задатак</string>
     <string name="notification_channel_reminder_title">Подсетник</string>
     <string name="stats_insights_popular">Најпопуларније време</string>
@@ -711,6 +722,8 @@ Language: sr_RS
     <string name="notification_new_site_creation_title">Креирај сајт</string>
     <string name="new_site_creation_create_site_button">Креирај сајт</string>
     <string name="new_site_creation_site_preview_content_description">Приказујем преглед сајта</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">Правимо Ваше ново веб место</string>
+    <string name="cancel_new_site_wizard_content_description">Откажи Чаробњака за прављење веб места</string>
     <string name="site_creation_error_generic_title">Дошло је до проблема</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Дошло је до проблема</string>
     <string name="new_site_creation_preview_title">Ваша страница је креирана!</string>
@@ -1356,6 +1369,7 @@ Language: sr_RS
     <string name="connected_accounts_label">Повезани налози</string>
     <string name="sharing">Дељење</string>
     <string name="tabbar_accessibility_label_notifications">Обавештења. Управљајте обавештењима.</string>
+    <string name="tabbar_accessibility_label_reader">Читач. Прати садржај са других веб места.</string>
     <string name="my_site_btn_sharing">Дељење</string>
     <string name="button_not_now">Не сада</string>
     <string name="editor_draft_saved_locally">Нацрт сачуван на уређају</string>
@@ -1929,6 +1943,7 @@ Language: sr_RS
     <string name="reader_likes_you_and_multi">Вама и %,d других се ово свиђа</string>
     <string name="cant_share_no_visible_blog">Не можете делити на Вордпресу без видљивог блога</string>
     <string name="reader_likes_multi">%,d људи ово воли</string>
+    <string name="comment_unapproved">Коментар неодобрен</string>
     <string name="pick_photo">Одаберите фотографију</string>
     <string name="pick_video">Одаберите видео снимак</string>
     <string name="reader_toast_err_get_post">Није могуће добавити овај чланак</string>

@@ -29,6 +29,7 @@ class CardsTracker @Inject constructor(
         PAGES("pages"),
         ACTIVITY("activity_log"),
         DASHBOARD_CARD_DOMAIN("dashboard_card_domain"),
+        DASHBOARD_CARD_PLANS("dashboard_card_plans"),
     }
 
     enum class QuickStartSubtype(val label: String) {
@@ -139,6 +140,7 @@ class CardsTracker @Inject constructor(
     }
 }
 
+@Suppress("ComplexMethod")
 fun DashboardCardType.toTypeValue(): Type {
     return when (this) {
         DashboardCardType.ERROR_CARD -> Type.ERROR
@@ -151,6 +153,7 @@ fun DashboardCardType.toTypeValue(): Type {
         DashboardCardType.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
         DashboardCardType.PROMOTE_WITH_BLAZE_CARD -> Type.PROMOTE_WITH_BLAZE
         DashboardCardType.DASHBOARD_DOMAIN_CARD -> Type.DASHBOARD_CARD_DOMAIN
+        DashboardCardType.DASHBOARD_PLANS_CARD -> Type.DASHBOARD_CARD_PLANS
         DashboardCardType.PAGES_CARD -> Type.PAGES
         DashboardCardType.PAGES_CARD_ERROR -> Type.ERROR
         DashboardCardType.ACTIVITY_CARD -> Type.ACTIVITY

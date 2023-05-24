@@ -67,13 +67,13 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     lateinit var onCompletedObserver: Observer<SiteCreationCompletionEvent>
 
     @Mock
-    lateinit var wizardExitedObserver: Observer<Unit>
+    lateinit var wizardExitedObserver: Observer<Unit?>
 
     @Mock
     lateinit var dialogActionsObserver: Observer<DialogHolder>
 
     @Mock
-    lateinit var onBackPressedObserver: Observer<Unit>
+    lateinit var onBackPressedObserver: Observer<Unit?>
 
     @Mock
     lateinit var savedInstanceState: Bundle
@@ -200,6 +200,14 @@ class SiteCreationMainVMTest : BaseUnitTest() {
             assertEquals(CHECKOUT_EVENT.domainName, domainName)
             assertEquals(CHECKOUT_EVENT.email, email)
         }
+    }
+
+
+    @Test
+    fun `on checkout result when not null tracks domain purchase success`() {
+        viewModel.onCartCreated(CHECKOUT_DETAILS)
+        viewModel.onCheckoutResult(CHECKOUT_EVENT)
+        verify(domainsRegistrationTracker).trackDomainsPurchaseDomainSuccess(true)
     }
 
     @Test

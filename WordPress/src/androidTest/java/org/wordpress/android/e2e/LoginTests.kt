@@ -1,7 +1,6 @@
 package org.wordpress.android.e2e
 
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BuildConfig
@@ -58,10 +57,5 @@ class LoginTests : BaseTest() {
                 BuildConfig.E2E_SELF_HOSTED_USER_PASSWORD
             )
             .confirmLogin(true)
-    }
-
-    @After
-    fun tearDown() {
-        logoutIfNecessary()
     }
 }

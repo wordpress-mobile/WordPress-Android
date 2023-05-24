@@ -35,7 +35,9 @@ class InsightsManagementFragment : Fragment(R.layout.insights_management_fragmen
             initializeViews()
             initializeViewModels(requireActivity(), siteId)
         }
-        requireActivity().onBackPressedDispatcher.addCallback(this) { viewModel.onBackPressed() }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            viewModel.onBackPressed()
+        }
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {

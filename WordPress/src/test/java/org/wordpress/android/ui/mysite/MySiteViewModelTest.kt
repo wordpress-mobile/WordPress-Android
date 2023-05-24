@@ -120,6 +120,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
+import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder.Companion.NOT_SET
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
@@ -331,6 +332,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var dashboardCardDomainUtils: DashboardCardDomainUtils
+
+    @Mock
+    lateinit var plansCardUtils: PlansCardUtils
 
     @Mock
     lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
@@ -565,6 +569,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             jetpackInstallFullPluginShownTracker,
             blazeFeatureUtils,
             dashboardCardDomainUtils,
+            plansCardUtils,
             jetpackFeatureRemovalPhaseHelper,
             wpJetpackIndividualPluginHelper,
         )
@@ -2955,23 +2960,23 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given selected site with domain credit, when dashboard cards + items, then domain reg card does not exist`() {
+    fun `given selected site with domain credit, when dashboard cards + items, then domain reg card exists`() {
         initSelectedSite()
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
-        assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isEmpty()
+        assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isNotEmpty
     }
 
     @Test
-    fun `given selected site with domain credit, when site menu cards and items, then domain reg card exists`() {
+    fun `given selected site with domain credit, when site menu cards and items, then domain reg card doesn't exist`() {
         initSelectedSite()
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
         val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
-        assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isNotEmpty
+        assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isEmpty()
     }
 
     @Test

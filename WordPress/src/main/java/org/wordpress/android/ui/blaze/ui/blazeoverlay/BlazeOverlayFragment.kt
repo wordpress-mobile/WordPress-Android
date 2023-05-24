@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.blaze.ui.blazeoverlay
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -37,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,7 +50,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.blaze.BlazeUIModel
@@ -99,6 +102,7 @@ class BlazeOverlayFragment : Fragment() {
     }
 
     @Composable
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     fun BlazeOverlayScreen(
         content: BlazeUiState.PromoteScreen,
         isDarkTheme: Boolean = isSystemInDarkTheme()
@@ -282,13 +286,11 @@ class BlazeOverlayFragment : Fragment() {
 
     @Composable
     private fun FeaturedImage(url: String?, modifier: Modifier = Modifier) {
-        val painter = rememberImagePainter(url) {
-            placeholder(R.drawable.bg_rectangle_placeholder_globe_margin_8dp)
-            error(R.drawable.bg_rectangle_placeholder_globe_margin_8dp)
-            crossfade(true)
-        }
-        Image(
-            painter = painter,
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(url)
+                .crossfade(true)
+                .build(),
             contentScale = ContentScale.Crop,
             contentDescription = stringResource(R.string.blavatar_desc),
             modifier = modifier

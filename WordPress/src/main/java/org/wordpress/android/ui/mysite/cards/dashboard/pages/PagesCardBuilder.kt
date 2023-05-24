@@ -7,15 +7,15 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.PageContentItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams.PagesItemClickParams
-import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.config.DashboardCardPagesConfig
-import javax.inject.Inject
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.DRAFT
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.PUBLISH
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.SCHEDULED
 import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.config.DashboardCardPagesConfig
+import javax.inject.Inject
 
 private const val REQUIRED_PAGES_IN_CARD: Int = 3
 
@@ -24,10 +24,18 @@ class PagesCardBuilder @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
     fun build(params: PagesCardBuilderParams): PagesCard? {
-        if (!dashboardCardPagesConfig.isEnabled()) {
+        if (!shouldBuildCard(params)) {
             return null
         }
         return convertToPagesItems(params)
+    }
+
+    private fun shouldBuildCard(params: PagesCardBuilderParams): Boolean {
+        if (!dashboardCardPagesConfig.isEnabled() ||
+            params.pageCard == null
+        ) return false
+
+        return true
     }
 
     private fun convertToPagesItems(params: PagesCardBuilderParams): PagesCard.PagesCardWithData {

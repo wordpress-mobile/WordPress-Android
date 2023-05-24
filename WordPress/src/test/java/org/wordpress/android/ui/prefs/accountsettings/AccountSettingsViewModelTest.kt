@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs.accountsettings
 
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -8,17 +9,21 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult
 import org.wordpress.android.fluxc.store.AccountStore.AccountError
 import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.SiteUiModel
+import org.wordpress.android.ui.prefs.accountsettings.usecase.AccountClosureUseCase
 import org.wordpress.android.ui.prefs.accountsettings.usecase.FetchAccountSettingsUseCase
 import org.wordpress.android.ui.prefs.accountsettings.usecase.GetAccountUseCase
 import org.wordpress.android.ui.prefs.accountsettings.usecase.GetSitesUseCase
@@ -54,6 +59,9 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var account: AccountModel
 
+    @Mock
+    lateinit var accountClosureUseCase: AccountClosureUseCase
+
     private val siteViewModels = mutableListOf<SiteUiModel>().apply {
         add(SiteUiModel("HappyDay", 1L, "http://happyday.wordpress.com"))
         add(SiteUiModel("WonderLand", 2L, "http://wonderland.wordpress.com"))
@@ -80,7 +88,7 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `The initial primarysite is shown from cached account settings`() = test {
+    fun `The initial primary site is shown from cached account settings`() = test {
         uiState.primarySiteSettingsUiState.primarySite?.siteId?.let {
             assertThat(it).isEqualTo(getAccountUseCase.account.primarySiteId)
         }
@@ -407,6 +415,31 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
                 .isEqualTo(false)
         }
 
+    @Test
+    fun `When account closure succeeds, then the closure dialog should be in the success state`() = test {
+        mockAccountClosureWithResult(CloseAccountResult.Success)
+        viewModel.closeAccount()
+        assertTrue(viewModel.accountClosureUiState.value is AccountClosureUiState.Opened.Success)
+    }
+
+    @Test
+    fun `When account closure fails, then the closure dialog should be in the error state`() = test {
+        mockAccountClosureWithResult(CloseAccountResult.Failure(CloseAccountResult.Error(
+            CloseAccountResult.ErrorType.UNKNOWN,
+            "unknown",
+        )))
+        viewModel.closeAccount()
+        assertTrue(viewModel.accountClosureUiState.value is AccountClosureUiState.Opened.Error)
+    }
+
+    @Test
+    fun `When there is an Atomic site, then the closure dialog should open in the error state`() = test {
+        val mockAtomicSite: SiteModel = mock()
+        whenever(getSitesUseCase.getAtomic()).thenReturn(listOf(mockAtomicSite))
+        viewModel.openAccountClosureDialog()
+        assertTrue(viewModel.accountClosureUiState.value is AccountClosureUiState.Opened.Error)
+    }
+
     // Helper Methods
     private fun <T> testUiStateChanges(
         block: suspend CoroutineScope.() -> T
@@ -437,12 +470,23 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
             resourceProvider,
             networkUtilsWrapper,
             testDispatcher(),
+            testDispatcher(),
             fetchAccountSettingsUseCase,
             pushAccountSettingsUseCase,
             getAccountUseCase,
             getSitesUseCase,
-            optimisticUpdateHandler
+            optimisticUpdateHandler,
+            accountClosureUseCase,
         )
+    }
+
+    private suspend fun mockAccountClosureWithResult(result: CloseAccountResult) {
+        whenever(getSitesUseCase.getAtomic()).thenReturn(emptyList())
+        whenever(accountClosureUseCase.closeAccount(any())).thenAnswer {
+            val completion = it.getArgument<((CloseAccountResult) -> Unit)>(0)
+            completion.invoke(result)
+        }
+        viewModel.openAccountClosureDialog()
     }
 
     private suspend fun mockSites(siteViewModels: List<SiteUiModel>) {

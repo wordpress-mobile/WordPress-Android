@@ -72,16 +72,16 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     private lateinit var tracker: SiteCreationTracker
 
     @Mock
-    private lateinit var uiStateObserver: Observer<DomainsUiState>
+    private lateinit var uiStateObserver: Observer<DomainsUiState?>
 
     @Mock
     private lateinit var createSiteBtnObserver: Observer<DomainModel>
 
     @Mock
-    private lateinit var clearBtnObserver: Observer<Unit>
+    private lateinit var clearBtnObserver: Observer<Unit?>
 
     @Mock
-    private lateinit var onHelpClickedObserver: Observer<Unit>
+    private lateinit var onHelpClickedObserver: Observer<Unit?>
 
     @Mock
     private lateinit var networkUtils: NetworkUtilsWrapper
@@ -300,6 +300,30 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         viewModel.onCreateSiteBtnClicked()
 
         verify(createSiteBtnObserver).onChanged(argWhere { it == selectedDomain })
+    }
+
+    @Test
+    fun `click on the create site button tracks the selected free domain`() = testWithSuccessResponse {
+        val selectedDomain = mockDomain("test.domain")
+        val expectedCost = "Free"
+        whenever(selectedDomain.cost).thenReturn(expectedCost)
+        viewModel.onDomainSelected(selectedDomain)
+
+        viewModel.onCreateSiteBtnClicked()
+
+        verify(tracker).trackDomainSelected(selectedDomain.domainName, "", expectedCost)
+    }
+
+    @Test
+    fun `click on the create site button tracks the selected paid domain`() = testWithSuccessResponse {
+        val selectedDomain = mockDomain("test.domain", free = false)
+        val expectedCost = "1.23 USD"
+        whenever(selectedDomain.cost).thenReturn(expectedCost)
+        viewModel.onDomainSelected(selectedDomain)
+
+        viewModel.onCreateSiteBtnClicked()
+
+        verify(tracker).trackDomainSelected(selectedDomain.domainName, "", expectedCost)
     }
 
     @Test

@@ -36,11 +36,11 @@ class SiteCreationIntentsViewModel @Inject constructor(
     private val _uiState: MutableLiveData<IntentsUiState> = MutableLiveData()
     val uiState: LiveData<IntentsUiState> = _uiState
 
-    private val _onSkipButtonPressed = SingleLiveEvent<Unit>()
-    val onSkipButtonPressed: LiveData<Unit> = _onSkipButtonPressed
+    private val _onSkipButtonPressed = SingleLiveEvent<Unit?>()
+    val onSkipButtonPressed: LiveData<Unit?> = _onSkipButtonPressed
 
-    private val _onBackButtonPressed = SingleLiveEvent<Unit>()
-    val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
+    private val _onBackButtonPressed = SingleLiveEvent<Unit?>()
+    val onBackButtonPressed: LiveData<Unit?> = _onBackButtonPressed
 
     private val _onIntentSelected = SingleLiveEvent<String?>()
     val onIntentSelected: LiveData<String?> = _onIntentSelected

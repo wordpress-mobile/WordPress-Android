@@ -63,8 +63,8 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
 
     private val uiStateObserver = mock<Observer<SiteProgressUiState>>()
     private val startServiceObserver = mock<Observer<StartServiceData>>()
-    private val onHelpClickedObserver = mock<Observer<Unit>>()
-    private val onCancelWizardClickedObserver = mock<Observer<Unit>>()
+    private val onHelpClickedObserver = mock<Observer<Unit?>>()
+    private val onCancelWizardClickedObserver = mock<Observer<Unit?>>()
     private val onRemoteSiteCreatedObserver = mock<Observer<SiteModel>>()
     private val onCartCreatedObserver = mock<Observer<CheckoutDetails>>()
 

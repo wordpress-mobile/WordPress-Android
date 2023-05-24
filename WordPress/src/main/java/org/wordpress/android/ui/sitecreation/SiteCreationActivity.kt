@@ -119,7 +119,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     @Suppress("LongMethod")
     private fun observeVMState() {
-        mainViewModel.navigationTargetObservable.observe(this) { it?.let(::showStep) }
+        mainViewModel.navigationTargetObservable.observe(this, ::showStep)
         mainViewModel.onCompleted.observe(this) { (result, isTitleTaskComplete) ->
             val intent = Intent().apply {
                 putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, (result as? Created)?.site?.id)
@@ -142,12 +142,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
             onBackPressedDispatcher.onBackPressedCompat(backPressedCallback)
         }
         mainViewModel.showDomainCheckout.observe(this, domainCheckoutActivityLauncher::launch)
-        siteCreationIntentsViewModel.onBackButtonPressed.observe(this) {
-            mainViewModel.onBackPressed()
-        }
-        siteCreationIntentsViewModel.onSkipButtonPressed.observe(this) {
-            mainViewModel.onSiteIntentSkipped()
-        }
+        siteCreationIntentsViewModel.onBackButtonPressed.observe(this) { mainViewModel.onBackPressed() }
+        siteCreationIntentsViewModel.onSkipButtonPressed.observe(this) { mainViewModel.onSiteIntentSkipped() }
         siteCreationSiteNameViewModel.onBackButtonPressed.observe(this) {
             mainViewModel.onBackPressed()
             ActivityUtils.hideKeyboard(this)
@@ -156,20 +152,12 @@ class SiteCreationActivity : LocaleAwareActivity(),
             ActivityUtils.hideKeyboard(this)
             mainViewModel.onSiteNameSkipped()
         }
-        hppViewModel.onBackButtonPressed.observe(this) {
-            mainViewModel.onBackPressed()
-        }
-        hppViewModel.onDesignActionPressed.observe(this) { design ->
-            mainViewModel.onSiteDesignSelected(design.template)
-        }
-        progressViewModel.onCancelWizardClicked.observe(this) {
-            mainViewModel.onWizardCancelled()
-        }
+        hppViewModel.onBackButtonPressed.observe(this) { mainViewModel.onBackPressed() }
+        hppViewModel.onDesignActionPressed.observe(this) { mainViewModel.onDesignSelected(it.template) }
+        progressViewModel.onCancelWizardClicked.observe(this) { mainViewModel.onWizardCancelled() }
         progressViewModel.onFreeSiteCreated.observe(this, mainViewModel::onFreeSiteCreated)
         progressViewModel.onCartCreated.observe(this, mainViewModel::onCartCreated)
-        previewViewModel.onOkButtonClicked.observe(this) { result ->
-            mainViewModel.onWizardFinished(result)
-        }
+        previewViewModel.onOkButtonClicked.observe(this, mainViewModel::onWizardFinished)
         observeOverlayEvents()
     }
 

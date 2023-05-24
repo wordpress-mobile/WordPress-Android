@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.sitecreation.domains
 
 import android.view.ViewGroup
-import androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
 import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
@@ -58,17 +57,11 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
         }
     }
 
-    @Suppress("ForbiddenComment")
     class NewDomainViewHolder(parentView: ViewGroup) :
         SiteCreationDomainViewHolder<SiteCreationDomainsItemV2Binding>(
             parentView.viewBinding(SiteCreationDomainsItemV2Binding::inflate)
         ) {
         val composeView = binding.composeView
-
-        init {
-            // TODO: Remove this for Compose 1.2.0-beta02+ and RecyclerView 1.3.0-alpha02+
-            binding.composeView.setViewCompositionStrategy(DisposeOnViewTreeLifecycleDestroyed)
-        }
 
         fun onBind(uiState: New.DomainUiState) = with(binding) {
             composeView.setContent {

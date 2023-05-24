@@ -111,6 +111,7 @@
     <string name="update_now">Update Now</string>
     <string name="status_and_visibility">Status &amp; Visibility</string>
     <string name="free">Free</string>
+    <string name="dismiss">Dismiss</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>
@@ -599,6 +600,7 @@
     <string name="days_quantity_other">%d days</string>
     <string name="weeks_quantity_one">1 week</string>
     <string name="weeks_quantity_other">%d weeks</string>
+    <string name="https" translatable="false">https:\/\/</string>
 
     <!-- PreferenceCategory Headers -->
     <string name="site_settings_general_header">General</string>
@@ -2754,6 +2756,17 @@
     <string name="export_email_sent">Export email sent!</string>
     <string name="export_your_content">Export your content</string>
     <string name="export_your_content_message">Your posts, pages, and settings will be emailed to you at %s.</string>
+    <string name="close_account">Close Account</string>
+    <string name="account_closure_dialog_message">To confirm, please re-enter your username before closing.</string>
+    <string name="account_closure_dialog_title">Confirm Close Account…</string>
+    <string name="account_closure_dialog_error_title">Couldn\'t close account automatically"</string>
+    <string name="account_closure_dialog_error_unauthorized">You\'re not authorized to close the account.</string>
+    <string name="account_closure_dialog_error_atomic_site">This user account cannot be closed immediately because it has active purchases. Please contact our support team to finish deleting the account.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">This user account cannot be closed if there are unresolved chargebacks.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">This user account cannot be closed while it has active subscriptions.</string>
+    <string name="account_closure_dialog_error_active_memberships">This user account cannot be closed while it has active purchases.</string>
+    <string name="account_closure_dialog_error_unknown">An error occurred while closing account.</string>
+    <string name="account_closure_dialog_success_message">Account closed.</string>
 
     <!-- Plans -->
     <string name="plan">Plan</string>
@@ -3297,6 +3310,10 @@
     <string name="error_media_recover_page" translatable="false">@string/error_media_recover_post</string>
     <string name="error_unknown_page_type">Unknown page format</string>
 
+    <string name="virtual_homepage_title">Homepage</string>
+    <string name="virtual_homepage_subtitle">Your homepage is using a Theme template and will open in the web editor.</string>
+    <string name="virtual_homepage_learn_more">Learn more about templates</string>
+
     <!-- Posts -->
     <string name="post_list_author">Post author</string>
     <string name="post_list_tab_published_posts">Published</string>
@@ -3372,7 +3389,6 @@
     <!-- Site Creation : Domains - Updated designs -->
     <string name="site_creation_domain_header_subtitle">Search for a short and memorable domain to help people find and visit your site.</string>
     <string name="site_creation_domain_search_input_hint">Search with keywords</string>
-    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_search_domain_example_body">Like the example above, a domain allows people to find and visit your site from their web browser.</string>
 
@@ -4332,11 +4348,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="login">Check your email on this device!</string>
     <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">We just sent a magic link to</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link Rel</string>
-    <string name="wp_jp_static_poster_title">%s has moved to the Jetpack app.</string>
-    <string name="wp_jp_static_poster_title_plural">%s have moved to the Jetpack app.</string>
+    <string name="wp_jp_static_poster_title">Use WordPress with %s in the Jetpack\u00A0app.</string>
+    <string name="wp_jp_static_poster_title_plural">Use WordPress with %s in the Jetpack\u00A0app.</string>
     <string name="wp_jp_static_poster_button_primary">Switch to the Jetpack app</string>
     <string name="wp_jp_static_poster_button_secondary">Learn more at Jetpack.com</string>
-    <string name="wp_jp_static_poster_message">Stats, Reader, Notifications and other Jetpack powered features have been removed from the WordPress app, and can now only be found in the Jetpack app.</string>
+    <string name="wp_jp_static_poster_message">The Jetpack app has all the WordPress app’s functionality, and now exclusive access to Stats, Reader, Notifications and more.</string>
     <string name="wp_jp_static_poster_footnote">Switching is free and only takes a minute.</string>
 
     <!-- Jetpack Welcome Screen -->
@@ -4347,7 +4363,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_welcome_site_found_message">We found your site. Continue to transfer all your data and sign in to Jetpack automatically.</string>
     <string name="jp_migration_continue_button">Continue</string>
     <string name="jp_migration_help_button">Need help?</string>
-    <string name="jp_migration_notifications_title">Notifications now come from Jetpack</string>
+    <string name="jp_migration_notifications_allow_title">Allow notifications to keep up with your site</string>
     <string name="jp_migration_notifications_subtitle">You’ll get all the same notifications but now they’ll come from the Jetpack app.</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">We\'ll turn off notifications from the WordPress app.</string>
     <string name="jp_migration_done_title">Thanks for switching to Jetpack!</string>
@@ -4473,6 +4489,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="dashboard_card_domain_sub_title">Stake your claim on your corner of the web with a site address that\'s easy to find, share, and follow.</string>
     <string name="dashboard_card_domain_menu_hide_this">Hide this</string>
 
+    <!-- Dashboard Card Plans-->
+    <string name="dashboard_card_plans_title">Free domain with annual plan</string>
+    <string name="dashboard_card_plans_sub_title">Get a free domain for the first year, remove ads on your site, and increase your storage.</string>
+    <string name="dashboard_card_plans_menu_hide_this">Hide this</string>
+
     <!-- Promote Blaze Card-->
     <string name="promote_blaze_card_title">Promote your content with Blaze</string>
     <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
@@ -4544,4 +4565,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Remove blocks</string>
     <string name="gutenberg_native_loading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Loading</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Unlabeled color. %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editing reusable blocks is not yet supported on %s for Android</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editing reusable blocks is not yet supported on %s for iOS</string>
 </resources>

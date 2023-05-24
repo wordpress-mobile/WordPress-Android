@@ -9,4 +9,8 @@
     <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
         @dimen/disabled_alpha
     </item>
+
+    <item name="dashboard_card_pages_status_background_alpha" format="float" type="dimen">
+        @dimen/disabled_alpha
+    </item>
 </resources>
