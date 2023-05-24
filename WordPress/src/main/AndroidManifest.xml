@@ -1081,6 +1081,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <meta-data android:name="io.sentry.traces.activity.enable" android:value="false" />
+
     </application>
     <queries>
         <intent>
