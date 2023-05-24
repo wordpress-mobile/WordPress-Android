@@ -1,33 +1,40 @@
 package org.wordpress.android.models;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.util.StringUtils;
 
 public class PublicizeService {
     public enum Status {
-        OK {
-            public String toString() {
-                return "ok";
-            }
-        },
-        UNSUPPORTED {
-            public String toString() {
-                return "unsupported";
-            }
-        };
+        OK("ok"),
+        UNSUPPORTED("unsupported");
 
+        @NonNull private final String mValue;
+
+        Status(@NonNull final String value) {
+            this.mValue = value;
+        }
+
+        @NonNull
         public static Status fromString(@Nullable final String value) {
-            if (OK.toString().equals(value)) {
-                return OK;
-            } else if (UNSUPPORTED.toString().equals(value)) {
-                return UNSUPPORTED;
+            for (Status status : Status.values()) {
+                if (status.mValue.equals(value)) {
+                    return status;
+                }
             }
+            // default to OK
             return OK;
+        }
+
+        @NonNull
+        public String getValue() {
+            return mValue;
         }
     }
 
     public static final String FACEBOOK_SERVICE_ID = "facebook";
+    public static final String TWITTER_SERVICE_ID = "twitter";
 
     private String mId;
     private String mLabel;

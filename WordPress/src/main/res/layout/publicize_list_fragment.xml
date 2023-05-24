@@ -64,6 +64,14 @@
 
             </LinearLayout>
 
+            <include
+                layout="@layout/publicize_twitter_deprecation_notice_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_medium" />
+
             <RelativeLayout
                 android:id="@+id/manage_container"
                 android:layout_width="match_parent"

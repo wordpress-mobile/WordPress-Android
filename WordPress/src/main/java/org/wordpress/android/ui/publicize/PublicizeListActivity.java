@@ -12,7 +12,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -62,16 +61,12 @@ public class PublicizeListActivity extends LocaleAwareActivity
 
     @Inject SiteStore mSiteStore;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
-    @Inject ViewModelProvider.Factory mViewModelFactory;
-    PublicizeListViewModel mPublicizeListViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.publicize_list_activity);
-
-        initViewModel();
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -105,7 +100,6 @@ public class PublicizeListActivity extends LocaleAwareActivity
                 finish();
                 return;
             }
-            mPublicizeListViewModel.onSiteAvailable(mSite);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
@@ -127,10 +121,6 @@ public class PublicizeListActivity extends LocaleAwareActivity
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
-    }
-
-    private void initViewModel() {
-        mPublicizeListViewModel = new ViewModelProvider(this, mViewModelFactory).get(PublicizeListViewModel.class);
     }
 
     private void showListFragment() {
