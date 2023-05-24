@@ -96,7 +96,7 @@ ext {
     wiremockHttpClientVersion = '4.3.5.1'
 
     // other
-    androidDesugarVersion = '1.1.8'
+    androidDesugarVersion = '2.0.3'
     wordPressLintVersion = '1.1.0'
 }
 
