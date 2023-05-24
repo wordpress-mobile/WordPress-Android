@@ -37,6 +37,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.FirebaseRemoteConfigWrapper
 import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -79,6 +80,9 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     private lateinit var scanTracker: ScanTracker
 
     @Mock
+    private lateinit var firebaseRemoteConfigWrapper: FirebaseRemoteConfigWrapper
+
+    @Mock
     private lateinit var scanStore: ScanStore
 
     private lateinit var viewModel: ThreatDetailsViewModel
@@ -99,7 +103,8 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
             builder,
             htmlMessageUtils,
             resourceProvider,
-            scanTracker
+            scanTracker,
+            firebaseRemoteConfigWrapper
         )
         whenever(site.name).thenReturn(TEST_SITE_NAME)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)

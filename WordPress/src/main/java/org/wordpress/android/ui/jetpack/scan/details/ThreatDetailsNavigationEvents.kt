@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.jetpack.scan.details
 
 import androidx.annotation.StringRes
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
-
-private const val CODEABLE_GET_FREE_ESTIMATE_FIREBASE_KEY = "codeable_get_free_estimate_url"
+import org.wordpress.android.util.FirebaseRemoteConfigWrapper
 
 sealed class ThreatDetailsNavigationEvents {
     class OpenThreatActionDialog(
@@ -24,8 +22,10 @@ sealed class ThreatDetailsNavigationEvents {
 
     data class ShowUpdatedFixState(val threatId: Long) : ThreatDetailsNavigationEvents()
 
-    object ShowGetFreeEstimate : ThreatDetailsNavigationEvents() {
-        fun url() = FirebaseRemoteConfig.getInstance().getString(CODEABLE_GET_FREE_ESTIMATE_FIREBASE_KEY)
+    data class ShowGetFreeEstimate(
+        val firebaseRemoteConfigWrapper: FirebaseRemoteConfigWrapper
+    ) : ThreatDetailsNavigationEvents() {
+        fun url() = firebaseRemoteConfigWrapper.getCodeableGetFreeEstimateUrl()
     }
 
     data class ShowJetpackSettings(val url: String) : ThreatDetailsNavigationEvents()
