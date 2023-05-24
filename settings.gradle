@@ -14,7 +14,7 @@ pluginManagement {
         id "org.jetbrains.kotlin.plugin.allopen" version gradle.ext.kotlinVersion
         id "com.android.application" version gradle.ext.agpVersion
         id "com.android.library" version gradle.ext.agpVersion
-        id 'com.google.gms.google-services' version '4.3.8'
+        id 'com.google.gms.google-services' version '4.3.15'
         id "io.sentry.android.gradle" version "3.5.0"
         id "io.gitlab.arturbosch.detekt" version gradle.ext.detektVersion
         id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" version "1.67"
