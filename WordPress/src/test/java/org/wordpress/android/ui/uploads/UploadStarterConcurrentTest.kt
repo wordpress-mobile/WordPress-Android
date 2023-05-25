@@ -74,6 +74,7 @@ class UploadStarterConcurrentTest : BaseUnitTest() {
         uploadServiceFacade = uploadServiceFacade,
         uploadActionUseCase = UploadActionUseCase(mock(), createMockedPostUtilsWrapper(), uploadServiceFacade),
         tracker = mock(),
-        dispatcher = mock()
+        dispatcher = mock(),
+        mutex = mock(),
     )
 }

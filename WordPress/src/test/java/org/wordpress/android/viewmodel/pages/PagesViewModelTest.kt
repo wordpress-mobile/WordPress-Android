@@ -41,7 +41,6 @@ import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsError
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsErrorType.INVALID_PARAMETERS
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.blaze.BlazeStore
-import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
@@ -99,9 +98,6 @@ class PagesViewModelTest : BaseUnitTest() {
     lateinit var siteOptionsStore: SiteOptionsStore
 
     @Mock
-    lateinit var appLogWrapper: AppLogWrapper
-
-    @Mock
     lateinit var siteStore: SiteStore
 
     @Mock
@@ -131,6 +127,7 @@ class PagesViewModelTest : BaseUnitTest() {
 
     private val mockedPageId = 1
     private val copyPageId = 2
+    private val remoteId = 1L
 
     @Before
     fun setUp() {
@@ -156,7 +153,7 @@ class PagesViewModelTest : BaseUnitTest() {
             uploadStarter = uploadStarter,
             pageListEventListenerFactory = mock(),
             siteOptionsStore = siteOptionsStore,
-            appLogWrapper = appLogWrapper,
+            appLogWrapper = mock(),
             siteStore = siteStore,
             accountStore = accountStore,
             prefs = appPrefsWrapper,
@@ -357,18 +354,17 @@ class PagesViewModelTest : BaseUnitTest() {
     @Test
     fun `SET_AS_HOMEPAGE sets page as Homepage`() = test {
         // Arrange
-        val homepageId = 1L
         val snackbarMessages = mutableListOf<SnackbarMessageHolder>()
         setupPageOnFrontUpdate(
             snackbarMessages = snackbarMessages,
             showOnFront = PAGE,
-            updatedPageOnFrontId = homepageId
+            updatedPageOnFrontId = remoteId
         )
 
         // Act
         viewModel.onMenuAction(
             SET_AS_HOMEPAGE,
-            getPublishedPage(homepageId)
+            getPublishedPage()
         )
 
         // Assert
@@ -379,19 +375,18 @@ class PagesViewModelTest : BaseUnitTest() {
     @Test
     fun `SET_AS_HOMEPAGE shows error store returns an error`() = test {
         // Arrange
-        val homepageId = 1L
         val snackbarMessages = mutableListOf<SnackbarMessageHolder>()
         setupPageOnFrontUpdate(
             snackbarMessages = snackbarMessages,
             showOnFront = PAGE,
-            updatedPageOnFrontId = homepageId,
+            updatedPageOnFrontId = remoteId,
             isError = true
         )
 
         // Act
         viewModel.onMenuAction(
             SET_AS_HOMEPAGE,
-            getPublishedPage(homepageId)
+            getPublishedPage()
         )
 
         // Assert
@@ -402,18 +397,17 @@ class PagesViewModelTest : BaseUnitTest() {
     @Test
     fun `SET_AS_POSTS_PAGE sets page as Posts page`() = test {
         // Arrange
-        val pageForPostsId = 1L
         val snackbarMessages = mutableListOf<SnackbarMessageHolder>()
         setupPageForPostsUpdate(
             snackbarMessages = snackbarMessages,
             showOnFront = PAGE,
-            updatedPageForPostsId = pageForPostsId
+            updatedPageForPostsId = remoteId
         )
 
         // Act
         viewModel.onMenuAction(
             SET_AS_POSTS_PAGE,
-            getPublishedPage(pageForPostsId)
+            getPublishedPage()
         )
 
         // Assert
@@ -424,19 +418,18 @@ class PagesViewModelTest : BaseUnitTest() {
     @Test
     fun `SET_AS_POSTS_PAGE shows error store returns an error`() = test {
         // Arrange
-        val pageForPostsId = 1L
         val snackbarMessages = mutableListOf<SnackbarMessageHolder>()
         setupPageForPostsUpdate(
             snackbarMessages = snackbarMessages,
             showOnFront = PAGE,
-            updatedPageForPostsId = pageForPostsId,
+            updatedPageForPostsId = remoteId,
             isError = true
         )
 
         // Act
         viewModel.onMenuAction(
             SET_AS_POSTS_PAGE,
-            getPublishedPage(pageForPostsId)
+            getPublishedPage()
         )
 
         // Assert
@@ -444,7 +437,7 @@ class PagesViewModelTest : BaseUnitTest() {
         assertThat(message.stringRes).isEqualTo(R.string.page_posts_page_update_failed)
     }
 
-    private fun getPublishedPage(remoteId: Long): PublishedPage = PublishedPage(
+    private fun getPublishedPage(): PublishedPage = PublishedPage(
         remoteId = remoteId,
         localId = 2,
         title = "Published page",
@@ -605,7 +598,7 @@ class PagesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given draft tab requested, when view is launched, then darft is shown`() = test {
+    fun `given draft tab requested, when view is launched, then draft is shown`() = test {
         // Act
         viewModel.onSpecificPageListTypeRequested(DRAFTS)
 

@@ -544,6 +544,7 @@ class UploadStarterTest : BaseUnitTest() {
         uploadServiceFacade = uploadServiceFacade,
         uploadActionUseCase = UploadActionUseCase(uploadStore, postUtilsWrapper, uploadServiceFacade),
         tracker = mock(),
-        dispatcher = dispatcher
+        dispatcher = dispatcher,
+        mutex = mock(),
     ).also { resetTestPostIdIndex() }
 }

@@ -44,10 +44,13 @@ import kotlin.coroutines.CoroutineContext
  * addition to this, call sites can also request an immediate execution by calling [checkConnectionAndUpload].
  *
  * The method [activateAutoUploading] must be called once, preferably during app creation, for the auto-uploads to work.
+ *
+ * @param mutex When the app comes to foreground both `queueUploadFromAllSites` and `queueUploadFromSite` are invoked.
+ * The problem is that they can run in parallel and `uploadServiceFacade.isPostUploadingOrQueued(it)` might return
+ * out-of-date result and a same post is added twice.
  */
 @Singleton
 @OpenForTesting
-@Suppress("LongParameterList")
 class UploadStarter @Inject constructor(
     private val appContext: Context,
     private val dispatcher: Dispatcher,
@@ -60,16 +63,10 @@ class UploadStarter @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val uploadServiceFacade: UploadServiceFacade,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val connectionStatus: LiveData<ConnectionStatus>
+    private val connectionStatus: LiveData<ConnectionStatus>,
+    private val mutex: Mutex,
 ) : CoroutineScope {
     private val job = Job()
-
-    /**
-     * When the app comes to foreground both `queueUploadFromAllSites` and `queueUploadFromSite` are invoked.
-     * The problem is that they can run in parallel and `uploadServiceFacade.isPostUploadingOrQueued(it)` might return
-     * out-of-date result and a same post is added twice.
-     */
-    private val mutex = Mutex()
 
     override val coroutineContext: CoroutineContext get() = job + bgDispatcher
 
@@ -133,8 +130,6 @@ class UploadStarter @Inject constructor(
             val posts = async { postStore.getPostsWithLocalChanges(site) }
             val pages = async { pageStore.getPagesWithLocalChanges(site) }
             val list = posts.await() + pages.await()
-            var throwable: Throwable? = null
-
             list.asSequence()
                 .map { post ->
                     val action = uploadActionUseCase.getAutoUploadAction(post, site)
@@ -150,7 +145,6 @@ class UploadStarter @Inject constructor(
                         uploadServiceFacade.uploadPost(appContext, post, trackAnalytics = false)
                     }.onFailure {
                         AppLog.e(T.POSTS, it)
-                        throwable = it
                     }
                 }
         }

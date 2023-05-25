@@ -7,8 +7,10 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
 import org.wordpress.android.util.helpers.Debouncer
 import javax.inject.Named
+import javax.inject.Singleton
 
 const val APPLICATION_SCOPE = "APPLICATION_SCOPE"
 
@@ -52,5 +54,11 @@ class ThreadModule {
     @Provides
     fun provideDebouncer(): Debouncer {
         return Debouncer()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMutex(): Mutex {
+        return Mutex()
     }
 }
