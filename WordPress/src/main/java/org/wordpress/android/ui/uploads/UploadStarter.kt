@@ -45,7 +45,7 @@ import kotlin.coroutines.CoroutineContext
  *
  * The method [activateAutoUploading] must be called once, preferably during app creation, for the auto-uploads to work.
  *
- * @param mutex When the app comes to foreground both `queueUploadFromAllSites` and `queueUploadFromSite` are invoked.
+ * @param mutex When the app comes to foreground both [queueUploadFromAllSites] and [queueUploadFromSite] are invoked.
  * The problem is that they can run in parallel and `uploadServiceFacade.isPostUploadingOrQueued(it)` might return
  * out-of-date result and a same post is added twice.
  */
