@@ -532,19 +532,22 @@ class UploadStarterTest : BaseUnitTest() {
         postUtilsWrapper: PostUtilsWrapper = createMockedPostUtilsWrapper(),
         uploadStore: UploadStore = createMockedUploadStore(0),
         dispatcher: Dispatcher = mock()
-    ) = UploadStarter(
-        appContext = mock(),
-        postStore = postStore,
-        pageStore = pageStore,
-        siteStore = siteStore,
-        bgDispatcher = testDispatcher(),
-        ioDispatcher = testDispatcher(),
-        networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
-        connectionStatus = connectionStatus,
-        uploadServiceFacade = uploadServiceFacade,
-        uploadActionUseCase = UploadActionUseCase(uploadStore, postUtilsWrapper, uploadServiceFacade),
-        tracker = mock(),
-        dispatcher = dispatcher,
-        mutex = mock(),
-    ).also { resetTestPostIdIndex() }
+    ) = run {
+        resetTestPostIdIndex()
+        UploadStarter(
+            appContext = mock(),
+            postStore = postStore,
+            pageStore = pageStore,
+            siteStore = siteStore,
+            bgDispatcher = testDispatcher(),
+            ioDispatcher = testDispatcher(),
+            networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
+            connectionStatus = connectionStatus,
+            uploadServiceFacade = uploadServiceFacade,
+            uploadActionUseCase = UploadActionUseCase(uploadStore, postUtilsWrapper, uploadServiceFacade),
+            tracker = mock(),
+            dispatcher = dispatcher,
+            mutex = mock(),
+        )
+    }
 }
