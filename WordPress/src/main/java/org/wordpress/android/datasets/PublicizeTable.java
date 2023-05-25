@@ -10,6 +10,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeConnectionList;
 import org.wordpress.android.models.PublicizeService;
+import org.wordpress.android.models.PublicizeService.Status;
 import org.wordpress.android.models.PublicizeServiceList;
 import org.wordpress.android.util.SqlUtils;
 
@@ -28,6 +29,7 @@ public class PublicizeTable {
                    + " is_jetpack_supported INTEGER DEFAULT 0,"
                    + " is_multi_user_id_supported INTEGER DEFAULT 0,"
                    + " is_external_users_only INTEGER DEFAULT 0,"
+                   + " status TEXT NOT NULL,"
                    + " PRIMARY KEY (id))");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS " + CONNECTIONS_TABLE + " ("
@@ -108,8 +110,9 @@ public class PublicizeTable {
                     + " connect_url," // 6
                     + " is_jetpack_supported," // 7
                     + " is_multi_user_id_supported," // 8
-                    + " is_external_users_only)" // 9
-                    + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)");
+                    + " is_external_users_only," // 9
+                    + " status)" // 10
+                    + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)");
             for (PublicizeService service : serviceList) {
                 stmt.bindString(1, service.getId());
                 stmt.bindString(2, service.getLabel());
@@ -120,6 +123,7 @@ public class PublicizeTable {
                 stmt.bindLong(7, SqlUtils.boolToSql(service.isJetpackSupported()));
                 stmt.bindLong(8, SqlUtils.boolToSql(service.isMultiExternalUserIdSupported()));
                 stmt.bindLong(9, SqlUtils.boolToSql(service.isExternalUsersOnly()));
+                stmt.bindString(10, service.getStatus().getValue());
                 stmt.executeInsert();
             }
 
@@ -147,6 +151,7 @@ public class PublicizeTable {
         service.setIsJetpackSupported(getBooleanFromCursor(c, "is_jetpack_supported"));
         service.setIsMultiExternalUserIdSupported(getBooleanFromCursor(c, "is_multi_user_id_supported"));
         service.setIsExternalUsersOnly(getBooleanFromCursor(c, "is_external_users_only"));
+        service.setStatus(Status.fromString(c.getString(c.getColumnIndexOrThrow("status"))));
 
         return service;
     }

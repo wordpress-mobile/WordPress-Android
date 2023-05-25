@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-03 12:54:08+0000
+Translation-Revision-Date: 2023-05-16 21:05:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">Redigering av återanvändbara block stöds ännu inte i %s för iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Redigering av återanvändbara block stöds ännu inte i %s för Android</string>
+    <string name="jp_migration_notifications_allow_title">Tillåt aviseringar för att hålla koll på din webbplats</string>
+    <string name="wp_jp_static_poster_message">Jetpack-appen har alla WordPress-appens funktionalitet och nu exklusiv åtkomst till statistik, Läsare, aviseringar och mer.</string>
+    <string name="wp_jp_static_poster_title_plural">Använd WordPress med %s i Jetpack-appen.</string>
+    <string name="wp_jp_static_poster_title">Använd WordPress med %s i Jetpack-appen.</string>
     <string name="gutenberg_native_unlabeled_color_s">Omärkt färg. %s</string>
     <string name="dashboard_activity_card_footer_link">Visa all aktivitet</string>
     <string name="dashboard_activity_card_title">Senaste aktivitet</string>
     <string name="dashboard_card_domain_title">Hitta en anpassad domän</string>
     <string name="site_creation_search_domain_example_body">Precis som i exemplet ovan så låter en domän människor hitta och besöka din webbplats från sina webbläsare.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
-    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
     <string name="site_creation_domain_search_input_hint">Sök med nyckelord</string>
     <string name="site_creation_domain_header_subtitle">Leta efter en kort domän som är lätt att komma ihåg för att hjälpa människor hitta och besöka din webbplats.</string>
     <string name="site_creation_domain_cost_sale">för första året</string>
-    <string name="site_creation_error_cart_subtitle">Din webbplats har skapats, men vi stötte på ett problem när vi skulle förbereda din anpassade domän för utcheckning. Försök igen eller kontakta supporten för hjälp.</string>
+    <string name="site_creation_error_cart_subtitle">Din webbplats har skapats, men vi stötte på ett problem när vi skulle förbereda din anpassade domän för betalning. Försök igen eller kontakta supporten för hjälp.</string>
     <string name="new_site_creation_preview_caption_paid">Det kan dröja upp till 30 minuter innan din anpassade domän börjar fungera.</string>
     <string name="new_site_creation_preview_subtitle_paid">Vi har skickat ditt kvitto via e-post. %s</string>
     <string name="notifications_disabled_permission_dialog">App-notiser har inaktiverats. Tryck här för att aktivera dem.</string>
@@ -71,11 +76,8 @@ Language: sv_SE
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s använder %2$s, som inte stöder alla funktioner i appen än. Installera %3$s.</string>
     <string name="wp_jetpack_feature_removal_static_posters_phase">Flyttar till Jetpack-appen om några dagar.</string>
     <string name="wp_jp_static_poster_footnote">Att byta är gratis och tar bara en minut.</string>
-    <string name="wp_jp_static_poster_message">Statistik, Tittaren, Notiser och andra Jetpack-drivna funktioner har tagits bort från WordPress-appen och finns nu bara i Jetpack-appen.</string>
     <string name="wp_jp_static_poster_button_secondary">Lär dig mer på Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Byt till Jetpack-appen</string>
-    <string name="wp_jp_static_poster_title_plural">%s har flyttat till Jetpack-appen.</string>
-    <string name="wp_jp_static_poster_title">%s har flyttat till Jetpack-appen.</string>
     <string name="my_site_btn_wp_admin">WP-Adminpanel</string>
     <string name="my_site_header_manage">Hantera</string>
     <string name="my_site_header_traffic">Trafik</string>
@@ -240,7 +242,6 @@ Language: sv_SE
     <string name="jp_migration_done_title">Tack för att du bytt till Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Aviseringar från WordPress-appent kommer att stängas av.</string>
     <string name="jp_migration_notifications_subtitle">Du kommer att få samma aviseringar som tidigare, men nu från Jetpack-appen.</string>
-    <string name="jp_migration_notifications_title">Aviseringar kommer nu från Jetpack</string>
     <string name="wordpress_help_center_button">WordPress hjälpcenter</string>
     <string name="support_title">Support</string>
     <string name="notification_disable_broadcast_permission_desc">Tillåter att appen inaktiverar WordPress-aviseringar.</string>

@@ -44,6 +44,7 @@ import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
 import org.wordpress.android.ui.prefs.language.LocalePickerViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
+import org.wordpress.android.ui.publicize.PublicizeListViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
@@ -539,4 +540,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AccountSettingsViewModel.class)
     abstract ViewModel accountSettingsViewModel(AccountSettingsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PublicizeListViewModel.class)
+    abstract ViewModel publicizeListViewModel(PublicizeListViewModel viewModel);
 }

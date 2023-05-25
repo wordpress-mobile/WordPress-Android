@@ -1,7 +1,6 @@
 package org.wordpress.android.e2e
 
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BuildConfig

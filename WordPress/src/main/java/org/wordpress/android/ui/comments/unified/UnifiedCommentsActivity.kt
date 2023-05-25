@@ -98,6 +98,7 @@ class UnifiedCommentsActivity : LocaleAwareActivity() {
     }
 
     private fun UnifiedCommentActivityBinding.setupObservers() {
+        @Suppress("DEPRECATION")
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { uiState ->
                 viewPager.isUserInputEnabled = uiState.isTabBarEnabled

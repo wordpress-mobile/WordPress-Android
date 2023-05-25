@@ -21,7 +21,7 @@ fun FlatButton(
         contentColor = AppColor.White,
     ),
     enabled: Boolean = true,
-) = Button(
+): Unit = Button(
     modifier = modifier,
     onClick = onClick,
     colors = colors,
@@ -42,7 +42,7 @@ fun FlatOutlinedButton(
     colors: ButtonColors = ButtonDefaults.buttonColors(),
     enabled: Boolean = true,
     isPending: Boolean = false,
-) = OutlinedButton(
+): Unit = OutlinedButton(
     modifier = modifier,
     onClick = onClick,
     colors = colors,

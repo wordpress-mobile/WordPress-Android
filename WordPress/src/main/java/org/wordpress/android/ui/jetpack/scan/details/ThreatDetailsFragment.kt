@@ -124,7 +124,7 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
         threatActionDialog?.show()
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (requireActivity().intent.extras?.containsKey(WordPress.SITE) != true) {

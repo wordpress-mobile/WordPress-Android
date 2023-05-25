@@ -11,7 +11,6 @@ import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainSource
-import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardDomainSource
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
@@ -36,7 +35,6 @@ class MySiteSourceManager @Inject constructor(
     promoteWithBlazeCardSource: PromoteWithBlazeCardSource,
     private val selectedSiteRepository: SelectedSiteRepository,
     dashboardCardDomainSource: DashboardCardDomainSource,
-    plansCardDomainSource: PlansCardDomainSource,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
@@ -51,7 +49,6 @@ class MySiteSourceManager @Inject constructor(
         bloggingPromptCardSource,
         promoteWithBlazeCardSource,
         dashboardCardDomainSource,
-        plansCardDomainSource
     )
 
     private val showDashboardCards: Boolean

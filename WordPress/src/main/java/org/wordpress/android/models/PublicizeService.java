@@ -1,9 +1,40 @@
 package org.wordpress.android.models;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.util.StringUtils;
 
 public class PublicizeService {
+    public enum Status {
+        OK("ok"),
+        UNSUPPORTED("unsupported");
+
+        @NonNull private final String mValue;
+
+        Status(@NonNull final String value) {
+            this.mValue = value;
+        }
+
+        @NonNull
+        public static Status fromString(@Nullable final String value) {
+            for (Status status : Status.values()) {
+                if (status.mValue.equals(value)) {
+                    return status;
+                }
+            }
+            // default to OK
+            return OK;
+        }
+
+        @NonNull
+        public String getValue() {
+            return mValue;
+        }
+    }
+
     public static final String FACEBOOK_SERVICE_ID = "facebook";
+    public static final String TWITTER_SERVICE_ID = "twitter";
 
     private String mId;
     private String mLabel;
@@ -11,6 +42,7 @@ public class PublicizeService {
     private String mGenericon;
     private String mIconUrl;
     private String mConnectUrl;
+    private Status mStatus;
     private boolean mIsExternalUsersOnly;
 
     private boolean mIsJetpackSupported;
@@ -86,6 +118,14 @@ public class PublicizeService {
 
     public void setIsExternalUsersOnly(boolean isExternalUsersOnly) {
         mIsExternalUsersOnly = isExternalUsersOnly;
+    }
+
+    public Status getStatus() {
+        return mStatus;
+    }
+
+    public void setStatus(final Status status) {
+        this.mStatus = status;
     }
 
     public boolean isSameAs(PublicizeService other) {

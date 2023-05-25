@@ -5,9 +5,18 @@ import com.automattic.android.tracks.crashlogging.CrashLoggingDataProvider
 import com.automattic.android.tracks.crashlogging.CrashLoggingUser
 import com.automattic.android.tracks.crashlogging.EventLevel
 import com.automattic.android.tracks.crashlogging.ExtraKnownKey
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
+import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.EncryptedLogging
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -15,6 +24,7 @@ import org.wordpress.android.util.LogFileProviderWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Locale
 import javax.inject.Inject
+import javax.inject.Named
 
 class WPCrashLoggingDataProvider @Inject constructor(
     private val sharedPreferences: SharedPreferences,
@@ -23,8 +33,15 @@ class WPCrashLoggingDataProvider @Inject constructor(
     private val localeManager: LocaleManagerWrapper,
     private val encryptedLogging: EncryptedLogging,
     private val logFileProvider: LogFileProviderWrapper,
-    private val buildConfig: BuildConfigWrapper
+    private val buildConfig: BuildConfigWrapper,
+    @Named(APPLICATION_SCOPE) private val appScope: CoroutineScope,
+    wpPerformanceMonitoringConfig: WPPerformanceMonitoringConfig,
+    dispatcher: Dispatcher,
 ) : CrashLoggingDataProvider {
+    init {
+        dispatcher.register(this)
+    }
+
     override val buildType: String = BuildConfig.BUILD_TYPE
     override val enableCrashLoggingLogs: Boolean = BuildConfig.DEBUG
     override val locale: Locale
@@ -32,9 +49,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
     override val releaseName: String = BuildConfig.VERSION_NAME
     override val sentryDSN: String = BuildConfig.SENTRY_DSN
 
-    override fun applicationContextProvider(): Map<String, String> {
-        return emptyMap()
-    }
+    override val applicationContextProvider = MutableStateFlow<Map<String, String>>(emptyMap())
 
     override fun crashLoggingEnabled(): Boolean {
         if (buildConfig.isDebug()) {
@@ -96,14 +111,26 @@ class WPCrashLoggingDataProvider @Inject constructor(
                 value == EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR
     }
 
-    override fun userProvider(): CrashLoggingUser? {
-        return accountStore.account?.let { accountModel ->
-            CrashLoggingUser(
-                userID = accountModel.userId.toString(),
-                email = accountModel.email,
-                username = accountModel.userName
-            )
+    override val user = MutableStateFlow(accountStore.account?.toCrashLoggingUser())
+
+    override val performanceMonitoringConfig = wpPerformanceMonitoringConfig()
+
+    @Suppress("unused", "unused_parameter")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onAccountChanged(event: OnAccountChanged) {
+        appScope.launch {
+            user.emit(accountStore.account.toCrashLoggingUser())
         }
+    }
+
+    private fun AccountModel.toCrashLoggingUser(): CrashLoggingUser? {
+        if (userId == 0L) return null
+
+        return CrashLoggingUser(
+            userID = userId.toString(),
+            email = email,
+            username = userName
+        )
     }
 
     companion object {

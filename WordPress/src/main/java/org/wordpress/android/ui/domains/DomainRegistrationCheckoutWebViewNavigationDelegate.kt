@@ -8,6 +8,7 @@ object DomainRegistrationCheckoutWebViewNavigationDelegate {
         UrlMatcher(
             ".*wordpress.com".toRegex(),
             listOf(
+                "/plans.*?.*".toRegex(),
                 "/automattic-domain-name-registration-agreement.*".toRegex(),
                 "/checkout.*".toRegex(),
                 "$optionalLanguagePath/tos.*".toRegex(),

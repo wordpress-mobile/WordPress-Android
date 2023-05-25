@@ -33,7 +33,6 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
-import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -101,7 +100,6 @@ public class PublicizeListActivity extends LocaleAwareActivity
                 finish();
                 return;
             }
-            PublicizeUpdateService.updateConnectionsForSite(this, mSite);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
@@ -345,7 +343,6 @@ public class PublicizeListActivity extends LocaleAwareActivity
         if (event.didSucceed()) {
             Map<String, Object> analyticsProperties = new HashMap<>();
             analyticsProperties.put("service", event.getService());
-
 
             if (event.getAction() == ConnectAction.CONNECT) {
                 AnalyticsUtils.trackWithSiteDetails(Stat.PUBLICIZE_SERVICE_CONNECTED, mSite, analyticsProperties);

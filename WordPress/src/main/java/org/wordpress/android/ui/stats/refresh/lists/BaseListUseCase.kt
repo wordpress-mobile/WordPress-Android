@@ -22,7 +22,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.distinct
-import org.wordpress.android.util.map
+import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.mapAsync
 import org.wordpress.android.util.mergeAsyncNotNull
 import org.wordpress.android.util.mergeNotNull
@@ -70,12 +70,12 @@ class BaseListUseCase(
     )
 
     private val mutableSnackbarMessage = MutableLiveData<Int?>()
-    val snackbarMessage: LiveData<SnackbarMessageHolder> = mutableSnackbarMessage.map {
+    val snackbarMessage: LiveData<SnackbarMessageHolder> = mutableSnackbarMessage.mapSafe {
         it?.let { SnackbarMessageHolder(UiStringRes(it)) }
     }
 
-    private val mutableListSelected = SingleLiveEvent<Unit>()
-    val listSelected: LiveData<Unit> = mutableListSelected
+    private val mutableListSelected = SingleLiveEvent<Unit?>()
+    val listSelected: LiveData<Unit?> = mutableListSelected
 
     private val mutableScrollTo = MutableLiveData<Event<StatsType>>()
     val scrollTo: LiveData<Event<StatsType>> = mutableScrollTo

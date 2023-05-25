@@ -90,7 +90,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
-import org.wordpress.android.util.map
+import org.wordpress.android.util.mapSafe
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -142,12 +142,12 @@ class ReaderPostDetailViewModel @Inject constructor(
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _updateLikesState = MediatorLiveData<GetLikesState>()
-    val likesUiState: LiveData<TrainOfFacesUiState> = _updateLikesState.map { state ->
+    val likesUiState: LiveData<TrainOfFacesUiState> = _updateLikesState.mapSafe { state ->
         buildLikersUiState(state)
     }
 
     private val _commentSnippetState = MutableLiveData<CommentSnippetState>()
-    val commentSnippetState: LiveData<CommentSnippetUiState> = _commentSnippetState.map { state ->
+    val commentSnippetState: LiveData<CommentSnippetUiState> = _commentSnippetState.mapSafe { state ->
         postDetailUiStateBuilder.buildCommentSnippetUiState(state, post, ::onCommentSnippetClicked)
     }
 

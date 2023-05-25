@@ -81,7 +81,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
 
     @Mock
-    lateinit var onFeatureAnnouncementRequestedObserver: Observer<Unit>
+    lateinit var onFeatureAnnouncementRequestedObserver: Observer<Unit?>
 
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
@@ -111,7 +111,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     lateinit var quickStartType: QuickStartType
 
     @Mock
-    private lateinit var openBloggingPromptsOnboardingObserver: Observer<Unit>
+    private lateinit var openBloggingPromptsOnboardingObserver: Observer<Unit?>
 
     @Mock
     private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper

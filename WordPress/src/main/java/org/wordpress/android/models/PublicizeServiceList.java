@@ -86,6 +86,8 @@ public class PublicizeServiceList extends ArrayList<PublicizeService> {
             service.setIsMultiExternalUserIdSupported(jsonService.optBoolean("multiple_external_user_ID_support"));
             service.setIsExternalUsersOnly(jsonService.optBoolean("external_users_only"));
 
+            service.setStatus(PublicizeService.Status.fromString(jsonService.optString("status")));
+
             JSONObject jsonGenericon = jsonService.optJSONObject("genericon");
             if (jsonGenericon != null) {
                 service.setGenericon(jsonGenericon.optString("unicode"));

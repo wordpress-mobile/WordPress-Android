@@ -1,5 +1,6 @@
 package org.wordpress.android.widgets;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ public class WPDialogSnackbar {
     private Snackbar mSnackbar;
     private View mContentView;
 
+    @SuppressLint("RestrictedApi")
     private WPDialogSnackbar(@NonNull View view, @NonNull CharSequence text, int duration) {
         mSnackbar = Snackbar.make(view, "", // CHECKSTYLE IGNORE
                 AccessibilityUtils.getSnackbarDuration(view.getContext(), duration));

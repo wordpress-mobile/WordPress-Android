@@ -74,11 +74,11 @@ class SiteCreationProgressViewModel @Inject constructor(
     private val _startCreateSiteService: SingleLiveEvent<StartServiceData> = SingleLiveEvent()
     val startCreateSiteService: LiveData<StartServiceData> = _startCreateSiteService
 
-    private val _onHelpClicked = SingleLiveEvent<Unit>()
-    val onHelpClicked: LiveData<Unit> = _onHelpClicked
+    private val _onHelpClicked = SingleLiveEvent<Unit?>()
+    val onHelpClicked: LiveData<Unit?> = _onHelpClicked
 
-    private val _onCancelWizardClicked = SingleLiveEvent<Unit>()
-    val onCancelWizardClicked: LiveData<Unit> = _onCancelWizardClicked
+    private val _onCancelWizardClicked = SingleLiveEvent<Unit?>()
+    val onCancelWizardClicked: LiveData<Unit?> = _onCancelWizardClicked
 
     private val _onFreeSiteCreated = SingleLiveEvent<SiteModel>()
     val onFreeSiteCreated: LiveData<SiteModel> = _onFreeSiteCreated

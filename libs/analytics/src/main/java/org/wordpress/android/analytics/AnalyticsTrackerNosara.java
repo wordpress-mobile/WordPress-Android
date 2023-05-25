@@ -2593,6 +2593,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "free_to_paid_plan_dashboard_card_menu_tapped";
             case DASHBOARD_CARD_PLANS_HIDDEN:
                 return "free_to_paid_plan_dashboard_card_hidden";
+            case TWITTER_NOTICE_LINK_TAPPED:
+                return "twitter_notice_link_tapped";
         }
         return null;
     }

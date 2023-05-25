@@ -50,7 +50,9 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
         with(DomainRegistrationResultFragmentBinding.bind(view)) {
             setupViews(domainName, email)
         }
-        requireActivity().onBackPressedDispatcher.addCallback(this) { finishRegistration(domainName, email) }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            finishRegistration(domainName, email)
+        }
     }
 
     private fun setupWindow() = with(requireAppCompatActivity()) {

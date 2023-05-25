@@ -2,6 +2,10 @@ package org.wordpress.android.util.crashlogging
 
 import android.content.SharedPreferences
 import com.automattic.android.tracks.crashlogging.EventLevel.DEBUG
+import com.automattic.android.tracks.crashlogging.PerformanceMonitoringConfig
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.Before
@@ -15,7 +19,9 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.util.BuildConfigWrapper
@@ -31,7 +37,8 @@ import java.io.File
 import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
-class WPCrashLoggingDataProviderTest {
+@ExperimentalCoroutinesApi
+class WPCrashLoggingDataProviderTest : BaseUnitTest() {
     lateinit var sut: WPCrashLoggingDataProvider
 
     private val mockedFile: File = mock { on { exists() } doReturn true }
@@ -53,17 +60,28 @@ class WPCrashLoggingDataProviderTest {
     private val buildConfig: BuildConfigWrapper = mock()
     private val sharedPreferences: SharedPreferences = mock()
 
+    private val wpPerformanceMonitoringConfig: WPPerformanceMonitoringConfig = mock {
+        on { invoke() } doReturn PerformanceMonitoringConfig.Enabled(1.0)
+    }
+
     @Before
     fun setUp() {
         sut = WPCrashLoggingDataProvider(
-            sharedPreferences,
-            resourceProvider,
-            accountStore,
-            localeManager,
-            encryptedLogging,
-            logFileProvider,
-            buildConfig
+            sharedPreferences = sharedPreferences,
+            resourceProvider = resourceProvider,
+            accountStore = accountStore,
+            localeManager = localeManager,
+            encryptedLogging = encryptedLogging,
+            logFileProvider = logFileProvider,
+            buildConfig = buildConfig,
+            appScope = testScope(),
+            wpPerformanceMonitoringConfig = wpPerformanceMonitoringConfig,
+            dispatcher = Dispatcher()
         )
+    }
+
+    private fun reinitialize() {
+        setUp()
     }
 
     @Test
@@ -72,10 +90,11 @@ class WPCrashLoggingDataProviderTest {
     }
 
     @Test
-    fun `should correctly reads and maps user`() {
+    fun `should correctly reads and maps user`() = runTest {
         whenever(accountStore.account).thenReturn(TEST_ACCOUNT)
+        reinitialize()
 
-        val user = sut.userProvider()
+        val user = sut.user.first()
 
         assertSoftly { softly ->
             softly.assertThat(user?.username).isEqualTo(TEST_ACCOUNT.userName)
@@ -85,17 +104,18 @@ class WPCrashLoggingDataProviderTest {
     }
 
     @Test
-    fun `should not provide user if user does not exist`() {
+    fun `should not provide user if user does not exist`() = runTest {
         whenever(accountStore.account).thenReturn(null)
+        reinitialize()
 
-        val user = sut.userProvider()
+        val user = sut.user.first()
 
         assertThat(user).isNull()
     }
 
     @Test
-    fun `should provide empty application context`() {
-        assertThat(sut.applicationContextProvider()).isEmpty()
+    fun `should provide empty application context`() = runTest {
+        assertThat(sut.applicationContextProvider.first()).isEmpty()
     }
 
     @Test
@@ -116,6 +136,7 @@ class WPCrashLoggingDataProviderTest {
     @Test
     fun `should not provide encrypted logging uuid to extras if log file is not available`() {
         whenever(logFileProvider.getLogFiles()).thenReturn(emptyList())
+        reinitialize()
 
         val extras = sut.provideExtrasForEvent(currentExtras = emptyMap(), eventLevel = DEBUG)
 
@@ -139,6 +160,7 @@ class WPCrashLoggingDataProviderTest {
     fun `should provide locale from locale manager`() {
         val testLocale = Locale.US
         whenever(localeManager.getLocale()).thenReturn(testLocale)
+        reinitialize()
 
         assertThat(sut.locale).isEqualTo(testLocale)
     }
@@ -146,6 +168,7 @@ class WPCrashLoggingDataProviderTest {
     @Test
     fun `should disable crash logging for debug builds`() {
         whenever(buildConfig.isDebug()).thenReturn(true)
+        reinitialize()
 
         assertThat(sut.crashLoggingEnabled()).isFalse
     }
@@ -154,6 +177,7 @@ class WPCrashLoggingDataProviderTest {
     fun `should disable crash logging if user has opt out in release`() {
         whenever(buildConfig.isDebug()).thenReturn(false)
         whenever(sharedPreferences.getBoolean(eq(SEND_CRASH_SAMPLE_KEY), any())).thenReturn(false)
+        reinitialize()
 
         assertThat(sut.crashLoggingEnabled()).isFalse
     }
@@ -162,6 +186,7 @@ class WPCrashLoggingDataProviderTest {
     fun `should enable crash logging if user has not opt out in release`() {
         whenever(buildConfig.isDebug()).thenReturn(false)
         whenever(sharedPreferences.getBoolean(eq(SEND_CRASH_SAMPLE_KEY), any())).thenReturn(true)
+        reinitialize()
 
         assertThat(sut.crashLoggingEnabled()).isTrue
     }

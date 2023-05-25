@@ -1049,7 +1049,8 @@ public final class AnalyticsTracker {
         DASHBOARD_CARD_PLANS_SHOWN,
         DASHBOARD_CARD_PLANS_TAPPED,
         DASHBOARD_CARD_PLANS_MORE_MENU_TAPPED,
-        DASHBOARD_CARD_PLANS_HIDDEN
+        DASHBOARD_CARD_PLANS_HIDDEN,
+        TWITTER_NOTICE_LINK_TAPPED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
@@ -1063,6 +1064,10 @@ public final class AnalyticsTracker {
         if (hasUserOptedOut != mHasUserOptedOut) {
             mHasUserOptedOut = hasUserOptedOut;
         }
+    }
+
+    public static boolean hasUserOptedOut() {
+        return mHasUserOptedOut;
     }
 
     public static void setHasUserOptedOut(boolean hasUserOptedOut) {

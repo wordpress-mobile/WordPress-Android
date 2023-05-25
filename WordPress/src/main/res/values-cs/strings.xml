@@ -21,11 +21,8 @@ Language: cs_CZ
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s používá aplikaci %2$s, která zatím nepodporuje všechny funkce aplikace. Nainstalujte %3$s.</string>
     <string name="wp_jetpack_feature_removal_static_posters_phase">Přesun do aplikace Jetpack za pár dní.</string>
     <string name="wp_jp_static_poster_footnote">Přepínání je zdarma a trvá jen minutu.</string>
-    <string name="wp_jp_static_poster_message">Statistiky, čtečka, upozornění a další funkce poháněné Jetpack byly z aplikace WordPress odstraněny a nyní je lze nalézt pouze v aplikaci Jetpack.</string>
     <string name="wp_jp_static_poster_button_secondary">Více se dozvíte na Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Přepněte do aplikace Jetpack</string>
-    <string name="wp_jp_static_poster_title_plural">%s se přesunuly do aplikace Jetpack.</string>
-    <string name="wp_jp_static_poster_title">%s se přesunul do aplikace Jetpack.</string>
     <string name="my_site_btn_wp_admin">WP Admin</string>
     <string name="my_site_header_manage">Správa</string>
     <string name="my_site_header_traffic">Návštěvnost</string>
@@ -190,7 +187,6 @@ Language: cs_CZ
     <string name="jp_migration_done_title">Děkujeme, že jste přešli na Jetpack!</string>
     <string name="jp_migration_notifications_subtitle">Budete dostávat všechna stejná oznámení, ale nyní budou pocházet z aplikace Jetpack.</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Vypneme oznámení z WordPress aplikace.</string>
-    <string name="jp_migration_notifications_title">Oznámení nyní přicházejí z Jetpacku</string>
     <string name="wordpress_help_center_button">WordPress centrum nápovědy</string>
     <string name="support_title">Podpora</string>
     <string name="notification_disable_broadcast_permission_desc">Umožňuje aplikaci zakázat WordPress oznámení.</string>
