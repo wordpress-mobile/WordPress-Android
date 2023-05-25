@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.uploads
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
@@ -13,11 +14,12 @@ import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.ui.uploads.UploadFixtures.createSimpleLocallyChangedPostModel
+import org.wordpress.android.ui.uploads.UploadFixtures.createLocallyChangedPostModel
 import org.wordpress.android.ui.uploads.UploadFixtures.createMockedNetworkUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadFixtures.createMockedPostUtilsWrapper
-import org.wordpress.android.ui.uploads.UploadFixtures.createSiteModel
 import org.wordpress.android.ui.uploads.UploadFixtures.createMockedUploadServiceFacade
+import org.wordpress.android.ui.uploads.UploadFixtures.createSiteModel
+import org.wordpress.android.ui.uploads.UploadFixtures.resetTestPostIdIndex
 
 /**
  * Tests for structured concurrency in [UploadStarter].
@@ -27,54 +29,50 @@ import org.wordpress.android.ui.uploads.UploadFixtures.createMockedUploadService
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class UploadStarterConcurrentTest : BaseUnitTest() {
+    private lateinit var starter: UploadStarter
+    private lateinit var uploadServiceFacade: UploadServiceFacade
+
     private val site = createSiteModel()
     private val draftPosts = listOf(
-        createSimpleLocallyChangedPostModel(),
-        createSimpleLocallyChangedPostModel(),
-        createSimpleLocallyChangedPostModel(),
-        createSimpleLocallyChangedPostModel(),
-        createSimpleLocallyChangedPostModel()
+        createLocallyChangedPostModel(),
+        createLocallyChangedPostModel(),
+        createLocallyChangedPostModel(),
+        createLocallyChangedPostModel(),
+        createLocallyChangedPostModel(),
     )
 
-    private val postStore = mock<PostStore> {
-        on { getPostsWithLocalChanges(eq(site)) } doReturn draftPosts
-    }
+    private val postStore = mock<PostStore> { on { getPostsWithLocalChanges(eq(site)) } doReturn draftPosts }
+    private val pageStore = mock<PageStore> { onBlocking { getPagesWithLocalChanges(any()) } doReturn emptyList() }
 
-    private val pageStore = mock<PageStore> {
-        onBlocking { getPagesWithLocalChanges(any()) } doReturn emptyList()
+    @Before
+    fun setUp() {
+        resetTestPostIdIndex()
+        uploadServiceFacade = createMockedUploadServiceFacade()
+        starter = UploadStarter(
+            appContext = mock(),
+            postStore = postStore,
+            pageStore = pageStore,
+            siteStore = mock(),
+            bgDispatcher = testDispatcher(),
+            ioDispatcher = testDispatcher(),
+            networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
+            connectionStatus = mock(),
+            uploadServiceFacade = uploadServiceFacade,
+            uploadActionUseCase = UploadActionUseCase(mock(), createMockedPostUtilsWrapper(), uploadServiceFacade),
+            tracker = mock(),
+            dispatcher = mock(),
+            mutex = mock(),
+        )
     }
 
     @Test
     fun `it uploads local drafts concurrently`() = test {
-        // Given
-        val uploadServiceFacade = createMockedUploadServiceFacade()
-
-        val starter = createUploadStarter(uploadServiceFacade)
-
-        // When
         starter.queueUploadFromSite(site).join()
 
-        // Then
         verify(uploadServiceFacade, times(draftPosts.size)).uploadPost(
             context = any(),
             post = any(),
             trackAnalytics = any()
         )
     }
-
-    private fun createUploadStarter(uploadServiceFacade: UploadServiceFacade) = UploadStarter(
-        appContext = mock(),
-        postStore = postStore,
-        pageStore = pageStore,
-        siteStore = mock(),
-        bgDispatcher = testDispatcher(),
-        ioDispatcher = testDispatcher(),
-        networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
-        connectionStatus = mock(),
-        uploadServiceFacade = uploadServiceFacade,
-        uploadActionUseCase = UploadActionUseCase(mock(), createMockedPostUtilsWrapper(), uploadServiceFacade),
-        tracker = mock(),
-        dispatcher = mock(),
-        mutex = mock(),
-    )
 }

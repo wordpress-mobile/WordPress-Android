@@ -56,11 +56,5 @@ internal object UploadFixtures {
             setIsPage(page)
         }
 
-    fun createSimpleLocallyChangedPostModel() = PostModel().apply {
-        setStatus(PostStatus.DRAFT.toString())
-        setIsLocallyChanged(true)
-        setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(Date().time / 1000))
-    }
-
     fun createSiteModel(isWpCom: Boolean = true) = SiteModel().apply { setIsWPCom(isWpCom) }
 }
