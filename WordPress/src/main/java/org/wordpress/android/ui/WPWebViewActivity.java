@@ -127,14 +127,9 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public static final String ACTION_BAR_TITLE = "action_bar_title";
     public static final String SHOW_PREVIEW_MODE_TOGGLE = "SHOW_PREVIEW_MODE_TOGGLE";
     public static final String PRIVATE_AT_SITE_ID = "PRIVATE_AT_SITE_ID";
-    public static final String CSS_TO_INJECT = "CSS_TO_INJECT";
     public static final String WEBVIEW_SOURCE = "WEBVIEW_SOURCE";
     private static final int PREVIEW_INITIAL_SCALE = 90;
     private static final long PREVIEW_JS_EVALUATION_DELAY = 250L;
-    private static final long CSS_JS_EVALUATION_DELAY = 250L;
-    private static final String CSS_INJECTION_SCRIPT_TEMPLATE = "var style = document.createElement('style'); "
-                                                                + "style.innerHTML = '%s'; "
-                                                                + "document.head.appendChild(style);";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -372,26 +367,24 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
-        openWPCOMURL(context, url, null, null, false, false, null, null);
+        openWPCOMURL(context, url, null, null, false, false, null);
     }
 
-    public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url,
-                                                            String cssToInject, WPWebViewSource source) {
-        openWPCOMURL(context, url, null, null, false, false, cssToInject, source);
+    public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url, WPWebViewSource source) {
+        openWPCOMURL(context, url, null, null, false, false, source);
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context,
                                                             String url,
                                                             boolean allowPreviewModeSelection) {
-        openWPCOMURL(context, url, null, null, allowPreviewModeSelection, false, null, null);
+        openWPCOMURL(context, url, null, null, allowPreviewModeSelection, false, null);
     }
 
     public static void openPostUrlByUsingGlobalWPCOMCredentials(Context context, String url, String shareableUrl,
                                                                 String shareSubject, boolean allowPreviewModeSelection,
                                                                 boolean startPreviewForResult) {
         openWPCOMURL(context, url, shareableUrl, shareSubject,
-                allowPreviewModeSelection, startPreviewForResult,
-                null, null);
+                allowPreviewModeSelection, startPreviewForResult, null);
     }
 
     // frameNonce is used to show drafts, without it "no page found" error would be thrown
@@ -502,8 +495,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         openURL(context, url, referrer, false, 0);
     }
 
-    public static void openURL(Context context, String url, String cssToInject, WPWebViewSource source) {
-        openURL(context, url, null, false, 0, cssToInject, source);
+    public static void openURL(Context context, String url, WPWebViewSource source) {
+        openURL(context, url, null, false, 0, source);
     }
 
     public static void openURL(Context context, String url, boolean allowPreviewModeSelection,
@@ -513,12 +506,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
     public static void openURL(Context context, String url, String referrer,
                                boolean allowPreviewModeSelection, long privateSiteId) {
-        openURL(context, url, referrer, allowPreviewModeSelection, privateSiteId, null, null);
+        openURL(context, url, referrer, allowPreviewModeSelection, privateSiteId, null);
     }
 
     public static void openURL(Context context, String url, String referrer,
                                boolean allowPreviewModeSelection, long privateSiteId,
-                               String cssToInject, WPWebViewSource source) {
+                               WPWebViewSource source) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -538,9 +531,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
         if (!TextUtils.isEmpty(referrer)) {
             intent.putExtra(REFERRER_URL, referrer);
-        }
-        if (!TextUtils.isEmpty(cssToInject)) {
-            intent.putExtra(CSS_TO_INJECT, cssToInject);
         }
         if (source != null) {
             intent.putExtra(WPWebViewActivity.WEBVIEW_SOURCE, source);
@@ -563,7 +553,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     private static void openWPCOMURL(Context context, String url, String shareableUrl, String shareSubject) {
-        openWPCOMURL(context, url, shareableUrl, shareSubject, false, false, null, null);
+        openWPCOMURL(context, url, shareableUrl, shareSubject, false, false, null);
     }
 
     private static void openWPCOMURL(
@@ -573,7 +563,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             String shareSubject,
             boolean allowPreviewModeSelection,
             boolean startPreviewForResult,
-            String cssToInject,
             WPWebViewSource source
     ) {
         if (!checkContextAndUrl(context, url)) {
@@ -590,9 +579,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
         if (!TextUtils.isEmpty(shareSubject)) {
             intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, shareSubject);
-        }
-        if (!TextUtils.isEmpty(cssToInject)) {
-            intent.putExtra(WPWebViewActivity.CSS_TO_INJECT, cssToInject);
         }
         if (source != null) {
             intent.putExtra(WPWebViewActivity.WEBVIEW_SOURCE, source);
@@ -677,26 +663,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
     @Override
     public void onWebViewPageLoaded() {
-        if (getIntent().hasExtra(CSS_TO_INJECT)) {
-            String css = getIntent().getStringExtra(CSS_TO_INJECT);
-            injectCss(css);
-        }
-
         if (mPreviewModeChangeAllowed) {
             enforcePreviewMode();
         } else {
             mViewModel.onUrlLoaded();
         }
         refreshBackForwardNavButtons();
-    }
-
-    private void injectCss(@NonNull final String css) {
-        String script = String.format(CSS_INJECTION_SCRIPT_TEMPLATE, css);
-
-        new Handler().postDelayed(
-                () -> mWebView.evaluateJavascript(script, null),
-                CSS_JS_EVALUATION_DELAY
-        );
     }
 
     private void refreshBackForwardNavButtons() {

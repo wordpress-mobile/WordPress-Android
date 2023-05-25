@@ -565,11 +565,10 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                     WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
                         activity,
                         url,
-                        css,
                         WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE
                     )
                 } else {
-                    WPWebViewActivity.openURL(activity, url, css, WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE)
+                    WPWebViewActivity.openURL(activity, url, WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE)
                 }
             }
         }
