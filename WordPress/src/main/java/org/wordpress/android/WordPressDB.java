@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 67;
+    private static final int DATABASE_VERSION = 68;
 
 
     // Warning renaming DATABASE_NAME could break previous App backups (see: xml/backup_scheme.xml)
@@ -175,6 +175,9 @@ public class WordPressDB {
                 // add Jetpack search site setting
                 mDb.execSQL(SiteSettingsModel.ADD_JETPACK_SEARCH_SUPPORTED);
                 mDb.execSQL(SiteSettingsModel.ADD_JETPACK_SEARCH_ENABLED);
+            case 67:
+                // drop services table so it reflects the integration with external-services v2 endpoint
+                PublicizeTable.resetServicesTable(mDb);
         }
         mDb.setVersion(DATABASE_VERSION);
     }

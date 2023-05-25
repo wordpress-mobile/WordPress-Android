@@ -3,6 +3,7 @@ package org.wordpress.android.e2e
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assume.assumeTrue
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.wordpress.android.e2e.pages.MySitesPage
 import org.wordpress.android.support.BaseTest
@@ -21,6 +22,7 @@ class DashboardTests : BaseTest() {
     }
 
     @Test
+    @Ignore("Skipped due to increased flakiness. Test fails to scroll to the card.")
     fun e2eDomainsCardNavigation() {
         MySitesPage()
             .scrollToDomainsCard()

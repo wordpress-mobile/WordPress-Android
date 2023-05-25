@@ -21,11 +21,8 @@ Language: lv
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s izmanto %2$s, kas vēl neatbalsta visas lietotnes funkcijas. Lūdzu, instalējiet %3$s.</string>
     <string name="wp_jetpack_feature_removal_static_posters_phase">Pāreja uz Jetpack lietotni pēc dažām dienām.</string>
     <string name="wp_jp_static_poster_footnote">Pārslēgšanās ir bezmaksas un aizņem tikai minūti.</string>
-    <string name="wp_jp_static_poster_message">Statistika, lasītājs, paziņojumi un citas Jetpack darbināmas funkcijas ir noņemtas no WordPress lietotnes, un tagad tās var atrast tikai Jetpack lietotnē.</string>
     <string name="wp_jp_static_poster_button_secondary">Uzziniet vairāk vietnē Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Pārslēdzieties uz Jetpack lietotni</string>
-    <string name="wp_jp_static_poster_title_plural">%s ir pārcēlušies uz Jetpack lietotni.</string>
-    <string name="wp_jp_static_poster_title">%s ir pārcēlies uz Jetpack lietotni.</string>
     <string name="my_site_btn_wp_admin">WP administrators</string>
     <string name="my_site_header_manage">Pārvaldīt</string>
     <string name="my_site_header_traffic">Satiksme</string>
@@ -189,7 +186,6 @@ Language: lv
     <string name="jp_migration_done_title">Paldies, ka pārgājāt uz Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Mēs izslēgsim paziņojumus no WordPress lietotnes.</string>
     <string name="jp_migration_notifications_subtitle">Jūs saņemsiet visus tos pašus paziņojumus, taču tagad tie tiks saņemti no lietotnes Jetpack.</string>
-    <string name="jp_migration_notifications_title">Paziņojumi tagad nāk no Jetpack</string>
     <string name="wordpress_help_center_button">WordPress palīdzības centrs</string>
     <string name="support_title">Atbalsts</string>
     <string name="notification_disable_broadcast_permission_desc">Ļauj lietotnei atspējot WordPress paziņojumus.</string>

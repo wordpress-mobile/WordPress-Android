@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-12 14:34:45+0000
+Translation-Revision-Date: 2023-05-17 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">La modifica dei blocchi riutilizzabili non è ancora supportata su %s per iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">La modifica dei blocchi riutilizzabili non è ancora supportata su %s per Android</string>
+    <string name="jp_migration_notifications_allow_title">Consenti le notifiche per stare al passo con il tuo sito</string>
+    <string name="wp_jp_static_poster_message">L\'app Jetpack offre tutte le funzionalità dell\'app WordPress e ora anche l\'accesso esclusivo a Statistiche, Reader, Notifiche e altro.</string>
+    <string name="wp_jp_static_poster_title_plural">Usa WordPress con %s nell\'app Jetpack\u00A0.</string>
+    <string name="wp_jp_static_poster_title">Usa WordPress con %s nell\'app Jetpack\u00A0.</string>
     <string name="gutenberg_native_unlabeled_color_s">Colore senza etichetta. %s</string>
     <string name="dashboard_activity_card_footer_link">Visualizza tutte le attività</string>
     <string name="dashboard_activity_card_title">Attività recente</string>
     <string name="dashboard_card_domain_title">Trova un dominio personalizzato</string>
     <string name="site_creation_search_domain_example_body">Come nell\'esempio precedente, un dominio consente agli utenti di trovare e visitare il tuo sito dal proprio browser web.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
-    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
     <string name="site_creation_domain_search_input_hint">Cerca con le parole chiave</string>
     <string name="site_creation_domain_header_subtitle">Cerca un dominio breve e facile da ricordare per aiutare gli utenti a trovare e visitare il tuo sito.</string>
     <string name="site_creation_domain_cost_sale">per il primo anno</string>
@@ -71,11 +76,8 @@ Language: it
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s utilizza %2$s, che non supportano ancora tutte le funzionalità dell\'app. Please install the %3$s.</string>
     <string name="wp_jetpack_feature_removal_static_posters_phase">Moving to the Jetpack app in a few days.</string>
     <string name="wp_jp_static_poster_footnote">Il passaggio è gratuito e richiede solo un minuto.</string>
-    <string name="wp_jp_static_poster_message">Statistiche, Reader, Notifiche e altre funzionalità basate su Jetpack sono state rimosse dall\'app WordPress.</string>
     <string name="wp_jp_static_poster_button_secondary">Maggiori informazioni su jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Passa all\'app Jetpack</string>
-    <string name="wp_jp_static_poster_title_plural">%s have moved to the Jetpack app.</string>
-    <string name="wp_jp_static_poster_title">%s has moved to the Jetpack app.</string>
     <string name="my_site_btn_wp_admin">WP Admin</string>
     <string name="my_site_header_manage">Gestisci</string>
     <string name="my_site_header_traffic">Traffico</string>
@@ -240,7 +242,6 @@ Language: it
     <string name="jp_migration_done_title">Grazie per aver scelto di passare a Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Disattiveremo le notifiche dall\'app WordPress.</string>
     <string name="jp_migration_notifications_subtitle">Riceverai tutte le stesse notifiche, ma ora arriveranno dall\'app Jetpack.</string>
-    <string name="jp_migration_notifications_title">Le notifiche ora arrivano da Jetpack</string>
     <string name="wordpress_help_center_button">Centro d\'assistenza di WordPress</string>
     <string name="support_title">Supporto</string>
     <string name="notification_disable_broadcast_permission_desc">Consenti all\'app di disabilitare le notifiche WordPress.</string>

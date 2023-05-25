@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-02 08:11:15+0000
+Translation-Revision-Date: 2023-05-22 06:14:27+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">Menyunting blok pakai ulang belum didukung di %s untuk iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Menyunting blok pakai ulang belum didukung di %s untuk Android</string>
+    <string name="jp_migration_notifications_allow_title">Izinkan pemberitahuan untuk mengikuti perkembangan situs Anda</string>
+    <string name="wp_jp_static_poster_message">Aplikasi Jetpack memiliki semua fungsionalitas aplikasi WordPress, dan sekarang memiliki akses eksklusif ke Statistik, Pembaca, Notifikasi, dan lainnya.</string>
+    <string name="wp_jp_static_poster_title_plural">Gunakan WordPress dengan %s di aplikasi\u00A0Jetpack.</string>
+    <string name="wp_jp_static_poster_title">Gunakan WordPress dengan %s di aplikasi\u00A0Jetpack.</string>
     <string name="gutenberg_native_unlabeled_color_s">Warna tanpa label. %s</string>
     <string name="dashboard_activity_card_footer_link">Lihat semua aktivitas</string>
     <string name="dashboard_activity_card_title">Aktivitas terbaru</string>
     <string name="dashboard_card_domain_title">Cari domain khusus</string>
     <string name="site_creation_search_domain_example_body">Seperti contoh di atas, domain mengizinkan Anda menemukan dan mengunjungi situs Anda dari web browser.</string>
     <string name="site_creation_search_domain_example_title">NamaSitusAnda.com</string>
-    <string name="site_creation_search_domain_example_url">https://namasitusanda.com</string>
     <string name="site_creation_domain_search_input_hint">Cari dengan kata kunci</string>
     <string name="site_creation_domain_header_subtitle">Cari domain yang pendek dan mudah diingat agar siapa pun mudah menemukan dan mengunjungi situs Anda.</string>
     <string name="site_creation_domain_cost_sale">untuk tahun pertama</string>
@@ -71,11 +76,8 @@ Language: id
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s ini menggunakan %2$s yang belum mendukung semua fitur dalam aplikasi. Silakan instal %3$s.</string>
     <string name="wp_jetpack_feature_removal_static_posters_phase">Berpindah ke aplikasi Jetpack dalam beberapa hari.</string>
     <string name="wp_jp_static_poster_footnote">Beralihlah ke aplikasi—gratis dan prosesnya cepat!</string>
-    <string name="wp_jp_static_poster_message">Statistik, Pembaca, Pemberitahuan, dan beragam fitur lain berbasis Jetpack telah dihapus dari aplikasi WordPress dan hanya dapat ditemukan di aplikasi Jetpack.</string>
     <string name="wp_jp_static_poster_button_secondary">Baca selengkapnya di Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Ganti ke aplikasi Jetpack</string>
-    <string name="wp_jp_static_poster_title_plural">%s telah berpindah ke aplikasi Jetpack.</string>
-    <string name="wp_jp_static_poster_title">%s telah berpindah ke aplikasi Jetpack.</string>
     <string name="my_site_btn_wp_admin">Admin WP</string>
     <string name="my_site_header_manage">Kelola</string>
     <string name="my_site_header_traffic">Lalu Lintas</string>
@@ -240,7 +242,6 @@ Language: id
     <string name="jp_migration_done_title">Terima kasih telah beralih ke Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Kami akan menonaktifkan pemberitahuan dari aplikasi WordPress.</string>
     <string name="jp_migration_notifications_subtitle">Anda akan tetap menerima pemberitahuan tersebut, tetapi dari aplikasi Jetpack.</string>
-    <string name="jp_migration_notifications_title">Pemberitahuan kini dikirimkan lewat Jetpack</string>
     <string name="wordpress_help_center_button">Pusat bantuan WordPress</string>
     <string name="support_title">Dukungan</string>
     <string name="notification_disable_broadcast_permission_desc">Mengizinkan aplikasi untuk menonaktifkan pemberitahuan WordPress.</string>
