@@ -10,7 +10,7 @@
         <item name="fontWeight">400</item>
     </style>
 
-    <style name="DashboardCardSubtitle" parent="Base.TextAppearance.Material3.TitleMedium">
+    <style name="DashboardCardSubtitle" parent="TextAppearance.Material3.TitleMedium">
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceHigh</item>
         <item name="fontWeight">500</item>
@@ -21,7 +21,7 @@
         <item name="fontWeight">400</item>
     </style>
 
-    <style name="DashboardCardFooter" parent="Base.TextAppearance.Material3.TitleMedium">
+    <style name="DashboardCardFooter" parent="TextAppearance.Material3.TitleMedium">
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/primary_emphasis_medium_selector</item>
         <item name="fontWeight">500</item>
