@@ -6,6 +6,10 @@
 * [***] Enables editing of the site homepage for sites using block-based themes directly from the pages list. [https://github.com/wordpress-mobile/WordPress-Android/pull/18454]
 * [*] Adds a button to enable account closure from the account settings screen [https://github.com/wordpress-mobile/WordPress-Android/pull/18412]
 * [*] Fixes an issue on the plugins screen [https://github.com/wordpress-mobile/WordPress-Android/pull/18498]
+* [*] Add disabled style to `Cell` component [https://github.com/WordPress/gutenberg/pull/50665]
+* [**] Fix undo/redo history when inserting a link configured to open in a new tab [https://github.com/WordPress/gutenberg/pull/50460]
+* [**] Disable details settings for not belonged VideoPress videos [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5782]
+* [*] [List block] Fix an issue when merging a list item into a Paragraph would remove its nested list items [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5785]
 
 22.4
 -----
