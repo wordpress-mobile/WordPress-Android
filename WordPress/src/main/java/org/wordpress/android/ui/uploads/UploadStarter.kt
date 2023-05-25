@@ -16,6 +16,7 @@ import kotlinx.coroutines.sync.withLock
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.UploadActionBuilder
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
@@ -139,40 +140,23 @@ class UploadStarter @Inject constructor(
                     val action = uploadActionUseCase.getAutoUploadAction(post, site)
                     Pair(post, action)
                 }
-                .filter { (_, action) ->
-                    action != DO_NOTHING
-                }
+                .filter { (_, action) -> action != DO_NOTHING }
                 .toList()
                 .forEach { (post, action) ->
                     runCatching {
                         trackAutoUploadAction(action, post.status, post.isPage)
-                        AppLog.d(
-                            T.POSTS,
-                            "UploadStarter for post " +
-                                    "(isPage: ${post.isPage.compareTo(false)}) " +
-                                    "title: ${post.title}, " +
-                                    "action: $action"
-                        )
-                        dispatcher.dispatch(
-                            UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(
-                                post
-                            )
-                        )
-                        uploadServiceFacade.uploadPost(
-                            context = appContext,
-                            post = post,
-                            trackAnalytics = false
-                        )
+                        AppLog.d(T.POSTS, "UploadStarter for ${post.toStringLog()}; action: $action")
+                        dispatcher.dispatch(UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(post))
+                        uploadServiceFacade.uploadPost(appContext, post, trackAnalytics = false)
                     }.onFailure {
                         AppLog.e(T.POSTS, it)
                         throwable = it
                     }
                 }
-            throwable?.let {
-                throw it
-            }
         }
     }
+
+    private fun PostModel.toStringLog() = "${if (isPage) "page" else "post"} with title: $title"
 
     private fun trackAutoUploadAction(
         action: UploadAction,
