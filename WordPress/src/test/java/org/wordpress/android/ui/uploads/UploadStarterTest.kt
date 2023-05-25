@@ -195,15 +195,10 @@ class UploadStarterTest : BaseUnitTest() {
 
     @Test
     fun `when uploading all sites, posts & pages of the sites are uploaded`() {
-        // Given
-        val connectionStatus = createConnectionStatusLiveData(null)
-        val uploadServiceFacade = createMockedUploadServiceFacade()
-        val starter = createUploadStarter(connectionStatus, uploadServiceFacade)
+        val starter = createUploadStarter()
 
-        // When
         starter.queueUploadFromAllSites()
 
-        // Then
         val expectedUploadPostExecutions = draftPosts.size + draftPages.size
         verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
             context = any(),
@@ -213,19 +208,15 @@ class UploadStarterTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given a failure, when uploading all sites, all other posts & pages are uploaded`() {
-        // Given
-        val connectionStatus = createConnectionStatusLiveData(null)
-        val uploadServiceFacade = createMockedUploadServiceFacade()
+    fun `given a failure, when uploading all sites, all other posts & pages are uploaded`() = test {
+        val starter = createUploadStarter()
+        draftPages.first().let {
+            whenever(uploadServiceFacade.uploadPost(any(), eq(it), any()))
+                .thenThrow(CancellationException("Upload error in test for post: " + it.title))
+        }
 
-        val starter = createUploadStarter(connectionStatus, uploadServiceFacade)
-        whenever(uploadServiceFacade.uploadPost(any(), eq(draftPosts.first()), any()))
-            .thenThrow(CancellationException("fake upload error"))
-
-        // When
         starter.queueUploadFromAllSites()
 
-        // Then
         val expectedUploadPostExecutions = draftPosts.size + draftPages.size
         verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
             context = any(),
