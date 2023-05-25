@@ -14,7 +14,7 @@ class PageItemVirtualHomepageActionTest {
 
         testSites.forEach { testSite ->
             val site = SiteModel().apply { adminUrl = testSite }
-            val action = PageItem.VirtualHomepage.Action.OpenSiteEditor()
+            val action = PageItem.VirtualHomepage.Action.OpenSiteEditor
 
             val url = action.getUrl(site)
 

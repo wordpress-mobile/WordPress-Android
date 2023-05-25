@@ -639,13 +639,12 @@ class PagesViewModelTest : BaseUnitTest() {
         viewModel.start(site)
 
         // Act
-        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor()
+        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor
         viewModel.onVirtualHomepageAction(action)
 
         // Assert
         val expected = PagesViewModel.SiteEditorData(
             "https://example.com/wp-admin/site-editor.php?canvas=edit",
-            PageItem.VirtualHomepage.Action.OpenSiteEditor.SITE_EDITOR_CSS,
             true
         )
         assertThat(viewModel.openSiteEditorWebView.value).isEqualTo(expected)
@@ -661,13 +660,12 @@ class PagesViewModelTest : BaseUnitTest() {
         viewModel.start(site)
 
         // Act
-        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor()
+        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor
         viewModel.onVirtualHomepageAction(action)
 
         // Assert
         val expected = PagesViewModel.SiteEditorData(
             "https://example.com/wp-admin/site-editor.php?canvas=edit",
-            PageItem.VirtualHomepage.Action.OpenSiteEditor.SITE_EDITOR_CSS,
             true
         )
         assertThat(viewModel.openSiteEditorWebView.value).isEqualTo(expected)
@@ -683,13 +681,12 @@ class PagesViewModelTest : BaseUnitTest() {
         viewModel.start(site)
 
         // Act
-        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor()
+        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor
         viewModel.onVirtualHomepageAction(action)
 
         // Assert
         val expected = PagesViewModel.SiteEditorData(
             "https://example.com/wp-admin/site-editor.php?canvas=edit",
-            PageItem.VirtualHomepage.Action.OpenSiteEditor.SITE_EDITOR_CSS,
             false
         )
         assertThat(viewModel.openSiteEditorWebView.value).isEqualTo(expected)
@@ -718,7 +715,7 @@ class PagesViewModelTest : BaseUnitTest() {
         viewModel.start(site)
 
         // Act
-        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor()
+        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor
         viewModel.onVirtualHomepageAction(action)
 
         // Assert
