@@ -11,15 +11,13 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.ui.posts.PostUtilsWrapper
-import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.NetworkUtilsWrapper
-import java.util.Date
+import org.wordpress.android.ui.uploads.UploadFixtures.createSimpleLocallyChangedPostModel
+import org.wordpress.android.ui.uploads.UploadFixtures.createMockedNetworkUtilsWrapper
+import org.wordpress.android.ui.uploads.UploadFixtures.createMockedPostUtilsWrapper
+import org.wordpress.android.ui.uploads.UploadFixtures.createSiteModel
+import org.wordpress.android.ui.uploads.UploadFixtures.createMockedUploadServiceFacade
 
 /**
  * Tests for structured concurrency in [UploadStarter].
@@ -31,11 +29,11 @@ import java.util.Date
 class UploadStarterConcurrentTest : BaseUnitTest() {
     private val site = createSiteModel()
     private val draftPosts = listOf(
-        createLocallyChangedPostModel(),
-        createLocallyChangedPostModel(),
-        createLocallyChangedPostModel(),
-        createLocallyChangedPostModel(),
-        createLocallyChangedPostModel()
+        createSimpleLocallyChangedPostModel(),
+        createSimpleLocallyChangedPostModel(),
+        createSimpleLocallyChangedPostModel(),
+        createSimpleLocallyChangedPostModel(),
+        createSimpleLocallyChangedPostModel()
     )
 
     private val postStore = mock<PostStore> {
@@ -78,27 +76,4 @@ class UploadStarterConcurrentTest : BaseUnitTest() {
         tracker = mock(),
         dispatcher = mock()
     )
-
-    private companion object Fixtures {
-        fun createMockedNetworkUtilsWrapper() = mock<NetworkUtilsWrapper> {
-            on { isNetworkAvailable() } doReturn true
-        }
-
-        fun createMockedUploadServiceFacade() = mock<UploadServiceFacade> {
-            on { isPostUploadingOrQueued(any()) } doReturn false
-        }
-
-        fun createMockedPostUtilsWrapper() = mock<PostUtilsWrapper> {
-            on { isPublishable(any()) } doReturn true
-            on { isPostInConflictWithRemote(any()) } doReturn false
-        }
-
-        fun createLocallyChangedPostModel() = PostModel().apply {
-            setStatus(PostStatus.DRAFT.toString())
-            setIsLocallyChanged(true)
-            setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(Date().time / 1000))
-        }
-
-        fun createSiteModel(): SiteModel = SiteModel().apply { setIsWPCom(true) }
-    }
 }

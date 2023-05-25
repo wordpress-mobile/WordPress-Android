@@ -1,11 +1,8 @@
 package org.wordpress.android.ui.uploads
 
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ProcessLifecycleOwner
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions
@@ -31,7 +28,6 @@ import org.wordpress.android.fluxc.action.UploadAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
@@ -43,14 +39,20 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.posts.PostUtilsWrapper
+import org.wordpress.android.ui.uploads.UploadFixtures.createConnectionStatusLiveData
+import org.wordpress.android.ui.uploads.UploadFixtures.createLocallyChangedPostModel
+import org.wordpress.android.ui.uploads.UploadFixtures.createMockedNetworkUtilsWrapper
+import org.wordpress.android.ui.uploads.UploadFixtures.createMockedPostUtilsWrapper
+import org.wordpress.android.ui.uploads.UploadFixtures.createMockedProcessLifecycleOwner
+import org.wordpress.android.ui.uploads.UploadFixtures.createMockedUploadServiceFacade
+import org.wordpress.android.ui.uploads.UploadFixtures.createMockedUploadStore
+import org.wordpress.android.ui.uploads.UploadFixtures.createSiteModel
+import org.wordpress.android.ui.uploads.UploadFixtures.resetTestPostIdIndex
 import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.UNAVAILABLE
 import java.util.Date
-import java.util.UUID
-import kotlin.random.Random
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -480,7 +482,7 @@ class UploadStarterTest : BaseUnitTest() {
         val postModel = createLocallyChangedPostModel()
         defaultSetup(siteModel, postModel)
 
-        // Set autosaveModified to a newer date than dateLocallyChanged to indicate the changes were remotely-auto-saved
+        // Set autoSaveModified to a newer date than dateLocallyChanged to indicate the changes were remotely-auto-saved
         postModel.setAutoSaveModified(
             DateTimeUtils.iso8601FromTimestamp(
                 DateTimeUtils.timestampFromIso8601(
@@ -543,51 +545,5 @@ class UploadStarterTest : BaseUnitTest() {
         uploadActionUseCase = UploadActionUseCase(uploadStore, postUtilsWrapper, uploadServiceFacade),
         tracker = mock(),
         dispatcher = dispatcher
-    )
-
-    private companion object Fixtures {
-
-        var postIdIndex = 0
-        fun makePostTitleFromId() = postIdIndex.toString().padStart(2, '0')
-
-        fun createMockedNetworkUtilsWrapper() = mock<NetworkUtilsWrapper> {
-            on { isNetworkAvailable() } doReturn true
-        }
-
-        fun createConnectionStatusLiveData(initialValue: ConnectionStatus?): MutableLiveData<ConnectionStatus> {
-            return MutableLiveData<ConnectionStatus>().apply {
-                value = initialValue
-            }
-        }
-
-        fun createMockedPostUtilsWrapper() = mock<PostUtilsWrapper> {
-            on { isPublishable(any()) } doReturn true
-            on { isPostInConflictWithRemote(any()) } doReturn false
-        }
-
-        fun createMockedUploadStore(numberOfAutoUploadAttempts: Int) = mock<UploadStore> {
-            on { getNumberOfPostAutoUploadAttempts(any()) } doReturn numberOfAutoUploadAttempts
-        }
-
-        fun createMockedUploadServiceFacade() = mock<UploadServiceFacade> {
-            on { isPostUploadingOrQueued(any()) } doReturn false
-        }
-
-        fun createMockedProcessLifecycleOwner(lifecycle: Lifecycle = mock()) = mock<ProcessLifecycleOwner> {
-            on { this.lifecycle } doReturn lifecycle
-        }
-
-        fun createLocallyChangedPostModel(postStatus: PostStatus = DRAFT, page: Boolean = false) = PostModel().apply {
-            setId(++postIdIndex)
-            setTitle(makePostTitleFromId())
-            setStatus(postStatus.toString())
-            setIsLocallyChanged(true)
-            setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(Date().time / 1000))
-            setIsPage(page)
-        }
-
-        fun createSiteModel(isWpCom: Boolean = true) = SiteModel().apply {
-            setIsWPCom(isWpCom)
-        }
-    }
+    ).also { resetTestPostIdIndex() }
 }
