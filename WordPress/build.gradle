@@ -1,5 +1,6 @@
 import se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask
 import se.bjurr.violations.lib.model.SEVERITY
+import io.sentry.android.gradle.extensions.InstrumentationFeature
 
 plugins {
     id "com.android.application"
@@ -11,6 +12,16 @@ plugins {
     id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
     id "com.google.gms.google-services"
     id 'dagger.hilt.android.plugin'
+}
+
+sentry {
+    tracingInstrumentation {
+        enabled = true
+        features = [io.sentry.android.gradle.extensions.InstrumentationFeature.DATABASE]
+    }
+    autoInstallation {
+        enabled = false
+    }
 }
 
 repositories {

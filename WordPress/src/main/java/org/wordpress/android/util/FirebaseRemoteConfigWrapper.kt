@@ -14,6 +14,6 @@ class FirebaseRemoteConfigWrapper @Inject constructor() {
     companion object {
         private const val PERFORMANCE_MONITORING_SAMPLE_RATE_KEY = "wp_android_performance_monitoring_sample_rate"
 
-        const val OPEN_WEB_LINKS_WITH_JETPACK_FLOW_FREQUENCY_KEY = "open_web_links_with_jetpack_flow_frequency"
+        private const val OPEN_WEB_LINKS_WITH_JETPACK_FLOW_FREQUENCY_KEY = "open_web_links_with_jetpack_flow_frequency"
     }
 }
