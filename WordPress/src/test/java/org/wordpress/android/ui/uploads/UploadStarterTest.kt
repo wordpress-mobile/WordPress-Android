@@ -5,7 +5,10 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
 import org.assertj.core.api.Assertions
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
@@ -123,6 +126,13 @@ class UploadStarterTest : BaseUnitTest() {
         }
     }
 
+    private lateinit var mutex: Mutex
+
+    @Before
+    fun setUp() {
+        mutex = Mutex()
+    }
+
     @Test
     fun `when the internet connection is restored and the app is in foreground, it uploads changed posts & pages`() {
         // Given
@@ -226,6 +236,23 @@ class UploadStarterTest : BaseUnitTest() {
             trackAnalytics = any()
         )
     }
+
+    @Test
+    fun `given an unexpected mutex unlock, when uploading, then all other sites are uploaded`() = test {
+        val starter = createUploadStarter()
+        val unlockPoint = draftPosts.first()
+        whenever(uploadServiceFacade.uploadPost(any(), eq(unlockPoint), any())).thenAnswer { mutex.unlock() }
+
+        launch {
+            starter.queueUploadFromSite(sites[0])
+            starter.queueUploadFromSite(sites[1])
+            starter.queueUploadFromAllSites()
+        }
+
+        val expectedInvocations = (draftPosts.size + draftPages.size) * 2
+        verify(uploadServiceFacade, times(expectedInvocations)).uploadPost(any(), any<PostModel>(), any())
+    }
+
 
     @Test
     fun `when uploading a single site, only posts & pages of that site are uploaded`() {
@@ -547,7 +574,7 @@ class UploadStarterTest : BaseUnitTest() {
             uploadActionUseCase = UploadActionUseCase(uploadStore, postUtilsWrapper, uploadServiceFacade),
             tracker = mock(),
             dispatcher = dispatcher,
-            mutex = mock(),
+            mutex = mutex,
         )
     }
 }
