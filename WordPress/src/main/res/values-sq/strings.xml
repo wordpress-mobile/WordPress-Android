@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-10 11:26:11+0000
+Translation-Revision-Date: 2023-05-26 08:47:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sq_AL
 -->
 <resources>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Shihni më tepër</string>
+    <string name="sharing_twitter_deprecation_notice_description">Ndarja e automatizuar me të tjerë që nga Twitter s’mund të përdoret më, për shkak ndryshimesh në kushte dhe çmim nga ana e Twitter-it.</string>
+    <string name="sharing_twitter_deprecation_notice_title">Ndarja e automatizuar me të tjerë që nga Twitter s’mund të përdoret më</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në %s për iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në %s për Android</string>
+    <string name="jp_migration_notifications_allow_title">Lejoni njoftime, që të jeni në dijeni se ç’ndodh në sajtin tuaj</string>
+    <string name="wp_jp_static_poster_message">Aplikacioni Jetpack ka krejt anët e aplikacionit WordPress dhe tanimë edhe hyrje përjashtimore te Statistika, Lexues, Njoftime, etj.</string>
+    <string name="wp_jp_static_poster_title_plural">Përdorni WordPress-in me %s në Jetpack\u00A0app.</string>
+    <string name="wp_jp_static_poster_title">Përdorni WordPress-in me %s në Jetpack\u00A0app.</string>
     <string name="gutenberg_native_unlabeled_color_s">Ngjyrë pa etiketë. %s</string>
     <string name="dashboard_activity_card_footer_link">Shihni krejt veprimtarinë</string>
     <string name="dashboard_activity_card_title">Veprimtari së fundi</string>
