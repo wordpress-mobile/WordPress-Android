@@ -206,7 +206,6 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
         setFeatureEnabled(isFeatureFlagEnabled)
         setJetpackInstalled(isJetpackInstalled)
         setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
-//        setDeepLinkHandlerComponentEnabled(isDeepLinkComponentEnabled)
         setLastShownTimestamp(overlayLastShownTimestamp)
         setFlowFrequency(flowFrequency)
         setDaysBetween(overlayLastShownTimestamp)
@@ -227,7 +226,6 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     }
 
     private fun setFlowFrequency(value: Long) {
-        //         whenever(mockAppConfig.getValue<Long>("example_field")).thenReturn(expectedValue)
         whenever(remoteConfigWrapper.getOpenWebLinksWithJetpackFlowFrequency()).thenReturn(value)
     }
 
