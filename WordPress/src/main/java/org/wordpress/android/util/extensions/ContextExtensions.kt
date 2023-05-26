@@ -45,6 +45,18 @@ fun Context.getColorStateListFromAttribute(@AttrRes attribute: Int): ColorStateL
         AppCompatResources.getColorStateList(this, it)
     }
 
+fun Context.getColorStateListFromAttributeOrRes(resId: Int): ColorStateList {
+    val typedValue = TypedValue()
+    val isAttr = theme.resolveAttribute(resId, typedValue, true)
+
+    return if (isAttr) {
+        AppCompatResources.getColorStateList(this, typedValue.resourceId)
+    } else {
+        AppCompatResources.getColorStateList(this, resId)
+    }
+}
+
+
 // https://developer.android.com/reference/android/content/res/Configuration.html#locale
 val Context.currentLocale: Locale
     get() = ConfigurationCompat.getLocales(resources.configuration)[0] ?: Locale.getDefault()

@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/promote_blaze_card_title"
                 android:textAlignment="viewStart"
-                android:textAppearance="@style/blaze_title"
+                android:textAppearance="@style/DashboardCardSubtitle"
                 app:layout_constraintEnd_toStartOf="@+id/my_site_promote_with_blaze_card_more"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -60,7 +60,7 @@
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingTop="@dimen/margin_medium"
                 android:text="@string/promote_blaze_card_sub_title"
-                android:textAppearance="@style/blaze_sub_title"
+                android:textAppearance="@style/DashboardCardDetail"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/my_site_promote_with_blaze_card_title" />
