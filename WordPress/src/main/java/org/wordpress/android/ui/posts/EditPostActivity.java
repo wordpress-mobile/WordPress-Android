@@ -206,6 +206,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.VersionUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
@@ -2435,6 +2436,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (editorTheme == null) {
             return null;
         }
+
+        /**
+         * If site is using WP 5.9+ then return true as galleryWithImageBlocks is supported in WP 5.9+.
+         * Once support for WP 5.8 is dropped, this can be removed.
+         * https://github.com/WordPress/gutenberg/issues/47782
+         */
+        if (VersionUtils.checkMinimalVersion(mSite.getSoftwareVersion(), "5.9")) {
+            return true;
+        }
+
         return editorTheme.getThemeSupport().getGalleryWithImageBlocks();
     }
 
