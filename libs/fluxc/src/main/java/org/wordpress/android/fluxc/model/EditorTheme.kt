@@ -11,7 +11,10 @@ import com.google.gson.reflect.TypeToken
 import org.wordpress.android.fluxc.persistence.EditorThemeElementType
 import org.wordpress.android.fluxc.persistence.EditorThemeSqlUtils.EditorThemeBuilder
 import org.wordpress.android.fluxc.persistence.EditorThemeSqlUtils.EditorThemeElementBuilder
+import org.wordpress.android.util.VersionUtils
 import java.lang.reflect.Type
+
+private const val GALLERY_V2_WP_VERSION = "5.9"
 
 const val MAP_KEY_ELEMENT_DISPLAY_NAME: String = "name"
 const val MAP_KEY_ELEMENT_SLUG: String = "slug"
@@ -182,3 +185,6 @@ class EditorThemeElementListSerializer : JsonDeserializer<List<EditorThemeElemen
         }
     }
 }
+
+private val SiteModel.coreSupportsGalleryV2: Boolean
+    get() = VersionUtils.checkMinimalVersion(softwareVersion, GALLERY_V2_WP_VERSION)
