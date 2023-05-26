@@ -48,7 +48,7 @@ class BloggingPromptsOnboardingUiStateMapperTest : BaseUnitTest() {
             UiStringRes(
                 string.my_site_blogging_prompt_card_view_answers
             ),
-            R.attr.colorOnSurface
+            R.color.primary_emphasis_medium_selector
         )
     )
 
