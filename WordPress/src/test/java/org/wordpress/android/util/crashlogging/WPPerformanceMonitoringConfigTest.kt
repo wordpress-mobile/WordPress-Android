@@ -7,13 +7,13 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.assertj.core.api.Assertions.assertThat
-import org.wordpress.android.util.FirebaseRemoteConfigWrapper
+import org.wordpress.android.util.config.RemoteConfigWrapper
 
 private const val VALID_SAMPLE_RATE = 0.01
 private const val INVALID_SAMPLE_RATE = 0.0
 
 class WPPerformanceMonitoringConfigTest {
-    private val remoteConfig: FirebaseRemoteConfigWrapper = mock()
+    private val remoteConfig: RemoteConfigWrapper = mock()
     private val analytics: AnalyticsTrackerWrapper = mock()
     private val buildConfig: BuildConfigWrapper = mock()
 

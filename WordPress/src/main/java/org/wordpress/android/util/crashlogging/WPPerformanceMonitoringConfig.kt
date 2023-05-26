@@ -3,11 +3,11 @@ package org.wordpress.android.util.crashlogging
 import com.automattic.android.tracks.crashlogging.PerformanceMonitoringConfig
 import org.wordpress.android.util.BuildConfigWrapper
 import javax.inject.Inject
-import org.wordpress.android.util.FirebaseRemoteConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.RemoteConfigWrapper
 
 class WPPerformanceMonitoringConfig @Inject constructor(
-    private val remoteConfigWrapper: FirebaseRemoteConfigWrapper,
+    private val remoteConfigWrapper: RemoteConfigWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
