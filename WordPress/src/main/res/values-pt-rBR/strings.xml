@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-21 14:18:56+0000
+Translation-Revision-Date: 2023-05-25 15:33:48+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: pt_BR
 -->
 <resources>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Saiba mais</string>
+    <string name="sharing_twitter_deprecation_notice_description">O autocompartilhamento do Twitter não está mais disponível devido a uma mudança nos termos e preços do Twitter.</string>
+    <string name="sharing_twitter_deprecation_notice_title">O autocompartilhamento no Twitter não está mais disponível</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">Ainda não é possível editar blocos reutilizáveis no %s para iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Ainda não é possível editar blocos reutilizáveis no %s para Android</string>
+    <string name="jp_migration_notifications_allow_title">Ative as notificações para acompanhar a atividade do seu site</string>
+    <string name="wp_jp_static_poster_message">O aplicativo do Jetpack tem todas as funcionalidades do aplicativo do WordPress e agora acesso exclusivo a Estatísticas, Leitor, Notificações e muito mais.</string>
+    <string name="wp_jp_static_poster_title_plural">Use o WordPress com %s no aplicativo do\u00A0Jetpack.</string>
+    <string name="wp_jp_static_poster_title">Use o WordPress com %s no aplicativo do\u00A0Jetpack.</string>
+    <string name="gutenberg_native_unlabeled_color_s">Cor não rotulada. %s</string>
+    <string name="dashboard_activity_card_footer_link">Ver todas as atividades</string>
+    <string name="dashboard_activity_card_title">Atividade recente</string>
+    <string name="dashboard_card_domain_title">Encontre um domínio personalizado</string>
+    <string name="site_creation_search_domain_example_body">Como no exemplo acima, um domínio permite que as pessoas encontrem e visitem seu site usando um navegador.</string>
+    <string name="site_creation_search_domain_example_title">NomeDoSite.com</string>
+    <string name="site_creation_domain_search_input_hint">Pesquise com palavras-chave</string>
+    <string name="site_creation_domain_header_subtitle">Pesquise um domínio curto mas marcante para ajudar as pessoas a encontrar e visitar seu site.</string>
+    <string name="site_creation_domain_cost_sale">no primeiro ano</string>
+    <string name="site_creation_error_cart_subtitle">Seu site foi criado com sucesso, mas encontramos um problema ao preparar seu domínio personalizado para o checkout. Tente novamente ou entre em contato com o suporte para obter ajuda.</string>
+    <string name="new_site_creation_preview_caption_paid">Pode levar até 30 minutos para o domínio personalizado começar a funcionar.</string>
+    <string name="new_site_creation_preview_subtitle_paid">Enviamos o recibo por e-mail. %s</string>
+    <string name="notifications_disabled_permission_dialog">As notificações do aplicativo foram desativadas. Toque aqui para ativá-las.</string>
     <string name="jp_migration_delete_message">Recomendamos que você &lt;b&gt;desinstale o aplicativo WordPress&lt;/b&gt; de seu dispositivo para evitar conflitos de dados.</string>
     <string name="jp_migration_delete_subtitle">Parece que você ainda tem o aplicativo WordPress instalado.</string>
     <string name="jp_migration_delete_title">Você não precisa mais do aplicativo WordPress em seu dispositivo</string>
@@ -78,6 +100,7 @@ Language: pt_BR
     <string name="site_creation_domain_tag_sale">Promoção</string>
     <string name="site_creation_domain_tag_recommended">Recomendado</string>
     <string name="site_creation_domain_tag_best_alternative">Melhor alternativa</string>
+    <string name="site_creation_domain_cost">por ano</string>
     <string name="me_btn_help">Ajuda</string>
     <string name="support_faq_caption">Nossas Perguntas Frequentes podem responder algumas de suas dúvidas.</string>
     <string name="support_faq_title">Agradecemos pela preferência pelo aplicativo Jetpack.</string>
@@ -802,6 +825,7 @@ Language: pt_BR
     <string name="gutenberg_native_one">Um</string>
     <string name="gutenberg_native_add_title">Adicionar título</string>
     <string name="gutenberg_native_no_preview_available">Nenhuma visualização disponível</string>
+    <string name="gutenberg_native_loading">Carregando</string>
     <string name="gutenberg_native_text_color">Cor do texto</string>
     <string name="gutenberg_native_padding">Recuo</string>
     <string name="gutenberg_native_four">Quatro</string>
