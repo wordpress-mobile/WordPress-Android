@@ -46,6 +46,8 @@ import org.wordpress.android.ui.comments.unified.OnLoadMoreListener
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
 @AndroidEntryPoint
 @Deprecated(
@@ -56,8 +58,8 @@ class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnComm
     ScrollableViewInitializedListener {
 
     @Suppress("DEPRECATION")
-    @JvmField @Inject
-    var mCommentsStoreAdapter: CommentsStoreAdapter? = null
+    @Inject
+    lateinit var mCommentsStoreAdapter: CommentsStoreAdapter
     private lateinit var mViewPager: WPViewPager
     private var mAppBarLayout: AppBarLayout? = null
     private var mProgressBar: ProgressBar? = null
@@ -72,22 +74,17 @@ class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnComm
     private var mIsUpdatingComments = false
     private var mCanLoadMoreComments = true
 
-    companion object {
-        const val COMMENT_ID_EXTRA = "commentId"
-        const val COMMENT_STATUS_FILTER_EXTRA = "commentStatusFilter"
-    }
 
-    @Suppress("DEPRECATION")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mCommentsStoreAdapter!!.register(this)
+        mCommentsStoreAdapter.register(this)
         AppLog.i(AppLog.T.COMMENTS, "Creating CommentsDetailActivity")
         setContentView(R.layout.comments_detail_activity)
 
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val fragment =
-                    supportFragmentManager.findFragmentByTag(CollapseFullScreenDialogFragment.TAG) as CollapseFullScreenDialogFragment?
+                val fragment = supportFragmentManager
+                    .findFragmentByTag(CollapseFullScreenDialogFragment.TAG) as CollapseFullScreenDialogFragment?
                 if (fragment != null) {
                     fragment.collapse()
                 } else {
@@ -108,14 +105,12 @@ class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnComm
 
         if (savedInstanceState == null) {
             mCommentId = intent.getLongExtra(COMMENT_ID_EXTRA, -1)
-            mSite = intent.getSerializableExtra(WordPress.SITE) as SiteModel?
-            mStatusFilter =
-                intent.getSerializableExtra(COMMENT_STATUS_FILTER_EXTRA) as CommentStatus?
+            mSite = requireNotNull(intent.getSerializableExtraCompat(WordPress.SITE))
+            mStatusFilter = requireNotNull(intent.getSerializableExtraCompat(COMMENT_STATUS_FILTER_EXTRA))
         } else {
             mCommentId = savedInstanceState.getLong(COMMENT_ID_EXTRA)
-            mSite = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
-            mStatusFilter =
-                savedInstanceState.getSerializable(COMMENT_STATUS_FILTER_EXTRA) as CommentStatus?
+            mSite = requireNotNull(savedInstanceState.getSerializableCompat(WordPress.SITE))
+            mStatusFilter = requireNotNull(savedInstanceState.getSerializableCompat(COMMENT_STATUS_FILTER_EXTRA))
         }
 
         // set up the viewpager and adapter for lateral navigation
@@ -147,7 +142,7 @@ class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnComm
     }
 
     public override fun onDestroy() {
-        mCommentsStoreAdapter!!.unregister(this)
+        mCommentsStoreAdapter.unregister(this)
         super.onDestroy()
     }
 
@@ -163,6 +158,7 @@ class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnComm
         updateComments()
     }
 
+    @Suppress("ReturnCount")
     private fun updateComments() {
         if (mIsUpdatingComments) {
             AppLog.w(AppLog.T.COMMENTS, "update comments task already running")
@@ -176,7 +172,7 @@ class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnComm
         }
 
         val offset = mAdapter!!.count
-        mCommentsStoreAdapter!!.dispatch(
+        mCommentsStoreAdapter.dispatch(
             CommentActionBuilder.newFetchCommentsAction(
                 FetchCommentsPayload(mSite!!, mStatusFilter!!, COMMENTS_PER_PAGE, offset)
             )
@@ -238,7 +234,7 @@ class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnComm
 
         // Only notify adapter when loading new page
         if (mAdapter != null && mAdapter!!.isAddingNewComments(commentList)) {
-            mAdapter!!.onNewItems(commentList)
+            mAdapter?.onNewItems(commentList)
         } else {
             // If current items change, rebuild the adapter
             mAdapter = CommentDetailFragmentAdapter(
@@ -259,7 +255,7 @@ class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnComm
             mOnPageChangeListener = object : SimpleOnPageChangeListener() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    val comment = mAdapter!!.getCommentAtPosition(position)
+                    val comment = mAdapter?.getCommentAtPosition(position)
                     if (comment != null) {
                         mCommentId = comment.remoteCommentId
                         // track subsequent comment views
@@ -286,7 +282,7 @@ class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnComm
 
     private fun setLoadingState(visible: Boolean) {
         if (mProgressBar != null) {
-            mProgressBar!!.visibility = if (visible) View.VISIBLE else View.GONE
+            mProgressBar?.visibility = if (visible) View.VISIBLE else View.GONE
         }
     }
 
@@ -299,7 +295,12 @@ class CommentsDetailActivity : LocaleAwareActivity(), OnLoadMoreListener, OnComm
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        mAppBarLayout!!.liftOnScrollTargetViewId = containerId
+        mAppBarLayout?.liftOnScrollTargetViewId = containerId
+    }
+
+    companion object {
+        const val COMMENT_ID_EXTRA = "commentId"
+        const val COMMENT_STATUS_FILTER_EXTRA = "commentStatusFilter"
     }
 
 }
