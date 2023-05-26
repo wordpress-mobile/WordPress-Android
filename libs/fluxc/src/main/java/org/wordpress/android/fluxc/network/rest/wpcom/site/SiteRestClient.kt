@@ -1021,6 +1021,7 @@ class SiteRestClient @Inject constructor(
             site.setIsVideoPressSupported(from.options.videopress_enabled)
             site.setIsAutomatedTransfer(from.options.is_automated_transfer)
             site.setIsWpComStore(from.options.is_wpcom_store)
+            site.publishedStatus = from.options.blog_public
             site.hasWooCommerce = from.options.woocommerce_is_active
             site.adminUrl = from.options.admin_url
             site.loginUrl = from.options.login_url
