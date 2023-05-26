@@ -1,0 +1,2 @@
+22.4:
+İç içe bir metin blokuna dokunduğunuzda, bu bloktaki içeriği hemen düzenleyebilirsiniz. Artık gitmek istediğiniz yere ulaşmak için her iç içe seviyeye dokunarak ilerlemeniz gerekmiyor. (Bizim parmaklarımız da yoruluyordu.)

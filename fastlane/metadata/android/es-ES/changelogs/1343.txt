@@ -1,0 +1,2 @@
+22.4:
+Al pulsar en un bloque anidado de texto, puedes editar inmediatamente el contenido de ese bloque - nunca más tendrá que pulsar en en todos los nivele anidados para ir donde quieras (nuestros dedos también se cansan.)

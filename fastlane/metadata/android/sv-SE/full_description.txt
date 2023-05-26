@@ -1,40 +1,40 @@
-Med WordPress för Android har du möjligheten till webbpublicering i fickan. Det är ett verktyg för att skapa webbplatser, och mycket mer!
+WordPress för Android placerar webbpubliceringskraften i din ficka. Det är både ett verktyg för webbplatsbyggande och mycket annat.
 
 SKAPA
-- Visa dina stora idéer på webben. WordPress för Android är ett verktyg för att skapa webbplatser och bloggar.
-- Välj utseende och utformning bland många WordPress-teman och anpassa sedan med bilder, färger och typsnitt så att webbplatsen blir din egen.
-- En inbyggd snabbstartsguide hjälper dig genom den grundläggande konfigurationen för en lyckad webbplats.
+- Ge dina stora idéer ett hem på webben. WordPress för Android är ett verktyg för webbplatsbyggande och bloggskapande.
+- Välj rätt utseende och känsla från ett brett urval av WordPress-teman och anpassa sedan temat med foton, färger och typsnitt som gör det unikt för dig.
+- Den inbyggda snabbstartsguiden vägleder dig genom grunderna för hur du skapar en framgångsrik webbplats.
 
 PUBLICERA
-- Skapa uppdateringar, berättelser, fotorapporter, tillkännagivanden – allt möjligt! – i redigeraren.
-- Gör dina inlägg och sidor levande med fotografier och videoklipp från kameran och dina album. Eller hitta den perfekta illustrationen med appens inbyggda samling proffsbilder som är fria att använda.
-- Spara idéer som utkast och plocka fram dem igen när inspirationen återkommer, eller schemalägg inlägg för framtida publicering för att hålla webbplatsen ständigt uppdaterad och intressant.
-- Lägg till etiketter och kategorier för att hjälpa nya läsare upptäcka dina inlägg, och se din läsekrets växa.
+- Skapa uppdateringar, berättelser, fotorapporter, tillkännagivanden – allt möjligt – med redigeraren.
+- Ge dina inlägg och sidor liv med foton och videoklipp från din kamera och dina album, eller hitta den perfekta bilden med appens inbyggda samling proffsbilder som är gratis att använda.
+- Spara idéer som utkast och plocka fram dem igen när inspirationen kommer tillbaka, eller schemalägg nya inlägg för framtida publicering för att hålla din webbplats uppdaterad och intressant.
+- Lägg till etiketter och kategorier för att hjälpa nya läsare att upptäcka dina inlägg och se hur din läsekrets växer.
 
 STATISTIK
-- Kolla webbplatsens statistik i realtid för att se vad som händer.
-- Se vilka inlägg och sidor som får flest besök över längre tid via insikter per dag, vecka, månad och år.
+- Kontrollera din webbplatsstatistik i realtid för att hålla koll på aktiviteten på din webbplats.
+- Håll koll på vilka inlägg och sidor som får mest trafik över tid genom att utforska dagliga, veckovisa, månatliga och årliga insikter.
 
 NOTISER
-- Få notiser om kommentarer, gillamarkeringar och nya följare, så att du direkt vet om någon lämnar en reaktion på din webbplats.
-- Svara på nya kommentarer direkt för att hålla diskussionen igång och uppmärksamma dina läsare.
+- Få notiser om kommentarer, gilla-markeringar och nya följare, så att du kan se hur folk reagerar på din webbplats i realtid.
+- Svara på nya kommentarer när de publiceras för att hålla konversationen igång och få dina läsare att känna sig sedda.
 
-LÄSAREN
-- Utforska tusentals ämnen via etiketter, hitta nya författare och organisationer och följ dem som väcker ditt intresse.
-- Lägg undan inlägg som fascinerar dig med funktionen ”Spara till senare”.
+LÄSARE
+- Utforska tusentals olika ämnen baserat på etiketter, upptäck nya författare och organisationer och följ bloggar som väcker ditt intresse.
+Håll koll på inlägg som fascinerar dig med funktionen Spara för senare.
 
 DELA
-- Konfigurera automatisk delning till sociala media för att informera följare om nya inlägg.
-- Lägg till knappar för delning på sociala nätverk i dina inlägg, så att dina besökare kan dela dem med sina kontakter och dina fans kan bli dina ambassadörer.
+- Konfigurera automatisk delning för att meddela dina följare på sociala medier när du publicerar ett nytt inlägg.
+- Lägg till delningsknappar för sociala medier i dina inlägg, så att dina besökare kan dela dem med sitt nätverk. Låt dina fans bli dina ambassadörer.
 
 Varför WordPress?
 
-Det finns många bloggtjänster, webbplatsbyggare och sociala nätverk att välja mellan. Varför välja just WordPress?
+Det finns många bloggtjänster, webbplatsbyggare och sociala nätverk där ute. Varför ska du skapa din webbplats med WordPress?
 
-WordPress driver mer än en tredjedel av webben. Det används av hobbybloggare, företag av alla storlekar, e-butiker och även några av de största nyhetstjänsterna internet. Sannolikheten är stor att många av dina favoritwebbplatser använder WordPress.
+WordPress driver mer än en tredjedel av webben. Det används av hobbybloggar, företag av alla storlekar, onlinebutiker och till och med de största nyhetswebbplatserna på internet. Oddsen är att många av dina favoritwebbplatser körs på WordPress.
 
-Med WordPress äger du ditt eget innehåll. Andra sociala nätverk betraktar dig som en handelsvara och tar äganderätt över ditt innehåll. Men med WordPress är allt innehåll du publicerar ditt eget, och du kan ta det med dig vart du själv skulle vilja.
+Med WordPress äger du ditt eget innehåll. Andra sociala nätverk behandlar dig som en vara och övertar ägandet av innehållet du publicerar. Med WordPress är dock allt du publicerar ditt, och du kan ta det med dig vart du vill.
 
-Oavsett om du behöver en webbplatsbyggare för att skapa en egen webbplats, eller en enkel blogg är WordPress rätt. Det har stora designmöjligheter, kraftfulla funktioner och friheten att bygga det du själv vill ha.
+WordPress har vad du behöver, oavsett om du behöver en webbplatsbyggare för att skapa en webbplats eller bara en enkel bloggskapare. Det ger dig vackra designer, kraftfulla funktioner och friheten att bygga vad du vill.
 
-Integritetsinformation för användare i Kalifornien: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.
+Sekretessmeddelande för användare i Kalifornien: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.
