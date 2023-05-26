@@ -2,7 +2,6 @@ package org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.comp
 
 import android.content.res.Configuration
 import androidx.compose.material.Text
-import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
