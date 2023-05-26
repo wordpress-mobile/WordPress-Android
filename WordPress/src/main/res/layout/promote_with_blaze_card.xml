@@ -54,7 +54,7 @@
                 tools:text="@string/promote_blaze_card_title" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/card_detail"
+                android:id="@+id/my_site_promote_with_blaze_card_sub_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/margin_medium"
