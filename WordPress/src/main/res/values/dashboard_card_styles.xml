@@ -121,11 +121,6 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="MySiteCardBloggingPromptAvatar">
-        <item name="android:layout_width">@dimen/avatar_sz_extra_small</item>
-        <item name="android:layout_height">@dimen/avatar_sz_extra_small</item>
-    </style>
-
     <!--My Site Card - Quick start card -->
     <style name="MySiteCardQuickStartItemTitle" parent="DashboardCardSubtitle">
         <item name="android:textAlignment">viewStart</item>
