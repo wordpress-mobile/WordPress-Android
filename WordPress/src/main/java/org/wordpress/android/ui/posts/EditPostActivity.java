@@ -2354,7 +2354,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean enableXPosts = mSite.isUsingWpComRestApi() && (mIsXPostsCapable == null || mIsXPostsCapable);
 
         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
-        Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
+        Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle(mSite) : null;
 
         boolean isUnsupportedBlockEditorEnabled =
                 mSite.isWPCom() || mIsJetpackSsoEnabled;
@@ -3715,7 +3715,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (editorTheme == null) return;
         EditorThemeSupport editorThemeSupport = editorTheme.getThemeSupport();
         ((EditorThemeUpdateListener) mEditorFragment)
-                    .onEditorThemeUpdated(editorThemeSupport.toBundle());
+                    .onEditorThemeUpdated(editorThemeSupport.toBundle(mSite));
 
         mPostEditorAnalyticsSession
                 .editorSettingsFetched(editorThemeSupport.isBlockBasedTheme(), event.getEndpoint().getValue());
