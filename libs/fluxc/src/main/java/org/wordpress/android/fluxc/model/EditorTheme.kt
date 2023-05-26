@@ -49,15 +49,15 @@ data class EditorTheme(
             version = null
     )
 
-    fun toBuilder(siteId: Int): EditorThemeBuilder {
+    fun toBuilder(site: SiteModel): EditorThemeBuilder {
         val element = EditorThemeBuilder()
-        element.localSiteId = siteId
+        element.localSiteId = site.id
         element.stylesheet = stylesheet
         element.version = version
         element.rawStyles = themeSupport.rawStyles
         element.rawFeatures = themeSupport.rawFeatures
         element.isBlockBasedTheme = themeSupport.isBlockBasedTheme
-        element.galleryWithImageBlocks = themeSupport.galleryWithImageBlocks
+        element.galleryWithImageBlocks = themeSupport.galleryWithImageBlocks ?: site.coreSupportsGalleryV2
         element.quoteBlockV2 = themeSupport.quoteBlockV2
         element.listBlockV2 = themeSupport.listBlockV2
         element.hasBlockTemplates = themeSupport.hasBlockTemplates ?: false
@@ -97,11 +97,11 @@ data class EditorThemeSupport(
     val rawStyles: String?,
     val rawFeatures: String?,
     val isBlockBasedTheme: Boolean,
-    val galleryWithImageBlocks: Boolean,
+    val galleryWithImageBlocks: Boolean?,
     val quoteBlockV2: Boolean,
     val listBlockV2: Boolean
 ) {
-    fun toBundle(): Bundle {
+    fun toBundle(site: SiteModel): Bundle {
         val bundle = Bundle()
 
         colors?.map { it.toBundle() }?.let {
@@ -121,7 +121,7 @@ data class EditorThemeSupport(
         }
 
         bundle.putBoolean(MAP_KEY_IS_BLOCK_BASED_THEME, isBlockBasedTheme)
-        bundle.putBoolean(MAP_KEY_GALLERY_WITH_IMAGE_BLOCKS, galleryWithImageBlocks)
+        bundle.putBoolean(MAP_KEY_GALLERY_WITH_IMAGE_BLOCKS, galleryWithImageBlocks ?: site.coreSupportsGalleryV2)
         bundle.putBoolean(MAP_KEY_QUOTE_BLOCK_V2, quoteBlockV2)
         bundle.putBoolean(MAP_KEY_LIST_BLOCK_V2, listBlockV2)
         bundle.putBoolean(MAP_KEY_HAS_BLOCK_TEMPLATES, hasBlockTemplates ?: false)
@@ -130,7 +130,6 @@ data class EditorThemeSupport(
     }
     fun isEditorThemeBlockBased(): Boolean = isBlockBasedTheme || (hasBlockTemplates ?: false)
 }
-
 
 data class EditorThemeElement(
     val name: String?,
