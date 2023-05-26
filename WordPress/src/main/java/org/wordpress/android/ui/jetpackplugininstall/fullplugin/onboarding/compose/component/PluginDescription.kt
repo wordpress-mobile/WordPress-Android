@@ -27,18 +27,13 @@ fun PluginDescription(
     Text(
         modifier = modifier,
         text = buildPluginDescriptionText(pluginNames, siteString, useConciseText),
-        style = dashboardCardDetailText.body2,
+        style = dashboardCardDetail,
         color = colorResource(R.color.material_on_surface_emphasis_medium)
     )
 }
-// todo : improve this logic
 
 val dashboardCardDetail = TextStyle(
         fontWeight = FontWeight.Normal,
-)
-
-val dashboardCardDetailText = Typography(
-    body2 = dashboardCardDetail,
 )
 
 @ReadOnlyComposable
