@@ -1,4 +1,7 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
+22.5
+-----
+* [**] Check required WordPress version to set galleryWithImageBlocks flag [https://github.com/wordpress-mobile/WordPress-Android/pull/18518]
 
 22.5
 -----
