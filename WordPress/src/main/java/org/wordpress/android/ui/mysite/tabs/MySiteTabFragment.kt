@@ -403,11 +403,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             action.site,
             CTA_DOMAIN_CREDIT_REDEMPTION
         )
-        is SiteNavigationAction.OpenFreeDomainSearch -> ActivityLauncher.viewDomainRegistrationActivityForResult(
-            activity,
-            action.site,
-            FREE_DOMAIN_WITH_ANNUAL_PLAN
-        )
+        is SiteNavigationAction.OpenFreeDomainSearch ->
+            ActivityLauncher.viewPlanWithFreeDomainRegistrationActivityForResult(
+                this,
+                action.site,
+                FREE_DOMAIN_WITH_ANNUAL_PLAN
+            )
         is SiteNavigationAction.OpenPaidDomainSearch -> ActivityLauncher.viewDomainRegistrationActivityForResult(
             this,
             action.site,
