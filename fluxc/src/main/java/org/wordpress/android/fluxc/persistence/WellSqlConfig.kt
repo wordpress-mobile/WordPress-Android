@@ -8,7 +8,6 @@ import android.preference.PreferenceManager
 import android.view.Gravity
 import android.widget.Toast
 import androidx.annotation.StringDef
-import com.wellsql.generated.EditorThemeTable
 import com.yarolegovich.wellsql.DefaultWellConfig
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.WellTableManager
@@ -37,7 +36,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 187
+        return 188
     }
 
     override fun getDbName(): String {
@@ -1945,6 +1944,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 186 -> migrate(version) {
                     db.execSQL("ALTER TABLE AccountModel ADD USER_IP_COUNTRY_CODE TEXT")
+                }
+                187 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD PUBLISHED_STATUS INTEGER")
                 }
             }
         }
