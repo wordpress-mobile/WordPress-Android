@@ -773,4 +773,7 @@
     <dimen name="dashboard_card_plans_layout_padding">16dp</dimen>
     <dimen name="dashboard_card_plans_top_margin">48dp</dimen>
     <dimen name="dashboard_card_plans_done_button_bottom_margin">16dp</dimen>
+
+    <!-- Jetpack plans purchase -->
+    <dimen name="plans_purchase_success_title">32sp</dimen>
 </resources>
