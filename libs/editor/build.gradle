@@ -70,7 +70,7 @@ dependencies {
 
     // Forcing version due to https://github.com/facebook/SoLoader/issues/94
     // To be removed with React Native 0.70+
-    implementation("com.facebook.soloader:soloader") {
+    implementation("com.facebook.soloader:soloader:$facebookSoloaderVersion") {
         version {
             strictly facebookSoloaderVersion
         }
