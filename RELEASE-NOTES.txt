@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+22.6
+-----
+
+
 22.5
 -----
 * [**] [Jetpack-only] Block Editor: Enable VideoPress block (only on Simple WPCOM sites) [https://github.com/wordpress-mobile/WordPress-Android/pull/18440]
