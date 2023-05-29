@@ -65,7 +65,7 @@ class EditorThemeSqlUtils {
     }
 
     private fun makeEditorTheme(site: SiteModel, editorTheme: EditorTheme) {
-        val editorThemeBuilder = editorTheme.toBuilder(site.id)
+        val editorThemeBuilder = editorTheme.toBuilder(site)
         val items = (editorTheme.themeSupport.colors ?: emptyList()) +
                 (editorTheme.themeSupport.gradients ?: emptyList())
 
