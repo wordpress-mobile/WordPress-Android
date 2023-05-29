@@ -81,6 +81,7 @@ ext {
 
     // react native
     facebookSoloaderVersion = '0.10.4'
+    facebookFrescoVersion = '2.5.0'
 
     // test
     assertjVersion = '3.23.1'
