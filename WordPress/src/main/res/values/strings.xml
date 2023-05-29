@@ -2637,9 +2637,6 @@
     <string name="domain_contact_information_state_not_available_hint">State (Not Available)</string>
     <string name="domain_contact_information_postal_code_hint">Postal code</string>
     <string name="domain_contact_information_register_domain_button">Register domain</string>
-    <string name="domain_registration_result_title">Congratulations on your purchase!</string>
-    <string name="domain_registration_result_description">Your new domain &lt;b&gt;%s&lt;/b&gt; is being set up. It may take up to 30 minutes for your domain to start working.</string>
-    <string name="domain_registration_result_continue_button" translatable="false">@string/label_done_button</string>
     <string name="domain_registration_country_picker_dialog_title">Select Country</string>
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
@@ -4496,6 +4493,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="dashboard_card_plans_title">Free domain with annual plan</string>
     <string name="dashboard_card_plans_sub_title">Get a free domain for the first year, remove ads on your site, and increase your storage.</string>
     <string name="dashboard_card_plans_menu_hide_this">Hide this</string>
+    <string name="dashboard_card_plans_checkout_success_title">All ready to go!</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">Your new domain &lt;b&gt;%s&lt;/b&gt; is being set up.</string>
+    <string name="dashboard_card_plans_checkout_success_info">It may take up to 30 minutes for your domain to start working properly.</string>
+
 
     <!-- Promote Blaze Card-->
     <string name="promote_blaze_card_title">Promote your content with Blaze</string>

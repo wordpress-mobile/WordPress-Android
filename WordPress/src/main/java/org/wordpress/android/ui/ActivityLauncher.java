@@ -780,6 +780,15 @@ public class ActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
     }
 
+    public static void viewPlanWithFreeDomainRegistrationActivityForResult(
+            Fragment fragment,
+            @NonNull SiteModel site,
+            @NonNull DomainRegistrationPurpose purpose
+    ) {
+        Intent intent = createDomainRegistrationActivityIntent(fragment.getContext(), site, purpose);
+        fragment.startActivityForResult(intent, RequestCodes.PLAN_PURCHASE_WITH_FREE_DOMAIN);
+    }
+
     private static Intent createDomainRegistrationActivityIntent(Context context, @NonNull SiteModel site,
                                                                    @NonNull DomainRegistrationPurpose purpose) {
         Intent intent = new Intent(context, DomainRegistrationActivity.class);
