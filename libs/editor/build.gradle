@@ -79,8 +79,8 @@ dependencies {
     implementation "com.facebook.fresco:fresco:$facebookFrescoVersion"
     implementation "com.facebook.fresco:imagepipeline-okhttp3:$facebookFrescoVersion"
     implementation "com.facebook.fbjni:fbjni:$facebookFbjniVersion"
-    implementation 'com.facebook.react:hermes-engine:0.69.4:release@aar'
-    implementation 'com.facebook.react:react-native:0.69.4:release@aar'
+    implementation "com.facebook.react:hermes-engine:$facebookReactVersion"
+    implementation "com.facebook.react:react-native:$facebookReactVersion"
 
     // This dependency will be substituted if the `local-builds.gradle` file contains
     // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.

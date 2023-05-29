@@ -80,6 +80,7 @@ ext {
     zendeskVersion = '5.1.2'
 
     // react native
+    facebookReactVersion = '0.69.4:release@aar'
     facebookSoloaderVersion = '0.10.4'
     facebookFrescoVersion = '2.5.0'
     facebookFbjniVersion = '0.2.2'
