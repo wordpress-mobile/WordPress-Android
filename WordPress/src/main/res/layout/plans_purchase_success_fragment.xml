@@ -36,7 +36,7 @@
             android:text="@string/dashboard_card_plans_checkout_success_title"
             android:textAlignment="viewStart"
             android:textFontWeight="700"
-            android:textSize="@dimen/m3_sys_typescale_headline_large_text_size"
+            android:textSize="@dimen/text_sz_extra_extra_large"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/illustration_view"
