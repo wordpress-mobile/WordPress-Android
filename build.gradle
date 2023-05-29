@@ -79,6 +79,9 @@ ext {
     uCropVersion = '2.2.8'
     zendeskVersion = '5.1.2'
 
+    // react native
+    facebookSoloaderVersion = '0.10.4'
+
     // test
     assertjVersion = '3.23.1'
     junitVersion = '4.13.2'

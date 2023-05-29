@@ -72,7 +72,7 @@ dependencies {
     // To be removed with React Native 0.70+
     implementation("com.facebook.soloader:soloader") {
         version {
-            strictly '0.10.4'
+            strictly facebookSoloaderVersion
         }
     }
 
