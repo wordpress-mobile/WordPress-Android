@@ -6,9 +6,9 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.FirebaseRemoteConfigWrapper
 import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig
+import org.wordpress.android.util.config.RemoteConfigWrapper
 import java.util.Date
 import javax.inject.Inject
 
@@ -16,10 +16,10 @@ import javax.inject.Inject
 class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     private val openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val firebaseRemoteConfigWrapper: FirebaseRemoteConfigWrapper,
     private val packageManagerWrapper: PackageManagerWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val buildConfigWrapper: BuildConfigWrapper
+    private val buildConfigWrapper: BuildConfigWrapper,
+    private val remoteConfigWrapper: RemoteConfigWrapper
 ) {
     fun shouldShowOpenLinksInJetpackOverlay() = showOverlay()
 
@@ -76,7 +76,7 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     }
 
     private fun hasExceededOverlayFrequency(): Boolean {
-        val frequency = firebaseRemoteConfigWrapper.getOpenWebLinksWithJetpackFlowFrequency()
+        val frequency = remoteConfigWrapper.getOpenWebLinksWithJetpackFlowFrequency()
         if (frequency == 0L) return false // Only show the overlay 1X and it's already been shown do not show again
 
         val lastShownDate = Date(getOpenWebLinksWithJetpackOverlayLastShownTimestamp())
