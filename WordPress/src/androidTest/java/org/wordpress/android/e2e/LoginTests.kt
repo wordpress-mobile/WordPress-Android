@@ -41,11 +41,15 @@ class LoginTests : BaseTest() {
 
     @Test
     fun e2eLoginWithMagicLink() {
-        LoginFlow().chooseContinueWithWpCom(super.mComposeTestRule)
-            .enterEmailAddress(BuildConfig.E2E_WP_COM_USER_EMAIL)
-            .chooseMagicLink()
-            .openMagicLink()
-            .confirmLogin(false)
+        try {
+            LoginFlow().chooseContinueWithWpCom(super.mComposeTestRule)
+                .enterEmailAddress(BuildConfig.E2E_WP_COM_USER_EMAIL)
+                .chooseMagicLink()
+                .openMagicLink()
+                .confirmLogin(false)
+        } finally {
+            logoutIfNecessary()
+        }
     }
 
     @Test
