@@ -10,6 +10,7 @@
 * [**] Block editor: Fix undo/redo history when inserting a link configured to open in a new tab [https://github.com/WordPress/gutenberg/pull/50460]
 * [**] [Jetpack-only] Block editor: Disable details settings for not belonged VideoPress videos [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5782]
 * [*] Block editor: [List block] Fix an issue when merging a list item into a Paragraph would remove its nested list items [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5785]
+* [*] Block editor: [Gallery block] Fixes a compatibility issue with Gallery block [https://github.com/wordpress-mobile/WordPress-Android/pull/18519]
 
 22.4
 -----
