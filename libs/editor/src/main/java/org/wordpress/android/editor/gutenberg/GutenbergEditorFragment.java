@@ -294,12 +294,20 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
                     @Override
                     public void onRetryUploadForMediaClicked(int mediaId) {
-                        showRetryMediaUploadDialog(mediaId);
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                showRetryMediaUploadDialog(mediaId);
+                            });
+                        }
                     }
 
                     @Override
                     public void onCancelUploadForMediaClicked(int mediaId) {
-                        showCancelMediaUploadDialog(mediaId);
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                showCancelMediaUploadDialog(mediaId);
+                            });
+                        }
                     }
 
                     @Override
@@ -464,15 +472,27 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     @Override public void onCancelUploadForMediaCollection(ArrayList<Object> mediaFiles) {
-                        showCancelMediaCollectionUploadDialog(mediaFiles);
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                showCancelMediaCollectionUploadDialog(mediaFiles);
+                            });
+                        }
                     }
 
                     @Override public void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles) {
-                        showRetryMediaCollectionUploadDialog(mediaFiles);
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                showRetryMediaCollectionUploadDialog(mediaFiles);
+                            });
+                        }
                     }
 
                     @Override public void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles) {
-                        showCancelMediaCollectionSaveDialog(mediaFiles);
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                showCancelMediaCollectionSaveDialog(mediaFiles);
+                            });
+                        }
                     }
 
                     @Override public void onMediaFilesBlockReplaceSync(ArrayList<Object> mediaFiles, String blockId) {
