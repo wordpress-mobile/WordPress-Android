@@ -21,6 +21,7 @@ import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -848,6 +849,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    @UiThread
     private void showCancelMediaUploadDialog(final int localMediaId) {
         // Display 'cancel upload' dialog
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
@@ -879,6 +881,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         dialog.show();
     }
 
+    @UiThread
     private void showRetryMediaUploadDialog(final int mediaId) {
         // Display 'retry upload' dialog
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
@@ -908,6 +911,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         dialog.show();
     }
 
+    @UiThread
     public void showFeaturedImageConfirmationDialog(final int mediaId) {
         GutenbergDialogFragment dialog = new GutenbergDialogFragment();
         dialog.initialize(
@@ -937,6 +941,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         getGutenbergContainerFragment().sendToJSFeaturedImageId(mediaId);
     }
 
+    @UiThread
     private void showCancelMediaCollectionUploadDialog(ArrayList<Object> mediaFiles) {
         // Display 'cancel upload' dialog
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
@@ -969,6 +974,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         dialog.show();
     }
 
+    @UiThread
     private void showRetryMediaCollectionUploadDialog(ArrayList<Object> mediaFiles) {
         // Display 'retry upload' dialog
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
@@ -991,6 +997,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         dialog.show();
     }
 
+    @UiThread
     private void showCancelMediaCollectionSaveDialog(ArrayList<Object> mediaFiles) {
         // Display 'cancel upload' dialog
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
@@ -1360,6 +1367,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void removeMedia(String mediaId) {
     }
 
+    @UiThread
     private boolean showSavingProgressDialogIfNeeded() {
         if (!isAdded()) {
             return false;
