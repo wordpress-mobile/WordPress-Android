@@ -1,6 +1,7 @@
 pluginManagement {
     gradle.ext.kotlinVersion = '1.8.21'
     gradle.ext.agpVersion = '7.2.1'
+    gradle.ext.googleServicesVersion = '4.3.15'
     gradle.ext.navigationVersion = '2.4.2'
     gradle.ext.daggerVersion = "2.46.1"
     gradle.ext.detektVersion = '1.21.0'
@@ -14,7 +15,7 @@ pluginManagement {
         id "org.jetbrains.kotlin.plugin.allopen" version gradle.ext.kotlinVersion
         id "com.android.application" version gradle.ext.agpVersion
         id "com.android.library" version gradle.ext.agpVersion
-        id 'com.google.gms.google-services' version '4.3.15'
+        id 'com.google.gms.google-services' version gradle.ext.googleServicesVersion
         id "androidx.navigation.safeargs.kotlin" version gradle.ext.navigationVersion
         id "io.sentry.android.gradle" version "3.5.0"
         id "io.gitlab.arturbosch.detekt" version gradle.ext.detektVersion
