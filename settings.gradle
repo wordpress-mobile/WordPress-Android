@@ -3,7 +3,7 @@ pluginManagement {
     gradle.ext.agpVersion = '7.2.1'
     gradle.ext.daggerVersion = "2.46.1"
     gradle.ext.detektVersion = '1.21.0'
-    gradle.ext.navComponentVersion = '2.4.2'
+    gradle.ext.navigationVersion = '2.4.2'
 
     plugins {
         id "org.jetbrains.kotlin.android" version gradle.ext.kotlinVersion
@@ -18,7 +18,7 @@ pluginManagement {
         id "io.sentry.android.gradle" version "3.5.0"
         id "io.gitlab.arturbosch.detekt" version gradle.ext.detektVersion
         id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" version "1.67"
-        id "androidx.navigation.safeargs.kotlin" version gradle.ext.navComponentVersion
+        id "androidx.navigation.safeargs.kotlin" version gradle.ext.navigationVersion
     }
     repositories {
         maven {
