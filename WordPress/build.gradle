@@ -423,7 +423,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-process:$androidxLifecycleVersion"
     implementation "com.android.volley:volley:$androidVolleyVersion"
-    implementation "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"
     implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
     implementation "com.google.android.gms:play-services-code-scanner:$googlePlayServicesCodeScannerVersion"
     implementation "com.google.mlkit:barcode-scanning-common:$googleMLKitBarcodeScanningVersion"
@@ -519,6 +518,14 @@ dependencies {
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$androidDesugarVersion"
     lintChecks "org.wordpress:lint:$wordPressLintVersion"
+
+    // Firebase
+    def firebaseBom = platform("com.google.firebase:firebase-bom:$firebaseBomVersion")
+    implementation(firebaseBom)
+    // Firebase - Main
+    implementation "com.google.firebase:firebase-messaging"
+    // Firebase - Deprecated
+    implementation "com.google.firebase:firebase-iid:$firebaseIidVersion"
 
     // Jetpack Compose
     def composeBom = platform("androidx.compose:compose-bom:$androidxComposeBomVersion")
