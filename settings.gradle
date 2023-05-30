@@ -2,7 +2,7 @@ pluginManagement {
     gradle.ext.kotlinVersion = '1.8.21'
     gradle.ext.agpVersion = '7.2.1'
     gradle.ext.googleServicesVersion = '4.3.15'
-    gradle.ext.navigationVersion = '2.4.2'
+    gradle.ext.navigationVersion = '2.5.3'
     gradle.ext.sentryVersion = '3.5.0'
     gradle.ext.daggerVersion = "2.46.1"
     gradle.ext.detektVersion = '1.21.0'
