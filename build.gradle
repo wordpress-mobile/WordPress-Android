@@ -60,7 +60,6 @@ ext {
     firebaseBomVersion = '32.1.0'
     firebaseIidVersion = '21.1.0'
     glideVersion = '4.10.0'
-    glideVolleyVersion = '4.6.1@aar'
     googleAutoServiceVersion = '1.0.1'
     googleExoPlayerVersion = '2.13.3'
     googleFlexboxlayoutVersion = '3.0.0'
