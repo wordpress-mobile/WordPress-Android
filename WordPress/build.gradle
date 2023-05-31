@@ -149,6 +149,7 @@ android {
         buildConfigField "boolean", "DASHBOARD_CARD_DOMAIN", "false"
         buildConfigField "boolean", "DASHBOARD_CARD_FREE_TO_PAID_PLANS", "false"
         buildConfigField "boolean", "SITE_EDITOR_MVP", "false"
+        buildConfigField "boolean", "JETPACK_SOCIAL", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
