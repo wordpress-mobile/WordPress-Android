@@ -3,6 +3,7 @@
 22.6
 -----
 
+* [*] [internal] Block editor: Upgrade Android 13 [https://github.com/wordpress-mobile/WordPress-Android/pull/18477]
 
 22.5
 -----
