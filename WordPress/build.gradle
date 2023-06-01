@@ -149,6 +149,7 @@ android {
         buildConfigField "boolean", "DASHBOARD_CARD_DOMAIN", "false"
         buildConfigField "boolean", "DASHBOARD_CARD_FREE_TO_PAID_PLANS", "false"
         buildConfigField "boolean", "SITE_EDITOR_MVP", "false"
+        buildConfigField "boolean", "JETPACK_SOCIAL", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -163,6 +164,7 @@ android {
         buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
         buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
         buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
+        buildConfigField "boolean", "BLAZE_MANAGE_CAMPAIGNS", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -422,7 +424,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-process:$androidxLifecycleVersion"
     implementation "com.android.volley:volley:$androidVolleyVersion"
-    implementation "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"
     implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
     implementation "com.google.android.gms:play-services-code-scanner:$googlePlayServicesCodeScannerVersion"
     implementation "com.google.mlkit:barcode-scanning-common:$googleMLKitBarcodeScanningVersion"
@@ -518,6 +519,14 @@ dependencies {
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$androidDesugarVersion"
     lintChecks "org.wordpress:lint:$wordPressLintVersion"
+
+    // Firebase
+    def firebaseBom = platform("com.google.firebase:firebase-bom:$firebaseBomVersion")
+    implementation(firebaseBom)
+    // Firebase - Main
+    implementation "com.google.firebase:firebase-messaging"
+    // Firebase - Deprecated
+    implementation "com.google.firebase:firebase-iid:$firebaseIidVersion"
 
     // Jetpack Compose
     def composeBom = platform("androidx.compose:compose-bom:$androidxComposeBomVersion")

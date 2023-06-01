@@ -18,6 +18,14 @@ updates:
       # Bumping 2.26.3 to 2.27.2 will break the mocks. For more details, see
       # https://github.com/wiremock/wiremock/issues/1345#issuecomment-656060968
       - dependency-name: "com.github.tomakehurst:wiremock"
+      # List of React Native related dependencies that should be explicitly updated alongside a
+      # React Native upgrade. For more details, see
+      # https://github.com/wordpress-mobile/WordPress-Android/pull/18494#issuecomment-1566922244
+      - dependency-name: "com.facebook.react:react-native"
+      - dependency-name: "com.facebook.react:hermes-engine"
+      - dependency-name: "com.facebook.fresco:fresco"
+      - dependency-name: "com.facebook.fresco:imagepipeline-okhttp3"
+      - dependency-name: "com.facebook.fbjni:fbjni"
       # Our libraries that are stored in S3 have a custom versioning scheme which doesn't work with
       # dependapot.
       - dependency-name: "org.wordpress:fluxc"
