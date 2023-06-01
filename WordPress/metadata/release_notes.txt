@@ -1,8 +1,5 @@
-* [***] Enables editing of the site homepage for sites using block-based themes directly from the pages list. [https://github.com/wordpress-mobile/WordPress-Android/pull/18454]
-* [*] Adds a button to enable account closure from the account settings screen [https://github.com/wordpress-mobile/WordPress-Android/pull/18412]
-* [*] Fixes an issue on the plugins screen [https://github.com/wordpress-mobile/WordPress-Android/pull/18498]
-* [*] Block editor: Add disabled style to `Cell` component [https://github.com/WordPress/gutenberg/pull/50665]
-* [**] Block editor: Fix undo/redo history when inserting a link configured to open in a new tab [https://github.com/WordPress/gutenberg/pull/50460]
-* [*] Block editor: [List block] Fix an issue when merging a list item into a Paragraph would remove its nested list items [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5785]
-* [*] Block editor: [Gallery block] Fixes a compatibility issue with Gallery block [https://github.com/wordpress-mobile/WordPress-Android/pull/18519]
-* [**] Block editor: Tapping any type of nested block moves focus to the nested block directly, rather than requiring multiple taps to navigate down each nesting levels. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5781]
+- Home page editable from Pages list on sites with block-based themes
+- Undo/redo post-link text when setting links to open in new tab
+- Tap-to-edit available for all nested block types
+- Accounts closable from account settings screen
+- Bug fixes in block editor and plugin screen

@@ -10,16 +10,20 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
+msgctxt "release_note_225"
+msgid ""
+"22.5:\n"
+"- Home page editable from Pages list on sites with block-based themes\n"
+"- Undo/redo post-link text when setting links to open in new tab\n"
+"- Tap-to-edit available for all nested block types\n"
+"- Accounts closable from account settings screen\n"
+"- Bug fixes in block editor and plugin screen\n"
+msgstr ""
+
 msgctxt "release_note_224"
 msgid ""
 "22.4:\n"
 "When you tap on a nested text block, you can immediately edit content in that block—no more tapping through every nesting level to get where you want to go. (Our fingers were getting tired, too.)\n"
-msgstr ""
-
-msgctxt "release_note_223"
-msgid ""
-"22.3:\n"
-"No updates this week, but we’re hard at work on a pressing feature we know you’ll enjoy.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
