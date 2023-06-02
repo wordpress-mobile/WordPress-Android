@@ -111,19 +111,13 @@ class UploadStarterTest : BaseUnitTest() {
     )
     private val draftPages = sitesAndDraftPages.values.flatten()
 
-    private val siteStore = mock<SiteStore> {
-        on { sites } doReturn sites
-    }
-    private val postStore = mock<PostStore> {
-        sites.forEach {
-            on { getPostsWithLocalChanges(eq(it)) } doReturn sitesAndDraftPosts.getValue(it)
-        }
+    private val siteStoreDefaultMock = mock<SiteStore> { on { sites } doReturn sites }
+    private val postStoreDefaultMock = mock<PostStore> {
+        sites.forEach { on { getPostsWithLocalChanges(eq(it)) } doReturn sitesAndDraftPosts.getValue(it) }
     }
 
-    private val pageStore = mock<PageStore> {
-        sites.forEach {
-            onBlocking { getPagesWithLocalChanges(eq(it)) } doReturn sitesAndDraftPages.getValue(it)
-        }
+    private val pageStoreDefaultMock = mock<PageStore> {
+        sites.forEach { onBlocking { getPagesWithLocalChanges(eq(it)) } doReturn sitesAndDraftPages.getValue(it) }
     }
 
     private lateinit var mutex: Mutex
@@ -252,7 +246,6 @@ class UploadStarterTest : BaseUnitTest() {
         val expectedInvocations = (draftPosts.size + draftPages.size) * 2
         verify(uploadServiceFacade, times(expectedInvocations)).uploadPost(any(), any<PostModel>(), any())
     }
-
 
     @Test
     fun `when uploading a single site, only posts & pages of that site are uploaded`() {
@@ -549,8 +542,8 @@ class UploadStarterTest : BaseUnitTest() {
     }
 
     private fun defaultSetup(siteModel: SiteModel, postModel: PostModel) = test {
-        whenever(postStore.getPostsWithLocalChanges(any())).thenReturn(listOf(postModel))
-        whenever(pageStore.getPagesWithLocalChanges(siteModel)).thenReturn(listOf())
+        whenever(postStoreDefaultMock.getPostsWithLocalChanges(any())).thenReturn(listOf(postModel))
+        whenever(pageStoreDefaultMock.getPagesWithLocalChanges(siteModel)).thenReturn(listOf())
     }
 
     private fun createUploadStarter(
@@ -558,7 +551,10 @@ class UploadStarterTest : BaseUnitTest() {
         uploadServiceFacade: UploadServiceFacade = this.uploadServiceFacade,
         postUtilsWrapper: PostUtilsWrapper = createMockedPostUtilsWrapper(),
         uploadStore: UploadStore = createMockedUploadStore(0),
-        dispatcher: Dispatcher = mock()
+        dispatcher: Dispatcher = mock(),
+        postStore: PostStore = postStoreDefaultMock,
+        pageStore: PageStore = pageStoreDefaultMock,
+        siteStore: SiteStore = siteStoreDefaultMock,
     ) = run {
         resetTestPostIdIndex()
         UploadStarter(
