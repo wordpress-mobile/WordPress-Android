@@ -283,19 +283,20 @@ class MySitesPage {
     }
 
     private fun scrollToCard(elementID: Int): MySitesPage {
-        WPSupportUtils.waitForElementToBeDisplayed(elementID)
         Espresso.onView(ViewMatchers.withId(elementID))
             .perform(scrollTo())
 
         return this
     }
 
-    fun scrollToDomainsCard(): MySitesPage {
-        return scrollToCard(R.id.dashboard_card_domain_cta)
-    }
-
     private fun tapCard(elementID: Int) {
         WPSupportUtils.clickOn(elementID)
+    }
+
+    // "Domains" Dashboard Card
+
+    fun scrollToDomainsCard(): MySitesPage {
+        return scrollToCard(R.id.dashboard_card_domain_cta)
     }
 
     fun tapDomainsCard(): DomainsScreen {
@@ -313,7 +314,6 @@ class MySitesPage {
 
                 ViewMatchers.hasDescendant(
                     Matchers.allOf(
-
                         ViewMatchers.withText(R.string.dashboard_card_domain_title),
                         ViewMatchers.withId(R.id.dashboard_card_domain_title),
                     )
@@ -324,8 +324,64 @@ class MySitesPage {
                         ViewMatchers.withText(R.string.dashboard_card_domain_sub_title),
                         ViewMatchers.withId(R.id.dashboard_card_domain_sub_title),
                     )
+                )
+            )
+        )
+            .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+
+        return this
+    }
+
+    // "Pages" Dashboard Card
+
+    fun scrollToPagesCard(): MySitesPage {
+        return scrollToCard(R.id.dashboard_card_pages)
+    }
+
+    fun tapPagesCard(): PagesScreen {
+        tapCard(R.id.dashboard_card_pages)
+        return PagesScreen()
+    }
+
+    fun assertPagesCard(): MySitesPage {
+        Espresso.onView(
+            Matchers.allOf(
+                ViewMatchers.withId(R.id.dashboard_card_pages),
+                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.dashboard_cards)),
+
+                ViewMatchers.hasDescendant(
+                    Matchers.allOf(
+                        ViewMatchers.withText(R.string.dashboard_pages_card_title),
+                        ViewMatchers.withId(R.id.my_site_card_toolbar_title),
+                    )
                 ),
 
+                ViewMatchers.hasDescendant(ViewMatchers.withId(R.id.my_site_card_toolbar_more)),
+
+                ViewMatchers.hasDescendant(
+                    Matchers.allOf(
+                        ViewMatchers.withText(R.string.dashboard_pages_card_create_another_page_button),
+                        ViewMatchers.withId(R.id.link_label),
+                    )
+                )
+            )
+        )
+            .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+
+        return this
+    }
+
+    fun assertPagesCardHasPage(pageTitle: String): MySitesPage {
+        Espresso.onView(
+            Matchers.allOf(
+                ViewMatchers.withId(R.id.dashboard_card_pages),
+
+                ViewMatchers.hasDescendant(
+                    Matchers.allOf(
+                        ViewMatchers.withText(pageTitle),
+                        ViewMatchers.withId(R.id.title),
+                    )
+                )
             )
         )
             .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
