@@ -1132,7 +1132,6 @@ public class AccountRestClient extends BaseWPComRestClient {
         account.setSiteCount(from.site_count);
         account.setVisibleSiteCount(from.visible_site_count);
         account.setHasUnseenNotes(from.has_unseen_notes);
-        account.setUserIpCountryCode(from.user_ip_country_code);
         return account;
     }
 
