@@ -5,8 +5,11 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
@@ -233,18 +236,34 @@ class UploadStarterTest : BaseUnitTest() {
 
     @Test
     fun `given an unexpected mutex unlock, when uploading, then all other sites are uploaded`() = test {
-        val starter = createUploadStarter()
-        val unlockPoint = draftPosts.first()
-        whenever(uploadServiceFacade.uploadPost(any(), eq(unlockPoint), any())).thenAnswer { mutex.unlock() }
-
-        launch {
-            starter.queueUploadFromSite(sites[0])
-            starter.queueUploadFromSite(sites[1])
+        val sites = createSiteModel() to createSiteModel()
+        val starter = createUploadStarter(
+            postStore = mock {
+                resetTestPostIdIndex()
+                val posts = createLocallyChangedPostModel() to createLocallyChangedPostModel()
+                on { getPostsWithLocalChanges(sites.first) } doReturn listOf(posts.first)
+                on { getPostsWithLocalChanges(sites.second) } doReturn listOf(posts.second)
+            },
+            pageStore = mock { onBlocking { getPagesWithLocalChanges(any()) } doReturn emptyList() },
+            siteStore = mock { on { this@on.sites } doReturn sites.toList() },
+        )
+        val jobs = mutableListOf<Job>()
+        // whenever(uploadServiceFacade.uploadPost(any(), eq(posts.second), any())).thenAnswer { mutex.unlock() }
+        jobs += launch {
+            starter.queueUploadFromSite(sites.first)
+        } // 0
+        jobs += launch {
+            delay(1500)
+            starter.queueUploadFromSite(sites.second)
+            delay(500)
+        } // 1
+        jobs[1].cancel()
+        jobs += launch {
             starter.queueUploadFromAllSites()
-        }
+        } // 2
+        advanceUntilIdle()
 
-        val expectedInvocations = (draftPosts.size + draftPages.size) * 2
-        verify(uploadServiceFacade, times(expectedInvocations)).uploadPost(any(), any<PostModel>(), any())
+        verify(uploadServiceFacade, times(4)).uploadPost(any(), any<PostModel>(), any())
     }
 
     @Test
