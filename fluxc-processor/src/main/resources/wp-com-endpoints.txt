@@ -6,6 +6,8 @@
 /devices/new/
 /devices/$deviceId#String/delete/
 
+/geo/
+
 /is-available/blog/
 /is-available/email/
 /is-available/username/
