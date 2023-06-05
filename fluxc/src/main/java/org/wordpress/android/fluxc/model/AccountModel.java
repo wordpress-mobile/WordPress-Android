@@ -39,8 +39,6 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
     @Column private boolean mTracksOptOut;
     @Column private boolean mUsernameCanBeChanged;
 
-    @Column private String mUserIpCountryCode;
-
     public AccountModel() {
         init();
     }
@@ -124,7 +122,6 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
         setEmail(other.getEmail());
         setHasUnseenNotes(other.getHasUnseenNotes());
         setEmailVerified(other.getEmailVerified());
-        setUserIpCountryCode(other.getUserIpCountryCode());
     }
 
     /**
@@ -313,13 +310,5 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
 
     public void setUsernameCanBeChanged(boolean usernameCanBeChanged) {
         mUsernameCanBeChanged = usernameCanBeChanged;
-    }
-
-    public String getUserIpCountryCode() {
-        return mUserIpCountryCode;
-    }
-
-    public void setUserIpCountryCode(final String userIpCountryCode) {
-        mUserIpCountryCode = userIpCountryCode;
     }
 }
