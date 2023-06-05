@@ -18,6 +18,9 @@ sentry {
     tracingInstrumentation {
         enabled = true
         features = [io.sentry.android.gradle.extensions.InstrumentationFeature.DATABASE]
+        logcat {
+            enabled = false
+        }
     }
     autoInstallation {
         enabled = false
