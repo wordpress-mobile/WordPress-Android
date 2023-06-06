@@ -2,7 +2,7 @@
 common_params:
   # Common plugin settings to use with the `plugins` key.
   - &common_plugins
-    - automattic/a8c-ci-toolkit#2.15.1
+    - automattic/a8c-ci-toolkit#2.17.0
 
 steps:
   - label: "Code Freeze"

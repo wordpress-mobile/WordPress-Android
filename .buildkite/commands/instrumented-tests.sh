@@ -7,4 +7,24 @@ echo "--- :closed_lock_with_key: Installing Secrets"
 bundle exec fastlane run configure_apply
 
 echo "--- 🧪 Testing"
+set +e
 bundle exec fastlane build_and_run_instrumented_test app:$1
+TESTS_EXIT_STATUS=$?
+set -e
+
+if [[ "$TESTS_EXIT_STATUS" -ne 0 ]]; then
+  # Keep the (otherwise collapsed) current "Testing" section open in Buildkite logs on error. See https://buildkite.com/docs/pipelines/managing-log-output#collapsing-output
+  echo "^^^ +++"
+  echo "Instrumented Tests failed!"
+fi
+
+echo "--- 🚦 Report Tests Status"
+results_file=$(find "build/instrumented-tests" -type f -name "*.xml" -print -quit)
+
+if [[ $BUILDKITE_BRANCH == trunk ]] || [[ $BUILDKITE_BRANCH == test/* ]]; then
+    annotate_test_failures "$results_file" --slack "jos-testing-notif"
+else
+    annotate_test_failures "$results_file"
+fi
+
+exit $TESTS_EXIT_STATUS
