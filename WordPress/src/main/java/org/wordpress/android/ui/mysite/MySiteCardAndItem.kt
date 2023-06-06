@@ -58,6 +58,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         POST_CARD_WITH_POST_ITEMS,
         BLOGGING_PROMPT_CARD,
         PROMOTE_WITH_BLAZE_CARD,
+        BLAZE_CAMPAIGNS_CARD,
         DASHBOARD_DOMAIN_CARD,
         DASHBOARD_PLANS_CARD,
         PAGES_CARD_ERROR,
@@ -326,13 +327,26 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD)
                 }
 
-                data class PromoteWithBlazeCard(
-                    val title: UiString?,
-                    val subtitle: UiString?,
-                    val onClick: ListItemInteraction,
-                    val onHideMenuItemClick: ListItemInteraction,
-                    val onMoreMenuClick: ListItemInteraction,
-                ): DashboardCard(dashboardCardType = DashboardCardType.PROMOTE_WITH_BLAZE_CARD)
+                sealed class BlazeCard(
+                    override val dashboardCardType: DashboardCardType
+                ): DashboardCard(dashboardCardType) {
+                    data class BlazeCampaignsCard(
+                        val title: UiString,
+                        val subtitle: UiString,
+                        val description: UiString,
+                        val cta: UiString,
+                        val onClick: ListItemInteraction,
+                        val onDismissClick: ListItemInteraction,
+                    ): BlazeCard(dashboardCardType = DashboardCardType.BLAZE_CAMPAIGNS_CARD)
+
+                    data class PromoteWithBlazeCard(
+                        val title: UiString?,
+                        val subtitle: UiString?,
+                        val onClick: ListItemInteraction,
+                        val onHideMenuItemClick: ListItemInteraction,
+                        val onMoreMenuClick: ListItemInteraction,
+                    ): BlazeCard(dashboardCardType = DashboardCardType.PROMOTE_WITH_BLAZE_CARD)
+                }
 
                 data class DashboardDomainCard(
                     val title: UiString?,
