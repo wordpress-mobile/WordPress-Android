@@ -64,6 +64,8 @@ steps:
           cp gradle.properties-example gradle.properties
           ./gradlew testWordpressVanillaRelease
         plugins: *common_plugins
+        artifact_paths:
+          - "**/unit-test-results/*"
 
       - label: "🔬 Test Processors"
         command: |
