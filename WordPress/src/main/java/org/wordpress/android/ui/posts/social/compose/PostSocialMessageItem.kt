@@ -15,8 +15,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
@@ -33,7 +35,7 @@ fun PostSocialMessageItem(
             .padding(horizontal = Margin.ExtraLarge.value, vertical = Margin.MediumLarge.value)
     ) {
         Text(
-            text = "Message",
+            text = stringResource(R.string.social_item_message_title),
             style = MaterialTheme.typography.subtitle1,
             color = MaterialTheme.colors.onSurface
                 .copy(alpha = if (enabled) ContentAlpha.high else ContentAlpha.disabled),
