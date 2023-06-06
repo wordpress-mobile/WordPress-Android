@@ -329,15 +329,26 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
                 sealed class BlazeCard(
                     override val dashboardCardType: DashboardCardType
-                ): DashboardCard(dashboardCardType) {
+                ) : DashboardCard(dashboardCardType) {
                     data class BlazeCampaignsCard(
                         val title: UiString,
-                        val subtitle: UiString,
-                        val description: UiString,
-                        val cta: UiString,
-                        val onClick: ListItemInteraction,
-                        val onDismissClick: ListItemInteraction,
-                    ): BlazeCard(dashboardCardType = DashboardCardType.BLAZE_CAMPAIGNS_CARD)
+                        val campaigns: BlazeCampaignsCardItem,
+                        val footer: BlazeCampaignsCardFooter,
+                    ) : BlazeCard(dashboardCardType = DashboardCardType.BLAZE_CAMPAIGNS_CARD) {
+                        data class BlazeCampaignsCardItem(
+                            val id:Int,
+                            val title: UiString,
+                            val status: UiString,
+                            val featuredImageUrl: String?,
+                            val impressionCount: UiString,
+                            val clickCount: UiString,
+                            val onClick: ListItemInteraction,
+                        )
+                        data class BlazeCampaignsCardFooter(
+                            val label: UiString,
+                            val onClick: ListItemInteraction,
+                        )
+                    }
 
                     data class PromoteWithBlazeCard(
                         val title: UiString?,
