@@ -280,12 +280,6 @@ android {
         unitTests {
             includeAndroidResources = true
             returnDefaultValues = true
-            reports {
-                junitXml.enabled = true
-                html.enabled = false
-                xml.enabled = true
-                xml.destination = file("${project.buildDir}/unit-test-results")
-            }
         }
     }
 
