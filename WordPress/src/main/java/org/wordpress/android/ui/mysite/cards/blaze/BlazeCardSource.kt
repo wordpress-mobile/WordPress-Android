@@ -20,7 +20,7 @@ import javax.inject.Named
 
 const val REFRESH_DELAY = 500L
 
-class PromoteWithBlazeCardSource @Inject constructor(
+class BlazeCardSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val blazeStore: BlazeStore,
     private val blazeFeatureUtils: BlazeFeatureUtils,

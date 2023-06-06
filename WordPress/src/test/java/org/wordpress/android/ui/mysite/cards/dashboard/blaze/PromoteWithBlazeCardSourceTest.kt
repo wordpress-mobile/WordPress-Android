@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.store.blaze.BlazeStore.BlazeStatusResult
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PromoteWithBlazeUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardSource
+import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardSource
 
 /* SITE */
 
@@ -48,7 +48,7 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
     @Mock
     private lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
-    private lateinit var blazeCardSource: PromoteWithBlazeCardSource
+    private lateinit var blazeCardSource: BlazeCardSource
 
     private val data = BlazeStatusResult(
         model = BLAZE_STATUS_MODELS
@@ -67,7 +67,7 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
 
     private fun init(isBlazeEnabled: Boolean = false) {
         setUpMocks(isBlazeEnabled)
-        blazeCardSource = PromoteWithBlazeCardSource(
+        blazeCardSource = BlazeCardSource(
             selectedSiteRepository,
             blazeStore,
             blazeFeatureUtils,
