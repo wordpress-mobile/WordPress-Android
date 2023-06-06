@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 
 @Composable
@@ -40,7 +41,7 @@ fun PostSocialConnectionItem(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .clickable(enabled) { onSharingChange(!connection.isSharingEnabled) }
-            .padding(horizontal = 16.dp, vertical = 10.dp)
+            .padding(horizontal = Margin.ExtraLarge.value, vertical = Margin.MediumLarge.value)
     ) {
         val saturationMatrix = ColorMatrix().apply {
             setToSaturation(if (enabled) 1f else 0f)
@@ -53,7 +54,7 @@ fun PostSocialConnectionItem(
             alpha = if (enabled) 1f else ContentAlpha.disabled,
             modifier = Modifier.size(28.dp),
         )
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(Margin.ExtraLarge.value))
         Text(
             text = connection.externalName,
             style = MaterialTheme.typography.subtitle1,
