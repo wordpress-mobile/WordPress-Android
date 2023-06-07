@@ -21,8 +21,8 @@ fi
 echo "--- 🚦 Report Tests Status"
 results_file=$(find "build/instrumented-tests" -type f -name "*.xml" -print -quit)
 
-if [[ $BUILDKITE_BRANCH == trunk ]] || [[ $BUILDKITE_BRANCH == test/* ]]; then
-    annotate_test_failures "$results_file" --slack "jos-testing-notif"
+if [[ $BUILDKITE_BRANCH == trunk ]] || [[ $BUILDKITE_BRANCH == release/* ]]; then
+    annotate_test_failures "$results_file" --slack "build-and-ship"
 else
     annotate_test_failures "$results_file"
 fi
