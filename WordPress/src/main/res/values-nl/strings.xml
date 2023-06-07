@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-17 11:54:09+0000
+Translation-Revision-Date: 2023-05-31 16:54:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_block_ungrouped">Blokgroepering ongedaan gemaakt</string>
+    <string name="gutenberg_native_block_grouped">Blok gegroepeerd</string>
+    <string name="dashboard_card_plans_checkout_success_info">Het kan tot 30 minuten duren voor je domein correct werkt.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">Je nieuwe domein, &lt;b&gt;%s&lt;/b&gt;, wordt ingesteld.</string>
+    <string name="dashboard_card_plans_menu_hide_this">Dit verbergen</string>
+    <string name="dashboard_card_plans_sub_title">Ontvang een gratis domein voor eerste jaar, verwijder advertenties van je website en krijg meer opslagruimte.</string>
+    <string name="virtual_homepage_learn_more">Meer informatie over sjablonen</string>
+    <string name="virtual_homepage_subtitle">Jouw homepage gebruikt een themasjabloon en wordt in de webeditor geopend.</string>
+    <string name="account_closure_dialog_error_unknown">Fout bij account sluiten.</string>
+    <string name="account_closure_dialog_error_active_memberships">Dit gebruikersaccount kan niet worden gesloten zolang het actieve aankopen bevat.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">Dit gebruikersaccount kan niet worden gesloten zolang het actieve abonnementen bevat.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">Dit gebruikersaccount kan niet worden gesloten terwijl het onopgeloste terugvorderingen bevat.</string>
+    <string name="account_closure_dialog_error_title">Kon account niet automatisch sluiten\'</string>
+    <string name="account_closure_dialog_title">Account sluiten bevestigen …</string>
+    <string name="account_closure_dialog_message">Geef voordat je dit sluit je je gebruikersnaam opnieuw op om te bevestigen.</string>
+    <string name="close_account">Account sluiten</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Meer informatie</string>
+    <string name="sharing_twitter_deprecation_notice_description">Automatisch delen op Twitter is niet langer beschikbaar vanwege wijzigingen van de voorwaarden en prijzen van Twitter.</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">Bewerken van herbruikbare blokken wordt momenteel niet ondersteund door %s voor iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Bewerken van herbruikbare blokken wordt momenteel niet ondersteund door %s voor Android</string>
     <string name="jp_migration_notifications_allow_title">Sta meldingen toe om op de hoogte te blijven van je site</string>
@@ -602,8 +620,6 @@ Language: nl
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis voor het eerste jaar &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /jaar&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Je domeinen zullen omleiden naar je site op %s</string>
     <string name="gutenberg_native_create_link">Maak link</string>
-    <string name="domain_registration_result_description">Je nieuwe domein &lt;b&gt;%s&lt;/b&gt; wordt ingesteld. Het kan tot 30 minuten duren voordat je domein begint te werken.</string>
-    <string name="domain_registration_result_title">Gefeliciteerd met je aankoop!</string>
     <string name="domains_suggestions_select_domain">Selecteer domein</string>
     <string name="domains_title">Domeinen</string>
     <string name="post_status_sticky">Sticky</string>
@@ -822,6 +838,7 @@ Language: nl
     <string name="gutenberg_native_no_preview_available">Geen voorbeeld beschikbaar</string>
     <string name="gutenberg_native_loading">Laden</string>
     <string name="gutenberg_native_text_color">Tekstkleur</string>
+    <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_four">Vier</string>
     <string name="gutenberg_native_featured">Uitgelicht</string>
@@ -2173,6 +2190,7 @@ Language: nl
     <string name="page_status_change_error">Er is een probleem opgetreden bij het wijzigen van de paginastatus</string>
     <string name="page_delete_error">Er is een probleem opgetreden bij het verwijderen van de pagina</string>
     <string name="set_parent">Instellen als bovenliggend item</string>
+    <string name="dismiss">Afwijzen</string>
     <string name="quick_start_focus_point_description">tik hier</string>
     <string name="quick_start_list_create_site_title">Je site maken</string>
     <string name="quick_start_list_create_site_subtitle">Ga aan de slag met je site.</string>

@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-16 21:05:30+0000
+Translation-Revision-Date: 2023-06-05 09:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_block_ungrouped">Block avgrupperat</string>
+    <string name="gutenberg_native_block_grouped">Block grupperat</string>
+    <string name="dashboard_card_plans_checkout_success_info">Det kan ta upp till 30 minuter för din domän att börja fungera ordentligt.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">Din nya domän &lt;b&gt;%s&lt;/b&gt; håller på att konfigureras.</string>
+    <string name="dashboard_card_plans_checkout_success_title">Allt är klart att köras.</string>
+    <string name="dashboard_card_plans_menu_hide_this">Dölj detta</string>
+    <string name="dashboard_card_plans_sub_title">Få en gratis domän det första året, ta bort annonser från din webbplats och utöka ditt lagringsutrymme.</string>
+    <string name="dashboard_card_plans_title">Gratis domän med årligt paket</string>
+    <string name="virtual_homepage_learn_more">Lär dig mer om mallar</string>
+    <string name="virtual_homepage_subtitle">Din startsida använder en temamall och kommer att öppnas i webbredigeraren.</string>
+    <string name="virtual_homepage_title">Startsida</string>
+    <string name="account_closure_dialog_success_message">Konto avslutat.</string>
+    <string name="account_closure_dialog_error_unknown">Ett fel uppstod när kontot skulle avslutas.</string>
+    <string name="account_closure_dialog_error_active_memberships">Detta användarkonto kan inte avslutas eftersom det har aktiva köp.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">Detta användarkonto kan inte avslutas eftersom det har aktiva prenumerationer.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">Detta användarkonto kan inte avslutas eftersom det fortfarande finns olösta återkrav.</string>
+    <string name="account_closure_dialog_error_atomic_site">Detta användarkonto kan inte avslutas med en gång eftersom det har aktiva köp. Kontakta vårt supportteam för att avsluta kontot helt.</string>
+    <string name="account_closure_dialog_error_unauthorized">Du är inte auktoriserad att avsluta kontot.</string>
+    <string name="account_closure_dialog_error_title">Det gick inte att avsluta kontot automatiskt</string>
+    <string name="account_closure_dialog_title">Bekräfta avluta konto …</string>
+    <string name="account_closure_dialog_message">Bekräfta genom att skriva in ditt användarnamn innan kontot avslutas.</string>
+    <string name="close_account">Avsluta konto</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Få reda på mer</string>
+    <string name="sharing_twitter_deprecation_notice_description">Automatisk delning på Twitter är inte längre tillgängligt på grund av Twitters ändringar i villkor och pris.</string>
+    <string name="sharing_twitter_deprecation_notice_title">Automatisk delning på Twitter är inte längre tillgängligt</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">Redigering av återanvändbara block stöds ännu inte i %s för iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Redigering av återanvändbara block stöds ännu inte i %s för Android</string>
     <string name="jp_migration_notifications_allow_title">Tillåt aviseringar för att hålla koll på din webbplats</string>
@@ -604,8 +629,6 @@ Language: sv_SE
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis för det första året &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/år&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Din domän kommer omdirigeras till din webbplats på %s</string>
     <string name="gutenberg_native_create_link">Skapa länk</string>
-    <string name="domain_registration_result_description">Din nya domän &lt;b&gt;%s&lt;/b&gt; håller på att konfigureras. Det kan dröja upp till 30 minuter innan din domän börjar fungera.</string>
-    <string name="domain_registration_result_title">Grattis till ditt köp!</string>
     <string name="domains_suggestions_select_domain">Välj domän</string>
     <string name="domains_title">Domäner</string>
     <string name="post_status_sticky">Klistrat</string>
@@ -824,6 +847,7 @@ Language: sv_SE
     <string name="gutenberg_native_no_preview_available">Ingen förhandsgranskning tillgänglig</string>
     <string name="gutenberg_native_loading">Laddar in …</string>
     <string name="gutenberg_native_text_color">Textfärg</string>
+    <string name="gutenberg_native_s_link">Länk för %s</string>
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_four">Fyra</string>
     <string name="gutenberg_native_featured">Utvalda</string>
@@ -2175,6 +2199,7 @@ Language: sv_SE
     <string name="page_status_change_error">Det gick inte att ändra sidans status</string>
     <string name="page_delete_error">Det gick inte att radera sidan</string>
     <string name="set_parent">Ange överordnad</string>
+    <string name="dismiss">Avfärda</string>
     <string name="quick_start_focus_point_description">tryck här</string>
     <string name="quick_start_list_create_site_title">Skapa din webbplats</string>
     <string name="quick_start_list_create_site_subtitle">Kom igång med din webbplats.</string>
