@@ -1,10 +1,11 @@
 package org.wordpress.android.ui.compose.components
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,11 +19,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 private const val DEFAULT_ICON_SIZE = 32
 private const val DEFAULT_ICON_BORDER_WIDTH = 2
+
 // this proportion is calculated based on the Figma design for Jetpack Social (Th1ahHKq53k5JT1PNDMavY-fi-865_13166)
 private const val ICON_OFFSET_PROPORTION = 29f / 36f
 
@@ -61,14 +62,10 @@ fun TrainOfIcons(
                     placeholder = placeholder,
                     modifier = Modifier
                         .size(iconSizeWithBorder.dp)
-                        .border(
-                            width = iconBorderWidth,
-                            color = AppColor.White,
-                            shape = CircleShape
-                        )
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colors.surface)
                         .padding(iconBorderWidth)
                         .clip(CircleShape)
-                        .background(AppColor.White)
                 )
             }
         }
@@ -93,6 +90,7 @@ fun TrainOfIcons(
 }
 
 @Preview
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun TrainOfIconsPreview() {
     AppTheme {
