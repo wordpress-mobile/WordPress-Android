@@ -68,19 +68,8 @@ dependencies {
         }
     }
 
-    // Forcing version due to https://github.com/facebook/SoLoader/issues/94
-    // To be removed with React Native 0.70+
-    implementation("com.facebook.soloader:soloader:$facebookSoloaderVersion") {
-        version {
-            strictly facebookSoloaderVersion
-        }
-    }
-
-    implementation "com.facebook.fresco:fresco:$facebookFrescoVersion"
-    implementation "com.facebook.fresco:imagepipeline-okhttp3:$facebookFrescoVersion"
-    implementation "com.facebook.fbjni:fbjni:$facebookFbjniVersion"
-    implementation "com.facebook.react:hermes-engine:$facebookReactVersion"
-    implementation "com.facebook.react:react-native:$facebookReactVersion"
+    implementation "com.facebook.react:hermes-android:$facebookReactVersion"
+    implementation "com.facebook.react:react-android:$facebookReactVersion"
 
     // This dependency will be substituted if the `local-builds.gradle` file contains
     // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.
