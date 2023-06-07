@@ -277,7 +277,8 @@ android {
 
     testOptions {
         animationsDisabled = true
-        reportDir = "${project.rootDir}/unit-test-results/"
+        reportDir = "${project.rootDir}/build/reports/unit-test-results/"
+        resultsDir = "${project.rootDir}/build/reports/unit-test-results/"
         unitTests {
             includeAndroidResources = true
             returnDefaultValues = true
