@@ -4,16 +4,16 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PromoteWithBlazeCardBuilderParams
-import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardBuilder
+import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardBuilder
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
 
-class PromoteWithBlazeCardBuilderTest {
-    private lateinit var builder: PromoteWithBlazeCardBuilder
+class BlazeCardBuilderTest {
+    private lateinit var builder: BlazeCardBuilder
 
     @Before
     fun setUp() {
-        builder = PromoteWithBlazeCardBuilder()
+        builder = BlazeCardBuilder()
     }
     @Test
     fun `when is eligible for blaze, then return the PromoteWithBlazeCard`() {

@@ -5,7 +5,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
-import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardBuilder
+import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardBuilder
@@ -20,7 +20,7 @@ class CardsBuilder @Inject constructor(
     private val todaysStatsCardBuilder: TodaysStatsCardBuilder,
     private val postCardBuilder: PostCardBuilder,
     private val bloggingPromptCardBuilder: BloggingPromptCardBuilder,
-    private val promoteWithBlazeCardBuilder: PromoteWithBlazeCardBuilder,
+    private val blazeCardBuilder: BlazeCardBuilder,
     private val dashboardDomainCardBuilder: DashboardDomainCardBuilder,
     private val plansCardBuilder: PlansCardBuilder,
     private val pagesCardBuilder: PagesCardBuilder,
@@ -40,7 +40,7 @@ class CardsBuilder @Inject constructor(
                         add(it)
                     }
 
-                promoteWithBlazeCardBuilder.build(dashboardCardsBuilderParams.promoteWithBlazeCardBuilderParams)?.let {
+                blazeCardBuilder.build(dashboardCardsBuilderParams.promoteWithBlazeCardBuilderParams)?.let {
                     add(it)
                 }
 

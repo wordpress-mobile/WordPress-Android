@@ -8,7 +8,7 @@ import org.wordpress.android.ui.utils.UiString
 
 import javax.inject.Inject
 
-class PromoteWithBlazeCardBuilder @Inject constructor() {
+class BlazeCardBuilder @Inject constructor() {
     fun build(params: MySiteCardAndItemBuilderParams.PromoteWithBlazeCardBuilderParams): PromoteWithBlazeCard? {
         return if (params.isEligible) {
             PromoteWithBlazeCard(
