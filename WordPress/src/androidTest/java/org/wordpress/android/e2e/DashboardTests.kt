@@ -43,4 +43,19 @@ class DashboardTests : BaseTest() {
             .assertPagesScreenHasPage("Cart")
             .assertPagesScreenHasPage("Shop")
     }
+
+    @Test
+    fun e2eActivityLogCardNavigation() {
+        MySitesPage()
+            .scrollToActivityLogCard()
+            .assertActivityLogCard()
+            .assertActivityLogCardHasActivity("Enabled Jetpack Social")
+            .assertActivityLogCardHasActivity("The Jetpack connection")
+            .assertActivityLogCardHasActivity("This site is connected to")
+            .tapViewAllActivity()
+            .assertActivityLogScreenLoaded()
+            .assertActivityLogScreenHasActivity("Enabled Jetpack Social")
+            .assertActivityLogScreenHasActivity("The Jetpack connection")
+            .assertActivityLogScreenHasActivity("This site is connected to")
+    }
 }
