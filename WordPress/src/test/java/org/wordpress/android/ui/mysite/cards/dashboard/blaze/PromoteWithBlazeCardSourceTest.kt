@@ -18,7 +18,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeStatusErrorType
 import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.fluxc.store.blaze.BlazeStore.BlazeStatusResult
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PromoteWithBlazeUpdate
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardSource
 
@@ -116,7 +116,7 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
     @Test
     fun `given blaze is enabled and no error, when build is invoked, the data is only loaded from get (db)`() = test {
         init(true)
-        val result = mutableListOf<PromoteWithBlazeUpdate>()
+        val result = mutableListOf<BlazeCardUpdate>()
         whenever(blazeStore.getBlazeStatus(siteModel.siteId)).thenReturn(flowOf(data))
         whenever(blazeStore.fetchBlazeStatus(siteModel)).thenReturn(BlazeStatusResult())
         blazeCardSource.refresh.observeForever { }
@@ -126,28 +126,28 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
         }
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(PromoteWithBlazeUpdate(data.model?.first()))
+        assertThat(result.first()).isEqualTo(BlazeCardUpdate(data.model?.first()))
     }
 
     @Test
     fun `given blaze is enabled, when build is invoked on site not eligible, then model is null`() = test {
         init(true)
         val invalidSiteLocalId = 2
-        val result = mutableListOf<PromoteWithBlazeUpdate>()
+        val result = mutableListOf<BlazeCardUpdate>()
         blazeCardSource.refresh.observeForever { }
 
         blazeCardSource.build(testScope(), invalidSiteLocalId).observeForever {
             it?.let { result.add(it) }
         }
 
-        assertThat(result.first()).isEqualTo(PromoteWithBlazeUpdate(blazeStatusModel = null))
+        assertThat(result.first()).isEqualTo(BlazeCardUpdate(blazeStatusModel = null))
     }
 
     @Test
     fun `given error, when build is invoked, then model is null`() = test {
         init(true)
         val invalidSiteId = 2
-        val result = mutableListOf<PromoteWithBlazeUpdate>()
+        val result = mutableListOf<BlazeCardUpdate>()
         blazeCardSource.refresh.observeForever { }
 
         blazeCardSource.build(testScope(), invalidSiteId).observeForever {
@@ -156,7 +156,7 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(PromoteWithBlazeUpdate(blazeStatusModel = null))
+        assertThat(result.first()).isEqualTo(BlazeCardUpdate(blazeStatusModel = null))
     }
 
     @Test

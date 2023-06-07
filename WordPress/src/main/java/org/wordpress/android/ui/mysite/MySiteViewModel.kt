@@ -83,7 +83,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStat
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PromoteWithBlazeUpdate
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
@@ -351,7 +351,7 @@ class MySiteViewModel @Inject constructor(
                     scanAvailable,
                     cardsUpdate,
                     bloggingPromptsUpdate,
-                    promoteWithBlazeUpdate,
+                    blazeCardUpdate,
                     hasSiteCustomDomains
                 )
                 selectDefaultTabIfNeeded()
@@ -402,7 +402,7 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
-        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?,
+        blazeCardUpdate: BlazeCardUpdate?,
         hasSiteCustomDomains: Boolean?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
@@ -416,7 +416,7 @@ class MySiteViewModel @Inject constructor(
             scanAvailable,
             cardsUpdate,
             bloggingPromptUpdate,
-            promoteWithBlazeUpdate,
+            blazeCardUpdate,
             hasSiteCustomDomains
         )
 
@@ -506,7 +506,7 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
-        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?,
+        blazeCardUpdate: BlazeCardUpdate?,
         hasSiteCustomDomains: Boolean?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
@@ -602,7 +602,7 @@ class MySiteViewModel @Inject constructor(
                 ),
                 promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
                     isEligible = blazeFeatureUtils.shouldShowBlazeCardEntryPoint(
-                        promoteWithBlazeUpdate?.blazeStatusModel,
+                        blazeCardUpdate?.blazeStatusModel,
                         site.siteId
                     ),
                     onClick = this::onPromoteWithBlazeCardClick,
@@ -667,7 +667,7 @@ class MySiteViewModel @Inject constructor(
                 enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 onClick = this::onItemClick,
                 isBlazeEligible =
-                blazeFeatureUtils.shouldShowBlazeMenuEntryPoint(promoteWithBlazeUpdate?.blazeStatusModel)
+                blazeFeatureUtils.shouldShowBlazeMenuEntryPoint(blazeCardUpdate?.blazeStatusModel)
             )
         )
 

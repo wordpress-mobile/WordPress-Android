@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PromoteWithBlazeUpdate
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import javax.inject.Inject
 import javax.inject.Named
@@ -25,11 +25,11 @@ class BlazeCardSource @Inject constructor(
     private val blazeStore: BlazeStore,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-) : MySiteRefreshSource<PromoteWithBlazeUpdate> {
+) : MySiteRefreshSource<BlazeCardUpdate> {
     override val refresh = MutableLiveData(false)
 
-    override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<PromoteWithBlazeUpdate> {
-        val result = MediatorLiveData<PromoteWithBlazeUpdate>()
+    override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<BlazeCardUpdate> {
+        val result = MediatorLiveData<BlazeCardUpdate>()
         if (shouldFetchBlazeEligibility(siteLocalId)) {
             result.getData(coroutineScope, siteLocalId)
         }
@@ -45,7 +45,7 @@ class BlazeCardSource @Inject constructor(
         return false
     }
 
-    private fun MediatorLiveData<PromoteWithBlazeUpdate>.getData(
+    private fun MediatorLiveData<BlazeCardUpdate>.getData(
         coroutineScope: CoroutineScope,
         siteLocalId: Int
     ) {
@@ -55,7 +55,7 @@ class BlazeCardSource @Inject constructor(
                 blazeStore.getBlazeStatus(selectedSite.siteId)
                     .map { it.model?.firstOrNull() }
                     .collect { result ->
-                        postValue(PromoteWithBlazeUpdate(result))
+                        postValue(BlazeCardUpdate(result))
                     }
             }
         } else {
@@ -63,7 +63,7 @@ class BlazeCardSource @Inject constructor(
         }
     }
 
-    private fun MediatorLiveData<PromoteWithBlazeUpdate>.refreshData(
+    private fun MediatorLiveData<BlazeCardUpdate>.refreshData(
         coroutineScope: CoroutineScope,
         siteLocalId: Int,
         isRefresh: Boolean? = null
@@ -74,7 +74,7 @@ class BlazeCardSource @Inject constructor(
         }
     }
 
-    private fun MediatorLiveData<PromoteWithBlazeUpdate>.refreshData(
+    private fun MediatorLiveData<BlazeCardUpdate>.refreshData(
         coroutineScope: CoroutineScope,
         siteLocalId: Int
     ) {
@@ -86,7 +86,7 @@ class BlazeCardSource @Inject constructor(
         }
     }
 
-    private fun MediatorLiveData<PromoteWithBlazeUpdate>.fetchBlazeStatusAndPostErrorIfAvailable(
+    private fun MediatorLiveData<BlazeCardUpdate>.fetchBlazeStatusAndPostErrorIfAvailable(
         coroutineScope: CoroutineScope,
         selectedSite: SiteModel
     ) {
@@ -97,7 +97,7 @@ class BlazeCardSource @Inject constructor(
             val error = result.error
             when {
                 error != null -> postErrorState()
-                model != null -> postState(PromoteWithBlazeUpdate(model[0]))
+                model != null -> postState(BlazeCardUpdate(model[0]))
                 else -> postLastState()
             }
         }
@@ -108,12 +108,12 @@ class BlazeCardSource @Inject constructor(
      * the previous status is still the current one. This avoids issues like the loading progress indicator being shown
      * indefinitely.
      */
-    private fun MediatorLiveData<PromoteWithBlazeUpdate>.postLastState() {
+    private fun MediatorLiveData<BlazeCardUpdate>.postLastState() {
         val lastStatus = value?.blazeStatusModel
-        postState(PromoteWithBlazeUpdate(lastStatus))
+        postState(BlazeCardUpdate(lastStatus))
     }
 
-    private fun MediatorLiveData<PromoteWithBlazeUpdate>.postErrorState() {
-        postState(PromoteWithBlazeUpdate(null))
+    private fun MediatorLiveData<BlazeCardUpdate>.postErrorState() {
+        postState(BlazeCardUpdate(null))
     }
 }

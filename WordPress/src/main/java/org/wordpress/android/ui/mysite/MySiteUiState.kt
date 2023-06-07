@@ -30,7 +30,7 @@ data class MySiteUiState(
     val visibleDynamicCards: List<DynamicCardType> = listOf(),
     val cardsUpdate: CardsUpdate? = null,
     val bloggingPromptsUpdate: BloggingPromptUpdate? = null,
-    val promoteWithBlazeUpdate: PartialState.PromoteWithBlazeUpdate? = null,
+    val blazeCardUpdate: PartialState.BlazeCardUpdate? = null,
     val hasSiteCustomDomains: Boolean? = null
 ) {
     sealed class PartialState {
@@ -62,7 +62,7 @@ data class MySiteUiState(
             val promptModel: BloggingPromptModel?
         ) : PartialState()
 
-        data class PromoteWithBlazeUpdate(
+        data class BlazeCardUpdate(
             val blazeStatusModel: BlazeStatusModel?
         ) : PartialState()
     }
@@ -92,7 +92,7 @@ data class MySiteUiState(
             )
             is CardsUpdate -> uiState.copy(cardsUpdate = partialState)
             is BloggingPromptUpdate -> uiState.copy(bloggingPromptsUpdate = partialState)
-            is PartialState.PromoteWithBlazeUpdate -> uiState.copy(promoteWithBlazeUpdate = partialState)
+            is PartialState.BlazeCardUpdate -> uiState.copy(blazeCardUpdate = partialState)
         }
     }
 
