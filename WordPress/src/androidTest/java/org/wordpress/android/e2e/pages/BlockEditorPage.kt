@@ -133,9 +133,7 @@ class BlockEditorPage {
     }
 
     fun verifyPostSettings(categoryName: String?, tagName: String?): BlockEditorPage {
-//        TestCase.assertTrue(
-//        intentional fail for testing
-        TestCase.assertFalse(
+        TestCase.assertTrue(
             "Category is not present in Post confirmation panel",
             WPSupportUtils.waitForElementToBeDisplayedWithoutFailure(
                 Espresso.onView(
@@ -159,9 +157,7 @@ class BlockEditorPage {
     }
 
     fun verifyPostElementText(postText: String?): BlockEditorPage {
-//        TestCase.assertTrue(
-//        intentional fail for testing
-        TestCase.assertFalse(
+        TestCase.assertTrue(
             "Expected text is not displayed",
             WPSupportUtils.waitForElementToBeDisplayedWithoutFailure(
                 Espresso.onView(
