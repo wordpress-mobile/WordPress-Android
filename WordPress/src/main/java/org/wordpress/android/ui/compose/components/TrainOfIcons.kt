@@ -95,9 +95,12 @@ fun TrainOfIcons(
 fun TrainOfIconsPreview() {
     AppTheme {
         TrainOfIcons(
-            iconModels = List(4) {
-                R.drawable.login_prologue_fifth_asset_one
-            }
+            iconModels = listOf(
+                R.drawable.login_prologue_second_asset_three,
+                R.drawable.login_prologue_second_asset_two,
+                R.drawable.login_prologue_third_asset_one,
+                R.mipmap.app_icon
+            )
         )
     }
 }
