@@ -52,10 +52,8 @@ class DashboardTests : BaseTest() {
             .assertActivityLogCardHasActivity("Enabled Jetpack Social")
             .assertActivityLogCardHasActivity("The Jetpack connection")
             .assertActivityLogCardHasActivity("This site is connected to")
-            .tapViewAllActivity()
-            .assertActivityLogScreenLoaded()
-            .assertActivityLogScreenHasActivity("Enabled Jetpack Social")
-            .assertActivityLogScreenHasActivity("The Jetpack connection")
-            .assertActivityLogScreenHasActivity("This site is connected to")
+            .tapActivity("The Jetpack connection")
+            .assertEventScreenLoaded()
+            .assertEventScreenHasActivity("The Jetpack connection is now complete. Welcome!")
     }
 }

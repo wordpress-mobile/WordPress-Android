@@ -409,6 +409,18 @@ class MySitesPage {
         return ActivityLogScreen()
     }
 
+    fun tapActivity(activityPartial: String): EventScreen {
+        val activityRow = Espresso.onView(
+            Matchers.allOf(
+                ViewMatchers.withText(containsString(activityPartial)),
+                ViewMatchers.withId(R.id.activity_card_item_label),
+            )
+        )
+
+        WPSupportUtils.clickOn(activityRow)
+        return EventScreen()
+    }
+
     fun assertActivityLogCard(): MySitesPage {
         Espresso.onView(
             Matchers.allOf(

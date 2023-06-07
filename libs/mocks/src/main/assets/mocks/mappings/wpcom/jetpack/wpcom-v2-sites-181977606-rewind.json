@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "urlPath": "/wpcom/v2/sites/181977606/rewind/"
+    "urlPath": "/wpcom/v2/sites/106707880/rewind/"
   },
   "response": {
     "status": 200,
@@ -14,16 +14,8 @@
       "alerts": {
         "threats": []
       },
-      "downloads": [{
-        "downloadId": 305125,
-        "rewindId": "1620888407.673",
-        "backupPoint": 1620888407,
-        "startedAt": 1620999169,
-        "downloadCount": 0,
-        "validUntil": 1621085575
-      }],
       "state": "active",
-      "last_updated": "2021-05-18T20:48:47.217+00:00",
+      "last_updated": "2023-06-07T13:00:18.125+00:00",
       "has_cloud": false
     }
   }
