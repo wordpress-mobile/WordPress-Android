@@ -38,7 +38,9 @@ private const val ICON_OFFSET_PROPORTION = 29f / 36f
  *
  * @param iconModels a list of models to be used for the icons. The list must have at least 1 element.
  * @param modifier the modifier to be applied to the layout.
+ * @param contentDescription the content description of the container.
  * @param iconSize the size of an individual icon.
+ * @param iconBorderWidth the width of the icon border.
  * @param placeholder the placeholder to be used while the icons are loading.
  */
 @Composable
