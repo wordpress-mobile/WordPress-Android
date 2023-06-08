@@ -14,6 +14,8 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -43,6 +45,7 @@ private const val ICON_OFFSET_PROPORTION = 29f / 36f
 fun TrainOfIcons(
     iconModels: List<Any>,
     modifier: Modifier = Modifier,
+    contentDescription: String? = null,
     iconSize: Dp = DEFAULT_ICON_SIZE.dp,
     iconBorderWidth: Dp = DEFAULT_ICON_BORDER_WIDTH.dp,
     placeholder: Painter = ColorPainter(colorResource(R.color.placeholder)),
@@ -52,7 +55,11 @@ fun TrainOfIcons(
     val iconSizeWithBorder = (iconSize.value + 2 * iconBorderWidth.value).toInt()
 
     Layout(
-        modifier = modifier,
+        modifier = modifier.then(Modifier.semantics(mergeDescendants = true) {
+            contentDescription?.let {
+                this.contentDescription = it
+            }
+        }),
         content = {
             iconModels.forEach { iconModel ->
                 AsyncImage(
@@ -100,7 +107,8 @@ fun TrainOfIconsPreview() {
                 R.drawable.login_prologue_second_asset_two,
                 R.drawable.login_prologue_third_asset_one,
                 R.mipmap.app_icon
-            )
+            ),
+            contentDescription = "Train of icons",
         )
     }
 }
