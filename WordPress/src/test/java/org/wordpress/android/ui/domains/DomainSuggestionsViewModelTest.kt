@@ -128,6 +128,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         whenever(productsStore.fetchProducts(any())).thenReturn(mock())
 
         viewModel.start(site, domainRegistrationPurpose)
+        viewModel.start(site, domainRegistrationPurpose)
         advanceUntilIdle()
 
         verify(productsStore).fetchProducts(eq(TYPE_DOMAINS_PRODUCT))
