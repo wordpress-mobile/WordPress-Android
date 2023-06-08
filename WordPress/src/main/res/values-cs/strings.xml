@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-10 10:51:33+0000
+Translation-Revision-Date: 2023-05-31 19:10:57+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: cs_CZ
@@ -549,8 +549,6 @@ Language: cs_CZ
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;První rok zdarma &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /rok&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Vaše domény budou přesměrovány na váš web na %s</string>
     <string name="gutenberg_native_create_link">Vytvořit odkaz</string>
-    <string name="domain_registration_result_description">Vaše nová doména &lt;b&gt;%s&lt;/b&gt; se nastavuje. Může trvat až 30 minut, než vaše doména začne fungovat.</string>
-    <string name="domain_registration_result_title">Gratulujeme k nákupu!</string>
     <string name="domains_suggestions_select_domain">Vybrat doménu</string>
     <string name="domains_title">Domény</string>
     <string name="post_settings_post_sticky">Připnutý příspěvek na úvodní stránce</string>
@@ -766,6 +764,7 @@ Language: cs_CZ
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Jeden</string>
     <string name="gutenberg_native_no_preview_available">Náhled není k dispozici.</string>
+    <string name="gutenberg_native_s_link">%s odkaz</string>
     <string name="gutenberg_native_text_color">Barva textu</string>
     <string name="gutenberg_native_padding">Odsazení</string>
     <string name="gutenberg_native_featured">Doporučené</string>
@@ -2118,6 +2117,7 @@ Language: cs_CZ
     <string name="page_status_change_error">Změna stavu stránky se nezdařila</string>
     <string name="page_delete_error">Stránku se nepodařilo odstranit</string>
     <string name="set_parent">Nastavit nadřazenou stránku</string>
+    <string name="dismiss">Odmítnout</string>
     <string name="quick_start_focus_point_description">kliknout zde</string>
     <string name="quick_start_list_create_site_title">Vytvořit stránku</string>
     <string name="quick_start_completed_tour_subtitle">Dobrý pocit odškrtnout něco ze seznamu, co?</string>

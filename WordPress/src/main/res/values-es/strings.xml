@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-17 13:54:09+0000
+Translation-Revision-Date: 2023-06-01 10:21:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_block_ungrouped">Bloque desagrupado</string>
+    <string name="gutenberg_native_block_grouped">Bloque agrupado</string>
+    <string name="dashboard_card_plans_checkout_success_info">El dominio puede tardar hasta 30 minutos en empezar a funcionar correctamente.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">Tu nuevo dominio &lt;b&gt;%s&lt;/b&gt; se está configurando.</string>
+    <string name="dashboard_card_plans_checkout_success_title">¡Todo listo!</string>
+    <string name="dashboard_card_plans_menu_hide_this">Ocultar esto</string>
+    <string name="dashboard_card_plans_sub_title">Obtén un dominio gratuito durante el primer año, elimina los anuncios de tu sitio y aumenta tu espacio de almacenamiento.</string>
+    <string name="dashboard_card_plans_title">Consigue un dominio gratis con un plan anual</string>
+    <string name="virtual_homepage_learn_more">Obtén más información sobre las plantillas</string>
+    <string name="virtual_homepage_subtitle">Tu página de inicio usa una plantilla de tema, por lo que se abrirá en el editor web.</string>
+    <string name="virtual_homepage_title">Página de inicio</string>
+    <string name="account_closure_dialog_success_message">Se ha cerrado la cuenta.</string>
+    <string name="account_closure_dialog_error_unknown">Ha ocurrido un error al cerrar la cuenta.</string>
+    <string name="account_closure_dialog_error_active_memberships">No es posible cerrar la cuenta de este usuario porque tiene compras activas.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">No es posible cerrar la cuenta de este usuario porque tiene suscripciones activas.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">No es posible cerrar la cuenta de este usuario si tiene cargos rechazados sin resolver.</string>
+    <string name="account_closure_dialog_error_atomic_site">No es posible cerrar la cuenta de este usuario de inmediato porque tiene compras activas. Contacta con nuestros Happiness Engineers para eliminar la cuenta definitivamente.</string>
+    <string name="account_closure_dialog_error_unauthorized">No tienes autorización para cerrar la cuenta.</string>
+    <string name="account_closure_dialog_error_title">No se ha podido cerrar la cuenta automáticamente</string>
+    <string name="account_closure_dialog_title">Confirmar el cierre de la cuenta…</string>
+    <string name="account_closure_dialog_message">Para confirmar, vuelve a introducir tu nombre de usuario antes de cerrarla.</string>
+    <string name="close_account">Cerrar cuenta</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Saber más</string>
+    <string name="sharing_twitter_deprecation_notice_description">La opción de compartir automáticamente en Twitter ya no está disponible debido a las modificaciones que ha sufrido esta red social en lo que respecta a términos y precios.</string>
+    <string name="sharing_twitter_deprecation_notice_title">La opción de compartir automáticamente en Twitter ya no está disponible</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">%s para iOS aún no es compatible con editar bloques reutilizables</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">%s para Android aún no es compatible con editar bloques reutilizables</string>
     <string name="jp_migration_notifications_allow_title">Activa las notificaciones para estar al tanto de lo que sucede en tu sitio</string>
@@ -604,8 +629,6 @@ Language: es
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis el primer año &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /año&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Tus dominios redirigirán tu sitio a %s</string>
     <string name="gutenberg_native_create_link">Crear un enlace</string>
-    <string name="domain_registration_result_description">Tu nuevo dominio &lt;b&gt;%s&lt;/b&gt; está siendo configurando. Tu dominio puede tardar hasta 30 minutos en empezar a funcionar.</string>
-    <string name="domain_registration_result_title">¡Felicidades por tu compra!</string>
     <string name="domains_suggestions_select_domain">Seleccionar el dominio</string>
     <string name="domains_title">Dominios</string>
     <string name="post_status_sticky">Fija</string>
@@ -824,6 +847,7 @@ Language: es
     <string name="gutenberg_native_no_preview_available">Vista previa no disponible</string>
     <string name="gutenberg_native_loading">Cargando</string>
     <string name="gutenberg_native_text_color">Color del texto</string>
+    <string name="gutenberg_native_s_link">Enlace %s</string>
     <string name="gutenberg_native_padding">Relleno</string>
     <string name="gutenberg_native_four">Cuatro</string>
     <string name="gutenberg_native_featured">Destacado</string>
@@ -2175,6 +2199,7 @@ Language: es
     <string name="page_status_change_error">Hubo un problema al cambiar el estado de la página</string>
     <string name="page_delete_error">Hubo un problema al borrar la página</string>
     <string name="set_parent">Hacer superior</string>
+    <string name="dismiss">Descartar</string>
     <string name="quick_start_focus_point_description">toca aquí</string>
     <string name="quick_start_list_create_site_title">Crea tu sitio</string>
     <string name="quick_start_list_create_site_subtitle">Pon tu sitio en marcha.</string>
