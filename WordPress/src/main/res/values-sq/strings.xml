@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-10 11:26:11+0000
+Translation-Revision-Date: 2023-05-26 08:47:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sq_AL
 -->
 <resources>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Shihni më tepër</string>
+    <string name="sharing_twitter_deprecation_notice_description">Ndarja e automatizuar me të tjerë që nga Twitter s’mund të përdoret më, për shkak ndryshimesh në kushte dhe çmim nga ana e Twitter-it.</string>
+    <string name="sharing_twitter_deprecation_notice_title">Ndarja e automatizuar me të tjerë që nga Twitter s’mund të përdoret më</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në %s për iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në %s për Android</string>
+    <string name="jp_migration_notifications_allow_title">Lejoni njoftime, që të jeni në dijeni se ç’ndodh në sajtin tuaj</string>
+    <string name="wp_jp_static_poster_message">Aplikacioni Jetpack ka krejt anët e aplikacionit WordPress dhe tanimë edhe hyrje përjashtimore te Statistika, Lexues, Njoftime, etj.</string>
+    <string name="wp_jp_static_poster_title_plural">Përdorni WordPress-in me %s në Jetpack\u00A0app.</string>
+    <string name="wp_jp_static_poster_title">Përdorni WordPress-in me %s në Jetpack\u00A0app.</string>
     <string name="gutenberg_native_unlabeled_color_s">Ngjyrë pa etiketë. %s</string>
     <string name="dashboard_activity_card_footer_link">Shihni krejt veprimtarinë</string>
     <string name="dashboard_activity_card_title">Veprimtari së fundi</string>
     <string name="dashboard_card_domain_title">Gjeni një përkatësi vetjake</string>
     <string name="site_creation_search_domain_example_body">Në ngjashmëri me shembullin më sipër, një përkatësi u lejon njerëzve të gjejnë dhe vizitojnë sajtin tuaj që nga shfletuesi.</string>
     <string name="site_creation_search_domain_example_title">EmriiSajtitTuaj.com</string>
-    <string name="site_creation_search_domain_example_url">https://emriisajtittuaj.com</string>
     <string name="site_creation_domain_search_input_hint">Kërkoni me fjalëkyçe</string>
     <string name="site_creation_domain_header_subtitle">Kërkoni për një përkatësi të shkurtër dhe që mund të mbahet mend, për t’i ndihmuar njerëzit të gjejnë dhe vizitojnë sajtin tuaj.</string>
     <string name="site_creation_domain_cost_sale">për vitin e parë</string>
@@ -71,11 +79,8 @@ Language: sq_AL
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s po përdor %2$s, i cili nuk i mbulon ende krejt veçoritë e aplikacionit. Ju lutemi, instaloni %3$s.</string>
     <string name="wp_jetpack_feature_removal_static_posters_phase">Kalim në aplikacionin Jetpack pas pak ditësh.</string>
     <string name="wp_jp_static_poster_footnote">Kalimi është falas dhe do vetëm një minutë.</string>
-    <string name="wp_jp_static_poster_message">Statistikat, Lexuesi, Njoftimet dhe veçori të tjera të bazuara në Jetpack tani janë hequr prej aplikacionit WordPress dhe tani mund të gjenden vetëm në aplikacionin Jetpack.</string>
     <string name="wp_jp_static_poster_button_secondary">Mësoni më tepër, te Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Kaloni te aplikacioni Jetpack</string>
-    <string name="wp_jp_static_poster_title_plural">%s kanë kaluar te aplikacioni Jetpack.</string>
-    <string name="wp_jp_static_poster_title">%s ka kaluar te aplikacioni Jetpack.</string>
     <string name="my_site_btn_wp_admin">Përgjegjës WP-je</string>
     <string name="my_site_header_manage">Administrojini</string>
     <string name="my_site_header_traffic">Trafik</string>
@@ -239,7 +244,6 @@ Language: sq_AL
     <string name="jp_migration_done_title">Faleminderit që kaloni në Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Do t’i çaktivizojmë njoftimet prej aplikacionit WordPress.</string>
     <string name="jp_migration_notifications_subtitle">Do të merrni të njëjtat njoftime, por tani do të vijnë nga aplikacioni Jetpack.</string>
-    <string name="jp_migration_notifications_title">Njoftimet tani vijnë prej Jetpack-ut</string>
     <string name="wordpress_help_center_button">Qendër ndihme WordPress</string>
     <string name="support_title">Asistencë</string>
     <string name="notification_disable_broadcast_permission_desc">E lejon aplikacionin të çaktivizojë njoftimet nga WordPress-i.</string>

@@ -1,0 +1,2 @@
+22.4:
+Quando tocchi un blocco di testo nidificato, puoi modificare immediatamente il contenuto in quel blocco. Non dovrai più toccare ogni livello di nidificazione per arrivare dove desideri. (Anche noi avevamo le dita stanche.)

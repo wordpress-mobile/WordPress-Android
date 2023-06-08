@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/publicize_twitter_deprecation_notice_header_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_notice_red_24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_title"
+        app:layout_constraintEnd_toStartOf="@+id/publicize_twitter_deprecation_notice_header_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/publicize_twitter_deprecation_notice_header_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_title"
+        tools:text="@string/sharing_twitter_deprecation_notice_description" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/publicize_twitter_deprecation_notice_header_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="?attr/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/publicize_twitter_deprecation_notice_header_error"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/sharing_twitter_deprecation_notice_title" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

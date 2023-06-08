@@ -249,7 +249,6 @@ class PagesViewModel
 
     data class SiteEditorData(
         val url: String,
-        val css: String,
         val useWpComCredentials: Boolean,
     )
 
@@ -745,11 +744,10 @@ class PagesViewModel
                 _openExternalLink.postValue(action.url)
             }
 
-            is VirtualHomepage.Action.OpenSiteEditor -> {
+            VirtualHomepage.Action.OpenSiteEditor -> {
                 _openSiteEditorWebView.postValue(
                     SiteEditorData(
-                        action.getUrl(site),
-                        action.customCss,
+                        VirtualHomepage.Action.OpenSiteEditor.getUrl(site),
                         useWpComCredentials = site.isWPCom || site.isWPComAtomic || site.isPrivateWPComAtomic
                     )
                 )
@@ -762,7 +760,7 @@ class PagesViewModel
             VirtualHomepage.Action.OpenExternalLink.TemplateSupport ->
                 AnalyticsTracker.Stat.PAGES_EDIT_HOMEPAGE_INFO_PRESSED
 
-            is VirtualHomepage.Action.OpenSiteEditor -> AnalyticsTracker.Stat.PAGES_EDIT_HOMEPAGE_ITEM_PRESSED
+            VirtualHomepage.Action.OpenSiteEditor -> AnalyticsTracker.Stat.PAGES_EDIT_HOMEPAGE_ITEM_PRESSED
         }
         analyticsTracker.track(stat, site)
     }

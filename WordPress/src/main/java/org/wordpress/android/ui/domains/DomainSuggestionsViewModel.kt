@@ -272,7 +272,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     private fun openPlans(selectedSuggestion: DomainSuggestionItem) {
         val domainProductDetails = DomainProductDetails(selectedSuggestion.productId, selectedSuggestion.domainName)
         _onFreeDomainSelected.postValue(Event(domainProductDetails))
-        // add tracking here
+        domainsRegistrationTracker.trackDomainsPurchaseWebviewViewed(site, isSiteCreation = false)
     }
 
     private fun selectDomain(selectedSuggestion: DomainSuggestionItem) {

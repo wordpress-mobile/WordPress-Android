@@ -13,4 +13,6 @@ steps:
 
       install_gems
 
+      cp gradle.properties-example gradle.properties
+
       bundle exec fastlane finalize_release skip_confirm:true

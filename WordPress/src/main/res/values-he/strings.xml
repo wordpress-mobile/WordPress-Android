@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-04 14:54:09+0000
+Translation-Revision-Date: 2023-05-17 17:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">עריכת בלוקים לשימוש חוזר עדיין אינה נתמכת ב-%s למערכת iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">עריכת בלוקים לשימוש חוזר עדיין אינה נתמכת ב-%s למערכת Android</string>
+    <string name="jp_migration_notifications_allow_title">לאפשר להודעות להתעדכן מול האתר שלך</string>
+    <string name="wp_jp_static_poster_message">באפליקציה של Jetpack יש את כל הפונקציונליות של האפליקציה של WordPress ועכשיו גם גישה בלעדית לנתונים סטטיסטיים, ל-Reader, להודעות ועוד.</string>
+    <string name="wp_jp_static_poster_title_plural">להשתמש ב-WordPress עם %s באפליקציה של Jetpack\u00A0.</string>
+    <string name="wp_jp_static_poster_title">להשתמש ב-WordPress עם %s באפליקציה של Jetpack\u00A0.</string>
     <string name="gutenberg_native_unlabeled_color_s">צבע ללא תווית. %s</string>
     <string name="dashboard_activity_card_title">פעילות אחרונה</string>
     <string name="dashboard_card_domain_title">למצוא דומיין אישי</string>
     <string name="site_creation_search_domain_example_body">כמו הדוגמה שמוצגת למעלה, דומיין מאפשר לאנשים למצוא את האתר שלך ולבקר בו מדפדפן האינטרנט שלהם.</string>
     <string name="dashboard_activity_card_footer_link">להציג את כל הפעילויות</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
-    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
     <string name="site_creation_domain_cost_sale">בשנה הראשונה</string>
     <string name="new_site_creation_preview_caption_paid">יידרשו עד 30 דקות להתחלת הפעילות של הדומיין האישי.</string>
     <string name="new_site_creation_preview_subtitle_paid">שלחנו את הקבלה שלך באימייל. %s</string>
@@ -71,11 +76,8 @@ Language: he_IL
     <string name="jetpack_full_plugin_install_concise_description_single">האתר ⁦%1$s⁩ משתמש ב-⁦%2$s⁩ שעדיין לא תומך בכל האפשרויות של האפליקציה. יש להתקין את ⁦%3$s⁩.</string>
     <string name="wp_jetpack_feature_removal_static_posters_phase">האפשרות תעבור לאפליקציה של Jetpack בימים הקרובים.</string>
     <string name="wp_jp_static_poster_footnote">ההחלפה היא חינמית ואורכת דקה בלבד.</string>
-    <string name="wp_jp_static_poster_message">נתונים סטטיסטיים, Reader, הודעות ואפשרויות אחרות שמופעלות על ידי Jetpack הוסרו מאפליקציית WordPress וכעת ניתן לגשת אליהן רק באפליקציה של Jetpack.</string>
     <string name="wp_jp_static_poster_button_secondary">מידע נוסף באתר Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">החלפה לאפליקציה של Jetpack</string>
-    <string name="wp_jp_static_poster_title_plural">האפשרויות של %s הועברו לאפליקציה של Jetpack.</string>
-    <string name="wp_jp_static_poster_title">האפשרות של %s הועברה לאפליקציה של Jetpack.</string>
     <string name="my_site_btn_wp_admin">ניהול WP</string>
     <string name="my_site_header_manage">ניהול</string>
     <string name="my_site_header_traffic">תעבורה</string>
@@ -240,7 +242,6 @@ Language: he_IL
     <string name="jp_migration_done_title">תודה שעברת אל Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">אנחנו נשבית את קבלת ההודעות מהאפליקציה של WordPress.</string>
     <string name="jp_migration_notifications_subtitle">אותן הודעות ימשיכו להישלח אליך אבל כעת הן יגיעו מהאפליקציה של Jetpack.</string>
-    <string name="jp_migration_notifications_title">ההודעות מגיעות עכשיו מ-Jetpack</string>
     <string name="wordpress_help_center_button">מרכז העזרה של WordPress</string>
     <string name="support_title">תמיכה</string>
     <string name="notification_disable_broadcast_permission_desc">הפעולה מאפשרת לאפליקציה להשבית את ההודעות של WordPress.</string>

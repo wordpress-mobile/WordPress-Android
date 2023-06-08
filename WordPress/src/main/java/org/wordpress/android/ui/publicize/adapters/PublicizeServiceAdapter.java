@@ -202,7 +202,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
 
             PublicizeServiceList services = PublicizeTable.getServiceList();
             for (PublicizeService service : services) {
-                if (!isHiddenService(service)) {
+                if (!isHiddenService(service) && service.getStatus() == PublicizeService.Status.OK) {
                     mTmpServices.add(service);
                 }
             }

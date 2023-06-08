@@ -51,10 +51,11 @@ class BlazeViewModel @Inject constructor(
     private fun initializePromotePostUIState(postModel: PostUIModel) {
         val updatedPostModel = postModel.copy(
             url = UrlUtils.removeScheme(postModel.url),
-            featuredImageUrl = featuredImageTracker.getFeaturedImageUrl(
-                siteSelectedSiteRepository.getSelectedSite()!!,
-                postModel.featuredImageId
-            )
+            featuredImageUrl = siteSelectedSiteRepository.getSelectedSite()?.let {
+                featuredImageTracker.getFeaturedImageUrl(
+                    it,
+                    postModel.featuredImageId)
+            }
         )
         _uiState.value = BlazeUiState.PromoteScreen.PromotePost(updatedPostModel)
         _promoteUiState.value = BlazeUiState.PromoteScreen.PromotePost(updatedPostModel)

@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-12 14:34:08+0000
+Translation-Revision-Date: 2023-05-25 16:06:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: de
 -->
 <resources>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Mehr erfahren</string>
+    <string name="sharing_twitter_deprecation_notice_title">Das automatische Teilen auf Twitter ist nicht länger verfügbar</string>
+    <string name="sharing_twitter_deprecation_notice_description">Das automatische Teilen auf Twitter ist aufgrund von Änderungen der Bedingungen und der Preisgestaltung von Twitter nicht länger verfügbar.</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">Das Bearbeiten von wiederverwendbaren Blöcken wird in %s für iOS noch nicht unterstützt</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Das Bearbeiten von wiederverwendbaren Blöcken wird in %s für Android noch nicht unterstützt</string>
+    <string name="jp_migration_notifications_allow_title">Benachrichtigungen zulassen, um deine Website auf dem neusten Stand zu halten</string>
+    <string name="wp_jp_static_poster_message">Die Jetpack-App verfügt über alle Funktionen der WordPress-App und bietet ab sofort exklusiven Zugriff auf Statistiken, den Reader, Benachrichtigungen und mehr.</string>
+    <string name="wp_jp_static_poster_title_plural">Verwende WordPress mit %s in der Jetpack-App.</string>
+    <string name="wp_jp_static_poster_title">Verwende WordPress mit %s in der Jetpack-App.</string>
     <string name="gutenberg_native_unlabeled_color_s">Unbenannte Farbe %s</string>
     <string name="dashboard_activity_card_footer_link">Gesamte Aktivität anzeigen</string>
     <string name="dashboard_activity_card_title">Letzte Aktivität</string>
     <string name="dashboard_card_domain_title">Individuelle Domain finden</string>
     <string name="site_creation_search_domain_example_body">Wie im Beispiel oben ermöglicht eine Domain Personen, deine Website über ihren Webbrowser zu finden.</string>
-    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">Mit Stichwörtern suchen</string>
     <string name="site_creation_domain_header_subtitle">Suche nach einer kurzen und einprägsamen Domain, damit Personen deine Website leicht finden und besuchen können.</string>
@@ -71,11 +79,8 @@ Language: de
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s verwendet %2$s, das noch nicht alle Funktionen der App unterstützt. Bitte installiere das %3$s.</string>
     <string name="wp_jetpack_feature_removal_static_posters_phase">Wird in einigen Tagen in die Jetpack-App verschoben.</string>
     <string name="wp_jp_static_poster_footnote">Der Wechsel ist kostenlos und dauert nur eine Minute.</string>
-    <string name="wp_jp_static_poster_message">Statistiken, der Reader, Benachrichtigungen und weitere von Jetpack unterstützte Funktionen wurden aus der WordPress-App entfernt und sind ab sofort ausschließlich in der Jetpack-App verfügbar.</string>
     <string name="wp_jp_static_poster_button_secondary">Weitere Informationen auf Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Zur Jetpack-App wechseln</string>
-    <string name="wp_jp_static_poster_title_plural">%s wurden in die Jetpack-App verschoben.</string>
-    <string name="wp_jp_static_poster_title">%s wurde in die Jetpack-App verschoben.</string>
     <string name="my_site_btn_wp_admin">WP Admin</string>
     <string name="my_site_header_manage">Verwalten</string>
     <string name="my_site_header_traffic">Traffic</string>
@@ -240,7 +245,6 @@ Language: de
     <string name="jp_migration_done_title">Danke für deinen Wechsel zu Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Wir deaktivieren Benachrichtigungen von der WordPress App.</string>
     <string name="jp_migration_notifications_subtitle">Du erhältst dieselben Benachrichtigungen, sie kommen aber ab sofort von der Jetpack-App.</string>
-    <string name="jp_migration_notifications_title">Benachrichtigungen kommen ab jetzt von Jetpack</string>
     <string name="wordpress_help_center_button">WordPress-Hilfe-Center</string>
     <string name="support_title">Support</string>
     <string name="notification_disable_broadcast_permission_desc">Erlaubt der App, WordPress-Benachrichtigungen zu deaktivieren.</string>

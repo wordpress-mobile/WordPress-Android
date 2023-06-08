@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-03 12:24:47+0000
+Translation-Revision-Date: 2023-05-25 13:31:56+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ro
 -->
 <resources>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Află mai multe</string>
+    <string name="sharing_twitter_deprecation_notice_description">Partajarea automată pe Twitter nu mai este disponibilă deoarece Twitter a făcut modificări la termeni și prețuri.</string>
+    <string name="sharing_twitter_deprecation_notice_title">Partajarea automată pe Twitter nu mai este disponibilă</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">%s pentru iOS nu suportă încă editarea blocurilor reutilizabile</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">%s pentru Android nu suportă încă editarea blocurilor reutilizabile</string>
+    <string name="jp_migration_notifications_allow_title">Permite ca notificările să continue pe site-ul tău</string>
+    <string name="wp_jp_static_poster_message">Aplicația Jetpack are toate funcționalitățile aplicației WordPress, cu acces exclusiv la Statistici, Cititor, Notificări și altele.</string>
+    <string name="wp_jp_static_poster_title_plural">Folosește WordPress cu %s în aplicația Jetpack.</string>
+    <string name="wp_jp_static_poster_title">Folosește WordPress cu %s în aplicația Jetpack.</string>
     <string name="gutenberg_native_unlabeled_color_s">Culoare fără etichetă. %s</string>
     <string name="dashboard_activity_card_footer_link">Vezi toată activitatea</string>
     <string name="dashboard_activity_card_title">Activitate recentă</string>
     <string name="dashboard_card_domain_title">Găsește un domeniu personalizat</string>
     <string name="site_creation_search_domain_example_body">La fel ca în exemplul de mai sus, un domeniu le permite oamenilor să-ți găsească și să-ți viziteze site-ul din navigatoarele lor web.</string>
     <string name="site_creation_search_domain_example_title">numelesiteuluitau.com</string>
-    <string name="site_creation_search_domain_example_url">https://numelesiteuluitau.com</string>
     <string name="site_creation_domain_search_input_hint">Caută după cuvinte cheie</string>
     <string name="site_creation_domain_header_subtitle">Caută un domeniu care să fie scurt și ușor de ținut minte ca să le permiți oamenilor să-ți găsească și să-ți viziteze site-ul.</string>
     <string name="site_creation_domain_cost_sale">în primul an</string>
@@ -71,11 +79,8 @@ Language: ro
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s folosește %2$s, care încă nu suportă toate funcționalitățile aplicației. Te rog instalează %3$s.</string>
     <string name="wp_jetpack_feature_removal_static_posters_phase">Mutăm funcționalitatea în aplicația Jetpack peste câteva zile.</string>
     <string name="wp_jp_static_poster_footnote">Comutarea este gratuită și durează numai un minut.</string>
-    <string name="wp_jp_static_poster_message">Statistici, Cititor, Notificări și alte funcționalități propulsate de Jetpack au fost înlăturate din aplicația WordPress. Pot fi găsite acum doar în aplicația Jetpack.</string>
     <string name="wp_jp_static_poster_button_secondary">Află mai multe la Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Comută la aplicația Jetpack</string>
-    <string name="wp_jp_static_poster_title_plural">%s s-au mutat în aplicația Jetpack.</string>
-    <string name="wp_jp_static_poster_title">%s s-a mutat în aplicația Jetpack.</string>
     <string name="my_site_btn_wp_admin">Administrare WP</string>
     <string name="my_site_header_manage">Administrează</string>
     <string name="my_site_header_traffic">Trafic</string>
@@ -240,7 +245,6 @@ Language: ro
     <string name="jp_migration_done_title">Îți mulțumim că ai comutat la Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Vom dezactiva notificările din aplicația WordPress.</string>
     <string name="jp_migration_notifications_subtitle">Vei primi aceleași notificări, dar acum vor veni din aplicația Jetpack.</string>
-    <string name="jp_migration_notifications_title">Notificările vin acum de la Jetpack</string>
     <string name="wordpress_help_center_button">Centru de ajutor WordPress</string>
     <string name="support_title">Suport</string>
     <string name="notification_disable_broadcast_permission_desc">Permite aplicației să dezactiveze notificările WordPress.</string>
@@ -2337,7 +2341,7 @@ Language: ro
     <string name="site_settings_quota_space_unlimited">%1$s din nelimitat</string>
     <string name="preview_count">Previzualizează %d</string>
     <string name="add_count">Adaugă %d</string>
-    <string name="fab_add_tag_desc">Creează etichetă</string>
+    <string name="fab_add_tag_desc">Creează o etichetă</string>
     <string name="navigate_up_desc">navighează în sus</string>
     <string name="notification_settings_switch_desc">Notificări</string>
     <string name="open_external_link_desc">Deschide legătura externă</string>

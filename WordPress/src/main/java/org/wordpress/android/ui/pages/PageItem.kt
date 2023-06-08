@@ -192,18 +192,8 @@ sealed class PageItem(open val type: Type) {
 
     object VirtualHomepage : PageItem(VIRTUAL_HOMEPAGE) {
         sealed class Action {
-            class OpenSiteEditor : Action() {
-                val customCss: String get() = SITE_EDITOR_CSS
-
+            object OpenSiteEditor : Action() {
                 fun getUrl(site: SiteModel): String = site.adminUrl + "site-editor.php?canvas=edit"
-
-                companion object {
-                    const val SITE_EDITOR_CSS = ".edit-site-header-edit-mode { padding-left: 0px } " +
-                            ".edit-site-site-hub { display: none } " +
-                            ".edit-site-template-details " +
-                            ".edit-site-template-details__show-all-button.components-button " +
-                            "{ display: none }"
-                }
             }
 
             sealed class OpenExternalLink(

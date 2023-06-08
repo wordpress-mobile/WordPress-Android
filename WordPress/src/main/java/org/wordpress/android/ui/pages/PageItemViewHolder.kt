@@ -300,7 +300,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         override fun onBind(pageItem: PageItem) {
             itemView.setOnClickListener {
                 QuickStartUtils.removeQuickStartFocusPoint(pageItemContainer)
-                onAction(Action.OpenSiteEditor())
+                onAction(Action.OpenSiteEditor)
             }
             pageItemInfo.setOnClickListener {
                 onAction(Action.OpenExternalLink.TemplateSupport)

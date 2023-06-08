@@ -174,7 +174,6 @@
     <dimen name="text_sz_extra_small">10sp</dimen>
     <dimen name="text_sz_small">12sp</dimen>
     <dimen name="text_sz_medium">14sp</dimen>
-    <dimen name="text_sz_medium_large">15sp</dimen>
     <dimen name="text_sz_large">16sp</dimen>
     <dimen name="text_sz_larger">18sp</dimen>
     <dimen name="text_sz_extra_large">20sp</dimen>
@@ -722,10 +721,14 @@
     <dimen name="toolbar_bottom_margin_with_tabs">168dp</dimen>
 
     <!-- quick link ribbon -->
-    <dimen name="quick_link_ribbon_padding_start">18dp</dimen>
+    <dimen name="quick_link_ribbon_margin">16dp</dimen>
+    <dimen name="quick_link_ribbon_padding_start">12dp</dimen>
+    <dimen name="quick_link_ribbon_padding_end">16dp</dimen>
+    <dimen name="quick_link_ribbon_padding_vertical">8dp</dimen>
     <dimen name="quick_link_ribbon_icon_size">24dp</dimen>
+    <dimen name="quick_link_ribbon_text_size">16sp</dimen>
     <dimen name="quick_link_ribbon_corner_radius">10dp</dimen>
-    <dimen name="quick_link_ribbon_icon_padding">16dp</dimen>
+    <dimen name="quick_link_ribbon_icon_padding">8dp</dimen>
 
     <!-- Jetpack Migration Flow -->
     <dimen name="jp_migration_padding_horizontal">30dp</dimen>
@@ -765,4 +768,9 @@
     </item>
     <dimen name="my_site_dashboard_card_page_create_page_top_padding">14dp</dimen>
     <dimen name="my_site_dashboard_card_page_create_page_divider_top_padding">18dp</dimen>
+
+    <!-- Dashboard card plans -->
+    <dimen name="dashboard_card_plans_layout_padding">16dp</dimen>
+    <dimen name="dashboard_card_plans_top_margin">48dp</dimen>
+    <dimen name="dashboard_card_plans_done_button_bottom_margin">16dp</dimen>
 </resources>

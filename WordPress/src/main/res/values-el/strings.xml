@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-03 14:27:56+0000
+Translation-Revision-Date: 2023-05-22 11:01:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: el_GR
@@ -13,6 +13,7 @@ Language: el_GR
     <string name="help_buttons_screen_title">Βοήθεια</string>
     <string name="free">Δωρεάν</string>
     <string name="tickets">Εισιτήρια</string>
+    <string name="site_creation_domain_cost">ανά έτος</string>
     <string name="jetpack_plugin_install_error_title">Παρουσιάστηκε ένα πρόβλημα</string>
     <string name="jetpack_plugin_install_error_image_content_description">Εικονίδιο σφάλματος</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d Απαντήσεις</string>

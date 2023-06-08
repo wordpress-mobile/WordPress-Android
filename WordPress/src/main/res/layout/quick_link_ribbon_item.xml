@@ -10,7 +10,7 @@
         style="@style/MySiteQuickLinkRibbon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginStart="@dimen/quick_link_ribbon_margin"
         tools:text="@string/my_site_btn_site_pages"
         tools:icon="@drawable/ic_pages_white_24dp"
         app:layout_constraintStart_toStartOf="parent"

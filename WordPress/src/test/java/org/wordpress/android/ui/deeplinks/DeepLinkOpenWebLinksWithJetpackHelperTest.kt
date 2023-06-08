@@ -15,9 +15,9 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.FirebaseRemoteConfigWrapper
 import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig
+import org.wordpress.android.util.config.RemoteConfigWrapper
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -30,8 +30,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Mock
-    lateinit var firebaseRemoteConfigWrapper: FirebaseRemoteConfigWrapper
-
+    lateinit var remoteConfigWrapper: RemoteConfigWrapper
     @Mock
     lateinit var packageManagerWrapper: PackageManagerWrapper
 
@@ -48,10 +47,10 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
         helper = DeepLinkOpenWebLinksWithJetpackHelper(
             openWebLinksWithJetpackFlowFeatureConfig,
             appPrefsWrapper,
-            firebaseRemoteConfigWrapper,
             packageManagerWrapper,
             dateTimeUtilsWrapper,
-            buildConfigWrapper
+            buildConfigWrapper,
+            remoteConfigWrapper
         )
     }
 
@@ -207,7 +206,6 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
         setFeatureEnabled(isFeatureFlagEnabled)
         setJetpackInstalled(isJetpackInstalled)
         setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
-//        setDeepLinkHandlerComponentEnabled(isDeepLinkComponentEnabled)
         setLastShownTimestamp(overlayLastShownTimestamp)
         setFlowFrequency(flowFrequency)
         setDaysBetween(overlayLastShownTimestamp)
@@ -228,7 +226,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     }
 
     private fun setFlowFrequency(value: Long) {
-        whenever(firebaseRemoteConfigWrapper.getOpenWebLinksWithJetpackFlowFrequency()).thenReturn(value)
+        whenever(remoteConfigWrapper.getOpenWebLinksWithJetpackFlowFrequency()).thenReturn(value)
     }
 
     private fun setDaysBetween(lastShownTimestamp: Long) {

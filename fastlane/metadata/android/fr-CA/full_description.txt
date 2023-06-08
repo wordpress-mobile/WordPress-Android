@@ -1,14 +1,14 @@
-WordPress pour Android vous permet de publier sur le Web partout où vous vous trouvez. C’est tellement plus qu’un créateur de site Web !
+Avec WordPress pour Android, publiez sur le Web partout où vous allez. C’est tellement plus qu’un créateur de site Web !
 
 CRÉER
-- Hébergez vos plus grandes idées sur le Web. WordPress pour Android est un créateur de sites Web et de blogs.
+- Donnez à vos grandes idées une place sur le Web. WordPress pour Android est un créateur de site Web et de blog.
 - Choisissez l’apparence souhaitée parmi une vaste sélection de thèmes WordPress, puis personnalisez votre site à votre image avec des photos, couleurs et polices.
-- Les conseils intégrés lors de la prise en main vous guideront à travers les étapes de base de la configuration de votre nouveau site Web afin d’en faire un succès.
+- Les conseils intégrés lors de la prise en main vous guideront à travers les bases de la configuration de votre nouveau site Web afin d’en faire un succès.
 
 PUBLIER
-- Créez des mises à jour, des stories, des photoreportages, des annonces. Absolument tout ce que vous voulez  grâce à l’éditeur.
-- Donnez vie à vos articles et pages avec vos propres photos et vidéos, ou trouvez l’image parfaite dans la bibliothèque de photographies professionnelles gratuites intégrée à l’application.
-- Enregistrez vos idées en mode brouillon et revenez-y lorsque l’inspiration vous revient ou programmez de nouveaux articles à publier plus tard afin que votre site reste attrayant grâce à des publications régulières.
+- Créez des mises à jour, des stories, des photoreportages, des annonces — tout ce que vous voulez ! — avec l’éditeur.
+- Donnez vie à vos articles et pages avec des photos et vidéos de votre appareil photo ou de vos albums, ou trouvez l’image parfaite dans le recueil de photographies professionnelles gratuites proposées dans l’application.
+- Enregistrez vos idées au mode brouillon et revenez-y lorsque l’inspiration vous revient, ou programmez de nouveaux articles pour plus tard afin de garder votre site attrayant.
 - Ajoutez des étiquettes et des catégories pour inviter les nouveaux lecteurs à découvrir vos articles, et admirez votre public grandir.
 
 STATISTIQUES
@@ -20,7 +20,7 @@ NOTIFICATIONS
 - Répondez aux nouveaux commentaires au fur et à mesure qu’ils apparaissent pour entretenir la conversation et remercier vos lecteurs.
 
 LECTEUR
-Explorez des milliers de thèmes classés par étiquette, découvrez de nouveaux auteurs et organisations, et suivez celles et ceux qui vous intéressent.
+- Explorez des milliers de thèmes classés par étiquette, découvrez de nouveaux auteurs et organisations, et suivez celles et ceux qui vous intéressent.
 - Conservez les publications qui vous fascinent avec la fonctionnalité Enregistrer pour plus tard.
 
 PARTAGER

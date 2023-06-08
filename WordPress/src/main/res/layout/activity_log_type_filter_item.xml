@@ -7,7 +7,7 @@
     android:background="?attr/selectableItemBackground"
     android:focusable="true">
 
-    <com.google.android.material.checkbox.MaterialCheckBox
+    <CheckBox
         android:id="@+id/checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-12 14:35:31+0000
+Translation-Revision-Date: 2023-05-17 13:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.4
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">تحرير المكوّنات القابلة لإعادة الاستخدام غير مدعوم بعد على %s لنظام التشغيل iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">تحرير المكوّنات القابلة لإعادة الاستخدام غير مدعوم بعد على %s لنظام التشغيل Android</string>
+    <string name="jp_migration_notifications_allow_title">السماح بالتنبيهات بمواكبة موقعك</string>
+    <string name="wp_jp_static_poster_message">يحتوي تطبيق Jetpack على كل وظائف تطبيق ووردبريس، إلى جانب وصول حصري الآن إلى ميزات Stats وReader وNotifications والمزيد.</string>
+    <string name="wp_jp_static_poster_title_plural">استخدم ووردبريس مع %s في Jetpack\u00A0app.</string>
+    <string name="wp_jp_static_poster_title">استخدم ووردبريس مع %s في Jetpack\u00A0app.</string>
     <string name="gutenberg_native_unlabeled_color_s">لون غير مصنّف. %s</string>
     <string name="dashboard_activity_card_footer_link">عرض كل النشاط</string>
     <string name="dashboard_activity_card_title">آخر نشاط</string>
     <string name="dashboard_card_domain_title">العثور على نطاق مخصص</string>
     <string name="site_creation_search_domain_example_body">على غرار المثال أعلاه، يسمح النطاق للأشخاص بالعثور على موقعك وزيارته من متصفح الويب لديهم.</string>
-    <string name="site_creation_search_domain_example_url">https://yoursitename.com</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">البحث باستخدام الكلمات المفتاحية</string>
     <string name="site_creation_domain_header_subtitle">ابحث عن نطاق قصير لا يُنسى لمساعدة الأشخاص على العثور على موقعك وزيارته.</string>
@@ -71,11 +76,8 @@ Language: ar
     <string name="jetpack_full_plugin_install_concise_description_single">يستخدم ⁦%1$s⁩ ⁦%2$s⁩، التي لا تدعم كل ميزات التطبيق حتى الآن. Please install the %3$s.</string>
     <string name="wp_jetpack_feature_removal_static_posters_phase">Moving to the Jetpack app in a few days.</string>
     <string name="wp_jp_static_poster_footnote">التبديل مجاني، ولا يستغرق سوى بضع دقائق.</string>
-    <string name="wp_jp_static_poster_message">تمت إزالة ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات التي يدعمها Jetpack من تطبيق ووردبريس.</string>
     <string name="wp_jp_static_poster_button_secondary">معرفة المزيد على jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">التبديل إلى تطبيق Jetpack</string>
-    <string name="wp_jp_static_poster_title_plural">%s have moved to the Jetpack app.</string>
-    <string name="wp_jp_static_poster_title">%s has moved to the Jetpack app.</string>
     <string name="my_site_btn_wp_admin">مسؤول ووردبريس</string>
     <string name="my_site_header_manage">إدارة المحتويات</string>
     <string name="my_site_header_traffic">حركة المرور</string>
@@ -240,7 +242,6 @@ Language: ar
     <string name="jp_migration_done_title">شكرًا على التبديل إلى Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">سنقوم بإيقاف تشغيل التنبيهات من تطبيق ووردبريس.</string>
     <string name="jp_migration_notifications_subtitle">ستتلقى كل التنبيهات نفسها ولكنها ستأتي الآن من تطبيق Jetpack.</string>
-    <string name="jp_migration_notifications_title">تأتي التنبيهات الآن من Jetpack</string>
     <string name="wordpress_help_center_button">مركز مساعدة ووردبريس</string>
     <string name="support_title">دعم</string>
     <string name="notification_disable_broadcast_permission_desc">يسمح للتطبيق بتعطيل تنبيهات ووردبريس.</string>

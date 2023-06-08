@@ -28,4 +28,19 @@ class DashboardTests : BaseTest() {
             .tapDomainsCard()
             .assertDomainsScreenLoaded()
     }
+
+    @Test
+    fun e2ePagesCardNavigation() {
+        MySitesPage()
+            .scrollToPagesCard()
+            .assertPagesCard()
+            .assertPagesCardHasPage("Blog")
+            .assertPagesCardHasPage("Cart")
+            .assertPagesCardHasPage("Shop")
+            .tapPagesCard()
+            .assertPagesScreenLoaded()
+            .assertPagesScreenHasPage("Blog")
+            .assertPagesScreenHasPage("Cart")
+            .assertPagesScreenHasPage("Shop")
+    }
 }
