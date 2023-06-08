@@ -62,6 +62,8 @@ public class AppPrefs {
      * Application related preferences. When the user disconnects, these preferences are erased.
      */
     public enum DeletablePrefKey implements PrefKey {
+        HAS_SAVED_PRIVACY_SETTINGS,
+
         // name of last shown activity
         LAST_ACTIVITY_STR,
 

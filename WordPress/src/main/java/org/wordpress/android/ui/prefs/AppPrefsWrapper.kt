@@ -7,6 +7,8 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.prefs.AppPrefs.PrefKey
+import org.wordpress.android.ui.prefs.AppPrefs.getBoolean
+import org.wordpress.android.ui.prefs.AppPrefs.setBoolean
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
@@ -21,6 +23,10 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
+var savedPrivacySettings: Boolean
+    get() = getBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, false)
+    set(value) = setBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, value)
+
 /**
  * Injectable wrapper around AppPrefs.
  *
@@ -30,6 +36,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class AppPrefsWrapper @Inject constructor() {
+    var savedPrivacyBannerSettings by ::savedPrivacySettings
+
     var featureAnnouncementShownVersion: Int
         get() = AppPrefs.getFeatureAnnouncementShownVersion()
         set(version) = AppPrefs.setFeatureAnnouncementShownVersion(version)
