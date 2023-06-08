@@ -4,11 +4,13 @@ import org.wordpress.android.util.LanguageUtils
 import org.wordpress.android.util.LocaleManager
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
-class LocaleProvider @Inject constructor() : Provider<Locale> {
+class LocaleProvider @Inject constructor() : ReadOnlyProperty<Any, Locale> {
+    override fun getValue(thisRef: Any, property: KProperty<*>) = appLocale
+
     private val appLocale by lazy { getAppLocale() }
-
-    override fun provide() = appLocale
 
     fun getAppLocale(): Locale = LanguageUtils.getCurrentDeviceLanguage()
 

@@ -1,24 +1,21 @@
 package org.wordpress.android.ui.prefs.privacy.banner.domain
 
 import org.wordpress.android.data.LocaleProvider
-import org.wordpress.android.fluxc.store.AccountStore
 import javax.inject.Inject
 
 class IsUsersCountryGdprCompliant @Inject constructor(
-    private val accountStore: AccountStore,
-    private val telephonyManagerProvider: TelephonyManagerProvider,
-    private val localeProvider: LocaleProvider,
+    localeProvider: LocaleProvider,
+    carrierCountryCodeProvider: CarrierCountryCodeProvider,
+    accountIpCountryCodeProvider: AccountIpCountryCodeProvider,
 ) {
     operator fun invoke(): Boolean {
-        val countryCode = let {
-            if (accountStore.hasAccessToken()) accountStore.account.userIpCountryCode
-            else countryCodeFromPhoneCarrierOrLocale()
-        }.uppercase()
+        val countryCode = accountIpCountryCode ?: carrierCountryCode ?: deviceLocale.country.orEmpty()
         return countryCode in PRIVACY_BANNER_ELIGIBLE_COUNTRY_CODES
     }
 
-    private fun countryCodeFromPhoneCarrierOrLocale() =
-        telephonyManagerProvider.getCountryCode().ifEmpty { localeProvider.provide().country.orEmpty() }
+    private val accountIpCountryCode by accountIpCountryCodeProvider
+    private val carrierCountryCode by carrierCountryCodeProvider
+    private val deviceLocale by localeProvider
 }
 
 private val PRIVACY_BANNER_ELIGIBLE_COUNTRY_CODES = listOf(
