@@ -14,7 +14,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.prefs.language.LocalePickerListItem.LocaleRow
 import org.wordpress.android.ui.prefs.language.LocalePickerViewModel
 import org.wordpress.android.ui.prefs.language.LocalePickerViewModel.LocalePickerUiState
-import org.wordpress.android.util.LocaleProvider
+import org.wordpress.android.data.LocaleProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Locale
 

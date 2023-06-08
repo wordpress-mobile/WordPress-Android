@@ -9,7 +9,7 @@ import androidx.lifecycle.switchMap
 import org.wordpress.android.R.array
 import org.wordpress.android.ui.prefs.language.LocalePickerListItem.ClickAction
 import org.wordpress.android.ui.prefs.language.LocalePickerListItem.LocaleRow
-import org.wordpress.android.util.LocaleProvider
+import org.wordpress.android.data.LocaleProvider
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
