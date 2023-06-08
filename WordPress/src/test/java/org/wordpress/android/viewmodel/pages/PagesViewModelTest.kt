@@ -542,6 +542,7 @@ class PagesViewModelTest : BaseUnitTest() {
         // Arrange
         val wpcomSite = SiteModel()
         wpcomSite.setIsWPCom(false)
+        setUpPageStoreWithEmptyPages()
 
         // Act
         viewModel.start(wpcomSite)
