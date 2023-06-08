@@ -2,8 +2,11 @@ package org.wordpress.android.util.extensions
 
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Context.TELEPHONY_SERVICE
+import android.content.pm.PackageManager.FEATURE_TELEPHONY
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
+import android.telephony.TelephonyManager
 import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
@@ -67,6 +70,15 @@ val Context.currentLocale: Locale
  */
 val Context.clipboardManager: ClipboardManager?
     get() = ContextCompat.getSystemService(this, ClipboardManager::class.java)
+
+/**
+ * Gets the [TelephonyManager] system service if device has [FEATURE_TELEPHONY] or null otherwise
+ */
+val Context.telephonyManager: TelephonyManager?
+    get() {
+        if (!packageManager.hasSystemFeature(FEATURE_TELEPHONY)) return null
+        return getSystemService(TELEPHONY_SERVICE) as TelephonyManager
+    }
 
 fun Context.getDrawableFromAttribute(attributeId: Int): Drawable? {
     val styledAttributes = this.obtainStyledAttributes(intArrayOf(attributeId))
