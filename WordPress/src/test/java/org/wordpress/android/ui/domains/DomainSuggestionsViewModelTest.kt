@@ -128,7 +128,6 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         whenever(productsStore.fetchProducts(any())).thenReturn(mock())
 
         viewModel.start(site, domainRegistrationPurpose)
-        viewModel.start(site, domainRegistrationPurpose)
         advanceUntilIdle()
 
         verify(productsStore).fetchProducts(eq(TYPE_DOMAINS_PRODUCT))
@@ -136,13 +135,14 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site on blogger plan is requesting only dot blog domain suggestions`() = test {
+        whenever(productsStore.fetchProducts(any())).thenReturn(mock())
         site.planId = PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
 
         viewModel.start(site, domainRegistrationPurpose)
         viewModel.updateSearchQuery("test")
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(1)).dispatch(captor.capture())
+        verify(dispatcher, times(2)).dispatch(captor.capture())
 
         val lastAction = captor.value
 
@@ -161,12 +161,14 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site on non blogger plan is requesting all possible domain suggestions`() = test {
+        whenever(productsStore.fetchProducts(any())).thenReturn(mock())
+
         site.planId = PlansConstants.PREMIUM_PLAN_ID
         viewModel.start(site, domainRegistrationPurpose)
         viewModel.updateSearchQuery("test")
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(1)).dispatch(captor.capture())
+        verify(dispatcher, times(2)).dispatch(captor.capture())
 
         val lastAction = captor.value
 
@@ -184,6 +186,8 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `clicking select domain button for credit redemption emits selected domain`() = test {
+        whenever(productsStore.fetchProducts(any())).thenReturn(mock())
+
         viewModel.start(site, CTA_DOMAIN_CREDIT_REDEMPTION)
         viewModel.onDomainSuggestionSelected(dummySelectedDomainSuggestionItem)
         viewModel.onSelectDomainButtonClicked()
@@ -197,6 +201,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     fun `clicking select domain button for purchase calls cart creation use case and emits selected domain`() = test {
         whenever(createCartUseCase.execute(site, DUMMY_PRODUCT_ID, DUMMY_DOMAIN_NAME, true, false))
             .thenReturn(dummySuccessfulOnShoppingCartCreated)
+        whenever(productsStore.fetchProducts(any())).thenReturn(mock())
 
         viewModel.start(site, DOMAIN_PURCHASE)
         viewModel.onDomainSuggestionSelected(dummySelectedDomainSuggestionItem)
