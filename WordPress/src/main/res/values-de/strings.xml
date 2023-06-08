@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-25 16:06:43+0000
+Translation-Revision-Date: 2023-05-30 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_block_ungrouped">Gruppierung des Blocks aufgehoben</string>
+    <string name="gutenberg_native_block_grouped">Block gruppiert</string>
+    <string name="dashboard_card_plans_checkout_success_info">Es kann bis zu 30 Minuten dauern, bis deine Domain richtig funktioniert.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">Deine neue Domain &lt;b&gt;%s&lt;/b&gt; wird eingerichtet.</string>
+    <string name="dashboard_card_plans_checkout_success_title">Fertig!</string>
+    <string name="dashboard_card_plans_menu_hide_this">Ausblenden</string>
+    <string name="dashboard_card_plans_sub_title">Hol dir eine im ersten Jahr kostenlose Domain, entferne Werbung von deiner Website und erweitere deinen Speicherplatz.</string>
+    <string name="dashboard_card_plans_title">Kostenlose Domain zum Jahrestarif</string>
+    <string name="virtual_homepage_learn_more">Erfahre mehr über Templates</string>
+    <string name="virtual_homepage_subtitle">Deine Startseite verwendet ein Theme-Template und wird im Webeditor geöffnet.</string>
+    <string name="virtual_homepage_title">Startseite</string>
+    <string name="account_closure_dialog_success_message">Konto geschlossen.</string>
+    <string name="account_closure_dialog_error_unknown">Beim Schließen des Kontos ist ein Fehler aufgetreten.</string>
+    <string name="account_closure_dialog_error_active_memberships">Dieses Benutzerkonto kann nicht geschlossen werden, solange es aktive Käufe hat.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">Dieses Benutzerkonto kann nicht geschlossen werden, solange es aktive Abonnements hat.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">Dieses Benutzerkonto kann nicht geschlossen werden, solange noch ungelöste Rückbuchungen bestehen.</string>
+    <string name="account_closure_dialog_error_atomic_site">Dieses Benutzerkonto kann nicht sofort geschlossen werden, da es aktive Käufe hat. Wende dich bitte an das Support-Team, um das Konto zu löschen.</string>
+    <string name="account_closure_dialog_error_unauthorized">Du bist nicht autorisiert, dieses Konto zu schließen.</string>
+    <string name="account_closure_dialog_error_title">Konto konnte nicht automatisch geschlossen werden</string>
+    <string name="account_closure_dialog_title">Schließen des Kontos bestätigen …</string>
+    <string name="account_closure_dialog_message">Bitte gib den Benutzernamen vor dem Schließen erneut an, um den Vorgang zu bestätigen.</string>
+    <string name="close_account">Konto schließen</string>
     <string name="sharing_twitter_deprecation_notice_find_out_more">Mehr erfahren</string>
     <string name="sharing_twitter_deprecation_notice_title">Das automatische Teilen auf Twitter ist nicht länger verfügbar</string>
     <string name="sharing_twitter_deprecation_notice_description">Das automatische Teilen auf Twitter ist aufgrund von Änderungen der Bedingungen und der Preisgestaltung von Twitter nicht länger verfügbar.</string>
@@ -607,8 +629,6 @@ Language: de
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Kostenlos für das erste Jahr &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/Jahr&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Deine Domains werden zu deiner Website unter %s weiterleiten</string>
     <string name="gutenberg_native_create_link">Link erstellen</string>
-    <string name="domain_registration_result_description">Deine neue Domain &lt;b&gt;%s&lt;/b&gt; wird gerade eingerichtet. Es kann bis zu 30 Minuten dauern, bis deine Domain funktioniert.</string>
-    <string name="domain_registration_result_title">Glückwunsch zu deinem Kauf!</string>
     <string name="domains_title">Domains</string>
     <string name="post_status_sticky">Oben gehalten</string>
     <string name="post_settings_post_sticky">Beitrag auf der Startseite halten</string>
@@ -826,6 +846,7 @@ Language: de
     <string name="gutenberg_native_no_preview_available">Keine Vorschau verfügbar</string>
     <string name="gutenberg_native_add_title">Titel hinzufügen</string>
     <string name="gutenberg_native_loading">Wird geladen</string>
+    <string name="gutenberg_native_s_link">%s Link</string>
     <string name="gutenberg_native_text_color">Textfarbe</string>
     <string name="gutenberg_native_padding">Innenabstand</string>
     <string name="gutenberg_native_featured">Beitragsbild</string>
@@ -2178,6 +2199,7 @@ Language: de
     <string name="page_status_change_error">Beim Ändern des Seitenstatus ist ein Problem aufgetreten</string>
     <string name="page_delete_error">Beim Löschen der Seite ist ein Problem aufgetreten</string>
     <string name="set_parent">Übergeordnete festlegen</string>
+    <string name="dismiss">Verwerfen</string>
     <string name="quick_start_focus_point_description">Hier tippen</string>
     <string name="quick_start_list_create_site_title">Erstelle deine Website</string>
     <string name="quick_start_list_create_site_subtitle">Website einrichten.</string>

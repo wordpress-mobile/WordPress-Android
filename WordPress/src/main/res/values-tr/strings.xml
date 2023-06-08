@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-17 15:54:09+0000
+Translation-Revision-Date: 2023-05-31 17:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_block_ungrouped">Blok gruptan çıkarıldı</string>
+    <string name="gutenberg_native_block_grouped">Blok gruplandı</string>
+    <string name="dashboard_card_plans_checkout_success_info">Alan adınızın düzgün şekilde çalışmaya başlaması 30 dakika kadar sürebilir.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">Yeni alan adınız &lt;b&gt;%s&lt;/b&gt; ayarlanıyor.</string>
+    <string name="dashboard_card_plans_checkout_success_title">Her şey hazır!</string>
+    <string name="dashboard_card_plans_menu_hide_this">Bunu gizle</string>
+    <string name="dashboard_card_plans_sub_title">İlk yıl için ücretsiz bir alan adı alın, sitenizdeki reklamları kaldırın ve saklama alanınızı arttırın.</string>
+    <string name="dashboard_card_plans_title">Yıllık pakette ücretsiz alan adı</string>
+    <string name="virtual_homepage_learn_more">Şablonlar hakkında daha fazlasını öğren</string>
+    <string name="virtual_homepage_subtitle">Ana sayfanız, Tema şablonunu kullanıyor ve web düzenleyicisinde açılacak.</string>
+    <string name="virtual_homepage_title">Ana sayfa</string>
+    <string name="account_closure_dialog_success_message">Hesap kapatıldı.</string>
+    <string name="account_closure_dialog_error_unknown">Hesap kapatılırken bir hata oluştu.</string>
+    <string name="account_closure_dialog_error_active_memberships">Aktif satın alımları olduğundan, bu kullanıcı hesabı kapatılamaz.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">Aktif abonelikleri olduğundan, bu kullanıcı hesabı kapatılamaz.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">Çözülmemiş geri ödeme varsa bu kullanıcı hesabı kapatılamaz.</string>
+    <string name="account_closure_dialog_error_atomic_site">Aktif satın alma işlemleri içerdiğinden, bu kullanıcı hesabı hemen kapatılamaz. Hesabı silme işlemini tamamlamak için lütfen destek ekibimizle iletişime geçin.</string>
+    <string name="account_closure_dialog_error_unauthorized">Hesabı kapatma yetkiniz yok.</string>
+    <string name="account_closure_dialog_error_title">Hesap otomatik olarak kapatılamadı\"</string>
+    <string name="account_closure_dialog_title">Hesabı Kapatmayı Onayla…</string>
+    <string name="account_closure_dialog_message">Onaylamak için lütfen kapatmadan önce kullanıcı adınızı tekrar girin.</string>
+    <string name="close_account">Hesabı Kapat</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Daha fazla bilgi</string>
+    <string name="sharing_twitter_deprecation_notice_description">Twitter otomatik paylaşım özelliği, Twitter\'ın şartlarındaki ve fiyatlandırmasındaki değişiklikler nedeniyle artık kullanılmıyor.</string>
+    <string name="sharing_twitter_deprecation_notice_title">Twitter otomatik paylaşım özelliği artık kullanılamıyor</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">Tekrar kullanılabilir blokların düzenlenmesi iOS için %s sitesinde henüz desteklenmemektedir</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Tekrar kullanılabilir blokların düzenlenmesi Android için %s sitesinde henüz desteklenmemektedir</string>
     <string name="jp_migration_notifications_allow_title">Bildirimleri sitenize göre özelleştirin</string>
@@ -604,8 +629,6 @@ Language: tr
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;İlk yıl ücretsiz, &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /yıl&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Alan adlarınız %s adresindeki sitenize yönlendirilecektir.</string>
     <string name="gutenberg_native_create_link">Bağlantı oluştur</string>
-    <string name="domain_registration_result_description">Yeni alan adınız &lt;b&gt;%s&lt;/b&gt; oluşturuluyor. Alan adınızın çalışmaya başlaması 30 dakika kadar sürebilir.</string>
-    <string name="domain_registration_result_title">Satın aldığınız için tebrikler!</string>
     <string name="domains_suggestions_select_domain">Alan adı seç</string>
     <string name="domains_title">Alan adları</string>
     <string name="post_status_sticky">Yapışkan</string>
@@ -824,6 +847,7 @@ Language: tr
     <string name="gutenberg_native_no_preview_available">Önizleme yok</string>
     <string name="gutenberg_native_loading">Yükleniyor</string>
     <string name="gutenberg_native_text_color">Metin rengi</string>
+    <string name="gutenberg_native_s_link">%s bağlantı</string>
     <string name="gutenberg_native_padding">Dolgu</string>
     <string name="gutenberg_native_four">Dört</string>
     <string name="gutenberg_native_featured">Öne çıkan</string>
@@ -2175,6 +2199,7 @@ Language: tr
     <string name="page_status_change_error">Sayfa durumu değiştirilirken sorun yaşandı</string>
     <string name="page_delete_error">Sayfa silinirken sorun yaşandı</string>
     <string name="set_parent">Ebeveyn belirle</string>
+    <string name="dismiss">Kapat</string>
     <string name="quick_start_focus_point_description">buraya dokunun</string>
     <string name="quick_start_list_create_site_title">Sitenizi oluşturun</string>
     <string name="quick_start_list_create_site_subtitle">Sitenizi ayağa kaldırın ve yayınlayın.</string>

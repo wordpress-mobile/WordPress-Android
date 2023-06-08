@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-17 13:54:09+0000
+Translation-Revision-Date: 2023-05-31 13:54:10+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.4
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_block_ungrouped">تم إلغاء تجميع المكوّنات</string>
+    <string name="gutenberg_native_block_grouped">تم تجميع المكوّنات</string>
+    <string name="dashboard_card_plans_checkout_success_info">قد يستغرق الأمر ما يصل إلى 30 دقيقة لكي يبدأ نطاقك بالعمل بشكل صحيح.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">يجري إعداد نطاقك الجديد &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="dashboard_card_plans_checkout_success_title">كل شيء جاهز الآن!</string>
+    <string name="dashboard_card_plans_menu_hide_this">إخفاء ذلك</string>
+    <string name="dashboard_card_plans_sub_title">احصل على نطاق مجاني للعام الأول، وأزل الإعلانات على موقعك، وارفع مساحة التخزين لديك.</string>
+    <string name="dashboard_card_plans_title">نطاق مجاني مع خطة سنوية</string>
+    <string name="virtual_homepage_learn_more">تعرّف على المزيد حول القوالب</string>
+    <string name="virtual_homepage_subtitle">تستخدم صفحتك الرئيسية قالب القالب وستفتح في محرر الويب.</string>
+    <string name="virtual_homepage_title">الصفحة الرئيسية</string>
+    <string name="account_closure_dialog_success_message">تم إغلاق الحساب.</string>
+    <string name="account_closure_dialog_error_unknown">حدث خطأ في أثناء إغلاق الحساب.</string>
+    <string name="account_closure_dialog_error_active_memberships">يتعذر إغلاق حساب المستخدم هذا ولا تزال توجد عليه عمليات شراء نشطة.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">يتعذر إغلاق حساب المستخدم هذا ولا تزال توجد عليه اشتراكات نشطة.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">يتعذر إغلاق حساب المستخدم هذا إذا كانت هناك عمليات رد مبالغ مدفوعة لم يتم حلها.</string>
+    <string name="account_closure_dialog_error_atomic_site">يتعذر إغلاق حساب المستخدم هذا على الفور لأنه يتضمن عمليات شراء نشطة. يرجى الاتصال بفريق الدعم لدينا لإنهاء حذف الحساب.</string>
+    <string name="account_closure_dialog_error_unauthorized">لست مخولاً لإغلاق الحساب.</string>
+    <string name="account_closure_dialog_error_title">يتعذر إغلاق الحساب تلقائيًا\"</string>
+    <string name="account_closure_dialog_title">تأكيد إغلاق الحساب…</string>
+    <string name="account_closure_dialog_message">للتأكيد، ترجى إعادة إدخال اسم المستخدم الخاص بك قبل الإغلاق.</string>
+    <string name="close_account">إغلاق الحساب</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">اكتشاف المزيد</string>
+    <string name="sharing_twitter_deprecation_notice_description">لا تتوافر ميزة المشاركة التلقائية على تويتر بعد الآن بسبب التغييرات التي أجرتها تويتر في الشروط والأسعار.</string>
+    <string name="sharing_twitter_deprecation_notice_title">لا تتوافر ميزة المشاركة التلقائية في تويتر بعد الآن</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">تحرير المكوّنات القابلة لإعادة الاستخدام غير مدعوم بعد على %s لنظام التشغيل iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">تحرير المكوّنات القابلة لإعادة الاستخدام غير مدعوم بعد على %s لنظام التشغيل Android</string>
     <string name="jp_migration_notifications_allow_title">السماح بالتنبيهات بمواكبة موقعك</string>
@@ -604,8 +629,6 @@ Language: ar
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;مجاني للعام الأول &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s في العام&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">سيتم توجيه نطاقاتك إلى موقعك على %s</string>
     <string name="gutenberg_native_create_link">إنشاء رابط</string>
-    <string name="domain_registration_result_title">تهانينا على إتمام عملية الشراء!</string>
-    <string name="domain_registration_result_description">جاري الآن إعداد نطاقك الجديد &lt;b&gt;%s&lt;/b&gt;. قد يستغرق ما يصل إلى 30 دقيقة ليبدء نطاقك بالعمل.</string>
     <string name="post_status_sticky">مثبّت</string>
     <string name="domains_title">النطاقات</string>
     <string name="domains_suggestions_select_domain">تحديد نطاق</string>
@@ -823,6 +846,7 @@ Language: ar
     <string name="gutenberg_native_no_preview_available">لا توجد معاينة متاحة</string>
     <string name="gutenberg_native_add_title">أضف عنواناً</string>
     <string name="gutenberg_native_loading">تحميل</string>
+    <string name="gutenberg_native_s_link">%s رابط</string>
     <string name="gutenberg_native_text_color">لون النص</string>
     <string name="gutenberg_native_padding">الهوامش الداخلية</string>
     <string name="gutenberg_native_featured">مميز</string>
