@@ -6,19 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/jetpack_powered_bottom_sheet_background">
 
-    <ImageButton
-        android:id="@+id/close_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:background="?attr/selectableItemBackground"
-        android:padding="@dimen/margin_medium"
-        android:src="@drawable/ic_close_white_24dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/wpColorOnSurfaceMedium"
-        tools:ignore="ContentDescription" />
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -29,6 +17,19 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/close_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/margin_medium"
+                android:src="@drawable/ic_close_white_24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="?attr/wpColorOnSurfaceMedium"
+                tools:ignore="ContentDescription" />
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/illustration_view"
