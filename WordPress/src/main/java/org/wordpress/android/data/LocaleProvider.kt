@@ -8,13 +8,13 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 class LocaleProvider @Inject constructor() : ReadOnlyProperty<Any, Locale> {
-    override fun getValue(thisRef: Any, property: KProperty<*>) = appLocale
+    override fun getValue(thisRef: Any, property: KProperty<*>) = _appLocale
 
-    private val appLocale by lazy { getAppLocale() }
+    private val _appLocale by lazy { getAppLocale() }
 
     fun getAppLocale(): Locale = LanguageUtils.getCurrentDeviceLanguage()
 
-    fun getAppLanguageDisplayString(): String = LocaleManager.getLanguageString(appLocale.toString(), appLocale)
+    fun getAppLanguageDisplayString(): String = LocaleManager.getLanguageString(_appLocale.toString(), _appLocale)
 
     fun createSortedLocalizedLanguageDisplayStrings(
         availableLocales: Array<String>,
