@@ -25,7 +25,6 @@ class JetpackAIRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-
     /**
      * Fetches Jetpack AI completions for a given prompt.
      *
