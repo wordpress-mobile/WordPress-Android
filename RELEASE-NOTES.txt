@@ -4,7 +4,7 @@
 -----
 
 * [*] [internal] Block editor: Upgrade Android 13 [https://github.com/wordpress-mobile/WordPress-Android/pull/18477]
-* [***] [Jetpack-only] Plans: Bringing WPCOM plans to JP app, behind a feature flag [https://github.com/wordpress-mobile/WordPress-Android/issues/18417]
+* [***] [Jetpack-only] Plans: Bringing WPCOM plans to Jetpack app [https://github.com/wordpress-mobile/WordPress-Android/issues/18417]
 
 22.5
 -----
