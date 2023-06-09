@@ -1,2 +1,0 @@
-22.4:
-Om du trycker på ett inbäddat textblock kan du omedelbart redigera innehållet i blocket – du behöver inte längre trycka dig igenom varje inbäddningsnivå för att komma dit du vill. (Vi blev också trötta i fingrarna.)

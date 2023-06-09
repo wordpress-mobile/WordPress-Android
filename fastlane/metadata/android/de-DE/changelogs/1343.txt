@@ -1,2 +1,0 @@
-22.4:
-Wenn du auf einen verschachtelten Text-Block tippst, kannst du augenblicklich Inhalte in diesem Block bearbeiten. Es ist nicht mehr erforderlich, dass du dich durch jede Verschachtelungsebene tippst, um ans Ziel zu gelangen. (Auch unsere Finger taten weh.)
