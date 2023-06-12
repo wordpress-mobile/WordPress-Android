@@ -1,6 +1,6 @@
-- Home page editable from Pages list on block-based sites
-- VideoPress blocks enabled
-- Detail settings disabled for videos not owned by site
-- Undo/redo text when setting links to open in new tab
-- Tap-to-edit for all nested block types
-- Accounts closable from account settings
+
+* [*] [internal] Block editor: Upgrade Android 13 [https://github.com/wordpress-mobile/WordPress-Android/pull/18477]
+* [***] [Jetpack-only] Plans: Bringing WPCOM plans to Jetpack app [https://github.com/wordpress-mobile/WordPress-Android/issues/18417]
+* [*] Block editor: Display lock icon in disabled state of `Cell` component [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5798]
+* [*] Block editor: Show "No title"/"No description" placeholder for not belonged videos in VideoPress block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5840]
+
