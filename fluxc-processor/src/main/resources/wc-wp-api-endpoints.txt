@@ -34,6 +34,8 @@
 /customers/
 /customers/<id>/downloads
 
+/wc-analytics/reports/customers
+
 /reports/orders/totals/
 /reports/revenue/stats/
 
