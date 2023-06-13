@@ -367,7 +367,7 @@ class ReaderViewModelTest : BaseUnitTest() {
         // Assert
         assertThat(uiStates.size).isEqualTo(1)
         assertThat(uiStates[0]).isInstanceOf(ContentUiState::class.java)
-        assertThat((uiStates[0] as ContentUiState).appBarExpanded).isTrue()
+        assertThat((uiStates[0] as ContentUiState).appBarExpanded).isTrue
     }
 
     @Test
@@ -494,7 +494,7 @@ class ReaderViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given wp app, when jp bottom sheet feature is false, then bottom sheet is not shown`() = testWithEmptyTags {
-        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>(Event(false))
+        val showJetpackPoweredBottomSheetEvent = mutableListOf(Event(false))
         viewModel.showJetpackPoweredBottomSheet.observeForever {
             showJetpackPoweredBottomSheetEvent.add(it)
         }
@@ -507,7 +507,7 @@ class ReaderViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given wp app, when jetpack overlay feature is false, then jp fullscreen overlay is not shown`() {
-        val showJetpackOverlayEvent = mutableListOf<Event<Boolean>>(Event(false))
+        val showJetpackOverlayEvent = mutableListOf(Event(false))
         viewModel.showJetpackOverlay.observeForever {
             showJetpackOverlayEvent.add(it)
         }
@@ -520,7 +520,7 @@ class ReaderViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given wp app, when jetpack overlay feature is true, then jp fullscreen overlay is shown`() {
-        val showJetpackOverlayEvent = mutableListOf<Event<Boolean>>(Event(false))
+        val showJetpackOverlayEvent = mutableListOf(Event(false))
         viewModel.showJetpackOverlay.observeForever {
             showJetpackOverlayEvent.add(it)
         }
