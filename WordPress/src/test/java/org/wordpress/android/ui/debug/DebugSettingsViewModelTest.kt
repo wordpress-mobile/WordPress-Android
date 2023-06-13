@@ -16,7 +16,6 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.Stat
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Field
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiState
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper

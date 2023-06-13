@@ -23,13 +23,6 @@ sealed class DebugSettingsItemViewHolder(
     parent: ViewGroup,
     @LayoutRes layout: Int
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
-    class HeaderViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.debug_settings_header) {
-        private val header = itemView.findViewById<TextView>(R.id.header)
-        fun bind(item: UiItem.Header) {
-            header.setText(item.header)
-        }
-    }
-
     class ButtonViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.debug_settings_button) {
         private val button = itemView.findViewById<Button>(R.id.button)
         fun bind(item: UiItem.Button) {

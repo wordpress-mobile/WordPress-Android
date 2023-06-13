@@ -13,12 +13,10 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.Stat
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Field
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.ToggleAction
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.BUTTON
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.FEATURE
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.HEADER
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.ROW
 import org.wordpress.android.ui.debug.previews.PREVIEWS
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
@@ -72,24 +70,19 @@ class DebugSettingsViewModel
             }
         }
         if (remoteFeatures.isNotEmpty()) {
-            uiItems.add(Header(R.string.debug_settings_remote_features))
             uiItems.addAll(remoteFeatures)
         }
         val developedFeatures = buildDevelopedFeatures()
         if (remoteFeatures.isNotEmpty()) {
-            uiItems.add(Header(R.string.debug_settings_features_in_development))
             uiItems.addAll(developedFeatures)
         }
         val remoteFieldConfigs = buildRemoteFieldConfigs()
         if (remoteFieldConfigs.isNotEmpty()) {
-            uiItems.add(Header(R.string.debug_settings_remote_field_configs))
             uiItems.addAll(remoteFieldConfigs)
         }
-        uiItems.add(Header(R.string.debug_settings_missing_developed_feature))
         if (hasChange) {
             uiItems.add(Button(R.string.debug_settings_restart_app, debugUtils::restartApp))
         }
-        uiItems.add(Header(R.string.debug_settings_tools))
         uiItems.add(Row(R.string.debug_cookies_title, create(this::onDebugCookiesClick)))
         uiItems.add(Row(R.string.debug_settings_force_show_weekly_roundup, create(this::onForceShowWeeklyRoundupClick)))
         _uiState.value = UiState(uiItems)
@@ -160,7 +153,6 @@ class DebugSettingsViewModel
 
     data class UiState(val uiItems: List<UiItem>)
     sealed class UiItem(val type: Type) {
-        data class Header(val header: Int) : UiItem(HEADER)
         data class Button(val text: Int, val clickAction: () -> Unit) : UiItem(BUTTON)
         data class Feature(val title: String, val state: State, val toggleAction: ToggleAction) : UiItem(FEATURE) {
             constructor(title: String, enabled: Boolean?, toggleAction: ToggleAction) : this(
@@ -193,7 +185,7 @@ class DebugSettingsViewModel
         }
 
         enum class Type {
-            HEADER, FEATURE, BUTTON, ROW, FIELD
+            FEATURE, BUTTON, ROW, FIELD
         }
     }
 
