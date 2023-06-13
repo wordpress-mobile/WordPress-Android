@@ -31,7 +31,6 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartType
-import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
@@ -64,9 +63,6 @@ class ReaderViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var accountStore: AccountStore
-
-    @Mock
-    lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
 
     @Mock
     lateinit var quickStartRepository: QuickStartRepository
