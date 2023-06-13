@@ -92,6 +92,7 @@
             android:contentDescription="@string/create_post_page_fab_tooltip"
             android:src="@drawable/ic_create_white_24dp"
             android:visibility="gone"
+            android:backgroundTint="@color/gray_90"
             app:borderWidth="0dp"
             tools:visibility="visible" />
     </RelativeLayout>
