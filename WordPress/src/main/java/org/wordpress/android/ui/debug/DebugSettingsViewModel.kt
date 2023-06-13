@@ -12,13 +12,10 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.Stat
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Field
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.ToggleAction
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.BUTTON
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.FEATURE
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.ROW
 import org.wordpress.android.ui.debug.previews.PREVIEWS
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.NotificationManagerWrapper
-import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.util.config.FeatureFlagConfig
 import org.wordpress.android.util.config.FeaturesInDevelopment
@@ -144,7 +141,6 @@ class DebugSettingsViewModel
 
     data class UiState(val uiItems: List<UiItem>)
     sealed class UiItem(val type: Type) {
-        data class Button(val text: Int, val clickAction: () -> Unit) : UiItem(BUTTON)
         data class Feature(val title: String, val state: State, val toggleAction: ToggleAction) : UiItem(FEATURE) {
             constructor(title: String, enabled: Boolean?, toggleAction: ToggleAction) : this(
                 title,
@@ -165,8 +161,6 @@ class DebugSettingsViewModel
         data class Field(val remoteFieldKey: String, val remoteFieldValue: String, val remoteFieldSource: String) :
             UiItem(Type.FIELD)
 
-        data class Row(val title: Int, val onClick: ListItemInteraction) : UiItem(ROW)
-
         data class ToggleAction(
             val key: String,
             val value: Boolean,
@@ -176,7 +170,7 @@ class DebugSettingsViewModel
         }
 
         enum class Type {
-            FEATURE, BUTTON, ROW, FIELD
+            FEATURE, FIELD
         }
     }
 

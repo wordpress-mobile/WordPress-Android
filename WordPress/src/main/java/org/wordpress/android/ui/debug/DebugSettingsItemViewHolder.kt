@@ -23,14 +23,6 @@ sealed class DebugSettingsItemViewHolder(
     parent: ViewGroup,
     @LayoutRes layout: Int
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
-    class ButtonViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.debug_settings_button) {
-        private val button = itemView.findViewById<Button>(R.id.button)
-        fun bind(item: UiItem.Button) {
-            button.setText(item.text)
-            button.setOnClickListener { item.clickAction() }
-        }
-    }
-
     class FeatureViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.debug_settings_feature) {
         private val title = itemView.findViewById<TextView>(R.id.feature_title)
         private val enabled = itemView.findViewById<CheckBox>(R.id.feature_enabled)
@@ -60,14 +52,6 @@ sealed class DebugSettingsItemViewHolder(
             preview.setOnClickListener { item.preview?.invoke() }
         }
     }
-
-    class RowViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.debug_settings_row) {
-        fun bind(item: UiItem.Row) = with(DebugSettingsRowBinding.bind(itemView)) {
-            title.setText(item.title)
-            root.setOnClickListener { item.onClick.click() }
-        }
-    }
-
     class RemoteFieldConfigViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(
         parent,
         R.layout.debug_settings_remote_field
