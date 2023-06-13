@@ -28,13 +28,6 @@ class DebugSettingsFragment : Fragment(R.layout.debug_settings_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(DebugSettingsFragmentBinding.bind(view)) {
-            with(requireActivity() as AppCompatActivity) {
-                setSupportActionBar(toolbar)
-                supportActionBar?.let {
-                    it.setHomeButtonEnabled(true)
-                    it.setDisplayHomeAsUpEnabled(true)
-                }
-            }
             recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
             recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
 
