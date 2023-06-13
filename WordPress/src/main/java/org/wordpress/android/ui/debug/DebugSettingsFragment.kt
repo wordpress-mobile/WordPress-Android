@@ -39,12 +39,6 @@ class DebugSettingsFragment : Fragment(R.layout.debug_settings_fragment) {
                     adapter.submitList(uiState.uiItems)
                 }
             }
-            viewModel.onNavigation.observeEvent(viewLifecycleOwner) {
-                when (it) {
-                    DebugCookies -> ActivityLauncher.viewDebugCookies(requireContext())
-                    is PreviewFragment -> previewFragmentInActivity(it.name)
-                }
-            }
             viewModel.start(getDebugSettingsType())
         }
     }

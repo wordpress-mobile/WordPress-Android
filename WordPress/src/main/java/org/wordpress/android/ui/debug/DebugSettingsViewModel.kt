@@ -75,7 +75,7 @@ class DebugSettingsViewModel
         _uiState.value = UiState(uiItems)
     }
 
-    private fun onDebugCookiesClick() {
+    fun onDebugCookiesClick() {
         _onNavigation.value = Event(DebugCookies)
     }
 
@@ -83,7 +83,7 @@ class DebugSettingsViewModel
         _onNavigation.value = Event(NavigationAction.PreviewFragment(key))
     }
 
-    private fun onForceShowWeeklyRoundupClick() = launch(bgDispatcher) {
+    fun onForceShowWeeklyRoundupClick() = launch(bgDispatcher) {
         if (!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications())
             return@launch
         weeklyRoundupNotifier.buildNotifications().forEach {
@@ -136,6 +136,10 @@ class DebugSettingsViewModel
             manualFeatureConfig.setManuallyEnabled(remoteKey, value)
             refresh(debugSettingsType)
         }
+    }
+
+    fun onRestartAppClick() {
+        debugUtils.restartApp()
     }
 
     data class UiState(val uiItems: List<UiItem>)
