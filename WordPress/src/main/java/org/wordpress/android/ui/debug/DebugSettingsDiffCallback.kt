@@ -7,9 +7,9 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
 class DebugSettingsDiffCallback : DiffUtil.ItemCallback<UiItem>() {
     override fun areItemsTheSame(oldItem: UiItem, newItem: UiItem): Boolean {
         return oldItem.type == newItem.type && when {
-            oldItem is Header && newItem is Header -> oldItem.header == newItem.header
-            oldItem is Feature && newItem is Feature -> oldItem.title == newItem.title
-            else -> true
+            oldItem is Feature && newItem is Feature -> oldItem == newItem
+            oldItem is UiItem.Field && newItem is UiItem.Field -> oldItem == newItem
+            else -> false
         }
     }
 
