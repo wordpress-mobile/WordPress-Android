@@ -293,7 +293,7 @@ class ReaderViewModelTest : BaseUnitTest() {
         triggerReaderTabContentDisplay()
 
         // Assert
-        assertThat(state!!.searchMenuItemUiState.isVisible).isTrue()
+        assertThat(state!!.searchMenuItemUiState.isVisible).isTrue
     }
 
     @Test
@@ -352,7 +352,7 @@ class ReaderViewModelTest : BaseUnitTest() {
         // Assert
         assertThat(uiStates.size).isEqualTo(1)
         assertThat(uiStates[0]).isInstanceOf(ContentUiState::class.java)
-        assertThat((uiStates[0] as ContentUiState).tabLayoutVisible).isTrue()
+        assertThat((uiStates[0] as ContentUiState).tabLayoutVisible).isTrue
     }
 
     @Test
