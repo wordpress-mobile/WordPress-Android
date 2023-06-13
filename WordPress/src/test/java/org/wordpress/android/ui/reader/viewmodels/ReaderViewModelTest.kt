@@ -497,7 +497,7 @@ class ReaderViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wp app, when jp powered bottom sheet feature is false, then jp powered bottom sheet is not shown`() {
+    fun `given wp app, when jp bottom sheet feature is false, then bottom sheet is not shown`() = testWithEmptyTags {
         val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>(Event(false))
         viewModel.showJetpackPoweredBottomSheet.observeForever {
             showJetpackPoweredBottomSheetEvent.add(it)
