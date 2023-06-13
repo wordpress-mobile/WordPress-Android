@@ -128,6 +128,7 @@ class UploadStarterTest : BaseUnitTest() {
     @Before
     fun setUp() {
         mutex = Mutex()
+        resetTestPostIdIndex()
     }
 
     @Test
@@ -237,10 +238,10 @@ class UploadStarterTest : BaseUnitTest() {
     @Test
     fun `given an unexpected mutex unlock, when uploading, then all other sites are uploaded`() = test {
         val sites = createSiteModel() to createSiteModel()
+        val post = createLocallyChangedPostModel()
         val starter = createUploadStarter(
             postStore = mock {
-                resetTestPostIdIndex()
-                val posts = createLocallyChangedPostModel() to createLocallyChangedPostModel()
+                val posts = post to createLocallyChangedPostModel()
                 on { getPostsWithLocalChanges(sites.first) } doReturn listOf(posts.first)
                 on { getPostsWithLocalChanges(sites.second) } doReturn listOf(posts.second)
             },
@@ -248,7 +249,7 @@ class UploadStarterTest : BaseUnitTest() {
             siteStore = mock { on { this@on.sites } doReturn sites.toList() },
         )
         val jobs = mutableListOf<Job>()
-        // whenever(uploadServiceFacade.uploadPost(any(), eq(posts.second), any())).thenAnswer { mutex.unlock() }
+         whenever(uploadServiceFacade.uploadPost(any(), eq(post), any())).thenAnswer { mutex.unlock() }
         jobs += launch {
             starter.queueUploadFromSite(sites.first)
         } // 0
@@ -575,7 +576,6 @@ class UploadStarterTest : BaseUnitTest() {
         pageStore: PageStore = pageStoreDefaultMock,
         siteStore: SiteStore = siteStoreDefaultMock,
     ) = run {
-        resetTestPostIdIndex()
         UploadStarter(
             appContext = mock(),
             postStore = postStore,
