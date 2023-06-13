@@ -14,6 +14,7 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.NavigationAction.De
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.NavigationAction.PreviewFragment
 import org.wordpress.android.ui.debug.previews.PreviewFragmentActivity.Companion.previewFragmentInActivity
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
@@ -27,27 +28,17 @@ class DebugSettingsFragment : Fragment(R.layout.debug_settings_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(DebugSettingsFragmentBinding.bind(view)) {
-            recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-            recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
-
             viewModel = ViewModelProvider(this@DebugSettingsFragment, viewModelFactory)
                 .get(DebugSettingsViewModel::class.java)
-            viewModel.uiState.observe(viewLifecycleOwner, {
-                it?.let { uiState ->
-                    val adapter: DebugSettingsAdapter
-                    if (recyclerView.adapter == null) {
-                        adapter = DebugSettingsAdapter()
-                        recyclerView.adapter = adapter
-                    } else {
-                        adapter = recyclerView.adapter as DebugSettingsAdapter
-                    }
 
-                    val layoutManager = recyclerView.layoutManager
-                    val recyclerViewState = layoutManager?.onSaveInstanceState()
+            val adapter = DebugSettingsAdapter()
+            setUpRecyclerView(adapter)
+
+            viewModel.uiState.observe(viewLifecycleOwner) {
+                it?.let { uiState ->
                     adapter.submitList(uiState.uiItems)
-                    layoutManager?.onRestoreInstanceState(recyclerViewState)
                 }
-            })
+            }
             viewModel.onNavigation.observeEvent(viewLifecycleOwner) {
                 when (it) {
                     DebugCookies -> ActivityLauncher.viewDebugCookies(requireContext())
