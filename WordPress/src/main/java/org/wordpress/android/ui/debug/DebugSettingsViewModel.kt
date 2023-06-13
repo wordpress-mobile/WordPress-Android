@@ -3,17 +3,14 @@ package org.wordpress.android.ui.debug
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.NavigationAction.DebugCookies
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Button
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Field
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.ToggleAction
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.BUTTON
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.FEATURE
@@ -22,7 +19,6 @@ import org.wordpress.android.ui.debug.previews.PREVIEWS
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
-import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.util.config.FeatureFlagConfig
 import org.wordpress.android.util.config.FeaturesInDevelopment
@@ -56,35 +52,26 @@ class DebugSettingsViewModel
     val onNavigation: LiveData<Event<NavigationAction>> = _onNavigation
     private var hasChange: Boolean = false
 
-    fun start() {
+    private lateinit var debugSettingsType: DebugSettingsType
+
+    fun start(type: DebugSettingsType) {
+        this.debugSettingsType = type
         launch {
-            refresh()
+            refresh(type)
         }
     }
 
-    private fun refresh() {
-        val uiItems = mutableListOf<UiItem>()
-        val remoteFeatures = buildRemoteFeatures().map {
-            it.apply {
-                preview = { onFeaturePreviewClick(title) }.takeIf { state == ENABLED && PREVIEWS.contains(title) }
-            }
+    private fun refresh(debugSettingsType: DebugSettingsType) {
+        val uiItems: MutableList<UiItem> = when (debugSettingsType) {
+            DebugSettingsType.REMOTE_FEATURES -> buildRemoteFeatures().map {
+                it.apply {
+                    preview = { onFeaturePreviewClick(title) }.takeIf { state == ENABLED && PREVIEWS.contains(title) }
+                }
+            }.toMutableList()
+
+            DebugSettingsType.REMOTE_FIELD_CONFIGS -> buildRemoteFieldConfigs().toMutableList()
+            DebugSettingsType.FEATURES_IN_DEVELOPMENT -> buildDevelopedFeatures().toMutableList()
         }
-        if (remoteFeatures.isNotEmpty()) {
-            uiItems.addAll(remoteFeatures)
-        }
-        val developedFeatures = buildDevelopedFeatures()
-        if (remoteFeatures.isNotEmpty()) {
-            uiItems.addAll(developedFeatures)
-        }
-        val remoteFieldConfigs = buildRemoteFieldConfigs()
-        if (remoteFieldConfigs.isNotEmpty()) {
-            uiItems.addAll(remoteFieldConfigs)
-        }
-        if (hasChange) {
-            uiItems.add(Button(R.string.debug_settings_restart_app, debugUtils::restartApp))
-        }
-        uiItems.add(Row(R.string.debug_cookies_title, create(this::onDebugCookiesClick)))
-        uiItems.add(Row(R.string.debug_settings_force_show_weekly_roundup, create(this::onForceShowWeeklyRoundupClick)))
         _uiState.value = UiState(uiItems)
     }
 
@@ -147,7 +134,7 @@ class DebugSettingsViewModel
         launch {
             hasChange = true
             manualFeatureConfig.setManuallyEnabled(remoteKey, value)
-            refresh()
+            refresh(debugSettingsType)
         }
     }
 

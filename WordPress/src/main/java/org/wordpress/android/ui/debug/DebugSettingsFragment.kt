@@ -2,7 +2,6 @@ package org.wordpress.android.ui.debug
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,7 +54,30 @@ class DebugSettingsFragment : Fragment(R.layout.debug_settings_fragment) {
                     is PreviewFragment -> previewFragmentInActivity(it.name)
                 }
             }
-            viewModel.start()
+            viewModel.start(getDebugSettingsType())
+        }
+    }
+
+    private fun getDebugSettingsType() = arguments?.getSerializableCompat<DebugSettingsType>(
+        DEBUG_SETTINGS_TYPE_KEY
+    ) ?: throw IllegalArgumentException(
+        "DebugSettingsType not provided"
+    )
+
+    private fun setUpRecyclerView(adapter: DebugSettingsAdapter) {
+        with(DebugSettingsFragmentBinding.bind(requireView())) {
+            recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(requireActivity(), 1)))
+            recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+            recyclerView.adapter = adapter
+        }
+    }
+
+    companion object {
+        private const val DEBUG_SETTINGS_TYPE_KEY = "debug_settings_type_key"
+        fun newInstance(debugSettingsType: DebugSettingsType) = DebugSettingsFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(DEBUG_SETTINGS_TYPE_KEY, debugSettingsType)
+            }
         }
     }
 }

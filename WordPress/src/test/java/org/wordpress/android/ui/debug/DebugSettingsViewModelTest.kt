@@ -76,7 +76,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
     fun `loads flags on start`() {
         setup()
 
-        viewModel.start()
+        viewModel.start(getDebugSettingsType())
 
         assertUiState()
     }
@@ -98,7 +98,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
         whenever(manualFeatureConfig.isManuallyEnabled(any<String>())).thenReturn(false)
         setup()
 
-        viewModel.start()
+        viewModel.start(getDebugSettingsType())
 
         assertUiState(DISABLED)
     }
@@ -108,7 +108,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
         whenever(featureFlagConfig.isEnabled(any())).thenReturn(false)
         setup()
 
-        viewModel.start()
+        viewModel.start(getDebugSettingsType())
 
         val toggledItem = findFirstFeatureItem()
 
@@ -127,7 +127,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
         whenever(featureFlagConfig.isEnabled(any())).thenReturn(false)
         setup()
 
-        viewModel.start()
+        viewModel.start(getDebugSettingsType())
 
         findFirstFeatureItem().toggleAction.toggle()
 
