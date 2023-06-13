@@ -17,11 +17,13 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.MySiteFragmentBinding
 import org.wordpress.android.databinding.MySiteInfoHeaderCardBinding
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.debug.DebugSettingsActivity
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
@@ -112,6 +114,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     TooltipCompat.setTooltipText(actionView, meMenu.title)
                 }
             }
+            toolbar.menu.findItem(R.id.debug_settings_item)?.let { debugSettings ->
+                debugSettings.isVisible = BuildConfig.DEBUG
+                debugSettings.setOnMenuItemClickListener {
+                    navigateToDebugSettings()
+                    true
+                }
+            }
+
         }
         val avatar = root.findViewById<ImageView>(R.id.avatar)
 
@@ -196,6 +206,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         viewModel.onShowJetpackIndividualPluginOverlay.observeEvent(viewLifecycleOwner) {
             WPJetpackIndividualPluginFragment.show(requireActivity().supportFragmentManager)
         }
+    }
+
+    private fun navigateToDebugSettings() {
+        // In debug mode, on this will show the debug menu
+        requireContext().startActivity(Intent(activity, DebugSettingsActivity::class.java))
     }
 
     private fun MySiteFragmentBinding.loadGravatar(avatarUrl: String) =
@@ -375,7 +390,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     companion object {
-        @JvmField var TAG: String = MySiteFragment::class.java.simpleName
+        @JvmField
+        var TAG: String = MySiteFragment::class.java.simpleName
         private const val PASS_TO_TAB_FRAGMENT_DELAY = 300L
         private const val MAX_PERCENT = 100
         fun newInstance(): MySiteFragment {
