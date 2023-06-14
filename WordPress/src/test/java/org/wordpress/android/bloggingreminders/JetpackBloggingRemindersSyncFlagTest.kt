@@ -21,7 +21,9 @@ class JetpackBloggingRemindersSyncFlagTest {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         val expected = true
         val actual = classToTest.isEnabled()
-        Assert.assertEquals(expected, actual)
+//        Assert.assertEquals(expected, actual)
+//        intentional fail for testing
+        Assert.assertNotEquals(expected, actual)
     }
 
     @Test

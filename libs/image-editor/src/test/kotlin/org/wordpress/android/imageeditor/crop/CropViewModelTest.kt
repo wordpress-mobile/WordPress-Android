@@ -52,14 +52,18 @@ class CropViewModelTest {
     fun `done menu hidden when ui loading`() {
         initViewModel()
         viewModel.onLoadingProgress(true)
-        assertThat(requireNotNull(viewModel.uiState.value).doneMenuVisible).isEqualTo(false)
+//        assertThat(requireNotNull(viewModel.uiState.value).doneMenuVisible).isEqualTo(false)
+//        intentional fail for testing
+        assertThat(requireNotNull(viewModel.uiState.value).doneMenuVisible).isEqualTo(true)
     }
 
     @Test
     fun `done menu visible when ui loaded`() {
         initViewModel()
         viewModel.onLoadingProgress(false)
-        assertThat(requireNotNull(viewModel.uiState.value).doneMenuVisible).isEqualTo(true)
+//        assertThat(requireNotNull(viewModel.uiState.value).doneMenuVisible).isEqualTo(true)
+//        intentional fail for testing
+        assertThat(requireNotNull(viewModel.uiState.value).doneMenuVisible).isEqualTo(false)
     }
 
     @Test
