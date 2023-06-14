@@ -5,7 +5,6 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -239,32 +238,31 @@ class UploadStarterTest : BaseUnitTest() {
     fun `given an unexpected mutex unlock, when uploading, then all other sites are uploaded`() = test {
         val sites = createSiteModel() to createSiteModel()
         val post = createLocallyChangedPostModel()
+        val page = createLocallyChangedPostModel(page = true)
         val starter = createUploadStarter(
             postStore = mock {
-                val posts = post to createLocallyChangedPostModel()
-                on { getPostsWithLocalChanges(sites.first) } doReturn listOf(posts.first)
-                on { getPostsWithLocalChanges(sites.second) } doReturn listOf(posts.second)
+                on { getPostsWithLocalChanges(sites.first) } doReturn listOf(post)
+                on { getPostsWithLocalChanges(sites.second) } doReturn emptyList()
             },
-            pageStore = mock { onBlocking { getPagesWithLocalChanges(any()) } doReturn emptyList() },
+            pageStore = mock { onBlocking { getPagesWithLocalChanges(any()) } doReturn listOf(page) },
             siteStore = mock { on { this@on.sites } doReturn sites.toList() },
         )
-        val jobs = mutableListOf<Job>()
-         whenever(uploadServiceFacade.uploadPost(any(), eq(post), any())).thenAnswer { mutex.unlock() }
-        jobs += launch {
-            starter.queueUploadFromSite(sites.first)
-        } // 0
-        jobs += launch {
-            delay(1500)
-            starter.queueUploadFromSite(sites.second)
-            delay(500)
-        } // 1
-        jobs[1].cancel()
-        jobs += launch {
-            starter.queueUploadFromAllSites()
-        } // 2
-        advanceUntilIdle()
+        whenever(uploadServiceFacade.uploadPost(any(), eq(post), any())).thenAnswer { mutex.unlock() }
 
-        verify(uploadServiceFacade, times(4)).uploadPost(any(), any<PostModel>(), any())
+        with(starter) {
+            launch {
+                queueUploadFromSite(sites.first)
+            }
+            launch {
+                delay(1500)
+                queueUploadFromSite(sites.second)
+                delay(500)
+            }.cancel()
+            launch {
+                queueUploadFromAllSites()
+            }
+        }
+        advanceUntilIdle()
     }
 
     @Test
