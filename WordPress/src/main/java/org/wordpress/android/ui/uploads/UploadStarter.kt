@@ -152,11 +152,7 @@ class UploadStarter @Inject constructor(
 
     private fun PostModel.toStringLog() = "${if (isPage) "page" else "post"} with title: $title"
 
-    private fun trackAutoUploadAction(
-        action: UploadAction,
-        status: String,
-        isPage: Boolean
-    ) {
+    private fun trackAutoUploadAction(action: UploadAction, status: String, isPage: Boolean) {
         tracker.track(
             if (isPage) Stat.AUTO_UPLOAD_PAGE_INVOKED else Stat.AUTO_UPLOAD_POST_INVOKED,
             mapOf(
