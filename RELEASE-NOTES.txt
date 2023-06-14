@@ -1,9 +1,16 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+22.7
+-----
+
+
 22.6
 -----
 
 * [*] [internal] Block editor: Upgrade Android 13 [https://github.com/wordpress-mobile/WordPress-Android/pull/18477]
+* [***] [Jetpack-only] Plans: Bringing WPCOM plans to Jetpack app [https://github.com/wordpress-mobile/WordPress-Android/issues/18417]
+* [*] Block editor: Display lock icon in disabled state of `Cell` component [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5798]
+* [*] Block editor: Show "No title"/"No description" placeholder for not belonged videos in VideoPress block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5840]
 
 22.5
 -----

@@ -261,8 +261,6 @@ Language: pl
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Darmowy w pierwszym roku&lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Twoje domeny przekierują na twoją witrynę pod adresem %s</string>
     <string name="gutenberg_native_create_link">Stwórz odnośnik</string>
-    <string name="domain_registration_result_title">Gratulacje z okazji twojego zakupu!</string>
-    <string name="domain_registration_result_description">Twoja nowa domena &lt;b&gt;%s&lt;/b&gt; jest w tym momencie ustawiana. Może zająć do 30 minut zanim zacznie działać.</string>
     <string name="domains_suggestions_select_domain">Wybierz domenę</string>
     <string name="domains_title">Domeny</string>
     <string name="post_settings_post_sticky">Przypnij wpis na stronie głównej</string>
@@ -469,6 +467,7 @@ Language: pl
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Jeden</string>
     <string name="gutenberg_native_no_preview_available">Podgląd nie jest dostępny</string>
+    <string name="gutenberg_native_s_link">%s łącze</string>
     <string name="gutenberg_native_text_color">Kolor tekstu</string>
     <string name="gutenberg_native_padding">Dopełnienie</string>
     <string name="gutenberg_native_featured">Wyróżnione</string>

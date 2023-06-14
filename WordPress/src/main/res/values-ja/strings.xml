@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-18 09:54:09+0000
+Translation-Revision-Date: 2023-06-01 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_block_ungrouped">ブロックのグループが解除されました</string>
+    <string name="gutenberg_native_block_grouped">ブロックがグループ化されました</string>
+    <string name="dashboard_card_plans_checkout_success_info">ドメインが正常に使用可能になるまでに最大で30分かかる場合があります。</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">新しいドメイン &lt;b&gt;%s&lt;/b&gt; の設定中です。</string>
+    <string name="dashboard_card_plans_checkout_success_title">準備完了 !</string>
+    <string name="dashboard_card_plans_menu_hide_this">非表示</string>
+    <string name="dashboard_card_plans_sub_title">初年度は無料でドメインを取得でき、サイト上の広告が削除され、ストレージが増えます。</string>
+    <string name="dashboard_card_plans_title">年間プランではドメイン名が無料で利用できます</string>
+    <string name="virtual_homepage_learn_more">テンプレートについての詳細</string>
+    <string name="virtual_homepage_subtitle">ホームページではテーマテンプレートが使用されており、Web エディターで開きます。</string>
+    <string name="virtual_homepage_title">ホームページ</string>
+    <string name="account_closure_dialog_success_message">アカウントが閉鎖されました。</string>
+    <string name="account_closure_dialog_error_unknown">アカウントの閉鎖中にエラーが発生しました。</string>
+    <string name="account_closure_dialog_error_active_memberships">有効になっている購入があるため、このユーザーアカウントを閉鎖できません。</string>
+    <string name="account_closure_dialog_error_active_subscriptions">有効になっているサブスクリプションがあるため、このユーザーアカウントを閉鎖できません。</string>
+    <string name="account_closure_dialog_error_chargebacked_site">未解決のチャージバックがある場合、このユーザーアカウントを閉鎖できません。</string>
+    <string name="account_closure_dialog_error_atomic_site">有効になっている購入があるため、すぐにはこのユーザーアカウントを閉鎖できません。 サポートチームにご連絡いただき、アカウントの削除を完了してください。</string>
+    <string name="account_closure_dialog_error_unauthorized">アカウントを閉鎖する権限がありません。</string>
+    <string name="account_closure_dialog_error_title">アカウントを自動的にクローズできませんでした。</string>
+    <string name="account_closure_dialog_title">アカウントの閉鎖を確認…</string>
+    <string name="account_closure_dialog_message">確認するには、閉鎖する前のユーザーアカウントをもう一度入力してください。</string>
+    <string name="close_account">アカウントを閉鎖</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">さらに詳しく</string>
+    <string name="sharing_twitter_deprecation_notice_description">Twitter の自動共有機能は Twitter の規約と価格に変更があったため利用できなくなりました。</string>
+    <string name="sharing_twitter_deprecation_notice_title">Twitter の自動共有機能は利用できなくなりました</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">再利用ブロックの編集は iOS 用 %s ではまだサポートされていません</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">再利用ブロックの編集は Android 用 %s ではまだサポートされていません</string>
     <string name="jp_migration_notifications_allow_title">サイトを更新するよう通知を許可する</string>
@@ -604,8 +629,6 @@ Language: ja_JP
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;1年目は無料 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s / 年&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">ドメインはご自分のサイト (%s) に転送されます</string>
     <string name="gutenberg_native_create_link">リンクを作成</string>
-    <string name="domain_registration_result_description">新しいドメイン &lt;b&gt;%s&lt;/b&gt; をセットアップ中です。 ドメインが使用可能になるまでに最大で30分かかる場合があります。</string>
-    <string name="domain_registration_result_title">ご購入いただきありがとうございます。</string>
     <string name="domains_suggestions_select_domain">ドメインを選択</string>
     <string name="domains_title">ドメイン</string>
     <string name="post_status_sticky">先頭固定表示</string>
@@ -823,6 +846,7 @@ Language: ja_JP
     <string name="gutenberg_native_no_preview_available">利用できるプレビューがありません</string>
     <string name="gutenberg_native_add_title">タイトルを追加</string>
     <string name="gutenberg_native_loading">読み込み中</string>
+    <string name="gutenberg_native_s_link">%s リンク</string>
     <string name="gutenberg_native_text_color">テキスト色</string>
     <string name="gutenberg_native_padding">パディング</string>
     <string name="gutenberg_native_featured">おすすめ</string>
@@ -2175,6 +2199,7 @@ Language: ja_JP
     <string name="page_delete_error">ページを削除中に問題が発生しました</string>
     <string name="set_parent">親の設定</string>
     <string name="page_permanently_deleted">ページは完全に削除されました</string>
+    <string name="dismiss">閉じる</string>
     <string name="quick_start_focus_point_description">ここをタップ</string>
     <string name="quick_start_list_create_site_title">サイトの作成</string>
     <string name="quick_start_completed_tour_subtitle">リストから消したいものがありますか ?</string>
