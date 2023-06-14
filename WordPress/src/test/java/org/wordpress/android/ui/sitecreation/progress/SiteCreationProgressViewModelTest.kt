@@ -196,7 +196,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on service success for paid domain creates cart`() = test {
+    fun `on service success for paid domain creates cart`() = testWith(CART_SUCCESS)  {
         startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
         verify(createCartUseCase).execute(
