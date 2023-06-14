@@ -22,6 +22,7 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
 
     private static final String WP_LOGIN_URL_SUFFIX = "wp-login.php";
     private static final String REMOTE_LOGIN_URL_SUFFIX = "remote-login.php";
+    private static final String BLOB_URL_PREFIX = "blob:";
 
     public URLFilteredWebViewClient(String url, ErrorManagedWebViewClientListener listener) {
         super(listener);
@@ -66,6 +67,7 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
 
             boolean isRemoteLoginUrl = url.endsWith(REMOTE_LOGIN_URL_SUFFIX);
             boolean isLoginUrl = url.endsWith(WP_LOGIN_URL_SUFFIX);
+            boolean isBlobUrl = url.startsWith(BLOB_URL_PREFIX);
 
             Uri currentUri = Uri.parse((view.getUrl()));
             Uri incomingUri = Uri.parse(url);
@@ -73,8 +75,8 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
             boolean newUrlIsOnTheSameHost =
                     currentUri.getHost() != null && currentUri.getHost().equals(incomingUri.getHost());
 
-            boolean openInExternalBrowser =
-                    !isRemoteLoginUrl && !isLoginUrl && !isComingFromLoginUrl && !newUrlIsOnTheSameHost;
+            boolean openInExternalBrowser = !isRemoteLoginUrl && !isLoginUrl && !isComingFromLoginUrl
+                                            && !newUrlIsOnTheSameHost && !isBlobUrl;
 
             if (openInExternalBrowser) {
                 ReaderActivityLauncher.openUrl(view.getContext(), url, ReaderActivityLauncher.OpenUrlType.EXTERNAL);

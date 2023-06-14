@@ -337,8 +337,6 @@ Language: es_VE
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis el primer año &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /año&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Tus dominios redirigirán tu sitio a %s</string>
     <string name="gutenberg_native_create_link">Crear un enlace</string>
-    <string name="domain_registration_result_description">Tu nuevo dominio &lt;b&gt;%s&lt;/b&gt; está siendo configurando. Tu dominio puede tardar hasta 30 minutos en empezar a funcionar.</string>
-    <string name="domain_registration_result_title">¡Felicidades por tu compra!</string>
     <string name="domains_suggestions_select_domain">Seleccionar el dominio</string>
     <string name="domains_title">Dominios</string>
     <string name="post_status_sticky">Fija</string>
@@ -551,6 +549,7 @@ Language: es_VE
     <string name="gutenberg_native_one">Uno</string>
     <string name="gutenberg_native_no_preview_available">Vista previa no disponible</string>
     <string name="gutenberg_native_text_color">Color del texto</string>
+    <string name="gutenberg_native_s_link">Enlace %s</string>
     <string name="gutenberg_native_padding">Relleno</string>
     <string name="gutenberg_native_four">Cuatro</string>
     <string name="gutenberg_native_featured">Destacado</string>

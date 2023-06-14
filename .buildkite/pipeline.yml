@@ -64,18 +64,24 @@ steps:
           cp gradle.properties-example gradle.properties
           ./gradlew testWordpressVanillaRelease
         plugins: *common_plugins
+        artifact_paths:
+          - "**/build/test-results/*/*.xml"
 
       - label: "🔬 Test Processors"
         command: |
           cp gradle.properties-example gradle.properties
           ./gradlew :libs:processors:test
         plugins: *common_plugins
+        artifact_paths:
+          - "**/build/test-results/*/*.xml"
 
       - label: "🔬 Test Image Editor"
         command: |
           cp gradle.properties-example gradle.properties
           ./gradlew :libs:image-editor:test
         plugins: *common_plugins
+        artifact_paths:
+          - "**/build/test-results/*/*.xml"
 
   #################
   # Instrumented (aka UI) Tests
