@@ -95,7 +95,7 @@ class DebugSettingsViewModel
             } else {
                 null
             }
-            Feature(name, value, ToggleAction(name, value?.not() ?: true, this::toggleFeature))
+            Feature(name, value, "", ToggleAction(name, value?.not() ?: true, this::toggleFeature))
         }.sortedBy { it.title }
     }
 
@@ -109,8 +109,13 @@ class DebugSettingsViewModel
                     else -> null
                 }
             }
+            val source = if (manualFeatureConfig.hasManualSetup(key)) {
+                "Manual"
+            } else {
+                featureFlagConfig.flags.find { it.key == key }?.source?.name ?: "Unknown"
+            }
             if (value != null) {
-                Feature(key, value, ToggleAction(key, !value, this::toggleFeature))
+                Feature(key, value, source, ToggleAction(key, !value, this::toggleFeature))
             } else {
                 null
             }
@@ -141,14 +146,20 @@ class DebugSettingsViewModel
 
     data class UiState(val uiItems: List<UiItem>)
     sealed class UiItem(val type: Type) {
-        data class Feature(val title: String, val state: State, val toggleAction: ToggleAction) : UiItem(FEATURE) {
-            constructor(title: String, enabled: Boolean?, toggleAction: ToggleAction) : this(
+        data class Feature(
+            val title: String,
+            val state: State,
+            val source: String,
+            val toggleAction: ToggleAction
+        ) : UiItem(FEATURE) {
+            constructor(title: String, enabled: Boolean?, source: String, toggleAction: ToggleAction) : this(
                 title,
                 when (enabled) {
                     true -> ENABLED
                     false -> DISABLED
                     null -> UNKNOWN
                 },
+                source,
                 toggleAction
             )
 

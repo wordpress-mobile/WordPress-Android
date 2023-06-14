@@ -3,17 +3,12 @@ package org.wordpress.android.ui.debug
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
+import org.wordpress.android.databinding.DebugSettingsFeatureBinding
 import org.wordpress.android.databinding.DebugSettingsRemoteFieldBinding
-import org.wordpress.android.databinding.DebugSettingsRowBinding
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
@@ -24,32 +19,29 @@ sealed class DebugSettingsItemViewHolder(
     @LayoutRes layout: Int
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     class FeatureViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.debug_settings_feature) {
-        private val title = itemView.findViewById<TextView>(R.id.feature_title)
-        private val enabled = itemView.findViewById<CheckBox>(R.id.feature_enabled)
-        private val unknown = itemView.findViewById<ImageView>(R.id.unknown_icon)
-        private val preview = itemView.findViewById<MaterialButton>(R.id.preview_icon)
-        fun bind(item: UiItem.Feature) {
-            title.text = item.title
-            enabled.visibility = View.GONE
-            unknown.visibility = View.GONE
-            enabled.setOnCheckedChangeListener(null)
+        fun bind(item: UiItem.Feature) = with(DebugSettingsFeatureBinding.bind(itemView)) {
+            featureTitle.text = item.title
+            featureEnabled.visibility = View.GONE
+            unknownIcon.visibility = View.GONE
+            featureEnabled.setOnCheckedChangeListener(null)
+            remoteFieldSource.text = item.source
             when (item.state) {
                 ENABLED -> {
-                    enabled.visibility = View.VISIBLE
-                    enabled.isChecked = true
+                    featureEnabled.visibility = View.VISIBLE
+                    featureEnabled.isChecked = true
                 }
                 DISABLED -> {
-                    enabled.visibility = View.VISIBLE
-                    enabled.isChecked = false
+                    featureEnabled.visibility = View.VISIBLE
+                    featureEnabled.isChecked = false
                 }
                 UNKNOWN -> {
-                    unknown.visibility = View.VISIBLE
+                    unknownIcon.visibility = View.VISIBLE
                 }
             }
-            enabled.setOnCheckedChangeListener { _, _ -> item.toggleAction.toggle() }
+            featureEnabled.setOnCheckedChangeListener { _, _ -> item.toggleAction.toggle() }
             itemView.setOnClickListener { item.toggleAction.toggle() }
-            preview.isVisible = item.preview != null
-            preview.setOnClickListener { item.preview?.invoke() }
+            previewIcon.isVisible = item.preview != null
+            previewIcon.setOnClickListener { item.preview?.invoke() }
         }
     }
     class RemoteFieldConfigViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(
