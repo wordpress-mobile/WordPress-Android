@@ -59,26 +59,20 @@ steps:
   #################
   - group: "🔬 Unit Tests"
     steps:
-      - label: "🔬 Test WordPress"
-        command: |
-          cp gradle.properties-example gradle.properties
-          ./gradlew testWordpressVanillaRelease
+      - label: "🔬 Unit Test WordPress"
+        command: ".buildkite/commands/run-unit-tests.sh wordpress"
         plugins: *common_plugins
         artifact_paths:
           - "**/build/test-results/*/*.xml"
 
-      - label: "🔬 Test Processors"
-        command: |
-          cp gradle.properties-example gradle.properties
-          ./gradlew :libs:processors:test
+      - label: "🔬 Unit Test Processors"
+        command: ".buildkite/commands/run-unit-tests.sh processors"
         plugins: *common_plugins
         artifact_paths:
           - "**/build/test-results/*/*.xml"
 
-      - label: "🔬 Test Image Editor"
-        command: |
-          cp gradle.properties-example gradle.properties
-          ./gradlew :libs:image-editor:test
+      - label: "🔬 Unit Test Image Editor"
+        command: ".buildkite/commands/run-unit-tests.sh image-editor"
         plugins: *common_plugins
         artifact_paths:
           - "**/build/test-results/*/*.xml"
@@ -89,13 +83,13 @@ steps:
   - group: "🔬 Instrumented tests"
     steps:
       - label: ":wordpress: 🔬 Instrumented tests"
-        command: ".buildkite/commands/instrumented-tests.sh wordpress"
+        command: ".buildkite/commands/run-instrumented-tests.sh wordpress"
         plugins: *common_plugins
         artifact_paths:
           - "**/build/instrumented-tests/**/*"
 
       - label: ":jetpack: 🔬 Instrumented tests"
-        command: ".buildkite/commands/instrumented-tests.sh jetpack"
+        command: ".buildkite/commands/run-instrumented-tests.sh jetpack"
         plugins: *common_plugins
         artifact_paths:
           - "**/build/instrumented-tests/**/*"
