@@ -8,7 +8,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
@@ -248,7 +247,6 @@ class UploadStarterTest : BaseUnitTest() {
             siteStore = mock { on { this@on.sites } doReturn sites.toList() },
         )
         whenever(uploadServiceFacade.uploadPost(any(), eq(post), any())).thenAnswer { mutex.unlock() }
-
         with(starter) {
             launch {
                 queueUploadFromSite(sites.first)
@@ -262,7 +260,6 @@ class UploadStarterTest : BaseUnitTest() {
                 queueUploadFromAllSites()
             }
         }
-        advanceUntilIdle()
     }
 
     @Test
