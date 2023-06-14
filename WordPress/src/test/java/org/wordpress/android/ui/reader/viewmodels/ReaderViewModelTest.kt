@@ -31,7 +31,6 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartType
-import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
@@ -64,9 +63,6 @@ class ReaderViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var accountStore: AccountStore
-
-    @Mock
-    lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
 
     @Mock
     lateinit var quickStartRepository: QuickStartRepository
@@ -297,7 +293,7 @@ class ReaderViewModelTest : BaseUnitTest() {
         triggerReaderTabContentDisplay()
 
         // Assert
-        assertThat(state!!.searchMenuItemUiState.isVisible).isTrue()
+        assertThat(state!!.searchMenuItemUiState.isVisible).isTrue
     }
 
     @Test
@@ -356,7 +352,7 @@ class ReaderViewModelTest : BaseUnitTest() {
         // Assert
         assertThat(uiStates.size).isEqualTo(1)
         assertThat(uiStates[0]).isInstanceOf(ContentUiState::class.java)
-        assertThat((uiStates[0] as ContentUiState).tabLayoutVisible).isTrue()
+        assertThat((uiStates[0] as ContentUiState).tabLayoutVisible).isTrue
     }
 
     @Test
@@ -371,7 +367,7 @@ class ReaderViewModelTest : BaseUnitTest() {
         // Assert
         assertThat(uiStates.size).isEqualTo(1)
         assertThat(uiStates[0]).isInstanceOf(ContentUiState::class.java)
-        assertThat((uiStates[0] as ContentUiState).appBarExpanded).isTrue()
+        assertThat((uiStates[0] as ContentUiState).appBarExpanded).isTrue
     }
 
     @Test
@@ -497,8 +493,8 @@ class ReaderViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wp app, when jp powered bottom sheet feature is false, then jp powered bottom sheet is not shown`() {
-        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>(Event(false))
+    fun `given wp app, when jp bottom sheet feature is false, then bottom sheet is not shown`() = testWithEmptyTags {
+        val showJetpackPoweredBottomSheetEvent = mutableListOf(Event(false))
         viewModel.showJetpackPoweredBottomSheet.observeForever {
             showJetpackPoweredBottomSheetEvent.add(it)
         }
@@ -511,7 +507,7 @@ class ReaderViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given wp app, when jetpack overlay feature is false, then jp fullscreen overlay is not shown`() {
-        val showJetpackOverlayEvent = mutableListOf<Event<Boolean>>(Event(false))
+        val showJetpackOverlayEvent = mutableListOf(Event(false))
         viewModel.showJetpackOverlay.observeForever {
             showJetpackOverlayEvent.add(it)
         }
@@ -524,7 +520,7 @@ class ReaderViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given wp app, when jetpack overlay feature is true, then jp fullscreen overlay is shown`() {
-        val showJetpackOverlayEvent = mutableListOf<Event<Boolean>>(Event(false))
+        val showJetpackOverlayEvent = mutableListOf(Event(false))
         viewModel.showJetpackOverlay.observeForever {
             showJetpackOverlayEvent.add(it)
         }

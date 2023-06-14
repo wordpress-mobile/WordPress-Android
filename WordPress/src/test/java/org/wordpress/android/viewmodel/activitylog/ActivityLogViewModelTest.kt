@@ -174,9 +174,10 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         whenever(site.siteId).thenReturn(SITE_ID)
         whenever(jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(anyLong()))
             .thenReturn(JetpackPurchasedProducts(scan = false, backup = false))
-        val progress = BackupDownloadRequestState.Progress(REWIND_ID, 50)
-        whenever(getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, DOWNLOAD_ID))
-            .thenReturn(flow { emit(progress) })
+        val progress = RestoreRequestState.Progress(REWIND_ID, 50)
+        val complete = RestoreRequestState.Complete(REWIND_ID, RESTORE_ID)
+        whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID))
+            .thenReturn(flow { emit(progress); emit(complete) })
         whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID))
             .thenReturn(flow { emit(RestoreRequestState.Multisite) })
     }
