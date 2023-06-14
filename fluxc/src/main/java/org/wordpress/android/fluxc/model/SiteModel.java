@@ -1,9 +1,13 @@
 package org.wordpress.android.fluxc.model;
 
-import static java.lang.annotation.RetentionPolicy.SOURCE;
-
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+
+import com.yarolegovich.wellsql.core.Identifiable;
+import com.yarolegovich.wellsql.core.annotation.Column;
+import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
+import com.yarolegovich.wellsql.core.annotation.RawConstraints;
+import com.yarolegovich.wellsql.core.annotation.Table;
 
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
@@ -18,11 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 
-import com.yarolegovich.wellsql.core.Identifiable;
-import com.yarolegovich.wellsql.core.annotation.Column;
-import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
-import com.yarolegovich.wellsql.core.annotation.RawConstraints;
-import com.yarolegovich.wellsql.core.annotation.Table;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 @Table
 @RawConstraints({"UNIQUE (SITE_ID, URL)"})
