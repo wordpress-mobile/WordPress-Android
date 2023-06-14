@@ -1,13 +1,9 @@
 package org.wordpress.android.fluxc.model;
 
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
-
-import com.yarolegovich.wellsql.core.Identifiable;
-import com.yarolegovich.wellsql.core.annotation.Column;
-import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
-import com.yarolegovich.wellsql.core.annotation.RawConstraints;
-import com.yarolegovich.wellsql.core.annotation.Table;
 
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
@@ -22,7 +18,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import com.yarolegovich.wellsql.core.Identifiable;
+import com.yarolegovich.wellsql.core.annotation.Column;
+import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
+import com.yarolegovich.wellsql.core.annotation.RawConstraints;
+import com.yarolegovich.wellsql.core.annotation.Table;
 
 @Table
 @RawConstraints({"UNIQUE (SITE_ID, URL)"})
@@ -249,6 +249,8 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     private int mBloggingReminderMinute;
     @Column
     private String mApplicationPasswordsAuthorizeUrl;
+    @Column
+    private Boolean mCanBlaze;
 
     @Override
     public int getId() {
@@ -1065,5 +1067,13 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setPublishedStatus(int publishedStatus) {
         this.mPublishedStatus = publishedStatus;
+    }
+
+    public Boolean getCanBlaze() {
+        return mCanBlaze;
+    }
+
+    public void setCanBlaze(Boolean mCanBlaze) {
+        this.mCanBlaze = mCanBlaze;
     }
 }
