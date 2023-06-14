@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.preference.ListPreference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -15,6 +17,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -32,6 +35,8 @@ import java.util.Locale;
 
 public class DetailListPreference extends ListPreference
         implements PreferenceHint {
+    private static final String STATE_SELECTED_INDEX = "STATE_SELECTED_INDEX";
+    public boolean canShowDialog = true;
     private DetailListAdapter mListAdapter;
     private String[] mDetails;
     private String mStartingValue;
@@ -39,7 +44,6 @@ public class DetailListPreference extends ListPreference
     private String mHint;
     private AlertDialog mDialog;
     private int mWhichButtonClicked;
-    public boolean canShowDialog = true;
 
     public DetailListPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -97,7 +101,11 @@ public class DetailListPreference extends ListPreference
 
         mListAdapter = new DetailListAdapter(getContext(), R.layout.detail_list_preference, mDetails);
         mStartingValue = getValue();
-        mSelectedIndex = findIndexOfValue(mStartingValue);
+        if (state != null && state.containsKey(STATE_SELECTED_INDEX)) {
+            mSelectedIndex = state.getInt(STATE_SELECTED_INDEX);
+        } else {
+            mSelectedIndex = findIndexOfValue(mStartingValue);
+        }
 
         builder.setSingleChoiceItems(mListAdapter, mSelectedIndex,
                 (dialog, which) -> mSelectedIndex = which);
@@ -189,6 +197,70 @@ public class DetailListPreference extends ListPreference
         mDetails = details;
         refreshAdapter();
     }
+
+    // region copied from DialogPreference
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        final Parcelable superState = super.onSaveInstanceState();
+        if (mDialog == null || !mDialog.isShowing()) {
+            return superState;
+        }
+
+        final SavedState myState = new SavedState(superState);
+        myState.isDialogShowing = true;
+        myState.dialogBundle = mDialog.onSaveInstanceState();
+        myState.dialogBundle.putInt(STATE_SELECTED_INDEX, mSelectedIndex);
+        return myState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state == null || !state.getClass().equals(SavedState.class)) {
+            // Didn't save state for us in onSaveInstanceState
+            super.onRestoreInstanceState(state);
+            return;
+        }
+
+        SavedState myState = (SavedState) state;
+        super.onRestoreInstanceState(myState.getSuperState());
+        if (myState.isDialogShowing) {
+            showDialog(myState.dialogBundle);
+        }
+    }
+
+    private static class SavedState extends BaseSavedState {
+        public static final @NonNull Parcelable.Creator<SavedState> CREATOR =
+                new Parcelable.Creator<SavedState>() {
+                    public SavedState createFromParcel(Parcel in) {
+                        return new SavedState(in);
+                    }
+
+                    public SavedState[] newArray(int size) {
+                        return new SavedState[size];
+                    }
+                };
+        boolean isDialogShowing;
+        Bundle dialogBundle;
+        int selectedIndex;
+
+        public SavedState(Parcel source) {
+            super(source);
+            isDialogShowing = source.readInt() == 1;
+            dialogBundle = source.readBundle(getClass().getClassLoader());
+        }
+
+        public SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            super.writeToParcel(dest, flags);
+            dest.writeInt(isDialogShowing ? 1 : 0);
+            dest.writeBundle(dialogBundle);
+        }
+    }
+    // endregion
 
     private class DetailListAdapter extends ArrayAdapter<String> {
         DetailListAdapter(Context context, int resource, String[] objects) {
