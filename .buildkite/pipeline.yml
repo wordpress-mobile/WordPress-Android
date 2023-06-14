@@ -60,19 +60,19 @@ steps:
   - group: "🔬 Unit Tests"
     steps:
       - label: "🔬 Test WordPress"
-        command: ".buildkite/commands/run-instrumented-tests.sh wordpress"
+        command: ".buildkite/commands/run-unit-tests.sh wordpress"
         plugins: *common_plugins
         artifact_paths:
           - "**/build/test-results/*/*.xml"
 
       - label: "🔬 Test Processors"
-        command: ".buildkite/commands/run-instrumented-tests.sh processors"
+        command: ".buildkite/commands/run-unit-tests.sh processors"
         plugins: *common_plugins
         artifact_paths:
           - "**/build/test-results/*/*.xml"
 
       - label: "🔬 Test Image Editor"
-        command: ".buildkite/commands/run-instrumented-tests.sh image-editor"
+        command: ".buildkite/commands/run-unit-tests.sh image-editor"
         plugins: *common_plugins
         artifact_paths:
           - "**/build/test-results/*/*.xml"
