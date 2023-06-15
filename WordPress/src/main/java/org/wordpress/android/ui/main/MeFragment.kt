@@ -153,15 +153,15 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     }
 
     private fun MeFragmentBinding.setupViews() {
-        with(requireActivity() as AppCompatActivity) {
-            setSupportActionBar(toolbarMain)
-            supportActionBar?.apply {
-                setHomeButtonEnabled(true)
-                setDisplayHomeAsUpEnabled(true)
-                // We need to set the title this way so it can be updated on locale change
-                setTitle(packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA).labelRes)
-            }
-        }
+//        with(requireActivity() as AppCompatActivity) {
+//            setSupportActionBar(toolbarMain)
+//            supportActionBar?.apply {
+//                setHomeButtonEnabled(true)
+//                setDisplayHomeAsUpEnabled(true)
+//                // We need to set the title this way so it can be updated on locale change
+//                setTitle(packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA).labelRes)
+//            }
+//        }
 
         addJetpackBadgeIfNeeded()
 
