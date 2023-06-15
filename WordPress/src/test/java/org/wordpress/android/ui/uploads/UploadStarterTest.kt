@@ -234,9 +234,10 @@ class UploadStarterTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given an unexpected mutex unlock, when uploading, then all other sites are uploaded`() = test {
+    fun `given an unexpected mutex unlock, when uploading, then all other uploads succeed`() = test {
         val (first, last) = createLocallyChangedPostModel() to createLocallyChangedPostModel()
         val (firstSite, lastSite) = createSiteModel() to createSiteModel()
+        val page = createLocallyChangedPostModel(page = true)
         whenever(uploadServiceFacade.uploadPost(any(), eq(first), any())).thenAnswer {
             mutex.unlock()
         }
@@ -246,7 +247,10 @@ class UploadStarterTest : BaseUnitTest() {
                 on { getPostsWithLocalChanges(firstSite) } doReturn listOf(first)
                 on { getPostsWithLocalChanges(lastSite) } doReturn listOf(last)
             },
-            pageStore = mock { onBlocking { getPagesWithLocalChanges(any()) } doReturn emptyList() },
+            pageStore = mock {
+                onBlocking { getPagesWithLocalChanges(firstSite) }.thenReturn(listOf())
+                onBlocking { getPagesWithLocalChanges(lastSite) }.thenReturn(listOf(page))
+            },
             siteStore = mock { on { sites } doReturn sites.toList() },
         ).run {
             launch {
@@ -262,8 +266,9 @@ class UploadStarterTest : BaseUnitTest() {
             }
         }
 
-        val expectedInvocations = 1 // 1 blog * 2 sites - 1 failed upload
-        verify(uploadServiceFacade, times(expectedInvocations)).uploadPost(any(), any<PostModel>(), any())
+        verify(uploadServiceFacade).uploadPost(any(), eq(first), any())
+        verify(uploadServiceFacade, never()).uploadPost(any(), eq(last), any())
+        verify(uploadServiceFacade, never()).uploadPost(any(), eq(page), any()) // this should work without never()
     }
 
     @Test
