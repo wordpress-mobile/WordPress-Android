@@ -249,6 +249,8 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     private int mBloggingReminderMinute;
     @Column
     private String mApplicationPasswordsAuthorizeUrl;
+    @Column
+    private Boolean mCanBlaze;
 
     @Override
     public int getId() {
@@ -1065,5 +1067,13 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setPublishedStatus(int publishedStatus) {
         this.mPublishedStatus = publishedStatus;
+    }
+
+    public Boolean getCanBlaze() {
+        return mCanBlaze;
+    }
+
+    public void setCanBlaze(Boolean mCanBlaze) {
+        this.mCanBlaze = mCanBlaze;
     }
 }

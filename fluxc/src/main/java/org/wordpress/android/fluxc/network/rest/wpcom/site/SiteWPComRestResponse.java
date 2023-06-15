@@ -36,6 +36,7 @@ public class SiteWPComRestResponse implements Response {
         public List<String> jetpack_connection_active_plugins;
         public BloggingPromptsSettings blogging_prompts_settings;
         public int blog_public;
+        public boolean can_blaze;
     }
 
     public static class Plan {
