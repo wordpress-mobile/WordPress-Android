@@ -27,6 +27,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ArrayUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -126,6 +128,7 @@ public class DetailListPreference extends ListPreference
         mDialog = builder.create();
 
         if (state != null) {
+            // TODO thomashortadev this is causing a WindowLeaked error for some reason
             mDialog.onRestoreInstanceState(state);
         }
         mDialog.setOnDismissListener(this);
@@ -189,7 +192,16 @@ public class DetailListPreference extends ListPreference
 
     public void refreshAdapter() {
         if (mListAdapter != null) {
-            mListAdapter.notifyDataSetChanged();
+            // if this happens it might also mean we changed the actual entries, let's check
+            if (mDetails == null) {
+                mListAdapter.clear();
+                mListAdapter.notifyDataSetChanged();
+            } else if (mDetails.length != mListAdapter.getCount() ||
+                       !Arrays.equals(mDetails, mListAdapter.getItems())) {
+                mListAdapter.clear();
+                mListAdapter.addAll(mDetails);
+                mListAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -241,7 +253,6 @@ public class DetailListPreference extends ListPreference
                 };
         boolean isDialogShowing;
         Bundle dialogBundle;
-        int selectedIndex;
 
         public SavedState(Parcel source) {
             super(source);
@@ -264,7 +275,7 @@ public class DetailListPreference extends ListPreference
 
     private class DetailListAdapter extends ArrayAdapter<String> {
         DetailListAdapter(Context context, int resource, String[] objects) {
-            super(context, resource, objects);
+            super(context, resource, new ArrayList<>(Arrays.asList(objects)));
         }
 
         @NotNull
@@ -303,6 +314,14 @@ public class DetailListPreference extends ListPreference
         private void changeSelection(int position) {
             mSelectedIndex = position;
             notifyDataSetChanged();
+        }
+
+        String[] getItems() {
+            String[] items = new String[getCount()];
+            for (int i = 0; i < getCount(); i++) {
+                items[i] = getItem(i);
+            }
+            return items;
         }
     }
 }
