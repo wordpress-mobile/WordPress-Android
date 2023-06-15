@@ -23,6 +23,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType.ME
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
@@ -149,7 +150,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         return when (itemId) {
             R.id.nav_sites -> MY_SITE
             R.id.nav_reader -> READER
-            else -> NOTIFS
+            R.id.nav_notifications -> NOTIFS
+            else -> ME
         }
     }
 
@@ -158,7 +160,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         return when (getPageTypeOrNull(position)) {
             MY_SITE -> R.id.nav_sites
             READER -> R.id.nav_reader
-            else -> R.id.nav_notifications
+            NOTIFS -> R.id.nav_notifications
+            else -> R.id.nav_me
         }
     }
 
@@ -218,7 +221,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         return when (getPageTypeOrNull(position)) {
             MY_SITE -> R.drawable.ic_my_sites_white_24dp
             READER -> R.drawable.ic_reader_white_24dp
-            else -> R.drawable.ic_bell_white_24dp
+            NOTIFS -> R.drawable.ic_bell_white_24dp
+            else -> R.drawable.ic_user_primary_white_24
         }
     }
 
@@ -226,7 +230,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         @StringRes val idRes: Int = when (pages().getOrNull(position)) {
             MY_SITE -> R.string.my_site_section_screen_title
             READER -> R.string.reader_screen_title
-            else -> R.string.notifications_screen_title
+            NOTIFS -> R.string.notifications_screen_title
+            else -> R.string.me_section_screen_title
         }
         return context.getString(idRes)
     }
@@ -235,7 +240,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         @StringRes val idRes: Int = when (pages().getOrNull(position)) {
             MY_SITE -> R.string.tabbar_accessibility_label_my_site
             READER -> R.string.tabbar_accessibility_label_reader
-            else -> R.string.tabbar_accessibility_label_notifications
+            NOTIFS -> R.string.tabbar_accessibility_label_notifications
+            else -> R.string.tabbar_accessibility_label_me
         }
         return context.getString(idRes)
     }
@@ -249,6 +255,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             MY_SITE -> TAG_MY_SITE
             READER -> TAG_READER
             NOTIFS -> TAG_NOTIFS
+            ME -> TAG_ME
         }
     }
 
@@ -313,6 +320,7 @@ class WPMainNavigationView @JvmOverloads constructor(
                 NOTIFS -> if (shouldUseStaticPostersFragment)
                     JetpackStaticPosterFragment.newInstance(UiData.NOTIFICATIONS)
                 else NotificationsListFragment.newInstance()
+                ME -> MeFragment.newInstance()
             }
             fragmentManager?.beginTransaction()
                 ?.add(R.id.fragment_container, fragment, getTagForPageType(pageType))
@@ -360,11 +368,16 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     companion object {
-        private val pages = if (BuildConfig.ENABLE_READER) listOf(MY_SITE, READER, NOTIFS) else listOf(MY_SITE, NOTIFS)
+        private val pages = if (BuildConfig.ENABLE_READER) {
+            listOf(MY_SITE, READER, NOTIFS, ME)
+        } else {
+            listOf(MY_SITE, NOTIFS, ME)
+        }
 
         private const val TAG_MY_SITE = "tag-mysite"
         private const val TAG_READER = "tag-reader"
         private const val TAG_NOTIFS = "tag-notifs"
+        private const val TAG_ME = "tag-me"
 
         private fun numPages(): Int = pages.size
 
@@ -385,6 +398,6 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     enum class PageType {
-        MY_SITE, READER, NOTIFS
+        MY_SITE, READER, NOTIFS, ME
     }
 }
