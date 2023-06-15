@@ -261,6 +261,9 @@ class UploadStarterTest : BaseUnitTest() {
                 queueUploadFromAllSites()
             }
         }
+
+        val expectedInvocations = 1 // 1 blog * 2 sites - 1 failed upload
+        verify(uploadServiceFacade, times(expectedInvocations)).uploadPost(any(), any<PostModel>(), any())
     }
 
     @Test
