@@ -1,5 +1,5 @@
 pluginManagement {
-    gradle.ext.kotlinVersion = '1.8.21'
+    gradle.ext.kotlinVersion = '1.8.22'
     gradle.ext.agpVersion = '7.2.1'
     gradle.ext.googleServicesVersion = '4.3.15'
     gradle.ext.navigationVersion = '2.5.3'
