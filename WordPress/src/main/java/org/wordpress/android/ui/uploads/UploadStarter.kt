@@ -126,27 +126,27 @@ class UploadStarter @Inject constructor(
      * This is meant to be used by [checkConnectionAndUpload] only.
      */
     private suspend fun upload(site: SiteModel) = coroutineScope {
-        mutex.withLock {
-            val posts = async { postStore.getPostsWithLocalChanges(site) }
-            val pages = async { pageStore.getPagesWithLocalChanges(site) }
-            val list = posts.await() + pages.await()
-            list.asSequence()
-                .map { post ->
-                    val action = uploadActionUseCase.getAutoUploadAction(post, site)
-                    Pair(post, action)
-                }
-                .filter { (_, action) -> action != DO_NOTHING }
-                .toList()
-                .forEach { (post, action) ->
-                    runCatching {
+        try {
+            mutex.withLock {
+                val posts = async { postStore.getPostsWithLocalChanges(site).orEmpty() }
+                val pages = async { (pageStore.getPagesWithLocalChanges(site) as? List<PostModel>).orEmpty() }
+                val list = posts.await() + pages.await()
+                list.asSequence()
+                    .map { post ->
+                        val action = uploadActionUseCase.getAutoUploadAction(post, site)
+                        Pair(post, action)
+                    }
+                    .filter { (_, action) -> action != DO_NOTHING }
+                    .toList()
+                    .forEach { (post, action) ->
                         trackAutoUploadAction(action, post.status, post.isPage)
                         AppLog.d(T.POSTS, "UploadStarter for ${post.toStringLog()}; action: $action")
                         dispatcher.dispatch(UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(post))
                         uploadServiceFacade.uploadPost(appContext, post, trackAnalytics = false)
-                    }.onFailure {
-                        AppLog.e(T.POSTS, it)
                     }
-                }
+            }
+        } catch (e: Exception) {
+            AppLog.e(T.POSTS, e)
         }
     }
 
