@@ -191,7 +191,7 @@
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
     <dimen name="blavatar_sz_extra_large">72dp</dimen>
-    <dimen name="my_site_blavatar_sz">64dp</dimen>
+    <dimen name="my_site_blavatar_sz">40dp</dimen>
 
     <dimen name="reader_post_header_height">40dp</dimen>
     <dimen name="reader_button_icon">24dp</dimen>

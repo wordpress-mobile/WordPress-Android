@@ -17,15 +17,7 @@
             style="@style/WordPress.CollapsedToolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-            >
-
-<!--            <com.google.android.material.appbar.MaterialToolbar-->
-<!--                android:id="@+id/toolbar_main"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="@dimen/toolbar_height"-->
-<!--                app:layout_collapseMode="pin"-->
-<!--                app:theme="@style/WordPress.ActionBar"/>-->
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
             <RelativeLayout
                 android:id="@+id/header"
