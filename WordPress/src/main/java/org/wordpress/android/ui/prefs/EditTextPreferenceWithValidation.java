@@ -73,12 +73,15 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
             });
         }
 
-        CharSequence summary = getSummary();
-        if (summary == null || summary.equals(mStringToIgnoreForPrefilling)) {
-            getEditText().setText("");
-        } else {
-            getEditText().setText(summary);
-            getEditText().setSelection(0, summary.length());
+        // if the bundle is not null, there's no need to set the text again as it will be restored from the bundle
+        if (state == null) {
+            CharSequence summary = getSummary();
+            if (summary == null || summary.equals(mStringToIgnoreForPrefilling)) {
+                getEditText().setText("");
+            } else {
+                getEditText().setText(summary);
+                getEditText().setSelection(0, summary.length());
+            }
         }
 
         // Use "hidden" input type for passwords so characters are replaced with dots for added security.
