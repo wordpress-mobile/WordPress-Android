@@ -81,7 +81,7 @@
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
         android:contentDescription="@string/fab_create_desc"
-        android:src="@drawable/ic_create_white_24dp"
+        android:src="@drawable/ic_plus_white_24dp"
         android:layout_gravity="end|bottom"
         app:borderWidth="0dp"
         app:layout_behavior="org.wordpress.android.ui.FloatingActionButtonBehavior" />

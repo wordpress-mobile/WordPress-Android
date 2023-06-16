@@ -130,6 +130,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
         val siteModel = SiteModel().apply { id = 123 }
         whenever(siteStore.sitesCount).thenReturn(1)
         whenever(siteStore.sites).thenReturn(listOf(siteModel))
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
 
         val startState = viewStates[0]
         (startState as Ready).onPrimaryButtonClick()
@@ -142,6 +143,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
         val siteModel = SiteModel().apply { id = 123 }
         whenever(siteStore.sitesCount).thenReturn(1)
         whenever(siteStore.sites).thenReturn(listOf(siteModel))
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(getIsFirstBloggingPromptsOnboardingUseCase.execute()).thenReturn(false)
         classToTest.start(ONBOARDING)
         val startState = viewStates[0]
@@ -206,6 +208,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     fun `Should track try it now clicked when onPrimaryButtonClick is called with ONBOARDING`() = test {
         classToTest.start(ONBOARDING)
         val startState = viewStates[0]
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(SiteModel())
         (startState as Ready).onPrimaryButtonClick()
         verify(analyticsTracker).trackTryItNowClicked()
     }

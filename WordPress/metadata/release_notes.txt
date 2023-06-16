@@ -1,5 +1,3 @@
-- Home page editable from Pages list on sites with block-based themes
-- Undo/redo post-link text when setting links to open in new tab
-- Tap-to-edit available for all nested block types
-- Accounts closable from account settings screen
-- Bug fixes in block editor and plugin screen
+Locked and loaded—there’s now a lock icon for disabled cells in the block editor so you know when they aren’t in use.
+
+We also updated the placeholder text for VideoPress videos that don’t belong to your site. (Hopefully they don’t feel left out.)

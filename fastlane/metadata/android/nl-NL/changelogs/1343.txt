@@ -1,2 +1,0 @@
-22.4:
-Wanneer je op een genest tekstblok tikt, kun je meteen de inhoud van dat blok bewerken, zonder dat je door elk niveau hoeft te klikken om de gewenste plek te bereiken. (Onze vingers werden ook moe.)

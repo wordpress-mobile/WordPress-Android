@@ -28,4 +28,32 @@ class DashboardTests : BaseTest() {
             .tapDomainsCard()
             .assertDomainsScreenLoaded()
     }
+
+    @Test
+    fun e2ePagesCardNavigation() {
+        MySitesPage()
+            .scrollToPagesCard()
+            .assertPagesCard()
+            .assertPagesCardHasPage("Blog")
+            .assertPagesCardHasPage("Cart")
+            .assertPagesCardHasPage("Shop")
+            .tapPagesCard()
+            .assertPagesScreenLoaded()
+            .assertPagesScreenHasPage("Blog")
+            .assertPagesScreenHasPage("Cart")
+            .assertPagesScreenHasPage("Shop")
+    }
+
+    @Test
+    fun e2eActivityLogCardNavigation() {
+        MySitesPage()
+            .scrollToActivityLogCard()
+            .assertActivityLogCard()
+            .assertActivityLogCardHasActivity("Enabled Jetpack Social")
+            .assertActivityLogCardHasActivity("The Jetpack connection")
+            .assertActivityLogCardHasActivity("This site is connected to")
+            .tapActivity("The Jetpack connection")
+            .assertEventScreenLoaded()
+            .assertEventScreenHasActivity("The Jetpack connection is now complete. Welcome!")
+    }
 }

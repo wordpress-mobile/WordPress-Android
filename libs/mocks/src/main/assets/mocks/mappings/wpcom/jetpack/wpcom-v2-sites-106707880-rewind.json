@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/wpcom/v2/sites/106707880/rewind/"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody":{
+      "credentials": [{
+        "still_valid": true,
+        "type": "managed",
+        "role": "main"
+      }],
+      "alerts": {
+        "threats": []
+      },
+      "state": "active",
+      "last_updated": "2023-06-07T13:00:18.125+00:00",
+      "has_cloud": false
+    }
+  }
+}

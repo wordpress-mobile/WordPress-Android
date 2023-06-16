@@ -505,6 +505,7 @@
         android:contentDescription="@string/fab_content_description_preview"
         android:src="@drawable/ic_fullscreen_white_24dp"
         android:visibility="gone"
+        app:backgroundTint="?attr/colorBackgroundFloating"
         app:elevation="8dp"
         app:layout_anchor="@id/app_bar_layout"
         app:layout_anchorGravity="bottom|right|end"

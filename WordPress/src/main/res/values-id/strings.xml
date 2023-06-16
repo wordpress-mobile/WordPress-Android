@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-22 06:14:27+0000
+Translation-Revision-Date: 2023-05-31 11:54:28+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_block_ungrouped">Blok tidak dikelompokkan</string>
+    <string name="gutenberg_native_block_grouped">Blok dikelompokkan</string>
+    <string name="dashboard_card_plans_checkout_success_info">Domain Anda memerlukan waktu hingga 30 menit untuk mulai berfungsi dengan benar.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">Domain baru Anda &lt;b&gt;%s&lt;/b&gt; sedang disiapkan.</string>
+    <string name="dashboard_card_plans_checkout_success_title">Semua siap!</string>
+    <string name="dashboard_card_plans_menu_hide_this">Tutup</string>
+    <string name="dashboard_card_plans_sub_title">Dapatkan domain gratis untuk tahun pertama, hilangkan iklan di situs Anda, dan perbesar ruang penyimpanan Anda.</string>
+    <string name="dashboard_card_plans_title">Domain gratis dengan paket tahunan</string>
+    <string name="virtual_homepage_learn_more">Baca selengkapnya tentang templat</string>
+    <string name="virtual_homepage_subtitle">Beranda Anda menggunakan templat Tema dan akan dibuka di editor web.</string>
+    <string name="virtual_homepage_title">Beranda</string>
+    <string name="account_closure_dialog_success_message">Akun ditutup.</string>
+    <string name="account_closure_dialog_error_unknown">Terjadi error saat menutup akun.</string>
+    <string name="account_closure_dialog_error_active_memberships">Akun pengguna ini tidak dapat ditutup jika memiliki pembelian aktif.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">Akun pengguna ini tidak dapat ditutup jika memiliki langganan aktif.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">Akun pengguna ini tidak dapat ditutup jika ada proses penagihan balik yang belum terselesaikan.</string>
+    <string name="account_closure_dialog_error_atomic_site">Akun pengguna ini tidak dapat segera ditutup karena memiliki pembelian aktif. Hubungi tim dukungan kami untuk menyelesaikan penghapusan akun.</string>
+    <string name="account_closure_dialog_error_unauthorized">Anda tidak berwenang untuk menutup akun.</string>
+    <string name="account_closure_dialog_error_title">Tidak dapat menutup akun secara otomatis\"</string>
+    <string name="account_closure_dialog_title">Konfirmasi Penutupan Akun …</string>
+    <string name="account_closure_dialog_message">Untuk mengonfirmasi, silakan masukkan lagi nama pengguna Anda sebelum menutup.</string>
+    <string name="close_account">Tutup Akun</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Cari tahu selengkapnya</string>
+    <string name="sharing_twitter_deprecation_notice_description">Membagikan otomatis di Twitter tidak lagi tersedia karena perubahan kebijakan dan harga di Twitter.</string>
+    <string name="sharing_twitter_deprecation_notice_title">Membagikan otomatis di Twitter tidak lagi tersedia</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">Menyunting blok pakai ulang belum didukung di %s untuk iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Menyunting blok pakai ulang belum didukung di %s untuk Android</string>
     <string name="jp_migration_notifications_allow_title">Izinkan pemberitahuan untuk mengikuti perkembangan situs Anda</string>
@@ -604,8 +629,6 @@ Language: id
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis untuk tahun pertama &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Domain Anda akan dialihkan ke situs Anda di %s</string>
     <string name="gutenberg_native_create_link">Buat tautan</string>
-    <string name="domain_registration_result_description">Domain baru Anda &lt;b&gt;%s&lt;/b&gt; sedang disiapkan. Perlu waktu hingga 30 menit agar domain Anda mulai berfungsi.</string>
-    <string name="domain_registration_result_title">Selamat atas pembelian Anda!</string>
     <string name="domains_suggestions_select_domain">Pilih domain</string>
     <string name="domains_title">Domain</string>
     <string name="post_status_sticky">Lekat</string>
@@ -824,6 +847,7 @@ Language: id
     <string name="gutenberg_native_no_preview_available">Pratinjau tidak tersedia</string>
     <string name="gutenberg_native_loading">Memuat</string>
     <string name="gutenberg_native_text_color">Warna teks</string>
+    <string name="gutenberg_native_s_link">%s tautan</string>
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_four">Empat.</string>
     <string name="gutenberg_native_featured">Andalan</string>
@@ -2175,6 +2199,7 @@ Language: id
     <string name="page_status_change_error">Ada masalah saat mengubah status halaman</string>
     <string name="page_delete_error">Ada masalah saat menghapus halaman</string>
     <string name="set_parent">Atur Induk</string>
+    <string name="dismiss">Tutup</string>
     <string name="quick_start_focus_point_description">ketuk di sini</string>
     <string name="quick_start_list_create_site_title">Buat situs Anda</string>
     <string name="quick_start_list_create_site_subtitle">Buat situs Anda dan kelola.</string>

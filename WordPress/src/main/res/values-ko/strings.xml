@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-17 15:54:09+0000
+Translation-Revision-Date: 2023-06-08 01:16:50+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_block_ungrouped">블록 그룹 해제됨</string>
+    <string name="gutenberg_native_block_grouped">블록 그룹 지정됨</string>
+    <string name="dashboard_card_plans_checkout_success_info">도메인이 올바르게 작동하기 시작하려면 최대 30분이 걸릴 수 있습니다.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">새 도메인(&lt;b&gt;%s&lt;/b&gt;)을 설정하는 중입니다.</string>
+    <string name="dashboard_card_plans_checkout_success_title">모든 준비를 마쳤습니다!</string>
+    <string name="dashboard_card_plans_menu_hide_this">숨기기</string>
+    <string name="dashboard_card_plans_sub_title">첫해에 무료 도메인을 이용하고, 사이트에서 광고를 제거하고, 저장 공간을 늘리세요.</string>
+    <string name="dashboard_card_plans_title">무료 도메인이 제공되는 연간 요금제</string>
+    <string name="virtual_homepage_learn_more">템플릿에 대해 더 알아보기</string>
+    <string name="virtual_homepage_subtitle">홈페이지에서 테마 템플릿이 사용되고 있으며 웹 편집기에서 홈페이지가 열립니다.</string>
+    <string name="virtual_homepage_title">홈페이지</string>
+    <string name="account_closure_dialog_success_message">계정이 종료되었습니다.</string>
+    <string name="account_closure_dialog_error_unknown">계정을 종료하는 동안 오류가 발생했습니다.</string>
+    <string name="account_closure_dialog_error_active_memberships">활성 구매 항목이 있는 동안에는 이 사용자 계정을 종료할 수 없습니다.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">활성 구독이 있는 동안에는 이 사용자 계정을 종료할 수 없습니다.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">해결되지 않는 결제 승인 거부가 있는 경우 이 사용자 계정을 종료할 수 없습니다.</string>
+    <string name="account_closure_dialog_error_atomic_site">이 사용자 계정은 활성 구매 항목이 있어서 즉시 닫을 수 없습니다. 지원팀에 문의하여 계정 삭제를 마무리하세요.</string>
+    <string name="account_closure_dialog_error_unauthorized">계정을 종료할 권한이 없습니다.</string>
+    <string name="account_closure_dialog_error_title">계정을 자동으로 종료할 수 없습니다.</string>
+    <string name="account_closure_dialog_title">계정 종료 확인…</string>
+    <string name="account_closure_dialog_message">확인하려면 종료하기 전에 사용자명을 다시 입력하세요.</string>
+    <string name="close_account">계정 종료</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">더 알아보기</string>
+    <string name="sharing_twitter_deprecation_notice_description">Twitter의 약관 및 가격 변경으로 인해 Twitter 자동 공유를 더 이상 사용할 수 없습니다.</string>
+    <string name="sharing_twitter_deprecation_notice_title">Twitter 자동 공유를 더 이상 사용할 수 없습니다.</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">재사용 가능한 블록 편집은 아직 iOS용 %s에서 지원되지 않습니다.</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">재사용 가능한 블록 편집은 아직 Android용 %s에서 지원되지 않습니다.</string>
     <string name="jp_migration_notifications_allow_title">알림이 사이트에 계속 표시되도록 허용</string>
@@ -604,8 +629,6 @@ Language: ko_KR
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;첫해 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/년 무료&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">도메인이 %s의 사이트로 리디렉팅됩니다.</string>
     <string name="gutenberg_native_create_link">링크 생성</string>
-    <string name="domain_registration_result_description">새 도메인(&lt;b&gt;%s&lt;/b&gt;)을 생성하는 중입니다. 도메인이 작동하기 시작하려면 30분 정도 걸릴 수 있습니다.</string>
-    <string name="domain_registration_result_title">업그레이드를 축하합니다!</string>
     <string name="domains_suggestions_select_domain">도메인 선택</string>
     <string name="domains_title">도메인</string>
     <string name="post_status_sticky">붙박이</string>
@@ -824,6 +847,7 @@ Language: ko_KR
     <string name="gutenberg_native_no_preview_available">사용 가능한 미리보기 없음</string>
     <string name="gutenberg_native_loading">로드하는 중</string>
     <string name="gutenberg_native_text_color">텍스트 색상</string>
+    <string name="gutenberg_native_s_link">%s 링크</string>
     <string name="gutenberg_native_padding">안쪽 여백</string>
     <string name="gutenberg_native_four">4</string>
     <string name="gutenberg_native_featured">추천</string>
@@ -2175,6 +2199,7 @@ Language: ko_KR
     <string name="page_status_change_error">페이지 상태를 변경하는 중에 문제가 발생했습니다.</string>
     <string name="page_delete_error">페이지를 삭제하는 중에 문제가 발생했습니다.</string>
     <string name="set_parent">상위 항목 설정</string>
+    <string name="dismiss">무시</string>
     <string name="quick_start_focus_point_description">여기를 탭하세요.</string>
     <string name="quick_start_list_create_site_title">사이트 만들기</string>
     <string name="quick_start_list_create_site_subtitle">사이트 가동 및 작동</string>
