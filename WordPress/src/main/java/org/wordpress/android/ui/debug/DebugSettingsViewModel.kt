@@ -6,17 +6,13 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.NavigationAction.DebugCookies
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Field
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.ToggleAction
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.FEATURE
 import org.wordpress.android.ui.debug.previews.PREVIEWS
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.util.DebugUtils
+import org.wordpress.android.ui.debug.UiItem.FeatureFlag.RemoteFeatureFlag
+import org.wordpress.android.ui.debug.UiItem.FeatureFlag.LocalFeatureFlag
+import org.wordpress.android.ui.debug.UiItem.Field
 import org.wordpress.android.util.config.FeatureFlagConfig
 import org.wordpress.android.util.config.FeaturesInDevelopment
 import org.wordpress.android.util.config.ManualFeatureConfig
@@ -62,7 +58,9 @@ class DebugSettingsViewModel
         val uiItems: MutableList<UiItem> = when (debugSettingsType) {
             DebugSettingsType.REMOTE_FEATURES -> buildRemoteFeatures().map {
                 it.apply {
-                    preview = { onFeaturePreviewClick(title) }.takeIf { state == ENABLED && PREVIEWS.contains(title) }
+                    preview = { onFeaturePreviewClick(title) }.takeIf {
+                        state == UiItem.FeatureFlag.State.ENABLED && PREVIEWS.contains(title)
+                    }
                 }
             }.toMutableList()
 
@@ -88,18 +86,21 @@ class DebugSettingsViewModel
         }
     }
 
-    private fun buildDevelopedFeatures(): List<Feature> {
+    private fun buildDevelopedFeatures(): List<LocalFeatureFlag> {
         return FeaturesInDevelopment.featuresInDevelopment.map { name ->
             val value = if (manualFeatureConfig.hasManualSetup(name)) {
                 manualFeatureConfig.isManuallyEnabled(name)
             } else {
                 null
             }
-            Feature(name, value, "", ToggleAction(name, value?.not() ?: true, this::toggleFeature))
+            LocalFeatureFlag(
+                name, value,
+                UiItem.ToggleAction(name, value?.not() ?: true, this::toggleFeature)
+            )
         }.sortedBy { it.title }
     }
 
-    private fun buildRemoteFeatures(): List<Feature> {
+    private fun buildRemoteFeatures(): List<RemoteFeatureFlag> {
         return RemoteFeatureConfigDefaults.remoteFeatureConfigDefaults.mapNotNull { (key, defaultValue) ->
             val value = if (manualFeatureConfig.hasManualSetup(key)) {
                 manualFeatureConfig.isManuallyEnabled(key)
@@ -115,11 +116,11 @@ class DebugSettingsViewModel
                 featureFlagConfig.flags.find { it.key == key }?.source?.name ?: "Unknown"
             }
             if (value != null) {
-                Feature(key, value, source, ToggleAction(key, !value, this::toggleFeature))
+                RemoteFeatureFlag(key, value, UiItem.ToggleAction(key, !value, this::toggleFeature), source)
             } else {
                 null
             }
-        }.sortedBy { it.title }
+        }.sortedBy { it.remoteKey }
     }
 
     private fun buildRemoteFieldConfigs(): List<Field> {
@@ -142,47 +143,6 @@ class DebugSettingsViewModel
 
     fun onRestartAppClick() {
         debugUtils.restartApp()
-    }
-
-    data class UiState(val uiItems: List<UiItem>)
-    sealed class UiItem(val type: Type) {
-        data class Feature(
-            val title: String,
-            val state: State,
-            val source: String,
-            val toggleAction: ToggleAction
-        ) : UiItem(FEATURE) {
-            constructor(title: String, enabled: Boolean?, source: String, toggleAction: ToggleAction) : this(
-                title,
-                when (enabled) {
-                    true -> ENABLED
-                    false -> DISABLED
-                    null -> UNKNOWN
-                },
-                source,
-                toggleAction
-            )
-
-            enum class State { ENABLED, DISABLED, UNKNOWN }
-
-            @Suppress("DataClassShouldBeImmutable") // We're not in prod code or diffing here, the rule is moot
-            var preview: (() -> Unit)? = null
-        }
-
-        data class Field(val remoteFieldKey: String, val remoteFieldValue: String, val remoteFieldSource: String) :
-            UiItem(Type.FIELD)
-
-        data class ToggleAction(
-            val key: String,
-            val value: Boolean,
-            val toggleAction: (key: String, value: Boolean) -> Unit
-        ) {
-            fun toggle() = toggleAction(key, value)
-        }
-
-        enum class Type {
-            FEATURE, FIELD
-        }
     }
 
     sealed class NavigationAction {

@@ -9,13 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.DebugSettingsFragmentBinding
-import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.NavigationAction.DebugCookies
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.NavigationAction.PreviewFragment
-import org.wordpress.android.ui.debug.previews.PreviewFragmentActivity.Companion.previewFragmentInActivity
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
-import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
