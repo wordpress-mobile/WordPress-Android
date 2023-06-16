@@ -32,7 +32,7 @@ class DebugSettingsActivity : LocaleAwareActivity() {
         setUpViewModel()
     }
 
-    fun setUpViewModel() {
+    private fun setUpViewModel() {
         viewModel = ViewModelProvider(
             this@DebugSettingsActivity,
             viewModelFactory
