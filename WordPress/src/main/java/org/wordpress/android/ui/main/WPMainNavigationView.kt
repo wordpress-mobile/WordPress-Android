@@ -11,6 +11,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
@@ -19,8 +20,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigation.NavigationBarView.OnItemReselectedListener
 import com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.ME
@@ -29,6 +32,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.main.jetpack.staticposter.JetpackStaticPosterFragment
 import org.wordpress.android.ui.main.jetpack.staticposter.UiData
+import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteFragment
 import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
@@ -36,13 +40,18 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.extensions.getColorStateListFromAttribute
+import org.wordpress.android.util.image.ImageType
+import javax.inject.Inject
+
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
  * four primary views - note that we ignore the built-in icons and labels and
  * insert our own custom views so we have more control over their appearance
  */
+@AndroidEntryPoint
 class WPMainNavigationView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -58,6 +67,12 @@ class WPMainNavigationView @JvmOverloads constructor(
         resources,
         R.dimen.material_emphasis_disabled
     )
+
+    @Inject
+    lateinit var meGravatarLoader: MeGravatarLoader
+
+    @Inject
+    lateinit var accountStore: AccountStore
 
     private var currentPosition: Int
         get() = getPositionForItemId(selectedItemId)
@@ -105,10 +120,29 @@ class WPMainNavigationView @JvmOverloads constructor(
                 customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
             }
 
+            if (i == getPosition(ME)) {
+                ImageViewCompat.setImageTintList(imgIcon, null)
+                loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
+            }
+
             itemView.addView(customView)
         }
 
         currentPosition = getMainPageIndex()
+    }
+
+    private fun loadGravatar(imgIcon: ImageView, avatarUrl: String) {
+        AppLog.d(AppLog.T.MAIN, meGravatarLoader.constructGravatarUrl(avatarUrl))
+        imgIcon.let {
+            meGravatarLoader.load(
+                false,
+                meGravatarLoader.constructGravatarUrl(avatarUrl),
+                null,
+                it,
+                ImageType.USER,
+                null
+            )
+        }
     }
 
     private fun getMainPageIndex(): Int {

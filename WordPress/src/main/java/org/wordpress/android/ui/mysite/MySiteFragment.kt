@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -21,7 +20,6 @@ import org.wordpress.android.databinding.MySiteInfoHeaderCardBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment
 import org.wordpress.android.ui.main.SitePickerActivity
-import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.SiteInfoToolbarViewParams
@@ -35,7 +33,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
-import org.wordpress.android.util.image.ImageType.USER
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.QuickStartFocusPoint
@@ -48,9 +45,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     @Inject
     lateinit var uiHelpers: UiHelpers
-
-    @Inject
-    lateinit var meGravatarLoader: MeGravatarLoader
 
     @Inject
     lateinit var imageManager: ImageManager
@@ -100,18 +94,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.setupToolbar() {
-//        toolbarMain.let { toolbar ->
-//            toolbar.inflateMenu(R.menu.my_site_menu)
-//            toolbar.menu.findItem(R.id.me_item)?.let { meMenu ->
-//                meMenu.actionView?.let { actionView ->
-//                    actionView.contentDescription = meMenu.title
-//                    actionView.setOnClickListener { viewModel.onAvatarPressed() }
-//                    TooltipCompat.setTooltipText(actionView, meMenu.title)
-//                }
-//            }
-//        }
-//        val avatar = root.findViewById<ImageView>(R.id.avatar)
-
         appbarMain.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             val maxOffset = appBarLayout.totalScrollRange
             val currentOffset = maxOffset + verticalOffset
@@ -125,16 +107,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
 
             fadeSiteInfoHeader(percentage)
-//            avatar?.let { avatar ->
-//                val minSize = avatar.minimumHeight
-//                val maxSize = avatar.maxHeight
-//                val modifierPx = (minSize.toFloat() - maxSize.toFloat()) * (percentage.toFloat() / 100) * -1
-//                val modifierPercentage = modifierPx / minSize
-//                val newScale = 1 + modifierPercentage
-//
-//                avatar.scaleX = newScale
-//                avatar.scaleY = newScale
-//            }
         })
     }
 
@@ -167,7 +139,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner) { uiModel ->
-            loadGravatar(uiModel.accountAvatarUrl)
             when (val state = uiModel.state) {
                 is State.SiteSelected -> loadData(state)
                 is State.NoSites -> loadEmptyView(state)
@@ -194,18 +165,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             WPJetpackIndividualPluginFragment.show(requireActivity().supportFragmentManager)
         }
     }
-
-    private fun MySiteFragmentBinding.loadGravatar(avatarUrl: String) =
-        root.findViewById<ImageView>(R.id.avatar)?.let {
-            meGravatarLoader.load(
-                false,
-                meGravatarLoader.constructGravatarUrl(avatarUrl),
-                null,
-                it,
-                USER,
-                null
-            )
-        }
 
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
         tabLayout.setVisible(state.tabsUiState.showTabs)
@@ -250,18 +209,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         showHeader(siteInfoToolbarViewParams.headerVisible)
         val appBarHeight = resources.getDimension(siteInfoToolbarViewParams.appBarHeight).toInt()
         appbarMain.layoutParams.height = appBarHeight
-//        val toolbarBottomMargin = resources.getDimension(siteInfoToolbarViewParams.toolbarBottomMargin).toInt()
-//        updateToolbarBottomMargin(toolbarBottomMargin)
         appbarMain.isLiftOnScroll = siteInfoToolbarViewParams.appBarLiftOnScroll
         appbarMain.requestLayout()
     }
-
-//    private fun MySiteFragmentBinding.updateToolbarBottomMargin(appBarHeight: Int) {
-//        val bottomMargin = (appBarHeight / resources.displayMetrics.density).toInt()
-//        val layoutParams = (toolbarMain.layoutParams as? MarginLayoutParams)
-//        layoutParams?.setMargins(0, 0, 0, bottomMargin)
-//        toolbarMain.layoutParams = layoutParams
-//    }
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
         tabLayout.setVisible(state.tabsUiState.showTabs)
