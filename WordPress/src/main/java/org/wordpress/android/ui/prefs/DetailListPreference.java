@@ -196,8 +196,8 @@ public class DetailListPreference extends ListPreference
             if (mDetails == null) {
                 mListAdapter.clear();
                 mListAdapter.notifyDataSetChanged();
-            } else if (mDetails.length != mListAdapter.getCount() ||
-                       !Arrays.equals(mDetails, mListAdapter.getItems())) {
+            } else if (mDetails.length != mListAdapter.getCount()
+                       || !Arrays.equals(mDetails, mListAdapter.getItems())) {
                 mListAdapter.clear();
                 mListAdapter.addAll(mDetails);
                 mListAdapter.notifyDataSetChanged();
@@ -266,16 +266,16 @@ public class DetailListPreference extends ListPreference
                         return new SavedState[size];
                     }
                 };
-        boolean isDialogShowing;
-        Bundle dialogBundle;
+        public boolean isDialogShowing;
+        public Bundle dialogBundle;
 
-        public SavedState(Parcel source) {
+        SavedState(Parcel source) {
             super(source);
             isDialogShowing = source.readInt() == 1;
             dialogBundle = source.readBundle(getClass().getClassLoader());
         }
 
-        public SavedState(Parcelable superState) {
+        SavedState(Parcelable superState) {
             super(superState);
         }
 

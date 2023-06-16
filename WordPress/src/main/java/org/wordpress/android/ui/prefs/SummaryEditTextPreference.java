@@ -276,16 +276,16 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
                         return new SavedState[size];
                     }
                 };
-        boolean isDialogShowing;
-        Bundle dialogBundle;
+        public boolean isDialogShowing;
+        public Bundle dialogBundle;
 
-        public SavedState(Parcel source) {
+        SavedState(Parcel source) {
             super(source);
             isDialogShowing = source.readInt() == 1;
             dialogBundle = source.readBundle(getClass().getClassLoader());
         }
 
-        public SavedState(Parcelable superState) {
+        SavedState(Parcelable superState) {
             super(superState);
         }
 
