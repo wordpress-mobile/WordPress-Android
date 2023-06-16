@@ -37,7 +37,7 @@ import java.util.Locale;
 
 public class DetailListPreference extends ListPreference
         implements PreferenceHint {
-    private static final String STATE_SELECTED_INDEX = "STATE_SELECTED_INDEX";
+    private static final String STATE_SELECTED_INDEX = "DetailListPreference_STATE_SELECTED_INDEX";
     public boolean canShowDialog = true;
     private DetailListAdapter mListAdapter;
     private String[] mDetails;
@@ -126,12 +126,12 @@ public class DetailListPreference extends ListPreference
         }
 
         mDialog = builder.create();
+        mDialog.setOnDismissListener(this);
 
         if (state != null) {
-            // TODO thomashortadev this is causing a WindowLeaked error for some reason
             mDialog.onRestoreInstanceState(state);
         }
-        mDialog.setOnDismissListener(this);
+
         mDialog.show();
 
         ListView listView = mDialog.getListView();
@@ -210,7 +210,16 @@ public class DetailListPreference extends ListPreference
         refreshAdapter();
     }
 
-    // region copied from DialogPreference
+    // region adapted from DialogPreference to make sure dialog state behaves correctly, specially in system initiated
+    // death/recreation scenarios, such as changing system dark mode.
+    private void dismissDialog() {
+        if (mDialog == null || !mDialog.isShowing()) {
+            return;
+        }
+
+        mDialog.dismiss();
+    }
+
     @Override
     protected Parcelable onSaveInstanceState() {
         final Parcelable superState = super.onSaveInstanceState();
@@ -222,6 +231,12 @@ public class DetailListPreference extends ListPreference
         myState.isDialogShowing = true;
         myState.dialogBundle = mDialog.onSaveInstanceState();
         myState.dialogBundle.putInt(STATE_SELECTED_INDEX, mSelectedIndex);
+
+        // Since dialog is showing, let's dismiss it so it doesn't leak. This is not the best place to do it, but
+        // since the android.preference is deprecated we are not able to register the proper lifecycle listeners, and
+        // we should migrate to androidx.preference or something similar in the future.
+        dismissDialog();
+
         return myState;
     }
 
