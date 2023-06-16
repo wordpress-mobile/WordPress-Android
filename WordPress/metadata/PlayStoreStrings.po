@@ -10,6 +10,14 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
+msgctxt "release_note_226"
+msgid ""
+"22.6:\n"
+"Locked and loaded—there’s now a lock icon for disabled cells in the block editor so you know when they aren’t in use.\n"
+"\n"
+"We also updated the placeholder text for VideoPress videos that don’t belong to your site. (Hopefully they don’t feel left out.)\n"
+msgstr ""
+
 msgctxt "release_note_225"
 msgid ""
 "22.5:\n"
@@ -18,12 +26,6 @@ msgid ""
 "- Tap-to-edit available for all nested block types\n"
 "- Accounts closable from account settings screen\n"
 "- Bug fixes in block editor and plugin screen\n"
-msgstr ""
-
-msgctxt "release_note_224"
-msgid ""
-"22.4:\n"
-"When you tap on a nested text block, you can immediately edit content in that block—no more tapping through every nesting level to get where you want to go. (Our fingers were getting tired, too.)\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
