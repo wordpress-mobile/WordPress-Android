@@ -45,7 +45,6 @@ import org.wordpress.android.util.extensions.getColorStateListFromAttribute
 import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
 
-
 /*
  * Bottom navigation view and related adapter used by the main activity for the
  * four primary views - note that we ignore the built-in icons and labels and

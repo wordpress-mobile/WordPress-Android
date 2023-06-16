@@ -50,4 +50,7 @@
         <!-- WORDPRESS -->
         <ignore path="**/src/wordpress/res" /> <!-- drawable-hdpi, drawable-xxhdpi -->
     </issue>
+    <issue id="ObsoleteSdkInt">
+        <ignore path="**/generated/source/kapt/**/org/wordpress/android/ui/main/Hilt_WPMainNavigationView.java" />
+    </issue>
 </lint>
