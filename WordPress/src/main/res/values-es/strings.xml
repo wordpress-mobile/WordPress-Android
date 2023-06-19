@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-01 10:21:09+0000
+Translation-Revision-Date: 2023-06-13 10:56:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: es
 -->
 <resources>
+    <string name="social_item_message_title">Mensaje</string>
     <string name="gutenberg_native_block_ungrouped">Bloque desagrupado</string>
     <string name="gutenberg_native_block_grouped">Bloque agrupado</string>
     <string name="dashboard_card_plans_checkout_success_info">El dominio puede tardar hasta 30 minutos en empezar a funcionar correctamente.</string>
@@ -829,12 +830,14 @@ Language: es
     <string name="gutenberg_native_width_settings">Ajustes de anchura</string>
     <string name="gutenberg_native_link_rel">«rel» del enlace</string>
     <string name="gutenberg_native_column_settings">Ajustes de columna</string>
+    <string name="gutenberg_native_no_description">Sin descripción</string>
     <string name="user_profile_untitled_site">(Sin título)</string>
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_bottom_sheet_description">Información de hoja inferior del perfil de usuario</string>
     <string name="likes_list_screen_title">Lista de Me gusta %s</string>
     <string name="gutenberg_native_two">Dos</string>
     <string name="gutenberg_native_three">Tres</string>
+    <string name="gutenberg_native_no_title">Sin título</string>
     <string name="gutenberg_native_s_social_icon">Icono social %s</string>
     <string name="gutenberg_native_mention">Mención</string>
     <string name="gutenberg_native_new">NUEVO</string>
