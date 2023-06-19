@@ -26,7 +26,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/margin_medium_large">
+                    android:padding="@dimen/margin_large">
 
                     <FrameLayout
                         android:id="@+id/frame_avatar"
@@ -71,6 +71,9 @@
                         android:layout_toEndOf="@+id/frame_avatar"
                         android:ellipsize="end"
                         android:maxLines="1"
+                        app:autoSizeMaxTextSize="@dimen/my_site_name_label_single_line_text_size"
+                        app:autoSizeMinTextSize="@dimen/my_site_name_label_double_line_text_size"
+                        app:autoSizeTextType="uniform"
                         tools:text="Full Name" />
 
                     <org.wordpress.android.widgets.WPTextView
