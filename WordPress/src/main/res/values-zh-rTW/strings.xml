@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-31 12:54:10+0000
+Translation-Revision-Date: 2023-06-14 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_TW
 -->
 <resources>
+    <string name="social_item_message_title">訊息</string>
     <string name="gutenberg_native_block_ungrouped">已取消區塊群組</string>
     <string name="gutenberg_native_block_grouped">已將區塊設為群組</string>
     <string name="dashboard_card_plans_checkout_success_info">你的網域最多可能需要 30 分鐘才能開始正常運作。</string>
@@ -828,6 +829,7 @@ Language: zh_TW
     <string name="gutenberg_native_width_settings">寬度設定</string>
     <string name="gutenberg_native_link_rel">鏈結 Rel</string>
     <string name="gutenberg_native_column_settings">欄位設定</string>
+    <string name="gutenberg_native_no_description">無描述</string>
     <string name="user_profile_untitled_site">(未命名)</string>
     <string name="user_profile_site_section_header">網站</string>
     <string name="user_profile_bottom_sheet_description">使用者個人資料底頁資訊</string>
