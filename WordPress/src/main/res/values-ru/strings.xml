@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-30 09:54:26+0000
+Translation-Revision-Date: 2023-06-14 15:54:29+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ru
@@ -835,6 +835,7 @@ Language: ru
     <string name="likes_list_screen_title">Отметки \"нравится\" %s</string>
     <string name="gutenberg_native_two">Два</string>
     <string name="gutenberg_native_three">Три</string>
+    <string name="gutenberg_native_no_title">Нет заголовка</string>
     <string name="gutenberg_native_s_social_icon">Значок соцсети %s</string>
     <string name="gutenberg_native_mention">Упоминание</string>
     <string name="gutenberg_native_new">НОВОЕ</string>

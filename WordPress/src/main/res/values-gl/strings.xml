@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-30 08:26:07+0000
+Translation-Revision-Date: 2023-06-15 16:53:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: gl_ES
 -->
 <resources>
+    <string name="social_item_message_title">Mensaxe</string>
+    <string name="dashboard_card_plans_menu_hide_this">Ocultar isto</string>
+    <string name="virtual_homepage_learn_more">Aprende máis sobre os modelos</string>
+    <string name="virtual_homepage_title">Páxina de inicio</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Saber máis</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">A edición de bloques reutilizables aínda non é compatible con %s para iOS.</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">A edición de bloques reutilizables aínda non é compatible con %s para Android.</string>
     <string name="jp_migration_notifications_allow_title">Permitir avisos para estar ao día co teu sitio</string>
@@ -804,12 +809,14 @@ Language: gl_ES
     <string name="gutenberg_native_width_settings">Axustes de anchura</string>
     <string name="gutenberg_native_link_rel">«rel» da ligazón</string>
     <string name="gutenberg_native_column_settings">Axustes de columna</string>
+    <string name="gutenberg_native_no_description">Sen descrición</string>
     <string name="user_profile_untitled_site">(Sen título)</string>
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_bottom_sheet_description">Información de folla inferior do perfil de usuario</string>
     <string name="likes_list_screen_title">Lista de Gústame %s</string>
     <string name="gutenberg_native_two">Dous</string>
     <string name="gutenberg_native_three">Tres</string>
+    <string name="gutenberg_native_no_title">Sen título</string>
     <string name="gutenberg_native_s_social_icon">Icona social %s</string>
     <string name="gutenberg_native_mention">Mención</string>
     <string name="gutenberg_native_new">NOVO</string>

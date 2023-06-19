@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-08 07:56:32+0000
+Translation-Revision-Date: 2023-06-14 13:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: nl
@@ -829,6 +829,7 @@ Language: nl
     <string name="gutenberg_native_width_settings">Breedte instellingen</string>
     <string name="gutenberg_native_link_rel">Linkrelatie</string>
     <string name="gutenberg_native_column_settings">Kolominstellingen</string>
+    <string name="gutenberg_native_no_description">Geen omschrijving</string>
     <string name="user_profile_untitled_site">(Zonder titel)</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Gebruikersprofiel onderste blad informatie</string>
