@@ -80,7 +80,7 @@ ext {
     zendeskVersion = '5.1.2'
 
     // react native
-    facebookReactVersion = '0.71.8'
+    facebookReactVersion = '0.71.11'
 
     // test
     assertjVersion = '3.23.1'
