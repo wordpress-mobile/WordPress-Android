@@ -121,7 +121,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     true
                 }
             }
-
         }
         val avatar = root.findViewById<ImageView>(R.id.avatar)
 

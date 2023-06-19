@@ -15,7 +15,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class DebugSettingsActivity : LocaleAwareActivity() {
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 

@@ -8,7 +8,6 @@ sealed class UiItem(open val type: DebugSettingsType) {
         val toggleAction: ToggleAction,
         override val type: DebugSettingsType
     ) : UiItem(type) {
-
         data class RemoteFeatureFlag(
             val remoteKey: String,
             val enabled: Boolean?,

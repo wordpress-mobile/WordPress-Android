@@ -129,5 +129,4 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
         verify(manualFeatureConfig).setManuallyEnabled(featureKey, true)
         assertTrue((uiStates.last().uiItems[0] as UiItem.FeatureFlag.RemoteFeatureFlag).enabled!!)
     }
-
 }
