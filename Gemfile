@@ -11,6 +11,9 @@ gem 'fastlane-plugin-wpmreleasetoolkit', '~> 8.1'
 # gem 'fastlane-plugin-wpmreleasetoolkit', path: '../../release-toolkit'
 # gem 'fastlane-plugin-wpmreleasetoolkit', git: 'https://github.com/wordpress-mobile/release-toolkit', branch: 'trunk'
 
+### Danger Plugins
+gem 'danger-iantest', git: 'https://github.com/iangmaia/danger-iantest', branch: 'main'
+
 
 ### Gems needed only for generating Promo Screenshots
 group :screenshots, optional: true do
