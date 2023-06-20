@@ -21,6 +21,9 @@ steps:
   #################
   - group: "🕵️‍♂️ Linters"
     steps:
+      - label: "☢️ Danger - PR Check"
+        command: .buildkite/commands/danger-pr-check.sh
+        if: "build.pull_request.id != null"
       - label: "🕵️ checkstyle"
         command: |
           cp gradle.properties-example gradle.properties
