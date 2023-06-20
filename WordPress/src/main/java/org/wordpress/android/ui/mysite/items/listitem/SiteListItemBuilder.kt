@@ -196,6 +196,19 @@ class SiteListItemBuilder @Inject constructor(
         } else null
     }
 
+    fun buildMeItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+        return if ((!buildConfigWrapper.isJetpackApp && site.hasCapabilityManageOptions) ||
+            !siteUtilsWrapper.isAccessedViaWPComRest(site)
+        ) {
+            ListItem(
+                R.drawable.ic_user_white_24dp,
+                UiStringRes(R.string.me),
+                onClick = ListItemInteraction.create(ListItemAction.ME, onClick),
+                disablePrimaryIconTint = true
+            )
+        } else null
+    }
+
     fun buildBlazeItemIfAvailable(isBlazeEligible: Boolean = false, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (isBlazeEligible) {
             ListItem(

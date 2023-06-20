@@ -5,6 +5,7 @@ package org.wordpress.android.ui.main
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -12,6 +13,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.view.View.OnClickListener
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -151,6 +153,20 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     }
 
     private fun MeFragmentBinding.setupViews() {
+        if (!BuildConfig.IS_JETPACK_APP) {
+            with(requireActivity() as AppCompatActivity) {
+                setSupportActionBar(toolbarMain)
+                supportActionBar?.apply {
+                    setHomeButtonEnabled(true)
+                    setDisplayHomeAsUpEnabled(true)
+                    // We need to set the title this way so it can be updated on locale change
+                    setTitle(packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA).labelRes)
+                }
+            }
+        } else {
+            appbarMain.visibility = View.GONE
+        }
+
         addJetpackBadgeIfNeeded()
 
         val showPickerListener = OnClickListener {
