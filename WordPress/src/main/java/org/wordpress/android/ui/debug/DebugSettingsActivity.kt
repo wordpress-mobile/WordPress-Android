@@ -10,6 +10,7 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.DebugSettingsActivityBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.debug.previews.PreviewFragmentActivity.Companion.previewFragmentInActivity
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -38,10 +39,11 @@ class DebugSettingsActivity : LocaleAwareActivity() {
         )[DebugSettingsViewModel::class.java]
         viewModel.onNavigation.observeEvent(this@DebugSettingsActivity) {
             when (it) {
-                DebugSettingsViewModel.NavigationAction.DebugCookies ->
+                is DebugSettingsViewModel.NavigationAction.DebugCookies ->
                     ActivityLauncher.viewDebugCookies(this@DebugSettingsActivity)
-
-                else -> {}
+                is DebugSettingsViewModel.NavigationAction.PreviewFragment -> {
+                    previewFragmentInActivity(it.name)
+                }
             }
         }
     }
