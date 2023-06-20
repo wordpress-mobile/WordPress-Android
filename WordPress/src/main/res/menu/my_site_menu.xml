@@ -2,12 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/debug_settings_item"
-        android:title="@string/preference_open_debug_settings"
-        android:icon="@drawable/ic_cog_white_24dp"
-        app:showAsAction="always">
-    </item>
-    <item
         android:id="@+id/me_item"
         android:title="@string/me_section_screen_title"
         app:actionLayout="@layout/me_action_layout"
