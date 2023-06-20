@@ -113,7 +113,7 @@ class DebugSettingsViewModel
             val source = if (manualFeatureConfig.hasManualSetup(key)) {
                 "Manual"
             } else {
-                featureFlagConfig.flags.find { it.key == key }?.source?.name ?: "Unknown"
+                featureFlagConfig.flags.find { it.key == key }?.source?.toUiValue()?: "Unknown"
             }
             if (value != null) {
                 RemoteFeatureFlag(key, value, UiItem.ToggleAction(key, !value, this::toggleFeature), source)
@@ -121,6 +121,14 @@ class DebugSettingsViewModel
                 null
             }
         }.sortedBy { it.remoteKey }
+    }
+
+    private fun FeatureFlagConfigDao.FeatureFlagValueSource.toUiValue(): String? {
+        return when (this) {
+            FeatureFlagConfigDao.FeatureFlagValueSource.BUILD_CONFIG -> "Local value"
+            FeatureFlagConfigDao.FeatureFlagValueSource.REMOTE -> "Remote Value"
+            else -> null
+        }
     }
 
     private fun buildRemoteFieldConfigs(): List<Field> {
