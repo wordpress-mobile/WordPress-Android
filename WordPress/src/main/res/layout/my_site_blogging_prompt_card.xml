@@ -94,7 +94,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:importantForAccessibility="no"
-                app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
+                android:overScrollMode="never"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="3"
                 tools:listitem="@layout/avatar_item" />
 

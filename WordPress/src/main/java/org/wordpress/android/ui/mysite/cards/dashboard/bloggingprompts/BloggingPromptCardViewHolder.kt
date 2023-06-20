@@ -4,10 +4,6 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.MenuCompat
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexWrap
-import com.google.android.flexbox.FlexboxLayoutManager
-import com.google.android.flexbox.JustifyContent
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteBloggingPromptCardBinding
 import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
@@ -65,12 +61,6 @@ class BloggingPromptCardViewHolder(
         }
         uiHelpers.updateVisibility(answeredPromptControls, card.isAnswered)
 
-        val layoutManager = FlexboxLayoutManager(
-            answeredUsersRecycler.context,
-            FlexDirection.ROW,
-            FlexWrap.NOWRAP
-        ).apply { justifyContent = JustifyContent.CENTER }
-
         if (card.numberOfAnswers > 0) {
             uiHelpers.updateVisibility(answeredUsersContainer, true)
             answeredUsersRecycler.addItemDecoration(
@@ -80,8 +70,6 @@ class BloggingPromptCardViewHolder(
                     AVATAR_LEFT_OFFSET_DIMEN
                 )
             )
-            answeredUsersRecycler.layoutManager = layoutManager
-
             val adapter = TrainOfAvatarsAdapter(
                 imageManager,
                 uiHelpers
@@ -121,14 +109,17 @@ class BloggingPromptCardViewHolder(
                         bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuViewMorePromptsClicked()
                         card.onViewMoreClick.invoke()
                     }
+
                     R.id.skip -> {
                         bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
                         card.onSkipClick.invoke()
                     }
+
                     R.id.remove -> {
                         bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuRemoveFromDashboardClicked()
                         card.onRemoveClick.invoke()
                     }
+
                     R.id.learn_more -> {
                         bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuLearnMoreClicked()
                         learnMoreClicked()
