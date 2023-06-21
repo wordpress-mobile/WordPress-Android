@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-13 03:51:54+0000
+Translation-Revision-Date: 2023-06-20 20:21:56+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ro
@@ -3422,7 +3422,6 @@ Language: ro
     <string name="media_error_no_permission">Nu ai permisiunea de a vizualiza bibioteca media</string>
     <string name="cannot_delete_multi_media_items">Unele elemente media nu pot fi șterse acum. Încearcă din nou mai târziu.</string>
     <string name="create_a_link">Crează o nouă legătură</string>
-    <string name="horizontal_alignment">Aliniere orizontală</string>
     <string name="comment_status_approved">Aprobat</string>
     <string name="comment_status_unapproved">În așteptare</string>
     <string name="comment_status_spam">Spam</string>
@@ -3468,6 +3467,7 @@ Language: ro
     <string name="comment_status_trash">Aruncate la gunoi</string>
     <string name="mnu_comment_unapprove">Anulează aprobarea</string>
     <string name="cancel_edit">Anulează editarea</string>
+    <string name="horizontal_alignment">Aliniere pe orizontală</string>
     <string name="share_link">Partajează legătura</string>
     <string name="reader_empty_posts_in_tag_updating">Se aduc articole…</string>
     <string name="cant_share_no_visible_blog">Nu poți partaja pe WordPress fără ca blogul să fie vizibil</string>

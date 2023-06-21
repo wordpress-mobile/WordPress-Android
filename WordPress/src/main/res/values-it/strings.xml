@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-14 11:54:07+0000
+Translation-Revision-Date: 2023-06-20 19:24:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: it
 -->
 <resources>
+    <string name="social_item_message_title">Messaggio</string>
     <string name="gutenberg_native_block_ungrouped">Blocco separato</string>
     <string name="gutenberg_native_block_grouped">Blocco raggruppato</string>
     <string name="dashboard_card_plans_checkout_success_info">Potrebbero essere necessari fino a 30 minuti prima che il dominio inizi a funzionare correttamente.</string>
@@ -836,6 +837,7 @@ Language: it
     <string name="likes_list_screen_title">Elenco di Mi piace %s</string>
     <string name="gutenberg_native_two">Due</string>
     <string name="gutenberg_native_three">Tre</string>
+    <string name="gutenberg_native_no_title">Nessun titolo</string>
     <string name="gutenberg_native_s_social_icon">Icona social %s</string>
     <string name="gutenberg_native_mention">Riferimento</string>
     <string name="gutenberg_native_new">NOVITÀ</string>
@@ -2551,7 +2553,7 @@ Language: it
     <string name="site_settings_timezones_error">Impossibile caricare i fusi orario</string>
     <string name="site_settings_format_help">Scopri di più sulla formattazione di data e ora</string>
     <string name="site_settings_format_hint_custom">Formato personalizzato</string>
-    <string name="site_settings_format_entry_custom">Clientela</string>
+    <string name="site_settings_format_entry_custom">Personalizzato</string>
     <string name="site_settings_posts_per_page_title">Articoli per pagina</string>
     <string name="site_settings_timezone_subtitle">Seleziona una città che rientra nel tuo fuso orario</string>
     <string name="site_settings_timezone_title">Fuso orario</string>
@@ -2692,7 +2694,7 @@ Language: it
     <string name="error_unknown_post">Non è stato possibile trovare l\'articolo sul server</string>
     <string name="error_post_does_not_exist">Questo articolo non è più disponibile</string>
     <string name="error_media_canceled">Caricamento file multimediali annullato</string>
-    <string name="error_upload_page_media_param">Si è verificato un errore nel caricamento del media in questa pagina:  %s.</string>
+    <string name="error_upload_page_media_param">Si è verificato un errore nel caricamento del media in questa pagina: %s.</string>
     <string name="error_upload_page_param">Si è verificato un errore nel caricamento di questa pagina: %s. </string>
     <string name="editor_uploading_post">Il tuo articolo è stato caricato</string>
     <string name="uploading_media">Caricamento del media…</string>
