@@ -1,28 +1,23 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
-import android.content.Context
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.MenuCompat
+import androidx.core.view.isVisible
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteBloggingPromptCardBinding
-import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
-import org.wordpress.android.ui.avatars.AvatarItemDecorator
-import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution.DAY_ONE
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.HtmlCompatWrapper
-import org.wordpress.android.util.RtlUtils
+import org.wordpress.android.util.extensions.getColorStateListFromAttributeOrRes
 import org.wordpress.android.util.extensions.viewBinding
-import org.wordpress.android.util.image.ImageManager
 
 class BloggingPromptCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers,
-    private val imageManager: ImageManager,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val htmlCompatWrapper: HtmlCompatWrapper,
     private val learnMoreClicked: () -> Unit
@@ -61,44 +56,47 @@ class BloggingPromptCardViewHolder(
         }
         uiHelpers.updateVisibility(answeredPromptControls, card.isAnswered)
 
-        if (card.numberOfAnswers > 0) {
-            uiHelpers.updateVisibility(answeredUsersContainer, true)
-            answeredUsersRecycler.addItemDecoration(
-                AvatarItemDecorator(
-                    RtlUtils.isRtl(answeredUsersRecycler.context),
-                    answeredUsersRecycler.context,
-                    AVATAR_LEFT_OFFSET_DIMEN
-                )
-            )
-            val adapter = TrainOfAvatarsAdapter(
-                imageManager,
-                uiHelpers
-            )
-            answeredUsersRecycler.adapter = adapter
-
-            adapter.loadData(card.respondents)
-
-            card.onViewAnswersClick?.let { onClick ->
-                answeredUsersContainer.setOnClickListener { onClick(card.promptId) }
-            }
-            answeredUsersContainer.contentDescription = createViewAnswersContentDescription(
-                answeredUsersContainer.context,
-                card.respondents
-            )
-        } else {
-            uiHelpers.updateVisibility(answeredUsersContainer, false)
-        }
+        setupAnsweredUsersContainer(card)
     }
 
-    private fun createViewAnswersContentDescription(
-        context: Context,
-        respondents: List<TrainOfAvatarsItem>,
-    ): CharSequence? {
-        return respondents
-            .filterIsInstance<TrainOfAvatarsItem.TrailingLabelTextItem>()
-            .firstOrNull()
-            ?.text
-            ?.let { uiHelpers.getTextOfUiString(context, it) }
+    @Suppress("NestedBlockDepth")
+    private fun setupAnsweredUsersContainer(
+        card: BloggingPromptCardWithData,
+    ) = with(binding) {
+        if (card.numberOfAnswers <= 0) {
+            answeredUsersAvatars.isVisible = false
+            answeredUsersLabel.isVisible = false
+            return@with
+        }
+
+        answeredUsersAvatars.apply {
+            isVisible = true
+            iconUrls = card.respondents
+                .filterIsInstance(TrainOfAvatarsItem.AvatarItem::class.java)
+                .map { it.userAvatarUrl }
+        }
+
+        answeredUsersLabel.apply {
+            card.respondents
+                .filterIsInstance(TrainOfAvatarsItem.TrailingLabelTextItem::class.java)
+                .firstOrNull()
+                ?.let {
+                    isVisible = true
+                    text = uiHelpers.getTextOfUiString(
+                        context,
+                        it.text
+                    )
+                    setTextColor(
+                        context.getColorStateListFromAttributeOrRes(it.labelColor)
+                    )
+                    card.onViewAnswersClick?.let { onClick ->
+                        setOnClickListener { onClick(card.promptId) }
+                    }
+                }
+                ?: run {
+                    isVisible = false
+                }
+        }
     }
 
     private fun MySiteBloggingPromptCardBinding.showCardMenu(card: BloggingPromptCardWithData) {
