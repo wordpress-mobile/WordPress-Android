@@ -8,12 +8,13 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/feature_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:gravity="start"
         android:textAppearance="?attr/textAppearanceSubtitle1"
         android:textSize="16sp"
+        android:maxLines="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/preview_icon"
         app:layout_constraintHorizontal_bias="0.0"
