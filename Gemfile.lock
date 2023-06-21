@@ -1,11 +1,11 @@
 GIT
   remote: https://github.com/iangmaia/danger-iantest
-  revision: 192476f3a2df76bc68a5866a13f9023ec9df2e09
+  revision: 27b561f809dcecd3b6f9c9b1f9312cd6810867cc
   branch: main
   specs:
     danger-iantest (0.0.1)
-      danger (~> 9.3)
-      danger-plugin-api (~> 1.0)
+      danger (~> 9.3.0)
+      danger-plugin-api (~> 1.0.0)
 
 GEM
   remote: https://rubygems.org/
