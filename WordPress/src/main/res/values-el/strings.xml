@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-22 11:01:09+0000
+Translation-Revision-Date: 2023-06-13 08:27:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: el_GR
@@ -35,6 +35,7 @@ Language: el_GR
     <string name="gutenberg_native_width_settings">Ρυθμίσεις πλάτους</string>
     <string name="gutenberg_native_column_settings">Ρυθμίσεις Στήλης</string>
     <string name="gutenberg_native_link_rel">Σχέση συνδέσμου (Rel)</string>
+    <string name="gutenberg_native_no_description">Χωρίς περιγραφή</string>
     <string name="user_profile_untitled_site">(Χωρίς τίτλο)</string>
     <string name="user_profile_site_section_header">Ιστότοπος</string>
     <string name="gutenberg_native_mention">Αναφορά</string>

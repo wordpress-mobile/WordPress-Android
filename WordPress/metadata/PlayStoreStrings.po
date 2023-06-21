@@ -14,8 +14,6 @@ msgctxt "release_note_226"
 msgid ""
 "22.6:\n"
 "Locked and loaded—there’s now a lock icon for disabled cells in the block editor so you know when they aren’t in use.\n"
-"\n"
-"We also updated the placeholder text for VideoPress videos that don’t belong to your site. (Hopefully they don’t feel left out.)\n"
 msgstr ""
 
 msgctxt "release_note_225"

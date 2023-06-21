@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-31 11:54:28+0000
+Translation-Revision-Date: 2023-06-13 19:33:49+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: id
 -->
 <resources>
+    <string name="social_item_message_title">Pesan</string>
     <string name="gutenberg_native_block_ungrouped">Blok tidak dikelompokkan</string>
     <string name="gutenberg_native_block_grouped">Blok dikelompokkan</string>
     <string name="dashboard_card_plans_checkout_success_info">Domain Anda memerlukan waktu hingga 30 menit untuk mulai berfungsi dengan benar.</string>
@@ -829,12 +830,14 @@ Language: id
     <string name="gutenberg_native_width_settings">Pengaturan Lebar</string>
     <string name="gutenberg_native_link_rel">Link Rel</string>
     <string name="gutenberg_native_column_settings">Pengaturan Kolom</string>
+    <string name="gutenberg_native_no_description">Tanpa deskripsi</string>
     <string name="user_profile_untitled_site">(Tanpa judul)</string>
     <string name="user_profile_site_section_header">Situs</string>
     <string name="user_profile_bottom_sheet_description">Informasi lembar bawah profil pengguna</string>
     <string name="likes_list_screen_title">Daftar Suka %s</string>
     <string name="gutenberg_native_two">Dua.</string>
     <string name="gutenberg_native_three">Tiga.</string>
+    <string name="gutenberg_native_no_title">Tanpa judul</string>
     <string name="gutenberg_native_s_social_icon">Ikon media sosial %s</string>
     <string name="gutenberg_native_mention">Sebutan</string>
     <string name="gutenberg_native_new">Baru</string>

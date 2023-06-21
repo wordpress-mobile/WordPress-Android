@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-31 13:54:10+0000
+Translation-Revision-Date: 2023-06-14 13:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: fr
@@ -835,6 +835,7 @@ Language: fr
     <string name="likes_list_screen_title">Liste des mentions J’aime %s</string>
     <string name="gutenberg_native_two">Deux</string>
     <string name="gutenberg_native_three">Trois</string>
+    <string name="gutenberg_native_no_title">Sans titre</string>
     <string name="gutenberg_native_s_social_icon">Icône de réseau social %s</string>
     <string name="gutenberg_native_mention">Mention</string>
     <string name="gutenberg_native_new">NOUVEAU</string>

@@ -345,7 +345,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         // initialize the appropriate settings interface (WP.com or WP.org)
         mSiteSettings = SiteSettingsInterface.getInterface(activity, mSite, this);
 
-        setRetainInstance(true);
         addPreferencesFromResource();
 
         // toggle which preferences are shown and set references
