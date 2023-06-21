@@ -9,18 +9,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.compose.components.TrainOfIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.DisplayUtils
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
-class TrainOfAvatarsView @JvmOverloads constructor(
+class TrainOfIconsView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
-    private val avatarsState: MutableState<List<AvatarItem>> = mutableStateOf(emptyList())
+    private val iconUrlsState: MutableState<List<String>> = mutableStateOf(emptyList())
 
     // icon size in DP used by the Composable
     private val iconSizeState: MutableState<Int> = mutableStateOf(DEFAULT_ICON_SIZE_DP)
@@ -28,10 +27,10 @@ class TrainOfAvatarsView @JvmOverloads constructor(
     // icon border width in DP used by the Composable
     private val iconBorderWidthState: MutableState<Int> = mutableStateOf(DEFAULT_ICON_BORDER_WIDTH_DP)
 
-    var avatars: List<AvatarItem>
-        get() = avatarsState.value
+    var iconUrls: List<String>
+        get() = iconUrlsState.value
         set(value) {
-            if (avatarsState.value != value) avatarsState.value = value
+            if (iconUrlsState.value != value) iconUrlsState.value = value
         }
 
     /**
@@ -55,11 +54,11 @@ class TrainOfAvatarsView @JvmOverloads constructor(
         }
 
     init {
-        val ta = context.obtainStyledAttributes(attrs, R.styleable.TrainOfAvatarsView)
-        ta.getDimensionPixelSize(R.styleable.TrainOfAvatarsView_iconSize, -1)
+        val ta = context.obtainStyledAttributes(attrs, R.styleable.TrainOfIconsView)
+        ta.getDimensionPixelSize(R.styleable.TrainOfIconsView_iconSize, -1)
             .takeIf { it != -1 }
             ?.let { iconSize = it }
-        ta.getDimensionPixelSize(R.styleable.TrainOfAvatarsView_iconBorderWidth, -1)
+        ta.getDimensionPixelSize(R.styleable.TrainOfIconsView_iconBorderWidth, -1)
             .takeIf { it != -1 }
             ?.let { iconBorderWidth = it }
         ta.recycle()
@@ -67,11 +66,11 @@ class TrainOfAvatarsView @JvmOverloads constructor(
 
     @Composable
     override fun Content() {
-        if (avatarsState.value.isEmpty()) return
+        if (iconUrlsState.value.isEmpty()) return
 
         AppTheme {
             TrainOfIcons(
-                iconModels = avatarsState.value.map { it.userAvatarUrl },
+                iconModels = iconUrlsState.value,
                 iconSize = iconSizeState.value.dp,
                 iconBorderWidth = iconBorderWidthState.value.dp,
             )
