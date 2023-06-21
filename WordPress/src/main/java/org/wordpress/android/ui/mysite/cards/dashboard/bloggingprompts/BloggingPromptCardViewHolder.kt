@@ -71,9 +71,8 @@ class BloggingPromptCardViewHolder(
 
         answeredUsersAvatars.apply {
             isVisible = true
-            iconUrls = card.respondents
+            avatars = card.respondents
                 .filterIsInstance(TrainOfAvatarsItem.AvatarItem::class.java)
-                .map { it.userAvatarUrl }
         }
 
         answeredUsersLabel.apply {
