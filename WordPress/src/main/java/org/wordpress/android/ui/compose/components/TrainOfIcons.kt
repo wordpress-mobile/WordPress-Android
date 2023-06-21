@@ -45,7 +45,7 @@ private const val ICON_OFFSET_PROPORTION = 29f / 36f
  */
 @Composable
 fun TrainOfIcons(
-    iconModels: List<Any>,
+    iconModels: List<Any?>,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     iconSize: Dp = DEFAULT_ICON_SIZE.dp,
@@ -68,6 +68,8 @@ fun TrainOfIcons(
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     placeholder = placeholder,
+                    fallback = placeholder,
+                    error = placeholder,
                     modifier = Modifier
                         .size(iconSizeWithBorder.dp)
                         .clip(CircleShape)
