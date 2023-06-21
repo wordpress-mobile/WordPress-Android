@@ -1,6 +1,3 @@
-- Home page editable from Pages list on block-based sites
-- VideoPress blocks enabled
-- Detail settings disabled for videos not owned by site
-- Undo/redo text when setting links to open in new tab
-- Tap-to-edit for all nested block types
-- Accounts closable from account settings
+- WordPress.com plans are coming to the Jetpack app.
+- There’s now a lock icon for disabled cells in the block editor.
+- We updated the placeholder text for VideoPress videos that don’t belong to your site.

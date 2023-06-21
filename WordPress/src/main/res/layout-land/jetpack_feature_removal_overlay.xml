@@ -21,10 +21,11 @@
         tools:ignore="ContentDescription" />
 
     <ScrollView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:layout_weight="1">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/close_button">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
