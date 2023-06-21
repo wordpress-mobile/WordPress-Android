@@ -55,13 +55,12 @@ fun TrainOfIcons(
     require(iconModels.isNotEmpty()) { "TrainOfIcons must have at least 1 icon" }
 
     val iconSizeWithBorder = (iconSize.value + 2 * iconBorderWidth.value).toInt()
+    val semanticsModifier = contentDescription?.let {
+        modifier.semantics(mergeDescendants = true) { this.contentDescription = it }
+    }
 
     Layout(
-        modifier = modifier.then(Modifier.semantics(mergeDescendants = true) {
-            contentDescription?.let {
-                this.contentDescription = it
-            }
-        }),
+        modifier = semanticsModifier ?: modifier,
         content = {
             iconModels.forEach { iconModel ->
                 AsyncImage(
