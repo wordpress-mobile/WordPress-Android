@@ -38,7 +38,7 @@ class TrainOfAvatarsView @JvmOverloads constructor(
     private val iconBorderWidthState: MutableState<Int> = mutableStateOf(DEFAULT_ICON_BORDER_WIDTH_DP)
 
     // placeholder drawable/color resource to be used by the Composable
-    private val placeHolderResState: MutableState<Int> = mutableStateOf(R.color.placeholder)
+    private val placeholderResState: MutableState<Int> = mutableStateOf(R.color.placeholder)
 
     var avatars: List<AvatarItem>
         get() = avatarsState.value
@@ -66,10 +66,10 @@ class TrainOfAvatarsView @JvmOverloads constructor(
             if (iconBorderWidthState.value != borderWidthDp) iconBorderWidthState.value = borderWidthDp
         }
 
-    var placeHolderRes: Int
-        get() = placeHolderResState.value
+    var placeholderRes: Int
+        get() = placeholderResState.value
         set(value) {
-            if (placeHolderResState.value != value) placeHolderResState.value = value
+            if (placeholderResState.value != value) placeholderResState.value = value
         }
 
     init {
@@ -82,7 +82,7 @@ class TrainOfAvatarsView @JvmOverloads constructor(
             ?.let { iconBorderWidth = it }
         ta.getResourceId(R.styleable.TrainOfAvatarsView_placeholder, -1)
             .takeIf { it != -1 }
-            ?.let { placeHolderRes = it }
+            ?.let { placeholderRes = it }
         ta.recycle()
     }
 
@@ -118,7 +118,7 @@ class TrainOfAvatarsView @JvmOverloads constructor(
 
     @Composable
     private fun placeholderPainter(): Painter {
-        val resId = placeHolderResState.value
+        val resId = placeholderResState.value
 
         val drawable = AppCompatResources.getDrawable(context, resId)
         return if (drawable is ColorDrawable) {
