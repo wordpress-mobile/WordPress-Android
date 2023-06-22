@@ -163,6 +163,12 @@
                     style="@style/HelpActivitySingleText"
                     android:text="@string/tickets" />
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/debug_settings_button"
+                    style="@style/HelpActivitySingleText"
+                    android:visibility="gone"
+                    android:text="@string/preference_open_debug_settings" />
+
                 <LinearLayout
                     android:id="@+id/contactEmailContainer"
                     android:layout_width="match_parent"

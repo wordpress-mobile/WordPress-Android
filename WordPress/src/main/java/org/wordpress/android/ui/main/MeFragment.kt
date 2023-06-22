@@ -67,6 +67,7 @@ import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.models.JetpackPoweredScreen
+import org.wordpress.android.ui.debug.DebugSettingsActivity
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.SnackbarItem
@@ -185,6 +186,13 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
 
         if (BuildConfig.IS_JETPACK_APP) meAboutIcon.setImageResource(R.drawable.ic_jetpack_logo_white_24dp)
+
+        if (BuildConfig.DEBUG) {
+            rowDebugSettings.isVisible = true
+            rowDebugSettings.setOnClickListener {
+                requireContext().startActivity(Intent(requireContext(), DebugSettingsActivity::class.java))
+            }
+        }
 
         rowAboutTheApp.setOnClickListener {
             viewModel.showUnifiedAbout()
@@ -549,6 +557,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                     }
                 }
             }
+
             UCrop.REQUEST_CROP -> {
                 AnalyticsTracker.track(ME_GRAVATAR_CROPPED)
                 if (resultCode == Activity.RESULT_OK) {
