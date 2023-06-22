@@ -11,6 +11,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.items.ACTIVITY_ITEM
 import org.wordpress.android.ui.mysite.items.ADMIN_ITEM
 import org.wordpress.android.ui.mysite.items.BACKUP_ITEM
@@ -51,6 +52,9 @@ class SiteListItemBuilderTest {
     lateinit var siteModel: SiteModel
 
     @Mock
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
+    @Mock
     lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
     private lateinit var siteListItemBuilder: SiteListItemBuilder
 
@@ -62,7 +66,8 @@ class SiteListItemBuilderTest {
             siteUtilsWrapper,
             buildConfigWrapper,
             themeBrowserUtils,
-            siteDomainsFeatureConfig
+            siteDomainsFeatureConfig,
+            jetpackFeatureRemovalPhaseHelper
         )
     }
 

@@ -198,6 +198,7 @@ class SiteListItemBuilder @Inject constructor(
         } else null
     }
 
+    @Suppress("ComplexCondition")
     fun buildMeItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if ((!buildConfigWrapper.isJetpackApp &&
                     jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() &&
