@@ -190,6 +190,26 @@
             <View style="@style/MeListSectionDividerView" />
 
             <LinearLayout
+                android:id="@+id/row_debug_settings"
+                android:visibility="gone"
+                style="@style/MeListRowLayout">
+
+                <ImageView
+                    android:id="@+id/me_debug_settings_icon"
+                    style="@style/MeListRowIcon"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_cog_white_24dp" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/me_open_debug_settings"
+                    style="@style/MeListRowTextView"
+                    android:text="@string/preference_open_debug_settings" />
+
+            </LinearLayout>
+
+            <View style="@style/MeListSectionDividerView" />
+
+            <LinearLayout
                 android:id="@+id/row_support"
                 style="@style/MeListRowLayout">
 

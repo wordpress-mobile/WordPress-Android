@@ -122,8 +122,6 @@ public class AppSettingsFragment extends PreferenceFragment
         ((WordPress) getActivity().getApplication()).component().inject(this);
         mDispatcher.register(this);
 
-        setRetainInstance(true);
-
         addPreferencesFromResource(R.xml.app_settings);
 
         findPreference(getString(R.string.pref_key_send_usage)).setOnPreferenceChangeListener(
