@@ -57,7 +57,7 @@ class MeGravatarLoader @Inject constructor(
     }
 
     fun constructGravatarUrl(rawAvatarUrl: String): String {
-        val avatarSz = resourseProvider.getDimensionPixelSize(R.dimen.avatar_sz_large)
+        val avatarSz = resourseProvider.getDimensionPixelSize(R.dimen.avatar_sz_extra_small)
         return GravatarUtils.fixGravatarUrl(rawAvatarUrl, avatarSz)
     }
 }

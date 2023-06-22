@@ -4,6 +4,7 @@ import android.text.TextUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteViewModel
@@ -40,7 +41,8 @@ class SiteListItemBuilder @Inject constructor(
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val themeBrowserUtils: ThemeBrowserUtils,
-    private val siteDomainsFeatureConfig: SiteDomainsFeatureConfig
+    private val siteDomainsFeatureConfig: SiteDomainsFeatureConfig,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
@@ -192,6 +194,22 @@ class SiteListItemBuilder @Inject constructor(
                 R.drawable.ic_cog_white_24dp,
                 UiStringRes(R.string.my_site_btn_site_settings),
                 onClick = ListItemInteraction.create(SITE_SETTINGS, onClick)
+            )
+        } else null
+    }
+
+    @Suppress("ComplexCondition")
+    fun buildMeItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+        return if ((!buildConfigWrapper.isJetpackApp &&
+                    jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() &&
+                    site.hasCapabilityManageOptions) ||
+            !siteUtilsWrapper.isAccessedViaWPComRest(site)
+        ) {
+            ListItem(
+                R.drawable.ic_user_primary_white_24,
+                UiStringRes(R.string.me),
+                onClick = ListItemInteraction.create(ListItemAction.ME, onClick),
+                disablePrimaryIconTint = true
             )
         } else null
     }

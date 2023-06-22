@@ -3,6 +3,7 @@
 22.7
 -----
 * [*] Updates Floating Action Button(FAB) color to black, shape to squircle, and icon to plus [https://github.com/wordpress-mobile/WordPress-Android/pull/18599]
+* [*] Me, and gravatar is moved to bottom navigation as fourth tab [https://github.com/wordpress-mobile/WordPress-Android/pull/18606]
 
 
 22.6

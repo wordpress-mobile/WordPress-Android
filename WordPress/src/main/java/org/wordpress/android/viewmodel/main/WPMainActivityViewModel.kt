@@ -246,19 +246,6 @@ class WPMainActivityViewModel @Inject constructor(
         _openBloggingPromptsOnboarding.call()
     }
 
-    private fun disableTooltip(site: SiteModel?) {
-        appPrefsWrapper.setMainFabTooltipDisabled(true)
-
-        val oldState = _fabUiState.value
-        oldState?.let {
-            _fabUiState.value = MainFabUiState(
-                isFabVisible = it.isFabVisible,
-                isFabTooltipVisible = false,
-                CreateContentMessageId = getCreateContentMessageId(site)
-            )
-        }
-    }
-
     private fun trackCreateActionsSheetCard(actions: List<MainActionListItem>) {
         if (actions.any { it is AnswerBloggingPromptAction }) {
             analyticsTracker.track(Stat.BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED)
@@ -297,14 +284,6 @@ class WPMainActivityViewModel @Inject constructor(
     fun onPageChanged(isOnMySitePageWithValidSite: Boolean, site: SiteModel?) {
         val showFab = if (buildConfigWrapper.isCreateFabEnabled) isOnMySitePageWithValidSite else false
         setMainFabUiState(showFab, site)
-    }
-
-    fun onTooltipTapped(site: SiteModel?) {
-        disableTooltip(site)
-    }
-
-    fun onFabLongPressed(site: SiteModel?) {
-        disableTooltip(site)
     }
 
     fun onOpenLoginPage(mySitePosition: Int) = launch {
