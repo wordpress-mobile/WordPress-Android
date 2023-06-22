@@ -110,7 +110,6 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     }
 
     private fun setupContent(readyState: Ready) {
-        print(readyState)
         val contentBinding = BloggingPromptsOnboardingDialogContentViewBinding.inflate(layoutInflater)
         setContent(contentBinding.root)
         with(contentBinding) {
