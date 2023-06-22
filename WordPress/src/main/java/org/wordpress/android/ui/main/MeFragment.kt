@@ -157,6 +157,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
     }
 
+    @Suppress("LongMethod")
     private fun MeFragmentBinding.setupViews() {
         if (!BuildConfig.IS_JETPACK_APP && jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()) {
             with(requireActivity() as AppCompatActivity) {
