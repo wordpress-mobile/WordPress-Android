@@ -95,7 +95,7 @@ class TrainOfAvatarsView @JvmOverloads constructor(
                 iconModels = avatarModels(),
                 iconSize = iconSizeState.value.dp,
                 iconBorderWidth = iconBorderWidthState.value.dp,
-                placeholder = placeholderPainter()
+                placeholderPainter = placeholderPainter()
             )
         }
     }
