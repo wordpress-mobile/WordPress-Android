@@ -194,6 +194,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return mRetainedGutenbergContainerFragment;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -610,6 +611,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return StringUtils.getMd5Hash(gson.toJson(mediaFiles));
     }
 
+    @SuppressWarnings("unchecked")
     private void normalizeMediaFilesIds(ArrayList<Object> mediaFiles) {
         // iterate through all of mediaFiles objects    and convert ids to String
         for (Object mediaFile : mediaFiles) {
@@ -948,6 +950,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         builder.setTitle(getString(R.string.stop_upload_dialog_title));
         builder.setPositiveButton(R.string.stop_upload_dialog_button_yes,
                 new DialogInterface.OnClickListener() {
+                    @SuppressWarnings("unchecked")
                     public void onClick(DialogInterface dialog, int id) {
                         mEditorFragmentListener.onCancelUploadForMediaCollection(mediaFiles);
                         // now signal Gutenberg upload failed, and remove the mediaIds from our tracking map
