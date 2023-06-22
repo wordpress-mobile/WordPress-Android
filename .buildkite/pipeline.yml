@@ -23,6 +23,7 @@ steps:
     steps:
       - label: "☢️ Danger - PR Check"
         command: .buildkite/commands/danger-pr-check.sh
+        plugins: *common_plugins
         if: "build.pull_request.id != null"
       - label: "🕵️ checkstyle"
         command: |
