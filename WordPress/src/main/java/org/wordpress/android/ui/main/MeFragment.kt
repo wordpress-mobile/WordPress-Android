@@ -67,6 +67,7 @@ import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.models.JetpackPoweredScreen
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.SnackbarItem
@@ -134,6 +135,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject
     lateinit var uiHelpers: UiHelpers
 
+    @Inject
+    lateinit var jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil
+
     private val viewModel: MeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -153,7 +157,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     }
 
     private fun MeFragmentBinding.setupViews() {
-        if (!BuildConfig.IS_JETPACK_APP) {
+        if (!BuildConfig.IS_JETPACK_APP && jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()) {
             with(requireActivity() as AppCompatActivity) {
                 setSupportActionBar(toolbarMain)
                 supportActionBar?.apply {
