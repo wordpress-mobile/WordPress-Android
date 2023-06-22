@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 
 gem 'fastlane', '~> 2'
 gem 'nokogiri'
+gem 'danger', '~> 9.3'
 
 ### Fastlane Plugins
 
