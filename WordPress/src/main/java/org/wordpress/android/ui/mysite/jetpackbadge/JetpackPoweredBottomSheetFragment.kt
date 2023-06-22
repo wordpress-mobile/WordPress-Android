@@ -19,6 +19,7 @@ import org.wordpress.android.databinding.JetpackPoweredExpandedBottomSheetBindin
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType.ME
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
@@ -105,6 +106,9 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
                     title.text = getString(R.string.wp_jetpack_powered_notifications_powered_by_jetpack)
                     caption.text = getString(R.string.wp_jetpack_powered_notifications_powered_by_jetpack_caption)
                     secondaryButton.text = getString(R.string.wp_jetpack_continue_to_notifications)
+                }
+                ME -> {
+                    // do nothing
                 }
             }
             primaryButton.setOnClickListener { viewModel.openJetpackAppDownloadLink() }

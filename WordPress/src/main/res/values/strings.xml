@@ -2402,6 +2402,7 @@
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
+    <string name="tabbar_accessibility_label_me">Me. Manage your profile details.</string>
 
     <!-- Special characters -->
     <string name="bullet" translatable="false">\u2022</string>
