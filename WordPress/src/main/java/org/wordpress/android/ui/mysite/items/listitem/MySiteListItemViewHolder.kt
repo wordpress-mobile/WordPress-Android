@@ -22,7 +22,7 @@ class MySiteListItemViewHolder(
     fun bind(cardAndItem: ListItem) = with(binding) {
         if (cardAndItem.disablePrimaryIconTint) mySiteItemPrimaryIcon.imageTintList = null
 
-        if (cardAndItem.primaryIcon == R.drawable.ic_user_white_24dp) {
+        if (cardAndItem.primaryIcon == R.drawable.ic_user_primary_white_24) {
             loadGravatar(mySiteItemPrimaryIcon, accountStore.account.avatarUrl)
         } else {
             uiHelpers.setImageOrHide(mySiteItemPrimaryIcon, cardAndItem.primaryIcon)

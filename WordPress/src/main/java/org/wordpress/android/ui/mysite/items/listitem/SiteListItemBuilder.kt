@@ -201,7 +201,7 @@ class SiteListItemBuilder @Inject constructor(
             !siteUtilsWrapper.isAccessedViaWPComRest(site)
         ) {
             ListItem(
-                R.drawable.ic_user_white_24dp,
+                R.drawable.ic_user_primary_white_24,
                 UiStringRes(R.string.me),
                 onClick = ListItemInteraction.create(ListItemAction.ME, onClick),
                 disablePrimaryIconTint = true
