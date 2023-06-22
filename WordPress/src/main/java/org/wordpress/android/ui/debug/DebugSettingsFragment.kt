@@ -2,7 +2,6 @@ package org.wordpress.android.ui.debug
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,12 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.DebugSettingsFragmentBinding
-import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.NavigationAction.DebugCookies
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.NavigationAction.PreviewFragment
-import org.wordpress.android.ui.debug.previews.PreviewFragmentActivity.Companion.previewFragmentInActivity
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.viewmodel.observeEvent
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
@@ -28,41 +23,41 @@ class DebugSettingsFragment : Fragment(R.layout.debug_settings_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(DebugSettingsFragmentBinding.bind(view)) {
-            with(requireActivity() as AppCompatActivity) {
-                setSupportActionBar(toolbar)
-                supportActionBar?.let {
-                    it.setHomeButtonEnabled(true)
-                    it.setDisplayHomeAsUpEnabled(true)
-                }
-            }
-            recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-            recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
-
             viewModel = ViewModelProvider(this@DebugSettingsFragment, viewModelFactory)
                 .get(DebugSettingsViewModel::class.java)
-            viewModel.uiState.observe(viewLifecycleOwner, {
-                it?.let { uiState ->
-                    val adapter: DebugSettingsAdapter
-                    if (recyclerView.adapter == null) {
-                        adapter = DebugSettingsAdapter()
-                        recyclerView.adapter = adapter
-                    } else {
-                        adapter = recyclerView.adapter as DebugSettingsAdapter
-                    }
 
-                    val layoutManager = recyclerView.layoutManager
-                    val recyclerViewState = layoutManager?.onSaveInstanceState()
+            val adapter = DebugSettingsAdapter()
+            setUpRecyclerView(adapter)
+
+            viewModel.uiState.observe(viewLifecycleOwner) {
+                it?.let { uiState ->
                     adapter.submitList(uiState.uiItems)
-                    layoutManager?.onRestoreInstanceState(recyclerViewState)
-                }
-            })
-            viewModel.onNavigation.observeEvent(viewLifecycleOwner) {
-                when (it) {
-                    DebugCookies -> ActivityLauncher.viewDebugCookies(requireContext())
-                    is PreviewFragment -> previewFragmentInActivity(it.name)
                 }
             }
-            viewModel.start()
+            viewModel.start(getDebugSettingsType())
+        }
+    }
+
+    private fun getDebugSettingsType() = arguments?.getSerializableCompat<DebugSettingsType>(
+        DEBUG_SETTINGS_TYPE_KEY
+    ) ?: throw IllegalArgumentException(
+        "DebugSettingsType not provided"
+    )
+
+    private fun setUpRecyclerView(adapter: DebugSettingsAdapter) {
+        with(DebugSettingsFragmentBinding.bind(requireView())) {
+            recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(requireActivity(), 1)))
+            recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+            recyclerView.adapter = adapter
+        }
+    }
+
+    companion object {
+        private const val DEBUG_SETTINGS_TYPE_KEY = "debug_settings_type_key"
+        fun newInstance(debugSettingsType: DebugSettingsType) = DebugSettingsFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(DEBUG_SETTINGS_TYPE_KEY, debugSettingsType)
+            }
         }
     }
 }

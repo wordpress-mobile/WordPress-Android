@@ -79,7 +79,6 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.ShortcutsNavigator;
-import org.wordpress.android.ui.WPTooltipView;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment;
@@ -239,7 +238,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private ModalLayoutPickerViewModel mMLPViewModel;
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
     private FloatingActionButton mFloatingActionButton;
-    private WPTooltipView mFabTooltip;
     private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
     private static final String BLOGGING_REMINDERS_BOTTOM_SHEET_TAG = "BLOGGING_REMINDERS_BOTTOM_SHEET_TAG";
     private final Handler mHandler = new Handler();
@@ -652,7 +650,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void initViewModel() {
         mFloatingActionButton = findViewById(R.id.fab_button);
-        mFabTooltip = findViewById(R.id.fab_tooltip);
 
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(WPMainActivityViewModel.class);
         mMLPViewModel = new ViewModelProvider(this, mViewModelFactory).get(ModalLayoutPickerViewModel.class);
@@ -662,14 +659,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // Setup Observers
         mViewModel.getFabUiState().observe(this, fabUiState -> {
             String message = getResources().getString(fabUiState.getCreateContentMessageId());
-
-            mFabTooltip.setMessage(message);
-
-            if (fabUiState.isFabTooltipVisible()) {
-                mFabTooltip.show();
-            } else {
-                mFabTooltip.hide();
-            }
 
             mFloatingActionButton.setContentDescription(message);
 
@@ -735,7 +724,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             if (v.isHapticFeedbackEnabled()) {
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
-            mViewModel.onFabLongPressed(getSelectedSite());
 
             int messageId = mViewModel.getCreateContentMessageId(getSelectedSite());
 
@@ -744,10 +732,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         });
 
         ViewExtensionsKt.redirectContextClickToLongPressListener(mFloatingActionButton);
-
-        mFabTooltip.setOnClickListener(v -> {
-            mViewModel.onTooltipTapped(getSelectedSite());
-        });
 
         mViewModel.isBottomSheetShowing().observe(this, event -> {
             event.applyIfNotHandled(isShowing -> {
@@ -1280,6 +1264,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
                 if (trackAnalytics) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
+                }
+                break;
+            case ME:
+                ActivityId.trackLastActivity(ActivityId.ME);
+                if (trackAnalytics) {
+                    AnalyticsTracker.track(Stat.ME_ACCESSED);
                 }
                 break;
             default:

@@ -9,16 +9,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Button
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Field
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiState
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.util.DebugUtils
@@ -27,6 +17,7 @@ import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.RemoteFieldConfigRepository
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupNotifier
+import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
 class DebugSettingsViewModelTest : BaseUnitTest() {
@@ -71,139 +62,71 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
             contextProvider,
             jetpackFeatureRemovalPhaseHelper
         )
+        observeUIState()
     }
 
-    @Test
-    fun `loads flags on start`() {
-        setup()
-
-        viewModel.start()
-
-        assertUiState()
-    }
-
-    @Test
-    fun `loads flags as enabled from manual config`() {
-        whenever(manualFeatureConfig.hasManualSetup(any<String>())).thenReturn(true)
-        whenever(manualFeatureConfig.isManuallyEnabled(any<String>())).thenReturn(true)
-        setup()
-
-        viewModel.start()
-
-        assertUiState(ENABLED)
-    }
-
-    @Test
-    fun `loads flags as disabled from manual config`() {
-        whenever(manualFeatureConfig.hasManualSetup(any<String>())).thenReturn(true)
-        whenever(manualFeatureConfig.isManuallyEnabled(any<String>())).thenReturn(false)
-        setup()
-
-        viewModel.start()
-
-        assertUiState(DISABLED)
-    }
-
-    @Test
-    fun `toggle item changes value and reloads data`() {
-        whenever(featureFlagConfig.isEnabled(any())).thenReturn(false)
-        setup()
-
-        viewModel.start()
-
-        val toggledItem = findFirstFeatureItem()
-
-        val featureKey = toggledItem.title
-
-        whenever(featureFlagConfig.isEnabled(featureKey)).thenReturn(true)
-
-        toggledItem.toggleAction.toggle()
-
-        verify(manualFeatureConfig).setManuallyEnabled(featureKey, true)
-        assertUiState(enabledFeature = featureKey, hasRestartButton = true)
-    }
-
-    @Test
-    fun `toggle item adds restart button at the end`() {
-        whenever(featureFlagConfig.isEnabled(any())).thenReturn(false)
-        setup()
-
-        viewModel.start()
-
-        findFirstFeatureItem().toggleAction.toggle()
-
-        assertUiState(hasRestartButton = true)
-
-        val restartButton = findRestartButton()
-
-        restartButton.clickAction()
-
-        verify(debugUtils).restartApp()
-    }
-
-    private fun setup() {
+    private fun observeUIState() {
         viewModel.uiState.observeForever {
             it?.let { uiStates.add(it) }
         }
     }
 
-    @Suppress("NestedBlockDepth", "ComplexMethod", "NestedBlockDepth")
-    private fun assertUiState(
-        expectedState: Feature.State? = null,
-        enabledFeature: String? = null,
-        hasRestartButton: Boolean = false
-    ) {
-        uiStates.last().apply {
-            val headers = mutableListOf<Header>()
-            val remoteItems = mutableListOf<Feature>()
-            val developedItems = mutableListOf<Feature>()
-            val buttons = mutableListOf<Button>()
-            val rows = mutableListOf<Row>()
-            val remoteFields = mutableListOf<Field>()
-            for (uiItem in this.uiItems) {
-                when (uiItem) {
-                    is Header -> headers.add(uiItem)
-                    is Feature -> {
-                        if (headers.size < 2) {
-                            remoteItems.add(uiItem)
-                        } else {
-                            developedItems.add(uiItem)
-                        }
-                    }
-                    is Button -> {
-                        buttons.add(uiItem)
-                    }
-                    is Row -> {
-                        rows.add(uiItem)
-                    }
-                    is Field -> remoteFields.add(uiItem)
-                }
-            }
-            assertThat(headers).hasSize(4)
-            assertThat(headers[0].header).isEqualTo(R.string.debug_settings_remote_features)
-            assertThat(headers[1].header).isEqualTo(R.string.debug_settings_features_in_development)
-            assertThat(headers[2].header).isEqualTo(R.string.debug_settings_missing_developed_feature)
-            assertThat(headers[3].header).isEqualTo(R.string.debug_settings_tools)
-            remoteItems.filter { it.title != enabledFeature }
-                .forEach { assertThat(it.state).isEqualTo(expectedState ?: DISABLED) }
-            developedItems.filter { it.title != enabledFeature }
-                .forEach { assertThat(it.state).isEqualTo(expectedState ?: UNKNOWN) }
-            if (enabledFeature != null) {
-                assertThat(remoteItems.find { it.title == enabledFeature }!!.state).isEqualTo(ENABLED)
-            }
-            if (hasRestartButton) {
-                assertThat(buttons).hasSize(1)
-            } else {
-                assertThat(buttons).hasSize(0)
-            }
-        }
+    @Test
+    fun `given type remote features, when viewmodel starts, then only remote features are fetched`() {
+        viewModel.start(DebugSettingsType.REMOTE_FEATURES)
+
+        assertThat(uiStates.last().uiItems).allMatch { it is UiItem.FeatureFlag.RemoteFeatureFlag }
     }
 
-    private fun findFirstFeatureItem(): Feature {
-        return uiStates.last().uiItems.find { it is Feature } as Feature
+    @Test
+    fun `given type local features, when viewmodel starts, then only remote features are fetched`() {
+        viewModel.start(DebugSettingsType.FEATURES_IN_DEVELOPMENT)
+
+        assertThat(uiStates.last().uiItems)
+            .allMatch { it is UiItem.FeatureFlag.LocalFeatureFlag }
+            .allMatch {
+                (it as UiItem.FeatureFlag.LocalFeatureFlag).enabled == null
+            }
     }
 
-    private fun findRestartButton(): Button {
-        return uiStates.last().uiItems.find { it is Button } as Button
+    @Test
+    fun `given type remote field configs, when viewmodel starts, then only remote configs are fetched`() {
+        viewModel.start(DebugSettingsType.REMOTE_FIELD_CONFIGS)
+
+        assertThat(uiStates.last().uiItems).allMatch { it is UiItem.Field }
+    }
+
+
+    @Test
+    fun `given manually overidden, when viewmodel starts, then value source is manual`() {
+        whenever(manualFeatureConfig.hasManualSetup(any<String>())).thenReturn(true)
+        whenever(manualFeatureConfig.isManuallyEnabled(any<String>())).thenReturn(true)
+
+        viewModel.start(DebugSettingsType.REMOTE_FEATURES)
+
+        assertThat(uiStates.last().uiItems)
+            .allMatch {
+                (it as UiItem.FeatureFlag.RemoteFeatureFlag).enabled == true
+            }.allMatch {
+                (it as UiItem.FeatureFlag.RemoteFeatureFlag).source == "Manual"
+            }
+    }
+
+    @Test
+    fun `given remote feature values are fetched, when toggle action is invoked, then value is changed`() {
+        whenever(featureFlagConfig.isEnabled(any())).thenReturn(false)
+
+        viewModel.start(DebugSettingsType.REMOTE_FEATURES)
+
+        val remoteFeatureFlag = (uiStates.last().uiItems[0] as UiItem.FeatureFlag.RemoteFeatureFlag)
+
+        val featureKey = remoteFeatureFlag.title
+
+        whenever(featureFlagConfig.isEnabled(featureKey)).thenReturn(true)
+
+        remoteFeatureFlag.toggleAction.toggle()
+
+        verify(manualFeatureConfig).setManuallyEnabled(featureKey, true)
+        assertTrue((uiStates.last().uiItems[0] as UiItem.FeatureFlag.RemoteFeatureFlag).enabled!!)
     }
 }
