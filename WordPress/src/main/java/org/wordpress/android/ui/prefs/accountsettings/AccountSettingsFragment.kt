@@ -348,8 +348,10 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         var action: AccountSettingsEvent? = null
         when (preference) {
             emailPreference -> {
-                viewModel.onEmailChanged(newValue.toString())
-                action = EMAIL_CHANGED
+                if (!emailPreference.summary.equals(newValue.toString())) {
+                    viewModel.onEmailChanged(newValue.toString())
+                    action = EMAIL_CHANGED
+                }
             }
             primarySitePreference -> {
                 viewModel.onPrimarySiteChanged(newValue.toString().toLong())
