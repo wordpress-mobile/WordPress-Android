@@ -49,9 +49,11 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissBy
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostListType.SEARCH
-import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment.Companion.newInstance
+import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
@@ -516,9 +518,11 @@ class PostsListActivity : LocaleAwareActivity(),
 
                 viewModel.handleEditPostResult(data)
             }
+
             requestCode == RequestCodes.REMOTE_PREVIEW_POST -> {
                 viewModel.handleRemotePreviewClosing()
             }
+
             requestCode == RequestCodes.PHOTO_PICKER &&
                     resultCode == Activity.RESULT_OK &&
                     data != null -> {
@@ -529,6 +533,7 @@ class PostsListActivity : LocaleAwareActivity(),
                     STORY_FROM_POSTS_LIST
                 )
             }
+
             requestCode == RequestCodes.CREATE_STORY -> {
                 val isNewStory = data?.getStringExtra(GutenbergEditorFragment.ARG_STORY_BLOCK_ID) == null
                 bloggingRemindersViewModel.onPublishingPost(

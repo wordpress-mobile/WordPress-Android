@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.prepublishing
+package org.wordpress.android.ui.posts.prepublishing.publishsettings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.prepublishing.categories.addcategory
 
 import android.os.Bundle
 import androidx.lifecycle.LiveData
@@ -10,9 +10,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel.SubmitButtonUiState.SubmitButtonDisabledUiState
-import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel.SubmitButtonUiState.SubmitButtonEnabledUiState
-import org.wordpress.android.ui.posts.PrepublishingCategoriesFragment.Companion.ADD_CATEGORY_REQUEST
+import org.wordpress.android.ui.posts.GetCategoriesUseCase
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingAddCategoryRequest
+import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryViewModel.SubmitButtonUiState.SubmitButtonDisabledUiState
+import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryViewModel.SubmitButtonUiState.SubmitButtonEnabledUiState
+import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesFragment.Companion.ADD_CATEGORY_REQUEST
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper

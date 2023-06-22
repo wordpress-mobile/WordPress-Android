@@ -9,7 +9,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel
+import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsViewModel
 import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 

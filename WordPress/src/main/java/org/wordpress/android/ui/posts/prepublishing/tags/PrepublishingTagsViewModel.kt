@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.prepublishing.tags
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,6 +7,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.GetPostTagsUseCase
+import org.wordpress.android.ui.posts.UpdatePostTagsUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
