@@ -3,6 +3,7 @@
 22.7
 -----
 * [*] Updates Floating Action Button(FAB) color to black, shape to squircle, and icon to plus [https://github.com/wordpress-mobile/WordPress-Android/pull/18599]
+* [*] Block editor: Image block - Fix issue where in some cases the image doesn't display the right aspect ratio [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5869]
 
 
 22.6
