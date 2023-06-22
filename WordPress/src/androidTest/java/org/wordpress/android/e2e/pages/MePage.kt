@@ -12,7 +12,6 @@ class MePage {
     fun go(): MePage {
         // Using the settings button as a marker for successfully navigating to the page
         while (!WPSupportUtils.isElementDisplayed(appSettings)) {
-            WPSupportUtils.clickOn(R.id.nav_sites)
             WPSupportUtils.clickOn(R.id.nav_me)
         }
         if (!isSelfHosted) {
