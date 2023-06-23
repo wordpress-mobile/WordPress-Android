@@ -4,7 +4,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.R.anim
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.SHORT
@@ -105,7 +104,7 @@ class ThumbnailViewUtils(val imageManager: ImageManager) {
                 showOrderCounter -> {
                     AniUtils.startAnimation(
                         txtSelectionCount,
-                        anim.pop
+                        R.anim.pop
                     )
                 }
                 isSelected -> {
