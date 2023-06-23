@@ -1,6 +1,0 @@
-22.5:
-- Página de inicio editable desde la lista de páginas en sitios con temas basados en bloques
-- Deshacer/rehacer el texto de los enlaces de entrada al establecer que se abran en una nueva pestaña.
-- Tocar para editar disponible para todos los tipos de bloques anidados
-- Cuentas cancelables desde la pantalla de configuración de cuentas
-- Corrección de errores en el editor de bloques y en la pantalla de plugins

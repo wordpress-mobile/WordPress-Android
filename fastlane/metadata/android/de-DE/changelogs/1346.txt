@@ -1,6 +1,0 @@
-22.5:
-- Startseite kann auf Websites mit blockbasierten Themes über die Seitenliste bearbeitet werden
-- Text nach einem Link kann rückgängig gemacht/wiederhergestellt werden, wenn festgelegt wurde, dass Links in einem neuen Tab geöffnet werden sollen
-- Antippen zum Bearbeiten für alle verschachtelten Blocktypen verfügbar
-- Konten können über den Bildschirm mit „Kontoeinstellungen“ geschlossen werden
-- Fehler im Block-Editor und Plugin-Bildschirm behoben

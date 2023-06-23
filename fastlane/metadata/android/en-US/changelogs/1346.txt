@@ -1,5 +1,0 @@
-- Home page editable from Pages list on sites with block-based themes
-- Undo/redo post-link text when setting links to open in new tab
-- Tap-to-edit available for all nested block types
-- Accounts closable from account settings screen
-- Bug fixes in block editor and plugin screen

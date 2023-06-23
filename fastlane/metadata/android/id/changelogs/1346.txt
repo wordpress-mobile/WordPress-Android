@@ -1,6 +1,0 @@
-22.5:
-- Halaman depan dapat diedit dari daftar Halaman pada situs dengan tema berbasis blok
-- Undo/redo teks tautan artikel saat mengatur tautan untuk dibuka di tab baru
-- Ketuk-untuk-mengedit tersedia untuk semua jenis blok bertingkat
-- Akun dapat ditutup dari layar pengaturan akun
-- Perbaikan bug pada editor blok dan layar plugin
