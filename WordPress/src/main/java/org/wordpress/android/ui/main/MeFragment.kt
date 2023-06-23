@@ -29,7 +29,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_CROPPED
@@ -603,7 +602,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         options.setShowCropGrid(false)
         options.setStatusBarColor(context.getColorFromAttribute(android.R.attr.statusBarColor))
         options.setToolbarColor(context.getColorFromAttribute(R.attr.wpColorAppBar))
-        options.setToolbarWidgetColor(context.getColorFromAttribute(attr.colorOnSurface))
+        options.setToolbarWidgetColor(context.getColorFromAttribute(R.attr.colorOnSurface))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
         UCrop.of(uri, Uri.fromFile(File(context.cacheDir, "cropped_for_gravatar.jpg")))

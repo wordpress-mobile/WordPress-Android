@@ -13,7 +13,6 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.google.android.material.elevation.ElevationOverlayProvider
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.getColorFromAttribute
 
@@ -56,7 +55,7 @@ class AppBarFadingEdgeView @JvmOverloads constructor(
             },
             intArrayOf(
                 ContextCompat.getColor(context, color.transparent),
-                context.getColorFromAttribute(attr.wpColorAppBar)
+                context.getColorFromAttribute(R.attr.wpColorAppBar)
             )
         )
 

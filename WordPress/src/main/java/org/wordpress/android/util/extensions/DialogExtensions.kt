@@ -8,7 +8,6 @@ import android.widget.FrameLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
 
 fun Dialog.getPreferenceDialogContainerView(): View? {
     var view: View? = findViewById(android.R.id.list_container)
@@ -24,7 +23,7 @@ fun Dialog.getPreferenceDialogContainerView(): View? {
 @Suppress("DEPRECATION")
 fun Dialog.setStatusBarAsSurfaceColor() {
     window?.apply {
-        statusBarColor = context.getColorFromAttribute(attr.colorSurface)
+        statusBarColor = context.getColorFromAttribute(R.attr.colorSurface)
         if (!context.resources.configuration.isDarkTheme()) {
             decorView.systemUiVisibility = decorView
                 .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR

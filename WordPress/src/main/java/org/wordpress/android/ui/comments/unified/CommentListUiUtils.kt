@@ -10,7 +10,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.graphics.ColorUtils
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
 import org.wordpress.android.R.integer
 import org.wordpress.android.ui.comments.CommentUtils
 import org.wordpress.android.util.extensions.getColorFromAttribute
@@ -59,7 +58,7 @@ class CommentListUiUtils @Inject constructor() {
         if (isSelected) {
             containerView.setBackgroundColor(
                 ColorUtils.setAlphaComponent(
-                    containerView.context.getColorFromAttribute(attr.colorOnSurface),
+                    containerView.context.getColorFromAttribute(R.attr.colorOnSurface),
                     containerView.context.resources.getInteger(integer.selected_list_item_opacity)
                 )
             )
