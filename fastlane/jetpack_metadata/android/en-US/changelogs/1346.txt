@@ -1,6 +1,0 @@
-- Home page editable from Pages list on block-based sites
-- VideoPress blocks enabled
-- Detail settings disabled for videos not owned by site
-- Undo/redo text when setting links to open in new tab
-- Tap-to-edit for all nested block types
-- Accounts closable from account settings
