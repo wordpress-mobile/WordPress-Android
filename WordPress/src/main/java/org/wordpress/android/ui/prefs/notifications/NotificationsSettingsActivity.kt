@@ -16,7 +16,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
-import org.wordpress.android.R.layout
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_DISABLED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED
@@ -44,7 +43,7 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(layout.notifications_settings_activity)
+        setContentView(R.layout.notifications_settings_activity)
         fragmentContainer = findViewById(R.id.fragment_container)
 
         setUpPrimaryToolbar()

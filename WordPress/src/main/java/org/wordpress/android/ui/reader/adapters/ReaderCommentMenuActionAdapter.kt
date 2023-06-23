@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import org.wordpress.android.R
-import org.wordpress.android.R.layout
 import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType.DIVIDER_NO_ACTION
 import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuItem.PrimaryItemMenu
 import org.wordpress.android.ui.utils.UiHelpers
@@ -66,7 +65,7 @@ class ReaderCommentMenuActionAdapter(
         var innerConvertView = convertView
         val holder: ReaderCommentMenuSpacerHolder
         if (innerConvertView == null) {
-            innerConvertView = inflater.inflate(layout.popup_menu_divider, parent, false)
+            innerConvertView = inflater.inflate(R.layout.popup_menu_divider, parent, false)
             holder = ReaderCommentMenuSpacerHolder(innerConvertView)
             innerConvertView.tag = holder
         } else {
@@ -86,7 +85,7 @@ class ReaderCommentMenuActionAdapter(
         var innerConvertView = convertView
         val holder: ReaderCommentMenuHolder
         if (innerConvertView == null) {
-            innerConvertView = inflater.inflate(layout.reader_popup_menu_item, parent, false)
+            innerConvertView = inflater.inflate(R.layout.reader_popup_menu_item, parent, false)
             holder = ReaderCommentMenuHolder(innerConvertView)
             innerConvertView.tag = holder
         } else {

@@ -20,7 +20,6 @@ import com.airbnb.lottie.LottieAnimationView
 import org.json.JSONArray
 import org.json.JSONException
 import org.wordpress.android.R
-import org.wordpress.android.R.layout
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.datasets.ReaderCommentTable
@@ -100,7 +99,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(layout.notifications_fragment_detail_list, container, false)
+        val view = inflater.inflate(R.layout.notifications_fragment_detail_list, container, false)
         rootLayout = view.findViewById(R.id.notifications_list_root) as LinearLayout
         return view
     }
