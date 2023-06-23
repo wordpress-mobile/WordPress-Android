@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.items
 
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -51,19 +50,19 @@ class SiteItemsBuilder @Inject constructor(
         return listOfNotNull(
                 CategoryHeaderItem(UiStringRes(R.string.my_site_header_content)),
             ListItem(
-                drawable.ic_posts_white_24dp,
+                R.drawable.ic_posts_white_24dp,
                 UiStringRes(R.string.my_site_btn_blog_posts),
                 onClick = ListItemInteraction.create(POSTS, params.onClick)
             ),
             siteListItemBuilder.buildPagesItemIfAvailable(params.site, params.onClick, showPagesFocusPoint),
             ListItem(
-                drawable.ic_media_white_24dp,
+                R.drawable.ic_media_white_24dp,
                 UiStringRes(R.string.media),
                 onClick = ListItemInteraction.create(MEDIA, params.onClick),
                 showFocusPoint = showMediaFocusPoint
             ),
             ListItem(
-                drawable.ic_comment_white_24dp,
+                R.drawable.ic_comment_white_24dp,
                 UiStringRes(R.string.my_site_btn_comments),
                 onClick = ListItemInteraction.create(COMMENTS, params.onClick)
             )

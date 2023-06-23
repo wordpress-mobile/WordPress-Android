@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
@@ -23,7 +22,7 @@ class NotificationsPermissionBuilder @Inject constructor() {
         )
 
         val uiItems = mutableListOf(
-            Illustration(drawable.img_illustration_bell_yellow_96dp),
+            Illustration(R.drawable.img_illustration_bell_yellow_96dp),
             Title(title),
             Caption(UiStringRes(R.string.blogging_reminders_notifications_permission_caption))
         )

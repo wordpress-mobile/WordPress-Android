@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_NOTIFICATION_PROMPT_ANSWER_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_NOTIFICATION_PROMPT_TAPPED
@@ -90,7 +89,7 @@ class PromptReminderNotifier @Inject constructor(
             } else {
                 resourceProvider.getColor(R.color.blue_50)
             },
-            smallIcon = drawable.ic_app_white_24dp,
+            smallIcon = R.drawable.ic_app_white_24dp,
             firstAction = Builder(
                 0,
                 resourceProvider.getString(R.string.blogging_prompts_answer_prompt_notification_answer_action),

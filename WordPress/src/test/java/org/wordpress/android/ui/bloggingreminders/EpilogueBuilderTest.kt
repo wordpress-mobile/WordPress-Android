@@ -8,7 +8,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
@@ -147,7 +146,7 @@ class EpilogueBuilderTest {
     private fun assertModelWithNoSelection(
         uiModel: List<BloggingRemindersItem>
     ) {
-        assertThat(uiModel[0]).isEqualTo(Illustration(drawable.img_illustration_bell_yellow_96dp))
+        assertThat(uiModel[0]).isEqualTo(Illustration(R.drawable.img_illustration_bell_yellow_96dp))
         assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(R.string.blogging_reminders_epilogue_not_set_title)))
         assertThat(uiModel[2])
             .isEqualTo(
@@ -164,7 +163,7 @@ class EpilogueBuilderTest {
         uiModel: List<BloggingRemindersItem>,
         message: String
     ) {
-        assertThat(uiModel[0]).isEqualTo(Illustration(drawable.img_illustration_bell_yellow_96dp))
+        assertThat(uiModel[0]).isEqualTo(Illustration(R.drawable.img_illustration_bell_yellow_96dp))
         assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(R.string.blogging_reminders_epilogue_title)))
         assertThat(uiModel[2])
             .isEqualTo(
@@ -178,7 +177,7 @@ class EpilogueBuilderTest {
         uiModel: List<BloggingRemindersItem>,
         message: String
     ) {
-        assertThat(uiModel[0]).isEqualTo(Illustration(drawable.img_illustration_bell_yellow_96dp))
+        assertThat(uiModel[0]).isEqualTo(Illustration(R.drawable.img_illustration_bell_yellow_96dp))
         assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(R.string.blogging_reminders_epilogue_title)))
         assertThat(uiModel[2]).isEqualTo(
             HighEmphasisText(

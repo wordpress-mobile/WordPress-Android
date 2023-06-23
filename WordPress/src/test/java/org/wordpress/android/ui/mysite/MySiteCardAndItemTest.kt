@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
@@ -122,7 +121,7 @@ class MySiteCardAndItemTest {
     }
 
     private fun initListItem(showFocusPoint: Boolean) = ListItem(
-        primaryIcon = drawable.ic_dropdown_primary_30_24dp,
+        primaryIcon = R.drawable.ic_dropdown_primary_30_24dp,
         primaryText = UiStringText("title"),
         secondaryIcon = null,
         secondaryText = null,

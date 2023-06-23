@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.LayoutDirection.Rtl
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
 import org.wordpress.android.ui.accounts.login.compose.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.Tagline
@@ -80,7 +79,7 @@ fun LoginScreenRevamped(
     onWpComLoginClicked: () -> Unit,
     onSiteAddressLoginClicked: () -> Unit,
 ) {
-    val brushStrokePainter = painterResource(id = drawable.brush_stroke)
+    val brushStrokePainter = painterResource(id = R.drawable.brush_stroke)
     // Flip the background image for RTL locales
     val scaleX = if (LocalLayoutDirection.current == Rtl) -1f else 1f
 
