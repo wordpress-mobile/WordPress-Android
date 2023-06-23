@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.jetpack.backup.download
 
-import android.R.id
 import android.os.Bundle
 import android.view.MenuItem
 import org.wordpress.android.databinding.BackupDownloadActivityBinding
@@ -17,7 +16,7 @@ class BackupDownloadActivity : LocaleAwareActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == id.home) {
+        if (item.itemId == android.R.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
         }

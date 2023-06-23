@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader
 
-import android.R.id
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -34,7 +33,7 @@ class NoSiteToReblogActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        id.home -> {
+        android.R.id.home -> {
             finish()
             true
         }

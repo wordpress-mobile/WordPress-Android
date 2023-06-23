@@ -1,6 +1,5 @@
 package org.wordpress.android.widgets
 
-import android.R.color
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
@@ -44,7 +43,7 @@ class AppBarFadingEdgeView @JvmOverloads constructor(
             } else {
                 RIGHT_LEFT
             },
-            intArrayOf(ContextCompat.getColor(context, color.transparent), appBarColor)
+            intArrayOf(ContextCompat.getColor(context, android.R.color.transparent), appBarColor)
         )
 
         val fadingEdgeDrawableFlush = GradientDrawable(
@@ -54,7 +53,7 @@ class AppBarFadingEdgeView @JvmOverloads constructor(
                 RIGHT_LEFT
             },
             intArrayOf(
-                ContextCompat.getColor(context, color.transparent),
+                ContextCompat.getColor(context, android.R.color.transparent),
                 context.getColorFromAttribute(R.attr.wpColorAppBar)
             )
         )

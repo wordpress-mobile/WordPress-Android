@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.comments.unified
 
-import android.R.attr
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
@@ -78,7 +77,7 @@ class UnifiedCommentListItemDecoration(val context: Context) : ItemDecoration() 
     }
 
     companion object {
-        private val ATTRS = intArrayOf(attr.listDivider)
+        private val ATTRS = intArrayOf(android.R.attr.listDivider)
     }
 
     init {

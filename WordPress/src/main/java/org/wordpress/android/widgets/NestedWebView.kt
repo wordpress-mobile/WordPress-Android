@@ -1,6 +1,5 @@
 package org.wordpress.android.widgets
 
-import android.R.attr
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
@@ -22,7 +21,7 @@ import org.wordpress.android.ui.WPWebView
 class NestedWebView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = attr.webViewStyle
+    defStyleAttr: Int = android.R.attr.webViewStyle
 ) : WPWebView(context, attrs, defStyleAttr), NestedScrollingChild3 {
     private var lastY = 0
     private val scrollOffset = IntArray(2)
