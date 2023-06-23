@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.setVisible
 
@@ -81,7 +80,7 @@ class LayoutsItemViewHolder(
         title.setTextSize(
             TypedValue.COMPLEX_UNIT_PX,
             title.resources.getDimensionPixelSize(
-                if (useLargeCategoryHeading) dimen.text_sz_extra_large else dimen.text_sz_large
+                if (useLargeCategoryHeading) R.dimen.text_sz_extra_large else R.dimen.text_sz_large
             ).toFloat()
         )
 

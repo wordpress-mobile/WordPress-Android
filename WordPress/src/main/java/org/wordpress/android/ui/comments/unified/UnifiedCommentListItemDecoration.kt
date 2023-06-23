@@ -9,7 +9,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.RecyclerView.State
-import org.wordpress.android.R.dimen
+import org.wordpress.android.R
 import org.wordpress.android.util.RtlUtils
 import kotlin.math.roundToInt
 
@@ -85,6 +85,6 @@ class UnifiedCommentListItemDecoration(val context: Context) : ItemDecoration() 
         val attrs = context.obtainStyledAttributes(ATTRS)
         divider = attrs.getDrawable(0)
         attrs.recycle()
-        dividerStartOffset = context.resources.getDimensionPixelOffset(dimen.comment_list_divider_start_offset)
+        dividerStartOffset = context.resources.getDimensionPixelOffset(R.dimen.comment_list_divider_start_offset)
     }
 }

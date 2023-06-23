@@ -9,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_FILTER_CHANGED
@@ -51,7 +50,7 @@ class UnifiedCommentsActivity : LocaleAwareActivity() {
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(UnifiedCommentActivityViewModel::class.java)
         val disabledAlpha = TypedValue()
-        resources.getValue(dimen.material_emphasis_disabled, disabledAlpha, true)
+        resources.getValue(R.dimen.material_emphasis_disabled, disabledAlpha, true)
         disabledTabsOpacity = disabledAlpha.float
 
         if (selectedSiteRepository.getSelectedSite() == null) {
