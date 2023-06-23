@@ -116,8 +116,10 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
+import org.wordpress.android.ui.prefs.privacy.banner.PrivacyBannerFragment;
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.quickstart.QuickStartTracker;
 import org.wordpress.android.ui.reader.ReaderFragment;
@@ -660,6 +662,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 new ViewModelProvider(this, mViewModelFactory).get(BloggingRemindersViewModel.class);
 
         // Setup Observers
+        mViewModel.getAskForPrivacyConsent().observe(this, action -> showPrivacyConsentDialog());
+        mViewModel.getShowPrivacySettings().observe(this, action -> showPrivacySettingsScreen(null));
+        mViewModel.getShowPrivacySettingsWithError().observe(this, this::showPrivacySettingsScreen);
         mViewModel.getFabUiState().observe(this, fabUiState -> {
             String message = getResources().getString(fabUiState.getCreateContentMessageId());
 
@@ -1882,5 +1887,27 @@ public class WPMainActivity extends LocaleAwareActivity implements
             // re-enable all deep linking components
             mDeepLinkOpenWebLinksWithJetpackHelper.enableDeepLinks();
         }
+    }
+
+    private void showPrivacyConsentDialog() {
+        PrivacyBannerFragment privacyBannerFragment = (PrivacyBannerFragment) getSupportFragmentManager()
+                .findFragmentByTag(PrivacyBannerFragment.TAG);
+        if (privacyBannerFragment == null) {
+            privacyBannerFragment = new PrivacyBannerFragment();
+        }
+        privacyBannerFragment.show(getSupportFragmentManager(), PrivacyBannerFragment.TAG);
+    }
+
+    private void showPrivacySettingsScreen(@Nullable Boolean requestedAnalyticsValue) {
+        Intent intent = new Intent(this, AppSettingsActivity.class);
+        intent.putExtra(AppSettingsActivity.EXTRA_SHOW_PRIVACY_SETTINGS, true);
+        if (requestedAnalyticsValue != null) {
+            intent.putExtra(
+                    AppSettingsActivity.EXTRA_REQUESTED_ANALYTICS_VALUE_FROM_ERROR,
+                    requestedAnalyticsValue
+            );
+        }
+//        startActivityForResult(intent, RequestCodes.SETTINGS); // TODO: do we need to handle the result?
+        startActivity(intent);
     }
 }
