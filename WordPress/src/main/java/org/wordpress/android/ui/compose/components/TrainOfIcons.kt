@@ -41,34 +41,35 @@ private const val ICON_OFFSET_PROPORTION = 29f / 36f
  * @param contentDescription the content description of the container.
  * @param iconSize the size of an individual icon.
  * @param iconBorderWidth the width of the icon border.
- * @param placeholder the placeholder to be used while the icons are loading.
+ * @param placeholderPainter the placeholder [Painter] to be used while the icons are loading.
  */
 @Composable
 fun TrainOfIcons(
-    iconModels: List<Any>,
+    iconModels: List<Any?>,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     iconSize: Dp = DEFAULT_ICON_SIZE.dp,
     iconBorderWidth: Dp = DEFAULT_ICON_BORDER_WIDTH.dp,
-    placeholder: Painter = ColorPainter(colorResource(R.color.placeholder)),
+    placeholderPainter: Painter = ColorPainter(colorResource(R.color.placeholder)),
 ) {
     require(iconModels.isNotEmpty()) { "TrainOfIcons must have at least 1 icon" }
 
     val iconSizeWithBorder = (iconSize.value + 2 * iconBorderWidth.value).toInt()
+    val semanticsModifier = contentDescription?.let {
+        modifier.semantics(mergeDescendants = true) { this.contentDescription = it }
+    }
 
     Layout(
-        modifier = modifier.then(Modifier.semantics(mergeDescendants = true) {
-            contentDescription?.let {
-                this.contentDescription = it
-            }
-        }),
+        modifier = semanticsModifier ?: modifier,
         content = {
             iconModels.forEach { iconModel ->
                 AsyncImage(
                     model = iconModel,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    placeholder = placeholder,
+                    placeholder = placeholderPainter,
+                    fallback = placeholderPainter,
+                    error = placeholderPainter,
                     modifier = Modifier
                         .size(iconSizeWithBorder.dp)
                         .clip(CircleShape)
