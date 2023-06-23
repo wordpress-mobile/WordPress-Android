@@ -26,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
-import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.theme.EBGaramond
@@ -44,11 +43,11 @@ fun ColumnScope.Tagline(text: String, modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(drawable.ic_wordpress_gridicon),
             contentDescription = stringResource(R.string.login_prologue_revamped_content_description_wordpress_icon),
-            colorFilter = ColorFilter.tint(colorResource(id = color.login_prologue_revamped_icon)),
+            colorFilter = ColorFilter.tint(colorResource(id = R.color.login_prologue_revamped_icon)),
             modifier = Modifier
                 .size(50.dp)
                 .clip(CircleShape)
-                .background(color = colorResource(id = color.login_prologue_revamped_background))
+                .background(color = colorResource(id = R.color.login_prologue_revamped_background))
         )
         Text(
             text,
@@ -71,7 +70,7 @@ fun PreviewLoginPrologue() {
     AppTheme {
         Column(
             Modifier
-                .background(color = colorResource(id = color.login_prologue_revamped_background))
+                .background(color = colorResource(id = R.color.login_prologue_revamped_background))
         ) {
             Tagline(text = stringResource(R.string.login_prologue_revamped_tagline))
         }

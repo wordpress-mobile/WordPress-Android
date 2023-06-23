@@ -5,7 +5,7 @@ import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import androidx.annotation.StringRes
-import org.wordpress.android.R.color
+import org.wordpress.android.R
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -23,7 +23,7 @@ class CheckboxSpannableLabel @Inject constructor(
         val labelHintText = resourceProvider.getString(labelHintRes)
         val spannable = SpannableString(labelHintText)
         spannable.setSpan(
-            ForegroundColorSpan(resourceProvider.getColor(color.neutral)),
+            ForegroundColorSpan(resourceProvider.getColor(R.color.neutral)),
             0,
             labelHintText.length,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE

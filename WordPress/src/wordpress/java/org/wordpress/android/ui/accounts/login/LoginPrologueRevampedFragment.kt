@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.LayoutDirection.Rtl
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
-import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
 import org.wordpress.android.ui.accounts.login.compose.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.SecondaryButton
@@ -89,7 +88,7 @@ fun LoginScreenRevamped(
     val offsetY = with(LocalDensity.current) { 75.dp.toPx() }
 
     Box(modifier = Modifier
-        .background(color = colorResource(id = color.login_prologue_revamped_background))
+        .background(color = colorResource(id = R.color.login_prologue_revamped_background))
         .drawBehind {
             scale(scaleX = scaleX, scaleY = 1f) {
                 translate(

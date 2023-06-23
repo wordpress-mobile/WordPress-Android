@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import org.wordpress.android.R
-import org.wordpress.android.R.color
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -47,8 +46,8 @@ class ViewsAndVisitorsMapper
         companion object {
             fun valueOf(value: Int): SelectedType? = values().find { it.value == value }
             fun getColor(selectedType: Int): Int = when (selectedType) {
-                0 -> color.blue_50
-                else -> color.purple_50
+                0 -> R.color.blue_50
+                else -> R.color.purple_50
             }
 
             fun getFillDrawable(selectedType: Int): Int = when (selectedType) {
@@ -227,8 +226,8 @@ class ViewsAndVisitorsMapper
         return Text(
             text = resourceProvider.getString(stringRes, change),
             color = when {
-                positive -> mapOf(color.stats_color_positive to change)
-                else -> mapOf(color.stats_color_negative to change)
+                positive -> mapOf(R.color.stats_color_positive to change)
+                else -> mapOf(R.color.stats_color_negative to change)
             }
         )
     }
@@ -278,8 +277,8 @@ class ViewsAndVisitorsMapper
         return Text(
             text = resourceProvider.getString(stringRes, change),
             color = when {
-                positive -> mapOf(color.stats_color_positive to change)
-                else -> mapOf(color.stats_color_negative to change)
+                positive -> mapOf(R.color.stats_color_positive to change)
+                else -> mapOf(R.color.stats_color_negative to change)
             }
         )
     }

@@ -2,7 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.wordpress.android.R.color
+import org.wordpress.android.R
 import org.wordpress.android.R.drawable
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
@@ -92,7 +92,7 @@ class MySiteCardAndItemTest {
             GROW_QUICK_START,
             UiStringText("title"),
             listOf(),
-            color.pink_40,
+            R.color.pink_40,
             0,
             interaction
         )
