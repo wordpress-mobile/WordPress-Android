@@ -7,6 +7,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.prefs.AppPrefs.PrefKey
+import org.wordpress.android.ui.prefs.AppPrefs.getBoolean
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
@@ -374,6 +375,10 @@ class AppPrefsWrapper @Inject constructor() {
     fun setStringSet(prefKey: PrefKey, set: Set<String>?) {
         AppPrefs.putStringSet(prefKey, set)
     }
+
+    var savedPrivacyBannerSettings: Boolean
+        get() = getBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, false)
+        set(value) = setBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, value)
 
     companion object {
         private const val LIGHT_MODE_ID = 0
