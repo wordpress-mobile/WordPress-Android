@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameCharSequence
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameString
 import org.wordpress.android.ui.engagement.EngageItem.LikedItem
@@ -43,7 +42,7 @@ class LikedItemViewHolder(
         if (!TextUtils.isEmpty(likedItem.authorPreferredSiteUrl) || likedItem.authorPreferredSiteId > 0) {
             with(this.avatar) {
                 importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
-                contentDescription = this.context.getString(string.profile_picture, authorName)
+                contentDescription = this.context.getString(R.string.profile_picture, authorName)
                 setOnClickListener {
                     likedItem.onGravatarClick.invoke(
                         likedItem.authorPreferredSiteId,

@@ -15,9 +15,9 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
+import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_DISABLED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED
@@ -116,7 +116,7 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
 
         // Set main switch state from shared preferences.
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@NotificationsSettingsActivity)
-        val isMainChecked = sharedPreferences.getBoolean(getString(string.wp_pref_notifications_main), true)
+        val isMainChecked = sharedPreferences.getBoolean(getString(R.string.wp_pref_notifications_main), true)
         mainSwitchToolBarView.loadInitialState(isMainChecked)
         hideDisabledView(isMainChecked)
     }

@@ -12,7 +12,6 @@ import androidx.core.graphics.ColorUtils
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.R.integer
-import org.wordpress.android.R.string
 import org.wordpress.android.ui.comments.CommentUtils
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import javax.inject.Inject
@@ -30,13 +29,13 @@ class CommentListUiUtils @Inject constructor() {
 
     fun formatCommentTitle(authorName: String, postTitle: String, context: Context): Spannable {
         val formattedTitle: String
-        var author = context.getString(string.anonymous)
+        var author = context.getString(R.string.anonymous)
         if (!TextUtils.isEmpty(authorName)) {
             author = authorName.trim { it <= ' ' }
         }
         val trimmedPostTitle = postTitle.trim { it <= ' ' }
         formattedTitle = if (!TextUtils.isEmpty(postTitle)) {
-            context.getString(string.comment_title, author, postTitle)
+            context.getString(R.string.comment_title, author, postTitle)
         } else {
             author
         }

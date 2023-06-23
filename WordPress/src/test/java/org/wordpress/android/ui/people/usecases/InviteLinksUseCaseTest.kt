@@ -10,7 +10,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.people.InviteLinksApiCallsProvider
@@ -82,7 +82,7 @@ class InviteLinksUseCaseTest : BaseUnitTest() {
         assertThat(flow.toList()).isEqualTo(
             listOf(
                 InviteLinksLoading(INITIALIZING),
-                InviteLinksError(INITIALIZING, UiStringRes(string.error_network_connection))
+                InviteLinksError(INITIALIZING, UiStringRes(R.string.error_network_connection))
             )
         )
     }

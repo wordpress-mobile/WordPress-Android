@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_ERROR
 import org.wordpress.android.fluxc.model.SiteModel
@@ -74,9 +74,9 @@ class ViewsAndVisitorsUseCase
         listOf(
             ValueItem(
                 value = "0",
-                unit = string.stats_views,
+                unit = R.string.stats_views,
                 isFirst = true,
-                contentDescription = resourceProvider.getString(string.stats_loading_card)
+                contentDescription = resourceProvider.getString(R.string.stats_loading_card)
             )
         )
 
@@ -218,7 +218,7 @@ class ViewsAndVisitorsUseCase
     }
 
     private fun buildTitle() = TitleWithMore(
-        string.stats_insights_views_and_visitors,
+        R.string.stats_insights_views_and_visitors,
         navigationAction = if (useCaseMode == BLOCK) ListItemInteraction.create(this::onViewMoreClick) else null
     )
 

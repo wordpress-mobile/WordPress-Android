@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.databinding.FragmentJetpackSecuritySettingsBinding
 
 class JetpackSecuritySettingsActivity : AppCompatActivity() {
@@ -22,7 +22,7 @@ class JetpackSecuritySettingsActivity : AppCompatActivity() {
     }
 
     private fun FragmentJetpackSecuritySettingsBinding.setupToolbar() {
-        title = resources.getText(string.jetpack_security_setting_title)
+        title = resources.getText(R.string.jetpack_security_setting_title)
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
         if (actionBar != null) {

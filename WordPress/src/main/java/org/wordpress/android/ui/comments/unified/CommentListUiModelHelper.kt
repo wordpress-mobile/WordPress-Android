@@ -2,7 +2,6 @@ package org.wordpress.android.ui.comments.unified
 
 import okhttp3.internal.toImmutableList
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.DELETED
 import org.wordpress.android.fluxc.model.CommentStatus.TRASH
@@ -135,7 +134,7 @@ class CommentListUiModelHelper @Inject constructor(
         val title: UiString? = when (val numSelected = selectedComments.size) {
             0 -> null
             else -> {
-                UiStringText(String.format(resourceProvider.getString(string.cab_selected), numSelected))
+                UiStringText(String.format(resourceProvider.getString(R.string.cab_selected), numSelected))
             }
         }
 
@@ -177,15 +176,15 @@ class CommentListUiModelHelper @Inject constructor(
             return when (batchModerationStatus.commentStatus) {
                 DELETED -> {
                     val messageResId = if (selectedComments.size > 1) {
-                        string.dlg_sure_to_delete_comments
+                        R.string.dlg_sure_to_delete_comments
                     } else {
-                        string.dlg_sure_to_delete_comment
+                        R.string.dlg_sure_to_delete_comment
                     }
                     ConfirmationDialogUiModel.Visible(
-                        title = string.delete,
+                        title = R.string.delete,
                         message = messageResId,
-                        positiveButton = string.yes,
-                        negativeButton = string.no,
+                        positiveButton = R.string.yes,
+                        negativeButton = R.string.no,
                         confirmAction = {
                             onModerateComments.invoke(batchModerationStatus.commentStatus)
                         },
@@ -196,10 +195,10 @@ class CommentListUiModelHelper @Inject constructor(
                 }
                 TRASH -> {
                     ConfirmationDialogUiModel.Visible(
-                        title = string.trash,
-                        message = string.dlg_confirm_trash_comments,
-                        positiveButton = string.dlg_confirm_action_trash,
-                        negativeButton = string.dlg_cancel_action_dont_trash,
+                        title = R.string.trash,
+                        message = R.string.dlg_confirm_trash_comments,
+                        positiveButton = R.string.dlg_confirm_action_trash,
+                        negativeButton = R.string.dlg_cancel_action_dont_trash,
                         confirmAction = {
                             onModerateComments.invoke(batchModerationStatus.commentStatus)
                         },
@@ -311,9 +310,9 @@ class CommentListUiModelHelper @Inject constructor(
                 val errorMessage = commentsDataResult.error.message
                 if (commentsDataResult.cachedData.comments.isEmpty()) {
                     val errorString = if (!networkUtilsWrapper.isNetworkAvailable()) {
-                        UiStringRes(string.no_network_message)
+                        UiStringRes(R.string.no_network_message)
                     } else if (errorMessage.isNullOrEmpty()) {
-                        UiStringRes(string.error_refresh_comments)
+                        UiStringRes(R.string.error_refresh_comments)
                     } else {
                         UiStringText(errorMessage)
                     }
@@ -330,12 +329,12 @@ class CommentListUiModelHelper @Inject constructor(
 
     fun getEmptyViewMessageResId(commentFilter: CommentFilter): Int {
         return when (commentFilter) {
-            CommentFilter.APPROVED -> string.comments_empty_list_filtered_approved
-            PENDING -> string.comments_empty_list_filtered_pending
-            UNREPLIED -> string.comments_empty_list_filtered_unreplied
-            SPAM -> string.comments_empty_list_filtered_spam
-            TRASHED -> string.comments_empty_list_filtered_trashed
-            CommentFilter.DELETE, CommentFilter.ALL -> string.comments_empty_list
+            CommentFilter.APPROVED -> R.string.comments_empty_list_filtered_approved
+            PENDING -> R.string.comments_empty_list_filtered_pending
+            UNREPLIED -> R.string.comments_empty_list_filtered_unreplied
+            SPAM -> R.string.comments_empty_list_filtered_spam
+            TRASHED -> R.string.comments_empty_list_filtered_trashed
+            CommentFilter.DELETE, CommentFilter.ALL -> R.string.comments_empty_list
         }
     }
 

@@ -27,9 +27,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection.Rtl
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import org.wordpress.android.R
 import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
-import org.wordpress.android.R.string
 import org.wordpress.android.ui.accounts.login.compose.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.Tagline
@@ -107,14 +107,14 @@ fun LoginScreenRevamped(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(vertical = 45.dp)
         ) {
-            Tagline(text = stringResource(string.login_prologue_revamped_tagline))
+            Tagline(text = stringResource(R.string.login_prologue_revamped_tagline))
             PrimaryButton(
-                text = stringResource(string.continue_with_wpcom),
+                text = stringResource(R.string.continue_with_wpcom),
                 onClick = onWpComLoginClicked,
                 modifier = Modifier.testTag(TestTags.BUTTON_WPCOM_AUTH)
             )
             SecondaryButton(
-                text = stringResource(string.enter_your_site_address),
+                text = stringResource(R.string.enter_your_site_address),
                 onClick = onSiteAddressLoginClicked,
             )
         }

@@ -21,7 +21,6 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.wordpress.android.R
 import org.wordpress.android.R.layout
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.datasets.ReaderCommentTable
@@ -173,7 +172,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private fun showErrorToastAndFinish() {
         AppLog.e(NOTIFS, "Note could not be found.")
         activity?.let {
-            ToastUtils.showToast(activity, string.error_notification_open)
+            ToastUtils.showToast(activity, R.string.error_notification_open)
             it.finish()
         }
     }
@@ -479,7 +478,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                     // Remove this when we start receiving "Read the source post block" from the backend
                     val generatedBlock = buildGeneratedLinkBlock(
                         mOnNoteBlockTextClickListener, pingbackUrl,
-                        activity!!.getString(string.comment_read_source_post)
+                        activity!!.getString(R.string.comment_read_source_post)
                     )
                     generatedBlock.setIsPingback()
                     noteList.add(generatedBlock)

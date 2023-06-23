@@ -12,7 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
@@ -190,7 +190,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 override fun showVideoDurationLimitWarning(fileName: String) {
                     ToastUtils.showToast(
                         appContext,
-                        string.error_media_video_duration_exceeds_limit,
+                        R.string.error_media_video_duration_exceeds_limit,
                         LONG
                     )
                 }

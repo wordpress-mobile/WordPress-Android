@@ -39,7 +39,6 @@ import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
@@ -497,7 +496,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun showVideoDurationLimitWarning(fileName: String) {
-        ToastUtils.showToast(this, string.error_media_video_duration_exceeds_limit, LONG)
+        ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, LONG)
     }
 
     private fun updateAddingMediaToStoryComposerProgressDialogState(uiState: ProgressDialogUiState) {

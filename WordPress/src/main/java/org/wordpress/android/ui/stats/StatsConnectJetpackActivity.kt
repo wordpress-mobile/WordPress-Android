@@ -6,7 +6,7 @@ import android.view.MenuItem
 import androidx.core.text.HtmlCompat
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsJetpackConnectionActivityBinding
 import org.wordpress.android.fluxc.Dispatcher
@@ -44,7 +44,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
         with(StatsJetpackConnectionActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
             initActionBar()
-            setTitle(string.stats)
+            setTitle(R.string.stats)
             checkAndContinueJetpackConnectionFlow(savedInstanceState)
             initViews()
         }
@@ -58,7 +58,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
         setSupportActionBar(toolbarLayout.toolbarMain)
         val actionBar = supportActionBar
         if (actionBar != null) {
-            actionBar.setTitle(string.stats)
+            actionBar.setTitle(R.string.stats)
             actionBar.setDisplayShowTitleEnabled(true)
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
@@ -90,7 +90,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
             WPWebViewActivity.openURL(this@StatsConnectJetpackActivity, FAQ_URL)
         }
         jetpackTermsAndConditions.text = HtmlCompat.fromHtml(
-            String.format(resources.getString(string.jetpack_connection_terms_and_conditions), "<u>", "</u>"),
+            String.format(resources.getString(R.string.jetpack_connection_terms_and_conditions), "<u>", "</u>"),
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         jetpackTermsAndConditions.setOnClickListener {

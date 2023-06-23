@@ -30,7 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.SolidCircle
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.compose.unit.Margin
@@ -69,7 +69,7 @@ fun DomainItem(uiState: DomainUiState): Unit = with(uiState) {
                 if (isSelected) {
                     Icon(
                         imageVector = Icons.Default.Check,
-                        contentDescription = stringResource(string.selected),
+                        contentDescription = stringResource(R.string.selected),
                         tint = colors.primary,
                         modifier = Modifier.size(16.dp),
                     )

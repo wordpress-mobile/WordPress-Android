@@ -12,7 +12,6 @@ import androidx.fragment.app.activityViewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.R.color
-import org.wordpress.android.R.string
 import org.wordpress.android.databinding.SiteCreationSiteNameFragmentBinding
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewModel.SiteNameUiState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -66,7 +65,7 @@ class SiteCreationSiteNameFragment : Fragment() {
         get() {
             val blueColorHexCode = HtmlUtils.colorResToHtmlColor(requireContext(), color.blue)
             return htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                string.new_site_creation_site_name_header_title,
+                R.string.new_site_creation_site_name_header_title,
                 siteIntent?.let { "<span style='color:$blueColorHexCode;'>$it</span>" }.orEmpty()
             )
         }

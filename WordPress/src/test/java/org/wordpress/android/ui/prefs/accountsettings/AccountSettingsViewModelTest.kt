@@ -13,7 +13,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult
@@ -153,7 +153,7 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
             assertThat(uiState.userNameSettingsUiState.newUserChangeConfirmedSnackBarMessageHolder.message)
                 .isEqualTo(
                     UiStringResWithParams(
-                        string.settings_username_changer_toast_content,
+                        R.string.settings_username_changer_toast_content,
                         listOf(UiStringText("new_wordpressuser_username"))
                     )
                 )
@@ -190,7 +190,7 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
             assertThat(uiState.emailSettingsUiState.emailVerificationMsgSnackBarMessageHolder.message)
                 .isEqualTo(
                     UiStringResWithParams(
-                        string.pending_email_change_snackbar,
+                        R.string.pending_email_change_snackbar,
                         listOf(UiStringText(getAccountUseCase.account.newEmail))
                     )
                 )

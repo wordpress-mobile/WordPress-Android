@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.action.TaxonomyAction
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -110,7 +109,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     }
 
     private fun setToolbarTitleUiState() {
-        _toolbarTitleUiState.value = UiStringRes(string.prepublishing_nudges_toolbar_title_categories)
+        _toolbarTitleUiState.value = UiStringRes(R.string.prepublishing_nudges_toolbar_title_categories)
     }
 
     private fun saveAndFinish() {
@@ -125,7 +124,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     private fun updateCategories() {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarEvents.postValue(
-                Event(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
+                Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
             )
             return
         }
@@ -201,9 +200,9 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         // treat as an error because without a name, there is no category
         val isError = event.isError || event.term?.name == null
         val message = if (isError) {
-            string.adding_cat_failed
+            R.string.adding_cat_failed
         } else {
-            string.adding_cat_success
+            R.string.adding_cat_success
         }
         _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(message))))
 

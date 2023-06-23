@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_GROW
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_REMINDER
@@ -58,18 +57,18 @@ class InsightsManagementMapper @Inject constructor(
     suspend fun buildUIModel(addedTypes: Set<InsightType>, onClick: (InsightType) -> Unit) =
         withContext(bgDispatcher) {
             val insightListItems = mutableListOf<InsightListItem>()
-            insightListItems += Header(string.stats_insights_management_general)
+            insightListItems += Header(R.string.stats_insights_management_general)
             if (BuildConfig.IS_JETPACK_APP && !GENERAL_INSIGHTS.contains(VIEWS_AND_VISITORS)) {
                 GENERAL_INSIGHTS.add(0, VIEWS_AND_VISITORS)
             }
             insightListItems += GENERAL_INSIGHTS.map { type ->
                 buildInsightModel(type, addedTypes, onClick)
             }
-            insightListItems += Header(string.stats_insights_management_posts_and_pages)
+            insightListItems += Header(R.string.stats_insights_management_posts_and_pages)
             insightListItems += POSTS_AND_PAGES_INSIGHTS.map { type ->
                 buildInsightModel(type, addedTypes, onClick)
             }
-            insightListItems += Header(string.stats_insights_management_activity)
+            insightListItems += Header(R.string.stats_insights_management_activity)
 
             if (BuildConfig.IS_JETPACK_APP && ACTIVITY_INSIGHTS.contains(FOLLOWER_TOTALS)) {
                 // Replace FOLLOWER_TOTALS with Stats revamp v2 total insights
@@ -111,11 +110,11 @@ class InsightsManagementMapper @Inject constructor(
         POSTING_ACTIVITY -> R.string.stats_insights_posting_activity
         PUBLICIZE -> R.string.stats_view_publicize
         ANNUAL_SITE_STATS -> R.string.stats_insights_this_year_site_stats
-        TOTAL_LIKES -> string.stats_view_total_likes
-        TOTAL_COMMENTS -> string.stats_view_total_comments
-        TOTAL_FOLLOWERS -> string.stats_view_total_followers
-        AUTHORS_COMMENTS -> string.stats_comments_authors
-        POSTS_COMMENTS -> string.stats_comments_posts_and_pages
+        TOTAL_LIKES -> R.string.stats_view_total_likes
+        TOTAL_COMMENTS -> R.string.stats_view_total_comments
+        TOTAL_FOLLOWERS -> R.string.stats_view_total_followers
+        AUTHORS_COMMENTS -> R.string.stats_comments_authors
+        POSTS_COMMENTS -> R.string.stats_comments_posts_and_pages
         FOLLOWER_TOTALS -> R.string.stats_view_follower_totals
         FOLLOWER_TYPES -> null
         ACTION_REMINDER, ACTION_SCHEDULE, ACTION_GROW -> null
