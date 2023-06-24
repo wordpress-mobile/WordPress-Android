@@ -1,6 +1,0 @@
-22.5:
-- Startsidan kan redigeras från listan Sidor på webbplatser med blockbaserade teman
-- Ångra/skriv om efterlänkstext när du ställer in länkar så att de öppnas i en ny flik
-- Tryck för att redigera är tillgängligt för alla inbäddade blocktyper
-- Konton kan stängas från skärmen Kontoinställningar
-- Buggkorrigeringar i blockredigeraren och på tilläggsskärmen

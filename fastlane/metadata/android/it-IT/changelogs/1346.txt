@@ -1,6 +1,0 @@
-22.5:
-- Homepage modificabile dall'Elenco delle pagine sui siti con temi basati su blocchi
-- Annullamento/ripristino del testo link-articolo quando si impostano i link da aprire in una nuova scheda
-- Funzionalità di modifica tramite tocco disponibile per tutti i tipi di blocchi nidificati
-- Account chiudibili dalla schermata delle impostazioni dell'account
-- Correzioni di bug nell'editor a blocchi e nella schermata dei plugin

@@ -1,0 +1,2 @@
+22.6:
+Bloccato e caricato: è presente anche un'icona di blocco per le celle disattivate nell'editor a blocchi in modo da sapere quando non sono in uso.
