@@ -1,0 +1,2 @@
+22.6:
+Gesperrt und geladen – es gibt ab sofort ein neues Schloss-Icon für deaktivierte Zellen im Block-Editor, damit du weißt, wann sie nicht verwendet werden.

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-16 17:01:43+0000
+Translation-Revision-Date: 2023-06-15 16:53:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: gl_ES
 -->
 <resources>
+    <string name="social_item_message_title">Mensaxe</string>
+    <string name="dashboard_card_plans_menu_hide_this">Ocultar isto</string>
+    <string name="virtual_homepage_learn_more">Aprende máis sobre os modelos</string>
+    <string name="virtual_homepage_title">Páxina de inicio</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Saber máis</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">A edición de bloques reutilizables aínda non é compatible con %s para iOS.</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">A edición de bloques reutilizables aínda non é compatible con %s para Android.</string>
     <string name="jp_migration_notifications_allow_title">Permitir avisos para estar ao día co teu sitio</string>
@@ -604,8 +609,6 @@ Language: gl_ES
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis o primeiro ano &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /ano&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Os teus dominios redirixirán ao teu sitio a %s</string>
     <string name="gutenberg_native_create_link">Crear unha ligazón</string>
-    <string name="domain_registration_result_description">O teu novo dominio &lt;b&gt;%s&lt;/b&gt; está sendo configurado. O teu dominio pode tardar ata 30 minutos en empezar a funcionar.</string>
-    <string name="domain_registration_result_title">Felicidades pola túa compra!</string>
     <string name="domains_suggestions_select_domain">Seleccionar o dominio</string>
     <string name="domains_title">Dominios</string>
     <string name="post_status_sticky">Fixa</string>
@@ -806,12 +809,14 @@ Language: gl_ES
     <string name="gutenberg_native_width_settings">Axustes de anchura</string>
     <string name="gutenberg_native_link_rel">«rel» da ligazón</string>
     <string name="gutenberg_native_column_settings">Axustes de columna</string>
+    <string name="gutenberg_native_no_description">Sen descrición</string>
     <string name="user_profile_untitled_site">(Sen título)</string>
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_bottom_sheet_description">Información de folla inferior do perfil de usuario</string>
     <string name="likes_list_screen_title">Lista de Gústame %s</string>
     <string name="gutenberg_native_two">Dous</string>
     <string name="gutenberg_native_three">Tres</string>
+    <string name="gutenberg_native_no_title">Sen título</string>
     <string name="gutenberg_native_s_social_icon">Icona social %s</string>
     <string name="gutenberg_native_mention">Mención</string>
     <string name="gutenberg_native_new">NOVO</string>
@@ -824,6 +829,7 @@ Language: gl_ES
     <string name="gutenberg_native_no_preview_available">Vista previa non dispoñible</string>
     <string name="gutenberg_native_loading">Cargando</string>
     <string name="gutenberg_native_text_color">Cor do texto</string>
+    <string name="gutenberg_native_s_link">ligazón %s</string>
     <string name="gutenberg_native_padding">Recheo</string>
     <string name="gutenberg_native_four">Catro</string>
     <string name="gutenberg_native_featured">Destacado</string>
@@ -2175,6 +2181,7 @@ Language: gl_ES
     <string name="page_status_change_error">Houbo un problema ao cambiar o estado da páxina</string>
     <string name="page_delete_error">Houbo un problema ao borrar a páxina</string>
     <string name="set_parent">Facer superior</string>
+    <string name="dismiss">Descartar</string>
     <string name="quick_start_focus_point_description">toca aquí</string>
     <string name="quick_start_list_create_site_title">Crea o teu sitio</string>
     <string name="quick_start_list_create_site_subtitle">Pon o teu sitio en marcha.</string>

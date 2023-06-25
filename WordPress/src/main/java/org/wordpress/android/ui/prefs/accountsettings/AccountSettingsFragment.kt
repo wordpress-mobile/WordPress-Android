@@ -97,7 +97,6 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity.application as WordPress).component().inject(this)
-        retainInstance = true
         addPreferencesFromResource(R.xml.account_settings)
         bindPreferences()
         setUpListeners()
@@ -263,7 +262,6 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 entryValues = state.siteIds
                 canShowDialog = state.canShowChoosePrimarySiteDialog
                 setDetails(state.homeURLOrHostNames)
-                refreshAdapter()
                  // Add click listener to show toast
                 setOnPreferenceClickListener {
                     if (state.sites?.size == 1) {
@@ -350,8 +348,10 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         var action: AccountSettingsEvent? = null
         when (preference) {
             emailPreference -> {
-                viewModel.onEmailChanged(newValue.toString())
-                action = EMAIL_CHANGED
+                if (!emailPreference.summary.equals(newValue.toString())) {
+                    viewModel.onEmailChanged(newValue.toString())
+                    action = EMAIL_CHANGED
+                }
             }
             primarySitePreference -> {
                 viewModel.onPrimarySiteChanged(newValue.toString().toLong())

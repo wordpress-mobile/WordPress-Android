@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/wpcom/v2/sites/106707880/rewind/downloads/"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": []
+  }
+}

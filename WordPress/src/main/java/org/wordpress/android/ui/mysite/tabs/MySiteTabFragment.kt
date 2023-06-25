@@ -22,6 +22,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.MySiteTabFragmentBinding
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.FullScreenDialogFragment
@@ -42,6 +43,7 @@ import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.Jetpa
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
+import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteAdapter
 import org.wordpress.android.ui.mysite.MySiteCardAndItemDecoration
 import org.wordpress.android.ui.mysite.MySiteViewModel
@@ -135,6 +137,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     lateinit var readerTracker: ReaderTracker
 
     @Inject
+    lateinit var meGravatarLoader: MeGravatarLoader
+
+    @Inject
+    lateinit var accountStore: AccountStore
+
+    @Inject
     lateinit var htmlCompatWrapper: HtmlCompatWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
@@ -207,6 +215,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         val adapter = MySiteAdapter(
             imageManager,
             uiHelpers,
+            accountStore,
+            meGravatarLoader,
             bloggingPromptsCardAnalyticsTracker,
             htmlCompatWrapper
         ) { viewModel.onBloggingPromptsLearnMoreClicked() }

@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-17 11:54:10+0000
+Translation-Revision-Date: 2023-06-14 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_CN
 -->
 <resources>
+    <string name="social_item_message_title">消息</string>
+    <string name="gutenberg_native_block_ungrouped">未分组区块</string>
+    <string name="gutenberg_native_block_grouped">已分组区块</string>
+    <string name="dashboard_card_plans_checkout_success_info">您的域名最多可能需要 30 分钟时间才能开始正常运行。</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">正在设置您的新域名 &lt;b&gt;%s&lt;/b&gt;。</string>
+    <string name="dashboard_card_plans_checkout_success_title">一切准备就绪！</string>
+    <string name="dashboard_card_plans_menu_hide_this">隐藏此内容</string>
+    <string name="dashboard_card_plans_sub_title">首年可获得免费域名，删除您站点上的广告并增加存储空间。</string>
+    <string name="dashboard_card_plans_title">年度套餐附免费域名</string>
+    <string name="virtual_homepage_learn_more">了解更多关于模板的信息</string>
+    <string name="virtual_homepage_subtitle">您的主页正在使用主题模板，并将在 Web 编辑器中打开。</string>
+    <string name="virtual_homepage_title">主页</string>
+    <string name="account_closure_dialog_success_message">账户已关闭。</string>
+    <string name="account_closure_dialog_error_unknown">关闭账户时发生错误。</string>
+    <string name="account_closure_dialog_error_active_memberships">无法关闭此用户账户，因为该账户存在活跃的购买。</string>
+    <string name="account_closure_dialog_error_active_subscriptions">无法关闭此用户账户，因为该账户存在活跃的订阅。</string>
+    <string name="account_closure_dialog_error_chargebacked_site">如果存在未解决的退款，则无法关闭此用户账户。</string>
+    <string name="account_closure_dialog_error_atomic_site">无法立即关闭此用户账户，因为该账户存在活跃的购买。 请联系我们的支持团队，完成账户删除操作。</string>
+    <string name="account_closure_dialog_error_unauthorized">您不具备关闭此账户的权限。</string>
+    <string name="account_closure_dialog_error_title">无法自动关闭账户\"</string>
+    <string name="account_closure_dialog_title">确认关闭账户…</string>
+    <string name="account_closure_dialog_message">如果您确认关闭账户，请在关闭之前重新输入您的用户名。</string>
+    <string name="close_account">关闭账户</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">了解更多</string>
+    <string name="sharing_twitter_deprecation_notice_description">由于 Twitter 更改了条款和定价，Twitter 自动共享功能已无法使用。</string>
+    <string name="sharing_twitter_deprecation_notice_title">Twitter 自动分享功能已无法使用</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Android 版 %s 尚不支持编辑可重用区块</string>
     <string name="jp_migration_notifications_allow_title">允许通知，持续关注您的站点</string>
     <string name="wp_jp_static_poster_message">Jetpack 应用拥有 WordPress 应用的所有功能，现在可以独家访问统计信息、阅读器、通知等功能。</string>
@@ -603,8 +629,6 @@ Language: zh_CN
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;第一年免费，&lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/年&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">您的域将重定向至您的站点：%s。</string>
     <string name="gutenberg_native_create_link">创建链接</string>
-    <string name="domain_registration_result_description">正在设置您的新域 &lt;b&gt;%s&lt;/b&gt; 。 最多可能需花费 30 分钟时间，您的域才能开始运行。</string>
-    <string name="domain_registration_result_title">恭喜您购买成功！</string>
     <string name="domains_suggestions_select_domain">选择域</string>
     <string name="domains_title">域名</string>
     <string name="post_status_sticky">置顶</string>
@@ -823,6 +847,7 @@ Language: zh_CN
     <string name="gutenberg_native_no_preview_available">无可用预览</string>
     <string name="gutenberg_native_loading">正在载入</string>
     <string name="gutenberg_native_text_color">文字颜色</string>
+    <string name="gutenberg_native_s_link">%s 链接</string>
     <string name="gutenberg_native_padding">内边距</string>
     <string name="gutenberg_native_four">四</string>
     <string name="gutenberg_native_featured">文章特色图片</string>

@@ -67,6 +67,8 @@ import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.models.JetpackPoweredScreen
+import org.wordpress.android.ui.debug.DebugSettingsActivity
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.SnackbarItem
@@ -134,6 +136,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject
     lateinit var uiHelpers: UiHelpers
 
+    @Inject
+    lateinit var jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil
+
     private val viewModel: MeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -152,15 +157,20 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
     }
 
+    @Suppress("LongMethod")
     private fun MeFragmentBinding.setupViews() {
-        with(requireActivity() as AppCompatActivity) {
-            setSupportActionBar(toolbarMain)
-            supportActionBar?.apply {
-                setHomeButtonEnabled(true)
-                setDisplayHomeAsUpEnabled(true)
-                // We need to set the title this way so it can be updated on locale change
-                setTitle(packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA).labelRes)
+        if (!BuildConfig.IS_JETPACK_APP && jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()) {
+            with(requireActivity() as AppCompatActivity) {
+                setSupportActionBar(toolbarMain)
+                supportActionBar?.apply {
+                    setHomeButtonEnabled(true)
+                    setDisplayHomeAsUpEnabled(true)
+                    // We need to set the title this way so it can be updated on locale change
+                    setTitle(packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA).labelRes)
+                }
             }
+        } else {
+            appbarMain.visibility = View.GONE
         }
 
         addJetpackBadgeIfNeeded()
@@ -170,7 +180,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             showPhotoPickerForGravatar()
         }
         avatarContainer.setOnClickListener(showPickerListener)
-        changePhoto.setOnClickListener(showPickerListener)
         rowMyProfile.setOnClickListener {
             ActivityLauncher.viewMyProfile(activity)
         }
@@ -186,12 +195,20 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
         if (BuildConfig.IS_JETPACK_APP) meAboutIcon.setImageResource(R.drawable.ic_jetpack_logo_white_24dp)
 
+        if (BuildConfig.DEBUG) {
+            rowDebugSettings.isVisible = true
+            rowDebugSettings.setOnClickListener {
+                requireContext().startActivity(Intent(requireContext(), DebugSettingsActivity::class.java))
+            }
+        }
+
         rowAboutTheApp.setOnClickListener {
             viewModel.showUnifiedAbout()
         }
 
         if (shouldShowQrCodeLogin()) {
             rowScanLoginCode.isVisible = true
+            scanLoginCodeDivider.isVisible = true
 
             rowScanLoginCode.setOnClickListener {
                 viewModel.showScanLoginCode()
@@ -549,6 +566,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                     }
                 }
             }
+
             UCrop.REQUEST_CROP -> {
                 AnalyticsTracker.track(ME_GRAVATAR_CROPPED)
                 if (resultCode == Activity.RESULT_OK) {

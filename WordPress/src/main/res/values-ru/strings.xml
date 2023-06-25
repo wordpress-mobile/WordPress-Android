@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-17 13:54:09+0000
+Translation-Revision-Date: 2023-06-22 14:09:34+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ru
 -->
 <resources>
+    <string name="social_item_message_title">Сообщение</string>
+    <string name="gutenberg_native_block_ungrouped">Блок расгруппирован</string>
+    <string name="gutenberg_native_block_grouped">Блок сгруппирован</string>
+    <string name="dashboard_card_plans_checkout_success_info">Прежде чем ваш домен начнёт работать, может пройти до 30 минут.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">Ваш новый домен &lt;b&gt;%s&lt;/b&gt; настраивается.</string>
+    <string name="dashboard_card_plans_checkout_success_title">Всё готово!</string>
+    <string name="dashboard_card_plans_menu_hide_this">Скрыть это</string>
+    <string name="dashboard_card_plans_sub_title">Получите бесплатный домен на первый год, уберите рекламу на своем сайте и увеличьте объем хранилища.</string>
+    <string name="dashboard_card_plans_title">Бесплатный домен на тарифном плане с ежегодной оплатой</string>
+    <string name="virtual_homepage_learn_more">Узнать больше о шаблонах</string>
+    <string name="virtual_homepage_subtitle">Ваша домашняя страница использует шаблон темы и откроется в веб-редакторе.</string>
+    <string name="virtual_homepage_title">Домашняя страница</string>
+    <string name="account_closure_dialog_success_message">Учётная запись закрыта.</string>
+    <string name="account_closure_dialog_error_unknown">При закрытии учётной записи произошла ошибка.</string>
+    <string name="account_closure_dialog_error_active_memberships">Эту учетную запись пользователя нельзя закрыть, если есть активные покупки.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">Эту учетную запись пользователя нельзя закрыть, если есть активные подписки.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">Эту учетную запись пользователя нельзя закрыть, если есть неразрешенные возвратные платежи.</string>
+    <string name="account_closure_dialog_error_atomic_site">Эта учётная запись не может быть закрыта, так как имеет активные покупки. Пожалуйста, обратитесь в нашу службу поддержки для удаления учётной записи.</string>
+    <string name="account_closure_dialog_error_unauthorized">У вас нет прав для закрытия учётной записи.</string>
+    <string name="account_closure_dialog_error_title">Не получается автоматически закрыть учётную запись</string>
+    <string name="account_closure_dialog_title">Подтвердите закрытие учётной записи…</string>
+    <string name="account_closure_dialog_message">Введите ваше имя пользователя для подтверждения закрытия.</string>
+    <string name="close_account">Закрыть учётную запись</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Подробнее</string>
+    <string name="sharing_twitter_deprecation_notice_description">Автоматическая публикация в Twitter больше не доступна из-за изменения условий использования и цен Twitter.</string>
+    <string name="sharing_twitter_deprecation_notice_title">Автоматическая публикация в Twitter больше не доступна</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">Редактирование «моих блоков» пока не доступно в %s для iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Редактирование «моих блоков» пока не доступно в %s для Android</string>
     <string name="jp_migration_notifications_allow_title">Разрешите уведомления, чтобы быть в курсе событий на сайте</string>
@@ -604,8 +630,6 @@ Language: ru
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Первый год - бесплатно &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s в год&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Ваши домены направят на ваш сайт по адресу %s</string>
     <string name="gutenberg_native_create_link">Создать ссылку</string>
-    <string name="domain_registration_result_description">Ваш новый домен &lt;b&gt;%s&lt;/b&gt; настраивается, это может занять до 30 минут пока он станет доступен.</string>
-    <string name="domain_registration_result_title">Поздравляем с приобретением!</string>
     <string name="domains_suggestions_select_domain">Выберите домен</string>
     <string name="domains_title">Домены</string>
     <string name="post_status_sticky">Прилеплена</string>
@@ -806,12 +830,14 @@ Language: ru
     <string name="gutenberg_native_width_settings">Настройки ширины</string>
     <string name="gutenberg_native_link_rel">Link rel</string>
     <string name="gutenberg_native_column_settings">Настройки столбцов</string>
+    <string name="gutenberg_native_no_description">Нет описания</string>
     <string name="user_profile_untitled_site">(Без названия)</string>
     <string name="user_profile_site_section_header">Сайт</string>
     <string name="user_profile_bottom_sheet_description">Нижняя часть информации профиля пользователя</string>
     <string name="likes_list_screen_title">Отметки \"нравится\" %s</string>
     <string name="gutenberg_native_two">Два</string>
     <string name="gutenberg_native_three">Три</string>
+    <string name="gutenberg_native_no_title">Нет заголовка</string>
     <string name="gutenberg_native_s_social_icon">Значок соцсети %s</string>
     <string name="gutenberg_native_mention">Упоминание</string>
     <string name="gutenberg_native_new">НОВОЕ</string>
@@ -824,6 +850,7 @@ Language: ru
     <string name="gutenberg_native_no_preview_available">Предварительный просмотр недоступен</string>
     <string name="gutenberg_native_loading">Загрузка</string>
     <string name="gutenberg_native_text_color">Цвет текста</string>
+    <string name="gutenberg_native_s_link">ссылка на %s</string>
     <string name="gutenberg_native_padding">Отступ</string>
     <string name="gutenberg_native_four">Четыре</string>
     <string name="gutenberg_native_featured">Избранное</string>
@@ -2175,6 +2202,7 @@ Language: ru
     <string name="page_status_change_error">Возникла проблема установления статуса страницы</string>
     <string name="page_delete_error">Возникла проблема при удалении страницы</string>
     <string name="set_parent">Установить родителя</string>
+    <string name="dismiss">Закрыть</string>
     <string name="quick_start_focus_point_description">нажмите здесь</string>
     <string name="quick_start_list_create_site_title">Создайте ваш сайт</string>
     <string name="quick_start_list_create_site_subtitle">Запустите ваш сайт</string>
