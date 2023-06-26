@@ -1,0 +1,45 @@
+package org.wordpress.android.ui.posts
+
+import android.content.Context
+import android.util.AttributeSet
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.AbstractComposeView
+import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.posts.social.PostSocialConnection
+
+class EditPostSettingsJetpackSocialContainerComposeView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null
+) : AbstractComposeView(context, attrs) {
+    private var data: EditPostSettingsJetpackSocialContainerComposeViewData? = null
+
+    @Composable
+    override fun Content() {
+        AppTheme {
+            data?.let {
+                EditPostSettingsJetpackSocialContainerView(
+                    trainOfIconsModels = it.trainOfIconsModels,
+                    postSocialConnectionList = it.postSocialConnectionList,
+                    shareMessage = it.shareMessage,
+                    remainingSharesMessage = it.remainingSharesMessage,
+                    subscribeButtonLabel = it.subscribeButtonLabel,
+                    onSubscribeClick = it.onSubscribeClick,
+                )
+            }
+        }
+    }
+
+    fun update(data: EditPostSettingsJetpackSocialContainerComposeViewData) {
+        this.data = data
+        disposeComposition()
+    }
+}
+
+data class EditPostSettingsJetpackSocialContainerComposeViewData(
+    val trainOfIconsModels: List<Any>,
+    val postSocialConnectionList: List<PostSocialConnection>,
+    val shareMessage: String,
+    val remainingSharesMessage: String,
+    val subscribeButtonLabel: String,
+    val onSubscribeClick: () -> Unit,
+)
