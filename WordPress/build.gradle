@@ -347,6 +347,10 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
         variant.buildConfigField "String", it.key.toUpperCase(), "\"${it.value}\""
     }
 }
+kapt {
+    // Enable to infer error types in stubs (see: https://kotlinlang.org/docs/kapt.html#non-existent-type-correction)
+    correctErrorTypes true
+}
 
 dependencies {
     compileOnly project(path: ':libs:annotations')
