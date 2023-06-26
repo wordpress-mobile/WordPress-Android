@@ -1,2 +1,0 @@
-22.4 :
-Lorsque vous appuyez sur un bloc paragraphe imbriqué, vous pouvez immédiatement modifier le contenu de ce bloc. Il n’est plus nécessaire d’appuyer sur chaque niveau de l’imbrication pour accéder là où vous voulez. (Nos doigts se fatiguaient aussi.)

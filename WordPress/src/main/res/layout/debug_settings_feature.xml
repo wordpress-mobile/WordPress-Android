@@ -8,55 +8,76 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/feature_title"
-        style="@style/MainBottomSheetRowTextView"
-        android:gravity="start"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="start"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textSize="16sp"
+        android:maxLines="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/preview_icon"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Feature Title"/>
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="Feature Title" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/remote_field_source"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textAllCaps="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/feature_title"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="Remote Source" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/preview_icon"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_medium"
         android:background="?android:selectableItemBackgroundBorderless"
         android:contentDescription="@string/preview"
+        android:paddingHorizontal="@dimen/margin_small"
         android:visibility="gone"
+        app:background="@color/transparent"
         app:cornerRadius="@dimen/margin_large"
         app:icon="@drawable/ic_external_grey_min_24dp"
         app:iconPadding="0dp"
         app:iconSize="@dimen/settings_icon_size"
         app:iconTint="@color/grey_dark"
-        app:background="@color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/feature_enabled"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         tools:visibility="visible" />
 
     <CheckBox
         android:id="@+id/feature_enabled"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginEnd="@dimen/margin_medium"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/remote_field_source"
         app:layout_constraintEnd_toStartOf="@+id/unknown_icon"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible"/>
+        app:layout_constraintTop_toTopOf="@+id/feature_title"
+        app:layout_constraintVertical_bias="0.0"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/unknown_icon"
         android:layout_width="@dimen/settings_icon_size"
-        android:layout_height="@dimen/settings_icon_size"
+        android:layout_height="0dp"
+        android:contentDescription="@string/unknown"
         android:src="@drawable/ic_help_outline_white_24dp"
         android:tint="@color/placeholder"
-        android:contentDescription="@string/unknown"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/remote_field_source"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

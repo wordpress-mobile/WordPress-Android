@@ -12,7 +12,6 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.privacy.GeoRepository
 
-
 @OptIn(ExperimentalCoroutinesApi::class)
 class ShouldAskPrivacyConsentTest: BaseUnitTest() {
     private val appPrefs: AppPrefsWrapper = mock()

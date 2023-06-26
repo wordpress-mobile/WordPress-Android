@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-17 15:54:09+0000
+Translation-Revision-Date: 2023-06-14 13:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_block_ungrouped">Bloc dissocié</string>
+    <string name="gutenberg_native_block_grouped">Bloc groupé</string>
+    <string name="dashboard_card_plans_checkout_success_info">Un délai de 30 minutes peut être nécessaire pour que votre domaine soit opérationnel.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">Votre nouveau domaine &lt;b&gt;%s&lt;/b&gt; est en cours de configuration.</string>
+    <string name="dashboard_card_plans_checkout_success_title">Tout est prêt !</string>
+    <string name="dashboard_card_plans_menu_hide_this">Masquer ceci</string>
+    <string name="dashboard_card_plans_sub_title">Obtenez un domaine gratuit la première année, supprimez les publicités sur votre site et augmentez votre stockage.</string>
+    <string name="dashboard_card_plans_title">Domaine gratuit avec un plan annuel</string>
+    <string name="virtual_homepage_learn_more">En savoir plus sur les modèles</string>
+    <string name="virtual_homepage_subtitle">Votre page d’accueil utilise un modèle Thème et s’ouvrira dans l’éditeur web.</string>
+    <string name="virtual_homepage_title">Page d’accueil</string>
+    <string name="account_closure_dialog_error_unknown">Une erreur est survenue lors de la clôture du compte.</string>
+    <string name="account_closure_dialog_success_message">Compte clôturé.</string>
+    <string name="account_closure_dialog_error_active_memberships">Ce compte utilisateur ne peut pas être clôturé tant qu’il comporte des achats actifs.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">Ce compte ne peut pas être clôturé tant qu’il comporte des abonnements actifs.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">Ce compte utilisateur ne peut pas être clôturé s’il y a des contestations de paiement non résolues.</string>
+    <string name="account_closure_dialog_error_atomic_site">Ce compte d’utilisateur ne peut pas être fermé immédiatement, car il est associé à des achats actifs. Veuillez contacter notre équipe d’assistance pour terminer la suppression du compte.</string>
+    <string name="account_closure_dialog_error_unauthorized">Nous n’êtes pas autorisé à clôturer le compte.</string>
+    <string name="account_closure_dialog_error_title">Fermeture automatique du compte impossible »</string>
+    <string name="account_closure_dialog_title">Confirmer la clôture du compte…</string>
+    <string name="account_closure_dialog_message">Pour confirmer, saisissez à nouveau votre identifiant avant de fermer.</string>
+    <string name="close_account">Clôturer le compte</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">En savoir plus</string>
+    <string name="sharing_twitter_deprecation_notice_description">Le partage automatique sur Twitter n’est plus disponible en raison de modifications des conditions générales et tarifaires de Twitter.</string>
+    <string name="sharing_twitter_deprecation_notice_title">Le partage automatique sur Twitter n’est plus disponible</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">La modification des blocs réutilisables n’est pas encore prise en charge sur %s pour iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">La modification des blocs réutilisables n’est pas encore prise en charge sur %s pour Android</string>
     <string name="jp_migration_notifications_allow_title">Autoriser les notifications pour suivre l’évolution de votre site</string>
@@ -604,8 +629,6 @@ Language: fr
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratuit la 1ère année &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /an&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Vos domaines renverront vers votre site à %s</string>
     <string name="gutenberg_native_create_link">Créer un lien</string>
-    <string name="domain_registration_result_title">Félicitations pour votre achat !</string>
-    <string name="domain_registration_result_description">Le nouveau domaine &lt;b&gt;%s&lt;/b&gt; a bien été configuré. Il peut se passer jusqu’à 30 minutes avant qu’il ne fonctionne complètement.</string>
     <string name="domains_title">Domaines</string>
     <string name="domains_suggestions_select_domain">Sélectionnez un domaine</string>
     <string name="reader_follow_comments_unfollow_conversation">Se désabonner de cette conversation</string>
@@ -812,6 +835,7 @@ Language: fr
     <string name="likes_list_screen_title">Liste des mentions J’aime %s</string>
     <string name="gutenberg_native_two">Deux</string>
     <string name="gutenberg_native_three">Trois</string>
+    <string name="gutenberg_native_no_title">Sans titre</string>
     <string name="gutenberg_native_s_social_icon">Icône de réseau social %s</string>
     <string name="gutenberg_native_mention">Mention</string>
     <string name="gutenberg_native_new">NOUVEAU</string>
@@ -823,6 +847,7 @@ Language: fr
     <string name="gutenberg_native_no_preview_available">Aucun aperçu disponible</string>
     <string name="gutenberg_native_add_title">Ajouter un titre</string>
     <string name="gutenberg_native_loading">En cours de chargement…</string>
+    <string name="gutenberg_native_s_link">%s lien</string>
     <string name="gutenberg_native_text_color">Couleur du texte</string>
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_featured">À la Une</string>
@@ -2175,6 +2200,7 @@ Language: fr
     <string name="page_status_change_error">Un problème est survenu lors de la modification de l\'état de la page</string>
     <string name="page_delete_error">Un problème est survenu lors de la suppression de la page</string>
     <string name="set_parent">Configurer le parent</string>
+    <string name="dismiss">Ignorer</string>
     <string name="quick_start_focus_point_description">appuyer ici</string>
     <string name="quick_start_list_create_site_title">Créer votre site</string>
     <string name="quick_start_list_create_site_subtitle">Rendre votre site opérationnel</string>

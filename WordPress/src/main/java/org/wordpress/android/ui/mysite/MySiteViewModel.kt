@@ -981,6 +981,7 @@ class MySiteViewModel @Inject constructor(
                 }
 
                 ListItemAction.DOMAINS -> SiteNavigationAction.OpenDomains(selectedSite)
+                ListItemAction.ME -> SiteNavigationAction.OpenMeScreen
                 ListItemAction.SITE_SETTINGS -> SiteNavigationAction.OpenSiteSettings(selectedSite)
                 ListItemAction.THEMES -> SiteNavigationAction.OpenThemes(selectedSite)
                 ListItemAction.PLUGINS -> SiteNavigationAction.OpenPlugins(selectedSite)

@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-26 08:47:23+0000
+Translation-Revision-Date: 2023-06-17 22:18:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sq_AL
 -->
 <resources>
+    <string name="social_item_message_title">Mesazh</string>
+    <string name="gutenberg_native_block_ungrouped">Blloku u hoq nga grupi</string>
+    <string name="gutenberg_native_block_grouped">Blloku u grupua</string>
+    <string name="dashboard_card_plans_checkout_success_info">Mund të duhen deri në 30 minuta që përkatësia juaj vetjake të fillojë të funksionojë.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">Përkatësia juaj e re &lt;b&gt;%s&lt;/b&gt; po ujdiset.</string>
+    <string name="dashboard_card_plans_checkout_success_title">Gati për punë!</string>
+    <string name="dashboard_card_plans_menu_hide_this">Fshihe këtë</string>
+    <string name="dashboard_card_plans_sub_title">Merrni një përkatësi falas për vitin e parë, hiqni reklama në sajtin tuaj dhe shtoni hapësirë depozitimi.</string>
+    <string name="dashboard_card_plans_title">Përkatësi falas me planin tuaj vjetor</string>
+    <string name="virtual_homepage_learn_more">Mësoni më tepër rreth gjedhesh</string>
+    <string name="virtual_homepage_subtitle">Faqja juaj hyrëse po përdor një gjedhe Teme dhe do të hapet në përpunuesin në internet.</string>
+    <string name="virtual_homepage_title">Faqe hyrëse</string>
+    <string name="account_closure_dialog_success_message">Llogaria u mbyll.</string>
+    <string name="account_closure_dialog_error_unknown">Ndodhi një gabim teksa mbyllej llogaria.</string>
+    <string name="account_closure_dialog_error_active_memberships">Kjo llogari përdoruesi s’mund të mbyllet, teksa ka blerje aktive.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">Kjo llogari përdoruesi s’mund të mbyllet, teksa ka pajtime aktive.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">Kjo llogari përdoruesi s’mund të mbyllet, nëse ka pagesa të prapambetura të pakryera.</string>
+    <string name="account_closure_dialog_error_atomic_site">Kjo llogari përdoruesi s’mund të mbyllet menjëherë, ngaqë ka blerje aktive. Ju lutemi, lidhuni me ekipin tonë të asistencës, që të përfundoni fshirjen e llogarisë.</string>
+    <string name="account_closure_dialog_error_unauthorized">S’jeni i autorizuar të mbyllni llogarinë.</string>
+    <string name="account_closure_dialog_error_title">Llogaria s’u mbyll dot automatikisht</string>
+    <string name="account_closure_dialog_title">Ripohoni Mbyllje Llogarie…</string>
+    <string name="account_closure_dialog_message">Që ta ripohoni, ju lutemi, rijepni emrin tuaj të përdoruesit para mbylljes.</string>
+    <string name="close_account">Mbylleni Llogarinë</string>
     <string name="sharing_twitter_deprecation_notice_find_out_more">Shihni më tepër</string>
     <string name="sharing_twitter_deprecation_notice_description">Ndarja e automatizuar me të tjerë që nga Twitter s’mund të përdoret më, për shkak ndryshimesh në kushte dhe çmim nga ana e Twitter-it.</string>
     <string name="sharing_twitter_deprecation_notice_title">Ndarja e automatizuar me të tjerë që nga Twitter s’mund të përdoret më</string>
@@ -602,8 +625,6 @@ Language: sq_AL
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Falas për vitin e parë &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /vit&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Përkatësia juaj do të ridrejtojë për te sajti juaj te %s</string>
     <string name="gutenberg_native_create_link">Krijo lidhje</string>
-    <string name="domain_registration_result_description">Përkatësia juaj e re &lt;b&gt;%s&lt;/b&gt; po ujdiset. Mund të duhen deri në 30 minuta që përkatësia juaj të fillojë të funksionojë.</string>
-    <string name="domain_registration_result_title">Përgëzime për blerjen tuaj!</string>
     <string name="domains_suggestions_select_domain">Përzgjidhni përkatësi</string>
     <string name="domains_title">Përkatësi</string>
     <string name="post_status_sticky">Ngjitës</string>
@@ -802,12 +823,14 @@ Language: sq_AL
     <string name="gutenberg_native_width_settings">Rregullime Gjerësie</string>
     <string name="gutenberg_native_link_rel">Atribut “Rel” Lidhjeje</string>
     <string name="gutenberg_native_column_settings">Rregullime Shtylle</string>
+    <string name="gutenberg_native_no_description">Pa përshkrim</string>
     <string name="user_profile_untitled_site">(I patitull)</string>
     <string name="user_profile_site_section_header">Sajt</string>
     <string name="user_profile_bottom_sheet_description">Hollësi profili përdoruesi në fund të fletës</string>
     <string name="likes_list_screen_title">Listë %s Pëlqimesh</string>
     <string name="gutenberg_native_two">Dy</string>
     <string name="gutenberg_native_three">Tre</string>
+    <string name="gutenberg_native_no_title">Pa titull</string>
     <string name="gutenberg_native_s_social_icon">Ikonë shoqërorësh %s</string>
     <string name="gutenberg_native_mention">Përmendje</string>
     <string name="gutenberg_native_new">I RI</string>
@@ -820,6 +843,7 @@ Language: sq_AL
     <string name="gutenberg_native_no_preview_available">S’ka paraparje gati</string>
     <string name="gutenberg_native_loading">Po ngarkohet</string>
     <string name="gutenberg_native_text_color">Ngjyrë teksti</string>
+    <string name="gutenberg_native_s_link">Lidhje %s</string>
     <string name="gutenberg_native_padding">Mbushje</string>
     <string name="gutenberg_native_four">Katër</string>
     <string name="gutenberg_native_featured">Të zgjedhura</string>
@@ -2170,6 +2194,7 @@ Language: sq_AL
     <string name="page_status_change_error">Pati një problem me ndryshimin e gjendjes së faqes</string>
     <string name="page_delete_error">Pati një problem me fshirjen e faqes</string>
     <string name="set_parent">Caktojeni Mëmë</string>
+    <string name="dismiss">Hidhe tej</string>
     <string name="quick_start_focus_point_description">prekeni këtu</string>
     <string name="quick_start_list_create_site_title">Krijoni sajtin tuaj</string>
     <string name="quick_start_list_create_site_subtitle">Krijojeni dhe vëreni në punë sajtin tuaj.</string>

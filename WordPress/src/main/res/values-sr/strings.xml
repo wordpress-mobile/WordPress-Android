@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-15 01:34:59+0000
+Translation-Revision-Date: 2023-06-23 11:05:00+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: sr_RS
@@ -67,8 +67,20 @@ Language: sr_RS
     <string name="my_site_untitled_post">Без наслова</string>
     <string name="my_site_post_card_scheduled_title">Предстојећи заказани чланци</string>
     <string name="gutenberg_native_create_link">Направи везу</string>
+    <string name="comment_edit_comment">Коментар</string>
+    <string name="comment_edit_user_name">Име</string>
+    <string name="comment_edit_menu_done">Готово</string>
+    <string name="gutenberg_native_embed_options">Могућности угнежђавања</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 блогеру&lt;/a&gt; се ово свиђа.</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s блогера&lt;/a&gt; се ово свиђа.</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Вама и %1$s блогера&lt;/a&gt; се ово свиђа.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Вама и 1 блогеру&lt;/a&gt; се ово свиђа.</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Вама&lt;/a&gt; се ово свиђа.</string>
+    <string name="domains_primary_site_address">%s</string>
+    <string name="my_site_btn_domains">Домени</string>
     <string name="blogging_reminders_site_settings_label">%1$s недељно у %2$s</string>
     <string name="gutenberg_native_selected_s">Одабрано: %s</string>
+    <string name="gutenberg_native_move_blocks">Помери блокове</string>
     <string name="gutenberg_native_use_icon_button">Користите дугме иконице</string>
     <string name="gutenberg_native_search_input_field">Поље за унос претраге</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Дугме за претрагу. Тренутни текст на дугмету је</string>

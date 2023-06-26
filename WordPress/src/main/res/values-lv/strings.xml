@@ -560,8 +560,6 @@ Language: lv
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Bezmaksas pirmo gadu &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s / gadā&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Jūsu domēni tiks novirzīti uz jūsu vietni %s</string>
     <string name="gutenberg_native_create_link">Izveidot saiti</string>
-    <string name="domain_registration_result_description">Tiek iestatīts jūsu jaunais domēns &lt;b&gt;%s&lt;/b&gt;. Jūsu domēna darbības uzsākšana var aizņemt līdz 30 minūtēm.</string>
-    <string name="domain_registration_result_title">Apsveicam ar pirkumu!</string>
     <string name="domains_suggestions_select_domain">Izvēlieties domēnu</string>
     <string name="domains_title">Domēni</string>
     <string name="post_status_sticky">Piesprausta</string>
@@ -780,6 +778,7 @@ Language: lv
     <string name="gutenberg_native_no_preview_available">Priekšskatījums nav pieejams</string>
     <string name="gutenberg_native_loading">Notiek ielāde</string>
     <string name="gutenberg_native_text_color">Teksta krāsa</string>
+    <string name="gutenberg_native_s_link">%s saite</string>
     <string name="gutenberg_native_padding">Piemale</string>
     <string name="gutenberg_native_four">Četri</string>
     <string name="gutenberg_native_featured">Piedāvātie</string>

@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-17 15:54:09+0000
+Translation-Revision-Date: 2023-06-20 19:24:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: it
 -->
 <resources>
+    <string name="social_item_message_title">Messaggio</string>
+    <string name="gutenberg_native_block_ungrouped">Blocco separato</string>
+    <string name="gutenberg_native_block_grouped">Blocco raggruppato</string>
+    <string name="dashboard_card_plans_checkout_success_info">Potrebbero essere necessari fino a 30 minuti prima che il dominio inizi a funzionare correttamente.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">Il nuovo dominio &lt;b&gt;%s&lt;/b&gt; è in fase di configurazione.</string>
+    <string name="dashboard_card_plans_checkout_success_title">Tutto pronto!</string>
+    <string name="dashboard_card_plans_menu_hide_this">Nascondi</string>
+    <string name="dashboard_card_plans_sub_title">Ottieni un dominio gratuito per il primo anno, rimuovi gli annunci dal sito e aumenta lo spazio di archiviazione.</string>
+    <string name="dashboard_card_plans_title">Dominio gratuito con il piano annuale</string>
+    <string name="virtual_homepage_learn_more">Scopri di più sui modelli</string>
+    <string name="virtual_homepage_subtitle">La home page utilizza un modello di tema e si aprirà nell\'editor web.</string>
+    <string name="virtual_homepage_title">Home page</string>
+    <string name="account_closure_dialog_success_message">Account chiuso.</string>
+    <string name="account_closure_dialog_error_unknown">Si è verificato un errore durante la chiusura dell\'account.</string>
+    <string name="account_closure_dialog_error_active_memberships">Questo account utente ha acquisti attivi e non può essere chiuso.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">Questo account utente ha abbonamenti attivi e non può essere chiuso.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">Questo account utente non può essere chiuso se sono presenti revoche non risolte.</string>
+    <string name="account_closure_dialog_error_atomic_site">Questo account utente non può essere chiuso immediatamente perché ha acquisti attivi. Contatta il nostro team di supporto per completare l\'eliminazione dell\'account.</string>
+    <string name="account_closure_dialog_error_unauthorized">Non possiedi l\'autorizzazione necessaria per chiudere l\'account.</string>
+    <string name="account_closure_dialog_error_title">Impossibile chiudere l\'account automaticamente\"</string>
+    <string name="account_closure_dialog_title">Conferma chiusura dell\'account…</string>
+    <string name="account_closure_dialog_message">Per confermare, inserisci nuovamente il nome utente prima di chiudere.</string>
+    <string name="close_account">Chiudi account</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Scopri di più</string>
+    <string name="sharing_twitter_deprecation_notice_description">La condivisione automatica di Twitter non è più disponibile a causa delle modifiche nei termini e nei prezzi di Twitter.</string>
+    <string name="sharing_twitter_deprecation_notice_title">La condivisione automatica di Twitter non è più disponibile</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">La modifica dei blocchi riutilizzabili non è ancora supportata su %s per iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">La modifica dei blocchi riutilizzabili non è ancora supportata su %s per Android</string>
     <string name="jp_migration_notifications_allow_title">Consenti le notifiche per stare al passo con il tuo sito</string>
@@ -604,8 +630,6 @@ Language: it
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis per il primo anno a &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/all\'anno&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">I domini reindirizzeranno al tuo sito su %s</string>
     <string name="gutenberg_native_create_link">Crea link</string>
-    <string name="domain_registration_result_description">Il nuovo dominio &lt;b&gt;%s&lt;/b&gt; è in fase di configurazione. Potrebbero essere necessari fino a 30 minuti prima che il tuo dominio inizi a funzionare.</string>
-    <string name="domain_registration_result_title">Complimenti per l\'acquisto.</string>
     <string name="domains_suggestions_select_domain">Seleziona dominio</string>
     <string name="domains_title">Domini</string>
     <string name="post_status_sticky">In evidenza</string>
@@ -806,12 +830,14 @@ Language: it
     <string name="gutenberg_native_width_settings">Impostazioni larghezza</string>
     <string name="gutenberg_native_link_rel">Link Rel</string>
     <string name="gutenberg_native_column_settings">Impostazioni della colonna</string>
+    <string name="gutenberg_native_no_description">Descrizione</string>
     <string name="user_profile_untitled_site">(Senza titolo)</string>
     <string name="user_profile_site_section_header">Sito</string>
     <string name="user_profile_bottom_sheet_description">Informazioni sul foglio inferiore del profilo utente</string>
     <string name="likes_list_screen_title">Elenco di Mi piace %s</string>
     <string name="gutenberg_native_two">Due</string>
     <string name="gutenberg_native_three">Tre</string>
+    <string name="gutenberg_native_no_title">Nessun titolo</string>
     <string name="gutenberg_native_s_social_icon">Icona social %s</string>
     <string name="gutenberg_native_mention">Riferimento</string>
     <string name="gutenberg_native_new">NOVITÀ</string>
@@ -824,6 +850,7 @@ Language: it
     <string name="gutenberg_native_no_preview_available">Nessuna anteprima disponibile</string>
     <string name="gutenberg_native_loading">Caricamento</string>
     <string name="gutenberg_native_text_color">Colore del testo</string>
+    <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_four">Quattro</string>
     <string name="gutenberg_native_featured">In evidenza</string>
@@ -2175,6 +2202,7 @@ Language: it
     <string name="page_status_change_error">Si è verificato un errore durante la modifica dello stato della pagina</string>
     <string name="page_delete_error">Si è verificato un errore durante l\'eliminazione della pagina</string>
     <string name="set_parent">Imposta genitore</string>
+    <string name="dismiss">Ignora</string>
     <string name="quick_start_focus_point_description">tocca qui</string>
     <string name="quick_start_list_create_site_title">Crea il tuo sito</string>
     <string name="quick_start_list_create_site_subtitle">Configura il sito ed eseguilo.</string>
@@ -2525,7 +2553,7 @@ Language: it
     <string name="site_settings_timezones_error">Impossibile caricare i fusi orario</string>
     <string name="site_settings_format_help">Scopri di più sulla formattazione di data e ora</string>
     <string name="site_settings_format_hint_custom">Formato personalizzato</string>
-    <string name="site_settings_format_entry_custom">Clientela</string>
+    <string name="site_settings_format_entry_custom">Personalizzato</string>
     <string name="site_settings_posts_per_page_title">Articoli per pagina</string>
     <string name="site_settings_timezone_subtitle">Seleziona una città che rientra nel tuo fuso orario</string>
     <string name="site_settings_timezone_title">Fuso orario</string>
@@ -2666,7 +2694,7 @@ Language: it
     <string name="error_unknown_post">Non è stato possibile trovare l\'articolo sul server</string>
     <string name="error_post_does_not_exist">Questo articolo non è più disponibile</string>
     <string name="error_media_canceled">Caricamento file multimediali annullato</string>
-    <string name="error_upload_page_media_param">Si è verificato un errore nel caricamento del media in questa pagina:  %s.</string>
+    <string name="error_upload_page_media_param">Si è verificato un errore nel caricamento del media in questa pagina: %s.</string>
     <string name="error_upload_page_param">Si è verificato un errore nel caricamento di questa pagina: %s. </string>
     <string name="editor_uploading_post">Il tuo articolo è stato caricato</string>
     <string name="uploading_media">Caricamento del media…</string>

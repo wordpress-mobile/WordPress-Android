@@ -2402,6 +2402,7 @@
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
+    <string name="tabbar_accessibility_label_me">Me. Manage your profile details.</string>
 
     <!-- Special characters -->
     <string name="bullet" translatable="false">\u2022</string>
@@ -4575,6 +4576,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_block_grouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block grouped</string>
     <string name="gutenberg_native_block_ungrouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block ungrouped</string>
     <string name="gutenberg_native_s_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s link</string>
+    <string name="gutenberg_native_no_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">No description</string>
+    <string name="gutenberg_native_no_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">No title</string>
 
     <!-- Privacy Banner -->
     <string name="privacy_banner_description">Your privacy is critically important to us and always has been. We use, store, and process your personal data to optimize our app (and your experience) in various ways. Some uses of your data we absolutely need in order to make things work, and others you can customize from your Settings.</string>

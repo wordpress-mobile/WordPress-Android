@@ -347,6 +347,10 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
         variant.buildConfigField "String", it.key.toUpperCase(), "\"${it.value}\""
     }
 }
+kapt {
+    // Enable to infer error types in stubs (see: https://kotlinlang.org/docs/kapt.html#non-existent-type-correction)
+    correctErrorTypes true
+}
 
 dependencies {
     compileOnly project(path: ':libs:annotations')
@@ -446,7 +450,7 @@ dependencies {
     }
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
-    implementation "com.github.bumptech.glide:volley-integration:$glideVolleyVersion"
+    implementation "com.github.bumptech.glide:volley-integration:$glideVersion"
     implementation "com.github.indexos.media-for-mobile:domain:$indexosMediaForMobileVersion"
     implementation "com.github.indexos.media-for-mobile:android:$indexosMediaForMobileVersion"
     implementation "com.zendesk:support:$zendeskVersion"
