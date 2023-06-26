@@ -378,7 +378,7 @@ class AppPrefsWrapper @Inject constructor() {
 
     var savedPrivacyBannerSettings: Boolean
         get() = getBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, false)
-        set(value) = setBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, value)
+        set(value) = AppPrefs.setBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, value)
 
     companion object {
         private const val LIGHT_MODE_ID = 0
