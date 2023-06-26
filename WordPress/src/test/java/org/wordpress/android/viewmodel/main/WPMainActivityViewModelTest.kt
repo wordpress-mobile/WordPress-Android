@@ -178,6 +178,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(false)
         whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(bloggingPrompt))
         whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(true)
+        whenever(shouldAskPrivacyConsent()).thenReturn(false)
         viewModel = WPMainActivityViewModel(
             featureAnnouncementProvider,
             buildConfigWrapper,
