@@ -70,22 +70,22 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
         viewModel = ViewModelProvider(this@PrepublishingHomeFragment, viewModelFactory)
             .get(PrepublishingHomeViewModel::class.java)
 
-        viewModel.storyTitleUiState.observe(viewLifecycleOwner, { storyTitleUiState ->
+        viewModel.storyTitleUiState.observe(viewLifecycleOwner) { storyTitleUiState ->
             uiHelpers.updateVisibility(storyTitleHeaderView, true)
             storyTitleHeaderView.init(uiHelpers, imageManager, storyTitleUiState)
-        })
+        }
 
-        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             (actionsRecyclerView.adapter as PrepublishingHomeAdapter).update(uiState)
-        })
+        }
 
-        viewModel.onActionClicked.observeEvent(viewLifecycleOwner, { actionType ->
+        viewModel.onActionClicked.observeEvent(viewLifecycleOwner) { actionType ->
             actionClickedListener?.onActionClicked(actionType)
-        })
+        }
 
-        viewModel.onSubmitButtonClicked.observeEvent(viewLifecycleOwner, { publishPost ->
+        viewModel.onSubmitButtonClicked.observeEvent(viewLifecycleOwner) { publishPost ->
             actionClickedListener?.onSubmitButtonClicked(publishPost)
-        })
+        }
 
         val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
             "arguments can't be null."
