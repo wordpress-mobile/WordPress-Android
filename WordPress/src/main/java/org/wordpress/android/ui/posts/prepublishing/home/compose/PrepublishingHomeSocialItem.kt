@@ -2,13 +2,14 @@ package org.wordpress.android.ui.posts.prepublishing.home.compose
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
@@ -31,46 +32,60 @@ fun PrepublishingHomeSocialItem(
     avatarModels: List<TrainOfIconsModel>,
     modifier: Modifier = Modifier
 ) {
-    Column(
+    SocialContainer(
+        avatarCount = avatarModels.size,
         modifier = modifier
+            .fillMaxWidth()
             .background(MaterialTheme.colors.surface)
+            .padding(16.dp),
     ) {
-        Divider()
+        Column {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.body1,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
 
-        // TODO thomashortadev check compose layout tutorials for a "flex" wrap implementation instead of Row
-        //  if we want to wrap when the icons don't fit in the row
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            Spacer(Modifier.height(2.dp))
+
+            Text(
+                text = description,
+                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+
+        if (avatarModels.isNotEmpty()) {
+            Spacer(modifier = Modifier.size(8.dp))
+
+            TrainOfIcons(iconModels = avatarModels)
+        }
+    }
+}
+
+@Composable
+fun SocialContainer(
+    avatarCount: Int,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    if (avatarCount > 2) {
+        Column(
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = modifier,
         ) {
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.body1,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-
-                Spacer(Modifier.height(2.dp))
-
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-
-            if (avatarModels.isNotEmpty()) {
-                Spacer(modifier = Modifier.width(4.dp))
-
-                TrainOfIcons(iconModels = avatarModels)
-            }
+            content()
+        }
+    } else {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier,
+        ) {
+            content()
         }
     }
 }
@@ -78,17 +93,36 @@ fun PrepublishingHomeSocialItem(
 @Preview
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
-fun PrepublishingHomeSocialItemPreview() {
+fun PrepublishingHomeSocialItemPreviewHorizontal() {
     AppTheme {
-        PrepublishingHomeSocialItem(
-            title = "Sharing to 3 accounts",
-            description = "27/30 social shares remaining",
-            avatarModels = listOf(
-                TrainOfIconsModel(R.drawable.login_prologue_second_asset_three, 0.36f),
-                TrainOfIconsModel(R.drawable.login_prologue_second_asset_two, 0.36f),
-                TrainOfIconsModel(R.drawable.login_prologue_third_asset_one),
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colors.background)
+        ) {
+            PrepublishingHomeSocialItem(
+                title = "Sharing to 2 of 3 accounts",
+                description = "27/30 social shares remaining",
+                avatarModels = listOf(
+                    TrainOfIconsModel(R.drawable.login_prologue_second_asset_three, 0.36f),
+                    TrainOfIconsModel(R.drawable.login_prologue_second_asset_two),
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Divider()
+
+            PrepublishingHomeSocialItem(
+                title = "Sharing to 1 of 3 accounts",
+                description = "27/30 social shares remaining",
+                avatarModels = listOf(
+                    TrainOfIconsModel(R.drawable.login_prologue_second_asset_three, 0.36f),
+                    TrainOfIconsModel(R.drawable.login_prologue_second_asset_two, 0.36f),
+                    TrainOfIconsModel(R.drawable.login_prologue_third_asset_one),
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
     }
 }
