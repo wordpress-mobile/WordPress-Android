@@ -368,7 +368,7 @@ class AppPrefsWrapper @Inject constructor() {
         AppPrefs.putInt(prefKey, value)
     }
 
-    fun setBoolean(prefKey: PrefKey, value: Boolean) {
+    fun putBoolean(prefKey: PrefKey, value: Boolean) {
         AppPrefs.putBoolean(prefKey, value)
     }
 
