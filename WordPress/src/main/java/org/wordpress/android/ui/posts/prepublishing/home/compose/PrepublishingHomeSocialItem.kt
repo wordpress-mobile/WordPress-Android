@@ -123,6 +123,5 @@ fun PrepublishingHomeSocialItemPreviewHorizontal() {
                 modifier = Modifier.fillMaxWidth()
             )
         }
-
     }
 }
