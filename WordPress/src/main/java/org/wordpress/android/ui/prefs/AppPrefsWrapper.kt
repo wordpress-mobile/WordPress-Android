@@ -158,9 +158,6 @@ class AppPrefsWrapper @Inject constructor() {
     fun isMainFabTooltipDisabled() = AppPrefs.isMainFabTooltipDisabled()
     fun setMainFabTooltipDisabled(disable: Boolean) = AppPrefs.setMainFabTooltipDisabled(disable)
 
-    fun getReaderSubfilter() = AppPrefs.getReaderSubfilter()
-    fun setReaderSubfilter(json: String) = AppPrefs.setReaderSubfilter(json)
-
     fun getLastReaderKnownAccessTokenStatus() = AppPrefs.getLastReaderKnownAccessTokenStatus()
     fun setLastReaderKnownAccessTokenStatus(lastKnownAccessTokenStatus: Boolean) =
         AppPrefs.setLastReaderKnownAccessTokenStatus(lastKnownAccessTokenStatus)
