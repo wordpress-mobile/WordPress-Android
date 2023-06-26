@@ -104,8 +104,8 @@ fun PrepublishingHomeSocialItemPreviewHorizontal() {
                 title = "Sharing to 2 of 3 accounts",
                 description = "27/30 social shares remaining",
                 avatarModels = listOf(
-                    TrainOfIconsModel(R.drawable.login_prologue_second_asset_three, 0.36f),
-                    TrainOfIconsModel(R.drawable.login_prologue_second_asset_two),
+                    TrainOfIconsModel(R.drawable.ic_social_tumblr, 0.36f),
+                    TrainOfIconsModel(R.drawable.ic_social_facebook),
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -116,9 +116,9 @@ fun PrepublishingHomeSocialItemPreviewHorizontal() {
                 title = "Sharing to 1 of 3 accounts",
                 description = "27/30 social shares remaining",
                 avatarModels = listOf(
-                    TrainOfIconsModel(R.drawable.login_prologue_second_asset_three, 0.36f),
-                    TrainOfIconsModel(R.drawable.login_prologue_second_asset_two, 0.36f),
-                    TrainOfIconsModel(R.drawable.login_prologue_third_asset_one),
+                    TrainOfIconsModel(R.drawable.ic_social_facebook, 0.36f),
+                    TrainOfIconsModel(R.drawable.ic_social_mastodon, 0.36f),
+                    TrainOfIconsModel(R.drawable.ic_social_tumblr),
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
