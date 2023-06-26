@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+22.8
+-----
+
+
 22.7
 -----
 * [*] Updates Floating Action Button(FAB) color to black, shape to squircle, and icon to plus [https://github.com/wordpress-mobile/WordPress-Android/pull/18599]
