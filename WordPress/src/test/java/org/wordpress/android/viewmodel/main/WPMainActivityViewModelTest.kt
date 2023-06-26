@@ -53,6 +53,7 @@ import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.privacy.banner.domain.ShouldAskPrivacyConsent
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
@@ -125,6 +126,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var siteUtilsWrapper: SiteUtilsWrapper
 
+    @Mock
+    private lateinit var shouldAskPrivacyConsent: ShouldAskPrivacyConsent
+
     private val featureAnnouncement = FeatureAnnouncement(
         "14.7",
         2,
@@ -174,6 +178,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(false)
         whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(bloggingPrompt))
         whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(true)
+        whenever(shouldAskPrivacyConsent()).thenReturn(false)
         viewModel = WPMainActivityViewModel(
             featureAnnouncementProvider,
             buildConfigWrapper,
@@ -189,7 +194,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             jetpackFeatureRemovalPhaseHelper,
             blazeFeatureUtils,
             blazeStore,
-            siteUtilsWrapper
+            siteUtilsWrapper,
+            shouldAskPrivacyConsent,
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
             onFeatureAnnouncementRequestedObserver

@@ -158,9 +158,6 @@ class AppPrefsWrapper @Inject constructor() {
     fun isMainFabTooltipDisabled() = AppPrefs.isMainFabTooltipDisabled()
     fun setMainFabTooltipDisabled(disable: Boolean) = AppPrefs.setMainFabTooltipDisabled(disable)
 
-    fun getReaderSubfilter() = AppPrefs.getReaderSubfilter()
-    fun setReaderSubfilter(json: String) = AppPrefs.setReaderSubfilter(json)
-
     fun getLastReaderKnownAccessTokenStatus() = AppPrefs.getLastReaderKnownAccessTokenStatus()
     fun setLastReaderKnownAccessTokenStatus(lastKnownAccessTokenStatus: Boolean) =
         AppPrefs.setLastReaderKnownAccessTokenStatus(lastKnownAccessTokenStatus)
@@ -368,7 +365,7 @@ class AppPrefsWrapper @Inject constructor() {
         AppPrefs.putInt(prefKey, value)
     }
 
-    fun setBoolean(prefKey: PrefKey, value: Boolean) {
+    fun putBoolean(prefKey: PrefKey, value: Boolean) {
         AppPrefs.putBoolean(prefKey, value)
     }
 
@@ -378,7 +375,7 @@ class AppPrefsWrapper @Inject constructor() {
 
     var savedPrivacyBannerSettings: Boolean
         get() = getBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, false)
-        set(value) = setBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, value)
+        set(value) = AppPrefs.setBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, value)
 
     companion object {
         private const val LIGHT_MODE_ID = 0

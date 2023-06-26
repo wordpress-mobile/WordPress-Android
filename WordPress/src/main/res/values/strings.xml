@@ -4578,4 +4578,13 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_s_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s link</string>
     <string name="gutenberg_native_no_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">No description</string>
     <string name="gutenberg_native_no_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">No title</string>
+
+    <!-- Privacy Banner -->
+    <string name="privacy_banner_description">Your privacy is critically important to us and always has been. We use, store, and process your personal data to optimize our app (and your experience) in various ways. Some uses of your data we absolutely need in order to make things work, and others you can customize from your Settings.</string>
+    <string name="privacy_banner_title">Manage privacy</string>
+    <string name="privacy_banner_analytics">Analytics</string>
+    <string name="privacy_banner_analytics_description">Allow us to optimize performance by collecting information on how users interact with our mobile apps.</string>
+    <string name="privacy_banner_settings">Settings</string>
+    <string name="privacy_banner_save">Save</string>
+    <string name="privacy_banner_error_save">There was an error saving your privacy choices.</string>
 </resources>

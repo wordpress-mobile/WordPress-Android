@@ -13,9 +13,11 @@ class ShouldAskPrivacyConsent @Inject constructor(
     private val accountStore: AccountStore,
     private val selectedSiteRepository: SelectedSiteRepository,
 ) {
-    suspend operator fun invoke() = isLoggedIn &&
-            !appPrefs.savedPrivacyBannerSettings &&
-            geoRepository.isGdprComplianceRequired()
+    suspend operator fun invoke(): Boolean {
+        return isLoggedIn &&
+                !appPrefs.savedPrivacyBannerSettings &&
+                geoRepository.isGdprComplianceRequired()
+    }
 
     private val isLoggedIn
         get () = accountStore.hasAccessToken() || selectedSiteRepository.getSelectedSite()?.let {

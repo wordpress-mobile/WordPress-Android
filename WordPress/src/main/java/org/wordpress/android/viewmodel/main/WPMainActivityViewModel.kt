@@ -38,6 +38,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.privacy.banner.domain.ShouldAskPrivacyConsent
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
@@ -75,7 +76,8 @@ class WPMainActivityViewModel @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val blazeStore: BlazeStore,
-    private val siteUtilsWrapper: SiteUtilsWrapper
+    private val siteUtilsWrapper: SiteUtilsWrapper,
+    private val shouldAskPrivacyConsent: ShouldAskPrivacyConsent,
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -130,6 +132,15 @@ class WPMainActivityViewModel @Inject constructor(
     private val _openBloggingPromptsOnboarding = SingleLiveEvent<Unit?>()
     val openBloggingPromptsOnboarding: LiveData<Unit?> = _openBloggingPromptsOnboarding
 
+    private val _askForPrivacyConsent = SingleLiveEvent<Unit>()
+    val askForPrivacyConsent: LiveData<Unit> = _askForPrivacyConsent
+
+    private val _showPrivacySettings = SingleLiveEvent<Unit>()
+    val showPrivacySettings: LiveData<Unit> = _showPrivacySettings
+
+    private val _showPrivacySettingsWithError = SingleLiveEvent<Boolean?>()
+    val showPrivacySettingsWithError: LiveData<Boolean?> = _showPrivacySettingsWithError
+
     val onFocusPointVisibilityChange = quickStartRepository.activeTask
         .mapNullable { getExternalFocusPointInfo(it) }
         .distinctUntilChanged()
@@ -149,6 +160,12 @@ class WPMainActivityViewModel @Inject constructor(
     fun start(site: SiteModel?) {
         if (isStarted) return
         isStarted = true
+
+        launch {
+            if (shouldAskPrivacyConsent()) {
+                _askForPrivacyConsent.call()
+            }
+        }
 
         setMainFabUiState(false, site)
 
@@ -395,6 +412,14 @@ class WPMainActivityViewModel @Inject constructor(
 
     fun triggerCreatePageFlow(){
         _createAction.postValue(CREATE_NEW_PAGE_FROM_PAGES_CARD)
+    }
+
+    fun onPrivacySettingsTapped() = launch {
+        _showPrivacySettings.call()
+    }
+
+    fun onSettingsPrivacyPreferenceUpdateFailed(requestedAnalyticsPreference: Boolean?) {
+        _showPrivacySettingsWithError.value = requestedAnalyticsPreference
     }
 
     data class FocusPointInfo(
