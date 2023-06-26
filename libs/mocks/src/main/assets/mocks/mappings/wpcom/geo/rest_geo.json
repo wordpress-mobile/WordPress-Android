@@ -1,0 +1,15 @@
+{
+    "request": {
+        "urlPath": "/geo/",
+        "method": "GET"
+    },
+    "response": {
+        "status": 200,
+        "body": "US",
+        "headers": {
+            "Content-Type": "application/json",
+            "Connection": "keep-alive",
+            "Cache-Control": "no-cache, must-revalidate, max-age=0"
+        }
+    }
+}
