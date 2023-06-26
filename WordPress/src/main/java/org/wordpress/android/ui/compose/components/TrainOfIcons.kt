@@ -29,6 +29,12 @@ private const val DEFAULT_ICON_BORDER_WIDTH = 2
 // this proportion is calculated based on the Figma design for Jetpack Social (Th1ahHKq53k5JT1PNDMavY-fi-865_13166)
 private const val ICON_OFFSET_PROPORTION = 29f / 36f
 
+
+data class TrainOfIconsModel(
+    val data: Any?,
+    val alpha: Float = 1f,
+)
+
 /**
  * This component uses coil's [AsyncImage] internally so it supports any model the regular [AsyncImage] composable can
  * use. The icons are laid out horizontally, with the first icon being the first element in the list and the last icon
@@ -45,7 +51,7 @@ private const val ICON_OFFSET_PROPORTION = 29f / 36f
  */
 @Composable
 fun TrainOfIcons(
-    iconModels: List<Any?>,
+    iconModels: List<TrainOfIconsModel>,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     iconSize: Dp = DEFAULT_ICON_SIZE.dp,
@@ -64,7 +70,8 @@ fun TrainOfIcons(
         content = {
             iconModels.forEach { iconModel ->
                 AsyncImage(
-                    model = iconModel,
+                    model = iconModel.data,
+                    alpha = iconModel.alpha,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     placeholder = placeholderPainter,
@@ -110,7 +117,7 @@ fun TrainOfIconsPreview() {
                 R.drawable.login_prologue_second_asset_two,
                 R.drawable.login_prologue_third_asset_one,
                 R.mipmap.app_icon
-            ),
+            ).map { TrainOfIconsModel(it) },
             contentDescription = "Train of icons",
         )
     }

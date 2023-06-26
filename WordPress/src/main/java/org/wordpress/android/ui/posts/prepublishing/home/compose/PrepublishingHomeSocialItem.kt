@@ -21,13 +21,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.TrainOfIcons
+import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
 fun PrepublishingHomeSocialItem(
     title: String,
     description: String,
-    avatarModels: List<Any>,
+    avatarModels: List<TrainOfIconsModel>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -83,9 +84,9 @@ fun PrepublishingHomeSocialItemPreview() {
             title = "Sharing to 3 accounts",
             description = "27/30 social shares remaining",
             avatarModels = listOf(
-                R.drawable.login_prologue_second_asset_three,
-                R.drawable.login_prologue_second_asset_two,
-                R.drawable.login_prologue_third_asset_one,
+                TrainOfIconsModel(R.drawable.login_prologue_second_asset_three, 0.36f),
+                TrainOfIconsModel(R.drawable.login_prologue_second_asset_two, 0.36f),
+                TrainOfIconsModel(R.drawable.login_prologue_third_asset_one),
             ),
             modifier = Modifier.fillMaxWidth()
         )
