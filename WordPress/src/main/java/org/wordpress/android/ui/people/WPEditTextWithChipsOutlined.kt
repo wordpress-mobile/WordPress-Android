@@ -33,6 +33,7 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.WpEditTextWithChipsOutlinedBinding
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
+import com.google.android.material.R as MaterialR
 
 /**
  * As of our understanding, currently the TextInputLayout (that is a LinearLayout) works in OutlinedBox mode having
@@ -103,8 +104,8 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     }
 
     enum class ItemValidationState(@AttrRes val colorAttr: Int) {
-        NEUTRAL(com.google.android.material.R.attr.colorOnSurface),
-        VALIDATED(com.google.android.material.R.attr.colorPrimary),
+        NEUTRAL(MaterialR.attr.colorOnSurface),
+        VALIDATED(MaterialR.attr.colorPrimary),
         VALIDATED_WITH_ERRORS(R.attr.wpColorError);
 
         @ColorInt
@@ -246,17 +247,17 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     private fun loadColors() {
         outlineColorDefault = ContextCompat.getColor(context,
             TypedValue().let {
-                getContext().theme.resolveAttribute(com.google.android.material.R.attr.colorOnSurface, it, true)
+                getContext().theme.resolveAttribute(MaterialR.attr.colorOnSurface, it, true)
                 it.resourceId
             })
         outlineColorFocused = ContextCompat.getColor(context,
             TypedValue().let {
-                getContext().theme.resolveAttribute(com.google.android.material.R.attr.colorPrimary, it, true)
+                getContext().theme.resolveAttribute(MaterialR.attr.colorPrimary, it, true)
                 it.resourceId
             })
         colorSurface = ContextCompat.getColor(context,
             TypedValue().let {
-                getContext().theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, it, true)
+                getContext().theme.resolveAttribute(MaterialR.attr.colorSurface, it, true)
                 it.resourceId
             })
 

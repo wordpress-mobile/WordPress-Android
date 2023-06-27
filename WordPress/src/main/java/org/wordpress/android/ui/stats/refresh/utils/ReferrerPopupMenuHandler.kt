@@ -21,6 +21,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+import com.google.android.material.R as MaterialR
 
 @Singleton
 class ReferrerPopupMenuHandler
@@ -40,11 +41,7 @@ class ReferrerPopupMenuHandler
     ) {
         coroutineScope.launch {
             withContext(mainDispatcher) {
-                val popup = ListPopupWindow(
-                    view.context,
-                    null,
-                    com.google.android.material.R.attr.listPopupWindowStyle
-                )
+                val popup = ListPopupWindow(view.context, null, MaterialR.attr.listPopupWindowStyle)
                 val adapter = ReferrerMenuAdapter(view.context, spam)
                 popup.setAdapter(adapter)
                 popup.width = view.context.resources.getDimensionPixelSize(R.dimen.stats_insights_menu_item_width)

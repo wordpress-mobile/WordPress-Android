@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.layoutpicker
 
 import org.wordpress.android.R
+import com.google.android.material.R as MaterialR
 
 /**
  * The category list item
@@ -16,11 +17,7 @@ data class CategoryListItemUiState(
         get() = if (selected) R.attr.categoriesButtonBackgroundSelected else R.attr.categoriesButtonBackground
 
     val textColor: Int
-        get() = if (selected) {
-            com.google.android.material.R.attr.colorOnPrimary
-        } else {
-            com.google.android.material.R.attr.colorOnSurface
-        }
+        get() = if (selected) MaterialR.attr.colorOnPrimary else MaterialR.attr.colorOnSurface
 
     val checkIconVisible: Boolean
         get() = selected

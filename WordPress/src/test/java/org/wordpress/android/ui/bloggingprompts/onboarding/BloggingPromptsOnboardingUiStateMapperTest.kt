@@ -16,6 +16,7 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
+import com.google.android.material.R as MaterialR
 
 @ExperimentalCoroutinesApi
 class BloggingPromptsOnboardingUiStateMapperTest : BaseUnitTest() {
@@ -35,7 +36,7 @@ class BloggingPromptsOnboardingUiStateMapperTest : BaseUnitTest() {
                 R.string.my_site_blogging_prompt_card_number_of_answers_other,
                 3
             ),
-            com.google.android.material.R.attr.colorOnSurface
+            MaterialR.attr.colorOnSurface
         )
     )
 

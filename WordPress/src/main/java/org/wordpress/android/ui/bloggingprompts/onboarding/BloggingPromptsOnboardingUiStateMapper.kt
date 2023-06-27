@@ -12,6 +12,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 class BloggingPromptsOnboardingUiStateMapper @Inject constructor(
     private val bloggingPromptsSocialFeatureConfig: BloggingPromptsSocialFeatureConfig
@@ -49,7 +50,7 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor(
                 val labelColor = if (bloggingPromptsSocialFeatureConfig.isEnabled()) {
                     R.color.primary_emphasis_medium_selector
                 } else {
-                    com.google.android.material.R.attr.colorOnSurface
+                    MaterialR.attr.colorOnSurface
                 }
 
                 list.add(TrailingLabelTextItem(trailingLabel, labelColor))

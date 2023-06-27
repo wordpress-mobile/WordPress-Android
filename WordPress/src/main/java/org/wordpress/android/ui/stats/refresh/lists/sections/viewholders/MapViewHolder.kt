@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import com.google.android.material.R as MaterialR
 
 class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     parent,
@@ -40,9 +41,7 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val context = itemView.context
             val colorLow = toHexString(R.color.stats_map_activity_low, context)
             val colorHigh = toHexString(R.color.stats_map_activity_high, context)
-            val backgroundColor = toHexString(context.getColorFromAttribute(
-                com.google.android.material.R.attr.colorSurface)
-            )
+            val backgroundColor = toHexString(context.getColorFromAttribute(MaterialR.attr.colorSurface))
             val emptyColor = toHexString(R.color.stats_map_activity_empty, context)
             val htmlPage = ("<html>" +
                     "<head>" +

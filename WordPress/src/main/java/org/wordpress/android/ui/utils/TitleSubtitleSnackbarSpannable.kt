@@ -9,6 +9,7 @@ import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import com.google.android.material.R as MaterialR
 
 object TitleSubtitleSnackbarSpannable {
     private const val SUBTITLE_ALPHA: Int = (0.6 * 0xFF).toInt()
@@ -23,7 +24,7 @@ object TitleSubtitleSnackbarSpannable {
      */
     fun create(context: Context, title: CharSequence, subtitle: CharSequence): Spannable {
         // color used for Snackbar text
-        val color = context.getColorFromAttribute(com.google.android.material.R.attr.colorSurface)
+        val color = context.getColorFromAttribute(MaterialR.attr.colorSurface)
         val subtitleColor = Color.argb(SUBTITLE_ALPHA, color.red, color.green, color.blue)
         val spannable = SpannableStringBuilder()
 

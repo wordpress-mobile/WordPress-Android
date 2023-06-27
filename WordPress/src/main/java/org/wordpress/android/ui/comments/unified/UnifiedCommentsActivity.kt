@@ -24,6 +24,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 class UnifiedCommentsActivity : LocaleAwareActivity() {
     @Inject
@@ -50,7 +51,7 @@ class UnifiedCommentsActivity : LocaleAwareActivity() {
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(UnifiedCommentActivityViewModel::class.java)
         val disabledAlpha = TypedValue()
-        resources.getValue(com.google.android.material.R.dimen.material_emphasis_disabled, disabledAlpha, true)
+        resources.getValue(MaterialR.dimen.material_emphasis_disabled, disabledAlpha, true)
         disabledTabsOpacity = disabledAlpha.float
 
         if (selectedSiteRepository.getSelectedSite() == null) {

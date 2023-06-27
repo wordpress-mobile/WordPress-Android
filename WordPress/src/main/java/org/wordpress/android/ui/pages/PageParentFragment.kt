@@ -31,6 +31,7 @@ import org.wordpress.android.viewmodel.pages.PageParentViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
+import com.google.android.material.R as MaterialR
 
 class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider, CoroutineScope {
     private var job: Job = Job()
@@ -123,9 +124,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
             }
         })
 
-        val searchEditFrame = searchAction.actionView?.findViewById<LinearLayout>(
-            com.google.android.material.R.id.search_edit_frame
-        )
+        val searchEditFrame = searchAction.actionView?.findViewById<LinearLayout>(MaterialR.id.search_edit_frame)
         (searchEditFrame?.layoutParams as LinearLayout.LayoutParams)
             .apply { this.leftMargin = DisplayUtils.dpToPx(activity, SEARCH_ACTION_LEFT_MARGIN_DP) }
 

@@ -44,13 +44,13 @@ import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.USERN
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.USERNAME_CHANGE_SCREEN_DISMISSED
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.USERNAME_CHANGE_SCREEN_DISPLAYED
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.WEB_ADDRESS_CHANGED
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.ChangePasswordSettingsUiState
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.Companion.AccountClosureAction
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.EmailSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.PrimarySiteSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.UserNameSettingsUiState
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.Companion.AccountClosureAction
 import org.wordpress.android.ui.prefs.accountsettings.components.AccountClosureUi
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
@@ -62,6 +62,7 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 private const val SNACKBAR_NO_OF_LINES_FOUR = 4
 private const val EMPTY_STRING = ""
@@ -310,7 +311,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                     ) { snackBarMessage.buttonAction }
                 }
                 val textView = emailSnackbar?.view
-                    ?.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                    ?.findViewById<TextView>(MaterialR.id.snackbar_text)
                 textView?.maxLines = SNACKBAR_NO_OF_LINES_FOUR
             }
         }

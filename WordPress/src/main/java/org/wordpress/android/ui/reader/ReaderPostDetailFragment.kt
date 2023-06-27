@@ -65,6 +65,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
@@ -121,7 +122,6 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.RtlUtils
@@ -150,6 +150,7 @@ import org.wordpress.android.widgets.WPTextView
 import java.net.HttpURLConnection
 import java.util.EnumSet
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 @AndroidEntryPoint
 @Suppress("LargeClass")
@@ -290,9 +291,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 val isDarkTheme = context.resources.configuration.isDarkTheme()
 
                 val colorAttr = if (isCollapsed || isDarkTheme) {
-                    com.google.android.material.R.attr.colorOnSurface
+                    MaterialR.attr.colorOnSurface
                 } else {
-                    com.google.android.material.R.attr.colorSurface
+                    MaterialR.attr.colorSurface
                 }
                 val color = context.getColorFromAttribute(colorAttr)
                 val colorFilter = BlendModeColorFilterCompat

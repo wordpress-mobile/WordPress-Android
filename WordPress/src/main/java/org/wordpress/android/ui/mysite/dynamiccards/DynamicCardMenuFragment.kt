@@ -15,6 +15,7 @@ import org.wordpress.android.databinding.QuickStartMenuFragmentBinding
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 class DynamicCardMenuFragment : BottomSheetDialogFragment() {
     @Inject
@@ -59,7 +60,7 @@ class DynamicCardMenuFragment : BottomSheetDialogFragment() {
             val sheetDialog = dialogInterface as? BottomSheetDialog
 
             val bottomSheet = sheetDialog?.findViewById<View>(
-                com.google.android.material.R.id.design_bottom_sheet
+                MaterialR.id.design_bottom_sheet
             ) as? FrameLayout
 
             bottomSheet?.let {

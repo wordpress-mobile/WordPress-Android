@@ -13,6 +13,7 @@ import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
+import com.google.android.material.R as MaterialR
 
 class LikedItemViewHolder(
     parent: ViewGroup,
@@ -51,9 +52,7 @@ class LikedItemViewHolder(
                     )
                 }
                 setBackgroundResource(
-                    this.context.getDrawableResIdFromAttribute(
-                        com.google.android.material.R.attr.selectableItemBackgroundBorderless
-                    )
+                    this.context.getDrawableResIdFromAttribute(MaterialR.attr.selectableItemBackgroundBorderless)
                 )
             }
         } else {

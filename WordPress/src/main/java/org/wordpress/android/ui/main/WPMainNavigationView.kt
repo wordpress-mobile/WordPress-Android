@@ -44,6 +44,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.extensions.getColorStateListFromAttribute
 import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
@@ -64,7 +65,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
     private val unselectedButtonAlpha = ResourcesCompat.getFloat(
         resources,
-        com.google.android.material.R.dimen.material_emphasis_disabled
+        MaterialR.dimen.material_emphasis_disabled
     )
 
     @Inject

@@ -99,6 +99,7 @@ import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import java.io.File
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 @Suppress("LargeClass")
 class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
@@ -549,7 +550,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         options.setShowCropGrid(false)
         options.setStatusBarColor(context.getColorFromAttribute(android.R.attr.statusBarColor))
         options.setToolbarColor(context.getColorFromAttribute(R.attr.wpColorAppBar))
-        options.setToolbarWidgetColor(context.getColorFromAttribute(com.google.android.material.R.attr.colorOnSurface))
+        options.setToolbarWidgetColor(context.getColorFromAttribute(MaterialR.attr.colorOnSurface))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
         UCrop.of(imageUri.uri, Uri.fromFile(File(context.cacheDir, "cropped_for_site_icon.jpg")))
