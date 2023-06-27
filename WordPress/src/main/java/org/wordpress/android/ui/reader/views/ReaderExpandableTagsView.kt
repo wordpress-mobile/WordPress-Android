@@ -145,7 +145,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         val chipBackgroundColorRes = if (isSingleLine) {
             R.color.on_surface_chip
         } else {
-            R.color.transparent
+            android.R.color.transparent
         }
         overflowIndicatorChip.setChipBackgroundColorResource(chipBackgroundColorRes)
     }
