@@ -8,7 +8,6 @@ import androidx.annotation.AttrRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.NestedScrollingChild3
 import androidx.core.view.NestedScrollingChildHelper
-import org.wordpress.android.R
 
 // Coordinator Layout that can be nested inside another Coordinator Layout and propagate
 // its scroll state to it
@@ -18,7 +17,7 @@ class NestedCoordinatorLayout @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     @AttrRes
     @SuppressLint("PrivateResource")
-    defStyleAttr: Int = R.attr.coordinatorLayoutStyle
+    defStyleAttr: Int = androidx.coordinatorlayout.R.attr.coordinatorLayoutStyle
 ) : CoordinatorLayout(context, attrs, defStyleAttr), NestedScrollingChild3 {
     private val helper = NestedScrollingChildHelper(this)
 
