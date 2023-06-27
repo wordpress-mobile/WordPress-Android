@@ -458,7 +458,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         )
         storyEditorMedia.snackBarMessage.observeEvent(this,
             { messageHolder ->
-                findViewById<View>(R.id.compose_loop_frame_layout)?.let {
+                findViewById<View>(com.wordpress.stories.R.id.compose_loop_frame_layout)?.let {
                     WPSnackbar
                         .make(
                             it,
