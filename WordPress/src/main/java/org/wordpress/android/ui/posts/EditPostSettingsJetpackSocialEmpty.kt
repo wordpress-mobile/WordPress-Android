@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.TrainOfIcons
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeEditor
 
 @Composable
 fun EditPostSettingsJetpackSocialEmpty(
@@ -20,7 +20,7 @@ fun EditPostSettingsJetpackSocialEmpty(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EditPostSettingsJetpackSocialEmptyPreview() {
-    AppTheme {
+    AppThemeEditor {
         EditPostSettingsJetpackSocialEmpty(
             trainOfIconsModels = listOf(
                 R.drawable.login_prologue_second_asset_three,

@@ -41,6 +41,21 @@ fun AppThemeWithoutBackground(
     )
 }
 
+/**
+ * This theme should *only* be used in the context of the Editor (e.g. Post Settings).
+ * More info: https://github.com/wordpress-mobile/gutenberg-mobile/issues/4889
+ */
+@Composable
+fun AppThemeEditor(
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        colors = WpColorPalette(isDarkTheme),
+        content = content
+    )
+}
+
 @Composable
 private fun ContentInSurface(
     content: @Composable () -> Unit

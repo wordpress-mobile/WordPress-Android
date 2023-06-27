@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.models.PublicizeConnectionList
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeEditor
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.compose.PostSocialConnectionItem
 
@@ -33,7 +33,7 @@ fun EditPostSettingsJetpackSocialConnectionsList(postSocialConnectionList: List<
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewEditPostSettingsJetpackSocialConnectionsList() {
-    AppTheme {
+    AppThemeEditor {
         val connections = PublicizeConnectionList()
         val connection1 = PublicizeConnection().apply {
             connectionId = 0

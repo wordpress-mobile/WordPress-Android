@@ -11,7 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.models.PublicizeConnectionList
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeEditor
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.compose.PostSocialMessageItem
@@ -58,7 +58,7 @@ fun EditPostSettingsJetpackSocialContainerView(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewEditPostSettingsJetpackSocialContainerConnectionsListView() {
-    AppTheme {
+    AppThemeEditor {
         val connections = PublicizeConnectionList()
         val connection1 = PublicizeConnection().apply {
             connectionId = 0
@@ -100,7 +100,7 @@ fun PreviewEditPostSettingsJetpackSocialContainerConnectionsListView() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewEditPostSettingsJetpackSocialContainerEmptyView() {
-    AppTheme {
+    AppThemeEditor {
         EditPostSettingsJetpackSocialContainerView(
             trainOfIconsModels = listOf(
                 R.drawable.login_prologue_second_asset_three,
