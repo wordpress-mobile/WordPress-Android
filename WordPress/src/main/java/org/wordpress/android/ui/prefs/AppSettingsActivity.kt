@@ -33,9 +33,11 @@ class AppSettingsActivity : LocaleAwareActivity() {
     }
 
     override fun recreate() {
-        val intent = Intent(this@AppSettingsActivity, AppSettingsActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
+        startActivity(
+            Intent(this, this::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        )
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()
     }
