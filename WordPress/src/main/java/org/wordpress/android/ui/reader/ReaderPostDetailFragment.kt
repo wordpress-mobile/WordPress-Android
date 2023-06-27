@@ -405,7 +405,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             toolBar.setNavigationOnClickListener { requireActivity().finish() }
             toolBar.setTitle(R.string.reader_title_related_post_detail)
         } else {
-            toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            toolBar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp)
             toolBar.setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         }
     }
