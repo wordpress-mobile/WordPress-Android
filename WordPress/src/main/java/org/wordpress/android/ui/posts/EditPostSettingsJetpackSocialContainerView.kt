@@ -10,12 +10,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
 import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.models.PublicizeConnectionList
+import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.compose.PostSocialMessageItem
 import org.wordpress.android.ui.posts.social.compose.PostSocialSharesText
-import org.wordpress.android.ui.qrcodeauth.compose.components.PrimaryButton
 
 @Composable
 fun EditPostSettingsJetpackSocialContainerView(
@@ -44,6 +44,7 @@ fun EditPostSettingsJetpackSocialContainerView(
             PrimaryButton(
                 text = subscribeButtonLabel,
                 onClick = onSubscribeClick,
+                shouldFillMaxWidth = false,
             )
         } else {
             EditPostSettingsJetpackSocialEmpty(

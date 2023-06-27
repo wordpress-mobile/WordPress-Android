@@ -22,6 +22,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.modifiers.doIf
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 
@@ -44,6 +45,7 @@ fun PrimaryButton(
     ),
     textStyle: TextStyle = LocalTextStyle.current,
     buttonSize: ButtonSize = ButtonSize.NORMAL,
+    shouldFillMaxWidth: Boolean = true,
 ) {
     Button(
         onClick = onClick,
@@ -54,9 +56,11 @@ fun PrimaryButton(
         ),
         colors = colors,
         modifier = modifier
-            .padding(padding)
+            .padding(paddingValues = padding)
             .defaultMinSize(minHeight = buttonSize.height)
-            .fillMaxWidth(),
+            .doIf(shouldFillMaxWidth) {
+                fillMaxWidth()
+            }
     ) {
         if (isInProgress) {
             CircularProgressIndicator(
