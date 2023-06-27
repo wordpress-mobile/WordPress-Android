@@ -51,7 +51,7 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.PLAN -> R.drawable.bg_oval_placholder_plans_32dp
             ImageType.PLUGIN -> R.drawable.plugin_placeholder
             ImageType.THEME -> R.drawable.bg_rectangle_placeholder_themes_100dp
-            ImageType.UNKNOWN -> R.drawable.legacy_dashicon_format_image_big_grey
+            ImageType.UNKNOWN -> org.wordpress.android.editor.R.drawable.legacy_dashicon_format_image_big_grey
             ImageType.USER -> R.drawable.ic_user_white_24dp
             ImageType.VIDEO -> R.color.placeholder
             ImageType.ICON -> R.drawable.bg_rectangle_placeholder_radius_2dp

@@ -26,7 +26,6 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebChromeClientWithFileChooser
 import org.wordpress.android.ui.WPWebViewActivity.WPCOM_LOGIN_URL
@@ -145,7 +144,7 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
                 chromeClient = WPWebChromeClientWithFileChooser(
                     activity,
                     this,
-                    R.drawable.media_movieclip,
+                    org.wordpress.android.editor.R.drawable.media_movieclip,
                     null,
                     this@BlazeWebViewFragment
                 )

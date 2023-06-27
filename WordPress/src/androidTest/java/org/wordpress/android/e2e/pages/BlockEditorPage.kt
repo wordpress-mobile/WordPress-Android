@@ -15,7 +15,7 @@ class BlockEditorPage {
     private val mEditor: ViewInteraction
 
     init {
-        mEditor = Espresso.onView(ViewMatchers.withId(R.id.gutenberg_container))
+        mEditor = Espresso.onView(ViewMatchers.withId(org.wordpress.android.editor.R.id.gutenberg_container))
         mEditor.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 

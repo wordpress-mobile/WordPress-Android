@@ -48,7 +48,10 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
             errorText.text = root.context.getText(uiState.messageResId)
             retry.apply {
                 text = context.getText(uiState.retryButtonResId)
-                val drawable = ContextCompat.getDrawable(context, R.drawable.retry_icon)?.apply {
+                val drawable = ContextCompat.getDrawable(
+                    context,
+                    org.wordpress.android.editor.R.drawable.retry_icon
+                )?.apply {
                     setTint(ContextCompat.getColor(context, R.color.primary))
                 }
                 setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
