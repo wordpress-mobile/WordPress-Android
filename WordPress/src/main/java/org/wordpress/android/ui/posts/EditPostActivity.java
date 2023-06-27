@@ -1945,7 +1945,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         int displayWidth = Math.max(DisplayUtils.getWindowPixelWidth(getBaseContext()),
                 DisplayUtils.getWindowPixelHeight(getBaseContext()));
 
-        int margin = getResources().getDimensionPixelSize(R.dimen.preview_image_view_margin);
+        int margin = getResources().getDimensionPixelSize(
+                org.wordpress.android.imageeditor.R.dimen.preview_image_view_margin
+        );
         int maxWidth = displayWidth - (margin * 2);
 
         int reducedSizeWidth = (int) (maxWidth * PREVIEW_IMAGE_REDUCED_SIZE_FACTOR);
