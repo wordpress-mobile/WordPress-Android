@@ -94,6 +94,7 @@ import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.Objects
 import javax.inject.Inject
+import com.wordpress.stories.R as StoriesR
 
 class StoryComposerActivity : ComposeLoopFrameActivity(),
     SnackbarProvider,
@@ -458,7 +459,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         )
         storyEditorMedia.snackBarMessage.observeEvent(this,
             { messageHolder ->
-                findViewById<View>(com.wordpress.stories.R.id.compose_loop_frame_layout)?.let {
+                findViewById<View>(StoriesR.id.compose_loop_frame_layout)?.let {
                     WPSnackbar
                         .make(
                             it,
