@@ -116,9 +116,9 @@ class HomepageSettingsDialog : DialogFragment() {
         val button = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
         button.isEnabled = enabled
         val textColor = if (enabled) {
-            requireContext().getColorResIdFromAttribute(R.attr.colorPrimary)
+            requireContext().getColorResIdFromAttribute(com.google.android.material.R.attr.colorPrimary)
         } else {
-            R.color.material_on_surface_disabled
+            com.google.android.material.R.color.material_on_surface_disabled
         }
         button.setTextColor(ContextCompat.getColor(requireContext(), textColor))
     }

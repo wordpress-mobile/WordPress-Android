@@ -40,7 +40,9 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val context = itemView.context
             val colorLow = toHexString(R.color.stats_map_activity_low, context)
             val colorHigh = toHexString(R.color.stats_map_activity_high, context)
-            val backgroundColor = toHexString(context.getColorFromAttribute(R.attr.colorSurface))
+            val backgroundColor = toHexString(context.getColorFromAttribute(
+                com.google.android.material.R.attr.colorSurface)
+            )
             val emptyColor = toHexString(R.color.stats_map_activity_empty, context)
             val htmlPage = ("<html>" +
                     "<head>" +

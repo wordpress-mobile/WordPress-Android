@@ -34,7 +34,9 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
         iconContainer.setIconOrAvatar(header, imageManager)
         text.setTextOrHide(header.textResource, header.text)
         val textColor = when (expandableItem.header.textStyle) {
-            TextStyle.NORMAL -> text.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
+            TextStyle.NORMAL -> text.context.getColorResIdFromAttribute(
+                com.google.android.material.R.attr.colorOnSurface
+            )
             LIGHT -> text.context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
         }
         text.contentDescription = header.contentDescription

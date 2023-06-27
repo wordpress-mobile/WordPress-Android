@@ -148,7 +148,7 @@ class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
 
             val selectedColor = ColorUtils
                 .setAlphaComponent(
-                    context.getColorFromAttribute(R.attr.colorOnSurface),
+                    context.getColorFromAttribute(com.google.android.material.R.attr.colorOnSurface),
                     context.resources.getInteger(R.integer.custom_popup_selected_list_item_opacity_dec)
                 )
 

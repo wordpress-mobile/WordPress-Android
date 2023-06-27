@@ -51,7 +51,9 @@ class LikedItemViewHolder(
                     )
                 }
                 setBackgroundResource(
-                    this.context.getDrawableResIdFromAttribute(R.attr.selectableItemBackgroundBorderless)
+                    this.context.getDrawableResIdFromAttribute(
+                        com.google.android.material.R.attr.selectableItemBackgroundBorderless
+                    )
                 )
             }
         } else {

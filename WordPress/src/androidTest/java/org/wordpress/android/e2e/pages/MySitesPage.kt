@@ -51,7 +51,7 @@ class MySitesPage {
 
     fun startNewPost() {
         WPSupportUtils.clickOn(R.id.fab_button)
-        if (WPSupportUtils.isElementDisplayed(R.id.design_bottom_sheet)) {
+        if (WPSupportUtils.isElementDisplayed(com.google.android.material.R.id.design_bottom_sheet)) {
             // If Stories are enabled, FAB opens a bottom sheet with options - select the 'Blog post' option
             WPSupportUtils.clickOn(Espresso.onView(ViewMatchers.withText(R.string.my_site_bottom_sheet_add_post)))
         }

@@ -37,12 +37,12 @@ class DiffView : MaterialTextView {
             if (diff.operation == ADD) {
                 diffContent.setSpan(
                     ColorUnderlineSpan(
-                        context.getColorFromAttribute(R.attr.colorPrimary)
+                        context.getColorFromAttribute(com.google.android.material.R.attr.colorPrimary)
                     ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
                 diffContent.setSpan(
                     BackgroundColorSpan(
-                        context.getColorFromAttribute(R.attr.colorSurface)
+                        context.getColorFromAttribute(com.google.android.material.R.attr.colorSurface)
                     ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             } else if (diff.operation == DELETE) {
@@ -59,7 +59,7 @@ class DiffView : MaterialTextView {
                 )
                 diffContent.setSpan(
                     BackgroundColorSpan(
-                        context.getColorFromAttribute(R.attr.colorSurface)
+                        context.getColorFromAttribute(com.google.android.material.R.attr.colorSurface)
                     ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             }

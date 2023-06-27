@@ -27,7 +27,7 @@ fun PluginDescription(
         modifier = modifier,
         text = buildPluginDescriptionText(pluginNames, siteString, useConciseText),
         style = dashboardCardDetail,
-        color = colorResource(R.color.material_on_surface_emphasis_medium)
+        color = colorResource(com.google.android.material.R.color.material_on_surface_emphasis_medium)
     )
 }
 

@@ -41,13 +41,13 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
     ) {
         HIGHLIGHTED(
             0,
-            R.attr.colorOnPrimary,
-            R.attr.colorPrimary
+            com.google.android.material.R.attr.colorOnPrimary,
+            com.google.android.material.R.attr.colorPrimary
         ),
         NORMAL(
             1,
-            R.attr.colorOnSurface,
-            R.attr.colorSurface
+            com.google.android.material.R.attr.colorOnSurface,
+            com.google.android.material.R.attr.colorSurface
         );
 
         companion object {

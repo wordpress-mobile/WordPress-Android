@@ -40,7 +40,11 @@ class ReferrerPopupMenuHandler
     ) {
         coroutineScope.launch {
             withContext(mainDispatcher) {
-                val popup = ListPopupWindow(view.context, null, R.attr.listPopupWindowStyle)
+                val popup = ListPopupWindow(
+                    view.context,
+                    null,
+                    com.google.android.material.R.attr.listPopupWindowStyle
+                )
                 val adapter = ReferrerMenuAdapter(view.context, spam)
                 popup.setAdapter(adapter)
                 popup.width = view.context.resources.getDimensionPixelSize(R.dimen.stats_insights_menu_item_width)

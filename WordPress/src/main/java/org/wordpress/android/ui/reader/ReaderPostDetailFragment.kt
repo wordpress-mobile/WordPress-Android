@@ -290,9 +290,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 val isDarkTheme = context.resources.configuration.isDarkTheme()
 
                 val colorAttr = if (isCollapsed || isDarkTheme) {
-                    R.attr.colorOnSurface
+                    com.google.android.material.R.attr.colorOnSurface
                 } else {
-                    R.attr.colorSurface
+                    com.google.android.material.R.attr.colorSurface
                 }
                 val color = context.getColorFromAttribute(colorAttr)
                 val colorFilter = BlendModeColorFilterCompat

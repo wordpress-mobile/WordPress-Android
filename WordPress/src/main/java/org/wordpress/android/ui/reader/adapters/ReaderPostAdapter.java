@@ -385,9 +385,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ReaderPost post = getItem(position);
         final Context context = holder.mRemovedPostContainer.getContext();
         holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
-        Drawable drawable =
-                ColorUtils.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp,
-                        ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorPrimary));
+        Drawable drawable = ColorUtils.applyTintToDrawable(
+                context,
+                R.drawable.ic_undo_white_24dp,
+                ContextExtensionsKt.getColorResIdFromAttribute(
+                        context,
+                        com.google.android.material.R.attr.colorPrimary
+                )
+        );
         holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         holder.mPostContainer.setOnClickListener(v -> undoPostUnbookmarked(post));
     }

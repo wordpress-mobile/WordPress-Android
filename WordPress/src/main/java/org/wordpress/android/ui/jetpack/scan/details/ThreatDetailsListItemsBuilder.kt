@@ -226,7 +226,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
 
         val lineNumberBackgroundColorRes = if (isHighlighted) {
             R.color.context_line_highlighted_row_background
-        } else R.color.material_on_surface_disabled
+        } else com.google.android.material.R.color.material_on_surface_disabled
 
         val contentBackgroundColorRes = if (isHighlighted) {
             R.color.context_line_highlighted_row_background

@@ -29,7 +29,9 @@ class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManag
         iconContainer.setIconOrAvatar(item, imageManager)
         text.setTextOrHide(item.textResource, item.text)
         val textColor = when (item.textStyle) {
-            TextStyle.NORMAL -> text.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
+            TextStyle.NORMAL -> text.context.getColorResIdFromAttribute(
+                com.google.android.material.R.attr.colorOnSurface
+            )
             LIGHT -> text.context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
         }
         text.setTextColor(AppCompatResources.getColorStateList(text.context, textColor))

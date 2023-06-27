@@ -272,7 +272,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
 
         val threatItem = buildThreatItem(threatModel)
 
-        assertThat(threatItem.subHeaderColor).isEqualTo(R.attr.colorOnSurface)
+        assertThat(threatItem.subHeaderColor).isEqualTo(com.google.android.material.R.attr.colorOnSurface)
     }
 
     @Test
@@ -281,7 +281,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
 
         val threatItem = buildThreatItem(threatModel)
 
-        assertThat(threatItem.subHeaderColor).isEqualTo(R.attr.colorOnSurface)
+        assertThat(threatItem.subHeaderColor).isEqualTo(com.google.android.material.R.attr.colorOnSurface)
     }
 
     private fun buildThreatItem(

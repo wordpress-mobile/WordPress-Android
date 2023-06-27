@@ -87,7 +87,7 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             }
 
             override fun updateDrawState(ds: TextPaint) {
-                ds.color = context.getColorFromAttribute(R.attr.colorPrimary)
+                ds.color = context.getColorFromAttribute(com.google.android.material.R.attr.colorPrimary)
                 ds.typeface = Typeface.create(
                     Typeface.DEFAULT_BOLD,
                     Typeface.NORMAL

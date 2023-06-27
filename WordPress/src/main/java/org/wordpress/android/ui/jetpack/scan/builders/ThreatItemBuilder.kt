@@ -100,7 +100,7 @@ class ThreatItemBuilder @Inject constructor(
         if (threatModel.baseThreatModel.status == FIXED) {
             R.attr.wpColorSuccess
         } else {
-            R.attr.colorOnSurface
+            com.google.android.material.R.attr.colorOnSurface
         }
 
     fun buildThreatItemDescription(threatModel: ThreatModel): UiString? {

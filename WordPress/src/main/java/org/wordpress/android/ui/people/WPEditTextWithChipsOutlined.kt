@@ -103,8 +103,8 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     }
 
     enum class ItemValidationState(@AttrRes val colorAttr: Int) {
-        NEUTRAL(R.attr.colorOnSurface),
-        VALIDATED(R.attr.colorPrimary),
+        NEUTRAL(com.google.android.material.R.attr.colorOnSurface),
+        VALIDATED(com.google.android.material.R.attr.colorPrimary),
         VALIDATED_WITH_ERRORS(R.attr.wpColorError);
 
         @ColorInt
@@ -246,17 +246,17 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     private fun loadColors() {
         outlineColorDefault = ContextCompat.getColor(context,
             TypedValue().let {
-                getContext().theme.resolveAttribute(R.attr.colorOnSurface, it, true)
+                getContext().theme.resolveAttribute(com.google.android.material.R.attr.colorOnSurface, it, true)
                 it.resourceId
             })
         outlineColorFocused = ContextCompat.getColor(context,
             TypedValue().let {
-                getContext().theme.resolveAttribute(R.attr.colorPrimary, it, true)
+                getContext().theme.resolveAttribute(com.google.android.material.R.attr.colorPrimary, it, true)
                 it.resourceId
             })
         colorSurface = ContextCompat.getColor(context,
             TypedValue().let {
-                getContext().theme.resolveAttribute(R.attr.colorSurface, it, true)
+                getContext().theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, it, true)
                 it.resourceId
             })
 

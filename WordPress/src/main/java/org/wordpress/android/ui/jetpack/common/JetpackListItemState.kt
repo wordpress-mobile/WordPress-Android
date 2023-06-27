@@ -20,8 +20,10 @@ open class JetpackListItemState(open val type: ViewType) {
         val contentDescription: UiString
     ) : JetpackListItemState(ViewType.ICON)
 
-    data class HeaderState(val text: UiString, @AttrRes val textColorRes: Int = R.attr.colorOnSurface) :
-        JetpackListItemState(ViewType.HEADER)
+    data class HeaderState(
+        val text: UiString,
+        @AttrRes val textColorRes: Int = com.google.android.material.R.attr.colorOnSurface
+    ) : JetpackListItemState(ViewType.HEADER)
 
     data class DescriptionState(
         val text: UiString?,

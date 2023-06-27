@@ -50,7 +50,7 @@ class UnifiedCommentsActivity : LocaleAwareActivity() {
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(UnifiedCommentActivityViewModel::class.java)
         val disabledAlpha = TypedValue()
-        resources.getValue(R.dimen.material_emphasis_disabled, disabledAlpha, true)
+        resources.getValue(com.google.android.material.R.dimen.material_emphasis_disabled, disabledAlpha, true)
         disabledTabsOpacity = disabledAlpha.float
 
         if (selectedSiteRepository.getSelectedSite() == null) {

@@ -77,7 +77,7 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     private fun ActivityLogTypeFilterFragmentBinding.initToolbar() {
         toolbarMain.navigationIcon = ColorUtils.applyTintToDrawable(
             toolbarMain.context, R.drawable.ic_close_white_24dp,
-            toolbarMain.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
+            toolbarMain.context.getColorResIdFromAttribute(com.google.android.material.R.attr.colorOnSurface)
         )
         toolbarMain.setNavigationContentDescription(R.string.close_dialog_button_desc)
         toolbarMain.setNavigationOnClickListener { dismiss() }

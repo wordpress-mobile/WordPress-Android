@@ -49,7 +49,7 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor(
                 val labelColor = if (bloggingPromptsSocialFeatureConfig.isEnabled()) {
                     R.color.primary_emphasis_medium_selector
                 } else {
-                    R.attr.colorOnSurface
+                    com.google.android.material.R.attr.colorOnSurface
                 }
 
                 list.add(TrailingLabelTextItem(trailingLabel, labelColor))

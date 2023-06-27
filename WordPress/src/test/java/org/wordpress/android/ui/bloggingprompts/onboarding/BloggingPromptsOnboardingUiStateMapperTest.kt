@@ -35,7 +35,7 @@ class BloggingPromptsOnboardingUiStateMapperTest : BaseUnitTest() {
                 R.string.my_site_blogging_prompt_card_number_of_answers_other,
                 3
             ),
-            R.attr.colorOnSurface
+            com.google.android.material.R.attr.colorOnSurface
         )
     )
 

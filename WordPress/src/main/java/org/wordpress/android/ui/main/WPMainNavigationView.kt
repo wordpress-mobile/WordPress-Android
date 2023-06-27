@@ -64,7 +64,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
     private val unselectedButtonAlpha = ResourcesCompat.getFloat(
         resources,
-        R.dimen.material_emphasis_disabled
+        com.google.android.material.R.dimen.material_emphasis_disabled
     )
 
     @Inject

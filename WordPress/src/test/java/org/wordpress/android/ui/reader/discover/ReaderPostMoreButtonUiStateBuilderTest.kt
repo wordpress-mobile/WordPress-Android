@@ -190,7 +190,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.FOLLOW &&
-                    (it as SecondaryAction).labelColor == R.attr.colorSecondary
+                    (it as SecondaryAction).labelColor == com.google.android.material.R.attr.colorSecondary
         }).isNotNull
     }
 
@@ -216,7 +216,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS &&
-                    (it as SecondaryAction).labelColor == R.attr.colorOnSurface
+                    (it as SecondaryAction).labelColor == com.google.android.material.R.attr.colorOnSurface
         }).isNotNull
     }
 

@@ -12,7 +12,6 @@ import android.text.style.URLSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteTodaysStatsCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TextWithLinks.Clickable
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
@@ -27,7 +26,7 @@ class TodaysStatsCardViewHolder(
 ) : CardViewHolder<MySiteTodaysStatsCardBinding>(
     parent.viewBinding(MySiteTodaysStatsCardBinding::inflate)
 ) {
-    private val linkColor = itemView.context.getColorFromAttribute(R.attr.colorPrimary)
+    private val linkColor = itemView.context.getColorFromAttribute(com.google.android.material.R.attr.colorPrimary)
 
     init {
         with(binding.getMoreViewsMessage) {

@@ -302,7 +302,9 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         })
 
         // fix the search view margins to match the action bar
-        val searchEditFrame = actionMenuItem.actionView?.findViewById<LinearLayout>(R.id.search_edit_frame)
+        val searchEditFrame = actionMenuItem.actionView?.findViewById<LinearLayout>(
+            com.google.android.material.R.id.search_edit_frame
+        )
         (searchEditFrame?.layoutParams as LinearLayout.LayoutParams)
             .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
 

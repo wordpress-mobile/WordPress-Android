@@ -57,7 +57,7 @@ class CommentListUiUtils @Inject constructor() {
         if (isSelected) {
             containerView.setBackgroundColor(
                 ColorUtils.setAlphaComponent(
-                    containerView.context.getColorFromAttribute(R.attr.colorOnSurface),
+                    containerView.context.getColorFromAttribute(com.google.android.material.R.attr.colorOnSurface),
                     containerView.context.resources.getInteger(R.integer.selected_list_item_opacity)
                 )
             )

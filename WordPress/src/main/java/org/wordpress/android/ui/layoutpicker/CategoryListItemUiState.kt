@@ -16,7 +16,11 @@ data class CategoryListItemUiState(
         get() = if (selected) R.attr.categoriesButtonBackgroundSelected else R.attr.categoriesButtonBackground
 
     val textColor: Int
-        get() = if (selected) R.attr.colorOnPrimary else R.attr.colorOnSurface
+        get() = if (selected) {
+            com.google.android.material.R.attr.colorOnPrimary
+        } else {
+            com.google.android.material.R.attr.colorOnSurface
+        }
 
     val checkIconVisible: Boolean
         get() = selected

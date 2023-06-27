@@ -20,7 +20,7 @@ class LinkViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val drawable = ColorUtils.applyTintToDrawable(
                 text.context,
                 item.icon,
-                text.context.getColorResIdFromAttribute(R.attr.colorPrimary)
+                text.context.getColorResIdFromAttribute(com.google.android.material.R.attr.colorPrimary)
             )
             text.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         } else {

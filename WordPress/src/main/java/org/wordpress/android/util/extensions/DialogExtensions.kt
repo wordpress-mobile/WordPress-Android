@@ -23,7 +23,7 @@ fun Dialog.getPreferenceDialogContainerView(): View? {
 @Suppress("DEPRECATION")
 fun Dialog.setStatusBarAsSurfaceColor() {
     window?.apply {
-        statusBarColor = context.getColorFromAttribute(R.attr.colorSurface)
+        statusBarColor = context.getColorFromAttribute(com.google.android.material.R.attr.colorSurface)
         if (!context.resources.configuration.isDarkTheme()) {
             decorView.systemUiVisibility = decorView
                 .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR

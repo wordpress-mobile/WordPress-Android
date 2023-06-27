@@ -122,7 +122,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
             ),
             buildFootnoteState(
                 textRes = R.string.backup_download_complete_info,
-                textAlphaResId = R.dimen.material_emphasis_medium
+                textAlphaResId = com.google.android.material.R.dimen.material_emphasis_medium
             )
         )
     }

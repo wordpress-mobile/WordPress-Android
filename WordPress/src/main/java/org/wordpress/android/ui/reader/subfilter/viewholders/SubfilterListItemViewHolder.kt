@@ -20,9 +20,9 @@ open class SubfilterListItemViewHolder(
             it.setTextColor(
                 parent.context.getColorFromAttribute(
                     if (filter.isSelected) {
-                        R.attr.colorPrimary
+                        com.google.android.material.R.attr.colorPrimary
                     } else {
-                        R.attr.colorOnSurface
+                        com.google.android.material.R.attr.colorOnSurface
                     }
                 )
             )

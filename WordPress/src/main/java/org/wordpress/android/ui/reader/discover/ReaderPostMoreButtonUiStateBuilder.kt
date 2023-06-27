@@ -66,7 +66,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         SecondaryAction(
             type = VISIT_SITE,
             label = UiStringRes(R.string.reader_label_visit),
-            labelColor = R.attr.colorOnSurface,
+            labelColor = com.google.android.material.R.attr.colorOnSurface,
             iconRes = R.drawable.ic_globe_white_24dp,
             iconColor = R.attr.wpColorOnSurfaceMedium,
             onClicked = onButtonClicked
@@ -107,7 +107,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
             SecondaryAction(
                 type = SITE_NOTIFICATIONS,
                 label = UiStringRes(R.string.reader_btn_notifications_on),
-                labelColor = R.attr.colorOnSurface,
+                labelColor = com.google.android.material.R.attr.colorOnSurface,
                 iconRes = R.drawable.ic_bell_white_24dp,
                 iconColor = R.attr.wpColorOnSurfaceMedium,
                 isSelected = false,
@@ -135,7 +135,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
             SecondaryAction(
                 type = TOGGLE_SEEN_STATUS,
                 label = UiStringRes(R.string.reader_menu_mark_as_unseen),
-                labelColor = R.attr.colorOnSurface,
+                labelColor = com.google.android.material.R.attr.colorOnSurface,
                 iconRes = R.drawable.ic_not_visible_white_24dp,
                 iconColor = R.attr.wpColorOnSurfaceMedium,
                 isSelected = false,
@@ -145,7 +145,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
             SecondaryAction(
                 type = TOGGLE_SEEN_STATUS,
                 label = UiStringRes(R.string.reader_menu_mark_as_seen),
-                labelColor = R.attr.colorOnSurface,
+                labelColor = com.google.android.material.R.attr.colorOnSurface,
                 iconRes = R.drawable.ic_visible_white_24dp,
                 iconColor = R.attr.wpColorOnSurfaceMedium,
                 isSelected = false,
@@ -157,7 +157,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         SecondaryAction(
             type = SHARE,
             label = UiStringRes(R.string.reader_btn_share),
-            labelColor = R.attr.colorOnSurface,
+            labelColor = com.google.android.material.R.attr.colorOnSurface,
             iconRes = R.drawable.ic_share_white_24dp,
             iconColor = R.attr.wpColorOnSurfaceMedium,
             onClicked = onButtonClicked
@@ -177,7 +177,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
             SecondaryAction(
                 type = FOLLOW,
                 label = UiStringRes(R.string.reader_btn_follow),
-                labelColor = R.attr.colorSecondary,
+                labelColor = com.google.android.material.R.attr.colorSecondary,
                 iconRes = R.drawable.ic_reader_follow_white_24dp,
                 isSelected = false,
                 onClicked = onButtonClicked

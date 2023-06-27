@@ -83,7 +83,7 @@ object QuickStartUtils {
         )
         // nothing to highlight
         if (startOfHighlight != -1 && endOfHighlight != -1) {
-            val highlightColor = activityContext.getColorFromAttribute(R.attr.colorSurface)
+            val highlightColor = activityContext.getColorFromAttribute(com.google.android.material.R.attr.colorSurface)
             mutableSpannedMessage.setSpan(
                 ForegroundColorSpan(highlightColor),
                 startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
