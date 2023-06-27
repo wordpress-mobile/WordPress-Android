@@ -578,7 +578,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mShowAztecEditor) {
             View overlay = findViewById(R.id.view_overlay);
             ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) overlay.getLayoutParams();
-            layoutParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.aztec_format_bar_height);
+            layoutParams.bottomMargin = getResources().getDimensionPixelOffset(
+                    org.wordpress.aztec.R.dimen.aztec_format_bar_height
+            );
             overlay.setLayoutParams(layoutParams);
         }
 
