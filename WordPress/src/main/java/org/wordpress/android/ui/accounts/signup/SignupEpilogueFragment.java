@@ -597,7 +597,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         mDialog = new FullScreenDialogFragment.Builder(getContext())
                 .setTitle(R.string.username_changer_title)
                 .setAction(R.string.username_changer_action)
-                .setToolbarTheme(R.style.ThemeOverlay_LoginFlow_Toolbar)
+                .setToolbarTheme(org.wordpress.android.login.R.style.ThemeOverlay_LoginFlow_Toolbar)
                 .setOnConfirmListener(this)
                 .setOnDismissListener(this)
                 .setOnShownListener(this)

@@ -25,14 +25,16 @@ class SignupFlow {
     fun enterEmail(email: String?): SignupFlow {
         // Email file = id/input
         WPSupportUtils.populateTextField(Espresso.onView(ViewMatchers.withId(R.id.input)), email)
-        WPSupportUtils.clickOn(Espresso.onView(ViewMatchers.withId(R.id.login_continue_button)))
+        WPSupportUtils.clickOn(
+            Espresso.onView(ViewMatchers.withId(org.wordpress.android.login.R.id.login_continue_button))
+        )
         return this
     }
 
     fun openMagicLink(): SignupFlow {
         // Should see "Check email" button
         // See SignupMagicLinkFragment
-        WPSupportUtils.waitForElementToBeDisplayed(R.id.signup_magic_link_button)
+        WPSupportUtils.waitForElementToBeDisplayed(org.wordpress.android.login.R.id.signup_magic_link_button)
 
         // Follow the magic link to continue login
         // Intent is invoked directly rather than through a browser as WireMock is unavailable once in the background

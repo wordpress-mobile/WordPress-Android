@@ -45,7 +45,11 @@ class TaskViewHolder(
         with(icon) {
             val context = itemView.context
             setImageResource(iconResId)
-            val tintResId = if (isEnabled) iconBackgroundColorResId else R.color.material_on_surface_emphasis_low
+            val tintResId = if (isEnabled) {
+                iconBackgroundColorResId
+            } else {
+                org.wordpress.android.login.R.color.material_on_surface_emphasis_low
+            }
             background.setTint(ContextCompat.getColor(context, tintResId))
         }
     }
@@ -77,8 +81,11 @@ class TaskViewHolder(
                 setCardBackgroundColor(ContextCompat.getColor(context, R.color.quick_start_task_card_background))
                 strokeWidth = 0
             } else {
-                setCardBackgroundColor(ContextCompat.getColor(context, R.color.transparent))
-                strokeColor = ContextCompat.getColor(context, R.color.material_on_surface_emphasis_low)
+                setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
+                strokeColor = ContextCompat.getColor(
+                    context,
+                    org.wordpress.android.login.R.color.material_on_surface_emphasis_low
+                )
                 strokeWidth = context.resources.getDimensionPixelSize(R.dimen.unelevated_card_stroke_width)
             }
         }
