@@ -36,6 +36,11 @@ class BlazeFeatureUtils @Inject constructor(
                 postModel.password.isEmpty()
     }
 
+    fun isSiteBlazeEligible(siteModel: SiteModel): Boolean {
+        return siteModel.canBlaze &&
+                isBlazeEligibleForUser(siteModel)
+    }
+
     fun shouldShowBlazeCardEntryPoint(blazeStatusModel: BlazeStatusModel?, siteId: Long) =
         isBlazeEnabled() &&
                 blazeStatusModel?.isEligible == true &&
