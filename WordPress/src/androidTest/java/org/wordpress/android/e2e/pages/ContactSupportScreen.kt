@@ -5,7 +5,6 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.Matchers
-import org.wordpress.android.R
 import org.wordpress.android.support.WPSupportUtils
 
 class ContactSupportScreen {
@@ -61,8 +60,8 @@ class ContactSupportScreen {
             Matchers.allOf(
                 ViewMatchers.isCompletelyDisplayed(),
                 Matchers.anyOf(
-                    ViewMatchers.withId(R.id.message_composer_input_text),
-                    ViewMatchers.withId(R.id.request_message_field)
+                    ViewMatchers.withId(com.zendesk.sdk.R.id.message_composer_input_text),
+                    ViewMatchers.withId(com.zendesk.sdk.R.id.request_message_field)
                 )
             )
         )
@@ -70,8 +69,8 @@ class ContactSupportScreen {
             Matchers.allOf(
                 ViewMatchers.isCompletelyDisplayed(),
                 Matchers.anyOf(
-                    ViewMatchers.withId(R.id.message_composer_send_btn),
-                    ViewMatchers.withId(R.id.request_conversations_disabled_menu_ic_send)
+                    ViewMatchers.withId(com.zendesk.sdk.R.id.message_composer_send_btn),
+                    ViewMatchers.withId(com.zendesk.sdk.R.id.request_conversations_disabled_menu_ic_send)
                 )
             )
         )
