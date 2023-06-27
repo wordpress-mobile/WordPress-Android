@@ -3,25 +3,24 @@ package org.wordpress.android.ui.prefs
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.widget.Toolbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.AppSettingsActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 
 @AndroidEntryPoint
 class AppSettingsActivity : LocaleAwareActivity() {
+    private lateinit var binding: AppSettingsActivityBinding
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as WordPress).component().inject(this)
-        setContentView(R.layout.app_settings_activity)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar_main)
-        setSupportActionBar(toolbar)
-        val actionBar = supportActionBar
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true)
-            actionBar.setDisplayHomeAsUpEnabled(true)
-            actionBar.setTitle(R.string.me_btn_app_settings)
+        binding = AppSettingsActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbarMain)
+        supportActionBar?.run {
+            setHomeButtonEnabled(true)
+            setDisplayHomeAsUpEnabled(true)
+            setTitle(R.string.me_btn_app_settings)
         }
     }
 
