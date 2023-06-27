@@ -6,6 +6,7 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.R
 import org.wordpress.android.databinding.FragmentJetpackSecuritySettingsBinding
+import android.R as AndroidR
 
 class JetpackSecuritySettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +34,7 @@ class JetpackSecuritySettingsActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val itemID = item.itemId
-        if (itemID == android.R.id.home) {
+        if (itemID == AndroidR.id.home) {
             setResult(RESULT_OK, null)
             finish()
             return true

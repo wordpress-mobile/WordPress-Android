@@ -8,10 +8,11 @@ import android.widget.FrameLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.wordpress.android.R
+import android.R as AndroidR
 import com.google.android.material.R as MaterialR
 
 fun Dialog.getPreferenceDialogContainerView(): View? {
-    var view: View? = findViewById(android.R.id.list_container)
+    var view: View? = findViewById(AndroidR.id.list_container)
 
     // just in case, try to find a container of our own custom dialog
     if (view == null) {

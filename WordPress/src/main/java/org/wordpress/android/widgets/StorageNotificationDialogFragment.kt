@@ -10,6 +10,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import android.R as AndroidR
 
 class StorageNotificationDialogFragment : DialogFragment() {
     data class DialogLabels(
@@ -57,7 +58,7 @@ class StorageNotificationDialogFragment : DialogFragment() {
                 )
             }
             if (isInternalStorageSettingsResolved) {
-                setNegativeButton(android.R.string.cancel) { _, _ ->
+                setNegativeButton(AndroidR.string.cancel) { _, _ ->
                     dismiss()
                     AnalyticsUtils.trackStorageWarningDialogEvent(
                         Stat.STORAGE_WARNING_CANCELED,

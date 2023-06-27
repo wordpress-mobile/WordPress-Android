@@ -62,6 +62,7 @@ import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class SiteCreationActivity : LocaleAwareActivity(),
@@ -275,7 +276,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == AndroidR.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
         }

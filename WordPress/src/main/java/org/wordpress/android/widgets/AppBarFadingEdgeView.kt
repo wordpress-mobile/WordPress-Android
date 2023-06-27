@@ -14,6 +14,7 @@ import com.google.android.material.elevation.ElevationOverlayProvider
 import org.wordpress.android.R
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import android.R as AndroidR
 import com.google.android.material.R as MaterialR
 
 class AppBarFadingEdgeView @JvmOverloads constructor(
@@ -44,7 +45,7 @@ class AppBarFadingEdgeView @JvmOverloads constructor(
             } else {
                 RIGHT_LEFT
             },
-            intArrayOf(ContextCompat.getColor(context, android.R.color.transparent), appBarColor)
+            intArrayOf(ContextCompat.getColor(context, AndroidR.color.transparent), appBarColor)
         )
 
         val fadingEdgeDrawableFlush = GradientDrawable(
@@ -54,7 +55,7 @@ class AppBarFadingEdgeView @JvmOverloads constructor(
                 RIGHT_LEFT
             },
             intArrayOf(
-                ContextCompat.getColor(context, android.R.color.transparent),
+                ContextCompat.getColor(context, AndroidR.color.transparent),
                 context.getColorFromAttribute(R.attr.wpColorAppBar)
             )
         )
@@ -64,7 +65,7 @@ class AppBarFadingEdgeView @JvmOverloads constructor(
             intArrayOf(
                 -MaterialR.attr.state_lifted,
                 MaterialR.attr.state_liftable,
-                android.R.attr.state_enabled
+                AndroidR.attr.state_enabled
             ), fadingEdgeDrawableFlush
         )
         fadingAgeStateListDrawable.addState(StateSet.WILD_CARD, fadingEdgeDrawableElevated)

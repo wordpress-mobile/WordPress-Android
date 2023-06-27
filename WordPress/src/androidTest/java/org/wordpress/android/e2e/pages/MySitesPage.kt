@@ -26,6 +26,7 @@ import org.wordpress.android.R
 import org.wordpress.android.support.BetterScrollToAction.Companion.scrollTo
 import org.wordpress.android.support.WPSupportUtils
 import org.wordpress.android.ui.prefs.WPPreference
+import android.R as AndroidR
 import com.google.android.material.R as MaterialR
 
 class MySitesPage {
@@ -47,7 +48,7 @@ class MySitesPage {
     fun removeSite(siteName: String) {
         switchSite()
         longClickSite(siteName)
-        WPSupportUtils.clickOn(android.R.id.button1)
+        WPSupportUtils.clickOn(AndroidR.id.button1)
     }
 
     fun startNewPost() {

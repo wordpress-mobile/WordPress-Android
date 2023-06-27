@@ -31,6 +31,7 @@ import org.wordpress.android.viewmodel.pages.PageParentViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
+import android.R as AndroidR
 import com.google.android.material.R as MaterialR
 
 class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider, CoroutineScope {
@@ -62,7 +63,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
-        android.R.id.home -> {
+        AndroidR.id.home -> {
             activity?.onBackPressedDispatcher?.onBackPressed()
             true
         }

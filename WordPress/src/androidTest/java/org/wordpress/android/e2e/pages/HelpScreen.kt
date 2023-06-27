@@ -7,6 +7,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.Matchers
 import org.wordpress.android.R
 import org.wordpress.android.support.WPSupportUtils
+import android.R as AndroidR
 
 class HelpScreen {
     fun assertHelpScreenLoaded(): HelpScreen {
@@ -37,8 +38,8 @@ class HelpScreen {
         WPSupportUtils.populateTextField(nameInput, userName)
         Espresso.onView(
             Matchers.anyOf(
-                ViewMatchers.withText(android.R.string.ok),
-                ViewMatchers.withId(android.R.id.button1)
+                ViewMatchers.withText(AndroidR.string.ok),
+                ViewMatchers.withId(AndroidR.id.button1)
             )
         )
             .perform(ViewActions.click())

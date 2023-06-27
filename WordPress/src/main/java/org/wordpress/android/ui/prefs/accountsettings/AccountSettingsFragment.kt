@@ -62,6 +62,7 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
+import android.R as AndroidR
 import com.google.android.material.R as MaterialR
 
 private const val SNACKBAR_NO_OF_LINES_FOUR = 4
@@ -181,7 +182,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         val coordinatorView = inflater.inflate(R.layout.preference_coordinator, container, false)
         val coordinator: CoordinatorLayout = coordinatorView.findViewById(R.id.coordinator)
         val preferenceView = super.onCreateView(inflater, coordinator, savedInstanceState)
-        val listOfPreferences = preferenceView?.findViewById<ListView>(android.R.id.list)
+        val listOfPreferences = preferenceView?.findViewById<ListView>(AndroidR.id.list)
         if (listOfPreferences != null) {
             ViewCompat.setNestedScrollingEnabled(listOfPreferences, true)
         }
@@ -192,7 +193,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     @Deprecated("Deprecated")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (view.findViewById<View>(android.R.id.list) as? ListView)?.let { listView ->
+        (view.findViewById<View>(AndroidR.id.list) as? ListView)?.let { listView ->
             listView.addFooterView(ComposeView(context).apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
@@ -376,7 +377,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     @Deprecated("Deprecated")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> activity.finish()
+            AndroidR.id.home -> activity.finish()
         }
         return super.onOptionsItemSelected(item)
     }

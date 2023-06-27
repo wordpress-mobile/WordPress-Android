@@ -10,6 +10,7 @@ import org.wordpress.android.widgets.StorageNotificationDialogFragment
 import org.wordpress.android.widgets.StorageNotificationDialogFragment.DialogLabels
 import javax.inject.Inject
 import javax.inject.Singleton
+import android.R as AndroidR
 
 @Singleton
 class StorageUtilsProvider @Inject constructor(
@@ -37,7 +38,7 @@ class StorageUtilsProvider @Inject constructor(
                     okLabel = if (isInternalStorageSettingsResolved) {
                         context.getString(R.string.storage_utils_dialog_ok_button)
                     } else {
-                        context.getString(android.R.string.ok)
+                        context.getString(AndroidR.string.ok)
                     },
                     dontShowAgainLabel = context.getString(R.string.storage_utils_dialog_dont_show_button)
                 ),

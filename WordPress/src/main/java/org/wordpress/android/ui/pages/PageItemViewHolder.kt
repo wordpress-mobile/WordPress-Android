@@ -37,6 +37,7 @@ import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.Locale
+import android.R as AndroidR
 
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
     RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
@@ -63,7 +64,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val pageItemContainer = itemView.findViewById<ViewGroup>(R.id.page_item)
         private val pageLayout = itemView.findViewById<ViewGroup>(R.id.page_layout)
         private val selectableBackground: Drawable? = parent.context.getDrawableFromAttribute(
-            android.R.attr.selectableItemBackground
+            AndroidR.attr.selectableItemBackground
         )
 
         companion object {

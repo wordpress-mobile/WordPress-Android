@@ -24,6 +24,7 @@ import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
+import android.R as AndroidR
 
 /**
  * An activity that shows when user tries to open Stats without Jetpack connected.
@@ -113,7 +114,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            android.R.id.home -> {
+            AndroidR.id.home -> {
                 finish()
                 true
             }

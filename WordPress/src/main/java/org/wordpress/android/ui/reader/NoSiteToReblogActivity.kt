@@ -5,6 +5,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.databinding.ReaderNoSiteToReblogBinding
 import org.wordpress.android.ui.ActivityLauncher
+import android.R as AndroidR
 
 /*
  * Serves as an intermediate screen where the user is informed that a site is needed for the reblog action
@@ -33,7 +34,7 @@ class NoSiteToReblogActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        android.R.id.home -> {
+        AndroidR.id.home -> {
             finish()
             true
         }

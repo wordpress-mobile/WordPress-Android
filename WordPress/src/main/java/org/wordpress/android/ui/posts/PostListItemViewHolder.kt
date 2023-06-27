@@ -40,6 +40,7 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.WPTextView
 import java.util.concurrent.atomic.AtomicBoolean
+import android.R as AndroidR
 
 const val POST_LIST_ICON_PADDING = 8
 
@@ -57,7 +58,7 @@ sealed class PostListItemViewHolder(
     private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
     private val container: ConstraintLayout = itemView.findViewById(R.id.container)
     private val selectableBackground: Drawable? = parent.context.getDrawableFromAttribute(
-        android.R.attr.selectableItemBackground
+        AndroidR.attr.selectableItemBackground
     )
 
     /**

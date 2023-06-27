@@ -26,6 +26,7 @@ import org.wordpress.android.ui.prefs.notifications.PrefMainSwitchToolbarView.Ma
 import org.wordpress.android.ui.prefs.notifications.usecase.UpdateNotificationSettingsUseCase
 import javax.inject.Inject
 import javax.inject.Named
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarListener {
@@ -73,7 +74,7 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> {
+            AndroidR.id.home -> {
                 onBackPressedDispatcher.onBackPressed()
                 return true
             }

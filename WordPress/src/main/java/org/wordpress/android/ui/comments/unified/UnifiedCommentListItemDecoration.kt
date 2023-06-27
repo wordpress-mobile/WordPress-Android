@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView.State
 import org.wordpress.android.R
 import org.wordpress.android.util.RtlUtils
 import kotlin.math.roundToInt
+import android.R as AndroidR
 
 /**
  * This ItemDecoration adds margin to the start of the divider and skipp drawing divider for list sub-headers.
@@ -77,7 +78,7 @@ class UnifiedCommentListItemDecoration(val context: Context) : ItemDecoration() 
     }
 
     companion object {
-        private val ATTRS = intArrayOf(android.R.attr.listDivider)
+        private val ATTRS = intArrayOf(AndroidR.attr.listDivider)
     }
 
     init {

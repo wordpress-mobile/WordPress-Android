@@ -84,6 +84,7 @@ import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import org.wordpress.android.viewmodel.observeEvent
 import java.io.File
 import javax.inject.Inject
+import android.R as AndroidR
 import com.google.android.material.R as MaterialR
 
 @AndroidEntryPoint
@@ -601,7 +602,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         val context = activity ?: return
         val options = Options()
         options.setShowCropGrid(false)
-        options.setStatusBarColor(context.getColorFromAttribute(android.R.attr.statusBarColor))
+        options.setStatusBarColor(context.getColorFromAttribute(AndroidR.attr.statusBarColor))
         options.setToolbarColor(context.getColorFromAttribute(R.attr.wpColorAppBar))
         options.setToolbarWidgetColor(context.getColorFromAttribute(MaterialR.attr.colorOnSurface))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)

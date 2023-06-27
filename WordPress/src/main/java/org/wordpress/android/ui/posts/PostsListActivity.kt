@@ -67,6 +67,7 @@ import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndReque
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel
 import javax.inject.Inject
+import android.R as AndroidR
 
 const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
 const val STATE_KEY_PREVIEW_STATE = "stateKeyPreviewState"
@@ -540,7 +541,7 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == AndroidR.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
         } else if (item.itemId == R.id.toggle_post_list_item_layout) {

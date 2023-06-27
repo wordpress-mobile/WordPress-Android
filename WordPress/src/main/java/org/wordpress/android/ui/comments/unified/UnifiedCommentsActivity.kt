@@ -24,6 +24,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
+import android.R as AndroidR
 import com.google.android.material.R as MaterialR
 
 class UnifiedCommentsActivity : LocaleAwareActivity() {
@@ -116,7 +117,7 @@ class UnifiedCommentsActivity : LocaleAwareActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == AndroidR.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
         }

@@ -10,6 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.ui.main.jetpack.staticposter.JetpackStaticPosterFragment
 import org.wordpress.android.ui.main.jetpack.staticposter.UiData
 import org.wordpress.android.util.config.JetpackFeatureRemovalStaticPostersConfig.Companion.JETPACK_FEATURE_REMOVAL_STATIC_POSTERS_REMOTE_FIELD
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class PreviewFragmentActivity : FragmentActivity() {
@@ -19,7 +20,7 @@ class PreviewFragmentActivity : FragmentActivity() {
         supportFragmentManager.commit {
             val key = requireNotNull(intent.getStringExtra(KEY))
             val factory = requireNotNull(PREVIEWS[key])
-            add(android.R.id.content, factory.invoke())
+            add(AndroidR.id.content, factory.invoke())
         }
     }
 

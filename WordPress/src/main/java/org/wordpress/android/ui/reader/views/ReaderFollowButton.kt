@@ -13,6 +13,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.views.ReaderFollowButtonType.FOLLOW_SITE
+import android.R as AndroidR
 
 /**
  * Follow button used in reader detail
@@ -105,7 +106,7 @@ class ReaderFollowButton @JvmOverloads constructor(
             }
             AnimatorSet().apply {
                 play(anim)
-                duration = context.resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+                duration = context.resources.getInteger(AndroidR.integer.config_shortAnimTime).toLong()
                 interpolator = AccelerateDecelerateInterpolator()
             }.start()
         } else {

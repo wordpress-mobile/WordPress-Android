@@ -7,6 +7,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.ActivityLogDetailActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class ActivityLogDetailActivity : LocaleAwareActivity() {
@@ -24,7 +25,7 @@ class ActivityLogDetailActivity : LocaleAwareActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == AndroidR.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
         }
