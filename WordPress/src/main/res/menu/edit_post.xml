@@ -5,6 +5,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
+        android:id="@+id/menu_site_icon"
+        android:title="Site icon"
+        android:icon="@drawable/undo"
+        android:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_undo_action"
+        android:icon="@drawable/undo"
+        android:title="@string/menu_undo"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_redo_action"
+        android:icon="@drawable/redo"
+        android:title="@string/menu_redo"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/menu_primary_action"
         android:title="@string/post_status_publish_post"
         app:showAsAction="always" >

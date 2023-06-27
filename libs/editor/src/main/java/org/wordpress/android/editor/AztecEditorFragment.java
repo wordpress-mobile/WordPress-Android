@@ -1676,6 +1676,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override public void showEditorHelp() {
     }
 
+    @Override public void onUndoPressed() {
+    }
+
+    @Override public void onRedoPressed() {
+    }
+
     private void onMediaTapped(@NonNull final AztecAttributes attrs, int naturalWidth, int naturalHeight,
                                final MediaType mediaType) {
         if (mediaType == null || !isAdded()) {

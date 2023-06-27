@@ -10,12 +10,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.DragEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -26,6 +29,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
+import androidx.core.content.ContextCompat;
 import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
@@ -216,7 +220,9 @@ import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig;
 import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
+import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder;
 import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -304,6 +310,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private static final String STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData";
     private static final String STATE_KEY_GUTENBERG_IS_SHOWN = "stateKeyGutenbergIsShown";
     private static final String STATE_KEY_MEDIA_CAPTURE_PATH = "stateKeyMediaCapturePath";
+    private static final String STATE_KEY_UNDO = "stateKeyUndo";
+    private static final String STATE_KEY_REDO = "stateKeyRedo";
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
@@ -368,6 +376,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private AppBarLayout mAppBarLayout;
     private Toolbar mToolbar;
+    private Menu mMenu;
+    private boolean mMenuHasUndo = false;
+    private boolean mMenuHasRedo = false;
 
     private Handler mShowPrepublishingBottomSheetHandler;
     private Runnable mShowPrepublishingBottomSheetRunnable;
@@ -585,9 +596,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // Set up the action bar.
         mToolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(mToolbar);
+
+        customizeToolbar();
+
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(false);
         }
 
         mAppBarLayout = findViewById(R.id.appbar_main);
@@ -751,7 +765,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued();
         }
 
-        setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
@@ -772,6 +786,35 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // The check on savedInstanceState should allow to show the dialog only on first start
         // (even in cases when the VM could be re-created like when activity is destroyed in the background)
         mStorageUtilsViewModel.start(savedInstanceState == null);
+    }
+
+    private void customizeToolbar() {
+        // Custom overflow icon
+        Drawable overflowIcon = ContextCompat.getDrawable(this, R.drawable.more_vertical);
+        mToolbar.setOverflowIcon(overflowIcon);
+
+        // Customize insets
+        int insetStart = (int) (8 * getResources().getDisplayMetrics().density);
+        mToolbar.setContentInsetsRelative(insetStart, mToolbar.getContentInsetEnd());
+
+        // Set custom header
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View customLayout = inflater.inflate(R.layout.edit_post_header, mToolbar, false);
+        mToolbar.addView(customLayout, 0);
+
+        Button closeButton = customLayout.findViewById(R.id.close_editor_button);
+        closeButton.setOnClickListener(v -> onBackPressed());
+
+        // Update site icon
+        String siteIconUrl = SiteUtils.getSiteIconUrl(
+                mSite,
+                getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small)
+        );
+        ImageButton siteIcon = customLayout.findViewById(R.id.close_editor_site_icon);
+        ImageType blavatarType = SiteUtils.getSiteImageType(
+                mSite.isWpForTeamsSite(), BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES);
+        mImageManager.loadImageWithCorners(siteIcon, blavatarType, siteIconUrl,
+                DisplayUtils.dpToPx(siteIcon.getContext(), 2));
     }
 
     private void presentNewPageNoticeIfNeeded() {
@@ -1082,6 +1125,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mIsConfigChange = true; // don't call sessionData.end() in onDestroy() if this is an Android config change
 
         outState.putBoolean(STATE_KEY_GUTENBERG_IS_SHOWN, mShowGutenbergEditor);
+        outState.putBoolean(STATE_KEY_UNDO, mMenuHasUndo);
+        outState.putBoolean(STATE_KEY_REDO, mMenuHasRedo);
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mEditorMedia.getDroppedMediaUris());
 
@@ -1265,6 +1310,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_post, menu);
+        mMenu = menu;
+
+        // Set opacity for undo/redo items
+        MenuItem undoItem = mMenu.findItem(R.id.menu_undo_action);
+        MenuItem redoItem = mMenu.findItem(R.id.menu_redo_action);
+
+        undoItem.setEnabled(mMenuHasUndo);
+        undoItem.getIcon().setAlpha(mMenuHasUndo ? 255 : 76);
+        redoItem.setEnabled(mMenuHasRedo);
+        redoItem.getIcon().setAlpha(mMenuHasRedo ? 255 : 76);
         return true;
     }
 
@@ -1483,6 +1538,20 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         mEditorPhotoPicker.hidePhotoPicker();
+
+        if (itemId == R.id.menu_undo_action) {
+            if (mEditorFragment instanceof GutenbergEditorFragment) {
+                ((GutenbergEditorFragment) mEditorFragment).onUndoPressed();
+            }
+            return true;
+        }
+
+        if (itemId == R.id.menu_redo_action) {
+            if (mEditorFragment instanceof GutenbergEditorFragment) {
+                ((GutenbergEditorFragment) mEditorFragment).onRedoPressed();
+            }
+            return true;
+        }
 
         if (itemId == R.id.menu_primary_action) {
             performPrimaryAction();
@@ -3516,6 +3585,34 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override public void onSendEventToHost(String eventName, Map<String, Object> properties) {
         AnalyticsUtils.trackBlockEditorEvent(eventName, mSite, properties);
+    }
+
+    @Override public void onToggleUndo(boolean isDisabled) {
+        mMenuHasUndo = !isDisabled;
+        if (mMenu != null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MenuItem undoItem = mMenu.findItem(R.id.menu_undo_action);
+                    undoItem.setEnabled(mMenuHasUndo);
+                    undoItem.getIcon().setAlpha(mMenuHasUndo ? 255 : 76);
+                }
+            });
+        }
+    }
+
+    @Override public void onToggleRedo(boolean isDisabled) {
+        mMenuHasRedo = !isDisabled;
+        if (mMenu != null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MenuItem redoItem = mMenu.findItem(R.id.menu_redo_action);
+                    redoItem.setEnabled(mMenuHasRedo);
+                    redoItem.getIcon().setAlpha(mMenuHasRedo ? 255 : 76);
+                }
+            });
+        }
     }
 
     // FluxC events
