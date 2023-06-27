@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-08 01:16:50+0000
+Translation-Revision-Date: 2023-06-13 00:33:45+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ko_KR
 -->
 <resources>
+    <string name="social_item_message_title">안내문</string>
     <string name="gutenberg_native_block_ungrouped">블록 그룹 해제됨</string>
     <string name="gutenberg_native_block_grouped">블록 그룹 지정됨</string>
     <string name="dashboard_card_plans_checkout_success_info">도메인이 올바르게 작동하기 시작하려면 최대 30분이 걸릴 수 있습니다.</string>
@@ -829,12 +830,14 @@ Language: ko_KR
     <string name="gutenberg_native_width_settings">폭 설정</string>
     <string name="gutenberg_native_link_rel">링크 관계</string>
     <string name="gutenberg_native_column_settings">열 설정</string>
+    <string name="gutenberg_native_no_description">설명 없음</string>
     <string name="user_profile_untitled_site">(제목이 없습니다)</string>
     <string name="user_profile_site_section_header">사이트</string>
     <string name="user_profile_bottom_sheet_description">사용자 프로필 하단 시트 정보</string>
     <string name="likes_list_screen_title">좋아요 목록 %s</string>
     <string name="gutenberg_native_two">2</string>
     <string name="gutenberg_native_three">3</string>
+    <string name="gutenberg_native_no_title">제목 없음</string>
     <string name="gutenberg_native_s_social_icon">%s 소셜 아이콘</string>
     <string name="gutenberg_native_mention">멘션</string>
     <string name="gutenberg_native_new">신규</string>

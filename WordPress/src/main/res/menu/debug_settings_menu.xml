@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_debug_cookies"
+        android:title="@string/debug_cookies_title"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_restart_app"
+        android:title="@string/debug_settings_restart_app"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_show_weekly_notifications"
+        android:title="@string/debug_settings_force_show_weekly_roundup"
+        app:showAsAction="never" />
+</menu>

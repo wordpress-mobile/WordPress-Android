@@ -9,7 +9,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_main"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_with_site_info_height"
+        android:layout_height="wrap_content"
         android:visibility="visible">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -17,22 +17,13 @@
             style="@style/WordPress.CollapsedToolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-            >
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar_main"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height"
-                app:layout_collapseMode="pin"
-                app:theme="@style/WordPress.ActionBar"/>
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
             <RelativeLayout
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/toolbar_height"
-                tools:visibility="gone"
+                tools:visibility="visible"
                 android:visibility="gone">
 
                 <include
@@ -53,7 +44,8 @@
                     android:layout_gravity="bottom"
                     android:visibility="gone"
                     app:layout_collapseMode="pin"
-                    tools:text="@string/my_site_menu_tab_title" />
+                    tools:text="@string/my_site_menu_tab_title"
+                    tools:visibility="visible"/>
             </RelativeLayout>
 
 

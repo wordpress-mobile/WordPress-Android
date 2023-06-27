@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-05 09:54:10+0000
+Translation-Revision-Date: 2023-06-12 20:23:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sv_SE
 -->
 <resources>
+    <string name="social_item_message_title">Meddelande</string>
     <string name="gutenberg_native_block_ungrouped">Block avgrupperat</string>
     <string name="gutenberg_native_block_grouped">Block grupperat</string>
     <string name="dashboard_card_plans_checkout_success_info">Det kan ta upp till 30 minuter för din domän att börja fungera ordentligt.</string>
@@ -829,12 +830,14 @@ Language: sv_SE
     <string name="gutenberg_native_width_settings">Breddinställningar</string>
     <string name="gutenberg_native_link_rel">Länk-rel</string>
     <string name="gutenberg_native_column_settings">Kolumninställningar</string>
+    <string name="gutenberg_native_no_description">Ingen beskrivning</string>
     <string name="user_profile_untitled_site">(utan rubrik)</string>
     <string name="user_profile_site_section_header">Webbplats</string>
     <string name="user_profile_bottom_sheet_description">Användarprofil, information på nedre blad</string>
     <string name="likes_list_screen_title">Lista över gilla-markeringar %s</string>
     <string name="gutenberg_native_two">Två</string>
     <string name="gutenberg_native_three">Tre</string>
+    <string name="gutenberg_native_no_title">Ingen rubrik</string>
     <string name="gutenberg_native_s_social_icon">Social ikon för %s</string>
     <string name="gutenberg_native_mention">Omnämnande</string>
     <string name="gutenberg_native_new">NYTT</string>

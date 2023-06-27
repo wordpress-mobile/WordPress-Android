@@ -74,6 +74,9 @@ class SiteItemsBuilder @Inject constructor(
     private fun getTrafficSiteItems(
         params: SiteItemsBuilderParams
     ): List<MySiteCardAndItem> {
+        if(jetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures())
+            return emptyList()
+
         val checkStatsTask = quickStartRepository.quickStartType
             .getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL)
         val showStatsFocusPoint = params.activeTask == checkStatsTask && params.enableStatsFocusPoint
@@ -93,22 +96,17 @@ class SiteItemsBuilder @Inject constructor(
     private fun getManageSiteItems(
         params: SiteItemsBuilderParams
     ): List<MySiteCardAndItem> {
-        val header = CategoryHeaderItem(UiStringRes(string.my_site_header_manage))
-        val activityLog = siteListItemBuilder.buildActivityLogItemIfAvailable(params.site, params.onClick)
-        val backup = siteListItemBuilder.buildBackupItemIfAvailable(params.onClick, params.backupAvailable)
-        val scan = siteListItemBuilder.buildScanItemIfAvailable(params.onClick, params.scanAvailable)
+        val manageSiteItems = buildManageSiteItems(params)
 
         val emptyHeaderItem1 = CategoryEmptyHeaderItem(UiString.UiStringText(""))
         val jetpackConfiguration = buildJetpackDependantConfigurationItemsIfNeeded(params)
         val lookAndFeel = getLookAndFeelSiteItems(params)
         val nonJetpackConfiguration = buildNonJetpackDependantConfigurationItemsIfNeeded(params)
-
+        val manageHeader = CategoryHeaderItem(UiStringRes(string.my_site_header_manage))
         val emptyHeaderItem2 = CategoryEmptyHeaderItem(UiString.UiStringText(""))
         val admin = siteListItemBuilder.buildAdminItemIfAvailable(params.site, params.onClick)
-        return listOfNotNull(header) +
-                listOfNotNull(activityLog) +
-                listOfNotNull(backup) +
-                listOfNotNull(scan) +
+        return listOf(manageHeader) +
+                manageSiteItems +
                 emptyHeaderItem1 +
                 jetpackConfiguration +
                 lookAndFeel +
@@ -127,8 +125,19 @@ class SiteItemsBuilder @Inject constructor(
     private fun buildNonJetpackDependantConfigurationItemsIfNeeded(params: SiteItemsBuilderParams):
             List<MySiteCardAndItem> {
         return listOfNotNull(
-                siteListItemBuilder.buildDomainsItemIfAvailable(params.site, params.onClick),
+            siteListItemBuilder.buildDomainsItemIfAvailable(params.site, params.onClick),
+            siteListItemBuilder.buildMeItemIfAvailable(params.site, params.onClick),
             siteListItemBuilder.buildSiteSettingsItemIfAvailable(params.site, params.onClick)
+        )
+    }
+
+    private fun buildManageSiteItems(params: SiteItemsBuilderParams): List<MySiteCardAndItem>{
+        if(jetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures())
+            return emptyList()
+        return listOfNotNull(
+            siteListItemBuilder.buildActivityLogItemIfAvailable(params.site, params.onClick),
+            siteListItemBuilder.buildBackupItemIfAvailable(params.onClick, params.backupAvailable),
+            siteListItemBuilder.buildScanItemIfAvailable(params.onClick, params.scanAvailable),
         )
     }
 

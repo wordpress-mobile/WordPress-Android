@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-30 10:54:58+0000
+Translation-Revision-Date: 2023-06-17 22:18:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sq_AL
 -->
 <resources>
+    <string name="social_item_message_title">Mesazh</string>
     <string name="gutenberg_native_block_ungrouped">Blloku u hoq nga grupi</string>
     <string name="gutenberg_native_block_grouped">Blloku u grupua</string>
     <string name="dashboard_card_plans_checkout_success_info">Mund të duhen deri në 30 minuta që përkatësia juaj vetjake të fillojë të funksionojë.</string>
@@ -822,12 +823,14 @@ Language: sq_AL
     <string name="gutenberg_native_width_settings">Rregullime Gjerësie</string>
     <string name="gutenberg_native_link_rel">Atribut “Rel” Lidhjeje</string>
     <string name="gutenberg_native_column_settings">Rregullime Shtylle</string>
+    <string name="gutenberg_native_no_description">Pa përshkrim</string>
     <string name="user_profile_untitled_site">(I patitull)</string>
     <string name="user_profile_site_section_header">Sajt</string>
     <string name="user_profile_bottom_sheet_description">Hollësi profili përdoruesi në fund të fletës</string>
     <string name="likes_list_screen_title">Listë %s Pëlqimesh</string>
     <string name="gutenberg_native_two">Dy</string>
     <string name="gutenberg_native_three">Tre</string>
+    <string name="gutenberg_native_no_title">Pa titull</string>
     <string name="gutenberg_native_s_social_icon">Ikonë shoqërorësh %s</string>
     <string name="gutenberg_native_mention">Përmendje</string>
     <string name="gutenberg_native_new">I RI</string>

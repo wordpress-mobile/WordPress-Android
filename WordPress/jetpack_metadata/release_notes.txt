@@ -1,6 +1,5 @@
-
-* [*] [internal] Block editor: Upgrade Android 13 [https://github.com/wordpress-mobile/WordPress-Android/pull/18477]
-* [***] [Jetpack-only] Plans: Bringing WPCOM plans to Jetpack app [https://github.com/wordpress-mobile/WordPress-Android/issues/18417]
-* [*] Block editor: Display lock icon in disabled state of `Cell` component [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5798]
-* [*] Block editor: Show "No title"/"No description" placeholder for not belonged videos in VideoPress block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5840]
+* [*] Updates Floating Action Button(FAB) color to black, shape to squircle, and icon to plus [https://github.com/wordpress-mobile/WordPress-Android/pull/18599]
+* [*] Block editor: Image block - Fix issue where in some cases the image doesn't display the right aspect ratio [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5869]
+* [*] Me, and gravatar is moved to bottom navigation as fourth tab [https://github.com/wordpress-mobile/WordPress-Android/pull/18606]
+* [*] [internal] We now display a privacy popup requiring consent from users residing in GDPR jurisdictions after login. [https://github.com/wordpress-mobile/WordPress-Android/pull/18696]
 

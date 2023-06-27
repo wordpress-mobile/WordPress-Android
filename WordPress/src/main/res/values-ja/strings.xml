@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-01 09:54:09+0000
+Translation-Revision-Date: 2023-06-14 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ja_JP
 -->
 <resources>
+    <string name="social_item_message_title">メッセージ</string>
     <string name="gutenberg_native_block_ungrouped">ブロックのグループが解除されました</string>
     <string name="gutenberg_native_block_grouped">ブロックがグループ化されました</string>
     <string name="dashboard_card_plans_checkout_success_info">ドメインが正常に使用可能になるまでに最大で30分かかる場合があります。</string>

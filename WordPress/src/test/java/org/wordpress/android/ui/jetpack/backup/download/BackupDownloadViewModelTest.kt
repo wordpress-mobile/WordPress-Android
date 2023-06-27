@@ -190,7 +190,8 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given details step, when request create download success, then state reflects progress`() = test {
-        whenever(percentFormatter.format(0)).thenReturn("30%")
+        whenever(percentFormatter.format(0)).thenReturn("0%")
+        whenever(percentFormatter.format(30)).thenReturn("30%")
         whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
             .thenReturn(postBackupDownloadSuccess)
 
@@ -312,9 +313,11 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given progress step, when started, then the progress is set to zero`() = test {
-        whenever(percentFormatter.format(0)).thenReturn("30%")
+        whenever(percentFormatter.format(0)).thenReturn("0%")
         whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
             .thenReturn(postBackupDownloadSuccess)
+        whenever(backupDownloadStatusUseCase.getBackupDownloadStatus(anyOrNull(), anyOrNull()))
+            .thenReturn(flow { emit(getInitialStatusProgress) })
 
         val uiStates = initObservers().uiStates
 
@@ -503,6 +506,11 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     private val getStatusProgress = BackupDownloadRequestState.Progress(
         rewindId = "rewindId",
         progress = 30
+    )
+
+    private val getInitialStatusProgress = BackupDownloadRequestState.Progress(
+        rewindId = "rewindId",
+        progress = null
     )
 
     private val postBackupDownloadNetworkError = BackupDownloadRequestState.Failure.NetworkUnavailable

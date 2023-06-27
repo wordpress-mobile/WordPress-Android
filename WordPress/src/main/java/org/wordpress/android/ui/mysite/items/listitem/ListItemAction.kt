@@ -19,5 +19,6 @@ enum class ListItemAction {
     MEDIA,
     COMMENTS,
     VIEW_SITE,
-    BLAZE
+    BLAZE,
+    ME
 }

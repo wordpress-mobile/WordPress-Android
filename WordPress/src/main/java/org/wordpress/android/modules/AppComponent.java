@@ -46,6 +46,7 @@ import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.main.WPMainNavigationView;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaGridAdapter;
 import org.wordpress.android.ui.media.MediaGridFragment;
@@ -565,4 +566,6 @@ public interface AppComponent {
     void inject(WeekViewsWidgetListProvider object);
 
     void inject(WeekWidgetBlockListProviderFactory object);
+
+    void inject(WPMainNavigationView object);
 }

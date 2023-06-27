@@ -44,8 +44,8 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
         return if (buildConfigWrapper.isJetpackApp) null
         else if (jetpackFeatureRemovalSelfHostedUsersConfig.isEnabled()) PhaseSelfHostedUsers
         else if (jetpackFeatureRemovalNewUsersConfig.isEnabled()) PhaseNewUsers
-        else if (jetpackFeatureRemovalStaticPostersConfig.isEnabled()) PhaseStaticPosters
         else if (jetpackFeatureRemovalPhaseFourConfig.isEnabled()) PhaseFour
+        else if (jetpackFeatureRemovalStaticPostersConfig.isEnabled()) PhaseStaticPosters
         else if (jetpackFeatureRemovalPhaseThreeConfig.isEnabled()) PhaseThree
         else if (jetpackFeatureRemovalPhaseTwoConfig.isEnabled()) PhaseTwo
         else if (jetpackFeatureRemovalPhaseOneConfig.isEnabled()) PhaseOne

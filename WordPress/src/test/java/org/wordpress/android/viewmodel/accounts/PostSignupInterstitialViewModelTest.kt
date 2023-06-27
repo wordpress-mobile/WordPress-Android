@@ -47,7 +47,9 @@ class PostSignupInterstitialViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when interstitial is shown should update preference value`() {
+    fun `when interstitial is shown should update preference value`() = test {
+        whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(false)
+
         viewModel.onInterstitialShown()
 
         verify(analyticsTracker).track(WELCOME_NO_SITES_INTERSTITIAL_SHOWN)

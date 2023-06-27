@@ -12,7 +12,9 @@ import javax.inject.Inject
 @Reusable
 class AnalyticsTrackerWrapper
 @Inject constructor() {
-    val hasUserOptedOut get() = AnalyticsTracker.hasUserOptedOut()
+    var hasUserOptedOut
+        get() = AnalyticsTracker.hasUserOptedOut()
+        set(value) = AnalyticsTracker.setHasUserOptedOut(value)
 
     fun track(stat: Stat) {
         AnalyticsTracker.track(stat)

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-30 13:13:14+0000
+Translation-Revision-Date: 2023-06-20 20:21:56+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ro
 -->
 <resources>
+    <string name="social_item_message_title">Mesaj</string>
     <string name="gutenberg_native_block_ungrouped">Bloc negrupat</string>
     <string name="gutenberg_native_block_grouped">Bloc grupat</string>
     <string name="dashboard_card_plans_checkout_success_info">Poate să dureze până la 30 de minute până când domeniul tău va începe să funcționeze așa cum trebuie.</string>
@@ -829,12 +830,14 @@ Language: ro
     <string name="gutenberg_native_width_settings">Setări lățime</string>
     <string name="gutenberg_native_link_rel">Legătură rel</string>
     <string name="gutenberg_native_column_settings">Setări coloană</string>
+    <string name="gutenberg_native_no_description">Fără descriere</string>
     <string name="user_profile_untitled_site">(Fără titlu)</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Informații din foaia de jos a profilului de utilizator</string>
     <string name="likes_list_screen_title">Lista aprecierilor %s</string>
     <string name="gutenberg_native_two">Doi</string>
     <string name="gutenberg_native_three">Trei</string>
+    <string name="gutenberg_native_no_title">Fără titlu</string>
     <string name="gutenberg_native_s_social_icon">Icon social %s</string>
     <string name="gutenberg_native_mention">Mențiune</string>
     <string name="gutenberg_native_new">NOU</string>
@@ -3451,7 +3454,7 @@ Language: ro
     <string name="delete_post">Ștergi articolul?</string>
     <string name="post_settings">Setări articole</string>
     <string name="file_not_found">Nu am putut găsit fișierul pentru încărcare. A fost șters sau mutat?</string>
-    <string name="horizontal_alignment">Aliniere orizontală</string>
+    <string name="horizontal_alignment">Aliniere pe orizontală</string>
     <string name="local_draft">Ciornă locală</string>
     <string name="page_settings">Setări pagină</string>
     <string name="create_a_link">Crează o nouă legătură</string>

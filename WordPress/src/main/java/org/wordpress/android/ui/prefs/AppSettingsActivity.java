@@ -15,6 +15,10 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class AppSettingsActivity extends LocaleAwareActivity {
+    public static final String EXTRA_SHOW_PRIVACY_SETTINGS = "extra_show_privacy_settings";
+    public static final String EXTRA_REQUESTED_ANALYTICS_VALUE_FROM_ERROR =
+            "extra_requested_analytics_value_from_error";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

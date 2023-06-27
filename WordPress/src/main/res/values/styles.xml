@@ -217,7 +217,8 @@
     </style>
 
     <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="android:backgroundTint">?attr/colorSecondary</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Material3.FloatingActionButton</item>
+        <item name="android:backgroundTint">?attr/colorOnSurface</item>
     </style>
 
     <style name="NumberPickerTheme" parent="WordPress">
@@ -612,6 +613,7 @@
         <item name="android:layout_width">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginStart">@dimen/margin_large</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
