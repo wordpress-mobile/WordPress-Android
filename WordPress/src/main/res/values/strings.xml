@@ -4587,4 +4587,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="privacy_banner_settings">Settings</string>
     <string name="privacy_banner_save">Save</string>
     <string name="privacy_banner_error_save">There was an error saving your privacy choices.</string>
+    <string name="gutenberg_native_reusable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Reusable</string>
 </resources>
