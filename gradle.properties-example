@@ -7,10 +7,10 @@ org.gradle.parallel=true
 org.gradle.configureondemand=true
 org.gradle.caching=true
 
-
 # WordPress-Android properties.
 
 android.useAndroidX=true
+android.enableJetifier=false
 
 android.nonTransitiveRClass=true
 
