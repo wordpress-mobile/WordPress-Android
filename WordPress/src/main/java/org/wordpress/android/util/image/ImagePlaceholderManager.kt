@@ -3,6 +3,7 @@ package org.wordpress.android.util.image
 import org.wordpress.android.R
 import javax.inject.Inject
 import javax.inject.Singleton
+import org.wordpress.android.login.R as LoginR
 
 @Singleton
 class ImagePlaceholderManager @Inject constructor() {
@@ -11,8 +12,7 @@ class ImagePlaceholderManager @Inject constructor() {
         return when (imgType) {
             ImageType.AVATAR -> R.drawable.bg_rectangle_placeholder_user_32dp
             ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_placeholder_user_32dp
-            ImageType.AVATAR_WITHOUT_BACKGROUND ->
-                org.wordpress.android.login.R.drawable.ic_user_circle_no_padding_grey_24dp
+            ImageType.AVATAR_WITHOUT_BACKGROUND -> LoginR.drawable.ic_user_circle_no_padding_grey_24dp
             ImageType.BLAVATAR -> R.drawable.bg_rectangle_placeholder_globe_32dp
             ImageType.P2_BLAVATAR -> R.drawable.bg_rectangle_placeholder_p2_32dp
             ImageType.BLAVATAR_ROUNDED_CORNERS -> R.drawable.bg_rectangle_placeholder_radius_4dp_globe_32dp
@@ -38,8 +38,7 @@ class ImagePlaceholderManager @Inject constructor() {
         return when (imgType) {
             ImageType.AVATAR -> R.drawable.bg_oval_placeholder
             ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_placeholder_user_32dp
-            ImageType.AVATAR_WITHOUT_BACKGROUND ->
-                org.wordpress.android.login.R.drawable.ic_user_circle_no_padding_grey_24dp
+            ImageType.AVATAR_WITHOUT_BACKGROUND -> LoginR.drawable.ic_user_circle_no_padding_grey_24dp
             ImageType.BLAVATAR -> R.color.placeholder
             ImageType.P2_BLAVATAR -> R.color.placeholder
             ImageType.BLAVATAR_ROUNDED_CORNERS -> R.drawable.bg_rectangle_placeholder_radius_4dp
