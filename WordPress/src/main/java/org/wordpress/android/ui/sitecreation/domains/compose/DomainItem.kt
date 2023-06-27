@@ -40,6 +40,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.Recommended
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.Sale
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.Unavailable
+import androidx.compose.ui.R as ComposeR
 
 private val HighlightBgColor @Composable get() = colors.primary.copy(0.1f)
 private val SecondaryTextColor @Composable get() = colors.onSurface.copy(0.46f)
@@ -68,7 +69,7 @@ fun DomainItem(uiState: DomainUiState): Unit = with(uiState) {
                 if (isSelected) {
                     Icon(
                         imageVector = Icons.Default.Check,
-                        contentDescription = stringResource(androidx.compose.ui.R.string.selected),
+                        contentDescription = stringResource(ComposeR.string.selected),
                         tint = colors.primary,
                         modifier = Modifier.size(16.dp),
                     )
