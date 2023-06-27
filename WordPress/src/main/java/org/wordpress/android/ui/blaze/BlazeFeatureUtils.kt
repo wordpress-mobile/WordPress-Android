@@ -28,10 +28,11 @@ class BlazeFeatureUtils @Inject constructor(
     }
 
     fun isPostBlazeEligible(
+        siteModel: SiteModel,
         postStatus: PostStatus,
         postModel: PostModel
     ): Boolean {
-        return isBlazeEnabled() &&
+        return isSiteBlazeEligible(siteModel) &&
                 postStatus == PostStatus.PUBLISHED &&
                 postModel.password.isEmpty()
     }
