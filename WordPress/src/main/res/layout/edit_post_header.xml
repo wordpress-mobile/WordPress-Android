@@ -21,6 +21,7 @@
         android:layout_height="32dp"
         android:layout_toEndOf="@id/close_editor"
         android:layout_centerVertical="true"
+        android:layout_marginStart="2dp"
         app:cardElevation="0dp">
 
         <ImageButton

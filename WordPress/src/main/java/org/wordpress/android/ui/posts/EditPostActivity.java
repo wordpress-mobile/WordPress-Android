@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -1317,9 +1318,24 @@ public class EditPostActivity extends LocaleAwareActivity implements
         MenuItem redoItem = mMenu.findItem(R.id.menu_redo_action);
 
         undoItem.setEnabled(mMenuHasUndo);
-        undoItem.getIcon().setAlpha(mMenuHasUndo ? 255 : 76);
+        View undoView = undoItem.getActionView();
+        ImageView undoIcon = undoView.findViewById(R.id.menu_undo_icon);
+        undoIcon.setImageAlpha(mMenuHasUndo ? 255 : 76);
+        undoView.setOnClickListener(v -> {
+            if (mEditorFragment instanceof GutenbergEditorFragment) {
+                ((GutenbergEditorFragment) mEditorFragment).onUndoPressed();
+            }
+        });
+
         redoItem.setEnabled(mMenuHasRedo);
-        redoItem.getIcon().setAlpha(mMenuHasRedo ? 255 : 76);
+        View redoView = redoItem.getActionView();
+        ImageView redoIcon = redoView.findViewById(R.id.menu_redo_icon);
+        redoIcon.setImageAlpha(mMenuHasRedo ? 255 : 76);
+        redoView.setOnClickListener(v -> {
+            if (mEditorFragment instanceof GutenbergEditorFragment) {
+                ((GutenbergEditorFragment) mEditorFragment).onRedoPressed();
+            }
+        });
         return true;
     }
 
@@ -1538,20 +1554,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         mEditorPhotoPicker.hidePhotoPicker();
-
-        if (itemId == R.id.menu_undo_action) {
-            if (mEditorFragment instanceof GutenbergEditorFragment) {
-                ((GutenbergEditorFragment) mEditorFragment).onUndoPressed();
-            }
-            return true;
-        }
-
-        if (itemId == R.id.menu_redo_action) {
-            if (mEditorFragment instanceof GutenbergEditorFragment) {
-                ((GutenbergEditorFragment) mEditorFragment).onRedoPressed();
-            }
-            return true;
-        }
 
         if (itemId == R.id.menu_primary_action) {
             performPrimaryAction();
@@ -3595,7 +3597,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 public void run() {
                     MenuItem undoItem = mMenu.findItem(R.id.menu_undo_action);
                     undoItem.setEnabled(mMenuHasUndo);
-                    undoItem.getIcon().setAlpha(mMenuHasUndo ? 255 : 76);
+
+                    View undoView = undoItem.getActionView();
+                    ImageView undoIcon = undoView.findViewById(R.id.menu_undo_icon);
+                    undoIcon.setImageAlpha(mMenuHasUndo ? 255 : 76);
                 }
             });
         }
@@ -3609,7 +3614,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 public void run() {
                     MenuItem redoItem = mMenu.findItem(R.id.menu_redo_action);
                     redoItem.setEnabled(mMenuHasRedo);
-                    redoItem.getIcon().setAlpha(mMenuHasRedo ? 255 : 76);
+
+                    View redoView = redoItem.getActionView();
+                    ImageView redoIcon = redoView.findViewById(R.id.menu_redo_icon);
+                    redoIcon.setImageAlpha(mMenuHasRedo ? 255 : 76);
                 }
             });
         }
