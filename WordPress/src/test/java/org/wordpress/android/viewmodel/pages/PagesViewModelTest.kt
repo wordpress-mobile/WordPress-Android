@@ -116,16 +116,12 @@ class PagesViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
-    @Mock
-    lateinit var blazeStore: BlazeStore
-
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
     private lateinit var searchPages: MutableList<SortedMap<PageListType, List<PageModel>>>
     private lateinit var authorSelectionUpdated: MutableLiveData<AuthorFilterSelection>
     private lateinit var authorUIState: MutableLiveData<PagesAuthorFilterUIState>
-    private lateinit var blazeSiteEligibility: MutableLiveData<Boolean>
     private lateinit var launchPageListType: MutableLiveData<PageListType>
     private lateinit var postStore: PostStore
 
@@ -161,21 +157,18 @@ class PagesViewModelTest : BaseUnitTest() {
             accountStore = accountStore,
             prefs = appPrefsWrapper,
             blazeFeatureUtils = blazeFeatureUtils,
-            blazeStore = blazeStore
         )
         listStates = mutableListOf()
         pages = mutableListOf()
         searchPages = mutableListOf()
         authorSelectionUpdated = MutableLiveData<AuthorFilterSelection>()
         authorUIState = MutableLiveData<PagesAuthorFilterUIState>()
-        blazeSiteEligibility = MutableLiveData<Boolean>()
         launchPageListType = MutableLiveData<PageListType>()
         viewModel.listState.observeForever { if (it != null) listStates.add(it) }
         viewModel.pages.observeForever { if (it != null) pages.add(it) }
         viewModel.searchPages.observeForever { if (it != null) searchPages.add(it) }
         viewModel.authorSelectionUpdated.observeForever { if (it != null) authorSelectionUpdated.value = it }
         viewModel.authorUIState.observeForever { if (it != null) authorUIState.value = it }
-        viewModel.blazeSiteEligibility.observeForever { if (it != null) blazeSiteEligibility.value = it }
         viewModel.launchPageListType.observeForever { if (it != null) launchPageListType.value = it }
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
         whenever(postSqlUtils.insertPostForResult(any())).thenAnswer { invocation ->
