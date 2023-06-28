@@ -120,6 +120,7 @@ fun PrepublishingHomeSocialItemPreviewHorizontal() {
                     TrainOfIconsModel(R.drawable.ic_social_mastodon, 0.36f),
                     TrainOfIconsModel(R.drawable.ic_social_twitter),
                     TrainOfIconsModel(R.drawable.ic_social_linkedin),
+                    TrainOfIconsModel(R.drawable.ic_social_instagram),
                     TrainOfIconsModel(R.drawable.ic_social_tumblr),
                 ),
                 modifier = Modifier.fillMaxWidth()
