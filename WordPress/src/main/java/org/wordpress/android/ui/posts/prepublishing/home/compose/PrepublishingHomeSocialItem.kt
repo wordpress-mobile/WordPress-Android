@@ -67,7 +67,7 @@ fun PrepublishingHomeSocialItem(
 }
 
 @Composable
-fun SocialContainer(
+private fun SocialContainer(
     avatarCount: Int,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
