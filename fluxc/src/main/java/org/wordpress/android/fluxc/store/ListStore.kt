@@ -68,6 +68,7 @@ class ListStore @Inject constructor(
             LIST_DATA_INVALIDATED -> handleListDataInvalidated(action.payload as ListDescriptorTypeIdentifier)
             REMOVE_EXPIRED_LISTS -> handleRemoveExpiredLists(action.payload as RemoveExpiredListsPayload)
             REMOVE_ALL_LISTS -> handleRemoveAllLists()
+            ListAction.LIST_DATA_FAILURE -> handleDataFailure(action.payload as OnListDataFailure)
         }
     }
 
@@ -310,6 +311,10 @@ class ListStore @Inject constructor(
         listSqlUtils.deleteAllLists()
     }
 
+    private fun handleDataFailure(event : OnListDataFailure){
+        emitChange(event)
+    }
+
     /**
      * Deletes all the items for the given [ListDescriptor].
      */
@@ -397,6 +402,8 @@ class ListStore @Inject constructor(
      * @property remoteItemIds Remote item ids to be removed from the lists matching the [ListDescriptorTypeIdentifier].
      */
     class ListItemsRemovedPayload(val type: ListDescriptorTypeIdentifier, val remoteItemIds: List<Long>)
+
+    class OnListDataFailure(val type: ListDescriptorTypeIdentifier) : Store.OnChanged<ListError>()
 
     /**
      * This is the payload for [ListAction.FETCHED_LIST_ITEMS].
