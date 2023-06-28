@@ -113,11 +113,13 @@ fun PrepublishingHomeSocialItemPreviewHorizontal() {
             Divider()
 
             PrepublishingHomeSocialItem(
-                title = "Sharing to 1 of 3 accounts",
+                title = "Sharing to 3 of 5 accounts",
                 description = "27/30 social shares remaining",
                 avatarModels = listOf(
                     TrainOfIconsModel(R.drawable.ic_social_facebook, 0.36f),
                     TrainOfIconsModel(R.drawable.ic_social_mastodon, 0.36f),
+                    TrainOfIconsModel(R.drawable.ic_social_twitter),
+                    TrainOfIconsModel(R.drawable.ic_social_linkedin),
                     TrainOfIconsModel(R.drawable.ic_social_tumblr),
                 ),
                 modifier = Modifier.fillMaxWidth()
