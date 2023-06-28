@@ -19,11 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.TrainOfIcons
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
 fun PrepublishingHomeSocialItem(
@@ -37,7 +37,7 @@ fun PrepublishingHomeSocialItem(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.surface)
-            .padding(16.dp),
+            .padding(Margin.ExtraLarge.value),
     ) {
         Column {
             Text(
@@ -47,7 +47,7 @@ fun PrepublishingHomeSocialItem(
                 overflow = TextOverflow.Ellipsis,
             )
 
-            Spacer(Modifier.height(2.dp))
+            Spacer(Modifier.height(Margin.ExtraSmall.value))
 
             Text(
                 text = description,
@@ -59,7 +59,7 @@ fun PrepublishingHomeSocialItem(
         }
 
         if (avatarModels.isNotEmpty()) {
-            Spacer(modifier = Modifier.size(8.dp))
+            Spacer(modifier = Modifier.size(Margin.Medium.value))
 
             TrainOfIcons(iconModels = avatarModels)
         }
