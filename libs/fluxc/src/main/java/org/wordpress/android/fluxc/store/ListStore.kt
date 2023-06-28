@@ -441,6 +441,7 @@ class ListStore @Inject constructor(
 
     enum class ListErrorType {
         GENERIC_ERROR,
-        PERMISSION_ERROR
+        PERMISSION_ERROR,
+        PARSE_ERROR
     }
 }
