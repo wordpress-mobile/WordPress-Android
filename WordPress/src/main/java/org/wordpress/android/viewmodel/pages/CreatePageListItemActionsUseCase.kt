@@ -101,7 +101,7 @@ class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeat
                 add(CANCEL_AUTO_UPLOAD)
             }
 
-            if (isPageEligibleForBlaze && blazeFeatureUtils.isBlazeEnabled()) {
+            if (isPageEligibleForBlaze) {
                 add(PROMOTE_WITH_BLAZE)
             }
         }
