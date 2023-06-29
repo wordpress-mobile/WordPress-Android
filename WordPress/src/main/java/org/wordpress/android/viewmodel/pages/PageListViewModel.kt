@@ -72,8 +72,8 @@ class PageListViewModel @Inject constructor(
     private val globalStyleSupportFeatureConfig: GlobalStyleSupportFeatureConfig,
     private val editorThemeStore: EditorThemeStore,
     private val siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig,
-    @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
-    private val blazeFeatureUtils: BlazeFeatureUtils
+    private val blazeFeatureUtils: BlazeFeatureUtils,
+    @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = _pages.map {

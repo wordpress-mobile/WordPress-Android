@@ -94,7 +94,6 @@ class PostListMainViewModel @Inject constructor(
         val lifecycleRegistry = LifecycleRegistry(this)
         override val lifecycle: Lifecycle = lifecycleRegistry
     }
-    private var isSiteBlazeEligible = false
 
     private val scrollToTargetPostJob: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -340,8 +339,7 @@ class PostListMainViewModel @Inject constructor(
             doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
             hasAutoSave = postConflictResolver::hasUnhandledAutoSave,
             postFetcher = postFetcher,
-            getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl,
-            isSiteBlazeEligible = isSiteBlazeEligible,
+            getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
         )
     }
 

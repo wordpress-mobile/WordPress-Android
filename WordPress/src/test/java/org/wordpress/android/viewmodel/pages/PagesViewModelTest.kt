@@ -40,7 +40,6 @@ import org.wordpress.android.fluxc.store.SiteOptionsStore.HomepageUpdatedPayload
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsError
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsErrorType.INVALID_PARAMETERS
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.pages.PageItem
