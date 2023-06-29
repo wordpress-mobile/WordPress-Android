@@ -3,18 +3,19 @@ package org.wordpress.android.ui.blaze
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.blaze.BlazeStatusModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BlazeFeatureConfig
+import org.wordpress.android.util.config.BlazeManageCampaignFeatureConfig
 import javax.inject.Inject
 
 class BlazeFeatureUtils @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val blazeFeatureConfig: BlazeFeatureConfig,
+    private val blazeManageCampaignFeatureConfig: BlazeManageCampaignFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
 ) {
     fun isBlazeEnabled(): Boolean {
@@ -38,17 +39,16 @@ class BlazeFeatureUtils @Inject constructor(
     }
 
     fun isSiteBlazeEligible(siteModel: SiteModel): Boolean {
-        return siteModel.canBlaze &&
-                isBlazeEligibleForUser(siteModel)
+        return isBlazeEligibleForUser(siteModel)
     }
 
-    fun shouldShowBlazeCardEntryPoint(blazeStatusModel: BlazeStatusModel?, siteId: Long) =
-        isBlazeEnabled() &&
-                blazeStatusModel?.isEligible == true &&
-                    !isPromoteWithBlazeCardHiddenByUser(siteId)
+    fun shouldShowBlazeCardEntryPoint(siteModel: SiteModel): Boolean =
+        isSiteBlazeEligible(siteModel) &&
+                !isPromoteWithBlazeCardHiddenByUser(siteModel.siteId)
 
-    fun shouldShowBlazeMenuEntryPoint(blazeStatusModel: BlazeStatusModel?) =
-        isBlazeEnabled() &&  blazeStatusModel?.isEligible == true
+    fun shouldShowBlazeCampaigns(siteModel: SiteModel): Boolean =
+        shouldShowBlazeCardEntryPoint(siteModel) &&
+                blazeManageCampaignFeatureConfig.isEnabled()
 
     fun track(stat: AnalyticsTracker.Stat, source: BlazeFlowSource) {
         analyticsTrackerWrapper.track(
@@ -58,7 +58,7 @@ class BlazeFeatureUtils @Inject constructor(
     }
 
     fun hidePromoteWithBlazeCard(siteId: Long) {
-        appPrefsWrapper.setShouldHidePromoteWithBlazeCard(siteId,true)
+        appPrefsWrapper.setShouldHidePromoteWithBlazeCard(siteId, true)
     }
 
     fun trackEntryPointTapped(blazeFlowSource: BlazeFlowSource) {
