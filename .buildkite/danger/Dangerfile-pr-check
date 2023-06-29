@@ -1,5 +1,14 @@
-# When using a Gem, Danger will always try and load 'Dangerfile' (with an optional path, but no different Dangerfile name)
-# When using Github, <path> = path to Dangerfile
+# When using a Gem, Danger will always try and load the Gem's 'Dangerfile', without path
+# When using Github, path: = path/to/Dangerfile, branch: "main"
+# When using just a path: alone, it uses the given path/to/Dangerfile
 
 danger.import_dangerfile(gem: 'danger-iantest')
-# danger.import_dangerfile(github: 'iangmaia/danger-iantest', path: 'Dangerfile-pr-check')
+
+manifest_pr_checker.check_gemfile_lock_updated
+iantest_main.run_android_pr_checks
+
+message "Danger ID: `#{@env.danger_id}`"
+
+if status_report[:errors].count.zero? && status_report[:warnings].count.zero?
+  markdown(":white_check_mark: No errors or warnings while checking the PR :thumbsup:")
+end
