@@ -543,10 +543,9 @@ class PageListViewModel @Inject constructor(
     private fun isPageBlazeEligible(pageModel: PageModel): Boolean {
         val pageStatus = PageStatus.fromPost(pageModel.post)
 
-        return blazeFeatureUtils.isSiteBlazeEligible(pagesViewModel.site) &&
-                listType == PUBLISHED &&
-                pageStatus != PageStatus.PRIVATE &&
-                pageModel.post.password.isEmpty()
+        if (listType != PUBLISHED) return false
+
+        return blazeFeatureUtils.isPageBlazeEligible(pagesViewModel.site, pageStatus, pageModel)
     }
 
     private data class ItemUiStateData(

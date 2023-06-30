@@ -35,6 +35,16 @@ class BlazeFeatureUtils @Inject constructor(
                 postModel.password.isEmpty()
     }
 
+    fun isPageBlazeEligible(
+        siteModel: SiteModel,
+        pageStatus: PageStatus,
+        pageModel: PageModel
+    ): Boolean {
+        return isSiteBlazeEligible(siteModel) &&
+                pageStatus == PageStatus.PUBLISHED &&
+                pageModel.post.password.isEmpty()
+    }
+
     fun isSiteBlazeEligible(siteModel: SiteModel): Boolean {
         return siteModel.canBlaze && siteModel.isAdmin &&
                 isBlazeEnabled()
