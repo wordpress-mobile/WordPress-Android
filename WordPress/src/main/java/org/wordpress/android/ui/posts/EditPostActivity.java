@@ -1312,10 +1312,21 @@ public class EditPostActivity extends LocaleAwareActivity implements
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_post, menu);
         mMenu = menu;
+        boolean isRtlLayout = getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
 
         // Set opacity for undo/redo items
         MenuItem undoItem = mMenu.findItem(R.id.menu_undo_action);
         MenuItem redoItem = mMenu.findItem(R.id.menu_redo_action);
+
+        if (undoItem.getActionView() != null) {
+            ImageView undoIcon = undoItem.getActionView().findViewById(R.id.menu_undo_icon);
+            undoIcon.setRotationY(isRtlLayout ? 180 : 0);
+        }
+
+        if (redoItem.getActionView() != null) {
+            ImageView redoIcon = redoItem.getActionView().findViewById(R.id.menu_redo_icon);
+            redoIcon.setRotationY(isRtlLayout ? 180 : 0);
+        }
 
         undoItem.setEnabled(mMenuHasUndo);
         View undoView = undoItem.getActionView();
