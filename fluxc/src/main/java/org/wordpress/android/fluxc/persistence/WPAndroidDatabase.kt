@@ -28,7 +28,7 @@ import org.wordpress.android.fluxc.persistence.domains.DomainDao
 import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
 
 @Database(
-        version = 14,
+        version = 15,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -39,7 +39,6 @@ import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
             BloggingPromptEntity::class,
             FeatureFlag::class,
             RemoteConfig::class,
-            BlazeStatus::class,
             JetpackCPConnectedSiteEntity::class,
             DomainEntity::class
         ],
@@ -208,6 +207,16 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                     execSQL(
                         "ALTER TABLE BloggingReminders ADD COLUMN isPromptRemindersOptedIn" +
                             " INTEGER DEFAULT 0 NOT NULL"
+                    )
+                }
+            }
+        }
+
+        val MIGRATION_14_15 = object : Migration(14,15){
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.apply {
+                    execSQL(
+                        "DROP TABLE IF EXISTS `BlazeStatus`"
                     )
                 }
             }
