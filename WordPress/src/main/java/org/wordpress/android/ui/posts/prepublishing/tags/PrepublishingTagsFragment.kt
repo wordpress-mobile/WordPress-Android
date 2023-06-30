@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.prepublishing.tags
 
 import android.content.Context
 import android.os.Bundle
@@ -9,7 +9,12 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.PrepublishingTagsFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.TagsFragment
+import org.wordpress.android.ui.posts.TagsSelectedListener
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener
+import org.wordpress.android.ui.posts.trackPrepublishingNudges
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper

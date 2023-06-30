@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.prepublishing
 
 import android.content.Context
 import android.content.DialogInterface
@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -19,12 +18,19 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.PostPrepublishingBottomSheetBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.WPBottomSheetDialogFragment
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
-import org.wordpress.android.ui.posts.PrepublishingScreen.ADD_CATEGORY
-import org.wordpress.android.ui.posts.PrepublishingScreen.CATEGORIES
-import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.ADD_CATEGORY
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.CATEGORIES
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.HOME
+import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesFragment
+import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryFragment
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeFragment
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
+import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActionClickedListener
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener
+import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsFragment
+import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.KeyboardResizeViewUtil
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -171,10 +177,12 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                     PrepublishingHomeFragment.TAG
                 )
             }
+
             PrepublishingScreen.PUBLISH -> Pair(
                 PrepublishingPublishSettingsFragment.newInstance(),
                 PrepublishingPublishSettingsFragment.TAG
             )
+
             PrepublishingScreen.TAGS -> {
                 val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
                     "arguments can't be null."
@@ -184,6 +192,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                     PrepublishingTagsFragment.TAG
                 )
             }
+
             CATEGORIES -> {
                 val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
                     "arguments can't be null."
@@ -197,6 +206,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                     PrepublishingCategoriesFragment.TAG
                 )
             }
+
             ADD_CATEGORY -> {
                 val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
                     "arguments can't be null."
@@ -255,7 +265,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         const val IS_STORY_POST = "prepublishing_bottom_sheet_is_story_post"
 
         @JvmStatic
-        fun newInstance(@NonNull site: SiteModel, isPage: Boolean, isStoryPost: Boolean) =
+        fun newInstance(site: SiteModel, isPage: Boolean, isStoryPost: Boolean) =
             PrepublishingBottomSheetFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(SITE, site)

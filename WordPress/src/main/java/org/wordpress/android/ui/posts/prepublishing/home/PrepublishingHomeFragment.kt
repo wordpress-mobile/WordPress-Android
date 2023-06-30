@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.prepublishing.home
 
 import android.content.Context
 import android.os.Bundle
@@ -10,7 +10,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostPrepublishingHomeFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.EditPostSettingsFragment
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActionClickedListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
@@ -68,22 +70,22 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
         viewModel = ViewModelProvider(this@PrepublishingHomeFragment, viewModelFactory)
             .get(PrepublishingHomeViewModel::class.java)
 
-        viewModel.storyTitleUiState.observe(viewLifecycleOwner, { storyTitleUiState ->
+        viewModel.storyTitleUiState.observe(viewLifecycleOwner) { storyTitleUiState ->
             uiHelpers.updateVisibility(storyTitleHeaderView, true)
             storyTitleHeaderView.init(uiHelpers, imageManager, storyTitleUiState)
-        })
+        }
 
-        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             (actionsRecyclerView.adapter as PrepublishingHomeAdapter).update(uiState)
-        })
+        }
 
-        viewModel.onActionClicked.observeEvent(viewLifecycleOwner, { actionType ->
+        viewModel.onActionClicked.observeEvent(viewLifecycleOwner) { actionType ->
             actionClickedListener?.onActionClicked(actionType)
-        })
+        }
 
-        viewModel.onSubmitButtonClicked.observeEvent(viewLifecycleOwner, { publishPost ->
+        viewModel.onSubmitButtonClicked.observeEvent(viewLifecycleOwner) { publishPost ->
             actionClickedListener?.onSubmitButtonClicked(publishPost)
-        })
+        }
 
         val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
             "arguments can't be null."
@@ -109,9 +111,9 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
         return editPostActivityHook.editPostRepository
     }
 
-    private fun getEditPostActivityHook(): EditPostActivityHook? {
+    private fun getEditPostActivityHook(): EditPostSettingsFragment.EditPostActivityHook? {
         val activity = activity ?: return null
-        return if (activity is EditPostActivityHook) {
+        return if (activity is EditPostSettingsFragment.EditPostActivityHook) {
             activity
         } else {
             throw RuntimeException("$activity must implement EditPostActivityHook")

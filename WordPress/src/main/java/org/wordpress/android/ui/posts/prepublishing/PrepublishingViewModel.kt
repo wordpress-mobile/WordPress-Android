@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.prepublishing
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -13,11 +13,12 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
-import org.wordpress.android.ui.posts.PrepublishingScreen.ADD_CATEGORY
-import org.wordpress.android.ui.posts.PrepublishingScreen.CATEGORIES
-import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
-import org.wordpress.android.ui.posts.PrepublishingScreen.PUBLISH
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.ADD_CATEGORY
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.CATEGORIES
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.HOME
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.PUBLISH
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
+import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
@@ -104,10 +105,12 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
                 currentScreen = CATEGORIES
                 navigateToScreen(currentScreen as PrepublishingScreen, bundle)
             }
+
             currentScreen != HOME -> {
                 currentScreen = HOME
                 navigateToScreen(currentScreen as PrepublishingScreen)
             }
+
             else -> {
                 _dismissBottomSheet.postValue(Event(Unit))
             }

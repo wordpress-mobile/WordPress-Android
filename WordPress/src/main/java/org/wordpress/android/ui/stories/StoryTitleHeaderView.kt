@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import org.wordpress.android.R
 import org.wordpress.android.databinding.PrepublishingStoryTitleListItemBinding
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.focusAndShowKeyboard
 import org.wordpress.android.util.image.ImageManager
