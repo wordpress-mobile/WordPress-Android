@@ -15,8 +15,6 @@ import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOffer
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferFeature
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfig
-import org.wordpress.android.fluxc.persistence.blaze.BlazeStatusDao
-import org.wordpress.android.fluxc.persistence.blaze.BlazeStatusDao.BlazeStatus
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao.BloggingPromptEntity
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
@@ -67,8 +65,6 @@ abstract class WPAndroidDatabase : RoomDatabase() {
     abstract fun featureFlagConfigDao(): FeatureFlagConfigDao
 
     abstract fun remoteConfigDao(): RemoteConfigDao
-
-    abstract fun blazeStatusDao(): BlazeStatusDao
 
     abstract fun domainDao(): DomainDao
 
