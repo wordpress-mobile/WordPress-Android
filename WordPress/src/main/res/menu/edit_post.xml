@@ -2,24 +2,28 @@
 
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <item
         android:id="@+id/menu_undo_action"
+        android:title="@string/menu_undo"
         app:actionLayout="@layout/edit_post_menu_undo_item"
         app:showAsAction="always"
-        android:title="@string/menu_undo"/>
+        tools:ignore="AlwaysShowAction" />
 
     <item
         android:id="@+id/menu_redo_action"
         app:actionLayout="@layout/edit_post_menu_redo_item"
         app:showAsAction="always"
-        android:title="@string/menu_redo"/>
+        android:title="@string/menu_redo"
+        tools:ignore="AlwaysShowAction" />
 
     <item
         android:id="@+id/menu_primary_action"
         android:title="@string/post_status_publish_post"
-        app:showAsAction="always" >
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" >
     </item>
 
     <group
