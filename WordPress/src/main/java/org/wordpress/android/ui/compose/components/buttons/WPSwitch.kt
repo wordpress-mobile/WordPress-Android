@@ -6,7 +6,6 @@ import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ContentAlpha
@@ -63,9 +62,11 @@ fun WPSwitch(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     colors: SwitchColors = WPSwitchDefaults.colors(),
 ) {
+    // always pass a lambda to `onCheckedChange` to avoid different padding when the callback is null
+    // note: maybe provide `false` to LocalMinimumInteractiveComponentEnforcement for ignoring min 48dp touch target
     Switch(
         checked = checked,
-        onCheckedChange = onCheckedChange,
+        onCheckedChange = { onCheckedChange?.invoke(it) },
         modifier = modifier,
         enabled = enabled,
         interactionSource = interactionSource,
@@ -139,7 +140,6 @@ private fun StatefulWPSwitchWithText(
             checked = checkedState.value,
             onCheckedChange = { checkedState.value = it },
             enabled = enabled,
-            modifier = Modifier.defaultMinSize(1.dp, 1.dp),
         )
     }
 }
