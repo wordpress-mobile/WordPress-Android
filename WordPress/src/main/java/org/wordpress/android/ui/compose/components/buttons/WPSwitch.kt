@@ -2,21 +2,25 @@ package org.wordpress.android.ui.compose.components.buttons
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.appcompat.widget.SwitchCompat
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Switch
 import androidx.compose.material.SwitchColors
 import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
@@ -26,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.widgets.WPSwitchCompat
 
 /**
  * A switch that by default uses the same colors as the SwitchCompat from the App Compat libraries, so there are no
@@ -71,9 +76,7 @@ fun WPSwitch(
 object WPSwitchDefaults {
     @Composable
     fun colors(): SwitchColors {
-        val disabledAlpha = 0.3f // it seems this the alpha used by the AppCompat
         // thumb colors
-        val baseThumbColor = Color(0xFFF9F9F9) // color from the 9-patch drawable used for the thumb
         val thumbDisabledColor = colorResource(
             if (MaterialTheme.colors.isLight) {
                 R.color.switch_thumb_disabled_material_light
@@ -92,30 +95,51 @@ object WPSwitchDefaults {
 
         // track colors
         val baseTrackColor = MaterialTheme.colors.surface
-        val trackDisabledColor = MaterialTheme.colors.onSurface.copy(alpha = disabledAlpha)
+        val trackDisabledColor = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
         val trackEnabledUncheckedColor = MaterialTheme.colors.onSurface
         val trackEnabledCheckedColor = MaterialTheme.colors.primary
 
         return SwitchDefaults.colors(
-            checkedTrackAlpha = disabledAlpha,
-            uncheckedTrackAlpha = disabledAlpha,
-            checkedThumbColor = thumbEnabledCheckedColor.multiply(baseThumbColor),
+            checkedTrackAlpha = ContentAlpha.disabled,
+            uncheckedTrackAlpha = ContentAlpha.disabled,
+            checkedThumbColor = thumbEnabledCheckedColor,
             checkedTrackColor = trackEnabledCheckedColor,
-            uncheckedThumbColor = thumbEnabledUncheckedColor.multiply(baseThumbColor),
+            uncheckedThumbColor = thumbEnabledUncheckedColor,
             uncheckedTrackColor = trackEnabledUncheckedColor,
-            disabledCheckedThumbColor = thumbDisabledColor.multiply(baseThumbColor),
+            disabledCheckedThumbColor = thumbDisabledColor,
             disabledCheckedTrackColor = trackDisabledColor.compositeOver(baseTrackColor),
-            disabledUncheckedThumbColor = thumbDisabledColor.multiply(baseThumbColor),
+            disabledUncheckedThumbColor = thumbDisabledColor,
             disabledUncheckedTrackColor = trackDisabledColor.compositeOver(baseTrackColor),
         )
     }
+}
 
-    private fun Color.multiply(other: Color): Color {
-        return Color(
-            red = this.red * other.red,
-            green = this.green * other.green,
-            blue = this.blue * other.blue,
-            alpha = this.alpha * other.alpha,
+/**
+ * Compose for previewing against the Android View-based [WPSwitchCompat].
+ */
+@Composable
+private fun StatefulWPSwitchWithText(
+    text: String,
+    modifier: Modifier = Modifier,
+    initialCheckedState: Boolean = false,
+    enabled: Boolean = true,
+) {
+    val checkedState = remember { mutableStateOf(initialCheckedState) }
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text,
+            modifier = Modifier.weight(1f),
+            style = MaterialTheme.typography.body2,
+            color = if (enabled) Color.Unspecified else LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
+        )
+        WPSwitch(
+            checked = checkedState.value,
+            onCheckedChange = { checkedState.value = it },
+            enabled = enabled,
+            modifier = Modifier.defaultMinSize(1.dp, 1.dp),
         )
     }
 }
@@ -124,126 +148,113 @@ object WPSwitchDefaults {
 @Preview(name = "Light mode")
 @Preview(name = "Dark mode", uiMode = UI_MODE_NIGHT_YES)
 @Composable
-fun WPSwitchPreview() {
+private fun WPSwitchPreview() {
     AppTheme {
         Column(modifier = Modifier.fillMaxWidth()) {
-            val itemModifier = Modifier
+            val viewModifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(
+                    horizontal = 8.dp,
+                    vertical = 16.dp,
+                )
 
-            AndroidView(
-                factory = { context ->
-                    SwitchCompat(context).apply {
-                        isChecked = true
-                        isEnabled = true
-                        text = "The first one view gets wrong colors..."
-                    }
-                },
-                modifier = itemModifier
-            )
-
-            Divider()
+            val composeModifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = 8.dp,
+                    end = 2.dp,
+                )
 
             // compose enabled checked
-            Row(modifier = itemModifier) {
-                Text(
-                    "Compose enabled checked",
-                    modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.body2
-                )
-                WPSwitch(checked = true, onCheckedChange = null)
-            }
+            StatefulWPSwitchWithText(
+                text = "Compose enabled checked",
+                modifier = composeModifier,
+                initialCheckedState = true,
+            )
 
             Divider()
 
             // view enabled checked
             AndroidView(
                 factory = { context ->
-                    SwitchCompat(context).apply {
+                    WPSwitchCompat(context).apply {
                         isChecked = true
                         isEnabled = true
                         text = "View enabled checked"
                     }
                 },
-                modifier = itemModifier
+                modifier = viewModifier
             )
 
             Divider()
 
             // compose enabled unchecked
-            Row(modifier = itemModifier) {
-                Text(
-                    "Compose enabled unchecked",
-                    modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.body2
-                )
-                WPSwitch(checked = false, onCheckedChange = null)
-            }
+            StatefulWPSwitchWithText(
+                text = "Compose enabled unchecked",
+                modifier = composeModifier,
+                initialCheckedState = false,
+            )
 
             Divider()
 
             // view enabled unchecked
             AndroidView(
                 factory = { context ->
-                    SwitchCompat(context).apply {
+                    WPSwitchCompat(context).apply {
                         isChecked = false
                         isEnabled = true
                         text = "View enabled unchecked"
                     }
                 },
-                modifier = itemModifier
+                modifier = viewModifier
             )
 
             Divider()
 
             // compose disabled checked
-            Row(modifier = itemModifier) {
-                Text(
-                    "Compose disabled checked",
-                    modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.body2
-                )
-                WPSwitch(checked = true, onCheckedChange = null, enabled = false)
-            }
+            StatefulWPSwitchWithText(
+                text = "Compose disabled checked",
+                modifier = composeModifier,
+                initialCheckedState = true,
+                enabled = false,
+            )
 
             Divider()
 
             // view disabled checked
             AndroidView(
                 factory = { context ->
-                    SwitchCompat(context).apply {
+                    WPSwitchCompat(context).apply {
                         isChecked = true
                         isEnabled = false
                         text = "View disabled checked"
                     }
                 },
-                modifier = itemModifier
+                modifier = viewModifier
             )
 
             Divider()
 
             // compose disabled unchecked
-            Row(modifier = itemModifier) {
-                Text(
-                    "Compose disabled unchecked",
-                    modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.body2
-                )
-                WPSwitch(checked = false, onCheckedChange = null, enabled = false)
-            }
+            StatefulWPSwitchWithText(
+                text = "Compose disabled unchecked",
+                modifier = composeModifier,
+                initialCheckedState = false,
+                enabled = false,
+            )
 
             Divider()
 
             // view disabled unchecked
             AndroidView(
                 factory = { context ->
-                    SwitchCompat(context).apply {
+                    WPSwitchCompat(context).apply {
                         isChecked = false
                         isEnabled = false
                         text = "View disabled unchecked"
                     }
                 },
-                modifier = itemModifier
+                modifier = viewModifier
             )
         }
     }
