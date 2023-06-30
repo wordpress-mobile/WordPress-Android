@@ -46,7 +46,9 @@ class BlazeFeatureUtils @Inject constructor(
     }
 
     fun isSiteBlazeEligible(siteModel: SiteModel): Boolean {
-        return siteModel.canBlaze && siteModel.isAdmin &&
+        return siteModel.canBlaze != null &&
+                siteModel.canBlaze &&
+                siteModel.isAdmin &&
                 isBlazeEnabled()
     }
 
