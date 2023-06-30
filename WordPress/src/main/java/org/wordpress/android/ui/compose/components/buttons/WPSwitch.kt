@@ -153,17 +153,11 @@ private fun WPSwitchPreview() {
         Column(modifier = Modifier.fillMaxWidth()) {
             val viewModifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    horizontal = 8.dp,
-                    vertical = 16.dp,
-                )
+                .padding(8.dp)
 
             val composeModifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    start = 8.dp,
-                    end = 2.dp,
-                )
+                .padding(horizontal = 8.dp)
 
             // compose enabled checked
             StatefulWPSwitchWithText(
