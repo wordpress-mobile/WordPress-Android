@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
@@ -39,9 +41,12 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.image.ImageManager
 
+@Suppress("LongParameterList")
 class MySiteAdapter(
     val imageManager: ImageManager,
     val uiHelpers: UiHelpers,
+    val accountStore: AccountStore,
+    val gravatarLoader: MeGravatarLoader,
     val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     val htmlCompatWrapper: HtmlCompatWrapper,
     val learnMoreClicked: () -> Unit
@@ -67,7 +72,12 @@ class MySiteAdapter(
             MySiteCardAndItem.Type.CATEGORY_EMPTY_HEADER_ITEM.ordinal -> {
                 MySiteCategoryItemEmptyViewHolder(parent, uiHelpers)
             }
-            MySiteCardAndItem.Type.LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
+            MySiteCardAndItem.Type.LIST_ITEM.ordinal -> MySiteListItemViewHolder(
+                parent,
+                uiHelpers,
+                accountStore,
+                gravatarLoader
+            )
             MySiteCardAndItem.Type.DASHBOARD_CARDS.ordinal -> CardsViewHolder(
                 parent,
                 imageManager,

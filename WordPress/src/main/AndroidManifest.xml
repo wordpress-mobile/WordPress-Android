@@ -652,6 +652,7 @@
         <activity
             android:name="org.wordpress.android.ui.debug.DebugSettingsActivity"
             android:launchMode="singleTop"
+            android:label="@string/preference_open_debug_settings"
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity

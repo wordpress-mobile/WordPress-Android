@@ -354,6 +354,7 @@ public class RestClientUtils {
     /**
      * Returns locale parameter used in REST calls which require the response to be localized
      */
+    @SuppressWarnings("deprecation")
     public static HashMap<String, String> getRestLocaleParams(Context context) {
         HashMap<String, String> params = new HashMap<>();
         String deviceLanguageCode = LanguageUtils.getCurrentDeviceLanguageCode(context);

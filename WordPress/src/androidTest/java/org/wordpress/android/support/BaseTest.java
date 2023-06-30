@@ -109,7 +109,6 @@ public class BaseTest {
         MePage mePage = new MePage();
         boolean isSelfHosted = mePage.go().isSelfHosted();
         if (isSelfHosted) { // Logged in from self hosted connected
-            mePage.goBack();
             new MySitesPage().go().removeSite(E2E_SELF_HOSTED_USER_SITE_ADDRESS);
         } else {
             wpLogout();
