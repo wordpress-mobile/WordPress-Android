@@ -72,4 +72,42 @@ class BlockEditorTests : BaseTest() {
             .switchToVisualMode()
             .verifyPostElementText(mPostText)
     }
+
+    @Test
+    fun e2eBlockEditorCanUndoChanges() {
+        val title = "blockEditorCanUndoChanges"
+        MySitesPage()
+            .startNewPost()
+        BlockEditorPage()
+            .waitForTitleDisplayed()
+            .enterTitle(title)
+            .enterParagraphText(mPostText)
+            .verifyContentStructure(1, mPostText.split(" ").count(), mPostText.length)
+            .dismissContentStructure()
+            .undo()
+            .undo()
+            .verifyContentStructure(0, 0, 0)
+            .dismissContentStructure()
+    }
+
+    @Test
+    fun e2eBlockEditorCanRedoChanges() {
+        val title = "blockEditorCanRedoChanges"
+        MySitesPage()
+            .startNewPost()
+        BlockEditorPage()
+            .waitForTitleDisplayed()
+            .enterTitle(title)
+            .enterParagraphText(mPostText)
+            .verifyContentStructure(1, mPostText.split(" ").count(), mPostText.length)
+            .dismissContentStructure()
+            .undo()
+            .undo()
+            .verifyContentStructure(0, 0, 0)
+            .dismissContentStructure()
+            .redo()
+            .redo()
+            .verifyContentStructure(1, mPostText.split(" ").count(), mPostText.length)
+            .dismissContentStructure()
+    }
 }

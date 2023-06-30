@@ -50,6 +50,11 @@ class BlockEditorPage {
         return this
     }
 
+    fun dismissContentStructure(): BlockEditorPage {
+        Espresso.pressBack()
+        return this
+    }
+
     fun addPostSettings(categoryName: String?, tagName: String?): BlockEditorPage {
         openPostSetting()
         addCategory(categoryName)
@@ -192,6 +197,35 @@ class BlockEditorPage {
     fun previewPost() {
         Espresso.openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext())
         WPSupportUtils.clickOn(Espresso.onView(ViewMatchers.withText(R.string.menu_preview)))
+    }
+
+    fun verifyContentStructure(blocks: Int, words: Int, characters: Int): BlockEditorPage {
+        val mContentStructure = "Blocks: %1\$d\nWords: %2\$d\nCharacters: %3\$d"
+
+        Espresso.openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext())
+        WPSupportUtils.clickOn(Espresso.onView(ViewMatchers.withText("Content structure")))
+
+        TestCase.assertTrue(
+            "Expected content structure is not valid",
+            WPSupportUtils.waitForElementToBeDisplayedWithoutFailure(
+                Espresso.onView(
+                    ViewMatchers.withText(
+                        String.format(mContentStructure, blocks, words, characters)
+                    )
+                )
+            )
+        )
+        return this
+    }
+
+    fun undo(): BlockEditorPage {
+        WPSupportUtils.clickOn((R.id.menu_undo_action))
+        return this
+    }
+
+    fun redo(): BlockEditorPage {
+        WPSupportUtils.clickOn((R.id.menu_redo_action))
+        return this
     }
 
     companion object {
