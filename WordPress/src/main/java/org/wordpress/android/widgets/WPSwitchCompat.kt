@@ -12,7 +12,7 @@ import org.wordpress.android.ui.compose.components.buttons.WPSwitch
  * us incrementally adopt Compose and use [WPSwitch] even inside Android View-based layouts without big visual
  * differences.
  */
-class WPSwitchCompat(
+class WPSwitchCompat @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.switchStyle,
