@@ -34,6 +34,10 @@
 
 /sites/$site/blogging-prompts
 
+/sites/$site/launch
+
+/sites/$site/jetpack-ai/completions
+
 /users/username/suggestions/
 
 /segments
