@@ -10,6 +10,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardSource
 
@@ -48,23 +49,21 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
     @Test
     fun `given blaze is enabled, when build is invoked, then card is shown`() = test {
         init(true)
-        val result = mutableListOf<Boolean>()
-        blazeCardSource.refresh.observeForever { result.add(it) }
+        val result = mutableListOf<BlazeCardUpdate>()
 
-        blazeCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
+        blazeCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) }}
 
-        assertThat(result.last()).isTrue
+        assertThat(result.last()).isEqualTo(BlazeCardUpdate(true))
     }
 
     @Test
     fun `given blaze is disabled, when build is invoked, then card is not shown`() = test {
         init(false)
-        val result = mutableListOf<Boolean>()
-        blazeCardSource.refresh.observeForever { result.add(it) }
+        val result = mutableListOf<BlazeCardUpdate>()
 
-        blazeCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
+        blazeCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) }}
 
-        assertThat(result.last()).isFalse
+        assertThat(result.last()).isEqualTo(BlazeCardUpdate(false))
     }
 
     @Test
@@ -90,12 +89,10 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
         blazeCardSource.refresh()
         advanceUntilIdle()
 
-        assertThat(result.size).isEqualTo(5)
+        assertThat(result.size).isEqualTo(3)
         assertThat(result[0]).isFalse // init
         assertThat(result[1]).isTrue // build(...) -> refresh()
         assertThat(result[2]).isTrue // build(...) -> fetch
-        assertThat(result[3]).isFalse // refresh()
-        assertThat(result[4]).isFalse // refreshData(...) -> fetch -> error
     }
 
     private fun setUpMocks(isBlazeEnabled: Boolean) {
