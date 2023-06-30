@@ -4,8 +4,8 @@
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:gravity="center_vertical|fill_horizontal"
-        android:start="1dp"
-        android:end="1dp">
+        android:start="@dimen/switch_horizontal_padding"
+        android:end="@dimen/switch_horizontal_padding">
         <shape android:shape="rectangle"
             android:tint="@color/switch_track">
             <corners android:radius="7dp" />

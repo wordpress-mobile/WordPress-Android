@@ -7,7 +7,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="false">
         <layer-list>
-            <item android:width="@dimen/switch_thumb_size" android:height="@dimen/switch_thumb_size" android:end="@dimen/switch_thumb_padding" android:start="@dimen/switch_thumb_padding">
+            <item android:width="@dimen/switch_thumb_size" android:height="@dimen/switch_thumb_size" android:bottom="@dimen/switch_vertical_padding" android:end="@dimen/switch_horizontal_padding" android:start="@dimen/switch_horizontal_padding" android:top="@dimen/switch_vertical_padding">
                 <shape android:gravity="center" android:shape="oval">
                     <solid android:color="?attr/colorSwitchThumbNormal" />
                 </shape>
@@ -18,7 +18,7 @@
 
     <item android:state_checked="true">
         <layer-list>
-            <item android:width="@dimen/switch_thumb_size" android:height="@dimen/switch_thumb_size" android:end="@dimen/switch_thumb_padding" android:start="@dimen/switch_thumb_padding">
+            <item android:width="@dimen/switch_thumb_size" android:height="@dimen/switch_thumb_size" android:bottom="@dimen/switch_vertical_padding" android:end="@dimen/switch_horizontal_padding" android:start="@dimen/switch_horizontal_padding" android:top="@dimen/switch_vertical_padding">
                 <shape android:gravity="center" android:shape="oval">
                     <solid android:color="?attr/colorControlActivated" />
                 </shape>
@@ -28,7 +28,7 @@
 
     <item>
         <layer-list>
-            <item android:width="@dimen/switch_thumb_size" android:height="@dimen/switch_thumb_size" android:end="@dimen/switch_thumb_padding" android:start="@dimen/switch_thumb_padding">
+            <item android:width="@dimen/switch_thumb_size" android:height="@dimen/switch_thumb_size" android:bottom="@dimen/switch_vertical_padding" android:end="@dimen/switch_horizontal_padding" android:start="@dimen/switch_horizontal_padding" android:top="@dimen/switch_vertical_padding">
                 <shape android:gravity="center" android:shape="oval">
                     <solid android:color="?attr/colorSwitchThumbNormal" />
                 </shape>
