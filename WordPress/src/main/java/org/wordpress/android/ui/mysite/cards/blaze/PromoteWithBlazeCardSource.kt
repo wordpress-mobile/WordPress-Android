@@ -27,11 +27,14 @@ class PromoteWithBlazeCardSource @Inject constructor(
     private fun MediatorLiveData<BlazeCardUpdate>.getData(siteLocalId: Int) {
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
-            if (blazeFeatureUtils.shouldShowBlazeCampaigns(selectedSite)) {
-                // to do : implement the logic to fetch campaigns
-                postValue(BlazeCardUpdate(true))
-            } else if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(selectedSite)) {
-                postValue(BlazeCardUpdate(true))
+            if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(selectedSite)) {
+                if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {
+                    // to do : implement the logic to fetch campaigns
+                    postValue(BlazeCardUpdate(true))
+                } else {
+                    // show blaze promo card if campaign feature is not available
+                    postValue(BlazeCardUpdate(true))
+                }
             } else {
                 postValue(BlazeCardUpdate(false))
             }

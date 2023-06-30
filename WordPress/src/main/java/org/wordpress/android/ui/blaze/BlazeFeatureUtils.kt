@@ -3,6 +3,8 @@ package org.wordpress.android.ui.blaze
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.page.PageModel
+import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
@@ -18,14 +20,9 @@ class BlazeFeatureUtils @Inject constructor(
     private val blazeManageCampaignFeatureConfig: BlazeManageCampaignFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
 ) {
-    fun isBlazeEnabled(): Boolean {
+    private fun isBlazeEnabled(): Boolean {
         return buildConfigWrapper.isJetpackApp &&
                 blazeFeatureConfig.isEnabled()
-    }
-
-    fun isBlazeEligibleForUser(siteModel: SiteModel): Boolean {
-        return siteModel.isAdmin &&
-                isBlazeEnabled()
     }
 
     fun isPostBlazeEligible(
@@ -39,16 +36,15 @@ class BlazeFeatureUtils @Inject constructor(
     }
 
     fun isSiteBlazeEligible(siteModel: SiteModel): Boolean {
-        return isBlazeEligibleForUser(siteModel)
+        return siteModel.canBlaze && siteModel.isAdmin &&
+                isBlazeEnabled()
     }
 
     fun shouldShowBlazeCardEntryPoint(siteModel: SiteModel): Boolean =
         isSiteBlazeEligible(siteModel) &&
                 !isPromoteWithBlazeCardHiddenByUser(siteModel.siteId)
 
-    fun shouldShowBlazeCampaigns(siteModel: SiteModel): Boolean =
-        shouldShowBlazeCardEntryPoint(siteModel) &&
-                blazeManageCampaignFeatureConfig.isEnabled()
+    fun shouldShowBlazeCampaigns() = blazeManageCampaignFeatureConfig.isEnabled()
 
     fun track(stat: AnalyticsTracker.Stat, source: BlazeFlowSource) {
         analyticsTrackerWrapper.track(
