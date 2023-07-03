@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import okhttp3.Credentials
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
@@ -21,10 +22,11 @@ class ApplicationPasswordsStore @Inject constructor(
         private const val UUID_PREFERENCE_KEY_PREFIX = "app_password_uuid_"
     }
 
-    fun getApplicationPasswordAuthOption(site: SiteModel): String? = encryptedPreferences.getString(
-        site.usernamePrefKey,
-        null
-    ) + ":" + encryptedPreferences.getString(site.passwordPrefKey, null)
+    fun getApplicationPasswordAuthHeader(site: SiteModel): String =
+        Credentials.basic(
+            username = encryptedPreferences.getString(site.usernamePrefKey, null).orEmpty(),
+            password = encryptedPreferences.getString(site.passwordPrefKey, null).orEmpty()
+        )
 
     @Inject internal lateinit var configuration: ApplicationPasswordsConfiguration
 
