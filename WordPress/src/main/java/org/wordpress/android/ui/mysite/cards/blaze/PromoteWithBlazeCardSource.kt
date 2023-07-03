@@ -30,13 +30,13 @@ class PromoteWithBlazeCardSource @Inject constructor(
             if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(selectedSite)) {
                 if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {
                     // to do : implement the logic to fetch campaigns
-                    postValue(BlazeCardUpdate(true))
+                    postState(BlazeCardUpdate(true))
                 } else {
                     // show blaze promo card if campaign feature is not available
-                    postValue(BlazeCardUpdate(true))
+                    postState(BlazeCardUpdate(true))
                 }
             } else {
-                postValue(BlazeCardUpdate(false))
+                postState(BlazeCardUpdate(false))
             }
         } else {
             postErrorState()
@@ -54,6 +54,6 @@ class PromoteWithBlazeCardSource @Inject constructor(
     }
 
     private fun MediatorLiveData<BlazeCardUpdate>.postErrorState() {
-        postValue(BlazeCardUpdate(false))
+        postState(BlazeCardUpdate(false))
     }
 }
