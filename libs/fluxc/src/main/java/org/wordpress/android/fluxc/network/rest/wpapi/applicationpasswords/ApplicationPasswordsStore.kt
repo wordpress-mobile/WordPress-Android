@@ -21,6 +21,9 @@ class ApplicationPasswordsStore @Inject constructor(
         private const val UUID_PREFERENCE_KEY_PREFIX = "app_password_uuid_"
     }
 
+    fun getApplicationPassword(site: SiteModel): String? =
+        encryptedPreferences.getString(site.passwordPrefKey, null)
+
     @Inject internal lateinit var configuration: ApplicationPasswordsConfiguration
 
     private val applicationName: String
