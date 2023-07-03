@@ -62,13 +62,13 @@ import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListen
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
-import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
-import org.wordpress.android.ui.posts.PublishPost
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
+import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.StoryMediaFileData
 import org.wordpress.android.ui.stories.media.StoryEditorMedia

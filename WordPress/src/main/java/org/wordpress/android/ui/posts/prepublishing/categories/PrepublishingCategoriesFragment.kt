@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.prepublishing.categories
 
 import android.content.Context
 import android.os.Bundle
@@ -19,8 +19,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.ADD_CATEGORY
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingAddCategoryRequest
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.ADD_CATEGORY
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActionClickedListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT

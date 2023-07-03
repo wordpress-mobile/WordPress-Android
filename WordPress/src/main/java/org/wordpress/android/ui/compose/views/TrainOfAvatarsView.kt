@@ -19,6 +19,7 @@ import androidx.core.graphics.drawable.toBitmap
 import org.wordpress.android.R
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.compose.components.TrainOfIcons
+import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.GravatarUtils
@@ -111,10 +112,13 @@ class TrainOfAvatarsView @JvmOverloads constructor(
     }
 
     // returning null for a model will cause the Composable to render a placeholder
-    private fun avatarModels(): List<String?> = avatarsState.value
-        .map { it.userAvatarUrl }
-        .map { GravatarUtils.fixGravatarUrl(it, iconSize) }
-        .map { it.takeIf { gravatarUrl -> gravatarUrl.isNotEmpty() } }
+    private fun avatarModels(): List<TrainOfIconsModel> = avatarsState.value
+        .map { GravatarUtils.fixGravatarUrl(it.userAvatarUrl, iconSize) }
+        .map {
+            TrainOfIconsModel(
+                it.takeIf { gravatarUrl -> gravatarUrl.isNotEmpty() }
+            )
+        }
 
     @Composable
     private fun placeholderPainter(): Painter {

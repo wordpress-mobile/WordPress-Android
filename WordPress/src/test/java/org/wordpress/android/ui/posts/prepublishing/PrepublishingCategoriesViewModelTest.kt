@@ -30,9 +30,8 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AddCategoryUseCase
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
-import org.wordpress.android.ui.posts.PrepublishingAddCategoryRequest
-import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel
-import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel.UiState
+import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesViewModel
+import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesViewModel.UiState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper

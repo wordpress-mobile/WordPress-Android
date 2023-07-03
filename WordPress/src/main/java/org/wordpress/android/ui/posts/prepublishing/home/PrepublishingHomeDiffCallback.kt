@@ -1,11 +1,11 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.prepublishing.home
 
-import androidx.recyclerview.widget.DiffUtil.Callback
+import androidx.recyclerview.widget.DiffUtil
 
 class PrepublishingHomeDiffCallback(
     private val oldList: List<PrepublishingHomeItemUiState>,
     private val newList: List<PrepublishingHomeItemUiState>
-) : Callback() {
+) : DiffUtil.Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]

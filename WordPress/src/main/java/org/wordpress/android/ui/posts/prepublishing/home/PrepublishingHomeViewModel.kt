@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.prepublishing.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,22 +6,26 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.CATEGORIES
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
+import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.GetCategoriesUseCase
+import org.wordpress.android.ui.posts.GetPostTagsUseCase
+import org.wordpress.android.ui.posts.PostSettingsUtils
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.CATEGORIES
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PUBLISH
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.TAGS
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
+import org.wordpress.android.ui.posts.trackPrepublishingNudges
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
-import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -73,13 +77,18 @@ class PrepublishingHomeViewModel @Inject constructor(
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             if (isStoryPost) {
                 _storyTitleUiState.postValue(StoryTitleUiState(
-                    storyTitle = UiStringText(StringUtils.notNullStr(editPostRepository.title)),
+                    storyTitle = UiString.UiStringText(StringUtils.notNullStr(editPostRepository.title)),
                     storyThumbnailUrl = storyRepositoryWrapper.getCurrentStoryThumbnailUrl()
                 ) { storyTitle ->
                     onStoryTitleChanged(storyTitle)
                 })
             } else {
-                add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
+                add(
+                    HeaderUiState(
+                        UiString.UiStringText(site.name),
+                        StringUtils.notNullStr(site.iconUrl)
+                    )
+                )
             }
 
             if (editPostRepository.status != PostStatus.PRIVATE) {
@@ -91,7 +100,7 @@ class PrepublishingHomeViewModel @Inject constructor(
             if (!editPostRepository.isPage) {
                 showNotSetPost(editPostRepository, site)
             } else {
-                UiStringRes(R.string.prepublishing_nudges_home_categories_not_set)
+                UiString.UiStringRes(R.string.prepublishing_nudges_home_categories_not_set)
             }
 
             val categoriesString = getCategoriesUseCase.getPostCategoriesString(
@@ -102,9 +111,9 @@ class PrepublishingHomeViewModel @Inject constructor(
             add(HomeUiState(
                 actionType = CATEGORIES,
                 actionResult = if (categoriesString.isNotEmpty()) {
-                    UiStringText(categoriesString)
+                    UiString.UiStringText(categoriesString)
                 } else {
-                    run { UiStringRes(R.string.prepublishing_nudges_home_categories_not_set) }
+                    run { UiString.UiStringRes(R.string.prepublishing_nudges_home_categories_not_set) }
                 },
                 actionClickable = true,
                 onActionClicked = ::onActionClicked
@@ -127,8 +136,8 @@ class PrepublishingHomeViewModel @Inject constructor(
         add(HomeUiState(
             actionType = TAGS,
             actionResult = getPostTagsUseCase.getTags(editPostRepository)
-                ?.let { UiStringText(it) }
-                ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
+                ?.let { UiString.UiStringText(it) }
+                ?: run { UiString.UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
             actionClickable = true,
             onActionClicked = ::onActionClicked
         )
@@ -139,7 +148,7 @@ class PrepublishingHomeViewModel @Inject constructor(
             site
         )
         if (categoryString.isNotEmpty()) {
-            UiStringText(categoryString)
+            UiString.UiStringText(categoryString)
         }
     }
 
@@ -151,7 +160,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                 actionType = PUBLISH,
                 actionResult = editPostRepository.getEditablePost()
                     ?.let {
-                        UiStringText(
+                        UiString.UiStringText(
                             postSettingsUtils.getPublishDateLabel(
                                 it
                             )
@@ -173,7 +182,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                 actionType = PUBLISH,
                 actionResult = editPostRepository.getEditablePost()
                     ?.let {
-                        UiStringText(
+                        UiString.UiStringText(
                             postSettingsUtils.getPublishDateLabel(
                                 it
                             )
@@ -198,7 +207,7 @@ class PrepublishingHomeViewModel @Inject constructor(
 
     private suspend fun waitForStoryTitleJobAndSubmit(publishPost: PublishPost) {
         updateStoryTitleJob?.join()
-        analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_PUBLISH_NOW_TAPPED)
+        analyticsTrackerWrapper.trackPrepublishingNudges(AnalyticsTracker.Stat.EDITOR_POST_PUBLISH_NOW_TAPPED)
         _onSubmitButtonClicked.postValue(Event(publishPost))
     }
 
