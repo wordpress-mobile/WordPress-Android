@@ -22,7 +22,7 @@ class ApplicationPasswordsStore @Inject constructor(
     }
 
     fun getApplicationPasswordAuthOption(site: SiteModel): String? = encryptedPreferences.getString(
-        site.passwordPrefKey,
+        site.usernamePrefKey,
         null
     ) + ":" + encryptedPreferences.getString(site.passwordPrefKey, null)
 
