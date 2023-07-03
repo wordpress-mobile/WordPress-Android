@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-31 17:54:09+0000
+Translation-Revision-Date: 2023-06-29 14:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_reusable">Yeniden kullanılabilir</string>
+    <string name="privacy_banner_error_save">Gizlilik tercihleriniz kaydedilirken bir hata oluştu.</string>
+    <string name="privacy_banner_save">Kaydet</string>
+    <string name="privacy_banner_settings">Ayarlar</string>
+    <string name="privacy_banner_analytics_description">Kullanıcıların mobil uygulamalarımızla nasıl etkileşimde bulunduğu hakkında bilgi toplayarak performansı optimize etmemize izin verin.</string>
+    <string name="privacy_banner_analytics">Analizler</string>
+    <string name="privacy_banner_title">Gizlilik yönetimi</string>
+    <string name="privacy_banner_description">Kullanıcı gizliliğiniz bizim için her zaman çok önemli olmuştur. Uygulamamızı (ve deneyiminizi) çeşitli şekillerde optimize etmek için kişisel verilerinizi kullanır, saklar ve işleriz. İşlerin sorunsuz yürümesi için verilerinizi bazı şekillerde kesinlikle kullanmamız gerekiyor. Diğer kullanımları Ayarlarınızdan özelleştirebilirsiniz.</string>
+    <string name="tabbar_accessibility_label_me">Ben. Profil ayrıntılarınızı yönetin.</string>
     <string name="gutenberg_native_block_ungrouped">Blok gruptan çıkarıldı</string>
     <string name="gutenberg_native_block_grouped">Blok gruplandı</string>
     <string name="dashboard_card_plans_checkout_success_info">Alan adınızın düzgün şekilde çalışmaya başlaması 30 dakika kadar sürebilir.</string>

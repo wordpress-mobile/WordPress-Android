@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-14 09:54:07+0000
+Translation-Revision-Date: 2023-06-28 13:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_reusable">可重用</string>
+    <string name="privacy_banner_error_save">保存您的隐私选项时出现错误。</string>
+    <string name="privacy_banner_save">保存</string>
+    <string name="privacy_banner_settings">设置</string>
+    <string name="privacy_banner_analytics_description">允许我们收集与用户跟我们的移动应用程序互动情况相关的信息，从而优化性能。</string>
+    <string name="privacy_banner_analytics">分析</string>
+    <string name="privacy_banner_title">管理隐私</string>
+    <string name="privacy_banner_description">我们自始至终都非常重视您的隐私。 我们使用、存储和处理您的个人数据，以多种方式优化我们的应用程序（以及您的体验）。 我们必须使用您的部分数据，来确保系统正常运行，而至于其他数据，您可以在“设置”中进行定制。</string>
+    <string name="tabbar_accessibility_label_me">本人。 管理您的个人资料详情。</string>
     <string name="social_item_message_title">消息</string>
     <string name="gutenberg_native_block_ungrouped">未分组区块</string>
     <string name="gutenberg_native_block_grouped">已分组区块</string>

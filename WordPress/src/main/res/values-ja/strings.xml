@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-14 09:54:07+0000
+Translation-Revision-Date: 2023-06-28 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_reusable">再利用可能</string>
+    <string name="privacy_banner_error_save">プライバシーに関する選択を保存しているときにエラーが発生しました。</string>
+    <string name="privacy_banner_save">保存</string>
+    <string name="privacy_banner_settings">設定</string>
+    <string name="privacy_banner_analytics_description">パフォーマンス最適化のために、当社モバイルアプリの利用状況に関する情報の収集を許可します。</string>
+    <string name="privacy_banner_analytics">アナリティクス</string>
+    <string name="privacy_banner_title">プライバシーを管理</string>
+    <string name="privacy_banner_description">当社はユーザーのプライバシーを常に重要視しています。 アプリ (そしてアプリの操作性) を最適化するために、個人データをさまざまな形で使用、保存、処理しています。 個人データの使用用途の一部は、アプリが機能するために必須のものです。それ以外の用途については設定でカスタマイズできます。</string>
+    <string name="tabbar_accessibility_label_me">自分。 プロフィール詳細を管理します。</string>
     <string name="social_item_message_title">メッセージ</string>
     <string name="gutenberg_native_block_ungrouped">ブロックのグループが解除されました</string>
     <string name="gutenberg_native_block_grouped">ブロックがグループ化されました</string>
