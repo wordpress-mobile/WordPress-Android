@@ -43,7 +43,7 @@
                 tools:text="Some example sub text." />
         </LinearLayout>
 
-        <androidx.appcompat.widget.SwitchCompat
+        <org.wordpress.android.widgets.WPSwitchCompat
             android:id="@+id/notifications_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

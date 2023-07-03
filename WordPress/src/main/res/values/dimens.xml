@@ -773,4 +773,10 @@
     <dimen name="dashboard_card_plans_layout_padding">16dp</dimen>
     <dimen name="dashboard_card_plans_top_margin">48dp</dimen>
     <dimen name="dashboard_card_plans_done_button_bottom_margin">16dp</dimen>
+
+    <!-- WPSwitchCompat min width to closely match the Switch composable -->
+    <dimen name="switch_min_width">48dp</dimen>
+    <dimen name="switch_thumb_size">20dp</dimen>
+    <dimen name="switch_horizontal_padding">7dp</dimen>
+    <dimen name="switch_vertical_padding">4dp</dimen>
 </resources>
