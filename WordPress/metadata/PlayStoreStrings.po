@@ -93,7 +93,7 @@ msgid ""
 "\n"
 "Whether you need a website builder to create your website, or a simple blog maker, WordPress can help. It gives you beautiful designs, powerful features, and the freedom to build anything you want.\n"
 "\n"
-"California users privacy notice: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.\n"
+"California users privacy notice: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa."
 msgstr ""
 
 #. translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!

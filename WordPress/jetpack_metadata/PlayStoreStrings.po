@@ -86,7 +86,7 @@ msgid ""
 "\n"
 "Learn more at https://jetpack.com/mobile\n"
 "\n"
-"California users privacy notice: https://automattic.com/privacy/#california-consumer-privacy-act-ccpa\n"
+"California users privacy notice: https://automattic.com/privacy/#california-consumer-privacy-act-ccpa"
 msgstr ""
 
 #. Description for the first app store image
