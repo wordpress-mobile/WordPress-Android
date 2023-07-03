@@ -319,7 +319,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     private Spanned formatTosText(int stringResId) {
         final int primaryColorResId = ContextExtensionsKt.getColorResIdFromAttribute(getContext(),
-                R.attr.colorSecondary);
+                com.google.android.material.R.attr.colorSecondary);
         final String primaryColorHtml = HtmlUtils.colorResToHtmlColor(getContext(), primaryColorResId);
         return Html.fromHtml(getString(stringResId, "<u><font color='" + primaryColorHtml + "'>", "</font></u>"));
     }
