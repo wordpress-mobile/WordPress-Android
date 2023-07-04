@@ -1139,6 +1139,8 @@ class SiteRestClient @Inject constructor(
             site.setIsWPCom(true)
         }
         site.origin = SiteModel.ORIGIN_WPCOM_REST
+        site.hasSocialShares1000Active =
+            from.plan?.features?.active?.find { it == "social-shares-1000" } != null
         return site
     }
 
