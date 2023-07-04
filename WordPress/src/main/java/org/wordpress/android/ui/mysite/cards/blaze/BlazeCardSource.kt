@@ -11,7 +11,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdat
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import javax.inject.Inject
 
-class PromoteWithBlazeCardSource @Inject constructor(
+class BlazeCardSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val blazeFeatureUtils: BlazeFeatureUtils,
 ) : MySiteRefreshSource<BlazeCardUpdate> {

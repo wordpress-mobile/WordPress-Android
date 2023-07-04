@@ -20,7 +20,7 @@ const val SITE_LOCAL_ID = 1
 const val SITE_ID = 1L
 
 @ExperimentalCoroutinesApi
-class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
+class BlazeCardSourceTest : BaseUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
 
