@@ -10,7 +10,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenLoginPage
@@ -96,15 +95,15 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
                     VisibleEmptyUiState(
                         title = UiStringRes(
                             if (accountStore.hasAccessToken())
-                                string.reader_filter_empty_sites_list
+                                R.string.reader_filter_empty_sites_list
                             else
-                                string.reader_filter_self_hosted_empty_sites_list
+                                R.string.reader_filter_self_hosted_empty_sites_list
                         ),
                         buttonText = UiStringRes(
                             if (accountStore.hasAccessToken())
-                                string.reader_filter_empty_sites_action
+                                R.string.reader_filter_empty_sites_action
                             else
-                                string.reader_filter_self_hosted_empty_sites_tags_action
+                                R.string.reader_filter_self_hosted_empty_sites_tags_action
                         ),
                         action = if (accountStore.hasAccessToken())
                             OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)

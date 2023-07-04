@@ -13,7 +13,6 @@ import org.mockito.kotlin.isNull
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.SiteStore
@@ -79,10 +78,10 @@ class AllTimeWidgetBlockListViewModelTest {
         val visitors = 100
         val posts = 50
         val viewsBestDayTotal = 300
-        whenever(resourceProvider.getString(string.stats_views)).thenReturn(viewsKey)
-        whenever(resourceProvider.getString(string.stats_visitors)).thenReturn(visitorsKey)
-        whenever(resourceProvider.getString(string.posts)).thenReturn(postsKey)
-        whenever(resourceProvider.getString(string.stats_insights_best_ever)).thenReturn(bestKey)
+        whenever(resourceProvider.getString(R.string.stats_views)).thenReturn(viewsKey)
+        whenever(resourceProvider.getString(R.string.stats_visitors)).thenReturn(visitorsKey)
+        whenever(resourceProvider.getString(R.string.posts)).thenReturn(postsKey)
+        whenever(resourceProvider.getString(R.string.stats_insights_best_ever)).thenReturn(bestKey)
         whenever(allTimeStore.getAllTimeInsights(site)).thenReturn(
             InsightsAllTimeModel(
                 150L,

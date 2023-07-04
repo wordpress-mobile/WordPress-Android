@@ -8,6 +8,7 @@ import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
 import org.wordpress.android.ui.utils.UiString
+import com.google.android.material.R as MaterialR
 
 open class JetpackListItemState(open val type: ViewType) {
     open fun longId(): Long = hashCode().toLong()
@@ -20,8 +21,10 @@ open class JetpackListItemState(open val type: ViewType) {
         val contentDescription: UiString
     ) : JetpackListItemState(ViewType.ICON)
 
-    data class HeaderState(val text: UiString, @AttrRes val textColorRes: Int = R.attr.colorOnSurface) :
-        JetpackListItemState(ViewType.HEADER)
+    data class HeaderState(
+        val text: UiString,
+        @AttrRes val textColorRes: Int = MaterialR.attr.colorOnSurface
+    ) : JetpackListItemState(ViewType.HEADER)
 
     data class DescriptionState(
         val text: UiString?,

@@ -26,6 +26,8 @@ import org.wordpress.android.R
 import org.wordpress.android.support.BetterScrollToAction.Companion.scrollTo
 import org.wordpress.android.support.WPSupportUtils
 import org.wordpress.android.ui.prefs.WPPreference
+import android.R as AndroidR
+import com.google.android.material.R as MaterialR
 
 class MySitesPage {
     fun go(): MySitesPage {
@@ -46,12 +48,12 @@ class MySitesPage {
     fun removeSite(siteName: String) {
         switchSite()
         longClickSite(siteName)
-        WPSupportUtils.clickOn(android.R.id.button1)
+        WPSupportUtils.clickOn(AndroidR.id.button1)
     }
 
     fun startNewPost() {
         WPSupportUtils.clickOn(R.id.fab_button)
-        if (WPSupportUtils.isElementDisplayed(R.id.design_bottom_sheet)) {
+        if (WPSupportUtils.isElementDisplayed(MaterialR.id.design_bottom_sheet)) {
             // If Stories are enabled, FAB opens a bottom sheet with options - select the 'Blog post' option
             WPSupportUtils.clickOn(Espresso.onView(ViewMatchers.withText(R.string.my_site_bottom_sheet_add_post)))
         }

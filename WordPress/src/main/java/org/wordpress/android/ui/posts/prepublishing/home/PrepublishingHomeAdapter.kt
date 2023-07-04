@@ -1,17 +1,17 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.prepublishing.home
 
 import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingHeaderListItemViewHolder
-import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingHomeListItemViewHolder
-import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingSubmitButtonViewHolder
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.StoryTitleUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewHolder.PrepublishingHeaderListItemViewHolder
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewHolder.PrepublishingHomeListItemViewHolder
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewHolder.PrepublishingSubmitButtonViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
@@ -35,7 +35,11 @@ class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<Prepubli
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrepublishingHomeViewHolder {
         return when (viewType) {
-            headerViewType -> PrepublishingHeaderListItemViewHolder(parent, uiHelpers, imageManager)
+            headerViewType -> PrepublishingHeaderListItemViewHolder(
+                parent,
+                uiHelpers,
+                imageManager
+            )
             homeItemViewType -> PrepublishingHomeListItemViewHolder(parent, uiHelpers)
             submitButtonViewType -> PrepublishingSubmitButtonViewHolder(parent, uiHelpers)
             else -> throw NotImplementedError("Unknown ViewType")

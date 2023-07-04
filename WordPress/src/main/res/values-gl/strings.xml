@@ -1,16 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-15 16:53:19+0000
+Translation-Revision-Date: 2023-06-28 14:44:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: gl_ES
 -->
 <resources>
+    <string name="gutenberg_native_reusable">Reutilizable</string>
+    <string name="privacy_banner_error_save">Produciuse un erro ao gardar as túas opcións de privacidade.</string>
+    <string name="privacy_banner_save">Gardar</string>
+    <string name="privacy_banner_settings">Axustes</string>
+    <string name="privacy_banner_analytics_description">Permítenos optimizar o rendemento mediante a recompilación de información sobre a forma na que os usuarios interactúan coas nosas aplicacións para móbiles.</string>
+    <string name="privacy_banner_analytics">Analítica</string>
+    <string name="privacy_banner_title">Xestión da privacidade</string>
+    <string name="privacy_banner_description">A túa privacidade é extremamente importante para nós e sempre o foi. Utilizamos, almacenamos e procesamos os teus datos persoais para optimizar a nosa aplicación (e a túa experiencia) de diversas maneiras. Algúns usos dos teus datos son absolutamente necesarios para que as cousas funcionen, e outros podes personalizalos nos Axustes.</string>
+    <string name="tabbar_accessibility_label_me">Eu. Xestionar os detalles do teu perfil.</string>
     <string name="social_item_message_title">Mensaxe</string>
+    <string name="gutenberg_native_block_ungrouped">Bloque desagrupado</string>
+    <string name="gutenberg_native_block_grouped">Bloque agrupado</string>
+    <string name="dashboard_card_plans_checkout_success_info">O dominio pode tardar ata 30 minutos en empezar a funcionar correctamente.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">O teu novo dominio &lt;b&gt;%s&lt;/b&gt; estase configurando.</string>
+    <string name="dashboard_card_plans_checkout_success_title">Todo listo!</string>
     <string name="dashboard_card_plans_menu_hide_this">Ocultar isto</string>
+    <string name="dashboard_card_plans_sub_title">Obtén un dominio gratuíto durante o primeiro ano, elimina os anuncios do teu sitio e aumenta o teu espazo de almacenamento.</string>
+    <string name="dashboard_card_plans_title">Consigue un dominio gratis cun plan anual</string>
     <string name="virtual_homepage_learn_more">Aprende máis sobre os modelos</string>
+    <string name="virtual_homepage_subtitle">A túa páxina de inicio usa un modelo de tema, polo que se abrirá no editor web.</string>
     <string name="virtual_homepage_title">Páxina de inicio</string>
+    <string name="account_closure_dialog_success_message">Pechouse a conta.</string>
+    <string name="account_closure_dialog_error_unknown">Ocorreu un erro ao cerrar a conta.</string>
+    <string name="account_closure_dialog_error_active_memberships">Non é posible cerrar a conta deste usuario porque ten compras activas.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">Non é posible cerrar a conta deste usuario porque ten subscricións activas.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">Non é posible cerrar a conta deste usuario se ten cargos rexeitados sen resolver.</string>
+    <string name="account_closure_dialog_error_atomic_site">Non é posible cerrar a conta deste usuario de inmediato porque ten compras activas. Contacta co noso equipo de soporte para eliminar a conta definitivamente.</string>
+    <string name="account_closure_dialog_error_unauthorized">Non tes autorización para cerrar a conta.</string>
+    <string name="account_closure_dialog_error_title">Non se puido cerrar a conta automaticamente</string>
+    <string name="account_closure_dialog_title">Confirmar o peche da conta…</string>
+    <string name="account_closure_dialog_message">Para confirmar, volve a introducir o teu nome de usuario antes de cerrala.</string>
+    <string name="close_account">Cerrar conta</string>
     <string name="sharing_twitter_deprecation_notice_find_out_more">Saber máis</string>
+    <string name="sharing_twitter_deprecation_notice_description">O uso compartido automático de Twitter xa non está disponible debido aos cambios de Twitter nos termos e prezos.</string>
+    <string name="sharing_twitter_deprecation_notice_title">A opción de compartir automaticamente en Twitter xa non está dispoñible</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">A edición de bloques reutilizables aínda non é compatible con %s para iOS.</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">A edición de bloques reutilizables aínda non é compatible con %s para Android.</string>
     <string name="jp_migration_notifications_allow_title">Permitir avisos para estar ao día co teu sitio</string>

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.prepublishing.home
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +10,12 @@ import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.BLAVATAR
+import org.wordpress.android.util.image.ImageType
 
 sealed class PrepublishingHomeViewHolder(
     internal val parent: ViewGroup,
@@ -42,8 +42,18 @@ sealed class PrepublishingHomeViewHolder(
                 uiState.onActionClicked?.invoke(uiState.actionType)
             }
 
-            actionType.setTextColor(ContextCompat.getColor(itemView.context, uiState.actionTypeColor))
-            actionResult.setTextColor(ContextCompat.getColor(itemView.context, uiState.actionResultColor))
+            actionType.setTextColor(
+                ContextCompat.getColor(
+                    itemView.context,
+                    uiState.actionTypeColor
+                )
+            )
+            actionResult.setTextColor(
+                ContextCompat.getColor(
+                    itemView.context,
+                    uiState.actionResultColor
+                )
+            )
         }
     }
 
@@ -60,12 +70,14 @@ sealed class PrepublishingHomeViewHolder(
 
             siteName.text = uiHelpers.getTextOfUiString(itemView.context, uiState.siteName)
 
-            imageManager.load(siteIcon, BLAVATAR, uiState.siteIconUrl)
+            imageManager.load(siteIcon, ImageType.BLAVATAR, uiState.siteIconUrl)
         }
     }
 
     class PrepublishingSubmitButtonViewHolder(parentView: ViewGroup, val uiHelpers: UiHelpers) :
-        PrepublishingHomeViewHolder(parentView, R.layout.prepublishing_home_publish_button_list_item) {
+        PrepublishingHomeViewHolder(parentView,
+            R.layout.prepublishing_home_publish_button_list_item
+        ) {
         private val button: Button = itemView.findViewById(R.id.publish_button)
 
         override fun onBind(uiState: PrepublishingHomeItemUiState) {

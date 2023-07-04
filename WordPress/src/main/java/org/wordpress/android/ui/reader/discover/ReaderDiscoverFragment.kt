@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ReaderDiscoverFragmentLayoutBinding
 import org.wordpress.android.ui.ActivityLauncher
@@ -85,8 +84,8 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             recyclerView.adapter = ReaderDiscoverAdapter(uiHelpers, imageManager, readerTracker)
 
-            val spacingHorizontal = resources.getDimensionPixelSize(dimen.reader_card_margin)
-            val spacingVertical = resources.getDimensionPixelSize(dimen.reader_card_gutters)
+            val spacingHorizontal = resources.getDimensionPixelSize(R.dimen.reader_card_margin)
+            val spacingVertical = resources.getDimensionPixelSize(R.dimen.reader_card_gutters)
             recyclerView.addItemDecoration(RecyclerItemDecoration(spacingHorizontal, spacingVertical, false))
 
             WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptrLayout) { viewModel.swipeToRefresh() }

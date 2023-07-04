@@ -10,12 +10,10 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.graphics.ColorUtils
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
-import org.wordpress.android.R.integer
-import org.wordpress.android.R.string
 import org.wordpress.android.ui.comments.CommentUtils
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 class CommentListUiUtils @Inject constructor() {
     fun displayHtmlComment(commentContent: String, textView: TextView, maxImageWidth: Int, maxEmojiWidth: Int) {
@@ -30,13 +28,13 @@ class CommentListUiUtils @Inject constructor() {
 
     fun formatCommentTitle(authorName: String, postTitle: String, context: Context): Spannable {
         val formattedTitle: String
-        var author = context.getString(string.anonymous)
+        var author = context.getString(R.string.anonymous)
         if (!TextUtils.isEmpty(authorName)) {
             author = authorName.trim { it <= ' ' }
         }
         val trimmedPostTitle = postTitle.trim { it <= ' ' }
         formattedTitle = if (!TextUtils.isEmpty(postTitle)) {
-            context.getString(string.comment_title, author, postTitle)
+            context.getString(R.string.comment_title, author, postTitle)
         } else {
             author
         }
@@ -60,8 +58,8 @@ class CommentListUiUtils @Inject constructor() {
         if (isSelected) {
             containerView.setBackgroundColor(
                 ColorUtils.setAlphaComponent(
-                    containerView.context.getColorFromAttribute(attr.colorOnSurface),
-                    containerView.context.resources.getInteger(integer.selected_list_item_opacity)
+                    containerView.context.getColorFromAttribute(MaterialR.attr.colorOnSurface),
+                    containerView.context.resources.getInteger(R.integer.selected_list_item_opacity)
                 )
             )
         } else {

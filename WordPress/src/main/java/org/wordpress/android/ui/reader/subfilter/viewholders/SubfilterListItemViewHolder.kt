@@ -9,6 +9,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import com.google.android.material.R as MaterialR
 
 open class SubfilterListItemViewHolder(
     internal val parent: ViewGroup,
@@ -20,9 +21,9 @@ open class SubfilterListItemViewHolder(
             it.setTextColor(
                 parent.context.getColorFromAttribute(
                     if (filter.isSelected) {
-                        R.attr.colorPrimary
+                        MaterialR.attr.colorPrimary
                     } else {
-                        R.attr.colorOnSurface
+                        MaterialR.attr.colorOnSurface
                     }
                 )
             )

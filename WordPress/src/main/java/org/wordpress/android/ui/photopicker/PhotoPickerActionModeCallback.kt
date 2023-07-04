@@ -11,7 +11,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
 import org.wordpress.android.R
-import org.wordpress.android.R.id
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
@@ -61,7 +60,7 @@ class PhotoPickerActionModeCallback(
         mode: ActionMode,
         item: MenuItem
     ): Boolean {
-        if (item.itemId == id.mnu_confirm_selection) {
+        if (item.itemId == R.id.mnu_confirm_selection) {
             viewModel.performInsertAction()
             return true
         }

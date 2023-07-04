@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.prepublishing
+package org.wordpress.android.ui.posts.prepublishing.publishsettings
 
 import android.content.Context
 import android.os.Bundle
@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.posts.PrepublishingScreenClosedListener
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener
 import org.wordpress.android.ui.posts.PublishSettingsFragment
 import org.wordpress.android.ui.posts.PublishSettingsFragmentType.PREPUBLISHING_NUDGES
 import org.wordpress.android.ui.posts.PublishSettingsViewModel

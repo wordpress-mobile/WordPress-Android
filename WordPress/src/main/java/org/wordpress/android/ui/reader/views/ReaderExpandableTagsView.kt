@@ -14,6 +14,7 @@ import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
+import android.R as AndroidR
 
 class ReaderExpandableTagsView @JvmOverloads constructor(
     context: Context,
@@ -145,7 +146,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         val chipBackgroundColorRes = if (isSingleLine) {
             R.color.on_surface_chip
         } else {
-            R.color.transparent
+            AndroidR.color.transparent
         }
         overflowIndicatorChip.setChipBackgroundColorResource(chipBackgroundColorRes)
     }

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.prepublishing.categories
 
 import android.os.Bundle
 import androidx.annotation.DimenRes
@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.action.TaxonomyAction
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -18,8 +17,13 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.AddCategoryUseCase
+import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
+import org.wordpress.android.ui.posts.GetCategoriesUseCase
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingAddCategoryRequest
+import org.wordpress.android.ui.posts.trackPrepublishingNudges
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
@@ -110,7 +114,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     }
 
     private fun setToolbarTitleUiState() {
-        _toolbarTitleUiState.value = UiStringRes(string.prepublishing_nudges_toolbar_title_categories)
+        _toolbarTitleUiState.value = UiStringRes(R.string.prepublishing_nudges_toolbar_title_categories)
     }
 
     private fun saveAndFinish() {
@@ -125,7 +129,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     private fun updateCategories() {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarEvents.postValue(
-                Event(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
+                Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
             )
             return
         }
@@ -201,9 +205,9 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         // treat as an error because without a name, there is no category
         val isError = event.isError || event.term?.name == null
         val message = if (isError) {
-            string.adding_cat_failed
+            R.string.adding_cat_failed
         } else {
-            string.adding_cat_success
+            R.string.adding_cat_success
         }
         _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(message))))
 

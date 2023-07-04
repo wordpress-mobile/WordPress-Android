@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.mysite.items
 
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -50,22 +48,22 @@ class SiteItemsBuilder @Inject constructor(
         val showMediaFocusPoint = params.activeTask == uploadMediaTask && params.enableMediaFocusPoint
 
         return listOfNotNull(
-                CategoryHeaderItem(UiStringRes(string.my_site_header_content)),
+                CategoryHeaderItem(UiStringRes(R.string.my_site_header_content)),
             ListItem(
-                drawable.ic_posts_white_24dp,
-                UiStringRes(string.my_site_btn_blog_posts),
+                R.drawable.ic_posts_white_24dp,
+                UiStringRes(R.string.my_site_btn_blog_posts),
                 onClick = ListItemInteraction.create(POSTS, params.onClick)
             ),
             siteListItemBuilder.buildPagesItemIfAvailable(params.site, params.onClick, showPagesFocusPoint),
             ListItem(
-                drawable.ic_media_white_24dp,
-                UiStringRes(string.media),
+                R.drawable.ic_media_white_24dp,
+                UiStringRes(R.string.media),
                 onClick = ListItemInteraction.create(MEDIA, params.onClick),
                 showFocusPoint = showMediaFocusPoint
             ),
             ListItem(
-                drawable.ic_comment_white_24dp,
-                UiStringRes(string.my_site_btn_comments),
+                R.drawable.ic_comment_white_24dp,
+                UiStringRes(R.string.my_site_btn_comments),
                 onClick = ListItemInteraction.create(COMMENTS, params.onClick)
             )
         )
@@ -82,7 +80,7 @@ class SiteItemsBuilder @Inject constructor(
         val showStatsFocusPoint = params.activeTask == checkStatsTask && params.enableStatsFocusPoint
 
         return listOfNotNull(
-            CategoryHeaderItem(UiStringRes(string.my_site_header_traffic)),
+            CategoryHeaderItem(UiStringRes(R.string.my_site_header_traffic)),
             ListItem(
                 R.drawable.ic_stats_alt_white_24dp,
                 UiStringRes(R.string.stats),
@@ -102,7 +100,7 @@ class SiteItemsBuilder @Inject constructor(
         val jetpackConfiguration = buildJetpackDependantConfigurationItemsIfNeeded(params)
         val lookAndFeel = getLookAndFeelSiteItems(params)
         val nonJetpackConfiguration = buildNonJetpackDependantConfigurationItemsIfNeeded(params)
-        val manageHeader = CategoryHeaderItem(UiStringRes(string.my_site_header_manage))
+        val manageHeader = CategoryHeaderItem(UiStringRes(R.string.my_site_header_manage))
         val emptyHeaderItem2 = CategoryEmptyHeaderItem(UiString.UiStringText(""))
         val admin = siteListItemBuilder.buildAdminItemIfAvailable(params.site, params.onClick)
         return listOf(manageHeader) +

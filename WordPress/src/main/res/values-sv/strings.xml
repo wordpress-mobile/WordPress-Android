@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-12 20:23:05+0000
+Translation-Revision-Date: 2023-06-28 12:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_reusable">Återanvändbar</string>
+    <string name="privacy_banner_error_save">Det uppstod ett fel när dina integritetsval skulle sparas.</string>
+    <string name="privacy_banner_save">Spara</string>
+    <string name="privacy_banner_settings">Inställningar</string>
+    <string name="privacy_banner_analytics_description">Gör det möjligt för oss att optimera prestandan genom att samla in information om hur användare interagerar med våra mobilappar.</string>
+    <string name="privacy_banner_analytics">Analys</string>
+    <string name="privacy_banner_title">Hantera integritet</string>
+    <string name="privacy_banner_description">Din integritet är och har alltid varit avgörande för oss. Vi använder, lagrar och behandlar dina personuppgifter för att optimera vår app (och din upplevelse) på en rad olika sätt. Vissa användningsområden för dina data är absolut nödvändiga för att få saker att fungera, andra kan du anpassa i dina inställningar.</string>
+    <string name="tabbar_accessibility_label_me">Jag. Hantera din profilinformation.</string>
     <string name="social_item_message_title">Meddelande</string>
     <string name="gutenberg_native_block_ungrouped">Block avgrupperat</string>
     <string name="gutenberg_native_block_grouped">Block grupperat</string>

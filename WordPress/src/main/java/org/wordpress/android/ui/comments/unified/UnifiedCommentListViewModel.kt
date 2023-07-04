@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_BATCH_APPROVED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_BATCH_DELETED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_BATCH_SPAMMED
@@ -184,7 +184,7 @@ class UnifiedCommentListViewModel @Inject constructor(
         launch(bgDispatcher) {
             _commentsProvider.filter { it is Failure }.collectLatest {
                 val errorMessage = if (it.type == BATCH_MODERATE_USE_CASE) {
-                    UiStringRes(string.comment_batch_moderation_error)
+                    UiStringRes(R.string.comment_batch_moderation_error)
                 } else {
                     if ((it as Failure).error.message.isNullOrEmpty()) {
                         null
@@ -206,15 +206,15 @@ class UnifiedCommentListViewModel @Inject constructor(
             _commentsProvider.filter { it is Success && it.type == MODERATE_USE_CASE }.collectLatest {
                 if (it is Success && it.data is SingleCommentModerationResult) {
                     val message = when (it.data.newStatus) {
-                        TRASH -> UiStringRes(string.comment_trashed)
-                        SPAM -> UiStringRes(string.comment_spammed)
-                        else -> UiStringRes(string.comment_deleted_permanently)
+                        TRASH -> UiStringRes(R.string.comment_trashed)
+                        SPAM -> UiStringRes(R.string.comment_spammed)
+                        else -> UiStringRes(R.string.comment_deleted_permanently)
                     }
                     commentInModeration.add(it.data.remoteCommentId)
                     _onSnackbarMessage.emit(
                         SnackbarMessageHolder(
                             message = message,
-                            buttonTitle = UiStringRes(string.undo),
+                            buttonTitle = UiStringRes(R.string.undo),
                             buttonAction = {
                                 launch(bgDispatcher) {
                                     commentInModeration.remove(it.data.remoteCommentId)
@@ -253,7 +253,7 @@ class UnifiedCommentListViewModel @Inject constructor(
     fun reload() {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             launch(bgDispatcher) {
-                _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
+                _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
             }
         } else {
             requestsFirstPage()
@@ -330,7 +330,7 @@ class UnifiedCommentListViewModel @Inject constructor(
         launch(bgDispatcher) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 launch(bgDispatcher) {
-                    _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
+                    _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
                 }
                 return@launch
             }

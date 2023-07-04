@@ -1,11 +1,11 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.posts.prepublishing.categories
 
 import android.view.ViewGroup
 import androidx.annotation.MainThread
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import org.wordpress.android.ui.posts.PrepublishingCategoriesViewHolder.PrepublishingCategoriesListItemViewHolder
-import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel.PrepublishingCategoriesListItemUiState
+import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesViewHolder.PrepublishingCategoriesListItemViewHolder
+import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesViewModel.PrepublishingCategoriesListItemUiState
 import org.wordpress.android.ui.utils.UiHelpers
 
 class PrepublishingCategoriesAdapter(private val uiHelpers: UiHelpers) :

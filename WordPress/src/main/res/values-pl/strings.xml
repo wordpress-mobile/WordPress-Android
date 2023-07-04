@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-21 05:46:22+0000
+Translation-Revision-Date: 2023-06-27 18:04:11+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: pl
@@ -1352,6 +1352,7 @@ Language: pl
     <string name="gutenberg_native_add_url">Dodaj adres URL</string>
     <string name="gutenberg_native_add_image_or_video">DODAJ ZDJĘCIE LUB FILM</string>
     <string name="gutenberg_native_add_block_here">DODAJ TUTAJ BLOK</string>
+    <string name="gutenberg_native_add_description">Dodaj opis</string>
     <string name="gutenberg_native_add_alt_text">Dodaj tekst alternatywny</string>
     <string name="gutenberg_native_add_image">Dodaj obrazek</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Wystąpił nieznany błąd. Proszę spróbować ponownie.</string>
@@ -2379,6 +2380,7 @@ Language: pl
     <string name="media_videos">Filmy</string>
     <string name="media_documents">Dokumenty</string>
     <string name="media_audio">Plik dźwiękowy</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">%1$s odmówiono dostępu do twoich plików multimedialnych. Aby to naprawić, edytuj uprawnienia i włącz %2$s.</string>
     <string name="reader_view_comments">Zobacz komentarze</string>
     <string name="site_settings_video_quality_hint">Jakość filmów. Wyższa wartość oznacza lepszą jakość filmów.</string>
     <string name="site_settings_video_width_hint">Zmień rozmiar filmów we wpisie do tego rozmiaru</string>

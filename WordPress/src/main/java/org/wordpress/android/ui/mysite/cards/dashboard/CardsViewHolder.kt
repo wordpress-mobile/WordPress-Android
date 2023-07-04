@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
 import android.view.ViewGroup
-import org.wordpress.android.R.dimen
+import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteDashboardCardsBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
@@ -30,7 +30,7 @@ class CardsViewHolder(
                 htmlCompatWrapper,
                 learnMoreClicked
             )
-            addItemDecoration(CardsDecoration(resources.getDimensionPixelSize(dimen.margin_extra_large)))
+            addItemDecoration(CardsDecoration(resources.getDimensionPixelSize(R.dimen.margin_extra_large)))
         }
     }
 

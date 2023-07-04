@@ -8,7 +8,6 @@ import com.wordpress.rest.RestRequest.ErrorListener
 import com.wordpress.rest.RestRequest.Listener
 import org.json.JSONObject
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.people.InviteLinksApiCallsProvider.InviteLinksCallResult.Failure
 import org.wordpress.android.ui.people.InviteLinksApiCallsProvider.InviteLinksCallResult.Success
@@ -103,12 +102,12 @@ class InviteLinksApiCallsProvider @Inject constructor(
                     Success(linksData)
                 } catch (jsonEx: JsonParseException) {
                     AppLog.d(T.PEOPLE, "getLinks > Error parsing server API response: error[{${jsonEx.message}}]")
-                    Failure(contextProvider.getContext().getString((string.invite_links_bad_format_response)))
+                    Failure(contextProvider.getContext().getString((R.string.invite_links_bad_format_response)))
                 }
             } else {
                 Success(listOf())
             }
-        } ?: Failure(contextProvider.getContext().getString(string.invite_links_null_response))
+        } ?: Failure(contextProvider.getContext().getString(R.string.invite_links_null_response))
     }
 
     private fun getErrorStringAndLog(

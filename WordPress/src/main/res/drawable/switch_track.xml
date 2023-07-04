@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Based on AOSP's drawable/switch_track_material.xml -->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:gravity="center_vertical|fill_horizontal"
+        android:start="@dimen/switch_horizontal_padding"
+        android:end="@dimen/switch_horizontal_padding">
+        <shape android:shape="rectangle"
+            android:tint="@color/switch_track">
+            <corners android:radius="7dp" />
+            <solid android:color="@color/white_disabled" />
+            <size android:height="14dp" />
+        </shape>
+    </item>
+</layer-list>
