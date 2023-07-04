@@ -40,8 +40,10 @@ class CardsBuilder @Inject constructor(
                         add(it)
                     }
 
-                blazeCardBuilder.build(dashboardCardsBuilderParams.promoteWithBlazeCardBuilderParams)?.let {
-                    add(it)
+                if(dashboardCardsBuilderParams.blazeCardBuilderParams != null){
+                    blazeCardBuilder.build(dashboardCardsBuilderParams.blazeCardBuilderParams)?.let {
+                        add(it)
+                    }
                 }
 
                 dashboardDomainCardBuilder.build(dashboardCardsBuilderParams.dashboardCardDomainBuilderParams)?.let {
