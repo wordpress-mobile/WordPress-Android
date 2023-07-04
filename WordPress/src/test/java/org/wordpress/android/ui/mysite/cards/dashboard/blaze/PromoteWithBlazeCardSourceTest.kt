@@ -74,9 +74,10 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
 
         blazeCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
-        assertThat(result.size).isEqualTo(2)
+        assertThat(result.size).isEqualTo(3)
         assertThat(result.first()).isFalse
-        assertThat(result.last()).isTrue
+        assertThat(result[1]).isTrue
+        assertThat(result.last()).isFalse
     }
 
     @Test
@@ -89,10 +90,12 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
         blazeCardSource.refresh()
         advanceUntilIdle()
 
-        assertThat(result.size).isEqualTo(3)
-        assertThat(result[0]).isFalse // init
-        assertThat(result[1]).isTrue // build(...) -> refresh()
-        assertThat(result[2]).isTrue // build(...) -> fetch
+        assertThat(result.size).isEqualTo(5)
+        assertThat(result.first()).isFalse // build
+        assertThat(result[1]).isTrue // build -> fetching data
+        assertThat(result.last()).isFalse // build -> fetching data -> success/error
+        assertThat(result[3]).isTrue // refresh() invoked
+        assertThat(result[4]).isFalse // refreshData(...) -> fetch -> success/error
     }
 
     private fun setUpMocks(isBlazeEnabled: Boolean) {
