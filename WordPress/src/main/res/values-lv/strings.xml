@@ -1,11 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-25 02:59:08+0000
+Translation-Revision-Date: 2023-06-30 19:47:30+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: lv
 -->
 <resources>
+    <string name="gutenberg_native_reusable">Atkārtoti lietojams</string>
+    <string name="privacy_banner_error_save">Saglabājot jūsu konfidencialitātes izvēles, radās kļūda.</string>
+    <string name="privacy_banner_save">Saglabāt</string>
+    <string name="privacy_banner_settings">Iestatījumi</string>
+    <string name="privacy_banner_analytics_description">Ļaujiet mums optimizēt veiktspēju, apkopojot informāciju par to, kā lietotāji mijiedarbojas ar mūsu mobilajām lietotnēm.</string>
+    <string name="privacy_banner_analytics">Analītika</string>
+    <string name="privacy_banner_title">Pārvaldīt privātumu</string>
+    <string name="privacy_banner_description">Jūsu privātums mums vienmēr ir bijis un ir ļoti svarīgs. Mēs izmantojam, glabājam un apstrādājam jūsu personas datus, lai dažādos veidos optimizētu mūsu lietotni (un jūsu pieredzi). Daži jūsu datu lietojumi mums ir absolūti nepieciešami, lai viss darbotos, un citus varat pielāgot iestatījumos.</string>
+    <string name="tabbar_accessibility_label_me">Es. Pārvaldiet savu profila informāciju.</string>
+    <string name="social_item_message_title">Ziņojums</string>
+    <string name="gutenberg_native_block_ungrouped">Nesagrupēts bloks</string>
+    <string name="gutenberg_native_block_grouped">Bloki sagrupēti</string>
+    <string name="dashboard_card_plans_checkout_success_info">Var paiet līdz 30 minūtēm, līdz jūsu domēns sāks darboties pareizi.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">Notiek jūsu jaunā domēna &lt;b&gt;%s&lt;/b&gt; iestatīšana.</string>
+    <string name="dashboard_card_plans_checkout_success_title">Viss gatavs darbam!</string>
+    <string name="dashboard_card_plans_menu_hide_this">Slēpt šo</string>
+    <string name="dashboard_card_plans_sub_title">Pirmo gadu iegūstiet bezmaksas domēnu, noņemiet reklāmas no savas vietnes un palieliniet krātuvi.</string>
+    <string name="dashboard_card_plans_title">Bezmaksas domēns ar gada plānu</string>
+    <string name="virtual_homepage_learn_more">Uzzināt vairāk par veidnēm</string>
+    <string name="virtual_homepage_subtitle">Jūsu mājaslapā tiek izmantota tēmas veidne, un tā tiks atvērta tīmekļa redaktorā.</string>
+    <string name="virtual_homepage_title">Mājas lapa</string>
+    <string name="account_closure_dialog_success_message">Konts slēgts.</string>
+    <string name="account_closure_dialog_error_unknown">Slēdzot kontu, radās kļūda.</string>
+    <string name="account_closure_dialog_error_active_memberships">Šo lietotāja kontu nevar slēgt, kamēr tajā ir aktīvi pirkumi.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">Šo lietotāja kontu nevar slēgt, kamēr tam ir aktīvi abonementi.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">Šo lietotāja kontu nevar slēgt, ja ir neatrisinātas atmaksas.</string>
+    <string name="account_closure_dialog_error_atomic_site">Šo lietotāja kontu nevar nekavējoties slēgt, jo tajā ir aktīvi pirkumi. Lūdzu, sazinieties ar mūsu atbalsta komandu, lai pabeigtu konta dzēšanu.</string>
+    <string name="account_closure_dialog_error_unauthorized">Jums nav tiesību slēgt kontu.</string>
+    <string name="account_closure_dialog_error_title">Nevarēja automātiski slēgt kontu</string>
+    <string name="account_closure_dialog_title">Apstiprināt konta slēgšanu…</string>
+    <string name="account_closure_dialog_message">Lai to apstiprinātu, pirms slēgšanas atkārtoti ievadiet savu lietotājvārdu.</string>
+    <string name="close_account">Aizvērt kontu</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Uzzināt vairāk</string>
+    <string name="sharing_twitter_deprecation_notice_description">Twitter auto-dalīšanās vairs nav pieejama, jo Twitter ir veicis izmaiņas terminos un cenās.</string>
+    <string name="sharing_twitter_deprecation_notice_title">Automātiskā koplietošana pakalpojumā Twitter vairs nav pieejama</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">Atkārtoti lietojamo bloku rediģēšana vēl netiek atbalstīta %s operētājsistēmā iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">Atkārtoti lietojamo bloku rediģēšana vēl netiek atbalstīta %s operētājsistēmā Android</string>
+    <string name="jp_migration_notifications_allow_title">Ļaujiet saņemt paziņojumus, lai sekotu līdzi jūsu vietnei</string>
+    <string name="wp_jp_static_poster_message">Jetpack lietotnei ir visi WordPress lietotnes funkcionalitātes, un tagad ekskluzīva piekļuve statistikai, lasītājam, paziņojumiem un citiem resursiem.</string>
+    <string name="wp_jp_static_poster_title_plural">Izmantojiet WordPress ar %s Jetpack\u00A0app.</string>
+    <string name="wp_jp_static_poster_title">Izmantojiet WordPress ar %s Jetpack\u00A0app.</string>
+    <string name="gutenberg_native_unlabeled_color_s">Nenosaukta krāsa. %s</string>
+    <string name="dashboard_activity_card_footer_link">Pārskatīt visas darbības</string>
+    <string name="dashboard_activity_card_title">Pēdējā darbība</string>
+    <string name="dashboard_card_domain_title">Pielāgota domēna atrašana</string>
+    <string name="site_creation_search_domain_example_body">Līdzīgi kā iepriekš minētajā piemērā, domēns ļauj cilvēkiem atrast un apmeklēt jūsu vietni savā tīmekļa pārlūkprogrammā.</string>
+    <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
+    <string name="site_creation_domain_search_input_hint">Meklējiet ar atslēgvārdiem</string>
+    <string name="site_creation_domain_header_subtitle">Meklējiet īsu un neaizmirstamu domēnu, lai palīdzētu cilvēkiem atrast un apmeklēt jūsu vietni.</string>
+    <string name="site_creation_domain_cost_sale">pirmo gadu</string>
+    <string name="site_creation_error_cart_subtitle">Jūsu vietne ir veiksmīgi izveidota, taču, sagatavojot jūsu pielāgoto domēnu norēķiniem, radās problēma. Lūdzu, mēģiniet vēlreiz vai sazinieties ar atbalsta dienestu, lai saņemtu palīdzību.</string>
+    <string name="new_site_creation_preview_caption_paid">Var paiet līdz 30 minūtēm, līdz jūsu pielāgotais domēns sāks darboties.</string>
+    <string name="new_site_creation_preview_subtitle_paid">Mēs nosūtījām jūsu kvīti pa e-pastu. %s</string>
+    <string name="notifications_disabled_permission_dialog">Lietotņu paziņojumi ir atspējoti. Pieskarieties šeit, lai tos iespējotu.</string>
+    <string name="jp_migration_delete_message">Lai izvairītos no datu konfliktiem, ieteicams ierīcē &lt;b&gt;atinstalēt lietotni WordPress&lt;/b&gt;.</string>
+    <string name="jp_migration_delete_subtitle">Šķiet, ka jums joprojām ir instalēta WordPress lietotne.</string>
+    <string name="jp_migration_delete_title">Jums vairs nav nepieciešama WordPress lietotne jūsu ierīcē</string>
+    <string name="jp_migration_done_delete_wp_message">Lai izvairītos no datu konfliktiem, ieteicams ierīcē &lt;b&gt;atinstalēt lietotni WordPress&lt;/b&gt;.</string>
+    <string name="jp_migration_success_card_message">Laipni lūdzam Jetpack lietotnē. Varat atinstalēt WordPress lietotni.</string>
+    <string name="gutenberg_native_remove_blocks">Noņemt blokus</string>
+    <string name="gutenberg_native_privacy_and_rating">Privātums un vērtējums</string>
+    <string name="gutenberg_native_playback_settings">Atskaņošanas iestatījumi</string>
+    <string name="gutenberg_native_playback_bar_color">Atskaņošanas joslas krāsa</string>
+    <string name="gutenberg_native_manual">Rokasgrāmata</string>
+    <string name="gutenberg_native_dynamic">Dinamisks</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">Aprakstiet attēla mērķi. Atstājiet tukšu, ja tas ir dekoratīvs.</string>
+    <string name="dashboard_pages_card_create_another_page_description">Sāciet ar pielāgotiem, mobilajām ierīcēm draudzīgiem izkārtojumiem</string>
+    <string name="dashboard_pages_card_create_another_page_button">Izveidot citu lapu</string>
+    <string name="dashboard_pages_card_no_pages_create_page_button">Pievienojiet lapas savai vietnei</string>
+    <string name="dashboard_card_domain_menu_hide_this">Slēpt šo</string>
+    <string name="dashboard_card_domain_sub_title">Apstipriniet savu prasību pēc vietas tīmeklī, norādot vietnes adresi, kuru ir viegli atrast, kopīgot un sekot.</string>
+    <string name="blogging_reminders_notifications_permission_caption">Lai izmantotu blogošanas atgādinājumus, jums būs jāieslēdz pašpiegādes paziņojumi.</string>
+    <string name="blogging_reminders_notifications_permission_title">Ieslēgt vietnes paziņojumus</string>
+    <string name="site_creation_domain_button_continue_with_subdomain">Turpināt ar apakšdomēnu</string>
+    <string name="site_creation_domain_button_purchase_domain">Iegādāties domēnu</string>
+    <string name="permission_images_video_audio">Fotogrāfijas, videoklipi, mūzika un audio</string>
+    <string name="permission_audio">Mūzika un audio</string>
+    <string name="permission_images">Fotoattēli un videoklipi</string>
+    <string name="photo_picker_soft_ask_audios_label">%s\" ir nepieciešama piekļuvei jūsu audio failiem.</string>
     <string name="photo_picker_soft_ask_videos_label">%s ir nepieciešama atļauja piekļūt jūsu videoklipiem</string>
     <string name="photo_picker_soft_ask_photos_label">%s ir nepieciešama atļauja piekļūt jūsu fotoattēliem</string>
     <string name="photo_picker_soft_ask_photos_videos_label">%s ir nepieciešama atļauja piekļūt jūsu fotoattēliem un videoklipiem</string>
@@ -760,12 +839,14 @@ Language: lv
     <string name="gutenberg_native_width_settings">Platuma iestatījumi</string>
     <string name="gutenberg_native_link_rel">Link Rel</string>
     <string name="gutenberg_native_column_settings">Slejas iestatījumi</string>
+    <string name="gutenberg_native_no_description">Nav apraksta</string>
     <string name="user_profile_untitled_site">(Bez nosaukuma)</string>
     <string name="user_profile_site_section_header">Vietne</string>
     <string name="user_profile_bottom_sheet_description">Informācija par lietotāja profila apakšējo lapu</string>
     <string name="likes_list_screen_title">Patīk %s saraksts</string>
     <string name="gutenberg_native_two">Divi</string>
     <string name="gutenberg_native_three">Trīs</string>
+    <string name="gutenberg_native_no_title">Bez nosaukuma</string>
     <string name="gutenberg_native_s_social_icon">%s sociālā ikona</string>
     <string name="gutenberg_native_mention">Pieminēt</string>
     <string name="gutenberg_native_new">JAUNS</string>
@@ -2130,6 +2211,7 @@ Language: lv
     <string name="page_status_change_error">Mainot lapas statusu, radās problēma</string>
     <string name="page_delete_error">Dzēšot lapu, radās problēma</string>
     <string name="set_parent">Iestatīt pamatu</string>
+    <string name="dismiss">Nerādīt</string>
     <string name="quick_start_focus_point_description">pieskarieties šeit</string>
     <string name="quick_start_list_create_site_title">Izveidojiet savu vietni</string>
     <string name="quick_start_list_create_site_subtitle">Sagatavojiet savu vietni.</string>
