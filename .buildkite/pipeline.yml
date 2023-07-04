@@ -92,13 +92,13 @@ steps:
         command: ".buildkite/commands/instrumented-tests.sh wordpress"
         plugins: *common_plugins
         artifact_paths:
-          - "**/build/instrumented-tests/wordpress/**/*"
+          - "**/build/instrumented-tests/**/*"
 
       - label: ":jetpack: 🔬 Instrumented tests"
         command: ".buildkite/commands/instrumented-tests.sh jetpack"
         plugins: *common_plugins
         artifact_paths:
-          - "**/build/instrumented-tests/jetpack/**/*"
+          - "**/build/instrumented-tests/**/*"
 
   #################
   # Create Prototype Builds for WP and JP
