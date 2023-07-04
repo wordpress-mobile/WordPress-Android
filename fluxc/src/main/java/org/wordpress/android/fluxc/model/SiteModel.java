@@ -21,6 +21,7 @@ import java.lang.annotation.Retention;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
@@ -251,9 +252,9 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     private String mApplicationPasswordsAuthorizeUrl;
     @Column
     private Boolean mCanBlaze;
-
-    // Jetpack Social
-    @Column private boolean mHasSocialShares1000Active;
+    // Comma-separated list of active features in the site's plan
+    @Column
+    private String mActiveFeatures;
 
     @Override
     public int getId() {
@@ -1084,11 +1085,15 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         return !isJetpackInstalled();
     }
 
-    public boolean getHasSocialShares1000Active() {
-        return mHasSocialShares1000Active;
+    public List<String> getActiveFeaturesList() {
+        return Arrays.asList(mActiveFeatures.split(","));
     }
 
-    public void setHasSocialShares1000Active(final boolean socialShares1000Active) {
-        mHasSocialShares1000Active = socialShares1000Active;
+    public String getActiveFeatures() {
+        return mActiveFeatures;
+    }
+
+    public void setActiveFeatures(final String activeFeatures) {
+        this.mActiveFeatures = activeFeatures;
     }
 }
