@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
@@ -19,36 +20,39 @@ class PromoteWithBlazeCardSource @Inject constructor(
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<BlazeCardUpdate> {
         val result = MediatorLiveData<BlazeCardUpdate>()
         refresh()
-        result.getData(siteLocalId)
-        result.addSource(refresh) { result.refreshData(siteLocalId, refresh.value) }
+        result.getData(coroutineScope, siteLocalId)
+        result.addSource(refresh) { result.refreshData(coroutineScope, siteLocalId, refresh.value) }
         return result
     }
 
-    private fun MediatorLiveData<BlazeCardUpdate>.getData(siteLocalId: Int) {
-        val selectedSite = selectedSiteRepository.getSelectedSite()
-        if (selectedSite != null && selectedSite.id == siteLocalId) {
-            if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(selectedSite)) {
-                if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {
-                    // to do : implement the logic to fetch campaigns
-                    postState(BlazeCardUpdate(true))
+    private fun MediatorLiveData<BlazeCardUpdate>.getData(coroutineScope: CoroutineScope, siteLocalId: Int) {
+        coroutineScope.launch {
+            val selectedSite = selectedSiteRepository.getSelectedSite()
+            if (selectedSite != null && selectedSite.id == siteLocalId) {
+                if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(selectedSite)) {
+                    if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {
+                        // to do : implement the logic to fetch campaigns
+                        postState(BlazeCardUpdate(true))
+                    } else {
+                        // show blaze promo card if campaign feature is not available
+                        postState(BlazeCardUpdate(true))
+                    }
                 } else {
-                    // show blaze promo card if campaign feature is not available
-                    postState(BlazeCardUpdate(true))
+                    postState(BlazeCardUpdate(false))
                 }
             } else {
-                postState(BlazeCardUpdate(false))
+                postErrorState()
             }
-        } else {
-            postErrorState()
         }
     }
 
     private fun MediatorLiveData<BlazeCardUpdate>.refreshData(
+        coroutineScope: CoroutineScope,
         siteLocalId: Int,
         isRefresh: Boolean? = null
     ) {
         when (isRefresh) {
-            null, true -> getData(siteLocalId)
+            null, true -> getData(coroutineScope, siteLocalId)
             else -> Unit // Do nothing
         }
     }
