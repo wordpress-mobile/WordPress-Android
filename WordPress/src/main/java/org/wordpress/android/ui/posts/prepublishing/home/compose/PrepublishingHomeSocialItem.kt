@@ -134,8 +134,9 @@ private fun DescriptionText(
     }
 }
 
-@Preview
-@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Preview(name = "Light Mode")
+@Preview(name = "Dark Mode", uiMode = UI_MODE_NIGHT_YES)
+@Preview(name = "RTL", locale = "ar")
 @Composable
 fun PrepublishingHomeSocialItemPreview() {
     AppTheme {
