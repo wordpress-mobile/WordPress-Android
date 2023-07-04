@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
@@ -13,6 +14,7 @@ import javax.inject.Inject
 
 class BlazeCardSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
+    private val blazeCampaignsStore: BlazeCampaignsStore,
     private val blazeFeatureUtils: BlazeFeatureUtils,
 ) : MySiteRefreshSource<BlazeCardUpdate> {
     override val refresh = MutableLiveData(false)
@@ -31,7 +33,11 @@ class BlazeCardSource @Inject constructor(
             if (selectedSite != null && selectedSite.id == siteLocalId) {
                 if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(selectedSite)) {
                     if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {
-                        // to do : implement the logic to fetch campaigns
+                        val campaign = blazeCampaignsStore.getMostRecentBlazeCampaign(selectedSite)
+                        if (campaign != null) {
+                            postState(BlazeCardUpdate(true, campaign = campaign))
+                        }
+                        // there are no campaigns, show blaze promo card
                         postState(BlazeCardUpdate(true))
                     } else {
                         // show blaze promo card if campaign feature is not available
