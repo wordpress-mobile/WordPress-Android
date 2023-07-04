@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-15 19:54:08+0000
+Translation-Revision-Date: 2023-06-29 14:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.4
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_reusable">قابل لإعادة الاستخدام</string>
+    <string name="privacy_banner_error_save">كان هناك خطأ في أثناء حفظ خيارات الخصوصية الخاصة بك.</string>
+    <string name="privacy_banner_save">حفظ</string>
+    <string name="privacy_banner_settings">الإعدادات</string>
+    <string name="privacy_banner_analytics_description">اسمح لنا بتحسين الأداء عن طريق جمع المعلومات حول كيفية تفاعل المستخدمين مع تطبيقاتنا للهواتف المحمولة.</string>
+    <string name="privacy_banner_analytics">التحليلات</string>
+    <string name="privacy_banner_title">إدارة الخصوصية</string>
+    <string name="tabbar_accessibility_label_me">أنا. Manage your profile details.</string>
+    <string name="privacy_banner_description">تُمثِّل خصوصيتك أهمية بالغة بالنسبة إلينا وكانت دومًا كذلك. إننا نستخدم بياناتك الشخصية ونخزّنها ونعالجها لتحسين تطبيقنا (وتجربتك) بطرق متنوعة. إننا بحاجة إلى بعض استخدامات بياناتك بشكل كلي لكي تسير الأمور على ما يرام، إلى جانب استخدامات أخرى يمكنك تحسينها من إعداداتك.</string>
     <string name="social_item_message_title">رسالة</string>
     <string name="gutenberg_native_block_ungrouped">تم إلغاء تجميع المكوّنات</string>
     <string name="gutenberg_native_block_grouped">تم تجميع المكوّنات</string>
