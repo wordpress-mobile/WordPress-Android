@@ -252,6 +252,9 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column
     private Boolean mCanBlaze;
 
+    // Jetpack Social
+    @Column private boolean mHasSocialShares1000Active;
+
     @Override
     public int getId() {
         return mId;
@@ -1075,5 +1078,17 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setCanBlaze(Boolean mCanBlaze) {
         this.mCanBlaze = mCanBlaze;
+    }
+
+    public boolean isHostedAtWPCom() {
+        return !isJetpackInstalled();
+    }
+
+    public boolean getHasSocialShares1000Active() {
+        return mHasSocialShares1000Active;
+    }
+
+    public void setHasSocialShares1000Active(final boolean socialShares1000Active) {
+        mHasSocialShares1000Active = socialShares1000Active;
     }
 }
