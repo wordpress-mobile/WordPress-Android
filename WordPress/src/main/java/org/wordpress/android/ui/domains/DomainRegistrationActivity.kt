@@ -23,6 +23,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenF
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
@@ -150,7 +151,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == AndroidR.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
         }

@@ -21,6 +21,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateFormatWrapper
 import java.util.Date
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 @Reusable
 class ThreatItemBuilder @Inject constructor(
@@ -100,7 +101,7 @@ class ThreatItemBuilder @Inject constructor(
         if (threatModel.baseThreatModel.status == FIXED) {
             R.attr.wpColorSuccess
         } else {
-            R.attr.colorOnSurface
+            MaterialR.attr.colorOnSurface
         }
 
     fun buildThreatItemDescription(threatModel: ThreatModel): UiString? {

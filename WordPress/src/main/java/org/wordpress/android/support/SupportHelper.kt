@@ -12,6 +12,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.validateEmail
+import android.R as AndroidR
 
 class SupportHelper {
     /**
@@ -38,8 +39,8 @@ class SupportHelper {
 
         val dialog = MaterialAlertDialogBuilder(context)
             .setView(layout)
-            .setPositiveButton(android.R.string.ok, null)
-            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(AndroidR.string.ok, null)
+            .setNegativeButton(AndroidR.string.cancel, null)
             .create()
         dialog.setOnShowListener {
             val button = dialog.getButton(AlertDialog.BUTTON_POSITIVE)

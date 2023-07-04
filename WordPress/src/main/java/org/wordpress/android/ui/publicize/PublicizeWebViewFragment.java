@@ -193,7 +193,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
 
     private class PublicizeWebChromeClient extends WebChromeClientWithVideoPoster {
         PublicizeWebChromeClient() {
-            super(mWebView, R.drawable.media_movieclip);
+            super(mWebView, org.wordpress.android.editor.R.drawable.media_movieclip);
         }
 
         @Override

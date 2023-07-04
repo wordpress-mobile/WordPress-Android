@@ -13,6 +13,7 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.debug.previews.PreviewFragmentActivity.Companion.previewFragmentInActivity
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class DebugSettingsActivity : LocaleAwareActivity() {
@@ -63,7 +64,7 @@ class DebugSettingsActivity : LocaleAwareActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> onBackPressedDispatcher.onBackPressed()
+            AndroidR.id.home -> onBackPressedDispatcher.onBackPressed()
             R.id.menu_debug_cookies -> viewModel.onDebugCookiesClick()
             R.id.menu_restart_app -> viewModel.onRestartAppClick()
             R.id.menu_show_weekly_notifications -> viewModel.onForceShowWeeklyRoundupClick()

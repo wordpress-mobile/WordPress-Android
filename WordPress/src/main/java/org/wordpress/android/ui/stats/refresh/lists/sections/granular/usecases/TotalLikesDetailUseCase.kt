@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
@@ -45,7 +45,7 @@ class TotalLikesDetailUseCase @Inject constructor(
     statsGranularity,
     UiState()
 ) {
-    override fun buildLoadingItem() = listOf(TitleWithMore(string.stats_view_total_likes))
+    override fun buildLoadingItem() = listOf(TitleWithMore(R.string.stats_view_total_likes))
 
     override fun buildEmptyItem() = listOf(buildTitle(), Empty())
 
@@ -107,7 +107,7 @@ class TotalLikesDetailUseCase @Inject constructor(
         return items
     }
 
-    private fun buildTitle() = TitleWithMore(string.stats_view_total_likes)
+    private fun buildTitle() = TitleWithMore(R.string.stats_view_total_likes)
 
     companion object {
         private const val TOTAL_LIKES_ITEMS_TO_LOAD = 15

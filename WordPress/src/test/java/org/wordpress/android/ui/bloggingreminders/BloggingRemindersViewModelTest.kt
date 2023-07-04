@@ -18,7 +18,6 @@ import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.eventToList
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.FRIDAY
@@ -577,7 +576,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         doAnswer {
             val onConfirm: () -> Unit = it.getArgument(0)
             PrimaryButton(
-                UiStringRes(string.blogging_reminders_done),
+                UiStringRes(R.string.blogging_reminders_done),
                 true,
                 ListItemInteraction.create { onConfirm.invoke() })
         }.whenever(epilogueBuilder).buildPrimaryButton(any())

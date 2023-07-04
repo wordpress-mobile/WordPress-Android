@@ -172,19 +172,24 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     @SuppressWarnings("deprecation")
     private void configureCardView(ThemeViewHolder themeViewHolder, boolean isCurrent) {
         if (isCurrent) {
-            ColorStateList color =
-                    ContextExtensionsKt.getColorStateListFromAttribute(mContext, R.attr.colorOnPrimarySurface);
-            themeViewHolder.mDetailsView
-                    .setBackgroundColor(
-                            ContextExtensionsKt.getColorFromAttribute(mContext, R.attr.colorPrimary));
+            ColorStateList color = ContextExtensionsKt.getColorStateListFromAttribute(
+                    mContext,
+                    com.google.android.material.R.attr.colorOnPrimarySurface
+            );
+            themeViewHolder.mDetailsView.setBackgroundColor(
+                    ContextExtensionsKt.getColorFromAttribute(mContext, com.google.android.material.R.attr.colorPrimary)
+            );
             themeViewHolder.mNameView.setTextColor(color);
             themeViewHolder.mActiveView.setVisibility(View.VISIBLE);
-            themeViewHolder.mCardView
-                    .setCardBackgroundColor(
-                            ContextExtensionsKt.getColorFromAttribute(mContext, R.attr.colorPrimary));
+            themeViewHolder.mCardView.setCardBackgroundColor(
+                    ContextExtensionsKt.getColorFromAttribute(mContext, com.google.android.material.R.attr.colorPrimary)
+            );
             ImageViewCompat.setImageTintList(themeViewHolder.mImageButton, color);
         } else {
-            ColorStateList color = ContextExtensionsKt.getColorStateListFromAttribute(mContext, R.attr.colorOnSurface);
+            ColorStateList color = ContextExtensionsKt.getColorStateListFromAttribute(
+                    mContext,
+                    com.google.android.material.R.attr.colorOnSurface
+            );
             themeViewHolder.mDetailsView
                     .setBackgroundColor(mElevatedSurfaceColor);
             themeViewHolder.mNameView.setTextColor(color);

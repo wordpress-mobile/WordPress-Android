@@ -579,7 +579,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mShowAztecEditor) {
             View overlay = findViewById(R.id.view_overlay);
             ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) overlay.getLayoutParams();
-            layoutParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.aztec_format_bar_height);
+            layoutParams.bottomMargin = getResources().getDimensionPixelOffset(
+                    org.wordpress.aztec.R.dimen.aztec_format_bar_height
+            );
             overlay.setLayoutParams(layoutParams);
         }
 
@@ -1944,7 +1946,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         int displayWidth = Math.max(DisplayUtils.getWindowPixelWidth(getBaseContext()),
                 DisplayUtils.getWindowPixelHeight(getBaseContext()));
 
-        int margin = getResources().getDimensionPixelSize(R.dimen.preview_image_view_margin);
+        int margin = getResources().getDimensionPixelSize(
+                org.wordpress.android.imageeditor.R.dimen.preview_image_view_margin
+        );
         int maxWidth = displayWidth - (margin * 2);
 
         int reducedSizeWidth = (int) (maxWidth * PREVIEW_IMAGE_REDUCED_SIZE_FACTOR);

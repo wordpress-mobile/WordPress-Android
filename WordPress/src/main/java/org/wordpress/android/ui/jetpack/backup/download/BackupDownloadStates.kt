@@ -62,7 +62,7 @@ sealed class ToolbarState {
     abstract val title: Int
 
     @DrawableRes
-    val icon: Int = R.drawable.ic_close_24px
+    val icon: Int = R.drawable.ic_close_white_24dp
 
     object DetailsToolbarState : ToolbarState() {
         @StringRes

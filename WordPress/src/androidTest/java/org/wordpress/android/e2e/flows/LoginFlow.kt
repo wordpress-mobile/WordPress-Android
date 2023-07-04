@@ -21,6 +21,7 @@ import org.wordpress.android.e2e.pages.HelpScreen
 import org.wordpress.android.e2e.pages.LandingPage.tapContinueWithWpCom
 import org.wordpress.android.e2e.pages.LandingPage.tapEnterYourSiteAddress
 import org.wordpress.android.support.WPSupportUtils
+import org.wordpress.android.login.R as LoginR
 
 class LoginFlow {
     fun chooseContinueWithWpCom(composeTestRule: ComposeTestRule?): LoginFlow {
@@ -33,7 +34,7 @@ class LoginFlow {
         // Email Address Screen – Fill it in and click "Continue"
         // See LoginEmailFragment
         WPSupportUtils.populateTextField(R.id.input, emailAddress)
-        WPSupportUtils.clickOn(R.id.login_continue_button)
+        WPSupportUtils.clickOn(LoginR.id.login_continue_button)
         return this
     }
 
@@ -47,7 +48,7 @@ class LoginFlow {
 
     fun confirmLogin(isSelfHosted: Boolean) {
         // If we get bumped to the "enter your username and password" screen, fill it in
-        if (WPSupportUtils.atLeastOneElementWithIdIsDisplayed(R.id.login_password_row)) {
+        if (WPSupportUtils.atLeastOneElementWithIdIsDisplayed(LoginR.id.login_password_row)) {
             enterUsernameAndPassword(
                 BuildConfig.E2E_WP_COM_USER_USERNAME,
                 BuildConfig.E2E_WP_COM_USER_PASSWORD
@@ -78,14 +79,14 @@ class LoginFlow {
     fun chooseMagicLink(): LoginFlow {
         // Password Screen – Choose "Get a login link by email"
         // See LoginEmailPasswordFragment
-        WPSupportUtils.clickOn(R.id.login_get_email_link)
+        WPSupportUtils.clickOn(LoginR.id.login_get_email_link)
         return this
     }
 
     fun openMagicLink(): LoginFlow {
         // Magic Link Sent Screen – Should see "Check email" button
         // See LoginMagicLinkSentFragment
-        WPSupportUtils.waitForElementToBeDisplayed(R.id.login_open_email_client)
+        WPSupportUtils.waitForElementToBeDisplayed(LoginR.id.login_open_email_client)
 
         // Follow the magic link to continue login
         // Intent is invoked directly rather than through a browser as WireMock is unavailable once in the background
@@ -100,13 +101,13 @@ class LoginFlow {
     fun enterUsernameAndPassword(username: String, password: String): LoginFlow {
         val usernameElement = Espresso.onView(
             CoreMatchers.allOf(
-                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.login_username_row)),
+                ViewMatchers.isDescendantOfA(ViewMatchers.withId(LoginR.id.login_username_row)),
                 Matchers.instanceOf(EditText::class.java)
             )
         )
         val passwordElement = Espresso.onView(
             CoreMatchers.allOf(
-                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.login_password_row)),
+                ViewMatchers.isDescendantOfA(ViewMatchers.withId(LoginR.id.login_password_row)),
                 Matchers.instanceOf(EditText::class.java)
             )
         )

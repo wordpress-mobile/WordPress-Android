@@ -10,12 +10,13 @@ import junit.framework.TestCase
 import org.junit.Assert
 import org.wordpress.android.R
 import org.wordpress.android.support.WPSupportUtils
+import org.wordpress.android.editor.R as EditorR
 
 class BlockEditorPage {
     private val mEditor: ViewInteraction
 
     init {
-        mEditor = Espresso.onView(ViewMatchers.withId(R.id.gutenberg_container))
+        mEditor = Espresso.onView(ViewMatchers.withId(EditorR.id.gutenberg_container))
         mEditor.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
