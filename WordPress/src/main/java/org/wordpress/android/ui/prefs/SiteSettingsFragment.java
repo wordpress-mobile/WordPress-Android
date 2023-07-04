@@ -76,6 +76,7 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersManager;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.plans.PlansConstants;
@@ -99,7 +100,6 @@ import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig;
-import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.util.config.ManageCategoriesFeatureConfig;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
@@ -185,7 +185,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject Dispatcher mDispatcher;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
+    @Inject BloggingRemindersManager mBloggingRemindersManager;
     @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
@@ -1235,7 +1235,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        if (!mBloggingRemindersFeatureConfig.isEnabled()) {
+        if (!mBloggingRemindersManager.shouldShowBloggingRemindersSetting(mSite)) {
             removeBloggingRemindersSettings();
         } else {
             mBloggingRemindersViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
