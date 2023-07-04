@@ -207,7 +207,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
                 sealed class PagesCard(
                     override val dashboardCardType: DashboardCardType,
-                ): DashboardCard(dashboardCardType) {
+                ) : DashboardCard(dashboardCardType) {
                     data class Error(
                         override val title: UiString
                     ) : PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD_ERROR), ErrorWithinCard
@@ -361,7 +361,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val onClick: ListItemInteraction,
                         val onHideMenuItemClick: ListItemInteraction,
                         val onMoreMenuClick: ListItemInteraction,
-                    ): BlazeCard(dashboardCardType = DashboardCardType.PROMOTE_WITH_BLAZE_CARD)
+                    ) : BlazeCard(dashboardCardType = DashboardCardType.PROMOTE_WITH_BLAZE_CARD)
                 }
 
                 data class DashboardDomainCard(
@@ -370,7 +370,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     val onClick: ListItemInteraction,
                     val onHideMenuItemClick: ListItemInteraction,
                     val onMoreMenuClick: ListItemInteraction,
-                ): DashboardCard(dashboardCardType = DashboardCardType.DASHBOARD_DOMAIN_CARD)
+                ) : DashboardCard(dashboardCardType = DashboardCardType.DASHBOARD_DOMAIN_CARD)
 
                 data class DashboardPlansCard(
                     val title: UiString?,
@@ -378,7 +378,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     val onClick: ListItemInteraction,
                     val onHideMenuItemClick: ListItemInteraction,
                     val onMoreMenuClick: ListItemInteraction,
-                ): DashboardCard(dashboardCardType = DashboardCardType.DASHBOARD_PLANS_CARD)
+                ) : DashboardCard(dashboardCardType = DashboardCardType.DASHBOARD_PLANS_CARD)
             }
         }
     }
