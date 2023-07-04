@@ -52,7 +52,7 @@ class GetIsSocialSharingLimitedUseCaseTest {
         val siteModel = SiteModel().apply {
             siteId = 1L
             setIsJetpackInstalled(true)
-            hasSocialShares1000Active = true
+            activeFeatures = "social-shares-1000"
         }
         whenever(jetpackSocialFeatureConfig.isEnabled()).thenReturn(true)
         whenever(siteStore.getSiteBySiteId(any())).thenReturn(siteModel)
@@ -66,7 +66,7 @@ class GetIsSocialSharingLimitedUseCaseTest {
         val siteModel = SiteModel().apply {
             siteId = 1L
             setIsJetpackInstalled(true)
-            hasSocialShares1000Active = false
+            activeFeatures = ""
         }
         whenever(jetpackSocialFeatureConfig.isEnabled()).thenReturn(true)
         whenever(siteStore.getSiteBySiteId(any())).thenReturn(siteModel)
