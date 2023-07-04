@@ -18,9 +18,9 @@ class PromoteWithBlazeCardSource @Inject constructor(
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<BlazeCardUpdate> {
         val result = MediatorLiveData<BlazeCardUpdate>()
+        refresh()
         result.getData(siteLocalId)
         result.addSource(refresh) { result.refreshData(siteLocalId, refresh.value) }
-        refresh()
         return result
     }
 
