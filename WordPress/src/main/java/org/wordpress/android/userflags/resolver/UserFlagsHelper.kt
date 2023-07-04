@@ -55,7 +55,7 @@ class UserFlagsHelper @Inject constructor(
                 is String -> appPrefsWrapper.setString(userFlagPrefKey, value)
                 is Long -> appPrefsWrapper.setLong(userFlagPrefKey, value)
                 is Int -> appPrefsWrapper.setInt(userFlagPrefKey, value)
-                is Boolean -> appPrefsWrapper.setBoolean(userFlagPrefKey, value)
+                is Boolean -> appPrefsWrapper.putBoolean(userFlagPrefKey, value)
                 is Collection<*> -> {
                     val stringSet = value.filterIsInstance<String>().toSet()
                     appPrefsWrapper.setStringSet(userFlagPrefKey, stringSet)

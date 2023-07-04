@@ -601,10 +601,7 @@ class MySiteViewModel @Inject constructor(
                     onRemoveClick = this::onBloggingPromptRemoveClick
                 ),
                 promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
-                    isEligible = blazeFeatureUtils.shouldShowBlazeCardEntryPoint(
-                        blazeCardUpdate?.blazeStatusModel,
-                        site.siteId
-                    ),
+                    isEligible = blazeCardUpdate?.blazeEligible ?: false,
                     onClick = this::onPromoteWithBlazeCardClick,
                     onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
                     onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
@@ -666,8 +663,7 @@ class MySiteViewModel @Inject constructor(
                 enablePagesFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 onClick = this::onItemClick,
-                isBlazeEligible =
-                blazeFeatureUtils.shouldShowBlazeMenuEntryPoint(blazeCardUpdate?.blazeStatusModel)
+                isBlazeEligible = blazeFeatureUtils.isSiteBlazeEligible(site),
             )
         )
 
@@ -981,6 +977,7 @@ class MySiteViewModel @Inject constructor(
                 }
 
                 ListItemAction.DOMAINS -> SiteNavigationAction.OpenDomains(selectedSite)
+                ListItemAction.ME -> SiteNavigationAction.OpenMeScreen
                 ListItemAction.SITE_SETTINGS -> SiteNavigationAction.OpenSiteSettings(selectedSite)
                 ListItemAction.THEMES -> SiteNavigationAction.OpenThemes(selectedSite)
                 ListItemAction.PLUGINS -> SiteNavigationAction.OpenPlugins(selectedSite)

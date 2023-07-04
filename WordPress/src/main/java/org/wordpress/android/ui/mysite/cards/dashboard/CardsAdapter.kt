@@ -54,7 +54,6 @@ class CardsAdapter(
             DashboardCardType.BLOGGING_PROMPT_CARD.ordinal -> BloggingPromptCardViewHolder(
                 parent,
                 uiHelpers,
-                imageManager,
                 bloggingPromptsCardAnalyticsTracker,
                 htmlCompatWrapper,
                 learnMoreClicked

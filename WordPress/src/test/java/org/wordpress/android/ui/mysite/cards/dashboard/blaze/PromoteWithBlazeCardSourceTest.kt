@@ -1,22 +1,14 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.blaze
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.blaze.BlazeStatusModel
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeStatusError
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeStatusErrorType
-import org.wordpress.android.fluxc.store.blaze.BlazeStore
-import org.wordpress.android.fluxc.store.blaze.BlazeStore.BlazeStatusResult
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -26,21 +18,11 @@ import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardSource
 
 const val SITE_LOCAL_ID = 1
 const val SITE_ID = 1L
-const val IS_ELIGIBLE = true
-
-/* MODEL */
-private val BLAZE_STATUS_MODEL = BlazeStatusModel(siteId = SITE_ID, IS_ELIGIBLE)
-
-private val BLAZE_STATUS_MODELS: List<BlazeStatusModel> = listOf(BLAZE_STATUS_MODEL)
-
 
 @ExperimentalCoroutinesApi
 class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
-
-    @Mock
-    private lateinit var blazeStore: BlazeStore
 
     @Mock
     private lateinit var siteModel: SiteModel
@@ -49,15 +31,6 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
     private lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
     private lateinit var blazeCardSource: BlazeCardSource
-
-    private val data = BlazeStatusResult(
-        model = BLAZE_STATUS_MODELS
-    )
-
-    @Suppress("UnusedPrivateMember")
-    private val apiError = BlazeStatusResult<List<BlazeStatusModel>>(
-        error = BlazeStatusError(BlazeStatusErrorType.API_ERROR)
-    )
 
 
     @Before
@@ -69,94 +42,28 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
         setUpMocks(isBlazeEnabled)
         blazeCardSource = BlazeCardSource(
             selectedSiteRepository,
-            blazeStore,
-            blazeFeatureUtils,
-            testDispatcher()
+            blazeFeatureUtils
         )
     }
 
     @Test
-    fun `given blaze is enabled, when build is invoked, then start collecting status from store (database)`() = test {
+    fun `given blaze is enabled, when build is invoked, then card is shown`() = test {
         init(true)
-        blazeCardSource.refresh.observeForever { }
+        val result = mutableListOf<BlazeCardUpdate>()
 
-        blazeCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
+        blazeCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) }}
 
-        verify(blazeStore).getBlazeStatus(siteModel.siteId)
+        assertThat(result.last()).isEqualTo(BlazeCardUpdate(true))
     }
 
     @Test
-    fun `given blaze is disabled, when build is invoked, then do not collect status from store (database)`() = test {
+    fun `given blaze is disabled, when build is invoked, then card is not shown`() = test {
         init(false)
-        blazeCardSource.refresh.observeForever { }
-
-        blazeCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
-
-        verifyNoInteractions(blazeStore)
-    }
-
-    @Test
-    fun `given blaze is enabled, when build is invoked, then blaze status is fetched from store (network)`() = test {
-        init(true)
-        whenever(blazeStore.getBlazeStatus(siteModel.siteId)).thenReturn(
-            flowOf(
-                BlazeStatusResult(
-                    BLAZE_STATUS_MODELS
-                ),
-            ),
-        )
-
-        blazeCardSource.refresh.observeForever { }
-
-        blazeCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
-
-        verify(blazeStore).getBlazeStatus(siteModel.siteId)
-    }
-
-    @Test
-    fun `given blaze is enabled and no error, when build is invoked, the data is only loaded from get (db)`() = test {
-        init(true)
         val result = mutableListOf<BlazeCardUpdate>()
-        whenever(blazeStore.getBlazeStatus(siteModel.siteId)).thenReturn(flowOf(data))
-        whenever(blazeStore.fetchBlazeStatus(siteModel)).thenReturn(BlazeStatusResult())
-        blazeCardSource.refresh.observeForever { }
 
-        blazeCardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
-            it?.let { result.add(it) }
-        }
+        blazeCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) }}
 
-        assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(BlazeCardUpdate(data.model?.first()))
-    }
-
-    @Test
-    fun `given blaze is enabled, when build is invoked on site not eligible, then model is null`() = test {
-        init(true)
-        val invalidSiteLocalId = 2
-        val result = mutableListOf<BlazeCardUpdate>()
-        blazeCardSource.refresh.observeForever { }
-
-        blazeCardSource.build(testScope(), invalidSiteLocalId).observeForever {
-            it?.let { result.add(it) }
-        }
-
-        assertThat(result.first()).isEqualTo(BlazeCardUpdate(blazeStatusModel = null))
-    }
-
-    @Test
-    fun `given error, when build is invoked, then model is null`() = test {
-        init(true)
-        val invalidSiteId = 2
-        val result = mutableListOf<BlazeCardUpdate>()
-        blazeCardSource.refresh.observeForever { }
-
-        blazeCardSource.build(testScope(), invalidSiteId).observeForever {
-            it?.let { result.add(it) }
-        }
-        advanceUntilIdle()
-
-        assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(BlazeCardUpdate(blazeStatusModel = null))
+        assertThat(result.last()).isEqualTo(BlazeCardUpdate(false))
     }
 
     @Test
@@ -167,17 +74,16 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
 
         blazeCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
-        assertThat(result.size).isEqualTo(2)
+        assertThat(result.size).isEqualTo(3)
         assertThat(result.first()).isFalse
-        assertThat(result.last()).isTrue
+        assertThat(result[1]).isTrue
+        assertThat(result.last()).isFalse
     }
 
     @Test
     fun `when refresh is invoked, then refresh is set to true`() = test {
         init(true)
         val result = mutableListOf<Boolean>()
-        whenever(blazeStore.getBlazeStatus(siteModel.siteId)).thenReturn(flowOf(data))
-        whenever(blazeStore.fetchBlazeStatus(siteModel)).thenReturn(BlazeStatusResult())
         blazeCardSource.refresh.observeForever { result.add(it) }
         blazeCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
@@ -185,16 +91,16 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(result.size).isEqualTo(5)
-        assertThat(result[0]).isFalse // init
-        assertThat(result[1]).isTrue // build(...) -> refresh()
-        assertThat(result[2]).isTrue // build(...) -> fetch
-        assertThat(result[3]).isFalse // refresh()
-        assertThat(result[4]).isFalse // refreshData(...) -> fetch -> error
+        assertThat(result.first()).isFalse // build
+        assertThat(result[1]).isTrue // build -> fetching data
+        assertThat(result.last()).isFalse // build -> fetching data -> success/error
+        assertThat(result[3]).isTrue // refresh() invoked
+        assertThat(result[4]).isFalse // refreshData(...) -> fetch -> success/error
     }
 
     private fun setUpMocks(isBlazeEnabled: Boolean) {
         whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
-        whenever(blazeFeatureUtils.isBlazeEligibleForUser(siteModel)).thenReturn(isBlazeEnabled)
+        whenever(blazeFeatureUtils.shouldShowBlazeCardEntryPoint(siteModel)).thenReturn(isBlazeEnabled)
     }
 }

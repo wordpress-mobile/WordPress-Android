@@ -35,6 +35,7 @@ import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.AppLogViewerActivity
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.debug.DebugSettingsActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -109,6 +110,10 @@ class HelpActivity : LocaleAwareActivity() {
                 showContactUs()
             }
 
+            if(BuildConfig.DEBUG) {
+                enableDebugSettings()
+            }
+
             faqButton.setOnClickListener { showFaq() }
             applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
             logsButton.setOnClickListener { v ->
@@ -127,6 +132,13 @@ class HelpActivity : LocaleAwareActivity() {
          */
         if (savedInstanceState == null && originFromExtras == Origin.ZENDESK_NOTIFICATION) {
             showZendeskTickets()
+        }
+    }
+
+    private fun enableDebugSettings() {
+        binding.debugSettingsButton.isVisible = true
+        binding.debugSettingsButton.setOnClickListener {
+            startActivity(Intent(this, DebugSettingsActivity::class.java))
         }
     }
 

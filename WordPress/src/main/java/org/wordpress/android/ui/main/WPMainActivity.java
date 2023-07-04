@@ -79,7 +79,6 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.ShortcutsNavigator;
-import org.wordpress.android.ui.WPTooltipView;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment;
@@ -116,8 +115,10 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
+import org.wordpress.android.ui.prefs.privacy.banner.PrivacyBannerFragment;
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.quickstart.QuickStartTracker;
 import org.wordpress.android.ui.reader.ReaderFragment;
@@ -239,7 +240,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private ModalLayoutPickerViewModel mMLPViewModel;
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
     private FloatingActionButton mFloatingActionButton;
-    private WPTooltipView mFabTooltip;
     private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
     private static final String BLOGGING_REMINDERS_BOTTOM_SHEET_TAG = "BLOGGING_REMINDERS_BOTTOM_SHEET_TAG";
     private final Handler mHandler = new Handler();
@@ -652,7 +652,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void initViewModel() {
         mFloatingActionButton = findViewById(R.id.fab_button);
-        mFabTooltip = findViewById(R.id.fab_tooltip);
 
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(WPMainActivityViewModel.class);
         mMLPViewModel = new ViewModelProvider(this, mViewModelFactory).get(ModalLayoutPickerViewModel.class);
@@ -660,16 +659,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 new ViewModelProvider(this, mViewModelFactory).get(BloggingRemindersViewModel.class);
 
         // Setup Observers
+        mViewModel.getAskForPrivacyConsent().observe(this, action -> showPrivacyConsentDialog());
+        mViewModel.getShowPrivacySettings().observe(this, action -> showPrivacySettingsScreen(null));
+        mViewModel.getShowPrivacySettingsWithError().observe(this, this::showPrivacySettingsScreen);
         mViewModel.getFabUiState().observe(this, fabUiState -> {
             String message = getResources().getString(fabUiState.getCreateContentMessageId());
-
-            mFabTooltip.setMessage(message);
-
-            if (fabUiState.isFabTooltipVisible()) {
-                mFabTooltip.show();
-            } else {
-                mFabTooltip.hide();
-            }
 
             mFloatingActionButton.setContentDescription(message);
 
@@ -735,7 +729,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             if (v.isHapticFeedbackEnabled()) {
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
-            mViewModel.onFabLongPressed(getSelectedSite());
 
             int messageId = mViewModel.getCreateContentMessageId(getSelectedSite());
 
@@ -744,10 +737,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         });
 
         ViewExtensionsKt.redirectContextClickToLongPressListener(mFloatingActionButton);
-
-        mFabTooltip.setOnClickListener(v -> {
-            mViewModel.onTooltipTapped(getSelectedSite());
-        });
 
         mViewModel.isBottomSheetShowing().observe(this, event -> {
             event.applyIfNotHandled(isShowing -> {
@@ -1280,6 +1269,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
                 if (trackAnalytics) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
+                }
+                break;
+            case ME:
+                ActivityId.trackLastActivity(ActivityId.ME);
+                if (trackAnalytics) {
+                    AnalyticsTracker.track(Stat.ME_ACCESSED);
                 }
                 break;
             default:
@@ -1882,5 +1877,27 @@ public class WPMainActivity extends LocaleAwareActivity implements
             // re-enable all deep linking components
             mDeepLinkOpenWebLinksWithJetpackHelper.enableDeepLinks();
         }
+    }
+
+    private void showPrivacyConsentDialog() {
+        PrivacyBannerFragment privacyBannerFragment = (PrivacyBannerFragment) getSupportFragmentManager()
+                .findFragmentByTag(PrivacyBannerFragment.TAG);
+        if (privacyBannerFragment == null) {
+            privacyBannerFragment = new PrivacyBannerFragment();
+        }
+        privacyBannerFragment.show(getSupportFragmentManager(), PrivacyBannerFragment.TAG);
+    }
+
+    private void showPrivacySettingsScreen(@Nullable Boolean requestedAnalyticsValue) {
+        Intent intent = new Intent(this, AppSettingsActivity.class);
+        intent.putExtra(AppSettingsActivity.EXTRA_SHOW_PRIVACY_SETTINGS, true);
+        if (requestedAnalyticsValue != null) {
+            intent.putExtra(
+                    AppSettingsActivity.EXTRA_REQUESTED_ANALYTICS_VALUE_FROM_ERROR,
+                    requestedAnalyticsValue
+            );
+        }
+//        startActivityForResult(intent, RequestCodes.SETTINGS); // TODO: do we need to handle the result?
+        startActivity(intent);
     }
 }

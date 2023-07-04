@@ -13,7 +13,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -32,10 +31,8 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
-import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
@@ -91,15 +88,12 @@ class PostListMainViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val blazeStore: BlazeStore,
     private val siteUtilsWrapper: SiteUtilsWrapper
 ) : ViewModel(), CoroutineScope {
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
         override val lifecycle: Lifecycle = lifecycleRegistry
     }
-    private var isSiteBlazeEligible = false
 
     private val scrollToTargetPostJob: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -272,8 +266,6 @@ class PostListMainViewModel @Inject constructor(
             AuthorFilterSelection.EVERYONE
         }
 
-        checkBlazeEligibility()
-
         postListEventListenerFactory.createAndStartListening(
             lifecycle = lifecycleOwner.lifecycle,
             dispatcher = dispatcher,
@@ -326,18 +318,6 @@ class PostListMainViewModel @Inject constructor(
         }
     }
 
-    private fun checkBlazeEligibility() {
-        // If the user is not an admin, we don't need to check for Blaze eligibility
-        if (!blazeFeatureUtils.isBlazeEligibleForUser(site)) return
-        launch {
-            blazeStore.getBlazeStatus(site.siteId)
-                .map { it.model?.firstOrNull() }
-                .collect {
-                    isSiteBlazeEligible = it?.isEligible ?: false
-                }
-        }
-    }
-
     override fun onCleared() {
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
         scrollToTargetPostJob.cancel() // cancels all coroutines with the default coroutineContext
@@ -359,8 +339,7 @@ class PostListMainViewModel @Inject constructor(
             doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
             hasAutoSave = postConflictResolver::hasUnhandledAutoSave,
             postFetcher = postFetcher,
-            getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl,
-            isSiteBlazeEligible = isSiteBlazeEligible,
+            getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
         )
     }
 
