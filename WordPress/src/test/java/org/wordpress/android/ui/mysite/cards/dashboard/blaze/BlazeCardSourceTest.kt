@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardSource
+import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardSource
 
 /* SITE */
 
@@ -20,7 +20,7 @@ const val SITE_LOCAL_ID = 1
 const val SITE_ID = 1L
 
 @ExperimentalCoroutinesApi
-class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
+class BlazeCardSourceTest : BaseUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
 
@@ -30,7 +30,7 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
     @Mock
     private lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
-    private lateinit var blazeCardSource: PromoteWithBlazeCardSource
+    private lateinit var blazeCardSource: BlazeCardSource
 
 
     @Before
@@ -40,7 +40,7 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
 
     private fun init(isBlazeEnabled: Boolean = false) {
         setUpMocks(isBlazeEnabled)
-        blazeCardSource = PromoteWithBlazeCardSource(
+        blazeCardSource = BlazeCardSource(
             selectedSiteRepository,
             blazeFeatureUtils
         )
