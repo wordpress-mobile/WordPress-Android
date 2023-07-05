@@ -3,6 +3,8 @@ package org.wordpress.android.ui.posts.prepublishing.home
 import androidx.annotation.ColorRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 
 typealias PublishPost = Boolean
 
@@ -18,50 +20,63 @@ sealed class PrepublishingHomeItemUiState {
 
     data class StoryTitleUiState(
         val storyThumbnailUrl: String,
-        val storyTitle: UiString.UiStringText? = null,
+        val storyTitle: UiStringText? = null,
         val onStoryTitleChanged: (String) -> Unit
     ) :
         PrepublishingHomeItemUiState()
 
-    data class HeaderUiState(val siteName: UiString.UiStringText, val siteIconUrl: String) :
+    data class HeaderUiState(val siteName: UiStringText, val siteIconUrl: String) :
         PrepublishingHomeItemUiState()
 
     sealed class ButtonUiState(
-        val buttonText: UiString.UiStringRes,
+        val buttonText: UiStringRes,
         val publishPost: PublishPost
     ) : PrepublishingHomeItemUiState() {
         open val onButtonClicked: ((PublishPost) -> Unit)? = null
 
         data class PublishButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
-            UiString.UiStringRes(R.string.prepublishing_nudges_home_publish_button),
+            UiStringRes(R.string.prepublishing_nudges_home_publish_button),
             true
         )
 
         data class ScheduleButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
-            UiString.UiStringRes(R.string.prepublishing_nudges_home_schedule_button),
+            UiStringRes(R.string.prepublishing_nudges_home_schedule_button),
             false
         )
 
         data class UpdateButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
-            UiString.UiStringRes(R.string.prepublishing_nudges_home_update_button),
+            UiStringRes(R.string.prepublishing_nudges_home_update_button),
             false
         )
 
         data class SubmitButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
-            UiString.UiStringRes(R.string.prepublishing_nudges_home_submit_button),
+            UiStringRes(R.string.prepublishing_nudges_home_submit_button),
             true
         )
 
         data class SaveButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
-            UiString.UiStringRes(R.string.prepublishing_nudges_home_save_button),
+            UiStringRes(R.string.prepublishing_nudges_home_save_button),
             false
         )
     }
 
-    enum class ActionType(val textRes: UiString.UiStringRes) {
-        PUBLISH(UiString.UiStringRes(R.string.prepublishing_nudges_publish_action)),
-        TAGS(UiString.UiStringRes(R.string.prepublishing_nudges_tags_action)),
-        CATEGORIES(UiString.UiStringRes(R.string.prepublishing_nudges_categories_action)),
-        ADD_CATEGORY(UiString.UiStringRes(R.string.prepublishing_nudges_categories_action))
+    data class SocialUiState(
+        val title: UiString,
+        val description: UiString,
+        val isLowOnShares: Boolean,
+        val connectionIcons: List<ConnectionIcon>,
+        val onItemClicked: (() -> Unit)?
+    ) : PrepublishingHomeItemUiState() {
+        data class ConnectionIcon(
+            val iconUrl: String,
+            val isEnabled: Boolean = true
+        )
+    }
+
+    enum class ActionType(val textRes: UiStringRes) {
+        PUBLISH(UiStringRes(R.string.prepublishing_nudges_publish_action)),
+        TAGS(UiStringRes(R.string.prepublishing_nudges_tags_action)),
+        CATEGORIES(UiStringRes(R.string.prepublishing_nudges_categories_action)),
+        ADD_CATEGORY(UiStringRes(R.string.prepublishing_nudges_categories_action))
     }
 }
