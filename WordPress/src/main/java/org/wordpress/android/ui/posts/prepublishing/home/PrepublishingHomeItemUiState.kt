@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.prepublishing.home
 
 import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -68,7 +69,7 @@ sealed class PrepublishingHomeItemUiState {
         val onItemClicked: (() -> Unit)?
     ) : PrepublishingHomeItemUiState() {
         data class ConnectionIcon(
-            val iconUrl: String,
+            @DrawableRes val iconRes: Int,
             val isEnabled: Boolean = true
         )
     }
