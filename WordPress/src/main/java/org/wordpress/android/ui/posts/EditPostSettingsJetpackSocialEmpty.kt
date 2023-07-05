@@ -5,11 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.TrainOfIcons
+import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.compose.theme.AppThemeEditor
 
 @Composable
 fun EditPostSettingsJetpackSocialEmpty(
-    trainOfIconsModels: List<Any>
+    trainOfIconsModels: List<TrainOfIconsModel>
 ) {
     TrainOfIcons(
         iconModels = trainOfIconsModels,
@@ -23,10 +24,10 @@ fun EditPostSettingsJetpackSocialEmptyPreview() {
     AppThemeEditor {
         EditPostSettingsJetpackSocialEmpty(
             trainOfIconsModels = listOf(
-                R.drawable.login_prologue_second_asset_three,
-                R.drawable.login_prologue_second_asset_two,
-                R.drawable.login_prologue_third_asset_one,
-                R.mipmap.app_icon
+                TrainOfIconsModel(R.drawable.login_prologue_second_asset_three),
+                TrainOfIconsModel(R.drawable.login_prologue_second_asset_two),
+                TrainOfIconsModel(R.drawable.login_prologue_third_asset_one),
+                TrainOfIconsModel(R.mipmap.app_icon)
             ),
         )
     }

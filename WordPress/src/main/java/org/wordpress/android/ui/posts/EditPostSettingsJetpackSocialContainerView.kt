@@ -10,6 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
 import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.models.PublicizeConnectionList
+import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
 import org.wordpress.android.ui.compose.theme.AppThemeEditor
 import org.wordpress.android.ui.compose.unit.Margin
@@ -19,7 +20,7 @@ import org.wordpress.android.ui.posts.social.compose.PostSocialSharesText
 
 @Composable
 fun EditPostSettingsJetpackSocialContainerView(
-    trainOfIconsModels: List<Any>,
+    trainOfIconsModels: List<TrainOfIconsModel>,
     postSocialConnectionList: List<PostSocialConnection>,
     shareMessage: String,
     remainingSharesMessage: String,
@@ -82,10 +83,10 @@ fun PreviewEditPostSettingsJetpackSocialContainerConnectionsListView() {
         connections.add(connection2)
         EditPostSettingsJetpackSocialContainerView(
             trainOfIconsModels = listOf(
-                R.drawable.login_prologue_second_asset_three,
-                R.drawable.login_prologue_second_asset_two,
-                R.drawable.login_prologue_third_asset_one,
-                R.mipmap.app_icon
+                TrainOfIconsModel(R.drawable.login_prologue_second_asset_three),
+                TrainOfIconsModel(R.drawable.login_prologue_second_asset_two),
+                TrainOfIconsModel(R.drawable.login_prologue_third_asset_one),
+                TrainOfIconsModel(R.mipmap.app_icon)
             ),
             postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
             shareMessage = "Share message.",
@@ -103,10 +104,10 @@ fun PreviewEditPostSettingsJetpackSocialContainerEmptyView() {
     AppThemeEditor {
         EditPostSettingsJetpackSocialContainerView(
             trainOfIconsModels = listOf(
-                R.drawable.login_prologue_second_asset_three,
-                R.drawable.login_prologue_second_asset_two,
-                R.drawable.login_prologue_third_asset_one,
-                R.mipmap.app_icon
+                TrainOfIconsModel(R.drawable.login_prologue_second_asset_three),
+                TrainOfIconsModel(R.drawable.login_prologue_second_asset_two),
+                TrainOfIconsModel(R.drawable.login_prologue_third_asset_one),
+                TrainOfIconsModel(R.mipmap.app_icon)
             ),
             postSocialConnectionList = emptyList(),
             shareMessage = "Share message.",

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AbstractComposeView
+import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.compose.theme.AppThemeEditor
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 
@@ -36,7 +37,7 @@ class EditPostSettingsJetpackSocialContainerComposeView @JvmOverloads constructo
 }
 
 data class EditPostSettingsJetpackSocialContainerComposeViewData(
-    val trainOfIconsModels: List<Any>,
+    val trainOfIconsModels: List<TrainOfIconsModel>,
     val postSocialConnectionList: List<PostSocialConnection>,
     val shareMessage: String,
     val remainingSharesMessage: String,
