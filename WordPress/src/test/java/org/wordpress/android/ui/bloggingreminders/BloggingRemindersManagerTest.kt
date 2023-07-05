@@ -34,6 +34,7 @@ class BloggingRemindersManagerTest {
     @Test
     fun `should not show blogging reminders when has no edit post capability`() {
         siteModel.hasCapabilityEditPosts = false
+
         val result = bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)
 
         assertThat(result).isFalse
@@ -42,6 +43,7 @@ class BloggingRemindersManagerTest {
     @Test
     fun `should show blogging reminders when has edit post capability`() {
         siteModel.hasCapabilityEditPosts = true
+
         val result = bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)
 
         assertThat(result).isTrue
@@ -49,6 +51,9 @@ class BloggingRemindersManagerTest {
 
     @Test
     fun `should not show blogging reminders when already shown for a site`() {
+        siteModel.hasCapabilityEditPosts = true
+        whenever(appPrefsWrapper.isBloggingRemindersShown(siteId)).thenReturn(true)
+
         val result = bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)
 
         assertThat(result).isFalse
@@ -56,8 +61,11 @@ class BloggingRemindersManagerTest {
 
     @Test
     fun `should show blogging reminders when already not shown for a site`() {
+        siteModel.hasCapabilityEditPosts = true
+        whenever(appPrefsWrapper.isBloggingRemindersShown(siteId)).thenReturn(false)
+
         val result = bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)
 
-        assertThat(result).isFalse
+        assertThat(result).isTrue
     }
 }
