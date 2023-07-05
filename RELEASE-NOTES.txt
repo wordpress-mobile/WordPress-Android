@@ -2,7 +2,7 @@
 
 22.8
 -----
-
+* [*] Fixes the crash that occurs after deleting the site [https://github.com/wordpress-mobile/WordPress-Android/pull/18736]
 
 22.7
 -----
