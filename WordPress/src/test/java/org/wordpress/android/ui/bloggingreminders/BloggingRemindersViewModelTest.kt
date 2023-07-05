@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.FRIDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.MONDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.WEDNESDAY
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.toList
@@ -81,12 +82,14 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     private lateinit var viewModel: BloggingRemindersViewModel
     private val siteId = 123
     private val hour = 10
     private val minute = 0
     private lateinit var events: MutableList<Boolean>
     private lateinit var uiState: MutableList<UiState>
+    private lateinit var siteModel: SiteModel
 
     @Before
     fun setUp() {
@@ -109,15 +112,17 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         events = mutableListOf()
         events = viewModel.isBottomSheetShowing.eventToList()
         uiState = viewModel.uiState.toList()
+        siteModel = SiteModel()
+        siteModel.id = siteId
         whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(emptyFlow())
     }
 
     @Test
     fun `sets blogging reminders as shown on PROLOGUE`() {
-        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
-        viewModel.onPublishingPost(siteId, true)
+        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)).thenReturn(true)
+        viewModel.onPublishingPost(siteModel, true)
 
-        verify(bloggingRemindersManager).bloggingRemindersShown(siteId)
+        verify(bloggingRemindersManager).bloggingRemindersShown(siteModel.id)
     }
 
     @Test
@@ -131,9 +136,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `shows bottom sheet on showBottomSheet`() {
-        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
+        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)).thenReturn(true)
 
-        viewModel.onPublishingPost(siteId, true)
+        viewModel.onPublishingPost(siteModel, true)
 
         assertThat(events).containsExactly(true)
     }
@@ -148,9 +153,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Test
     fun `shows prologue ui state on PROLOGUE`() {
         val uiItems = initPrologueBuilder()
-        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
+        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)).thenReturn(true)
 
-        viewModel.onPublishingPost(siteId, true)
+        viewModel.onPublishingPost(siteModel, true)
 
         assertThat(uiState.last().uiItems).isEqualTo(uiItems)
     }
@@ -213,8 +218,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Test
     fun `switches from prologue do day selection on primary button click`() {
         initPrologueBuilder()
-        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
-        viewModel.onPublishingPost(siteId, true)
+        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)).thenReturn(true)
+        viewModel.onPublishingPost(siteModel, true)
 
         clickPrimaryButton()
 
@@ -263,9 +268,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `showBottomSheet sets tracker site id`() {
-        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
+        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)).thenReturn(true)
 
-        viewModel.onPublishingPost(siteId, true)
+        viewModel.onPublishingPost(siteModel, true)
 
         verify(analyticsTracker).setSite(siteId)
     }
@@ -274,8 +279,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     fun `showBottomSheet tracks flow start with correct source`() = test {
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
         viewModel.onBlogSettingsItemClicked(siteId)
-        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
-        viewModel.onPublishingPost(siteId, true)
+        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)).thenReturn(true)
+        viewModel.onPublishingPost(siteModel, true)
 
         verify(analyticsTracker).trackFlowStart(BLOG_SETTINGS)
         verify(analyticsTracker).trackFlowStart(PUBLISH_FLOW)
@@ -283,9 +288,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `showBottomSheet tracks screen shown with correct screen`() = test {
-        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
+        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)).thenReturn(true)
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
-        viewModel.onPublishingPost(siteId, true)
+        viewModel.onPublishingPost(siteModel, true)
         viewModel.onBlogSettingsItemClicked(siteId)
 
         verify(analyticsTracker).trackScreenShown(PROLOGUE)
@@ -294,9 +299,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `showBottomSheet tracks screen shown more than once`() {
-        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
-        viewModel.onPublishingPost(siteId, true)
-        viewModel.onPublishingPost(siteId, true)
+        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)).thenReturn(true)
+        viewModel.onPublishingPost(siteModel, true)
+        viewModel.onPublishingPost(siteModel, true)
 
         verify(analyticsTracker, times(2)).trackScreenShown(PROLOGUE)
     }
@@ -304,8 +309,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Test
     fun `clicking primary button on prologue screen tracks correct events`() {
         initPrologueBuilder()
-        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
-        viewModel.onPublishingPost(siteId, true)
+        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)).thenReturn(true)
+        viewModel.onPublishingPost(siteModel, true)
 
         clickPrimaryButton()
 
@@ -338,8 +343,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `dismissing bottom sheet on prologue screen tracks dismiss event`() {
-        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
-        viewModel.onPublishingPost(siteId, true)
+        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)).thenReturn(true)
+        viewModel.onPublishingPost(siteModel, true)
         viewModel.onBottomSheetDismissed()
 
         verify(analyticsTracker).trackFlowDismissed(PROLOGUE)
@@ -429,11 +434,11 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onPublishingPost shows prologue when publishing for the first time and prompt was not shown before`() {
-        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
+        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)).thenReturn(true)
 
         initPrologueBuilder()
 
-        viewModel.onPublishingPost(siteId, true)
+        viewModel.onPublishingPost(siteModel, true)
 
         assertPrologue()
     }
@@ -442,18 +447,18 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     fun `onPublishingPost does not show prologue when post was already published and prompt was not shown before`() {
         initPrologueBuilder()
 
-        viewModel.onPublishingPost(siteId, false)
+        viewModel.onPublishingPost(siteModel, false)
 
         assertThat(uiState.last().uiItems).isEqualTo(emptyList<BloggingRemindersItem>())
     }
 
     @Test
     fun `onPublishingPost does not show prologue when publishing for the first time and prompt was shown before`() {
-        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(false)
+        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)).thenReturn(false)
 
         initPrologueBuilder()
 
-        viewModel.onPublishingPost(siteId, true)
+        viewModel.onPublishingPost(siteModel, true)
 
         assertThat(uiState.last().uiItems).isEqualTo(emptyList<BloggingRemindersItem>())
     }
