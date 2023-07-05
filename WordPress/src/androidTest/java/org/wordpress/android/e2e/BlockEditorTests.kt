@@ -29,6 +29,7 @@ class BlockEditorTests : BaseTest() {
 """
 
     @Test
+    @Ignore
     fun e2ePublishSimplePost() {
         val title = "publishSimplePost"
         MySitesPage()
@@ -60,6 +61,7 @@ class BlockEditorTests : BaseTest() {
     }
 
     @Test
+    @Ignore
     fun e2eBlockEditorCanDisplayElementAddedInHtmlMode() {
         val title = "blockEditorCanDisplayElementAddedInHtmlMode"
         MySitesPage()

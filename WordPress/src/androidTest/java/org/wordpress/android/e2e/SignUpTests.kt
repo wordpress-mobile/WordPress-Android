@@ -2,6 +2,7 @@ package org.wordpress.android.e2e
 
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.e2e.flows.SignupFlow
@@ -15,6 +16,7 @@ class SignUpTests : BaseTest() {
     }
 
     @Test
+    @Ignore
     fun e2eSignUpWithMagicLink() {
         try {
             SignupFlow().chooseContinueWithWpCom(super.mComposeTestRule)

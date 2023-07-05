@@ -95,6 +95,7 @@ steps:
           - "**/build/instrumented-tests/**/*"
 
       - label: ":jetpack: 🔬 Instrumented tests"
+        key: "JP_Instrumented_Tests"
         command: ".buildkite/commands/instrumented-tests.sh jetpack"
         plugins: *common_plugins
         artifact_paths:
@@ -114,3 +115,13 @@ steps:
         command: ".buildkite/commands/prototype-build.sh jetpack"
         if: build.pull_request.id != null
         plugins: *common_plugins
+
+  - wait
+
+  - label: "🔍 Test Analytics"
+    command: buildkite-agent artifact download '**/test_result_1.xml' . --step "JP_Instrumented_Tests"
+    plugins:
+      - test-collector#v1.8.0:
+          files: "**/test_result_1.xml"
+          format: "junit"
+          api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_JETPACK"

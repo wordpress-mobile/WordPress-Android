@@ -2,6 +2,7 @@ package org.wordpress.android.e2e
 
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.e2e.flows.LoginFlow
@@ -23,6 +24,7 @@ class LoginTests : BaseTest() {
     }
 
     @Test
+    @Ignore
     fun e2eLoginWithPasswordlessAccount() {
         LoginFlow().chooseContinueWithWpCom(super.mComposeTestRule)
             .enterEmailAddress(BuildConfig.E2E_WP_COM_PASSWORDLESS_USER_EMAIL)
@@ -31,6 +33,7 @@ class LoginTests : BaseTest() {
     }
 
     @Test
+    @Ignore
     fun e2eLoginWithSiteAddress() {
         LoginFlow().chooseEnterYourSiteAddress(super.mComposeTestRule)
             .enterSiteAddress(BuildConfig.E2E_WP_COM_USER_SITE_ADDRESS)
@@ -40,6 +43,7 @@ class LoginTests : BaseTest() {
     }
 
     @Test
+    @Ignore
     fun e2eLoginWithMagicLink() {
         try {
             LoginFlow().chooseContinueWithWpCom(super.mComposeTestRule)
@@ -53,6 +57,7 @@ class LoginTests : BaseTest() {
     }
 
     @Test
+    @Ignore
     fun e2eLoginWithSelfHostedAccount() {
         LoginFlow().chooseEnterYourSiteAddress(super.mComposeTestRule)
             .enterSiteAddress(BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS)

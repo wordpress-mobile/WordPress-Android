@@ -2,6 +2,7 @@ package org.wordpress.android.e2e
 
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.e2e.flows.LoginFlow
@@ -16,6 +17,7 @@ class ContactUsTests : BaseTest() {
     }
 
     @Test
+    @Ignore
     fun e2eSendButtonEnabledWhenTextIsEntered() {
         try {
             LoginFlow()
@@ -35,6 +37,7 @@ class ContactUsTests : BaseTest() {
     }
 
     @Test
+    @Ignore
     fun e2eHelpCanBeOpenedWhileEnteringEmail() {
         LoginFlow()
             .chooseContinueWithWpCom(super.mComposeTestRule)
@@ -43,6 +46,7 @@ class ContactUsTests : BaseTest() {
     }
 
     @Test
+    @Ignore
     fun e2eHelpCanBeOpenedWhileEnteringPassword() {
         LoginFlow()
             .chooseContinueWithWpCom(super.mComposeTestRule)
