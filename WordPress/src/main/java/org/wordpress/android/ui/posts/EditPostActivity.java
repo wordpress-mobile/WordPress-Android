@@ -308,8 +308,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private static final String STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData";
     private static final String STATE_KEY_GUTENBERG_IS_SHOWN = "stateKeyGutenbergIsShown";
     private static final String STATE_KEY_MEDIA_CAPTURE_PATH = "stateKeyMediaCapturePath";
-    private static final String STATE_KEY_UNDO = "stateKeyUndo";
-    private static final String STATE_KEY_REDO = "stateKeyRedo";
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
@@ -1109,8 +1107,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mIsConfigChange = true; // don't call sessionData.end() in onDestroy() if this is an Android config change
 
         outState.putBoolean(STATE_KEY_GUTENBERG_IS_SHOWN, mShowGutenbergEditor);
-        outState.putBoolean(STATE_KEY_UNDO, mMenuHasUndo);
-        outState.putBoolean(STATE_KEY_REDO, mMenuHasRedo);
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mEditorMedia.getDroppedMediaUris());
 
