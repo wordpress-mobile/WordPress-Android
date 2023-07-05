@@ -4588,4 +4588,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="privacy_banner_save">Save</string>
     <string name="privacy_banner_error_save">There was an error saving your privacy choices.</string>
     <string name="gutenberg_native_reusable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Reusable</string>
+
+    <!-- Jetpack - Blaze campaigns card -->
+    <string name="blaze_campaigns_card_title">Blaze Campaign</string>
+    <string name="blaze_campaigns_card_footer_label">Create Campaign</string>
 </resources>
