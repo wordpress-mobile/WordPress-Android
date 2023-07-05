@@ -8,17 +8,15 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.DragEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -30,7 +28,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
-import androidx.core.content.ContextCompat;
 import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
@@ -377,7 +374,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private AppBarLayout mAppBarLayout;
     private Toolbar mToolbar;
-    private Menu mMenu;
     private boolean mMenuHasUndo = false;
     private boolean mMenuHasRedo = false;
 
@@ -603,6 +599,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(false);
         }
 
         mAppBarLayout = findViewById(R.id.appbar_main);
@@ -766,8 +763,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
             resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued();
         }
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
         // we need to make sure AT cookie is available when trying to edit post on private AT site
@@ -790,32 +785,20 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void customizeToolbar() {
-        // Custom overflow icon
-        Drawable overflowIcon = ContextCompat.getDrawable(this, R.drawable.more_vertical);
-        mToolbar.setOverflowIcon(overflowIcon);
-
-        // Customize insets
-        int insetStart = (int) (8 * getResources().getDisplayMetrics().density);
-        mToolbar.setContentInsetsRelative(insetStart, mToolbar.getContentInsetEnd());
-
-        // Set custom header
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View customLayout = inflater.inflate(R.layout.edit_post_header, mToolbar, false);
-        mToolbar.addView(customLayout, 0);
-
-        Button closeButton = customLayout.findViewById(R.id.close_editor_button);
-        closeButton.setOnClickListener(v -> onBackPressed());
+        // Custom close button
+        View closeHeader = mToolbar.findViewById(R.id.edit_post_header);
+        closeHeader.setOnClickListener(v -> handleBackPressed());
 
         // Update site icon
         String siteIconUrl = SiteUtils.getSiteIconUrl(
                 mSite,
                 getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small)
         );
-        ImageButton siteIcon = customLayout.findViewById(R.id.close_editor_site_icon);
+        ImageView siteIcon = mToolbar.findViewById(R.id.close_editor_site_icon);
         ImageType blavatarType = SiteUtils.getSiteImageType(
                 mSite.isWpForTeamsSite(), BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES);
         mImageManager.loadImageWithCorners(siteIcon, blavatarType, siteIconUrl,
-                DisplayUtils.dpToPx(siteIcon.getContext(), 2));
+                getResources().getDimensionPixelSize(R.dimen.edit_post_header_image_corner_radius));
     }
 
     private void presentNewPageNoticeIfNeeded() {
@@ -1311,42 +1294,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_post, menu);
-        mMenu = menu;
-        boolean isRtlLayout = getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
-
-        // Set opacity for undo/redo items
-        MenuItem undoItem = mMenu.findItem(R.id.menu_undo_action);
-        MenuItem redoItem = mMenu.findItem(R.id.menu_redo_action);
-
-        if (undoItem.getActionView() != null) {
-            ImageView undoIcon = undoItem.getActionView().findViewById(R.id.menu_undo_icon);
-            undoIcon.setRotationY(isRtlLayout ? 180 : 0);
-        }
-
-        if (redoItem.getActionView() != null) {
-            ImageView redoIcon = redoItem.getActionView().findViewById(R.id.menu_redo_icon);
-            redoIcon.setRotationY(isRtlLayout ? 180 : 0);
-        }
-
-        undoItem.setEnabled(mMenuHasUndo);
-        View undoView = undoItem.getActionView();
-        ImageView undoIcon = undoView.findViewById(R.id.menu_undo_icon);
-        undoIcon.setImageAlpha(mMenuHasUndo ? 255 : 76);
-        undoView.setOnClickListener(v -> {
-            if (mEditorFragment instanceof GutenbergEditorFragment) {
-                ((GutenbergEditorFragment) mEditorFragment).onUndoPressed();
-            }
-        });
-
-        redoItem.setEnabled(mMenuHasRedo);
-        View redoView = redoItem.getActionView();
-        ImageView redoIcon = redoView.findViewById(R.id.menu_redo_icon);
-        redoIcon.setImageAlpha(mMenuHasRedo ? 255 : 76);
-        redoView.setOnClickListener(v -> {
-            if (mEditorFragment instanceof GutenbergEditorFragment) {
-                ((GutenbergEditorFragment) mEditorFragment).onRedoPressed();
-            }
-        });
         return true;
     }
 
@@ -1357,12 +1304,22 @@ public class EditPostActivity extends LocaleAwareActivity implements
             showMenuItems = false;
         }
 
+        MenuItem undoItem = menu.findItem(R.id.menu_undo_action);
+        MenuItem redoItem = menu.findItem(R.id.menu_redo_action);
         MenuItem secondaryAction = menu.findItem(R.id.menu_secondary_action);
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
         MenuItem historyMenuItem = menu.findItem(R.id.menu_history);
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
         MenuItem helpMenuItem = menu.findItem(R.id.menu_editor_help);
+
+        if (undoItem != null) {
+            undoItem.setEnabled(mMenuHasUndo);
+        }
+
+        if (redoItem != null) {
+            redoItem.setEnabled(mMenuHasRedo);
+        }
 
         if (secondaryAction != null && mEditPostRepository.hasPost()) {
             secondaryAction.setVisible(showMenuItems && getSecondaryAction().isVisible());
@@ -1618,6 +1575,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 if (mEditorFragment instanceof GutenbergEditorFragment) {
                     mAnalyticsTrackerWrapper.track(Stat.EDITOR_HELP_SHOWN, mSite);
                     ((GutenbergEditorFragment) mEditorFragment).showEditorHelp();
+                }
+            } else if (itemId == R.id.menu_undo_action) {
+                if (mEditorFragment instanceof GutenbergEditorFragment) {
+                    ((GutenbergEditorFragment) mEditorFragment).onUndoPressed();
+                }
+            } else if (itemId == R.id.menu_redo_action) {
+                if (mEditorFragment instanceof GutenbergEditorFragment) {
+                    ((GutenbergEditorFragment) mEditorFragment).onRedoPressed();
                 }
             }
         }
@@ -3601,37 +3566,17 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onToggleUndo(boolean isDisabled) {
-        mMenuHasUndo = !isDisabled;
-        if (mMenu != null) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    MenuItem undoItem = mMenu.findItem(R.id.menu_undo_action);
-                    undoItem.setEnabled(mMenuHasUndo);
+        if (mMenuHasUndo == !isDisabled) return;
 
-                    View undoView = undoItem.getActionView();
-                    ImageView undoIcon = undoView.findViewById(R.id.menu_undo_icon);
-                    undoIcon.setImageAlpha(mMenuHasUndo ? 255 : 76);
-                }
-            });
-        }
+        mMenuHasUndo = !isDisabled;
+        new Handler(Looper.getMainLooper()).post(this::invalidateOptionsMenu);
     }
 
     @Override public void onToggleRedo(boolean isDisabled) {
-        mMenuHasRedo = !isDisabled;
-        if (mMenu != null) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    MenuItem redoItem = mMenu.findItem(R.id.menu_redo_action);
-                    redoItem.setEnabled(mMenuHasRedo);
+        if (mMenuHasRedo == !isDisabled) return;
 
-                    View redoView = redoItem.getActionView();
-                    ImageView redoIcon = redoView.findViewById(R.id.menu_redo_icon);
-                    redoIcon.setImageAlpha(mMenuHasRedo ? 255 : 76);
-                }
-            });
-        }
+        mMenuHasRedo = !isDisabled;
+        new Handler(Looper.getMainLooper()).post(this::invalidateOptionsMenu);
     }
 
     // FluxC events

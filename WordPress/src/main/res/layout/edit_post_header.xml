@@ -1,51 +1,31 @@
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:layout_centerVertical="true">
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:contentDescription="@string/menu_close_editor"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
 
-    <ImageButton
-        android:id="@+id/close_editor"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignBottom="@id/close_editor_button"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@id/close_editor_button"
-        android:background="@null"
+    <ImageView
+        android:layout_width="@dimen/edit_post_header_chevron_size"
+        android:layout_height="@dimen/edit_post_header_chevron_size"
         android:importantForAccessibility="no"
         android:src="@drawable/chevron_down"
         android:clickable="false"
         android:visibility="visible" />
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_toEndOf="@id/close_editor"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="2dp"
-        app:cardElevation="0dp">
+    <ImageView
+        android:id="@+id/close_editor_site_icon"
+        android:layout_width="@dimen/edit_post_header_image_size"
+        android:layout_height="@dimen/edit_post_header_image_size"
+        android:importantForAccessibility="no"
+        android:src="@drawable/bg_rectangle_placeholder_radius_2dp_globe_32dp"
+        android:visibility="visible"
+        android:clickable="false"
+        tools:ignore="TouchTargetSizeCheck" />
 
-        <ImageButton
-            android:id="@+id/close_editor_site_icon"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@null"
-            android:contentDescription="@string/menu_site_icon_context"
-            android:src="@drawable/bg_rectangle_placeholder_globe_32dp"
-            android:visibility="visible"
-            tools:ignore="TouchTargetSizeCheck" />
-
-    </androidx.cardview.widget.CardView>
-
-    <Button
-        android:id="@+id/close_editor_button"
-        android:layout_width="57dp"
-        android:layout_height="57dp"
-        android:layout_centerVertical="true"
-        android:background="?android:attr/actionBarItemBackground"
-        android:contentDescription="@string/menu_close_editor"
-        android:textColor="@android:color/transparent" />
-
-</RelativeLayout>
+</LinearLayout>

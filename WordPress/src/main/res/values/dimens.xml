@@ -251,6 +251,9 @@
     <!-- editor -->
     <dimen name="post_settings_featured_image_height_min">150dp</dimen>
     <dimen name="post_settings_featured_image_height_max">300dp</dimen>
+    <dimen name="edit_post_header_chevron_size">24dp</dimen>
+    <dimen name="edit_post_header_image_size">32dp</dimen>
+    <dimen name="edit_post_header_image_corner_radius">2dp</dimen>
 
     <!-- comments -->
     <dimen name="comment_avatar_sz">40dp</dimen>

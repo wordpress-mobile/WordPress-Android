@@ -8,15 +8,15 @@
     <item
         android:id="@+id/menu_undo_action"
         android:title="@string/menu_undo"
-        app:actionLayout="@layout/edit_post_menu_undo_item"
+        android:icon="@drawable/undo"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
 
     <item
         android:id="@+id/menu_redo_action"
-        app:actionLayout="@layout/edit_post_menu_redo_item"
-        app:showAsAction="always"
         android:title="@string/menu_redo"
+        android:icon="@drawable/redo"
+        app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
 
     <item
