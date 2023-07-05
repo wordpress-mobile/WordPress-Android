@@ -20,6 +20,7 @@ import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUi
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.posts.trackPrepublishingNudges
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -43,6 +45,7 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val storyRepositoryWrapper: StoryRepositoryWrapper,
     private val updateStoryPostTitleUseCase: UpdateStoryPostTitleUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val socialFeatureConfig: JetpackSocialFeatureConfig,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
@@ -119,6 +122,8 @@ class PrepublishingHomeViewModel @Inject constructor(
                 onActionClicked = ::onActionClicked
             ))
 
+            setupSocialItem()
+
             add(getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
                 launch(bgDispatcher) {
                     waitForStoryTitleJobAndSubmit(publishPost)
@@ -192,6 +197,21 @@ class PrepublishingHomeViewModel @Inject constructor(
                 onActionClicked = ::onActionClicked
             )
         )
+    }
+
+    private fun MutableList<PrepublishingHomeItemUiState>.setupSocialItem() {
+        if (socialFeatureConfig.isEnabled()) {
+            // TODO thomashorta retrieve the actual data here
+            add(
+                SocialUiState(
+                    title = UiString.UiStringText("Social Item"),
+                    description = UiString.UiStringText("Social Description"),
+                    isLowOnShares = false,
+                    connectionIcons = listOf(),
+                    onItemClicked = { /* TODO thomashorta implement action here */ },
+                )
+            )
+        }
     }
 
     private fun onStoryTitleChanged(storyTitle: String) {
