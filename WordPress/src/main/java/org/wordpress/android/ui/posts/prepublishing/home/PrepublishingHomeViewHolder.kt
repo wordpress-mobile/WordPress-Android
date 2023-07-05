@@ -7,12 +7,19 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.compose.material.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -75,7 +82,8 @@ sealed class PrepublishingHomeViewHolder(
     }
 
     class PrepublishingSubmitButtonViewHolder(parentView: ViewGroup, val uiHelpers: UiHelpers) :
-        PrepublishingHomeViewHolder(parentView,
+        PrepublishingHomeViewHolder(
+            parentView,
             R.layout.prepublishing_home_publish_button_list_item
         ) {
         private val button: Button = itemView.findViewById(R.id.publish_button)
@@ -86,6 +94,27 @@ sealed class PrepublishingHomeViewHolder(
             button.text = uiHelpers.getTextOfUiString(itemView.context, uiState.buttonText)
             button.setOnClickListener {
                 uiState.onButtonClicked?.invoke(uiState.publishPost)
+            }
+        }
+    }
+
+    class PrepublishingSocialItemViewHolder(
+        parentView: ViewGroup,
+        val uiHelpers: UiHelpers,
+    ) : PrepublishingHomeViewHolder(parentView, R.layout.prepublishing_home_compose_item) {
+        private val composeView: ComposeView = itemView.findViewById(R.id.prepublishing_compose_view)
+
+        override fun onBind(uiState: PrepublishingHomeItemUiState) {
+            composeView.setContent {
+                val state: SocialUiState by remember(uiState) {
+                    mutableStateOf(uiState as SocialUiState)
+                }
+
+                AppTheme {
+                    Text(
+                        uiHelpers.getTextOfUiString(itemView.context, state.title).toString(),
+                    )
+                }
             }
         }
     }

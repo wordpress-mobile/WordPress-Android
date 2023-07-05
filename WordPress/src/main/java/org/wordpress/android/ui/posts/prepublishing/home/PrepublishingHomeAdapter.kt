@@ -12,6 +12,7 @@ import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUi
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewHolder.PrepublishingHeaderListItemViewHolder
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewHolder.PrepublishingHomeListItemViewHolder
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewHolder.PrepublishingSocialItemViewHolder
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewHolder.PrepublishingSubmitButtonViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -44,6 +45,7 @@ class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<Prepubli
             )
             VIEW_TYPE_HOME_ITEM -> PrepublishingHomeListItemViewHolder(parent, uiHelpers)
             VIEW_TYPE_SUBMIT_BUTTON -> PrepublishingSubmitButtonViewHolder(parent, uiHelpers)
+            VIEW_TYPE_SOCIAL_ITEM -> PrepublishingSocialItemViewHolder(parent, uiHelpers)
             else -> throw NotImplementedError("Unknown ViewType")
         }
     }
