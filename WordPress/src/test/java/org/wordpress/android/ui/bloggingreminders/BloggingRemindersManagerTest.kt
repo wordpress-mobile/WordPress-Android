@@ -19,22 +19,21 @@ class BloggingRemindersManagerTest {
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
-    @Mock
-    lateinit var siteModel: SiteModel
-
+    private lateinit var siteModel: SiteModel
     private lateinit var bloggingRemindersManager: BloggingRemindersManager
     private val siteId = 123
 
     @Before
     fun setUp() {
-        siteModel.siteId = siteId.toLong()
+        siteModel = SiteModel()
+        siteModel.id = siteId
         bloggingRemindersManager = BloggingRemindersManager(appPrefsWrapper, buildConfigWrapper)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
     }
 
     @Test
     fun `should not show blogging reminders when has no edit post capability`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
-        whenever(siteModel.hasCapabilityEditPosts).thenReturn(false)
+        siteModel.hasCapabilityEditPosts = false
         val result = bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)
 
         assertThat(result).isFalse
@@ -42,17 +41,14 @@ class BloggingRemindersManagerTest {
 
     @Test
     fun `should show blogging reminders when has edit post capability`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
-        whenever(siteModel.hasCapabilityEditPosts).thenReturn(true)
+        siteModel.hasCapabilityEditPosts = true
         val result = bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)
 
-        assertThat(result).isFalse
+        assertThat(result).isTrue
     }
 
     @Test
     fun `should not show blogging reminders when already shown for a site`() {
-        whenever(appPrefsWrapper.isBloggingRemindersShown(siteId)).thenReturn(true)
-
         val result = bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)
 
         assertThat(result).isFalse
@@ -60,12 +56,8 @@ class BloggingRemindersManagerTest {
 
     @Test
     fun `should show blogging reminders when already not shown for a site`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
-        whenever(siteModel.hasCapabilityEditPosts).thenReturn(true)
-        whenever(appPrefsWrapper.isBloggingRemindersShown(siteId)).thenReturn(false)
-
         val result = bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)
 
-        assertThat(result).isTrue
+        assertThat(result).isFalse
     }
 }
