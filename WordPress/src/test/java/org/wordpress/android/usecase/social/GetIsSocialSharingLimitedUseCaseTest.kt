@@ -7,32 +7,12 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 
 class GetIsSocialSharingLimitedUseCaseTest {
-    private val jetpackSocialFeatureConfig: JetpackSocialFeatureConfig = mock()
     private val siteStore: SiteStore = mock()
     private val classToTest = GetIsSocialSharingLimitedUseCase(
-        jetpackSocialFeatureConfig = jetpackSocialFeatureConfig,
         siteStore = siteStore,
     )
-
-    @Test
-    fun `Should return FALSE if Jetpack Social FF is disabled`() {
-        whenever(jetpackSocialFeatureConfig.isEnabled()).thenReturn(false)
-        val expected = false
-        val actual = classToTest.execute(1L)
-        assertEquals(expected, actual)
-    }
-
-    @Test
-    fun `Should return FALSE if get site is null`() {
-        whenever(jetpackSocialFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(siteStore.getSiteBySiteId(any())).thenReturn(null)
-        val expected = false
-        val actual = classToTest.execute(1L)
-        assertEquals(expected, actual)
-    }
 
     @Test
     fun `Should return FALSE if site is not self hosted`() {
@@ -40,7 +20,6 @@ class GetIsSocialSharingLimitedUseCaseTest {
             siteId = 1L
             setIsJetpackInstalled(false)
         }
-        whenever(jetpackSocialFeatureConfig.isEnabled()).thenReturn(true)
         whenever(siteStore.getSiteBySiteId(any())).thenReturn(siteModel)
         val expected = false
         val actual = classToTest.execute(1L)
@@ -54,7 +33,6 @@ class GetIsSocialSharingLimitedUseCaseTest {
             setIsJetpackInstalled(true)
             planActiveFeatures = "social-shares-1000"
         }
-        whenever(jetpackSocialFeatureConfig.isEnabled()).thenReturn(true)
         whenever(siteStore.getSiteBySiteId(any())).thenReturn(siteModel)
         val expected = false
         val actual = classToTest.execute(1L)
@@ -68,7 +46,6 @@ class GetIsSocialSharingLimitedUseCaseTest {
             setIsJetpackInstalled(true)
             planActiveFeatures = ""
         }
-        whenever(jetpackSocialFeatureConfig.isEnabled()).thenReturn(true)
         whenever(siteStore.getSiteBySiteId(any())).thenReturn(siteModel)
         val expected = true
         val actual = classToTest.execute(1L)
