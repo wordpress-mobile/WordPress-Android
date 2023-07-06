@@ -2,9 +2,8 @@ package org.wordpress.android.ui.mysite.cards.blaze
 
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import org.wordpress.android.databinding.CampaignsCardBinding
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard
@@ -19,7 +18,7 @@ class BlazeCampaignsCardViewHolder(parent: ViewGroup) :
                 BlazeCampaignsCardView(
                     blazeCampaignCard = card, modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
+                        .wrapContentHeight()
                 )
             }
         }
