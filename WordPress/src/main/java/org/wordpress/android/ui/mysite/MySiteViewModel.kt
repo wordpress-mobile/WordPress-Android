@@ -601,20 +601,23 @@ class MySiteViewModel @Inject constructor(
                     onViewAnswersClick = this::onBloggingPromptViewAnswersClick,
                     onRemoveClick = this::onBloggingPromptRemoveClick
                 ),
-                blazeCardBuilderParams = blazeCardUpdate?.blazeEligible?.let {
-                    blazeCardUpdate.campaign?.let { campaign ->
-                        CampaignWithBlazeCardBuilderParams(
-                            campaign = campaign,
-                            onCreateCampaignClick = this::onCreateCampaignClick,
-                            onCampaignClick = this::onCampaignClick,
-                            onCardClick = this::onCampaignsCardClick,
+                blazeCardBuilderParams = blazeCardUpdate?.let {
+                    if(it.blazeEligible) {
+                        it.campaign?.let { campaign ->
+                            CampaignWithBlazeCardBuilderParams(
+                                campaign = campaign,
+                                onCreateCampaignClick = this::onCreateCampaignClick,
+                                onCampaignClick = this::onCampaignClick,
+                                onCardClick = this::onCampaignsCardClick,
+                            )
+                        }
+                        PromoteWithBlazeCardBuilderParams(
+                            onClick = this::onPromoteWithBlazeCardClick,
+                            onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
+                            onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
                         )
                     }
-                    PromoteWithBlazeCardBuilderParams(
-                        onClick = this::onPromoteWithBlazeCardClick,
-                        onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
-                        onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
-                    )
+                    else null
                 },
                 dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
                     isEligible = dashboardCardDomainUtils.shouldShowCard(
