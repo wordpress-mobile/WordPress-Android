@@ -254,7 +254,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     private Boolean mCanBlaze;
     // Comma-separated list of active features in the site's plan
     @Column
-    private String mActiveFeatures;
+    private String mPlanActiveFeatures;
 
     @Override
     public int getId() {
@@ -1085,15 +1085,15 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         return !isJetpackInstalled();
     }
 
-    public List<String> getActiveFeaturesList() {
-        return Arrays.asList(mActiveFeatures.split(","));
+    public List<String> getPlanActiveFeaturesList() {
+        return Arrays.asList(mPlanActiveFeatures.split(","));
     }
 
-    public String getActiveFeatures() {
-        return mActiveFeatures;
+    public String getPlanActiveFeatures() {
+        return mPlanActiveFeatures;
     }
 
-    public void setActiveFeatures(final String activeFeatures) {
-        this.mActiveFeatures = activeFeatures;
+    public void setPlanActiveFeatures(final String planActiveFeatures) {
+        this.mPlanActiveFeatures = planActiveFeatures;
     }
 }
