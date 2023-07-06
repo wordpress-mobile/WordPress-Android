@@ -20,7 +20,7 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '2.1.0'
     automatticTracksVersion = '3.0.0'
-    gutenbergMobileVersion = '5944-6fe745be5342afe1c82f45e57d12a02c1b72e1de'
+    gutenbergMobileVersion = '5944-f408074e0a5daefe32df47ad1e8664a622841735'
     wordPressAztecVersion = 'v1.6.4'
     wordPressFluxCVersion = '2.34.0'
     wordPressLoginVersion = '1.3.0'
