@@ -7,19 +7,26 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.utils.asString
+import org.wordpress.android.ui.compose.utils.withBottomSheetElevation
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
+import org.wordpress.android.ui.posts.prepublishing.home.compose.PrepublishingHomeSocialItem
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -110,9 +117,21 @@ sealed class PrepublishingHomeViewHolder(
                     mutableStateOf(uiState as SocialUiState)
                 }
 
+                val avatarModels = state.connectionIcons.map { icon ->
+                    TrainOfIconsModel(
+                        data = icon.iconRes,
+                        alpha = if (icon.isEnabled) 1f else ContentAlpha.disabled,
+                    )
+                }
+
                 AppTheme {
-                    Text(
-                        uiHelpers.getTextOfUiString(itemView.context, state.title).toString(),
+                    PrepublishingHomeSocialItem(
+                        title = state.title.asString(),
+                        description = state.description.asString(),
+                        avatarModels = avatarModels,
+                        isLowOnShares = state.isLowOnShares,
+                        backgroundColor = MaterialTheme.colors.surface.withBottomSheetElevation(),
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
             }
