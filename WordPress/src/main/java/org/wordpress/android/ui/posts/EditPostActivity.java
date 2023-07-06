@@ -308,6 +308,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private static final String STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData";
     private static final String STATE_KEY_GUTENBERG_IS_SHOWN = "stateKeyGutenbergIsShown";
     private static final String STATE_KEY_MEDIA_CAPTURE_PATH = "stateKeyMediaCapturePath";
+    private static final String STATE_KEY_UNDO = "stateKeyUndo";
+    private static final String STATE_KEY_REDO = "stateKeyRedo";
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
@@ -1100,6 +1102,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, mEditorPhotoPicker.isPhotoPickerShowing());
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
+        outState.putBoolean(STATE_KEY_UNDO, mMenuHasUndo);
+        outState.putBoolean(STATE_KEY_REDO, mMenuHasRedo);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putParcelable(STATE_KEY_REVISION, mRevision);
 
@@ -1124,6 +1128,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         super.onRestoreInstanceState(savedInstanceState);
 
         mHtmlModeMenuStateOn = savedInstanceState.getBoolean(STATE_KEY_HTML_MODE_ON);
+        mMenuHasUndo = savedInstanceState.getBoolean(STATE_KEY_UNDO);
+        mMenuHasRedo = savedInstanceState.getBoolean(STATE_KEY_REDO);
         if (savedInstanceState.getBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, false)) {
             mEditorPhotoPicker.showPhotoPicker(mSite);
         }
