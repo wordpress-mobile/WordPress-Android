@@ -50,11 +50,6 @@ class BlockEditorPage {
         return this
     }
 
-    fun dismissContentStructure(): BlockEditorPage {
-        Espresso.pressBack()
-        return this
-    }
-
     fun addPostSettings(categoryName: String?, tagName: String?): BlockEditorPage {
         openPostSetting()
         addCategory(categoryName)
@@ -215,6 +210,7 @@ class BlockEditorPage {
                 )
             )
         )
+        Espresso.pressBack()
         return this
     }
 

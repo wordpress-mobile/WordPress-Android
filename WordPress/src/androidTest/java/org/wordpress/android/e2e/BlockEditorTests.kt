@@ -83,14 +83,11 @@ class BlockEditorTests : BaseTest() {
             .enterTitle(title)
             .enterParagraphText(mPostText)
             .verifyContentStructure(1, mPostText.split(" ").count(), mPostText.length)
-            .dismissContentStructure()
             .undo()
             .undo()
             .verifyContentStructure(0, 0, 0)
-            .dismissContentStructure()
             .redo()
             .redo()
             .verifyContentStructure(1, mPostText.split(" ").count(), mPostText.length)
-            .dismissContentStructure()
     }
 }
