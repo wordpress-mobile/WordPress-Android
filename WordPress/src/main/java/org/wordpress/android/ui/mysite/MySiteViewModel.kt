@@ -604,14 +604,13 @@ class MySiteViewModel @Inject constructor(
                 blazeCardBuilderParams = blazeCardUpdate?.let {
                     if(it.blazeEligible) {
                         it.campaign?.let { campaign ->
-                            CampaignWithBlazeCardBuilderParams(
+                           CampaignWithBlazeCardBuilderParams(
                                 campaign = campaign,
                                 onCreateCampaignClick = this::onCreateCampaignClick,
                                 onCampaignClick = this::onCampaignClick,
                                 onCardClick = this::onCampaignsCardClick,
                             )
-                        }
-                        PromoteWithBlazeCardBuilderParams(
+                        }?: PromoteWithBlazeCardBuilderParams(
                             onClick = this::onPromoteWithBlazeCardClick,
                             onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
                             onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
