@@ -74,24 +74,7 @@ class BlockEditorTests : BaseTest() {
     }
 
     @Test
-    fun e2eBlockEditorCanUndoChanges() {
-        val title = "blockEditorCanUndoChanges"
-        MySitesPage()
-            .startNewPost()
-        BlockEditorPage()
-            .waitForTitleDisplayed()
-            .enterTitle(title)
-            .enterParagraphText(mPostText)
-            .verifyContentStructure(1, mPostText.split(" ").count(), mPostText.length)
-            .dismissContentStructure()
-            .undo()
-            .undo()
-            .verifyContentStructure(0, 0, 0)
-            .dismissContentStructure()
-    }
-
-    @Test
-    fun e2eBlockEditorCanRedoChanges() {
+    fun e2eBlockEditorCanUndoRedoChanges() {
         val title = "blockEditorCanRedoChanges"
         MySitesPage()
             .startNewPost()
