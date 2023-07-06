@@ -31,12 +31,10 @@ class BlazeCardBuilder @Inject constructor() {
     }
 
     private fun getBlazeCardFooter(params: CampaignWithBlazeCardBuilderParams): BlazeCampaignsCardFooter {
-        with(params) {
-            return BlazeCampaignsCardFooter(
-                label = UiString.UiStringRes(R.string.blaze_campaigns_card_footer_label),
-                onClick = ListItemInteraction.create(params.onCreateCampaignClick),
-            )
-        }
+        return BlazeCampaignsCardFooter(
+            label = UiString.UiStringRes(R.string.blaze_campaigns_card_footer_label),
+            onClick = ListItemInteraction.create(params.onCreateCampaignClick),
+        )
     }
 
     private fun getRecentCampaign(params: CampaignWithBlazeCardBuilderParams): BlazeCampaignsCardItem {
