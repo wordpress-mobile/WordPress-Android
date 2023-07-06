@@ -1952,7 +1952,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE SiteModel ADD CAN_BLAZE BOOLEAN")
                 }
                 189 -> migrate(version) {
-                    db.execSQL("ALTER TABLE SiteModel ADD ACTIVE_FEATURES TEXT")
+                    db.execSQL("ALTER TABLE SiteModel ADD PLAN_ACTIVE_FEATURES TEXT")
                 }
             }
         }
