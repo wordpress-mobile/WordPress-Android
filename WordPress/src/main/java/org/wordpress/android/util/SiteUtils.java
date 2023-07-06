@@ -387,8 +387,4 @@ public class SiteUtils {
         ArrayList<SiteFilter> siteFilters = new ArrayList<>();
         return new FetchSitesPayload(siteFilters, !BuildConfig.IS_JETPACK_APP);
     }
-
-    public static boolean hasMappedDomains(@Nullable SiteModel site) {
-        return site != null && site.isWPCom() && !site.getUnmappedUrl().equals(site.getUrl());
-    }
 }
