@@ -83,16 +83,38 @@ steps:
   - group: "🔬 Instrumented tests"
     steps:
       - label: ":wordpress: 🔬 Instrumented tests"
+        key: "WP_instrumented_tests"      
         command: ".buildkite/commands/run-instrumented-tests.sh wordpress"
         plugins: *common_plugins
         artifact_paths:
           - "**/build/instrumented-tests/**/*"
 
+      - label: ":wordpress: 🔍 Test Analytics"
+        depends_on:
+          - "WP_instrumented_tests"
+        command: buildkite-agent artifact download '**/test_result_1.xml' . --step "WP_instrumented_tests"
+        plugins:
+          - test-collector#v1.8.0:
+              files: "**/test_result_1.xml"
+              format: "junit"
+              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_WORDPRESS"          
+
       - label: ":jetpack: 🔬 Instrumented tests"
+        key: "JP_instrumented_tests"
         command: ".buildkite/commands/run-instrumented-tests.sh jetpack"
         plugins: *common_plugins
         artifact_paths:
           - "**/build/instrumented-tests/**/*"
+
+      - label: ":jetpack: 🔍 Test Analytics"
+        depends_on:
+          - "JP_instrumented_tests"
+        command: buildkite-agent artifact download '**/test_result_1.xml' . --step "JP_instrumented_tests"
+        plugins:
+          - test-collector#v1.8.0:
+              files: "**/test_result_1.xml"
+              format: "junit"
+              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_JETPACK"
 
   #################
   # Create Prototype Builds for WP and JP
