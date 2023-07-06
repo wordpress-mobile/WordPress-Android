@@ -11,7 +11,7 @@ class GetIsSocialSharingLimitedUseCase @Inject constructor(
 ) {
     fun execute(siteId: Long): Boolean =
         jetpackSocialFeatureConfig.isEnabled() && siteStore.getSiteBySiteId(siteId)?.run {
-            !isHostedAtWPCom && activeFeaturesList?.doesNotContain(FEATURE_SOCIAL_SHARES_1000) ?: false
+            !isHostedAtWPCom && planActiveFeaturesList?.doesNotContain(FEATURE_SOCIAL_SHARES_1000) ?: false
         } ?: false
 }
 
