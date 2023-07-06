@@ -78,7 +78,7 @@ interface LoginAnalyticsListener {
         GOOGLE;
 
         fun asPropertyMap() = hashMapOf<String, Any>(
-                "source" to name.toLowerCase(Locale.ROOT)
+                "source" to name.lowercase(Locale.ROOT)
         )
     }
 }
