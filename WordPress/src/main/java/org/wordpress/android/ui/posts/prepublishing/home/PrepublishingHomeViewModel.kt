@@ -201,14 +201,17 @@ class PrepublishingHomeViewModel @Inject constructor(
 
     private fun MutableList<PrepublishingHomeItemUiState>.setupSocialItem() {
         if (socialFeatureConfig.isEnabled()) {
-            // TODO thomashorta retrieve the actual data here
+            // TODO in other PR: use actual data, for now just using fake data
             add(
                 SocialUiState(
-                    title = UiString.UiStringText("Social Item"),
-                    description = UiString.UiStringText("Social Description"),
+                    title = UiString.UiStringText("Sharing to 2 of 3 accounts"),
+                    description = UiString.UiStringText("27/30 social shares remaining"),
                     isLowOnShares = false,
-                    connectionIcons = listOf(),
-                    onItemClicked = { /* TODO thomashorta implement action here */ },
+                    connectionIcons = listOf(
+                        SocialUiState.ConnectionIcon(R.drawable.ic_social_facebook, isEnabled = false),
+                        SocialUiState.ConnectionIcon(R.drawable.ic_social_tumblr)
+                    ),
+                    onItemClicked = { /* TODO in other PR: open social section in bottom sheet */ },
                 )
             )
         }
