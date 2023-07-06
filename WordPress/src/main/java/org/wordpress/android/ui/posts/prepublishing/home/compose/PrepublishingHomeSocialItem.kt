@@ -46,8 +46,8 @@ fun PrepublishingHomeSocialItem(
         modifier = Modifier
             .background(backgroundColor)
             .then(modifier),
-    ) {
-        Column {
+    ) { textColumnModifier ->
+        Column(modifier = textColumnModifier) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.body1.copy(),
@@ -75,14 +75,14 @@ fun PrepublishingHomeSocialItem(
 private fun SocialContainer(
     avatarCount: Int,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
+    content: @Composable (textColumnModifier: Modifier) -> Unit,
 ) {
     if (avatarCount > 2) {
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
             modifier = modifier,
         ) {
-            content()
+            content(Modifier)
         }
     } else {
         Row(
@@ -90,7 +90,7 @@ private fun SocialContainer(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier,
         ) {
-            content()
+            content(Modifier.weight(1f))
         }
     }
 }
@@ -139,7 +139,7 @@ private fun DescriptionText(
     }
 }
 
-@Preview(name = "Light Mode")
+@Preview(name = "Light Mode", locale = "en")
 @Preview(name = "Dark Mode", uiMode = UI_MODE_NIGHT_YES)
 @Preview(name = "RTL", locale = "ar")
 @Composable
@@ -153,6 +153,16 @@ private fun PrepublishingHomeSocialItemPreview() {
             PrepublishingHomeSocialItem(
                 title = "Sharing to 2 of 3 accounts",
                 description = "27/30 social shares remaining",
+                avatarModels = listOf(
+                    TrainOfIconsModel(R.drawable.ic_social_tumblr, ContentAlpha.disabled),
+                    TrainOfIconsModel(R.drawable.ic_social_facebook),
+                ),
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
+            )
+
+            PrepublishingHomeSocialItem(
+                title = "Sharing to 2 of 3 accounts",
+                description = "27/30 social shares remaining with a very long text that should be truncated",
                 avatarModels = listOf(
                     TrainOfIconsModel(R.drawable.ic_social_tumblr, ContentAlpha.disabled),
                     TrainOfIconsModel(R.drawable.ic_social_facebook),
