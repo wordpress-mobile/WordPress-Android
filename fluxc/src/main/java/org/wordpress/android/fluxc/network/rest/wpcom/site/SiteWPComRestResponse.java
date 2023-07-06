@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.site;
 
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.fluxc.network.Response;
 
 import java.util.List;
@@ -43,6 +45,11 @@ public class SiteWPComRestResponse implements Response {
         public String product_id;
         public String product_name_short;
         public boolean is_free;
+        @Nullable public Features features;
+    }
+
+    public class Features {
+        @Nullable public List<String> active;
     }
 
     public static class Capabilities {
