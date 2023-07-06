@@ -75,9 +75,7 @@ dependencies {
     }
 
     // Custom WellSql version
-    api(sharedLibs.wellsql) {
-        exclude group: "com.android.support"
-    }
+    api sharedLibs.wellsql
     kapt sharedLibs.wellsql.processor
 
     // FluxC annotations
