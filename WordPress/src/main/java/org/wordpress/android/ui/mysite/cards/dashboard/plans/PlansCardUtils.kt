@@ -14,7 +14,6 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.DashboardCardFreeToPaidPlansFeatureConfig
 import java.util.concurrent.atomic.AtomicBoolean
@@ -43,7 +42,6 @@ class PlansCardUtils @Inject constructor(
                 !isCardHiddenByUser(siteModel.siteId) &&
                 siteModel.hasFreePlan &&
                 siteModel.isAdmin &&
-                !SiteUtils.hasMappedDomains(siteModel) &&
                 !siteModel.isWpForTeamsSite
     }
 
