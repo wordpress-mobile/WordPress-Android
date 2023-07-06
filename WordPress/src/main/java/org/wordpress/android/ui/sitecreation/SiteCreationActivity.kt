@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityLauncherWrapper
@@ -163,6 +164,9 @@ class SiteCreationActivity : LocaleAwareActivity(),
     }
 
     private fun observeOverlayEvents(savedInstanceState: Bundle?) {
+        if(BuildConfig.IS_JETPACK_APP)
+            return
+
         val fragment =  if (savedInstanceState == null) {
             JetpackFeatureFullScreenOverlayFragment
                 .newInstance(
