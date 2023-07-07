@@ -1,0 +1,4 @@
+22.7:
+- Vi har gett den flytande åtgärdsknappen en ny form, färg och stil.
+- Bildblock visas nu med rätt bildförhållande, oavsett om bilden har en angiven bredd och höjd eller inte.
+- Vi har flyttat sektionen "Mig" med din profilbild till det nedre navigeringsfältet.
