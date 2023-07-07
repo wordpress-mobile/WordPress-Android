@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.cards.blaze
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -35,11 +34,10 @@ class BlazeCardSource @Inject constructor(
                 if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(selectedSite)) {
                     if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {
                         val result = blazeCampaignsStore.fetchBlazeCampaigns(selectedSite)
-                        if(!result.isError) {
+                        // if the request was successful and there are campaigns, show blaze campaigns card
+                        if (!result.isError && result.model != null) {
                             val campaign = blazeCampaignsStore.getMostRecentBlazeCampaign(selectedSite)
-                            if (campaign != null) {
-                                return@launch postState(BlazeCardUpdate(true, campaign = campaign))
-                            }
+                            return@launch postState(BlazeCardUpdate(true, campaign = campaign))
                         }
                         // there are no campaigns, show blaze promo card
                         postState(BlazeCardUpdate(true))
