@@ -42,8 +42,10 @@ fun PrimaryButton(
         end = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal),
         bottom = 10.dp
     ),
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     textStyle: TextStyle = LocalTextStyle.current,
     buttonSize: ButtonSize = ButtonSize.NORMAL,
+    fillMaxWidth: Boolean = true,
 ) {
     Button(
         onClick = onClick,
@@ -56,7 +58,8 @@ fun PrimaryButton(
         modifier = modifier
             .padding(padding)
             .defaultMinSize(minHeight = buttonSize.height)
-            .fillMaxWidth(),
+            .then(if (fillMaxWidth) Modifier.fillMaxWidth() else Modifier),
+        contentPadding = contentPadding,
     ) {
         if (isInProgress) {
             CircularProgressIndicator(
