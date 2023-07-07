@@ -27,13 +27,19 @@ class BloggingRemindersManagerTest {
     fun setUp() {
         siteModel = SiteModel()
         siteModel.id = siteId
+
+        siteModel.setIsWPCom(true)
+        siteModel.setIsJetpackConnected(true)
+        siteModel.origin = 1
+
         bloggingRemindersManager = BloggingRemindersManager(appPrefsWrapper, buildConfigWrapper)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
     }
 
     @Test
-    fun `should not show blogging reminders when has no edit post capability`() {
-        siteModel.hasCapabilityEditPosts = false
+    fun `should not show blogging reminders when has no jetpack connection`() {
+        siteModel.setIsWPCom(false)
+        siteModel.setIsJetpackConnected(false)
 
         val result = bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)
 
@@ -41,8 +47,9 @@ class BloggingRemindersManagerTest {
     }
 
     @Test
-    fun `should show blogging reminders when has edit post capability`() {
-        siteModel.hasCapabilityEditPosts = true
+    fun `should show blogging reminders when has jetpack connection`() {
+        siteModel.setIsWPCom(true)
+        siteModel.setIsJetpackConnected(true)
 
         val result = bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)
 
@@ -51,7 +58,6 @@ class BloggingRemindersManagerTest {
 
     @Test
     fun `should not show blogging reminders when already shown for a site`() {
-        siteModel.hasCapabilityEditPosts = true
         whenever(appPrefsWrapper.isBloggingRemindersShown(siteId)).thenReturn(true)
 
         val result = bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)
@@ -61,7 +67,6 @@ class BloggingRemindersManagerTest {
 
     @Test
     fun `should show blogging reminders when already not shown for a site`() {
-        siteModel.hasCapabilityEditPosts = true
         whenever(appPrefsWrapper.isBloggingRemindersShown(siteId)).thenReturn(false)
 
         val result = bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteModel)
