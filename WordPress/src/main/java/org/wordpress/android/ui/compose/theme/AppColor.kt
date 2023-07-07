@@ -50,4 +50,8 @@ object AppColor {
 
     @Stable
     val JetpackGreen50 = Color(0xFF008710)
+
+    // Yellows
+    @Stable
+    val Yellow50 = Color(0xFF9D6E00)
 }

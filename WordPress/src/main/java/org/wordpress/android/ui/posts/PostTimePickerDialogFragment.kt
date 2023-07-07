@@ -8,10 +8,10 @@ import android.text.format.DateFormat
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import org.wordpress.android.R.style
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel
+import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsViewModel
 import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 
@@ -38,7 +38,7 @@ class PostTimePickerDialogFragment : DialogFragment() {
         }
 
         val is24HrFormat = DateFormat.is24HourFormat(activity)
-        val context = ContextThemeWrapper(activity, style.PostSettingsCalendar)
+        val context = ContextThemeWrapper(activity, R.style.PostSettingsCalendar)
         return TimePickerDialog(
             context,
             { _, selectedHour, selectedMinute -> viewModel.onTimeSelected(selectedHour, selectedMinute) },

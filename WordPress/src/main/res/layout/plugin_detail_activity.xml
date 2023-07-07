@@ -223,7 +223,7 @@
                                 style="@style/PluginCardViewPrimaryText"
                                 android:text="@string/plugin_detail_label_state_active" />
 
-                            <androidx.appcompat.widget.SwitchCompat
+                            <org.wordpress.android.widgets.WPSwitchCompat
                                 android:id="@+id/plugin_state_active"
                                 style="@style/PluginCardViewSecondaryElement" />
 
@@ -241,7 +241,7 @@
                             style="@style/PluginCardViewPrimaryText"
                             android:text="@string/plugin_detail_label_state_autoupdates" />
 
-                        <androidx.appcompat.widget.SwitchCompat
+                        <org.wordpress.android.widgets.WPSwitchCompat
                             android:id="@+id/plugin_state_autoupdates"
                             style="@style/PluginCardViewSecondaryElement" />
                     </RelativeLayout>

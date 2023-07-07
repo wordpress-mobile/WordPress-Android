@@ -7,6 +7,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.Matchers
 import org.wordpress.android.R
 import org.wordpress.android.support.WPSupportUtils
+import android.R as AndroidR
 
 class MePage {
     fun go(): MePage {
@@ -50,10 +51,10 @@ class MePage {
                 )
             )
         )
-        while (!WPSupportUtils.isElementDisplayed(android.R.id.button1)) {
+        while (!WPSupportUtils.isElementDisplayed(AndroidR.id.button1)) {
             WPSupportUtils.scrollToThenClickOn(logOutButton)
         }
-        WPSupportUtils.clickOn(android.R.id.button1)
+        WPSupportUtils.clickOn(AndroidR.id.button1)
     }
 
     companion object {

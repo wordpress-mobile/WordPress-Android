@@ -31,6 +31,7 @@ import org.wordpress.android.util.extensions.toFormattedTimeString
 import org.wordpress.android.util.text.PercentFormatter
 import java.util.Date
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 @Reusable
 class BackupDownloadStateListItemBuilder @Inject constructor(
@@ -122,7 +123,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
             ),
             buildFootnoteState(
                 textRes = R.string.backup_download_complete_info,
-                textAlphaResId = R.dimen.material_emphasis_medium
+                textAlphaResId = MaterialR.dimen.material_emphasis_medium
             )
         )
     }

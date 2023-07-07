@@ -255,7 +255,7 @@
 
             <LinearLayout style="@style/PostSettingsContainer">
 
-                <androidx.appcompat.widget.SwitchCompat
+                <org.wordpress.android.widgets.WPSwitchCompat
                     android:id="@+id/post_settings_sticky_switch"
                     style="@style/PostSettingsSwitch"
                     android:text="@string/post_settings_post_sticky" />

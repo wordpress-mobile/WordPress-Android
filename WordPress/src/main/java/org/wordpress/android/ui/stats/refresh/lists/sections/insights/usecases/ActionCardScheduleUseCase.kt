@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.modules.BG_THREAD
@@ -31,11 +31,11 @@ class ActionCardScheduleUseCase @Inject constructor(
     override fun buildUiModel(domainModel: Boolean): List<BlockListItem> {
         return listOf(
             ListItemActionCard(
-                titleResource = string.stats_action_card_schedule_post_title,
-                text = string.stats_action_card_schedule_post_message,
-                positiveButtonText = string.stats_action_card_schedule_post_button_label,
+                titleResource = R.string.stats_action_card_schedule_post_title,
+                text = R.string.stats_action_card_schedule_post_message,
+                positiveButtonText = R.string.stats_action_card_schedule_post_button_label,
                 positiveAction = ListItemInteraction.create(this::onSchedule),
-                negativeButtonText = string.stats_management_dismiss_insights_news_card,
+                negativeButtonText = R.string.stats_management_dismiss_insights_news_card,
                 negativeAction = ListItemInteraction.create(this::onDismiss)
             )
         )

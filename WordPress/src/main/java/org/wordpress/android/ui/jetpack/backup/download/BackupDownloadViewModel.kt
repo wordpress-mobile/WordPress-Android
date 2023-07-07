@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_CONFIRMED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_ERROR
@@ -437,10 +437,10 @@ class BackupDownloadViewModel @Inject constructor(
     }
 
     companion object {
-        private val NetworkUnavailableMsg = SnackbarMessageHolder(UiStringRes(string.error_network_connection))
-        private val GenericFailureMsg = SnackbarMessageHolder(UiStringRes(string.backup_download_generic_failure))
+        private val NetworkUnavailableMsg = SnackbarMessageHolder(UiStringRes(R.string.error_network_connection))
+        private val GenericFailureMsg = SnackbarMessageHolder(UiStringRes(R.string.backup_download_generic_failure))
         private val OtherRequestRunningMsg = SnackbarMessageHolder(
-            UiStringRes(string.backup_download_another_download_running)
+            UiStringRes(R.string.backup_download_another_download_running)
         )
     }
 

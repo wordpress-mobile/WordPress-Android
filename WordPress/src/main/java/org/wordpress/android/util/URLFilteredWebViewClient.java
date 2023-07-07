@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 
@@ -87,7 +88,7 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
         } else {
             // show "links are disabled" message.
             Context ctx = WordPress.getContext();
-            int linksDisabledMessageResId = org.wordpress.android.R.string.preview_screen_links_disabled;
+            int linksDisabledMessageResId = R.string.preview_screen_links_disabled;
             Toast.makeText(ctx, ctx.getText(linksDisabledMessageResId), Toast.LENGTH_SHORT).show();
         }
         return true;

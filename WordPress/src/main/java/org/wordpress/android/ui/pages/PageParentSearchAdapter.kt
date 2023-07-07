@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.wordpress.android.R.layout
+import org.wordpress.android.R
 import org.wordpress.android.ui.pages.PageItem.ParentPage
 import org.wordpress.android.ui.pages.PageItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageDividerViewHolder
@@ -22,12 +22,12 @@ class PageParentSearchAdapter(
             PageItem.Type.PARENT.viewType -> PageParentViewHolder(
                 parent,
                 this::selectParent,
-                layout.page_parent_list_item
+                R.layout.page_parent_list_item
             )
             PageItem.Type.TOP_LEVEL_PARENT.viewType -> PageParentViewHolder(
                 parent,
                 this::selectParent,
-                layout.page_parent_top_level_item
+                R.layout.page_parent_top_level_item
             )
             PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
             PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent) { }

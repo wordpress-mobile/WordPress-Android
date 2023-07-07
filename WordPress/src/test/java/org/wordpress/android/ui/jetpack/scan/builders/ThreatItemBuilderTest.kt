@@ -27,6 +27,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateFormatWrapper
 import java.text.DateFormat
+import com.google.android.material.R as MaterialR
 
 private const val TEST_FIXED_ON_DATE = "2 January, 2020"
 
@@ -272,7 +273,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
 
         val threatItem = buildThreatItem(threatModel)
 
-        assertThat(threatItem.subHeaderColor).isEqualTo(R.attr.colorOnSurface)
+        assertThat(threatItem.subHeaderColor).isEqualTo(MaterialR.attr.colorOnSurface)
     }
 
     @Test
@@ -281,7 +282,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
 
         val threatItem = buildThreatItem(threatModel)
 
-        assertThat(threatItem.subHeaderColor).isEqualTo(R.attr.colorOnSurface)
+        assertThat(threatItem.subHeaderColor).isEqualTo(MaterialR.attr.colorOnSurface)
     }
 
     private fun buildThreatItem(

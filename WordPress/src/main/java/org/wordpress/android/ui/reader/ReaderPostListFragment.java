@@ -1208,7 +1208,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         // this is hacky, but we want to change the SearchView's autocomplete to show suggestions
         // after a single character is typed, and there's no less hacky way to do this...
-        View view = mSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        View view = mSearchView.findViewById(com.google.android.material.R.id.search_src_text);
         if (view instanceof AutoCompleteTextView) {
             ((AutoCompleteTextView) view).setThreshold(1);
         }

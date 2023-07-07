@@ -159,8 +159,12 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        if (!event.isError()) {
+        if (!event.isError() && mSite != null) {
             mSite = mSiteStore.getSiteByLocalId(mSite.getId());
+            if (mSite == null) {
+                // The site could be deleted. No need for any further action.
+                return;
+            }
             mActionBar.setTitle(StringEscapeUtils.unescapeHtml4(SiteUtils.getSiteNameOrHomeURL(mSite)));
         }
     }

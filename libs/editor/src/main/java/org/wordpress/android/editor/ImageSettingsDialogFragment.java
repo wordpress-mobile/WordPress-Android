@@ -423,7 +423,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         mProgress.setVisibility(View.GONE);
         mImageView.setVisibility(View.VISIBLE);
         mImageView.setImageDrawable(
-                new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.grey_lighten_30))
+                new ColorDrawable(ContextCompat.getColor(getActivity(), org.wordpress.aztec.R.color.grey_lighten_30))
         );
     }
 

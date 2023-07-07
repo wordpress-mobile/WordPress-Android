@@ -9,7 +9,8 @@ import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import android.view.Window
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
-import org.wordpress.android.R
+import android.R as AndroidR
+import com.google.android.material.R as MaterialR
 
 @Suppress("DEPRECATION")
 fun Window.setLightStatusBar(showInLightMode: Boolean) {
@@ -36,9 +37,9 @@ fun Window.setLightNavigationBar(showInLightMode: Boolean, applyDefaultColors: B
         }
         if (applyDefaultColors) {
             navigationBarColor = if (showInLightMode) {
-                context.getColorFromAttribute(R.attr.colorSurface)
+                context.getColorFromAttribute(MaterialR.attr.colorSurface)
             } else {
-                ContextCompat.getColor(context, android.R.color.black)
+                ContextCompat.getColor(context, AndroidR.color.black)
             }
         }
     }
