@@ -202,8 +202,7 @@ class SiteListItemBuilder @Inject constructor(
     fun buildMeItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if ((!buildConfigWrapper.isJetpackApp &&
                     jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() &&
-                    site.hasCapabilityManageOptions) ||
-            !siteUtilsWrapper.isAccessedViaWPComRest(site)
+                    site.hasCapabilityManageOptions)
         ) {
             ListItem(
                 R.drawable.ic_user_primary_white_24,
