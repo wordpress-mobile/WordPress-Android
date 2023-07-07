@@ -1988,9 +1988,8 @@ public class SiteSettingsFragment extends PreferenceFragment
      */
     private void removeGeneralSettingsExceptBloggingReminders() {
         PreferenceGroup group = (PreferenceGroup) findPreference(getString(R.string.pref_key_site_general));
-        if (group != null && mBloggingRemindersPref != null) {
+        if (group != null) {
             group.removeAll();
-            group.addPreference(mBloggingRemindersPref);
         }
     }
 

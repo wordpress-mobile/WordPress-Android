@@ -11,12 +11,12 @@ class BloggingRemindersManager
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
     fun shouldShowBloggingRemindersSetting(site: SiteModel): Boolean {
-        return buildConfigWrapper.isJetpackApp && site.hasCapabilityEditPosts
+        return buildConfigWrapper.isJetpackApp && site.isUsingWpComRestApi
     }
 
     fun shouldShowBloggingRemindersPrompt(site: SiteModel): Boolean {
         return buildConfigWrapper.isJetpackApp &&
-                site.hasCapabilityEditPosts &&
+                site.isUsingWpComRestApi &&
                 !appPrefsWrapper.isBloggingRemindersShown(site.id)
     }
 
