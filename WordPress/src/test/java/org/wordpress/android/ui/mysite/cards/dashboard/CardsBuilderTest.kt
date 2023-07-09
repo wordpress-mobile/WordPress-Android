@@ -28,11 +28,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardBuilder
@@ -353,8 +353,7 @@ class CardsBuilderTest : BaseUnitTest() {
                 bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                     mock(), false, false, false, mock(), mock(), mock(), mock(), mock(), mock()
                 ),
-                promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
-                    isEligibleForBlaze,
+                blazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
                     mock(),
                     mock(),
                     mock()
