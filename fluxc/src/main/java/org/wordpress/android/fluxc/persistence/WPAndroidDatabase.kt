@@ -15,8 +15,6 @@ import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOffer
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferFeature
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfig
-import org.wordpress.android.fluxc.persistence.blaze.BlazeStatusDao
-import org.wordpress.android.fluxc.persistence.blaze.BlazeStatusDao.BlazeStatus
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao.BloggingPromptEntity
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
@@ -28,7 +26,7 @@ import org.wordpress.android.fluxc.persistence.domains.DomainDao
 import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
 
 @Database(
-        version = 14,
+        version = 15,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -39,7 +37,6 @@ import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
             BloggingPromptEntity::class,
             FeatureFlag::class,
             RemoteConfig::class,
-            BlazeStatus::class,
             JetpackCPConnectedSiteEntity::class,
             DomainEntity::class
         ],
@@ -68,8 +65,6 @@ abstract class WPAndroidDatabase : RoomDatabase() {
     abstract fun featureFlagConfigDao(): FeatureFlagConfigDao
 
     abstract fun remoteConfigDao(): RemoteConfigDao
-
-    abstract fun blazeStatusDao(): BlazeStatusDao
 
     abstract fun domainDao(): DomainDao
 
@@ -208,6 +203,16 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                     execSQL(
                         "ALTER TABLE BloggingReminders ADD COLUMN isPromptRemindersOptedIn" +
                             " INTEGER DEFAULT 0 NOT NULL"
+                    )
+                }
+            }
+        }
+
+        val MIGRATION_14_15 = object : Migration(14,15){
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.apply {
+                    execSQL(
+                        "DROP TABLE IF EXISTS `BlazeStatus`"
                     )
                 }
             }
