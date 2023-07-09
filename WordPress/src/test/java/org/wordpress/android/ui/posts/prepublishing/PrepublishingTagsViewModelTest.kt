@@ -13,7 +13,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.ui.posts.PrepublishingTagsViewModel
+import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsViewModel
 import org.wordpress.android.ui.posts.UpdatePostTagsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event

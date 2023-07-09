@@ -22,6 +22,7 @@ import org.wordpress.android.databinding.SiteSettingsTimezoneBottomSheetListBind
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
     @Inject
@@ -82,7 +83,7 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
                 val sheetDialog = dialogInterface as? BottomSheetDialog
 
                 bottomSheet = sheetDialog?.findViewById<View>(
-                    com.google.android.material.R.id.design_bottom_sheet
+                    MaterialR.id.design_bottom_sheet
                 ) as? FrameLayout
 
                 if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) expandBottomSheet()

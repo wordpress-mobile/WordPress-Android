@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
@@ -60,7 +60,7 @@ class AuthorsCommentsUseCase @Inject constructor(
         val items = mutableListOf<BlockListItem>()
         items.add(buildTitle())
         if (domainModel.authors.isNotEmpty()) {
-            val header = Header(string.stats_comments_author_label, string.stats_comments_label)
+            val header = Header(R.string.stats_comments_author_label, R.string.stats_comments_label)
             items.addAll(domainModel.authors.mapIndexed { index, author ->
                 ListItemWithIcon(
                     iconUrl = author.gravatar,
@@ -80,5 +80,5 @@ class AuthorsCommentsUseCase @Inject constructor(
         return items
     }
 
-    private fun buildTitle() = Title(string.stats_details_top_commentators, menuAction = null)
+    private fun buildTitle() = Title(R.string.stats_details_top_commentators, menuAction = null)
 }

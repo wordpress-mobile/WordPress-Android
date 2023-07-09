@@ -12,6 +12,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Activ
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.MEDIUM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_HIGH
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_LOW
+import android.R as AndroidR
 
 class DayViewHolder(parent: ViewGroup) : ViewHolder(
     LayoutInflater.from(parent.context).inflate(
@@ -22,7 +23,7 @@ class DayViewHolder(parent: ViewGroup) : ViewHolder(
 ) {
     fun bind(box: Box) {
         val color = when (box) {
-            INVISIBLE -> android.R.color.transparent
+            INVISIBLE -> AndroidR.color.transparent
             VERY_LOW -> R.color.stats_activity_very_low
             LOW -> R.color.stats_activity_low
             MEDIUM -> R.color.stats_activity_medium

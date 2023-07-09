@@ -10,6 +10,7 @@ import androidx.core.view.marginBottom
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar.SnackbarLayout
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.ABOVE
+import android.R as AndroidR
 
 /**
  * This class will let WPTooltipViewBehavior anchor above FloatingActionButton with transition animation.
@@ -78,7 +79,7 @@ class FloatingActionButtonBehavior : CoordinatorLayout.Behavior<FloatingActionBu
         child.animate()
             .translationY((-translation).toFloat())
             .setInterpolator(AccelerateInterpolator())
-            .setDuration(child.resources.getInteger(android.R.integer.config_shortAnimTime).toLong())
+            .setDuration(child.resources.getInteger(AndroidR.integer.config_shortAnimTime).toLong())
             .start()
     }
 
@@ -86,7 +87,7 @@ class FloatingActionButtonBehavior : CoordinatorLayout.Behavior<FloatingActionBu
         child.animate()
             .translationY(0f)
             .setInterpolator(AccelerateInterpolator())
-            .setDuration(child.resources.getInteger(android.R.integer.config_shortAnimTime).toLong())
+            .setDuration(child.resources.getInteger(AndroidR.integer.config_shortAnimTime).toLong())
             .start()
     }
 }

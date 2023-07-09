@@ -1,2 +1,0 @@
-22.6:
-Tak perlu lagi menduga-duga—di editor blok, kini terdapat ikon gembok untuk sel nonaktif sehingga sel yang sedang tidak digunakan bisa diketahui.

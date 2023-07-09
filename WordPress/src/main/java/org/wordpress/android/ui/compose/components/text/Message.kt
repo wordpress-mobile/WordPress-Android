@@ -8,7 +8,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.wordpress.android.R.color
+import org.wordpress.android.R
 
 @Composable
 fun Message(
@@ -19,7 +19,7 @@ fun Message(
         text = text,
         fontSize = 17.sp,
         style = TextStyle(letterSpacing = (-0.01).sp),
-        color = colorResource(color.gray_50),
+        color = colorResource(R.color.gray_50),
         modifier = modifier
             .padding(horizontal = 30.dp)
             .padding(top = 20.dp, bottom = 30.dp)

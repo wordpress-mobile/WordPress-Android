@@ -1,0 +1,4 @@
+22.7 :
+- Nous avons doté le bouton d’action flottant d’une forme, d’une couleur et d’un style nouveaux.
+- Les blocs d’images affichent désormais le bon rapport hauteur/largeur, que l’image soit ou non définie en largeur et en hauteur.
+- Nous avons déplacé la section « Moi » avec votre avatar dans la navigation en bas de page.

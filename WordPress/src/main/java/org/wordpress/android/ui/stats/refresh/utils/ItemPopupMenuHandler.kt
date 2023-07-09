@@ -25,6 +25,7 @@ import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+import com.google.android.material.R as MaterialR
 
 @Singleton
 class ItemPopupMenuHandler
@@ -49,7 +50,7 @@ class ItemPopupMenuHandler
             val showDownAction = indexOfBlock < insights.size - 1
 
             withContext(mainDispatcher) {
-                val popup = ListPopupWindow(view.context, null, R.attr.listPopupWindowStyle)
+                val popup = ListPopupWindow(view.context, null, MaterialR.attr.listPopupWindowStyle)
                 val adapter = InsightsMenuAdapter(view.context, showUpAction, showDownAction)
                 popup.setAdapter(adapter)
                 popup.width = view.context.resources.getDimensionPixelSize(R.dimen.stats_insights_menu_item_width)

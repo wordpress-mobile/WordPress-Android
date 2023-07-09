@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.JetpackBackupRestoreFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
@@ -67,7 +66,7 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
         recyclerView.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
         recyclerView.itemAnimator = null
         recyclerView.addItemDecoration(
-            HorizontalMarginItemDecoration(resources.getDimensionPixelSize(dimen.margin_extra_large))
+            HorizontalMarginItemDecoration(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
         )
     }
 

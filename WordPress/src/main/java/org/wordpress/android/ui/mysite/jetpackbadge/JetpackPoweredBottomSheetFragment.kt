@@ -28,6 +28,7 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogAction.O
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.getSerializableCompat
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 @AndroidEntryPoint
 class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
@@ -70,7 +71,7 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
         (dialog as? BottomSheetDialog)?.apply {
             setOnShowListener {
                 val bottomSheet: FrameLayout = dialog?.findViewById(
-                    com.google.android.material.R.id.design_bottom_sheet
+                    MaterialR.id.design_bottom_sheet
                 ) ?: return@setOnShowListener
                 val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
                 if (fullScreen && bottomSheet.layoutParams != null) {

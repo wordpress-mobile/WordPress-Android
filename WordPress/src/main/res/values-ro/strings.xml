@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-20 20:21:56+0000
+Translation-Revision-Date: 2023-06-27 13:24:44+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_reusable">Reutilizabil</string>
+    <string name="privacy_banner_error_save">A fost o eroare la salvarea alegerilor pentru confidențialitate.</string>
+    <string name="privacy_banner_save">Salvează</string>
+    <string name="privacy_banner_settings">Setări</string>
+    <string name="privacy_banner_analytics_description">Ne permit să optimizăm performanța prin colectarea de informații despre modul în care utilizatorii interacționează cu aplicațiile noastre pentru mobil.</string>
+    <string name="privacy_banner_analytics">Analytics</string>
+    <string name="privacy_banner_title">Administrează confidențialitatea</string>
+    <string name="privacy_banner_description">Confidențialitatea este foarte importantă pentru noi și a fost mereu în centrul atenției noastre. Folosim, stocăm și procesăm datele tale cu caracter personal în mai multe moduri ca să ne optimizăm aplicația (și experiența utilizatorilor). Avem nevoie neapărat de unele dintre datelor tale ca să facem lucrurile să funcționeze, iar alte date le poți personaliza în Setări.</string>
+    <string name="tabbar_accessibility_label_me">Pe mine. Administrează informațiile din profilul tău.</string>
     <string name="social_item_message_title">Mesaj</string>
     <string name="gutenberg_native_block_ungrouped">Bloc negrupat</string>
     <string name="gutenberg_native_block_grouped">Bloc grupat</string>

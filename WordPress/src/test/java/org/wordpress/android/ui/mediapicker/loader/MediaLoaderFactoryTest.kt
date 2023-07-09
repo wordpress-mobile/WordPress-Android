@@ -7,7 +7,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
@@ -66,7 +66,7 @@ class MediaLoaderFactoryTest {
             editingEnabled = true,
             queueResults = false,
             defaultSearchView = false,
-            title = string.wp_media_title
+            title = R.string.wp_media_title
         )
         whenever(deviceListBuilderFactory.build(setOf(), site)).thenReturn(deviceListBuilder)
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
@@ -88,7 +88,7 @@ class MediaLoaderFactoryTest {
             editingEnabled = false,
             queueResults = false,
             defaultSearchView = false,
-            title = string.wp_media_title
+            title = R.string.wp_media_title
         )
         whenever(mediaLibraryDataSourceFactory.build(site, setOf())).thenReturn(mediaLibraryDataSource)
 
@@ -111,7 +111,7 @@ class MediaLoaderFactoryTest {
             editingEnabled = false,
             queueResults = false,
             defaultSearchView = false,
-            title = string.wp_media_title
+            title = R.string.wp_media_title
         )
 
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
@@ -133,7 +133,7 @@ class MediaLoaderFactoryTest {
             editingEnabled = false,
             queueResults = false,
             defaultSearchView = true,
-            title = string.photo_picker_gif
+            title = R.string.photo_picker_gif
         )
 
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)

@@ -277,9 +277,13 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         // only show title when toolbar is collapsed
         final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
-        collapsingToolbar.setCollapsedTitleTextColor(
-                AppCompatResources.getColorStateList(this,
-                        ContextExtensionsKt.getColorResIdFromAttribute(this, R.attr.colorOnSurface)));
+        collapsingToolbar.setCollapsedTitleTextColor(AppCompatResources.getColorStateList(
+                        this,
+                        ContextExtensionsKt.getColorResIdFromAttribute(
+                                this,
+                                com.google.android.material.R.attr.colorOnSurface
+                        )
+        ));
 
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
 
