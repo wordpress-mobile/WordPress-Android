@@ -22,6 +22,10 @@ class ApplicationPasswordsStore @Inject constructor(
         private const val UUID_PREFERENCE_KEY_PREFIX = "app_password_uuid_"
     }
 
+    /*
+    Exposed only to pass to React Native instance so we can authenticate via application password
+    there. Do not use directly in WCAndroid app.
+     */
     fun getApplicationPasswordAuthHeader(site: SiteModel): String =
         Credentials.basic(
             username = encryptedPreferences.getString(site.usernamePrefKey, null).orEmpty(),
