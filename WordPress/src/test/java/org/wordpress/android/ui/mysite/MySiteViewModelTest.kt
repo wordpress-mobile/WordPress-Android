@@ -62,6 +62,7 @@ import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFu
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
@@ -2211,6 +2212,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
             verify(cardsTracker).trackPagesItemClicked(PagesCardContentType.SCHEDULED)
         }
+
     @Test
     fun `given published page card, when page item is clicked, then event is tracked`() =
         test {
@@ -2499,7 +2501,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeItemClickAction(ListItemAction.BLAZE)
 
         assertThat(navigationActions).containsExactly(
-            SiteNavigationAction.OpenPromoteWithBlazeOverlay(BlazeFlowSource.MENU_ITEM))
+            SiteNavigationAction.OpenPromoteWithBlazeOverlay(BlazeFlowSource.MENU_ITEM)
+        )
     }
 
     @Test
@@ -3814,12 +3817,12 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun initPromoteWithBlazeCard(mockInvocation: InvocationOnMock): DashboardCard.PromoteWithBlazeCard {
-        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
-        onPromoteWithBlazeCardClick = params.promoteWithBlazeCardBuilderParams.onClick
-        onPromoteWithBlazeCardMenuClicked = params.promoteWithBlazeCardBuilderParams.onMoreMenuClick
-        onPromoteWithBlazeCardHideThisClick = params.promoteWithBlazeCardBuilderParams.onHideMenuItemClick
-        return DashboardCard.PromoteWithBlazeCard(
+    private fun initPromoteWithBlazeCard(mockInvocation: InvocationOnMock): PromoteWithBlazeCard {
+        val params = getPromoteWithBlazeCardBuilderParams(mockInvocation)
+        onPromoteWithBlazeCardClick = params.onClick
+        onPromoteWithBlazeCardMenuClicked = params.onMoreMenuClick
+        onPromoteWithBlazeCardHideThisClick = params.onHideMenuItemClick
+        return DashboardCard.BlazeCard.PromoteWithBlazeCard(
             title = UiStringRes(0),
             subtitle = UiStringRes(0),
             onClick = ListItemInteraction.create { onPromoteWithBlazeCardClick },
@@ -3827,6 +3830,10 @@ class MySiteViewModelTest : BaseUnitTest() {
             onHideMenuItemClick = ListItemInteraction.create { onPromoteWithBlazeCardHideThisClick }
         )
     }
+
+    private fun getPromoteWithBlazeCardBuilderParams(mockInvocation: InvocationOnMock) =
+        (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first().blazeCardBuilderParams
+                as (MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams)
 
     private fun initSiteItems(mockInvocation: InvocationOnMock): List<ListItem> {
         val params = (mockInvocation.arguments.filterIsInstance<SiteItemsBuilderParams>()).first()
@@ -3863,7 +3870,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                     UiStringRes(R.string.blaze_menu_item_label),
                     onClick = mock(),
                     disablePrimaryIconTint = true
-               )
+                )
             )
         }
 
