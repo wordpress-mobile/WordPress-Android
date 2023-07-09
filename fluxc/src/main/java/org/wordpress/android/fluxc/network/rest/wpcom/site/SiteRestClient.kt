@@ -1139,6 +1139,7 @@ class SiteRestClient @Inject constructor(
             site.setIsWPCom(true)
         }
         site.origin = SiteModel.ORIGIN_WPCOM_REST
+        site.planActiveFeatures = (from.plan?.features?.active?.joinToString(",")).orEmpty()
         return site
     }
 
