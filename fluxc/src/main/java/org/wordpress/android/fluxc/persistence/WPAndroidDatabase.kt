@@ -15,6 +15,9 @@ import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOffer
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferFeature
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfig
+import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
+import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
+import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignsPaginationEntity
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao.BloggingPromptEntity
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
@@ -26,7 +29,7 @@ import org.wordpress.android.fluxc.persistence.domains.DomainDao
 import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
 
 @Database(
-        version = 15,
+        version = 16,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -38,12 +41,15 @@ import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
             FeatureFlag::class,
             RemoteConfig::class,
             JetpackCPConnectedSiteEntity::class,
-            DomainEntity::class
+            DomainEntity::class,
+            BlazeCampaignEntity::class,
+            BlazeCampaignsPaginationEntity::class
         ],
         autoMigrations = [
             AutoMigration(from = 11, to = 12),
             AutoMigration(from = 12, to = 13),
-            AutoMigration(from = 13, to = 14)
+            AutoMigration(from = 13, to = 14),
+            AutoMigration(from = 15, to = 16)
         ]
 )
 @TypeConverters(
@@ -69,6 +75,8 @@ abstract class WPAndroidDatabase : RoomDatabase() {
     abstract fun domainDao(): DomainDao
 
     abstract fun jetpackCPConnectedSitesDao(): JetpackCPConnectedSitesDao
+
+    abstract fun blazeCampaignsDao(): BlazeCampaignsDao
 
     @Suppress("MemberVisibilityCanBePrivate")
     companion object {
