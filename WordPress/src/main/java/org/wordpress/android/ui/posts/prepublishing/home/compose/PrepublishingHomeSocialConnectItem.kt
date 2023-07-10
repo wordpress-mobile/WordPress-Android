@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -67,7 +68,11 @@ fun PrepublishingHomeSocialConnectItem(
                 padding = PaddingValues(0.dp),
                 contentPadding = PaddingValues(0.dp),
                 fillMaxWidth = false,
+                modifier = Modifier.weight(1f, fill = false)
             )
+
+            // min spacing between buttons
+            Spacer(Modifier.width(Margin.Medium.value))
 
             SecondaryButton(
                 text = stringResource(R.string.button_not_now),
