@@ -38,7 +38,7 @@ class BlockEditorTests : BaseTest() {
             .enterTitle(title)
             .enterParagraphText(mPostText)
             .publish()
-//            .verifyPostPublished()
+            .verifyPostPublished()
     }
 
     @Test
