@@ -1085,10 +1085,6 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         return !isJetpackInstalled();
     }
 
-    public List<String> getPlanActiveFeaturesList() {
-        return Arrays.asList(mPlanActiveFeatures.split(","));
-    }
-
     public String getPlanActiveFeatures() {
         return mPlanActiveFeatures;
     }
