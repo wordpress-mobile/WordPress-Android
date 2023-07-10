@@ -14,7 +14,7 @@
         android:layout_width="@dimen/edit_post_header_chevron_size"
         android:layout_height="@dimen/edit_post_header_chevron_size"
         android:importantForAccessibility="no"
-        android:src="@drawable/chevron_down"
+        android:src="@drawable/chevron_left"
         android:clickable="false"
         android:visibility="visible" />
 
