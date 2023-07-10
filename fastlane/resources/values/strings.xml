@@ -3624,7 +3624,7 @@
     <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">ADD VIDEO</string>
     <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources">Address Settings</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit these blocks separately by tapping “Convert to regular blocks”.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit these blocks separately by tapping “Detach patterns”.</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
     <string name="gutenberg_native_applies_the_setting" tools:ignore="UnusedResources">Applies the setting</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources">Arrange your content into columns, add Call to Action buttons, and overlay images with text.</string>
@@ -4441,7 +4441,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_deep_link_overlay_description">It looks like you have the Jetpack app installed.\n\nWould you like to open links in the Jetpack app in the future?\n\nYou can always change this in App Settings &gt; Open links in Jetpack</string>
     <string name="wp_jetpack_deep_link_open_in_jetpack" translatable="false">@string/preference_open_links_in_jetpack</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">Open links in WordPress</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit this block separately by tapping “Convert to regular block”.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit this block separately by tapping “Detach pattern”.</string>
     <string name="gutenberg_native_s_converted_to_regular_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s converted to regular block</string>
 
     <!-- Jetpack Feature Card -->
@@ -4588,4 +4588,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="privacy_banner_save">Save</string>
     <string name="privacy_banner_error_save">There was an error saving your privacy choices.</string>
     <string name="gutenberg_native_reusable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Reusable</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editing synced patterns is not yet supported on %s for Android</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editing synced patterns is not yet supported on %s for iOS</string>
+    <string name="gutenberg_native_s_detached" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s detached</string>
 </resources>
