@@ -26,7 +26,7 @@ import org.wordpress.android.fluxc.persistence.domains.DomainDao
 import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
 
 @Database(
-        version = 15,
+        version = 16,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -85,6 +85,8 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 .addMigrations(MIGRATION_3_4)
                 .addMigrations(MIGRATION_5_6)
                 .addMigrations(MIGRATION_7_8)
+                .addMigrations(MIGRATION_14_15)
+                .addMigrations(MIGRATION_15_16)
                 .build()
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -209,6 +211,16 @@ abstract class WPAndroidDatabase : RoomDatabase() {
         }
 
         val MIGRATION_14_15 = object : Migration(14,15){
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.apply {
+                    execSQL(
+                        "DROP TABLE IF EXISTS `BlazeStatus`"
+                    )
+                }
+            }
+        }
+
+        val MIGRATION_15_16 = object : Migration(15,16){
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.apply {
                     execSQL(
