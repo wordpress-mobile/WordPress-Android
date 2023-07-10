@@ -19,7 +19,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
-import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardSource
+import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainSource
@@ -67,7 +67,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     lateinit var bloggingPromptCardSource: BloggingPromptCardSource
 
     @Mock
-    lateinit var promoteWithBlazeCardSource: PromoteWithBlazeCardSource
+    lateinit var blazeCardSource: BlazeCardSource
 
     @Mock
     lateinit var dashboardCardDomainSource: DashboardCardDomainSource
@@ -107,7 +107,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
             cardsSource,
             siteIconProgressSource,
             bloggingPromptCardSource,
-            promoteWithBlazeCardSource,
+            blazeCardSource,
             selectedSiteRepository,
             dashboardCardDomainSource,
             jetpackFeatureRemovalPhaseHelper

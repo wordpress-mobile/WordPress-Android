@@ -77,8 +77,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
             uploadActionUseCase = mock(),
             savePostToDbUseCase = savePostToDbUseCase,
             jetpackFeatureRemovalPhaseHelper = mock(),
-            blazeFeatureUtils = mock(),
-            blazeStore = mock(),
             siteUtilsWrapper = siteUtilsWrapper
         )
     }

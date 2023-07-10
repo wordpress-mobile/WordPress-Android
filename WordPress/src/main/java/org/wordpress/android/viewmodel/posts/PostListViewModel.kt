@@ -381,8 +381,7 @@ class PostListViewModel @Inject constructor(
                 connector.postActionHandler.handlePostButton(buttonType, postModel, hasAutoSave)
             },
             uploadStatusTracker = connector.uploadStatusTracker,
-            isSearch = connector.postListType == SEARCH,
-            isSiteBlazeEligible = connector.isSiteBlazeEligible
+            isSearch = connector.postListType == SEARCH
         )
     }
 
