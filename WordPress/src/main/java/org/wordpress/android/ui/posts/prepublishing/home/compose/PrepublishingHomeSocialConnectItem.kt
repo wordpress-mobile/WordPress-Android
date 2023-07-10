@@ -33,7 +33,7 @@ import org.wordpress.android.ui.publicize.PublicizeServiceIcon
 fun PrepublishingHomeSocialConnectItem(
     connectionIconModels: List<TrainOfIconsModel>,
     onConnectClick: () -> Unit,
-    onHideClick: () -> Unit,
+    onDismissClick: () -> Unit,
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colors.surface
 ) {
@@ -76,7 +76,7 @@ fun PrepublishingHomeSocialConnectItem(
 
             SecondaryButton(
                 text = stringResource(R.string.button_not_now),
-                onClick = onHideClick,
+                onClick = onDismissClick,
                 padding = PaddingValues(0.dp),
                 contentPadding = PaddingValues(0.dp),
                 fillMaxWidth = false,
@@ -93,7 +93,7 @@ private fun PrepublishingHomeSocialConnectItemPreview() {
         PrepublishingHomeSocialConnectItem(
             connectionIconModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
             onConnectClick = { /*TODO*/ },
-            onHideClick = { /*TODO*/ },
+            onDismissClick = { /*TODO*/ },
             modifier = Modifier.padding(
                 horizontal = 16.dp,
                 vertical = 24.dp,
