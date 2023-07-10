@@ -412,7 +412,7 @@ class PostsListActivity : LocaleAwareActivity(),
                     uploadActionUseCase,
                     uploadUtilsWrapper
                 ) { isFirstTimePublishing ->
-                    bloggingRemindersViewModel.onPublishingPost(site, isFirstTimePublishing)
+                    bloggingRemindersViewModel.onPublishingPost(site.id, isFirstTimePublishing)
                 }
             }
         })
@@ -538,7 +538,7 @@ class PostsListActivity : LocaleAwareActivity(),
             requestCode == RequestCodes.CREATE_STORY -> {
                 val isNewStory = data?.getStringExtra(GutenbergEditorFragment.ARG_STORY_BLOCK_ID) == null
                 bloggingRemindersViewModel.onPublishingPost(
-                    site,
+                    site.id,
                     isNewStory
                 )
             }

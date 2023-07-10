@@ -1235,7 +1235,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        if (!mBloggingRemindersManager.shouldShowBloggingRemindersSetting(mSite)) {
+        if (!mBloggingRemindersManager.shouldShowBloggingRemindersSetting()) {
             removeBloggingRemindersSettings();
         } else {
             mBloggingRemindersViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)

@@ -1349,7 +1349,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                 }
                             },
                             isFirstTimePublishing -> mBloggingRemindersViewModel
-                                    .onPublishingPost(site, isFirstTimePublishing)
+                                    .onPublishingPost(site.getId(), isFirstTimePublishing)
                     );
                 }
                 break;
@@ -1358,7 +1358,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (selectedSite != null) {
                     boolean isNewStory = data == null || data.getStringExtra(ARG_STORY_BLOCK_ID) == null;
                     mBloggingRemindersViewModel.onPublishingPost(
-                            selectedSite,
+                            selectedSite.getId(),
                             isNewStory
                     );
                 }
@@ -1750,7 +1750,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         null,
                         targetSite,
                         isFirstTimePublishing -> mBloggingRemindersViewModel
-                                .onPublishingPost(targetSite, isFirstTimePublishing)
+                                .onPublishingPost(targetSite.getId(), isFirstTimePublishing)
                 );
             }
         }

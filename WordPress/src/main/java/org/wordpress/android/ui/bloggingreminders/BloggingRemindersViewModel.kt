@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
@@ -294,9 +293,9 @@ class BloggingRemindersViewModel @Inject constructor(
         _isFirstTimeFlow.value = state.getBoolean(IS_FIRST_TIME_FLOW)
     }
 
-    fun onPublishingPost(site: SiteModel, isFirstTimePublishing: Boolean?) {
-        if (isFirstTimePublishing == true && bloggingRemindersManager.shouldShowBloggingRemindersPrompt(site)) {
-            showBottomSheet(site.id, Screen.PROLOGUE, PUBLISH_FLOW)
+    fun onPublishingPost(siteId: Int, isFirstTimePublishing: Boolean?) {
+        if (isFirstTimePublishing == true && bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)) {
+            showBottomSheet(siteId, Screen.PROLOGUE, PUBLISH_FLOW)
         }
     }
 
