@@ -81,7 +81,6 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var resourceProvider: ResourceProvider
-
     private lateinit var viewModel: BloggingRemindersViewModel
     private val siteId = 123
     private val hour = 10
