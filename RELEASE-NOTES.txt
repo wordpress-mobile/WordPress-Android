@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+22.9
+-----
+
+
 22.8
 -----
 * [*] Fixes the crash that occurs after deleting the site [https://github.com/wordpress-mobile/WordPress-Android/pull/18736]
