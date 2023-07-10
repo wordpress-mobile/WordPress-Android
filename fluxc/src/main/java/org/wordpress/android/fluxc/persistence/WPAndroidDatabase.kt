@@ -43,7 +43,8 @@ import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
         autoMigrations = [
             AutoMigration(from = 11, to = 12),
             AutoMigration(from = 12, to = 13),
-            AutoMigration(from = 13, to = 14)
+            AutoMigration(from = 13, to = 14),
+            AutoMigration(from = 14, to = 15)
         ]
 )
 @TypeConverters(
@@ -85,7 +86,6 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 .addMigrations(MIGRATION_3_4)
                 .addMigrations(MIGRATION_5_6)
                 .addMigrations(MIGRATION_7_8)
-                .addMigrations(MIGRATION_14_15)
                 .build()
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
