@@ -8,7 +8,6 @@ import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.INFORMATION
@@ -17,6 +16,7 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
+import com.google.android.material.R as MaterialR
 
 @ExperimentalCoroutinesApi
 class BloggingPromptsOnboardingUiStateMapperTest : BaseUnitTest() {
@@ -36,7 +36,7 @@ class BloggingPromptsOnboardingUiStateMapperTest : BaseUnitTest() {
                 R.string.my_site_blogging_prompt_card_number_of_answers_other,
                 3
             ),
-            R.attr.colorOnSurface
+            MaterialR.attr.colorOnSurface
         )
     )
 
@@ -46,7 +46,7 @@ class BloggingPromptsOnboardingUiStateMapperTest : BaseUnitTest() {
         AvatarItem(""),
         TrailingLabelTextItem(
             UiStringRes(
-                string.my_site_blogging_prompt_card_view_answers
+                R.string.my_site_blogging_prompt_card_view_answers
             ),
             R.color.primary_emphasis_medium_selector
         )
@@ -56,31 +56,31 @@ class BloggingPromptsOnboardingUiStateMapperTest : BaseUnitTest() {
     private val secondaryButtonListener: () -> Unit = {}
 
     private fun expectedOnboardingDialogReadyState(enhancementsEnabled: Boolean) = Ready(
-        promptRes = string.blogging_prompts_onboarding_card_prompt,
+        promptRes = R.string.blogging_prompts_onboarding_card_prompt,
         respondents = if (enhancementsEnabled) expectedRespondentsEnhancements else expectedRespondents,
-        contentTopRes = string.blogging_prompts_onboarding_content_top,
-        contentBottomRes = string.blogging_prompts_onboarding_content_bottom,
-        contentNoteTitle = string.blogging_prompts_onboarding_content_note_title,
-        contentNoteContent = string.blogging_prompts_onboarding_content_note_content,
-        primaryButtonLabel = string.blogging_prompts_onboarding_try_it_now,
+        contentTopRes = R.string.blogging_prompts_onboarding_content_top,
+        contentBottomRes = R.string.blogging_prompts_onboarding_content_bottom,
+        contentNoteTitle = R.string.blogging_prompts_onboarding_content_note_title,
+        contentNoteContent = R.string.blogging_prompts_onboarding_content_note_content,
+        primaryButtonLabel = R.string.blogging_prompts_onboarding_try_it_now,
         isPrimaryButtonVisible = true,
         onPrimaryButtonClick = primaryButtonListener,
-        secondaryButtonLabel = string.blogging_prompts_onboarding_remind_me,
+        secondaryButtonLabel = R.string.blogging_prompts_onboarding_remind_me,
         isSecondaryButtonVisible = true,
         onSecondaryButtonClick = secondaryButtonListener
     )
 
     private fun expectedInformationDialogReadyState(enhancementsEnabled: Boolean) = Ready(
-        promptRes = string.blogging_prompts_onboarding_card_prompt,
+        promptRes = R.string.blogging_prompts_onboarding_card_prompt,
         respondents = if (enhancementsEnabled) expectedRespondentsEnhancements else expectedRespondents,
-        contentTopRes = string.blogging_prompts_onboarding_content_top,
-        contentBottomRes = string.blogging_prompts_onboarding_content_bottom,
-        contentNoteTitle = string.blogging_prompts_onboarding_content_note_title,
-        contentNoteContent = string.blogging_prompts_onboarding_content_note_content,
-        primaryButtonLabel = string.blogging_prompts_onboarding_got_it,
+        contentTopRes = R.string.blogging_prompts_onboarding_content_top,
+        contentBottomRes = R.string.blogging_prompts_onboarding_content_bottom,
+        contentNoteTitle = R.string.blogging_prompts_onboarding_content_note_title,
+        contentNoteContent = R.string.blogging_prompts_onboarding_content_note_content,
+        primaryButtonLabel = R.string.blogging_prompts_onboarding_got_it,
         isPrimaryButtonVisible = true,
         onPrimaryButtonClick = primaryButtonListener,
-        secondaryButtonLabel = string.blogging_prompts_onboarding_remind_me,
+        secondaryButtonLabel = R.string.blogging_prompts_onboarding_remind_me,
         isSecondaryButtonVisible = false,
         onSecondaryButtonClick = secondaryButtonListener
     )

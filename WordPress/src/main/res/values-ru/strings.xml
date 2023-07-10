@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-22 14:09:34+0000
+Translation-Revision-Date: 2023-06-27 07:02:58+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_reusable">Мои блоки</string>
+    <string name="privacy_banner_error_save">При сохранении параметров конфиденциальности произошла ошибка.</string>
+    <string name="privacy_banner_save">Сохранить</string>
+    <string name="privacy_banner_settings">Настройки</string>
+    <string name="privacy_banner_analytics_description">Позвольте нам оптимизировать производительность, собирая информацию о том, как пользователи взаимодействуют с нашими мобильными приложениями.</string>
+    <string name="privacy_banner_analytics">Аналитика</string>
+    <string name="privacy_banner_title">Управление конфиденциальностью</string>
+    <string name="privacy_banner_description">Ваша конфиденциальность критически важна для нас и всегда была. Мы используем, храним и обрабатываем ваши личные данные для оптимизации нашего приложения (и вашего опыта) различными способами. Некоторые способы использования ваших данных нам абсолютно необходимы, чтобы все работало, а другие вы можете настроить.</string>
+    <string name="tabbar_accessibility_label_me">Мой профиль. Управление подробностями.</string>
     <string name="social_item_message_title">Сообщение</string>
     <string name="gutenberg_native_block_ungrouped">Блок расгруппирован</string>
     <string name="gutenberg_native_block_grouped">Блок сгруппирован</string>

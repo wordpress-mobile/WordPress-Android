@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import org.wordpress.android.ui.compose.components.buttons.WPSwitch
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.posts.social.PostSocialConnection
@@ -62,7 +62,7 @@ fun PostSocialConnectionItem(
                 .copy(alpha = if (enabled) ContentAlpha.high else ContentAlpha.disabled),
         )
         Spacer(modifier = Modifier.weight(1f))
-        Switch(
+        WPSwitch(
             enabled = enabled,
             checked = connection.isSharingEnabled,
             onCheckedChange = onSharingChange,
@@ -84,7 +84,7 @@ fun PostSocialConnectionItemPreview() {
         isSharingEnabled = true
     )
     var connectionState by remember { mutableStateOf(connection) }
-    var disabledState by remember { mutableStateOf(connection) }
+    var disabledState by remember { mutableStateOf(connection.copy(isSharingEnabled = false)) }
     AppTheme {
         Column {
             // enabled

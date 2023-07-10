@@ -11,7 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Empty
 
@@ -38,14 +38,14 @@ class PageParentSearchViewModelTest : BaseUnitTest() {
     fun `show empty item on start`() {
         searchPages.value = null
 
-        assertThat(viewModel.searchResult.value).containsOnly(Empty(string.pages_search_suggestion, true))
+        assertThat(viewModel.searchResult.value).containsOnly(Empty(R.string.pages_search_suggestion, true))
     }
 
     @Test
     fun `show no matches on empty search results`() {
-        searchPages.value = mutableListOf(Empty(string.pages_empty_search_result, false))
+        searchPages.value = mutableListOf(Empty(R.string.pages_empty_search_result, false))
 
-        assertThat(viewModel.searchResult.value).containsOnly(Empty(string.pages_empty_search_result, false))
+        assertThat(viewModel.searchResult.value).containsOnly(Empty(R.string.pages_empty_search_result, false))
     }
 
     @Test

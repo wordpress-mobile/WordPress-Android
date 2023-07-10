@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityLauncherWrapper
@@ -62,6 +63,7 @@ import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class SiteCreationActivity : LocaleAwareActivity(),
@@ -162,6 +164,9 @@ class SiteCreationActivity : LocaleAwareActivity(),
     }
 
     private fun observeOverlayEvents(savedInstanceState: Bundle?) {
+        if(BuildConfig.IS_JETPACK_APP)
+            return
+
         val fragment =  if (savedInstanceState == null) {
             JetpackFeatureFullScreenOverlayFragment
                 .newInstance(
@@ -275,7 +280,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == AndroidR.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
         }

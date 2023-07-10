@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
 import org.wordpress.android.databinding.MainActionListItemBinding
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
@@ -60,7 +59,7 @@ class ActionListItemViewHolder(
 
         if (action.showQuickStartFocusPoint) {
             val focusPointSize = actionRowContainer.resources.getDimensionPixelOffset(
-                dimen.quick_start_focus_point_size
+                R.dimen.quick_start_focus_point_size
             )
             actionRowContainer.post {
                 val verticalOffset = (actionRowContainer.width - focusPointSize) / 2

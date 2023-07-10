@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.utils.BarChartAccessibilityHelper
 import org.wordpress.android.ui.stats.refresh.utils.BarChartAccessibilityHelper.BarChartAccessibilityEvent
 import org.wordpress.android.ui.stats.refresh.utils.LargeValueFormatter
 import org.wordpress.android.util.DisplayUtils
+import android.R as AndroidR
 
 private const val MIN_COLUMN_COUNT = 5
 private const val MIN_VALUE = 4f
@@ -215,7 +216,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 R.color.primary_5
             ), ContextCompat.getColor(
                 context,
-                android.R.color.transparent
+                AndroidR.color.transparent
             )
         )
         dataSet.formLineWidth = 0f
@@ -277,14 +278,14 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             BarEntry(it.x, maxEntry.y, it.data)
         }
         val dataSet = BarDataSet(highlightedDataSet, "Highlight")
-        dataSet.color = ContextCompat.getColor(context, android.R.color.transparent)
+        dataSet.color = ContextCompat.getColor(context, AndroidR.color.transparent)
         dataSet.setGradientColor(
             ContextCompat.getColor(
                 context,
-                android.R.color.transparent
+                AndroidR.color.transparent
             ), ContextCompat.getColor(
                 context,
-                android.R.color.transparent
+                AndroidR.color.transparent
             )
         )
         dataSet.formLineWidth = 0f

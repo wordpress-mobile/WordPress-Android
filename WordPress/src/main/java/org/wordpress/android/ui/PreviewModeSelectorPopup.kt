@@ -6,7 +6,7 @@ import android.view.Gravity
 import android.view.View
 import androidx.appcompat.widget.ListPopupWindow
 import com.google.android.material.elevation.ElevationOverlayProvider
-import org.wordpress.android.R.dimen
+import org.wordpress.android.R
 
 /**
  * Implements the preview mode popup
@@ -14,15 +14,15 @@ import org.wordpress.android.R.dimen
 class PreviewModeSelectorPopup(val context: Context, val button: View) : ListPopupWindow(context) {
     init {
         val resources = context.resources
-        val popupOffset = resources.getDimensionPixelSize(dimen.margin_extra_large)
-        width = resources.getDimensionPixelSize(dimen.web_preview_mode_popup_width)
+        val popupOffset = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
+        width = resources.getDimensionPixelSize(R.dimen.web_preview_mode_popup_width)
         setDropDownGravity(Gravity.END)
         anchorView = button
         horizontalOffset = -popupOffset
         verticalOffset = popupOffset
         isModal = true
         val popupBackgroundColor = ElevationOverlayProvider(context).compositeOverlayWithThemeSurfaceColorIfNeeded(
-            resources.getDimension(dimen.popup_over_toolbar_elevation)
+            resources.getDimension(R.dimen.popup_over_toolbar_elevation)
         )
         setBackgroundDrawable(ColorDrawable(popupBackgroundColor))
     }

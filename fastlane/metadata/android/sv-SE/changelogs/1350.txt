@@ -1,2 +1,0 @@
-22.6:
-Klappat och klart – det finns nu en låsikon för inaktiverade celler i blockredigeraren så att du vet när de inte används.

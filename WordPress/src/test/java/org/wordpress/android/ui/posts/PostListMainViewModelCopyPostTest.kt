@@ -74,8 +74,6 @@ class PostListMainViewModelCopyPostTest : BaseUnitTest() {
             uploadActionUseCase = mock(),
             savePostToDbUseCase = mock(),
             jetpackFeatureRemovalPhaseHelper = mock(),
-            blazeFeatureUtils = mock(),
-            blazeStore = mock(),
             siteUtilsWrapper = mock()
         )
         viewModel.postListAction.observeForever(onPostListActionObserver)

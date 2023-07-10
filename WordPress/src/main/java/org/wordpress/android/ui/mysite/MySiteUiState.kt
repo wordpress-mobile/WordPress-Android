@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mysite
 
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.blaze.BlazeStatusModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -30,7 +29,7 @@ data class MySiteUiState(
     val visibleDynamicCards: List<DynamicCardType> = listOf(),
     val cardsUpdate: CardsUpdate? = null,
     val bloggingPromptsUpdate: BloggingPromptUpdate? = null,
-    val promoteWithBlazeUpdate: PartialState.PromoteWithBlazeUpdate? = null,
+    val blazeCardUpdate: PartialState.BlazeCardUpdate? = null,
     val hasSiteCustomDomains: Boolean? = null
 ) {
     sealed class PartialState {
@@ -62,8 +61,9 @@ data class MySiteUiState(
             val promptModel: BloggingPromptModel?
         ) : PartialState()
 
-        data class PromoteWithBlazeUpdate(
-            val blazeStatusModel: BlazeStatusModel?
+        data class BlazeCardUpdate(
+            val blazeEligible: Boolean = false,
+            val campaigns: List<String> = emptyList()
         ) : PartialState()
     }
 
@@ -92,7 +92,7 @@ data class MySiteUiState(
             )
             is CardsUpdate -> uiState.copy(cardsUpdate = partialState)
             is BloggingPromptUpdate -> uiState.copy(bloggingPromptsUpdate = partialState)
-            is PartialState.PromoteWithBlazeUpdate -> uiState.copy(promoteWithBlazeUpdate = partialState)
+            is PartialState.BlazeCardUpdate -> uiState.copy(blazeCardUpdate = partialState)
         }
     }
 

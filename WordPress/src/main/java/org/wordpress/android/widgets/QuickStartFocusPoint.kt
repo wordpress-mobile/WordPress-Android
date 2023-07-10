@@ -8,7 +8,6 @@ import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import org.wordpress.android.R
-import org.wordpress.android.R.styleable
 
 /**
  * Perpetually animated quick start focus point (hint)
@@ -52,11 +51,11 @@ class QuickStartFocusPoint : FrameLayout {
     private fun readSize(attrs: AttributeSet): Int {
         val a = context.theme.obtainStyledAttributes(
             attrs,
-            styleable.QuickStartFocusPoint,
+            R.styleable.QuickStartFocusPoint,
             0, 0
         )
         try {
-            return a.getInteger(styleable.QuickStartFocusPoint_size, SIZE_NORMAL)
+            return a.getInteger(R.styleable.QuickStartFocusPoint_size, SIZE_NORMAL)
         } finally {
             a.recycle()
         }

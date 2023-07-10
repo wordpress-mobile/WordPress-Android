@@ -1,2 +1,0 @@
-22.6:
-Bloqueado y cargado: ahora, en el editor de bloques aparece el icono de un candado para las celdas deshabilitadas, así sabrás cuándo no están en uso.

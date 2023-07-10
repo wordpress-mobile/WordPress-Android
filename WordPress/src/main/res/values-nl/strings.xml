@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-14 13:54:07+0000
+Translation-Revision-Date: 2023-06-28 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: nl
 -->
 <resources>
+    <string name="privacy_banner_analytics">Analytische gegevens</string>
+    <string name="privacy_banner_description">Wij vinden je privacy erg belangrijk en dat is altijd al zo geweest. Wij gebruiken, verwerken en slaan je persoonlijke gegevens op om onze app (en jouw ervaring) op allerlei manieren te optimaliseren. Bepaalde manieren waarop we je gegevens gebruiken, zijn essentieel om alles goed te laten werken, andere manieren kan je zelf aanpassen bij instellingen.</string>
+    <string name="tabbar_accessibility_label_me">Ik. Beheer je profielgegevens.</string>
     <string name="gutenberg_native_block_ungrouped">Blokgroepering ongedaan gemaakt</string>
     <string name="gutenberg_native_block_grouped">Blok gegroepeerd</string>
     <string name="dashboard_card_plans_checkout_success_info">Het kan tot 30 minuten duren voor je domein correct werkt.</string>

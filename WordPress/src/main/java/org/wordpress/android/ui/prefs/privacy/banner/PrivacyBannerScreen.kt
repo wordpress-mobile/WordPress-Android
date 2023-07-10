@@ -19,8 +19,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.contentColorFor
 import androidx.compose.runtime.Composable
@@ -37,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.buttons.WPSwitch
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
@@ -88,11 +87,8 @@ fun PrivacyBannerScreen(
                     text = stringResource(R.string.privacy_banner_analytics),
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                Switch(
+                WPSwitch(
                     modifier = Modifier.padding(end = 16.dp),
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colors.primary
-                    ),
                     checked = state.analyticsSwitchEnabled,
                     onCheckedChange = { onSwitchChanged(it) },
                 )

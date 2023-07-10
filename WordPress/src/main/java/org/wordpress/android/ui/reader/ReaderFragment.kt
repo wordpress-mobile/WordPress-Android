@@ -22,7 +22,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.databinding.ReaderFragmentLayoutBinding
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.models.ReaderTagList
@@ -147,7 +146,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     }
 
     private fun ReaderFragmentLayoutBinding.initToolbar() {
-        toolbar.title = getString(string.reader_screen_title)
+        toolbar.title = getString(R.string.reader_screen_title)
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
     }
 

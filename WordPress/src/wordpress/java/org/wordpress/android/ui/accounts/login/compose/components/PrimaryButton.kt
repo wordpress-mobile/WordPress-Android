@@ -18,8 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.wordpress.android.R.color
-import org.wordpress.android.R.dimen
+import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
@@ -40,14 +39,14 @@ fun PrimaryButton(
         shape = RoundedCornerShape(5.dp),
         colors = ButtonDefaults.buttonColors(
             contentColor = Color.White,
-            backgroundColor = colorResource(id = color.blue_50),
+            backgroundColor = colorResource(id = R.color.blue_50),
             disabledBackgroundColor = MaterialTheme.colors.background,
         ),
         modifier = modifier
             .fillMaxWidth()
             .padding(
                 vertical = Margin.Small.value,
-                horizontal = dimensionResource(dimen.login_prologue_revamped_buttons_padding),
+                horizontal = dimensionResource(R.dimen.login_prologue_revamped_buttons_padding),
             )
     ) {
         Text(

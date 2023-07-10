@@ -11,7 +11,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
 
 @Composable
 fun ScreenIcon(
@@ -22,7 +21,7 @@ fun ScreenIcon(
         painter = painterResource(iconRes),
         contentDescription = stringResource(R.string.icon_desc),
         modifier = modifier
-            .padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
+            .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
             .padding(top = 34.dp)
             .height(65.dp)
     )

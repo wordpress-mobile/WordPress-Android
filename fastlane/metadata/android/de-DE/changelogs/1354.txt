@@ -1,0 +1,4 @@
+22.7:
+- Der schwebende Aktionsbutton hat jetzt eine neue Form, eine neue Farbe und einen neuen Stil.
+- Bei Bildblöcken wird jetzt das richtige Bildformat angezeigt, egal ob Höhe und Breite des Bildes definiert sind oder nicht.
+- Wir haben den „Ich“-Abschnitt mit deinem Avatar in das Hauptmenü unter „Verwalten“ verschoben.

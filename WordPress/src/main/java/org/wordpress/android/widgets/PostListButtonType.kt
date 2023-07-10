@@ -4,6 +4,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import com.google.android.material.R as MaterialR
 
 // PostListButton.java types - from attrs.xml
 enum class PostListButtonType constructor(
@@ -12,23 +13,83 @@ enum class PostListButtonType constructor(
     @DrawableRes val iconResId: Int,
     @AttrRes val colorAttrId: Int
 ) {
-    BUTTON_EDIT(1, R.string.button_edit, R.drawable.ic_pencil_white_24dp, R.attr.colorOnSurface),
-    BUTTON_VIEW(2, R.string.button_view, R.drawable.ic_external_white_24dp, R.attr.colorOnSurface),
-    BUTTON_PREVIEW(3, R.string.button_preview, R.drawable.ic_external_white_24dp, R.attr.colorOnSurface),
-    BUTTON_STATS(4, R.string.button_stats, R.drawable.ic_stats_alt_white_24dp, R.attr.colorOnSurface),
-    BUTTON_TRASH(5, R.string.button_trash, R.drawable.ic_trash_white_24dp, R.attr.colorOnSurface),
-    BUTTON_DELETE(6, R.string.button_delete, R.drawable.ic_trash_white_24dp, R.attr.colorOnSurface),
-    BUTTON_PUBLISH(7, R.string.button_publish, R.drawable.ic_reader_white_24dp, R.attr.colorOnSurface),
-    BUTTON_SYNC(8, R.string.button_sync, R.drawable.ic_reader_white_24dp, R.attr.colorOnSurface),
-    BUTTON_MORE(9, R.string.button_more, R.drawable.ic_ellipsis_white_24dp, R.attr.colorOnSurface),
-    BUTTON_SUBMIT(10, R.string.submit_for_review, R.drawable.ic_reader_white_24dp, R.attr.colorOnSurface),
-    BUTTON_RETRY(11, R.string.button_retry, R.drawable.ic_refresh_white_24dp, R.attr.colorError),
-    BUTTON_MOVE_TO_DRAFT(12, R.string.button_move_to_draft, R.drawable.ic_refresh_white_24dp, R.attr.colorOnSurface),
+    BUTTON_EDIT(
+        1,
+        R.string.button_edit,
+        R.drawable.ic_pencil_white_24dp,
+        MaterialR.attr.colorOnSurface
+    ),
+    BUTTON_VIEW(
+        2,
+        R.string.button_view,
+        R.drawable.ic_external_white_24dp,
+        MaterialR.attr.colorOnSurface
+    ),
+    BUTTON_PREVIEW(
+        3,
+        R.string.button_preview,
+        R.drawable.ic_external_white_24dp,
+        MaterialR.attr.colorOnSurface
+    ),
+    BUTTON_STATS(
+        4,
+        R.string.button_stats,
+        R.drawable.ic_stats_alt_white_24dp,
+        MaterialR.attr.colorOnSurface
+    ),
+    BUTTON_TRASH(
+        5,
+        R.string.button_trash,
+        R.drawable.ic_trash_white_24dp,
+        MaterialR.attr.colorOnSurface
+    ),
+    BUTTON_DELETE(
+        6,
+        R.string.button_delete,
+        R.drawable.ic_trash_white_24dp,
+        MaterialR.attr.colorOnSurface
+    ),
+    BUTTON_PUBLISH(
+        7,
+        R.string.button_publish,
+        R.drawable.ic_reader_white_24dp,
+        MaterialR.attr.colorOnSurface
+    ),
+    BUTTON_SYNC(
+        8,
+        R.string.button_sync,
+        R.drawable.ic_reader_white_24dp,
+        MaterialR.attr.colorOnSurface
+    ),
+    BUTTON_MORE(
+        9,
+        R.string.button_more,
+        R.drawable.ic_ellipsis_white_24dp,
+        MaterialR.attr.colorOnSurface
+    ),
+    BUTTON_SUBMIT(
+        10,
+        R.string.submit_for_review,
+        R.drawable.ic_reader_white_24dp,
+        MaterialR.attr.colorOnSurface
+    ),
+    BUTTON_RETRY(
+        11,
+        R.string.button_retry,
+        R.drawable.ic_refresh_white_24dp,
+        MaterialR.attr.colorError
+    ),
+    BUTTON_MOVE_TO_DRAFT(
+        12,
+        R.string.button_move_to_draft,
+        R.drawable.ic_refresh_white_24dp,
+        MaterialR.attr.colorOnSurface
+    ),
     BUTTON_DELETE_PERMANENTLY(
         13,
         R.string.button_delete_permanently,
         R.drawable.ic_trash_white_24dp,
-        R.attr.colorOnSurface
+        MaterialR.attr.colorOnSurface
     ),
     BUTTON_CANCEL_PENDING_AUTO_UPLOAD(
         14,
@@ -36,9 +97,24 @@ enum class PostListButtonType constructor(
         R.drawable.ic_undo_white_24dp,
         R.attr.wpColorWarningDark
     ),
-    BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG(15, 0, 0, 0),
-    BUTTON_COPY(16, R.string.button_copy, R.drawable.ic_copy_white_24dp, R.attr.colorOnSurface),
-    BUTTON_COPY_URL(17, R.string.button_copy_link, R.drawable.ic_gridicons_link_white_24dp, R.attr.colorOnSurface),
+    BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG(
+        15,
+        0,
+        0,
+        0
+    ),
+    BUTTON_COPY(
+        16,
+        R.string.button_copy,
+        R.drawable.ic_copy_white_24dp,
+        MaterialR.attr.colorOnSurface
+    ),
+    BUTTON_COPY_URL(
+        17,
+        R.string.button_copy_link,
+        R.drawable.ic_gridicons_link_white_24dp,
+        MaterialR.attr.colorOnSurface
+    ),
     BUTTON_PROMOTE_WITH_BLAZE(
         18,
         R.string.button_promote_with_blaze,

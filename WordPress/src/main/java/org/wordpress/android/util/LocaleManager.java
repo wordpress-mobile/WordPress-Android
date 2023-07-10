@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
+import org.wordpress.android.R;
+
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -224,8 +226,8 @@ public class LocaleManager {
      * Creates a map from language codes to WordPress language IDs.
      */
     public static Map<String, String> generateLanguageMap(Context context) {
-        String[] languageIds = context.getResources().getStringArray(org.wordpress.android.R.array.lang_ids);
-        String[] languageCodes = context.getResources().getStringArray(org.wordpress.android.R.array.language_codes);
+        String[] languageIds = context.getResources().getStringArray(R.array.lang_ids);
+        String[] languageCodes = context.getResources().getStringArray(R.array.language_codes);
 
         Map<String, String> languageMap = new HashMap<>();
         for (int i = 0; i < languageIds.length && i < languageCodes.length; ++i) {

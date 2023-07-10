@@ -38,6 +38,7 @@ import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
@@ -109,7 +110,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 val sheetDialog = dialogInterface as? BottomSheetDialog
 
                 val bottomSheet = sheetDialog?.findViewById<View>(
-                    com.google.android.material.R.id.design_bottom_sheet
+                    MaterialR.id.design_bottom_sheet
                 ) as? FrameLayout
 
                 bottomSheet?.let {

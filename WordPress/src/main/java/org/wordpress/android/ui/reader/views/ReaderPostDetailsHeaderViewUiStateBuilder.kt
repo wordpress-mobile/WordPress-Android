@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader.views
 
 import dagger.Reusable
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.discover.ReaderPostTagsUiStateBuilder
@@ -30,7 +30,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         val hasAccessToken = accountStore.hasAccessToken()
         val textTitle = post
             .takeIf { post.hasTitle() }
-            ?.title?.let { UiStringText(it) } ?: UiStringRes(string.reader_untitled_post)
+            ?.title?.let { UiStringText(it) } ?: UiStringRes(R.string.reader_untitled_post)
 
         return ReaderPostDetailsHeaderUiState(
             title = textTitle,

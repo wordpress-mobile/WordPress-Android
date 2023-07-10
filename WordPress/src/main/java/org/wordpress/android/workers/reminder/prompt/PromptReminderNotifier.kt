@@ -10,8 +10,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_NOTIFICATION_PROMPT_ANSWER_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_NOTIFICATION_PROMPT_TAPPED
@@ -75,11 +73,11 @@ class PromptReminderNotifier @Inject constructor(
             )
         )
         val answerPromptReminderNotification = ReminderNotification(
-            channel = resourceProvider.getString(string.notification_channel_reminder_id),
+            channel = resourceProvider.getString(R.string.notification_channel_reminder_id),
             contentIntentBuilder = { contentPendingIntent },
             deleteIntentBuilder = { dismissNotificationSwipePendingIntent },
             contentTitle = resourceProvider.getString(
-                string.blogging_prompts_answer_prompt_notification_title, SiteUtils.getSiteNameOrHomeURL(site)
+                R.string.blogging_prompts_answer_prompt_notification_title, SiteUtils.getSiteNameOrHomeURL(site)
             ),
             contentText = htmlCompatWrapper.fromHtml(prompt?.text.orEmpty()).toString(),
             priority = PRIORITY_DEFAULT,
@@ -91,15 +89,15 @@ class PromptReminderNotifier @Inject constructor(
             } else {
                 resourceProvider.getColor(R.color.blue_50)
             },
-            smallIcon = drawable.ic_app_white_24dp,
+            smallIcon = R.drawable.ic_app_white_24dp,
             firstAction = Builder(
                 0,
-                resourceProvider.getString(string.blogging_prompts_answer_prompt_notification_answer_action),
+                resourceProvider.getString(R.string.blogging_prompts_answer_prompt_notification_answer_action),
                 openEditorPendingIntent
             ).build(),
             secondAction = Builder(
                 0,
-                resourceProvider.getString(string.blogging_prompts_notification_dismiss),
+                resourceProvider.getString(R.string.blogging_prompts_notification_dismiss),
                 dismissNotificationButtonPendingIntent
             ).build()
         )
