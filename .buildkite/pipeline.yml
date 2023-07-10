@@ -3,6 +3,11 @@ common_params:
   # Common plugin settings to use with the `plugins` key.
   - &common_plugins
     - automattic/a8c-ci-toolkit#2.17.0
+  - &common_plugins_with_test_collector
+    - automattic/a8c-ci-toolkit#2.17.0
+    - test-collector#v1.8.0:
+        files: "buildkite-test-analytics/*.xml"
+        format: "junit"
 
 steps:
   #################
@@ -61,34 +66,25 @@ steps:
     steps:
       - label: "🔬 Unit Test WordPress"
         command: ".buildkite/commands/run-unit-tests.sh wordpress"
-        plugins:
-          - automattic/a8c-ci-toolkit#2.17.0
-          - test-collector#v1.8.0:
-              files: "**/build/test-results/*/*.xml"
-              format: "junit"
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_WORDPRESS"                
+        plugins: *common_plugins_with_test_collector
+        env:
+          BUILDKITE_PLUGIN_TEST_COLLECTOR_API_TOKEN_ENV_NAME: $BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_WORDPRESS
         artifact_paths:
           - "**/build/test-results/*/*.xml"
 
       - label: "🔬 Unit Test Processors"
         command: ".buildkite/commands/run-unit-tests.sh processors"
-        plugins:
-          - automattic/a8c-ci-toolkit#2.17.0
-          - test-collector#v1.8.0:
-              files: "**/build/test-results/*/*.xml"
-              format: "junit"
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_PROCESSORS"        
+        plugins: *common_plugins_with_test_collector
+        env:
+          BUILDKITE_PLUGIN_TEST_COLLECTOR_API_TOKEN_ENV_NAME: $BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_PROCESSORS
         artifact_paths:
           - "**/build/test-results/*/*.xml"
 
       - label: "🔬 Unit Test Image Editor"
         command: ".buildkite/commands/run-unit-tests.sh image-editor"
-        plugins:
-          - automattic/a8c-ci-toolkit#2.17.0
-          - test-collector#v1.8.0:
-              files: "**/build/test-results/*/*.xml"
-              format: "junit"
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_IMAGE_EDITOR"             
+        plugins: *common_plugins_with_test_collector
+        env:
+          BUILDKITE_PLUGIN_TEST_COLLECTOR_API_TOKEN_ENV_NAME: $BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_IMAGE_EDITOR
         artifact_paths:
           - "**/build/test-results/*/*.xml"
 
@@ -97,25 +93,19 @@ steps:
   #################
   - group: "🔬 Instrumented tests"
     steps:
-      - label: ":wordpress: 🔬 Instrumented tests"   
+      - label: ":wordpress: 🔬 Instrumented tests"
         command: ".buildkite/commands/run-instrumented-tests.sh wordpress"
-        plugins:
-          - automattic/a8c-ci-toolkit#2.17.0
-          - test-collector#v1.8.0:
-              files: "build/instrumented-tests/**/test_result_1.xml"
-              format: "junit"
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_WORDPRESS"          
+        plugins: *common_plugins_with_test_collector
+        env:
+          BUILDKITE_PLUGIN_TEST_COLLECTOR_API_TOKEN_ENV_NAME: $BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_WORDPRESS
         artifact_paths:
           - "**/build/instrumented-tests/**/*"
 
       - label: ":jetpack: 🔬 Instrumented tests"
         command: ".buildkite/commands/run-instrumented-tests.sh jetpack"
-        plugins:
-          - automattic/a8c-ci-toolkit#2.17.0
-          - test-collector#v1.8.0:
-              files: "build/instrumented-tests/**/test_result_1.xml"
-              format: "junit"
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_JETPACK"        
+        plugins: *common_plugins_with_test_collector
+        env:
+          BUILDKITE_PLUGIN_TEST_COLLECTOR_API_TOKEN_ENV_NAME: $BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_JETPACK
         artifact_paths:
           - "**/build/instrumented-tests/**/*"
 

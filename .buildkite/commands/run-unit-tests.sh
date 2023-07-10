@@ -4,10 +4,13 @@ echo "--- 🧪 Testing"
 set +e
 if [ "$1" == "wordpress" ]; then
     test_suite="testWordpressVanillaRelease"
+    test_log_dir="WordPress/build/test-results/*/*.xml"
 elif [ "$1" == "processors" ]; then
     test_suite=":libs:processors:test"
+    test_log_dir="WordPress/libs/processors/build/test-results/*/*.xml"    
 elif [ "$1" == "image-editor" ]; then
     test_suite=":libs:image-editor:test"
+    test_log_dir="WordPress/libs/image-editor/build/test-results/*/*.xml"       
 else
     echo "Invalid Test Suite! Expected 'wordpress', 'processors', or 'image-editor', received '$1' instead"
     exit 1
@@ -38,5 +41,8 @@ for file in "${results_files[@]}"; do
     annotate_test_failures "$file"
   fi
 done
+
+echo "--- 🧪 Copying test logs for test collector"
+mkdir buildkite-test-analytics && cp $test_log_dir buildkite-test-analytics
 
 exit $TESTS_EXIT_STATUS
