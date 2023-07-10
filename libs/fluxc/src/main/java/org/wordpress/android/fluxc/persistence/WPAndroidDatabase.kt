@@ -85,6 +85,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 .addMigrations(MIGRATION_3_4)
                 .addMigrations(MIGRATION_5_6)
                 .addMigrations(MIGRATION_7_8)
+                .addMigrations(MIGRATION_14_15)
                 .addMigrations(MIGRATION_15_16)
                 .build()
 
@@ -204,6 +205,16 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                     execSQL(
                         "ALTER TABLE BloggingReminders ADD COLUMN isPromptRemindersOptedIn" +
                             " INTEGER DEFAULT 0 NOT NULL"
+                    )
+                }
+            }
+        }
+
+        val MIGRATION_14_15 = object : Migration(14,15){
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.apply {
+                    execSQL(
+                        "DROP TABLE IF EXISTS `BlazeStatus`"
                     )
                 }
             }
