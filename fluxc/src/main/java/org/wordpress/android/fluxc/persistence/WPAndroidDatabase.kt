@@ -85,6 +85,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 .addMigrations(MIGRATION_3_4)
                 .addMigrations(MIGRATION_5_6)
                 .addMigrations(MIGRATION_7_8)
+                .addMigrations(MIGRATION_14_15)
                 .build()
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
