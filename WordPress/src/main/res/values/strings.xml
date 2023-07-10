@@ -3482,6 +3482,8 @@
     <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Add New Category</string>
     <string name="prepublishing_nudges_add_category_button">Add Category</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Increase your traffic by auto-sharing your posts with your friends on social media.</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Connect your social profiles</string>
 
     <!-- Modal Layout Picker -->
     <string name="mlp_choose_layout_title">Choose a layout</string>

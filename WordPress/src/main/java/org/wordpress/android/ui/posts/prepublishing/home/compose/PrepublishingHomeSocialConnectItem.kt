@@ -50,7 +50,7 @@ fun PrepublishingHomeSocialConnectItem(
         Spacer(Modifier.height(Margin.ExtraLarge.value))
 
         Text(
-            text = "Increase your traffic by auto-sharing your posts with your friends on social media.",
+            text = stringResource(R.string.prepublishing_nudges_social_new_connection_text),
             style = MaterialTheme.typography.body1.copy(color = AppColor.Gray30),
             modifier = Modifier.fillMaxWidth(),
         )
@@ -63,7 +63,7 @@ fun PrepublishingHomeSocialConnectItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             SecondaryButton(
-                text = "Connect your social profiles",
+                text = stringResource(R.string.prepublishing_nudges_social_new_connection_cta),
                 onClick = onConnectClick,
                 padding = PaddingValues(0.dp),
                 contentPadding = PaddingValues(0.dp),
