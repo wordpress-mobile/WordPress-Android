@@ -210,9 +210,9 @@ class PrepublishingHomeViewModel @Inject constructor(
                 title = UiStringText("Sharing to 2 of 3 accounts"),
                 description = UiStringText("27/30 social shares remaining"),
                 isLowOnShares = false,
-                connectionIcons = listOf(
-                    SocialUiState.ConnectionIcon(R.drawable.ic_social_facebook, isEnabled = false),
-                    SocialUiState.ConnectionIcon(R.drawable.ic_social_tumblr)
+                serviceIcons = listOf(
+                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_facebook, isEnabled = false),
+                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_tumblr)
                 ),
                 onItemClicked = { /* TODO in other PR: open social section in bottom sheet */ },
             )

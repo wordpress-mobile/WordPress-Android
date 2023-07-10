@@ -65,10 +65,10 @@ sealed class PrepublishingHomeItemUiState {
         val title: UiString,
         val description: UiString,
         val isLowOnShares: Boolean,
-        val connectionIcons: List<ConnectionIcon>,
+        val serviceIcons: List<ConnectionServiceIcon>,
         val onItemClicked: (() -> Unit)?
     ) : PrepublishingHomeItemUiState() {
-        data class ConnectionIcon(
+        data class ConnectionServiceIcon(
             @DrawableRes val iconRes: Int,
             val isEnabled: Boolean = true
         )

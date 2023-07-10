@@ -36,13 +36,13 @@ import org.wordpress.android.ui.compose.unit.Margin
 fun PrepublishingHomeSocialItem(
     title: String,
     description: String,
-    avatarModels: List<TrainOfIconsModel>,
+    iconModels: List<TrainOfIconsModel>,
     modifier: Modifier = Modifier,
     isLowOnShares: Boolean = false,
     backgroundColor: Color = MaterialTheme.colors.surface
 ) {
     SocialContainer(
-        avatarCount = avatarModels.size,
+        iconCount = iconModels.size,
         modifier = Modifier
             .background(backgroundColor)
             .then(modifier),
@@ -63,21 +63,21 @@ fun PrepublishingHomeSocialItem(
             )
         }
 
-        if (avatarModels.isNotEmpty()) {
+        if (iconModels.isNotEmpty()) {
             Spacer(modifier = Modifier.size(Margin.Medium.value))
 
-            TrainOfIcons(iconModels = avatarModels, iconBorderColor = backgroundColor)
+            TrainOfIcons(iconModels = iconModels, iconBorderColor = backgroundColor)
         }
     }
 }
 
 @Composable
 private fun SocialContainer(
-    avatarCount: Int,
+    iconCount: Int,
     modifier: Modifier = Modifier,
     content: @Composable (textColumnModifier: Modifier) -> Unit,
 ) {
-    if (avatarCount > 2) {
+    if (iconCount > 2) {
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
             modifier = modifier,
@@ -153,7 +153,7 @@ private fun PrepublishingHomeSocialItemPreview() {
             PrepublishingHomeSocialItem(
                 title = "Sharing to 2 of 3 accounts",
                 description = "27/30 social shares remaining",
-                avatarModels = listOf(
+                iconModels = listOf(
                     TrainOfIconsModel(R.drawable.ic_social_tumblr, ContentAlpha.disabled),
                     TrainOfIconsModel(R.drawable.ic_social_facebook),
                 ),
@@ -163,7 +163,7 @@ private fun PrepublishingHomeSocialItemPreview() {
             PrepublishingHomeSocialItem(
                 title = "Sharing to 2 of 3 accounts",
                 description = "27/30 social shares remaining with a very long text that should be truncated",
-                avatarModels = listOf(
+                iconModels = listOf(
                     TrainOfIconsModel(R.drawable.ic_social_tumblr, ContentAlpha.disabled),
                     TrainOfIconsModel(R.drawable.ic_social_facebook),
                 ),
@@ -175,7 +175,7 @@ private fun PrepublishingHomeSocialItemPreview() {
             PrepublishingHomeSocialItem(
                 title = "Sharing to 3 of 5 accounts",
                 description = "27/30 social shares remaining",
-                avatarModels = listOf(
+                iconModels = listOf(
                     TrainOfIconsModel(R.drawable.ic_social_facebook, ContentAlpha.disabled),
                     TrainOfIconsModel(R.drawable.ic_social_mastodon, ContentAlpha.disabled),
                     TrainOfIconsModel(R.drawable.ic_social_twitter),
@@ -192,7 +192,7 @@ private fun PrepublishingHomeSocialItemPreview() {
                 title = "Not sharing to social",
                 description = "0/30 social shares remaining",
                 isLowOnShares = true,
-                avatarModels = listOf(
+                iconModels = listOf(
                     TrainOfIconsModel(R.drawable.ic_social_tumblr, ContentAlpha.disabled),
                 ),
                 modifier = Modifier.fillMaxWidth().padding(16.dp)

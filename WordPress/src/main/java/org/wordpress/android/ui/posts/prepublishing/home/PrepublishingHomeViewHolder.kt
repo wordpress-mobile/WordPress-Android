@@ -117,7 +117,7 @@ sealed class PrepublishingHomeViewHolder(
                     mutableStateOf(uiState as SocialUiState)
                 }
 
-                val avatarModels = state.connectionIcons.map { icon ->
+                val serviceIconModels = state.serviceIcons.map { icon ->
                     TrainOfIconsModel(
                         data = icon.iconRes,
                         alpha = if (icon.isEnabled) 1f else ContentAlpha.disabled,
@@ -128,7 +128,7 @@ sealed class PrepublishingHomeViewHolder(
                     PrepublishingHomeSocialItem(
                         title = state.title.asString(),
                         description = state.description.asString(),
-                        avatarModels = avatarModels,
+                        iconModels = serviceIconModels,
                         isLowOnShares = state.isLowOnShares,
                         backgroundColor = MaterialTheme.colors.surface.withBottomSheetElevation(),
                         modifier = Modifier.fillMaxWidth(),
