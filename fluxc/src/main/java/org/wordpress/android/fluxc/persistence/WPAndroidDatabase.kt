@@ -208,15 +208,5 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 }
             }
         }
-
-        val MIGRATION_14_15 = object : Migration(14,15){
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.apply {
-                    execSQL(
-                        "DROP TABLE IF EXISTS `BlazeStatus`"
-                    )
-                }
-            }
-        }
     }
 }
