@@ -21,7 +21,6 @@ import java.lang.annotation.Retention;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.List;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
