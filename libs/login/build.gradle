@@ -21,6 +21,8 @@ repositories {
 }
 
 android {
+    namespace "org.wordpress.android.login"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
