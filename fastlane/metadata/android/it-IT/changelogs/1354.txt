@@ -1,0 +1,4 @@
+22.7:
+- Abbiamo dato al pulsante di azione mobile forma, colore e stile completamente nuovi.
+- I blocchi immagine ora mostrano le proporzioni corrette, indipendentemente dal fatto che l'immagine abbia o meno larghezza e altezza impostate.
+- Abbiamo spostato la sezione "Io" con il tuo avatar nel menu principale in "Gestisci".

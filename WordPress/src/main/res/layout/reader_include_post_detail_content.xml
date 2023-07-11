@@ -11,12 +11,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <org.wordpress.android.ui.reader.views.ReaderWebView
-        android:id="@+id/reader_webview"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:scrollbars="none" />
+        android:layout_height="wrap_content">
+
+        <org.wordpress.android.ui.reader.views.ReaderWebView
+            android:id="@+id/reader_webview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:scrollbars="none" />
+
+        <ProgressBar
+            android:id="@+id/reader_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_extra_large"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/excerpt_footer"

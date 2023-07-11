@@ -8,6 +8,7 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import junit.framework.TestCase
 import org.junit.Assert
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.support.WPSupportUtils
 import org.wordpress.android.editor.R as EditorR
@@ -109,7 +110,9 @@ class BlockEditorPage {
 
     fun confirmPublish(): BlockEditorPage {
         WPSupportUtils.clickOn(Espresso.onView(ViewMatchers.withText(R.string.publish_now)))
-        dismissBloggingRemindersAlertIfNeeded()
+        if (BuildConfig.IS_JETPACK_APP) {
+            dismissBloggingRemindersAlertIfNeeded()
+        }
         return this
     }
 

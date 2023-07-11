@@ -16,8 +16,10 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,19 +38,19 @@ fun PrepublishingHomeSocialItem(
     description: String,
     avatarModels: List<TrainOfIconsModel>,
     modifier: Modifier = Modifier,
-    isLowOnShares: Boolean = false
+    isLowOnShares: Boolean = false,
+    backgroundColor: Color = MaterialTheme.colors.surface
 ) {
     SocialContainer(
         avatarCount = avatarModels.size,
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colors.surface)
-            .padding(Margin.ExtraLarge.value),
-    ) {
-        Column {
+        modifier = Modifier
+            .background(backgroundColor)
+            .then(modifier),
+    ) { textColumnModifier ->
+        Column(modifier = textColumnModifier) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.subtitle1,
+                style = MaterialTheme.typography.body1.copy(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -64,7 +66,7 @@ fun PrepublishingHomeSocialItem(
         if (avatarModels.isNotEmpty()) {
             Spacer(modifier = Modifier.size(Margin.Medium.value))
 
-            TrainOfIcons(iconModels = avatarModels)
+            TrainOfIcons(iconModels = avatarModels, iconBorderColor = backgroundColor)
         }
     }
 }
@@ -73,14 +75,14 @@ fun PrepublishingHomeSocialItem(
 private fun SocialContainer(
     avatarCount: Int,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
+    content: @Composable (textColumnModifier: Modifier) -> Unit,
 ) {
     if (avatarCount > 2) {
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
             modifier = modifier,
         ) {
-            content()
+            content(Modifier)
         }
     } else {
         Row(
@@ -88,22 +90,25 @@ private fun SocialContainer(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier,
         ) {
-            content()
+            content(Modifier.weight(1f))
         }
     }
 }
 
+private val warningColor: Color
+    @ReadOnlyComposable
+    @Composable
+    get() = AppColor.Yellow50
+
 private val lowOnSharesDescriptionStyle: TextStyle
     @Composable
-    get() = MaterialTheme.typography.body2.copy(
-        color = AppColor.Yellow50,
-    )
+    get() = MaterialTheme.typography.body1
+        .copy(color = warningColor)
 
 private val defaultDescriptionStyle: TextStyle
     @Composable
-    get() = MaterialTheme.typography.body2.copy(
-        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
-    )
+    get() = MaterialTheme.typography.body1
+        .copy(color = AppColor.Gray30)
 
 @Composable
 private fun DescriptionText(
@@ -120,7 +125,7 @@ private fun DescriptionText(
             Icon(
                 painterResource(R.drawable.ic_notice_white_24dp),
                 contentDescription = null,
-                tint = AppColor.Yellow50,
+                tint = warningColor,
                 modifier = Modifier.size(24.dp),
             )
         }
@@ -134,16 +139,16 @@ private fun DescriptionText(
     }
 }
 
-@Preview(name = "Light Mode")
+@Preview(name = "Light Mode", locale = "en")
 @Preview(name = "Dark Mode", uiMode = UI_MODE_NIGHT_YES)
 @Preview(name = "RTL", locale = "ar")
 @Composable
-fun PrepublishingHomeSocialItemPreview() {
+private fun PrepublishingHomeSocialItemPreview() {
     AppTheme {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.background)
+                .background(MaterialTheme.colors.surface)
         ) {
             PrepublishingHomeSocialItem(
                 title = "Sharing to 2 of 3 accounts",
@@ -152,7 +157,17 @@ fun PrepublishingHomeSocialItemPreview() {
                     TrainOfIconsModel(R.drawable.ic_social_tumblr, ContentAlpha.disabled),
                     TrainOfIconsModel(R.drawable.ic_social_facebook),
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
+            )
+
+            PrepublishingHomeSocialItem(
+                title = "Sharing to 2 of 3 accounts",
+                description = "27/30 social shares remaining with a very long text that should be truncated",
+                avatarModels = listOf(
+                    TrainOfIconsModel(R.drawable.ic_social_tumblr, ContentAlpha.disabled),
+                    TrainOfIconsModel(R.drawable.ic_social_facebook),
+                ),
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
             )
 
             Divider()
@@ -168,7 +183,7 @@ fun PrepublishingHomeSocialItemPreview() {
                     TrainOfIconsModel(R.drawable.ic_social_instagram),
                     TrainOfIconsModel(R.drawable.ic_social_tumblr),
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
             )
 
             Divider()
@@ -180,7 +195,7 @@ fun PrepublishingHomeSocialItemPreview() {
                 avatarModels = listOf(
                     TrainOfIconsModel(R.drawable.ic_social_tumblr, ContentAlpha.disabled),
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
             )
         }
     }

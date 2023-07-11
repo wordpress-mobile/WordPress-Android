@@ -1,2 +1,0 @@
-22.6:
-Kilitli ve yüklü: Artık düzenleyicide devre dışı bırakılan hücreler için bir kilit simgesi bulunuyor. Bu simge sayesinde hücrelerin kullanım dışı olduğunu anlayabilirsiniz.

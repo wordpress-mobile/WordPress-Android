@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.fluxc.store.MediaStore
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -86,6 +87,9 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var editorThemeStore: EditorThemeStore
 
+    @Mock
+    lateinit var blazeFeatureUtils: BlazeFeatureUtils
+
     private lateinit var viewModel: PageListViewModel
     private val site = SiteModel()
     private val pageListState = MutableLiveData<PageListState>()
@@ -105,7 +109,8 @@ class PageListViewModelTest : BaseUnitTest() {
             globalStyleSupportFeatureConfig,
             editorThemeStore,
             siteEditorMVPFeatureConfig,
-            testDispatcher(),
+            blazeFeatureUtils,
+            testDispatcher()
         )
 
         whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(
@@ -134,9 +139,6 @@ class PageListViewModelTest : BaseUnitTest() {
         whenever(pagesViewModel.authorUIState).thenReturn(authorFilterState)
         val accountModel = AccountModel()
         accountModel.userId = 4
-
-        val blazeSiteEligibility = MutableLiveData<Boolean>()
-        whenever(pagesViewModel.blazeSiteEligibility).thenReturn(blazeSiteEligibility)
 
         doAnswer {
             actions.add(it.getArgument(0))
