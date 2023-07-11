@@ -9,6 +9,8 @@ plugins {
 android {
     useLibrary 'org.apache.http.legacy'
 
+    namespace "org.wordpress.android.fluxc"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
