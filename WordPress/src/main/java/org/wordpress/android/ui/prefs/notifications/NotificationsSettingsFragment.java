@@ -82,7 +82,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPermissionUtils;
-import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 
 import java.util.ArrayList;
@@ -139,7 +138,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject FollowedBlogsProvider mFollowedBlogsProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject UiHelpers mUiHelpers;
 
@@ -996,10 +994,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     }
 
     private final BloggingRemindersProvider mBloggingRemindersProvider = new BloggingRemindersProvider() {
-        @Override public boolean isEnabled() {
-            return mBloggingRemindersFeatureConfig.isEnabled();
-        }
-
         @Override public String getSummary(long blogId) {
             UiString uiString = mBloggingRemindersSummariesBySiteId.get(blogId);
             return uiString != null ? mUiHelpers.getTextOfUiString(getContext(), uiString).toString() : null;
