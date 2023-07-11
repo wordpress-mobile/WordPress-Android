@@ -68,7 +68,7 @@ steps:
         command: ".buildkite/commands/run-unit-tests.sh wordpress"
         plugins: *common_plugins_with_test_collector
         env:
-          BUILDKITE_PLUGIN_TEST_COLLECTOR_API_TOKEN_ENV_NAME: $BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_WORDPRESS
+          BUILDKITE_PLUGIN_TEST_COLLECTOR_API_TOKEN_ENV_NAME: BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_WORDPRESS
         artifact_paths:
           - "**/build/test-results/*/*.xml"
 
@@ -76,7 +76,7 @@ steps:
         command: ".buildkite/commands/run-unit-tests.sh processors"
         plugins: *common_plugins_with_test_collector
         env:
-          BUILDKITE_PLUGIN_TEST_COLLECTOR_API_TOKEN_ENV_NAME: $BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_PROCESSORS
+          BUILDKITE_PLUGIN_TEST_COLLECTOR_API_TOKEN_ENV_NAME: BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_PROCESSORS
         artifact_paths:
           - "**/build/test-results/*/*.xml"
 
@@ -84,7 +84,7 @@ steps:
         command: ".buildkite/commands/run-unit-tests.sh image-editor"
         plugins: *common_plugins_with_test_collector
         env:
-          BUILDKITE_PLUGIN_TEST_COLLECTOR_API_TOKEN_ENV_NAME: $BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_IMAGE_EDITOR
+          BUILDKITE_PLUGIN_TEST_COLLECTOR_API_TOKEN_ENV_NAME: BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_IMAGE_EDITOR
         artifact_paths:
           - "**/build/test-results/*/*.xml"
 
@@ -97,7 +97,7 @@ steps:
         command: ".buildkite/commands/run-instrumented-tests.sh wordpress"
         plugins: *common_plugins_with_test_collector
         env:
-          BUILDKITE_PLUGIN_TEST_COLLECTOR_API_TOKEN_ENV_NAME: $BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_WORDPRESS
+          BUILDKITE_PLUGIN_TEST_COLLECTOR_API_TOKEN_ENV_NAME: BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_WORDPRESS
         artifact_paths:
           - "**/build/instrumented-tests/**/*"
 
@@ -105,7 +105,7 @@ steps:
         command: ".buildkite/commands/run-instrumented-tests.sh jetpack"
         plugins: *common_plugins_with_test_collector
         env:
-          BUILDKITE_PLUGIN_TEST_COLLECTOR_API_TOKEN_ENV_NAME: $BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_JETPACK
+          BUILDKITE_PLUGIN_TEST_COLLECTOR_API_TOKEN_ENV_NAME: BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_JETPACK
         artifact_paths:
           - "**/build/instrumented-tests/**/*"
 
