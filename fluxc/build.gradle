@@ -36,6 +36,10 @@ android {
     testOptions {
         unitTests.includeAndroidResources = true
     }
+
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 androidExtensions {
