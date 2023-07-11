@@ -1968,7 +1968,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         mUsernamePref.setEnabled(true);
         mPasswordPref.setEnabled(true);
         PreferenceGroup group = (PreferenceGroup) findPreference(getString(R.string.pref_key_site_general));
-        if (group != null) { group.removeAll();}
+        if (group != null) {
+            group.removeAll();
+        }
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
