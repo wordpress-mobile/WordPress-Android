@@ -34,6 +34,13 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
     }
 
+    buildTypes {
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+        }
+    }
+
     // Avoid 'duplicate files during packaging of APK' errors
     packagingOptions {
         exclude 'LICENSE.txt'
