@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.compose.components
+package org.wordpress.android.ui.compose.components.card
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
