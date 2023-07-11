@@ -9,7 +9,7 @@ class GetIsSocialSharingLimitedUseCase @Inject constructor(
 ) {
     fun execute(siteId: Long): Boolean =
         siteStore.getSiteBySiteId(siteId)?.run {
-            !isHostedAtWPCom && planActiveFeaturesList?.doesNotContain(FEATURE_SOCIAL_SHARES_1000) ?: false
+            !isHostedAtWPCom && (planActiveFeatures?.split(",")?.doesNotContain(FEATURE_SOCIAL_SHARES_1000) ?: true)
         } ?: false
 }
 

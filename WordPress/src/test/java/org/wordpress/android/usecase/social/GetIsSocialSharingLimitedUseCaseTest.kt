@@ -27,6 +27,15 @@ class GetIsSocialSharingLimitedUseCaseTest {
     }
 
     @Test
+    fun `Should return FALSE if site is null`() {
+        val siteModel = null
+        whenever(siteStore.getSiteBySiteId(any())).thenReturn(siteModel)
+        val expected = false
+        val actual = classToTest.execute(1L)
+        assertEquals(expected, actual)
+    }
+
+    @Test
     fun `Should return FALSE if site has social-shares-1000 feature active`() {
         val siteModel = SiteModel().apply {
             siteId = 1L
@@ -35,6 +44,19 @@ class GetIsSocialSharingLimitedUseCaseTest {
         }
         whenever(siteStore.getSiteBySiteId(any())).thenReturn(siteModel)
         val expected = false
+        val actual = classToTest.execute(1L)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Should return TRUE if active features list is null AND is self hosted`() {
+        val siteModel = SiteModel().apply {
+            siteId = 1L
+            setIsJetpackInstalled(true)
+            planActiveFeatures = null
+        }
+        whenever(siteStore.getSiteBySiteId(any())).thenReturn(siteModel)
+        val expected = true
         val actual = classToTest.execute(1L)
         assertEquals(expected, actual)
     }
