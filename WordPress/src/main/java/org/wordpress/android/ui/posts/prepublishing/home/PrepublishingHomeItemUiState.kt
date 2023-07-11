@@ -61,13 +61,23 @@ sealed class PrepublishingHomeItemUiState {
         )
     }
 
-    data class SocialUiState(
-        val title: UiString,
-        val description: UiString,
-        val isLowOnShares: Boolean,
-        val serviceIcons: List<ConnectionServiceIcon>,
-        val onItemClicked: (() -> Unit)?
-    ) : PrepublishingHomeItemUiState() {
+    sealed class SocialUiState : PrepublishingHomeItemUiState() {
+        abstract val serviceIcons: List<ConnectionServiceIcon>
+
+        data class SocialSharingUiState(
+            override val serviceIcons: List<ConnectionServiceIcon>,
+            val title: UiString,
+            val description: UiString,
+            val isLowOnShares: Boolean,
+            val onItemClicked: (() -> Unit),
+        ) : SocialUiState()
+
+        data class SocialConnectPromptUiState(
+            override val serviceIcons: List<ConnectionServiceIcon>,
+            val onConnectClicked: (() -> Unit),
+            val onDismissClicked: (() -> Unit),
+        ) : SocialUiState()
+
         data class ConnectionServiceIcon(
             @DrawableRes val iconRes: Int,
             val isEnabled: Boolean = true

@@ -7,6 +7,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
@@ -26,6 +28,7 @@ import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUi
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
+import org.wordpress.android.ui.posts.prepublishing.home.compose.PrepublishingHomeSocialConnectItem
 import org.wordpress.android.ui.posts.prepublishing.home.compose.PrepublishingHomeSocialItem
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -112,9 +115,13 @@ sealed class PrepublishingHomeViewHolder(
         private val composeView: ComposeView = itemView.findViewById(R.id.prepublishing_compose_view)
 
         override fun onBind(uiState: PrepublishingHomeItemUiState) {
+            require(uiState is SocialUiState) {
+                "PrepublishingSocialItemViewHolder can only bind SocialUiState"
+            }
+
             composeView.setContent {
                 val state: SocialUiState by remember(uiState) {
-                    mutableStateOf(uiState as SocialUiState)
+                    mutableStateOf(uiState)
                 }
 
                 val serviceIconModels = state.serviceIcons.map { icon ->
@@ -125,14 +132,32 @@ sealed class PrepublishingHomeViewHolder(
                 }
 
                 AppTheme {
-                    PrepublishingHomeSocialItem(
-                        title = state.title.asString(),
-                        description = state.description.asString(),
-                        iconModels = serviceIconModels,
-                        isLowOnShares = state.isLowOnShares,
-                        backgroundColor = MaterialTheme.colors.surface.withBottomSheetElevation(),
-                        modifier = Modifier.fillMaxWidth(),
-                    )
+                    (state as? SocialUiState.SocialSharingUiState)?.let { sharingState ->
+                        PrepublishingHomeSocialItem(
+                            title = sharingState.title.asString(),
+                            description = sharingState.description.asString(),
+                            iconModels = serviceIconModels,
+                            isLowOnShares = sharingState.isLowOnShares,
+                            backgroundColor = MaterialTheme.colors.surface.withBottomSheetElevation(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null, // no ripple
+                                    onClick = sharingState.onItemClicked,
+                                ),
+                        )
+                    }
+
+                    (state as? SocialUiState.SocialConnectPromptUiState)?.let { promptState ->
+                        PrepublishingHomeSocialConnectItem(
+                            connectionIconModels = serviceIconModels,
+                            onConnectClick = promptState.onConnectClicked,
+                            onDismissClick = promptState.onDismissClicked,
+                            backgroundColor = MaterialTheme.colors.surface.withBottomSheetElevation(),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
         }
