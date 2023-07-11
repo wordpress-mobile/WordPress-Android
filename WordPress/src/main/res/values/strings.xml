@@ -1782,6 +1782,10 @@
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
+    <string name="menu_undo_context">Undo last change</string>
+    <string name="menu_redo_context">Redo last change</string>
+
+    <string name="menu_close_editor">Close editor</string>
     <string name="menu_debug">Debug Menu</string>
     <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
     <string name="menu_content_info">Content structure</string>
