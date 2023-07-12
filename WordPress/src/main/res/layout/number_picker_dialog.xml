@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.SwitchCompat
+    <org.wordpress.android.widgets.WPSwitchCompat
         android:id="@+id/number_picker_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

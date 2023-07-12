@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-13 10:56:43+0000
+Translation-Revision-Date: 2023-06-27 17:53:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_reusable">Reutilizable</string>
+    <string name="privacy_banner_error_save">Se ha producido un error al guardar tus opciones de privacidad.</string>
+    <string name="privacy_banner_save">Guardar</string>
+    <string name="privacy_banner_settings">Ajustes</string>
+    <string name="privacy_banner_analytics_description">Nos permiten optimizar el rendimiento mediante la recopilación de información sobre la forma en que los usuarios interactúan con nuestras aplicaciones para móviles.</string>
+    <string name="privacy_banner_analytics">Analítica</string>
+    <string name="privacy_banner_title">Gestión de la privacidad</string>
+    <string name="privacy_banner_description">Tu privacidad es extremamente importante para nosotros y siempre lo ha sido. Utilizamos, almacenamos y procesamos tus datos personales para optimizar nuestra aplicación (y tu experiencia) de diversas maneras. Algunos usos de tus datos son absolutamente necesarios para que las cosas funcionen, y otros puedes personalizarlos en los Ajustes.</string>
+    <string name="tabbar_accessibility_label_me">Yo. Gestionar los detalles de tu perfil.</string>
     <string name="social_item_message_title">Mensaje</string>
     <string name="gutenberg_native_block_ungrouped">Bloque desagrupado</string>
     <string name="gutenberg_native_block_grouped">Bloque agrupado</string>

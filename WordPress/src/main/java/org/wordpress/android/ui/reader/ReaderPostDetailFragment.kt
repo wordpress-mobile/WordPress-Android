@@ -65,6 +65,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
@@ -121,7 +122,6 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.RtlUtils
@@ -150,6 +150,7 @@ import org.wordpress.android.widgets.WPTextView
 import java.net.HttpURLConnection
 import java.util.EnumSet
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 @AndroidEntryPoint
 @Suppress("LargeClass")
@@ -178,6 +179,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var scrollView: WPScrollView
     private lateinit var layoutFooter: ViewGroup
     private lateinit var readerWebView: ReaderWebView
+    private lateinit var readerProgressBar: ProgressBar
 
     private lateinit var likeFacesTrain: View
     private lateinit var likeProgressBar: ProgressBar
@@ -290,9 +292,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 val isDarkTheme = context.resources.configuration.isDarkTheme()
 
                 val colorAttr = if (isCollapsed || isDarkTheme) {
-                    R.attr.colorOnSurface
+                    MaterialR.attr.colorOnSurface
                 } else {
-                    R.attr.colorSurface
+                    MaterialR.attr.colorSurface
                 }
                 val color = context.getColorFromAttribute(colorAttr)
                 val colorFilter = BlendModeColorFilterCompat
@@ -404,7 +406,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             toolBar.setNavigationOnClickListener { requireActivity().finish() }
             toolBar.setTitle(R.string.reader_title_related_post_detail)
         } else {
-            toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            toolBar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp)
             toolBar.setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         }
     }
@@ -421,6 +423,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         readerWebView.setCustomViewListener(this)
         readerWebView.setUrlClickListener(this)
         readerWebView.setPageFinishedListener(this)
+
+        readerProgressBar = view.findViewById(R.id.reader_progress_bar)
     }
 
     private fun initLikeFacesTrain(view: View) {
@@ -1509,6 +1513,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun showPostInWebView(post: ReaderPost, fragment: Fragment) {
         readerWebView.setIsPrivatePost(post.isPrivate)
         readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))
+        readerProgressBar.visibility = View.VISIBLE
         renderer = ReaderPostRenderer(readerWebView, viewModel.post, readerCssProvider)
 
         // if the post is from private atomic site postpone render until we have a special access cookie
@@ -1542,6 +1547,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (!isAdded) {
             return
         }
+
+        readerProgressBar.visibility = View.GONE
 
         if (url != null && url == "about:blank") {
             // brief delay before showing related posts to give page time to render

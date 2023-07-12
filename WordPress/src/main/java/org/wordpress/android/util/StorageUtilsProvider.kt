@@ -3,13 +3,14 @@ package org.wordpress.android.util
 import android.content.Intent
 import android.provider.Settings
 import androidx.fragment.app.FragmentManager
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.widgets.StorageNotificationDialogFragment
 import org.wordpress.android.widgets.StorageNotificationDialogFragment.DialogLabels
 import javax.inject.Inject
 import javax.inject.Singleton
+import android.R as AndroidR
 
 @Singleton
 class StorageUtilsProvider @Inject constructor(
@@ -32,14 +33,14 @@ class StorageUtilsProvider @Inject constructor(
 
             StorageNotificationDialogFragment.newInstance(
                 dialogLabels = DialogLabels(
-                    title = context.getString(string.storage_utils_dialog_title),
-                    message = context.getString(string.storage_utils_dialog_message),
+                    title = context.getString(R.string.storage_utils_dialog_title),
+                    message = context.getString(R.string.storage_utils_dialog_message),
                     okLabel = if (isInternalStorageSettingsResolved) {
-                        context.getString(string.storage_utils_dialog_ok_button)
+                        context.getString(R.string.storage_utils_dialog_ok_button)
                     } else {
-                        context.getString(android.R.string.ok)
+                        context.getString(AndroidR.string.ok)
                     },
-                    dontShowAgainLabel = context.getString(string.storage_utils_dialog_dont_show_button)
+                    dontShowAgainLabel = context.getString(R.string.storage_utils_dialog_dont_show_button)
                 ),
                 isInternalStorageSettingsResolved = isInternalStorageSettingsResolved,
                 source = source.description

@@ -6,12 +6,10 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
-import org.wordpress.android.ui.posts.PrepublishingNavigationTarget
-import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
-import org.wordpress.android.ui.posts.PrepublishingScreen.PUBLISH
-import org.wordpress.android.ui.posts.PrepublishingScreen.TAGS
-import org.wordpress.android.ui.posts.PrepublishingViewModel
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.HOME
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.PUBLISH
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.TAGS
 import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi

@@ -17,18 +17,22 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.PublishButtonUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PUBLISH
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.TAGS
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState.PublishButtonUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewModel
+import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
@@ -57,6 +61,9 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     lateinit var getCategoriesUseCase: GetCategoriesUseCase
 
     @Mock
+    lateinit var socialFeatureConfig: JetpackSocialFeatureConfig
+
+    @Mock
     lateinit var site: SiteModel
 
     @Before
@@ -70,6 +77,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
             storyRepositoryWrapper,
             updateStoryTitleUseCase,
             getCategoriesUseCase,
+            socialFeatureConfig,
             testDispatcher()
         )
         whenever(
@@ -409,6 +417,42 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         // assert
         assertThat(event).isNotNull
         verify(updateStoryTitleUseCase).updateStoryTitle(eq(storyTitle), any())
+    }
+
+    @Test
+    fun `verify social item is not propagated to prepublishingHomeUiState for post with feature config off`() {
+        // arrange
+        whenever(socialFeatureConfig.isEnabled()).thenReturn(false)
+
+        // act
+        viewModel.start(editPostRepository, site, false)
+
+        // assert
+        assertThat(viewModel.uiState.value?.filterIsInstance(SocialUiState::class.java)?.size).isEqualTo(0)
+    }
+
+    @Test
+    fun `verify social item is propagated to prepublishingHomeUiState for post with feature config on`() {
+        // arrange
+        whenever(socialFeatureConfig.isEnabled()).thenReturn(true)
+
+        // act
+        viewModel.start(mock(), site, false)
+
+        // assert
+        assertThat(viewModel.uiState.value?.filterIsInstance(SocialUiState::class.java)?.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `verify social item is not propagated to prepublishingHomeUiState for page`() {
+        // arrange
+        whenever(editPostRepository.isPage).thenReturn(true)
+
+        // act
+        viewModel.start(editPostRepository, site, false)
+
+        // assert
+        assertThat(viewModel.uiState.value?.filterIsInstance(SocialUiState::class.java)?.size).isEqualTo(0)
     }
 
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()

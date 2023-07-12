@@ -11,7 +11,6 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -269,7 +268,7 @@ class StatsUtilsTest {
         val value = 20L
         val positive = true
         val expectedChange = "+15 (300%)"
-        whenever(resourceProvider.getString(eq(string.stats_traffic_increase), eq("15"), eq("300")))
+        whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("15"), eq("300")))
             .thenReturn(expectedChange)
 
         val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
@@ -284,7 +283,7 @@ class StatsUtilsTest {
         val value = 20L
         val positive = true
         val expectedChange = "+20 (∞%)"
-        whenever(resourceProvider.getString(eq(string.stats_traffic_increase), eq("20"), eq("∞")))
+        whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("20"), eq("∞")))
             .thenReturn(expectedChange)
 
         val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
@@ -299,7 +298,7 @@ class StatsUtilsTest {
         val value = 20L
         val positive = false
         val expectedChange = "-10 (-33%)"
-        whenever(resourceProvider.getString(eq(string.stats_traffic_change), eq("-10"), eq("-33")))
+        whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-10"), eq("-33")))
             .thenReturn(expectedChange)
 
         val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
@@ -314,7 +313,7 @@ class StatsUtilsTest {
         val value = 0L
         val positive = false
         val expectedChange = "-20 (-100%)"
-        whenever(resourceProvider.getString(eq(string.stats_traffic_change), eq("-20"), eq("-100")))
+        whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-20"), eq("-100")))
             .thenReturn(expectedChange)
 
         val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
@@ -328,7 +327,7 @@ class StatsUtilsTest {
         val value = 20L
         val positive = true
         val expectedChange = "+0 (0%)"
-        whenever(resourceProvider.getString(eq(string.stats_traffic_increase), eq("0"), eq("0")))
+        whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("0"), eq("0")))
             .thenReturn(expectedChange)
 
         val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)

@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import org.wordpress.android.R
-import org.wordpress.android.R.color
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -37,8 +35,8 @@ class ViewsAndVisitorsMapper
     private val totalStatsMapper: TotalStatsMapper
 ) {
     private val units = listOf(
-        string.stats_views,
-        string.stats_visitors
+        R.string.stats_views,
+        R.string.stats_visitors
     )
 
     enum class SelectedType(val value: Int) {
@@ -48,8 +46,8 @@ class ViewsAndVisitorsMapper
         companion object {
             fun valueOf(value: Int): SelectedType? = values().find { it.value == value }
             fun getColor(selectedType: Int): Int = when (selectedType) {
-                0 -> color.blue_50
-                else -> color.purple_50
+                0 -> R.color.blue_50
+                else -> R.color.purple_50
             }
 
             fun getFillDrawable(selectedType: Int): Int = when (selectedType) {
@@ -60,13 +58,13 @@ class ViewsAndVisitorsMapper
     }
 
     fun buildChartLegendsBlue() = ChartLegendsBlue(
-        string.stats_timeframe_last_seven_days,
-        string.stats_timeframe_previous_seven_days
+        R.string.stats_timeframe_last_seven_days,
+        R.string.stats_timeframe_previous_seven_days
     )
 
     fun buildChartLegendsPurple() = ChartLegendsPurple(
-        string.stats_timeframe_last_seven_days,
-        string.stats_timeframe_previous_seven_days
+        R.string.stats_timeframe_last_seven_days,
+        R.string.stats_timeframe_previous_seven_days
     )
 
     fun buildTitle(
@@ -83,7 +81,7 @@ class ViewsAndVisitorsMapper
             value1 = statsUtils.toFormattedString(thisWeekCount, startValue),
             unit1 = units[selectedPosition],
             contentDescription1 = resourceProvider.getString(
-                string.stats_overview_content_description,
+                R.string.stats_overview_content_description,
                 thisWeekCount,
                 resourceProvider.getString(units[selectedPosition]),
                 statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
@@ -92,7 +90,7 @@ class ViewsAndVisitorsMapper
             value2 = statsUtils.toFormattedString(prevWeekCount, startValue),
             unit2 = units[selectedPosition],
             contentDescription2 = resourceProvider.getString(
-                string.stats_overview_content_description,
+                R.string.stats_overview_content_description,
                 prevWeekCount,
                 resourceProvider.getString(units[selectedPosition]),
                 statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
@@ -115,7 +113,7 @@ class ViewsAndVisitorsMapper
             value1 = statsUtils.toFormattedString(thisWeekCount, startValue),
             unit1 = units[selectedPosition],
             contentDescription1 = resourceProvider.getString(
-                string.stats_overview_content_description,
+                R.string.stats_overview_content_description,
                 thisWeekCount,
                 resourceProvider.getString(units[selectedPosition]),
                 statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
@@ -124,7 +122,7 @@ class ViewsAndVisitorsMapper
             value2 = statsUtils.toFormattedString(prevWeekCount, startValue),
             unit2 = units[selectedPosition],
             contentDescription2 = resourceProvider.getString(
-                string.stats_overview_content_description,
+                R.string.stats_overview_content_description,
                 prevWeekCount,
                 resourceProvider.getString(units[selectedPosition]),
                 statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
@@ -161,8 +159,8 @@ class ViewsAndVisitorsMapper
         val result = mutableListOf<BlockListItem>()
 
         val entryType = when (SelectedType.valueOf(selectedType)) {
-            Visitors -> string.stats_visitors
-            else -> string.stats_views
+            Visitors -> R.string.stats_visitors
+            else -> R.string.stats_views
         }
 
         val contentDescriptions = statsUtils.getLineChartEntryContentDescriptions(
@@ -193,7 +191,7 @@ class ViewsAndVisitorsMapper
         if (thisWeekCount <= 0 || prevWeekCount <= 0) {
             return Text(
                 text = resourceProvider.getString(
-                    string.stats_insights_views_and_visitors_visitors_empty_state,
+                    R.string.stats_insights_views_and_visitors_visitors_empty_state,
                     EXTERNAL_LINK_ICON_TOKEN
                 ),
                 links = listOf(
@@ -212,24 +210,24 @@ class ViewsAndVisitorsMapper
         val stringRes = when (SelectedType.valueOf(selectedPosition)) {
             Views -> {
                 when {
-                    positive -> string.stats_insights_views_and_visitors_seven_days_views_positive
-                    else -> string.stats_insights_views_and_visitors_seven_days_views_negative
+                    positive -> R.string.stats_insights_views_and_visitors_seven_days_views_positive
+                    else -> R.string.stats_insights_views_and_visitors_seven_days_views_negative
                 }
             }
             Visitors -> {
                 when {
-                    positive -> string.stats_insights_views_and_visitors_seven_days_visitors_positive
-                    else -> string.stats_insights_views_and_visitors_seven_days_visitors_negative
+                    positive -> R.string.stats_insights_views_and_visitors_seven_days_visitors_positive
+                    else -> R.string.stats_insights_views_and_visitors_seven_days_visitors_negative
                 }
             }
-            else -> string.stats_insights_views_and_visitors_seven_days_views_positive
+            else -> R.string.stats_insights_views_and_visitors_seven_days_views_positive
         }
 
         return Text(
             text = resourceProvider.getString(stringRes, change),
             color = when {
-                positive -> mapOf(color.stats_color_positive to change)
-                else -> mapOf(color.stats_color_negative to change)
+                positive -> mapOf(R.color.stats_color_positive to change)
+                else -> mapOf(R.color.stats_color_negative to change)
             }
         )
     }
@@ -244,7 +242,7 @@ class ViewsAndVisitorsMapper
         if (thisWeekCount <= 0 || prevWeekCount <= 0) {
             return Text(
                 text = resourceProvider.getString(
-                    string.stats_insights_views_and_visitors_visitors_empty_state,
+                    R.string.stats_insights_views_and_visitors_visitors_empty_state,
                     EXTERNAL_LINK_ICON_TOKEN
                 ),
                 links = listOf(
@@ -263,24 +261,24 @@ class ViewsAndVisitorsMapper
         val stringRes = when (SelectedType.valueOf(selectedPosition)) {
             Views -> {
                 when {
-                    positive -> string.stats_insights_views_and_visitors_seven_days_views_positive
-                    else -> string.stats_insights_views_and_visitors_seven_days_views_negative
+                    positive -> R.string.stats_insights_views_and_visitors_seven_days_views_positive
+                    else -> R.string.stats_insights_views_and_visitors_seven_days_views_negative
                 }
             }
             Visitors -> {
                 when {
-                    positive -> string.stats_insights_views_and_visitors_seven_days_visitors_positive
-                    else -> string.stats_insights_views_and_visitors_seven_days_visitors_negative
+                    positive -> R.string.stats_insights_views_and_visitors_seven_days_visitors_positive
+                    else -> R.string.stats_insights_views_and_visitors_seven_days_visitors_negative
                 }
             }
-            else -> string.stats_insights_views_and_visitors_seven_days_views_positive
+            else -> R.string.stats_insights_views_and_visitors_seven_days_views_positive
         }
 
         return Text(
             text = resourceProvider.getString(stringRes, change),
             color = when {
-                positive -> mapOf(color.stats_color_positive to change)
-                else -> mapOf(color.stats_color_negative to change)
+                positive -> mapOf(R.color.stats_color_positive to change)
+                else -> mapOf(R.color.stats_color_negative to change)
             }
         )
     }
@@ -292,16 +290,16 @@ class ViewsAndVisitorsMapper
         return Chips(
             listOf(
                 Chip(
-                    string.stats_views,
+                    R.string.stats_views,
                     contentDescriptionHelper.buildContentDescription(
-                        string.stats_views,
+                        R.string.stats_views,
                         0
                     )
                 ),
                 Chip(
-                    string.stats_visitors,
+                    R.string.stats_visitors,
                     contentDescriptionHelper.buildContentDescription(
-                        string.stats_visitors,
+                        R.string.stats_visitors,
                         1
                     )
                 )

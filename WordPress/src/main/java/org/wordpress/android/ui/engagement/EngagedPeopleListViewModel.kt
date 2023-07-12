@@ -6,7 +6,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.engagement.EngageItem.LikedItem
@@ -230,7 +230,7 @@ class EngagedPeopleListViewModel @Inject constructor(
             showEmptyState = showEmptyState,
             emptyStateTitle = emptyStateTitle,
             emptyStateAction = emptyStateAction,
-            emptyStateButtonText = emptyStateAction?.let { UiStringRes(string.retry) }
+            emptyStateButtonText = emptyStateAction?.let { UiStringRes(R.string.retry) }
         )
     }
 

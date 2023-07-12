@@ -292,8 +292,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mFormattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
         mFormattingToolbar.setExpanded(mIsToolbarExpanded);
 
-        View mediaCollapseButton = mFormattingToolbar.findViewById(R.id.format_bar_button_media_collapsed);
-        View mediaExpandButton = mFormattingToolbar.findViewById(R.id.format_bar_button_media_expanded);
+        View mediaCollapseButton = mFormattingToolbar.findViewById(
+                org.wordpress.aztec.R.id.format_bar_button_media_collapsed
+        );
+        View mediaExpandButton = mFormattingToolbar.findViewById(
+                org.wordpress.aztec.R.id.format_bar_button_media_expanded
+        );
 
         mediaCollapseButton.setBackgroundTintList(ContextCompat
                 .getColorStateList(mediaExpandButton.getContext(), R.color.media_button_background_tint_selector));
@@ -977,7 +981,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.AttributePredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
         Drawable iconDrawable = getResources().getDrawable(R.drawable.media_retry_image);
-        float textSize = getResources().getDimension(R.dimen.text_header);
+        float textSize = getResources().getDimension(org.wordpress.aztec.R.dimen.text_header);
         TextDrawable textDrawable = new TextDrawable(getResources(),
                 getString(R.string.editor_failed_to_insert_media_tap_to_retry), textSize);
         // Divide icon height by 2 and shift the text vertically (note: both elements are vertically centered)
@@ -1674,6 +1678,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override public void showEditorHelp() {
+    }
+
+    @Override public void onUndoPressed() {
+    }
+
+    @Override public void onRedoPressed() {
     }
 
     private void onMediaTapped(@NonNull final AztecAttributes attrs, int naturalWidth, int naturalHeight,

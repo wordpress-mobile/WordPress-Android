@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-31 16:54:30+0000
+Translation-Revision-Date: 2023-06-28 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_reusable">לשימוש חוזר</string>
+    <string name="privacy_banner_error_save">אירעה שגיאה בשמירה של בחירות הפרטיות שלך.</string>
+    <string name="privacy_banner_save">לשמור</string>
+    <string name="privacy_banner_settings">הגדרות</string>
+    <string name="privacy_banner_analytics_description">אנחנו זקוקים לאישורך כדי לבצע אופטימיזציה של ביצועים על ידי איסוף מידע לגבי האופן שבו משתמשים יוצרים אינטראקציה עם האפליקציות שלנו למכשירים ניידים.</string>
+    <string name="privacy_banner_analytics">ניתוח סטטיסטי</string>
+    <string name="privacy_banner_title">ניהול פרטיות</string>
+    <string name="privacy_banner_description">הפרטיות שלך חשובה לנו מאוד, וכך היה תמיד. אנחנו משתמשים בנתונים האישיים שלך, מאחסנים ומעבדים אותם כדי לשפר את האפליקציה שלנו (ואת החוויה שלך) בדרכים שונות. יש שימושים בנתונים שאנחנו מחויבים לעשות כדי לאפשר פעילות תקינה של השירות, ויש שימושים שבאפשרותך לשנות מהמקטע \'הגדרות\' אצלך.</string>
+    <string name="tabbar_accessibility_label_me">אני. לנהל את פרטי הפרופיל שלך.</string>
     <string name="gutenberg_native_block_ungrouped">הבלוק הוסר מהקבוצה</string>
     <string name="gutenberg_native_block_grouped">הבלוק נוסף לקבוצה</string>
     <string name="dashboard_card_plans_checkout_success_info">יידרשו עד 30 דקות להתחלת הפעילות התקינה של הדומיין.</string>

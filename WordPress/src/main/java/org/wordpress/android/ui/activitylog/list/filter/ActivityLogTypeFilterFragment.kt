@@ -27,6 +27,7 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import org.wordpress.android.viewmodel.activitylog.DateRange
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 private const val ARG_INITIAL_SELECTION = "arg_initial_selection"
 private const val ARG_DATE_RANGE_AFTER = "arg_date_range_after"
@@ -77,7 +78,7 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     private fun ActivityLogTypeFilterFragmentBinding.initToolbar() {
         toolbarMain.navigationIcon = ColorUtils.applyTintToDrawable(
             toolbarMain.context, R.drawable.ic_close_white_24dp,
-            toolbarMain.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
+            toolbarMain.context.getColorResIdFromAttribute(MaterialR.attr.colorOnSurface)
         )
         toolbarMain.setNavigationContentDescription(R.string.close_dialog_button_desc)
         toolbarMain.setNavigationOnClickListener { dismiss() }

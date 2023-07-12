@@ -602,7 +602,10 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
 
     private void setCollapsibleHtmlText(@NonNull TextView textView, @Nullable String htmlText) {
         if (!TextUtils.isEmpty(htmlText)) {
-            textView.setTextColor(ContextExtensionsKt.getColorFromAttribute(this, R.attr.colorOnSurface));
+            textView.setTextColor(ContextExtensionsKt.getColorFromAttribute(
+                    this,
+                    com.google.android.material.R.attr.colorOnSurface
+            ));
             textView.setMovementMethod(WPLinkMovementMethod.getInstance());
             //noinspection ConstantConditions
             textView.setText(HtmlCompat.fromHtml(htmlText, HtmlCompat.FROM_HTML_MODE_LEGACY));

@@ -14,7 +14,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
@@ -89,7 +89,7 @@ class ReaderPostSeenStatusToggleUseCaseTest : BaseUnitTest() {
 
         val result = flow.toList()
         assertThat(result).isEqualTo(
-            listOf(Error(UiStringRes(string.error_network_connection)))
+            listOf(Error(UiStringRes(R.string.error_network_connection)))
         )
     }
 
@@ -100,7 +100,7 @@ class ReaderPostSeenStatusToggleUseCaseTest : BaseUnitTest() {
 
         val result = flow.toList()
         assertThat(result).isEqualTo(
-            listOf(Error(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post)))
+            listOf(Error(UiStringRes(R.string.reader_error_changing_seen_status_of_unsupported_post)))
         )
     }
 
@@ -155,7 +155,7 @@ class ReaderPostSeenStatusToggleUseCaseTest : BaseUnitTest() {
             listOf(
                 PostSeenStateChanged(
                     true,
-                    UiStringRes(string.reader_marked_post_as_seen)
+                    UiStringRes(R.string.reader_marked_post_as_seen)
                 )
             )
         )
@@ -175,7 +175,7 @@ class ReaderPostSeenStatusToggleUseCaseTest : BaseUnitTest() {
             listOf(
                 PostSeenStateChanged(
                     false,
-                    UiStringRes(string.reader_marked_post_as_unseen)
+                    UiStringRes(R.string.reader_marked_post_as_unseen)
                 )
             )
         )

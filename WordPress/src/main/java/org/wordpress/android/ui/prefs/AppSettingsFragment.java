@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
@@ -77,6 +78,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.ui.prefs.AppSettingsActivity.EXTRA_SHOW_PRIVACY_SETTINGS;
 
 public class AppSettingsFragment extends PreferenceFragment
         implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener, LocalePickerCallback {
@@ -239,6 +242,27 @@ public class AppSettingsFragment extends PreferenceFragment
         if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
             removeInitialScreen();
         }
+
+        final boolean showPrivacySettings = getActivity()
+                .getIntent()
+                .getBooleanExtra(EXTRA_SHOW_PRIVACY_SETTINGS, false);
+        if (showPrivacySettings) {
+            openPreference(getString(R.string.pref_key_privacy_settings), Stat.PRIVACY_SETTINGS_OPENED);
+        }
+    }
+
+    private void openPreference(@NotNull String key, @NotNull Stat event) {
+        final PreferenceScreen preferenceScreen = getPreferenceScreen();
+        final ListAdapter listAdapter = preferenceScreen.getRootAdapter();
+
+        int itemNumber;
+        for (itemNumber = 0; itemNumber < listAdapter.getCount(); ++itemNumber) {
+            if (listAdapter.getItem(itemNumber).equals(findPreference(key))) {
+                preferenceScreen.onItemClick(null, null, itemNumber, 0);
+                break;
+            }
+        }
+        AnalyticsTracker.track(event);
     }
 
     @Override

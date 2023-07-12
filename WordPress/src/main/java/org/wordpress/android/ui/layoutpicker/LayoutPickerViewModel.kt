@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.ui.PreviewMode
 import org.wordpress.android.ui.PreviewMode.MOBILE
 import org.wordpress.android.ui.PreviewMode.TABLET
@@ -287,7 +286,7 @@ abstract class LayoutPickerViewModel(
             return
         }
         layoutPickerTracker.trackErrorShown("Error previewing design")
-        updateUiState(Error(toast = string.hpp_choose_error))
+        updateUiState(Error(toast = R.string.hpp_choose_error))
     }
 
     fun onDismissPreview() {

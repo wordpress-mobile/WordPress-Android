@@ -154,7 +154,7 @@ public class MediaPreviewFragment extends Fragment {
 
         mImageView = view.findViewById(R.id.image_preview);
         mExoPlayerView = view.findViewById(R.id.video_preview);
-        mExoPlayerArtworkView = mExoPlayerView.findViewById(R.id.exo_artwork);
+        mExoPlayerArtworkView = mExoPlayerView.findViewById(com.google.android.exoplayer2.R.id.exo_artwork);
         mExoPlayerControlsView = view.findViewById(R.id.controls);
 
         FrameLayout videoFrame = view.findViewById(R.id.frame_video);

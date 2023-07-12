@@ -15,6 +15,7 @@ import org.wordpress.android.ui.WPTooltipView.TooltipPosition.BELOW
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.LEFT
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.RIGHT
 import org.wordpress.android.util.RtlUtils
+import android.R as AndroidR
 
 /**
  * Partially based on https://stackoverflow.com/a/42756576
@@ -72,7 +73,7 @@ class WPTooltipView @JvmOverloads constructor(
         val root = findViewById<LinearLayout>(R.id.root_view)
         tvMessage = findViewById(R.id.tooltip_message)
         val arrow = findViewById<View>(R.id.tooltip_arrow)
-        animationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
+        animationDuration = resources.getInteger(AndroidR.integer.config_shortAnimTime)
 
         if (messageId > 0) {
             tvMessage.setText(messageId)

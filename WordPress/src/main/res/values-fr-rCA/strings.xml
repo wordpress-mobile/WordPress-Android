@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-14 13:54:07+0000
+Translation-Revision-Date: 2023-06-28 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_reusable">Réutilisable</string>
+    <string name="privacy_banner_error_save">Une erreur est survenue lors de l’enregistrement de vos choix en matière de confidentialité.</string>
+    <string name="privacy_banner_save">Enregistrer</string>
+    <string name="privacy_banner_settings">Réglages</string>
+    <string name="privacy_banner_analytics_description">Donnez-nous la possibilité d’optimiser les performances en collectant des informations sur la façon dont les utilisateurs interagissent avec nos applications mobiles.</string>
+    <string name="privacy_banner_analytics">Statistiques</string>
+    <string name="privacy_banner_title">Gérer la confidentialité</string>
+    <string name="privacy_banner_description">Nous accordons depuis toujours une énorme importance au respect de votre privée. Nous utilisons, stockons et traitons vos données personnelles pour optimiser notre application (et votre expérience) de diverses manières. Certains usages de vos données sont indispensables au bon fonctionnement de l’application, tandis que d’autres peuvent être personnalisés dans vos Réglages.</string>
+    <string name="tabbar_accessibility_label_me">Me. Gérer les détails de votre profil.</string>
     <string name="gutenberg_native_block_ungrouped">Bloc dissocié</string>
     <string name="gutenberg_native_block_grouped">Bloc groupé</string>
     <string name="dashboard_card_plans_checkout_success_info">Un délai de 30 minutes peut être nécessaire pour que votre domaine soit opérationnel.</string>

@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader.usecases
 
 import kotlinx.coroutines.flow.flow
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
@@ -34,7 +34,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
      */
     suspend fun toggleSeenStatus(post: ReaderPost, actionSource: ReaderPostSeenToggleSource) = flow {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            emit(Error(UiStringRes(string.error_network_connection)))
+            emit(Error(UiStringRes(R.string.error_network_connection)))
             return@flow
         }
 
@@ -44,7 +44,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
         }
 
         if (!post.isSeenSupported) {
-            emit(Error(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post)))
+            emit(Error(UiStringRes(R.string.reader_error_changing_seen_status_of_unsupported_post)))
             return@flow
         }
 
@@ -84,7 +84,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
                         actionSource.toString()
                     )
                 }
-                PostSeenStateChanged(true, UiStringRes(string.reader_marked_post_as_seen))
+                PostSeenStateChanged(true, UiStringRes(R.string.reader_marked_post_as_seen))
             }
             is Failure -> {
                 Error(UiStringText(status.error))
@@ -102,7 +102,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
                     post,
                     actionSource.toString()
                 )
-                PostSeenStateChanged(false, UiStringRes(string.reader_marked_post_as_unseen))
+                PostSeenStateChanged(false, UiStringRes(R.string.reader_marked_post_as_unseen))
             }
             is Failure -> {
                 Error(UiStringText(status.error))
