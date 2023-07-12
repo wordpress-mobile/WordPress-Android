@@ -38,6 +38,8 @@
 
 /sites/$site/jetpack-ai/completions
 
+/sites/$site/jetpack-social
+
 /users/username/suggestions/
 
 /segments
