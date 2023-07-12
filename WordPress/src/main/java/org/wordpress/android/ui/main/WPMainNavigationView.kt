@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main
 
 import android.content.Context
+import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -23,6 +24,7 @@ import com.google.android.material.navigation.NavigationBarView.OnItemSelectedLi
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
@@ -42,6 +44,7 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.extensions.getColorStateListFromAttribute
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
 import com.google.android.material.R as MaterialR
@@ -121,7 +124,6 @@ class WPMainNavigationView @JvmOverloads constructor(
             }
 
             if (i == getPosition(ME)) {
-                ImageViewCompat.setImageTintList(imgIcon, null)
                 loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
             }
 
@@ -140,7 +142,36 @@ class WPMainNavigationView @JvmOverloads constructor(
                 null,
                 it,
                 ImageType.USER,
-                null
+                object : ImageManager.RequestListener<android.graphics.drawable.Drawable> {
+                    override fun onLoadFailed(e: Exception?, model: Any?) {
+                        val appLogMessage = "onLoadFailed while loading Gravatar image!"
+                        if (e == null) {
+                            AppLog.e(
+                                AppLog.T.MAIN,
+                                "$appLogMessage e == null"
+                            )
+                        } else {
+                            AppLog.e(
+                                AppLog.T.MAIN,
+                                appLogMessage,
+                                e
+                            )
+                        }
+                    }
+
+                    override fun onResourceReady(resource: android.graphics.drawable.Drawable, model: Any?) {
+                        ImageViewCompat.setImageTintList(imgIcon, null)
+                        if (resource is BitmapDrawable) {
+                            var bitmap = resource.bitmap
+                            // create a copy since the original bitmap may by automatically recycled
+                            bitmap = bitmap.copy(bitmap.config, true)
+                            WordPress.getBitmapCache().put(
+                                avatarUrl,
+                                bitmap
+                            )
+                        }
+                    }
+                }
             )
         }
     }
