@@ -561,6 +561,7 @@ dependencies {
     implementation "com.airbnb.android:lottie-compose:$lottieVersion"
     // - Jetpack Compose - UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test-junit4"
+    implementation "androidx.compose.material3:material3:$androidxComposeMaterial3Version"
 }
 
 configurations.all {
