@@ -29,7 +29,7 @@ import org.wordpress.android.fluxc.persistence.domains.DomainDao
 import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
 
 @Database(
-        version = 16,
+        version = 17,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -49,7 +49,7 @@ import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
             AutoMigration(from = 11, to = 12),
             AutoMigration(from = 12, to = 13),
             AutoMigration(from = 13, to = 14),
-            AutoMigration(from = 15, to = 16)
+            AutoMigration(from = 16, to = 17)
         ]
 )
 @TypeConverters(
