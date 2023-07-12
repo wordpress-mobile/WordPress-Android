@@ -21,7 +21,6 @@ import java.lang.annotation.Retention;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.List;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
@@ -1083,10 +1082,6 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public boolean isHostedAtWPCom() {
         return !isJetpackInstalled();
-    }
-
-    public List<String> getPlanActiveFeaturesList() {
-        return Arrays.asList(mPlanActiveFeatures.split(","));
     }
 
     public String getPlanActiveFeatures() {

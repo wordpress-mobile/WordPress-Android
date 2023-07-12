@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 16,
-    "identityHash": "7c8188b7922c1799f473acbb7c60bb2e",
+    "identityHash": "69627ce308934aad803fb99a12447b66",
     "entities": [
       {
         "tableName": "BloggingReminders",
@@ -673,135 +673,12 @@
         },
         "indices": [],
         "foreignKeys": []
-      },
-      {
-        "tableName": "BlazeCampaigns",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`siteId` INTEGER NOT NULL, `campaignId` INTEGER NOT NULL, `title` TEXT NOT NULL, `imageUrl` TEXT, `startDate` TEXT NOT NULL, `endDate` TEXT, `uiStatus` TEXT NOT NULL, `budgetCents` INTEGER NOT NULL, `impressions` INTEGER NOT NULL, `clicks` INTEGER NOT NULL, PRIMARY KEY(`siteId`, `campaignId`))",
-        "fields": [
-          {
-            "fieldPath": "siteId",
-            "columnName": "siteId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "campaignId",
-            "columnName": "campaignId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "title",
-            "columnName": "title",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "imageUrl",
-            "columnName": "imageUrl",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "startDate",
-            "columnName": "startDate",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "endDate",
-            "columnName": "endDate",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "uiStatus",
-            "columnName": "uiStatus",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "budgetCents",
-            "columnName": "budgetCents",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "impressions",
-            "columnName": "impressions",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "clicks",
-            "columnName": "clicks",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "siteId",
-            "campaignId"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [
-          {
-            "name": "index_BlazeCampaigns_siteId",
-            "unique": false,
-            "columnNames": [
-              "siteId"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_BlazeCampaigns_siteId` ON `${TABLE_NAME}` (`siteId`)"
-          }
-        ],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "BlazeCampaignsPagination",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`siteId` INTEGER NOT NULL, `page` INTEGER NOT NULL, `totalItems` INTEGER NOT NULL, `totalPages` INTEGER NOT NULL, PRIMARY KEY(`siteId`))",
-        "fields": [
-          {
-            "fieldPath": "siteId",
-            "columnName": "siteId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "page",
-            "columnName": "page",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "totalItems",
-            "columnName": "totalItems",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "totalPages",
-            "columnName": "totalPages",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "siteId"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7c8188b7922c1799f473acbb7c60bb2e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '69627ce308934aad803fb99a12447b66')"
     ]
   }
 }
