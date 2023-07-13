@@ -4592,4 +4592,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Jetpack - Blaze campaigns card -->
     <string name="blaze_campaigns_card_title">Blaze Campaign</string>
     <string name="blaze_campaigns_card_footer_label">Create Campaign</string>
+    <string name="campaign_status_active">ACTIVE</string>
+    <string name="campaign_status_completed">COMPLETED</string>
+    <string name="campaign_status_rejected">REJECTED</string>
+    <string name="campaign_status_in_moderation">IN MODERATION</string>
 </resources>
