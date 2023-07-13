@@ -36,7 +36,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 189
+        return 190
     }
 
     override fun getDbName(): String {
@@ -1950,6 +1950,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 188 -> migrate(version) {
                     db.execSQL("ALTER TABLE SiteModel ADD CAN_BLAZE BOOLEAN")
+                }
+                189 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD PLAN_ACTIVE_FEATURES TEXT")
                 }
             }
         }

@@ -34,7 +34,7 @@
 
 /sites/$site/blogging-prompts
 
-/sites/$site/blaze/status
+/sites/$site/wordads/dsp/api/v1/search/campaigns/site
 
 /sites/$site/launch
 
