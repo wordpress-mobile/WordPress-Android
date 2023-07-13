@@ -501,6 +501,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         addToolbarToSiteAcceleratorSettings();
+        addToolbarToJpSecuritySettings();
     }
 
     private AppCompatActivity getAppCompatActivity() {
@@ -513,7 +514,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         setupMorePreferenceScreen();
-        setupJetpackSecurityScreen();
     }
 
     @Override
@@ -521,7 +521,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
             setupMorePreferenceScreen();
-            setupJetpackSecurityScreen();
 
             SiteSettingsTimezoneBottomSheet bottomSheet =
                     (SiteSettingsTimezoneBottomSheet) (getAppCompatActivity())
@@ -598,6 +597,10 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void addToolbarToSiteAcceleratorSettings() {
         addToolbarToNestedPreference(mSiteAcceleratorSettings, R.string.site_settings_site_accelerator);
+    }
+
+    private void addToolbarToJpSecuritySettings() {
+        addToolbarToNestedPreference(mJpSecuritySettings, R.string.jetpack_security_setting_title);
     }
 
     @Override
@@ -1908,11 +1911,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mJpSecuritySettings == null || !isAdded()) {
             return;
         }
-        String title = getString(R.string.jetpack_security_setting_title);
         Dialog dialog = mJpSecuritySettings.getDialog();
         if (dialog != null) {
             setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            addToolbarToJpSecuritySettings();
         }
     }
 
