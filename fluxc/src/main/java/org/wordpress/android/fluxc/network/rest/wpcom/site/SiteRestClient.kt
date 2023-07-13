@@ -1001,6 +1001,16 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
+    suspend fun fetchJetpackSocial(remoteSiteId: Long): Response<JetpackSocialResponse> {
+        val url = WPCOMV2.sites.site(remoteSiteId).jetpack_social.url
+        return wpComGsonRequestBuilder.syncGetRequest(
+            restClient = this,
+            url = url,
+            params = mapOf(),
+            clazz = JetpackSocialResponse::class.java
+        )
+    }
+
     @Suppress("LongMethod", "ComplexMethod")
     private fun siteResponseToSiteModel(from: SiteWPComRestResponse): SiteModel {
         val site = SiteModel()
