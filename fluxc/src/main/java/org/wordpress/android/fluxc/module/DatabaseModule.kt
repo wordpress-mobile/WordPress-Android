@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDa
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.persistence.domains.DomainDao
+import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import javax.inject.Singleton
 
 @Module
@@ -78,5 +79,11 @@ class DatabaseModule {
         wpAndroidDatabase: WPAndroidDatabase
     ): JetpackCPConnectedSitesDao {
         return wpAndroidDatabase.jetpackCPConnectedSitesDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideJetpackSocialDao(wpAndroidDatabase: WPAndroidDatabase): JetpackSocialDao {
+        return wpAndroidDatabase.jetpackSocialDao()
     }
 }

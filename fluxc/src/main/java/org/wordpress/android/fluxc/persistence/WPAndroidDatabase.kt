@@ -24,9 +24,11 @@ import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
 import org.wordpress.android.fluxc.persistence.domains.DomainDao
 import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
+import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
+import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.JetpackSocialEntity
 
 @Database(
-        version = 16,
+        version = 17,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -38,12 +40,14 @@ import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
             FeatureFlag::class,
             RemoteConfig::class,
             JetpackCPConnectedSiteEntity::class,
-            DomainEntity::class
+            DomainEntity::class,
+            JetpackSocialEntity::class,
         ],
         autoMigrations = [
             AutoMigration(from = 11, to = 12),
             AutoMigration(from = 12, to = 13),
-            AutoMigration(from = 13, to = 14)
+            AutoMigration(from = 13, to = 14),
+            AutoMigration(from = 16, to = 17),
         ]
 )
 @TypeConverters(
@@ -69,6 +73,8 @@ abstract class WPAndroidDatabase : RoomDatabase() {
     abstract fun domainDao(): DomainDao
 
     abstract fun jetpackCPConnectedSitesDao(): JetpackCPConnectedSitesDao
+
+    abstract fun jetpackSocialDao(): JetpackSocialDao
 
     @Suppress("MemberVisibilityCanBePrivate")
     companion object {
