@@ -506,6 +506,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         addToolbarToJpSecuritySettings();
         addToolbarToStartOverSettings();
         addToolbarToJetpackMoreSettings();
+        addToolbarToSiteAcceleratorSettingsNested();
     }
 
     private AppCompatActivity getAppCompatActivity() {
@@ -612,6 +613,10 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void addToolbarToJetpackMoreSettings() {
         addToolbarToNestedPreference(mJetpackPerformanceMoreSettings, R.string.site_settings_performance);
+    }
+
+    private void addToolbarToSiteAcceleratorSettingsNested() {
+        addToolbarToNestedPreference(mSiteAcceleratorSettingsNested, R.string.site_settings_site_accelerator);
     }
 
     @Override
@@ -1956,11 +1961,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mSiteAcceleratorSettingsNested == null || !isAdded()) {
             return;
         }
-        String title = getString(R.string.site_settings_site_accelerator);
         Dialog dialog = mSiteAcceleratorSettingsNested.getDialog();
         if (dialog != null) {
             setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            addToolbarToSiteAcceleratorSettingsNested();
         }
     }
 
