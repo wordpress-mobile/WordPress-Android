@@ -499,11 +499,13 @@ public class SiteSettingsFragment extends PreferenceFragment
         return view;
     }
 
-    @Override public void onViewStateRestored(Bundle savedInstanceState) {
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         addToolbarToSiteAcceleratorSettings();
         addToolbarToJpSecuritySettings();
         addToolbarToStartOverSettings();
+        addToolbarToJetpackMoreSettings();
     }
 
     private AppCompatActivity getAppCompatActivity() {
@@ -606,6 +608,10 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void addToolbarToStartOverSettings() {
         addToolbarToNestedPreference(mStartOverSettingsScreen, R.string.start_over);
+    }
+
+    private void addToolbarToJetpackMoreSettings() {
+        addToolbarToNestedPreference(mJetpackPerformanceMoreSettings, R.string.site_settings_performance);
     }
 
     @Override
@@ -1939,11 +1945,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mJetpackPerformanceMoreSettings == null || !isAdded()) {
             return;
         }
-        String title = getString(R.string.site_settings_performance);
         Dialog dialog = mJetpackPerformanceMoreSettings.getDialog();
         if (dialog != null) {
             setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            addToolbarToJetpackMoreSettings();
         }
     }
 
