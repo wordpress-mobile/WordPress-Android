@@ -261,6 +261,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     // Advanced settings
     private Preference mStartOverPref;
+    private PreferenceScreen mStartOverSettingsScreen;
     private Preference mExportSitePref;
     private Preference mDeleteSitePref;
 
@@ -502,6 +503,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         super.onViewStateRestored(savedInstanceState);
         addToolbarToSiteAcceleratorSettings();
         addToolbarToJpSecuritySettings();
+        addToolbarToStartOverSettings();
     }
 
     private AppCompatActivity getAppCompatActivity() {
@@ -565,8 +567,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(getActivity(), WORDPRESS_EMPTY_SITE_SUPPORT_URL);
             } else {
                 setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-                String title = getString(R.string.start_over);
-                WPActivityUtils.addToolbarToDialog(this, dialog, title);
+                addToolbarToStartOverSettings();
             }
         } else if (preference == mDateFormatPref) {
             showDateOrTimeFormatDialog(FormatType.DATE_FORMAT);
@@ -601,6 +602,10 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void addToolbarToJpSecuritySettings() {
         addToolbarToNestedPreference(mJpSecuritySettings, R.string.jetpack_security_setting_title);
+    }
+
+    private void addToolbarToStartOverSettings() {
+        addToolbarToNestedPreference(mStartOverSettingsScreen, R.string.start_over);
     }
 
     @Override
@@ -981,6 +986,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mModerationHoldPref = getClickPref(R.string.pref_key_site_moderation_hold);
         mDenylistPref = getClickPref(R.string.pref_key_site_denylist);
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
+        mStartOverSettingsScreen = (PreferenceScreen) getClickPref(R.string.pref_key_site_start_over_screen);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
         mJpSecuritySettings = (PreferenceScreen) getClickPref(R.string.pref_key_jetpack_security_screen);
