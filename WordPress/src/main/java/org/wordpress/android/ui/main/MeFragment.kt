@@ -198,6 +198,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
         if (BuildConfig.DEBUG) {
             rowDebugSettings.isVisible = true
+            debugSettingsDivider.isVisible = true
             rowDebugSettings.setOnClickListener {
                 requireContext().startActivity(Intent(requireContext(), DebugSettingsActivity::class.java))
             }
@@ -398,6 +399,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             meUsername.visibility = View.VISIBLE
             cardAvatar.visibility = View.VISIBLE
             rowMyProfile.visibility = View.VISIBLE
+            myProfileDivider.visibility = View.VISIBLE
+            accountSettingsDivider.visibility = View.VISIBLE
             loadAvatar(null)
             meUsername.text = getString(R.string.at_username, defaultAccount.userName)
             meLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com)
@@ -408,7 +411,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             cardAvatar.visibility = View.GONE
             avatarProgress.visibility = View.GONE
             rowMyProfile.visibility = View.GONE
+            myProfileDivider.visibility = View.GONE
             rowAccountSettings.visibility = View.GONE
+            accountSettingsDivider.visibility = View.GONE
             meLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com)
         }
     }
