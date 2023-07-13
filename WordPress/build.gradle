@@ -77,6 +77,8 @@ android {
         dexInProcess = true
     }
 
+    namespace "org.wordpress.android"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     def versionProperties = loadPropertiesFromFile(file("${rootDir}/version.properties"))

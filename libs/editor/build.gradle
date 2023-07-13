@@ -27,6 +27,8 @@ repositories {
 }
 
 android {
+    namespace "org.wordpress.android.editor"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
