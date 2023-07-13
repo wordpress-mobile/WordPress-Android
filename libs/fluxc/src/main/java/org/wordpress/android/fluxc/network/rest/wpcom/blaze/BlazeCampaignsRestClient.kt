@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.AcceptHeaderStrategy
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
@@ -20,49 +21,52 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class BlazeRestClient @Inject constructor(
+class BlazeCampaignsRestClient @Inject constructor(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     dispatcher: Dispatcher,
     appContext: Context?,
     @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
-    userAgent: UserAgent
-) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchBlazeStatus(site: SiteModel): BlazeStatusFetchedPayload {
-        val url = WPCOMV2.sites.site(site.siteId).blaze.status.url
-        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), Map::class.java)
-        return when (response) {
-            is Success -> buildBlazeStatusFetchedPayload(site, response.data)
-            is Error -> BlazeStatusFetchedPayload(site.siteId, response.error.toBlazeStatusError())
-        }
-    }
-
-    private fun buildBlazeStatusFetchedPayload(
+    userAgent: UserAgent,
+    acceptStrategy: AcceptHeaderStrategy.JsonAcceptHeader
+) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent, acceptStrategy) {
+    suspend fun fetchBlazeCampaigns(
         site: SiteModel,
-        data: Map<*, *>?
-    ): BlazeStatusFetchedPayload {
-        return BlazeStatusFetchedPayload(site.siteId, data?.map { e ->
-            e.key.toString() to e.value.toString().toBoolean()
-        }?.toMap())
+        page: Int = 1
+    ): BlazeCampaignsFetchedPayload<BlazeCampaignsResponse> {
+        val url = "${WPCOMV2.sites.site(site.siteId).wordads.dsp.api.v1.search.campaigns.site.url}${site.siteId}"
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+            this,
+            url,
+            mapOf(
+                "page" to page.toString(),
+                "order" to "start_date",
+                "sort" to "desc"
+            ),
+            BlazeCampaignsResponse::class.java
+        )
+        return when (response) {
+            is Success -> BlazeCampaignsFetchedPayload(response.data)
+            is Error -> BlazeCampaignsFetchedPayload(response.error.toBlazeCampaignsError())
+        }
     }
 }
 
-data class BlazeStatusFetchedPayload(
-    val siteId: Long,
-    val eligibility: Map<String, Boolean>? = null
-) : Payload<BlazeStatusError>() {
-    constructor(siteId: Long, error: BlazeStatusError) : this(siteId) {
+data class BlazeCampaignsFetchedPayload<T>(
+    val response: T? = null
+) : Payload<BlazeCampaignsError>() {
+    constructor(error: BlazeCampaignsError) : this() {
         this.error = error
     }
 }
 
-class BlazeStatusError
+class BlazeCampaignsError
 @JvmOverloads constructor(
-    val type: BlazeStatusErrorType,
+    val type: BlazeCampaignsErrorType,
     val message: String? = null
 ) : OnChangedError
 
-enum class BlazeStatusErrorType {
+enum class BlazeCampaignsErrorType {
     GENERIC_ERROR,
     AUTHORIZATION_REQUIRED,
     INVALID_RESPONSE,
@@ -70,22 +74,25 @@ enum class BlazeStatusErrorType {
     TIMEOUT
 }
 
-fun WPComGsonNetworkError.toBlazeStatusError(): BlazeStatusError {
+fun WPComGsonNetworkError.toBlazeCampaignsError(): BlazeCampaignsError {
     val type = when (type) {
-        GenericErrorType.TIMEOUT -> BlazeStatusErrorType.TIMEOUT
+        GenericErrorType.TIMEOUT -> BlazeCampaignsErrorType.TIMEOUT
         GenericErrorType.NO_CONNECTION,
         GenericErrorType.SERVER_ERROR,
         GenericErrorType.INVALID_SSL_CERTIFICATE,
-        GenericErrorType.NETWORK_ERROR -> BlazeStatusErrorType.API_ERROR
+        GenericErrorType.NETWORK_ERROR -> BlazeCampaignsErrorType.API_ERROR
+
         GenericErrorType.PARSE_ERROR,
         GenericErrorType.NOT_FOUND,
         GenericErrorType.CENSORED,
-        GenericErrorType.INVALID_RESPONSE -> BlazeStatusErrorType.INVALID_RESPONSE
+        GenericErrorType.INVALID_RESPONSE -> BlazeCampaignsErrorType.INVALID_RESPONSE
+
         GenericErrorType.HTTP_AUTH_ERROR,
         GenericErrorType.AUTHORIZATION_REQUIRED,
-        GenericErrorType.NOT_AUTHENTICATED -> BlazeStatusErrorType.AUTHORIZATION_REQUIRED
+        GenericErrorType.NOT_AUTHENTICATED -> BlazeCampaignsErrorType.AUTHORIZATION_REQUIRED
+
         GenericErrorType.UNKNOWN,
-        null -> BlazeStatusErrorType.GENERIC_ERROR
+        null -> BlazeCampaignsErrorType.GENERIC_ERROR
     }
-    return BlazeStatusError(type, message)
+    return BlazeCampaignsError(type, message)
 }

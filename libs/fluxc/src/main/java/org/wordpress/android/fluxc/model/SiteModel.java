@@ -251,6 +251,9 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     private String mApplicationPasswordsAuthorizeUrl;
     @Column
     private Boolean mCanBlaze;
+    // Comma-separated list of active features in the site's plan
+    @Column
+    private String mPlanActiveFeatures;
 
     @Override
     public int getId() {
@@ -1075,5 +1078,17 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setCanBlaze(Boolean mCanBlaze) {
         this.mCanBlaze = mCanBlaze;
+    }
+
+    public boolean isHostedAtWPCom() {
+        return !isJetpackInstalled();
+    }
+
+    public String getPlanActiveFeatures() {
+        return mPlanActiveFeatures;
+    }
+
+    public void setPlanActiveFeatures(final String planActiveFeatures) {
+        this.mPlanActiveFeatures = planActiveFeatures;
     }
 }
