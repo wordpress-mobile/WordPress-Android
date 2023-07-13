@@ -49,8 +49,8 @@ val blazeCampaignsCard = BlazeCampaignsCard(
         status = UiString.UiStringText(campaign.uiStatus),
         featuredImageUrl = campaign.imageUrl,
         stats = BlazeCampaignStats(
-            impressionCount = UiString.UiStringText(campaign.impressions.toString()),
-            clickCount = UiString.UiStringText(campaign.clicks.toString())
+            impressions = UiString.UiStringText(campaign.impressions.toString()),
+            clicks = UiString.UiStringText(campaign.clicks.toString())
         ),
         onClick = onCampaignClick,
     ),
