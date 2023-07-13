@@ -498,6 +498,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         return view;
     }
 
+    @Override public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        addToolbarToSiteAcceleratorSettings();
+    }
+
     private AppCompatActivity getAppCompatActivity() {
         return (AppCompatActivity) getActivity();
     }
@@ -579,6 +584,20 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         return false;
+    }
+
+    private void addToolbarToNestedPreference(PreferenceScreen preferenceScreen, int titleRes) {
+        if (preferenceScreen != null && isAdded()) {
+            Dialog dialog = preferenceScreen.getDialog();
+            if (dialog != null) {
+                String title = getString(titleRes);
+                WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            }
+        }
+    }
+
+    private void addToolbarToSiteAcceleratorSettings() {
+        addToolbarToNestedPreference(mSiteAcceleratorSettings, R.string.site_settings_site_accelerator);
     }
 
     @Override
@@ -1901,11 +1920,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mSiteAcceleratorSettings == null || !isAdded()) {
             return;
         }
-        String title = getString(R.string.site_settings_site_accelerator);
         Dialog dialog = mSiteAcceleratorSettings.getDialog();
         if (dialog != null) {
             setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            addToolbarToSiteAcceleratorSettings();
         }
     }
 
