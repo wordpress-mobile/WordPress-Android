@@ -27,3 +27,15 @@ fun footerCTA() = MaterialTheme.typography.titleMedium.copy(
     fontStyle = FontStyle.Normal,
     color = colorResource(R.color.primary_emphasis_medium_selector)
 )
+
+@Composable
+fun detailText() = MaterialTheme.typography.bodyLarge.copy(
+    fontWeight = FontWeight.Normal,
+    fontSize = 14.sp,
+    color = colorResource(R.color.material_on_surface_emphasis_medium)
+)
+
+@Composable
+fun largeText() = MaterialTheme.typography.headlineMedium.copy(
+    color = colorResource(R.color.material_on_surface_emphasis_high_type)
+)
