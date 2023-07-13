@@ -25,7 +25,7 @@ fun BlazeStatusLabel(
 ) {
     Box(
         modifier = modifier
-            .padding(start = 16.dp, top = 8.dp)
+            .padding(start = 16.dp, top = 16.dp)
             .background(
                 color = status.textViewBackgroundColor(isInDarkMode),
                 shape = RoundedCornerShape(size = 2.dp)
