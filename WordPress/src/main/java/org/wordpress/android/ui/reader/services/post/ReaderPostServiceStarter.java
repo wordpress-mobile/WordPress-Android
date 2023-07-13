@@ -11,10 +11,11 @@ import android.os.PersistableBundle;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.util.AppLog;
 
+import static org.wordpress.android.JobServiceId.JOB_READER_POST_SERVICE_ID_BLOG;
+import static org.wordpress.android.JobServiceId.JOB_READER_POST_SERVICE_ID_FEED;
+import static org.wordpress.android.JobServiceId.JOB_READER_POST_SERVICE_ID_TAG;
+
 public class ReaderPostServiceStarter {
-    private static final int JOB_READER_POST_SERVICE_ID_TAG = 4001;
-    private static final int JOB_READER_POST_SERVICE_ID_BLOG = 4002;
-    private static final int JOB_READER_POST_SERVICE_ID_FEED = 4003;
     public static final String ARG_TAG = "tag";
     public static final String ARG_ACTION = "action";
     public static final String ARG_BLOG_ID = "blog_id";
