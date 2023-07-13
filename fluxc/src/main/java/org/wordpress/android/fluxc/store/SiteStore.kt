@@ -2128,10 +2128,11 @@ open class SiteStore @Inject constructor(
             }
         }
 
-    fun getJetpackSocial(siteLocalId: Int): Flow<JetpackSocial> =
-        jetpackSocialDao.getJetpackSocial(siteLocalId).map {
-            jetpackSocialMapper.mapDomain(it)
-        }
+    suspend fun getJetpackSocial(siteLocalId: Int): JetpackSocial {
+        val entity = jetpackSocialDao.getJetpackSocial(siteLocalId)
+        return jetpackSocialMapper.mapDomain(entity)
+    }
+
 
 
     suspend fun deleteApplicationPassword(site: SiteModel): OnApplicationPasswordDeleted =

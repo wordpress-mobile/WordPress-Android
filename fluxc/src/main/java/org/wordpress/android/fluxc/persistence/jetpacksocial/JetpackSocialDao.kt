@@ -5,18 +5,17 @@ import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
 
 @Dao
-abstract class JetpackSocialDao {
+interface JetpackSocialDao {
     @Query("SELECT * FROM JetpackSocial WHERE siteLocalId = :siteLocalId")
-    abstract fun getJetpackSocial(siteLocalId: Int): Flow<JetpackSocialEntity>
+    suspend fun getJetpackSocial(siteLocalId: Int): JetpackSocialEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insert(jetpackSocialEntity: JetpackSocialEntity)
+    suspend fun insert(jetpackSocialEntity: JetpackSocialEntity)
 
     @Query("DELETE FROM JetpackSocial")
-    abstract fun clear()
+    suspend fun clear()
 
     @Entity(
         tableName = "JetpackSocial",
