@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.blaze
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
@@ -24,7 +23,7 @@ fun BlazeStatusLabel(
     status: CampaignStatus,
     isInDarkMode: Boolean = false
 ) {
-    Row(
+    Box(
         modifier = modifier
             .padding(start = 16.dp, top = 8.dp)
             .background(
