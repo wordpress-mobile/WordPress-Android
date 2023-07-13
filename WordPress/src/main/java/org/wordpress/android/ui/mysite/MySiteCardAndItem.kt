@@ -21,6 +21,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SINGLE_ACTION_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
+import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -339,7 +340,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         data class BlazeCampaignsCardItem(
                             val id: Long,
                             val title: UiString,
-                            val status: UiString,
+                            val status: CampaignStatus?,
                             val featuredImageUrl: String?,
                             val stats: BlazeCampaignStats?,
                             val onClick: () -> Unit,

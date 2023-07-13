@@ -42,7 +42,7 @@ class BlazeCardBuilder @Inject constructor() {
             return BlazeCampaignsCardItem(
                 id = campaign.campaignId,
                 title = UiString.UiStringText(campaign.title),
-                status = UiString.UiStringText(campaign.uiStatus),
+                status = CampaignStatus.fromString(campaign.uiStatus),
                 featuredImageUrl = campaign.imageUrl,
                 stats = BlazeCampaignsCardItem.BlazeCampaignStats(
                     impressionCount = UiString.UiStringText(campaign.impressions.toString()),
