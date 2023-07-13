@@ -346,8 +346,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                             val onClick: () -> Unit,
                         ) {
                             data class BlazeCampaignStats(
-                                val impressionCount: UiString,
-                                val clickCount: UiString,
+                                val impressions: UiString,
+                                val clicks: UiString,
                             )
                         }
 

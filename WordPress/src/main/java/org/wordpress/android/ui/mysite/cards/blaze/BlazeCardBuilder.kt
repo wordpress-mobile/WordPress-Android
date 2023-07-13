@@ -45,8 +45,8 @@ class BlazeCardBuilder @Inject constructor() {
                 status = CampaignStatus.fromString(campaign.uiStatus),
                 featuredImageUrl = campaign.imageUrl,
                 stats = BlazeCampaignsCardItem.BlazeCampaignStats(
-                    impressionCount = UiString.UiStringText(campaign.impressions.toString()),
-                    clickCount = UiString.UiStringText(campaign.clicks.toString()),
+                    impressions = UiString.UiStringText(campaign.impressions.toString()),
+                    clicks = UiString.UiStringText(campaign.clicks.toString()),
                 ),
                 onClick = params.onCampaignClick,
             )
