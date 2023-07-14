@@ -48,6 +48,9 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     private val _triggerOnDeviceBackPressed = MutableLiveData<Event<PrepublishingScreen>>()
     val triggerOnDeviceBackPressed: LiveData<Event<PrepublishingScreen>> = _triggerOnDeviceBackPressed
 
+    private val _navigateToSharingSettings = MutableLiveData<Event<SiteModel>>()
+    val navigateToSharingSettings: LiveData<Event<SiteModel>> = _navigateToSharingSettings
+
     init {
         dispatcher.register(this)
     }
@@ -130,14 +133,24 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     }
 
     fun onActionClicked(actionType: ActionType, bundle: Bundle? = null) {
-        val screen = PrepublishingScreen.valueOf(actionType.name)
-        currentScreen = screen
-        navigateToScreen(screen, bundle)
+        when (actionType) {
+            is ActionType.PrepublishingScreenNavigation -> {
+                currentScreen = actionType.prepublishingScreen
+                navigateToScreen(actionType.prepublishingScreen, bundle)
+            }
+            is ActionType.Action -> handleAction(actionType)
+        }
     }
 
     fun onSubmitButtonClicked(publishPost: PublishPost) {
         onCloseClicked()
         _triggerOnSubmitButtonClickedListener.postValue(Event(publishPost))
+    }
+
+    private fun handleAction(action: ActionType.Action) {
+        when (action) {
+            ActionType.Action.NavigateToSharingSettings -> _navigateToSharingSettings.postValue(Event(site))
+        }
     }
 
     /**
