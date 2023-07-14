@@ -66,7 +66,7 @@ fun EditPostSettingsJetpackSocialContainerView(
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun PreviewEditPostSettingsJetpackSocialContainerConnectionsListView() {
+fun EditPostSettingsJetpackSocialContainerConnectionsListViewPreview() {
     AppThemeEditor {
         val connections = PublicizeConnectionList()
         val connection1 = PublicizeConnection().apply {
@@ -105,7 +105,7 @@ fun PreviewEditPostSettingsJetpackSocialContainerConnectionsListView() {
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun PreviewEditPostSettingsJetpackSocialContainerEmptyView() {
+fun EditPostSettingsJetpackSocialContainerEmptyViewPreview() {
     AppThemeEditor {
         EditPostSettingsJetpackSocialContainerView(
             trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
