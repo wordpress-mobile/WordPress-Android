@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,39 +39,51 @@ fun BlazeCampaignsCard(
 ) {
     UnelevatedCard(modifier = modifier, content = {
         Column(
-            modifier = Modifier
-                .padding(16.dp),
+            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(
-                text = uiStringText(uiString = blazeCampaignCardModel.title),
-                style = DashboardCardTypography.smallTitle,
-                textAlign = TextAlign.Start
+            Column(
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = uiStringText(uiString = blazeCampaignCardModel.title),
+                    style = DashboardCardTypography.smallTitle,
+                    textAlign = TextAlign.Start,
+                )
+                val status = blazeCampaignCardModel.campaign.status
+                if (status != null) {
+                    BlazeStatusLabel(
+                        status = status,
+                    )
+                }
+                CampaignTitleThumbnail(
+                    campaignTitle = blazeCampaignCardModel.campaign.title,
+                    featuredImageUrl = blazeCampaignCardModel.campaign.featuredImageUrl,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                if (blazeCampaignCardModel.campaign.stats != null) {
+                    CampaignStats(
+                        campaignStats = blazeCampaignCardModel.campaign.stats,
+                    )
+                }
+            }
+            Divider(
+                thickness = 0.5.dp,
+                modifier = Modifier
+                    .padding(start = 16.dp)
             )
-            val status = blazeCampaignCardModel.campaign.status
-            if (status != null) {
-                BlazeStatusLabel(
-                    status = status,
+            Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
+                Text(
+                    text = uiStringText(uiString = blazeCampaignCardModel.footer.label),
+                    style = DashboardCardTypography.footerCTA,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
                 )
             }
-            CampaignTitleThumbnail(
-                campaignTitle = blazeCampaignCardModel.campaign.title,
-                featuredImageUrl = blazeCampaignCardModel.campaign.featuredImageUrl,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            if (blazeCampaignCardModel.campaign.stats != null) {
-                CampaignStats(
-                    campaignStats = blazeCampaignCardModel.campaign.stats,
-                )
-            }
-            Text(
-                text = uiStringText(uiString = blazeCampaignCardModel.footer.label),
-                style = DashboardCardTypography.footerCTA,
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
         }
     })
 }
