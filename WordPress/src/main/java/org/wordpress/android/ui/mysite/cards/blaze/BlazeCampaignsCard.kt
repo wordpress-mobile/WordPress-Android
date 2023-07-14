@@ -45,9 +45,7 @@ fun BlazeCampaignsCard(
             Text(
                 text = uiStringText(uiString = blazeCampaignCardModel.title),
                 style = DashboardCardTypography.smallTitle,
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
+                textAlign = TextAlign.Start
             )
             val status = blazeCampaignCardModel.campaign.status
             if (status != null) {
