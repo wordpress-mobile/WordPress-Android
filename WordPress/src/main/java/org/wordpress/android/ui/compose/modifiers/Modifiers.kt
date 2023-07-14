@@ -14,9 +14,5 @@ fun Modifier.disableUserScroll() = nestedScroll(
     }
 )
 
-fun Modifier.doIf(condition: Boolean, modifier: Modifier.() -> Modifier): Modifier =
-    if (condition) {
-        then(modifier(Modifier))
-    } else {
-        this
-    }
+fun Modifier.conditionalThen(predicate: Boolean, other: Modifier): Modifier =
+    if (predicate) this.then(other) else this

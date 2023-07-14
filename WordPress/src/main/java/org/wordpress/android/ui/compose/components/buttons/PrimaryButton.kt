@@ -22,6 +22,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.modifiers.conditionalThen
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 
@@ -58,7 +59,10 @@ fun PrimaryButton(
         modifier = modifier
             .padding(paddingValues = padding)
             .defaultMinSize(minHeight = buttonSize.height)
-            .then(if (fillMaxWidth) Modifier.fillMaxWidth() else Modifier),
+            .conditionalThen(
+                predicate = fillMaxWidth,
+                other = Modifier.fillMaxWidth()
+            ),
         contentPadding = contentPadding,
     ) {
         if (isInProgress) {

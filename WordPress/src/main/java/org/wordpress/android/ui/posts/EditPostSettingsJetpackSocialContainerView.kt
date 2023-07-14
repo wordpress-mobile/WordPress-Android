@@ -45,7 +45,7 @@ fun EditPostSettingsJetpackSocialContainerView(
             PrimaryButton(
                 text = subscribeButtonLabel,
                 onClick = onSubscribeClick,
-                shouldFillMaxWidth = false,
+                fillMaxWidth = false,
             )
         } else {
             EditPostSettingsJetpackSocialEmpty(
