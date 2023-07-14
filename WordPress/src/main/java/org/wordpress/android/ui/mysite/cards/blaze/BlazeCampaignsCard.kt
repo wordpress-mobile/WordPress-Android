@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.card.DashboardCard
+import org.wordpress.android.ui.compose.components.card.UnelevatedCard
 import org.wordpress.android.ui.compose.styles.DashboardCardTypography
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel
@@ -36,7 +36,7 @@ fun BlazeCampaignsCard(
     blazeCampaignCardModel: BlazeCampaignsCardModel,
     modifier: Modifier = Modifier
 ) {
-    DashboardCard(modifier = modifier, content = {
+    UnelevatedCard(modifier = modifier, content = {
         Column(
             modifier = Modifier
                 .padding(16.dp),
