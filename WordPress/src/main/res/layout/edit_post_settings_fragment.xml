@@ -281,7 +281,7 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:orientation="vertical">
 
-                <org.wordpress.android.ui.posts.EditPostSettingsJetpackSocialContainerComposeView
+                <org.wordpress.android.ui.posts.EditPostSettingsJetpackSocialContainerView
                     android:id="@+id/post_settings_jetpack_social_container_compose_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
