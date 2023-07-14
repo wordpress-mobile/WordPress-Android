@@ -205,16 +205,29 @@ class PrepublishingHomeViewModel @Inject constructor(
 
     private fun MutableList<PrepublishingHomeItemUiState>.showSocialItem() {
         // TODO in other PR: use actual data, for now just using fake data
+//        add(
+//            SocialUiState.SocialSharingUiState(
+//                serviceIcons = listOf(
+//                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_facebook, isEnabled = false),
+//                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_tumblr)
+//                ),
+//                title = UiStringText("Sharing to 2 of 3 accounts"),
+//                description = UiStringText("27/30 social shares remaining"),
+//                isLowOnShares = false,
+//                onItemClicked = { Log.d("thomashorta", "hey there!") },
+//            )
+//        )
         add(
-            SocialUiState(
-                title = UiStringText("Sharing to 2 of 3 accounts"),
-                description = UiStringText("27/30 social shares remaining"),
-                isLowOnShares = false,
-                connectionIcons = listOf(
-                    SocialUiState.ConnectionIcon(R.drawable.ic_social_facebook, isEnabled = false),
-                    SocialUiState.ConnectionIcon(R.drawable.ic_social_tumblr)
+            SocialUiState.SocialConnectPromptUiState(
+                serviceIcons = listOf(
+                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_tumblr),
+                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_facebook),
+                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_instagram),
+                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_mastodon),
+                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_linkedin),
                 ),
-                onItemClicked = { /* TODO in other PR: open social section in bottom sheet */ },
+                onConnectClicked = { /* TODO in other PR: open sharing settings */ },
+                onDismissClicked = { /* TODO in other PR: hide this item forever */ },
             )
         )
     }

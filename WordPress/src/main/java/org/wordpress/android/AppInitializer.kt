@@ -378,6 +378,7 @@ class AppInitializer @Inject constructor(
         if (BuildConfig.DEBUG) {
             configBuilder.setMinimumLoggingLevel(Log.DEBUG)
         }
+        configBuilder.setJobSchedulerJobIdRange(WORK_MANAGER_ID_RANGE_MIN, WORK_MANAGER_ID_RANGE_MAX)
         WorkManager.initialize(application, configBuilder.build())
     }
 
@@ -960,6 +961,11 @@ class AppInitializer @Inject constructor(
         private const val KILOBYTES_IN_BYTES = 1024
         private const val MEMORY_CACHE_RATIO = 0.25 // Use 1/4th of the available memory for memory cache.
         private const val DEFAULT_TIMEOUT = 2 * 60 // 2 minutes
+
+        // Use service ids near the int max to avoid collisions with existing JobService ids
+        // The minimum range size is 1000, but we can easily give 10000.
+        private const val WORK_MANAGER_ID_RANGE_MAX = Int.MAX_VALUE
+        private const val WORK_MANAGER_ID_RANGE_MIN = WORK_MANAGER_ID_RANGE_MAX - 10000
 
         @SuppressLint("StaticFieldLeak")
         var context: Context? = null
