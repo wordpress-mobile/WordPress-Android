@@ -26,7 +26,8 @@ public class JobServiceId {
     public static final int JOB_READER_DISCOVER_SERVICE_ID = 10000;
 
     // Note: Until these JobServices are refactored as WorkManager requests, we should avoid using id values for these
-    // services that may collide w/ the WorkManager id range (currently 1000 ids with range ending in Integer.MAX_VALUE)
+    // services that may collide w/ the WorkManager id range (currently 10000 ids with range ending in
+    // Integer.MAX_VALUE)
 
     /*
      * This method checks that a bundle for a given JobService matches perfectly (all extras and all of its
