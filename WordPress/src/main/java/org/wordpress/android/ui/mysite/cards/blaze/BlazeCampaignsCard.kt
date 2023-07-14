@@ -39,8 +39,8 @@ import org.wordpress.android.ui.utils.UiString
 @Composable
 @Suppress("FunctionName")
 fun BlazeCampaignsCard(
-    modifier: Modifier = Modifier,
     blazeCampaignCardModel: BlazeCampaignsCardModel,
+    modifier: Modifier = Modifier,
     isInDarkMode: Boolean = isSystemInDarkTheme()
 ) {
     DashboardCard(modifier = modifier, content = {
