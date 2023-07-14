@@ -8,17 +8,20 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewHolder.PrepublishingHeaderListItemViewHolder
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewHolder.PrepublishingHomeListItemViewHolder
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewHolder.PrepublishingSocialItemViewHolder
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewHolder.PrepublishingSubmitButtonViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
-private const val headerViewType: Int = 1
-private const val homeItemViewType: Int = 2
-private const val submitButtonViewType: Int = 3
+private const val VIEW_TYPE_HEADER_VIEW: Int = 1
+private const val VIEW_TYPE_HOME_ITEM: Int = 2
+private const val VIEW_TYPE_SUBMIT_BUTTON: Int = 3
+private const val VIEW_TYPE_SOCIAL_ITEM: Int = 4
 
 class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<PrepublishingHomeViewHolder>() {
     private var items: List<PrepublishingHomeItemUiState> = listOf()
@@ -35,13 +38,14 @@ class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<Prepubli
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrepublishingHomeViewHolder {
         return when (viewType) {
-            headerViewType -> PrepublishingHeaderListItemViewHolder(
+            VIEW_TYPE_HEADER_VIEW -> PrepublishingHeaderListItemViewHolder(
                 parent,
                 uiHelpers,
                 imageManager
             )
-            homeItemViewType -> PrepublishingHomeListItemViewHolder(parent, uiHelpers)
-            submitButtonViewType -> PrepublishingSubmitButtonViewHolder(parent, uiHelpers)
+            VIEW_TYPE_HOME_ITEM -> PrepublishingHomeListItemViewHolder(parent, uiHelpers)
+            VIEW_TYPE_SUBMIT_BUTTON -> PrepublishingSubmitButtonViewHolder(parent, uiHelpers)
+            VIEW_TYPE_SOCIAL_ITEM -> PrepublishingSocialItemViewHolder(parent, uiHelpers)
             else -> throw NotImplementedError("Unknown ViewType")
         }
     }
@@ -60,9 +64,10 @@ class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<Prepubli
     @Suppress("UseCheckOrError")
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
-            is HeaderUiState -> headerViewType
-            is HomeUiState -> homeItemViewType
-            is ButtonUiState -> submitButtonViewType
+            is HeaderUiState -> VIEW_TYPE_HEADER_VIEW
+            is HomeUiState -> VIEW_TYPE_HOME_ITEM
+            is ButtonUiState -> VIEW_TYPE_SUBMIT_BUTTON
+            is SocialUiState -> VIEW_TYPE_SOCIAL_ITEM
             is StoryTitleUiState ->
                 throw IllegalStateException("StoryTitleUiState is not supported by the PrepublishingHomeAdapter")
         }

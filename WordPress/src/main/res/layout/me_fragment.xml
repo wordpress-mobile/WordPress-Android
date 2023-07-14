@@ -124,7 +124,11 @@
 
             </LinearLayout>
 
-            <View style="@style/MeListSectionDividerView" />
+            <View
+                android:id="@+id/my_profile_divider"
+                android:visibility="gone"
+                style="@style/MeListSectionDividerView"
+                tools:visibility="visible"/>
 
             <LinearLayout
                 android:id="@+id/row_account_settings"
@@ -143,7 +147,11 @@
 
             </LinearLayout>
 
-            <View style="@style/MeListSectionDividerView" />
+            <View
+                android:id="@+id/account_settings_divider"
+                android:visibility="gone"
+                style="@style/MeListSectionDividerView"
+                tools:visibility="visible"/>
 
             <LinearLayout
                 android:id="@+id/row_scan_login_code"
@@ -192,7 +200,8 @@
             <LinearLayout
                 android:id="@+id/row_debug_settings"
                 android:visibility="gone"
-                style="@style/MeListRowLayout">
+                style="@style/MeListRowLayout"
+                tools:visibility="visible">
 
                 <ImageView
                     android:id="@+id/me_debug_settings_icon"
@@ -207,7 +216,11 @@
 
             </LinearLayout>
 
-            <View style="@style/MeListSectionDividerView" />
+            <View
+                android:id="@+id/debug_settings_divider"
+                android:visibility="gone"
+                style="@style/MeListSectionDividerView"
+                tools:visibility="visible"/>
 
             <LinearLayout
                 android:id="@+id/row_support"

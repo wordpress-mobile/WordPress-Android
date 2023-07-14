@@ -7,7 +7,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
-import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardSource
+import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainSource
@@ -32,7 +32,7 @@ class MySiteSourceManager @Inject constructor(
     cardsSource: CardsSource,
     siteIconProgressSource: SiteIconProgressSource,
     private val bloggingPromptCardSource: BloggingPromptCardSource,
-    promoteWithBlazeCardSource: PromoteWithBlazeCardSource,
+    blazeCardSource: BlazeCardSource,
     private val selectedSiteRepository: SelectedSiteRepository,
     dashboardCardDomainSource: DashboardCardDomainSource,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
@@ -47,7 +47,7 @@ class MySiteSourceManager @Inject constructor(
         dynamicCardsSource,
         cardsSource,
         bloggingPromptCardSource,
-        promoteWithBlazeCardSource,
+        blazeCardSource,
         dashboardCardDomainSource,
     )
 

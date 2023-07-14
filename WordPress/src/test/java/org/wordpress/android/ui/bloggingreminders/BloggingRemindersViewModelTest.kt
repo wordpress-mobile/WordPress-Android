@@ -42,6 +42,7 @@ import org.wordpress.android.ui.utils.ListItemInteraction.Companion
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
 import org.wordpress.android.workers.reminder.ReminderScheduler
@@ -81,6 +82,10 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var buildConfigWrapper: BuildConfigWrapper
+
     private lateinit var viewModel: BloggingRemindersViewModel
     private val siteId = 123
     private val hour = 10
@@ -103,13 +108,15 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
             reminderScheduler,
             BloggingRemindersModelMapper(),
             siteStore,
-            resourceProvider
+            resourceProvider,
+            buildConfigWrapper
         )
         viewModel.setPermissionState(hasNotificationsPermission = true, notificationsPermissionAlwaysDenied = true)
         events = mutableListOf()
         events = viewModel.isBottomSheetShowing.eventToList()
         uiState = viewModel.uiState.toList()
         whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(emptyFlow())
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
     }
 
     @Test

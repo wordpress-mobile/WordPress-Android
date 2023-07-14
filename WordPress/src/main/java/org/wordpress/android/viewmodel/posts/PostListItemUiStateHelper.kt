@@ -92,7 +92,6 @@ class PostListItemUiStateHelper @Inject constructor(
         isSearch: Boolean,
         uploadStatusTracker: PostModelUploadStatusTracker,
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit,
-        isSiteBlazeEligible: Boolean
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
         val uploadUiState = uploadUiStateUseCase.createUploadUiState(post, site, uploadStatusTracker)
@@ -109,7 +108,8 @@ class PostListItemUiStateHelper @Inject constructor(
             statsSupported = statsSupported,
             shouldShowStatsInJetpackRemovalPhase =
             jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton(),
-            shouldShowPromoteWithBlaze = isSiteBlazeEligible && blazeFeatureUtils.isPostBlazeEligible(
+            shouldShowPromoteWithBlaze = blazeFeatureUtils.isPostBlazeEligible(
+                site,
                 postStatus,
                 post
             ),
@@ -145,6 +145,7 @@ class PostListItemUiStateHelper @Inject constructor(
                         POST_LIST_ITEM_SELECTED
                     )
                 }
+
                 UNKNOWN, PUBLISHED, DRAFT, PRIVATE, PENDING, SCHEDULED -> onAction.invoke(
                     post,
                     BUTTON_EDIT,
@@ -256,11 +257,13 @@ class PostListItemUiStateHelper @Inject constructor(
             uploadUiState is UploadFailed -> {
                 getErrorLabel(uploadUiState, postStatus)?.let { labels.add(it) }
             }
+
             uploadUiState is UploadingPost -> if (uploadUiState.isDraft) {
                 labels.add(UiStringRes(R.string.post_uploading_draft))
             } else {
                 labels.add(UiStringRes(R.string.post_uploading))
             }
+
             uploadUiState is UploadingMedia -> labels.add(UiStringRes(R.string.uploading_media))
             uploadUiState is UploadQueued -> labels.add(UiStringRes(R.string.post_queued))
             uploadUiState is UploadWaitingForConnection -> {
@@ -268,6 +271,7 @@ class PostListItemUiStateHelper @Inject constructor(
                     labels.add(it)
                 }
             }
+
             hasUnhandledConflicts -> labels.add(UiStringRes(R.string.local_post_is_conflicted))
             hasAutoSave -> labels.add(UiStringRes(R.string.local_post_autosave_revision_available))
         }
@@ -335,6 +339,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 uploadUiState.error.postError,
                 uploadUiState.isEligibleForAutoUpload
             )
+
             else -> {
                 val errorMsg = "MediaError and postError are both null."
                 if (BuildConfig.DEBUG) {
@@ -356,6 +361,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted_retrying)
                 DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_generic_error_retrying)
             }
+
             uploadUiState.retryWillPushChanges -> when (postStatus) {
                 PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published)
                 PRIVATE -> UiStringRes(R.string.error_media_recover_post_not_published_private)
@@ -363,6 +369,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted)
                 DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post)
             }
+
             else -> UiStringRes(R.string.error_media_recover_post)
         }
     }
