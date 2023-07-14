@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
@@ -46,6 +47,9 @@ fun EditPostSettingsJetpackSocialContainerView(
                 text = subscribeButtonLabel,
                 onClick = onSubscribeClick,
                 fillMaxWidth = false,
+                padding = PaddingValues(
+                    horizontal = Margin.ExtraLarge.value
+                ),
             )
         } else {
             EditPostSettingsJetpackSocialEmpty(
