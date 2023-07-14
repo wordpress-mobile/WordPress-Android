@@ -4,6 +4,9 @@ common_params:
   - &common_plugins
     - automattic/a8c-ci-toolkit#2.17.0
 
+agents:
+  queue: "android-staging"
+
 steps:
   - label: "Finalize release"
     plugins: *common_plugins
