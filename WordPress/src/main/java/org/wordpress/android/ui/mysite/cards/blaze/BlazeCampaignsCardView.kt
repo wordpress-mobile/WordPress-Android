@@ -30,11 +30,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.card.DashboardCard
-import org.wordpress.android.ui.compose.styles.detailText
-import org.wordpress.android.ui.compose.styles.footerCTA
-import org.wordpress.android.ui.compose.styles.largeText
-import org.wordpress.android.ui.compose.styles.smallTitle
-import org.wordpress.android.ui.compose.styles.subTitle
+import org.wordpress.android.ui.compose.styles.DashboardCardTypography
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard.BlazeCampaignsCardItem.BlazeCampaignStats
@@ -50,7 +46,7 @@ fun BlazeCampaignsCardView(
     DashboardCard(modifier = modifier, content = {
         Text(
             text = uiStringText(uiString = blazeCampaignCard.title),
-            style = smallTitle(),
+            style = DashboardCardTypography.smallTitle,
             textAlign = TextAlign.Start,
             modifier = modifier
                 .fillMaxWidth()
@@ -83,9 +79,9 @@ fun BlazeCampaignsCardView(
         }
         Text(
             text = uiStringText(uiString = blazeCampaignCard.footer.label),
-            style = footerCTA(),
+            style = DashboardCardTypography.footerCTA,
             textAlign = TextAlign.Start,
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
@@ -152,7 +148,7 @@ private fun FeaturedImage(url: String?, modifier: Modifier = Modifier) {
 private fun CampaignTitle(title: String, modifier: Modifier = Modifier) {
     Text(
         text = title,
-        style = subTitle(),
+        style = DashboardCardTypography.subTitle,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
         modifier = modifier.wrapContentHeight()
@@ -198,7 +194,7 @@ private fun CampaignStat(title: String, value: UiString, modifier: Modifier = Mo
     ) {
         Text(
             text = title,
-            style = detailText(),
+            style = DashboardCardTypography.detailText,
             textAlign = TextAlign.Start,
             modifier = modifier
                 .wrapContentWidth()
@@ -206,7 +202,7 @@ private fun CampaignStat(title: String, value: UiString, modifier: Modifier = Mo
         )
         Text(
             text = uiStringText(uiString = value),
-            style = largeText(),
+            style = DashboardCardTypography.largeText,
             textAlign = TextAlign.Start,
             modifier = modifier
                 .wrapContentWidth()
