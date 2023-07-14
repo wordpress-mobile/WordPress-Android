@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.mysite.cards.blaze
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,8 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
@@ -81,67 +79,36 @@ fun BlazeCampaignsCard(
 
 @Composable
 fun CampaignTitleThumbnail(campaignTitle: UiString, featuredImageUrl: String?, modifier: Modifier = Modifier) {
-    ConstraintLayout(
-        modifier = modifier
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Top,
     ) {
-        val (container, featuredImage, title) = createRefs()
-        Box(modifier = Modifier.constrainAs(container) {
-            top.linkTo(parent.top, 0.dp)
-            bottom.linkTo(parent.bottom, 0.dp)
-            start.linkTo(parent.start, 0.dp)
-            end.linkTo(parent.end, 0.dp)
-            width = Dimension.fillToConstraints
-            height = Dimension.fillToConstraints
-        })
-        FeaturedImage(
-            url = featuredImageUrl,
-            modifier = Modifier.constrainAs(featuredImage) {
-                top.linkTo(container.top)
-                bottom.linkTo(container.bottom)
-                end.linkTo(container.end)
-            })
-        CampaignTitle(
-            title = uiStringText(uiString = campaignTitle),
-            modifier = Modifier
-                .constrainAs(title) {
-                    top.linkTo(container.top)
-                    start.linkTo(container.start)
-                    featuredImageUrl?.run {
-                        end.linkTo(featuredImage.start, margin = 16.dp)
-                    } ?: run {
-                        end.linkTo(container.end, margin = 16.dp)
-                    }
-                    width = Dimension.fillToConstraints
-                }
-                .wrapContentHeight()
+        Text(
+            text = uiStringText(uiString = campaignTitle),
+            style = DashboardCardTypography.subTitle,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(
+                1f,
+                fill = false
+            )
         )
+        if (featuredImageUrl != null) {
+            Spacer(Modifier.width(16.dp))
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(featuredImageUrl)
+                    .crossfade(true)
+                    .build(),
+                contentScale = ContentScale.Crop,
+                contentDescription = stringResource(R.string.featured_image_desc),
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(RoundedCornerShape(4.dp))
+            )
+        }
     }
-}
-
-@Composable
-private fun FeaturedImage(url: String?, modifier: Modifier = Modifier) {
-    AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(url)
-            .crossfade(true)
-            .build(),
-        contentScale = ContentScale.Crop,
-        contentDescription = stringResource(R.string.featured_image_desc),
-        modifier = modifier
-            .size(48.dp)
-            .clip(RoundedCornerShape(4.dp))
-    )
-}
-
-@Composable
-private fun CampaignTitle(title: String, modifier: Modifier = Modifier) {
-    Text(
-        text = title,
-        style = DashboardCardTypography.subTitle,
-        maxLines = 2,
-        overflow = TextOverflow.Ellipsis,
-        modifier = modifier
-    )
 }
 
 @Composable
