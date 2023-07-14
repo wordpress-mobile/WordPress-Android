@@ -12,11 +12,11 @@ import org.wordpress.android.util.extensions.viewBinding
 
 class BlazeCampaignsCardViewHolder(parent: ViewGroup) :
     CardViewHolder<CampaignsCardBinding>(parent.viewBinding(CampaignsCardBinding::inflate)) {
-    fun bind(card: BlazeCampaignsCardModel) = with(binding) {
+    fun bind(cardModel: BlazeCampaignsCardModel) = with(binding) {
         blazeCampaignsCard.setContent {
             AppTheme {
                 BlazeCampaignsCard(
-                    blazeCampaignCardModel = card, modifier = Modifier
+                    blazeCampaignCardModel = cardModel, modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
                 )
