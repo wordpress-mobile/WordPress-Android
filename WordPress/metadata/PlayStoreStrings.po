@@ -10,18 +10,18 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
+msgctxt "release_note_228"
+msgid ""
+"22.8:\n"
+"The app will no longer crash after you delete a site. Phew.\n"
+msgstr ""
+
 msgctxt "release_note_227"
 msgid ""
 "22.7:\n"
 "- We gave the floating action button a new shape, color, and style.\n"
 "- Image blocks now display the correct aspect ratio, whether or not the image has a set width and height.\n"
 "- We moved the “Me” section with your avatar to the main menu under “Manage”.\n"
-msgstr ""
-
-msgctxt "release_note_226"
-msgid ""
-"22.6:\n"
-"Locked and loaded—there’s now a lock icon for disabled cells in the block editor so you know when they aren’t in use.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

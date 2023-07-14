@@ -1,4 +1,2 @@
-* [*] Fixes the crash that occurs after deleting the site [https://github.com/wordpress-mobile/WordPress-Android/pull/18736]
-* [*] [Jetpack-only] Block editor: Rename "Reusable blocks" to "Synced patterns", aligning with the web editor. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5885]
-* [**] [internal] Block editor: Fix a crash related to Reanimated when closing the editor [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5938]
-
+- The app will no longer crash after you delete a site. Phew.
+- Reusable blocks are now known as synced patterns, the same as in the desktop editor.
