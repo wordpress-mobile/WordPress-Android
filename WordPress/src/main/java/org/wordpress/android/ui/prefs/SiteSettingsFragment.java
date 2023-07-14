@@ -409,6 +409,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mSiteSettings != null) {
             mSiteSettings.clear();
         }
+        if (mDialog != null) {
+            mDialog.dismiss();
+        }
         super.onDestroy();
     }
 
