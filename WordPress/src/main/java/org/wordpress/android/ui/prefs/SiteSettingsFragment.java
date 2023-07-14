@@ -400,7 +400,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onDestroyView() {
-        removeJetpackSecurityScreenToolbar();
         mDispatcher.unregister(this);
         super.onDestroyView();
     }
@@ -516,7 +515,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        removeJetpackSecurityScreenToolbar();
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
     }
@@ -1981,14 +1979,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             return true;
         }
         return false;
-    }
-
-    private void removeJetpackSecurityScreenToolbar() {
-        if (mJpSecuritySettings == null || !isAdded()) {
-            return;
-        }
-        Dialog securityDialog = mJpSecuritySettings.getDialog();
-        WPActivityUtils.removeToolbarFromDialog(this, securityDialog);
     }
 
     private void hideAdminRequiredPreferences() {
