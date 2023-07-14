@@ -39,41 +39,43 @@ fun BlazeCampaignsCard(
     modifier: Modifier = Modifier
 ) {
     DashboardCard(modifier = modifier, content = {
-        Text(
-            text = uiStringText(uiString = blazeCampaignCardModel.title),
-            style = DashboardCardTypography.smallTitle,
-            textAlign = TextAlign.Start,
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, top = 16.dp)
-        )
-        val status = blazeCampaignCardModel.campaign.status
-        if (status != null) {
-            BlazeStatusLabel(
-                status = status,
-            )
-        }
-        CampaignTitleThumbnail(
-            campaignTitle = blazeCampaignCardModel.campaign.title,
-            featuredImageUrl = blazeCampaignCardModel.campaign.featuredImageUrl,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        if (blazeCampaignCardModel.campaign.stats != null) {
-            CampaignStats(
-                campaignStats = blazeCampaignCardModel.campaign.stats,
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = uiStringText(uiString = blazeCampaignCardModel.title),
+                style = DashboardCardTypography.smallTitle,
+                textAlign = TextAlign.Start,
                 modifier = Modifier
-                    .padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
+                    .fillMaxWidth()
+            )
+            val status = blazeCampaignCardModel.campaign.status
+            if (status != null) {
+                BlazeStatusLabel(
+                    status = status,
+                )
+            }
+            CampaignTitleThumbnail(
+                campaignTitle = blazeCampaignCardModel.campaign.title,
+                featuredImageUrl = blazeCampaignCardModel.campaign.featuredImageUrl,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+            if (blazeCampaignCardModel.campaign.stats != null) {
+                CampaignStats(
+                    campaignStats = blazeCampaignCardModel.campaign.stats,
+                )
+            }
+            Text(
+                text = uiStringText(uiString = blazeCampaignCardModel.footer.label),
+                style = DashboardCardTypography.footerCTA,
+                textAlign = TextAlign.Start,
+                modifier = Modifier
+                    .fillMaxWidth()
             )
         }
-        Text(
-            text = uiStringText(uiString = blazeCampaignCardModel.footer.label),
-            style = DashboardCardTypography.footerCTA,
-            textAlign = TextAlign.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
-        )
     })
 }
 
@@ -81,7 +83,6 @@ fun BlazeCampaignsCard(
 fun CampaignTitleThumbnail(campaignTitle: UiString, featuredImageUrl: String?, modifier: Modifier = Modifier) {
     ConstraintLayout(
         modifier = modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         val (container, featuredImage, title) = createRefs()
         Box(modifier = Modifier.constrainAs(container) {

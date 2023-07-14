@@ -26,7 +26,7 @@ fun BlazeStatusLabel(
     val isInDarkMode = !MaterialTheme.colors.isLight
     Box(
         modifier = modifier
-            .padding(start = 16.dp, top = 16.dp)
+            .padding(top = 8.dp)
             .background(
                 color = status.textViewBackgroundColor(isInDarkMode),
                 shape = RoundedCornerShape(size = 2.dp)
