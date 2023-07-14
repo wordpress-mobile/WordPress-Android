@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.cards.blaze
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,14 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -48,7 +45,6 @@ fun BlazeCampaignsCard(
             textAlign = TextAlign.Start,
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
                 .padding(start = 16.dp, top = 16.dp)
         )
         val status = blazeCampaignCardModel.campaign.status
@@ -62,15 +58,11 @@ fun BlazeCampaignsCard(
             featuredImageUrl = blazeCampaignCardModel.campaign.featuredImageUrl,
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
         )
         if (blazeCampaignCardModel.campaign.stats != null) {
             CampaignStats(
                 campaignStats = blazeCampaignCardModel.campaign.stats,
                 modifier = Modifier
-                    .wrapContentWidth()
-                    .wrapContentHeight()
-                    .background(Color.LightGray)
                     .padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
             )
         }
@@ -80,7 +72,6 @@ fun BlazeCampaignsCard(
             textAlign = TextAlign.Start,
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
                 .padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
         )
     })
@@ -148,7 +139,7 @@ private fun CampaignTitle(title: String, modifier: Modifier = Modifier) {
         style = DashboardCardTypography.subTitle,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
-        modifier = modifier.wrapContentHeight()
+        modifier = modifier
     )
 }
 
@@ -158,24 +149,19 @@ private fun CampaignStats(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier
-            .wrapContentHeight()
-            .wrapContentWidth(),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
         CampaignStat(
             modifier = Modifier
-                .wrapContentHeight()
-                .wrapContentWidth(),
+                .weight(1f),
             title = "Impressions",
             value = campaignStats.impressions
         )
         CampaignStat(
             modifier = Modifier
-                .wrapContentHeight()
-                .wrapContentWidth()
-                .padding(end = 8.dp),
+                .weight(1f),
             title = "Clicks",
             value = campaignStats.clicks
         )
@@ -186,24 +172,16 @@ private fun CampaignStats(
 private fun CampaignStat(title: String, value: UiString, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
-            .wrapContentHeight()
-            .wrapContentWidth()
     ) {
         Text(
             text = title,
             style = DashboardCardTypography.detailText,
-            textAlign = TextAlign.Start,
-            modifier = Modifier
-                .wrapContentWidth()
-                .wrapContentHeight()
+            textAlign = TextAlign.Start
         )
         Text(
             text = uiStringText(uiString = value),
             style = DashboardCardTypography.largeText,
-            textAlign = TextAlign.Start,
-            modifier = Modifier
-                .wrapContentWidth()
-                .wrapContentHeight()
+            textAlign = TextAlign.Start
         )
     }
 }
