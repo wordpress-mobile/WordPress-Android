@@ -46,7 +46,7 @@ fun BlazeCampaignsCard(
             text = uiStringText(uiString = blazeCampaignCardModel.title),
             style = DashboardCardTypography.smallTitle,
             textAlign = TextAlign.Start,
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .padding(start = 16.dp, top = 16.dp)
@@ -93,24 +93,24 @@ fun CampaignTitleThumbnail(campaignTitle: UiString, featuredImageUrl: String?, m
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         val (container, featuredImage, title) = createRefs()
-        Box(modifier = Modifier
-            .constrainAs(container) {
-                top.linkTo(parent.top, 0.dp)
-                bottom.linkTo(parent.bottom, 0.dp)
-                start.linkTo(parent.start, 0.dp)
-                end.linkTo(parent.end, 0.dp)
-                width = Dimension.fillToConstraints
-                height = Dimension.fillToConstraints
-            }
-        )
-        FeaturedImage(url = featuredImageUrl, modifier = Modifier
-            .constrainAs(featuredImage) {
+        Box(modifier = Modifier.constrainAs(container) {
+            top.linkTo(parent.top, 0.dp)
+            bottom.linkTo(parent.bottom, 0.dp)
+            start.linkTo(parent.start, 0.dp)
+            end.linkTo(parent.end, 0.dp)
+            width = Dimension.fillToConstraints
+            height = Dimension.fillToConstraints
+        })
+        FeaturedImage(
+            url = featuredImageUrl,
+            modifier = Modifier.constrainAs(featuredImage) {
                 top.linkTo(container.top)
                 bottom.linkTo(container.bottom)
                 end.linkTo(container.end)
             })
         CampaignTitle(
-            title = uiStringText(uiString = campaignTitle), modifier = Modifier
+            title = uiStringText(uiString = campaignTitle),
+            modifier = Modifier
                 .constrainAs(title) {
                     top.linkTo(container.top)
                     start.linkTo(container.start)
@@ -165,14 +165,14 @@ private fun CampaignStats(
         horizontalArrangement = Arrangement.Start
     ) {
         CampaignStat(
-            modifier = modifier
+            modifier = Modifier
                 .wrapContentHeight()
                 .wrapContentWidth(),
             title = "Impressions",
             value = campaignStats.impressions
         )
         CampaignStat(
-            modifier = modifier
+            modifier = Modifier
                 .wrapContentHeight()
                 .wrapContentWidth()
                 .padding(end = 8.dp),
@@ -193,7 +193,7 @@ private fun CampaignStat(title: String, value: UiString, modifier: Modifier = Mo
             text = title,
             style = DashboardCardTypography.detailText,
             textAlign = TextAlign.Start,
-            modifier = modifier
+            modifier = Modifier
                 .wrapContentWidth()
                 .wrapContentHeight()
         )
@@ -201,7 +201,7 @@ private fun CampaignStat(title: String, value: UiString, modifier: Modifier = Mo
             text = uiStringText(uiString = value),
             style = DashboardCardTypography.largeText,
             textAlign = TextAlign.Start,
-            modifier = modifier
+            modifier = Modifier
                 .wrapContentWidth()
                 .wrapContentHeight()
         )
