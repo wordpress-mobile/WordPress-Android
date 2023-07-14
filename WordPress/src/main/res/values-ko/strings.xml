@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-28 09:54:08+0000
+Translation-Revision-Date: 2023-07-12 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_s_detached">%s 분리됨</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">동기화된 패턴 편집은 아직 iOS용 %s에서 지원되지 않습니다.</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">동기화된 패턴 편집은 아직 Android용 %s에서 지원되지 않습니다.</string>
     <string name="gutenberg_native_reusable">재사용 가능</string>
     <string name="privacy_banner_error_save">개인정보 선택 사항을 저장하는 중 오류가 발생했습니다.</string>
     <string name="privacy_banner_save">저장</string>
