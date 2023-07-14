@@ -505,7 +505,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     /*
      * adjust the toolbar so it doesn't overlap the status bar
      */
-    @SuppressLint("InternalInsetResource")
+    @SuppressLint({"InternalInsetResource", "DiscouragedApi"})
     private void adjustToolbar() {
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
