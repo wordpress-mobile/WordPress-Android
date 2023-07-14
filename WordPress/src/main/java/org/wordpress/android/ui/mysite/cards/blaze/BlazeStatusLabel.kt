@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun BlazeStatusLabel(
-    modifier: Modifier = Modifier,
-    status: CampaignStatus
+    status: CampaignStatus,
+    modifier: Modifier = Modifier
 ) {
     val isInDarkMode = !MaterialTheme.colors.isLight
     Box(
