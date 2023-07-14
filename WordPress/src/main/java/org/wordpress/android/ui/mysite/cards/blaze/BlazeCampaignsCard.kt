@@ -38,14 +38,14 @@ import org.wordpress.android.ui.utils.UiString
 
 @Composable
 @Suppress("FunctionName")
-fun BlazeCampaignsCardView(
+fun BlazeCampaignsCard(
     modifier: Modifier = Modifier,
-    blazeCampaignCard: BlazeCampaignsCardModel,
+    blazeCampaignCardModel: BlazeCampaignsCardModel,
     isInDarkMode: Boolean = isSystemInDarkTheme()
 ) {
     DashboardCard(modifier = modifier, content = {
         Text(
-            text = uiStringText(uiString = blazeCampaignCard.title),
+            text = uiStringText(uiString = blazeCampaignCardModel.title),
             style = DashboardCardTypography.smallTitle,
             textAlign = TextAlign.Start,
             modifier = modifier
@@ -53,7 +53,7 @@ fun BlazeCampaignsCardView(
                 .wrapContentHeight()
                 .padding(start = 16.dp, top = 16.dp)
         )
-        val status = blazeCampaignCard.campaign.status
+        val status = blazeCampaignCardModel.campaign.status
         if (status != null) {
             BlazeStatusLabel(
                 status = status,
@@ -61,15 +61,15 @@ fun BlazeCampaignsCardView(
             )
         }
         CampaignTitleThumbnail(
-            campaignTitle = blazeCampaignCard.campaign.title,
-            featuredImageUrl = blazeCampaignCard.campaign.featuredImageUrl,
+            campaignTitle = blazeCampaignCardModel.campaign.title,
+            featuredImageUrl = blazeCampaignCardModel.campaign.featuredImageUrl,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
         )
-        if (blazeCampaignCard.campaign.stats != null) {
+        if (blazeCampaignCardModel.campaign.stats != null) {
             CampaignStats(
-                campaignStats = blazeCampaignCard.campaign.stats,
+                campaignStats = blazeCampaignCardModel.campaign.stats,
                 modifier = Modifier
                     .wrapContentWidth()
                     .wrapContentHeight()
@@ -78,7 +78,7 @@ fun BlazeCampaignsCardView(
             )
         }
         Text(
-            text = uiStringText(uiString = blazeCampaignCard.footer.label),
+            text = uiStringText(uiString = blazeCampaignCardModel.footer.label),
             style = DashboardCardTypography.footerCTA,
             textAlign = TextAlign.Start,
             modifier = Modifier

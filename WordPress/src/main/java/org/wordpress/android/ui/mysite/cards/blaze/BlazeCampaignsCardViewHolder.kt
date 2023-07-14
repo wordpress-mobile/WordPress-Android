@@ -15,8 +15,8 @@ class BlazeCampaignsCardViewHolder(parent: ViewGroup) :
     fun bind(card: BlazeCampaignsCardModel) = with(binding) {
         blazeCampaignsCard.setContent {
             AppTheme {
-                BlazeCampaignsCardView(
-                    blazeCampaignCard = card, modifier = Modifier
+                BlazeCampaignsCard(
+                    blazeCampaignCardModel = card, modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
                 )
