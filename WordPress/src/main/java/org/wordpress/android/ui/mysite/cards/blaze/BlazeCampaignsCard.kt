@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.blaze
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,8 +39,7 @@ import org.wordpress.android.ui.utils.UiString
 @Suppress("FunctionName")
 fun BlazeCampaignsCard(
     blazeCampaignCardModel: BlazeCampaignsCardModel,
-    modifier: Modifier = Modifier,
-    isInDarkMode: Boolean = isSystemInDarkTheme()
+    modifier: Modifier = Modifier
 ) {
     DashboardCard(modifier = modifier, content = {
         Text(
@@ -57,7 +55,6 @@ fun BlazeCampaignsCard(
         if (status != null) {
             BlazeStatusLabel(
                 status = status,
-                isInDarkMode = isInDarkMode
             )
         }
         CampaignTitleThumbnail(

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,9 +21,9 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun BlazeStatusLabel(
     modifier: Modifier = Modifier,
-    status: CampaignStatus,
-    isInDarkMode: Boolean = false
+    status: CampaignStatus
 ) {
+    val isInDarkMode = !MaterialTheme.colors.isLight
     Box(
         modifier = modifier
             .padding(start = 16.dp, top = 16.dp)
