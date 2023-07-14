@@ -32,15 +32,15 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.card.DashboardCard
 import org.wordpress.android.ui.compose.styles.DashboardCardTypography
 import org.wordpress.android.ui.compose.utils.uiStringText
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard.BlazeCampaignsCardItem.BlazeCampaignStats
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel.BlazeCampaignsCardItem.BlazeCampaignStats
 import org.wordpress.android.ui.utils.UiString
 
 @Composable
 @Suppress("FunctionName")
 fun BlazeCampaignsCardView(
     modifier: Modifier = Modifier,
-    blazeCampaignCard: BlazeCampaignsCard,
+    blazeCampaignCard: BlazeCampaignsCardModel,
     isInDarkMode: Boolean = isSystemInDarkTheme()
 ) {
     DashboardCard(modifier = modifier, content = {

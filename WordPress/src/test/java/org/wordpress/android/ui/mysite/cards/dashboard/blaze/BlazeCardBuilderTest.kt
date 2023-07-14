@@ -7,10 +7,10 @@ import org.junit.Test
 import org.mockito.kotlin.mock
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard.BlazeCampaignsCardFooter
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard.BlazeCampaignsCardItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard.BlazeCampaignsCardItem.BlazeCampaignStats
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel.BlazeCampaignsCardFooter
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel.BlazeCampaignsCardItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel.BlazeCampaignsCardItem.BlazeCampaignStats
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
@@ -41,7 +41,7 @@ val campaignWithBlazeBuilderParams = CampaignWithBlazeCardBuilderParams(
     onCreateCampaignClick = onCreateCampaignClick
 )
 
-val blazeCampaignsCard = BlazeCampaignsCard(
+val blazeCampaignsCardModel = BlazeCampaignsCardModel(
     title = UiString.UiStringRes(R.string.blaze_campaigns_card_title),
     campaign = BlazeCampaignsCardItem(
         id = campaign.campaignId,
@@ -103,9 +103,9 @@ class BlazeCardBuilderTest {
         val params = campaignWithBlazeBuilderParams
 
         // Act
-        val result = builder.build(params) as BlazeCampaignsCard
+        val result = builder.build(params) as BlazeCampaignsCardModel
 
         // Assert
-        assertEquals(blazeCampaignsCard,result)
+        assertEquals(blazeCampaignsCardModel,result)
     }
 }

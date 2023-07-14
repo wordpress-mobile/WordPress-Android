@@ -331,7 +331,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 sealed class BlazeCard(
                     override val dashboardCardType: DashboardCardType
                 ) : DashboardCard(dashboardCardType) {
-                    data class BlazeCampaignsCard(
+                    data class BlazeCampaignsCardModel(
                         val title: UiString,
                         val campaign: BlazeCampaignsCardItem,
                         val footer: BlazeCampaignsCardFooter,

@@ -2,9 +2,9 @@ package org.wordpress.android.ui.mysite.cards.blaze
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard.BlazeCampaignsCardItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard.BlazeCampaignsCardFooter
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel.BlazeCampaignsCardItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel.BlazeCampaignsCardFooter
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
@@ -21,8 +21,8 @@ class BlazeCardBuilder @Inject constructor() {
         }
     }
 
-    private fun buildBlazeCampaignsCard(params: CampaignWithBlazeCardBuilderParams): BlazeCampaignsCard {
-        return BlazeCampaignsCard(
+    private fun buildBlazeCampaignsCard(params: CampaignWithBlazeCardBuilderParams): BlazeCampaignsCardModel {
+        return BlazeCampaignsCardModel(
             title = UiString.UiStringRes(R.string.blaze_campaigns_card_title),
             campaign = getRecentCampaign(params),
             footer = getBlazeCardFooter(params),
