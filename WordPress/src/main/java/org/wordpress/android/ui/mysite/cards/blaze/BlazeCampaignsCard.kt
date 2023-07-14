@@ -150,8 +150,7 @@ private fun CampaignStats(
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
+        verticalAlignment = Alignment.CenterVertically
     ) {
         CampaignStat(
             modifier = Modifier
