@@ -8,7 +8,6 @@ import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import org.wordpress.android.R
 import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.models.PublicizeConnectionList
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
@@ -18,6 +17,7 @@ import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.compose.PostSocialMessageItem
 import org.wordpress.android.ui.posts.social.compose.PostSocialSharesText
+import org.wordpress.android.ui.publicize.PublicizeServiceIcon
 
 @Composable
 fun EditPostSettingsJetpackSocialContainerView(
@@ -27,6 +27,8 @@ fun EditPostSettingsJetpackSocialContainerView(
     remainingSharesMessage: String,
     subscribeButtonLabel: String,
     onSubscribeClick: () -> Unit,
+    connectProfilesButtonLabel: String,
+    onConnectProfilesCLick: () -> Unit,
 ) {
     Column {
         if (postSocialConnectionList.isNotEmpty()) {
@@ -52,8 +54,10 @@ fun EditPostSettingsJetpackSocialContainerView(
                 ),
             )
         } else {
-            EditPostSettingsJetpackSocialEmpty(
+            EditPostSettingsJetpackSocialNoConnections(
                 trainOfIconsModels = trainOfIconsModels,
+                connectProfilesButtonLabel = connectProfilesButtonLabel,
+                onConnectProfilesCLick = onConnectProfilesCLick,
             )
         }
     }
@@ -86,17 +90,14 @@ fun PreviewEditPostSettingsJetpackSocialContainerConnectionsListView() {
         connections.add(connection1)
         connections.add(connection2)
         EditPostSettingsJetpackSocialContainerView(
-            trainOfIconsModels = listOf(
-                TrainOfIconsModel(R.drawable.login_prologue_second_asset_three),
-                TrainOfIconsModel(R.drawable.login_prologue_second_asset_two),
-                TrainOfIconsModel(R.drawable.login_prologue_third_asset_one),
-                TrainOfIconsModel(R.mipmap.app_icon)
-            ),
+            trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
             postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
             shareMessage = "Share message.",
             remainingSharesMessage = "27/30 Social shares remaining in the next 30 days",
             subscribeButtonLabel = "Subscribe to share more",
             onSubscribeClick = {},
+            connectProfilesButtonLabel = "Connect your social profiles",
+            onConnectProfilesCLick = {},
         )
     }
 }
@@ -107,17 +108,14 @@ fun PreviewEditPostSettingsJetpackSocialContainerConnectionsListView() {
 fun PreviewEditPostSettingsJetpackSocialContainerEmptyView() {
     AppThemeEditor {
         EditPostSettingsJetpackSocialContainerView(
-            trainOfIconsModels = listOf(
-                TrainOfIconsModel(R.drawable.login_prologue_second_asset_three),
-                TrainOfIconsModel(R.drawable.login_prologue_second_asset_two),
-                TrainOfIconsModel(R.drawable.login_prologue_third_asset_one),
-                TrainOfIconsModel(R.mipmap.app_icon)
-            ),
+            trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
             postSocialConnectionList = emptyList(),
             shareMessage = "Share message.",
             remainingSharesMessage = "27/30 Social shares remaining in the next 30 days",
             subscribeButtonLabel = "Subscribe to share more",
             onSubscribeClick = {},
+            connectProfilesButtonLabel = "Connect your social profiles",
+            onConnectProfilesCLick = {},
         )
     }
 }

@@ -25,6 +25,8 @@ class EditPostSettingsJetpackSocialContainerComposeView @JvmOverloads constructo
                     remainingSharesMessage = it.remainingSharesMessage,
                     subscribeButtonLabel = it.subscribeButtonLabel,
                     onSubscribeClick = it.onSubscribeClick,
+                    connectProfilesButtonLabel = it.connectProfilesButtonLabel,
+                    onConnectProfilesCLick = it.onConnectProfilesCLick,
                 )
             }
         }
@@ -43,4 +45,6 @@ data class EditPostSettingsJetpackSocialContainerComposeViewData(
     val remainingSharesMessage: String,
     val subscribeButtonLabel: String,
     val onSubscribeClick: () -> Unit,
+    val connectProfilesButtonLabel: String,
+    val onConnectProfilesCLick: () -> Unit,
 )
