@@ -21,7 +21,6 @@ import org.wordpress.android.ui.publicize.PublicizeServiceIcon
 
 @Composable
 fun EditPostSettingsJetpackSocialContainer(
-    modifier: Modifier = Modifier,
     trainOfIconsModels: List<TrainOfIconsModel>,
     postSocialConnectionList: List<PostSocialConnection>,
     shareMessage: String,
@@ -30,6 +29,7 @@ fun EditPostSettingsJetpackSocialContainer(
     onSubscribeClick: () -> Unit,
     connectProfilesButtonLabel: String,
     onConnectProfilesCLick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         if (postSocialConnectionList.isNotEmpty()) {
