@@ -507,6 +507,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         addToolbarToStartOverSettings();
         addToolbarToJetpackMoreSettings();
         addToolbarToSiteAcceleratorSettingsNested();
+        addToolbarToMorePreference();
     }
 
     private AppCompatActivity getAppCompatActivity() {
@@ -518,15 +519,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         removeJetpackSecurityScreenToolbar();
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
-        setupMorePreferenceScreen();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
-            setupMorePreferenceScreen();
-
             SiteSettingsTimezoneBottomSheet bottomSheet =
                     (SiteSettingsTimezoneBottomSheet) (getAppCompatActivity())
                             .getSupportFragmentManager().findFragmentByTag(TIMEZONE_BOTTOM_SHEET_TAG);
@@ -617,6 +615,10 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void addToolbarToSiteAcceleratorSettingsNested() {
         addToolbarToNestedPreference(mSiteAcceleratorSettingsNested, R.string.site_settings_site_accelerator);
+    }
+
+    private void addToolbarToMorePreference() {
+        addToolbarToNestedPreference(mMorePreference, R.string.site_settings_discussion_title);
     }
 
     @Override
@@ -1972,12 +1974,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mMorePreference == null || !isAdded()) {
             return false;
         }
-        String title = getString(R.string.site_settings_discussion_title);
         Dialog dialog = mMorePreference.getDialog();
         if (dialog != null) {
-            dialog.setTitle(title);
             setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            addToolbarToMorePreference();
             return true;
         }
         return false;
