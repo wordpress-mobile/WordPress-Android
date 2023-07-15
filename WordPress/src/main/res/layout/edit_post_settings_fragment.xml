@@ -264,6 +264,32 @@
 
         </LinearLayout>
 
+        <!--Jetpack Social-->
+        <LinearLayout
+            android:id="@+id/post_settings_jetpack_social_container"
+            style="@style/PostSettingsCardViewInnerLayout"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/PostSettingsSectionHeader"
+                android:text="@string/post_settings_jetpack_social_header" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="vertical">
+
+                <org.wordpress.android.ui.posts.EditPostSettingsJetpackSocialContainerView
+                    android:id="@+id/post_settings_jetpack_social_container_compose_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
         <!--Page Attributes-->
         <LinearLayout
             android:id="@+id/post_settings_page_attributes_container"

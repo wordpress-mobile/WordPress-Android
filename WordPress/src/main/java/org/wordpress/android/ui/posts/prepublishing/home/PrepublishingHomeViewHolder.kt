@@ -49,14 +49,14 @@ sealed class PrepublishingHomeViewHolder(
         override fun onBind(uiState: PrepublishingHomeItemUiState) {
             uiState as HomeUiState
 
-            actionType.text = uiHelpers.getTextOfUiString(itemView.context, uiState.actionType.textRes)
+            actionType.text = uiHelpers.getTextOfUiString(itemView.context, uiState.navigationAction.textRes)
             uiState.actionResult?.let { resultText ->
                 actionResult.text = uiHelpers.getTextOfUiString(itemView.context, resultText)
             }
 
             actionLayout.isEnabled = uiState.actionClickable
             actionLayout.setOnClickListener {
-                uiState.onActionClicked?.invoke(uiState.actionType)
+                uiState.onNavigationActionClicked?.invoke(uiState.navigationAction)
             }
 
             actionType.setTextColor(

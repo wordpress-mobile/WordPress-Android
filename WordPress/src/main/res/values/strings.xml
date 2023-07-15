@@ -1712,6 +1712,7 @@
     <string name="post_settings_time_and_date">Date and Time</string>
     <string name="post_settings_notification">Notification</string>
     <string name="post_settings_add_to_calendar">Add to calendar</string>
+    <string name="post_settings_jetpack_social_header">Social Sharing</string>
 
     <string name="post_notification_off">Off</string>
     <string name="post_notification_one_hour_before">1 hour before</string>

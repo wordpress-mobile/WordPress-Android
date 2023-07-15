@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.social
 
 import org.wordpress.android.models.PublicizeConnection
+import org.wordpress.android.models.PublicizeConnectionList
 
 data class PostSocialConnection(
     val connectionId: Int,
@@ -23,5 +24,8 @@ data class PostSocialConnection(
                 isSharingEnabled = true, // default to true
             )
         }
+
+        fun fromPublicizeConnectionList(connections: PublicizeConnectionList): List<PostSocialConnection> =
+            connections.map { fromPublicizeConnection(it) }
     }
 }
