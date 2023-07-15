@@ -68,7 +68,7 @@ fun BlazeCampaignsCard(
                     CampaignStats(
                         campaignStats = blazeCampaignCardModel.campaign.stats,
                     )
-                }
+                } else Spacer(modifier = Modifier.size(8.dp))
             }
             Divider(
                 thickness = 0.5.dp,
