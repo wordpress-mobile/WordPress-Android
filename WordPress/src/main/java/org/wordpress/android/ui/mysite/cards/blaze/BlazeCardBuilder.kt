@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.blaze
 
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel.BlazeCampaignsCardItem
@@ -44,13 +45,21 @@ class BlazeCardBuilder @Inject constructor() {
                 title = UiString.UiStringText(campaign.title),
                 status = CampaignStatus.fromString(campaign.uiStatus),
                 featuredImageUrl = campaign.imageUrl,
-                stats = BlazeCampaignsCardItem.BlazeCampaignStats(
-                    impressions = UiString.UiStringText(campaign.impressions.toString()),
-                    clicks = UiString.UiStringText(campaign.clicks.toString()),
-                ),
+                stats = if (shouldShowCampaignStatus(campaign.uiStatus)) getCampaignStats(campaign) else null,
                 onClick = params.onCampaignClick,
             )
         }
+    }
+
+    private fun shouldShowCampaignStatus(campaignStatus: String): Boolean {
+        return campaignStatus == CampaignStatus.Active.status || campaignStatus == CampaignStatus.Completed.status
+    }
+
+    private fun getCampaignStats(campaign: BlazeCampaignModel): BlazeCampaignsCardItem.BlazeCampaignStats {
+        return BlazeCampaignsCardItem.BlazeCampaignStats(
+            impressions = UiString.UiStringText(campaign.impressions.toString()),
+            clicks = UiString.UiStringText(campaign.clicks.toString()),
+        )
     }
 
     private fun buildPromoteWithBlazeCard(params: PromoteWithBlazeCardBuilderParams): PromoteWithBlazeCard {
