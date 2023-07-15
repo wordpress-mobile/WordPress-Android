@@ -2,13 +2,18 @@ package org.wordpress.android.ui.posts
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.Person
+import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.people.utils.PeopleUtils.FetchUsersCallback
 import org.wordpress.android.ui.people.utils.PeopleUtilsWrapper
+import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -33,6 +38,12 @@ class EditPostPublishSettingsViewModel @Inject constructor(
 
     // Used for combining fetched users
     private val fetchedAuthors = mutableListOf<Person>()
+
+    private val _jetpackSocialuiState = MutableStateFlow<JetpackSocialUiState>(JetpackSocialUiState.Loading)
+    val jetpackSocialUiState = _jetpackSocialuiState.asStateFlow()
+
+    private val _actionEvents = MutableSharedFlow<ActionEvent>()
+    val actionEvents = _actionEvents
 
     private var isStarted = false
 
@@ -68,4 +79,43 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     }
 
     fun getAuthorIndex(authorId: Long) = authors.value?.indexOfFirst { it.personID == authorId } ?: -1
+
+    fun onJetpackSocialConnectProfilesClick() {
+        // TODO
+    }
+
+    fun onJetpackSocialConnectionClick() {
+        // TODO
+    }
+
+    fun onJetpackSocialMessageClick() {
+        // TODO
+    }
+
+    fun onJetpackSocialSuscribeClick() {
+        // TODO
+    }
+
+    sealed class JetpackSocialUiState {
+        object Loading : JetpackSocialUiState()
+
+        data class Loaded(
+            val postSocialConnectionList: List<PostSocialConnection>,
+            val showShareLimitUi: Boolean,
+            val shareMessage: String,
+            val remainingSharesMessage: String,
+            val subscribeButtonLabel: String,
+            val onSubscribeClick: () -> Unit,
+        ) : JetpackSocialUiState()
+
+        data class NoConnections(
+            val trainOfIconsModels: List<TrainOfIconsModel>,
+            val connectProfilesButtonLabel: String,
+            val onConnectProfilesCLick: () -> Unit,
+        ) : JetpackSocialUiState()
+    }
+
+    sealed class ActionEvent {
+        object OpenSharing : ActionEvent()
+    }
 }
