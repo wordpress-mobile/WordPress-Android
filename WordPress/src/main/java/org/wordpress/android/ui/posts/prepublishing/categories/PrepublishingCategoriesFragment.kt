@@ -22,10 +22,10 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingAddCategoryRequest
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.ADD_CATEGORY
-import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActionClickedListener
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
@@ -145,7 +145,7 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         })
 
         viewModel.navigateToAddCategoryScreen.observe(viewLifecycleOwner, { bundle ->
-            actionListener?.onActionClicked(ADD_CATEGORY, bundle)
+            actionListener?.onActionClicked(PrepublishingScreenNavigation.AddCategory, bundle)
         }
         )
 
