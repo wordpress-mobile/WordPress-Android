@@ -1,1 +1,0 @@
-Locked and loaded—there’s now a lock icon for disabled cells in the block editor so you know when they aren’t in use.

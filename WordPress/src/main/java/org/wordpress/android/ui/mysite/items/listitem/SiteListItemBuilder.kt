@@ -203,7 +203,8 @@ class SiteListItemBuilder @Inject constructor(
         return if ((!buildConfigWrapper.isJetpackApp &&
                     jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() &&
                     site.hasCapabilityManageOptions) ||
-            !siteUtilsWrapper.isAccessedViaWPComRest(site)
+            (!buildConfigWrapper.isJetpackApp &&
+                    site.isSelfHostedAdmin)
         ) {
             ListItem(
                 R.drawable.ic_user_primary_white_24,

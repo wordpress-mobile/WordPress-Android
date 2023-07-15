@@ -1,2 +1,0 @@
-22.6 :
-Cellules verrouillées et chargées : l’éditeur de blocs affiche à présent une icône de cadenas pour les cellules désactivées, ce qui vous permet de savoir quand elles ne sont pas utilisées.

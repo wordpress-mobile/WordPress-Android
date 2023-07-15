@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-14 09:54:07+0000
+Translation-Revision-Date: 2023-06-28 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_reusable">可重複使用</string>
+    <string name="privacy_banner_error_save">儲存你的隱私權設定時發生錯誤。</string>
+    <string name="privacy_banner_save">儲存</string>
+    <string name="privacy_banner_settings">設定</string>
+    <string name="privacy_banner_analytics_description">允許我們收集使用者與行動應用程式互動的相關資訊，進而將效能最佳化。</string>
+    <string name="privacy_banner_analytics">分析</string>
+    <string name="privacy_banner_title">管理隱私權</string>
+    <string name="privacy_banner_description">你的隱私權對我們至關重要，自始至終都是如此。 我們會使用、儲存及處理你的個人資料，並以各種方式最佳化我們的應用程式 (和你的體驗)。 我們必須使用你的某些資料來讓一切順利運作，其餘則可由你透過「設定」來自訂使用方式。</string>
+    <string name="tabbar_accessibility_label_me">我。 管理你的個人檔案詳細資料。</string>
     <string name="social_item_message_title">訊息</string>
     <string name="gutenberg_native_block_ungrouped">已取消區塊群組</string>
     <string name="gutenberg_native_block_grouped">已將區塊設為群組</string>

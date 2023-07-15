@@ -225,7 +225,11 @@ class CardsBuilderTest {
                     mock(),
                     mock(),
                 ),
-                blazeCardBuilderParams = BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams(mock(), mock(), mock()),
+                blazeCardBuilderParams = BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams(
+                    mock(),
+                    mock(),
+                    mock()
+                ),
                 dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
                     isEligible = isEligibleForDomainCard,
                     mock(),

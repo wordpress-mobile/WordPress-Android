@@ -1,0 +1,4 @@
+22.7:
+- Kayan işlem düğmesine yeni bir şekil, renk ve stil kazandırdık.
+- Görsel blokları, görsel için belirlenmiş bir genişlik ve yükseklik olsun ya da olmasın artık doğru en boy oranını gösteriyor.
+- Avatarınızı içeren “Ben” bölümünü “Manage” altındaki ana menüye taşıdık.

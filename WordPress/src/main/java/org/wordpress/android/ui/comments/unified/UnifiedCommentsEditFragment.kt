@@ -38,6 +38,7 @@ import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
+import android.R as AndroidR
 
 class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_fragment), MenuProvider {
     @Inject
@@ -211,7 +212,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
-        android.R.id.home -> {
+        AndroidR.id.home -> {
             viewModel.onBackPressed()
             true
         }

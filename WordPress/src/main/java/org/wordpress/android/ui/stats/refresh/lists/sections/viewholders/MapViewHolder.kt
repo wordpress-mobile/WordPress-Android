@@ -22,10 +22,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
-import org.wordpress.android.R.color
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import com.google.android.material.R as MaterialR
 
 class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     parent,
@@ -40,10 +39,10 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         coroutineScope.launch {
             delay(100)
             val context = itemView.context
-            val colorLow = toHexString(color.stats_map_activity_low, context)
-            val colorHigh = toHexString(color.stats_map_activity_high, context)
-            val backgroundColor = toHexString(context.getColorFromAttribute(attr.colorSurface))
-            val emptyColor = toHexString(color.stats_map_activity_empty, context)
+            val colorLow = toHexString(R.color.stats_map_activity_low, context)
+            val colorHigh = toHexString(R.color.stats_map_activity_high, context)
+            val backgroundColor = toHexString(context.getColorFromAttribute(MaterialR.attr.colorSurface))
+            val emptyColor = toHexString(R.color.stats_map_activity_empty, context)
             val htmlPage = ("<html>" +
                     "<head>" +
                     "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +

@@ -19,6 +19,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAc
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
+import com.google.android.material.R as MaterialR
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -190,7 +191,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.FOLLOW &&
-                    (it as SecondaryAction).labelColor == R.attr.colorSecondary
+                    (it as SecondaryAction).labelColor == MaterialR.attr.colorSecondary
         }).isNotNull
     }
 
@@ -216,7 +217,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS &&
-                    (it as SecondaryAction).labelColor == R.attr.colorOnSurface
+                    (it as SecondaryAction).labelColor == MaterialR.attr.colorOnSurface
         }).isNotNull
     }
 

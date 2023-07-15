@@ -25,7 +25,7 @@ val campaign = BlazeCampaignModel(
     startDate = mock(),
     endDate = mock(),
     uiStatus = "uiStatus",
-    budgetCents = 20.0,
+    budgetCents = 20L,
     impressions = 1,
     clicks = 1,
 )

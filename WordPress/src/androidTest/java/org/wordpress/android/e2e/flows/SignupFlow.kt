@@ -14,6 +14,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.e2e.pages.LandingPage.tapContinueWithWpCom
 import org.wordpress.android.support.WPSupportUtils
+import org.wordpress.android.login.R as LoginR
 
 class SignupFlow {
     fun chooseContinueWithWpCom(composeTestRule: ComposeTestRule?): SignupFlow {
@@ -25,14 +26,14 @@ class SignupFlow {
     fun enterEmail(email: String?): SignupFlow {
         // Email file = id/input
         WPSupportUtils.populateTextField(Espresso.onView(ViewMatchers.withId(R.id.input)), email)
-        WPSupportUtils.clickOn(Espresso.onView(ViewMatchers.withId(R.id.login_continue_button)))
+        WPSupportUtils.clickOn(Espresso.onView(ViewMatchers.withId(LoginR.id.login_continue_button)))
         return this
     }
 
     fun openMagicLink(): SignupFlow {
         // Should see "Check email" button
         // See SignupMagicLinkFragment
-        WPSupportUtils.waitForElementToBeDisplayed(R.id.signup_magic_link_button)
+        WPSupportUtils.waitForElementToBeDisplayed(LoginR.id.signup_magic_link_button)
 
         // Follow the magic link to continue login
         // Intent is invoked directly rather than through a browser as WireMock is unavailable once in the background

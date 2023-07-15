@@ -99,7 +99,6 @@ import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig;
-import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.util.config.ManageCategoriesFeatureConfig;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
@@ -185,7 +184,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject Dispatcher mDispatcher;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
     @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
@@ -1235,7 +1233,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        if (!mBloggingRemindersFeatureConfig.isEnabled()) {
+        if (!BuildConfig.IS_JETPACK_APP) {
             removeBloggingRemindersSettings();
         } else {
             mBloggingRemindersViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
@@ -1969,7 +1967,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void removeNonSelfHostedPreferences() {
         mUsernamePref.setEnabled(true);
         mPasswordPref.setEnabled(true);
-        removeGeneralSettingsExceptBloggingReminders();
+        PreferenceGroup group = (PreferenceGroup) findPreference(getString(R.string.pref_key_site_general));
+        if (group != null) {
+            group.removeAll();
+        }
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
@@ -1977,21 +1978,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_jetpack_settings);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
                 R.string.pref_key_jetpack_performance_settings);
-    }
-
-    /**
-     * This removes all preferences from the General preference group, except for Blogging Reminders – in practice it
-     * is removed as well, but then added back.
-     * <p>
-     * In the future, we should consider either moving the Blogging Reminders preference to its own group or
-     * replace this approach with something more scalable and efficient.
-     */
-    private void removeGeneralSettingsExceptBloggingReminders() {
-        PreferenceGroup group = (PreferenceGroup) findPreference(getString(R.string.pref_key_site_general));
-        if (group != null && mBloggingRemindersPref != null) {
-            group.removeAll();
-            group.addPreference(mBloggingRemindersPref);
-        }
     }
 
     private void removeNonJetpackPreferences() {

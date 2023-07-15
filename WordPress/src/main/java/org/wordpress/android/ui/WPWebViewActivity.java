@@ -638,7 +638,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mWPWebChromeClientWithFileChooser = new WPWebChromeClientWithFileChooser(
                 this,
                 mWebView,
-                R.drawable.media_movieclip,
+                org.wordpress.android.editor.R.drawable.media_movieclip,
                 (ProgressBar) findViewById(R.id.progress_bar),
                 this
         );

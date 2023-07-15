@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.weeks
 import android.content.Context
 import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
@@ -80,17 +79,17 @@ class WeekWidgetBlockListViewModel
             BlockItemUiModel(
                 layout,
                 localSiteId,
-                resourceProvider.getString(string.stats_views),
+                resourceProvider.getString(R.string.stats_views),
                 statsUtils.toFormattedString(domainModel.dates.last().views, MILLION),
-                resourceProvider.getString(string.stats_visitors),
+                resourceProvider.getString(R.string.stats_visitors),
                 statsUtils.toFormattedString(domainModel.dates.last().visitors, MILLION)
             ),
             BlockItemUiModel(
                 layout,
                 localSiteId,
-                resourceProvider.getString(string.likes),
+                resourceProvider.getString(R.string.likes),
                 statsUtils.toFormattedString(domainModel.dates.last().likes, MILLION),
-                resourceProvider.getString(string.stats_comments),
+                resourceProvider.getString(R.string.stats_comments),
                 statsUtils.toFormattedString(domainModel.dates.last().comments, MILLION)
             )
         )

@@ -1,5 +1,2 @@
-* [*] Updates Floating Action Button(FAB) color to black, shape to squircle, and icon to plus [https://github.com/wordpress-mobile/WordPress-Android/pull/18599]
-* [*] Block editor: Image block - Fix issue where in some cases the image doesn't display the right aspect ratio [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5869]
-* [*] Me, and gravatar is moved to bottom navigation as fourth tab [https://github.com/wordpress-mobile/WordPress-Android/pull/18606]
-* [*] [internal] We now display a privacy popup requiring consent from users residing in GDPR jurisdictions after login. [https://github.com/wordpress-mobile/WordPress-Android/pull/18696]
-
+- The app will no longer crash after you delete a site. Phew.
+- Reusable blocks are now known as synced patterns, the same as in the desktop editor.

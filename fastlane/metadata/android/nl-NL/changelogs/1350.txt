@@ -1,2 +1,0 @@
-22.6:
-Vergrendeld en geladen. Er is nu een slotpictogram voor uitgeschakelde cellen in de blok editor zodat je weet wanneer deze niet worden gebruikt.

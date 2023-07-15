@@ -9,7 +9,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips.Chip
@@ -54,8 +54,8 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
             contentDescriptionHelper,
             totalStatsMapper
         )
-        whenever(resourceProvider.getString(string.stats_views)).thenReturn(viewsTitle)
-        whenever(resourceProvider.getString(string.stats_visitors)).thenReturn(visitorsTitle)
+        whenever(resourceProvider.getString(R.string.stats_views)).thenReturn(viewsTitle)
+        whenever(resourceProvider.getString(R.string.stats_visitors)).thenReturn(visitorsTitle)
         whenever(statsDateFormatter.printGranularDate(any<String>(), any())).thenReturn(printedDate)
         whenever(statsUtils.toFormattedString(any<Long>(), any())).then { (it.arguments[0] as Long).toString() }
         whenever(totalStatsMapper.getCurrentSevenDays(buildPeriodData(), TotalStatsMapper.TotalStatsType.VIEWS))
@@ -80,9 +80,9 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
         )
 
         Assertions.assertThat(title.value1).isEqualTo(thisWeekViews.toString())
-        Assertions.assertThat(title.unit1).isEqualTo(string.stats_views)
+        Assertions.assertThat(title.unit1).isEqualTo(R.string.stats_views)
         Assertions.assertThat(title.value2).isEqualTo(prevWeekViews.toString())
-        Assertions.assertThat(title.unit2).isEqualTo(string.stats_views)
+        Assertions.assertThat(title.unit2).isEqualTo(R.string.stats_views)
     }
 
     @Test
@@ -97,9 +97,9 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
         )
 
         Assertions.assertThat(title.value1).isEqualTo(thisWeekVisitors.toString())
-        Assertions.assertThat(title.unit1).isEqualTo(string.stats_visitors)
+        Assertions.assertThat(title.unit1).isEqualTo(R.string.stats_visitors)
         Assertions.assertThat(title.value2).isEqualTo(prevWeekVisitors.toString())
-        Assertions.assertThat(title.unit2).isEqualTo(string.stats_visitors)
+        Assertions.assertThat(title.unit2).isEqualTo(R.string.stats_visitors)
     }
 
     @Test
@@ -112,7 +112,7 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
         val viewsContentDescription = "views description"
         whenever(
             contentDescriptionHelper.buildContentDescription(
-                eq(string.stats_views),
+                eq(R.string.stats_views),
                 eq(0)
             )
         ).thenReturn(viewsContentDescription)
@@ -120,15 +120,15 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
         val visitorsContentDescription = "visitors description"
         whenever(
             contentDescriptionHelper.buildContentDescription(
-                eq(string.stats_visitors),
+                eq(R.string.stats_visitors),
                 eq(1)
             )
         ).thenReturn(visitorsContentDescription)
 
         val result = mapper.buildChips(onChipSelected, uiState.selectedPosition)
 
-        result.chips[0].assertChip(string.stats_views, viewsContentDescription)
-        result.chips[1].assertChip(string.stats_visitors, visitorsContentDescription)
+        result.chips[0].assertChip(R.string.stats_views, viewsContentDescription)
+        result.chips[1].assertChip(R.string.stats_visitors, visitorsContentDescription)
 
         Assertions.assertThat(result.selectedColumn).isEqualTo(selectedPosition)
         Assertions.assertThat(result.onColumnSelected).isEqualTo(onChipSelected)

@@ -17,6 +17,7 @@ import org.wordpress.android.databinding.RecyclerViewBottomSheetBinding
 import org.wordpress.android.ui.main.AddContentAdapter
 import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 class PostListCreateMenuFragment : BottomSheetDialogFragment() {
     @Inject
@@ -48,7 +49,7 @@ class PostListCreateMenuFragment : BottomSheetDialogFragment() {
                 val sheetDialog = dialogInterface as? BottomSheetDialog
 
                 val bottomSheet = sheetDialog?.findViewById<View>(
-                    com.google.android.material.R.id.design_bottom_sheet
+                    MaterialR.id.design_bottom_sheet
                 ) as? FrameLayout
 
                 bottomSheet?.let {

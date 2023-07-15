@@ -43,7 +43,7 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
 
     private String mTags;
 
-    TagsSelectedListener mTagsSelectedListener;
+    protected TagsSelectedListener mTagsSelectedListener;
 
     public TagsFragment() {
     }
@@ -182,7 +182,7 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
         mTagsEditText.setSelection(mTagsEditText.length());
     }
 
-    boolean wereTagsChanged() {
+    protected boolean wereTagsChanged() {
         if (mTags != null) {
             return !mTags.equals(mTagsEditText.getText().toString());
         } else {

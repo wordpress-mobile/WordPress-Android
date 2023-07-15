@@ -597,7 +597,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         mDialog = new FullScreenDialogFragment.Builder(getContext())
                 .setTitle(R.string.username_changer_title)
                 .setAction(R.string.username_changer_action)
-                .setToolbarTheme(R.style.ThemeOverlay_LoginFlow_Toolbar)
+                .setToolbarTheme(org.wordpress.android.login.R.style.ThemeOverlay_LoginFlow_Toolbar)
                 .setOnConfirmListener(this)
                 .setOnDismissListener(this)
                 .setOnShownListener(this)
@@ -709,7 +709,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             ));
             options.setToolbarColor(ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorAppBar));
             options.setToolbarWidgetColor(ContextExtensionsKt.getColorFromAttribute(
-                    context, R.attr.colorOnSurface
+                    context, com.google.android.material.R.attr.colorOnSurface
             ));
             options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
             options.setHideBottomControls(true);

@@ -9,6 +9,7 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.extensions.getParcelableExtraCompat
 import javax.inject.Inject
+import android.R as AndroidR
 
 class EngagedPeopleListActivity : LocaleAwareActivity() {
     @Inject
@@ -59,7 +60,7 @@ class EngagedPeopleListActivity : LocaleAwareActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == AndroidR.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
         }

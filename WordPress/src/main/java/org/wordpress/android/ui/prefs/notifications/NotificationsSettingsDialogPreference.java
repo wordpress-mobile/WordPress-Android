@@ -69,8 +69,6 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
     }
 
     public interface BloggingRemindersProvider {
-        boolean isEnabled();
-
         String getSummary(long blogId);
 
         void onClick(long blogId);
@@ -223,8 +221,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         }
 
         if (shouldShowLocalNotifications) {
-            boolean isBloggingRemindersEnabled =
-                    mBloggingRemindersProvider != null && mBloggingRemindersProvider.isEnabled();
+            boolean isBloggingRemindersEnabled = mBloggingRemindersProvider != null;
             addWeeklyRoundupSetting(view, !isBloggingRemindersEnabled);
             if (isBloggingRemindersEnabled) {
                 addBloggingReminderSetting(view);

@@ -39,7 +39,7 @@
             android:textAppearance="?attr/textAppearanceSubtitle1"
             tools:text="text_title" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <org.wordpress.android.widgets.WPSwitchCompat
             android:id="@+id/switch_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -283,7 +283,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.comment_detail_fragment, container, false);
 
-        mMediumOpacity = ResourcesCompat.getFloat(getResources(), R.dimen.material_emphasis_medium);
+        mMediumOpacity = ResourcesCompat.getFloat(
+                getResources(),
+                com.google.android.material.R.dimen.material_emphasis_medium
+        );
 
         mTxtStatus = view.findViewById(R.id.text_status);
         mTxtContent = view.findViewById(R.id.text_content);
@@ -783,10 +786,15 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                     v -> ReaderActivityLauncher.openUrl(getActivity(), mComment.getAuthorUrl());
             imgAvatar.setOnClickListener(authorListener);
             txtName.setOnClickListener(authorListener);
-            txtName.setTextColor(ContextExtensionsKt.getColorFromAttribute(txtName.getContext(), R.attr.colorPrimary));
+            txtName.setTextColor(ContextExtensionsKt.getColorFromAttribute(
+                    txtName.getContext(),
+                    com.google.android.material.R.attr.colorPrimary)
+            );
         } else {
-            txtName.setTextColor(
-                    ContextExtensionsKt.getColorFromAttribute(txtName.getContext(), R.attr.colorOnSurface));
+            txtName.setTextColor(ContextExtensionsKt.getColorFromAttribute(
+                    txtName.getContext(),
+                    com.google.android.material.R.attr.colorOnSurface)
+            );
         }
 
         showPostTitle(mSite, mComment.getRemotePostId());
@@ -825,7 +833,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (isHyperlink) {
             String html = getString(R.string.on)
                           + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(),
-                    ContextExtensionsKt.getColorResIdFromAttribute(getActivity(), R.attr.colorPrimary))
+                    ContextExtensionsKt.getColorResIdFromAttribute(
+                            getActivity(),
+                            com.google.android.material.R.attr.colorPrimary
+                    ))
                           + ">"
                           + postTitle.trim()
                           + "</font>";
@@ -1083,12 +1094,18 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 break;
             case SPAM:
                 statusTextResId = R.string.comment_status_spam;
-                statusColor = ContextExtensionsKt.getColorFromAttribute(getActivity(), R.attr.colorError);
+                statusColor = ContextExtensionsKt.getColorFromAttribute(
+                        getActivity(),
+                        com.google.android.material.R.attr.colorError
+                );
                 break;
             case TRASH:
             default:
                 statusTextResId = R.string.comment_status_trash;
-                statusColor = ContextExtensionsKt.getColorFromAttribute(getActivity(), R.attr.colorError);
+                statusColor = ContextExtensionsKt.getColorFromAttribute(
+                        getActivity(),
+                        com.google.android.material.R.attr.colorError
+                );
                 break;
         }
 
@@ -1136,8 +1153,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (canTrash()) {
             if (commentStatus == CommentStatus.TRASH) {
                 ColorUtils.INSTANCE.setImageResourceWithTint(mBtnModerateIcon, R.drawable.ic_undo_white_24dp,
-                        ContextExtensionsKt
-                                .getColorResIdFromAttribute(mBtnModerateTextView.getContext(), R.attr.colorOnSurface));
+                        ContextExtensionsKt.getColorResIdFromAttribute(
+                                mBtnModerateTextView.getContext(),
+                                com.google.android.material.R.attr.colorOnSurface)
+                );
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
             }
         }
@@ -1173,14 +1192,18 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         int color;
 
         if (status == CommentStatus.APPROVED) {
-            color = ContextExtensionsKt
-                    .getColorResIdFromAttribute(mBtnModerateTextView.getContext(), R.attr.colorSecondary);
+            color = ContextExtensionsKt.getColorResIdFromAttribute(
+                    mBtnModerateTextView.getContext(),
+                    com.google.android.material.R.attr.colorSecondary
+            );
             mBtnModerateTextView.setText(R.string.comment_status_approved);
             mBtnModerateTextView.setAlpha(mNormalOpacity);
             mBtnModerateIcon.setAlpha(mNormalOpacity);
         } else {
-            color = ContextExtensionsKt
-                    .getColorResIdFromAttribute(mBtnModerateTextView.getContext(), R.attr.colorOnSurface);
+            color = ContextExtensionsKt.getColorResIdFromAttribute(
+                    mBtnModerateTextView.getContext(),
+                    com.google.android.material.R.attr.colorOnSurface
+            );
             mBtnModerateTextView.setText(R.string.mnu_comment_approve);
             mBtnModerateTextView.setAlpha(mMediumOpacity);
             mBtnModerateIcon.setAlpha(mMediumOpacity);
@@ -1322,14 +1345,20 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         int drawable;
 
         if (isLiked) {
-            color = ContextExtensionsKt.getColorResIdFromAttribute(mBtnLikeIcon.getContext(), R.attr.colorSecondary);
+            color = ContextExtensionsKt.getColorResIdFromAttribute(
+                    mBtnLikeIcon.getContext(),
+                    com.google.android.material.R.attr.colorSecondary
+            );
             drawable = R.drawable.ic_star_white_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
             mBtnLikeComment.setActivated(true);
             mBtnLikeTextView.setAlpha(mNormalOpacity);
             mBtnLikeIcon.setAlpha(mNormalOpacity);
         } else {
-            color = ContextExtensionsKt.getColorResIdFromAttribute(mBtnLikeIcon.getContext(), R.attr.colorOnSurface);
+            color = ContextExtensionsKt.getColorResIdFromAttribute(
+                    mBtnLikeIcon.getContext(),
+                    com.google.android.material.R.attr.colorOnSurface
+            );
             drawable = R.drawable.ic_star_outline_white_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.reader_label_like));
             mBtnLikeComment.setActivated(false);
