@@ -35,6 +35,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                     is Loaded -> {
                         EditPostSettingsJetpackSocialContainer(
                             postSocialConnectionList = postSocialConnectionList,
+                            showShareLimitUi = showShareLimitUi,
                             shareMessage = shareMessage,
                             remainingSharesMessage = remainingSharesMessage,
                             subscribeButtonLabel = subscribeButtonLabel,
@@ -45,7 +46,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                         EditPostSettingsJetpackSocialNoConnections(
                             trainOfIconsModels = trainOfIconsModels,
                             connectProfilesButtonLabel = connectProfilesButtonLabel,
-                            onConnectProfilesCLick = onConnectProfilesCLick,
+                            onConnectProfilesCLick = onConnectProfilesClick,
                         )
                     }
                 }
