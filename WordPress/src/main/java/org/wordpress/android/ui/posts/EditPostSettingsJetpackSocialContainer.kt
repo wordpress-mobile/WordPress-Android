@@ -37,8 +37,8 @@ fun EditPostSettingsJetpackSocialContainer(
                 vertical = Margin.MediumLarge.value,
             ),
         )
-        Divider()
         if (showShareLimitUi) {
+            Divider()
             PostSocialSharesText(
                 message = remainingSharesMessage,
             )
