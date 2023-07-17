@@ -51,7 +51,11 @@ class BlazeCardViewModelSlice @Inject constructor(
     }
 
     private fun onCreateCampaignClick() {
-        TODO("Not yet implemented")
+        blazeFeatureUtils.track(
+            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_TAPPED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
+        // todo: Add navigation to create campaign
     }
 
     fun onBlazeMenuItemClick(): SiteNavigationAction {
