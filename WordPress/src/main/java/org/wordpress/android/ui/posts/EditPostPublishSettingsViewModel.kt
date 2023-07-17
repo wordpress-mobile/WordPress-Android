@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
@@ -42,6 +43,8 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     postSchedulingNotificationStore,
     siteStore
 ) {
+    private var postModel: PostImmutableModel? = null
+
     private val _authors = MutableLiveData<List<Person>>()
     val authors: LiveData<List<Person>> = _authors
 
@@ -67,6 +70,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         val siteModel = postRepository?.localSiteId?.let {
             siteStore.getSiteByLocalId(it)
         }
+        postModel = postRepository?.getPost()
         loadAuthors(siteModel)
         loadJetpackSocial(siteModel)
     }
@@ -92,7 +96,12 @@ class EditPostPublishSettingsViewModel @Inject constructor(
                 val state = if (connections.isEmpty()) {
                     jetpackUiStateMapper.mapNoConnections(::onJetpackSocialConnectProfilesClick)
                 } else {
-                    jetpackUiStateMapper.mapLoaded(connections, shareLimit, ::onJetpackSocialSubscribeClick)
+                    jetpackUiStateMapper.mapLoaded(
+                        connections = connections,
+                        shareLimit = shareLimit,
+                        onSubscribeClick = ::onJetpackSocialSubscribeClick,
+                        localPostId = postModel?.id ?: -1,
+                    )
                 }
                 _jetpackSocialUiState.postValue(state)
             }

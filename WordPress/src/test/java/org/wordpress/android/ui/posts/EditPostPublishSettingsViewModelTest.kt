@@ -196,7 +196,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(true)
         classToTest.start(editPostRepository)
-        verify(jetpackUiStateMapper).mapLoaded(any(), any(), any())
+        verify(jetpackUiStateMapper).mapLoaded(any(), any(), any(), any())
     }
 
     @Test
@@ -239,7 +239,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             .thenReturn(ShareLimit.Disabled)
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(true)
-        whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any()))
+        whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any(), any()))
             .thenReturn(loaded)
         classToTest.start(editPostRepository)
         verify(jetpackSocialUiStateObserver).onChanged(loaded)

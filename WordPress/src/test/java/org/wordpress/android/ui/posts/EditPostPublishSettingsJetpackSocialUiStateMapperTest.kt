@@ -5,6 +5,7 @@ import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState
@@ -18,9 +19,11 @@ import java.util.Locale
 class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
     private val stringProvider: StringProvider = mock()
     private val localProvider: LocaleProvider = mock()
+    private val postStore: PostStore = mock()
     private val classToTest = EditPostPublishSettingsJetpackSocialUiStateMapper(
         stringProvider = stringProvider,
         localeProvider = localProvider,
+        postStore = postStore,
     )
 
     @Test
@@ -63,6 +66,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
             connections = connections,
             shareLimit = shareLimit,
             onSubscribeClick = onConnectProfilesClick,
+            localPostId = 1,
         )
         val expected = JetpackSocialUiState.Loaded(
             postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
@@ -107,6 +111,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
             connections = connections,
             shareLimit = shareLimit,
             onSubscribeClick = onConnectProfilesClick,
+            localPostId = 1,
         )
         val expected = JetpackSocialUiState.Loaded(
             postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
