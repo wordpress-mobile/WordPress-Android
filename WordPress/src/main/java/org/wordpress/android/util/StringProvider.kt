@@ -7,9 +7,9 @@ import javax.inject.Inject
 class StringProvider @Inject constructor(
     private val contextProvider: ContextProvider
 ) {
-    fun getString(@StringRes resId: Int) =
+    fun getString(@StringRes resId: Int): String =
         contextProvider.getContext().getString(resId)
 
-    fun getString(@StringRes resId: Int, vararg formatArgs: Any) =
-        contextProvider.getContext().getString(resId, formatArgs)
+    fun getString(@StringRes resId: Int, vararg formatArgs: Any): String =
+        contextProvider.getContext().getString(resId, *formatArgs)
 }
