@@ -135,6 +135,8 @@ public class EditPostSettingsFragment extends Fragment {
     private SwitchCompat mStickySwitch;
     private ViewGroup mFeaturedImageRetryOverlay;
     private ViewGroup mFeaturedImageProgressOverlay;
+    private ViewGroup mJetpackSocialContainer;
+    private EditPostSettingsJetpackSocialContainerView mJetpackSocialContainerView;
 
     private ArrayList<String> mDefaultPostFormatKeys;
     private ArrayList<String> mDefaultPostFormatNames;
@@ -286,6 +288,8 @@ public class EditPostSettingsFragment extends Fragment {
         mPublishHeaderTextView = rootView.findViewById(R.id.post_settings_publish);
         mPublishDateContainer = rootView.findViewById(R.id.publish_date_container);
         mStickySwitch = rootView.findViewById(R.id.post_settings_sticky_switch);
+        mJetpackSocialContainer = rootView.findViewById(R.id.post_settings_jetpack_social_container);
+        mJetpackSocialContainerView = rootView.findViewById(R.id.edit_post_settings_jetpack_social_container_view);
 
         mFeaturedImageView = rootView.findViewById(R.id.post_featured_image);
         mLocalFeaturedImageView = rootView.findViewById(R.id.post_featured_image_local);
@@ -422,6 +426,35 @@ public class EditPostSettingsFragment extends Fragment {
         applyAccessibilityHeadingToSettings();
 
         return rootView;
+    }
+
+    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        observeJetpackSocialContainerVisibility();
+        observeJetpackSocialUiState();
+        observeActionEvents();
+    }
+
+    private void observeJetpackSocialContainerVisibility() {
+        mPublishedViewModel.getShowJetpackSocialContainer().observe(getViewLifecycleOwner(), show -> {
+            if (show) {
+                mJetpackSocialContainer.setVisibility(View.VISIBLE);
+            } else {
+                mJetpackSocialContainer.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void observeJetpackSocialUiState() {
+        mPublishedViewModel.getJetpackSocialUiState().observe(getViewLifecycleOwner(), uiState -> {
+            mJetpackSocialContainerView.setJetpackSocialUiState(uiState);
+        });
+    }
+
+    private void observeActionEvents() {
+        mPublishedViewModel.getActionEvents().observe(getViewLifecycleOwner(), uiState -> {
+            // TODO
+        });
     }
 
     @Override
