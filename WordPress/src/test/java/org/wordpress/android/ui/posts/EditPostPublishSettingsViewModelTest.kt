@@ -147,6 +147,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     fun `Should emit no connections UI state if connections list is empty and jetpack social FF is enabled`() = test {
         val noConnections = JetpackSocialUiState.NoConnections(
             trainOfIconsModels = listOf(),
+            message = "message",
             connectProfilesButtonLabel = "label",
             onConnectProfilesClick = {},
         )

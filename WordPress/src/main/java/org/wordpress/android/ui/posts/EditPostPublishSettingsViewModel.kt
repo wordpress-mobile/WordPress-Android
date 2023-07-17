@@ -150,6 +150,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
 
         data class NoConnections(
             val trainOfIconsModels: List<TrainOfIconsModel>,
+            val message: String,
             val connectProfilesButtonLabel: String,
             val onConnectProfilesClick: () -> Unit,
         ) : JetpackSocialUiState()

@@ -45,6 +45,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                     is NoConnections -> {
                         EditPostSettingsJetpackSocialNoConnections(
                             trainOfIconsModels = trainOfIconsModels,
+                            message = message,
                             connectProfilesButtonLabel = connectProfilesButtonLabel,
                             onConnectProfilesCLick = onConnectProfilesClick,
                         )

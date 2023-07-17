@@ -121,14 +121,20 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
 
     @Test
     fun `Should map no connections UI state`() {
-        val connectProfilesString = "Connect profiles"
-        whenever(stringProvider.getString(R.string.post_settings_jetpack_social_connect_profiles))
-            .thenReturn(connectProfilesString)
+        val connectProfilesButtonLabel = "Connect profiles button"
+        whenever(stringProvider.getString(R.string.post_settings_jetpack_social_connect_social_profiles_button))
+            .thenReturn(connectProfilesButtonLabel)
+        whenever(localProvider.getAppLocale())
+            .thenReturn(Locale.US)
+        val connectProfilesMessage = "Connect profiles message"
+        whenever(stringProvider.getString(R.string.post_settings_jetpack_social_connect_social_profiles_message))
+            .thenReturn(connectProfilesMessage)
         val onConnectProfilesClick: () -> Unit = mock()
         val actual = classToTest.mapNoConnections(onConnectProfilesClick)
         val expected = JetpackSocialUiState.NoConnections(
             trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
-            connectProfilesButtonLabel = connectProfilesString,
+            message = connectProfilesMessage,
+            connectProfilesButtonLabel = "CONNECT PROFILES BUTTON",
             onConnectProfilesClick = onConnectProfilesClick,
         )
         assertThat(actual).isEqualTo(expected)
