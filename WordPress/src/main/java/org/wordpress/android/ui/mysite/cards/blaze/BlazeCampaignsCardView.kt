@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard
+import com.google.android.material.R as MaterialR
 
 @Composable
 @Suppress("FunctionName")
@@ -49,7 +50,7 @@ fun BlazeCampaignsCardView(
                 text = uiStringText(uiString = blazeCampaignCard.title),
                 fontSize = 14.sp,
                 textAlign = TextAlign.Start,
-                color = colorResource(R.color.material_on_surface_emphasis_high_type),
+                color = colorResource(MaterialR.color.material_on_surface_emphasis_high_type),
                 modifier = modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
@@ -59,7 +60,7 @@ fun BlazeCampaignsCardView(
                 text = uiStringText(uiString = blazeCampaignCard.campaign.status),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Normal,
-                color = colorResource(R.color.material_on_surface_emphasis_medium),
+                color = colorResource(MaterialR.color.material_on_surface_emphasis_medium),
                 textAlign = TextAlign.Start,
                 modifier = modifier
                     .fillMaxWidth()
@@ -71,7 +72,7 @@ fun BlazeCampaignsCardView(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Start,
-                color = colorResource(R.color.material_on_surface_emphasis_medium),
+                color = colorResource(MaterialR.color.material_on_surface_emphasis_medium),
                 modifier = modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
@@ -85,7 +86,7 @@ fun BlazeCampaignsCardView(
             ) {
                 Text(
                     text = uiStringText(uiString = blazeCampaignCard.footer.label),
-                    color = colorResource(R.color.material_on_surface_emphasis_medium),
+                    color = colorResource(MaterialR.color.material_on_surface_emphasis_medium),
                 )
             }
         }
