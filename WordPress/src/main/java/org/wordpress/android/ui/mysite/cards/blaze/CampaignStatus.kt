@@ -5,6 +5,8 @@ import androidx.compose.ui.graphics.Color
 import org.wordpress.android.R
 import org.wordpress.android.util.AppLog
 
+@Suppress("MagicNumber")
+
 enum class CampaignStatus(val status: String, @StringRes val stringResource: Int) {
     Active("Active", R.string.campaign_status_active),
     Completed("Completed", R.string.campaign_status_completed),
