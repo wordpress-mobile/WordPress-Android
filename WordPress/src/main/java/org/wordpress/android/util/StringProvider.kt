@@ -9,4 +9,7 @@ class StringProvider @Inject constructor(
 ) {
     fun getString(@StringRes resId: Int) =
         contextProvider.getContext().getString(resId)
+
+    fun getString(@StringRes resId: Int, vararg formatArgs: Any) =
+        contextProvider.getContext().getString(resId, formatArgs)
 }
