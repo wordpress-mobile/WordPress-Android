@@ -43,7 +43,9 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
         NoConnections(
             // TODO
             trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
-            connectProfilesButtonLabel = stringProvider.getString(R.string.post_settings_jetpack_social_connect_profiles),
+            connectProfilesButtonLabel = stringProvider.getString(
+                R.string.post_settings_jetpack_social_connect_profiles
+            ),
             onConnectProfilesClick = onConnectProfilesClick,
         )
 }

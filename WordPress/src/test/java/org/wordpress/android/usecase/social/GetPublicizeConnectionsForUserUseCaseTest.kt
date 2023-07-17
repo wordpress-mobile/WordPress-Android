@@ -74,10 +74,7 @@ class GetPublicizeConnectionsForUserUseCaseTest : BaseUnitTest() {
                     publicizeConnection2
                 )
             )
-        val expected = listOf(
-            publicizeConnection1,
-            publicizeConnection2,
-        )
+        val expected = listOf(publicizeConnection1, publicizeConnection2)
         val actual = classToTest.execute(siteId, currentUserId)
         assertEquals(expected, actual)
     }
