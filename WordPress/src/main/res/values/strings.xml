@@ -4607,4 +4607,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="campaign_status_rejected">REJECTED</string>
     <string name="campaign_status_canceled">CANCELED</string>
     <string name="campaign_status_in_moderation">IN MODERATION</string>
+    <string name="impressions_campaign_stats">Impressions</string>
+    <string name="clicks_campaign_stats">Clicks\n</string>
 </resources>

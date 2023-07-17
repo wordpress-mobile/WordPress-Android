@@ -134,13 +134,13 @@ private fun CampaignStats(
         CampaignStat(
             modifier = Modifier
                 .weight(1f),
-            title = "Impressions",
+            title = stringResource(id = R.string.impressions_campaign_stats),
             value = campaignStats.impressions
         )
         CampaignStat(
             modifier = Modifier
                 .weight(1f),
-            title = "Clicks",
+            title = stringResource(id = R.string.clicks_campaign_stats),
             value = campaignStats.clicks
         )
     }
