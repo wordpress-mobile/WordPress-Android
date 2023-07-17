@@ -1988,13 +1988,13 @@ open class WellSqlConfig : DefaultWellConfig {
     }
 
     /**
-     * For debug builds we want a cursor window size of 5MB so we can test for any problems caused by
-     * a larger size. Once we're confident this works we'll return 5MB in release builds to hopefully
-     * reduce the number of SQLiteBlobTooBigExceptions. Note that this is only called on API 28 and
-     * above since earlier versions don't allow adjusting the cursor window size.
+     * Increase the cursor window size to 5MB for devices running API 28 and above. This should
+     * reduce the number of SQLiteBlobTooBigExceptions.
+     * NOTE: this is only called on API 28 and above since earlier versions don't allow adjusting
+     * the cursor window size.
      */
     @Suppress("MagicNumber")
-    override fun getCursorWindowSize() = if (BuildConfig.DEBUG) (1024L * 1024L * 5L) else 0L
+    override fun getCursorWindowSize() = (1024L * 1024L * 5L)
 
     /**
      * Drop and create all tables
