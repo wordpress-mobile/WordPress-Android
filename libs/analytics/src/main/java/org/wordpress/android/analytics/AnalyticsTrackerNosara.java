@@ -2571,6 +2571,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blaze_flow_canceled";
             case BLAZE_FLOW_ERROR:
                 return "blaze_flow_error";
+            case BLAZE_CAMPAIGN_LISTING_PAGE_SHOWN:
+                return "blaze_campaign_list_opened";
             case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_SHOWN:
                 return "wp_individual_site_overlay_viewed";
             case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_DISMISSED:
