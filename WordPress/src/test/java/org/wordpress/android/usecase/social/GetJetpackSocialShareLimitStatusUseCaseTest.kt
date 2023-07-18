@@ -9,6 +9,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.jetpacksocial.JetpackSocial
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackSocialResult
 
 @ExperimentalCoroutinesApi
 class GetJetpackSocialShareLimitStatusUseCaseTest : BaseUnitTest() {
@@ -57,7 +58,7 @@ class GetJetpackSocialShareLimitStatusUseCaseTest : BaseUnitTest() {
             setIsJetpackInstalled(true)
             planActiveFeatures = null
         }
-        whenever(siteStore.getJetpackSocial(siteModel.id)).thenReturn(jetpackSocial)
+        whenever(siteStore.fetchJetpackSocial(siteModel)).thenReturn(FetchedJetpackSocialResult.Success(jetpackSocial))
         val expected = ShareLimit.Enabled(
             shareLimit = jetpackSocial.shareLimit,
             publicizedCount = jetpackSocial.publicizedCount,
@@ -85,13 +86,32 @@ class GetJetpackSocialShareLimitStatusUseCaseTest : BaseUnitTest() {
             setIsJetpackInstalled(true)
             planActiveFeatures = ""
         }
-        whenever(siteStore.getJetpackSocial(siteModel.id)).thenReturn(jetpackSocial)
+        whenever(siteStore.fetchJetpackSocial(siteModel)).thenReturn(FetchedJetpackSocialResult.Success(jetpackSocial))
         val expected = ShareLimit.Enabled(
             shareLimit = jetpackSocial.shareLimit,
             publicizedCount = jetpackSocial.publicizedCount,
             sharedPostsCount = jetpackSocial.sharedPostsCount,
             sharesRemaining = jetpackSocial.sharesRemaining,
         )
+        val actual = classToTest.execute(siteModel)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Should return Disabled if fetch site fails`() = test {
+        val siteModel = SiteModel().apply {
+            siteId = 1L
+            setIsJetpackInstalled(true)
+            planActiveFeatures = ""
+        }
+        whenever(siteStore.fetchJetpackSocial(siteModel)).thenReturn(
+            FetchedJetpackSocialResult.Error(
+                SiteStore.SiteError(
+                    SiteStore.SiteErrorType.GENERIC_ERROR
+                )
+            )
+        )
+        val expected = ShareLimit.Disabled
         val actual = classToTest.execute(siteModel)
         assertEquals(expected, actual)
     }
