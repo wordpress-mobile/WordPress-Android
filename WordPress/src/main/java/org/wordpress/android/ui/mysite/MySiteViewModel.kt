@@ -73,7 +73,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackIns
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PromoteWithBlazeCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
@@ -600,12 +601,23 @@ class MySiteViewModel @Inject constructor(
                     onViewAnswersClick = this::onBloggingPromptViewAnswersClick,
                     onRemoveClick = this::onBloggingPromptRemoveClick
                 ),
-                promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
-                    isEligible = blazeCardUpdate?.blazeEligible ?: false,
-                    onClick = this::onPromoteWithBlazeCardClick,
-                    onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
-                    onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
-                ),
+                blazeCardBuilderParams = blazeCardUpdate?.let {
+                    if(it.blazeEligible) {
+                        it.campaign?.let { campaign ->
+                           CampaignWithBlazeCardBuilderParams(
+                                campaign = campaign,
+                                onCreateCampaignClick = this::onCreateCampaignClick,
+                                onCampaignClick = this::onCampaignClick,
+                                onCardClick = this::onCampaignsCardClick,
+                            )
+                        }?: PromoteWithBlazeCardBuilderParams(
+                            onClick = this::onPromoteWithBlazeCardClick,
+                            onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
+                            onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
+                        )
+                    }
+                    else null
+                },
                 dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
                     isEligible = dashboardCardDomainUtils.shouldShowCard(
                         site, isDomainCreditAvailable, hasSiteCustomDomains
@@ -712,6 +724,18 @@ class MySiteViewModel @Inject constructor(
                 jetpackSwitchMenu = jetpackSwitchMenu
             )
         )
+    }
+
+    private fun onCampaignsCardClick() {
+        TODO("Not yet implemented")
+    }
+
+    private fun onCampaignClick() {
+        TODO("Not yet implemented")
+    }
+
+    private fun onCreateCampaignClick() {
+        TODO("Not yet implemented")
     }
 
     private fun onPagesItemClick(params: PagesCardBuilderParams.PagesItemClickParams) {

@@ -4598,4 +4598,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editing synced patterns is not yet supported on %s for Android</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editing synced patterns is not yet supported on %s for iOS</string>
     <string name="gutenberg_native_s_detached" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s detached</string>
+
+    <!-- Jetpack - Blaze campaigns card -->
+    <string name="blaze_campaigns_card_title">Blaze Campaign</string>
+    <string name="blaze_campaigns_card_footer_label">Create Campaign</string>
 </resources>

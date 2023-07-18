@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
@@ -65,7 +66,7 @@ sealed class MySiteCardAndItemBuilderParams {
         val todaysStatsCardBuilderParams: TodaysStatsCardBuilderParams,
         val postCardBuilderParams: PostCardBuilderParams,
         val bloggingPromptCardBuilderParams: BloggingPromptCardBuilderParams,
-        val promoteWithBlazeCardBuilderParams: PromoteWithBlazeCardBuilderParams,
+        val blazeCardBuilderParams: BlazeCardBuilderParams? = null,
         val dashboardCardDomainBuilderParams: DashboardCardDomainBuilderParams,
         val dashboardCardPlansBuilderParams: DashboardCardPlansBuilderParams,
         val pagesCardBuilderParams: PagesCardBuilderParams,
@@ -137,12 +138,20 @@ sealed class MySiteCardAndItemBuilderParams {
         val onRemoveClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
-    data class PromoteWithBlazeCardBuilderParams(
-        val isEligible: Boolean = false,
-        val onClick: () -> Unit,
-        val onHideMenuItemClick: () -> Unit,
-        val onMoreMenuClick: () -> Unit
-    ) : MySiteCardAndItemBuilderParams()
+    sealed class BlazeCardBuilderParams : MySiteCardAndItemBuilderParams() {
+        data class PromoteWithBlazeCardBuilderParams(
+            val onClick: () -> Unit,
+            val onHideMenuItemClick: () -> Unit,
+            val onMoreMenuClick: () -> Unit
+        ) : BlazeCardBuilderParams()
+
+        data class CampaignWithBlazeCardBuilderParams(
+            val campaign: BlazeCampaignModel,
+            val onCreateCampaignClick: () -> Unit,
+            val onCampaignClick: () -> Unit,
+            val onCardClick: () -> Unit
+        ) : BlazeCardBuilderParams()
+    }
 
     data class DashboardCardDomainBuilderParams(
         val isEligible: Boolean = false,
