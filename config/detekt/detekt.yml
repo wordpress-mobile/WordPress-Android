@@ -13,6 +13,8 @@ complexity:
     ignoreAnnotated: ['Composable']
   TooManyFunctions:
     active: false
+  CyclomaticComplexMethod:
+    ignoreSimpleWhenEntries: true
 
 coroutines:
   GlobalCoroutineUsage:
