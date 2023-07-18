@@ -101,3 +101,5 @@
 
 /subscriptions/
 /subscriptions/<id>/
+
+/reports/products
