@@ -21,7 +21,7 @@ import org.wordpress.android.util.extensions.getSerializableCompat
 private const val CAMPAIGN_DETAIL_PAGE_SOURCE = "campaign_detail_page_source"
 
 @AndroidEntryPoint
-class CampaignDetailsFragment: Fragment()  {
+class CampaignDetailsFragment : Fragment() {
     companion object {
         fun newInstance(source: CampaignDetailPageSource) = CampaignDetailsFragment().apply {
             arguments = Bundle().apply {
@@ -38,7 +38,9 @@ class CampaignDetailsFragment: Fragment()  {
     ): View = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
-                CampaignDetailPage()
+                CampaignDetailPage(
+                    navigationUp = requireActivity().onBackPressedDispatcher::onBackPressed
+                )
             }
         }
     }
@@ -56,12 +58,14 @@ class CampaignDetailsFragment: Fragment()  {
 
 @Composable
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-fun CampaignDetailPage() {
+fun CampaignDetailPage(navigationUp: () -> Unit = { }) {
     Scaffold(
         topBar = {
             MainTopAppBar(
-                title = stringResource(R.string.blaze_campaigns_page_title),
-                navigationIcon = NavigationIcons.BackIcon
+                // todo: Use the correct title
+                title = stringResource(R.string.blaze_campaigns_card_title),
+                navigationIcon = NavigationIcons.BackIcon,
+                onNavigationIconClick = navigationUp
             )
         }
     ) { }

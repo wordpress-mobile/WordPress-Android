@@ -10,9 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.ui.blazeCampaigns.CampaignViewModel
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
@@ -31,6 +33,8 @@ class CampaignListingFragment : Fragment() {
     }
 
     private val viewModel: CampaignListingViewModel by viewModels()
+
+    private val campaignViewModel: CampaignViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,17 +56,21 @@ class CampaignListingFragment : Fragment() {
         return arguments?.getSerializableCompat<CampaignListingPageSource>(CAMPAIGN_LISTING_PAGE_SOURCE)
             ?: CampaignListingPageSource.UNKNOWN
     }
+
+    @Composable
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+    fun CampaignListingPage() {
+        Scaffold(
+            topBar = {
+                MainTopAppBar(
+                    title = stringResource(R.string.blaze_campaigns_page_title),
+                    navigationIcon = NavigationIcons.BackIcon,
+                    onNavigationIconClick = {
+                        campaignViewModel.onNavigationUp()
+                    }
+                )
+            }
+        ) { }
+    }
 }
 
-@Composable
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-fun CampaignListingPage() {
-    Scaffold(
-        topBar = {
-            MainTopAppBar(
-                title = stringResource(R.string.blaze_campaigns_page_title),
-                navigationIcon = NavigationIcons.BackIcon
-            )
-        }
-    ) { }
-}

@@ -15,6 +15,10 @@ class CampaignViewModel @Inject constructor(
     val uiState: MutableLiveData<BlazeCampaignPage> = _uiState
 
     fun start(page: BlazeCampaignPage?) {
-        page?.let {  _uiState.value = it }
+        page?.let { _uiState.value = it }
+    }
+
+    fun onNavigationUp() {
+        _uiState.value = BlazeCampaignPage.Done
     }
 }

@@ -13,6 +13,7 @@ class CampaignListingViewModel @Inject constructor(
     fun start(campaignListingPageSource: CampaignListingPageSource) {
         blazeFeatureUtils.trackCampaignListingPageShown(campaignListingPageSource)
     }
+
 }
 
 enum class CampaignListingPageSource(val trackingName: String){
