@@ -55,7 +55,9 @@ class BlazeCardViewModelSlice @Inject constructor(
             AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_TAPPED,
             BlazeFlowSource.DASHBOARD_CARD
         )
-        // todo: Add navigation to create campaign
+        _onNavigation.value =
+            Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
+
     }
 
     fun onBlazeMenuItemClick(): SiteNavigationAction {
