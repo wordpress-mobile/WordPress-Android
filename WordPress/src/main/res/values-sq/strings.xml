@@ -224,7 +224,6 @@ Language: sq_AL
     <string name="blogging_prompts_list_answered_prompt">✓ Me Përgjigje</string>
     <string name="blogging_prompts_list_title">Cytje</string>
     <string name="close_desc">mbylle</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Ndryshe, mund ta shkëputni dhe përpunoni ndarazi këtë bllok, duke prekur “Shndërroje në bllok të rregullt”.</string>
     <string name="dlg_confirm_delete_category">Të fshihet përgjithmonë Kategoria \'%s\'?</string>
     <string name="deleting_cat_success">Kategoria u fshi me sukses</string>
     <string name="deleting_cat_failed">Fshirja e kategorisëdështoi</string>
@@ -768,7 +767,6 @@ Language: sq_AL
     <string name="blogging_reminders_notification_title">Është koha të blogoni te %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në WordPress për iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në WordPress për Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Ndryshe, mund t’i shkëputni dhe përpunoni ndarazi këto blloqe, duke prekur “Shndërroji në blloqe të rregullt”.</string>
     <string name="blogging_reminders_done">U bë</string>
     <string name="blogging_reminders_notify_me">Njoftomë</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;, që të aktivizoni rikthime sajti me një klikim, prej kopjeruajtjesh.</string>

@@ -471,6 +471,13 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     )
 
+    private val blazeCardUpdate = MutableLiveData(
+        MySiteUiState.PartialState.BlazeCardUpdate(
+            blazeEligible = true,
+            campaign = null
+        )
+    )
+
     private var quickActionsStatsClickAction: (() -> Unit)? = null
     private var quickActionsPagesClickAction: (() -> Unit)? = null
     private var quickActionsPostsClickAction: (() -> Unit)? = null
@@ -490,7 +497,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickStartUpdate,
         showSiteIconProgressBar,
         selectedSite,
-        bloggingPromptsUpdate
+        bloggingPromptsUpdate,
+        blazeCardUpdate
     )
 
     @Suppress("LongMethod")
