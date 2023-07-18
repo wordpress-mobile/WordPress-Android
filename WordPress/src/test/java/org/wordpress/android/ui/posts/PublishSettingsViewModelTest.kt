@@ -26,6 +26,7 @@ import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.CalendarEvent
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel
 import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
+import org.wordpress.android.usecase.social.GetJetpackSocialShareMessageUseCase
 import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -66,6 +67,9 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
     lateinit var getPublicizeConnectionsForUserUseCase: GetPublicizeConnectionsForUserUseCase
 
     @Mock
+    lateinit var getJetpackSocialShareMessageUseCase: GetJetpackSocialShareMessageUseCase
+
+    @Mock
     lateinit var getJetpackSocialShareLimitStatusUseCase: GetJetpackSocialShareLimitStatusUseCase
 
     @Mock
@@ -92,6 +96,7 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
             jetpackSocialFeatureConfig,
             accountStore,
             getPublicizeConnectionsForUserUseCase,
+            getJetpackSocialShareMessageUseCase,
             getJetpackSocialShareLimitStatusUseCase,
             jetpackUiStateMapper,
         )

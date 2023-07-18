@@ -16,6 +16,7 @@ import org.wordpress.android.ui.people.utils.PeopleUtils.FetchUsersCallback
 import org.wordpress.android.ui.people.utils.PeopleUtilsWrapper
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
+import org.wordpress.android.usecase.social.GetJetpackSocialShareMessageUseCase
 import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.config.JetpackSocialFeatureConfig
@@ -34,6 +35,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     private val jetpackSocialFeatureConfig: JetpackSocialFeatureConfig,
     private val accountStore: AccountStore,
     private val getPublicizeConnectionsForUserUseCase: GetPublicizeConnectionsForUserUseCase,
+    private val getJetpackSocialShareMessageUseCase: GetJetpackSocialShareMessageUseCase,
     private val getJetpackSocialShareLimitStatusUseCase: GetJetpackSocialShareLimitStatusUseCase,
     private val jetpackUiStateMapper: EditPostPublishSettingsJetpackSocialUiStateMapper,
     ) : PublishSettingsViewModel(
@@ -92,6 +94,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
             _showJetpackSocialContainer.value = true
             viewModelScope.launch {
                 val connections = getPublicizeConnectionsForUserUseCase.execute(it.siteId, accountStore.account.userId)
+                val shareMessage = getJetpackSocialShareMessageUseCase.execute(postModel?.id ?: -1)
                 val shareLimit = getJetpackSocialShareLimitStatusUseCase.execute(it)
                 val state = if (connections.isEmpty()) {
                     jetpackUiStateMapper.mapNoConnections(::onJetpackSocialConnectProfilesClick)
@@ -100,7 +103,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
                         connections = connections,
                         shareLimit = shareLimit,
                         onSubscribeClick = ::onJetpackSocialSubscribeClick,
-                        localPostId = postModel?.id ?: -1,
+                        shareMessage = shareMessage,
                     )
                 }
                 _jetpackSocialUiState.postValue(state)

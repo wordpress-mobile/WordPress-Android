@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState.Loaded
@@ -16,30 +15,22 @@ import javax.inject.Inject
 class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
     private val stringProvider: StringProvider,
     private val localeProvider: LocaleProvider,
-    // TODO extract to UseCase
-    private val postStore: PostStore,
 ) {
     fun mapLoaded(
         connections: List<PublicizeConnection>,
         shareLimit: ShareLimit,
         onSubscribeClick: () -> Unit,
-        localPostId: Int
+        shareMessage: String
     ): Loaded =
         Loaded(
             postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
             showShareLimitUi = shareLimit is ShareLimit.Enabled,
-            // TODO
-            shareMessage = mapShareMessage(localPostId),
+            shareMessage = shareMessage,
             remainingSharesMessage = mapRemainingSharesMessage(shareLimit),
             subscribeButtonLabel = stringProvider.getString(R.string.post_settings_jetpack_social_subscribe_share_more)
                 .uppercase(localeProvider.getAppLocale()),
             onSubscribeClick = onSubscribeClick,
         )
-
-    private fun mapShareMessage(localPostId: Int): String =
-        postStore.getPostByLocalPostId(localPostId)?.run {
-            if (autoShareMessage != null) autoShareMessage else title
-        } ?: ""
 
     private fun mapRemainingSharesMessage(shareLimit: ShareLimit) =
         if (shareLimit is ShareLimit.Enabled) {

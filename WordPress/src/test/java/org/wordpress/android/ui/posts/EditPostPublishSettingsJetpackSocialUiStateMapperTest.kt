@@ -5,7 +5,6 @@ import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState
@@ -19,11 +18,9 @@ import java.util.Locale
 class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
     private val stringProvider: StringProvider = mock()
     private val localProvider: LocaleProvider = mock()
-    private val postStore: PostStore = mock()
     private val classToTest = EditPostPublishSettingsJetpackSocialUiStateMapper(
         stringProvider = stringProvider,
         localeProvider = localProvider,
-        postStore = postStore,
     )
 
     @Test
@@ -34,6 +31,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
             sharedPostsCount = 12,
             sharesRemaining = 13,
         )
+        val shareMessage = "Message"
         val sharesRemaining = "13 remaining shares"
         whenever(stringProvider.getString(R.string.post_settings_jetpack_social_subscribe_share_more))
             .thenReturn("Share more")
@@ -66,12 +64,12 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
             connections = connections,
             shareLimit = shareLimit,
             onSubscribeClick = onConnectProfilesClick,
-            localPostId = 1,
+            shareMessage = shareMessage,
         )
         val expected = JetpackSocialUiState.Loaded(
             postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
             showShareLimitUi = true,
-            shareMessage = "Message",
+            shareMessage = shareMessage,
             remainingSharesMessage = sharesRemaining,
             subscribeButtonLabel = "SHARE MORE",
             onSubscribeClick = onConnectProfilesClick,
@@ -82,6 +80,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
     @Test
     fun `Should map loaded UI state with share limit disabled`() {
         val shareLimit = ShareLimit.Disabled
+        val shareMessage = "Message"
         whenever(stringProvider.getString(R.string.post_settings_jetpack_social_subscribe_share_more))
             .thenReturn("Share more")
         whenever(localProvider.getAppLocale())
@@ -111,7 +110,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
             connections = connections,
             shareLimit = shareLimit,
             onSubscribeClick = onConnectProfilesClick,
-            localPostId = 1,
+            shareMessage = shareMessage,
         )
         val expected = JetpackSocialUiState.Loaded(
             postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
