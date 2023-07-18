@@ -4,11 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
-import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
+import org.wordpress.android.ui.blazeCampaigns.campaigndetail.CampaignDetailPageSource
+import org.wordpress.android.ui.blazeCampaigns.campaignlisting.CampaignListingPageSource
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
+import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class BlazeCardViewModelSlice @Inject constructor(
@@ -43,11 +45,13 @@ class BlazeCardViewModelSlice @Inject constructor(
     }
 
     private fun onCampaignsCardClick() {
-        TODO("Not yet implemented")
+        _onNavigation.value =
+            Event(SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.DASHBOARD_CARD))
     }
 
     private fun onCampaignClick() {
-        TODO("Not yet implemented")
+        _onNavigation.value =
+            Event(SiteNavigationAction.OpenCampaignDetailPage(CampaignDetailPageSource.DASHBOARD_CARD))
     }
 
     private fun onCreateCampaignClick() {
