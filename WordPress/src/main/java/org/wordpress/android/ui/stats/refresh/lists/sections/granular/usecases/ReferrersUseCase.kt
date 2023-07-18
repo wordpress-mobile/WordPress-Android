@@ -110,6 +110,7 @@ class ReferrersUseCase(
         }
     }
 
+    @SuppressWarnings("CyclomaticComplexMethod")
     override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 

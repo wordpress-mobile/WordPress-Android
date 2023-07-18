@@ -276,6 +276,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         )
     }
 
+    @SuppressWarnings("CyclomaticComplexMethod")
     private fun setListeners() {
         editor.setOnFocusChangeListener { _, hasFocus ->
             val canAnimate = hint.width > 0 && label.width > 0 && hint.height > 0 && label.height > 0
