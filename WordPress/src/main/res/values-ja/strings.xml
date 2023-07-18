@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-28 09:54:08+0000
+Translation-Revision-Date: 2023-07-12 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_s_detached">%sを切り離しました</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">同期済みパターンの編集は iOS 用 %s ではまだサポートされていません</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">同期済みパターンの編集は Android 用 %s ではまだサポートされていません</string>
     <string name="gutenberg_native_reusable">再利用可能</string>
     <string name="privacy_banner_error_save">プライバシーに関する選択を保存しているときにエラーが発生しました。</string>
     <string name="privacy_banner_save">保存</string>
@@ -234,7 +237,7 @@ Language: ja_JP
     <string name="blogging_prompts_list_answered_prompt">✓回答済み</string>
     <string name="blogging_prompts_list_title">プロンプト</string>
     <string name="close_desc">閉</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">または、「通常のブロックへ変換」をタップして、このブロックを個別に切り離して編集できます。</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">または、「パターンを切り離す」をタップして、このブロックを個別に切り離して編集できます。</string>
     <string name="dlg_confirm_delete_category">「%s」カテゴリーを完全に削除しますか ?</string>
     <string name="deleting_cat_success">カテゴリーを削除しました</string>
     <string name="deleting_cat_failed">カテゴリーの削除に失敗しました</string>
@@ -782,7 +785,7 @@ Language: ja_JP
     <string name="blogging_reminders_notification_title">%sのブログに投稿する日です</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">再利用ブロックの編集は WordPress for iOS ではまだサポートされていません</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">再利用ブロックの編集は WordPress for Android ではまだサポートされていません</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">「通常のブロックへ変換」をタップして、これらのブロックを個別に切り離して編集できます。</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">または、「パターンを切り離す」をタップして、これらのブロックを個別に切り離して編集できます。</string>
     <string name="blogging_reminders_notify_me">通知する</string>
     <string name="blogging_reminders_done">完了</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;サーバーのログイン情報&lt;/a&gt;を入力すると、1クリックでバックアップからサイトを復元できるようになります。</string>

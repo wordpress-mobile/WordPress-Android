@@ -15,9 +15,8 @@ import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.posts.GetPostTagsUseCase
 import org.wordpress.android.ui.posts.PostSettingsUtils
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.CATEGORIES
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PUBLISH
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.TAGS
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.Action
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
@@ -113,14 +112,14 @@ class PrepublishingHomeViewModel @Inject constructor(
             )
 
             add(HomeUiState(
-                actionType = CATEGORIES,
+                navigationAction = PrepublishingScreenNavigation.Categories,
                 actionResult = if (categoriesString.isNotEmpty()) {
                     UiStringText(categoriesString)
                 } else {
                     run { UiStringRes(R.string.prepublishing_nudges_home_categories_not_set) }
                 },
                 actionClickable = true,
-                onActionClicked = ::onActionClicked
+                onNavigationActionClicked = ::onActionClicked
             ))
 
             if (!editPostRepository.isPage && socialFeatureConfig.isEnabled()) {
@@ -143,12 +142,12 @@ class PrepublishingHomeViewModel @Inject constructor(
     ) {
         add(
             HomeUiState(
-                actionType = TAGS,
+                navigationAction = PrepublishingScreenNavigation.Tags,
                 actionResult = getPostTagsUseCase.getTags(editPostRepository)
                     ?.let { UiStringText(it) }
                     ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
                 actionClickable = true,
-                onActionClicked = ::onActionClicked
+                onNavigationActionClicked = ::onActionClicked
             )
         )
 
@@ -166,7 +165,7 @@ class PrepublishingHomeViewModel @Inject constructor(
     ) {
         add(
             HomeUiState(
-                actionType = PUBLISH,
+                navigationAction = PrepublishingScreenNavigation.Publish,
                 actionResult = editPostRepository.getEditablePost()
                     ?.let {
                         UiStringText(
@@ -178,7 +177,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                 actionTypeColor = R.color.prepublishing_action_type_disabled_color,
                 actionResultColor = R.color.prepublishing_action_result_disabled_color,
                 actionClickable = false,
-                onActionClicked = null
+                onNavigationActionClicked = null
             )
         )
     }
@@ -188,7 +187,7 @@ class PrepublishingHomeViewModel @Inject constructor(
     ) {
         add(
             HomeUiState(
-                actionType = PUBLISH,
+                navigationAction = PrepublishingScreenNavigation.Publish,
                 actionResult = editPostRepository.getEditablePost()
                     ?.let {
                         UiStringText(
@@ -198,7 +197,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                         )
                     },
                 actionClickable = true,
-                onActionClicked = ::onActionClicked
+                onNavigationActionClicked = ::onActionClicked
             )
         )
     }
@@ -226,7 +225,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                     SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_mastodon),
                     SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_linkedin),
                 ),
-                onConnectClicked = { /* TODO in other PR: open sharing settings */ },
+                onConnectClicked = { onActionClicked(Action.NavigateToSharingSettings) },
                 onDismissClicked = { /* TODO in other PR: hide this item forever */ },
             )
         )
