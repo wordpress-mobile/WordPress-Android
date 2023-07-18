@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-28 12:54:08+0000
+Translation-Revision-Date: 2023-07-12 16:54:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_s_detached">%s frikopplad</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Redigering av synkroniserade mönster stöds ännu inte i %s för iOS</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Redigering av synkroniserade mönster stöds ännu inte i %s för Android</string>
     <string name="gutenberg_native_reusable">Återanvändbar</string>
     <string name="privacy_banner_error_save">Det uppstod ett fel när dina integritetsval skulle sparas.</string>
     <string name="privacy_banner_save">Spara</string>
@@ -234,7 +237,7 @@ Language: sv_SE
     <string name="blogging_prompts_list_answered_prompt">✓ Besvarat</string>
     <string name="blogging_prompts_list_title">Förslag</string>
     <string name="close_desc">stäng</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativt kan du ta bort bifogning och redigera detta block separat genom att trycka på ”Konvertera till vanligt block”.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Du kan även frikoppla och redigera det här blocket separat genom att trycka på Frikoppla mönster.</string>
     <string name="dlg_confirm_delete_category">Ta bort kategori \'%s\' permanent?</string>
     <string name="deleting_cat_success">Kategori borttagen</string>
     <string name="deleting_cat_failed">Misslyckades att ta bort kategori</string>
@@ -782,7 +785,7 @@ Language: sv_SE
     <string name="blogging_reminders_notification_title">Det är dags att blogga på %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Redigering av återanvändbara block stöds ännu inte i WordPress för iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Redigering av återanvändbara block stöds ännu inte i WordPress för Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativt kan du frikoppla och redigera dessa block separat genom att trycka på ”Konvertera till vanliga block”.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Du kan även frikoppla och redigera dessa block separat genom att trycka på Frikoppla mönster.</string>
     <string name="blogging_reminders_done">Klart</string>
     <string name="blogging_reminders_notify_me">Påminn mig</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Ange inloggningsuppgifterna till din server&lt;/a&gt; för att möjliggöra återställning av webbplatsen från säkerhetskopior med ett klick.</string>

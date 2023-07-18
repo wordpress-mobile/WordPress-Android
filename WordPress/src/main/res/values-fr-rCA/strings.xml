@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-28 15:54:08+0000
+Translation-Revision-Date: 2023-07-12 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_s_detached">%s détaché</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">La modification des compositions synchronisées n’est pas encore prise en charge sur %s pour iOS</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">La modification des compositions synchronisées n’est pas encore prise en charge sur %s pour Android</string>
     <string name="gutenberg_native_reusable">Réutilisable</string>
     <string name="privacy_banner_error_save">Une erreur est survenue lors de l’enregistrement de vos choix en matière de confidentialité.</string>
     <string name="privacy_banner_save">Enregistrer</string>
@@ -233,7 +236,7 @@ Language: fr
     <string name="blogging_prompts_list_answered_prompt">✓ Vous avez répondu</string>
     <string name="blogging_prompts_list_title">Incitations</string>
     <string name="close_desc">fermer</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Vous pouvez également détacher et modifier ce bloc séparément en appuyant sur « Convertir en bloc normal ».</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Vous pouvez également détacher et modifier ce bloc séparément en appuyant sur « Détacher la composition ».</string>
     <string name="dlg_confirm_delete_category">Supprimer définitivement la catégorie « %s » ?</string>
     <string name="deleting_cat_success">Suppression de la catégorie réussie</string>
     <string name="deleting_cat_failed">Échec de la suppression de la catégorie</string>
@@ -781,7 +784,7 @@ Language: fr
     <string name="blogging_reminders_notification_title">C’est l’heure de bloguer sur %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">La modification des blocs réutilisables n’est pas encore prise en charge sur WordPress pour iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">La modification des blocs réutilisables n’est pas encore prise en charge sur WordPress pour Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Vous pouvez également détacher et modifier ces blocs séparément en appuyant sur « Convertir en bloc normal ».</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Vous pouvez également détacher et modifier ces blocs séparément en appuyant sur « Détacher les compositions ».</string>
     <string name="blogging_reminders_done">Terminé</string>
     <string name="blogging_reminders_notify_me">M’avertir</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Saisissez les identifiants de votre serveur&lt;/a&gt; afin d’activer les restaurations de site en un clic à partir des sauvegardes.</string>

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-30 19:47:30+0000
+Translation-Revision-Date: 2023-07-10 20:24:08+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: lv
 -->
 <resources>
+    <string name="gutenberg_native_s_detached">%s atdalīts</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Sinhronizēto modeļu rediģēšana programmā %s iOS ierīcē vēl netiek atbalstīta.</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Sinhronizēto modeļu rediģēšana programmā %s Android ierīcē vēl netiek atbalstīta.</string>
     <string name="gutenberg_native_reusable">Atkārtoti lietojams</string>
     <string name="privacy_banner_error_save">Saglabājot jūsu konfidencialitātes izvēles, radās kļūda.</string>
     <string name="privacy_banner_save">Saglabāt</string>
@@ -234,7 +237,7 @@ Language: lv
     <string name="blogging_prompts_list_answered_prompt">✓ Atbildēts</string>
     <string name="blogging_prompts_list_title">Uzvednes</string>
     <string name="close_desc">aizvērt</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Varat arī atdalīt un rediģēt šo bloku atsevišķi, pieskaroties “Konvertēt uz parastu bloku”.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Varat arī atdalīt un rediģēt šo bloku atsevišķi, piesitiet \"Atvienot modeli\".</string>
     <string name="dlg_confirm_delete_category">Vai neatgriezeniski dzēst kategoriju \"%s\"?</string>
     <string name="deleting_cat_success">Kategorija veiksmīgi izdzēsta</string>
     <string name="deleting_cat_failed">Neizdevās dzēst kategoriju</string>
@@ -782,7 +785,7 @@ Language: lv
     <string name="blogging_reminders_notification_title">Ir pienācis laiks izveidot emuāru vietnē %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Atkārtoti lietojamo bloku rediģēšana vēl netiek atbalstīta pakalpojumā WordPress operētājsistēmai iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Atkārtoti lietojamo bloku rediģēšana vēl netiek atbalstīta pakalpojumā WordPress operētājsistēmai Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Varat arī atdalīt un rediģēt šos blokus atsevišķi, pieskaroties \"Konvertēt uz parastajiem blokiem\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Varat arī atdalīt un rediģēt šos blokus atsevišķi, piesitot \"Atvienot modeļus\".</string>
     <string name="blogging_reminders_done">Gatavs</string>
     <string name="blogging_reminders_notify_me">Informēt mani</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Ievadiet servera akreditācijas datus&lt;/a&gt;, lai iespējotu vietnes atjaunošanu no dublējumkopijas ar vienu klikšķi.</string>

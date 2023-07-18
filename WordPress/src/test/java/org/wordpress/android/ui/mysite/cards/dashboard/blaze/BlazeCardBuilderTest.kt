@@ -15,6 +15,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardBuilder
+import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 
@@ -24,7 +25,7 @@ val campaign = BlazeCampaignModel(
     imageUrl = "imageUrl",
     startDate = mock(),
     endDate = mock(),
-    uiStatus = "uiStatus",
+    uiStatus = "active",
     budgetCents = 20L,
     impressions = 1,
     clicks = 1,
@@ -41,19 +42,21 @@ val campaignWithBlazeBuilderParams = CampaignWithBlazeCardBuilderParams(
     onCreateCampaignClick = onCreateCampaignClick
 )
 
+val campaignCardItem = BlazeCampaignsCardItem(
+    id = campaign.campaignId,
+    title = UiString.UiStringText(campaign.title),
+    status = CampaignStatus.fromString(campaign.uiStatus),
+    featuredImageUrl = campaign.imageUrl,
+    stats = BlazeCampaignStats(
+        impressions = UiString.UiStringText(campaign.impressions.toString()),
+        clicks = UiString.UiStringText(campaign.clicks.toString())
+    ),
+    onClick = onCampaignClick,
+)
+
 val blazeCampaignsCardModel = BlazeCampaignsCardModel(
     title = UiString.UiStringRes(R.string.blaze_campaigns_card_title),
-    campaign = BlazeCampaignsCardItem(
-        id = campaign.campaignId,
-        title = UiString.UiStringText(campaign.title),
-        status = UiString.UiStringText(campaign.uiStatus),
-        featuredImageUrl = campaign.imageUrl,
-        stats = BlazeCampaignStats(
-            impressions = UiString.UiStringText(campaign.impressions.toString()),
-            clicks = UiString.UiStringText(campaign.clicks.toString())
-        ),
-        onClick = onCampaignClick,
-    ),
+    campaign = campaignCardItem,
     footer = BlazeCampaignsCardFooter(
         label = UiString.UiStringRes(R.string.blaze_campaigns_card_footer_label),
         onClick = ListItemInteraction.create(onCreateCampaignClick)
@@ -106,6 +109,26 @@ class BlazeCardBuilderTest {
         val result = builder.build(params) as BlazeCampaignsCardModel
 
         // Assert
-        assertEquals(blazeCampaignsCardModel,result)
+        assertEquals(blazeCampaignsCardModel, result)
+    }
+
+    @Test
+    fun `given campaign not active or completed, when campaign card is built, then no stats available`() {
+        // Arrange
+        val params = campaignWithBlazeBuilderParams.copy(
+            campaign = campaign.copy(uiStatus = "scheduled")
+        )
+
+        // Act
+        val result = builder.build(params) as BlazeCampaignsCardModel
+
+        // Assert
+        val expectedCampaignCard = blazeCampaignsCardModel.copy(
+            campaign = campaignCardItem.copy(
+                stats = null,
+                status = CampaignStatus.Scheduled
+            )
+        )
+        assertEquals(expectedCampaignCard, result)
     }
 }
