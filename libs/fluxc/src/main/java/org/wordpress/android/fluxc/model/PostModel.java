@@ -98,6 +98,10 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
 
     @Column private int mAnsweredPromptId;
 
+    // Auto-share message
+    @Column private String mAutoShareMessage;
+    @Column private long mAutoShareId;
+
     public PostModel() {}
 
     @Override
@@ -528,6 +532,22 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
 
     public void setAnsweredPromptId(int answeredPromptId) {
         mAnsweredPromptId = answeredPromptId;
+    }
+
+    public void setAutoShareMessage(String autoShareMessage) {
+        mAutoShareMessage = autoShareMessage;
+    }
+
+    public String getAutoShareMessage() {
+        return mAutoShareMessage;
+    }
+
+    public long getAutoShareId() {
+        return mAutoShareId;
+    }
+
+    public void setAutoShareId(long autoShareId) {
+        mAutoShareId = autoShareId;
     }
 
     @Override
