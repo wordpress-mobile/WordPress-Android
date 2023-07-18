@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
@@ -33,9 +34,11 @@ fun EditPostSettingsJetpackSocialContainer(
         )
         PostSocialMessageItem(
             message = shareMessage,
-            modifier = Modifier.padding(
-                vertical = Margin.MediumLarge.value,
-            ),
+            modifier = Modifier
+                .padding(
+                    vertical = Margin.MediumLarge.value,
+                )
+                .fillMaxWidth(),
         )
         if (showShareLimitUi) {
             Divider()
