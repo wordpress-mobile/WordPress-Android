@@ -86,7 +86,6 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
         ) {
             "This post is already being processed. Make sure not to start an autoSave " +
                     "or update draft action while another one is going on."
-
         }
         coroutineScope.launch {
             val onPostStatusFetched = fetchRemotePostStatus(remotePostPayload)
