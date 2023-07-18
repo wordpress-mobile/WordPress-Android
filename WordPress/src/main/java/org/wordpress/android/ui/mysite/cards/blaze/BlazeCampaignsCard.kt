@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.blaze
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,14 +38,15 @@ fun BlazeCampaignsCard(
     blazeCampaignCardModel: BlazeCampaignsCardModel,
     modifier: Modifier = Modifier
 ) {
-    UnelevatedCard(modifier = modifier, content = {
+    UnelevatedCard(modifier = modifier.clickable { blazeCampaignCardModel.onClick.click() }, content = {
         Column(
             modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp),
+                    .padding(start = 16.dp, end = 16.dp)
+                    .clickable { blazeCampaignCardModel.campaign.onClick() },
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
@@ -75,7 +77,8 @@ fun BlazeCampaignsCard(
                 modifier = Modifier
                     .padding(start = 16.dp)
             )
-            Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
+            Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                    .clickable { blazeCampaignCardModel.footer.onClick.click() }) {
                 Text(
                     text = uiStringText(uiString = blazeCampaignCardModel.footer.label),
                     style = DashboardCardTypography.footerCTA,
@@ -85,7 +88,7 @@ fun BlazeCampaignsCard(
                 )
             }
         }
-    })
+    }, )
 }
 
 @Composable
