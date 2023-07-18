@@ -36,7 +36,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 190
+        return 191
     }
 
     override fun getDbName(): String {
@@ -1953,6 +1953,10 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 189 -> migrate(version) {
                     db.execSQL("ALTER TABLE SiteModel ADD PLAN_ACTIVE_FEATURES TEXT")
+                }
+                190 -> migrate(version) {
+                    db.execSQL("ALTER TABLE PostModel ADD AUTO_SHARE_MESSAGE TEXT")
+                    db.execSQL("ALTER TABLE PostModel ADD AUTO_SHARE_ID INTEGER")
                 }
             }
         }

@@ -542,6 +542,17 @@ public class PostRestClient extends BaseWPComRestClient {
                             post.setAnsweredPromptId(Integer.parseInt(metaDataValue.toString()));
                         }
                     }
+
+                    if (key.equals("_wpas_mess")) {
+                        final Object metaDataValue = metaData.getValue();
+                        if (metaDataValue instanceof String) {
+                            post.setAutoShareMessage(metaDataValue.toString());
+                        }
+                        final long metaDataId = metaData.getId();
+                        if (metaDataId > 0) {
+                            post.setAutoShareId(metaDataId);
+                        }
+                    }
                 }
             }
         }
