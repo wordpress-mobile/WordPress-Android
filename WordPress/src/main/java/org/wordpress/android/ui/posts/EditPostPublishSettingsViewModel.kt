@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
@@ -45,8 +44,6 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     postSchedulingNotificationStore,
     siteStore
 ) {
-    private var postModel: PostImmutableModel? = null
-
     private var editPostRepository: EditPostRepository? = null
 
     private val _authors = MutableLiveData<List<Person>>()
@@ -76,7 +73,6 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         val siteModel = postRepository?.localSiteId?.let {
             siteStore.getSiteByLocalId(it)
         }
-        postModel = postRepository?.getPost()
         loadAuthors(siteModel)
         loadJetpackSocial(siteModel)
 
@@ -101,7 +97,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
             viewModelScope.launch {
                 val connections = getPublicizeConnectionsForUserUseCase.execute(it.siteId, accountStore.account.userId)
                 val shareMessage = jetpackSocialShareMessage.ifEmpty {
-                    getJetpackSocialShareMessageUseCase.execute(postModel?.id ?: -1)
+                    getJetpackSocialShareMessageUseCase.execute(editPostRepository?.getPost()?.id ?: -1)
                 }
                 val shareLimit = getJetpackSocialShareLimitStatusUseCase.execute(it)
                 val state = if (connections.isEmpty()) {
@@ -166,7 +162,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     fun onJetpackSocialShareMessageChanged(newShareMessage: String?) {
         val currentState = _jetpackSocialUiState.value
         if (newShareMessage != null && currentState is JetpackSocialUiState.Loaded) {
-            val shareMessage = newShareMessage.ifEmpty { postModel?.title ?: "" }
+            val shareMessage = newShareMessage.ifEmpty { editPostRepository?.getPost()?.title ?: "" }
             editPostRepository?.updateAsync({ postModel ->
                 postModel.setAutoShareMessage(shareMessage)
                 true
