@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.blaze.ui.blazepromote
+package org.wordpress.android.ui.blaze.blazepromote
 
 import android.text.TextUtils
 import androidx.lifecycle.ViewModel

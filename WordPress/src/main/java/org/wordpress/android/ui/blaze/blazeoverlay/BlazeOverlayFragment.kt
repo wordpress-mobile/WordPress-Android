@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.blaze.ui.blazeoverlay
+package org.wordpress.android.ui.blaze.blazeoverlay
 
 import android.annotation.SuppressLint
 import android.os.Bundle

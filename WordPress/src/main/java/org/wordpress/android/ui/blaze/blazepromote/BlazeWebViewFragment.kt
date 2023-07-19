@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.blaze.ui.blazepromote
+package org.wordpress.android.ui.blaze.blazepromote
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -34,7 +34,7 @@ import org.wordpress.android.ui.blaze.BlazeWebViewClient
 import org.wordpress.android.ui.blaze.BlazeWebViewContentUiState
 import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState
 import org.wordpress.android.ui.blaze.OnBlazeWebViewClientListener
-import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeViewModel
+import org.wordpress.android.ui.blaze.blazeoverlay.BlazeViewModel
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.editor.R as EditorR

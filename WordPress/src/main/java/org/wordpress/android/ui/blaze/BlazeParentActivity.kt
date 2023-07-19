@@ -5,9 +5,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeOverlayFragment
-import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeViewModel
-import org.wordpress.android.ui.blaze.ui.blazepromote.BlazeWebViewFragment
+import org.wordpress.android.ui.blaze.blazeoverlay.BlazeOverlayFragment
+import org.wordpress.android.ui.blaze.blazeoverlay.BlazeViewModel
+import org.wordpress.android.ui.blaze.blazepromote.BlazeWebViewFragment
 import org.wordpress.android.util.extensions.getParcelableExtraCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
