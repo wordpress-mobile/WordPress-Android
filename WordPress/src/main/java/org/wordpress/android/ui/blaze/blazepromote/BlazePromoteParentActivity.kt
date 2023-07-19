@@ -1,13 +1,15 @@
-package org.wordpress.android.ui.blaze
+package org.wordpress.android.ui.blaze.blazepromote
 
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.ui.blaze.BlazeFlowSource
+import org.wordpress.android.ui.blaze.BlazeUIModel
+import org.wordpress.android.ui.blaze.BlazeUiState
 import org.wordpress.android.ui.blaze.blazeoverlay.BlazeOverlayFragment
 import org.wordpress.android.ui.blaze.blazeoverlay.BlazeViewModel
-import org.wordpress.android.ui.blaze.blazepromote.BlazeWebViewFragment
 import org.wordpress.android.util.extensions.getParcelableExtraCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
