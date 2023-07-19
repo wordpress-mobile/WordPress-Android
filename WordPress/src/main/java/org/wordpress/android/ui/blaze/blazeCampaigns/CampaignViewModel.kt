@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.blazeCampaigns
+package org.wordpress.android.ui.blaze.blazeCampaigns
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

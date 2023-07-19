@@ -4,4 +4,4 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.blazeCampaigns.BlazeCampaignParentActivity" />
+    tools:context=".ui.blaze.blazeCampaigns.BlazeCampaignParentActivity" />

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.blazeCampaigns.campaigndetail
+package org.wordpress.android.ui.blaze.blazeCampaigns.campaigndetail
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -51,7 +51,9 @@ class CampaignDetailsFragment : Fragment() {
     }
 
     private fun getPageSource(): CampaignDetailPageSource {
-        return arguments?.getSerializableCompat<CampaignDetailPageSource>(CAMPAIGN_DETAIL_PAGE_SOURCE)
+        return arguments?.getSerializableCompat<CampaignDetailPageSource>(
+            CAMPAIGN_DETAIL_PAGE_SOURCE
+        )
             ?: CampaignDetailPageSource.UNKNOWN
     }
 }

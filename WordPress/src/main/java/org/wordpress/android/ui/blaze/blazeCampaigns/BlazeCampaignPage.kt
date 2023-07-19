@@ -1,10 +1,10 @@
-package org.wordpress.android.ui.blazeCampaigns
+package org.wordpress.android.ui.blaze.blazeCampaigns
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import org.wordpress.android.ui.blazeCampaigns.campaigndetail.CampaignDetailPageSource
-import org.wordpress.android.ui.blazeCampaigns.campaignlisting.CampaignListingPageSource
+import org.wordpress.android.ui.blaze.blazeCampaigns.campaigndetail.CampaignDetailPageSource
+import org.wordpress.android.ui.blaze.blazeCampaigns.campaignlisting.CampaignListingPageSource
 
 @Parcelize
 @SuppressLint("ParcelCreator")

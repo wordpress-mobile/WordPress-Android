@@ -1,12 +1,12 @@
-package org.wordpress.android.ui.blazeCampaigns
+package org.wordpress.android.ui.blaze.blazeCampaigns
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.ui.blazeCampaigns.campaigndetail.CampaignDetailsFragment
-import org.wordpress.android.ui.blazeCampaigns.campaignlisting.CampaignListingFragment
+import org.wordpress.android.ui.blaze.blazeCampaigns.campaigndetail.CampaignDetailsFragment
+import org.wordpress.android.ui.blaze.blazeCampaigns.campaignlisting.CampaignListingFragment
 import org.wordpress.android.util.extensions.getParcelableExtraCompat
 
 const val ARG_EXTRA_BLAZE_CAMPAIGN_PAGE = "blaze_campaign_page"

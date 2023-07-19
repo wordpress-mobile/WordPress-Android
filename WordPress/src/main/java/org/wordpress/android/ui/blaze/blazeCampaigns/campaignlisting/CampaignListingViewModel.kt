@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.blazeCampaigns.campaignlisting
+package org.wordpress.android.ui.blaze.blazeCampaigns.campaignlisting
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

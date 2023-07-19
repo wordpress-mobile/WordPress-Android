@@ -6,8 +6,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.blaze.BlazeFlowSource
-import org.wordpress.android.ui.blazeCampaigns.campaigndetail.CampaignDetailPageSource
-import org.wordpress.android.ui.blazeCampaigns.campaignlisting.CampaignListingPageSource
+import org.wordpress.android.ui.blaze.blazeCampaigns.campaigndetail.CampaignDetailPageSource
+import org.wordpress.android.ui.blaze.blazeCampaigns.campaignlisting.CampaignListingPageSource
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.UriWrapper
