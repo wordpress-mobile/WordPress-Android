@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.blaze.blazeCampaigns.campaigndetail
+package org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail
 
 import android.annotation.SuppressLint
 import android.os.Bundle

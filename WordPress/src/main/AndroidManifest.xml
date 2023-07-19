@@ -1071,7 +1071,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/WordPress.NoActionBar"/>
 
-        <activity android:name=".ui.blaze.blazeCampaigns.BlazeCampaignParentActivity"
+        <activity android:name=".ui.blaze.blazecampaigns.BlazeCampaignParentActivity"
             android:exported="false"
             android:label="@string/blaze_campaigns_page_title"
             android:screenOrientation="portrait"
