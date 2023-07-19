@@ -66,6 +66,9 @@ class BlazeCardViewModelSlice @Inject constructor(
 
     fun onBlazeMenuItemClick(): SiteNavigationAction {
         blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.MENU_ITEM)
+        if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {
+            return SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.MENU_ITEM)
+        }
         return SiteNavigationAction.OpenPromoteWithBlazeOverlay(BlazeFlowSource.MENU_ITEM)
     }
 
