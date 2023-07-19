@@ -62,8 +62,7 @@ fun CampaignDetailPage(navigationUp: () -> Unit = { }) {
     Scaffold(
         topBar = {
             MainTopAppBar(
-                // todo: Use the correct title
-                title = stringResource(R.string.blaze_campaigns_card_title),
+                title = stringResource(R.string.blaze_campaign_details_page_title),
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = navigationUp
             )
