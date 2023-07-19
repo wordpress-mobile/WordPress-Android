@@ -37,7 +37,7 @@ class BlazeParentActivity : AppCompatActivity() {
                 }
                 is BlazeUiState.WebViewScreen -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, BlazeWebViewFragment.newInstance())
+                        .replace(R.id.container, BlazePromoteWebViewFragment.newInstance())
                         .commitNow()
                 }
                 is BlazeUiState.Done -> {

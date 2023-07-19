@@ -30,7 +30,7 @@ import org.wordpress.android.util.config.BlazeNonDismissableHashConfig
 import javax.inject.Inject
 
 @HiltViewModel
-class BlazeWebViewViewModel @Inject constructor(
+class BlazePromoteWebViewViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val selectedSiteRepository: SelectedSiteRepository,
