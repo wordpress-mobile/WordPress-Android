@@ -162,7 +162,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             viewPager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
         }
 
-        viewModel.refresh.observe(viewLifecycleOwner) {
+        viewModel.blazeCardRefresh.observe(viewLifecycleOwner) {
             viewModel.refresh()
         }
 

@@ -312,7 +312,7 @@ class MySiteViewModel @Inject constructor(
     val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
-    val refresh = blazeCardViewModelSlice.refresh
+    val blazeCardRefresh = blazeCardViewModelSlice.refresh
 
     private var shouldMarkUpdateSiteTitleTaskComplete = false
 
