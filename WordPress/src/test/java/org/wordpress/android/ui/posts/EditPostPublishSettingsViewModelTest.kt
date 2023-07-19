@@ -88,6 +88,14 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `Should hide jetpack social container if FF is enabled but SiteModel is null`() = test {
+        whenever(jetpackSocialFeatureConfig.isEnabled())
+            .thenReturn(true)
+        classToTest.start(null)
+        verify(showJetpackSocialContainerObserver).onChanged(false)
+    }
+
+    @Test
     fun `Should show jetpack social container if FF is enabled`() = test {
         mockSiteModel()
         mockUserId()
