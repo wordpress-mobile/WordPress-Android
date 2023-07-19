@@ -42,7 +42,6 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     postSchedulingNotificationStore,
     siteStore
 ) {
-    private var siteModel: SiteModel? = null
     private val _authors = MutableLiveData<List<Person>>()
     val authors: LiveData<List<Person>> = _authors
 
@@ -65,14 +64,14 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
 
-        siteModel = postRepository?.localSiteId?.let {
+        val siteModel = postRepository?.localSiteId?.let {
             siteStore.getSiteByLocalId(it)
         }
-        loadAuthors()
-        loadJetpackSocial()
+        loadAuthors(siteModel)
+        loadJetpackSocial(siteModel)
     }
 
-    private fun loadAuthors() {
+    private fun loadAuthors(siteModel: SiteModel?) {
         siteModel?.let {
             if (it.hasCapabilityListUsers) {
                 fetchAuthors(it)
@@ -80,7 +79,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         }
     }
 
-    private fun loadJetpackSocial() {
+    private fun loadJetpackSocial(siteModel: SiteModel?) {
         if (!jetpackSocialFeatureConfig.isEnabled()) {
             _showJetpackSocialContainer.value = false
             return
@@ -97,6 +96,8 @@ class EditPostPublishSettingsViewModel @Inject constructor(
                 }
                 _jetpackSocialUiState.postValue(state)
             }
+        } ?: run {
+            _showJetpackSocialContainer.value = false
         }
     }
 
