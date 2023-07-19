@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-29 14:54:08+0000
+Translation-Revision-Date: 2023-07-12 14:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.4
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_s_detached">تم فصل %s</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">تحرير الأنماط التي تمت مزامنتها غير مدعوم حتى الآن على %s لنظام التشغيل iOS</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">تحرير الأنماط التي تمت مزامنتها غير مدعوم حتى الآن على %s لنظام التشغيل Android</string>
     <string name="gutenberg_native_reusable">قابل لإعادة الاستخدام</string>
     <string name="privacy_banner_error_save">كان هناك خطأ في أثناء حفظ خيارات الخصوصية الخاصة بك.</string>
     <string name="privacy_banner_save">حفظ</string>
@@ -234,7 +237,7 @@ Language: ar
     <string name="blogging_prompts_list_answered_prompt">✓ تم الرد</string>
     <string name="blogging_prompts_list_title">المطالبات</string>
     <string name="close_desc">إغلاق</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">وبدلاً من ذلك، يمكنك فصل هذا المكوّن وتحريره على حدة عن طريق النقر على \"التحويل إلى مكوّن عادي\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">وبدلاً من ذلك، يمكنك فصل هذا المكوّن وتحريره على حدة عن طريق النقر على \"فصل النمط\".</string>
     <string name="dlg_confirm_delete_category">هل تريد حذف تصنيف \"%s\" بشكل دائم؟</string>
     <string name="deleting_cat_success">نجح حذف التصنيف</string>
     <string name="deleting_cat_failed">فشل حذف التصنيف</string>
@@ -782,7 +785,7 @@ Language: ar
     <string name="blogging_reminders_notification_title">حان الوقت للتدوين في %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">تحرير المكوِّنات القابلة لإعادة الاستخدام غير مدعوم بعد على ووردبريس لنظام تشغيل iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">تحرير المكوِّنات القابلة لإعادة الاستخدام غير مدعوم بعد على ووردبريس لنظام تشغيل Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">وبدلاً من ذلك، يمكنك فصل هذه المكوّنات وتحريرها على حدة عن طريق الضغط على \"التحويل إلى مكوّنات عادية\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">وبدلاً من ذلك، يمكنك فصل هذه المكوّنات وتحريرها على حدة عن طريق الضغط على \"فصل الأنماط\".</string>
     <string name="blogging_reminders_done">تمّ</string>
     <string name="blogging_reminders_notify_me">إشعاري بذلك</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد الخادم الخاص بك&lt;/a&gt; لتمكين استعادة الموقع بنقرة واحدة من النُسخ الاحتياطية.</string>

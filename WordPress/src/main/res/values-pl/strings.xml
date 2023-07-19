@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-27 18:04:11+0000
+Translation-Revision-Date: 2023-07-11 04:38:03+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: pl
 -->
 <resources>
+    <string name="gutenberg_native_s_detached">odłączono %s</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Edycja zsynchronizowanych wzorców nie jest jeszcze obsługiwana w %s dla iOS</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Edytowanie zsynchronizowanych wzorców nie jest jeszcze obsługiwane w %s w androidzie</string>
+    <string name="gutenberg_native_reusable">Wielokrotnego użycia</string>
+    <string name="privacy_banner_error_save">Wystąpił błąd podczas zapisywania ustawień prywatności.</string>
+    <string name="privacy_banner_save">Zapisz</string>
+    <string name="privacy_banner_settings">Ustawienia</string>
+    <string name="privacy_banner_analytics_description">Pozwól nam zoptymalizować wydajność poprzez gromadzenie informacji na temat interakcji użytkowników z naszymi aplikacjami mobilnymi.</string>
+    <string name="privacy_banner_analytics">Analityka</string>
+    <string name="privacy_banner_title">Zarządzaj prywatnością</string>
     <string name="dashboard_activity_card_title">Ostatnia aktywność</string>
     <string name="dashboard_activity_card_footer_link">Zobacz pełną aktywność</string>
     <string name="gutenberg_native_remove_blocks">Usuń bloki</string>
@@ -26,7 +36,6 @@ Language: pl
     <string name="stats_timeframe_previous_seven_days">Poprzednie 7 dni</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Ukryj</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d odpowiedzi</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternatywnie można wyodrębnić i edytować blok klikając na \"Konwertuj na zwykły blok\".</string>
     <string name="dlg_confirm_delete_category">Trwale usunąć kategorię \'%s\'?</string>
     <string name="deleting_cat_success">Kategoria została pomyślnie usunięta!</string>
     <string name="deleting_cat_failed">Nie udało się usunąć kategorii</string>
@@ -406,7 +415,6 @@ Language: pl
     <string name="blogging_reminders_notification_title">Czas na dodanie wpisów na bloga dnia %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Edytowania bloków do ponownego wykorzystania nie jest jeszcze wspierane.</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Edytowanie bloków do późniejszego wykorzystania nie jest jeszcze wspierane w WordPressie dla Androida</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alterntywnie można odłączyć i edytować bloki osobno stukając na „Konwertuj na zwykłe bloki”.</string>
     <string name="blogging_reminders_done">Gotowe</string>
     <string name="blogging_reminders_notify_me">Powiadom mnie</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Wprowadź dane uwierzytelniające swojego serwera&lt;/a&gt; aby uaktywnić opcję odzyskiwania z kopii zapasowych za pomocą jednego kliknięcia.</string>

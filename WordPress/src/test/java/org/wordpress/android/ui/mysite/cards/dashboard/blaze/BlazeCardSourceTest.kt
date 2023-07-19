@@ -6,18 +6,33 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsError
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorType
+import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardSource
 
-/* SITE */
-
 const val SITE_LOCAL_ID = 1
-const val SITE_ID = 1L
+
+val BLAZE_CAMPAIGNS_MODEL = BlazeCampaignsModel(
+    listOf(
+        mock()
+    ),
+    page = 0,
+    totalItems = 10,
+    totalPages = 1
+)
+
 
 @ExperimentalCoroutinesApi
 class BlazeCardSourceTest : BaseUnitTest() {
@@ -30,8 +45,10 @@ class BlazeCardSourceTest : BaseUnitTest() {
     @Mock
     private lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
-    private lateinit var blazeCardSource: BlazeCardSource
+    @Mock
+    private lateinit var blazeCampaignsStore: BlazeCampaignsStore
 
+    private lateinit var blazeCardSource: BlazeCardSource
 
     @Before
     fun setUp() {
@@ -42,6 +59,7 @@ class BlazeCardSourceTest : BaseUnitTest() {
         setUpMocks(isBlazeEnabled)
         blazeCardSource = BlazeCardSource(
             selectedSiteRepository,
+            blazeCampaignsStore,
             blazeFeatureUtils
         )
     }
@@ -51,7 +69,8 @@ class BlazeCardSourceTest : BaseUnitTest() {
         init(true)
         val result = mutableListOf<BlazeCardUpdate>()
 
-        blazeCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) }}
+        blazeCardSource.build(testScope(), SITE_LOCAL_ID)
+            .observeForever { it?.let { result.add(it) } }
 
         assertThat(result.last()).isEqualTo(BlazeCardUpdate(true))
     }
@@ -61,7 +80,8 @@ class BlazeCardSourceTest : BaseUnitTest() {
         init(false)
         val result = mutableListOf<BlazeCardUpdate>()
 
-        blazeCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) }}
+        blazeCardSource.build(testScope(), SITE_LOCAL_ID)
+            .observeForever { it?.let { result.add(it) } }
 
         assertThat(result.last()).isEqualTo(BlazeCardUpdate(false))
     }
@@ -98,9 +118,64 @@ class BlazeCardSourceTest : BaseUnitTest() {
         assertThat(result[4]).isFalse // refreshData(...) -> fetch -> success/error
     }
 
+    @Test
+    fun `given blaze campaign enabled, when build is invoked, then campaign card is shown`() = test {
+        init(true)
+        val campaign = mock<BlazeCampaignModel>()
+        val result = mutableListOf<BlazeCardUpdate>()
+        setUpMocksForBlazeCampaigns(campaign)
+
+        blazeCardSource.build(testScope(), SITE_LOCAL_ID)
+            .observeForever { it?.let { result.add(it) } }
+
+        assertThat(result.last()).isEqualTo(BlazeCardUpdate(true, campaign))
+    }
+
+    @Test
+    fun `given blaze campaign enabled + no campaigns, when build is invoked, then promo card shown`() = test {
+        init(true)
+        val result = mutableListOf<BlazeCardUpdate>()
+        whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(true)
+        whenever(blazeCampaignsStore.fetchBlazeCampaigns(siteModel)).thenReturn(
+            BlazeCampaignsStore.BlazeCampaignsResult()
+        )
+
+        blazeCardSource.build(testScope(), SITE_LOCAL_ID)
+            .observeForever { it?.let { result.add(it) } }
+
+        verify(blazeCampaignsStore, never()).getMostRecentBlazeCampaign(siteModel)
+        assertThat(result.last()).isEqualTo(BlazeCardUpdate(true, null))
+    }
+
+    @Test
+    fun `given blaze campaign api returns error, when build is invoked, then promo card shown`() = test {
+        init(true)
+        val result = mutableListOf<BlazeCardUpdate>()
+        whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(true)
+        whenever(blazeCampaignsStore.fetchBlazeCampaigns(siteModel)).thenReturn(
+            BlazeCampaignsStore.BlazeCampaignsResult(error = BlazeCampaignsError(BlazeCampaignsErrorType.API_ERROR))
+        )
+
+        blazeCardSource.build(testScope(), SITE_LOCAL_ID)
+            .observeForever { it?.let { result.add(it) } }
+
+        verify(blazeCampaignsStore, never()).getMostRecentBlazeCampaign(siteModel)
+        assertThat(result.last()).isEqualTo(BlazeCardUpdate(true, null))
+    }
+
+    private suspend fun setUpMocksForBlazeCampaigns(campaign: BlazeCampaignModel) {
+        whenever(blazeCampaignsStore.fetchBlazeCampaigns(siteModel)).thenReturn(
+            BlazeCampaignsStore.BlazeCampaignsResult(BLAZE_CAMPAIGNS_MODEL)
+        )
+        whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(true)
+        whenever(blazeCampaignsStore.getMostRecentBlazeCampaign(siteModel)).thenReturn(campaign)
+    }
+
     private fun setUpMocks(isBlazeEnabled: Boolean) {
         whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
-        whenever(blazeFeatureUtils.shouldShowBlazeCardEntryPoint(siteModel)).thenReturn(isBlazeEnabled)
+        whenever(blazeFeatureUtils.shouldShowBlazeCardEntryPoint(siteModel)).thenReturn(
+            isBlazeEnabled
+        )
     }
 }

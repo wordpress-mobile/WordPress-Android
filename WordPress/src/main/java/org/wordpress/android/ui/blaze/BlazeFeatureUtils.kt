@@ -6,6 +6,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.ui.blazeCampaigns.campaigndetail.CampaignDetailPageSource
+import org.wordpress.android.ui.blazeCampaigns.campaignlisting.CampaignListingPageSource
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -128,6 +130,20 @@ class BlazeFeatureUtils @Inject constructor(
     fun trackBlazeFlowCompleted(blazeFlowSource: BlazeFlowSource) {
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.BLAZE_FLOW_COMPLETED, mapOf(SOURCE to blazeFlowSource.trackingName)
+        )
+    }
+
+    fun trackCampaignListingPageShown(campaignListingPageSource: CampaignListingPageSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_CAMPAIGN_LISTING_PAGE_SHOWN,
+            mapOf(SOURCE to campaignListingPageSource.trackingName)
+        )
+    }
+
+    fun trackCampaignDetailsOpened(campaignDetailPageSource: CampaignDetailPageSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_CAMPAIGN_DETAIL_PAGE_OPENED,
+            mapOf(SOURCE to campaignDetailPageSource.trackingName)
         )
     }
 

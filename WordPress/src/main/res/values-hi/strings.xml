@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2017-12-02 23:45:38+0000
+Translation-Revision-Date: 2023-07-14 06:54:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: hi_IN
 -->
 <resources>
+    <string name="privacy_banner_save">सहेजें</string>
+    <string name="about_news">समाचार</string>
+    <string name="my_site_menu_tab_title">मेनू</string>
+    <string name="domains_primary_site_address">%s</string>
+    <string name="gutenberg_native_new">नया</string>
+    <string name="typeface_label_shrikhand">बोल्ड</string>
+    <string name="mlp_notselected_description">%s</string>
+    <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">छिपायें</string>
+    <string name="dialog_discard_page_ok_button">मिटाएं</string>
+    <string name="sound_button_alt">ध्वनि</string>
+    <string name="text_button_alt">टेक्स्ट</string>
+    <string name="login_or">या</string>
+    <string name="login_done">हो गया</string>
+    <string name="suffix_1_000">%sK</string>
+    <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000_000_000">%sB</string>
+    <string name="suffix_1_000_000_000_000">%sT</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">साप्ताहिक</string>
+    <string name="notification_settings_followed_dialog_email_posts_daily">प्रतिदिन</string>
+    <string name="reader_photo_view_desc">फोटो</string>
+    <string name="reader_list_item_suggestion_remove_desc">हटाएं</string>
+    <string name="my_site_btn_site_pages">पृष्ठ</string>
     <string name="jetpack_allow_wpcom_sign_in_title">WordPress.com लॉगिन की अनुमति दें</string>
     <string name="jetpack_wpcom_sign_in_category_title">WordPress.com लॉगिन</string>
     <string name="jetpack_security_setting_title">सुरक्षा</string>
@@ -84,6 +106,7 @@ Language: hi_IN
     <string name="image_width">चौड़ाई </string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="send">भेजें</string>
+    <string name="people">लोग</string>
     <string name="post_format_video">विडियो </string>
     <string name="post_format_status">स्थिति</string>
     <string name="alignment_center">मध्य में</string>
@@ -309,7 +332,7 @@ Language: hi_IN
     <string name="note_reply_successful">जवाब प्रकाशित हो गया</string>
     <string name="new_notifications">%d नयी सूचनाएं</string>
     <string name="more_notifications">और %d और भी.</string>
-    <string name="sign_in">साइन इन</string>
+    <string name="sign_in">लॉग इन</string>
     <string name="loading">लोड किया जा रहा…</string>
     <string name="httppassword">एचटीटीपी कूटशब्द</string>
     <string name="httpuser">एचटीटीपी उपयोगकर्ता नाम</string>
