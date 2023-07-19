@@ -21,9 +21,9 @@ import org.wordpress.android.util.extensions.getSerializableCompat
 private const val CAMPAIGN_DETAIL_PAGE_SOURCE = "campaign_detail_page_source"
 
 @AndroidEntryPoint
-class CampaignDetailsFragment : Fragment() {
+class CampaignDetailFragment : Fragment() {
     companion object {
-        fun newInstance(source: CampaignDetailPageSource) = CampaignDetailsFragment().apply {
+        fun newInstance(source: CampaignDetailPageSource) = CampaignDetailFragment().apply {
             arguments = Bundle().apply {
                 putSerializable(CAMPAIGN_DETAIL_PAGE_SOURCE, source)
             }

@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.ui.blaze.blazeCampaigns.campaigndetail.CampaignDetailsFragment
+import org.wordpress.android.ui.blaze.blazeCampaigns.campaigndetail.CampaignDetailFragment
 import org.wordpress.android.ui.blaze.blazeCampaigns.campaignlisting.CampaignListingFragment
 import org.wordpress.android.util.extensions.getParcelableExtraCompat
 
@@ -33,7 +33,7 @@ class BlazeCampaignParentActivity : AppCompatActivity() {
 
                 is BlazeCampaignPage.CampaignDetailsPage -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, CampaignDetailsFragment.newInstance(uiState.source))
+                        .replace(R.id.container, CampaignDetailFragment.newInstance(uiState.source))
                         .commitNow()
                 }
 
