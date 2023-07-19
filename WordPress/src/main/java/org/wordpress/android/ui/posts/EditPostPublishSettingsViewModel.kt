@@ -2,11 +2,11 @@ package org.wordpress.android.ui.posts
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.Person
@@ -14,9 +14,13 @@ import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.people.utils.PeopleUtils.FetchUsersCallback
 import org.wordpress.android.ui.people.utils.PeopleUtilsWrapper
 import org.wordpress.android.ui.posts.social.PostSocialConnection
+import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
+import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 class EditPostPublishSettingsViewModel @Inject constructor(
@@ -25,8 +29,13 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     private val peopleUtilsWrapper: PeopleUtilsWrapper,
     localeManagerWrapper: LocaleManagerWrapper,
     postSchedulingNotificationStore: PostSchedulingNotificationStore,
-    private val siteStore: SiteStore
-) : PublishSettingsViewModel(
+    private val siteStore: SiteStore,
+    private val jetpackSocialFeatureConfig: JetpackSocialFeatureConfig,
+    private val accountStore: AccountStore,
+    private val getPublicizeConnectionsForUserUseCase: GetPublicizeConnectionsForUserUseCase,
+    private val getJetpackSocialShareLimitStatusUseCase: GetJetpackSocialShareLimitStatusUseCase,
+    private val jetpackUiStateMapper: EditPostPublishSettingsJetpackSocialUiStateMapper,
+    ) : PublishSettingsViewModel(
     resourceProvider,
     postSettingsUtils,
     localeManagerWrapper,
@@ -39,11 +48,14 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     // Used for combining fetched users
     private val fetchedAuthors = mutableListOf<Person>()
 
-    private val _jetpackSocialuiState = MutableStateFlow<JetpackSocialUiState>(JetpackSocialUiState.Loading)
-    val jetpackSocialUiState = _jetpackSocialuiState.asStateFlow()
+    private val _showJetpackSocialContainer = MutableLiveData<Boolean>()
+    val showJetpackSocialContainer: LiveData<Boolean> = _showJetpackSocialContainer
 
-    private val _actionEvents = MutableSharedFlow<ActionEvent>()
-    val actionEvents = _actionEvents
+    private val _jetpackSocialUiState = MutableLiveData<JetpackSocialUiState>()
+    val jetpackSocialUiState: LiveData<JetpackSocialUiState> = _jetpackSocialUiState
+
+    private val _actionEvents = SingleLiveEvent<ActionEvent>()
+    val actionEvents: LiveData<ActionEvent> = _actionEvents
 
     private var isStarted = false
 
@@ -52,11 +64,40 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
 
-        postRepository?.let {
-            val site = siteStore.getSiteByLocalId(it.localSiteId) ?: return@let
-            if (site.hasCapabilityListUsers) {
-                fetchAuthors(site)
+        val siteModel = postRepository?.localSiteId?.let {
+            siteStore.getSiteByLocalId(it)
+        }
+        loadAuthors(siteModel)
+        loadJetpackSocial(siteModel)
+    }
+
+    private fun loadAuthors(siteModel: SiteModel?) {
+        siteModel?.let {
+            if (it.hasCapabilityListUsers) {
+                fetchAuthors(it)
             }
+        }
+    }
+
+    private fun loadJetpackSocial(siteModel: SiteModel?) {
+        if (!jetpackSocialFeatureConfig.isEnabled()) {
+            _showJetpackSocialContainer.value = false
+            return
+        }
+        siteModel?.let {
+            _showJetpackSocialContainer.value = true
+            viewModelScope.launch {
+                val connections = getPublicizeConnectionsForUserUseCase.execute(it.siteId, accountStore.account.userId)
+                val shareLimit = getJetpackSocialShareLimitStatusUseCase.execute(it)
+                val state = if (connections.isEmpty()) {
+                    jetpackUiStateMapper.mapNoConnections(::onJetpackSocialConnectProfilesClick)
+                } else {
+                    jetpackUiStateMapper.mapLoaded(connections, shareLimit, ::onJetpackSocialSubscribeClick)
+                }
+                _jetpackSocialUiState.postValue(state)
+            }
+        } ?: run {
+            _showJetpackSocialContainer.value = false
         }
     }
 
@@ -92,7 +133,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         // TODO
     }
 
-    fun onJetpackSocialSuscribeClick() {
+    fun onJetpackSocialSubscribeClick() {
         // TODO
     }
 
@@ -110,8 +151,9 @@ class EditPostPublishSettingsViewModel @Inject constructor(
 
         data class NoConnections(
             val trainOfIconsModels: List<TrainOfIconsModel>,
+            val message: String,
             val connectProfilesButtonLabel: String,
-            val onConnectProfilesCLick: () -> Unit,
+            val onConnectProfilesClick: () -> Unit,
         ) : JetpackSocialUiState()
     }
 

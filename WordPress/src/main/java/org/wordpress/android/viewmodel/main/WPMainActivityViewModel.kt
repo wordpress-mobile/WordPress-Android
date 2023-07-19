@@ -375,7 +375,6 @@ class WPMainActivityViewModel @Inject constructor(
 
     private suspend fun canShowFeatureAnnouncement(): Boolean {
         val cachedAnnouncement = featureAnnouncementProvider.getLatestFeatureAnnouncement(true)
-
         return cachedAnnouncement != null &&
                 cachedAnnouncement.canBeDisplayedOnAppUpgrade(buildConfigWrapper.getAppVersionName()) &&
                 appPrefsWrapper.featureAnnouncementShownVersion < cachedAnnouncement.announcementVersion

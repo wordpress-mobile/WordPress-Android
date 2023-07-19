@@ -1713,6 +1713,10 @@
     <string name="post_settings_notification">Notification</string>
     <string name="post_settings_add_to_calendar">Add to calendar</string>
     <string name="post_settings_jetpack_social_header">Social Sharing</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Increase your traffic by auto-sharing your posts with your friends on social media.</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Connect your social profiles</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Subscribe to share more</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d Social shares remaining</string>
 
     <string name="post_notification_off">Off</string>
     <string name="post_notification_one_hour_before">1 hour before</string>
