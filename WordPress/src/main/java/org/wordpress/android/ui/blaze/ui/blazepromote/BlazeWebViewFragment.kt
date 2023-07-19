@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.blaze.ui.blazewebview
+package org.wordpress.android.ui.blaze.ui.blazepromote
 
 import android.annotation.SuppressLint
 import android.content.Intent
