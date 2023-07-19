@@ -161,6 +161,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         viewModel.selectTab.observeEvent(viewLifecycleOwner) { navTarget ->
             viewPager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
         }
+
+        viewModel.refresh.observe(viewLifecycleOwner) {
+            viewModel.refresh()
+        }
+
         viewModel.onShowJetpackIndividualPluginOverlay.observeEvent(viewLifecycleOwner) {
             WPJetpackIndividualPluginFragment.show(requireActivity().supportFragmentManager)
         }
