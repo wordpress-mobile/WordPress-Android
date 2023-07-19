@@ -14,7 +14,7 @@ class GetJetpackSocialShareMessageUseCase @Inject constructor(
     suspend fun execute(localPostId: Int): String =
         withContext(ioDispatcher) {
             postStore.getPostByLocalPostId(localPostId)?.run {
-                if (autoShareMessage != null && autoShareMessage.isNotEmpty()) autoShareMessage else title
+                autoShareMessage.ifEmpty { title }
             } ?: ""
         }
 }

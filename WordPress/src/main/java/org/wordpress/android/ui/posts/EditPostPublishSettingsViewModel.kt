@@ -47,6 +47,8 @@ class EditPostPublishSettingsViewModel @Inject constructor(
 ) {
     private var postModel: PostImmutableModel? = null
 
+    private var editPostRepository: EditPostRepository? = null
+
     private val _authors = MutableLiveData<List<Person>>()
     val authors: LiveData<List<Person>> = _authors
 
@@ -77,6 +79,8 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         postModel = postRepository?.getPost()
         loadAuthors(siteModel)
         loadJetpackSocial(siteModel)
+
+        editPostRepository = postRepository
     }
 
     private fun loadAuthors(siteModel: SiteModel?) {
@@ -163,6 +167,10 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         val currentState = _jetpackSocialUiState.value
         if (newShareMessage != null && currentState is JetpackSocialUiState.Loaded) {
             val shareMessage = newShareMessage.ifEmpty { postModel?.title ?: "" }
+            editPostRepository?.updateAsync({ postModel ->
+                postModel.setAutoShareMessage(shareMessage)
+                true
+            })
             _jetpackSocialUiState.value = currentState.copy(
                 shareMessage = shareMessage
             )

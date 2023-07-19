@@ -84,7 +84,8 @@ class EditJetpackSocialShareMessageActivity : AppCompatActivity() {
                                 ),
                             )
                             LaunchedEffect(Unit) {
-                                delay(100)
+                                // Without a delay the soft keyboard is not shown
+                                delay(DELAY_SOFT_KEYBOARD_IN_MS)
                                 focusRequester.requestFocus()
                             }
                         }
@@ -128,3 +129,5 @@ class EditJetpackSocialShareMessageActivity : AppCompatActivity() {
         const val RESULT_UPDATED_SHARE_MESSAGE = "RESULT_UPDATED_SHARE_MESSAGE"
     }
 }
+
+private const val DELAY_SOFT_KEYBOARD_IN_MS = 100L
