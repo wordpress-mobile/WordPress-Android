@@ -37,6 +37,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                             postSocialConnectionList = postSocialConnectionList,
                             showShareLimitUi = showShareLimitUi,
                             shareMessage = shareMessage,
+                            onShareMessageClick = onShareMessageClick,
                             remainingSharesMessage = remainingSharesMessage,
                             subscribeButtonLabel = subscribeButtonLabel,
                             onSubscribeClick = onSubscribeClick,

@@ -23,6 +23,7 @@ fun EditPostSettingsJetpackSocialContainer(
     postSocialConnectionList: List<PostSocialConnection>,
     showShareLimitUi: Boolean,
     shareMessage: String,
+    onShareMessageClick: () -> Unit,
     remainingSharesMessage: String,
     subscribeButtonLabel: String,
     onSubscribeClick: () -> Unit,
@@ -39,6 +40,7 @@ fun EditPostSettingsJetpackSocialContainer(
                     vertical = Margin.MediumLarge.value,
                 )
                 .fillMaxWidth(),
+            onClick = onShareMessageClick
         )
         if (showShareLimitUi) {
             Divider()
@@ -87,6 +89,7 @@ fun EditPostSettingsJetpackSocialContainerWithShareLimitPreview() {
             postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
             showShareLimitUi = true,
             shareMessage = "Share message.",
+            onShareMessageClick = {},
             remainingSharesMessage = "27/30 Social shares remaining in the next 30 days",
             subscribeButtonLabel = "Subscribe to share more",
             onSubscribeClick = {},
@@ -124,6 +127,7 @@ fun EditPostSettingsJetpackSocialContainerWithoutShareLimitPreview() {
             postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
             showShareLimitUi = false,
             shareMessage = "Share message.",
+            onShareMessageClick = {},
             remainingSharesMessage = "",
             subscribeButtonLabel = "",
             onSubscribeClick = {},

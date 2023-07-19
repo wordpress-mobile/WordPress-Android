@@ -38,7 +38,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     private val getJetpackSocialShareMessageUseCase: GetJetpackSocialShareMessageUseCase,
     private val getJetpackSocialShareLimitStatusUseCase: GetJetpackSocialShareLimitStatusUseCase,
     private val jetpackUiStateMapper: EditPostPublishSettingsJetpackSocialUiStateMapper,
-    ) : PublishSettingsViewModel(
+) : PublishSettingsViewModel(
     resourceProvider,
     postSettingsUtils,
     localeManagerWrapper,
@@ -61,6 +61,8 @@ class EditPostPublishSettingsViewModel @Inject constructor(
 
     private val _actionEvents = SingleLiveEvent<ActionEvent>()
     val actionEvents: LiveData<ActionEvent> = _actionEvents
+
+    private var jetpackSocialShareMessage = ""
 
     private var isStarted = false
 
@@ -94,7 +96,9 @@ class EditPostPublishSettingsViewModel @Inject constructor(
             _showJetpackSocialContainer.value = true
             viewModelScope.launch {
                 val connections = getPublicizeConnectionsForUserUseCase.execute(it.siteId, accountStore.account.userId)
-                val shareMessage = getJetpackSocialShareMessageUseCase.execute(postModel?.id ?: -1)
+                val shareMessage = jetpackSocialShareMessage.ifEmpty {
+                    getJetpackSocialShareMessageUseCase.execute(postModel?.id ?: -1)
+                }
                 val shareLimit = getJetpackSocialShareLimitStatusUseCase.execute(it)
                 val state = if (connections.isEmpty()) {
                     jetpackUiStateMapper.mapNoConnections(::onJetpackSocialConnectProfilesClick)
@@ -104,6 +108,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
                         shareLimit = shareLimit,
                         onSubscribeClick = ::onJetpackSocialSubscribeClick,
                         shareMessage = shareMessage,
+                        shareMessageClick = ::onJetpackSocialMessageClick
                     )
                 }
                 _jetpackSocialUiState.postValue(state)
@@ -133,7 +138,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
 
     fun getAuthorIndex(authorId: Long) = authors.value?.indexOfFirst { it.personID == authorId } ?: -1
 
-    fun onJetpackSocialConnectProfilesClick() {
+    private fun onJetpackSocialConnectProfilesClick() {
         // TODO
     }
 
@@ -141,12 +146,28 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         // TODO
     }
 
-    fun onJetpackSocialMessageClick() {
+    private fun onJetpackSocialMessageClick() {
+        val shareMessage = with(_jetpackSocialUiState.value) {
+            if (this is JetpackSocialUiState.Loaded) {
+                shareMessage
+            } else ""
+        }
+        _actionEvents.value = ActionEvent.OpenEditShareMessage(shareMessage)
+    }
+
+    private fun onJetpackSocialSubscribeClick() {
         // TODO
     }
 
-    fun onJetpackSocialSubscribeClick() {
-        // TODO
+    fun onJetpackSocialShareMessageChanged(newShareMessage: String?) {
+        val currentState = _jetpackSocialUiState.value
+        if (newShareMessage != null && currentState is JetpackSocialUiState.Loaded) {
+            val shareMessage = newShareMessage.ifEmpty { postModel?.title ?: "" }
+            _jetpackSocialUiState.value = currentState.copy(
+                shareMessage = shareMessage
+            )
+            jetpackSocialShareMessage = shareMessage
+        }
     }
 
     sealed class JetpackSocialUiState {
@@ -156,6 +177,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
             val postSocialConnectionList: List<PostSocialConnection>,
             val showShareLimitUi: Boolean,
             val shareMessage: String,
+            val onShareMessageClick: () -> Unit,
             val remainingSharesMessage: String,
             val subscribeButtonLabel: String,
             val onSubscribeClick: () -> Unit,
@@ -170,6 +192,6 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     }
 
     sealed class ActionEvent {
-        object OpenSharing : ActionEvent()
+        data class OpenEditShareMessage(val shareMessage: String) : ActionEvent()
     }
 }
