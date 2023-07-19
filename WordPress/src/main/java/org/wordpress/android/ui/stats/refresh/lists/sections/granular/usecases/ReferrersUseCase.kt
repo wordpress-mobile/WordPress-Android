@@ -110,7 +110,7 @@ class ReferrersUseCase(
         }
     }
 
-    @SuppressWarnings("CyclomaticComplexMethod", "LongMethod")
+    @Suppress("CyclomaticComplexMethod", "LongMethod")
     override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
