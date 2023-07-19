@@ -38,57 +38,61 @@ fun BlazeCampaignsCard(
     blazeCampaignCardModel: BlazeCampaignsCardModel,
     modifier: Modifier = Modifier
 ) {
-    UnelevatedCard(modifier = modifier.clickable { blazeCampaignCardModel.onClick.click() }, content = {
-        Column(
-            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+    UnelevatedCard(
+        modifier = modifier.clickable { blazeCampaignCardModel.onClick.click() },
+        content = {
             Column(
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp)
-                    .clickable { blazeCampaignCardModel.campaign.onClick() },
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier.padding(top = 16.dp)
             ) {
                 Text(
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                     text = uiStringText(uiString = blazeCampaignCardModel.title),
                     style = DashboardCardTypography.smallTitle,
                     textAlign = TextAlign.Start,
                 )
-                val status = blazeCampaignCardModel.campaign.status
-                if (status != null) {
-                    BlazeStatusLabel(
-                        status = status,
+                Column(
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+                        .clickable { blazeCampaignCardModel.campaign.onClick() },
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    val status = blazeCampaignCardModel.campaign.status
+                    if (status != null) {
+                        BlazeStatusLabel(
+                            status = status,
+                        )
+                    }
+                    CampaignTitleThumbnail(
+                        campaignTitle = blazeCampaignCardModel.campaign.title,
+                        featuredImageUrl = blazeCampaignCardModel.campaign.featuredImageUrl,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                    if (blazeCampaignCardModel.campaign.stats != null) {
+                        CampaignStats(
+                            campaignStats = blazeCampaignCardModel.campaign.stats,
+                        )
+                    } else Spacer(modifier = Modifier.size(8.dp))
+                }
+                Divider(
+                    thickness = 0.5.dp,
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                )
+                Column(modifier = Modifier
+                    .clickable { blazeCampaignCardModel.footer.onClick.click() }) {
+                    Text(
+                        text = uiStringText(uiString = blazeCampaignCardModel.footer.label),
+                        style = DashboardCardTypography.footerCTA,
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
                     )
                 }
-                CampaignTitleThumbnail(
-                    campaignTitle = blazeCampaignCardModel.campaign.title,
-                    featuredImageUrl = blazeCampaignCardModel.campaign.featuredImageUrl,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-                if (blazeCampaignCardModel.campaign.stats != null) {
-                    CampaignStats(
-                        campaignStats = blazeCampaignCardModel.campaign.stats,
-                    )
-                } else Spacer(modifier = Modifier.size(8.dp))
             }
-            Divider(
-                thickness = 0.5.dp,
-                modifier = Modifier
-                    .padding(start = 16.dp)
-            )
-            Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)
-                    .clickable { blazeCampaignCardModel.footer.onClick.click() }) {
-                Text(
-                    text = uiStringText(uiString = blazeCampaignCardModel.footer.label),
-                    style = DashboardCardTypography.footerCTA,
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-            }
-        }
-    }, )
+        },
+    )
 }
 
 @Composable
