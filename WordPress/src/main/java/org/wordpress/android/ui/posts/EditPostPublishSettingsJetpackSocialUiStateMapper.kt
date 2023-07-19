@@ -21,13 +21,13 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
         shareLimit: ShareLimit,
         onSubscribeClick: () -> Unit,
         shareMessage: String,
-        shareMessageClick: () -> Unit,
+        onShareMessageClick: () -> Unit,
     ): Loaded =
         Loaded(
             postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
             showShareLimitUi = shareLimit is ShareLimit.Enabled,
             shareMessage = shareMessage,
-            onShareMessageClick = shareMessageClick,
+            onShareMessageClick = onShareMessageClick,
             remainingSharesMessage = mapRemainingSharesMessage(shareLimit),
             subscribeButtonLabel = stringProvider.getString(R.string.post_settings_jetpack_social_subscribe_share_more)
                 .uppercase(localeProvider.getAppLocale()),

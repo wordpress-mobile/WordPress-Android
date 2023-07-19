@@ -28,24 +28,28 @@ class GetJetpackSocialShareMessageUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `Should return title if autoShareMessage is null`() = test {
+        val postTitle = "title"
         val localPostId = 123
         val postModel = PostModel().apply {
-            autoShareMessage = null
+            setAutoShareMessage(null)
+            setTitle(postTitle)
         }
         whenever(postStore.getPostByLocalPostId(localPostId)).thenReturn(postModel)
-        val expected = ""
+        val expected = postTitle
         val actual = classToTest.execute(localPostId)
         TestCase.assertEquals(expected, actual)
     }
 
     @Test
     fun `Should return title if autoShareMessage is empty`() = test {
+        val postTitle = "title"
         val localPostId = 123
         val postModel = PostModel().apply {
-            autoShareMessage = ""
+            setAutoShareMessage("")
+            setTitle(postTitle)
         }
         whenever(postStore.getPostByLocalPostId(localPostId)).thenReturn(postModel)
-        val expected = ""
+        val expected = postTitle
         val actual = classToTest.execute(localPostId)
         TestCase.assertEquals(expected, actual)
     }
@@ -55,7 +59,7 @@ class GetJetpackSocialShareMessageUseCaseTest : BaseUnitTest() {
         val message = "Share message"
         val localPostId = 123
         val postModel = PostModel().apply {
-            autoShareMessage = message
+            setAutoShareMessage(message)
         }
         whenever(postStore.getPostByLocalPostId(localPostId)).thenReturn(postModel)
         val expected = message

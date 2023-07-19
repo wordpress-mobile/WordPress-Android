@@ -112,7 +112,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
                         shareLimit = shareLimit,
                         onSubscribeClick = ::onJetpackSocialSubscribeClick,
                         shareMessage = shareMessage,
-                        shareMessageClick = ::onJetpackSocialMessageClick
+                        onShareMessageClick = ::onJetpackSocialMessageClick
                     )
                 }
                 _jetpackSocialUiState.postValue(state)

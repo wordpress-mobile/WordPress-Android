@@ -59,17 +59,20 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
                     "https://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-linkedin-2x.png"
             },
         )
-        val onConnectProfilesClick: () -> Unit = mock()
+        val onConnectProfilesClick: () -> Unit = {}
+        val onShareMessageClick: () -> Unit = {}
         val actual = classToTest.mapLoaded(
             connections = connections,
             shareLimit = shareLimit,
             onSubscribeClick = onConnectProfilesClick,
             shareMessage = shareMessage,
+            onShareMessageClick = onShareMessageClick,
         )
         val expected = JetpackSocialUiState.Loaded(
             postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
             showShareLimitUi = true,
             shareMessage = shareMessage,
+            onShareMessageClick = onShareMessageClick,
             remainingSharesMessage = sharesRemaining,
             subscribeButtonLabel = "SHARE MORE",
             onSubscribeClick = onConnectProfilesClick,
@@ -106,16 +109,19 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
             },
         )
         val onConnectProfilesClick: () -> Unit = mock()
+        val onShareMessageClick: () -> Unit = {}
         val actual = classToTest.mapLoaded(
             connections = connections,
             shareLimit = shareLimit,
             onSubscribeClick = onConnectProfilesClick,
             shareMessage = shareMessage,
+            onShareMessageClick = onShareMessageClick,
         )
         val expected = JetpackSocialUiState.Loaded(
             postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
             showShareLimitUi = false,
             shareMessage = "Message",
+            onShareMessageClick = onShareMessageClick,
             remainingSharesMessage = "",
             subscribeButtonLabel = "SHARE MORE",
             onSubscribeClick = onConnectProfilesClick,

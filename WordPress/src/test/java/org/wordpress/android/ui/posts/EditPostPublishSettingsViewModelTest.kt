@@ -201,7 +201,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(true)
         classToTest.start(editPostRepository)
-        verify(jetpackUiStateMapper).mapLoaded(any(), any(), any(), any())
+        verify(jetpackUiStateMapper).mapLoaded(any(), any(), any(), any(), any())
     }
 
     @Test
@@ -220,9 +220,10 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             ),
             showShareLimitUi = true,
             shareMessage = "message",
+            onShareMessageClick = {},
             remainingSharesMessage = "remaining shares",
             subscribeButtonLabel = "label",
-            onSubscribeClick = {}
+            onSubscribeClick = {},
         )
         mockSiteModel()
         mockUserId()
@@ -246,7 +247,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             .thenReturn("Message")
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(true)
-        whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any(), any()))
+        whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any(), any(), any()))
             .thenReturn(loaded)
         classToTest.start(editPostRepository)
         verify(jetpackSocialUiStateObserver).onChanged(loaded)
