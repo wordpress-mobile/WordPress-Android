@@ -261,6 +261,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     // Advanced settings
     private Preference mStartOverPref;
+    private PreferenceScreen mStartOverSettingsScreen;
     private Preference mExportSitePref;
     private Preference mDeleteSitePref;
 
@@ -399,7 +400,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onDestroyView() {
-        removeJetpackSecurityScreenToolbar();
         mDispatcher.unregister(this);
         super.onDestroyView();
     }
@@ -408,6 +408,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onDestroy() {
         if (mSiteSettings != null) {
             mSiteSettings.clear();
+        }
+        if (mDialog != null) {
+            mDialog.dismiss();
         }
         super.onDestroy();
     }
@@ -498,26 +501,31 @@ public class SiteSettingsFragment extends PreferenceFragment
         return view;
     }
 
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        addToolbarToSiteAcceleratorSettings();
+        addToolbarToJpSecuritySettings();
+        addToolbarToStartOverSettings();
+        addToolbarToJetpackMoreSettings();
+        addToolbarToSiteAcceleratorSettingsNested();
+        addToolbarToMorePreference();
+    }
+
     private AppCompatActivity getAppCompatActivity() {
         return (AppCompatActivity) getActivity();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        removeJetpackSecurityScreenToolbar();
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
-        setupMorePreferenceScreen();
-        setupJetpackSecurityScreen();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
-            setupMorePreferenceScreen();
-            setupJetpackSecurityScreen();
-
             SiteSettingsTimezoneBottomSheet bottomSheet =
                     (SiteSettingsTimezoneBottomSheet) (getAppCompatActivity())
                             .getSupportFragmentManager().findFragmentByTag(TIMEZONE_BOTTOM_SHEET_TAG);
@@ -561,8 +569,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(getActivity(), WORDPRESS_EMPTY_SITE_SUPPORT_URL);
             } else {
                 setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-                String title = getString(R.string.start_over);
-                WPActivityUtils.addToolbarToDialog(this, dialog, title);
+                addToolbarToStartOverSettings();
             }
         } else if (preference == mDateFormatPref) {
             showDateOrTimeFormatDialog(FormatType.DATE_FORMAT);
@@ -579,6 +586,40 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         return false;
+    }
+
+    private void addToolbarToNestedPreference(PreferenceScreen preferenceScreen, int titleRes) {
+        if (preferenceScreen != null && isAdded()) {
+            Dialog dialog = preferenceScreen.getDialog();
+            if (dialog != null) {
+                String title = getString(titleRes);
+                WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            }
+        }
+    }
+
+    private void addToolbarToSiteAcceleratorSettings() {
+        addToolbarToNestedPreference(mSiteAcceleratorSettings, R.string.site_settings_site_accelerator);
+    }
+
+    private void addToolbarToJpSecuritySettings() {
+        addToolbarToNestedPreference(mJpSecuritySettings, R.string.jetpack_security_setting_title);
+    }
+
+    private void addToolbarToStartOverSettings() {
+        addToolbarToNestedPreference(mStartOverSettingsScreen, R.string.start_over);
+    }
+
+    private void addToolbarToJetpackMoreSettings() {
+        addToolbarToNestedPreference(mJetpackPerformanceMoreSettings, R.string.site_settings_performance);
+    }
+
+    private void addToolbarToSiteAcceleratorSettingsNested() {
+        addToolbarToNestedPreference(mSiteAcceleratorSettingsNested, R.string.site_settings_site_accelerator);
+    }
+
+    private void addToolbarToMorePreference() {
+        addToolbarToNestedPreference(mMorePreference, R.string.site_settings_discussion_title);
     }
 
     @Override
@@ -959,6 +1000,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mModerationHoldPref = getClickPref(R.string.pref_key_site_moderation_hold);
         mDenylistPref = getClickPref(R.string.pref_key_site_denylist);
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
+        mStartOverSettingsScreen = (PreferenceScreen) getClickPref(R.string.pref_key_site_start_over_screen);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
         mJpSecuritySettings = (PreferenceScreen) getClickPref(R.string.pref_key_jetpack_security_screen);
@@ -1889,11 +1931,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mJpSecuritySettings == null || !isAdded()) {
             return;
         }
-        String title = getString(R.string.jetpack_security_setting_title);
         Dialog dialog = mJpSecuritySettings.getDialog();
         if (dialog != null) {
             setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            addToolbarToJpSecuritySettings();
         }
     }
 
@@ -1901,11 +1942,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mSiteAcceleratorSettings == null || !isAdded()) {
             return;
         }
-        String title = getString(R.string.site_settings_site_accelerator);
         Dialog dialog = mSiteAcceleratorSettings.getDialog();
         if (dialog != null) {
             setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            addToolbarToSiteAcceleratorSettings();
         }
     }
 
@@ -1913,11 +1953,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mJetpackPerformanceMoreSettings == null || !isAdded()) {
             return;
         }
-        String title = getString(R.string.site_settings_performance);
         Dialog dialog = mJetpackPerformanceMoreSettings.getDialog();
         if (dialog != null) {
             setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            addToolbarToJetpackMoreSettings();
         }
     }
 
@@ -1925,11 +1964,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mSiteAcceleratorSettingsNested == null || !isAdded()) {
             return;
         }
-        String title = getString(R.string.site_settings_site_accelerator);
         Dialog dialog = mSiteAcceleratorSettingsNested.getDialog();
         if (dialog != null) {
             setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            addToolbarToSiteAcceleratorSettingsNested();
         }
     }
 
@@ -1937,23 +1975,13 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mMorePreference == null || !isAdded()) {
             return false;
         }
-        String title = getString(R.string.site_settings_discussion_title);
         Dialog dialog = mMorePreference.getDialog();
         if (dialog != null) {
-            dialog.setTitle(title);
             setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            addToolbarToMorePreference();
             return true;
         }
         return false;
-    }
-
-    private void removeJetpackSecurityScreenToolbar() {
-        if (mJpSecuritySettings == null || !isAdded()) {
-            return;
-        }
-        Dialog securityDialog = mJpSecuritySettings.getDialog();
-        WPActivityUtils.removeToolbarFromDialog(this, securityDialog);
     }
 
     private void hideAdminRequiredPreferences() {

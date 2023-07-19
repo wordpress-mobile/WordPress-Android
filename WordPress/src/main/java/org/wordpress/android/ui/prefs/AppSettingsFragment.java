@@ -278,6 +278,11 @@ public class AppSettingsFragment extends PreferenceFragment
         return view;
     }
 
+    @Override public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        addPrivacyToolbar();
+    }
+
     private void addJetpackBadgeAsFooterIfEnabled(LayoutInflater inflater, ListView listView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             final JetpackPoweredScreen screen = JetpackPoweredScreen.WithStaticText.APP_SETTINGS;
@@ -351,11 +356,6 @@ public class AppSettingsFragment extends PreferenceFragment
         if (mAccountStore.hasAccessToken() && NetworkUtils.isNetworkAvailable(getActivity())) {
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     @Override
@@ -644,6 +644,17 @@ public class AppSettingsFragment extends PreferenceFragment
     private boolean handlePrivacyClick() {
         AnalyticsTracker.track(Stat.APP_SETTINGS_PRIVACY_SETTINGS_TAPPED);
 
+        boolean isToolbarAdded = addPrivacyToolbar();
+
+        if (!isToolbarAdded) {
+            return false;
+        }
+
+        AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_OPENED);
+        return true;
+    }
+
+    private boolean addPrivacyToolbar() {
         if (mPrivacySettings == null || !isAdded()) {
             return false;
         }
@@ -653,8 +664,6 @@ public class AppSettingsFragment extends PreferenceFragment
         if (dialog != null) {
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
         }
-
-        AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_OPENED);
         return true;
     }
 
