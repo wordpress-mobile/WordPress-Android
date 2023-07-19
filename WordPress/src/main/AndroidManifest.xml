@@ -1080,7 +1080,6 @@
         <activity android:name=".ui.jetpackoverlay.JetpackStaticPosterActivity"
             android:exported="false"
             android:label="@string/stats"
-            android:screenOrientation="portrait"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <meta-data android:name="io.sentry.traces.activity.enable" android:value="false" />
