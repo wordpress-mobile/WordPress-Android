@@ -698,6 +698,16 @@ public class PostRestClient extends BaseWPComRestClient {
             }
         }
 
+        if (post.getAutoShareMessage().length() > 0) {
+            Map<String, Object> autoShareMessageParams = new HashMap<>();
+            autoShareMessageParams.put("key", "_wpas_mess");
+            autoShareMessageParams.put("value", post.getAutoShareMessage());
+            if (post.getAutoShareId() >= 0) {
+                autoShareMessageParams.put("id", post.getAutoShareId());
+            }
+            metadata.add(autoShareMessageParams);
+        }
+
         if (!metadata.isEmpty()) {
             params.put("metadata", metadata);
         }

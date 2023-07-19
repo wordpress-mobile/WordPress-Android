@@ -538,10 +538,17 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mAutoShareMessage = autoShareMessage;
     }
 
+    @Override
+    @NonNull
     public String getAutoShareMessage() {
-        return mAutoShareMessage;
+        if (mAutoShareMessage == null) {
+            return "";
+        } else {
+            return mAutoShareMessage;
+        }
     }
 
+    @Override
     public long getAutoShareId() {
         return mAutoShareId;
     }
@@ -587,7 +594,9 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getAuthorDisplayName(), otherPost.getAuthorDisplayName())
                 && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged())
                 && StringUtils.equals(getAutoSaveModified(), otherPost.getAutoSaveModified())
-                && StringUtils.equals(getAutoSavePreviewUrl(), otherPost.getAutoSavePreviewUrl());
+                && StringUtils.equals(getAutoSavePreviewUrl(), otherPost.getAutoSavePreviewUrl())
+                && StringUtils.equals(getAutoShareMessage(), otherPost.getAutoShareMessage())
+                && getAutoShareId() == otherPost.getAutoShareId();
     }
 
     /**
@@ -630,6 +639,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         result = 31 * result + (mIsPage ? 1 : 0);
         result = 31 * result + (int) (mParentId ^ (mParentId >>> 32));
         result = 31 * result + (mParentTitle != null ? mParentTitle.hashCode() : 0);
+        result = 31 * result + (mAutoShareMessage != null ? mAutoShareMessage.hashCode() : 0);
         return result;
     }
 
