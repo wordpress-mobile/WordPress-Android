@@ -413,7 +413,7 @@ class WPMainActivityViewModel @Inject constructor(
         val isVisible: Boolean
     ) : Serializable {
         companion object {
-            const val serialVersionUID = 1L
+            private const val serialVersionUID: Long = 1L
         }
     }
 }
