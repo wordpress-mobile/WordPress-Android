@@ -2,6 +2,7 @@ package org.wordpress.android.usecase.social
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackSocialResult
 import org.wordpress.android.util.extensions.doesNotContain
 import javax.inject.Inject
 
@@ -12,8 +13,9 @@ class GetJetpackSocialShareLimitStatusUseCase @Inject constructor(
         val isShareLimitEnabled =
             !siteModel.isHostedAtWPCom
                     && (siteModel.planActiveFeatures?.split(",")?.doesNotContain(FEATURE_SOCIAL_SHARES_1000) != false)
-        return if (isShareLimitEnabled) {
-            with(siteStore.getJetpackSocial(siteModel.id)) {
+        val jetpackSocial = siteStore.fetchJetpackSocial(siteModel)
+        return if (isShareLimitEnabled && jetpackSocial is FetchedJetpackSocialResult.Success) {
+            with(jetpackSocial.jetpackSocial) {
                 ShareLimit.Enabled(
                     shareLimit = shareLimit,
                     publicizedCount = publicizedCount,
