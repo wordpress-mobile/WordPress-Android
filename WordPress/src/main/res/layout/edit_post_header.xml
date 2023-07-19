@@ -1,0 +1,31 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:contentDescription="@string/menu_close_editor"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:layout_width="@dimen/edit_post_header_chevron_size"
+        android:layout_height="@dimen/edit_post_header_chevron_size"
+        android:importantForAccessibility="no"
+        android:src="@drawable/chevron_left"
+        android:clickable="false"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/close_editor_site_icon"
+        android:layout_width="@dimen/edit_post_header_image_size"
+        android:layout_height="@dimen/edit_post_header_image_size"
+        android:importantForAccessibility="no"
+        android:src="@drawable/bg_rectangle_placeholder_radius_2dp_globe_32dp"
+        android:visibility="visible"
+        android:clickable="false"
+        tools:ignore="TouchTargetSizeCheck" />
+
+</LinearLayout>

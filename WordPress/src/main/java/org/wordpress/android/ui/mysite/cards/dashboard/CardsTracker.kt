@@ -152,6 +152,7 @@ fun DashboardCardType.toTypeValue(): Type {
         DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST
         DashboardCardType.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
         DashboardCardType.PROMOTE_WITH_BLAZE_CARD -> Type.PROMOTE_WITH_BLAZE
+        DashboardCardType.BLAZE_CAMPAIGNS_CARD -> Type.PROMOTE_WITH_BLAZE
         DashboardCardType.DASHBOARD_DOMAIN_CARD -> Type.DASHBOARD_CARD_DOMAIN
         DashboardCardType.DASHBOARD_PLANS_CARD -> Type.DASHBOARD_CARD_PLANS
         DashboardCardType.PAGES_CARD -> Type.PAGES

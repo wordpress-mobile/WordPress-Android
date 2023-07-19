@@ -1,0 +1,4 @@
+22.7:
+- Hemos dado al botón de acción flotante una nueva forma, color y estilo.
+- Los bloques de imagen muestran ahora la relación de aspecto correcta, tanto si la imagen tiene una anchura y altura determinadas como si no.
+- Hemos movido la sección «Yo» con tu avatar al menú principal en «Gestionar».

@@ -1,0 +1,4 @@
+22.7:
+- Kami memberikan bentuk, warna, dan gaya baru untuk tombol tindakan mengambang.
+- Blok gambar kini menampilkan rasio aspek yang tepat, meskipun lebar dan tinggi gambar mungkin belum ditentukan.
+- Kami memindahkan bagian “Saya” dengan avatar Anda ke navigasi bawah.

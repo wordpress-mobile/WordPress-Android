@@ -18,12 +18,12 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PUBLISH
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.TAGS
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState.PublishButtonUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewModel
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
@@ -31,6 +31,7 @@ import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
@@ -59,6 +60,9 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     lateinit var getCategoriesUseCase: GetCategoriesUseCase
 
     @Mock
+    lateinit var socialFeatureConfig: JetpackSocialFeatureConfig
+
+    @Mock
     lateinit var site: SiteModel
 
     @Before
@@ -72,6 +76,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
             storyRepositoryWrapper,
             updateStoryTitleUseCase,
             getCategoriesUseCase,
+            socialFeatureConfig,
             testDispatcher()
         )
         whenever(
@@ -129,7 +134,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         viewModel.start(editPostRepository, site, false)
 
         // assert
-        assertThat(getHomeUiState(TAGS)).isNotNull()
+        assertThat(getHomeUiState(PrepublishingScreenNavigation.Tags)).isNotNull()
     }
 
     @Test
@@ -141,7 +146,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         viewModel.start(editPostRepository, site, false)
 
         // assert
-        assertThat(getHomeUiState(TAGS)).isNull()
+        assertThat(getHomeUiState(PrepublishingScreenNavigation.Tags)).isNull()
     }
 
     @Test
@@ -175,12 +180,12 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Test
     fun `verify that publish action type is propagated to prepublishingActionType`() {
         // arrange
-        val expectedActionType = PUBLISH
+        val expectedActionType = PrepublishingScreenNavigation.Publish
 
         // act
         viewModel.start(mock(), site, false)
         val publishAction = getHomeUiState(expectedActionType)
-        publishAction?.onActionClicked?.invoke(expectedActionType)
+        publishAction?.onNavigationActionClicked?.invoke(expectedActionType)
 
         // assert
         assertThat(requireNotNull(viewModel.onActionClicked.value).peekContent()).isEqualTo(expectedActionType)
@@ -189,12 +194,12 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Test
     fun `verify that tags action type is propagated to prepublishingActionType`() {
         // arrange
-        val expectedActionType = TAGS
+        val expectedActionType = PrepublishingScreenNavigation.Tags
 
         // act
         viewModel.start(mock(), site, false)
         val tagsAction = getHomeUiState(expectedActionType)
-        tagsAction?.onActionClicked?.invoke(expectedActionType)
+        tagsAction?.onNavigationActionClicked?.invoke(expectedActionType)
 
         // assert
         assertThat(requireNotNull(viewModel.onActionClicked.value).peekContent()).isEqualTo(expectedActionType)
@@ -208,7 +213,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         // act
         viewModel.start(editPostRepository, site, false)
-        val publishAction = getHomeUiState(PUBLISH)
+        val publishAction = getHomeUiState(PrepublishingScreenNavigation.Publish)
 
         // assert
         assertThat((publishAction?.actionResult as? UiStringText)?.text).isEqualTo(expectedLabel)
@@ -222,7 +227,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         // act
         viewModel.start(editPostRepository, site, false)
-        val tagsAction = getHomeUiState(TAGS)
+        val tagsAction = getHomeUiState(PrepublishingScreenNavigation.Tags)
 
         // assert
         assertThat((tagsAction?.actionResult as? UiStringText)?.text).isEqualTo(expectedTags)
@@ -235,7 +240,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         // act
         viewModel.start(editPostRepository, site, false)
-        val tagsAction = getHomeUiState(TAGS)
+        val tagsAction = getHomeUiState(PrepublishingScreenNavigation.Tags)
 
         // assert
         assertThat((tagsAction?.actionResult as? UiStringRes)?.stringRes)
@@ -307,7 +312,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         viewModel.start(editPostRepository, site, false)
 
-        val uiState = getHomeUiState(PUBLISH)
+        val uiState = getHomeUiState(PrepublishingScreenNavigation.Publish)
 
         assertThat(uiState?.actionClickable).isFalse()
     }
@@ -318,7 +323,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         viewModel.start(editPostRepository, site, false)
 
-        val uiState = getHomeUiState(TAGS)
+        val uiState = getHomeUiState(PrepublishingScreenNavigation.Tags)
 
         assertThat(uiState?.actionClickable).isTrue()
     }
@@ -413,6 +418,42 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         verify(updateStoryTitleUseCase).updateStoryTitle(eq(storyTitle), any())
     }
 
+    @Test
+    fun `verify social item is not propagated to prepublishingHomeUiState for post with feature config off`() {
+        // arrange
+        whenever(socialFeatureConfig.isEnabled()).thenReturn(false)
+
+        // act
+        viewModel.start(editPostRepository, site, false)
+
+        // assert
+        assertThat(viewModel.uiState.value?.filterIsInstance(SocialUiState::class.java)?.size).isEqualTo(0)
+    }
+
+    @Test
+    fun `verify social item is propagated to prepublishingHomeUiState for post with feature config on`() {
+        // arrange
+        whenever(socialFeatureConfig.isEnabled()).thenReturn(true)
+
+        // act
+        viewModel.start(mock(), site, false)
+
+        // assert
+        assertThat(viewModel.uiState.value?.filterIsInstance(SocialUiState::class.java)?.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `verify social item is not propagated to prepublishingHomeUiState for page`() {
+        // arrange
+        whenever(editPostRepository.isPage).thenReturn(true)
+
+        // act
+        viewModel.start(editPostRepository, site, false)
+
+        // assert
+        assertThat(viewModel.uiState.value?.filterIsInstance(SocialUiState::class.java)?.size).isEqualTo(0)
+    }
+
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
     private fun getStoryTitleUiState() = viewModel.storyTitleUiState.value
 
@@ -423,6 +464,6 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     private fun getHomeUiState(actionType: ActionType): HomeUiState? {
         val actions = viewModel.uiState.value
             ?.filterIsInstance(HomeUiState::class.java)
-        return actions?.find { it.actionType == actionType }
+        return actions?.find { it.navigationAction == actionType }
     }
 }

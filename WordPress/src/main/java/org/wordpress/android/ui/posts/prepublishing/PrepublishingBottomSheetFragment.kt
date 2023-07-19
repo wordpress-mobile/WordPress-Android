@@ -17,6 +17,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.PostPrepublishingBottomSheetBinding
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.ADD_CATEGORY
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.CATEGORIES
@@ -158,6 +159,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
         viewModel.dismissKeyboard.observeEvent(this) {
             ActivityUtils.hideKeyboardForced(view)
+        }
+
+        viewModel.navigateToSharingSettings.observeEvent(this) { site ->
+            context?.let { ActivityLauncher.viewBlogSharing(it, site) }
         }
 
         val prepublishingScreenState = savedInstanceState?.getParcelableCompat<PrepublishingScreen>(

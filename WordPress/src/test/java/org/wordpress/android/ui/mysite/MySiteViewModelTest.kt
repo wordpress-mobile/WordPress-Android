@@ -37,7 +37,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.blaze.BlazeStatusModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
@@ -56,7 +55,6 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
-import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
@@ -64,6 +62,7 @@ import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFu
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
@@ -119,6 +118,7 @@ import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder.Companion.NOT_SET
@@ -471,6 +471,13 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     )
 
+    private val blazeCardUpdate = MutableLiveData(
+        MySiteUiState.PartialState.BlazeCardUpdate(
+            blazeEligible = true,
+            campaign = null
+        )
+    )
+
     private var quickActionsStatsClickAction: (() -> Unit)? = null
     private var quickActionsPagesClickAction: (() -> Unit)? = null
     private var quickActionsPostsClickAction: (() -> Unit)? = null
@@ -490,7 +497,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickStartUpdate,
         showSiteIconProgressBar,
         selectedSite,
-        bloggingPromptsUpdate
+        bloggingPromptsUpdate,
+        blazeCardUpdate
     )
 
     @Suppress("LongMethod")
@@ -2212,6 +2220,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
             verify(cardsTracker).trackPagesItemClicked(PagesCardContentType.SCHEDULED)
         }
+
     @Test
     fun `given published page card, when page item is clicked, then event is tracked`() =
         test {
@@ -2500,7 +2509,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeItemClickAction(ListItemAction.BLAZE)
 
         assertThat(navigationActions).containsExactly(
-            SiteNavigationAction.OpenPromoteWithBlazeOverlay(BlazeFlowSource.MENU_ITEM))
+            SiteNavigationAction.OpenPromoteWithBlazeOverlay(BlazeFlowSource.MENU_ITEM)
+        )
     }
 
     @Test
@@ -3558,7 +3568,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsSocialEnabled)
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsEnabled)
         whenever(jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard()).thenReturn(shouldShowJetpackBranding)
-        whenever(blazeFeatureUtils.shouldShowBlazeCardEntryPoint(any(), any())).thenReturn(isBlazeEnabled)
+        whenever(blazeFeatureUtils.shouldShowBlazeCardEntryPoint(site)).thenReturn(isBlazeEnabled)
         if (isSiteUsingWpComRestApi) {
             site.setIsWPCom(true)
             site.setIsJetpackConnected(true)
@@ -3731,11 +3741,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                     add(initPostCard(mockInvocation))
                     add(initTodaysStatsCard(mockInvocation))
                     if (bloggingPromptsFeatureConfig.isEnabled()) add(initBloggingPromptCard(mockInvocation))
-                    if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(
-                            BlazeStatusModel(1, true), 1)
-                    ) add(
-                        initPromoteWithBlazeCard(mockInvocation)
-                    )
+                    if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(site))
+                        add(initPromoteWithBlazeCard(mockInvocation))
                     add(initPageCard(mockInvocation))
                     add(initActivityCard(mockInvocation))
                 }
@@ -3818,12 +3825,12 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun initPromoteWithBlazeCard(mockInvocation: InvocationOnMock): DashboardCard.PromoteWithBlazeCard {
-        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
-        onPromoteWithBlazeCardClick = params.promoteWithBlazeCardBuilderParams.onClick
-        onPromoteWithBlazeCardMenuClicked = params.promoteWithBlazeCardBuilderParams.onMoreMenuClick
-        onPromoteWithBlazeCardHideThisClick = params.promoteWithBlazeCardBuilderParams.onHideMenuItemClick
-        return DashboardCard.PromoteWithBlazeCard(
+    private fun initPromoteWithBlazeCard(mockInvocation: InvocationOnMock): PromoteWithBlazeCard {
+        val params = getPromoteWithBlazeCardBuilderParams(mockInvocation)
+        onPromoteWithBlazeCardClick = params.onClick
+        onPromoteWithBlazeCardMenuClicked = params.onMoreMenuClick
+        onPromoteWithBlazeCardHideThisClick = params.onHideMenuItemClick
+        return DashboardCard.BlazeCard.PromoteWithBlazeCard(
             title = UiStringRes(0),
             subtitle = UiStringRes(0),
             onClick = ListItemInteraction.create { onPromoteWithBlazeCardClick },
@@ -3831,6 +3838,10 @@ class MySiteViewModelTest : BaseUnitTest() {
             onHideMenuItemClick = ListItemInteraction.create { onPromoteWithBlazeCardHideThisClick }
         )
     }
+
+    private fun getPromoteWithBlazeCardBuilderParams(mockInvocation: InvocationOnMock) =
+        (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first().blazeCardBuilderParams
+                as (MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams)
 
     private fun initSiteItems(mockInvocation: InvocationOnMock): List<ListItem> {
         val params = (mockInvocation.arguments.filterIsInstance<SiteItemsBuilderParams>()).first()
@@ -3867,7 +3878,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                     UiStringRes(R.string.blaze_menu_item_label),
                     onClick = mock(),
                     disablePrimaryIconTint = true
-               )
+                )
             )
         }
 

@@ -80,16 +80,12 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
         callback: OnAutoSavePostIfNotDraftCallback
     ) {
         val remotePostId = RemoteId(remotePostPayload.post.remotePostId)
-        if (remotePostPayload.post.isLocalDraft) {
-            throw IllegalArgumentException("Local drafts should not be auto-saved")
-        }
-        if (postStatusContinuations.containsKey(remotePostId) ||
-            autoSaveContinuations.containsKey(remotePostId)
+        require(!remotePostPayload.post.isLocalDraft) { "Local drafts should not be auto-saved" }
+        require(
+            !postStatusContinuations.containsKey(remotePostId) && !autoSaveContinuations.containsKey(remotePostId)
         ) {
-            throw IllegalArgumentException(
-                "This post is already being processed. Make sure not to start an autoSave " +
-                        "or update draft action while another one is going on."
-            )
+            "This post is already being processed. Make sure not to start an autoSave " +
+                    "or update draft action while another one is going on."
         }
         coroutineScope.launch {
             val onPostStatusFetched = fetchRemotePostStatus(remotePostPayload)

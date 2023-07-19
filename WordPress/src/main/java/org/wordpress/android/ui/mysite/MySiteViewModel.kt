@@ -73,7 +73,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackIns
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PromoteWithBlazeCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
@@ -83,7 +84,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStat
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PromoteWithBlazeUpdate
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
@@ -351,7 +352,7 @@ class MySiteViewModel @Inject constructor(
                     scanAvailable,
                     cardsUpdate,
                     bloggingPromptsUpdate,
-                    promoteWithBlazeUpdate,
+                    blazeCardUpdate,
                     hasSiteCustomDomains
                 )
                 selectDefaultTabIfNeeded()
@@ -402,7 +403,7 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
-        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?,
+        blazeCardUpdate: BlazeCardUpdate?,
         hasSiteCustomDomains: Boolean?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
@@ -416,7 +417,7 @@ class MySiteViewModel @Inject constructor(
             scanAvailable,
             cardsUpdate,
             bloggingPromptUpdate,
-            promoteWithBlazeUpdate,
+            blazeCardUpdate,
             hasSiteCustomDomains
         )
 
@@ -506,7 +507,7 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
-        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?,
+        blazeCardUpdate: BlazeCardUpdate?,
         hasSiteCustomDomains: Boolean?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
@@ -600,15 +601,23 @@ class MySiteViewModel @Inject constructor(
                     onViewAnswersClick = this::onBloggingPromptViewAnswersClick,
                     onRemoveClick = this::onBloggingPromptRemoveClick
                 ),
-                promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
-                    isEligible = blazeFeatureUtils.shouldShowBlazeCardEntryPoint(
-                        promoteWithBlazeUpdate?.blazeStatusModel,
-                        site.siteId
-                    ),
-                    onClick = this::onPromoteWithBlazeCardClick,
-                    onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
-                    onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
-                ),
+                blazeCardBuilderParams = blazeCardUpdate?.let {
+                    if(it.blazeEligible) {
+                        it.campaign?.let { campaign ->
+                           CampaignWithBlazeCardBuilderParams(
+                                campaign = campaign,
+                                onCreateCampaignClick = this::onCreateCampaignClick,
+                                onCampaignClick = this::onCampaignClick,
+                                onCardClick = this::onCampaignsCardClick,
+                            )
+                        }?: PromoteWithBlazeCardBuilderParams(
+                            onClick = this::onPromoteWithBlazeCardClick,
+                            onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
+                            onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
+                        )
+                    }
+                    else null
+                },
                 dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
                     isEligible = dashboardCardDomainUtils.shouldShowCard(
                         site, isDomainCreditAvailable, hasSiteCustomDomains
@@ -666,8 +675,7 @@ class MySiteViewModel @Inject constructor(
                 enablePagesFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 onClick = this::onItemClick,
-                isBlazeEligible =
-                blazeFeatureUtils.shouldShowBlazeMenuEntryPoint(promoteWithBlazeUpdate?.blazeStatusModel)
+                isBlazeEligible = blazeFeatureUtils.isSiteBlazeEligible(site),
             )
         )
 
@@ -716,6 +724,18 @@ class MySiteViewModel @Inject constructor(
                 jetpackSwitchMenu = jetpackSwitchMenu
             )
         )
+    }
+
+    private fun onCampaignsCardClick() {
+        TODO("Not yet implemented")
+    }
+
+    private fun onCampaignClick() {
+        TODO("Not yet implemented")
+    }
+
+    private fun onCreateCampaignClick() {
+        TODO("Not yet implemented")
     }
 
     private fun onPagesItemClick(params: PagesCardBuilderParams.PagesItemClickParams) {

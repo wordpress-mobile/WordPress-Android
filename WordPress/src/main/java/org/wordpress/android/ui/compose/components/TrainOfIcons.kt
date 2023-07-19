@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -56,6 +57,7 @@ fun TrainOfIcons(
     contentDescription: String? = null,
     iconSize: Dp = DEFAULT_ICON_SIZE.dp,
     iconBorderWidth: Dp = DEFAULT_ICON_BORDER_WIDTH.dp,
+    iconBorderColor: Color = MaterialTheme.colors.surface,
     placeholderPainter: Painter = ColorPainter(colorResource(R.color.placeholder)),
 ) {
     require(iconModels.isNotEmpty()) { "TrainOfIcons must have at least 1 icon" }
@@ -80,7 +82,7 @@ fun TrainOfIcons(
                     modifier = Modifier
                         .size(iconSizeWithBorder.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colors.surface)
+                        .background(iconBorderColor)
                         .padding(iconBorderWidth)
                         .clip(CircleShape)
                 )

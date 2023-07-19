@@ -15,19 +15,21 @@ import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.posts.GetPostTagsUseCase
 import org.wordpress.android.ui.posts.PostSettingsUtils
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.CATEGORIES
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PUBLISH
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.TAGS
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.Action
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.posts.trackPrepublishingNudges
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
-import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -43,6 +45,7 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val storyRepositoryWrapper: StoryRepositoryWrapper,
     private val updateStoryPostTitleUseCase: UpdateStoryPostTitleUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val socialFeatureConfig: JetpackSocialFeatureConfig,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
@@ -77,7 +80,7 @@ class PrepublishingHomeViewModel @Inject constructor(
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             if (isStoryPost) {
                 _storyTitleUiState.postValue(StoryTitleUiState(
-                    storyTitle = UiString.UiStringText(StringUtils.notNullStr(editPostRepository.title)),
+                    storyTitle = UiStringText(StringUtils.notNullStr(editPostRepository.title)),
                     storyThumbnailUrl = storyRepositoryWrapper.getCurrentStoryThumbnailUrl()
                 ) { storyTitle ->
                     onStoryTitleChanged(storyTitle)
@@ -85,7 +88,7 @@ class PrepublishingHomeViewModel @Inject constructor(
             } else {
                 add(
                     HeaderUiState(
-                        UiString.UiStringText(site.name),
+                        UiStringText(site.name),
                         StringUtils.notNullStr(site.iconUrl)
                     )
                 )
@@ -100,7 +103,7 @@ class PrepublishingHomeViewModel @Inject constructor(
             if (!editPostRepository.isPage) {
                 showNotSetPost(editPostRepository, site)
             } else {
-                UiString.UiStringRes(R.string.prepublishing_nudges_home_categories_not_set)
+                UiStringRes(R.string.prepublishing_nudges_home_categories_not_set)
             }
 
             val categoriesString = getCategoriesUseCase.getPostCategoriesString(
@@ -109,15 +112,19 @@ class PrepublishingHomeViewModel @Inject constructor(
             )
 
             add(HomeUiState(
-                actionType = CATEGORIES,
+                navigationAction = PrepublishingScreenNavigation.Categories,
                 actionResult = if (categoriesString.isNotEmpty()) {
-                    UiString.UiStringText(categoriesString)
+                    UiStringText(categoriesString)
                 } else {
-                    run { UiString.UiStringRes(R.string.prepublishing_nudges_home_categories_not_set) }
+                    run { UiStringRes(R.string.prepublishing_nudges_home_categories_not_set) }
                 },
                 actionClickable = true,
-                onActionClicked = ::onActionClicked
+                onNavigationActionClicked = ::onActionClicked
             ))
+
+            if (!editPostRepository.isPage && socialFeatureConfig.isEnabled()) {
+                showSocialItem()
+            }
 
             add(getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
                 launch(bgDispatcher) {
@@ -133,14 +140,15 @@ class PrepublishingHomeViewModel @Inject constructor(
         editPostRepository: EditPostRepository,
         site: SiteModel
     ) {
-        add(HomeUiState(
-            actionType = TAGS,
-            actionResult = getPostTagsUseCase.getTags(editPostRepository)
-                ?.let { UiString.UiStringText(it) }
-                ?: run { UiString.UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
-            actionClickable = true,
-            onActionClicked = ::onActionClicked
-        )
+        add(
+            HomeUiState(
+                navigationAction = PrepublishingScreenNavigation.Tags,
+                actionResult = getPostTagsUseCase.getTags(editPostRepository)
+                    ?.let { UiStringText(it) }
+                    ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
+                actionClickable = true,
+                onNavigationActionClicked = ::onActionClicked
+            )
         )
 
         val categoryString: String = getCategoriesUseCase.getPostCategoriesString(
@@ -148,7 +156,7 @@ class PrepublishingHomeViewModel @Inject constructor(
             site
         )
         if (categoryString.isNotEmpty()) {
-            UiString.UiStringText(categoryString)
+            UiStringText(categoryString)
         }
     }
 
@@ -157,10 +165,10 @@ class PrepublishingHomeViewModel @Inject constructor(
     ) {
         add(
             HomeUiState(
-                actionType = PUBLISH,
+                navigationAction = PrepublishingScreenNavigation.Publish,
                 actionResult = editPostRepository.getEditablePost()
                     ?.let {
-                        UiString.UiStringText(
+                        UiStringText(
                             postSettingsUtils.getPublishDateLabel(
                                 it
                             )
@@ -169,7 +177,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                 actionTypeColor = R.color.prepublishing_action_type_disabled_color,
                 actionResultColor = R.color.prepublishing_action_result_disabled_color,
                 actionClickable = false,
-                onActionClicked = null
+                onNavigationActionClicked = null
             )
         )
     }
@@ -179,17 +187,46 @@ class PrepublishingHomeViewModel @Inject constructor(
     ) {
         add(
             HomeUiState(
-                actionType = PUBLISH,
+                navigationAction = PrepublishingScreenNavigation.Publish,
                 actionResult = editPostRepository.getEditablePost()
                     ?.let {
-                        UiString.UiStringText(
+                        UiStringText(
                             postSettingsUtils.getPublishDateLabel(
                                 it
                             )
                         )
                     },
                 actionClickable = true,
-                onActionClicked = ::onActionClicked
+                onNavigationActionClicked = ::onActionClicked
+            )
+        )
+    }
+
+    private fun MutableList<PrepublishingHomeItemUiState>.showSocialItem() {
+        // TODO in other PR: use actual data, for now just using fake data
+//        add(
+//            SocialUiState.SocialSharingUiState(
+//                serviceIcons = listOf(
+//                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_facebook, isEnabled = false),
+//                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_tumblr)
+//                ),
+//                title = UiStringText("Sharing to 2 of 3 accounts"),
+//                description = UiStringText("27/30 social shares remaining"),
+//                isLowOnShares = false,
+//                onItemClicked = { Log.d("thomashorta", "hey there!") },
+//            )
+//        )
+        add(
+            SocialUiState.SocialConnectPromptUiState(
+                serviceIcons = listOf(
+                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_tumblr),
+                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_facebook),
+                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_instagram),
+                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_mastodon),
+                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_linkedin),
+                ),
+                onConnectClicked = { onActionClicked(Action.NavigateToSharingSettings) },
+                onDismissClicked = { /* TODO in other PR: hide this item forever */ },
             )
         )
     }

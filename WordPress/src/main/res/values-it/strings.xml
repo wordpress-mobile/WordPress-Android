@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-28 11:54:10+0000
+Translation-Revision-Date: 2023-07-12 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_s_detached">%s scollegato</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">La modifica dei pattern sincronizzati non è ancora supportata su %s per iOS</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">La modifica dei pattern sincronizzati non è ancora supportata su %s per Android</string>
     <string name="gutenberg_native_reusable">Riutilizzabile</string>
     <string name="privacy_banner_error_save">Si è verificato un errore durante il salvataggio delle tue scelte sulla privacy.</string>
     <string name="privacy_banner_save">Salva</string>
@@ -234,7 +237,7 @@ Language: it
     <string name="blogging_prompts_list_answered_prompt">✓ Risposta</string>
     <string name="blogging_prompts_list_title">Richieste</string>
     <string name="close_desc">chiudi</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">In alternativa, puoi staccare e modificare questo blocco separatamente toccando “Converti in blocco regolare”.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">In alternativa, puoi staccare e modificare questo blocco separatamente toccando “Scollega pattern”.</string>
     <string name="dlg_confirm_delete_category">Eliminare definitivamente la Categoria \'%s\'?</string>
     <string name="deleting_cat_success">Categoria eliminata correttamente</string>
     <string name="deleting_cat_failed">Impossibile eliminare la categoria</string>
@@ -782,7 +785,7 @@ Language: it
     <string name="blogging_reminders_notification_title">È ora di pubblicare sul blog di %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">La modifica dei blocchi riutilizzabili non è ancora supportata su WordPress per iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">La modifica dei blocchi riutilizzabili non è ancora supportata su WordPress per Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">In alternativa, puoi staccare e modificare questi blocchi separatamente toccando “Converti in blocchi regolari”.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">In alternativa, puoi staccare e modificare questi blocchi separatamente toccando “Scollega pattern”.</string>
     <string name="blogging_reminders_done">Fatto</string>
     <string name="blogging_reminders_notify_me">Inviami una notifica</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Inserisci le credenziali del server&lt;/a&gt; per abilitare i ripristini del sito con un clic dai backup.</string>

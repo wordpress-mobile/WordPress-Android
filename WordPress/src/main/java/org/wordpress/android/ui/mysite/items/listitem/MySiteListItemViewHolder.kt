@@ -1,8 +1,13 @@
 package org.wordpress.android.ui.mysite.items.listitem
 
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.widget.ImageViewCompat
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.MySiteItemBlockBinding
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
@@ -11,6 +16,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.extensions.viewBinding
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 
 class MySiteListItemViewHolder(
@@ -44,7 +50,37 @@ class MySiteListItemViewHolder(
                 null,
                 it,
                 ImageType.USER,
-                null
+                object : ImageManager.RequestListener<android.graphics.drawable.Drawable> {
+                    override fun onLoadFailed(e: Exception?, model: Any?) {
+                        val appLogMessage = "onLoadFailed while loading Gravatar image!"
+                        if (e == null) {
+                            AppLog.e(
+                                AppLog.T.MAIN,
+                                "$appLogMessage e == null"
+                            )
+                        } else {
+                            AppLog.e(
+                                AppLog.T.MAIN,
+                                appLogMessage,
+                                e
+                            )
+                        }
+                        ImageViewCompat.setImageTintList(imgIcon, ColorStateList.valueOf(Color.GRAY))
+                    }
+
+                    override fun onResourceReady(resource: android.graphics.drawable.Drawable, model: Any?) {
+                        ImageViewCompat.setImageTintList(imgIcon, null)
+                        if (resource is BitmapDrawable) {
+                            var bitmap = resource.bitmap
+                            // create a copy since the original bitmap may by automatically recycled
+                            bitmap = bitmap.copy(bitmap.config, true)
+                            WordPress.getBitmapCache().put(
+                                avatarUrl,
+                                bitmap
+                            )
+                        }
+                    }
+                }
             )
         }
     }

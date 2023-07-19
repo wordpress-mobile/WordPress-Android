@@ -573,6 +573,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
                 mEditorFragmentListener::onSendEventToHost,
 
+                mEditorFragmentListener::onToggleUndo,
+
+                mEditorFragmentListener::onToggleRedo,
+
                 GutenbergUtils.isDarkMode(getActivity()));
 
         // request dependency injection. Do this after setting min/max dimensions
@@ -1524,6 +1528,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void showEditorHelp() {
         getGutenbergContainerFragment().showEditorHelp();
+    }
+
+    @Override public void onUndoPressed() {
+        getGutenbergContainerFragment().onUndoPressed();
+    }
+
+    @Override public void onRedoPressed() {
+        getGutenbergContainerFragment().onRedoPressed();
     }
 
     @Override
