@@ -9,11 +9,9 @@ import javax.inject.Inject
 class CampaignListingViewModel @Inject constructor(
     private val blazeFeatureUtils: BlazeFeatureUtils,
 ) : ViewModel() {
-
     fun start(campaignListingPageSource: CampaignListingPageSource) {
         blazeFeatureUtils.trackCampaignListingPageShown(campaignListingPageSource)
     }
-
 }
 
 enum class CampaignListingPageSource(val trackingName: String){

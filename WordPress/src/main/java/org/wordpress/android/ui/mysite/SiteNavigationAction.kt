@@ -94,6 +94,7 @@ sealed class SiteNavigationAction {
     data class TriggerCreatePageFlow(val site: SiteModel):SiteNavigationAction()
     data class OpenPagesDraftsTab(val site: SiteModel, val pageId: Int) : SiteNavigationAction()
     data class OpenPagesScheduledTab(val site: SiteModel, val pageId: Int) : SiteNavigationAction()
-    data class OpenCampaignListingPage(val campaignListingPageSource: CampaignListingPageSource) : SiteNavigationAction()
+    data class OpenCampaignListingPage(val campaignListingPageSource: CampaignListingPageSource)
+        : SiteNavigationAction()
     data class OpenCampaignDetailPage(val campaignDetailPageSource: CampaignDetailPageSource) : SiteNavigationAction()
 }

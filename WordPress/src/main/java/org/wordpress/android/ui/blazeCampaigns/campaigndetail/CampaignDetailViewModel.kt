@@ -9,7 +9,6 @@ import javax.inject.Inject
 class CampaignDetailViewModel @Inject constructor(
     private val blazeFeatureUtils: BlazeFeatureUtils,
 ) : ViewModel() {
-
     fun start(campaignDetailPageSource: CampaignDetailPageSource) {
         blazeFeatureUtils.trackCampaignDetailsOpened(campaignDetailPageSource)
     }

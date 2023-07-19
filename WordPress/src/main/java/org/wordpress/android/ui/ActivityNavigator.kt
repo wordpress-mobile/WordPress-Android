@@ -12,7 +12,6 @@ import javax.inject.Singleton
 
 @Singleton
 class ActivityNavigator @Inject constructor() {
-
     fun navigateToCampaignListingPage(context: Context, campaignListingPageSource: CampaignListingPageSource) {
         context.startActivity(
             Intent(context, BlazeCampaignParentActivity::class.java).apply {
@@ -34,5 +33,4 @@ class ActivityNavigator @Inject constructor() {
             }
         )
     }
-
 }

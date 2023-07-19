@@ -61,7 +61,6 @@ class BlazeCardViewModelSlice @Inject constructor(
         )
         _onNavigation.value =
             Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
-
     }
 
     fun onBlazeMenuItemClick(): SiteNavigationAction {
