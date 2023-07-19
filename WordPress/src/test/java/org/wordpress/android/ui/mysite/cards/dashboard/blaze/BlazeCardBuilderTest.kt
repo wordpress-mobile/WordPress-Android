@@ -7,14 +7,15 @@ import org.junit.Test
 import org.mockito.kotlin.mock
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard.BlazeCampaignsCardFooter
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard.BlazeCampaignsCardItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCard.BlazeCampaignsCardItem.BlazeCampaignStats
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel.BlazeCampaignsCardFooter
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel.BlazeCampaignsCardItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel.BlazeCampaignsCardItem.BlazeCampaignStats
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardBuilder
+import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 
@@ -24,7 +25,7 @@ val campaign = BlazeCampaignModel(
     imageUrl = "imageUrl",
     startDate = mock(),
     endDate = mock(),
-    uiStatus = "uiStatus",
+    uiStatus = "active",
     budgetCents = 20L,
     impressions = 1,
     clicks = 1,
@@ -41,19 +42,21 @@ val campaignWithBlazeBuilderParams = CampaignWithBlazeCardBuilderParams(
     onCreateCampaignClick = onCreateCampaignClick
 )
 
-val blazeCampaignsCard = BlazeCampaignsCard(
-    title = UiString.UiStringRes(R.string.blaze_campaigns_card_title),
-    campaign = BlazeCampaignsCardItem(
-        id = campaign.campaignId,
-        title = UiString.UiStringText(campaign.title),
-        status = UiString.UiStringText(campaign.uiStatus),
-        featuredImageUrl = campaign.imageUrl,
-        stats = BlazeCampaignStats(
-            impressionCount = UiString.UiStringText(campaign.impressions.toString()),
-            clickCount = UiString.UiStringText(campaign.clicks.toString())
-        ),
-        onClick = onCampaignClick,
+val campaignCardItem = BlazeCampaignsCardItem(
+    id = campaign.campaignId,
+    title = UiString.UiStringText(campaign.title),
+    status = CampaignStatus.fromString(campaign.uiStatus),
+    featuredImageUrl = campaign.imageUrl,
+    stats = BlazeCampaignStats(
+        impressions = UiString.UiStringText(campaign.impressions.toString()),
+        clicks = UiString.UiStringText(campaign.clicks.toString())
     ),
+    onClick = onCampaignClick,
+)
+
+val blazeCampaignsCardModel = BlazeCampaignsCardModel(
+    title = UiString.UiStringRes(R.string.blaze_campaigns_card_title),
+    campaign = campaignCardItem,
     footer = BlazeCampaignsCardFooter(
         label = UiString.UiStringRes(R.string.blaze_campaigns_card_footer_label),
         onClick = ListItemInteraction.create(onCreateCampaignClick)
@@ -103,9 +106,29 @@ class BlazeCardBuilderTest {
         val params = campaignWithBlazeBuilderParams
 
         // Act
-        val result = builder.build(params) as BlazeCampaignsCard
+        val result = builder.build(params) as BlazeCampaignsCardModel
 
         // Assert
-        assertEquals(blazeCampaignsCard,result)
+        assertEquals(blazeCampaignsCardModel, result)
+    }
+
+    @Test
+    fun `given campaign not active or completed, when campaign card is built, then no stats available`() {
+        // Arrange
+        val params = campaignWithBlazeBuilderParams.copy(
+            campaign = campaign.copy(uiStatus = "scheduled")
+        )
+
+        // Act
+        val result = builder.build(params) as BlazeCampaignsCardModel
+
+        // Assert
+        val expectedCampaignCard = blazeCampaignsCardModel.copy(
+            campaign = campaignCardItem.copy(
+                stats = null,
+                status = CampaignStatus.Scheduled
+            )
+        )
+        assertEquals(expectedCampaignCard, result)
     }
 }
