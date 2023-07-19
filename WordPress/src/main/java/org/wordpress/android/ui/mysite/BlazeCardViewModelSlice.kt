@@ -44,9 +44,10 @@ class BlazeCardViewModelSlice @Inject constructor(
         }
     }
 
-    private fun onCampaignsCardClick() {
+    private fun onCreateCampaignClick() {
+        blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.DASHBOARD_CARD)
         _onNavigation.value =
-            Event(SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.DASHBOARD_CARD))
+            Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
     }
 
     private fun onCampaignClick() {
@@ -54,28 +55,9 @@ class BlazeCardViewModelSlice @Inject constructor(
             Event(SiteNavigationAction.OpenCampaignDetailPage(CampaignDetailPageSource.DASHBOARD_CARD))
     }
 
-    private fun onCreateCampaignClick() {
-        blazeFeatureUtils.track(
-            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_TAPPED,
-            BlazeFlowSource.DASHBOARD_CARD
-        )
+    private fun onCampaignsCardClick() {
         _onNavigation.value =
-            Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
-    }
-
-    fun onBlazeMenuItemClick(): SiteNavigationAction {
-        blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.MENU_ITEM)
-        if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {
-            return SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.MENU_ITEM)
-        }
-        return SiteNavigationAction.OpenPromoteWithBlazeOverlay(BlazeFlowSource.MENU_ITEM)
-    }
-
-    private fun onPromoteWithBlazeCardMoreMenuClick() {
-        blazeFeatureUtils.track(
-            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
-            BlazeFlowSource.DASHBOARD_CARD
-        )
+            Event(SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.DASHBOARD_CARD))
     }
 
     private fun onPromoteWithBlazeCardClick() {
@@ -93,5 +75,20 @@ class BlazeCardViewModelSlice @Inject constructor(
             blazeFeatureUtils.hidePromoteWithBlazeCard(it.siteId)
         }
         _refresh.value = Event(true)
+    }
+
+    private fun onPromoteWithBlazeCardMoreMenuClick() {
+        blazeFeatureUtils.track(
+            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
+    }
+
+    fun onBlazeMenuItemClick(): SiteNavigationAction {
+        blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.MENU_ITEM)
+        if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {
+            return SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.MENU_ITEM)
+        }
+        return SiteNavigationAction.OpenPromoteWithBlazeOverlay(BlazeFlowSource.MENU_ITEM)
     }
 }
