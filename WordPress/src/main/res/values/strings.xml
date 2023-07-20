@@ -2287,7 +2287,7 @@
     <string name="my_site_btn_jetpack_settings">Jetpack Settings</string>
     <string name="my_site_btn_site_pages">Pages</string>
     <string name="my_site_btn_blog_posts">Posts</string>
-    <string name="my_site_btn_sharing">Sharing</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="my_site_btn_domains">Domains</string>
     <string name="my_site_btn_site_settings">Site Settings</string>
     <string name="my_site_btn_comments" translatable="false">@string/comments</string>
@@ -2421,7 +2421,7 @@
     <string name="next_button" translatable="false">&gt;</string>
 
     <!-- Jetpack Social and sharing -->
-    <string name="sharing">Sharing</string>
+    <string name="sharing">Social</string>
     <string name="sharing_disabled">Sharing module disabled</string>
     <string name="sharing_disabled_description">You cannot access your sharing settings because your Sharing Jetpack module is disabled.</string>
     <string name="connections_label">Jetpack Social Connections</string>
