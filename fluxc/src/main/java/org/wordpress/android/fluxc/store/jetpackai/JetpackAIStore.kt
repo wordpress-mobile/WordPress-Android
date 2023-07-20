@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store.jetpackai
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIJWTTokenResponse
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
@@ -57,5 +58,14 @@ class JetpackAIStore @Inject constructor(
         loggedMessage = "fetch Jetpack AI completions"
     ) {
         jetpackAIRestClient.fetchJetpackAICompletions(site, prompt, feature, skipCache, postId)
+    }
+
+     private suspend fun fetchJetpackAIJWTToken(siteId: Long)
+     : JetpackAIJWTTokenResponse = coroutineEngine.withDefaultContext(
+        tag = AppLog.T.API,
+        caller = this,
+        loggedMessage = "fetch Jetpack AI JWT token"
+    ) {
+        jetpackAIRestClient.fetchJetpackAIJWTToken(siteId)
     }
 }
