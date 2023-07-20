@@ -4,10 +4,7 @@ import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
 import org.wordpress.android.ui.utils.UiString
 
 sealed class CampaignListingUiState {
-    data class Loading(
-        val image: Int,
-        val description: UiString,
-    ) : CampaignListingUiState()
+    object Loading : CampaignListingUiState()
 
     data class Error(
         val title: UiString,
