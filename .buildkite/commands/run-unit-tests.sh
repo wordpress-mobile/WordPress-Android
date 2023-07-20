@@ -44,6 +44,6 @@ done
 
 echo "--- 🧪 Copying test logs for test collector"
 mkdir buildkite-test-analytics
-cp $test_log_dir buildkite-test-analytics
+cp "$test_log_dir" buildkite-test-analytics
 
 exit $TESTS_EXIT_STATUS
