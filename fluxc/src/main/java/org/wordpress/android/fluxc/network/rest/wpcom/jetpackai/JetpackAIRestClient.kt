@@ -48,15 +48,15 @@ class JetpackAIRestClient @Inject constructor(
     }
 
     suspend fun fetchJetpackAITextCompletion(
-        prompt: String,
         token: String,
+        prompt: String,
         feature: String
     ): JetpackAICompletionsResponse {
         val url = WPCOMV2.text_completion.url
         val body = mutableMapOf<String, Any>()
         body.apply {
-            put("prompt", prompt)
             put("token", token)
+            put("prompt", prompt)
             put("feature", feature)
         }
 
