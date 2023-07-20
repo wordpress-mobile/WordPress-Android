@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
@@ -42,7 +44,8 @@ class CampaignListingFragment : Fragment() {
     ): View = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
-                CampaignListingPage()
+                val campaigns by viewModel.uiState.observeAsState()
+                CampaignListingPage(campaigns ?: CampaignListingUiState.Loading)
             }
         }
     }
@@ -59,7 +62,7 @@ class CampaignListingFragment : Fragment() {
 
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    fun CampaignListingPage() {
+    fun CampaignListingPage(uiState: CampaignListingUiState) {
         Scaffold(
             topBar = {
                 MainTopAppBar(
@@ -70,7 +73,33 @@ class CampaignListingFragment : Fragment() {
                     }
                 )
             }
-        ) { }
+        ) { CampaignListingContent(uiState) }
+    }
+
+    @Composable
+    fun CampaignListingContent(
+        uiState: CampaignListingUiState
+    ) {
+        when (uiState) {
+            is CampaignListingUiState.Loading -> CampaignListingLoading()
+            is CampaignListingUiState.Error -> CampaignListingError(uiState.error)
+            is CampaignListingUiState.Success -> CampaignListingSuccess(uiState.campaigns)
+        }
+    }
+
+    @Composable
+    fun CampaignListingSuccess(campaigns: List<CampaignModel>) {
+        TODO("Not yet implemented")
+    }
+
+    @Composable
+    fun CampaignListingError(error: String) {
+        TODO("Not yet implemented")
+    }
+
+    @Composable
+    fun CampaignListingLoading() {
+        TODO("Not yet implemented")
     }
 }
 
