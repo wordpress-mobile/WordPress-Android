@@ -83,19 +83,22 @@ class JetpackAIStore @Inject constructor(
         val result = if (token != null) {
             jetpackAIRestClient.fetchJetpackAITextCompletion(token, prompt, feature)
         } else {
-            handleJetpackAIJWTTokenResponse(fetchJetpackAIJWTToken(site), prompt, feature)
+            val jwtTokenResponse = fetchJetpackAIJWTToken(site)
+            fetchCompletionsWithToken(jwtTokenResponse, prompt, feature)
         }
 
         return@withDefaultContext when {
             // Fetch token anew if using existing token returns AUTH_ERROR
-            result is JetpackAICompletionsResponse.Error && result.type == AUTH_ERROR ->
-                handleJetpackAIJWTTokenResponse(fetchJetpackAIJWTToken(site), prompt, feature)
+            result is JetpackAICompletionsResponse.Error && result.type == AUTH_ERROR -> {
+                val jwtTokenResponse = fetchJetpackAIJWTToken(site)
+                fetchCompletionsWithToken(jwtTokenResponse, prompt, feature)
+            }
 
             else -> result
         }
     }
 
-    private suspend fun handleJetpackAIJWTTokenResponse(
+    private suspend fun fetchCompletionsWithToken(
         jwtTokenResponse: JetpackAIJWTTokenResponse,
         prompt: String,
         feature: String
