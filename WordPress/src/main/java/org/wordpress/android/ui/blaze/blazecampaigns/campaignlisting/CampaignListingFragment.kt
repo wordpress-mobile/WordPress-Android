@@ -64,7 +64,7 @@ class CampaignListingFragment : Fragment() {
         setContent {
             AppTheme {
                 val campaigns by viewModel.uiState.observeAsState()
-                CampaignListingPage(campaigns?: CampaignListingUiState.Loading)
+                CampaignListingPage(campaigns ?: CampaignListingUiState.Loading)
             }
         }
     }
@@ -138,7 +138,7 @@ fun CampaignListingError(error: CampaignListingUiState.Error) {
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center,
         )
-        if(error.button!=null){
+        if (error.button != null) {
             Button(
                 onClick = error.button.click
             ) {
