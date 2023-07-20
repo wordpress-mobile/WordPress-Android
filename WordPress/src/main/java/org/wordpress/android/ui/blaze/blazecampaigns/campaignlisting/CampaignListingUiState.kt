@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.blazeCampaigns.campaignlisting
+package org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting
 
 import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
 import org.wordpress.android.ui.utils.UiString
