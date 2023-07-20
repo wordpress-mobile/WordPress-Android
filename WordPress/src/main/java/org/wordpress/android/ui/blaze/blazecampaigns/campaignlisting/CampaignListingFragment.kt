@@ -7,9 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -104,9 +107,15 @@ class CampaignListingFragment : Fragment() {
     }
 
     @Composable
-    @Suppress("unused", "UNUSED_PARAMETER")
     fun CampaignListingSuccess(campaigns: List<CampaignModel>) {
-        TODO("Not yet implemented")
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(16.dp)
+        ) {
+            items(campaigns) { campaign ->
+                CampaignListRow(campaignModel = campaign)
+            }
+        }
     }
 }
 
