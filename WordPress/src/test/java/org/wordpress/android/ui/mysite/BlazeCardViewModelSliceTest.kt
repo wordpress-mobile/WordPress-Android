@@ -16,8 +16,8 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
-import org.wordpress.android.ui.blazeCampaigns.campaigndetail.CampaignDetailPageSource
-import org.wordpress.android.ui.blazeCampaigns.campaignlisting.CampaignListingPageSource
+import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
+import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
 import kotlin.test.assertEquals

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.blazeCampaigns.campaigndetail
+package org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -21,9 +21,9 @@ import org.wordpress.android.util.extensions.getSerializableCompat
 private const val CAMPAIGN_DETAIL_PAGE_SOURCE = "campaign_detail_page_source"
 
 @AndroidEntryPoint
-class CampaignDetailsFragment : Fragment() {
+class CampaignDetailFragment : Fragment() {
     companion object {
-        fun newInstance(source: CampaignDetailPageSource) = CampaignDetailsFragment().apply {
+        fun newInstance(source: CampaignDetailPageSource) = CampaignDetailFragment().apply {
             arguments = Bundle().apply {
                 putSerializable(CAMPAIGN_DETAIL_PAGE_SOURCE, source)
             }
@@ -51,7 +51,9 @@ class CampaignDetailsFragment : Fragment() {
     }
 
     private fun getPageSource(): CampaignDetailPageSource {
-        return arguments?.getSerializableCompat<CampaignDetailPageSource>(CAMPAIGN_DETAIL_PAGE_SOURCE)
+        return arguments?.getSerializableCompat<CampaignDetailPageSource>(
+            CAMPAIGN_DETAIL_PAGE_SOURCE
+        )
             ?: CampaignDetailPageSource.UNKNOWN
     }
 }

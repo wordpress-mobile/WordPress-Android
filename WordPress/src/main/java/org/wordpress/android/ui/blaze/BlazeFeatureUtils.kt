@@ -6,8 +6,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.ui.blazeCampaigns.campaigndetail.CampaignDetailPageSource
-import org.wordpress.android.ui.blazeCampaigns.campaignlisting.CampaignListingPageSource
+import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
+import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper

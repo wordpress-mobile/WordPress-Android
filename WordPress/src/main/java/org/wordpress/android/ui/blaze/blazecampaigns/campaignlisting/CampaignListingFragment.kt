@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.blazeCampaigns.campaignlisting
+package org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -14,7 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.ui.blazeCampaigns.CampaignViewModel
+import org.wordpress.android.ui.blaze.blazecampaigns.CampaignViewModel
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
