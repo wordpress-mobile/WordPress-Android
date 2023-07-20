@@ -9,7 +9,7 @@ elif [ "$1" == "processors" ]; then
     test_suite=":libs:processors:test"
     test_log_dir="libs/processors/build/test-results/test/*.xml"
 elif [ "$1" == "image-editor" ]; then
-    test_suite=":libs:image-editor:test"
+    test_suite=":libs:image-editor:testReleaseUnitTest"
     test_log_dir="libs/image-editor/build/test-results/testReleaseUnitTest/*.xml"
 else
     echo "Invalid Test Suite! Expected 'wordpress', 'processors', or 'image-editor', received '$1' instead"
