@@ -27,9 +27,9 @@ class JetpackAIRestClient @Inject constructor(
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchJetpackAIJWTToken(
-        siteId: Long
+        site: SiteModel
     ) : JetpackAIJWTTokenResponse {
-        val url = WPCOMV2.sites.site(siteId).jetpack_openai_query.jwt.url
+        val url = WPCOMV2.sites.site(site.siteId).jetpack_openai_query.jwt.url
         val response = wpComGsonRequestBuilder.syncPostRequest(
             restClient = this,
             url = url,
@@ -41,6 +41,36 @@ class JetpackAIRestClient @Inject constructor(
         return when (response) {
             is Response.Success -> JetpackAIJWTTokenResponse.Success(response.data.token)
             is Response.Error -> JetpackAIJWTTokenResponse.Error(
+                response.error.toJetpackAICompletionsError(),
+                response.error.message
+            )
+        }
+    }
+
+    suspend fun fetchJetpackAITextCompletion(
+        prompt: String,
+        token: String,
+        feature: String
+    ): JetpackAICompletionsResponse {
+        val url = WPCOMV2.text_completion.url
+        val body = mutableMapOf<String, Any>()
+        body.apply {
+            put("prompt", prompt)
+            put("token", token)
+            put("feature", feature)
+        }
+
+        val response = wpComGsonRequestBuilder.syncPostRequest(
+            restClient = this,
+            url = url,
+            params = null,
+            body = body,
+            clazz = JetpackAITextCompletionDto::class.java
+        )
+
+        return when (response) {
+            is Response.Success -> JetpackAICompletionsResponse.Success(response.data.completion)
+            is Response.Error -> JetpackAICompletionsResponse.Error(
                 response.error.toJetpackAICompletionsError(),
                 response.error.message
             )
@@ -91,9 +121,13 @@ class JetpackAIRestClient @Inject constructor(
         }
     }
 
-    internal class data class JetpackAIJWTTokenDto(
+    internal  data class JetpackAIJWTTokenDto(
         @SerializedName ("success") val success: Boolean,
         @SerializedName("token") val token: String
+    )
+
+    internal data class JetpackAITextCompletionDto(
+        @SerializedName ("completion") val completion: String
     )
 
     sealed class JetpackAIJWTTokenResponse {
