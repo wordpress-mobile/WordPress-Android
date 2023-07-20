@@ -2,7 +2,7 @@
 common_params:
   # Common plugin settings to use with the `plugins` key.
   - &ci_toolkit
-    automattic/a8c-ci-toolkit#2.17.0
+    automattic/a8c-ci-toolkit#2.18.2
   - &test_collector
     test-collector#v1.8.0
   - &test_collector_common_params
