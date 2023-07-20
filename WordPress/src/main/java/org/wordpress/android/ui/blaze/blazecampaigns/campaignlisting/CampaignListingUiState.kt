@@ -22,9 +22,9 @@ sealed class CampaignListingUiState {
 
 data class CampaignModel(
     val id: String,
-    val title: String,
-    val status: CampaignStatus,
-    val featureImageUrl: String,
+    val title: UiString,
+    val status: CampaignStatus?,
+    val featureImageUrl: String?,
     val impressions: UiString?,
     val clicks: UiString?,
     val budget: UiString,

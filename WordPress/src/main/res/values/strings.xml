@@ -4615,6 +4615,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <string name="impressions_campaign_stats">Impressions</string>
     <string name="clicks_campaign_stats">Clicks</string>
+    <string name="budget_campaign_stats">Budget</string>
 
     <!-- Jetpack - Blaze campaigns page -->
     <string name="blaze_campaigns_page_title">Blaze Campaigns</string>
