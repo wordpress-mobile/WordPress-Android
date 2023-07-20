@@ -5,18 +5,18 @@ import org.wordpress.android.ui.utils.UiString
 
 sealed class CampaignListingUiState {
     data class Loading(
-        val loadingImage: Int,
+        val image: Int,
         val description: UiString,
     ) : CampaignListingUiState()
 
     data class Error(
-        val errorTitle: UiString,
-        val errorDescription: UiString,
-        val errorButton: ErrorButton
+        val title: UiString,
+        val description: UiString,
+        val button: ErrorButton? = null
     ) : CampaignListingUiState() {
         data class ErrorButton(
-            val buttonTitle: UiString,
-            val buttonAction: () -> Unit
+            val text: UiString,
+            val click: () -> Unit
         )
     }
 
