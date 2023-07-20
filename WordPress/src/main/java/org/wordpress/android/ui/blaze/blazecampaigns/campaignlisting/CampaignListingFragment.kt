@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -19,24 +20,23 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.rememberLottieComposition
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.blaze.blazecampaigns.CampaignViewModel
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.extensions.getSerializableCompat
-import org.wordpress.android.util.extensions.isRtl
 
 private const val CAMPAIGN_LISTING_PAGE_SOURCE = "campaign_listing_page_source"
 
@@ -61,7 +61,7 @@ class CampaignListingFragment : Fragment() {
         setContent {
             AppTheme {
                 val campaigns by viewModel.uiState.observeAsState()
-                CampaignListingPage(campaigns ?: CampaignListingUiState.Loading)
+                CampaignListingPage(campaigns?: CampaignListingUiState.Loading)
             }
         }
     }
@@ -97,8 +97,8 @@ class CampaignListingFragment : Fragment() {
         uiState: CampaignListingUiState
     ) {
         when (uiState) {
-            is CampaignListingUiState.Loading -> CampaignListingLoading()
-            is CampaignListingUiState.Error -> CampaignListingError(uiState.error)
+            is CampaignListingUiState.Loading -> LoadingState()
+            is CampaignListingUiState.Error -> CampaignListingError(uiState)
             is CampaignListingUiState.Success -> CampaignListingSuccess(uiState.campaigns)
         }
     }
@@ -108,16 +108,10 @@ class CampaignListingFragment : Fragment() {
     fun CampaignListingSuccess(campaigns: List<CampaignModel>) {
         TODO("Not yet implemented")
     }
-
-    @Composable
-    @Suppress("unused", "UNUSED_PARAMETER")
-    fun CampaignListingError(error: String) {
-        TODO("Not yet implemented")
-    }
 }
 
 @Composable
-fun CampaignListingLoading() {
+fun CampaignListingError(error: CampaignListingUiState.Error) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -126,21 +120,37 @@ fun CampaignListingLoading() {
             .fillMaxWidth()
             .fillMaxHeight(),
     ) {
-        val animRes = if (LocalContext.current.isRtl()) R.raw.wp2jp_rtl else R.raw.wp2jp_left
-        val lottieComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(animRes))
-        LottieAnimation(lottieComposition)
         Text(
-            stringResource(R.string.campaign_listing_page_loading_message),
+            text = uiStringText(uiString = error.title),
             style = MaterialTheme.typography.h5,
         )
+        Text(
+            text = uiStringText(uiString = error.description),
+            style = MaterialTheme.typography.body1,
+            textAlign = TextAlign.Center,
+        )
+        if(error.button!=null){
+            Button(
+                onClick = error.button.click
+            ) {
+                Text(text = uiStringText(uiString = error.button.text))
+            }
+        }
     }
 }
 
 @Preview
 @Composable
-fun CampaignListingLoadingPreview() {
+fun CampaignListingErrorPreview() {
     AppTheme {
-        CampaignListingLoading()
+        CampaignListingError(CampaignListingUiState.Error(
+            title = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_title),
+            description = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_description),
+            button = CampaignListingUiState.Error.ErrorButton(
+                text = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_button_text),
+                click = { }
+            )
+        ))
     }
 }
 
