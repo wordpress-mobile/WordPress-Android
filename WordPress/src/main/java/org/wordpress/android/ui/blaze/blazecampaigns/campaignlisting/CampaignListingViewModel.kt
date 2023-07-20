@@ -20,6 +20,17 @@ class CampaignListingViewModel @Inject constructor(
         blazeFeatureUtils.trackCampaignListingPageShown(campaignListingPageSource)
         _uiState.value = CampaignListingUiState.Loading
     }
+
+    fun showNoCampaigns() {
+        _uiState.value = CampaignListingUiState.Error(
+            title = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_title),
+            description = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_description),
+            button = CampaignListingUiState.Error.ErrorButton(
+                text = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_button_text),
+                click = { }
+            )
+        )
+    }
 }
 
 enum class CampaignListingPageSource(val trackingName: String) {

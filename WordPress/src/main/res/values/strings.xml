@@ -4619,5 +4619,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Jetpack - Blaze campaigns page -->
     <string name="blaze_campaigns_page_title">Blaze Campaigns</string>
     <string name="blaze_campaign_details_page_title">Campaign Details</string>
-    <string name="campaign_listing_page_loading_message">Loading Campaigns ...\n</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">You have no campaigns</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">You have not created any campaigns yet. Click create to get started.</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Create</string>
 </resources>
