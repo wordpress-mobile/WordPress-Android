@@ -168,10 +168,10 @@ fun CampaignListRowPreview() {
     CampaignListRow(
         campaignModel = CampaignModel(
             id = "1",
-            title = UiString.UiStringText("This is just a campaign title"),
+            title = UiString.UiStringText("This is just a campaign title to see how the UI looks like"),
             status = CampaignStatus.Active,
             featureImageUrl = "https://picsum.photos/200/300",
-            impressions = UiString.UiStringText("10000"),
+            impressions = UiString.UiStringText("10,000"),
             clicks = UiString.UiStringText("100"),
             budget = UiString.UiStringText("$100")
         )
