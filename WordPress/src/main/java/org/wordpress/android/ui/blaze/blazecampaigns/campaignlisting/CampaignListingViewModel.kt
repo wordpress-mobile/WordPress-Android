@@ -19,6 +19,8 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+const val CENTS_IN_DOLLARS = 100
+
 @HiltViewModel
 class CampaignListingViewModel @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -63,7 +65,7 @@ class CampaignListingViewModel @Inject constructor(
             featureImageUrl = imageUrl,
             impressions = mapToStatsStringIfNeeded(impressions),
             clicks = mapToStatsStringIfNeeded(clicks),
-            budget = UiString.UiStringText(budgetCents.toString())
+            budget = convertToDollars(budgetCents)
         )
     }
 
@@ -74,6 +76,10 @@ class CampaignListingViewModel @Inject constructor(
         } else {
             null
         }
+    }
+
+    private fun convertToDollars(budgetCents: Long): UiString {
+        return UiString.UiStringText("$"+ (budgetCents/CENTS_IN_DOLLARS).toString())
     }
 
     private fun showCampaigns(campaigns: List<CampaignModel>) {
