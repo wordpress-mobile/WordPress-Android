@@ -343,7 +343,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                             val status: CampaignStatus?,
                             val featuredImageUrl: String?,
                             val stats: BlazeCampaignStats?,
-                            val onClick: () -> Unit,
+                            val onClick: (campaignId: Int) -> Unit,
                         ) {
                             data class BlazeCampaignStats(
                                 val impressions: UiString,

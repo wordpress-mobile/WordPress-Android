@@ -53,7 +53,7 @@ fun BlazeCampaignsCard(
                 Column(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
-                        .clickable { blazeCampaignCardModel.campaign.onClick() },
+                        .clickable { blazeCampaignCardModel.campaign.onClick(blazeCampaignCardModel.campaign.id.toInt()) },
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     val status = blazeCampaignCardModel.campaign.status
