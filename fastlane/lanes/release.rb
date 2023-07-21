@@ -364,4 +364,8 @@ platform :android do
     prefix = APP_SPECIFIC_VALUES[app.to_sym][:bundle_name_prefix]
     File.join(ENV['PROJECT_ROOT_FOLDER'], 'build', "#{prefix}-#{version['name']}.aab")
   end
+
+  def signed_apk_path(app, version)
+    bundle_file_path(app, version).sub!('.aab', '.apk')
+  end
 end

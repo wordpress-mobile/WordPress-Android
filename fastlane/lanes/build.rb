@@ -135,6 +135,27 @@ platform :android do
   end
 
   #####################################################################################
+  # download_signed_apk_from_google_play
+  # -----------------------------------------------------------------------------------
+  # This lane downloads the signed apk from Play Store for the given version and app
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane download_signed_apk_from_google_play app:<wordpress|jetpack> version:<versionName,versionCode>
+  #####################################################################################
+  lane :download_signed_apk_from_google_play do |options|
+    app = get_app_name_option!(options)
+    package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
+    version = options[:version] || android_get_release_version()
+
+    download_universal_apk_from_google_play(
+        package_name: package_name,
+        version_code: version['code'],
+        destination: signed_apk_path(app, version),
+        json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
+    )
+  end
+
+  #####################################################################################
   # build_and_upload_wordpress_prototype_build
   # -----------------------------------------------------------------------------------
   # Build a WordPress Prototype Build and make it available for download
