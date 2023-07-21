@@ -53,7 +53,7 @@ class JetpackAIRestClient @Inject constructor(
         feature: String
     ): JetpackAICompletionsResponse {
         val url = WPCOMV2.text_completion.url
-        val body = mutableMapOf<String, Any>()
+        val body = mutableMapOf<String, String>()
         body.apply {
             put("token", token)
             put("prompt", prompt)
