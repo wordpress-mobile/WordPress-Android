@@ -1,4 +1,0 @@
-22.7:
-- Pływający przyciskowi akcji zyskał nowy kształt, kolor i styl.
-- Bloki obrazków wyświetlają teraz prawidłowe proporcje, niezależnie od tego, czy obrazek ma ustawioną szerokość i wysokość.
-- Przeniesiono sekcję „Ja” z twoim awatarem do menu głównego w sekcji „Zarządzaj”.
