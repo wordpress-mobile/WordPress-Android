@@ -23,12 +23,12 @@ class ActivityNavigator @Inject constructor() {
         )
     }
 
-    fun navigateToCampaignDetailPage(context: Context, campaignDetailPageSource: CampaignDetailPageSource) {
+    fun navigateToCampaignDetailPage(context: Context, campaignId: Int, campaignDetailPageSource: CampaignDetailPageSource) {
         context.startActivity(
             Intent(context, BlazeCampaignParentActivity::class.java).apply {
                 putExtra(
                     ARG_EXTRA_BLAZE_CAMPAIGN_PAGE,
-                    BlazeCampaignPage.CampaignDetailsPage(campaignDetailPageSource)
+                    BlazeCampaignPage.CampaignDetailsPage(campaignId, campaignDetailPageSource)
                 )
             }
         )
