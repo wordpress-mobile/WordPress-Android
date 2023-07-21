@@ -366,6 +366,6 @@ platform :android do
   end
 
   def signed_apk_path(app, version)
-    bundle_file_path(app, version).sub!('.aab', '.apk')
+    bundle_file_path(app, version).sub('.aab', '.apk')
   end
 end
