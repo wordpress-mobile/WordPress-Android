@@ -92,7 +92,6 @@ fun CampaignListRow(campaignModel: CampaignModel, modifier: Modifier = Modifier)
                         .clip(RoundedCornerShape(4.dp))
                 )
             }
-
         }
         Divider(
             thickness = 0.5.dp,
