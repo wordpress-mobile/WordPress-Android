@@ -4,17 +4,19 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel.BlazeCampaignsCardItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel.BlazeCampaignsCardFooter
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel.BlazeCampaignsCardItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
+import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import javax.inject.Inject
 
-class BlazeCardBuilder @Inject constructor() {
+class BlazeCardBuilder @Inject constructor(private val statsUtils: StatsUtils) {
     fun build(params: MySiteCardAndItemBuilderParams.BlazeCardBuilderParams): BlazeCard {
         return when (params) {
             is PromoteWithBlazeCardBuilderParams -> buildPromoteWithBlazeCard(params)
@@ -57,9 +59,14 @@ class BlazeCardBuilder @Inject constructor() {
 
     private fun getCampaignStats(campaign: BlazeCampaignModel): BlazeCampaignsCardItem.BlazeCampaignStats {
         return BlazeCampaignsCardItem.BlazeCampaignStats(
-            impressions = UiString.UiStringText(campaign.impressions.toString()),
-            clicks = UiString.UiStringText(campaign.clicks.toString()),
+            impressions = mapToStatsString(campaign.impressions),
+            clicks = mapToStatsString(campaign.clicks),
         )
+    }
+
+    private fun mapToStatsString(value: Long): UiString {
+        val formattedString = statsUtils.toFormattedString(value, ONE_THOUSAND)
+        return UiString.UiStringText(formattedString)
     }
 
     private fun buildPromoteWithBlazeCard(params: PromoteWithBlazeCardBuilderParams): PromoteWithBlazeCard {
