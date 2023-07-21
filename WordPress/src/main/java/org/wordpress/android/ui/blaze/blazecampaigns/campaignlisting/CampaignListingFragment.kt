@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -102,18 +102,19 @@ class CampaignListingFragment : Fragment() {
         when (uiState) {
             is CampaignListingUiState.Loading -> LoadingState()
             is CampaignListingUiState.Error -> CampaignListingError(uiState)
-            is CampaignListingUiState.Success -> CampaignListingSuccess(uiState.campaigns)
+            is CampaignListingUiState.Success -> CampaignListingSuccess(uiState)
         }
     }
 
     @Composable
-    fun CampaignListingSuccess(campaigns: List<CampaignModel>) {
+    fun CampaignListingSuccess(uiState: CampaignListingUiState.Success) {
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(16.dp)
         ) {
-            items(campaigns) { campaign ->
-                CampaignListRow(campaignModel = campaign)
+            items(uiState.campaigns) { campaign ->
+                CampaignListRow(
+                    campaignModel = campaign,
+                    modifier = Modifier.clickable { uiState.itemClick(campaign) })
             }
         }
     }
