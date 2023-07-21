@@ -1,0 +1,3 @@
+22.8:
+- Die App stürzt nicht mehr ab, nachdem du eine Website gelöscht hast. Was ein Glück.
+- Wiederverwendbare Blöcke heißen nun synchronisierte Vorlagen, genau wie im Desktop-Editor.
