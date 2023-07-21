@@ -33,7 +33,7 @@ class BlazeCampaignParentActivity : AppCompatActivity() {
 
                 is BlazeCampaignPage.CampaignDetailsPage -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, CampaignDetailFragment.newInstance(uiState.source))
+                        .replace(R.id.container, CampaignDetailFragment.newInstance(uiState.campaignId, uiState.source))
                         .commitNow()
                 }
 
