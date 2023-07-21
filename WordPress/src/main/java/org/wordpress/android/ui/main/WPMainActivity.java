@@ -1885,7 +1885,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (privacyBannerFragment == null) {
             privacyBannerFragment = new PrivacyBannerFragment();
         }
-        privacyBannerFragment.show(getSupportFragmentManager(), PrivacyBannerFragment.TAG);
+        if (!privacyBannerFragment.isAdded()) {
+            privacyBannerFragment.show(getSupportFragmentManager(), PrivacyBannerFragment.TAG);
+        }
     }
 
     private void showPrivacySettingsScreen(@Nullable Boolean requestedAnalyticsValue) {

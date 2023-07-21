@@ -15,6 +15,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.StatsSubtype
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.BlazeSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -79,10 +80,16 @@ class CardsShownTracker @Inject constructor(
                 Type.BLOGGING_PROMPT.label
             )
         )
-        is DashboardCard.BlazeCard -> trackCardShown(
+        is DashboardCard.BlazeCard.PromoteWithBlazeCard -> trackCardShown(
             Pair(
                 card.dashboardCardType.toTypeValue().label,
-                Type.PROMOTE_WITH_BLAZE.label
+                BlazeSubtype.NO_CAMPAIGNS.label
+            )
+        )
+        is DashboardCard.BlazeCard.BlazeCampaignsCardModel -> trackCardShown(
+            Pair(
+                card.dashboardCardType.toTypeValue().label,
+                BlazeSubtype.CAMPAIGNS.label
             )
         )
         is DashboardDomainCard -> trackCardShown(

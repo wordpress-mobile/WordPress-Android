@@ -62,6 +62,11 @@ class CardsTracker @Inject constructor(
         PUBLISHED("published")
     }
 
+    enum class BlazeSubtype(val label: String) {
+        NO_CAMPAIGNS("no_campaigns"),
+        CAMPAIGNS("campaigns")
+    }
+
     fun trackQuickStartCardItemClicked(quickStartTaskType: QuickStartTaskType) {
         trackCardItemClicked(Type.QUICK_START.label, quickStartTaskType.toSubtypeValue().label)
     }

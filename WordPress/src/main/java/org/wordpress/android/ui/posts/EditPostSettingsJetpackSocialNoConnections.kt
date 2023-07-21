@@ -13,9 +13,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.TrainOfIcons
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
@@ -27,6 +25,7 @@ import org.wordpress.android.ui.publicize.PublicizeServiceIcon
 @Composable
 fun EditPostSettingsJetpackSocialNoConnections(
     trainOfIconsModels: List<TrainOfIconsModel>,
+    message: String,
     connectProfilesButtonLabel: String,
     onConnectProfilesCLick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -53,7 +52,7 @@ fun EditPostSettingsJetpackSocialNoConnections(
         )
         Spacer(Modifier.height(Margin.ExtraLarge.value))
         Text(
-            text = stringResource(R.string.prepublishing_nudges_social_new_connection_text),
+            text = message,
             style = MaterialTheme.typography.body1.copy(color = AppColor.Gray30),
             modifier = Modifier
                 .fillMaxWidth()
@@ -82,6 +81,7 @@ fun EditPostSettingsJetpackSocialNoConnectionsPreview() {
     AppThemeEditor {
         EditPostSettingsJetpackSocialNoConnections(
             trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
+            message = "Increase your traffic by auto-sharing your posts with your friends on social media.",
             connectProfilesButtonLabel = "Connect your social profiles",
             onConnectProfilesCLick = {}
         )
