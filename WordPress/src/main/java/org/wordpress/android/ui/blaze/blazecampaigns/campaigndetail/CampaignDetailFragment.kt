@@ -19,13 +19,15 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.getSerializableCompat
 
 private const val CAMPAIGN_DETAIL_PAGE_SOURCE = "campaign_detail_page_source"
+private const val CAMPAIGN_DETAIL_CAMPAIGN_ID = "campaign_detail_campaign_id"
 
 @AndroidEntryPoint
 class CampaignDetailFragment : Fragment() {
     companion object {
-        fun newInstance(source: CampaignDetailPageSource) = CampaignDetailFragment().apply {
+        fun newInstance(campaignId: Int, source: CampaignDetailPageSource) = CampaignDetailFragment().apply {
             arguments = Bundle().apply {
                 putSerializable(CAMPAIGN_DETAIL_PAGE_SOURCE, source)
+                putInt(CAMPAIGN_DETAIL_CAMPAIGN_ID, campaignId)
             }
         }
     }
@@ -47,7 +49,7 @@ class CampaignDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.start(getPageSource())
+        viewModel.start(getCampaignId(), getPageSource())
     }
 
     private fun getPageSource(): CampaignDetailPageSource {
@@ -56,6 +58,8 @@ class CampaignDetailFragment : Fragment() {
         )
             ?: CampaignDetailPageSource.UNKNOWN
     }
+
+    private fun getCampaignId() = requireArguments().getInt(CAMPAIGN_DETAIL_CAMPAIGN_ID)
 }
 
 @Composable
