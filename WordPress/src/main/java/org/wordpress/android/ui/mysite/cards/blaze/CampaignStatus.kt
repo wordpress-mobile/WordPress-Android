@@ -27,20 +27,47 @@ enum class CampaignStatus(val status: String, @StringRes val stringResource: Int
     }
 
     fun textColor(isInDarkMode: Boolean): Color {
+        return if (isInDarkMode) getTextColorDark() else getTextColorLight()
+    }
+
+    private fun getTextColorLight(): Color {
         return when (this) {
-            Active -> if (isInDarkMode) Color(0xFF00BA37) else Color(0xFF00450C)
-            Completed -> if (isInDarkMode) Color(0xFF399CE3) else Color(0xFF02395C)
-            Rejected, Canceled -> if (isInDarkMode) Color(0xFFF86368) else Color(0xFF8A2424)
-            InModeration, Scheduled -> if (isInDarkMode) Color(0xFFDEB100) else Color(0xFF4F3500)
+            Active -> CampaignStatusTextColor.ActiveLight
+            Completed -> CampaignStatusTextColor.CompletedLight
+            Rejected, Canceled -> CampaignStatusTextColor.CanceledLight
+            InModeration, Scheduled -> CampaignStatusTextColor.InModerationLight
         }
     }
 
-    fun textViewBackgroundColor(isInDarkMode: Boolean): Color {
+    private fun getTextColorDark(): Color {
         return when (this) {
-            Active -> if (isInDarkMode) Color(0xFF003008) else Color(0xFFB8E6BF)
-            Completed -> if (isInDarkMode) Color(0xFF01283D) else Color(0xFFBBE0FA)
-            Rejected, Canceled -> if (isInDarkMode) Color(0xFF451313) else Color(0xFFFACFD2)
-            InModeration, Scheduled -> if (isInDarkMode) Color(0xFF332200) else Color(0xFFF5E6B3)
+            Active -> CampaignStatusTextColor.ActiveDark
+            Completed -> CampaignStatusTextColor.CompletedDark
+            Rejected, Canceled -> CampaignStatusTextColor.CanceledDark
+            InModeration, Scheduled -> CampaignStatusTextColor.InModerationDark
+        }
+    }
+
+
+    fun textViewBackgroundColor(isInDarkMode: Boolean): Color {
+        return if (isInDarkMode) getTextViewBackgroundColorDark() else getTextViewBackgroundColorLight()
+    }
+
+    private fun getTextViewBackgroundColorDark(): Color {
+        return when (this) {
+            Active -> CampaignStatusTextBackgroundColor.ActiveDark
+            Completed -> CampaignStatusTextBackgroundColor.CompletedDark
+            Rejected, Canceled -> CampaignStatusTextBackgroundColor.CanceledDark
+            InModeration, Scheduled -> CampaignStatusTextBackgroundColor.InModerationDark
+        }
+    }
+
+    private fun getTextViewBackgroundColorLight(): Color {
+        return when (this) {
+            Active -> CampaignStatusTextBackgroundColor.ActiveLight
+            Completed -> CampaignStatusTextBackgroundColor.CompletedLight
+            Rejected, Canceled -> CampaignStatusTextBackgroundColor.CanceledLight
+            InModeration, Scheduled -> CampaignStatusTextBackgroundColor.InModerationLight
         }
     }
 }
