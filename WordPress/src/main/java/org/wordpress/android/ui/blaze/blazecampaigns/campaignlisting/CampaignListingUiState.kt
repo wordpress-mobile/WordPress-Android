@@ -17,7 +17,10 @@ sealed class CampaignListingUiState {
         )
     }
 
-    data class Success(val campaigns: List<CampaignModel>) : CampaignListingUiState()
+    data class Success(
+        val campaigns: List<CampaignModel>,
+        val itemClick: (CampaignModel) -> Unit
+    ) : CampaignListingUiState()
 }
 
 data class CampaignModel(
