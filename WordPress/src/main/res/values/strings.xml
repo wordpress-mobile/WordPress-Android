@@ -4619,4 +4619,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Jetpack - Blaze campaigns page -->
     <string name="blaze_campaigns_page_title">Blaze Campaigns</string>
     <string name="blaze_campaign_details_page_title">Campaign Details</string>
+    <string name="blaze_campaign_detail_error">Campaign Details couldn\'t be loaded</string>
 </resources>
