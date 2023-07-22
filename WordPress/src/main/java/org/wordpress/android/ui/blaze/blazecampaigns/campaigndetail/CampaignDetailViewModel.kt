@@ -14,18 +14,16 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.WPWebViewActivity
 
 @HiltViewModel
 class CampaignDetailViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val siteStore: SiteStore,
+    private val siteStore: SiteStore
 ) : ViewModel() {
     private lateinit var pageSource: CampaignDetailPageSource
     private var campaignId: Int = 0
@@ -44,13 +42,11 @@ class CampaignDetailViewModel @Inject constructor(
         validateAndFinishIfNeeded()
         assembleAndPostUiState()
     }
-
     private fun validateAndFinishIfNeeded() {
         if (accountStore.account.userName.isNullOrEmpty() || accountStore.accessToken.isNullOrEmpty()) {
             postActionEvent(BlazeActionEvent.FinishActivityWithMessage(R.string.blaze_campaign_detail_error))
         }
     }
-
     private fun assembleAndPostUiState() {
         val url = createURL(
             pathComponents = arrayOf(
@@ -62,9 +58,14 @@ class CampaignDetailViewModel @Inject constructor(
             source = pageSource.trackingName
         )
         val addressToLoad = prepareAddressToLoad(url)
-        postScreenState(model.value.copy(url = url, addressToLoad = addressToLoad))
+        postScreenState(
+            model.value.copy(
+                addressToLoad = addressToLoad,
+                url = url,
+                userAgent = blazeFeatureUtils.getUserAgent()
+            )
+        )
     }
-
     private fun createURL(vararg pathComponents: String, source: String): String {
         val basePath = pathComponents.joinToString("/")
         return "$WP_HOST/$basePath".withQueryParam("source", source)
@@ -73,7 +74,6 @@ class CampaignDetailViewModel @Inject constructor(
     private fun extractAndSanitizeSiteUrl(): String {
         return selectedSiteRepository.getSelectedSite()?.url?.replace(Regex(HTTP_PATTERN), "") ?: ""
     }
-
     private fun prepareAddressToLoad(url: String): String {
         val username = accountStore.account.userName
         val accessToken = accountStore.accessToken
@@ -92,13 +92,12 @@ class CampaignDetailViewModel @Inject constructor(
                 }
             }
         }
-        // Call the public static method in WPWebViewActivity - no need to recreate functionality with a copy/paste
-        return WPWebViewActivity.getAuthenticationPostData(
+        return blazeFeatureUtils.getAuthenticationPostData(
             WPCOM_LOGIN_URL,
             addressToLoad,
             username,
             "",
-            accessToken
+            accessToken?:""
         )
     }
 
@@ -107,7 +106,6 @@ class CampaignDetailViewModel @Inject constructor(
             _model.value = state
         }
     }
-
     private fun postActionEvent(actionEvent: BlazeActionEvent) {
         viewModelScope.launch {
             _actionEvents.send(actionEvent)
@@ -127,7 +125,6 @@ class CampaignDetailViewModel @Inject constructor(
     }
 
     private fun String.withQueryParam(key: String, value: String) = "$this?$key=$value"
-
     companion object {
         const val HTTP_PATTERN = "(https?://)"
         const val WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php"
@@ -148,7 +145,7 @@ enum class CampaignDetailPageSource(val trackingName: String) {
 data class CampaignDetailUIModel(
     val enableJavascript: Boolean = true,
     val enableDomStorage: Boolean = true,
-    val userAgent: String = WordPress.getUserAgent(),
+    val userAgent: String = "",
     val enableChromeClient: Boolean = true,
     val url: String = "",
     val addressToLoad: String = ""
