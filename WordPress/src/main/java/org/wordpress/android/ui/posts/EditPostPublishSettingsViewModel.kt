@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -75,6 +76,14 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         loadJetpackSocial(siteModel)
     }
 
+    fun onScreenShown() {
+        if (actionEvents.value is ActionEvent.OpenSocialConnectionsList) {
+            editPostRepository?.localSiteId?.let {
+                siteStore.getSiteByLocalId(it)
+            }?.let { loadJetpackSocial(it) }
+        }
+    }
+
     private fun loadAuthors(siteModel: SiteModel?) {
         siteModel?.let {
             if (it.hasCapabilityListUsers) {
@@ -134,11 +143,18 @@ class EditPostPublishSettingsViewModel @Inject constructor(
 
     fun getAuthorIndex(authorId: Long) = authors.value?.indexOfFirst { it.personID == authorId } ?: -1
 
-    private fun onJetpackSocialConnectProfilesClick() {
-        // TODO
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun onJetpackSocialConnectProfilesClick() {
+        editPostRepository?.localSiteId?.let {
+            siteStore.getSiteByLocalId(it)
+        }?.let { siteModel ->
+            _actionEvents.value = ActionEvent.OpenSocialConnectionsList(
+                siteModel = siteModel
+            )
+        }
     }
 
-    fun onJetpackSocialConnectionClick() {
+    private fun onJetpackSocialConnectionClick() {
         // TODO
     }
 
@@ -193,5 +209,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
 
     sealed class ActionEvent {
         data class OpenEditShareMessage(val shareMessage: String) : ActionEvent()
+
+        data class OpenSocialConnectionsList(val siteModel: SiteModel) : ActionEvent()
     }
 }

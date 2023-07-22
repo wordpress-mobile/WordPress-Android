@@ -60,6 +60,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent.OpenEditShareMessage;
+import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent.OpenSocialConnectionsList;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
@@ -275,6 +276,11 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
+    @Override public void onResume() {
+        super.onResume();
+        mPublishedViewModel.onScreenShown();
+    }
+
     @Override
     public void onDestroy() {
         if (mSiteSettings != null) {
@@ -483,6 +489,9 @@ public class EditPostSettingsFragment extends Fragment {
                         requireContext(), action.getShareMessage()
                 );
                 mEditShareMessageActivityResultLauncher.launch(intent);
+            } else if (actionEvent instanceof ActionEvent.OpenSocialConnectionsList) {
+                final OpenSocialConnectionsList action = (OpenSocialConnectionsList) actionEvent;
+                ActivityLauncher.viewBlogSharing(requireActivity(), action.getSiteModel());
             }
         });
     }

@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.ui.people.utils.PeopleUtilsWrapper
+import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
@@ -61,15 +62,19 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
     private val showJetpackSocialContainerObserver: Observer<Boolean> = mock()
     private val jetpackSocialUiStateObserver: Observer<JetpackSocialUiState> = mock()
+    private val actionEventsObserver: Observer<ActionEvent> = mock()
     private val editPostRepository: EditPostRepository = mock()
     private val remoteSiteId = 123L
     private val userId = 456L
-    private val siteModel = SiteModel()
+    private val siteModel = SiteModel().apply {
+        siteId = 12345
+    }
 
     @Before
     fun setup() {
         classToTest.showJetpackSocialContainer.observeForever(showJetpackSocialContainerObserver)
         classToTest.jetpackSocialUiState.observeForever(jetpackSocialUiStateObserver)
+        classToTest.actionEvents.observeForever(actionEventsObserver)
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(Calendar.getInstance())
         whenever(resourceProvider.getString(R.string.immediately)).thenReturn("Immediately")
     }
@@ -79,7 +84,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(false)
         classToTest.start(null)
-        verify(getPublicizeConnectionsForUserUseCase, never()).execute(any(), any())
+        verify(getPublicizeConnectionsForUserUseCase, never()).execute(any(), any(), any())
     }
 
     @Test
@@ -102,7 +107,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     fun `Should show jetpack social container if FF is enabled`() = test {
         mockSiteModel()
         mockUserId()
-        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any()))
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
             .thenReturn(emptyList())
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
@@ -116,7 +121,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     fun `Should get publicize connections for user if jetpack social FF is enabled`() = test {
         mockSiteModel()
         mockUserId()
-        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any()))
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
             .thenReturn(emptyList())
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
@@ -130,7 +135,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     fun `Should get jetpack social share limit status if jetpack social FF is enabled`() = test {
         mockSiteModel()
         mockUserId()
-        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any()))
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
             .thenReturn(emptyList())
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
@@ -144,7 +149,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     fun `Should map no connections UI state if connections list is empty and jetpack social FF is enabled`() = test {
         mockSiteModel()
         mockUserId()
-        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any()))
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
             .thenReturn(emptyList())
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
@@ -164,7 +169,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         )
         mockSiteModel()
         mockUserId()
-        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any()))
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
             .thenReturn(emptyList())
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
@@ -180,7 +185,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     fun `Should map loaded UI state if connections list is NOT empty and jetpack social FF is enabled`() = test {
         mockSiteModel()
         mockUserId()
-        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any()))
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
             .thenReturn(
                 listOf(
                     PublicizeConnection().apply {
@@ -227,7 +232,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         )
         mockSiteModel()
         mockUserId()
-        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any()))
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
             .thenReturn(
                 listOf(
                     PublicizeConnection().apply {
@@ -251,6 +256,76 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             .thenReturn(loaded)
         classToTest.start(editPostRepository)
         verify(jetpackSocialUiStateObserver).onChanged(loaded)
+    }
+
+    @Test
+    fun `Should reload jetpack social on screen shown if last emitted action was OpenSocialConnectionsList`() = test {
+        val loaded = JetpackSocialUiState.Loaded(
+            postSocialConnectionList = listOf(
+                PostSocialConnection(
+                    1,
+                    "service",
+                    "label",
+                    "externalId",
+                    "externalName",
+                    "iconUrl",
+                    true
+                )
+            ),
+            showShareLimitUi = true,
+            shareMessage = "message",
+            onShareMessageClick = {},
+            remainingSharesMessage = "remaining shares",
+            subscribeButtonLabel = "label",
+            onSubscribeClick = {},
+        )
+        mockSiteModel()
+        mockUserId()
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+            .thenReturn(
+                listOf(
+                    PublicizeConnection().apply {
+                        connectionId = 0
+                        service = "tumblr"
+                        label = "Tumblr"
+                        externalId = "myblog.tumblr.com"
+                        externalName = "My blog"
+                        externalProfilePictureUrl =
+                            "http://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-tumblr-2x.png"
+                    },
+                )
+            )
+        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+            .thenReturn(ShareLimit.Disabled)
+        whenever(getJetpackSocialShareMessageUseCase.execute(any()))
+            .thenReturn("Message")
+        whenever(jetpackSocialFeatureConfig.isEnabled())
+            .thenReturn(true)
+        whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any(), any(), any()))
+            .thenReturn(loaded)
+
+        classToTest.start(editPostRepository)
+        classToTest.onScreenShown()
+
+        verify(jetpackSocialUiStateObserver).onChanged(loaded)
+    }
+
+    @Test
+    fun `Should NOT reload jetpack social on screen shown if last emitted action was NOT OpenSocialConnectionsList`() {
+        classToTest.onScreenShown()
+        verify(jetpackSocialUiStateObserver, never()).onChanged(any())
+    }
+
+    @Test
+    fun `Should emit OpenSocialConnectionList when onJetpackSocialConnectProfilesClick is called`() {
+        mockSiteModel()
+        classToTest.start(editPostRepository)
+        classToTest.onJetpackSocialConnectProfilesClick()
+        verify(actionEventsObserver).onChanged(
+            ActionEvent.OpenSocialConnectionsList(
+                siteModel = siteModel,
+            )
+        )
     }
 
     private fun mockSiteModel() {
