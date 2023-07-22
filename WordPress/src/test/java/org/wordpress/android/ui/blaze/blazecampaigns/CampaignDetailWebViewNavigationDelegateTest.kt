@@ -23,14 +23,14 @@ class CampaignDetailWebViewNavigationDelegateTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when non advertising campaign url, then web view can not navigatie`() {
+    fun `when non advertising campaign url, then web view can not navigate`() {
         assertThat(
             buildUrls(
                 "/dummywpcomsite.wordpress.com",
                 "/advertising/dummywpcomsite.wordpress.com/campaigns",
                 "/advertising/dummywpcomsite.wordpress.com"
             )
-        ).allMatch {
+        ).noneMatch {
             navigationDelegate.canNavigateTo(it)
         }
     }
