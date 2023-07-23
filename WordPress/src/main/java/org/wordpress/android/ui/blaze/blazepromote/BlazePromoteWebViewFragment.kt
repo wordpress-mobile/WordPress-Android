@@ -37,6 +37,7 @@ import org.wordpress.android.ui.blaze.OnBlazeWebViewClientListener
 import org.wordpress.android.ui.blaze.blazeoverlay.BlazeViewModel
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.editor.R as EditorR
 
 @AndroidEntryPoint
@@ -76,7 +77,10 @@ class BlazePromoteWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
 
     private fun handleActionEvents(actionEvent: BlazeActionEvent) {
         when (actionEvent) {
-            is BlazeActionEvent.FinishActivity, is BlazeActionEvent.FinishActivityWithMessage -> {
+            is BlazeActionEvent.FinishActivity -> requireActivity().finish()
+
+            is BlazeActionEvent.FinishActivityWithMessage -> {
+                ToastUtils.showToast(requireContext(), actionEvent.id)
                 requireActivity().finish()
             }
 

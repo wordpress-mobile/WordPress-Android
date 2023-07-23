@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -56,15 +57,17 @@ class BlazePromoteWebViewViewModel @Inject constructor(
         blazeFeatureUtils.trackBlazeFlowStarted(source)
         val url = buildUrl(promoteScreen)
         blazeFlowStep = extractCurrentStep(url)
-        validateAndFinishIfNeeded()
+        if (validateAndPostFinishIfNeeded()) return
         postScreenState(model.value.copy(url = url, addressToLoad = prepareUrl(url)))
     }
 
-    private fun validateAndFinishIfNeeded() {
+    private fun validateAndPostFinishIfNeeded(): Boolean {
         if (accountStore.account.userName.isNullOrEmpty() || accountStore.accessToken.isNullOrEmpty()) {
             blazeFeatureUtils.trackFlowError(blazeFlowSource, blazeFlowStep)
-            postActionEvent(BlazeActionEvent.FinishActivity)
+            postActionEvent(BlazeActionEvent.FinishActivityWithMessage(R.string.promote_blaze_flow_error))
+            return false
         }
+        return true
     }
 
     private fun buildUrl(promoteScreen: BlazeUiState.PromoteScreen?): String {
@@ -166,7 +169,7 @@ class BlazePromoteWebViewViewModel @Inject constructor(
 
     fun onWebViewReceivedError() {
         blazeFeatureUtils.trackFlowError(blazeFlowSource, blazeFlowStep)
-        postActionEvent(BlazeActionEvent.FinishActivity)
+        postActionEvent(BlazeActionEvent.FinishActivityWithMessage(R.string.promote_blaze_flow_error))
     }
 
     fun onRedirectToExternalBrowser(url: String) {
