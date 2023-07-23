@@ -39,13 +39,15 @@ class CampaignDetailViewModel @Inject constructor(
 
         blazeFeatureUtils.trackCampaignDetailsOpened(campaignDetailPageSource)
 
-        validateAndFinishIfNeeded()
+        if (!validateAndPostFinishIfNeeded()) return
         assembleAndPostUiState()
     }
-    private fun validateAndFinishIfNeeded() {
+    private fun validateAndPostFinishIfNeeded(): Boolean {
         if (accountStore.account.userName.isNullOrEmpty() || accountStore.accessToken.isNullOrEmpty()) {
             postActionEvent(BlazeActionEvent.FinishActivityWithMessage(R.string.blaze_campaign_detail_error))
+            return false
         }
+        return true
     }
     private fun assembleAndPostUiState() {
         val url = createURL(
