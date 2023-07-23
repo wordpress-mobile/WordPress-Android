@@ -155,10 +155,10 @@ class BlazePromoteWebViewViewModel @Inject constructor(
     }
 
     fun updateHeaderActionUiState() {
-        val nonDismissableStep = nonDismissableHashConfig.getValue<String>()
+        val nonDismissibleStep = nonDismissableHashConfig.getValue<String>()
         val completedStep = completedStepHashConfig.getValue<String>()
 
-        if (blazeFlowStep.label == nonDismissableStep) {
+        if (blazeFlowStep.label == nonDismissibleStep) {
             postHeaderUiState(DisabledCancelAction())
         } else if (blazeFlowStep.label == completedStep || blazeFlowStep == BlazeFlowStep.CAMPAIGNS_LIST) {
             postHeaderUiState(DoneAction())
