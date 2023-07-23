@@ -183,7 +183,7 @@ class BlazePromoteWebViewViewModel @Inject constructor(
     }
 
     @Suppress("ReturnCount")
-    fun extractCurrentStep(url: String?): BlazeFlowStep {
+    private fun extractCurrentStep(url: String?): BlazeFlowStep {
         url?.let {
             val uri = UriWrapper(url)
             uri.fragment?.let { return BlazeFlowStep.fromString(it) }
