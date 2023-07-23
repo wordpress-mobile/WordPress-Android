@@ -59,10 +59,6 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
         whenever(accountStore.accessToken).thenReturn("accessToken")
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mock())
         whenever(selectedSiteRepository.getSelectedSite()?.url).thenReturn("test.wordpress.com")
-        whenever(siteStore.wPComSites).thenReturn(listOf(mock()))
-        whenever(siteStore.wPComSites[0].unmappedUrl).thenReturn("")
-        whenever(siteStore.wPComSites[0].url).thenReturn("test.wordpress.com")
-        whenever(siteStore.wPComSites[0].isAdmin).thenReturn(true)
     }
     @Test
     fun `given valid campaignId and pageSource, when start is called, then trackCampaignDetailsOpened is called`() {
@@ -100,8 +96,6 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
     fun `given valid account info, when start is called, then url is built`() {
         val domain = "test.wordpress.com"
         val postData = "postdata"
-        whenever(siteStore.wPComSites[0].url).thenReturn(domain)
-        whenever(siteStore.wPComSites[0].unmappedUrl).thenReturn("")
         whenever(blazeFeatureUtils.getAuthenticationPostData(any(), any(), any(), any(), any())).thenReturn(postData)
 
         val uiModels = mutableListOf<CampaignDetailUIModel>()
