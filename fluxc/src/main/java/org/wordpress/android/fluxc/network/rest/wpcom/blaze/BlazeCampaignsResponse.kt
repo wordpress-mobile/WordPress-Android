@@ -24,7 +24,7 @@ data class Campaign(
     @SerializedName("audience_list") val audienceList: AudienceList? = null,
     @SerializedName("avatar_url") val avatarUrl: String? = null,
     @SerializedName("budget_cents") val budgetCents: Long? = null,
-    @SerializedName("campaign_id") val campaignId: Long? = null,
+    @SerializedName("campaign_id") val campaignId: Int? = null,
     @SerializedName("clicks") val clicks: Long? = null,
     @SerializedName("content_config") val contentConfig: ContentConfig,
     @SerializedName("content_image") val contentImage: String? = null,
