@@ -57,10 +57,12 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent.OpenEditShareMessage;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent.OpenSocialConnectionsList;
+import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent.OpenSubscribeJetpackSocial;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
@@ -492,6 +494,10 @@ public class EditPostSettingsFragment extends Fragment {
             } else if (actionEvent instanceof ActionEvent.OpenSocialConnectionsList) {
                 final OpenSocialConnectionsList action = (OpenSocialConnectionsList) actionEvent;
                 ActivityLauncher.viewBlogSharing(requireActivity(), action.getSiteModel());
+            } else if (actionEvent instanceof ActionEvent.OpenSubscribeJetpackSocial) {
+                final OpenSubscribeJetpackSocial action = (OpenSubscribeJetpackSocial) actionEvent;
+                WPWebViewActivity.openUrlByUsingBlogCredentials(requireActivity(), action.getSiteModel(), null,
+                        action.getUrl(), new String[]{}, false, true, false);
             }
         });
     }

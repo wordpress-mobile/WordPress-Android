@@ -143,7 +143,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
 
     fun getAuthorIndex(authorId: Long) = authors.value?.indexOfFirst { it.personID == authorId } ?: -1
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @VisibleForTesting
     fun onJetpackSocialConnectProfilesClick() {
         editPostRepository?.localSiteId?.let {
             siteStore.getSiteByLocalId(it)
@@ -168,7 +168,17 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     }
 
     private fun onJetpackSocialSubscribeClick() {
-        // TODO
+        editPostRepository?.localSiteId?.let {
+            siteStore.getSiteByLocalId(it)
+        }?.let { siteModel ->
+            _actionEvents.value = ActionEvent.OpenSubscribeJetpackSocial(
+                siteModel = siteModel,
+                url = HIRE_JETPACK_SOCIAL_BASIC_URL.replace(
+                    oldValue = HIRE_JETPACK_SOCIAL_BASIC_SITE_PLACEHOLDER,
+                    newValue = siteModel.url,
+                ),
+            )
+        }
     }
 
     fun onJetpackSocialShareMessageChanged(newShareMessage: String?) {
@@ -211,5 +221,16 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         data class OpenEditShareMessage(val shareMessage: String) : ActionEvent()
 
         data class OpenSocialConnectionsList(val siteModel: SiteModel) : ActionEvent()
+
+        data class OpenSubscribeJetpackSocial(
+            val siteModel: SiteModel,
+            val url: String,
+        ) : ActionEvent()
     }
 }
+
+private const val HIRE_JETPACK_SOCIAL_BASIC_SITE_PLACEHOLDER = "{site}"
+
+@VisibleForTesting
+const val HIRE_JETPACK_SOCIAL_BASIC_URL =
+    "https://wordpress.com/checkout/$HIRE_JETPACK_SOCIAL_BASIC_SITE_PLACEHOLDER/jetpack_social_basic_yearly"
