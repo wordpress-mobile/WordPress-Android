@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.prepublishing.home.compose
+package org.wordpress.android.ui.posts.social.compose
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
@@ -33,7 +33,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
-fun PrepublishingHomeSocialItem(
+fun PostSocialSharingItem(
     title: String,
     description: String,
     iconModels: List<TrainOfIconsModel>,
@@ -143,14 +143,14 @@ private fun DescriptionText(
 @Preview(name = "Dark Mode", uiMode = UI_MODE_NIGHT_YES)
 @Preview(name = "RTL", locale = "ar")
 @Composable
-private fun PrepublishingHomeSocialItemPreview() {
+private fun PostSocialSharingItemPreview() {
     AppTheme {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colors.surface)
         ) {
-            PrepublishingHomeSocialItem(
+            PostSocialSharingItem(
                 title = "Sharing to 2 of 3 accounts",
                 description = "27/30 social shares remaining",
                 iconModels = listOf(
@@ -160,7 +160,7 @@ private fun PrepublishingHomeSocialItemPreview() {
                 modifier = Modifier.fillMaxWidth().padding(16.dp)
             )
 
-            PrepublishingHomeSocialItem(
+            PostSocialSharingItem(
                 title = "Sharing to 2 of 3 accounts",
                 description = "27/30 social shares remaining with a very long text that should be truncated",
                 iconModels = listOf(
@@ -172,7 +172,7 @@ private fun PrepublishingHomeSocialItemPreview() {
 
             Divider()
 
-            PrepublishingHomeSocialItem(
+            PostSocialSharingItem(
                 title = "Sharing to 3 of 5 accounts",
                 description = "27/30 social shares remaining",
                 iconModels = listOf(
@@ -188,7 +188,7 @@ private fun PrepublishingHomeSocialItemPreview() {
 
             Divider()
 
-            PrepublishingHomeSocialItem(
+            PostSocialSharingItem(
                 title = "Not sharing to social",
                 description = "0/30 social shares remaining",
                 isLowOnShares = true,
