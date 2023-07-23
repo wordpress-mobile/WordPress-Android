@@ -221,11 +221,12 @@ class BlazePromoteWebViewViewModel @Inject constructor(
         }?: return false
     }
 
+
     fun handleOnBackPressed() {
-        val nonDismissableStep = nonDismissableHashConfig.getValue<String>()
+        val nonDismissibleStep = nonDismissableHashConfig.getValue<String>()
         val completedStep = completedStepHashConfig.getValue<String>()
 
-        if (blazeFlowStep.label == nonDismissableStep) return
+        if (blazeFlowStep.label == nonDismissibleStep) return
 
         if (blazeFlowStep.label == completedStep || blazeFlowStep == BlazeFlowStep.CAMPAIGNS_LIST) {
             blazeFeatureUtils.trackBlazeFlowCompleted(blazeFlowSource)
