@@ -177,7 +177,7 @@ class BlazePromoteWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
         blazePromoteWebViewViewModel.onRedirectToExternalBrowser(url)
     }
 
-    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
+    @Suppress("DEPRECATION")
     override fun startActivityForFileChooserResult(intent: Intent?, requestCode: Int) {
         startActivityForResult(intent, requestCode)
     }
