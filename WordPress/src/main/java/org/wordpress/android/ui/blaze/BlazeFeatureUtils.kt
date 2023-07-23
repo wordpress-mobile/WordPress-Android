@@ -155,7 +155,7 @@ class BlazeFeatureUtils @Inject constructor(
                                   urlToLoad: String,
                                   username: String,
                                   password: String,
-                                  token: String) =
+                                  token: String): String =
         WPWebViewActivity.getAuthenticationPostData(authenticationUrl, urlToLoad, username, password, token)
 
     companion object {
