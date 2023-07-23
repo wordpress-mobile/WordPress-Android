@@ -51,7 +51,6 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
         actionEvents = mutableListOf()
         model = mutableListOf()
 
-       // val xxx = mockStatic(WordPress.Companion::class)
         whenever(blazeFeatureUtils.getUserAgent()).thenReturn("user-agent")
         whenever(blazeFeatureUtils.getAuthenticationPostData(any(), any(), any(), any(), any())).thenReturn("postdata")
 
@@ -66,7 +65,6 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
         whenever(siteStore.wPComSites[0].url).thenReturn("test.wordpress.com")
 
    }
-
     @Test
     fun `given valid campaignId and pageSource, when start is called, then trackCampaignDetailsOpened is called`() {
         viewModel.start(1, CampaignDetailPageSource.DASHBOARD_CARD)
