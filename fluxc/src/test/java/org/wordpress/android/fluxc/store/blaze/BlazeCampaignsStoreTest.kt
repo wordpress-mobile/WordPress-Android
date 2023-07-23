@@ -31,7 +31,7 @@ import org.wordpress.android.fluxc.tools.initCoroutineEngine
 const val SITE_ID = 1L
 
 /* Campaign */
-const val CAMPAIGN_ID = 1L
+const val CAMPAIGN_ID = 1
 const val TITLE = "title"
 const val IMAGE_URL = "imageUrl"
 const val START_DATE = "2023-06-02T00:00:00.000Z"
