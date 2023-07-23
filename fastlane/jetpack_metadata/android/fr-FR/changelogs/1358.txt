@@ -1,0 +1,3 @@
+22.8:
+- L’application ne se bloquera plus une fois le site supprimé. Ouf !
+- Les blocs réutilisables sont désormais désignés « compositions synchronisées », comme dans l’éditeur de bureau.

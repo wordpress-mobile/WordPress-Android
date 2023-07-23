@@ -1,4 +1,0 @@
-22.7:
-- Kami menambahkan bentuk, warga, dan gaya baru pada tombol aksi melayang.
-- Blok gambar sekarang menampilkan rasio aspek yang tepat, baik gambar yang memiliki atribut lebar dan tinggi atau tidak.
-- Kami memindahkan bagian "Saya" dengan avatar Anda ke menu utama dalam "Kelola".

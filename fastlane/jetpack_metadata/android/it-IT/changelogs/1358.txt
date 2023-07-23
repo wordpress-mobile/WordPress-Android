@@ -1,0 +1,3 @@
+22.8:
+- L'app non si arresterà più in modo anomalo dopo aver eliminato un sito. Meno male.
+- I blocchi riutilizzabili sono ora noti come pattern sincronizzati, come nell'editor del desktop.

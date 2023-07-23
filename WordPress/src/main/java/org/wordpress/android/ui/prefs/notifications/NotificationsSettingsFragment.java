@@ -225,6 +225,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         initBloggingReminders();
     }
 
+    @Override public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        PreferenceScreen otherBlogsScreen = (PreferenceScreen) findPreference(
+                getString(R.string.pref_notification_other_blogs));
+        addToolbarToDialog(otherBlogsScreen);
+    }
+
     private void addJetpackBadgeAsFooterIfEnabled(ListView listView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             final JetpackPoweredScreen screen = JetpackPoweredScreen.WithDynamicText.NOTIFICATIONS_SETTINGS;
@@ -940,17 +947,21 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         super.onPreferenceTreeClick(preferenceScreen, preference);
 
         if (preference instanceof PreferenceScreen) {
-            Dialog prefDialog = ((PreferenceScreen) preference).getDialog();
-            if (prefDialog != null) {
-                String title = String.valueOf(preference.getTitle());
-                WPActivityUtils.addToolbarToDialog(this, prefDialog, title);
-            }
+            addToolbarToDialog(preference);
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_STREAMS_OPENED);
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_DETAILS_OPENED);
         }
 
         return false;
+    }
+
+    private void addToolbarToDialog(Preference preference) {
+        Dialog prefDialog = ((PreferenceScreen) preference).getDialog();
+        if (prefDialog != null) {
+            String title = String.valueOf(preference.getTitle());
+            WPActivityUtils.addToolbarToDialog(this, prefDialog, title);
+        }
     }
 
     @Override
