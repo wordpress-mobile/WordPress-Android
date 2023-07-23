@@ -1,0 +1,2 @@
+- The app will no longer crash after you delete a site. Phew.
+- Reusable blocks are now known as synced patterns, the same as in the desktop editor.

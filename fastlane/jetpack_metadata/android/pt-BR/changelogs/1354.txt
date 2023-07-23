@@ -1,4 +1,0 @@
-22.7:
-- O botão de ação flutuante está com cores, formato e estilo novos.
-- Agora os blocos de imagem vão exibir a proporção correta mesmo se a largura e altura da imagem não estiverem definidas.
-- Movemos a seção "Meu perfil" junto com o avatar para a parte inferior da navegação.
