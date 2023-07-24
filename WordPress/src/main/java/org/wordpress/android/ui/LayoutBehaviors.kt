@@ -25,9 +25,9 @@ class WPTooltipViewBehavior : CoordinatorLayout.Behavior<WPTooltipView> {
     }
 
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: WPTooltipView, dependency: View): Boolean {
-        if (child.position != ABOVE) {
+        require(child.position == ABOVE) {
             // Remove this condition if you want to support different TooltipPosition
-            throw IllegalArgumentException("This behavior only supports TooltipPosition.ABOVE")
+            "This behavior only supports TooltipPosition.ABOVE"
         }
 
         if (dependency.measuredWidth == 0 || child.measuredWidth == 0) {

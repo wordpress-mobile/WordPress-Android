@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.PostUIModel
-import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeViewModel
+import org.wordpress.android.ui.blaze.blazeoverlay.BlazeViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 
 @ExperimentalCoroutinesApi

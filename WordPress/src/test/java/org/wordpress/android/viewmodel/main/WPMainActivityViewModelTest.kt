@@ -757,6 +757,35 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             verify(analyticsTrackerWrapper).track(Stat.BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED)
         }
 
+    @Test
+    fun `it asks for privacy consent at the start when it should`() = test {
+        // Given
+        whenever(shouldAskPrivacyConsent()).thenReturn(true)
+        val observer: Observer<Unit> = mock()
+        viewModel.askForPrivacyConsent.observeForever(observer)
+
+        // When
+        startViewModelWithDefaultParameters()
+
+        // Then
+        verify(observer).onChanged(anyOrNull())
+    }
+
+    @Test
+    fun `it asks for privacy consent only once, even when viewmodel is started more than once`() = test {
+        // Given
+        whenever(shouldAskPrivacyConsent()).thenReturn(true)
+        val observer: Observer<Unit> = mock()
+        viewModel.askForPrivacyConsent.observeForever(observer)
+
+        // When
+        startViewModelWithDefaultParameters()
+        startViewModelWithDefaultParameters()
+
+        // Then
+        verify(observer, times(1)).onChanged(anyOrNull())
+    }
+
     private fun startViewModelWithDefaultParameters(
         isWhatsNewFeatureEnabled: Boolean = true,
         isCreateFabEnabled: Boolean = true,

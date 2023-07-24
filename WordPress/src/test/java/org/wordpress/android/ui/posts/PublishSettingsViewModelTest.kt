@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.OFF
@@ -24,8 +25,11 @@ import org.wordpress.android.ui.people.utils.PeopleUtilsWrapper
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.CalendarEvent
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel
+import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
+import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
@@ -53,6 +57,21 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
     lateinit var siteStore: SiteStore
 
     @Mock
+    lateinit var jetpackSocialFeatureConfig: JetpackSocialFeatureConfig
+
+    @Mock
+    lateinit var accountStore: AccountStore
+
+    @Mock
+    lateinit var getPublicizeConnectionsForUserUseCase: GetPublicizeConnectionsForUserUseCase
+
+    @Mock
+    lateinit var getJetpackSocialShareLimitStatusUseCase: GetJetpackSocialShareLimitStatusUseCase
+
+    @Mock
+    lateinit var jetpackUiStateMapper: EditPostPublishSettingsJetpackSocialUiStateMapper
+
+    @Mock
     lateinit var editPostRepository: EditPostRepository
     private lateinit var viewModel: EditPostPublishSettingsViewModel
     private lateinit var post: PostModel
@@ -69,7 +88,12 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
             peopleUtilsWrapper,
             localeManagerWrapper,
             postSchedulingNotificationStore,
-            siteStore
+            siteStore,
+            jetpackSocialFeatureConfig,
+            accountStore,
+            getPublicizeConnectionsForUserUseCase,
+            getJetpackSocialShareLimitStatusUseCase,
+            jetpackUiStateMapper,
         )
         currentCalendar.set(2019, 6, 6, 10, 20)
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(currentCalendar)

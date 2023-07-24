@@ -13,3 +13,6 @@ fun Modifier.disableUserScroll() = nestedScroll(
         override suspend fun onPreFling(available: Velocity) = available.copy(x = 0f)
     }
 )
+
+fun Modifier.conditionalThen(predicate: Boolean, other: Modifier): Modifier =
+    if (predicate) this.then(other) else this

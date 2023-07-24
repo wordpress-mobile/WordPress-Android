@@ -16,6 +16,7 @@ import javax.inject.Inject
 
 class UiModelMapper
 @Inject constructor(private val networkUtilsWrapper: NetworkUtilsWrapper) {
+    @Suppress("CyclomaticComplexMethod")
     fun mapInsights(
         useCaseModels: List<UseCaseModel>,
         showError: (Int) -> Unit
@@ -89,6 +90,7 @@ class UiModelMapper
         return mapStatsWithOverview(TimeStatsType.OVERVIEW, useCaseModels, showError)
     }
 
+    @Suppress("CyclomaticComplexMethod")
     private fun mapStatsWithOverview(
         overViewType: StatsType,
         useCaseModels: List<UseCaseModel>,

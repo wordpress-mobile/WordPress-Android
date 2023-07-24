@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-28 09:54:08+0000
+Translation-Revision-Date: 2023-07-10 19:48:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_s_detached">%s losgelöst</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Das Bearbeiten synchronisierter Vorlagen wird noch nicht von %s unter iOS unterstützt</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Das Bearbeiten synchronisierter Vorlagen wird noch nicht von %s unter Android unterstützt</string>
     <string name="gutenberg_native_reusable">Wiederverwendbar</string>
     <string name="privacy_banner_error_save">Beim Speichern der Datenschutzeinstellungen ist ein Fehler aufgetreten.</string>
     <string name="privacy_banner_save">Speichern</string>
@@ -234,7 +237,7 @@ Language: de
     <string name="blogging_prompts_list_answered_prompt">✓ Geantwortet</string>
     <string name="blogging_prompts_list_title">Schreibanregungen</string>
     <string name="close_desc">Tag schließen</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativ kannst du diese Blöcke loslösen und separat bearbeiten, indem du auf „In normalen Block umwandeln“ tippst.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativ kannst du diese Blöcke loslösen und separat bearbeiten, indem du auf „Vorlage loslösen“ tippst.</string>
     <string name="dlg_confirm_delete_category">Kategorie „%s“ dauerhaft löschen?</string>
     <string name="deleting_cat_success">Kategorie erfolgreich gelöscht</string>
     <string name="deleting_cat_failed">Löschen der Kategorie fehlgeschlagen</string>
@@ -782,7 +785,7 @@ Language: de
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Das Bearbeiten von wiederverwendbaren Blöcken wird in WordPress für iOS noch nicht unterstützt</string>
     <string name="blogging_reminders_notification_text">Dies ist deine Erinnerung, heute kreativ zu sein</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Das Bearbeiten von wiederverwendbaren Blöcken wird in WordPress für Android noch nicht unterstützt</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativ kannst du diese Blöcke loslösen und separat bearbeiten, indem du auf „In normale Blöcke umwandeln“ tippst.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativ kannst du diese Blöcke loslösen und separat bearbeiten, indem du auf „Vorlage loslösen“ tippst.</string>
     <string name="blogging_reminders_done">Fertig</string>
     <string name="blogging_reminders_notify_me">Benachrichtige mich</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Gib deine Serveranmeldedaten ein&lt;/a&gt;, um Ein-Klick-Website-Wiederherstellungen von Backups zu aktivieren.</string>

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-28 14:44:50+0000
+Translation-Revision-Date: 2023-07-16 13:56:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: gl_ES
 -->
 <resources>
+    <string name="gutenberg_native_s_detached">%s separado</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">A edición de padróns sincronizados aínda non está incluída en %s para iOS</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">A edición de padróns sincronizados aínda non está incluída en %s para Android</string>
     <string name="gutenberg_native_reusable">Reutilizable</string>
     <string name="privacy_banner_error_save">Produciuse un erro ao gardar as túas opcións de privacidade.</string>
     <string name="privacy_banner_save">Gardar</string>
@@ -234,7 +237,7 @@ Language: gl_ES
     <string name="blogging_prompts_list_answered_prompt">✓ Respondido</string>
     <string name="blogging_prompts_list_title">Peticións</string>
     <string name="close_desc">cerrar</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativamente, podes separar e editar este bloque por separado tocando en «Converter en bloque normal».</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativamente, podes separar e editar este bloque por separado tocando en «Separar padrón».</string>
     <string name="dlg_confirm_delete_category">Borrar permanentemente a categoría «%s»?</string>
     <string name="deleting_cat_success">Categoría borrada correctamente</string>
     <string name="deleting_cat_failed">Borrando a categoría que fallou</string>
@@ -782,7 +785,7 @@ Language: gl_ES
     <string name="blogging_reminders_notification_title">É hora de bloguear en %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">WordPress para iOS aínda non é compatible con editar bloques reutilizables</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">WordPress para Android aínda non é compatible con editar bloques reutilizables</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativamente, podes separar e editar estes bloques por separado tocando en «Converter en bloques normais».</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativamente, podes separar e editar estes bloques por separado tocando en «Separar padróns».</string>
     <string name="blogging_reminders_done">Feito</string>
     <string name="blogging_reminders_notify_me">Avísame</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Introduce as credenciais do teu servidor&lt;/a&gt; para activar as restauracións do sitio cun clic das copias de seguridade.</string>

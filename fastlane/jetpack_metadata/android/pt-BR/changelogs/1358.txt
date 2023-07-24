@@ -1,0 +1,3 @@
+22.8:
+- Depois de excluir um site, o aplicativo não vai travar mais. Ufa!
+- Os blocos reutilizáveis agora são os padrões sincronizados, iguais aos do editor para desktop.

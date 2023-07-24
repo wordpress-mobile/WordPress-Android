@@ -1,0 +1,2 @@
+22.8:
+Uygulama, artık bir siteyi sildikten sonra kilitlenmeyecek. Harika!

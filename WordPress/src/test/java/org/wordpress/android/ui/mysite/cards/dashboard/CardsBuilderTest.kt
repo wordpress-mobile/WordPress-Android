@@ -23,17 +23,17 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PromoteWithBlazeCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
-import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardBuilder
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
+import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardBuilder
@@ -58,7 +58,7 @@ class CardsBuilderTest : BaseUnitTest() {
     lateinit var bloggingPromptCardsBuilder: BloggingPromptCardBuilder
 
     @Mock
-    lateinit var promoteWithBlazeCardBuilder: PromoteWithBlazeCardBuilder
+    lateinit var blazeCardBuilder: BlazeCardBuilder
 
     @Mock
     lateinit var dashboardDomainCardBuilder: DashboardDomainCardBuilder
@@ -80,7 +80,7 @@ class CardsBuilderTest : BaseUnitTest() {
             todaysStatsCardBuilder,
             postCardBuilder,
             bloggingPromptCardsBuilder,
-            promoteWithBlazeCardBuilder,
+            blazeCardBuilder,
             dashboardDomainCardBuilder,
             dashboardPlansCardBuilder,
             pagesCardBuilder,
@@ -336,7 +336,7 @@ class CardsBuilderTest : BaseUnitTest() {
         doAnswer { if (hasPostsForPostCard) createPostCards() else createPostPromptCards() }.whenever(postCardBuilder)
             .build(any())
         doAnswer { if (hasBlogginPrompt) blogingPromptCard else null }.whenever(bloggingPromptCardsBuilder).build(any())
-        doAnswer { if (isEligibleForBlaze) promoteWithBlazeCard else null }.whenever(promoteWithBlazeCardBuilder)
+        doAnswer { if (isEligibleForBlaze) promoteWithBlazeCard else null }.whenever(blazeCardBuilder)
             .build(any())
         doAnswer { if (isEligibleForDomainCard) dashboardDomainCard else null }.whenever(dashboardDomainCardBuilder)
             .build(any())
@@ -353,8 +353,7 @@ class CardsBuilderTest : BaseUnitTest() {
                 bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                     mock(), false, false, false, mock(), mock(), mock(), mock(), mock(), mock()
                 ),
-                promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
-                    isEligibleForBlaze,
+                blazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
                     mock(),
                     mock(),
                     mock()

@@ -3505,6 +3505,17 @@
         errorLine1="&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2="^">
         <location
+            file="src/main/res/layout/activity_blaze_campaign.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="MergeRootFrame"
+        message="This `&lt;FrameLayout>` can be replaced with a `&lt;merge>` tag"
+        errorLine1="&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
             file="src/main/res/layout/me_activity.xml"
             line="2"
             column="1"/>

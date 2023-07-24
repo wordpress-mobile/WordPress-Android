@@ -1,3 +1,0 @@
-- We gave the floating action button a new shape, color, and style.
-- Image blocks now display the correct aspect ratio, whether or not the image has a set width and height.
-- We moved the “Me” section with your avatar to the bottom navigation.

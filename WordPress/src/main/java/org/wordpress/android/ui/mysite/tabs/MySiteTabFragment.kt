@@ -25,6 +25,7 @@ import org.wordpress.android.databinding.MySiteTabFragmentBinding
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
@@ -146,6 +147,10 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     @Inject
     lateinit var htmlCompatWrapper: HtmlCompatWrapper
+
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
@@ -485,6 +490,17 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             requireActivity(),
             action.site,
             PageListViewModel.PageListType.SCHEDULED
+        )
+
+        is SiteNavigationAction.OpenCampaignListingPage -> activityNavigator.navigateToCampaignListingPage(
+            requireActivity(),
+            action.campaignListingPageSource
+        )
+
+        is SiteNavigationAction.OpenCampaignDetailPage -> activityNavigator.navigateToCampaignDetailPage(
+            requireActivity(),
+            action.campaignId,
+            action.campaignDetailPageSource
         )
     }
 
