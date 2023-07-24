@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestCl
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsUtils
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.Campaign
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.CampaignStats
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.ContentConfig
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.test
@@ -60,16 +61,20 @@ private val CONTENT_CONFIG_RESPONSE = ContentConfig(
     imageUrl = IMAGE_URL
 )
 
+private val CONTENT_CAMPAIGN_STATS = CampaignStats(
+    impressionsTotal = 0,
+    clicksTotal = 0
+)
+
 private val CAMPAIGN_RESPONSE = Campaign(
     campaignId = CAMPAIGN_ID,
     startDate = START_DATE,
     endDate = END_DATE,
-    clicks = CLICKS,
-    impressions = IMPRESSIONS,
     budgetCents = BUDGET_CENTS,
     uiStatus = UI_STATUS,
     audienceList = AUDIENCE_LIST_RESPONSE,
-    contentConfig = CONTENT_CONFIG_RESPONSE
+    contentConfig = CONTENT_CONFIG_RESPONSE,
+    campaignStats = CONTENT_CAMPAIGN_STATS
 )
 
 private val BLAZE_CAMPAIGNS_RESPONSE = BlazeCampaignsResponse(
