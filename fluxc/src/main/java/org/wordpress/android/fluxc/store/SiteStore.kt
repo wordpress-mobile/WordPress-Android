@@ -76,6 +76,8 @@ import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.model.asDomainModel
+import org.wordpress.android.fluxc.model.jetpacksocial.JetpackSocial
+import org.wordpress.android.fluxc.model.jetpacksocial.JetpackSocialMapper
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
@@ -108,6 +110,7 @@ import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException
 import org.wordpress.android.fluxc.persistence.domains.DomainDao
+import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.NON_PRIVATE_AT_SITE
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.SITE_MISSING_FROM_STORE
@@ -148,6 +151,8 @@ open class SiteStore @Inject constructor(
     private val siteSqlUtils: SiteSqlUtils,
     private val jetpackCPConnectedSitesDao: JetpackCPConnectedSitesDao,
     private val domainDao: DomainDao,
+    private val jetpackSocialDao: JetpackSocialDao,
+    private val jetpackSocialMapper: JetpackSocialMapper,
     private val coroutineEngine: CoroutineEngine
 ) : Store(dispatcher) {
     @Inject internal lateinit var applicationPasswordsManagerProvider: Provider<ApplicationPasswordsManager>
@@ -273,6 +278,14 @@ open class SiteStore @Inject constructor(
         constructor(site: SiteModel, error: SiteError?) : this(site) {
             this.error = error
         }
+    }
+
+    sealed class FetchedJetpackSocialResult {
+        data class Success(
+            @JvmField val jetpackSocial: JetpackSocial,
+        ) : FetchedJetpackSocialResult()
+
+        data class Error(val error: SiteError): FetchedJetpackSocialResult()
     }
 
     data class DesignateMobileEditorForAllSitesResponsePayload(
@@ -2098,6 +2111,29 @@ open class SiteStore @Inject constructor(
             result.map { it.toDomainModel() }
         }
     }
+
+    suspend fun fetchJetpackSocial(siteModel: SiteModel): FetchedJetpackSocialResult =
+        coroutineEngine.withDefaultContext(T.API, this, "Fetch Jetpack Social") {
+            when (val response = siteRestClient.fetchJetpackSocial(siteModel.siteId)) {
+                is Success -> {
+                    val entity = jetpackSocialMapper.mapEntity(response.data, siteModel.id)
+                    jetpackSocialDao.insert(entity)
+                    val domain = jetpackSocialMapper.mapDomain(entity)
+                    FetchedJetpackSocialResult.Success(domain)
+                }
+                is Error -> {
+                    val error = SiteError(SiteErrorType.GENERIC_ERROR, response.error.message)
+                    FetchedJetpackSocialResult.Error(error)
+                }
+            }
+        }
+
+    suspend fun getJetpackSocial(siteLocalId: Int): JetpackSocial {
+        val entity = jetpackSocialDao.getJetpackSocial(siteLocalId)
+        return jetpackSocialMapper.mapDomain(entity)
+    }
+
+
 
     suspend fun deleteApplicationPassword(site: SiteModel): OnApplicationPasswordDeleted =
         coroutineEngine.withDefaultContext(T.API, this, "Delete Application Password") {
