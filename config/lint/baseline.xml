@@ -640,28 +640,6 @@
     </issue>
 
     <issue
-        id="InvalidColorHexValue"
-        message="Invalid Color hex value"
-        errorLine1="private val lightModePostThumbnailBackground = Color(0xD000000)"
-        errorLine2="                                                     ~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/blaze/ui/blazeoverlay/BlazeOverlayFragment.kt"
-            line="73"
-            column="54"/>
-    </issue>
-
-    <issue
-        id="InvalidColorHexValue"
-        message="Invalid Color hex value"
-        errorLine1="private val darkModePostThumbnailBackground = Color(0xDFFFFFF)"
-        errorLine2="                                                    ~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/blaze/ui/blazeoverlay/BlazeOverlayFragment.kt"
-            line="76"
-            column="53"/>
-    </issue>
-
-    <issue
         id="ModifierParameter"
         message="Modifier parameter should be the first optional parameter"
         errorLine1="    modifier: Modifier = Modifier,"
