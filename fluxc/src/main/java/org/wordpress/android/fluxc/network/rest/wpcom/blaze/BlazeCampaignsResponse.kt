@@ -21,14 +21,7 @@ data class ContentConfig(
 
 data class CampaignStats(
     @SerializedName("impressions_total") val impressionsTotal: Long? = null,
-    @SerializedName("clicks_total") val clicksTotal: Long? = null,
-    @SerializedName("clickthrough_rate")  val clickThroughRate: Float? = null,
-    @SerializedName("duration_days") val durationDays: Long? = null,
-    @SerializedName("budget_day") val budgetDay: Long? = null,
-    @SerializedName("spent_budget_cents") val spentBudgetCents: Long? = null,
-    @SerializedName("budget_left") val budgetLeft: Long? = null,
-    @SerializedName("total_budget") val totalBudget: Long? = null,
-    @SerializedName("total_budget_used") val totalBudgetUsed: Long? = null
+    @SerializedName("clicks_total") val clicksTotal: Long? = null
 )
 
 data class Campaign(

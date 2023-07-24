@@ -51,14 +51,7 @@ private val CONTENT_CONFIG_RESPONSE = ContentConfig(
 
 private val CONTENT_CAMPAIGN_STATS = CampaignStats(
     impressionsTotal = 1,
-    clicksTotal = 1,
-    clickThroughRate = 0.0F,
-    durationDays = 0,
-    budgetDay = 0,
-    spentBudgetCents = 0,
-    budgetLeft = 0,
-    totalBudget = 0,
-    totalBudgetUsed = 0
+    clicksTotal = 1
 )
 
 private val CAMPAIGN_RESPONSE = Campaign(
