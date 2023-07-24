@@ -541,11 +541,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Override
     @NonNull
     public String getAutoShareMessage() {
-        if (mAutoShareMessage == null) {
-            return "";
-        } else {
-            return mAutoShareMessage;
-        }
+        return StringUtils.notNullStr(mAutoShareMessage);
     }
 
     @Override
