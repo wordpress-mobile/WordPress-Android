@@ -19,13 +19,24 @@ data class ContentConfig(
     val title: String,
 )
 
+data class CampaignStats(
+    @SerializedName("impressions_total") val impressionsTotal: Long? = null,
+    @SerializedName("clicks_total") val clicksTotal: Long? = null,
+    @SerializedName("clickthrough_rate")  val clickThroughRate: Float? = null,
+    @SerializedName("duration_days") val durationDays: Long? = null,
+    @SerializedName("budget_day") val budgetDay: Long? = null,
+    @SerializedName("spent_budget_cents") val spentBudgetCents: Long? = null,
+    @SerializedName("budget_left") val budgetLeft: Long? = null,
+    @SerializedName("total_budget") val totalBudget: Long? = null,
+    @SerializedName("total_budget_used") val totalBudgetUsed: Long? = null
+)
+
 data class Campaign(
     @SerializedName("alt_text") val altText: String? = null,
     @SerializedName("audience_list") val audienceList: AudienceList? = null,
     @SerializedName("avatar_url") val avatarUrl: String? = null,
     @SerializedName("budget_cents") val budgetCents: Long? = null,
     @SerializedName("campaign_id") val campaignId: Int? = null,
-    @SerializedName("clicks") val clicks: Long? = null,
     @SerializedName("content_config") val contentConfig: ContentConfig,
     @SerializedName("content_image") val contentImage: String? = null,
     @SerializedName("content_target_iab_category") val contentTargetIabCategory: String? = null,
@@ -42,7 +53,6 @@ data class Campaign(
     @SerializedName("file_name") val fileName: String? = null,
     @SerializedName("height") val height: Int? = null,
     @SerializedName("image_mime_type") val imageMimeType: String? = null,
-    @SerializedName("impressions") val impressions: Long? = null,
     @SerializedName("keyword_target_ids") val keywordTargetIds: String? = null,
     @SerializedName("keyword_target_kvs") val keywordTargetKvs: String? = null,
     @SerializedName("mime_type") val mimeType: String? = null,
@@ -69,6 +79,7 @@ data class Campaign(
     @SerializedName("user_target_geo2") val userTargetGeo2: String? = null,
     @SerializedName("user_target_language") val userTargetLanguage: String? = null,
     @SerializedName("width") val width: Int? = null,
+    @SerializedName("campaign_stats") val campaignStats: CampaignStats
 ) {
     fun toCampaignsModel(): BlazeCampaignModel {
         return BlazeCampaignModel(
@@ -79,8 +90,8 @@ data class Campaign(
             endDate = endDate?.let { BlazeCampaignsUtils.stringToDate(it) },
             uiStatus = uiStatus,
             budgetCents = budgetCents ?: 0,
-            impressions = impressions ?: 0,
-            clicks = clicks ?: 0
+            impressions = campaignStats.impressionsTotal ?: 0L,
+            clicks = campaignStats.clicksTotal ?: 0L
         )
     }
 }
