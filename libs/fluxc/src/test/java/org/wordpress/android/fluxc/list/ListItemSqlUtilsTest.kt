@@ -148,6 +148,45 @@ class ListItemSqlUtilsTest {
     }
 
     @Test
+    fun testDeleteItemFromTooManyLists() {
+        /**
+         * 1. Create 2000 lists and 30000 items for these lists
+         * 2. Insert the lists and the items in the DB
+         */
+        val listIds = (1..2000).toList()
+        val lists = listIds.map { insertTestList(PostListDescriptorForRestSite(testSite(it))) }
+        val items = (1..30000L).mapIndexed { index, itemId ->
+            ListItemModel(listId = listIds[index % listIds.size], remoteItemId = itemId)
+        }
+        listItemSqlUtils.insertItemList(items)
+
+        /**
+         * 1. Pick 1 item to delete and 999 lists to delete from
+         * 2. Delete the item from selected lists
+         * 3. If a list is picked to be deleted from, verify that remaining items don't contain
+         * items that should be deleted.
+         * 4. Verify that the remaining items are unchanged for lists that are not picked to be
+         * deleted from and SQLiteException for too many variables isn't thrown.
+         */
+        val remoteItemIdsToDelete = items.map{ it.remoteItemId }.take(1)
+        val listIdsToDeleteFrom = lists.map { it.id }.take(999)
+        listItemSqlUtils.deleteItemsFromLists(listIdsToDeleteFrom, remoteItemIdsToDelete)
+        items.groupBy { it.listId }.forEach { (listId, itemList) ->
+            val remainingItems = listItemSqlUtils.getListItems(listId)
+            if (listIdsToDeleteFrom.contains(listId)) {
+                assertFalse(remainingItems.any { remoteItemIdsToDelete.contains(it.remoteItemId) })
+            } else {
+                assertTrue {
+                    // `contains` approach wouldn't work here since the `id` fields might be different
+                    itemList.zip(remainingItems).fold(true) { acc, (first, second) ->
+                        acc && first.listId == second.listId && first.remoteItemId == second.remoteItemId
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
     fun testDeleteFromListsDoesNotCrashForEmptyRemoteItemIds() {
         /**
          * 1. Create a test list
