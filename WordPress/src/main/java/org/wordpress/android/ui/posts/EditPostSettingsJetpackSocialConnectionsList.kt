@@ -8,33 +8,41 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.models.PublicizeConnection
-import org.wordpress.android.models.PublicizeConnectionList
 import org.wordpress.android.ui.compose.theme.AppThemeEditor
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.compose.PostSocialConnectionItem
 
 @Composable
-fun EditPostSettingsJetpackSocialConnectionsList(postSocialConnectionList: List<PostSocialConnection>) {
+fun EditPostSettingsJetpackSocialConnectionsList(jetpackSocialConnectionDataList: List<JetpackSocialConnectionData>) {
     Column(
         Modifier
             .fillMaxWidth()
     ) {
-        postSocialConnectionList.forEachIndexed { _, connection ->
+        jetpackSocialConnectionDataList.forEach {
             PostSocialConnectionItem(
-                connection = connection,
-                onSharingChange = {},//TODO
+                connection = it.postSocialConnection,
+                onSharingChange = it.onConnectionClick,
+                enabled = it.enabled,
+                switchEnabled = it.switchEnabled,
             )
             Divider()
         }
     }
 }
 
+data class JetpackSocialConnectionData(
+    val postSocialConnection: PostSocialConnection,
+    val onConnectionClick: (Boolean) -> Unit,
+    val enabled: Boolean = true,
+    val switchEnabled: Boolean = true,
+)
+
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewEditPostSettingsJetpackSocialConnectionsList() {
     AppThemeEditor {
-        val connections = PublicizeConnectionList()
+        val connections = mutableListOf<JetpackSocialConnectionData>()
         val connection1 = PublicizeConnection().apply {
             connectionId = 0
             service = "tumblr"
@@ -53,10 +61,20 @@ fun PreviewEditPostSettingsJetpackSocialConnectionsList() {
             externalProfilePictureUrl =
                 "https://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-linkedin-2x.png"
         }
-        connections.add(connection1)
-        connections.add(connection2)
+        connections.add(
+            JetpackSocialConnectionData(
+                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection1),
+                onConnectionClick = {},
+            )
+        )
+        connections.add(
+            JetpackSocialConnectionData(
+                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection2),
+                onConnectionClick = {},
+            )
+        )
         EditPostSettingsJetpackSocialConnectionsList(
-            postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
+            jetpackSocialConnectionDataList = connections,
         )
     }
 }

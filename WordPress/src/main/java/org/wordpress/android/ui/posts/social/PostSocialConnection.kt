@@ -21,6 +21,7 @@ data class PostSocialConnection(
                 externalName = connection.externalDisplayName,
                 iconUrl = connection.externalProfilePictureUrl,
                 isSharingEnabled = true, // default to true
+            // TODO replace switchEnabled property with isSharingEnabled use
             )
         }
 

@@ -6,18 +6,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.datasets.wrappers.PublicizeTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.Person
+import org.wordpress.android.models.PublicizeService
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.people.utils.PeopleUtils.FetchUsersCallback
 import org.wordpress.android.ui.people.utils.PeopleUtilsWrapper
 import org.wordpress.android.ui.posts.social.PostSocialConnection
+import org.wordpress.android.ui.posts.social.PostSocialSharingModelMapper
+import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
 import org.wordpress.android.usecase.social.GetJetpackSocialShareMessageUseCase
 import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
+import org.wordpress.android.usecase.social.ShareLimit
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 import org.wordpress.android.viewmodel.Event
@@ -38,6 +44,8 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     private val getJetpackSocialShareMessageUseCase: GetJetpackSocialShareMessageUseCase,
     private val getJetpackSocialShareLimitStatusUseCase: GetJetpackSocialShareLimitStatusUseCase,
     private val jetpackUiStateMapper: EditPostPublishSettingsJetpackSocialUiStateMapper,
+    private val postSocialSharingModelMapper: PostSocialSharingModelMapper,
+    private val publicizeTableWrapper: PublicizeTableWrapper,
 ) : PublishSettingsViewModel(
     resourceProvider,
     postSettingsUtils,
@@ -45,6 +53,10 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     postSchedulingNotificationStore,
     siteStore
 ) {
+    private var siteModel: SiteModel? = null
+
+    private val selectedConnections = mutableListOf<PostSocialConnection>()
+
     private val _authors = MutableLiveData<List<Person>>()
     val authors: LiveData<List<Person>> = _authors
 
@@ -56,6 +68,9 @@ class EditPostPublishSettingsViewModel @Inject constructor(
 
     private val _jetpackSocialUiState = MutableLiveData<JetpackSocialUiState>()
     val jetpackSocialUiState: LiveData<JetpackSocialUiState> = _jetpackSocialUiState
+
+    private val _postSocialSharingModel = MutableLiveData<PostSocialSharingModel>()
+    val postSocialSharingModel: LiveData<PostSocialSharingModel> = _postSocialSharingModel
 
     private val _actionEvents = SingleLiveEvent<ActionEvent>()
     val actionEvents: LiveData<ActionEvent> = _actionEvents
@@ -69,22 +84,20 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
 
-        val siteModel = postRepository?.localSiteId?.let {
+        siteModel = postRepository?.localSiteId?.let {
             siteStore.getSiteByLocalId(it)
         }
-        loadAuthors(siteModel)
-        loadJetpackSocial(siteModel)
+        loadAuthors()
+        loadJetpackSocial()
     }
 
     fun onScreenShown() {
         if (actionEvents.value is ActionEvent.OpenSocialConnectionsList) {
-            editPostRepository?.localSiteId?.let {
-                siteStore.getSiteByLocalId(it)
-            }?.let { loadJetpackSocial(it) }
+            loadJetpackSocial()
         }
     }
 
-    private fun loadAuthors(siteModel: SiteModel?) {
+    private fun loadAuthors() {
         siteModel?.let {
             if (it.hasCapabilityListUsers) {
                 fetchAuthors(it)
@@ -92,7 +105,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         }
     }
 
-    private fun loadJetpackSocial(siteModel: SiteModel?) {
+    private fun loadJetpackSocial() {
         if (!jetpackSocialFeatureConfig.isEnabled()) {
             _showJetpackSocialContainer.value = false
             return
@@ -100,27 +113,64 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         siteModel?.let {
             _showJetpackSocialContainer.value = true
             viewModelScope.launch {
-                val connections = getPublicizeConnectionsForUserUseCase.execute(it.siteId, accountStore.account.userId)
-                val shareMessage = jetpackSocialShareMessage.ifEmpty {
-                    getJetpackSocialShareMessageUseCase.execute(editPostRepository?.getPost()?.id ?: -1)
-                }
-                val shareLimit = getJetpackSocialShareLimitStatusUseCase.execute(it)
-                val state = if (connections.isEmpty()) {
+                val allConnections =
+                    PostSocialConnection.fromPublicizeConnectionList(
+                        getPublicizeConnectionsForUserUseCase.execute(
+                            it.siteId,
+                            accountStore.account.userId
+                        )
+                    )
+                val state = if (showNoConnections(allConnections)) {
                     jetpackUiStateMapper.mapNoConnections(::onJetpackSocialConnectProfilesClick)
                 } else {
-                    jetpackUiStateMapper.mapLoaded(
-                        connections = connections,
-                        shareLimit = shareLimit,
-                        onSubscribeClick = ::onJetpackSocialSubscribeClick,
-                        shareMessage = shareMessage,
-                        onShareMessageClick = ::onJetpackSocialMessageClick
-                    )
+                    mapLoaded(it, allConnections)
                 }
                 _jetpackSocialUiState.postValue(state)
             }
         } ?: run {
             _showJetpackSocialContainer.value = false
         }
+    }
+
+    private fun showNoConnections(allConnections: List<PostSocialConnection>): Boolean =
+        allConnections.isEmpty() && (siteModel?.supportsPublicize() ?: false)
+                && publicizeTableWrapper.getServiceList().filter { it.status != PublicizeService.Status.UNSUPPORTED }
+            .isNotEmpty()
+
+    private suspend fun mapLoaded(
+        it: SiteModel,
+        allConnections: List<PostSocialConnection>
+    ): JetpackSocialUiState.Loaded {
+        val shareMessage = jetpackSocialShareMessage.ifEmpty {
+            getJetpackSocialShareMessageUseCase.execute(editPostRepository?.getPost()?.id ?: -1)
+        }
+        val shareLimit = getJetpackSocialShareLimitStatusUseCase.execute(it)
+        allConnections.map {
+            if (shareLimit is ShareLimit.Enabled) {
+                allConnections.mapIndexed { index, connection ->
+                    for (i in 0..shareLimit.sharesRemaining) {
+                        selectedConnections.add(connection)
+                        if (i == index) {
+                            break
+                        }
+                    }
+                }
+            }
+        }
+        _postSocialSharingModel.value =
+            postSocialSharingModelMapper.map(allConnections, selectedConnections, shareLimit)
+        return jetpackUiStateMapper.mapLoaded(
+            allConnections = allConnections,
+            selectedConnections = selectedConnections,
+            shareLimit = shareLimit,
+            onSubscribeClick = ::onJetpackSocialSubscribeClick,
+            shareMessage = shareMessage,
+            onShareMessageClick = ::onJetpackSocialMessageClick,
+            onConnectionClick = ::onJetpackSocialConnectionClick,
+            isPostPublished = editPostRepository?.getPost()?.status?.let {
+                it == PostStatus.PUBLISHED.toString()
+            } ?: false
+        )
     }
 
     // This fetches authors page by page and combine the result in fetchedAuthors.
@@ -145,17 +195,54 @@ class EditPostPublishSettingsViewModel @Inject constructor(
 
     @VisibleForTesting
     fun onJetpackSocialConnectProfilesClick() {
-        editPostRepository?.localSiteId?.let {
-            siteStore.getSiteByLocalId(it)
-        }?.let { siteModel ->
+        siteModel?.let { siteModel ->
             _actionEvents.value = ActionEvent.OpenSocialConnectionsList(
                 siteModel = siteModel
             )
         }
     }
 
-    private fun onJetpackSocialConnectionClick() {
-        // TODO
+    @VisibleForTesting
+    fun onJetpackSocialConnectionClick(publicizeSocialConnection: PostSocialConnection, enabled: Boolean) {
+        // TODO update selected connections using post metadata
+        siteModel?.let {
+            if (enabled) {
+                selectedConnections.add(publicizeSocialConnection)
+            } else {
+                selectedConnections.removeAll {
+                    it.service == publicizeSocialConnection.service
+                }
+            }
+            viewModelScope.launch {
+                val allConnections = PostSocialConnection.fromPublicizeConnectionList(
+                    getPublicizeConnectionsForUserUseCase.execute(
+                        siteId = it.siteId,
+                        userId = accountStore.account.userId,
+                        shouldForceUpdate = false,
+                    )
+                )
+                val shareMessage = jetpackSocialShareMessage.ifEmpty {
+                    getJetpackSocialShareMessageUseCase.execute(editPostRepository?.getPost()?.id ?: -1)
+                }
+                val shareLimit = getJetpackSocialShareLimitStatusUseCase.execute(it)
+                _postSocialSharingModel.value =
+                    postSocialSharingModelMapper.map(
+                        allConnections, selectedConnections, shareLimit
+                    )
+                jetpackUiStateMapper.mapLoaded(
+                    allConnections = allConnections,
+                    selectedConnections = selectedConnections,
+                    shareLimit = shareLimit,
+                    onSubscribeClick = ::onJetpackSocialSubscribeClick,
+                    shareMessage = shareMessage,
+                    onShareMessageClick = ::onJetpackSocialMessageClick,
+                    onConnectionClick = ::onJetpackSocialConnectionClick,
+                    isPostPublished = editPostRepository?.getPost()?.status?.let {
+                        it == PostStatus.PUBLISHED.toString()
+                    } ?: false
+                )
+            }
+        }
     }
 
     private fun onJetpackSocialMessageClick() {
@@ -168,9 +255,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     }
 
     private fun onJetpackSocialSubscribeClick() {
-        editPostRepository?.localSiteId?.let {
-            siteStore.getSiteByLocalId(it)
-        }?.let { siteModel ->
+        siteModel?.let { siteModel ->
             _actionEvents.value = ActionEvent.OpenSubscribeJetpackSocial(
                 siteModel = siteModel,
                 url = HIRE_JETPACK_SOCIAL_BASIC_URL.replace(
@@ -200,11 +285,11 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         object Loading : JetpackSocialUiState()
 
         data class Loaded(
-            val postSocialConnectionList: List<PostSocialConnection>,
+            val jetpackSocialConnectionDataList: List<JetpackSocialConnectionData>,
             val showShareLimitUi: Boolean,
+            val isShareMessageEnabled: Boolean,
             val shareMessage: String,
             val onShareMessageClick: () -> Unit,
-            val remainingSharesMessage: String,
             val subscribeButtonLabel: String,
             val onSubscribeClick: () -> Unit,
         ) : JetpackSocialUiState()

@@ -34,22 +34,19 @@ import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
 fun PostSocialSharingItem(
-    title: String,
-    description: String,
-    iconModels: List<TrainOfIconsModel>,
+    model: PostSocialSharingModel,
     modifier: Modifier = Modifier,
-    isLowOnShares: Boolean = false,
     backgroundColor: Color = MaterialTheme.colors.surface
 ) {
     SocialContainer(
-        iconCount = iconModels.size,
+        iconCount = model.iconModels.size,
         modifier = Modifier
             .background(backgroundColor)
             .then(modifier),
     ) { textColumnModifier ->
         Column(modifier = textColumnModifier) {
             Text(
-                text = title,
+                text = model.title,
                 style = MaterialTheme.typography.body1.copy(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -58,15 +55,15 @@ fun PostSocialSharingItem(
             Spacer(Modifier.height(Margin.ExtraSmall.value))
 
             DescriptionText(
-                text = description,
-                isLowOnShares = isLowOnShares,
+                text = model.description,
+                isLowOnShares = model.isLowOnShares,
             )
         }
 
-        if (iconModels.isNotEmpty()) {
+        if (model.iconModels.isNotEmpty()) {
             Spacer(modifier = Modifier.size(Margin.Medium.value))
 
-            TrainOfIcons(iconModels = iconModels, iconBorderColor = backgroundColor)
+            TrainOfIcons(iconModels = model.iconModels, iconBorderColor = backgroundColor)
         }
     }
 }
@@ -102,12 +99,12 @@ private val warningColor: Color
 
 private val lowOnSharesDescriptionStyle: TextStyle
     @Composable
-    get() = MaterialTheme.typography.body1
+    get() = MaterialTheme.typography.body2
         .copy(color = warningColor)
 
 private val defaultDescriptionStyle: TextStyle
     @Composable
-    get() = MaterialTheme.typography.body1
+    get() = MaterialTheme.typography.body2
         .copy(color = AppColor.Gray30)
 
 @Composable
@@ -139,6 +136,13 @@ private fun DescriptionText(
     }
 }
 
+data class PostSocialSharingModel(
+    val title: String,
+    val description: String,
+    val iconModels: List<TrainOfIconsModel>,
+    val isLowOnShares: Boolean = false,
+)
+
 @Preview(name = "Light Mode", locale = "en")
 @Preview(name = "Dark Mode", uiMode = UI_MODE_NIGHT_YES)
 @Preview(name = "RTL", locale = "ar")
@@ -150,29 +154,39 @@ private fun PostSocialSharingItemPreview() {
                 .fillMaxWidth()
                 .background(MaterialTheme.colors.surface)
         ) {
-            PostSocialSharingItem(
+            val model = PostSocialSharingModel(
                 title = "Sharing to 2 of 3 accounts",
                 description = "27/30 social shares remaining",
                 iconModels = listOf(
                     TrainOfIconsModel(R.drawable.ic_social_tumblr, ContentAlpha.disabled),
                     TrainOfIconsModel(R.drawable.ic_social_facebook),
                 ),
-                modifier = Modifier.fillMaxWidth().padding(16.dp)
+            )
+            PostSocialSharingItem(
+                model = model,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
             )
 
-            PostSocialSharingItem(
+            val model2 = PostSocialSharingModel(
                 title = "Sharing to 2 of 3 accounts",
                 description = "27/30 social shares remaining with a very long text that should be truncated",
                 iconModels = listOf(
                     TrainOfIconsModel(R.drawable.ic_social_tumblr, ContentAlpha.disabled),
                     TrainOfIconsModel(R.drawable.ic_social_facebook),
                 ),
-                modifier = Modifier.fillMaxWidth().padding(16.dp)
+            )
+            PostSocialSharingItem(
+                model = model2,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             )
 
             Divider()
 
-            PostSocialSharingItem(
+            val model3 = PostSocialSharingModel(
                 title = "Sharing to 3 of 5 accounts",
                 description = "27/30 social shares remaining",
                 iconModels = listOf(
@@ -183,19 +197,29 @@ private fun PostSocialSharingItemPreview() {
                     TrainOfIconsModel(R.drawable.ic_social_instagram),
                     TrainOfIconsModel(R.drawable.ic_social_tumblr),
                 ),
-                modifier = Modifier.fillMaxWidth().padding(16.dp)
+            )
+            PostSocialSharingItem(
+                model = model3,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
             )
 
             Divider()
 
-            PostSocialSharingItem(
+            val model4 = PostSocialSharingModel(
                 title = "Not sharing to social",
                 description = "0/30 social shares remaining",
-                isLowOnShares = true,
                 iconModels = listOf(
                     TrainOfIconsModel(R.drawable.ic_social_tumblr, ContentAlpha.disabled),
                 ),
-                modifier = Modifier.fillMaxWidth().padding(16.dp)
+                isLowOnShares = true,
+            )
+            PostSocialSharingItem(
+                model = model4,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
             )
         }
     }

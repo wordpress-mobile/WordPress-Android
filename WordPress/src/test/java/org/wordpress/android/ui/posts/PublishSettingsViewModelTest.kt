@@ -9,6 +9,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.datasets.wrappers.PublicizeTableWrapper
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.people.utils.PeopleUtilsWrapper
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.CalendarEvent
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel
+import org.wordpress.android.ui.posts.social.PostSocialSharingModelMapper
 import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
 import org.wordpress.android.usecase.social.GetJetpackSocialShareMessageUseCase
 import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
@@ -76,6 +78,12 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
     lateinit var jetpackUiStateMapper: EditPostPublishSettingsJetpackSocialUiStateMapper
 
     @Mock
+    lateinit var postSocialSharingModelMapper: PostSocialSharingModelMapper
+
+    @Mock
+    lateinit var publicizeTableWrapper: PublicizeTableWrapper
+
+    @Mock
     lateinit var editPostRepository: EditPostRepository
     private lateinit var viewModel: EditPostPublishSettingsViewModel
     private lateinit var post: PostModel
@@ -99,6 +107,8 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
             getJetpackSocialShareMessageUseCase,
             getJetpackSocialShareLimitStatusUseCase,
             jetpackUiStateMapper,
+            postSocialSharingModelMapper,
+            publicizeTableWrapper,
         )
         currentCalendar.set(2019, 6, 6, 10, 20)
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(currentCalendar)

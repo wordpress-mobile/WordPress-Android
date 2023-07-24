@@ -57,7 +57,6 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent.OpenEditShareMessage;
@@ -464,6 +463,7 @@ public class EditPostSettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         observeJetpackSocialContainerVisibility();
         observeJetpackSocialUiState();
+        observeJetpackSocialPostSocialSharingModel();
         observeActionEvents();
     }
 
@@ -483,6 +483,12 @@ public class EditPostSettingsFragment extends Fragment {
         });
     }
 
+    private void observeJetpackSocialPostSocialSharingModel() {
+        mPublishedViewModel.getPostSocialSharingModel().observe(getViewLifecycleOwner(), model -> {
+            mJetpackSocialContainerView.setPostSocialSharingModel(model);
+        });
+    }
+
     private void observeActionEvents() {
         mPublishedViewModel.getActionEvents().observe(getViewLifecycleOwner(), actionEvent -> {
             if (actionEvent instanceof ActionEvent.OpenEditShareMessage) {
@@ -496,8 +502,9 @@ public class EditPostSettingsFragment extends Fragment {
                 ActivityLauncher.viewBlogSharing(requireActivity(), action.getSiteModel());
             } else if (actionEvent instanceof ActionEvent.OpenSubscribeJetpackSocial) {
                 final OpenSubscribeJetpackSocial action = (OpenSubscribeJetpackSocial) actionEvent;
-                WPWebViewActivity.openUrlByUsingBlogCredentials(requireActivity(), action.getSiteModel(), null,
-                        action.getUrl(), new String[]{}, false, true, false);
+                ActivityLauncher.openUrlForSite(
+                        requireActivity(), action.getUrl(), action.getSiteModel()
+                );
             }
         });
     }
