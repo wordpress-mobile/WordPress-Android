@@ -38,8 +38,10 @@ fun SecondaryButton(
         end = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal),
         bottom = 10.dp,
     ),
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     textStyle: TextStyle = LocalTextStyle.current,
     buttonSize: ButtonSize = ButtonSize.NORMAL,
+    fillMaxWidth: Boolean = true,
     trailingContent: @Composable (() -> Unit)? = null,
 ) {
     Button(
@@ -53,7 +55,8 @@ fun SecondaryButton(
         modifier = modifier
             .padding(padding)
             .defaultMinSize(minHeight = buttonSize.height)
-            .fillMaxWidth()
+            .then(if (fillMaxWidth) Modifier.fillMaxWidth() else Modifier),
+        contentPadding = contentPadding,
     ) {
         Text(text, style = textStyle)
         trailingContent?.invoke()

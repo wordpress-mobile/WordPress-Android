@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.blaze.ui.blazewebview
+package org.wordpress.android.ui.blaze.blazepromote
 
 import android.text.TextUtils
 import androidx.lifecycle.ViewModel
@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -30,7 +31,7 @@ import org.wordpress.android.util.config.BlazeNonDismissableHashConfig
 import javax.inject.Inject
 
 @HiltViewModel
-class BlazeWebViewViewModel @Inject constructor(
+class BlazePromoteWebViewViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -56,15 +57,17 @@ class BlazeWebViewViewModel @Inject constructor(
         blazeFeatureUtils.trackBlazeFlowStarted(source)
         val url = buildUrl(promoteScreen)
         blazeFlowStep = extractCurrentStep(url)
-        validateAndFinishIfNeeded()
+        if (!validateAndPostFinishIfNeeded()) return
         postScreenState(model.value.copy(url = url, addressToLoad = prepareUrl(url)))
     }
 
-    private fun validateAndFinishIfNeeded() {
+    private fun validateAndPostFinishIfNeeded(): Boolean {
         if (accountStore.account.userName.isNullOrEmpty() || accountStore.accessToken.isNullOrEmpty()) {
             blazeFeatureUtils.trackFlowError(blazeFlowSource, blazeFlowStep)
-            postActionEvent(BlazeActionEvent.FinishActivity)
+            postActionEvent(BlazeActionEvent.FinishActivityWithMessage(R.string.promote_blaze_flow_error))
+            return false
         }
+        return true
     }
 
     private fun buildUrl(promoteScreen: BlazeUiState.PromoteScreen?): String {
@@ -152,10 +155,10 @@ class BlazeWebViewViewModel @Inject constructor(
     }
 
     fun updateHeaderActionUiState() {
-        val nonDismissableStep = nonDismissableHashConfig.getValue<String>()
+        val nonDismissibleStep = nonDismissableHashConfig.getValue<String>()
         val completedStep = completedStepHashConfig.getValue<String>()
 
-        if (blazeFlowStep.label == nonDismissableStep) {
+        if (blazeFlowStep.label == nonDismissibleStep) {
             postHeaderUiState(DisabledCancelAction())
         } else if (blazeFlowStep.label == completedStep || blazeFlowStep == BlazeFlowStep.CAMPAIGNS_LIST) {
             postHeaderUiState(DoneAction())
@@ -166,7 +169,7 @@ class BlazeWebViewViewModel @Inject constructor(
 
     fun onWebViewReceivedError() {
         blazeFeatureUtils.trackFlowError(blazeFlowSource, blazeFlowStep)
-        postActionEvent(BlazeActionEvent.FinishActivity)
+        postActionEvent(BlazeActionEvent.FinishActivityWithMessage(R.string.promote_blaze_flow_error))
     }
 
     fun onRedirectToExternalBrowser(url: String) {
@@ -180,7 +183,7 @@ class BlazeWebViewViewModel @Inject constructor(
     }
 
     @Suppress("ReturnCount")
-    fun extractCurrentStep(url: String?): BlazeFlowStep {
+    private fun extractCurrentStep(url: String?): BlazeFlowStep {
         url?.let {
             val uri = UriWrapper(url)
             uri.fragment?.let { return BlazeFlowStep.fromString(it) }
@@ -218,11 +221,12 @@ class BlazeWebViewViewModel @Inject constructor(
         }?: return false
     }
 
+
     fun handleOnBackPressed() {
-        val nonDismissableStep = nonDismissableHashConfig.getValue<String>()
+        val nonDismissibleStep = nonDismissableHashConfig.getValue<String>()
         val completedStep = completedStepHashConfig.getValue<String>()
 
-        if (blazeFlowStep.label == nonDismissableStep) return
+        if (blazeFlowStep.label == nonDismissibleStep) return
 
         if (blazeFlowStep.label == completedStep || blazeFlowStep == BlazeFlowStep.CAMPAIGNS_LIST) {
             blazeFeatureUtils.trackBlazeFlowCompleted(blazeFlowSource)

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.blaze.ui.blazewebview
+package org.wordpress.android.ui.blaze.blazepromote
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -34,16 +34,17 @@ import org.wordpress.android.ui.blaze.BlazeWebViewClient
 import org.wordpress.android.ui.blaze.BlazeWebViewContentUiState
 import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState
 import org.wordpress.android.ui.blaze.OnBlazeWebViewClientListener
-import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeViewModel
+import org.wordpress.android.ui.blaze.blazeoverlay.BlazeViewModel
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.editor.R as EditorR
 
 @AndroidEntryPoint
-class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
+class BlazePromoteWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
     WPWebChromeClientWithFileChooser.OnShowFileChooserListener {
     private var chromeClient: WPWebChromeClientWithFileChooser? = null
-    private val blazeWebViewViewModel: BlazeWebViewViewModel by viewModels()
+    private val blazePromoteWebViewViewModel: BlazePromoteWebViewViewModel by viewModels()
     private val blazeViewModel: BlazeViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -66,16 +67,23 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
     }
 
     private fun initViewModel() {
-        blazeWebViewViewModel.start(blazeViewModel.promoteUiState.value, blazeViewModel.getSource())
+        blazePromoteWebViewViewModel.start(blazeViewModel.promoteUiState.value, blazeViewModel.getSource())
     }
 
     private fun observeViewModel() {
-        blazeWebViewViewModel.actionEvents.onEach(this::handleActionEvents).launchIn(viewLifecycleOwner.lifecycleScope)
+        blazePromoteWebViewViewModel.actionEvents.onEach(this::handleActionEvents)
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun handleActionEvents(actionEvent: BlazeActionEvent) {
         when (actionEvent) {
             is BlazeActionEvent.FinishActivity -> requireActivity().finish()
+
+            is BlazeActionEvent.FinishActivityWithMessage -> {
+                ToastUtils.showToast(requireContext(), actionEvent.id)
+                requireActivity().finish()
+            }
+
             is BlazeActionEvent.LaunchExternalBrowser -> {
                 ActivityLauncher.openUrlExternal(
                     requireContext(),
@@ -90,7 +98,7 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     private fun BlazeWebViewScreen(
-        viewModel: BlazeWebViewViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+        viewModel: BlazePromoteWebViewViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     ) {
         val data by viewModel.model.collectAsState()
         val blazeHeaderState by viewModel.blazeHeaderState.collectAsState()
@@ -114,7 +122,7 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
     @Composable
     private fun TopAppBarActions(state: BlazeWebViewHeaderUiState) {
             TextButton(
-                onClick = { blazeWebViewViewModel.onHeaderActionClick(state) },
+                onClick = { blazePromoteWebViewViewModel.onHeaderActionClick(state) },
                 enabled = state.headerActionEnabled,
             ) {
                     Text(
@@ -141,13 +149,13 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
                 settings.userAgentString = model.userAgent
                 settings.javaScriptEnabled = model.enableJavascript
                 settings.domStorageEnabled = model.enableDomStorage
-                webViewClient = BlazeWebViewClient(this@BlazeWebViewFragment)
+                webViewClient = BlazeWebViewClient(this@BlazePromoteWebViewFragment)
                 chromeClient = WPWebChromeClientWithFileChooser(
                     activity,
                     this,
                     EditorR.drawable.media_movieclip,
                     null,
-                    this@BlazeWebViewFragment
+                    this@BlazePromoteWebViewFragment
                 )
                 webChromeClient = chromeClient
                 postUrl(WPCOM_LOGIN_URL, model.addressToLoad.toByteArray())
@@ -156,20 +164,20 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
     }
 
     override fun onWebViewPageLoaded(url: String) {
-        blazeWebViewViewModel.updateBlazeFlowStep(url)
-        blazeWebViewViewModel.updateHeaderActionUiState()
+        blazePromoteWebViewViewModel.updateBlazeFlowStep(url)
+        blazePromoteWebViewViewModel.updateHeaderActionUiState()
     }
 
     override fun onWebViewReceivedError(url: String?) {
-        blazeWebViewViewModel.updateBlazeFlowStep(url)
-        blazeWebViewViewModel.onWebViewReceivedError()
+        blazePromoteWebViewViewModel.updateBlazeFlowStep(url)
+        blazePromoteWebViewViewModel.onWebViewReceivedError()
     }
 
     override fun onRedirectToExternalBrowser(url: String) {
-        blazeWebViewViewModel.onRedirectToExternalBrowser(url)
+        blazePromoteWebViewViewModel.onRedirectToExternalBrowser(url)
     }
 
-    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
+    @Suppress("DEPRECATION")
     override fun startActivityForFileChooserResult(intent: Intent?, requestCode: Int) {
         startActivityForResult(intent, requestCode)
     }
@@ -185,13 +193,13 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    blazeWebViewViewModel.handleOnBackPressed()
+                    blazePromoteWebViewViewModel.handleOnBackPressed()
                 }
             }
         )
     }
 
     companion object {
-        fun newInstance() = BlazeWebViewFragment()
+        fun newInstance() = BlazePromoteWebViewFragment()
     }
 }

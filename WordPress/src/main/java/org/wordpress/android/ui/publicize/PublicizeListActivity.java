@@ -23,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.PublicizeConnection;
@@ -93,7 +92,6 @@ public class PublicizeListActivity extends LocaleAwareActivity
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            PublicizeTable.createTables(WordPress.wpDB.getDatabase());
             showListFragment();
             if (mSite == null) {
                 ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);

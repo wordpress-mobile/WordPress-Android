@@ -12,6 +12,7 @@ import com.tenor.android.core.network.ApiService;
 import com.tenor.android.core.network.IApiClient;
 
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.ui.ActivityNavigator;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStepsProvider;
 import org.wordpress.android.ui.jetpack.restore.RestoreStep;
@@ -72,5 +73,10 @@ public abstract class ApplicationModule {
     public static WizardManager<RestoreStep> provideRestoreWizardManager(
             RestoreStepsProvider stepsProvider) {
         return new WizardManager<>(stepsProvider.getSteps());
+    }
+
+    @Provides
+    public static ActivityNavigator provideActivityNavigator(@ApplicationContext Context context) {
+        return new ActivityNavigator();
     }
 }

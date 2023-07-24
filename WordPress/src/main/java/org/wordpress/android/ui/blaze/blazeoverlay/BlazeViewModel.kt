@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.blaze.ui.blazeoverlay
+package org.wordpress.android.ui.blaze.blazeoverlay
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -73,6 +73,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
     }
 
+    @Suppress("CyclomaticComplexMethod", "LongMethod")
     private fun BarChart.draw(
         item: BarChartItem,
         labelStart: TextView,

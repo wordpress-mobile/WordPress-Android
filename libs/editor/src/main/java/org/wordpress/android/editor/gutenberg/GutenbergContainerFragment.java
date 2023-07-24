@@ -36,6 +36,8 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListene
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSendEventToHostListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnToggleUndoButtonListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnToggleRedoButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestPreviewListener;
 
@@ -87,6 +89,8 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnBlockTypeImpressionsEventListener onBlockTypeImpressionsListener,
                                   OnCustomerSupportOptionsListener onCustomerSupportOptionsListener,
                                   OnSendEventToHostListener onSendEventToHostListener,
+                                  OnToggleUndoButtonListener onToggleUndoButtonListener,
+                                  OnToggleRedoButtonListener onToggleRedoButtonListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
@@ -110,6 +114,8 @@ public class GutenbergContainerFragment extends Fragment {
                     onBlockTypeImpressionsListener,
                     onCustomerSupportOptionsListener,
                     onSendEventToHostListener,
+                    onToggleUndoButtonListener,
+                    onToggleRedoButtonListener,
                     isDarkMode);
     }
 
@@ -259,6 +265,14 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void showEditorHelp() {
         mWPAndroidGlueCode.showEditorHelp();
+    }
+
+    public void onUndoPressed() {
+        mWPAndroidGlueCode.onUndoPressed();
+    }
+
+    public void onRedoPressed() {
+        mWPAndroidGlueCode.onRedoPressed();
     }
 
     public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {

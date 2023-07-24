@@ -23,5 +23,8 @@ data class PostSocialConnection(
                 isSharingEnabled = true, // default to true
             )
         }
+
+        fun fromPublicizeConnectionList(connections: List<PublicizeConnection>): List<PostSocialConnection> =
+            connections.map { fromPublicizeConnection(it) }
     }
 }

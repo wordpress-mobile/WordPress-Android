@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -63,7 +64,7 @@ data class MySiteUiState(
 
         data class BlazeCardUpdate(
             val blazeEligible: Boolean = false,
-            val campaigns: List<String> = emptyList()
+            val campaign: BlazeCampaignModel? = null
         ) : PartialState()
     }
 

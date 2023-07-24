@@ -27,4 +27,7 @@ else
     annotate_test_failures "$results_file"
 fi
 
+echo "--- 🧪 Copying test logs for test collector"
+mkdir buildkite-test-analytics && cp build/instrumented-tests/*/*/*.xml buildkite-test-analytics
+
 exit $TESTS_EXIT_STATUS

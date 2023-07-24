@@ -51,6 +51,10 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void mediaSelectionCancelled();
     public abstract void showEditorHelp();
 
+    public abstract void onUndoPressed();
+
+    public abstract void onRedoPressed();
+
 
     public enum MediaType {
         IMAGE, VIDEO;
@@ -227,6 +231,10 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onContactCustomerSupport();
         void onGotoCustomerSupportOptions();
         void onSendEventToHost(String eventName, Map<String, Object> properties);
+
+        void onToggleUndo(boolean isDisabled);
+
+        void onToggleRedo(boolean isDisabled);
     }
 
     /**

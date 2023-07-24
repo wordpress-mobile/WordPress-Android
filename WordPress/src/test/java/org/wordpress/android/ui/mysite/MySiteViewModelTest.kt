@@ -51,8 +51,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.ui.blaze.BlazeFeatureUtils
-import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -171,6 +169,7 @@ import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.publicdata.AppStatus
 import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
+import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
 private const val DYNAMIC_CARDS_BUILDER_MORE_CLICK_PARAM_POSITION = 3
@@ -327,7 +326,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker
 
     @Mock
-    lateinit var blazeFeatureUtils: BlazeFeatureUtils
+    lateinit var blazeCardViewModelSlice: BlazeCardViewModelSlice
 
     @Mock
     lateinit var dashboardCardDomainUtils: DashboardCardDomainUtils
@@ -378,6 +377,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val isDomainCreditAvailable = MutableLiveData(DomainCreditAvailable(false))
     private val showSiteIconProgressBar = MutableLiveData(ShowSiteIconProgressBar(false))
     private val selectedSite = MediatorLiveData<SelectedSite>()
+    private val refresh = MutableLiveData<Event<Boolean>>()
 
     private val jetpackCapabilities = MutableLiveData(
         JetpackCapabilities(
@@ -412,9 +412,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onBloggingPromptViewMoreClicked: (() -> Unit)? = null
     private var onBloggingPromptViewAnswersClicked: ((promptId: Int) -> Unit)? = null
     private var onBloggingPromptRemoveClicked: (() -> Unit)? = null
-    private var onPromoteWithBlazeCardClick: (() -> Unit) = {}
-    private var onPromoteWithBlazeCardMenuClicked: (() -> Unit) = {}
-    private var onPromoteWithBlazeCardHideThisClick: (() -> Unit) = {}
     private var onPageCardFooterLinkClick: (() -> Unit)? = null
     private var onPageItemClick: ((params: PagesItemClickParams) -> Unit)? = null
     private var onActivityCardFooterLinkClick: (() -> Unit)? = null
@@ -470,6 +467,13 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     )
 
+    private val blazeCardUpdate = MutableLiveData(
+        MySiteUiState.PartialState.BlazeCardUpdate(
+            blazeEligible = true,
+            campaign = null
+        )
+    )
+
     private var quickActionsStatsClickAction: (() -> Unit)? = null
     private var quickActionsPagesClickAction: (() -> Unit)? = null
     private var quickActionsPostsClickAction: (() -> Unit)? = null
@@ -489,7 +493,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickStartUpdate,
         showSiteIconProgressBar,
         selectedSite,
-        bloggingPromptsUpdate
+        bloggingPromptsUpdate,
+        blazeCardUpdate
     )
 
     @Suppress("LongMethod")
@@ -515,6 +520,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             .thenReturn(QuickStartNewSiteTask.VIEW_SITE)
         whenever(jetpackBrandingUtils.getBrandingTextForScreen(any())).thenReturn(mock())
         whenever(jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()).thenReturn(true)
+        whenever(blazeCardViewModelSlice.refresh).thenReturn(refresh)
         viewModel = MySiteViewModel(
             networkUtilsWrapper,
             testDispatcher(),
@@ -566,11 +572,11 @@ class MySiteViewModelTest : BaseUnitTest() {
             bloggingPromptsCardTrackHelper,
             getShowJetpackFullPluginInstallOnboardingUseCase,
             jetpackInstallFullPluginShownTracker,
-            blazeFeatureUtils,
             dashboardCardDomainUtils,
             plansCardUtils,
             jetpackFeatureRemovalPhaseHelper,
             wpJetpackIndividualPluginHelper,
+            blazeCardViewModelSlice
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -2211,6 +2217,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
             verify(cardsTracker).trackPagesItemClicked(PagesCardContentType.SCHEDULED)
         }
+
     @Test
     fun `given published page card, when page item is clicked, then event is tracked`() =
         test {
@@ -2495,18 +2502,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when blaze item click, then emits navigation event`() {
-        invokeItemClickAction(ListItemAction.BLAZE)
-
-        assertThat(navigationActions).containsExactly(
-            SiteNavigationAction.OpenPromoteWithBlazeOverlay(BlazeFlowSource.MENU_ITEM))
-    }
-
-    @Test
     fun `when blaze item click, then event is tracked`() {
         invokeItemClickAction(ListItemAction.BLAZE)
 
-        verify(blazeFeatureUtils).trackEntryPointTapped(BlazeFlowSource.MENU_ITEM)
+        verify(blazeCardViewModelSlice).onBlazeMenuItemClick()
     }
 
     /* ITEM VISIBILITY */
@@ -3410,40 +3409,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(jetpackFeatureCardHelper).setJetpackFeatureCardLastShownTimeStamp(any())
     }
 
-    /* Promote with Blaze */
-    @Test
-    fun `when promote with blaze card is tapped, then blaze entry point tapped is tracked`() = test {
-        initSelectedSite()
-
-        onPromoteWithBlazeCardClick.invoke()
-
-        verify(blazeFeatureUtils).trackEntryPointTapped(BlazeFlowSource.DASHBOARD_CARD)
-    }
-
-    @Test
-    fun `when promote with blaze card menu is accessed, then blaze card menu is accessed is tracked`() = test {
-        initSelectedSite()
-
-        onPromoteWithBlazeCardMenuClicked.invoke()
-
-        verify(blazeFeatureUtils).track(
-            Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
-            BlazeFlowSource.DASHBOARD_CARD
-        )
-    }
-
-    @Test
-    fun `when promote with blaze hide this is tapped, then blaze card hide this tapped is tracked`() = test {
-        initSelectedSite()
-
-        onPromoteWithBlazeCardHideThisClick.invoke()
-
-        verify(blazeFeatureUtils).track(
-            Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
-            BlazeFlowSource.DASHBOARD_CARD
-        )
-    }
-
     @Test
     fun `when onActionableEmptyViewVisible is invoked then show jetpack individual plugin overlay`() =
         test {
@@ -3539,8 +3504,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         isBloggingPromptsListEnabled: Boolean = true,
         isBloggingPromptsEnhancementsEnabled: Boolean = true,
         isBloggingPromptsSocialEnabled: Boolean = true,
-        shouldShowJetpackBranding: Boolean = true,
-        isBlazeEnabled: Boolean = true,
+        shouldShowJetpackBranding: Boolean = true
     ) {
         setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled)
         whenever(
@@ -3557,7 +3521,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsSocialEnabled)
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsEnabled)
         whenever(jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard()).thenReturn(shouldShowJetpackBranding)
-        whenever(blazeFeatureUtils.shouldShowBlazeCardEntryPoint(site)).thenReturn(isBlazeEnabled)
         if (isSiteUsingWpComRestApi) {
             site.setIsWPCom(true)
             site.setIsJetpackConnected(true)
@@ -3730,8 +3693,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                     add(initPostCard(mockInvocation))
                     add(initTodaysStatsCard(mockInvocation))
                     if (bloggingPromptsFeatureConfig.isEnabled()) add(initBloggingPromptCard(mockInvocation))
-                    if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(site))
-                        add(initPromoteWithBlazeCard(mockInvocation))
                     add(initPageCard(mockInvocation))
                     add(initActivityCard(mockInvocation))
                 }
@@ -3814,20 +3775,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun initPromoteWithBlazeCard(mockInvocation: InvocationOnMock): DashboardCard.PromoteWithBlazeCard {
-        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
-        onPromoteWithBlazeCardClick = params.promoteWithBlazeCardBuilderParams.onClick
-        onPromoteWithBlazeCardMenuClicked = params.promoteWithBlazeCardBuilderParams.onMoreMenuClick
-        onPromoteWithBlazeCardHideThisClick = params.promoteWithBlazeCardBuilderParams.onHideMenuItemClick
-        return DashboardCard.PromoteWithBlazeCard(
-            title = UiStringRes(0),
-            subtitle = UiStringRes(0),
-            onClick = ListItemInteraction.create { onPromoteWithBlazeCardClick },
-            onMoreMenuClick = ListItemInteraction.create { onPromoteWithBlazeCardMenuClicked },
-            onHideMenuItemClick = ListItemInteraction.create { onPromoteWithBlazeCardHideThisClick }
-        )
-    }
-
     private fun initSiteItems(mockInvocation: InvocationOnMock): List<ListItem> {
         val params = (mockInvocation.arguments.filterIsInstance<SiteItemsBuilderParams>()).first()
         val items = mutableListOf<ListItem>()
@@ -3863,7 +3810,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                     UiStringRes(R.string.blaze_menu_item_label),
                     onClick = mock(),
                     disablePrimaryIconTint = true
-               )
+                )
             )
         }
 

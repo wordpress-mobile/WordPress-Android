@@ -82,7 +82,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPermissionUtils;
-import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 
 import java.util.ArrayList;
@@ -139,7 +138,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject FollowedBlogsProvider mFollowedBlogsProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject UiHelpers mUiHelpers;
 
@@ -225,6 +223,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             addJetpackBadgeAsFooterIfEnabled(lv);
         }
         initBloggingReminders();
+    }
+
+    @Override public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        PreferenceScreen otherBlogsScreen = (PreferenceScreen) findPreference(
+                getString(R.string.pref_notification_other_blogs));
+        addToolbarToDialog(otherBlogsScreen);
     }
 
     private void addJetpackBadgeAsFooterIfEnabled(ListView listView) {
@@ -942,17 +947,21 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         super.onPreferenceTreeClick(preferenceScreen, preference);
 
         if (preference instanceof PreferenceScreen) {
-            Dialog prefDialog = ((PreferenceScreen) preference).getDialog();
-            if (prefDialog != null) {
-                String title = String.valueOf(preference.getTitle());
-                WPActivityUtils.addToolbarToDialog(this, prefDialog, title);
-            }
+            addToolbarToDialog(preference);
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_STREAMS_OPENED);
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_DETAILS_OPENED);
         }
 
         return false;
+    }
+
+    private void addToolbarToDialog(Preference preference) {
+        Dialog prefDialog = ((PreferenceScreen) preference).getDialog();
+        if (prefDialog != null) {
+            String title = String.valueOf(preference.getTitle());
+            WPActivityUtils.addToolbarToDialog(this, prefDialog, title);
+        }
     }
 
     @Override
@@ -996,10 +1005,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     }
 
     private final BloggingRemindersProvider mBloggingRemindersProvider = new BloggingRemindersProvider() {
-        @Override public boolean isEnabled() {
-            return mBloggingRemindersFeatureConfig.isEnabled();
-        }
-
         @Override public String getSummary(long blogId) {
             UiString uiString = mBloggingRemindersSummariesBySiteId.get(blogId);
             return uiString != null ? mUiHelpers.getTextOfUiString(getContext(), uiString).toString() : null;

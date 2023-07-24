@@ -375,7 +375,6 @@ class WPMainActivityViewModel @Inject constructor(
 
     private suspend fun canShowFeatureAnnouncement(): Boolean {
         val cachedAnnouncement = featureAnnouncementProvider.getLatestFeatureAnnouncement(true)
-
         return cachedAnnouncement != null &&
                 cachedAnnouncement.canBeDisplayedOnAppUpgrade(buildConfigWrapper.getAppVersionName()) &&
                 appPrefsWrapper.featureAnnouncementShownVersion < cachedAnnouncement.announcementVersion
@@ -413,7 +412,7 @@ class WPMainActivityViewModel @Inject constructor(
         val isVisible: Boolean
     ) : Serializable {
         companion object {
-            const val serialVersionUID = 1L
+            private const val serialVersionUID: Long = 1L
         }
     }
 }
