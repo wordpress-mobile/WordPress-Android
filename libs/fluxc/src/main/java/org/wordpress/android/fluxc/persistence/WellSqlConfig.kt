@@ -23,6 +23,11 @@ import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
 open class WellSqlConfig : DefaultWellConfig {
     companion object {
         const val ADDON_WOOCOMMERCE = "WC"
+
+        // The maximum value of a host parameter number is SQLITE_MAX_VARIABLE_NUMBER, which defaults to 999 for
+        // SQLite versions prior to 3.32.0 (2020-05-22) or 32766 for SQLite versions after 3.32.0.
+        // @see https://www.sqlite.org/limits.html
+        const val SQLITE_MAX_VARIABLE_NUMBER = 999
     }
 
     constructor(context: Context) : super(context)
@@ -1988,13 +1993,13 @@ open class WellSqlConfig : DefaultWellConfig {
     }
 
     /**
-     * For debug builds we want a cursor window size of 5MB so we can test for any problems caused by
-     * a larger size. Once we're confident this works we'll return 5MB in release builds to hopefully
-     * reduce the number of SQLiteBlobTooBigExceptions. Note that this is only called on API 28 and
-     * above since earlier versions don't allow adjusting the cursor window size.
+     * Increase the cursor window size to 5MB for devices running API 28 and above. This should
+     * reduce the number of SQLiteBlobTooBigExceptions.
+     * NOTE: this is only called on API 28 and above since earlier versions don't allow adjusting
+     * the cursor window size.
      */
     @Suppress("MagicNumber")
-    override fun getCursorWindowSize() = if (BuildConfig.DEBUG) (1024L * 1024L * 5L) else 0L
+    override fun getCursorWindowSize() = (1024L * 1024L * 5L)
 
     /**
      * Drop and create all tables

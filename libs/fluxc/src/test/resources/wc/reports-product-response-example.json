@@ -1,0 +1,81 @@
+ [
+    {
+      "product_id": 14,
+      "items_sold": 25,
+      "net_revenue": 506.0000000000001,
+      "orders_count": 26,
+      "extended_info": {
+        "name": "Polo",
+        "price": 29,
+        "image": "<img width=\"450\" height=\"450\" src=\"https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/polo-2-600x599.jpg\" class=\"attachment-woocommerce_thumbnail size-woocommerce_thumbnail\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/polo-2-600x599.jpg 600w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/polo-2-300x300.jpg 300w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/polo-2-100x100.jpg?crop=1 100w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/polo-2-150x150.jpg?crop=1 150w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/polo-2-768x767.jpg 768w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/polo-2-400x400.jpg?crop=1 400w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/polo-2-200x200.jpg?crop=1 200w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/polo-2.jpg 801w\" sizes=\"(max-width: 450px) 100vw, 450px\" data-attachment-id=\"55\" data-permalink=\"https://superlativecentaur.wpcomstaging.com/?attachment_id=55\" data-orig-file=\"https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/polo-2.jpg\" data-orig-size=\"801,800\" data-comments-opened=\"1\" data-image-meta=\"{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}\" data-image-title=\"polo-2.jpg\" data-image-description=\"\" data-image-caption=\"\" data-medium-file=\"https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/polo-2-300x300.jpg\" data-large-file=\"https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/polo-2.jpg\" />",
+        "permalink": "https://superlativecentaur.wpcomstaging.com/product/polo/",
+        "stock_status": "instock",
+        "stock_quantity": 0,
+        "manage_stock": false,
+        "low_stock_amount": 2,
+        "category_ids": [
+          1361
+        ],
+        "sku": "woo-polo"
+      },
+      "_links": {
+        "product": [
+          {
+            "href": "https://superlativecentaur.wpcomstaging.com/wp-json/wc-analytics/products/26"
+          }
+        ]
+      }
+    },
+    {
+      "product_id": 22,
+      "items_sold": 25,
+      "net_revenue": 1374,
+      "orders_count": 26,
+      "extended_info": {
+        "name": "Sunglasses Subscription",
+        "price": 60,
+        "image": "<img width=\"450\" height=\"450\" src=\"https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/sunglasses-2-600x600.jpg\" class=\"attachment-woocommerce_thumbnail size-woocommerce_thumbnail\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/sunglasses-2-600x600.jpg 600w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/sunglasses-2-300x300.jpg 300w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/sunglasses-2-100x100.jpg?crop=1 100w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/sunglasses-2-150x150.jpg?crop=1 150w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/sunglasses-2-768x768.jpg 768w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/sunglasses-2-400x400.jpg?crop=1 400w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/sunglasses-2-200x200.jpg?crop=1 200w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/sunglasses-2.jpg 801w\" sizes=\"(max-width: 450px) 100vw, 450px\" data-attachment-id=\"51\" data-permalink=\"https://superlativecentaur.wpcomstaging.com/?attachment_id=51\" data-orig-file=\"https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/sunglasses-2.jpg\" data-orig-size=\"801,801\" data-comments-opened=\"1\" data-image-meta=\"{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}\" data-image-title=\"sunglasses-2.jpg\" data-image-description=\"\" data-image-caption=\"\" data-medium-file=\"https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/sunglasses-2-300x300.jpg\" data-large-file=\"https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/sunglasses-2.jpg\" />",
+        "permalink": "https://superlativecentaur.wpcomstaging.com/product/sunglasses-subscription/",
+        "stock_status": "instock",
+        "stock_quantity": 0,
+        "manage_stock": false,
+        "low_stock_amount": 2,
+        "category_ids": [],
+        "sku": ""
+      },
+      "_links": {
+        "product": [
+          {
+            "href": "https://superlativecentaur.wpcomstaging.com/wp-json/wc-analytics/products/218"
+          }
+        ]
+      }
+    },
+    {
+      "product_id": 15,
+      "items_sold": 21,
+      "net_revenue": 385,
+      "orders_count": 10,
+      "extended_info": {
+        "name": "Beanie",
+        "price": 20,
+        "image": "<img width=\"450\" height=\"450\" src=\"https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/beanie-2-600x600.jpg\" class=\"attachment-woocommerce_thumbnail size-woocommerce_thumbnail\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/beanie-2-600x600.jpg 600w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/beanie-2-300x300.jpg 300w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/beanie-2-100x100.jpg?crop=1 100w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/beanie-2-150x150.jpg?crop=1 150w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/beanie-2-768x768.jpg 768w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/beanie-2-400x400.jpg?crop=1 400w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/beanie-2-200x200.jpg?crop=1 200w, https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/beanie-2.jpg 801w\" sizes=\"(max-width: 450px) 100vw, 450px\" data-attachment-id=\"48\" data-permalink=\"https://superlativecentaur.wpcomstaging.com/?attachment_id=48\" data-orig-file=\"https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/beanie-2.jpg\" data-orig-size=\"801,801\" data-comments-opened=\"1\" data-image-meta=\"{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}\" data-image-title=\"beanie-2.jpg\" data-image-description=\"\" data-image-caption=\"\" data-medium-file=\"https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/beanie-2-300x300.jpg\" data-large-file=\"https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/beanie-2.jpg\" />",
+        "permalink": "https://superlativecentaur.wpcomstaging.com/product/beanie/",
+        "stock_status": "instock",
+        "stock_quantity": 498,
+        "manage_stock": true,
+        "low_stock_amount": 2,
+        "category_ids": [
+          1363
+        ],
+        "sku": "woo-beanie"
+      },
+      "_links": {
+        "product": [
+          {
+            "href": "https://superlativecentaur.wpcomstaging.com/wp-json/wc-analytics/products/19"
+          }
+        ]
+      }
+    }
+ ]

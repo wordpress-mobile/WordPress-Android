@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.jetpackai
 
 import android.content.Context
 import com.android.volley.RequestQueue
+import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
@@ -25,6 +26,57 @@ class JetpackAIRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
+    suspend fun fetchJetpackAIJWTToken(
+        site: SiteModel
+    ) : JetpackAIJWTTokenResponse {
+        val url = WPCOMV2.sites.site(site.siteId).jetpack_openai_query.jwt.url
+        val response = wpComGsonRequestBuilder.syncPostRequest(
+            restClient = this,
+            url = url,
+            params = null,
+            body = null,
+            clazz = JetpackAIJWTTokenDto::class.java,
+        )
+
+        return when (response) {
+            is Response.Success -> JetpackAIJWTTokenResponse.Success(response.data.token)
+            is Response.Error -> JetpackAIJWTTokenResponse.Error(
+                response.error.toJetpackAICompletionsError(),
+                response.error.message
+            )
+        }
+    }
+
+    suspend fun fetchJetpackAITextCompletion(
+        token: String,
+        prompt: String,
+        feature: String
+    ): JetpackAICompletionsResponse {
+        val url = WPCOMV2.text_completion.url
+        val body = mutableMapOf<String, String>()
+        body.apply {
+            put("token", token)
+            put("prompt", prompt)
+            put("feature", feature)
+        }
+
+        val response = wpComGsonRequestBuilder.syncPostRequest(
+            restClient = this,
+            url = url,
+            params = null,
+            body = body,
+            clazz = JetpackAITextCompletionDto::class.java
+        )
+
+        return when (response) {
+            is Response.Success -> JetpackAICompletionsResponse.Success(response.data.completion)
+            is Response.Error -> JetpackAICompletionsResponse.Error(
+                response.error.toJetpackAICompletionsError(),
+                response.error.message
+            )
+        }
+    }
+
     /**
      * Fetches Jetpack AI completions for a given prompt.
      *
@@ -67,6 +119,23 @@ class JetpackAIRestClient @Inject constructor(
                 response.error.message
             )
         }
+    }
+
+    internal  data class JetpackAIJWTTokenDto(
+        @SerializedName ("success") val success: Boolean,
+        @SerializedName("token") val token: String
+    )
+
+    internal data class JetpackAITextCompletionDto(
+        @SerializedName ("completion") val completion: String
+    )
+
+    sealed class JetpackAIJWTTokenResponse {
+        data class Success(val token: String) : JetpackAIJWTTokenResponse()
+        data class Error(
+            val type: JetpackAICompletionsErrorType,
+            val message: String? = null
+        ) : JetpackAIJWTTokenResponse()
     }
 
     sealed class JetpackAICompletionsResponse {

@@ -10,10 +10,12 @@ import org.wordpress.android.fluxc.persistence.PlanOffersDao
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao
 import org.wordpress.android.fluxc.persistence.WPAndroidDatabase
 import org.wordpress.android.fluxc.persistence.WPAndroidDatabase.Companion.buildDb
+import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.persistence.domains.DomainDao
+import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import javax.inject.Singleton
 
 @Module
@@ -78,5 +80,17 @@ class DatabaseModule {
         wpAndroidDatabase: WPAndroidDatabase
     ): JetpackCPConnectedSitesDao {
         return wpAndroidDatabase.jetpackCPConnectedSitesDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideBlazeCampaignsDao(wpAndroidDatabase: WPAndroidDatabase): BlazeCampaignsDao {
+        return wpAndroidDatabase.blazeCampaignsDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideJetpackSocialDao(wpAndroidDatabase: WPAndroidDatabase): JetpackSocialDao {
+        return wpAndroidDatabase.jetpackSocialDao()
     }
 }
