@@ -7,10 +7,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CampaignDetailViewModel @Inject constructor(
-    private val blazeFeatureUtils: BlazeFeatureUtils,
+    private val blazeFeatureUtils: BlazeFeatureUtils
 ) : ViewModel() {
-    fun start(campaignDetailPageSource: CampaignDetailPageSource) {
+    private var campaignId: Int = 0
+    fun start(campaignId: Int, campaignDetailPageSource: CampaignDetailPageSource) {
         blazeFeatureUtils.trackCampaignDetailsOpened(campaignDetailPageSource)
+        this.campaignId = campaignId
     }
 }
 

@@ -36,9 +36,8 @@ val campaign = BlazeCampaignModel(
 )
 
 val onCreateCampaignClick = { }
-val onCampaignClick = { }
 val onCardClick = { }
-
+private var onCampaignClick: ((campaignId: Int) -> Unit) = { }
 val campaignWithBlazeBuilderParams = CampaignWithBlazeCardBuilderParams(
     campaign = campaign,
     onCardClick = onCardClick,
