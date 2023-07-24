@@ -138,9 +138,11 @@ fun CampaignListingError(error: CampaignListingUiState.Error) {
             text = uiStringText(uiString = error.description),
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center,
+            modifier = Modifier.padding(top = 8.dp)
         )
         if (error.button != null) {
             Button(
+                modifier = Modifier.padding(top = 8.dp),
                 onClick = error.button.click
             ) {
                 Text(text = uiStringText(uiString = error.button.text))
