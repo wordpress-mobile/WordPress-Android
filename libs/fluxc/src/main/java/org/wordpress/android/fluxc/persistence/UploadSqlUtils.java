@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.wordpress.android.fluxc.persistence.WellSqlConfig.SQLITE_MAX_VARIABLE_NUMBER;
+
 public class UploadSqlUtils {
     public static int insertOrUpdateMedia(MediaUploadModel media) {
         if (media == null) return 0;
@@ -169,11 +171,8 @@ public class UploadSqlUtils {
     }
 
     public static @NonNull List<PostModel> getPostModelsForPostUploadModels(List<PostUploadModel> postUploadModels) {
-        // The maximum value of a host parameter number is SQLITE_MAX_VARIABLE_NUMBER, which defaults to 999 for
-        // SQLite versions prior to 3.32.0 (2020-05-22) or 32766 for SQLite versions after 3.32.0.
-        // @see https://www.sqlite.org/limits.html
         if (postUploadModels.size() > 0) {
-            List<List<PostUploadModel>> batches = getBatches(postUploadModels, 999);
+            List<List<PostUploadModel>> batches = getBatches(postUploadModels, SQLITE_MAX_VARIABLE_NUMBER);
             List<PostModel> postModelList = new ArrayList<>();
 
             for (List<PostUploadModel> batch : batches) {
