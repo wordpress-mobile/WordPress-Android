@@ -49,6 +49,18 @@ private val CONTENT_CONFIG_RESPONSE = ContentConfig(
     imageUrl = "https://imageurl"
 )
 
+private val CONTENT_CAMPAIGN_STATS = CampaignStats(
+    impressionsTotal = 1,
+    clicksTotal = 1,
+    clickThroughRate = 0.0F,
+    durationDays = 0,
+    budgetDay = 0,
+    spentBudgetCents = 0,
+    budgetLeft = 0,
+    totalBudget = 0,
+    totalBudgetUsed = 0
+)
+
 private val CAMPAIGN_RESPONSE = Campaign(
     campaignId = 1,
     name = "Brand new post - do not approve",
@@ -60,8 +72,6 @@ private val CAMPAIGN_RESPONSE = Campaign(
     statusSmart = 0,
     status = "rejected",
     subscriptionId = 1,
-    clicks = null,
-    impressions = null,
     revenue = null,
     displayName = "displayname",
     avatarUrl = "https://avatar.url",
@@ -98,7 +108,8 @@ private val CAMPAIGN_RESPONSE = Campaign(
     creativeHtml = "",
     uiStatus = "rejected",
     audienceList = AUDIENCE_LIST_RESPONSE,
-    contentConfig = CONTENT_CONFIG_RESPONSE
+    contentConfig = CONTENT_CONFIG_RESPONSE,
+    campaignStats = CONTENT_CAMPAIGN_STATS
 )
 
 private val BLAZE_CAMPAIGNS_RESPONSE = BlazeCampaignsResponse(
