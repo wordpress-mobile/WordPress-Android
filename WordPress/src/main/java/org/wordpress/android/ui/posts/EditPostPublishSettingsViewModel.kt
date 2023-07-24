@@ -44,8 +44,6 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     postSchedulingNotificationStore,
     siteStore
 ) {
-    private var editPostRepository: EditPostRepository? = null
-
     private val _authors = MutableLiveData<List<Person>>()
     val authors: LiveData<List<Person>> = _authors
 
@@ -75,8 +73,6 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         }
         loadAuthors(siteModel)
         loadJetpackSocial(siteModel)
-
-        editPostRepository = postRepository
     }
 
     private fun loadAuthors(siteModel: SiteModel?) {
