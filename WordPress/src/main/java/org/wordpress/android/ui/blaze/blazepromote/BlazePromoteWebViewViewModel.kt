@@ -57,7 +57,7 @@ class BlazePromoteWebViewViewModel @Inject constructor(
         blazeFeatureUtils.trackBlazeFlowStarted(source)
         val url = buildUrl(promoteScreen)
         blazeFlowStep = extractCurrentStep(url)
-        if (validateAndPostFinishIfNeeded()) return
+        if (!validateAndPostFinishIfNeeded()) return
         postScreenState(model.value.copy(url = url, addressToLoad = prepareUrl(url)))
     }
 
