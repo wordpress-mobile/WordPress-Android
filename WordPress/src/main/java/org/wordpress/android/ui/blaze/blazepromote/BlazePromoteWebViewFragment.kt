@@ -76,7 +76,10 @@ class BlazePromoteWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
 
     private fun handleActionEvents(actionEvent: BlazeActionEvent) {
         when (actionEvent) {
-            is BlazeActionEvent.FinishActivity -> requireActivity().finish()
+            is BlazeActionEvent.FinishActivity, is BlazeActionEvent.FinishActivityWithMessage -> {
+                requireActivity().finish()
+            }
+
             is BlazeActionEvent.LaunchExternalBrowser -> {
                 ActivityLauncher.openUrlExternal(
                     requireContext(),
