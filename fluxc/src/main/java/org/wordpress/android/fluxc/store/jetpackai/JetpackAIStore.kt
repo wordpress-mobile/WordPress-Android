@@ -2,7 +2,13 @@ package org.wordpress.android.fluxc.store.jetpackai
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAICompletionsErrorType.AUTH_ERROR
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAICompletionsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIJWTTokenResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIJWTTokenResponse.Error
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIJWTTokenResponse.Success
 import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -10,8 +16,12 @@ import javax.inject.Singleton
 @Singleton
 class JetpackAIStore @Inject constructor(
     private val jetpackAIRestClient: JetpackAIRestClient,
-    private val coroutineEngine: CoroutineEngine
+    private val coroutineEngine: CoroutineEngine,
+    private val preferenceUtils: PreferenceUtilsWrapper
 ) {
+    companion object {
+        const val JETPACK_AI_JWT_TOKEN_KEY = "JETPACK_AI_JWT_TOKEN_KEY"
+    }
     /**
      * Fetches Jetpack AI completions for a given prompt to be used on a particular post.
      *
@@ -57,5 +67,70 @@ class JetpackAIStore @Inject constructor(
         loggedMessage = "fetch Jetpack AI completions"
     ) {
         jetpackAIRestClient.fetchJetpackAICompletions(site, prompt, feature, skipCache, postId)
+    }
+
+    suspend fun fetchJetpackAICompletions(
+        site: SiteModel,
+        prompt: String,
+        feature: String
+    ): JetpackAICompletionsResponse = coroutineEngine.withDefaultContext(
+        tag = AppLog.T.API,
+        caller = this,
+        loggedMessage = "fetch Jetpack AI completions"
+    ) {
+        val token = preferenceUtils.getFluxCPreferences().getString(JETPACK_AI_JWT_TOKEN_KEY, null)
+
+        val result = if (token != null) {
+            jetpackAIRestClient.fetchJetpackAITextCompletion(token, prompt, feature)
+        } else {
+            val jwtTokenResponse = fetchJetpackAIJWTToken(site)
+            fetchCompletionsWithToken(jwtTokenResponse, prompt, feature)
+        }
+
+        return@withDefaultContext when {
+            // Fetch token anew if using existing token returns AUTH_ERROR
+            result is JetpackAICompletionsResponse.Error && result.type == AUTH_ERROR -> {
+                val jwtTokenResponse = fetchJetpackAIJWTToken(site)
+                fetchCompletionsWithToken(jwtTokenResponse, prompt, feature)
+            }
+
+            else -> result
+        }
+    }
+
+    private suspend fun fetchCompletionsWithToken(
+        jwtTokenResponse: JetpackAIJWTTokenResponse,
+        prompt: String,
+        feature: String
+    ): JetpackAICompletionsResponse {
+        return when (jwtTokenResponse) {
+            is Error -> {
+                JetpackAICompletionsResponse.Error(
+                    type = AUTH_ERROR,
+                    message = jwtTokenResponse.message,
+                )
+            }
+
+            is Success -> {
+                preferenceUtils.getFluxCPreferences().edit().putString(
+                    JETPACK_AI_JWT_TOKEN_KEY, jwtTokenResponse.token
+                ).apply()
+
+                jetpackAIRestClient.fetchJetpackAITextCompletion(
+                    jwtTokenResponse.token,
+                    prompt,
+                    feature
+                )
+            }
+        }
+    }
+
+     private suspend fun fetchJetpackAIJWTToken(site: SiteModel)
+     : JetpackAIJWTTokenResponse = coroutineEngine.withDefaultContext(
+        tag = AppLog.T.API,
+        caller = this,
+        loggedMessage = "fetch Jetpack AI JWT token"
+    ) {
+        jetpackAIRestClient.fetchJetpackAIJWTToken(site)
     }
 }

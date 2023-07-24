@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.WellSqlTestUtils;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
+import org.wordpress.android.fluxc.model.jetpacksocial.JetpackSocialMapper;
 import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory;
@@ -28,6 +29,7 @@ import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.persistence.domains.DomainDao;
+import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.UpdateSitesResult;
 import org.wordpress.android.fluxc.tools.CoroutineEngineUtilsKt;
@@ -68,6 +70,8 @@ public class SiteStoreUnitTest {
             mSiteSqlUtils,
             Mockito.mock(JetpackCPConnectedSitesDao.class),
             Mockito.mock(DomainDao.class),
+            Mockito.mock(JetpackSocialDao.class),
+            Mockito.mock(JetpackSocialMapper.class),
             CoroutineEngineUtilsKt.initCoroutineEngine()
     );
 

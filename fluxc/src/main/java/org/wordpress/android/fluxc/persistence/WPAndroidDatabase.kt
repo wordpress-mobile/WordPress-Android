@@ -15,6 +15,9 @@ import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOffer
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferFeature
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfig
+import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
+import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
+import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignsPaginationEntity
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao.BloggingPromptEntity
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
@@ -24,9 +27,11 @@ import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
 import org.wordpress.android.fluxc.persistence.domains.DomainDao
 import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
+import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
+import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.JetpackSocialEntity
 
 @Database(
-        version = 16,
+        version = 18,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -38,12 +43,17 @@ import org.wordpress.android.fluxc.persistence.domains.DomainDao.DomainEntity
             FeatureFlag::class,
             RemoteConfig::class,
             JetpackCPConnectedSiteEntity::class,
-            DomainEntity::class
+            DomainEntity::class,
+            BlazeCampaignEntity::class,
+            BlazeCampaignsPaginationEntity::class,
+            JetpackSocialEntity::class,
         ],
         autoMigrations = [
             AutoMigration(from = 11, to = 12),
             AutoMigration(from = 12, to = 13),
-            AutoMigration(from = 13, to = 14)
+            AutoMigration(from = 13, to = 14),
+            AutoMigration(from = 16, to = 17),
+            AutoMigration(from = 17, to = 18),
         ]
 )
 @TypeConverters(
@@ -69,6 +79,10 @@ abstract class WPAndroidDatabase : RoomDatabase() {
     abstract fun domainDao(): DomainDao
 
     abstract fun jetpackCPConnectedSitesDao(): JetpackCPConnectedSitesDao
+
+    abstract fun blazeCampaignsDao(): BlazeCampaignsDao
+
+    abstract fun jetpackSocialDao(): JetpackSocialDao
 
     @Suppress("MemberVisibilityCanBePrivate")
     companion object {
