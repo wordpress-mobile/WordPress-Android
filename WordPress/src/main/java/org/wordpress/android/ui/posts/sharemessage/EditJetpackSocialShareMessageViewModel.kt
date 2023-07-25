@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.sharemessage
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,7 +47,8 @@ class EditJetpackSocialShareMessageViewModel @Inject constructor(
         updatedShareMessage = shareMessage
     }
 
-    private fun onBackClick() {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun onBackClick() {
         viewModelScope.launch {
             _actionEvents.send(
                 ActionEvent.FinishActivity(
