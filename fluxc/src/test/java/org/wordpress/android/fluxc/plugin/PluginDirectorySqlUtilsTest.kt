@@ -163,6 +163,34 @@ class PluginDirectorySqlUtilsTest {
         }
     }
 
+    @Test
+    fun testTooManyVariablesForGetWPOrgPluginsForDirectory() {
+        val numberOfNewPlugins = 1000
+
+        val slugList: MutableList<String> = ArrayList()
+        for (i in 0 until numberOfNewPlugins) {
+            slugList.add(randomString("slug$i")) // ensure slugs are different
+        }
+        // Insert random wporg plugins
+        slugList.forEach {
+            val wpOrgPluginModel = WPOrgPluginModel()
+            wpOrgPluginModel.slug = it
+            PluginSqlUtils.insertOrUpdateWPOrgPlugin(wpOrgPluginModel)
+        }
+
+        // Add plugin directory models for NEW type
+        val directoryListForNewPlugins = arrayListOf<PluginDirectoryModel>()
+        slugList.forEach {
+            val directoryModel = PluginDirectoryModel()
+            directoryModel.slug = it
+            directoryModel.directoryType = NEW.toString()
+            directoryListForNewPlugins.add(directoryModel)
+        }
+        PluginSqlUtils.insertPluginDirectoryList(directoryListForNewPlugins)
+        val insertedNewPlugins = PluginSqlUtils.getWPOrgPluginsForDirectory(NEW)
+        Assert.assertEquals(numberOfNewPlugins, insertedNewPlugins.size)
+    }
+
     @Throws(
         NoSuchMethodException::class,
         InvocationTargetException::class,
