@@ -5,18 +5,21 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.Matchers
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.support.WPSupportUtils
 import android.R as AndroidR
 
 class HelpScreen {
     fun assertHelpScreenLoaded(): HelpScreen {
-        contactUsButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+        if (BuildConfig.IS_JETPACK_APP) {
+            contactUsButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+            ticketsButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+            emailAddressText.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+        }
         faqButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
-        ticketsButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
         logsButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
         applicationVersionText.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
-        emailAddressText.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
         return this
     }
 
