@@ -48,6 +48,8 @@ interface PostImmutableModel {
     val hasCapabilityEditPost: Boolean
     val hasCapabilityDeletePost: Boolean
     val dateLocallyChanged: String
+    val autoShareMessage: String
+    val autoShareId: Long
 
     fun hasFeaturedImage(): Boolean
 
