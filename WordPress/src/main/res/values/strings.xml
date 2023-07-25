@@ -4515,6 +4515,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="promote_blaze_card_title">Promote your content with Blaze</string>
     <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
     <string name="promote_blaze_card_menu_hide_this">Hide this</string>
+    <string name="promote_blaze_flow_error">The blaze promote flow couldn\'t be loaded</string>
 
     <string name="gutenberg_native_blocks_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks menu</string>
 
@@ -4623,4 +4624,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="campaign_listing_page_no_campaigns_message_title">You have no campaigns</string>
     <string name="campaign_listing_page_no_campaigns_message_description">You have not created any campaigns yet. Click create to get started.</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Create</string>
+    <string name="blaze_campaign_detail_error">Campaign Details couldn\'t be loaded</string>
+    <string name="gutenberg_native_insert_audio_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Audio Block</string>
+    <string name="gutenberg_native_insert_gallery_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Gallery Block</string>
+    <string name="gutenberg_native_insert_image_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Image Block</string>
+    <string name="gutenberg_native_insert_video_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Video Block</string>
 </resources>
