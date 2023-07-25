@@ -2128,13 +2128,6 @@ open class SiteStore @Inject constructor(
             }
         }
 
-    suspend fun getJetpackSocial(siteLocalId: Int): JetpackSocial {
-        val entity = jetpackSocialDao.getJetpackSocial(siteLocalId)
-        return jetpackSocialMapper.mapDomain(entity)
-    }
-
-
-
     suspend fun deleteApplicationPassword(site: SiteModel): OnApplicationPasswordDeleted =
         coroutineEngine.withDefaultContext(T.API, this, "Delete Application Password") {
             when (val result = applicationPasswordsManagerProvider.get().deleteApplicationCredentials(site)) {
