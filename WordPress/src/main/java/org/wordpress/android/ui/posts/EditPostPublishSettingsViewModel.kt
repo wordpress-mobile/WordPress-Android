@@ -134,8 +134,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
 
     private fun showNoConnections(allConnections: List<PostSocialConnection>): Boolean =
         allConnections.isEmpty() && (siteModel?.supportsPublicize() ?: false)
-                && publicizeTableWrapper.getServiceList().filter { it.status != PublicizeService.Status.UNSUPPORTED }
-            .isNotEmpty()
+                && publicizeTableWrapper.getServiceList().any { it.status != PublicizeService.Status.UNSUPPORTED }
 
     private suspend fun mapLoaded(
         it: SiteModel,
