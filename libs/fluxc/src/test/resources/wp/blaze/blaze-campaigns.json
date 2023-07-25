@@ -61,7 +61,18 @@
         "languages": ""
       },
       "creative_html": "",
-      "ui_status": "rejected"
+      "ui_status": "rejected",
+      "campaign_stats": {
+        "impressions_total": 1,
+        "clicks_total": 1,
+        "clickthrough_rate": 0.0,
+        "duration_days": 0,
+        "budget_day": 0,
+        "spent_budget_cents": 0,
+        "budget_left": 0,
+        "total_budget": 0,
+        "total_budget_used": 0
+      }
     }
   ],
   "total_pages": 1,
