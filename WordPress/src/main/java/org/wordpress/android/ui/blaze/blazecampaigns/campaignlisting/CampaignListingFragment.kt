@@ -54,7 +54,6 @@ private const val CAMPAIGN_LISTING_PAGE_SOURCE = "campaign_listing_page_source"
 
 @AndroidEntryPoint
 class CampaignListingFragment : Fragment() {
-
     @Inject
     lateinit var activityNavigator: ActivityNavigator
 
