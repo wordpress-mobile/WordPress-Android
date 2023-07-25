@@ -702,7 +702,7 @@ public class PostRestClient extends BaseWPComRestClient {
             Map<String, Object> autoShareMessageParams = new HashMap<>();
             autoShareMessageParams.put("key", "_wpas_mess");
             autoShareMessageParams.put("value", post.getAutoShareMessage());
-            if (post.getAutoShareId() >= 0) {
+            if (post.getAutoShareId() > 0) {
                 autoShareMessageParams.put("id", post.getAutoShareId());
             }
             metadata.add(autoShareMessageParams);
