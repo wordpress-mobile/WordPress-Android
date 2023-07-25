@@ -1,0 +1,3 @@
+22.8:
+- Uygulama, artık bir siteyi sildikten sonra kilitlenmeyecek. Harika!
+- Tekrar kullanılabilir bloklar, artık masaüstü düzenleyicisinde olduğu gibi senkronize edilmiş desenler olarak adlandırılıyor.

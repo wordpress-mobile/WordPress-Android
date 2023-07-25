@@ -1,8 +1,13 @@
 # Nodes with values to reuse in the pipeline.
 common_params:
   # Common plugin settings to use with the `plugins` key.
-  - &common_plugins
-    - automattic/a8c-ci-toolkit#2.17.0
+  - &ci_toolkit
+    automattic/a8c-ci-toolkit#2.18.2
+  - &test_collector
+    test-collector#v1.8.0
+  - &test_collector_common_params
+      files: "buildkite-test-analytics/*.xml"
+      format: "junit"
 
 steps:
   #################
@@ -11,7 +16,7 @@ steps:
   - label: "Gradle Wrapper Validation"
     command: |
       validate_gradle_wrapper
-    plugins: *common_plugins
+    plugins: [*ci_toolkit]
 
   # Wait for Gradle Wrapper to be validated before running any other jobs
   - wait
@@ -25,7 +30,7 @@ steps:
         command: |
           cp gradle.properties-example gradle.properties
           ./gradlew checkstyle
-        plugins: *common_plugins
+        plugins: [*ci_toolkit]
         artifact_paths:
           - "**/build/reports/checkstyle/checkstyle.*"
 
@@ -33,7 +38,7 @@ steps:
         command: |
           cp gradle.properties-example gradle.properties
           ./gradlew detekt
-        plugins: *common_plugins
+        plugins: [*ci_toolkit]
         artifact_paths:
           - "**/build/reports/detekt/detekt.html"
 
@@ -52,7 +57,7 @@ steps:
       cp gradle.properties-example gradle.properties
       .buildkite/commands/dependency-tree-diff.sh
     if: build.pull_request.id != null
-    plugins: *common_plugins
+    plugins: [*ci_toolkit]
 
   #################
   # Unit Tests
@@ -61,19 +66,31 @@ steps:
     steps:
       - label: "🔬 Unit Test WordPress"
         command: ".buildkite/commands/run-unit-tests.sh wordpress"
-        plugins: *common_plugins
+        plugins: 
+          - *ci_toolkit
+          - *test_collector :
+              <<: *test_collector_common_params
+              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_WORDPRESS"
         artifact_paths:
           - "**/build/test-results/*/*.xml"
 
       - label: "🔬 Unit Test Processors"
         command: ".buildkite/commands/run-unit-tests.sh processors"
-        plugins: *common_plugins
+        plugins: 
+          - *ci_toolkit
+          - *test_collector :
+              <<: *test_collector_common_params
+              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_PROCESSORS"
         artifact_paths:
           - "**/build/test-results/*/*.xml"
 
       - label: "🔬 Unit Test Image Editor"
         command: ".buildkite/commands/run-unit-tests.sh image-editor"
-        plugins: *common_plugins
+        plugins: 
+          - *ci_toolkit
+          - *test_collector :
+              <<: *test_collector_common_params
+              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_IMAGE_EDITOR"
         artifact_paths:
           - "**/build/test-results/*/*.xml"
 
@@ -83,38 +100,24 @@ steps:
   - group: "🔬 Instrumented tests"
     steps:
       - label: ":wordpress: 🔬 Instrumented tests"
-        key: "WP_instrumented_tests"      
         command: ".buildkite/commands/run-instrumented-tests.sh wordpress"
-        plugins: *common_plugins
+        plugins: 
+          - *ci_toolkit
+          - *test_collector :
+              <<: *test_collector_common_params
+              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_WORDPRESS"
         artifact_paths:
           - "**/build/instrumented-tests/**/*"
-
-      - label: ":wordpress: 🔍 Test Analytics"
-        depends_on:
-          - "WP_instrumented_tests"
-        command: buildkite-agent artifact download '**/test_result_1.xml' . --step "WP_instrumented_tests"
-        plugins:
-          - test-collector#v1.8.0:
-              files: "**/test_result_1.xml"
-              format: "junit"
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_WORDPRESS"          
 
       - label: ":jetpack: 🔬 Instrumented tests"
-        key: "JP_instrumented_tests"
         command: ".buildkite/commands/run-instrumented-tests.sh jetpack"
-        plugins: *common_plugins
+        plugins: 
+          - *ci_toolkit
+          - *test_collector :
+              <<: *test_collector_common_params
+              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_JETPACK"
         artifact_paths:
           - "**/build/instrumented-tests/**/*"
-
-      - label: ":jetpack: 🔍 Test Analytics"
-        depends_on:
-          - "JP_instrumented_tests"
-        command: buildkite-agent artifact download '**/test_result_1.xml' . --step "JP_instrumented_tests"
-        plugins:
-          - test-collector#v1.8.0:
-              files: "**/test_result_1.xml"
-              format: "junit"
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_JETPACK"
 
   #################
   # Create Prototype Builds for WP and JP
@@ -124,9 +127,9 @@ steps:
       - label: ":wordpress: :android: Prototype Build"
         command: ".buildkite/commands/prototype-build.sh wordpress"
         if: build.pull_request.id != null
-        plugins: *common_plugins
+        plugins: [*ci_toolkit]
 
       - label: ":jetpack: :android: Prototype Build"
         command: ".buildkite/commands/prototype-build.sh jetpack"
         if: build.pull_request.id != null
-        plugins: *common_plugins
+        plugins: [*ci_toolkit]

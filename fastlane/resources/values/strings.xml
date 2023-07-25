@@ -1712,6 +1712,11 @@
     <string name="post_settings_time_and_date">Date and Time</string>
     <string name="post_settings_notification">Notification</string>
     <string name="post_settings_add_to_calendar">Add to calendar</string>
+    <string name="post_settings_jetpack_social_header">Social Sharing</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Increase your traffic by auto-sharing your posts with your friends on social media.</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Connect your social profiles</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Subscribe to share more</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d Social shares remaining</string>
 
     <string name="post_notification_off">Off</string>
     <string name="post_notification_one_hour_before">1 hour before</string>
@@ -1782,6 +1787,10 @@
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
+    <string name="menu_undo_context">Undo last change</string>
+    <string name="menu_redo_context">Redo last change</string>
+
+    <string name="menu_close_editor">Close editor</string>
     <string name="menu_debug">Debug Menu</string>
     <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
     <string name="menu_content_info">Content structure</string>
@@ -3482,6 +3491,8 @@
     <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Add New Category</string>
     <string name="prepublishing_nudges_add_category_button">Add Category</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Increase your traffic by auto-sharing your posts with your friends on social media.</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Connect your social profiles</string>
 
     <!-- Modal Layout Picker -->
     <string name="mlp_choose_layout_title">Choose a layout</string>
@@ -4504,6 +4515,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="promote_blaze_card_title">Promote your content with Blaze</string>
     <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
     <string name="promote_blaze_card_menu_hide_this">Hide this</string>
+    <string name="promote_blaze_flow_error">The blaze promote flow couldn\'t be loaded</string>
 
     <string name="gutenberg_native_blocks_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks menu</string>
 
@@ -4591,4 +4603,30 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editing synced patterns is not yet supported on %s for Android</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editing synced patterns is not yet supported on %s for iOS</string>
     <string name="gutenberg_native_s_detached" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s detached</string>
+
+    <!-- Jetpack - Blaze campaigns card -->
+    <string name="blaze_campaigns_card_title">Blaze Campaign</string>
+    <string name="blaze_campaigns_card_footer_label">Create Campaign</string>
+    <string name="campaign_status_active">ACTIVE</string>
+    <string name="campaign_status_completed">COMPLETED</string>
+    <string name="campaign_status_rejected">REJECTED</string>
+    <string name="campaign_status_canceled">CANCELED</string>
+    <string name="campaign_status_in_moderation">IN MODERATION</string>
+    <string name="campaign_status_scheduled">SCHEDULED</string>
+
+    <string name="impressions_campaign_stats">Impressions</string>
+    <string name="clicks_campaign_stats">Clicks</string>
+    <string name="budget_campaign_stats">Budget</string>
+
+    <!-- Jetpack - Blaze campaigns page -->
+    <string name="blaze_campaigns_page_title">Blaze Campaigns</string>
+    <string name="blaze_campaign_details_page_title">Campaign Details</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">You have no campaigns</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">You have not created any campaigns yet. Click create to get started.</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Create</string>
+    <string name="blaze_campaign_detail_error">Campaign Details couldn\'t be loaded</string>
+    <string name="gutenberg_native_insert_audio_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Audio Block</string>
+    <string name="gutenberg_native_insert_gallery_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Gallery Block</string>
+    <string name="gutenberg_native_insert_image_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Image Block</string>
+    <string name="gutenberg_native_insert_video_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Video Block</string>
 </resources>

@@ -16,8 +16,8 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
-import org.wordpress.android.ui.blazeCampaigns.campaigndetail.CampaignDetailPageSource
-import org.wordpress.android.ui.blazeCampaigns.campaignlisting.CampaignListingPageSource
+import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
+import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
 import kotlin.test.assertEquals
@@ -36,6 +36,8 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
 
     private lateinit var refreshActions: MutableList<Boolean>
+
+    private val campaignId = 1
 
     @Before
     fun setup() {
@@ -153,11 +155,16 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
         // When
         val result =
             blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate) as CampaignWithBlazeCardBuilderParams
-        result.onCampaignClick()
+        result.onCampaignClick(campaignId)
 
         // Then
         assertThat(navigationActions)
-            .containsOnly(SiteNavigationAction.OpenCampaignDetailPage(CampaignDetailPageSource.DASHBOARD_CARD))
+            .containsOnly(
+                SiteNavigationAction.OpenCampaignDetailPage(
+                    campaignId,
+                    CampaignDetailPageSource.DASHBOARD_CARD
+                )
+            )
     }
 
     @Test
