@@ -106,7 +106,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     }
 
     private fun loadJetpackSocial() {
-        if (!jetpackSocialFeatureConfig.isEnabled()) {
+        if (!jetpackSocialFeatureConfig.isEnabled() || siteModel?.supportsPublicize() != true) {
             _showJetpackSocialContainer.value = false
             return
         }
