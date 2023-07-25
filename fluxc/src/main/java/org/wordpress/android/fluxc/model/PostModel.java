@@ -102,6 +102,9 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private String mAutoShareMessage;
     @Column private long mAutoShareId;
 
+    // Comma-separated IDs of publicize connections that should not be enabled
+    @Column private String mPublicizeSkipConnections;
+
     public PostModel() {}
 
     @Override
@@ -544,6 +547,15 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         return StringUtils.notNullStr(mAutoShareMessage);
     }
 
+    public void setPublicizeSkipConnections(final String publicizeSkipConnections) {
+        mPublicizeSkipConnections = publicizeSkipConnections;
+    }
+
+    @Override
+    @NonNull public String getPublicizeSkipConnections() {
+        return StringUtils.notNullStr(mPublicizeSkipConnections);
+    }
+
     @Override
     public long getAutoShareId() {
         return mAutoShareId;
@@ -592,6 +604,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getAutoSaveModified(), otherPost.getAutoSaveModified())
                 && StringUtils.equals(getAutoSavePreviewUrl(), otherPost.getAutoSavePreviewUrl())
                 && StringUtils.equals(getAutoShareMessage(), otherPost.getAutoShareMessage())
+                && getPublicizeSkipConnections().equals(otherPost.getPublicizeSkipConnections())
                 && getAutoShareId() == otherPost.getAutoShareId();
     }
 
@@ -636,6 +649,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         result = 31 * result + (int) (mParentId ^ (mParentId >>> 32));
         result = 31 * result + (mParentTitle != null ? mParentTitle.hashCode() : 0);
         result = 31 * result + (mAutoShareMessage != null ? mAutoShareMessage.hashCode() : 0);
+        result = 31 * result + (mPublicizeSkipConnections != null ? mPublicizeSkipConnections.hashCode() : 0);
         return result;
     }
 
