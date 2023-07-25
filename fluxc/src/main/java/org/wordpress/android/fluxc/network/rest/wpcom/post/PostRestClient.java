@@ -514,6 +514,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
         List<PostMetaData> metaDataList = from.getMetadata();
         if (metaDataList != null) {
+            final ArrayList<String> publicizeSkipConnections = new ArrayList<>();
             for (PostMetaData metaData : metaDataList) {
                 String key = metaData.getKey();
                 if (key != null && metaData.getValue() != null) {
@@ -553,8 +554,22 @@ public class PostRestClient extends BaseWPComRestClient {
                             post.setAutoShareId(metaDataId);
                         }
                     }
+
+                    if (key.startsWith("_wpas_skip_publicize_")) {
+                        // e.g. "_wpas_skip_publicize_12345"
+                        final String[] publicizeSkipConnectionSplit = metaData.getKey().split("_wpas_skip_publicize_");
+                        // Length should be 2, since one element will be "" (removed delimiter) and the other one
+                        // the connection ID
+                        if (publicizeSkipConnectionSplit.length == 2) {
+                            final String connectionId = publicizeSkipConnectionSplit[1];
+                            if (connectionId != null && connectionId.length() > 0) {
+                                publicizeSkipConnections.add(connectionId);
+                            }
+                        }
+                    }
                 }
             }
+            post.setPublicizeSkipConnections(String.join(",", publicizeSkipConnections));
         }
 
         if (from.getCategories() != null) {
