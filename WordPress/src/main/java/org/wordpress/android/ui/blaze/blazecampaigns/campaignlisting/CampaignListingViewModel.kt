@@ -33,6 +33,9 @@ class CampaignListingViewModel @Inject constructor(
     private val _uiState = MutableLiveData<CampaignListingUiState>()
     val uiState: LiveData<CampaignListingUiState> = _uiState
 
+    private val _navigation = MutableLiveData<Event<CampaignListingNavigation>>()
+    val navigation = _navigation
+
     fun start(campaignListingPageSource: CampaignListingPageSource) {
         blazeFeatureUtils.trackCampaignListingPageShown(campaignListingPageSource)
         _uiState.postValue(CampaignListingUiState.Loading)
@@ -86,9 +89,8 @@ class CampaignListingViewModel @Inject constructor(
         _uiState.postValue(CampaignListingUiState.Success(campaigns, this::onCampaignClicked))
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun onCampaignClicked(campaignModel: CampaignModel) {
-        // todo navigate to campaign detail page
+        _navigation.postValue(Event(CampaignListingNavigation.CampaignDetailPage(campaignModel.id.toInt())))
     }
 
     private fun showNoCampaigns() {
@@ -108,4 +110,16 @@ enum class CampaignListingPageSource(val trackingName: String) {
     MENU_ITEM("menu_item"),
     UNKNOWN("unknown")
 }
+
+sealed class CampaignListingNavigation {
+    data class CampaignDetailPage(
+        val campaignId: Int,
+        val campaignDetailPageSource: CampaignDetailPageSource = CampaignDetailPageSource.CAMPAIGN_LISTING_PAGE
+    ) : CampaignListingNavigation()
+
+    data class CampaignCreatePage(
+        val blazeFlowSource: BlazeFlowSource = BlazeFlowSource.CAMPAIGN_LISTING_PAGE
+    ) : CampaignListingNavigation()
+}
+
 
