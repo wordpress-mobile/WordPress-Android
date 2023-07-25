@@ -9,12 +9,15 @@ import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.blaze.BlazeFlowSource
+import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
 import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -43,7 +46,7 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     private fun loadCampaigns() {
-        if(!networkUtilsWrapper.isNetworkAvailable()) {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
             // showNoInternet() error, skipping for now so that loading state can be design reviewed
             return
         }
@@ -82,7 +85,7 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     private fun convertToDollars(budgetCents: Long): UiString {
-        return UiString.UiStringText("$"+ (budgetCents/CENTS_IN_DOLLARS).toString())
+        return UiString.UiStringText("$" + (budgetCents / CENTS_IN_DOLLARS).toString())
     }
 
     private fun showCampaigns(campaigns: List<CampaignModel>) {
