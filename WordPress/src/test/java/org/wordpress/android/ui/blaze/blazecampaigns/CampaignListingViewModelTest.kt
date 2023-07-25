@@ -187,7 +187,7 @@ class CampaignListingViewModelTest : BaseUnitTest() {
         for (i in 0 until numbers) {
             listOfCampaigns.add(
                 BlazeCampaignModel(
-                    campaignId = i.toLong(),
+                    campaignId = i,
                     title = "Campaign $i",
                     imageUrl = "https://picsum.photos/200/300",
                     startDate = Date(),
