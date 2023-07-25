@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
@@ -22,6 +23,7 @@ fun EditPostSettingsJetpackSocialContainer(
     postSocialConnectionList: List<PostSocialConnection>,
     showShareLimitUi: Boolean,
     shareMessage: String,
+    onShareMessageClick: () -> Unit,
     remainingSharesMessage: String,
     subscribeButtonLabel: String,
     onSubscribeClick: () -> Unit,
@@ -33,9 +35,12 @@ fun EditPostSettingsJetpackSocialContainer(
         )
         PostSocialMessageItem(
             message = shareMessage,
-            modifier = Modifier.padding(
-                vertical = Margin.MediumLarge.value,
-            ),
+            modifier = Modifier
+                .padding(
+                    vertical = Margin.MediumLarge.value,
+                )
+                .fillMaxWidth(),
+            onClick = onShareMessageClick
         )
         if (showShareLimitUi) {
             Divider()
@@ -84,6 +89,7 @@ fun EditPostSettingsJetpackSocialContainerWithShareLimitPreview() {
             postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
             showShareLimitUi = true,
             shareMessage = "Share message.",
+            onShareMessageClick = {},
             remainingSharesMessage = "27/30 Social shares remaining in the next 30 days",
             subscribeButtonLabel = "Subscribe to share more",
             onSubscribeClick = {},
@@ -121,6 +127,7 @@ fun EditPostSettingsJetpackSocialContainerWithoutShareLimitPreview() {
             postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
             showShareLimitUi = false,
             shareMessage = "Share message.",
+            onShareMessageClick = {},
             remainingSharesMessage = "",
             subscribeButtonLabel = "",
             onSubscribeClick = {},

@@ -21,6 +21,7 @@ import org.wordpress.android.ui.people.utils.PeopleUtilsWrapper
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
+import org.wordpress.android.usecase.social.GetJetpackSocialShareMessageUseCase
 import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
 import org.wordpress.android.usecase.social.ShareLimit
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -39,6 +40,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     private val jetpackSocialFeatureConfig: JetpackSocialFeatureConfig = mock()
     private val accountStore: AccountStore = mock()
     private val getPublicizeConnectionsForUserUseCase: GetPublicizeConnectionsForUserUseCase = mock()
+    private val getJetpackSocialShareMessageUseCase: GetJetpackSocialShareMessageUseCase = mock()
     private val getJetpackSocialShareLimitStatusUseCase: GetJetpackSocialShareLimitStatusUseCase = mock()
     private val jetpackUiStateMapper: EditPostPublishSettingsJetpackSocialUiStateMapper = mock()
 
@@ -52,6 +54,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         jetpackSocialFeatureConfig = jetpackSocialFeatureConfig,
         accountStore = accountStore,
         getPublicizeConnectionsForUserUseCase = getPublicizeConnectionsForUserUseCase,
+        getJetpackSocialShareMessageUseCase = getJetpackSocialShareMessageUseCase,
         getJetpackSocialShareLimitStatusUseCase = getJetpackSocialShareLimitStatusUseCase,
         jetpackUiStateMapper = jetpackUiStateMapper,
     )
@@ -191,12 +194,14 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
                     },
                 )
             )
+        whenever(getJetpackSocialShareMessageUseCase.execute(any()))
+            .thenReturn("Message")
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(true)
         classToTest.start(editPostRepository)
-        verify(jetpackUiStateMapper).mapLoaded(any(), any(), any())
+        verify(jetpackUiStateMapper).mapLoaded(any(), any(), any(), any(), any())
     }
 
     @Test
@@ -215,9 +220,10 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             ),
             showShareLimitUi = true,
             shareMessage = "message",
+            onShareMessageClick = {},
             remainingSharesMessage = "remaining shares",
             subscribeButtonLabel = "label",
-            onSubscribeClick = {}
+            onSubscribeClick = {},
         )
         mockSiteModel()
         mockUserId()
@@ -237,9 +243,11 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             )
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
+        whenever(getJetpackSocialShareMessageUseCase.execute(any()))
+            .thenReturn("Message")
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(true)
-        whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any()))
+        whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any(), any(), any()))
             .thenReturn(loaded)
         classToTest.start(editPostRepository)
         verify(jetpackSocialUiStateObserver).onChanged(loaded)

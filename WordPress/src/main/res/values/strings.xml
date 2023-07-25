@@ -1716,6 +1716,8 @@
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Increase your traffic by auto-sharing your posts with your friends on social media.</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_button">Connect your social profiles</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">Subscribe to share more</string>
+    <string name="post_settings_jetpack_social_share_message_title">Customize the message</string>
+    <string name="post_settings_jetpack_social_share_message_description">Customize the message you want to share. If you don\'t add your own text here, we\'ll use the post\'s title as the message.</string>
     <string name="jetpack_social_social_shares_remaining">%1$d Social shares remaining</string>
 
     <string name="post_notification_off">Off</string>
@@ -2285,7 +2287,7 @@
     <string name="my_site_btn_jetpack_settings">Jetpack Settings</string>
     <string name="my_site_btn_site_pages">Pages</string>
     <string name="my_site_btn_blog_posts">Posts</string>
-    <string name="my_site_btn_sharing">Sharing</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="my_site_btn_domains">Domains</string>
     <string name="my_site_btn_site_settings">Site Settings</string>
     <string name="my_site_btn_comments" translatable="false">@string/comments</string>
@@ -2419,7 +2421,7 @@
     <string name="next_button" translatable="false">&gt;</string>
 
     <!-- Jetpack Social and sharing -->
-    <string name="sharing">Sharing</string>
+    <string name="sharing">Social</string>
     <string name="sharing_disabled">Sharing module disabled</string>
     <string name="sharing_disabled_description">You cannot access your sharing settings because your Sharing Jetpack module is disabled.</string>
     <string name="connections_label">Jetpack Social Connections</string>
