@@ -12,11 +12,15 @@ import android.R as AndroidR
 
 class HelpScreen {
     fun assertHelpScreenLoaded(): HelpScreen {
+        // WordPress and Jetpack apps display different items on the Support Screen
         if (BuildConfig.IS_JETPACK_APP) {
             contactUsButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
             ticketsButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
             emailAddressText.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+        } else {
+            communityForumsButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
         }
+
         faqButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
         logsButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
         applicationVersionText.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
@@ -55,5 +59,6 @@ class HelpScreen {
         var logsButton = Espresso.onView(ViewMatchers.withId(R.id.logs_button))
         var applicationVersionText = Espresso.onView(ViewMatchers.withId(R.id.applicationVersion))
         var emailAddressText = Espresso.onView(ViewMatchers.withId(R.id.contactEmailAddress))
+        var communityForumsButton = Espresso.onView(ViewMatchers.withId(R.id.support_forums_button))
     }
 }
