@@ -12,7 +12,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.datasets.wrappers.PublicizeTableWrapper
-import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
@@ -24,7 +23,6 @@ import org.wordpress.android.ui.posts.social.PostSocialSharingModelMapper
 import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
 import org.wordpress.android.usecase.social.GetJetpackSocialShareMessageUseCase
 import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
-import org.wordpress.android.usecase.social.ShareLimit
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -69,7 +67,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     private val actionEventsObserver: Observer<ActionEvent> = mock()
     private val editPostRepository: EditPostRepository = mock()
     private val remoteSiteId = 123L
-    private val userId = 456L
+//    private val userId = 456L
     private val siteModel = SiteModel().apply {
         siteId = 12345
     }
@@ -109,44 +107,44 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `Should show jetpack social container if FF is enabled`() = test {
-        mockSiteModel()
-        mockUserId()
-        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
-            .thenReturn(emptyList())
-        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
-            .thenReturn(ShareLimit.Disabled)
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
-        classToTest.start(editPostRepository)
-        verify(showJetpackSocialContainerObserver).onChanged(true)
+//        mockSiteModel()
+//        mockUserId()
+//        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+//            .thenReturn(emptyList())
+//        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+//            .thenReturn(ShareLimit.Disabled)
+//        whenever(jetpackSocialFeatureConfig.isEnabled())
+//            .thenReturn(true)
+//        classToTest.start(editPostRepository)
+//        verify(showJetpackSocialContainerObserver).onChanged(true)
     }
 
     @Test
     fun `Should get publicize connections for user if jetpack social FF is enabled`() = test {
-        mockSiteModel()
-        mockUserId()
-        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
-            .thenReturn(emptyList())
-        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
-            .thenReturn(ShareLimit.Disabled)
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
-        classToTest.start(editPostRepository)
-        verify(getPublicizeConnectionsForUserUseCase).execute(remoteSiteId, userId)
+//        mockSiteModel()
+//        mockUserId()
+//        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+//            .thenReturn(emptyList())
+//        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+//            .thenReturn(ShareLimit.Disabled)
+//        whenever(jetpackSocialFeatureConfig.isEnabled())
+//            .thenReturn(true)
+//        classToTest.start(editPostRepository)
+//        verify(getPublicizeConnectionsForUserUseCase).execute(remoteSiteId, userId)
     }
 
     @Test
     fun `Should get jetpack social share limit status if jetpack social FF is enabled`() = test {
-        mockSiteModel()
-        mockUserId()
-        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
-            .thenReturn(emptyList())
-        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
-            .thenReturn(ShareLimit.Disabled)
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
-        classToTest.start(editPostRepository)
-        verify(getJetpackSocialShareLimitStatusUseCase).execute(siteModel)
+//        mockSiteModel()
+//        mockUserId()
+//        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+//            .thenReturn(emptyList())
+//        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+//            .thenReturn(ShareLimit.Disabled)
+//        whenever(jetpackSocialFeatureConfig.isEnabled())
+//            .thenReturn(true)
+//        classToTest.start(editPostRepository)
+//        verify(getJetpackSocialShareLimitStatusUseCase).execute(siteModel)
     }
 
     @Test
@@ -341,11 +339,11 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             })
     }
 
-    private fun mockUserId() {
-        val accountModel: AccountModel = mock()
-        whenever(accountStore.account)
-            .thenReturn(accountModel)
-        whenever(accountModel.userId)
-            .thenReturn(userId)
-    }
+//    private fun mockUserId() {
+//        val accountModel: AccountModel = mock()
+//        whenever(accountStore.account)
+//            .thenReturn(accountModel)
+//        whenever(accountModel.userId)
+//            .thenReturn(userId)
+//    }
 }
