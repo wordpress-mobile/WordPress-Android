@@ -134,11 +134,17 @@ object PluginSqlUtils {
             slugList.add(slug)
             orderMap[slug] = index
         }
-        val wpOrgPlugins = WellSql.select(WPOrgPluginModel::class.java)
-            .where()
-            .isIn(WPOrgPluginModelTable.SLUG, slugList)
-            .endWhere()
-            .asModel
+
+        val batches = slugList.chunked(WellSqlConfig.SQLITE_MAX_VARIABLE_NUMBER)
+        val wpOrgPlugins = mutableListOf<WPOrgPluginModel>()
+        batches.forEach {
+            val batchQueryResult = WellSql.select(WPOrgPluginModel::class.java)
+                .where()
+                .isIn(WPOrgPluginModelTable.SLUG, it)
+                .endWhere()
+                .asModel
+            wpOrgPlugins.addAll(batchQueryResult)
+        }
         // We need to manually order the list according to the directory models since SQLite will
         // return mixed results
         wpOrgPlugins.sortWith { plugin1, plugin2 ->
