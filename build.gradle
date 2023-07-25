@@ -21,7 +21,7 @@ ext {
     automatticStoriesVersion = '738-987fbd6d5418732171cc9cafcd9e183f7da0eb23'
     automatticTracksVersion = '3.0.0'
     gutenbergMobileVersion = 'v1.100.1'
-    wordPressAztecVersion = 'v1.6.4'
+    wordPressAztecVersion = '1051-22e5fb9611a6e973f2dc132b68d8d1b2bddd46d0'
     wordPressFluxCVersion = '2772-6b7aa4e8e2e139c367250dc30b054cef745d9c8d'
     wordPressLoginVersion = '119-864c02e4f7b59d7d83cd5bc7a6dc92fb41595c00'
     wordPressPersistentEditTextVersion = '1.0.2'
