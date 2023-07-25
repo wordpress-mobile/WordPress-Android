@@ -28,7 +28,6 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
 
-
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class CampaignListingViewModelTest : BaseUnitTest() {
@@ -202,5 +201,4 @@ class CampaignListingViewModelTest : BaseUnitTest() {
         }
         return listOfCampaigns
     }
-
 }
