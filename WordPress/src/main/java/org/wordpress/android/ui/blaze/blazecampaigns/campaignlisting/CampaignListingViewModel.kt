@@ -89,7 +89,13 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     private fun showCampaigns(campaigns: List<CampaignModel>) {
-        _uiState.postValue(CampaignListingUiState.Success(campaigns, this::onCampaignClicked))
+        _uiState.postValue(
+            CampaignListingUiState.Success(
+                campaigns,
+                this::onCampaignClicked,
+                this::createCampaignClick
+            )
+        )
     }
 
     private fun onCampaignClicked(campaignModel: CampaignModel) {
@@ -97,14 +103,16 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     private fun showNoCampaigns() {
-        _uiState.postValue(CampaignListingUiState.Error(
-            title = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_title),
-            description = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_description),
-            button = CampaignListingUiState.Error.ErrorButton(
-                text = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_button_text),
-                click = this::createCampaignClick
+        _uiState.postValue(
+            CampaignListingUiState.Error(
+                title = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_title),
+                description = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_description),
+                button = CampaignListingUiState.Error.ErrorButton(
+                    text = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_button_text),
+                    click = this::createCampaignClick
+                )
             )
-        ))
+        )
     }
 
     private fun createCampaignClick() {
