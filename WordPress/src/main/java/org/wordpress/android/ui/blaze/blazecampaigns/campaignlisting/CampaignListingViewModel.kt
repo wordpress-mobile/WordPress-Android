@@ -102,9 +102,13 @@ class CampaignListingViewModel @Inject constructor(
             description = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_description),
             button = CampaignListingUiState.Error.ErrorButton(
                 text = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_button_text),
-                click = { }
+                click = this::createCampaignClick
             )
         ))
+    }
+
+    private fun createCampaignClick() {
+        _navigation.postValue(Event(CampaignListingNavigation.CampaignCreatePage()))
     }
 }
 

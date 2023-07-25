@@ -32,6 +32,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.blaze.blazecampaigns.CampaignViewModel
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
@@ -40,11 +41,17 @@ import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.viewmodel.observeEvent
+import javax.inject.Inject
 
 private const val CAMPAIGN_LISTING_PAGE_SOURCE = "campaign_listing_page_source"
 
 @AndroidEntryPoint
 class CampaignListingFragment : Fragment() {
+
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
+
     companion object {
         fun newInstance(campaignListingPageSource: CampaignListingPageSource) = CampaignListingFragment().apply {
             arguments = Bundle().apply {
@@ -72,6 +79,27 @@ class CampaignListingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.start(getPageSource())
+        initObservers()
+    }
+
+    private fun initObservers() {
+        viewModel.navigation.observeEvent(viewLifecycleOwner) { navigation ->
+            when(navigation){
+                is CampaignListingNavigation.CampaignDetailPage -> {
+                    activityNavigator.navigateToCampaignDetailPage(
+                        requireContext(),
+                        navigation.campaignId,
+                        navigation.campaignDetailPageSource
+                    )
+                }
+                is CampaignListingNavigation.CampaignCreatePage -> {
+                    activityNavigator.openPromoteWithBlaze(
+                        requireContext(),
+                        navigation.blazeFlowSource
+                    )
+                }
+            }
+        }
     }
 
     private fun getPageSource(): CampaignListingPageSource {
