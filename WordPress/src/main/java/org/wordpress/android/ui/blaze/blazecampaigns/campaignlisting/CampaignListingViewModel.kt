@@ -9,12 +9,15 @@ import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.blaze.BlazeFlowSource
+import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
 import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -33,6 +36,9 @@ class CampaignListingViewModel @Inject constructor(
     private val _uiState = MutableLiveData<CampaignListingUiState>()
     val uiState: LiveData<CampaignListingUiState> = _uiState
 
+    private val _navigation = MutableLiveData<Event<CampaignListingNavigation>>()
+    val navigation = _navigation
+
     fun start(campaignListingPageSource: CampaignListingPageSource) {
         blazeFeatureUtils.trackCampaignListingPageShown(campaignListingPageSource)
         _uiState.postValue(CampaignListingUiState.Loading)
@@ -40,7 +46,7 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     private fun loadCampaigns() {
-        if(!networkUtilsWrapper.isNetworkAvailable()) {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
             // showNoInternet() error, skipping for now so that loading state can be design reviewed
             return
         }
@@ -79,27 +85,38 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     private fun convertToDollars(budgetCents: Long): UiString {
-        return UiString.UiStringText("$"+ (budgetCents/CENTS_IN_DOLLARS).toString())
+        return UiString.UiStringText("$" + (budgetCents / CENTS_IN_DOLLARS).toString())
     }
 
     private fun showCampaigns(campaigns: List<CampaignModel>) {
-        _uiState.postValue(CampaignListingUiState.Success(campaigns, this::onCampaignClicked))
+        _uiState.postValue(
+            CampaignListingUiState.Success(
+                campaigns,
+                this::onCampaignClicked,
+                this::createCampaignClick
+            )
+        )
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun onCampaignClicked(campaignModel: CampaignModel) {
-        // todo navigate to campaign detail page
+        _navigation.postValue(Event(CampaignListingNavigation.CampaignDetailPage(campaignModel.id.toInt())))
     }
 
     private fun showNoCampaigns() {
-        _uiState.postValue(CampaignListingUiState.Error(
-            title = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_title),
-            description = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_description),
-            button = CampaignListingUiState.Error.ErrorButton(
-                text = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_button_text),
-                click = { }
+        _uiState.postValue(
+            CampaignListingUiState.Error(
+                title = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_title),
+                description = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_description),
+                button = CampaignListingUiState.Error.ErrorButton(
+                    text = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_button_text),
+                    click = this::createCampaignClick
+                )
             )
-        ))
+        )
+    }
+
+    private fun createCampaignClick() {
+        _navigation.postValue(Event(CampaignListingNavigation.CampaignCreatePage()))
     }
 }
 
@@ -108,4 +125,16 @@ enum class CampaignListingPageSource(val trackingName: String) {
     MENU_ITEM("menu_item"),
     UNKNOWN("unknown")
 }
+
+sealed class CampaignListingNavigation {
+    data class CampaignDetailPage(
+        val campaignId: Int,
+        val campaignDetailPageSource: CampaignDetailPageSource = CampaignDetailPageSource.CAMPAIGN_LISTING_PAGE
+    ) : CampaignListingNavigation()
+
+    data class CampaignCreatePage(
+        val blazeFlowSource: BlazeFlowSource = BlazeFlowSource.CAMPAIGN_LISTING_PAGE
+    ) : CampaignListingNavigation()
+}
+
 
