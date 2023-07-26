@@ -542,6 +542,17 @@ public class PostRestClient extends BaseWPComRestClient {
                             post.setAnsweredPromptId(Integer.parseInt(metaDataValue.toString()));
                         }
                     }
+
+                    if (key.equals("_wpas_mess")) {
+                        final Object metaDataValue = metaData.getValue();
+                        if (metaDataValue instanceof String) {
+                            post.setAutoShareMessage(metaDataValue.toString());
+                        }
+                        final long metaDataId = metaData.getId();
+                        if (metaDataId > 0) {
+                            post.setAutoShareId(metaDataId);
+                        }
+                    }
                 }
             }
         }
@@ -685,6 +696,16 @@ public class PostRestClient extends BaseWPComRestClient {
                 longitudeParams.put("operation", "delete");
                 metadata.add(longitudeParams);
             }
+        }
+
+        if (post.getAutoShareMessage().length() > 0) {
+            Map<String, Object> autoShareMessageParams = new HashMap<>();
+            autoShareMessageParams.put("key", "_wpas_mess");
+            autoShareMessageParams.put("value", post.getAutoShareMessage());
+            if (post.getAutoShareId() > 0) {
+                autoShareMessageParams.put("id", post.getAutoShareId());
+            }
+            metadata.add(autoShareMessageParams);
         }
 
         if (!metadata.isEmpty()) {
