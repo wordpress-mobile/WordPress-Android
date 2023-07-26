@@ -20,7 +20,8 @@ sealed class CampaignListingUiState {
     data class Success(
         val campaigns: List<CampaignModel>,
         val itemClick: (CampaignModel) -> Unit,
-        val createCampaignClick: () -> Unit
+        val createCampaignClick: () -> Unit,
+        val loadingMore: Boolean = false
     ) : CampaignListingUiState()
 }
 
