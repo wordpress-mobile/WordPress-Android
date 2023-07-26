@@ -39,6 +39,8 @@ class CampaignListingViewModel @Inject constructor(
     private val _navigation = MutableLiveData<Event<CampaignListingNavigation>>()
     val navigation = _navigation
 
+    private var page = 1
+
     fun start(campaignListingPageSource: CampaignListingPageSource) {
         blazeFeatureUtils.trackCampaignListingPageShown(campaignListingPageSource)
         _uiState.postValue(CampaignListingUiState.Loading)
@@ -93,7 +95,58 @@ class CampaignListingViewModel @Inject constructor(
             CampaignListingUiState.Success(
                 campaigns,
                 this::onCampaignClicked,
-                this::createCampaignClick
+                this::createCampaignClick,
+                pagingDetails = CampaignListingUiState.Success.PagingDetails(
+                    loadMoreFunction = this::loadMoreCampaigns,
+                    loadingNext = false
+                )
+            )
+        )
+    }
+
+    private fun loadMoreCampaigns() {
+        launch {
+            if (_uiState.value is CampaignListingUiState.Success &&
+                (_uiState.value as CampaignListingUiState.Success).pagingDetails.loadingNext.not()
+            ) {
+                page++
+                showLoadingMore()
+                fetchMoreCampaigns()
+            }
+        }
+    }
+
+    private suspend fun fetchMoreCampaigns() {
+        val campaignResult = blazeCampaignsStore.fetchBlazeCampaigns(selectedSiteRepository.getSelectedSite()!!, page)
+        val currentUiState = _uiState.value as CampaignListingUiState.Success
+        val campaigns = campaignResult.model?.campaigns?.map {
+            it.mapToCampaignModel()
+        }
+        if (campaigns.isNullOrEmpty()) {
+            disableLoadingMore(currentUiState)
+        } else {
+            val updatedCampaigns = currentUiState.campaigns + campaigns
+            showCampaigns(updatedCampaigns)
+        }
+    }
+
+    private fun showLoadingMore() {
+        val currentUiState = _uiState.value as CampaignListingUiState.Success
+        _uiState.postValue(
+            currentUiState.copy(
+                pagingDetails = CampaignListingUiState.Success.PagingDetails(
+                    loadingNext = true
+                )
+            )
+        )
+    }
+
+    private fun disableLoadingMore(currentUiState: CampaignListingUiState.Success) {
+        _uiState.postValue(
+            currentUiState.copy(
+                pagingDetails = CampaignListingUiState.Success.PagingDetails(
+                    loadingNext = false
+                )
             )
         )
     }
