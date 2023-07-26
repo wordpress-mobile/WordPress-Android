@@ -26,6 +26,7 @@ import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCas
 import org.wordpress.android.usecase.social.ShareLimit
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.config.JetpackSocialFeatureConfig
+import org.wordpress.android.util.extensions.doesNotContain
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -53,10 +54,6 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     postSchedulingNotificationStore,
     siteStore
 ) {
-    private var siteModel: SiteModel? = null
-
-    private val selectedConnections = mutableListOf<PostSocialConnection>()
-
     private val _authors = MutableLiveData<List<Person>>()
     val authors: LiveData<List<Person>> = _authors
 
@@ -76,6 +73,9 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     val actionEvents: LiveData<ActionEvent> = _actionEvents
 
     private var jetpackSocialShareMessage = ""
+    private var siteModel: SiteModel? = null
+    private lateinit var shareLimit: ShareLimit
+    private val connections = mutableListOf<PostSocialConnection>()
 
     private var isStarted = false
 
@@ -88,13 +88,98 @@ class EditPostPublishSettingsViewModel @Inject constructor(
             siteStore.getSiteByLocalId(it)
         }
         loadAuthors()
-        loadJetpackSocial()
+        viewModelScope.launch {
+            shareLimit = siteModel?.let {
+                getJetpackSocialShareLimitStatusUseCase.execute(it)
+            } ?: ShareLimit.Disabled
+            loadConnections()
+            loadJetpackSocial()
+        }
     }
 
     fun onScreenShown() {
         if (actionEvents.value is ActionEvent.OpenSocialConnectionsList) {
-            loadJetpackSocial()
+            // When getting back from publicize connections screen, we should update connections to
+            // make sure we have the latest data.
+            viewModelScope.launch {
+                updateConnections()
+                loadJetpackSocial()
+            }
         }
+    }
+
+    private suspend fun loadConnections() {
+        siteModel?.let {
+            val publicizeConnections = getPublicizeConnectionsForUserUseCase.execute(
+                siteId = it.siteId,
+                userId = accountStore.account.userId
+            )
+            connections.clear()
+            connections.addAll(publicizeConnections.map { connection ->
+                PostSocialConnection.fromPublicizeConnection(connection, false)
+            })
+            updateInitialConnectionListSharingStatus()
+            _postSocialSharingModel.value =
+                postSocialSharingModelMapper.map(connections, shareLimit)
+        }
+    }
+
+    private suspend fun updateConnections() {
+        siteModel?.let {
+            val publicizeConnections = getPublicizeConnectionsForUserUseCase.execute(
+                siteId = it.siteId,
+                userId = accountStore.account.userId,
+                shouldForceUpdate = false,
+            )
+            // Update connections list with new connections
+            val currentConnectionIds = connections.map { it.connectionId }
+            publicizeConnections.forEach { publicizeConnection ->
+                if (currentConnectionIds.doesNotContain(publicizeConnection.connectionId)) {
+                    connections.add(PostSocialConnection.fromPublicizeConnection(publicizeConnection, false))
+                }
+            }
+            // Update connections list with removed connections
+            currentConnectionIds.forEach { currentConnectionId ->
+                if (publicizeConnections.map { connection -> connection.connectionId }
+                        .doesNotContain(currentConnectionId)) {
+                    connections.removeAll { connection -> connection.connectionId == currentConnectionId }
+                }
+            }
+        }
+    }
+
+    private suspend fun loadJetpackSocial() {
+        val showJetpackSocial = jetpackSocialFeatureConfig.isEnabled() && siteModel?.supportsPublicize() == true
+        if (!showJetpackSocial) {
+            _showJetpackSocialContainer.value = false
+            return
+        }
+        siteModel?.let {
+            _showJetpackSocialContainer.value = true
+            val state = if (showNoConnections()) {
+                jetpackUiStateMapper.mapNoConnections(::onJetpackSocialConnectProfilesClick)
+            } else {
+                mapLoaded()
+            }
+            _jetpackSocialUiState.postValue(state)
+        } ?: run {
+            _showJetpackSocialContainer.value = false
+        }
+    }
+
+    private suspend fun mapLoaded(): JetpackSocialUiState.Loaded {
+        val shareMessage = jetpackSocialShareMessage.ifEmpty {
+            getJetpackSocialShareMessageUseCase.execute(editPostRepository?.getPost()?.id ?: -1)
+        }
+        return jetpackUiStateMapper.mapLoaded(
+            connections = connections,
+            shareLimit = shareLimit,
+            onSubscribeClick = ::onJetpackSocialSubscribeClick,
+            shareMessage = shareMessage,
+            onShareMessageClick = ::onJetpackSocialMessageClick,
+            onConnectionClick = ::onJetpackSocialConnectionClick,
+            isPostPublished = isPostPublished(),
+        )
     }
 
     private fun loadAuthors() {
@@ -105,71 +190,28 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         }
     }
 
-    private fun loadJetpackSocial() {
-        if (!jetpackSocialFeatureConfig.isEnabled() || siteModel?.supportsPublicize() != true) {
-            _showJetpackSocialContainer.value = false
-            return
-        }
-        siteModel?.let {
-            _showJetpackSocialContainer.value = true
-            viewModelScope.launch {
-                val allConnections =
-                    PostSocialConnection.fromPublicizeConnectionList(
-                        getPublicizeConnectionsForUserUseCase.execute(
-                            it.siteId,
-                            accountStore.account.userId
-                        )
-                    )
-                val state = if (showNoConnections(allConnections)) {
-                    jetpackUiStateMapper.mapNoConnections(::onJetpackSocialConnectProfilesClick)
-                } else {
-                    mapLoaded(it, allConnections)
-                }
-                _jetpackSocialUiState.postValue(state)
-            }
-        } ?: run {
-            _showJetpackSocialContainer.value = false
-        }
-    }
-
-    private fun showNoConnections(allConnections: List<PostSocialConnection>): Boolean =
-        allConnections.isEmpty() && (siteModel?.supportsPublicize() ?: false)
+    private fun showNoConnections(): Boolean =
+        connections.isEmpty()
                 && publicizeTableWrapper.getServiceList().any { it.status != PublicizeService.Status.UNSUPPORTED }
 
-    private suspend fun mapLoaded(
-        it: SiteModel,
-        allConnections: List<PostSocialConnection>
-    ): JetpackSocialUiState.Loaded {
-        val shareMessage = jetpackSocialShareMessage.ifEmpty {
-            getJetpackSocialShareMessageUseCase.execute(editPostRepository?.getPost()?.id ?: -1)
-        }
-        val shareLimit = getJetpackSocialShareLimitStatusUseCase.execute(it)
-        allConnections.map {
-            if (shareLimit is ShareLimit.Enabled) {
-                allConnections.mapIndexed { index, connection ->
-                    for (i in 0..shareLimit.sharesRemaining) {
-                        selectedConnections.add(connection)
-                        if (i == index) {
-                            break
-                        }
+    private fun isPostPublished(): Boolean =
+        editPostRepository?.getPost()?.status?.let { post ->
+            post == PostStatus.PUBLISHED.toString()
+        } ?: false
+
+    private fun updateInitialConnectionListSharingStatus() {
+        if (isPostPublished()) {
+            connections.map { it.isSharingEnabled = false }
+        } else {
+            // TODO refactor considering connection skip metadata
+            with(shareLimit) {
+                if (this is ShareLimit.Enabled) {
+                    connections.take(this.sharesRemaining).map {
+                        it.isSharingEnabled = true
                     }
                 }
             }
         }
-        _postSocialSharingModel.value =
-            postSocialSharingModelMapper.map(allConnections, selectedConnections, shareLimit)
-        return jetpackUiStateMapper.mapLoaded(
-            allConnections = allConnections,
-            selectedConnections = selectedConnections,
-            shareLimit = shareLimit,
-            onSubscribeClick = ::onJetpackSocialSubscribeClick,
-            shareMessage = shareMessage,
-            onShareMessageClick = ::onJetpackSocialMessageClick,
-            onConnectionClick = ::onJetpackSocialConnectionClick,
-            isPostPublished = editPostRepository?.getPost()?.status?.let {
-                it == PostStatus.PUBLISHED.toString()
-            } ?: false
-        )
     }
 
     // This fetches authors page by page and combine the result in fetchedAuthors.
@@ -202,44 +244,16 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     }
 
     @VisibleForTesting
-    fun onJetpackSocialConnectionClick(publicizeSocialConnection: PostSocialConnection, enabled: Boolean) {
+    fun onJetpackSocialConnectionClick(connection: PostSocialConnection, enabled: Boolean) {
         // TODO update selected connections using post metadata
         siteModel?.let {
-            if (enabled) {
-                selectedConnections.add(publicizeSocialConnection)
-            } else {
-                selectedConnections.removeAll {
-                    it.service == publicizeSocialConnection.service
-                }
-            }
             viewModelScope.launch {
-                val allConnections = PostSocialConnection.fromPublicizeConnectionList(
-                    getPublicizeConnectionsForUserUseCase.execute(
-                        siteId = it.siteId,
-                        userId = accountStore.account.userId,
-                        shouldForceUpdate = false,
-                    )
-                )
-                val shareMessage = jetpackSocialShareMessage.ifEmpty {
-                    getJetpackSocialShareMessageUseCase.execute(editPostRepository?.getPost()?.id ?: -1)
+                connections.firstOrNull { it.connectionId == connection.connectionId }?.let {
+                    it.isSharingEnabled = enabled
                 }
-                val shareLimit = getJetpackSocialShareLimitStatusUseCase.execute(it)
+                _jetpackSocialUiState.postValue(mapLoaded())
                 _postSocialSharingModel.value =
-                    postSocialSharingModelMapper.map(
-                        allConnections, selectedConnections, shareLimit
-                    )
-                jetpackUiStateMapper.mapLoaded(
-                    allConnections = allConnections,
-                    selectedConnections = selectedConnections,
-                    shareLimit = shareLimit,
-                    onSubscribeClick = ::onJetpackSocialSubscribeClick,
-                    shareMessage = shareMessage,
-                    onShareMessageClick = ::onJetpackSocialMessageClick,
-                    onConnectionClick = ::onJetpackSocialConnectionClick,
-                    isPostPublished = editPostRepository?.getPost()?.status?.let {
-                        it == PostStatus.PUBLISHED.toString()
-                    } ?: false
-                )
+                    postSocialSharingModelMapper.map(connections, shareLimit)
             }
         }
     }

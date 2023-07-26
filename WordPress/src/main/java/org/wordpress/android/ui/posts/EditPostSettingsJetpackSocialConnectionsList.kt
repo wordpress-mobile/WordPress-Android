@@ -23,7 +23,6 @@ fun EditPostSettingsJetpackSocialConnectionsList(jetpackSocialConnectionDataList
                 connection = it.postSocialConnection,
                 onSharingChange = it.onConnectionClick,
                 enabled = it.enabled,
-                switchEnabled = it.switchEnabled,
             )
             Divider()
         }
@@ -34,7 +33,6 @@ data class JetpackSocialConnectionData(
     val postSocialConnection: PostSocialConnection,
     val onConnectionClick: (Boolean) -> Unit,
     val enabled: Boolean = true,
-    val switchEnabled: Boolean = true,
 )
 
 @Preview
@@ -63,13 +61,13 @@ fun PreviewEditPostSettingsJetpackSocialConnectionsList() {
         }
         connections.add(
             JetpackSocialConnectionData(
-                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection1),
+                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection1, true),
                 onConnectionClick = {},
             )
         )
         connections.add(
             JetpackSocialConnectionData(
-                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection2),
+                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection2, false),
                 onConnectionClick = {},
             )
         )

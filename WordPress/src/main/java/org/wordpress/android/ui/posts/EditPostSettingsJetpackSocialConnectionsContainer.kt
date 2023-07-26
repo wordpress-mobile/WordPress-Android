@@ -62,15 +62,15 @@ fun EditPostSettingsJetpackSocialContainerWithShareLimitPreview() {
         }
         connections.add(
             JetpackSocialConnectionData(
-                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection1),
+                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection1, true),
                 onConnectionClick = {},
             )
         )
         connections.add(
             JetpackSocialConnectionData(
-                postSocialConnection = PostSocialConnection.fromPublicizeConnection(
-                    connection2
-                ), onConnectionClick = {})
+                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection2, false),
+                onConnectionClick = {}
+            )
         )
         EditPostSettingsJetpackSocialConnectionsContainer(
             jetpackSocialConnectionDataList = connections,
@@ -107,15 +107,15 @@ fun EditPostSettingsJetpackSocialContainerWithoutShareLimitPreview() {
         }
         connections.add(
             JetpackSocialConnectionData(
-                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection1),
+                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection1, true),
                 onConnectionClick = {},
             )
         )
         connections.add(
             JetpackSocialConnectionData(
-                postSocialConnection = PostSocialConnection.fromPublicizeConnection(
-                    connection2
-                ), onConnectionClick = {})
+                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection2, false),
+                onConnectionClick = {}
+            )
         )
         EditPostSettingsJetpackSocialConnectionsContainer(
             jetpackSocialConnectionDataList = connections,

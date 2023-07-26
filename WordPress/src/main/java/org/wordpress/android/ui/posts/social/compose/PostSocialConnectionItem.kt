@@ -35,7 +35,6 @@ fun PostSocialConnectionItem(
     connection: PostSocialConnection,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    switchEnabled: Boolean = true,
     onSharingChange: (Boolean) -> Unit,
 ) {
     Row(
@@ -64,8 +63,9 @@ fun PostSocialConnectionItem(
         )
         Spacer(modifier = Modifier.weight(1f))
         WPSwitch(
-            checked = switchEnabled,
+            checked = connection.isSharingEnabled,
             onCheckedChange = onSharingChange,
+            enabled = enabled,
         )
     }
 }

@@ -17,8 +17,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
 ) {
     @Suppress("LongParameterList")
     fun mapLoaded(
-        allConnections: List<PostSocialConnection>,
-        selectedConnections: List<PostSocialConnection>,
+        connections: List<PostSocialConnection>,
         shareLimit: ShareLimit,
         onSubscribeClick: () -> Unit,
         shareMessage: String,
@@ -27,15 +26,13 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
         isPostPublished: Boolean,
     ): Loaded =
         Loaded(
-            jetpackSocialConnectionDataList = allConnections.map { connection ->
+            jetpackSocialConnectionDataList = connections.map { connection ->
                 JetpackSocialConnectionData(
                     postSocialConnection = connection,
                     onConnectionClick = { onConnectionClick(connection, it) },
                     enabled = !isPostPublished && if (shareLimit is ShareLimit.Enabled) {
                         shareLimit.sharesRemaining > 0
                     } else true,
-                    switchEnabled = !isPostPublished && selectedConnections.map { it.connectionId }
-                        .contains(connection.connectionId),
                 )
             },
             showShareLimitUi = !isPostPublished && shareLimit is ShareLimit.Enabled,

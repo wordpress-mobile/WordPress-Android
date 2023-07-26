@@ -104,7 +104,6 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
 //                postSocialConnection = ,
 //                onConnectionClick = onConnectionClick,
 //                enabled = true,
-//                switchEnabled = true
 //            )),
 //            showShareLimitUi = true,
 //            shareMessage = shareMessage,

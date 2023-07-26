@@ -13,65 +13,62 @@ class PostSocialSharingModelMapper @Inject constructor(
     private val stringProvider: StringProvider,
 ) {
     fun map(
-        allConnections: List<PostSocialConnection>,
-        selectedConnections: List<PostSocialConnection>,
+        connections: List<PostSocialConnection>,
         shareLimit: ShareLimit,
     ): PostSocialSharingModel {
-        val title: String
-        val description: String
-        val iconModels: List<TrainOfIconsModel>
-        val isLowOnShares: Boolean
-        if (shareLimit is ShareLimit.Enabled) {
-            title = mapTitle(selectedConnections, allConnections)
-            description = stringProvider.getString(
+        return if (shareLimit is ShareLimit.Enabled) {
+            val title = mapTitle(connections)
+            val description = stringProvider.getString(
                 R.string.jetpack_social_social_shares_remaining,
                 shareLimit.sharesRemaining
             )
-            iconModels = mapIconModels(selectedConnections)
-            isLowOnShares = mapIsLowOnShares(shareLimit, selectedConnections, allConnections)
+            val iconModels = mapIconModels(connections)
+            val isLowOnShares = mapIsLowOnShares(shareLimit, connections)
+            PostSocialSharingModel(
+                title = title,
+                description = description,
+                iconModels = iconModels,
+                isLowOnShares = isLowOnShares,
+            )
         } else {
-            title = ""
-            description = ""
-            iconModels = emptyList()
-            isLowOnShares = false
+            PostSocialSharingModel(
+                title = "",
+                description = "",
+                iconModels = emptyList(),
+                isLowOnShares = false,
+            )
         }
-        return PostSocialSharingModel(
-            title = title,
-            description = description,
-            iconModels = iconModels,
-            isLowOnShares = isLowOnShares,
-        )
     }
 
-    private fun mapTitle(
-        selectedConnections: List<PostSocialConnection>,
-        allConnections: List<PostSocialConnection>
-    ) = when {
-        // Sharing to 0 accounts
-        selectedConnections.isEmpty() ->
-            stringProvider.getString(R.string.jetpack_social_social_shares_title_not_sharing)
-        // Sharing to 1 out of 1 account
-        selectedConnections.hasOneElement() && allConnections.hasOneElement() ->
-            stringProvider.getString(
-                R.string.jetpack_social_social_shares_title_single_account,
-                selectedConnections.single().externalName
+    private fun mapTitle(connections: List<PostSocialConnection>): String {
+        val sharingEnabledConnections = connections.filter { it.isSharingEnabled }
+        return when {
+            // Sharing to 0 accounts
+            sharingEnabledConnections.isEmpty() ->
+                stringProvider.getString(R.string.jetpack_social_social_shares_title_not_sharing)
+            // Sharing to 1 out of 1 account
+            sharingEnabledConnections.hasOneElement() && connections.hasOneElement() ->
+                stringProvider.getString(
+                    R.string.jetpack_social_social_shares_title_single_account,
+                    sharingEnabledConnections.single().externalName
+                )
+            // Sharing to all accounts
+            sharingEnabledConnections.size == connections.size ->
+                stringProvider.getString(
+                    R.string.jetpack_social_social_shares_title_all_accounts,
+                    connections.size
+                )
+            // Sharing to some accounts
+            else -> stringProvider.getString(
+                R.string.jetpack_social_social_shares_title_part_of_the_accounts,
+                sharingEnabledConnections.size,
+                connections.size
             )
-        // Sharing to all accounts
-        selectedConnections.size == allConnections.size ->
-            stringProvider.getString(
-                R.string.jetpack_social_social_shares_title_all_accounts,
-                allConnections.size
-            )
-        // Sharing to some accounts
-        else -> stringProvider.getString(
-            R.string.jetpack_social_social_shares_title_part_of_the_accounts,
-            selectedConnections.size,
-            allConnections.size
-        )
+        }
     }
 
-    private fun mapIconModels(selectedConnections: List<PostSocialConnection>) =
-        selectedConnections.mapNotNull {
+    private fun mapIconModels(connections: List<PostSocialConnection>) =
+        connections.filter { it.isSharingEnabled }.mapNotNull {
             PublicizeServiceIcon.fromServiceId(it.service)?.iconResId
         }.map {
             TrainOfIconsModel(
@@ -82,15 +79,17 @@ class PostSocialSharingModelMapper @Inject constructor(
 
     private fun mapIsLowOnShares(
         shareLimit: ShareLimit.Enabled,
-        selectedConnections: List<PostSocialConnection>,
-        allConnections: List<PostSocialConnection>
-    ) = when {
-        // No more shares left.
-        shareLimit.sharesRemaining == 0 -> true
-        // Remaining shares < no. of accounts.
-        shareLimit.sharesRemaining < selectedConnections.size -> true
-        // Sharing to some accounts, but not enough shares for all.
-        selectedConnections.isNotEmpty() && shareLimit.sharesRemaining < allConnections.size -> true
-        else -> false
+        connections: List<PostSocialConnection>
+    ): Boolean {
+        val sharingEnabledConnections = connections.filter { it.isSharingEnabled }
+        return when {
+            // No more shares left.
+            shareLimit.sharesRemaining == 0 -> true
+            // Remaining shares < no. of accounts.
+            shareLimit.sharesRemaining < sharingEnabledConnections.size -> true
+            // Sharing to some accounts, but not enough shares for all.
+            sharingEnabledConnections.isNotEmpty() && shareLimit.sharesRemaining < connections.size -> true
+            else -> false
+        }
     }
 }
