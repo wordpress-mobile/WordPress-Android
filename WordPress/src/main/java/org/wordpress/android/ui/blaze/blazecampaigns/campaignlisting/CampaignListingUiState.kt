@@ -21,8 +21,13 @@ sealed class CampaignListingUiState {
         val campaigns: List<CampaignModel>,
         val itemClick: (CampaignModel) -> Unit,
         val createCampaignClick: () -> Unit,
-        val loadingMore: Boolean = false
-    ) : CampaignListingUiState()
+        val pagingDetails: PagingDetails = PagingDetails()
+    ) : CampaignListingUiState() {
+        data class PagingDetails(
+            val loadMoreFunction: () -> Unit = { },
+            val loadingNext: Boolean = false
+        )
+    }
 }
 
 data class CampaignModel(
