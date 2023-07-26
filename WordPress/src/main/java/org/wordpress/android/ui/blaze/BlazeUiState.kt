@@ -21,7 +21,8 @@ enum class BlazeFlowSource(val trackingName: String) {
     MENU_ITEM("menu_item"),
     POSTS_LIST("posts_list"),
     STATS_POST("stats_post"),
-    PAGES_LIST("pages_list")
+    PAGES_LIST("pages_list"),
+    CAMPAIGN_LISTING_PAGE("campaign_listing_page")
 }
 sealed interface BlazeUIModel: Parcelable {
     val title: String

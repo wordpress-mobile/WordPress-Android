@@ -239,6 +239,7 @@ public class PostUtils {
                                     && PostLocation.Companion.equals(oldPost.getLocation(), newPost.getLocation())
                                     && oldPost.getChangesConfirmedContentHashcode() == newPost
                 .getChangesConfirmedContentHashcode()
+                                    && StringUtils.equals(oldPost.getAutoShareMessage(), newPost.getAutoShareMessage())
         );
     }
 

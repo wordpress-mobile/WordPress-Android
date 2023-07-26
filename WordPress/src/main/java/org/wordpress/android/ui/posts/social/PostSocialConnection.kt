@@ -18,7 +18,7 @@ data class PostSocialConnection(
                 service = connection.service,
                 label = connection.label,
                 externalId = connection.externalId,
-                externalName = connection.externalName,
+                externalName = connection.externalDisplayName,
                 iconUrl = connection.externalProfilePictureUrl,
                 isSharingEnabled = true, // default to true
             )

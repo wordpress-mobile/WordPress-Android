@@ -271,6 +271,10 @@
             android:name=".ui.posts.PostSettingsTagsActivity"
             android:label="@string/post_settings_tags"
             android:theme="@style/WordPress.NoActionBar" />
+        <activity
+            android:name=".ui.posts.sharemessage.EditJetpackSocialShareMessageActivity"
+            android:label="@string/post_settings_jetpack_social_share_message_title"
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!-- History -->
         <activity

@@ -6,6 +6,7 @@ import org.junit.Test
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.e2e.flows.LoginFlow
 import org.wordpress.android.e2e.pages.ContactSupportScreen
+import org.wordpress.android.e2e.pages.HelpScreen
 import org.wordpress.android.support.BaseTest
 
 @HiltAndroidTest
@@ -22,13 +23,17 @@ class ContactUsTests : BaseTest() {
                 .chooseContinueWithWpCom(super.mComposeTestRule)
                 .tapHelp()
                 .assertHelpScreenLoaded()
-                .openContactUs()
-                .assertContactSupportScreenLoaded()
-                .assertSendButtonDisabled()
-                .setMessageText("Hello")
-                .assertSendButtonEnabled()
-                .setMessageText("")
-                .assertSendButtonDisabled()
+
+            // Contact Us is only available on Jetpack App, see: https://github.com/wordpress-mobile/WordPress-Android/pull/18818
+            if (BuildConfig.IS_JETPACK_APP) {
+                HelpScreen().openContactUs()
+                    .assertContactSupportScreenLoaded()
+                    .assertSendButtonDisabled()
+                    .setMessageText("Hello")
+                    .assertSendButtonEnabled()
+                    .setMessageText("")
+                    .assertSendButtonDisabled()
+            }
         } finally {
             ContactSupportScreen().goBackAndDeleteUnsentMessageIfNeeded()
         }
