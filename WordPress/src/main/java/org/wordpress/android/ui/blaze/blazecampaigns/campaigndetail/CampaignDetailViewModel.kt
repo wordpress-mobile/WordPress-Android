@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail
 
 import android.text.TextUtils
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.wordpress.android.ui.blaze.BlazeActionEvent
@@ -17,14 +17,18 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.viewmodel.ScopedViewModel
+import javax.inject.Named
 
 @HiltViewModel
 class CampaignDetailViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val siteStore: SiteStore
-) : ViewModel() {
+    private val siteStore: SiteStore,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+) : ScopedViewModel(bgDispatcher) {
     private lateinit var pageSource: CampaignDetailPageSource
     private var campaignId: Int = 0
 
@@ -64,7 +68,8 @@ class CampaignDetailViewModel @Inject constructor(
             model.value.copy(
                 addressToLoad = addressToLoad,
                 url = url,
-                userAgent = blazeFeatureUtils.getUserAgent()
+                userAgent = blazeFeatureUtils.getUserAgent(),
+                isInitialLoading = true
             )
         )
     }
@@ -119,7 +124,9 @@ class CampaignDetailViewModel @Inject constructor(
     }
 
     fun onUrlLoaded() {
-        // no op
+        if (model.value.isInitialLoading) {
+            postScreenState(model.value.copy(isInitialLoading = false))
+        }
     }
 
     fun onWebViewError() {
@@ -150,5 +157,6 @@ data class CampaignDetailUIModel(
     val userAgent: String = "",
     val enableChromeClient: Boolean = true,
     val url: String = "",
-    val addressToLoad: String = ""
+    val addressToLoad: String = "",
+    val isInitialLoading: Boolean = false
 )

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
+import androidx.compose.ui.Alignment
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.blaze.BlazeActionEvent
@@ -28,6 +30,21 @@ import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import androidx.compose.runtime.*
+import kotlinx.coroutines.isActive
+
 
 private const val CAMPAIGN_DETAIL_PAGE_SOURCE = "campaign_detail_page_source"
 private const val CAMPAIGN_DETAIL_CAMPAIGN_ID = "campaign_detail_campaign_id"
@@ -41,6 +58,8 @@ class CampaignDetailFragment : Fragment(), CampaignDetailWebViewClient.CampaignD
                 putInt(CAMPAIGN_DETAIL_CAMPAIGN_ID, campaignId)
             }
         }
+
+        const val DELAY_MILLISECONDS = 15000L
     }
 
     private val viewModel: CampaignDetailViewModel by viewModels()
@@ -125,8 +144,14 @@ class CampaignDetailFragment : Fragment(), CampaignDetailWebViewClient.CampaignD
     @SuppressLint("SetJavaScriptEnabled")
     @Composable
     private fun CampaignDetailContent(model: CampaignDetailUIModel) {
-        AndroidView(factory = {
-            WebView(it).apply {
+        var isLoading by remember { mutableStateOf(true) }
+        var webView: WebView? by remember { mutableStateOf(null) }
+        val delayScope = CoroutineScope(Dispatchers.Default)
+
+        isLoading = model.isInitialLoading
+
+        LaunchedEffect(true) {
+            webView = WebView(requireContext()).apply {
                 layoutParams = ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
@@ -138,6 +163,30 @@ class CampaignDetailFragment : Fragment(), CampaignDetailWebViewClient.CampaignD
                 webViewClient = CampaignDetailWebViewClient(this@CampaignDetailFragment)
                 postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, model.addressToLoad.toByteArray())
             }
-        })
+
+            delayScope.launch {
+                delay(DELAY_MILLISECONDS)
+                withContext(Dispatchers.Main) {
+                    isLoading = false
+                }
+            }
+        }
+
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            if (isLoading) {
+                CircularProgressIndicator()
+            } else {
+                if (delayScope.isActive) delayScope.cancel()
+                webView?.let { theWebView ->
+                    AndroidView(
+                        factory = { theWebView },
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
+        }
     }
 }
