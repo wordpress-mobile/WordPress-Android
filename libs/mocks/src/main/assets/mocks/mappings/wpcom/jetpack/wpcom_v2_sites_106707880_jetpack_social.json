@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/wpcom/v2/sites/106707880/jetpack-social/",
+    "queryParameters": {
+      "_locale": {
+        "matches": "(.*)"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "isShareLimitEnabled": false,
+      "toBePublicizedCount": 1,
+      "shareLimit": 1,
+      "publicizedCount": 1,
+      "sharedPostsCount": 1,
+      "sharesRemaining": 1,
+      "isEnhancedPublishingEnabled": false,
+      "isSocialImageGeneratorEnabled": false
+    }
+  }
+}
