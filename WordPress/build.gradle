@@ -1,5 +1,6 @@
 import se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask
 import se.bjurr.violations.lib.model.SEVERITY
+import io.sentry.android.gradle.extensions.InstrumentationFeature
 
 plugins {
     id "com.android.application"
@@ -429,8 +430,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-process:$androidxLifecycleVersion"
-    implementation "androidx.paging:paging-runtime:$androidXPagingVersion"
-    implementation "androidx.paging:paging-compose:$androidXPagingComposeVersion"
     implementation "com.android.volley:volley:$androidVolleyVersion"
     implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
     implementation "com.google.android.gms:play-services-code-scanner:$googlePlayServicesCodeScannerVersion"
