@@ -109,12 +109,12 @@ class CampaignDetailViewModel @Inject constructor(
     }
 
     private fun postScreenState(state: CampaignDetailUIModel) {
-        viewModelScope.launch {
+        viewModelScope.launch(bgDispatcher) {
             _model.value = state
         }
     }
     private fun postActionEvent(actionEvent: BlazeActionEvent) {
-        viewModelScope.launch {
+        viewModelScope.launch(bgDispatcher) {
             _actionEvents.send(actionEvent)
         }
     }
