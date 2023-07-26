@@ -95,7 +95,7 @@ class BlazeCampaignsDaoTest {
         var observedStatus = dao.getCampaignsAndPaginationForSite(defaultSiteId)
         assertEquals(observedStatus.campaigns.size, 1)
 
-        model = model.copy(page = 2, campaigns = model.campaigns.map { it.copy(campaignId = 2L) })
+        model = model.copy(page = 2, campaigns = model.campaigns.map { it.copy(campaignId = 2) })
         dao.insertCampaignsAndPageInfoForSite(defaultSiteId, model)
 
         observedStatus = dao.getCampaignsAndPaginationForSite(defaultSiteId)
@@ -116,7 +116,7 @@ class BlazeCampaignsDaoTest {
         var observedStatus = dao.getCampaignsAndPaginationForSite(defaultSiteId)
         assertEquals(observedStatus.campaigns.size, 1)
 
-        model = model.copy(page = 2, campaigns = model.campaigns.map { it.copy(campaignId = 2L) })
+        model = model.copy(page = 2, campaigns = model.campaigns.map { it.copy(campaignId = 2) })
         dao.insertCampaignsAndPageInfoForSite(defaultSiteId, model)
 
         observedStatus = dao.getCampaignsAndPaginationForSite(defaultSiteId)
