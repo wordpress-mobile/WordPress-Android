@@ -42,9 +42,8 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import androidx.compose.runtime.*
+import androidx.compose.runtime.setValue
 import kotlinx.coroutines.isActive
-
 
 private const val CAMPAIGN_DETAIL_PAGE_SOURCE = "campaign_detail_page_source"
 private const val CAMPAIGN_DETAIL_CAMPAIGN_ID = "campaign_detail_campaign_id"
