@@ -27,6 +27,7 @@ import org.wordpress.android.usecase.social.ShareLimit
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 import org.wordpress.android.util.extensions.doesNotContain
+import org.wordpress.android.util.extensions.publicizeSkipConnectionsList
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -199,25 +200,33 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         connections.isEmpty()
                 && publicizeTableWrapper.getServiceList().any { it.status != PublicizeService.Status.UNSUPPORTED }
 
+    private fun updateInitialConnectionListSharingStatus() {
+        with(shareLimit) {
+            if (this is ShareLimit.Enabled && !isPostPublished()) {
+                val skipConnectionsMetadata = postPublicizeSkipConnections()
+                run loop@{
+                    connections.forEachIndexed { index, connection ->
+                        // Use metadata to verify if this connection was previously disabled by the user
+                        connection.isSharingEnabled =
+                            skipConnectionsMetadata.doesNotContain(connection.connectionId.toString())
+                        if (index == this.sharesRemaining) {
+                            return@loop
+                        }
+                    }
+                }
+            } else {
+                connections.map { it.isSharingEnabled = false }
+            }
+        }
+    }
+
+    private fun postPublicizeSkipConnections(): List<String> =
+        editPostRepository?.getPost()?.publicizeSkipConnectionsList() ?: emptyList()
+
     private fun isPostPublished(): Boolean =
         editPostRepository?.getPost()?.status?.let { post ->
             post == PostStatus.PUBLISHED.toString()
         } ?: false
-
-    private fun updateInitialConnectionListSharingStatus() {
-        if (isPostPublished()) {
-            connections.map { it.isSharingEnabled = false }
-        } else {
-            // TODO refactor considering connection skip metadata
-            with(shareLimit) {
-                if (this is ShareLimit.Enabled) {
-                    connections.take(this.sharesRemaining).map {
-                        it.isSharingEnabled = true
-                    }
-                }
-            }
-        }
-    }
 
     // This fetches authors page by page and combine the result in fetchedAuthors.
     private fun fetchAuthors(site: SiteModel) {
