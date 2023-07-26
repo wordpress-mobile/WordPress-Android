@@ -2,8 +2,8 @@ package org.wordpress.android.ui.posts.social
 
 import org.wordpress.android.models.PublicizeConnection
 
-@Suppress("LongParameterList")
-class PostSocialConnection(
+@Suppress("LongParameterList", "DataClassShouldBeImmutable")
+data class PostSocialConnection(
     val connectionId: Int,
     val service: String,
     val label: String,
