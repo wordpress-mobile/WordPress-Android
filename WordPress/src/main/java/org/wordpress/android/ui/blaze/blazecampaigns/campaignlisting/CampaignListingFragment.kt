@@ -158,6 +158,11 @@ class CampaignListingFragment : Fragment() {
                     campaignModel = campaign,
                     modifier = Modifier.clickable { uiState.itemClick(campaign) })
             }
+            if (uiState.loadingMore) {
+                item {
+                    LoadingState(modifier = Modifier.padding(top = 16.dp))
+                }
+            }
         }
     }
 }
