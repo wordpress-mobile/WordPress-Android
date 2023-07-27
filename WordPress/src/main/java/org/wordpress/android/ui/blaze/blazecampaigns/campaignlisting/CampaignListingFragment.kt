@@ -21,15 +21,18 @@ import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -126,7 +129,14 @@ class CampaignListingFragment : Fragment() {
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     fun CampaignListingPage(uiState: CampaignListingUiState) {
+        val scaffoldState = rememberScaffoldState()
+
         Scaffold(
+            scaffoldState = scaffoldState,
+            snackbarHost = { snackbarHostState ->
+                // SnackbarHost needs to be provided to show Snackbars
+                SnackbarHost(hostState = snackbarHostState)
+            },
             topBar = {
                 MainTopAppBar(
                     title = stringResource(R.string.blaze_campaigns_page_title),
@@ -144,6 +154,14 @@ class CampaignListingFragment : Fragment() {
                 }
             },
         ) { CampaignListingContent(uiState) }
+
+        LaunchedEffect(viewModel.snackBar) {
+            viewModel.snackBar.collect { message ->
+                if (message.isNotEmpty()) {
+                    scaffoldState.snackbarHostState.showSnackbar(message)
+                }
+            }
+        }
     }
 
     @Composable
