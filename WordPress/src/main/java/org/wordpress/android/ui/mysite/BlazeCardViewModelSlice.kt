@@ -50,9 +50,9 @@ class BlazeCardViewModelSlice @Inject constructor(
             Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
     }
 
-    private fun onCampaignClick() {
+        private fun onCampaignClick(campaignId: Int) {
         _onNavigation.value =
-            Event(SiteNavigationAction.OpenCampaignDetailPage(CampaignDetailPageSource.DASHBOARD_CARD))
+            Event(SiteNavigationAction.OpenCampaignDetailPage(campaignId, CampaignDetailPageSource.DASHBOARD_CARD))
     }
 
     private fun onCampaignsCardClick() {

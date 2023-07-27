@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-11 04:38:03+0000
+Translation-Revision-Date: 2023-07-21 05:49:17+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: pl
@@ -241,8 +241,8 @@ Language: pl
     <string name="about_automattic_legal_page_title">Sprawy prawne i więcej</string>
     <string name="gutenberg_native_more_support_options">Więcej opcji wsparcia</string>
     <string name="gutenberg_native_get_support">Uzyskaj wsparcie</string>
-    <string name="gutenberg_native_font_size">Rozmiar czcionki</string>
     <string name="gutenberg_native_double_tap_to_select_font_size">Stuknij dwukrotnie aby wybrać rozmiar czcionki</string>
+    <string name="gutenberg_native_font_size">Wielkość liter</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Stuknij dwukrotnie aby wybrać domyślny rozmiar czcionki</string>
     <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="reader_comments_follow_conversation">Obserwuj konwersację</string>

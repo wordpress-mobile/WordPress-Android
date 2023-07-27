@@ -1,0 +1,2 @@
+22.8:
+Aplikasi tidak akan crash lagi setelah Anda menghapus situs. Fiuh, leganya!

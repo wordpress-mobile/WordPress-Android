@@ -37,6 +37,8 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
 
     private lateinit var refreshActions: MutableList<Boolean>
 
+    private val campaignId = 1
+
     @Before
     fun setup() {
         blazeCardViewModelSlice = BlazeCardViewModelSlice(blazeFeatureUtils, selectedSiteRepository)
@@ -153,11 +155,16 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
         // When
         val result =
             blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate) as CampaignWithBlazeCardBuilderParams
-        result.onCampaignClick()
+        result.onCampaignClick(campaignId)
 
         // Then
         assertThat(navigationActions)
-            .containsOnly(SiteNavigationAction.OpenCampaignDetailPage(CampaignDetailPageSource.DASHBOARD_CARD))
+            .containsOnly(
+                SiteNavigationAction.OpenCampaignDetailPage(
+                    campaignId,
+                    CampaignDetailPageSource.DASHBOARD_CARD
+                )
+            )
     }
 
     @Test

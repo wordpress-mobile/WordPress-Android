@@ -499,6 +499,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
         is SiteNavigationAction.OpenCampaignDetailPage -> activityNavigator.navigateToCampaignDetailPage(
             requireActivity(),
+            action.campaignId,
             action.campaignDetailPageSource
         )
     }

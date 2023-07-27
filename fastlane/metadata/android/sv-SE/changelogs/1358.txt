@@ -1,0 +1,3 @@
+22.8:
+Nu kommer appen inte längre att krascha efter att du raderat en webbplats. Skönt.
+

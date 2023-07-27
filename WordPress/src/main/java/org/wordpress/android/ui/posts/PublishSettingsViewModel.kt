@@ -32,6 +32,9 @@ constructor(
     private val postSchedulingNotificationStore: PostSchedulingNotificationStore,
     private val siteStore: SiteStore
 ) : ViewModel() {
+    protected var editPostRepository: EditPostRepository? = null
+        private set
+
     var canPublishImmediately: Boolean = false
 
     var year: Int? = null
@@ -67,6 +70,7 @@ constructor(
     val onAddToCalendar: LiveData<Event<CalendarEvent>> = _onAddToCalendar
 
     open fun start(postRepository: EditPostRepository?) {
+        editPostRepository = postRepository
         val startCalendar = postRepository?.let { getCurrentPublishDateAsCalendar(it) }
             ?: localeManagerWrapper.getCurrentCalendar()
         updateDateAndTimeFromCalendar(startCalendar)

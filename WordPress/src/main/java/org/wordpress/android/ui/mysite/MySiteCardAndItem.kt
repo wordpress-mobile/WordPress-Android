@@ -338,12 +338,12 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val onClick: ListItemInteraction
                         ) : BlazeCard(dashboardCardType = DashboardCardType.BLAZE_CAMPAIGNS_CARD) {
                         data class BlazeCampaignsCardItem(
-                            val id: Long,
+                            val id: Int,
                             val title: UiString,
                             val status: CampaignStatus?,
                             val featuredImageUrl: String?,
                             val stats: BlazeCampaignStats?,
-                            val onClick: () -> Unit,
+                            val onClick: (campaignId: Int) -> Unit,
                         ) {
                             data class BlazeCampaignStats(
                                 val impressions: UiString,

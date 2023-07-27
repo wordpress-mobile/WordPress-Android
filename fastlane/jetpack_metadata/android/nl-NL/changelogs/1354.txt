@@ -1,4 +1,0 @@
-22.7:
-- We hebben de zwevende actieknop een nieuwe vorm, kleur en stijl gegeven.
-- Afbeeldingblokken worden nu in de juiste beeldverhouding weergegeven, of er nou wel of niet een breedte en hoogte zijn ingesteld voor het beeld.
-- We hebben het gedeelte 'Ik' met je avatar verplaatst naar de onderste navigatie.

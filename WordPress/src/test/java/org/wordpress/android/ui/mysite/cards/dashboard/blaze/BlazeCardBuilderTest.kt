@@ -4,7 +4,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mock
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel
@@ -16,6 +18,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardB
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardBuilder
 import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
+import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 
@@ -32,9 +36,8 @@ val campaign = BlazeCampaignModel(
 )
 
 val onCreateCampaignClick = { }
-val onCampaignClick = { }
 val onCardClick = { }
-
+private var onCampaignClick: ((campaignId: Int) -> Unit) = { }
 val campaignWithBlazeBuilderParams = CampaignWithBlazeCardBuilderParams(
     campaign = campaign,
     onCardClick = onCardClick,
@@ -68,9 +71,12 @@ val blazeCampaignsCardModel = BlazeCampaignsCardModel(
 class BlazeCardBuilderTest {
     private lateinit var builder: BlazeCardBuilder
 
+    @Mock
+    private var statsUtils: StatsUtils = mock()
+
     @Before
     fun setUp() {
-        builder = BlazeCardBuilder()
+        builder = BlazeCardBuilder(statsUtils)
     }
 
     @Test
@@ -104,6 +110,8 @@ class BlazeCardBuilderTest {
     fun `when campaignBuilderParams, then return the CampaignCard`() {
         // Arrange
         val params = campaignWithBlazeBuilderParams
+        whenever(statsUtils.toFormattedString(campaign.impressions, ONE_THOUSAND)).thenReturn("1")
+        whenever(statsUtils.toFormattedString(campaign.clicks, ONE_THOUSAND)).thenReturn("1")
 
         // Act
         val result = builder.build(params) as BlazeCampaignsCardModel
