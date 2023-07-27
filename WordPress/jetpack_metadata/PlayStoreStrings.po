@@ -10,19 +10,17 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Jetpack - Apps - Android - Release Notes\n"
 
+msgctxt "release_note_229"
+msgid ""
+"22.9:\n"
+"We made some big changes to the block editor, including styles, colors, and icons. You’ll also find more buttons and block options in the header toolbar, including the undo and redo buttons. That’s right, you now have more tools than Batman’s utility belt.\n"
+msgstr ""
+
 msgctxt "release_note_228"
 msgid ""
 "22.8:\n"
 "- The app will no longer crash after you delete a site. Phew.\n"
 "- Reusable blocks are now known as synced patterns, the same as in the desktop editor.\n"
-msgstr ""
-
-msgctxt "release_note_227"
-msgid ""
-"22.7:\n"
-"- We gave the floating action button a new shape, color, and style.\n"
-"- Image blocks now display the correct aspect ratio, whether or not the image has a set width and height.\n"
-"- We moved the “Me” section with your avatar to the bottom navigation.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
