@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
@@ -18,6 +21,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -31,7 +35,8 @@ class CampaignListingViewModel @Inject constructor(
     private val blazeCampaignsStore: BlazeCampaignsStore,
     private val statsUtils: StatsUtils,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val resourceProvider: ResourceProvider
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiState = MutableLiveData<CampaignListingUiState>()
     val uiState: LiveData<CampaignListingUiState> = _uiState
@@ -42,8 +47,9 @@ class CampaignListingViewModel @Inject constructor(
     private val _refresh = MutableLiveData<Boolean>()
     val refresh = _refresh
 
-    private val _snackbar = MutableLiveData<Event<Int>>()
-    val snackBar = _snackbar
+    // todo: Ajesh remove initial message - this is just to show it works
+    private val _snackbar = MutableStateFlow<String>("Initial messages")
+    val snackBar = _snackbar.asStateFlow()
 
     private var page = 1
 
@@ -199,10 +205,11 @@ class CampaignListingViewModel @Inject constructor(
         }
     }
 
-    private fun showSnackBar(stringRes: Int) {
-        _snackbar.postValue(Event(stringRes))
+    private fun showSnackBar(@StringRes stringRes: Int) {
+        launch {
+            _snackbar.value = resourceProvider.getString(stringRes).takeIf { it.isNotEmpty() } ?: ""
+        }
     }
-
 }
 
 enum class CampaignListingPageSource(val trackingName: String) {
@@ -221,5 +228,3 @@ sealed class CampaignListingNavigation {
         val blazeFlowSource: BlazeFlowSource = BlazeFlowSource.CAMPAIGN_LISTING_PAGE
     ) : CampaignListingNavigation()
 }
-
-
