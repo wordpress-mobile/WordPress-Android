@@ -39,6 +39,12 @@ class CampaignListingViewModel @Inject constructor(
     private val _navigation = MutableLiveData<Event<CampaignListingNavigation>>()
     val navigation = _navigation
 
+    private val _refresh = MutableLiveData<Boolean>()
+    val refresh = _refresh
+
+    private val _snackbar = MutableLiveData<Event<Int>>()
+    val snackBar = _snackbar
+
     private var page = 1
 
     fun start(campaignListingPageSource: CampaignListingPageSource) {
@@ -172,9 +178,31 @@ class CampaignListingViewModel @Inject constructor(
         _navigation.postValue(Event(CampaignListingNavigation.CampaignCreatePage()))
     }
 
-    fun refresh() {
-        TODO("Not yet implemented")
+    fun refreshCampaigns() {
+        page = 1
+        launch {
+            _refresh.postValue(true)
+            val blazeCampaignModel =
+                blazeCampaignsStore.fetchBlazeCampaigns(selectedSiteRepository.getSelectedSite()!!, page)
+            if (blazeCampaignModel.isError) {
+                _refresh.postValue(false)
+                showSnackBar(R.string.campaign_listing_page_error_could_not_fetch_campaigns)
+            } else if (blazeCampaignModel.model?.campaigns.isNullOrEmpty()) {
+                _refresh.postValue(false)
+            } else if (blazeCampaignModel.model?.campaigns.isNullOrEmpty().not()) {
+                _refresh.postValue(false)
+                val campaigns = blazeCampaignModel.model?.campaigns?.map {
+                    it.mapToCampaignModel()
+                }
+                showCampaigns(campaigns!!)
+            }
+        }
     }
+
+    private fun showSnackBar(stringRes: Int) {
+        _snackbar.postValue(Event(stringRes))
+    }
+
 }
 
 enum class CampaignListingPageSource(val trackingName: String) {

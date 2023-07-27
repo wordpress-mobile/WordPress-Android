@@ -4628,6 +4628,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="campaign_listing_page_no_campaigns_button_text">Create</string>
     <string name="blaze_campaign_detail_error">Campaign Details couldn\'t be loaded</string>
     <string name="campaign_listing_page_create_campaign_fab_description" translatable="false"> @string/blaze_campaigns_card_footer_label</string>
+    <string name="campaign_listing_page_error_could_not_fetch_campaigns"> Something went wrong, could not fetch campaigns</string>
 
     <string name="gutenberg_native_insert_audio_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Audio Block</string>
     <string name="gutenberg_native_insert_gallery_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Gallery Block</string>

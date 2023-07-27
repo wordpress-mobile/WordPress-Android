@@ -160,6 +160,8 @@ class CampaignListingFragment : Fragment() {
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun CampaignListingSuccess(uiState: CampaignListingUiState.Success) {
+        val refreshState = viewModel.refresh.observeAsState()
+
         val listState = rememberLazyListState()
 
         val isScrollToEnd by remember {
@@ -173,8 +175,8 @@ class CampaignListingFragment : Fragment() {
         }
 
         val pullRefreshState = rememberPullRefreshState(
-            refreshing = uiState.pagingDetails.loadingNext,
-            onRefresh = viewModel::refresh
+            refreshing = refreshState.value ?: false,
+            onRefresh = viewModel::refreshCampaigns
         )
 
         Box(
@@ -203,7 +205,7 @@ class CampaignListingFragment : Fragment() {
                 refreshing = true,
                 state = pullRefreshState,
                 modifier = Modifier.align(Alignment.TopCenter),
-                backgroundColor =  Color.Red,
+                backgroundColor = Color.Red,
             )
         }
     }
