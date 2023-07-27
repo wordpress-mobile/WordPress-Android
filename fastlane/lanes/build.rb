@@ -255,7 +255,7 @@ platform :android do
       bucket: 'a8c-apps-public-artifacts',
       key: filename,
       file: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-      skip_if_exists: true
+      if_exists: :skip
     )
 
     return if ENV['BUILDKITE_PULL_REQUEST'].nil?
