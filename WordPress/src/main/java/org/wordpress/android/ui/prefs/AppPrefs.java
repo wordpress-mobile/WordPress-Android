@@ -193,6 +193,7 @@ public class AppPrefs {
         WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_LAST_SHOWN_TIMESTAMP,
         NOTIFICATIONS_PERMISSION_WARNING_DISMISSED,
         HAS_SAVED_PRIVACY_SETTINGS,
+        SHOULD_HIDE_BLAZE_OVERLAY,
     }
 
     /**
@@ -1673,5 +1674,13 @@ public class AppPrefs {
 
     public static void setNotificationsPermissionWarningDismissed(boolean dismissed) {
         setBoolean(DeletablePrefKey.NOTIFICATIONS_PERMISSION_WARNING_DISMISSED, dismissed);
+    }
+
+    public static Boolean getShouldHideBlazeOverlay() {
+        return getBoolean(DeletablePrefKey.SHOULD_HIDE_BLAZE_OVERLAY, false);
+    }
+
+    public static void setShouldHideBlazeOverlay(final boolean isHidden) {
+        setBoolean(DeletablePrefKey.SHOULD_HIDE_BLAZE_OVERLAY, isHidden);
     }
 }

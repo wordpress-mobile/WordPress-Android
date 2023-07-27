@@ -62,6 +62,10 @@ class BlazeFeatureUtils @Inject constructor(
 
     fun shouldShowBlazeCampaigns() = blazeManageCampaignFeatureConfig.isEnabled()
 
+    fun shouldHideBlazeOverlay() = appPrefsWrapper.getShouldHideBlazeOverlay()
+
+    fun setShouldHideBlazeOverlay() = appPrefsWrapper.setShouldHideBlazeOverlay(true)
+
     fun track(stat: AnalyticsTracker.Stat, source: BlazeFlowSource) {
         analyticsTrackerWrapper.track(
             stat,
