@@ -1963,7 +1963,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE PostModel ADD AUTO_SHARE_MESSAGE TEXT")
                     db.execSQL("ALTER TABLE PostModel ADD AUTO_SHARE_ID INTEGER")
                 }
-                191 -> migrate(version) {
+                191 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCRevenueStatsModel ADD RANGE_ID INTEGER")
                 }
             }
