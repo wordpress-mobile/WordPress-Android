@@ -7,20 +7,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Button
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -30,6 +36,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -150,6 +157,7 @@ class CampaignListingFragment : Fragment() {
         }
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun CampaignListingSuccess(uiState: CampaignListingUiState.Success) {
         val listState = rememberLazyListState()
@@ -164,21 +172,39 @@ class CampaignListingFragment : Fragment() {
             uiState.pagingDetails.loadMoreFunction()
         }
 
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(bottom = 72.dp),
+        val pullRefreshState = rememberPullRefreshState(
+            refreshing = uiState.pagingDetails.loadingNext,
+            onRefresh = viewModel::refresh
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pullRefresh(pullRefreshState)
         ) {
-            items(uiState.campaigns) { campaign ->
-                CampaignListRow(
-                    campaignModel = campaign,
-                    modifier = Modifier.clickable { uiState.itemClick(campaign) })
-            }
-            if (uiState.pagingDetails.loadingNext) {
-                item {
-                    LoadingState(modifier = Modifier.padding(top = 16.dp))
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(bottom = 72.dp),
+            ) {
+                items(uiState.campaigns) { campaign ->
+                    CampaignListRow(
+                        campaignModel = campaign,
+                        modifier = Modifier.clickable { uiState.itemClick(campaign) })
+                }
+                if (uiState.pagingDetails.loadingNext) {
+                    item {
+                        LoadingState(modifier = Modifier.padding(top = 16.dp))
+                    }
                 }
             }
+
+            PullRefreshIndicator(
+                refreshing = true,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter),
+                backgroundColor =  Color.Red,
+            )
         }
     }
 }

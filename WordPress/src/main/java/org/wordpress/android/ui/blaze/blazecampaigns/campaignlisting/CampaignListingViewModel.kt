@@ -171,6 +171,10 @@ class CampaignListingViewModel @Inject constructor(
     private fun createCampaignClick() {
         _navigation.postValue(Event(CampaignListingNavigation.CampaignCreatePage()))
     }
+
+    fun refresh() {
+        TODO("Not yet implemented")
+    }
 }
 
 enum class CampaignListingPageSource(val trackingName: String) {
