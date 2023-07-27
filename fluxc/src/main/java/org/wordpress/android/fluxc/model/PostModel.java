@@ -605,7 +605,8 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getAutoSavePreviewUrl(), otherPost.getAutoSavePreviewUrl())
                 && StringUtils.equals(getAutoShareMessage(), otherPost.getAutoShareMessage())
                 && getPublicizeSkipConnections().equals(otherPost.getPublicizeSkipConnections())
-                && getAutoShareId() == otherPost.getAutoShareId();
+                && getAutoShareId() == otherPost.getAutoShareId()
+                && StringUtils.equals(getPublicizeSkipConnections(), otherPost.getPublicizeSkipConnections());
     }
 
     /**
