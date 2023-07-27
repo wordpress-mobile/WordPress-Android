@@ -145,7 +145,12 @@ platform :android do
   lane :download_signed_apk_from_google_play do |options|
     app = get_app_name_option!(options)
     package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
-    version = options[:version] || android_get_release_version()
+    version = options[:version] || android_get_release_version() # default to current release version
+
+    if version.is_a?(String) # for when calling from command line
+      (version_name, version_code) = version.split(',')
+      version = { 'name' => version_name, 'code' => version_code || '1' }
+    end
 
     download_universal_apk_from_google_play(
         package_name: package_name,
