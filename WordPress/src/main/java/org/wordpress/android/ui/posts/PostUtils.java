@@ -240,6 +240,8 @@ public class PostUtils {
                                     && oldPost.getChangesConfirmedContentHashcode() == newPost
                 .getChangesConfirmedContentHashcode()
                                     && StringUtils.equals(oldPost.getAutoShareMessage(), newPost.getAutoShareMessage())
+                                    && oldPost.getPublicizeSkipConnectionsJson()
+                                              .equals(newPost.getPublicizeSkipConnectionsJson())
         );
     }
 

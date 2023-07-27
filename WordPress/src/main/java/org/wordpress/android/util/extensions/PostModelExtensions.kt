@@ -1,6 +1,8 @@
 package org.wordpress.android.util.extensions
 
-import org.wordpress.android.fluxc.model.PostImmutableModel
+import com.google.gson.Gson
+import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.PublicizeSkipConnection
 
-fun PostImmutableModel.publicizeSkipConnectionsList(): List<String> =
-    publicizeSkipConnections.split(",")
+fun PostModel.updatePublicizeSkipConnections(publicizeSkipConnectionsList: MutableList<PublicizeSkipConnection>) =
+    setPublicizeSkipConnectionsJson(Gson().toJson(publicizeSkipConnectionsList))
