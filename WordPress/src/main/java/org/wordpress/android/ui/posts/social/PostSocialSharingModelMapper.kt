@@ -69,12 +69,12 @@ class PostSocialSharingModelMapper @Inject constructor(
     }
 
     private fun mapIconModels(connections: List<PostSocialConnection>) =
-        connections.filter { it.isSharingEnabled }.mapNotNull {
-            PublicizeServiceIcon.fromServiceId(it.service)?.iconResId
-        }.map {
+        connections.map {
+            Pair(PublicizeServiceIcon.fromServiceId(it.service)?.iconResId, it)
+        }.map { (iconResId, connection) ->
             TrainOfIconsModel(
-                data = it,
-                alpha = 1f // TODO
+                data = iconResId,
+                alpha = if (connection.isSharingEnabled) 1f else 0.5f
             )
         }
 
