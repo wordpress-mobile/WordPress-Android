@@ -2599,6 +2599,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "free_to_paid_plan_dashboard_card_hidden";
             case TWITTER_NOTICE_LINK_TAPPED:
                 return "twitter_notice_link_tapped";
+            case DASHBOARD_CARD_DOMAIN_TRANSFER_SHOWN:
+                return "dashboard_card_domain_transfer_shown";
+            case DASHBOARD_CARD_DOMAIN_TRANSFER_TAPPED:
+                return "dashboard_card_domain_transfer_tapped";
+            case DASHBOARD_CARD_DOMAIN_TRANSFER_MORE_MENU_TAPPED:
+                return "dashboard_card_domain_transfer_more_menu_tapped";
+            case DASHBOARD_CARD_DOMAIN_TRANSFER_HIDDEN:
+                return "dashboard_card_domain_transfer_hidden";
         }
         return null;
     }
