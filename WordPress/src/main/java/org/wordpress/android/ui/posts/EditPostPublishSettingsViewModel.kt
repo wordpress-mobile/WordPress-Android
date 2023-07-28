@@ -88,16 +88,22 @@ class EditPostPublishSettingsViewModel @Inject constructor(
             siteStore.getSiteByLocalId(it)
         }
         loadAuthors()
-        viewModelScope.launch {
-            shareLimit = siteModel?.let {
-                getJetpackSocialShareLimitStatusUseCase.execute(it)
-            } ?: ShareLimit.Disabled
-            loadConnections()
-            loadJetpackSocial()
+
+        if (jetpackSocialFeatureConfig.isEnabled()) {
+            viewModelScope.launch {
+                shareLimit = siteModel?.let {
+                    getJetpackSocialShareLimitStatusUseCase.execute(it)
+                } ?: ShareLimit.Disabled
+                loadConnections()
+                loadJetpackSocial()
+            }
+        } else {
+            _showJetpackSocialContainer.value = false
         }
     }
 
     fun onScreenShown() {
+        if (!jetpackSocialFeatureConfig.isEnabled()) return
         if (actionEvents.value is ActionEvent.OpenSocialConnectionsList) {
             // When getting back from publicize connections screen, we should update connections to
             // make sure we have the latest data.
