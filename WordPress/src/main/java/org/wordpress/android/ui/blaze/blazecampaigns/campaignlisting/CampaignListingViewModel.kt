@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
@@ -23,15 +22,16 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
-@Suppress("LongParameterList")
+@Suppress("LongParameterList", "TooManyFunctions")
 class CampaignListingViewModel @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val blazeCampaignsStore: BlazeCampaignsStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
-    private val mapper: CampaignListingUIModelMapper
+    private val mapper: CampaignListingUIModelMapper,
+    private val fetchCampaignListUseCase: FetchCampaignListUseCase,
+    private val getCampaignListFromDbUseCase: GetCampaignListFromDbUseCase
 ) : ScopedViewModel(bgDispatcher) {
     private lateinit var site: SiteModel
 
@@ -58,26 +58,25 @@ class CampaignListingViewModel @Inject constructor(
     private fun loadCampaigns() {
         _uiState.postValue(CampaignListingUiState.Loading)
         launch {
-            val blazeCampaignModel = blazeCampaignsStore.getBlazeCampaigns(site)
-            if (blazeCampaignModel.campaigns.isEmpty()) {
-                if (networkUtilsWrapper.isNetworkAvailable().not()) {
-                    _uiState.postValue(mapper.toNoNetworkError(this@CampaignListingViewModel::loadCampaigns))
-                } else {
-                    val campaignResult = blazeCampaignsStore.fetchBlazeCampaigns(site, page)
-                    if (campaignResult.isError) {
-                        _uiState.postValue(mapper.toGenericError(this@CampaignListingViewModel::loadCampaigns))
-                    } else if (campaignResult.model == null || campaignResult.model?.campaigns.isNullOrEmpty()) {
-                        showNoCampaigns()
-                    } else {
-                        val campaigns = campaignResult.model!!.campaigns.map { mapper.mapToCampaignModel(it) }
-                        showCampaigns(campaigns)
+            when (val campaigns = getCampaignListFromDbUseCase.execute(site)) {
+                is Right -> showCampaigns(campaigns.value)
+                is Left -> fetchCampaigns()
+            }
+        }
+    }
+
+    private suspend fun fetchCampaigns() {
+        if (networkUtilsWrapper.isNetworkAvailable().not()) {
+            showNoNetworkError()
+        } else {
+            when (val campaignResult = fetchCampaignListUseCase.execute(site, page)) {
+                is Right -> showCampaigns(campaignResult.value)
+                is Left -> {
+                    when (campaignResult.value) {
+                        is GenericError -> showGenericError()
+                        is NoCampaigns -> showNoCampaigns()
                     }
                 }
-            } else {
-                val campaigns = blazeCampaignModel.campaigns.map {
-                    mapper.mapToCampaignModel(it)
-                }
-                showCampaigns(campaigns)
             }
         }
     }
@@ -96,6 +95,14 @@ class CampaignListingViewModel @Inject constructor(
         )
     }
 
+    private fun showGenericError() {
+        _uiState.postValue(mapper.toGenericError(this@CampaignListingViewModel::loadCampaigns))
+    }
+
+    private fun showNoNetworkError() {
+        _uiState.postValue(mapper.toNoNetworkError(this@CampaignListingViewModel::loadCampaigns))
+    }
+
     private fun loadMoreCampaigns() {
         launch {
             if (_uiState.value is CampaignListingUiState.Success &&
@@ -109,20 +116,27 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     private suspend fun fetchMoreCampaigns() {
-        val campaignResult = blazeCampaignsStore.fetchBlazeCampaigns(site, page)
-        val currentUiState = _uiState.value as CampaignListingUiState.Success
-        val campaigns = campaignResult.model?.campaigns?.map { mapper.mapToCampaignModel(it) }
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
+        if (networkUtilsWrapper.isNetworkAvailable().not()) {
             disableLoadingMore()
             showSnackBar(R.string.campaign_listing_page_error_refresh_no_network_available)
-        } else if (campaignResult.isError) {
-            disableLoadingMore()
-            showSnackBar(R.string.campaign_listing_page_error_refresh_could_not_fetch_campaigns)
-        } else if (campaigns.isNullOrEmpty()) {
-            disableLoadingMore()
         } else {
-            val updatedCampaigns = currentUiState.campaigns + campaigns
-            showCampaigns(updatedCampaigns)
+            when (val campaignResult = fetchCampaignListUseCase.execute(site, page)) {
+                is Right -> {
+                    val currentUiState = _uiState.value as CampaignListingUiState.Success
+                    showCampaigns(currentUiState.campaigns + campaignResult.value)
+                }
+
+                is Left -> {
+                    when (campaignResult.value) {
+                        is GenericError -> {
+                            disableLoadingMore()
+                            showSnackBar(R.string.campaign_listing_page_error_refresh_could_not_fetch_campaigns)
+                        }
+
+                        is NoCampaigns -> disableLoadingMore()
+                    }
+                }
+            }
         }
     }
 
@@ -161,16 +175,22 @@ class CampaignListingViewModel @Inject constructor(
                 _refresh.postValue(false)
                 showSnackBar(R.string.campaign_listing_page_error_refresh_no_network_available)
             } else {
-                val blazeCampaignModel = blazeCampaignsStore.fetchBlazeCampaigns(site, page)
-                if (blazeCampaignModel.isError || blazeCampaignModel.model?.campaigns.isNullOrEmpty()) {
-                    _refresh.postValue(false)
-                    showSnackBar(R.string.campaign_listing_page_error_refresh_could_not_fetch_campaigns)
-                } else if (blazeCampaignModel.model?.campaigns.isNullOrEmpty().not()) {
-                    _refresh.postValue(false)
-                    val campaigns = blazeCampaignModel.model?.campaigns?.map {
-                        mapper.mapToCampaignModel(it)
+                when (val campaignResult = fetchCampaignListUseCase.execute(site, page)) {
+                    is Right -> {
+                        _refresh.postValue(false)
+                        showCampaigns(campaignResult.value)
                     }
-                    showCampaigns(campaigns!!)
+                    is Left -> {
+                        when (campaignResult.value) {
+                            is GenericError -> {
+                                _refresh.postValue(false)
+                                showSnackBar(R.string.campaign_listing_page_error_refresh_could_not_fetch_campaigns)
+                            }
+
+                            // on refresh there shouldn't be a case where there are no campaigns
+                            is NoCampaigns -> _refresh.postValue(false)
+                        }
+                    }
                 }
             }
         }
