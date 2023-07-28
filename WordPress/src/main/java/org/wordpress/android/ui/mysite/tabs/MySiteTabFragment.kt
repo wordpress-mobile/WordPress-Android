@@ -502,6 +502,10 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             action.campaignId,
             action.campaignDetailPageSource
         )
+
+        is SiteNavigationAction.OpenDomainTransferPage -> ActivityLauncher.openDomainTransfer(
+            requireActivity(), action.site,  action.url
+        )
     }
 
     private fun showJetpackPoweredBottomSheet() {
