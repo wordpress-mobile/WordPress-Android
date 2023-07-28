@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -140,7 +141,7 @@ class HomePagePickerViewModelTest : BaseUnitTest() {
         viewModel.start()
         val captor = ArgumentCaptor.forClass(LayoutPickerUiState::class.java)
         verify(uiStateObserver, times(3)).onChanged(captor.capture())
-        assertThat(captor.value is LayoutPickerUiState.Content)
+        assertTrue(captor.value is LayoutPickerUiState.Content)
         assertThat((captor.value as LayoutPickerUiState.Content).layoutCategories.size).isGreaterThan(0)
     }
 

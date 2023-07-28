@@ -3,6 +3,7 @@ package org.wordpress.android.ui.photopicker
 import android.content.Context
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -422,9 +423,9 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     private fun PhotoPickerUiItem.assertEqualToDomainItem(domainItem: PhotoPickerItem) {
         assertThat(this.id).isEqualTo(domainItem.id)
         if (domainItem.isVideo) {
-            assertThat(this is PhotoPickerUiItem.VideoItem)
+            assertTrue(this is PhotoPickerUiItem.VideoItem)
         } else {
-            assertThat(this is PhotoPickerUiItem.PhotoItem)
+            assertTrue(this is PhotoPickerUiItem.PhotoItem)
         }
 
         assertThat(this.uri).isEqualTo(domainItem.uri)
