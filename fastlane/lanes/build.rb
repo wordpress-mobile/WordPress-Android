@@ -149,7 +149,8 @@ platform :android do
 
     if version.is_a?(String) # for when calling from command line
       (version_name, version_code) = version.split(',')
-      version = { 'name' => version_name, 'code' => version_code || '1' }
+      UI.user_error!('Please pass the `version` option as a comma-separated `name,code` value') if version_code.nil?
+      version = { 'name' => version_name, 'code' => version_code }
     end
 
     download_universal_apk_from_google_play(
