@@ -463,6 +463,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     public void onStart() {
         super.onStart();
         registerReceiver(mDownloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
