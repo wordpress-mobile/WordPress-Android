@@ -2,7 +2,7 @@
 
 23.0
 -----
-
+* [**] [internal] Upgrade React Native to 0.71.11 [https://github.com/wordpress-mobile/WordPress-Android/pull/18613]
 
 22.9
 -----

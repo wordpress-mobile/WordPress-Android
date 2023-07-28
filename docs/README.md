@@ -6,6 +6,7 @@
 - [Using Android Resources](using-android-resources.md) - describes how to add or use Android resources like strings and drawables
 - [Localization](localization.md)
 - [Pull Request Guidelines](pull-request-guidelines.md) - branch naming and how to write good pull requests
+- [Converting to Kotlin](converting-to-kotlin.md)
 - [UI Tests](../WordPress/src/androidTest/java/org/wordpress/android/e2e/)
 
 ## Accessibility
@@ -23,7 +24,7 @@
 
 - [Handbook: Git Branching Guidelines](https://make.wordpress.org/mobile/handbook/general-guides/git-branching/)
 
-## External Resources 
+## External Resources
 
 - [WordPress Mobile Blog](http://make.wordpress.org/mobile)
 - [WordPress Mobile Handbook](http://make.wordpress.org/mobile/handbook/)

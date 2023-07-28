@@ -20,10 +20,10 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '738-987fbd6d5418732171cc9cafcd9e183f7da0eb23'
     automatticTracksVersion = '3.0.0'
-    gutenbergMobileVersion = '5989-389b43aaeae9db891ee436972e88b49933710275'
-    wordPressAztecVersion = '1051-22e5fb9611a6e973f2dc132b68d8d1b2bddd46d0'
-    wordPressFluxCVersion = '2772-0e0389234dfc8b023e74b012b90457f56a91c23d'
-    wordPressLoginVersion = '119-864c02e4f7b59d7d83cd5bc7a6dc92fb41595c00'
+    gutenbergMobileVersion = 'v1.101.0-alpha1'
+    wordPressAztecVersion = 'v1.6.4'
+    wordPressFluxCVersion = 'trunk-21f44db8f768fff12c7a85ee0531c7d9a53ba780'
+    wordPressLoginVersion = '1.3.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '130-1b8f56190c280e1990195b51414a82227e3c0f6f'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
@@ -81,10 +81,7 @@ ext {
     zendeskVersion = '5.1.2'
 
     // react native
-    facebookReactVersion = '0.69.4:release@aar'
-    facebookSoloaderVersion = '0.10.4'
-    facebookFrescoVersion = '2.5.0'
-    facebookFbjniVersion = '0.2.2'
+    facebookReactVersion = '0.71.11'
 
     // test
     assertjVersion = '3.23.1'
