@@ -95,7 +95,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
                     getJetpackSocialShareLimitStatusUseCase.execute(it)
                 } ?: ShareLimit.Disabled
                 loadConnections()
-                loadJetpackSocial()
+                loadJetpackSocialIfSupported()
             }
         } else {
             _showJetpackSocialContainer.value = false
@@ -109,7 +109,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
             // make sure we have the latest data.
             viewModelScope.launch {
                 updateConnections()
-                loadJetpackSocial()
+                loadJetpackSocialIfSupported()
             }
         }
     }
@@ -154,7 +154,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadJetpackSocial() {
+    private suspend fun loadJetpackSocialIfSupported() {
         val showJetpackSocial = jetpackSocialFeatureConfig.isEnabled() && siteModel?.supportsPublicize() == true
         if (!showJetpackSocial) {
             _showJetpackSocialContainer.value = false
