@@ -116,6 +116,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
+import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DashboardCardDomainTransferUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder.Companion.NOT_SET
@@ -339,6 +340,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper
+
+    @Mock
+    lateinit var dashboardCardDomainTransferUtils: DashboardCardDomainTransferUtils
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
@@ -576,7 +580,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             plansCardUtils,
             jetpackFeatureRemovalPhaseHelper,
             wpJetpackIndividualPluginHelper,
-            blazeCardViewModelSlice
+            blazeCardViewModelSlice,
+            dashboardCardDomainTransferUtils
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
