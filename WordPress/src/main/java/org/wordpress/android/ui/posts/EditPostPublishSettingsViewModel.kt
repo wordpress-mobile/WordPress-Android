@@ -202,9 +202,13 @@ class EditPostPublishSettingsViewModel @Inject constructor(
                 && publicizeTableWrapper.getServiceList().any { it.status != PublicizeService.Status.UNSUPPORTED }
 
     private fun updateInitialConnectionListSharingStatus() {
+        if (isPostPublished()) {
+            connections.map { it.isSharingEnabled = false }
+            return
+        }
         val shareLimitValue = shareLimit
-        if (shareLimitValue is ShareLimit.Enabled && !isPostPublished()) {
-            val skipConnections = postPublicizeSkipConnections()
+        val skipConnections = postPublicizeSkipConnections()
+        if (shareLimitValue is ShareLimit.Enabled) {
             // If shares remaining < number of connections, all connections are unchecked by default
             if (shareLimitValue.sharesRemaining < connections.size) {
                 connections.map { it.isSharingEnabled = false }
@@ -224,7 +228,14 @@ class EditPostPublishSettingsViewModel @Inject constructor(
                 }
             }
         } else {
-            connections.map { it.isSharingEnabled = false }
+            // With share limit disabled we can enabled all connections but still considering the skip
+            // connections metadata
+            connections.map { it.isSharingEnabled = true }
+            connections.forEach { connection ->
+                // Use metadata to verify if this connection was previously disabled by the user
+                skipConnections.firstOrNull { it.connectionId() == connection.connectionId.toString() }
+                    ?.let { connection.isSharingEnabled = it.isConnectionEnabled() }
+            }
         }
     }
 
@@ -279,8 +290,13 @@ class EditPostPublishSettingsViewModel @Inject constructor(
                 // Update local post
                 editPostRepository?.updateAsync({ postModel ->
                     val connectionId = connection.connectionId.toString()
-                    with (postModel.publicizeSkipConnectionsList.toMutableList()) {
+                    with(postModel.publicizeSkipConnectionsList.toMutableList()) {
                         firstOrNull { it.connectionId() == connectionId }?.updateValue(enabled)
+                            ?: run {
+                                // Connection wasn't part of skip connections before, so we must add it
+                                // with the correct value
+                                add(PublicizeSkipConnection.createNew(connectionId, enabled))
+                            }
                         postModel.updatePublicizeSkipConnections(this)
                     }
                     true
