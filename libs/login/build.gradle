@@ -21,6 +21,8 @@ repositories {
 }
 
 android {
+    namespace "org.wordpress.android.login"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
@@ -28,6 +30,9 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
 
         vectorDrawables.useSupportLibrary = true
+    }
+    buildFeatures {
+        buildConfig true
     }
 }
 
@@ -103,7 +108,6 @@ project.afterEvaluate {
 
                 groupId "org.wordpress"
                 artifactId "login"
-                artifact tasks.named("androidSourcesJar")
                 // version is set by 'publish-to-s3' plugin
             }
         }
