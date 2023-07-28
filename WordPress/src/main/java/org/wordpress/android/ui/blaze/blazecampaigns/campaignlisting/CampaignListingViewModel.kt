@@ -19,6 +19,7 @@ import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
 import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -54,19 +55,45 @@ class CampaignListingViewModel @Inject constructor(
 
     fun start(campaignListingPageSource: CampaignListingPageSource) {
         blazeFeatureUtils.trackCampaignListingPageShown(campaignListingPageSource)
-        _uiState.postValue(CampaignListingUiState.Loading)
         loadCampaigns()
     }
 
     private fun loadCampaigns() {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            // showNoInternet() error, skipping for now so that loading state can be design reviewed
-            return
-        }
+        _uiState.postValue(CampaignListingUiState.Loading)
         launch {
             val blazeCampaignModel = blazeCampaignsStore.getBlazeCampaigns(selectedSiteRepository.getSelectedSite()!!)
             if (blazeCampaignModel.campaigns.isEmpty()) {
-                showNoCampaigns()
+                if (networkUtilsWrapper.isNetworkAvailable().not()) {
+                    _uiState.postValue(
+                        CampaignListingUiState.Error(
+                            title = UiStringRes(R.string.campaign_listing_page_no_network_error_title),
+                            description = UiStringRes(R.string.campaign_listing_page_no_network_error_description),
+                            button = CampaignListingUiState.Error.ErrorButton(
+                                text = UiStringRes(R.string.campaign_listing_page_no_network_error_button_text),
+                                click = this@CampaignListingViewModel::loadCampaigns
+                            )
+                        )
+                    )
+                    return@launch
+                } else {
+                    val campaignResult =
+                        blazeCampaignsStore.fetchBlazeCampaigns(selectedSiteRepository.getSelectedSite()!!, page)
+                    if (campaignResult.isError) {
+                        _uiState.postValue(
+                            CampaignListingUiState.Error(
+                                title = UiStringRes(R.string.campaign_listing_page_error_title),
+                                description = UiStringRes(R.string.campaign_listing_page_error_description),
+                                button = CampaignListingUiState.Error.ErrorButton(
+                                    text = UiStringRes(R.string.campaign_listing_page_error_button_text),
+                                    click = this@CampaignListingViewModel::loadCampaigns
+                                )
+                            )
+                        )
+                        return@launch
+                    } else if (campaignResult.model == null || campaignResult.model?.campaigns.isNullOrEmpty())
+                        showNoCampaigns()
+                    else showCampaigns(campaignResult.model!!.campaigns.map { it.mapToCampaignModel() })
+                }
             } else {
                 val campaigns = blazeCampaignModel.campaigns.map {
                     it.mapToCampaignModel()
@@ -169,10 +196,10 @@ class CampaignListingViewModel @Inject constructor(
     private fun showNoCampaigns() {
         _uiState.postValue(
             CampaignListingUiState.Error(
-                title = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_title),
-                description = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_message_description),
+                title = UiStringRes(R.string.campaign_listing_page_no_campaigns_message_title),
+                description = UiStringRes(R.string.campaign_listing_page_no_campaigns_message_description),
                 button = CampaignListingUiState.Error.ErrorButton(
-                    text = UiString.UiStringRes(R.string.campaign_listing_page_no_campaigns_button_text),
+                    text = UiStringRes(R.string.campaign_listing_page_no_campaigns_button_text),
                     click = this::createCampaignClick
                 )
             )
@@ -189,7 +216,7 @@ class CampaignListingViewModel @Inject constructor(
             _refresh.postValue(true)
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 _refresh.postValue(false)
-                showSnackBar(R.string.no_network_message)
+                showSnackBar(R.string.campaign_listing_page_error_refresh_no_network_available)
                 return@launch
             }
             val blazeCampaignModel =
