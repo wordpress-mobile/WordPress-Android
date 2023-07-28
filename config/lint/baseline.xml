@@ -420,17 +420,6 @@
     </issue>
 
     <issue
-        id="SpecifyJobSchedulerIdRange"
-        message="Specify a valid range of job id&apos;s for `WorkManager` to use."
-        errorLine1="public class NotificationsUpdateJobService extends JobService"
-        errorLine2="^">
-        <location
-            file="src/main/java/org/wordpress/android/ui/notifications/services/NotificationsUpdateJobService.java"
-            line="13"
-            column="1"/>
-    </issue>
-
-    <issue
         id="UseSwitchCompatOrMaterialCode"
         message="Use `SwitchCompat` from AppCompat or `SwitchMaterial` from Material library"
         errorLine1="        Switch switchControl = getSwitch((ViewGroup) view);"
