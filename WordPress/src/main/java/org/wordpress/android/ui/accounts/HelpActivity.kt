@@ -42,6 +42,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.config.ContactSupportFeatureConfig
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -69,6 +70,9 @@ class HelpActivity : LocaleAwareActivity() {
 
     @Inject
     lateinit var mDispatcher: Dispatcher
+
+    @Inject
+    lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
 
     private lateinit var binding: HelpActivityBinding
 
@@ -163,6 +167,10 @@ class HelpActivity : LocaleAwareActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun launchSupportWidget() {
+        // TODO
+    }
+
     private fun createNewZendeskTicket() {
         zendeskHelper.createNewTicket(
             this,
@@ -205,7 +213,13 @@ class HelpActivity : LocaleAwareActivity() {
             AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_VIEWED)
             JpFaqContainer.setOnClickListener { showMigrationFaq() }
         }
-        contactUsButton.setOnClickListener { createNewZendeskTicket() }
+        contactUsButton.setOnClickListener {
+            if (contactSupportFeatureConfig.isEnabled()) {
+                launchSupportWidget()
+            } else {
+                createNewZendeskTicket()
+            }
+        }
         ticketsButton.setOnClickListener { showZendeskTickets() }
 
         contactEmailContainer.setOnClickListener {
