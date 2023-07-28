@@ -23,6 +23,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
+@Suppress("LongParameterList")
 class CampaignListingViewModel @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val blazeFeatureUtils: BlazeFeatureUtils,
@@ -30,7 +31,7 @@ class CampaignListingViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
-    private val mapper: CampaignListingDomainMapper
+    private val mapper: CampaignListingUIModelMapper
 ) : ScopedViewModel(bgDispatcher) {
     private lateinit var site: SiteModel
 

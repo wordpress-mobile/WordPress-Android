@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 const val CENTS_IN_DOLLARS = 100
 
-class CampaignListingDomainMapper @Inject constructor(
+class CampaignListingUIModelMapper @Inject constructor(
     private val statsUtils: StatsUtils
 ){
     fun mapToCampaignModel(campaignModel:BlazeCampaignModel): CampaignModel {
