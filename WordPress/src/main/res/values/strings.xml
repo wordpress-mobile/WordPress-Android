@@ -4504,6 +4504,12 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="dashboard_card_domain_sub_title">Stake your claim on your corner of the web with a site address that\'s easy to find, share, and follow.</string>
     <string name="dashboard_card_domain_menu_hide_this">Hide this</string>
 
+    <!-- Dashboard Card Domain Transfer-->
+    <string name="dashboard_card_domain_transfer_title">News</string>
+    <string name="dashboard_card_domain_transfer_sub_title">Move your domain to WordPress.com</string>
+    <string name="dashboard_card_domain_transfer_caption">Transfer your domains to WordPress.com now, and get an additional year for free, with the lowest prices possible going forward.</string>
+    <string name="dashboard_card_domain_transfer_menu_hide_this">Hide this</string>
+
     <!-- Dashboard Card Plans-->
     <string name="dashboard_card_plans_title">Free domain with annual plan</string>
     <string name="dashboard_card_plans_sub_title">Get a free domain for the first year, remove ads on your site, and increase your storage.</string>

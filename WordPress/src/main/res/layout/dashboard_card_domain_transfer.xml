@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dashboard_card_domain_transfer_cta"
+    style="@style/WordPress.CardView.Unelevated"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?attr/selectableItemBackground">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_extra_large">
+
+            <ImageView
+                android:id="@+id/dashboard_domain_transfer_card_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/content_description_more"
+                android:src="@drawable/ic_more_vert_white_24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="?attr/wpColorOnSurfaceMedium" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/dashboard_card_domain_transfer_title"
+                style="@style/DashboardCardSubtitle"
+                android:textAlignment="viewStart"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/dashboard_card_domain_transfer_title"
+                app:layout_constraintEnd_toStartOf="@+id/dashboard_domain_transfer_card_more"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/dashboard_card_domain_transfer_image"
+                android:src="@drawable/ic_wordpress_jetpack_logo"
+                android:layout_width="56dp"
+                android:layout_height="44dp"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:contentDescription="@null"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dashboard_card_domain_transfer_title" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/dashboard_card_domain_transfer_sub_title"
+                style="@style/DashboardCardSubtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/single_action_card_padding"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:text="@string/dashboard_card_domain_transfer_sub_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/dashboard_card_domain_transfer_image"
+                app:layout_constraintTop_toBottomOf="@+id/dashboard_card_domain_transfer_title" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/dashboard_card_domain_transfer_caption"
+                style="@style/DashboardCardDetail"
+                android:textAlignment="viewStart"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:text="@string/dashboard_card_domain_transfer_caption"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dashboard_card_domain_transfer_sub_title" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/dashboard_card_domain_transfer_learn_more"
+                style="@style/DashboardCardDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:gravity="center_vertical|start"
+                android:text="@string/learn_more"
+                android:textAlignment="viewStart"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="@dimen/text_sz_large"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dashboard_card_domain_transfer_caption" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
+
