@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 192
+        return 193
     }
 
     override fun getDbName(): String {
@@ -1963,7 +1963,10 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE PostModel ADD AUTO_SHARE_MESSAGE TEXT")
                     db.execSQL("ALTER TABLE PostModel ADD AUTO_SHARE_ID INTEGER")
                 }
-                191 -> migrate(version) {
+                191 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCRevenueStatsModel ADD RANGE_ID INTEGER")
+                }
+                192 -> migrate(version) {
                     db.execSQL("ALTER TABLE PostModel ADD PUBLICIZE_SKIP_CONNECTIONS_JSON TEXT")
                 }
             }
