@@ -102,7 +102,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         }
     }
 
-    fun onScreenShown() {
+    fun onResume() {
         if (jetpackSocialFeatureConfig.isEnabled() && actionEvents.value is ActionEvent.OpenSocialConnectionsList) {
             // When getting back from publicize connections screen, we should update connections to
             // make sure we have the latest data.

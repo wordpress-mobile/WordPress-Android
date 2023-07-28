@@ -327,14 +327,14 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             .thenReturn(loaded)
 
         classToTest.start(editPostRepository)
-        classToTest.onScreenShown()
+        classToTest.onResume()
 
         verify(jetpackSocialUiStateObserver).onChanged(loaded)
     }
 
     @Test
     fun `Should NOT reload jetpack social on screen shown if last emitted action was NOT OpenSocialConnectionsList`() {
-        classToTest.onScreenShown()
+        classToTest.onResume()
         verify(jetpackSocialUiStateObserver, never()).onChanged(any())
     }
 
