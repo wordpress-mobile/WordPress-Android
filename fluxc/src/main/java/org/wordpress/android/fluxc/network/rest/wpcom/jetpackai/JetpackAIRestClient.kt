@@ -26,6 +26,10 @@ class JetpackAIRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
+    companion object {
+        private const val FIELDS_TO_REQUEST = "completion"
+    }
+
     suspend fun fetchJetpackAIJWTToken(
         site: SiteModel
     ) : JetpackAIJWTTokenResponse {
@@ -58,6 +62,7 @@ class JetpackAIRestClient @Inject constructor(
             put("token", token)
             put("prompt", prompt)
             put("feature", feature)
+            put("_fields", FIELDS_TO_REQUEST)
         }
 
         val response = wpComGsonRequestBuilder.syncPostRequest(

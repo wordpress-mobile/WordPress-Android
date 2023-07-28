@@ -26,7 +26,6 @@ class PublicizeSkipConnection(
             ).apply {
                 updateValue(enabled)
             }
-
     }
 }
 
