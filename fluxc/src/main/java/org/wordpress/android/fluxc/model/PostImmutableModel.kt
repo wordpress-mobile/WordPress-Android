@@ -50,7 +50,8 @@ interface PostImmutableModel {
     val dateLocallyChanged: String
     val autoShareMessage: String
     val autoShareId: Long
-    val publicizeSkipConnections: String
+    val publicizeSkipConnectionsJson: String
+    val publicizeSkipConnectionsList: List<PublicizeSkipConnection>
 
     fun hasFeaturedImage(): Boolean
 

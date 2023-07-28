@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -20,6 +21,7 @@ import org.wordpress.android.fluxc.model.LikeModel;
 import org.wordpress.android.fluxc.model.LikeModel.LikeType;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
+import org.wordpress.android.fluxc.model.PublicizeSkipConnection;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.list.AuthorFilter;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite;
@@ -514,7 +516,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
         List<PostMetaData> metaDataList = from.getMetadata();
         if (metaDataList != null) {
-            final ArrayList<String> publicizeSkipConnections = new ArrayList<>();
+            final ArrayList<PostMetaData> publicizeSkipConnections = new ArrayList<>();
             for (PostMetaData metaData : metaDataList) {
                 String key = metaData.getKey();
                 if (key != null && metaData.getValue() != null) {
@@ -555,21 +557,13 @@ public class PostRestClient extends BaseWPComRestClient {
                         }
                     }
 
-                    if (key.startsWith("_wpas_skip_publicize_")) {
-                        // e.g. "_wpas_skip_publicize_12345"
-                        final String[] publicizeSkipConnectionSplit = metaData.getKey().split("_wpas_skip_publicize_");
-                        // Length should be 2, since one element will be "" (removed delimiter) and the other one
-                        // the connection ID
-                        if (publicizeSkipConnectionSplit.length == 2) {
-                            final String connectionId = publicizeSkipConnectionSplit[1];
-                            if (connectionId != null && connectionId.length() > 0) {
-                                publicizeSkipConnections.add(connectionId);
-                            }
-                        }
+                    // e.g. "_wpas_skip_publicize_12345"
+                    if (key.startsWith(PublicizeSkipConnection.METADATA_SKIP_PUBLICIZE_PREFIX)) {
+                        publicizeSkipConnections.add(metaData);
                     }
                 }
             }
-            post.setPublicizeSkipConnections(String.join(",", publicizeSkipConnections));
+            post.setPublicizeSkipConnectionsJson(new Gson().toJson(publicizeSkipConnections));
         }
 
         if (from.getCategories() != null) {
@@ -721,6 +715,26 @@ public class PostRestClient extends BaseWPComRestClient {
                 autoShareMessageParams.put("id", post.getAutoShareId());
             }
             metadata.add(autoShareMessageParams);
+        }
+
+        if (post.getPublicizeSkipConnectionsJson().length() > 0) {
+            final List<PublicizeSkipConnection> publicizeSkipConnections = post.getPublicizeSkipConnectionsList();
+            if (publicizeSkipConnections.size() > 0) {
+                Map<String, Object> publicizeSkipConnectionsMetadata = new HashMap<>();
+                for (final PublicizeSkipConnection connection : publicizeSkipConnections) {
+                    if (connection.getKey() != null && !connection.getKey().isEmpty()) {
+                        publicizeSkipConnectionsMetadata.put("key", connection.getKey());
+                    }
+                    if (connection.getId() > 0) {
+                        publicizeSkipConnectionsMetadata.put("id", connection.getId());
+                    }
+                    if (connection.getValue() != null && !connection.getValue().isEmpty()) {
+                        publicizeSkipConnectionsMetadata.put("value", connection.getValue());
+                    }
+                }
+                publicizeSkipConnectionsMetadata.put("operation", "update");
+                metadata.add(publicizeSkipConnectionsMetadata);
+            }
         }
 
         if (!metadata.isEmpty()) {
