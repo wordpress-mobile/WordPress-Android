@@ -32,7 +32,7 @@ class CampaignListingViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val mapper: CampaignListingDomainMapper
 ) : ScopedViewModel(bgDispatcher) {
-    lateinit var site: SiteModel
+    private lateinit var site: SiteModel
 
     private val _uiState = MutableLiveData<CampaignListingUiState>()
     val uiState: LiveData<CampaignListingUiState> = _uiState
