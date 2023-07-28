@@ -202,28 +202,26 @@ class EditPostPublishSettingsViewModel @Inject constructor(
                 && publicizeTableWrapper.getServiceList().any { it.status != PublicizeService.Status.UNSUPPORTED }
 
     private fun updateInitialConnectionListSharingStatus() {
-        with(shareLimit) {
-            if (this is ShareLimit.Enabled && !isPostPublished()) {
-                val skipConnections = postPublicizeSkipConnections()
-                // If shares remaining < number of connections, all connections are unchecked by default
-                if (sharesRemaining < connections.size) {
-                    connections.map { it.isSharingEnabled = false }
-                } else {
-                    run loop@{
-                        connections.forEachIndexed { index, connection ->
-                            // Use metadata to verify if this connection was previously disabled by the user
-                            skipConnections.firstOrNull { it.connectionId() == connection.connectionId.toString() }?.let {
-                                connection.isSharingEnabled = it.isConnectionEnabled()
-                            }
-                            if (index == sharesRemaining) {
-                                return@loop
-                            }
+        val shareLimitValue = shareLimit
+        if (shareLimitValue is ShareLimit.Enabled && !isPostPublished()) {
+            val skipConnections = postPublicizeSkipConnections()
+            // If shares remaining < number of connections, all connections are unchecked by default
+            if (shareLimitValue.sharesRemaining < connections.size) {
+                connections.map { it.isSharingEnabled = false }
+            } else {
+                run loop@{
+                    connections.forEachIndexed { index, connection ->
+                        // Use metadata to verify if this connection was previously disabled by the user
+                        skipConnections.firstOrNull { it.connectionId() == connection.connectionId.toString() }
+                            ?.let { connection.isSharingEnabled = it.isConnectionEnabled() }
+                        if (index == shareLimitValue.sharesRemaining) {
+                            return@loop
                         }
                     }
                 }
-            } else {
-                connections.map { it.isSharingEnabled = false }
             }
+        } else {
+            connections.map { it.isSharingEnabled = false }
         }
     }
 
