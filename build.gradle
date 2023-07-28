@@ -25,7 +25,7 @@ ext {
     wordPressFluxCVersion = '2772-66c473cdbf935ce3bf00e3a31b0e0ca6f77e8006'
     wordPressLoginVersion = '119-e5f3e339ee51ef0942bc5a842810308ecb9f74c1'
     wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressUtilsVersion = '130-d62c9b291204ebd8d7fdc6dc1e6ebd60c829d82e'
+    wordPressUtilsVersion = '3.7.0'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 
     // debug
