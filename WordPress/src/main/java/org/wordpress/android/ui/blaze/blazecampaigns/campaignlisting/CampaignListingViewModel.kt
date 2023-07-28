@@ -8,18 +8,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
-import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
-import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
-import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -27,17 +21,15 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-const val CENTS_IN_DOLLARS = 100
-
 @HiltViewModel
 class CampaignListingViewModel @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val blazeCampaignsStore: BlazeCampaignsStore,
-    private val statsUtils: StatsUtils,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val mapper: CampaignListingDomainMapper
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiState = MutableLiveData<CampaignListingUiState>()
     val uiState: LiveData<CampaignListingUiState> = _uiState
@@ -64,68 +56,26 @@ class CampaignListingViewModel @Inject constructor(
             val blazeCampaignModel = blazeCampaignsStore.getBlazeCampaigns(selectedSiteRepository.getSelectedSite()!!)
             if (blazeCampaignModel.campaigns.isEmpty()) {
                 if (networkUtilsWrapper.isNetworkAvailable().not()) {
-                    _uiState.postValue(
-                        CampaignListingUiState.Error(
-                            title = UiStringRes(R.string.campaign_listing_page_no_network_error_title),
-                            description = UiStringRes(R.string.campaign_listing_page_no_network_error_description),
-                            button = CampaignListingUiState.Error.ErrorButton(
-                                text = UiStringRes(R.string.campaign_listing_page_no_network_error_button_text),
-                                click = this@CampaignListingViewModel::loadCampaigns
-                            )
-                        )
+                    _uiState.postValue(mapper.toNoNetworkError(this@CampaignListingViewModel::loadCampaigns)
                     )
                     return@launch
                 } else {
                     val campaignResult =
                         blazeCampaignsStore.fetchBlazeCampaigns(selectedSiteRepository.getSelectedSite()!!, page)
                     if (campaignResult.isError) {
-                        _uiState.postValue(
-                            CampaignListingUiState.Error(
-                                title = UiStringRes(R.string.campaign_listing_page_error_title),
-                                description = UiStringRes(R.string.campaign_listing_page_error_description),
-                                button = CampaignListingUiState.Error.ErrorButton(
-                                    text = UiStringRes(R.string.campaign_listing_page_error_button_text),
-                                    click = this@CampaignListingViewModel::loadCampaigns
-                                )
-                            )
-                        )
+                        _uiState.postValue(mapper.toGenericError(this@CampaignListingViewModel::loadCampaigns))
                         return@launch
                     } else if (campaignResult.model == null || campaignResult.model?.campaigns.isNullOrEmpty())
                         showNoCampaigns()
-                    else showCampaigns(campaignResult.model!!.campaigns.map { it.mapToCampaignModel() })
+                    else showCampaigns(campaignResult.model!!.campaigns.map { mapper.mapToCampaignModel(it) })
                 }
             } else {
                 val campaigns = blazeCampaignModel.campaigns.map {
-                    it.mapToCampaignModel()
+                    mapper.mapToCampaignModel(it)
                 }
                 showCampaigns(campaigns)
             }
         }
-    }
-
-    private fun BlazeCampaignModel.mapToCampaignModel(): CampaignModel {
-        return CampaignModel(
-            id = this.campaignId.toString(),
-            title = UiString.UiStringText(title),
-            status = CampaignStatus.fromString(uiStatus),
-            featureImageUrl = imageUrl,
-            impressions = mapToStatsStringIfNeeded(impressions),
-            clicks = mapToStatsStringIfNeeded(clicks),
-            budget = convertToDollars(budgetCents)
-        )
-    }
-
-    private fun mapToStatsStringIfNeeded(value: Long): UiString? {
-        return if (value != 0L) {
-            val formattedString = statsUtils.toFormattedString(value, ONE_THOUSAND)
-            UiString.UiStringText(formattedString)
-        } else {
-            null
-        }
-    }
-
-    private fun convertToDollars(budgetCents: Long): UiString {
-        return UiString.UiStringText("$" + (budgetCents / CENTS_IN_DOLLARS).toString())
     }
 
     private fun showCampaigns(campaigns: List<CampaignModel>) {
@@ -158,7 +108,7 @@ class CampaignListingViewModel @Inject constructor(
         val campaignResult = blazeCampaignsStore.fetchBlazeCampaigns(selectedSiteRepository.getSelectedSite()!!, page)
         val currentUiState = _uiState.value as CampaignListingUiState.Success
         val campaigns = campaignResult.model?.campaigns?.map {
-            it.mapToCampaignModel()
+            mapper.mapToCampaignModel(it)
         }
         if (campaigns.isNullOrEmpty()) {
             disableLoadingMore(currentUiState)
@@ -194,16 +144,7 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     private fun showNoCampaigns() {
-        _uiState.postValue(
-            CampaignListingUiState.Error(
-                title = UiStringRes(R.string.campaign_listing_page_no_campaigns_message_title),
-                description = UiStringRes(R.string.campaign_listing_page_no_campaigns_message_description),
-                button = CampaignListingUiState.Error.ErrorButton(
-                    text = UiStringRes(R.string.campaign_listing_page_no_campaigns_button_text),
-                    click = this::createCampaignClick
-                )
-            )
-        )
+        _uiState.postValue(mapper.toNoCampaignsError { createCampaignClick() })
     }
 
     private fun createCampaignClick() {
@@ -229,7 +170,7 @@ class CampaignListingViewModel @Inject constructor(
             } else if (blazeCampaignModel.model?.campaigns.isNullOrEmpty().not()) {
                 _refresh.postValue(false)
                 val campaigns = blazeCampaignModel.model?.campaigns?.map {
-                    it.mapToCampaignModel()
+                    mapper.mapToCampaignModel(it)
                 }
                 showCampaigns(campaigns!!)
             }
