@@ -210,6 +210,9 @@ class EditPostPublishSettingsViewModel @Inject constructor(
                 connections.map { it.isSharingEnabled = false }
             } else {
                 run loop@{
+                    connections.take(shareLimitValue.sharesRemaining).map {
+                        it.isSharingEnabled = true
+                    }
                     connections.forEachIndexed { index, connection ->
                         // Use metadata to verify if this connection was previously disabled by the user
                         skipConnections.firstOrNull { it.connectionId() == connection.connectionId.toString() }
