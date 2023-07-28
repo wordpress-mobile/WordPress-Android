@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
@@ -20,6 +22,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -102,8 +105,8 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private String mAutoShareMessage;
     @Column private long mAutoShareId;
 
-    // Comma-separated IDs of publicize connections that should not be enabled
-    @Column private String mPublicizeSkipConnections;
+    // JSON - an array of PublicizeSkipConnection objects representing publicize skip connections
+    @Column private String mPublicizeSkipConnectionsJson;
 
     public PostModel() {}
 
@@ -547,13 +550,27 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         return StringUtils.notNullStr(mAutoShareMessage);
     }
 
-    public void setPublicizeSkipConnections(final String publicizeSkipConnections) {
-        mPublicizeSkipConnections = publicizeSkipConnections;
+    public void setPublicizeSkipConnectionsJson(final String publicizeSkipConnectionsJson) {
+        mPublicizeSkipConnectionsJson = publicizeSkipConnectionsJson;
     }
 
     @Override
-    @NonNull public String getPublicizeSkipConnections() {
-        return StringUtils.notNullStr(mPublicizeSkipConnections);
+    @NonNull public String getPublicizeSkipConnectionsJson() {
+        return StringUtils.notNullStr(mPublicizeSkipConnectionsJson);
+    }
+
+    /**
+     * @return the publicize skip connections JSON deserialized into a list of PublicizeSkipConnection objects
+     */
+    @NonNull
+    @Override
+    public List<PublicizeSkipConnection> getPublicizeSkipConnectionsList() {
+        try {
+            final Type publicizeSkipConnectionsType = new TypeToken<List<PublicizeSkipConnection>>() {}.getType();
+            return new Gson().fromJson(mPublicizeSkipConnectionsJson, publicizeSkipConnectionsType);
+        } catch (final Exception exception) {
+            return Collections.emptyList();
+        }
     }
 
     @Override
@@ -604,9 +621,9 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getAutoSaveModified(), otherPost.getAutoSaveModified())
                 && StringUtils.equals(getAutoSavePreviewUrl(), otherPost.getAutoSavePreviewUrl())
                 && StringUtils.equals(getAutoShareMessage(), otherPost.getAutoShareMessage())
-                && getPublicizeSkipConnections().equals(otherPost.getPublicizeSkipConnections())
+                && getPublicizeSkipConnectionsJson().equals(otherPost.getPublicizeSkipConnectionsJson())
                 && getAutoShareId() == otherPost.getAutoShareId()
-                && StringUtils.equals(getPublicizeSkipConnections(), otherPost.getPublicizeSkipConnections());
+                && StringUtils.equals(getPublicizeSkipConnectionsJson(), otherPost.getPublicizeSkipConnectionsJson());
     }
 
     /**
@@ -650,7 +667,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         result = 31 * result + (int) (mParentId ^ (mParentId >>> 32));
         result = 31 * result + (mParentTitle != null ? mParentTitle.hashCode() : 0);
         result = 31 * result + (mAutoShareMessage != null ? mAutoShareMessage.hashCode() : 0);
-        result = 31 * result + (mPublicizeSkipConnections != null ? mPublicizeSkipConnections.hashCode() : 0);
+        result = 31 * result + (mPublicizeSkipConnectionsJson != null ? mPublicizeSkipConnectionsJson.hashCode() : 0);
         return result;
     }
 

@@ -1964,7 +1964,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE PostModel ADD AUTO_SHARE_ID INTEGER")
                 }
                 191 -> migrate(version) {
-                    db.execSQL("ALTER TABLE PostModel ADD PUBLICIZE_SKIP_CONNECTIONS TEXT")
+                    db.execSQL("ALTER TABLE PostModel ADD PUBLICIZE_SKIP_CONNECTIONS_JSON TEXT")
                 }
             }
         }
