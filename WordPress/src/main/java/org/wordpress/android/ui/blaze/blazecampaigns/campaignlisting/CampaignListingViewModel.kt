@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
@@ -31,6 +32,8 @@ class CampaignListingViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val mapper: CampaignListingDomainMapper
 ) : ScopedViewModel(bgDispatcher) {
+    lateinit var site: SiteModel
+
     private val _uiState = MutableLiveData<CampaignListingUiState>()
     val uiState: LiveData<CampaignListingUiState> = _uiState
 
@@ -46,6 +49,7 @@ class CampaignListingViewModel @Inject constructor(
     private var page = 1
 
     fun start(campaignListingPageSource: CampaignListingPageSource) {
+        this.site = selectedSiteRepository.getSelectedSite()!!
         blazeFeatureUtils.trackCampaignListingPageShown(campaignListingPageSource)
         loadCampaigns()
     }
@@ -53,21 +57,20 @@ class CampaignListingViewModel @Inject constructor(
     private fun loadCampaigns() {
         _uiState.postValue(CampaignListingUiState.Loading)
         launch {
-            val blazeCampaignModel = blazeCampaignsStore.getBlazeCampaigns(selectedSiteRepository.getSelectedSite()!!)
+            val blazeCampaignModel = blazeCampaignsStore.getBlazeCampaigns(site)
             if (blazeCampaignModel.campaigns.isEmpty()) {
                 if (networkUtilsWrapper.isNetworkAvailable().not()) {
-                    _uiState.postValue(mapper.toNoNetworkError(this@CampaignListingViewModel::loadCampaigns)
-                    )
-                    return@launch
+                    _uiState.postValue(mapper.toNoNetworkError(this@CampaignListingViewModel::loadCampaigns))
                 } else {
-                    val campaignResult =
-                        blazeCampaignsStore.fetchBlazeCampaigns(selectedSiteRepository.getSelectedSite()!!, page)
+                    val campaignResult = blazeCampaignsStore.fetchBlazeCampaigns(site, page)
                     if (campaignResult.isError) {
                         _uiState.postValue(mapper.toGenericError(this@CampaignListingViewModel::loadCampaigns))
-                        return@launch
-                    } else if (campaignResult.model == null || campaignResult.model?.campaigns.isNullOrEmpty())
+                    } else if (campaignResult.model == null || campaignResult.model?.campaigns.isNullOrEmpty()) {
                         showNoCampaigns()
-                    else showCampaigns(campaignResult.model!!.campaigns.map { mapper.mapToCampaignModel(it) })
+                    } else {
+                        val campaigns = campaignResult.model!!.campaigns.map { mapper.mapToCampaignModel(it) }
+                        showCampaigns(campaigns)
+                    }
                 }
             } else {
                 val campaigns = blazeCampaignModel.campaigns.map {
@@ -105,35 +108,33 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     private suspend fun fetchMoreCampaigns() {
-        val campaignResult = blazeCampaignsStore.fetchBlazeCampaigns(selectedSiteRepository.getSelectedSite()!!, page)
+        val campaignResult = blazeCampaignsStore.fetchBlazeCampaigns(site, page)
         val currentUiState = _uiState.value as CampaignListingUiState.Success
-        val campaigns = campaignResult.model?.campaigns?.map {
-            mapper.mapToCampaignModel(it)
-        }
-        if (campaigns.isNullOrEmpty()) {
-            disableLoadingMore(currentUiState)
+        val campaigns = campaignResult.model?.campaigns?.map { mapper.mapToCampaignModel(it) }
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            disableLoadingMore()
+            showSnackBar(R.string.campaign_listing_page_error_refresh_no_network_available)
+        } else if (campaignResult.isError) {
+            disableLoadingMore()
+            showSnackBar(R.string.campaign_listing_page_error_refresh_could_not_fetch_campaigns)
+        } else if (campaigns.isNullOrEmpty()) {
+            disableLoadingMore()
         } else {
             val updatedCampaigns = currentUiState.campaigns + campaigns
             showCampaigns(updatedCampaigns)
         }
     }
 
-    private fun showLoadingMore() {
+    private fun showLoadingMore() = updateLoadingMoreState(showLoading = true)
+
+    private fun disableLoadingMore() = updateLoadingMoreState(showLoading = false)
+
+    private fun updateLoadingMoreState(showLoading: Boolean = false) {
         val currentUiState = _uiState.value as CampaignListingUiState.Success
         _uiState.postValue(
             currentUiState.copy(
                 pagingDetails = CampaignListingUiState.Success.PagingDetails(
-                    loadingNext = true
-                )
-            )
-        )
-    }
-
-    private fun disableLoadingMore(currentUiState: CampaignListingUiState.Success) {
-        _uiState.postValue(
-            currentUiState.copy(
-                pagingDetails = CampaignListingUiState.Success.PagingDetails(
-                    loadingNext = false
+                    loadingNext = showLoading
                 )
             )
         )
@@ -158,21 +159,18 @@ class CampaignListingViewModel @Inject constructor(
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 _refresh.postValue(false)
                 showSnackBar(R.string.campaign_listing_page_error_refresh_no_network_available)
-                return@launch
-            }
-            val blazeCampaignModel =
-                blazeCampaignsStore.fetchBlazeCampaigns(selectedSiteRepository.getSelectedSite()!!, page)
-            if (blazeCampaignModel.isError) {
-                _refresh.postValue(false)
-                showSnackBar(R.string.campaign_listing_page_error_refresh_could_not_fetch_campaigns)
-            } else if (blazeCampaignModel.model?.campaigns.isNullOrEmpty()) {
-                _refresh.postValue(false)
-            } else if (blazeCampaignModel.model?.campaigns.isNullOrEmpty().not()) {
-                _refresh.postValue(false)
-                val campaigns = blazeCampaignModel.model?.campaigns?.map {
-                    mapper.mapToCampaignModel(it)
+            } else {
+                val blazeCampaignModel = blazeCampaignsStore.fetchBlazeCampaigns(site, page)
+                if (blazeCampaignModel.isError || blazeCampaignModel.model?.campaigns.isNullOrEmpty()) {
+                    _refresh.postValue(false)
+                    showSnackBar(R.string.campaign_listing_page_error_refresh_could_not_fetch_campaigns)
+                } else if (blazeCampaignModel.model?.campaigns.isNullOrEmpty().not()) {
+                    _refresh.postValue(false)
+                    val campaigns = blazeCampaignModel.model?.campaigns?.map {
+                        mapper.mapToCampaignModel(it)
+                    }
+                    showCampaigns(campaigns!!)
                 }
-                showCampaigns(campaigns!!)
             }
         }
     }
