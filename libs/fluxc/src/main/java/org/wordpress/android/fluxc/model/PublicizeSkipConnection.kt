@@ -2,7 +2,7 @@ package org.wordpress.android.fluxc.model
 
 import com.google.gson.annotations.SerializedName
 
-data class PublicizeSkipConnection(
+class PublicizeSkipConnection(
     @SerializedName("id") val id: Long = 0,
     // e.g. "_wpas_skip_publicize_12345"
     @SerializedName("key") val key: String? = null,
