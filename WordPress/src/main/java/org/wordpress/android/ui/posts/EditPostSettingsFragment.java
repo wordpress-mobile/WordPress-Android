@@ -279,7 +279,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Override public void onResume() {
         super.onResume();
-        mPublishedViewModel.onScreenShown();
+        mPublishedViewModel.onResume();
     }
 
     @Override

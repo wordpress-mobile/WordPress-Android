@@ -88,22 +88,27 @@ class EditPostPublishSettingsViewModel @Inject constructor(
             siteStore.getSiteByLocalId(it)
         }
         loadAuthors()
-        viewModelScope.launch {
-            shareLimit = siteModel?.let {
-                getJetpackSocialShareLimitStatusUseCase.execute(it)
-            } ?: ShareLimit.Disabled
-            loadConnections()
-            loadJetpackSocial()
+
+        if (jetpackSocialFeatureConfig.isEnabled()) {
+            viewModelScope.launch {
+                shareLimit = siteModel?.let {
+                    getJetpackSocialShareLimitStatusUseCase.execute(it)
+                } ?: ShareLimit.Disabled
+                loadConnections()
+                loadJetpackSocialIfSupported()
+            }
+        } else {
+            _showJetpackSocialContainer.value = false
         }
     }
 
-    fun onScreenShown() {
-        if (actionEvents.value is ActionEvent.OpenSocialConnectionsList) {
+    fun onResume() {
+        if (jetpackSocialFeatureConfig.isEnabled() && actionEvents.value is ActionEvent.OpenSocialConnectionsList) {
             // When getting back from publicize connections screen, we should update connections to
             // make sure we have the latest data.
             viewModelScope.launch {
                 updateConnections()
-                loadJetpackSocial()
+                loadJetpackSocialIfSupported()
             }
         }
     }
@@ -148,7 +153,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadJetpackSocial() {
+    private suspend fun loadJetpackSocialIfSupported() {
         val showJetpackSocial = jetpackSocialFeatureConfig.isEnabled() && siteModel?.supportsPublicize() == true
         if (!showJetpackSocial) {
             _showJetpackSocialContainer.value = false
