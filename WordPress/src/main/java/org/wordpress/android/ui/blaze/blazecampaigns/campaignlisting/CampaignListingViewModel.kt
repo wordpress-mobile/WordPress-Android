@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
@@ -47,9 +47,8 @@ class CampaignListingViewModel @Inject constructor(
     private val _refresh = MutableLiveData<Boolean>()
     val refresh = _refresh
 
-    // todo: Ajesh remove initial message - this is just to show it works
-    private val _snackbar = MutableStateFlow<String>("Initial messages")
-    val snackBar = _snackbar.asStateFlow()
+    private val _snackbar = MutableSharedFlow<String>()
+    val snackBar = _snackbar.asSharedFlow()
 
     private var page = 1
 
@@ -188,11 +187,16 @@ class CampaignListingViewModel @Inject constructor(
         page = 1
         launch {
             _refresh.postValue(true)
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                _refresh.postValue(false)
+                showSnackBar(R.string.no_network_message)
+                return@launch
+            }
             val blazeCampaignModel =
                 blazeCampaignsStore.fetchBlazeCampaigns(selectedSiteRepository.getSelectedSite()!!, page)
             if (blazeCampaignModel.isError) {
                 _refresh.postValue(false)
-                showSnackBar(R.string.campaign_listing_page_error_could_not_fetch_campaigns)
+                showSnackBar(R.string.campaign_listing_page_error_refresh_could_not_fetch_campaigns)
             } else if (blazeCampaignModel.model?.campaigns.isNullOrEmpty()) {
                 _refresh.postValue(false)
             } else if (blazeCampaignModel.model?.campaigns.isNullOrEmpty().not()) {
@@ -205,10 +209,8 @@ class CampaignListingViewModel @Inject constructor(
         }
     }
 
-    private fun showSnackBar(@StringRes stringRes: Int) {
-        launch {
-            _snackbar.value = resourceProvider.getString(stringRes).takeIf { it.isNotEmpty() } ?: ""
-        }
+    private suspend fun showSnackBar(@StringRes stringRes: Int) {
+        _snackbar.emit(resourceProvider.getString(stringRes).takeIf { it.isNotEmpty() } ?: "")
     }
 }
 
