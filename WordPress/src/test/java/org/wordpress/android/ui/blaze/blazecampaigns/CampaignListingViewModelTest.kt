@@ -17,15 +17,15 @@ import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingUIModelMapper
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingNavigation
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingUiState
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
-import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
-import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -40,13 +40,16 @@ class CampaignListingViewModelTest : BaseUnitTest() {
     lateinit var blazeCampaignsStore: BlazeCampaignsStore
 
     @Mock
-    lateinit var statsUtils: StatsUtils
+    lateinit var mapper: CampaignListingUIModelMapper
 
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
 
     private val uiStates = mutableListOf<CampaignListingUiState>()
 
@@ -60,9 +63,10 @@ class CampaignListingViewModelTest : BaseUnitTest() {
             testDispatcher(),
             blazeFeatureUtils,
             blazeCampaignsStore,
-            statsUtils,
             selectedSiteRepository,
-            networkUtilsWrapper
+            networkUtilsWrapper,
+            resourceProvider,
+            mapper
         )
         observeUIState()
         observeNavigationEvents()
@@ -98,8 +102,6 @@ class CampaignListingViewModelTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(blazeCampaignsStore.getBlazeCampaigns(siteModel)).thenReturn(campaignModel)
-        whenever(statsUtils.toFormattedString(1000L, ONE_THOUSAND)).thenReturn("1000")
-
 
         viewModel.start(CampaignListingPageSource.DASHBOARD_CARD)
         advanceUntilIdle()
@@ -146,7 +148,6 @@ class CampaignListingViewModelTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(blazeCampaignsStore.getBlazeCampaigns(siteModel)).thenReturn(campaignModel)
-        whenever(statsUtils.toFormattedString(1000L, ONE_THOUSAND)).thenReturn("1000")
 
 
         viewModel.start(CampaignListingPageSource.DASHBOARD_CARD)
@@ -163,7 +164,6 @@ class CampaignListingViewModelTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(blazeCampaignsStore.getBlazeCampaigns(siteModel)).thenReturn(campaignModel)
-        whenever(statsUtils.toFormattedString(1000L, ONE_THOUSAND)).thenReturn("1000")
 
 
         viewModel.start(CampaignListingPageSource.DASHBOARD_CARD)
