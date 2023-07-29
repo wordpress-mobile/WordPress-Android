@@ -36,7 +36,7 @@
 
             <ImageView
                 android:id="@+id/dashboard_card_domain_transfer_image"
-                android:src="@drawable/ic_wordpress_jetpack_logo"
+                android:src="@drawable/ic_domain_transfer_54x32"
                 android:layout_width="56dp"
                 android:layout_height="44dp"
                 android:layout_marginBottom="@dimen/margin_extra_large"
