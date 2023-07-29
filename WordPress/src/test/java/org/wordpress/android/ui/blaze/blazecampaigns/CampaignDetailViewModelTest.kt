@@ -14,16 +14,18 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.blaze.BlazeActionEvent
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailMapper
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
-import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailUIModel
+import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailUiState
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -40,6 +42,12 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var siteStore: SiteStore
 
+    @Mock
+    lateinit var mapper: CampaignDetailMapper
+
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     private lateinit var viewModel: CampaignDetailViewModel
 
     @Before
@@ -48,7 +56,10 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
             accountStore,
             blazeFeatureUtils,
             selectedSiteRepository,
-            siteStore
+            siteStore,
+            mapper,
+            networkUtilsWrapper,
+            testDispatcher(),
         )
 
         whenever(blazeFeatureUtils.getUserAgent()).thenReturn("user-agent")
@@ -59,6 +70,11 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
         whenever(accountStore.accessToken).thenReturn("accessToken")
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mock())
         whenever(selectedSiteRepository.getSelectedSite()?.url).thenReturn("test.wordpress.com")
+
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        whenever(mapper.toGenericError(any())).thenReturn(mock())
+        whenever(mapper.toNoNetworkError(any())).thenReturn(mock())
+        whenever(mapper.toPrepared(any(), any())).thenReturn(mock())
     }
     @Test
     fun `given valid campaignId and pageSource, when start is called, then trackCampaignDetailsOpened is called`() {
@@ -68,55 +84,71 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given invalid account username, when start is called, then FinishActivityWithMessage is posted`() {
+    fun `given invalid account username, when start is called, then error state is posted`() {
         whenever(accountStore.account.userName).thenReturn(null)
 
-        val uiModels = mutableListOf<CampaignDetailUIModel>()
+        val uiState = mutableListOf<CampaignDetailUiState>()
         val actionEvents = mutableListOf<BlazeActionEvent>()
-        testWithData(actionEvents, uiModels) {
+        testWithData(actionEvents, uiState) {
             viewModel.start(1, CampaignDetailPageSource.DASHBOARD_CARD)
 
-            assertThat(actionEvents.last()).isInstanceOf(BlazeActionEvent.FinishActivityWithMessage::class.java)
+            assertThat(uiState.last()).isInstanceOf(CampaignDetailUiState.Error::class.java)
         }
     }
 
     @Test
-    fun `given invalid accessToken, when start is called, then FinishActivityWithMessage is posted`() {
+    fun `given invalid accessToken, when start is called, then error state is posted`() {
         whenever(accountStore.accessToken).thenReturn(null)
 
-        val uiModels = mutableListOf<CampaignDetailUIModel>()
+        val uiState = mutableListOf<CampaignDetailUiState>()
         val actionEvents = mutableListOf<BlazeActionEvent>()
-        testWithData(actionEvents, uiModels) {
+        testWithData(actionEvents, uiState) {
             viewModel.start(1, CampaignDetailPageSource.DASHBOARD_CARD)
 
-            assertThat(actionEvents.last()).isInstanceOf(BlazeActionEvent.FinishActivityWithMessage::class.java)
+            assertThat(uiState.last()).isInstanceOf(CampaignDetailUiState.Error::class.java)
         }
     }
     @Test
-    fun `given valid account info, when start is called, then url is built`() {
-        val domain = "test.wordpress.com"
-        val postData = "postdata"
-        whenever(blazeFeatureUtils.getAuthenticationPostData(any(), any(), any(), any(), any())).thenReturn(postData)
+    fun `given valid account info, when start is called, then preparing is posted`() {
+        whenever(
+            blazeFeatureUtils.getAuthenticationPostData(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull()
+            )
+        ).thenReturn("postdata")
 
-        val uiModels = mutableListOf<CampaignDetailUIModel>()
+        val uiStates = mutableListOf<CampaignDetailUiState>()
         val actionEvents = mutableListOf<BlazeActionEvent>()
-        testWithData(actionEvents, uiModels) {
+        testWithData(actionEvents, uiStates) {
             viewModel.start(1, CampaignDetailPageSource.DASHBOARD_CARD)
 
-            val uiModel = uiModels.last()
-            assertThat(uiModel.url).isNotEmpty
-            assertThat(uiModel.url).contains(domain)
-            assertThat(uiModel.addressToLoad).isNotEmpty
-            assertThat(uiModel.addressToLoad).contains(postData)
+            assertThat(uiStates.last()).isInstanceOf(CampaignDetailUiState.Prepared::class.java)
         }
     }
+
+    @Test
+    fun `when start is called, then preparing is posted`() {
+        whenever(blazeFeatureUtils.getAuthenticationPostData(any(), any(), any(), any(), any())).thenReturn(any())
+
+        val uiStates = mutableListOf<CampaignDetailUiState>()
+        val actionEvents = mutableListOf<BlazeActionEvent>()
+        testWithData(actionEvents, uiStates) {
+            viewModel.start(1, CampaignDetailPageSource.DASHBOARD_CARD)
+
+            assertThat(uiStates.first()).isInstanceOf(CampaignDetailUiState.Preparing::class.java)
+        }
+    }
+
     @Test
     fun `when onRedirectToExternal browser is requested, then launch external browser action event is posted`() {
-        val uiModels = mutableListOf<CampaignDetailUIModel>()
+        val uiStates = mutableListOf<CampaignDetailUiState>()
         val actionEvents = mutableListOf<BlazeActionEvent>()
         val url = "https://external.url.com"
 
-        testWithData(actionEvents, uiModels) {
+        testWithData(actionEvents, uiStates) {
             viewModel.onRedirectToExternalBrowser(url)
 
             val actionEvent = actionEvents.last()
@@ -124,29 +156,57 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
             assertThat((actionEvent as BlazeActionEvent.LaunchExternalBrowser).url).isEqualTo(url)
         }
     }
-    @Test
-    fun `when on web view error handled, then finish activity with message event is posted`() {
-        val uiModels = mutableListOf<CampaignDetailUIModel>()
-        val actionEvents = mutableListOf<BlazeActionEvent>()
-        val errorMessageResId = R.string.blaze_campaign_detail_error
 
-        testWithData(actionEvents, uiModels) {
+    @Test
+    fun `when on web view error handled, then error view is posted`() {
+        val uiStates = mutableListOf<CampaignDetailUiState>()
+        val actionEvents = mutableListOf<BlazeActionEvent>()
+
+        testWithData(actionEvents, uiStates) {
             viewModel.onWebViewError()
 
-            val actionEvent = actionEvents.last()
-            assertThat(actionEvent).isInstanceOf(BlazeActionEvent.FinishActivityWithMessage::class.java)
-            assertThat((actionEvent as BlazeActionEvent.FinishActivityWithMessage).id).isEqualTo(errorMessageResId)
+            val uiState = uiStates.last()
+            assertThat(uiState).isInstanceOf(CampaignDetailUiState.Error::class.java)
         }
     }
+
+    @Test
+    fun `when no network connection, then error view is posted`() {
+        val uiStates = mutableListOf<CampaignDetailUiState>()
+        val actionEvents = mutableListOf<BlazeActionEvent>()
+
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        testWithData(actionEvents, uiStates) {
+            viewModel.onWebViewError()
+
+            val uiState = uiStates.last()
+            assertThat(uiState).isInstanceOf(CampaignDetailUiState.Error::class.java)
+        }
+    }
+
+    @Test
+    fun `when on page loaded handled, then loaded is posted`() {
+        val uiStates = mutableListOf<CampaignDetailUiState>()
+        val actionEvents = mutableListOf<BlazeActionEvent>()
+
+        testWithData(actionEvents, uiStates) {
+            viewModel.onUrlLoaded()
+
+            val uiState = uiStates.last()
+            assertThat(uiState).isInstanceOf(CampaignDetailUiState.Loaded::class.java)
+        }
+    }
+
     private fun testWithData(
         actionEvents: MutableList<BlazeActionEvent> = mutableListOf(),
-        uiModels: MutableList<CampaignDetailUIModel> = mutableListOf(),
+        uiState: MutableList<CampaignDetailUiState> = mutableListOf(),
         testBody: suspend TestScope.() -> Unit
     ) = test {
         val actionEventsJob = launch { viewModel.actionEvents.toList(actionEvents) }
-        val uiModelsJob = launch { viewModel.model.toList(uiModels) }
+        val uiStatesJob = launch { viewModel.uiState.toList(uiState) }
         testBody(testScope())
         actionEventsJob.cancel()
-        uiModelsJob.cancel()
+        uiStatesJob.cancel()
     }
 }
