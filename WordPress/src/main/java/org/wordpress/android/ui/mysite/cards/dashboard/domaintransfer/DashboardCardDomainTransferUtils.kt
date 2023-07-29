@@ -9,7 +9,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardDomainTransferCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DomainTransferCardModel
 import org.wordpress.android.ui.mysite.MySiteViewModel
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -56,7 +56,7 @@ class DashboardCardDomainTransferUtils @Inject constructor(
                 ?.firstOrNull()
                 ?.cards
                 ?.any {
-                        card -> card is DashboardDomainTransferCard
+                        card -> card is DomainTransferCardModel
                 } ?: false
 
             // add a delay (debouncing mechanism)
@@ -128,7 +128,7 @@ class DashboardCardDomainTransferUtils @Inject constructor(
             ?.firstOrNull()
             ?.cards
             ?.indexOfFirst {
-                it is DashboardDomainTransferCard
+                it is DomainTransferCardModel
             } ?: -1
     }
 

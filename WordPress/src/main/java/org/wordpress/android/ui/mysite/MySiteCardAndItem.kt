@@ -328,10 +328,11 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val onRemoveClick: () -> Unit,
                     ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD)
                 }
-                data class DashboardDomainTransferCard(
-                    val title: UiString?,
-                    val subtitle: UiString?,
-                    val caption: UiString?,
+                data class DomainTransferCardModel(
+                    val title: UiString,
+                    val subtitle: UiString,
+                    val caption: UiString,
+                    val cta: UiString,
                     val onClick: ListItemInteraction,
                     val onHideMenuItemClick: ListItemInteraction,
                     val onMoreMenuClick: ListItemInteraction,

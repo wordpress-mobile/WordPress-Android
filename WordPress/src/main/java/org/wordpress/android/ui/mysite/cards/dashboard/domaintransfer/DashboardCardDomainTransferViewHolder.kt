@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import org.wordpress.android.R
 import org.wordpress.android.databinding.DashboardCardDomainTransferBinding
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardDomainTransferCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DomainTransferCardModel
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiHelpers
@@ -17,7 +17,7 @@ class DashboardCardDomainTransferViewHolder (
 ) : CardViewHolder<DashboardCardDomainTransferBinding>(
     parent.viewBinding(DashboardCardDomainTransferBinding::inflate)
 ) {
-    fun bind(card: DashboardDomainTransferCard) = with(binding) {
+    fun bind(card: DomainTransferCardModel) = with(binding) {
         uiHelpers.setTextOrHide(dashboardCardDomainTransferTitle, card.title)
         uiHelpers.setTextOrHide(dashboardCardDomainTransferSubTitle, card.subtitle)
         dashboardCardDomainTransferCta.setOnClickListener { card.onClick.click() }
