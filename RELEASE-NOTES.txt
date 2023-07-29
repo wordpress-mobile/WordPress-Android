@@ -3,6 +3,8 @@
 23.0
 -----
 * [**] [internal] Upgrade React Native to 0.71.11 [https://github.com/wordpress-mobile/WordPress-Android/pull/18613]
+* [**] [Jetpack-only] Adds a dashboard card for domain transfers campaign [https://github.com/wordpress-mobile/WordPress-Android/pull/18852]
+
 
 22.9
 -----
