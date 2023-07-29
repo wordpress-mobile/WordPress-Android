@@ -173,6 +173,7 @@ class CampaignDetailFragment : Fragment(), CampaignDetailWebViewClient.CampaignD
             Text(
                 text = uiStringText(uiString = error.title),
                 style = MaterialTheme.typography.h5,
+                textAlign = TextAlign.Center
             )
             Text(
                 text = uiStringText(uiString = error.description),
