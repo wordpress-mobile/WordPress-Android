@@ -62,7 +62,6 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
             testDispatcher(),
         )
 
-        whenever(blazeFeatureUtils.getUserAgent()).thenReturn("user-agent")
         whenever(blazeFeatureUtils.getAuthenticationPostData(any(), any(), any(), any(), any())).thenReturn("postdata")
 
         whenever(accountStore.account).thenReturn(mock())
@@ -178,7 +177,7 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         testWithData(actionEvents, uiStates) {
-            viewModel.onWebViewError()
+            viewModel.start(1, CampaignDetailPageSource.DASHBOARD_CARD)
 
             val uiState = uiStates.last()
             assertThat(uiState).isInstanceOf(CampaignDetailUiState.Error::class.java)
