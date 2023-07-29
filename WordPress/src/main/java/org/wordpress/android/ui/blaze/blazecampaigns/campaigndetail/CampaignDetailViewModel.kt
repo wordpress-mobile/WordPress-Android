@@ -37,9 +37,6 @@ class CampaignDetailViewModel @Inject constructor(
     private val _actionEvents = Channel<BlazeActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
-    private val _model = MutableStateFlow(CampaignDetailModel())
-    val model: StateFlow<CampaignDetailModel> = _model
-
     private val _uiState = MutableStateFlow<CampaignDetailUiState>(CampaignDetailUiState.Preparing)
     val uiState = _uiState as StateFlow<CampaignDetailUiState>
 
