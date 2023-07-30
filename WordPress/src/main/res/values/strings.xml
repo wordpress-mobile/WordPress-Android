@@ -4635,8 +4635,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
 
     <!-- Jetpack - Blaze campaign detail page -->
-    <string name="blaze_campaign_detail_error">Campaign Details couldn\'t be loaded</string>
-    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Something went wrong, could not fetch campaigns</string>
     <string name="campaign_detail_no_network_error_title" translatable="false">@string/no_network_title</string>
     <string name="campaign_detail_no_network_error_description" translatable="false">@string/no_network_message</string>
     <string name="campaign_detail_no_network_error_button_text" translatable="false">@string/retry</string>
