@@ -3,6 +3,8 @@ plugins {
 }
 
 android {
+    namespace "org.wordpress.android.networking"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {

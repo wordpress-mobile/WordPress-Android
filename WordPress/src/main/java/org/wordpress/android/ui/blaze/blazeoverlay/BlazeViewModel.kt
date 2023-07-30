@@ -41,7 +41,6 @@ class BlazeViewModel @Inject constructor(
     }
 
     private fun initializePromoteContentUIState(blazeUIModel: BlazeUIModel) {
-        blazeFeatureUtils.trackOverlayDisplayed(blazeFlowSource)
         when(blazeUIModel) {
             is PostUIModel -> initializePromotePostUIState(blazeUIModel)
             is PageUIModel -> initializePromotePageUIState(blazeUIModel)
@@ -57,8 +56,13 @@ class BlazeViewModel @Inject constructor(
                     postModel.featuredImageId)
             }
         )
-        _uiState.value = BlazeUiState.PromoteScreen.PromotePost(updatedPostModel)
+
         _promoteUiState.value = BlazeUiState.PromoteScreen.PromotePost(updatedPostModel)
+        _uiState.value = if (shouldShowOverlayAndTrack()) {
+            BlazeUiState.PromoteScreen.PromotePost(updatedPostModel)
+        } else {
+            BlazeUiState.WebViewScreen
+        }
     }
 
     private fun initializePromotePageUIState(pageModel: PageUIModel) {
@@ -69,14 +73,31 @@ class BlazeViewModel @Inject constructor(
                 pageModel.featuredImageId
             )
         )
-        _uiState.value = BlazeUiState.PromoteScreen.PromotePage(updatedPageModel)
+
         _promoteUiState.value = BlazeUiState.PromoteScreen.PromotePage(updatedPageModel)
+        _uiState.value = if (shouldShowOverlayAndTrack()) {
+            BlazeUiState.PromoteScreen.PromotePage(updatedPageModel)
+        } else {
+            BlazeUiState.WebViewScreen
+        }
     }
 
     private fun initializePromoteSiteUIState() {
-        blazeFeatureUtils.trackOverlayDisplayed(blazeFlowSource)
-        _uiState.value = BlazeUiState.PromoteScreen.Site
         _promoteUiState.value = BlazeUiState.PromoteScreen.Site
+        _uiState.value = if (shouldShowOverlayAndTrack()) {
+            BlazeUiState.PromoteScreen.Site
+        } else {
+            BlazeUiState.WebViewScreen
+        }
+    }
+
+    private fun shouldShowOverlayAndTrack() : Boolean  {
+        val shouldShowOverlay = !blazeFeatureUtils.shouldHideBlazeOverlay()
+        if (shouldShowOverlay) {
+            blazeFeatureUtils.trackOverlayDisplayed(blazeFlowSource)
+            blazeFeatureUtils.setShouldHideBlazeOverlay()
+        }
+        return shouldShowOverlay
     }
 
     // to do: tracking logic and logic for done state - this might not be where we want to track

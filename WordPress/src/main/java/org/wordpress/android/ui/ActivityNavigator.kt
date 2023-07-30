@@ -9,7 +9,7 @@ import org.wordpress.android.ui.blaze.blazecampaigns.BlazeCampaignParentActivity
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
 import org.wordpress.android.ui.blaze.blazepromote.ARG_BLAZE_FLOW_SOURCE
-import org.wordpress.android.ui.blaze.blazepromote.BlazeParentActivity
+import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -45,7 +45,7 @@ class ActivityNavigator @Inject constructor() {
         context: Context,
         source: BlazeFlowSource
     ) {
-        val intent = Intent(context, BlazeParentActivity::class.java)
+        val intent = Intent(context, BlazePromoteParentActivity::class.java)
         intent.putExtra(ARG_BLAZE_FLOW_SOURCE, source)
         context.startActivity(intent)
     }

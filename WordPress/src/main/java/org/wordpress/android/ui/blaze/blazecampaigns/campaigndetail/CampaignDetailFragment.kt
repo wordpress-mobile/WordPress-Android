@@ -42,8 +42,6 @@ import androidx.compose.runtime.remember
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.isActive
@@ -66,8 +64,6 @@ class CampaignDetailFragment : Fragment(), CampaignDetailWebViewClient.CampaignD
                 putInt(CAMPAIGN_DETAIL_CAMPAIGN_ID, campaignId)
             }
         }
-
-        const val DELAY_MILLISECONDS = 15000L
     }
 
     private val viewModel: CampaignDetailViewModel by viewModels()
@@ -208,10 +204,6 @@ class CampaignDetailFragment : Fragment(), CampaignDetailWebViewClient.CampaignD
                     settings.domStorageEnabled = model.enableDomStorage
                     webViewClient = CampaignDetailWebViewClient(this@CampaignDetailFragment)
                     postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, model.addressToLoad.toByteArray())
-                }
-
-                delayScope.launch {
-                    delay(DELAY_MILLISECONDS)
                 }
             }
         }
