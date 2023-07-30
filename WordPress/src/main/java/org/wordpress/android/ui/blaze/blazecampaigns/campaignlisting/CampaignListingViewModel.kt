@@ -24,12 +24,11 @@ import javax.inject.Named
 @HiltViewModel
 @Suppress("LongParameterList", "TooManyFunctions")
 class CampaignListingViewModel @Inject constructor(
-    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    @param:Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
-    private val mapper: CampaignListingUIModelMapper,
     private val fetchCampaignListUseCase: FetchCampaignListUseCase,
     private val getCampaignListFromDbUseCase: GetCampaignListFromDbUseCase
 ) : ScopedViewModel(bgDispatcher) {
@@ -96,11 +95,11 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     private fun showGenericError() {
-        _uiState.postValue(mapper.toGenericError(this@CampaignListingViewModel::loadCampaigns))
+        _uiState.postValue(CampaignListingUiState.toGenericError(this@CampaignListingViewModel::loadCampaigns))
     }
 
     private fun showNoNetworkError() {
-        _uiState.postValue(mapper.toNoNetworkError(this@CampaignListingViewModel::loadCampaigns))
+        _uiState.postValue(CampaignListingUiState.toNoNetworkError(this@CampaignListingViewModel::loadCampaigns))
     }
 
     private fun loadMoreCampaigns() {
@@ -160,7 +159,7 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     private fun showNoCampaigns() {
-        _uiState.postValue(mapper.toNoCampaignsError { createCampaignClick() })
+        _uiState.postValue(CampaignListingUiState.toNoCampaignsError { createCampaignClick() })
     }
 
     private fun createCampaignClick() {
@@ -180,6 +179,7 @@ class CampaignListingViewModel @Inject constructor(
                         _refresh.postValue(false)
                         showCampaigns(campaignResult.value)
                     }
+
                     is Left -> {
                         when (campaignResult.value) {
                             is GenericError -> {
