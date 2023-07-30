@@ -33,7 +33,6 @@ import org.wordpress.android.ui.blaze.BlazeActionEvent
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
@@ -108,10 +107,6 @@ class CampaignDetailFragment : Fragment(), CampaignDetailWebViewClient.CampaignD
                     requireContext(),
                     actionEvent.url
                 )
-            }
-            is BlazeActionEvent.FinishActivityWithMessage -> {
-                ToastUtils.showToast(requireContext(), actionEvent.id)
-                requireActivity().finish()
             }
         }
     }
