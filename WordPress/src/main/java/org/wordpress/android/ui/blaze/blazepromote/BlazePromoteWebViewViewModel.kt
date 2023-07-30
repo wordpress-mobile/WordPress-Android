@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.blaze.blazepromote
 
 import android.text.TextUtils
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -169,14 +168,12 @@ class BlazePromoteWebViewViewModel @Inject constructor(
 
     private fun postUiState(state: BlazePromoteUiState) {
         launch {
-            Log.i(javaClass.simpleName, "***=> Thread in postUiState = ${Thread.currentThread().name}")
             _uiState.value = state
         }
     }
 
     private fun postActionEvent(actionEvent: BlazeActionEvent) {
         launch {
-            Log.i(javaClass.simpleName, "***=> Thread in postActionEvent = ${Thread.currentThread().name}")
             _actionEvents.send(actionEvent)
         }
     }
