@@ -71,7 +71,6 @@ class BlazePromoteWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
 
     companion object {
         fun newInstance() = BlazePromoteWebViewFragment()
-        const val DELAY_MILLISECONDS = 1500L
     }
 
     override fun onCreateView(
@@ -231,10 +230,6 @@ class BlazePromoteWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
                     )
                     webChromeClient = chromeClient
                     postUrl(WPCOM_LOGIN_URL, model.addressToLoad.toByteArray())
-                }
-
-                delayScope.launch {
-                    delay(DELAY_MILLISECONDS)
                 }
             }
         }
