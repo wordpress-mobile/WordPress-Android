@@ -58,8 +58,8 @@ class CampaignListingViewModel @Inject constructor(
         _uiState.postValue(CampaignListingUiState.Loading)
         launch {
             when (val campaigns = getCampaignListFromDbUseCase.execute(site)) {
-                is Right -> showCampaigns(campaigns.value)
-                is Left -> fetchCampaigns()
+                is Either.Right -> showCampaigns(campaigns.value)
+                is Either.Left -> fetchCampaigns()
             }
         }
     }
@@ -69,8 +69,8 @@ class CampaignListingViewModel @Inject constructor(
             showNoNetworkError()
         } else {
             when (val campaignResult = fetchCampaignListUseCase.execute(site, page)) {
-                is Right -> showCampaigns(campaignResult.value)
-                is Left -> {
+                is Either.Right -> showCampaigns(campaignResult.value)
+                is Either.Left -> {
                     when (campaignResult.value) {
                         is GenericError -> showGenericError()
                         is NoCampaigns -> showNoCampaigns()
@@ -120,12 +120,12 @@ class CampaignListingViewModel @Inject constructor(
             showSnackBar(R.string.campaign_listing_page_error_refresh_no_network_available)
         } else {
             when (val campaignResult = fetchCampaignListUseCase.execute(site, page)) {
-                is Right -> {
+                is Either.Right -> {
                     val currentUiState = _uiState.value as CampaignListingUiState.Success
                     showCampaigns(currentUiState.campaigns + campaignResult.value)
                 }
 
-                is Left -> {
+                is Either.Left -> {
                     when (campaignResult.value) {
                         is GenericError -> {
                             disableLoadingMore()
@@ -175,12 +175,12 @@ class CampaignListingViewModel @Inject constructor(
                 showSnackBar(R.string.campaign_listing_page_error_refresh_no_network_available)
             } else {
                 when (val campaignResult = fetchCampaignListUseCase.execute(site, page)) {
-                    is Right -> {
+                    is Either.Right -> {
                         _refresh.postValue(false)
                         showCampaigns(campaignResult.value)
                     }
 
-                    is Left -> {
+                    is Either.Left -> {
                         when (campaignResult.value) {
                             is GenericError -> {
                                 _refresh.postValue(false)

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting
 
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
 import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
