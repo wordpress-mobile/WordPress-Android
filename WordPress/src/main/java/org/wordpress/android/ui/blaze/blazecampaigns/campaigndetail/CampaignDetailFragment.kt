@@ -67,8 +67,6 @@ class CampaignDetailFragment : Fragment(), CampaignDetailWebViewClient.CampaignD
                 putInt(CAMPAIGN_DETAIL_CAMPAIGN_ID, campaignId)
             }
         }
-
-        const val DELAY_MILLISECONDS = 15000L
     }
 
     private val viewModel: CampaignDetailViewModel by viewModels()
@@ -213,10 +211,6 @@ class CampaignDetailFragment : Fragment(), CampaignDetailWebViewClient.CampaignD
                     settings.domStorageEnabled = model.enableDomStorage
                     webViewClient = CampaignDetailWebViewClient(this@CampaignDetailFragment)
                     postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, model.addressToLoad.toByteArray())
-                }
-
-                delayScope.launch {
-                    delay(DELAY_MILLISECONDS)
                 }
             }
         }
