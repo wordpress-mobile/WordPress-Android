@@ -43,11 +43,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebChromeClientWithFileChooser
 import org.wordpress.android.ui.WPWebViewActivity.WPCOM_LOGIN_URL
