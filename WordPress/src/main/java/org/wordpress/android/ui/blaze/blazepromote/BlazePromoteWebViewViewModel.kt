@@ -182,7 +182,7 @@ class BlazePromoteWebViewViewModel @Inject constructor(
         return selectedSiteRepository.getSelectedSite()?.url?.replace(Regex(HTTP_PATTERN), "") ?: ""
     }
 
-    fun updateHeaderActionUiState() {
+    private fun updateHeaderActionUiState() {
         val nonDismissibleStep = nonDismissableHashConfig.getValue<String>()
         val completedStep = completedStepHashConfig.getValue<String>()
 
