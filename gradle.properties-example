@@ -14,6 +14,7 @@ android.enableJetifier=false
 
 android.nonTransitiveRClass=true
 android.nonFinalResIds=false
+android.enableR8.fullMode=false
 
 # For more details on what these properties do visit
 # https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/README.md
