@@ -9,6 +9,7 @@ class FetchCampaignListUseCase @Inject constructor(
     private val store: BlazeCampaignsStore,
     private val mapper: CampaignListingUIModelMapper
 ) {
+    @Suppress("ReturnCount")
     suspend fun execute(site: SiteModel, page: Int): Either<NetworkError, List<CampaignModel>> {
         val result = store.fetchBlazeCampaigns(site, page)
         if (result.isError || result.model == null) return Either.Left(GenericError)

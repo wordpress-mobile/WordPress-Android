@@ -56,5 +56,4 @@ class GetCampaignListFromDbUseCaseTest: BaseUnitTest() {
 
         assertThat(actualResult is Either.Right).isTrue
     }
-
 }
