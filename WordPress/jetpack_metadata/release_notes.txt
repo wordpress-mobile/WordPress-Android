@@ -1,3 +1,1 @@
-* [**] Block editor: Move undo/redo buttons to the navigation bar [https://github.com/wordpress-mobile/WordPress-Android/pull/18705]
-* [***] Block editor: Editor UX improvements with new icons, colors and additional design enhancements. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5985]
-
+We made some big changes to the block editor, including styles, colors, and icons. You’ll also find more buttons and block options in the header toolbar, including the undo and redo buttons. That’s right, you now have more tools than Batman’s utility belt.

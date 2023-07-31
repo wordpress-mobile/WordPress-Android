@@ -73,9 +73,11 @@ import org.wordpress.android.ui.utils.UiString
 private val darkModePrimaryButtonColor = Color(0xFF1C1C1E)
 
 @Stable
+@SuppressLint("InvalidColorHexValue")
 private val lightModePostThumbnailBackground = Color(0xD000000)
 
 @Stable
+@SuppressLint("InvalidColorHexValue")
 private val darkModePostThumbnailBackground = Color(0xDFFFFFF)
 
 @Stable

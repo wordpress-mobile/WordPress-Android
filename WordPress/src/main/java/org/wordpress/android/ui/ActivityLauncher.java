@@ -46,7 +46,7 @@ import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.blaze.BlazeFlowSource;
-import org.wordpress.android.ui.blaze.blazepromote.BlazeParentActivity;
+import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity;
 import org.wordpress.android.ui.blaze.PageUIModel;
 import org.wordpress.android.ui.blaze.PostUIModel;
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity;
@@ -1886,7 +1886,7 @@ public class ActivityLauncher {
     public static void openPromoteWithBlaze(@NonNull Context context,
                                             @Nullable PostModel postModel,
                                             @NonNull BlazeFlowSource source) {
-        Intent intent = new Intent(context, BlazeParentActivity.class);
+        Intent intent = new Intent(context, BlazePromoteParentActivity.class);
         if (postModel != null) {
             PostUIModel postUIModel = new PostUIModel(
                     postModel.getRemotePostId(),
@@ -1903,7 +1903,7 @@ public class ActivityLauncher {
     public static void openPromoteWithBlaze(@NonNull Context context,
                                             @NonNull PageModel page,
                                             @NonNull BlazeFlowSource source) {
-        Intent intent = new Intent(context, BlazeParentActivity.class);
+        Intent intent = new Intent(context, BlazePromoteParentActivity.class);
         PageUIModel pageUIModel = new PageUIModel(
                 page.getPost().getRemotePostId(),
                 page.getPost().getTitle(),

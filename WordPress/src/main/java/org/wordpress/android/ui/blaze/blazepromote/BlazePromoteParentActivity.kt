@@ -17,7 +17,7 @@ const val ARG_EXTRA_BLAZE_UI_MODEL = "blaze_ui_model"
 const val ARG_BLAZE_FLOW_SOURCE = "blaze_flow_source"
 
 @AndroidEntryPoint
-class BlazeParentActivity : AppCompatActivity() {
+class BlazePromoteParentActivity : AppCompatActivity() {
     private val viewModel: BlazeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

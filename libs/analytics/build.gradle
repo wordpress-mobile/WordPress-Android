@@ -23,6 +23,8 @@ dependencies {
 }
 
 android {
+    namespace "org.wordpress.android.analytics"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
