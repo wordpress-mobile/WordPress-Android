@@ -19,7 +19,7 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingUiState
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingViewModel
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignModel
-import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.Either
+import org.wordpress.android.Either
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.FetchCampaignListUseCase
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.GetCampaignListFromDbUseCase
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.NoCampaigns

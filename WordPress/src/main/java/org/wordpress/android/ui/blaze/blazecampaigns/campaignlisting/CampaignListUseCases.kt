@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting
 
+import org.wordpress.android.Either
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
 import javax.inject.Inject
@@ -28,14 +29,6 @@ class GetCampaignListFromDbUseCase @Inject constructor(
         return  Either.Right(campaigns)
     }
 }
-
-sealed class Either<out L, out R> {
-    class Left<out L>(val value: L) : Either<L, Nothing>()
-    class Right<out R>(val value: R) : Either<Nothing, R>()
-}
-
-
-
 
 sealed interface NetworkError
 
