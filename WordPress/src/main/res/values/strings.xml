@@ -4633,7 +4633,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_insert_image_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Image Block</string>
     <string name="gutenberg_native_insert_video_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Video Block</string>
 
-
     <!-- Jetpack - Blaze campaign detail page -->
     <string name="campaign_detail_no_network_error_title" translatable="false">@string/no_network_title</string>
     <string name="campaign_detail_no_network_error_description" translatable="false">@string/no_network_message</string>
@@ -4641,4 +4640,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="campaign_detail_error_title">Something went wrong</string>
     <string name="campaign_detail_error_description" translatable="false">@string/request_failed_message</string>
     <string name="campaign_detail_error_button_text" translatable="false">@string/retry</string>
+
+    <string name="blaze_promote_no_network_error_title" translatable="false">@string/no_network_title</string>
+    <string name="blaze_promote_no_network_error_description" translatable="false">@string/no_network_message</string>
+    <string name="blaze_promote_no_network_error_button_text" translatable="false">@string/retry</string>
+    <string name="blaze_promote_error_title" translatable="false">@string/campaign_detail_error_title</string>
+    <string name="blaze_promote_error_description" translatable="false">@string/request_failed_message</string>
+    <string name="blaze_promote_error_button_text" translatable="false">@string/retry</string>
 </resources>
