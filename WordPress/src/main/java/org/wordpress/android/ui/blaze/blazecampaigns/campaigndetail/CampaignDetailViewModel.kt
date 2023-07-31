@@ -128,7 +128,7 @@ class CampaignDetailViewModel @Inject constructor(
     }
 
     private fun postActionEvent(actionEvent: BlazeActionEvent) {
-        viewModelScope.launch(bgDispatcher) {
+        launch {
             _actionEvents.send(actionEvent)
         }
     }
