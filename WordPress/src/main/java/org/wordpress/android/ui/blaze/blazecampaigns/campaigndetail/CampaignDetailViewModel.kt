@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail
 
 import android.text.TextUtils
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +11,6 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -128,7 +126,7 @@ class CampaignDetailViewModel @Inject constructor(
     }
 
     private fun postActionEvent(actionEvent: BlazeActionEvent) {
-        viewModelScope.launch(bgDispatcher) {
+        launch {
             _actionEvents.send(actionEvent)
         }
     }

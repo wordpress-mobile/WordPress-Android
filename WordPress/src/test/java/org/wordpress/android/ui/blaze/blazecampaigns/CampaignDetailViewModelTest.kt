@@ -91,7 +91,7 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
         testWithData(actionEvents, uiState) {
             viewModel.start(1, CampaignDetailPageSource.DASHBOARD_CARD)
 
-            assertThat(uiState.last()).isInstanceOf(CampaignDetailUiState.Error::class.java)
+            assertThat(uiState.last()).isInstanceOf(CampaignDetailUiState.GenericError::class.java)
         }
     }
 
@@ -104,7 +104,7 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
         testWithData(actionEvents, uiState) {
             viewModel.start(1, CampaignDetailPageSource.DASHBOARD_CARD)
 
-            assertThat(uiState.last()).isInstanceOf(CampaignDetailUiState.Error::class.java)
+            assertThat(uiState.last()).isInstanceOf(CampaignDetailUiState.GenericError::class.java)
         }
     }
     @Test
@@ -165,7 +165,7 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
             viewModel.onWebViewError()
 
             val uiState = uiStates.last()
-            assertThat(uiState).isInstanceOf(CampaignDetailUiState.Error::class.java)
+            assertThat(uiState).isInstanceOf(CampaignDetailUiState.GenericError::class.java)
         }
     }
 
@@ -180,7 +180,7 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
             viewModel.start(1, CampaignDetailPageSource.DASHBOARD_CARD)
 
             val uiState = uiStates.last()
-            assertThat(uiState).isInstanceOf(CampaignDetailUiState.Error::class.java)
+            assertThat(uiState).isInstanceOf(CampaignDetailUiState.NoNetworkError::class.java)
         }
     }
 

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail
 
+import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
 
 sealed class CampaignDetailUiState {
@@ -11,7 +12,7 @@ sealed class CampaignDetailUiState {
 
     object Loaded : CampaignDetailUiState()
 
-    data class Error(
+    open class Error(
         val title: UiString,
         val description: UiString,
         val button: ErrorButton? = null
@@ -21,6 +22,24 @@ sealed class CampaignDetailUiState {
             val click: () -> Unit
         )
     }
+
+    data class NoNetworkError(val buttonClick: () -> Unit): Error(
+        title = UiString.UiStringRes(R.string.campaign_detail_no_network_error_title),
+        description = UiString.UiStringRes(R.string.campaign_detail_error_description),
+        button = ErrorButton(
+            text = UiString.UiStringRes(R.string.campaign_detail_error_button_text),
+            click = buttonClick
+        )
+    )
+
+    data class GenericError(val buttonClick: () -> Unit): Error(
+        title = UiString.UiStringRes(R.string.campaign_detail_error_title),
+        description = UiString.UiStringRes(R.string.campaign_detail_error_description),
+        button = ErrorButton(
+            text = UiString.UiStringRes(R.string.campaign_detail_error_button_text),
+            click = buttonClick
+        )
+    )
 }
 
 data class CampaignDetailModel(
