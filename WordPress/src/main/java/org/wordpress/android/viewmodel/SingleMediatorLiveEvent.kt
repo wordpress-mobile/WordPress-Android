@@ -17,7 +17,6 @@ package org.wordpress.android.viewmodel
 
 import android.util.Log
 import androidx.annotation.MainThread
-import androidx.annotation.NonNull
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
@@ -39,7 +38,7 @@ open class SingleMediatorLiveEvent<T> : MediatorLiveData<T>() {
     private val pending = AtomicBoolean(false)
 
     @MainThread
-    override fun observe(@NonNull owner: LifecycleOwner, @NonNull observer: Observer<in T>) {
+    override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
         if (hasActiveObservers()) {
             Log.w(TAG, "Multiple observers registered but only one will be notified of changes.")
         }

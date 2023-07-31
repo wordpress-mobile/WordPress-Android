@@ -77,6 +77,8 @@ android {
         dexInProcess = true
     }
 
+    namespace "org.wordpress.android"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     def versionProperties = loadPropertiesFromFile(file("${rootDir}/version.properties"))
@@ -142,7 +144,6 @@ android {
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_SELF_HOSTED_USERS", "false"
         buildConfigField "boolean", "PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD", "false"
         buildConfigField "boolean", "OPEN_WEB_LINKS_WITH_JETPACK_FLOW", "false"
-        buildConfigField "boolean", "ENABLE_WORDPRESS_SUPPORT_FORUM", "false"
         buildConfigField "boolean", "JETPACK_INSTALL_FULL_PLUGIN", "false"
         buildConfigField "boolean", "ENABLE_BLAZE_FEATURE", "false"
         buildConfigField "boolean", "WP_INDIVIDUAL_PLUGIN_OVERLAY", "false"
@@ -152,6 +153,7 @@ android {
         buildConfigField "boolean", "DASHBOARD_CARD_FREE_TO_PAID_PLANS", "false"
         buildConfigField "boolean", "SITE_EDITOR_MVP", "false"
         buildConfigField "boolean", "JETPACK_SOCIAL", "false"
+        buildConfigField "boolean", "CONTACT_SUPPORT", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -282,7 +284,7 @@ android {
         }
     }
 
-    lintOptions{
+    lint {
         warningsAsErrors = true
         checkDependencies = true
         checkGeneratedSources = true
@@ -315,6 +317,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig true
         viewBinding true
         compose true
 
