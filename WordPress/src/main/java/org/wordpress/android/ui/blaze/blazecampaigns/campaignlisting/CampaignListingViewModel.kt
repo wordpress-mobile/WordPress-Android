@@ -48,6 +48,8 @@ class CampaignListingViewModel @Inject constructor(
     val snackBar = _snackbar.asSharedFlow()
 
     private var page = 1
+    private var limitPerPage: Int = 10
+    private var isLastPage: Boolean = false
 
     fun start(campaignListingPageSource: CampaignListingPageSource) {
         this.site = selectedSiteRepository.getSelectedSite()!!
@@ -106,7 +108,8 @@ class CampaignListingViewModel @Inject constructor(
     private fun loadMoreCampaigns() {
         launch {
             if (_uiState.value is CampaignListingUiState.Success &&
-                (_uiState.value as CampaignListingUiState.Success).pagingDetails.loadingNext.not()
+                (_uiState.value as CampaignListingUiState.Success).pagingDetails.loadingNext.not() &&
+                isLastPage.not()
             ) {
                 page++
                 showLoadingMore()
@@ -123,6 +126,7 @@ class CampaignListingViewModel @Inject constructor(
             when (val campaignResult = fetchCampaignListUseCase.execute(site, page)) {
                 is Either.Right -> {
                     val currentUiState = _uiState.value as CampaignListingUiState.Success
+                    isLastPage = campaignResult.value.isEmpty() || campaignResult.value.size < limitPerPage
                     showCampaigns(currentUiState.campaigns + campaignResult.value)
                 }
 
@@ -178,6 +182,7 @@ class CampaignListingViewModel @Inject constructor(
                 when (val campaignResult = fetchCampaignListUseCase.execute(site, page)) {
                     is Either.Right -> {
                         _refresh.postValue(false)
+                        isLastPage = false
                         showCampaigns(campaignResult.value)
                     }
 
