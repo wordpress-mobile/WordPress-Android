@@ -8,14 +8,17 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
+import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiString
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class CampaignListingUIModelMapperTest {
+class CampaignListingUIModelMapperTest : BaseUnitTest() {
     @Mock
     lateinit var statsUtils: StatsUtils
 
@@ -28,15 +31,16 @@ class CampaignListingUIModelMapperTest {
 
     @Test
     fun `given campaign model, when mapper is called, then campaign model is created`() {
+        whenever(statsUtils.toFormattedString(1L, ONE_THOUSAND)).thenReturn("1")
         val campaignModel = campaignListingUIModelMapper.mapToCampaignModel(
             BlazeCampaignModel(
                 campaignId = 1,
                 title = "title",
                 uiStatus = "active",
                 imageUrl = "imageUrl",
-                impressions = 1,
-                clicks = 1,
-                budgetCents = 1,
+                impressions = 1L,
+                clicks = 1L,
+                budgetCents = 100,
                 startDate = mock(),
                 endDate = mock(),
             )
