@@ -102,9 +102,8 @@ class CampaignListingViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given internet available, when viewmodel start, then should fetch campaigns`() = runTest {
+    fun `when viewmodel start, then should fetch campaigns`() = runTest {
         val campaignFetchResult: Either<NoCampaigns, List<CampaignModel>> = Either.Right(mock())
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(campaignFetchResult)
 
         viewModel.start(CampaignListingPageSource.DASHBOARD_CARD)
@@ -114,12 +113,12 @@ class CampaignListingViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no campaigns, when viewmodel start, then should show no campaigns error`() = runTest {
+    fun `given no campaigns in db + api, when viewmodel start, then should show no campaigns error`() = runTest {
         val noCampaigns: Either<NoCampaigns, List<CampaignModel>> = Either.Left(NoCampaigns)
-
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(noCampaigns)
+        whenever(fetchCampaignListUseCase.execute(siteModel, 1)).thenReturn(noCampaigns)
 
         viewModel.start(CampaignListingPageSource.DASHBOARD_CARD)
         advanceUntilIdle()
@@ -129,12 +128,14 @@ class CampaignListingViewModelTest : BaseUnitTest() {
 
 
     @Test
-    fun `given no campaigns, when click is invoked on create, then navigate to blaze flow`() = runTest {
+    fun `given no campaigns in db + api, when click is invoked on create, then navigate to blaze flow`() = runTest {
         val noCampaigns: Either<NoCampaigns, List<CampaignModel>> = Either.Left(NoCampaigns)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(noCampaigns)
+        whenever(fetchCampaignListUseCase.execute(siteModel, 1)).thenReturn(noCampaigns)
 
         viewModel.start(CampaignListingPageSource.DASHBOARD_CARD)
+        advanceUntilIdle()
         val noCampaignsState = uiStates.last() as CampaignListingUiState.Error
         noCampaignsState.button!!.click.invoke()
 
