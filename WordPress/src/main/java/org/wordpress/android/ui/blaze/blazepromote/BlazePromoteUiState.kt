@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.blaze.blazepromote
 
 import org.wordpress.android.R
-import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailUiState
 import org.wordpress.android.ui.utils.UiString
 
 sealed class BlazePromoteUiState {
@@ -24,7 +23,7 @@ sealed class BlazePromoteUiState {
         )
     }
 
-    data class NoNetworkError(val buttonClick: () -> Unit): CampaignDetailUiState.Error(
+    data class NoNetworkError(val buttonClick: () -> Unit): Error(
         title = UiString.UiStringRes(R.string.blaze_promote_no_network_error_title),
         description = UiString.UiStringRes(R.string.blaze_promote_error_description),
         button = ErrorButton(
@@ -33,7 +32,7 @@ sealed class BlazePromoteUiState {
         )
     )
 
-    data class GenericError(val buttonClick: () -> Unit): CampaignDetailUiState.Error(
+    data class GenericError(val buttonClick: () -> Unit): Error(
         title = UiString.UiStringRes(R.string.blaze_promote_error_title),
         description = UiString.UiStringRes(R.string.blaze_promote_error_description),
         button = ErrorButton(
