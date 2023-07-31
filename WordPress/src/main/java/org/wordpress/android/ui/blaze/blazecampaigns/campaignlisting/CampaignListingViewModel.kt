@@ -25,7 +25,7 @@ import javax.inject.Named
 @HiltViewModel
 @Suppress("LongParameterList", "TooManyFunctions")
 class CampaignListingViewModel @Inject constructor(
-    @param:Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
