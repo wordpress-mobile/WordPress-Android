@@ -1905,8 +1905,4 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, JetpackStaticPosterActivity.class);
         context.startActivity(intent);
     }
-
-    public static void openDomainTransfer(Context context, SiteModel site, @NonNull String url) {
-        WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
-    }
 }

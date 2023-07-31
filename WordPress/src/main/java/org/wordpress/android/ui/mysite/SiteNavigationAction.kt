@@ -98,5 +98,5 @@ sealed class SiteNavigationAction {
         : SiteNavigationAction()
     data class OpenCampaignDetailPage(val campaignId: Int, val campaignDetailPageSource: CampaignDetailPageSource)
         : SiteNavigationAction()
-    data class OpenDomainTransferPage(val site: SiteModel, val url: String) : SiteNavigationAction()
+    data class OpenDomainTransferPage(val url: String) : SiteNavigationAction()
 }

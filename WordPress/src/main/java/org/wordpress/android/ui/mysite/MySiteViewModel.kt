@@ -1646,9 +1646,8 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onDashboardCardDomainTransferClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         dashboardCardDomainTransferUtils.trackCardTapped(uiModel.value?.state as? SiteSelected)
-        _onNavigation.value = Event(SiteNavigationAction.OpenDomainTransferPage(selectedSite, DOMAIN_TRANSFER_PAGE_URL))
+        _onNavigation.value = Event(SiteNavigationAction.OpenDomainTransferPage(DOMAIN_TRANSFER_PAGE_URL))
     }
 
     private fun onDashboardCardDomainTransferMoreMenuClick() {
