@@ -145,7 +145,6 @@ class CampaignListingViewModelTest : BaseUnitTest() {
     @Test
     fun `given campaigns available, when clicked on campaign, then navigate to detail`() = runTest {
         val campaignFetchResult: Either<NoCampaigns, List<CampaignModel>> = Either.Right(getCampaigns(10))
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(campaignFetchResult)
 
@@ -160,7 +159,6 @@ class CampaignListingViewModelTest : BaseUnitTest() {
     @Test
     fun `given campaigns available, when clicked on create campaign fab, then navigate to blaze flow`() = runTest {
         val campaigns: Either<NoCampaigns, List<CampaignModel>> = Either.Right(mock())
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(campaigns)
 
