@@ -95,11 +95,11 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     private fun showGenericError() {
-        _uiState.postValue(CampaignListingUiState.toGenericError(this@CampaignListingViewModel::loadCampaigns))
+        _uiState.postValue(CampaignListingUiState.Error.GenericError(this@CampaignListingViewModel::loadCampaigns))
     }
 
     private fun showNoNetworkError() {
-        _uiState.postValue(CampaignListingUiState.toNoNetworkError(this@CampaignListingViewModel::loadCampaigns))
+        _uiState.postValue(CampaignListingUiState.Error.NoNetworkError(this@CampaignListingViewModel::loadCampaigns))
     }
 
     private fun loadMoreCampaigns() {
@@ -159,7 +159,7 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     private fun showNoCampaigns() {
-        _uiState.postValue(CampaignListingUiState.toNoCampaignsError { createCampaignClick() })
+        _uiState.postValue(CampaignListingUiState.Error.NoCampaignsError { createCampaignClick() })
     }
 
     private fun createCampaignClick() {
