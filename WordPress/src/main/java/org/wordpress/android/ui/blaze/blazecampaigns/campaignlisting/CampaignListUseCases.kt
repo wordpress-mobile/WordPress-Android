@@ -12,9 +12,9 @@ class FetchCampaignListUseCase @Inject constructor(
     suspend fun execute(site: SiteModel, page: Int): Either<NetworkError, List<CampaignModel>> {
         val result = store.fetchBlazeCampaigns(site, page)
         if (result.isError || result.model == null) return Either.Left(GenericError)
-        if (result.model!!.campaigns.isEmpty()) return Either.Left(NoCampaigns)
-        val campaigns = result.model!!.campaigns.map { mapper.mapToCampaignModel(it) }
-        return Either.Right(campaigns)
+        val campaigns = result.model!!.campaigns
+        if (campaigns.isEmpty()) return Either.Left(NoCampaigns)
+        return Either.Right(mapper.mapToCampaignModels(campaigns))
     }
 }
 
@@ -24,9 +24,8 @@ class GetCampaignListFromDbUseCase @Inject constructor(
 ) {
     suspend fun execute(site: SiteModel): Either<NoCampaigns, List<CampaignModel>> {
         val result = store.getBlazeCampaigns(site)
-        if (result.campaigns.isEmpty()) return  Either.Left(NoCampaigns)
-        val campaigns = result.campaigns.map { mapper.mapToCampaignModel(it) }
-        return  Either.Right(campaigns)
+        if (result.campaigns.isEmpty()) return Either.Left(NoCampaigns)
+        return Either.Right(mapper.mapToCampaignModels(result.campaigns))
     }
 }
 

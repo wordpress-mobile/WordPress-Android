@@ -12,7 +12,11 @@ const val CENTS_IN_DOLLARS = 100
 class CampaignListingUIModelMapper @Inject constructor(
     private val statsUtils: StatsUtils
 ){
-    fun mapToCampaignModel(campaignModel:BlazeCampaignModel): CampaignModel {
+    fun mapToCampaignModels(list: List<BlazeCampaignModel>) : List<CampaignModel> {
+        return list.map { mapToCampaignModel(it) }
+    }
+
+    private fun mapToCampaignModel(campaignModel:BlazeCampaignModel): CampaignModel {
         return CampaignModel(
             id = campaignModel.campaignId.toString(),
             title = UiString.UiStringText(campaignModel.title),
