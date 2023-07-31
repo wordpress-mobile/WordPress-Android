@@ -29,50 +29,52 @@ class CampaignListingUIModelMapperTest : BaseUnitTest() {
         campaignListingUIModelMapper = CampaignListingUIModelMapper(statsUtils)
     }
 
+    private val activeCampaign = BlazeCampaignModel(
+        campaignId = 1,
+        title = "title",
+        uiStatus = "active",
+        imageUrl = "imageUrl",
+        impressions = 1L,
+        clicks = 1L,
+        budgetCents = 100,
+        startDate = mock(),
+        endDate = mock(),
+    )
+
     @Test
     fun `given campaign model, when mapper is called, then campaign model is created`() {
         whenever(statsUtils.toFormattedString(1L, ONE_THOUSAND)).thenReturn("1")
-        val campaignModel = campaignListingUIModelMapper.mapToCampaignModel(
-            BlazeCampaignModel(
-                campaignId = 1,
-                title = "title",
-                uiStatus = "active",
-                imageUrl = "imageUrl",
-                impressions = 1L,
-                clicks = 1L,
-                budgetCents = 100,
-                startDate = mock(),
-                endDate = mock(),
-            )
-        )
 
-        assertThat(campaignModel.id).isEqualTo("1")
-        assertThat(campaignModel.title).isEqualTo(UiString.UiStringText("title"))
-        assertThat(campaignModel.status).isEqualTo(CampaignStatus.Active)
-        assertThat(campaignModel.featureImageUrl).isEqualTo("imageUrl")
-        assertThat(campaignModel.impressions).isEqualTo(UiString.UiStringText("1"))
-        assertThat(campaignModel.clicks).isEqualTo(UiString.UiStringText("1"))
-        assertThat(campaignModel.budget).isEqualTo(UiString.UiStringText("$1"))
+        val campaigns = campaignListingUIModelMapper.mapToCampaignModels(listOf(activeCampaign))
+
+        assertThat(campaigns).hasSize(1)
+        assertThat(campaigns[0].id).isEqualTo("1")
+        assertThat(campaigns[0].title).isEqualTo(UiString.UiStringText("title"))
+        assertThat(campaigns[0].status).isEqualTo(CampaignStatus.Active)
+        assertThat(campaigns[0].featureImageUrl).isEqualTo("imageUrl")
+        assertThat(campaigns[0].impressions).isEqualTo(UiString.UiStringText("1"))
+        assertThat(campaigns[0].clicks).isEqualTo(UiString.UiStringText("1"))
+        assertThat(campaigns[0].budget).isEqualTo(UiString.UiStringText("$1"))
     }
+
+    private val inActiveCampaign = BlazeCampaignModel(
+        campaignId = 1,
+        title = "title",
+        uiStatus = "canceled",
+        imageUrl = "imageUrl",
+        impressions = 0,
+        clicks = 0,
+        budgetCents = 100,
+        startDate = mock(),
+        endDate = mock(),
+    )
 
     @Test
     fun `given inactive campaign, when mapper is called, then camapign stats is null`() {
-        val campaignModel = campaignListingUIModelMapper.mapToCampaignModel(
-            BlazeCampaignModel(
-                campaignId = 1,
-                title = "title",
-                uiStatus = "canceled",
-                imageUrl = "imageUrl",
-                impressions = 0,
-                clicks = 0,
-                budgetCents = 1,
-                startDate = mock(),
-                endDate = mock(),
-            )
-        )
+        val campaigns = campaignListingUIModelMapper.mapToCampaignModels(listOf(inActiveCampaign))
 
-        assertThat(campaignModel.status).isEqualTo(CampaignStatus.Canceled)
-        assertThat(campaignModel.impressions).isNull()
-        assertThat(campaignModel.clicks).isNull()
+        assertThat(campaigns[0].status).isEqualTo(CampaignStatus.Canceled)
+        assertThat(campaigns[0].impressions).isNull()
+        assertThat(campaigns[0].clicks).isNull()
     }
 }
