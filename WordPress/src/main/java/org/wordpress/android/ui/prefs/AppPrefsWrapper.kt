@@ -351,6 +351,12 @@ class AppPrefsWrapper @Inject constructor() {
     fun incrementWPJetpackIndividualPluginOverlayShownCount() =
         AppPrefs.incrementWPJetpackIndividualPluginOverlayShownCount()
 
+    fun getShouldHideBlazeOverlay(): Boolean =
+        AppPrefs.getShouldHideBlazeOverlay()
+
+    fun setShouldHideBlazeOverlay(isHidden: Boolean) =
+        AppPrefs.setShouldHideBlazeOverlay(isHidden)
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -9,6 +10,7 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 
+@SuppressLint("CustomSplashScreen")
 public class WPLaunchActivity extends LocaleAwareActivity {
     /*
      * this the main (default) activity, which does nothing more than launch the
