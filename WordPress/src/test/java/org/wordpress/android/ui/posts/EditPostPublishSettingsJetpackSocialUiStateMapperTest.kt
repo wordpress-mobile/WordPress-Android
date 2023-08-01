@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
@@ -26,29 +27,15 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         localeProvider = localProvider,
     )
 
-    @Test
-    fun `Should map loaded UI state with share limit enabled`() {
-        val shareLimit = ShareLimit.Enabled(
-            shareLimit = 10,
-            publicizedCount = 11,
-            sharedPostsCount = 12,
-            sharesRemaining = 13,
-        )
-        val shareMessage = "Message"
-        val subscribeButtonLabel = "SHARE MORE"
-        whenever(stringProvider.getString(R.string.post_settings_jetpack_social_subscribe_share_more))
-            .thenReturn(subscribeButtonLabel)
-        whenever(localProvider.getAppLocale())
-            .thenReturn(Locale.US)
-
+    @Before
+    fun setUp() {
         connection1 = PostSocialConnection(
             connectionId = 0,
             service = "tumblr",
             label = "Tumblr",
             externalId = "myblog.tumblr.com",
             externalName = "My blog",
-            iconUrl =
-            "http://i.wordpress.com/wp-content/publicize/assets/publicize-tumblr-2x.png",
+            iconUrl = "http://i.wordpress.com/wp-content/publicize/assets/publicize-tumblr-2x.png",
             isSharingEnabled = true,
         )
 
@@ -61,12 +48,23 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
             iconUrl = "https://i.wordpress.com/wp-content/publicize/assets/publicize-linkedin-2x.png",
             isSharingEnabled = true,
         )
+    }
 
-        val allConnections = listOf(
-            connection1,
-            connection2,
+    @Test
+    fun `Should map loaded UI state with share limit enabled`() {
+        val shareLimit = ShareLimit.Enabled(
+            shareLimit = 10,
+            publicizedCount = 11,
+            sharedPostsCount = 12,
+            sharesRemaining = 13,
         )
+        val shareMessage = "Message"
+        val subscribeButtonLabel = "SHARE MORE"
+        whenever(stringProvider.getString(R.string.post_settings_jetpack_social_subscribe_share_more))
+            .thenReturn(subscribeButtonLabel)
+        whenever(localProvider.getAppLocale()).thenReturn(Locale.US)
 
+        val allConnections = listOf(connection1, connection2)
         val onConnectProfilesClick: () -> Unit = {}
         val onShareMessageClick: () -> Unit = {}
         val onConnectionClick: (connection: PostSocialConnection, enable: Boolean ) -> Unit = mock()
@@ -119,17 +117,6 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         whenever(localProvider.getAppLocale())
             .thenReturn(Locale.US)
 
-        connection1 = PostSocialConnection(
-            connectionId = 0,
-            service = "tumblr",
-            label = "Tumblr",
-            externalId = "myblog.tumblr.com",
-            externalName = "My blog",
-            iconUrl =
-                "http://i.wordpress.com/wp-content/publicize/assets/publicize-tumblr-2x.png",
-            isSharingEnabled = true,
-        )
-
         val allConnections = listOf(connection1)
 
         val onConnectProfilesClick: () -> Unit = {}
@@ -160,17 +147,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         whenever(localProvider.getAppLocale())
             .thenReturn(Locale.US)
 
-        connection1 = PostSocialConnection(
-            connectionId = 1,
-            service = "linkedin",
-            label = "LinkedIn",
-            externalId = "linkedin.com",
-            externalName = "My Profile",
-            iconUrl = "https://i.wordpress.com/wp-content/publicize/assets/publicize-linkedin-2x.png",
-            isSharingEnabled = true,
-        )
-
-        val allConnections = listOf(connection1)
+        val allConnections = listOf(connection2)
 
         val onConnectProfilesClick: () -> Unit = mock()
         val onShareMessageClick: () -> Unit = {}
@@ -188,7 +165,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         val expected = JetpackSocialUiState.Loaded(
             jetpackSocialConnectionDataList = listOf(
                 JetpackSocialConnectionData(
-                    postSocialConnection = connection1,
+                    postSocialConnection = connection2,
                     onConnectionClick = actual.jetpackSocialConnectionDataList[0].onConnectionClick,
                     enabled = false
                 ),
