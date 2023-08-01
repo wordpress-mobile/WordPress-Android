@@ -242,7 +242,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     private fun postPublicizeSkipConnections(): List<PublicizeSkipConnection> =
         editPostRepository?.getPost()?.publicizeSkipConnectionsList ?: emptyList()
 
-    private fun     isPostPublished(): Boolean =
+    private fun isPostPublished(): Boolean =
         editPostRepository?.getPost()?.status?.let { status ->
             status == PostStatus.PUBLISHED.toString()
         } ?: false

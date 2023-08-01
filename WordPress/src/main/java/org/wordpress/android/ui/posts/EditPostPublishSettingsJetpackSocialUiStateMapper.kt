@@ -24,15 +24,18 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
         onShareMessageClick: () -> Unit,
         onConnectionClick: (PostSocialConnection, Boolean) -> Unit,
         isPostPublished: Boolean,
-    ): Loaded =
-        Loaded(
+    ): Loaded {
+        val selectedConnectionsSize = connections.filter { it.isSharingEnabled }.size
+        return Loaded(
             jetpackSocialConnectionDataList = connections.map { connection ->
                 JetpackSocialConnectionData(
                     postSocialConnection = connection,
                     onConnectionClick = { onConnectionClick(connection, it) },
                     enabled = !isPostPublished && if (shareLimit is ShareLimit.Enabled) {
-                        shareLimit.sharesRemaining > 0
-                    } else true,
+                        if (!connection.isSharingEnabled) {
+                            shareLimit.sharesRemaining > selectedConnectionsSize
+                        } else shareLimit.sharesRemaining > 0
+                    } else true
                 )
             },
             showShareLimitUi = !isPostPublished && shareLimit is ShareLimit.Enabled,
@@ -43,6 +46,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
                 .uppercase(localeProvider.getAppLocale()),
             onSubscribeClick = onSubscribeClick,
         )
+    }
 
     fun mapNoConnections(
         onConnectProfilesClick: () -> Unit,
