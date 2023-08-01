@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.posts
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
@@ -14,7 +16,7 @@ import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.compose.PostSocialMessageItem
 
 @Composable
-fun EditPostSettingsJetpackSocialConnectionsContainer(
+fun ColumnScope.EditPostSettingsJetpackSocialConnectionsContainer(
     jetpackSocialConnectionDataList: List<JetpackSocialConnectionData>,
     shareMessage: String,
     isShareMessageEnabled: Boolean,
@@ -41,43 +43,45 @@ fun EditPostSettingsJetpackSocialConnectionsContainer(
 @Composable
 fun EditPostSettingsJetpackSocialContainerWithShareLimitPreview() {
     AppThemeEditor {
-        val connections = mutableListOf<JetpackSocialConnectionData>()
-        val connection1 = PublicizeConnection().apply {
-            connectionId = 0
-            service = "tumblr"
-            label = "Tumblr"
-            externalId = "myblog.tumblr.com"
-            externalName = "My blog"
-            externalProfilePictureUrl =
-                "http://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-tumblr-2x.png"
-        }
-        val connection2 = PublicizeConnection().apply {
-            connectionId = 1
-            service = "linkedin"
-            label = "LinkedIn"
-            externalId = "linkedin.com"
-            externalName = "My Profile"
-            externalProfilePictureUrl =
-                "https://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-linkedin-2x.png"
-        }
-        connections.add(
-            JetpackSocialConnectionData(
-                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection1, true),
-                onConnectionClick = {},
+        Column {
+            val connections = mutableListOf<JetpackSocialConnectionData>()
+            val connection1 = PublicizeConnection().apply {
+                connectionId = 0
+                service = "tumblr"
+                label = "Tumblr"
+                externalId = "myblog.tumblr.com"
+                externalName = "My blog"
+                externalProfilePictureUrl =
+                    "http://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-tumblr-2x.png"
+            }
+            val connection2 = PublicizeConnection().apply {
+                connectionId = 1
+                service = "linkedin"
+                label = "LinkedIn"
+                externalId = "linkedin.com"
+                externalName = "My Profile"
+                externalProfilePictureUrl =
+                    "https://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-linkedin-2x.png"
+            }
+            connections.add(
+                JetpackSocialConnectionData(
+                    postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection1, true),
+                    onConnectionClick = {},
+                )
             )
-        )
-        connections.add(
-            JetpackSocialConnectionData(
-                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection2, false),
-                onConnectionClick = {}
+            connections.add(
+                JetpackSocialConnectionData(
+                    postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection2, false),
+                    onConnectionClick = {}
+                )
             )
-        )
-        EditPostSettingsJetpackSocialConnectionsContainer(
-            jetpackSocialConnectionDataList = connections,
-            shareMessage = "Share message.",
-            isShareMessageEnabled = true,
-            onShareMessageClick = {},
-        )
+            EditPostSettingsJetpackSocialConnectionsContainer(
+                jetpackSocialConnectionDataList = connections,
+                shareMessage = "Share message.",
+                isShareMessageEnabled = true,
+                onShareMessageClick = {},
+            )
+        }
     }
 }
 
@@ -86,42 +90,44 @@ fun EditPostSettingsJetpackSocialContainerWithShareLimitPreview() {
 @Composable
 fun EditPostSettingsJetpackSocialContainerWithoutShareLimitPreview() {
     AppThemeEditor {
-        val connections = mutableListOf<JetpackSocialConnectionData>()
-        val connection1 = PublicizeConnection().apply {
-            connectionId = 0
-            service = "tumblr"
-            label = "Tumblr"
-            externalId = "myblog.tumblr.com"
-            externalName = "My blog"
-            externalProfilePictureUrl =
-                "http://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-tumblr-2x.png"
-        }
-        val connection2 = PublicizeConnection().apply {
-            connectionId = 1
-            service = "linkedin"
-            label = "LinkedIn"
-            externalId = "linkedin.com"
-            externalName = "My Profile"
-            externalProfilePictureUrl =
-                "https://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-linkedin-2x.png"
-        }
-        connections.add(
-            JetpackSocialConnectionData(
-                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection1, true),
-                onConnectionClick = {},
+        Column {
+            val connections = mutableListOf<JetpackSocialConnectionData>()
+            val connection1 = PublicizeConnection().apply {
+                connectionId = 0
+                service = "tumblr"
+                label = "Tumblr"
+                externalId = "myblog.tumblr.com"
+                externalName = "My blog"
+                externalProfilePictureUrl =
+                    "http://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-tumblr-2x.png"
+            }
+            val connection2 = PublicizeConnection().apply {
+                connectionId = 1
+                service = "linkedin"
+                label = "LinkedIn"
+                externalId = "linkedin.com"
+                externalName = "My Profile"
+                externalProfilePictureUrl =
+                    "https://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-linkedin-2x.png"
+            }
+            connections.add(
+                JetpackSocialConnectionData(
+                    postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection1, true),
+                    onConnectionClick = {},
+                )
             )
-        )
-        connections.add(
-            JetpackSocialConnectionData(
-                postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection2, false),
-                onConnectionClick = {}
+            connections.add(
+                JetpackSocialConnectionData(
+                    postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection2, false),
+                    onConnectionClick = {}
+                )
             )
-        )
-        EditPostSettingsJetpackSocialConnectionsContainer(
-            jetpackSocialConnectionDataList = connections,
-            shareMessage = "Share message.",
-            isShareMessageEnabled = true,
-            onShareMessageClick = {},
-        )
+            EditPostSettingsJetpackSocialConnectionsContainer(
+                jetpackSocialConnectionDataList = connections,
+                shareMessage = "Share message.",
+                isShareMessageEnabled = true,
+                onShareMessageClick = {},
+            )
+        }
     }
 }
