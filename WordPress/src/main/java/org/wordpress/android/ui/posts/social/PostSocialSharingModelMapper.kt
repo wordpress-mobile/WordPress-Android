@@ -87,7 +87,7 @@ class PostSocialSharingModelMapper @Inject constructor(
             // No more shares left.
             shareLimit.sharesRemaining == 0 -> true
             // Sharing to some accounts, but not enough shares for all.
-            sharingEnabledConnections.isNotEmpty() && shareLimit.sharesRemaining < connections.size -> true
+            connections.size > sharingEnabledConnections.size && shareLimit.sharesRemaining < connections.size -> true
             // Remaining shares < no. of accounts.
             shareLimit.sharesRemaining < connections.size -> true
             else -> false
