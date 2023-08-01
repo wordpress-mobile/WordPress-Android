@@ -18,8 +18,8 @@ object MissingSplitsUtils {
      */
     fun isMissingSplits(context: Context) = try {
         context.resources.getValue(R.drawable.splash_icon, TypedValue(), true)
-        true
-    } catch (e: Resources.NotFoundException) {
         false
+    } catch (e: Resources.NotFoundException) {
+        true
     }
 }
