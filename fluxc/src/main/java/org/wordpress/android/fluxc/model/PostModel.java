@@ -570,7 +570,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 final Type publicizeSkipConnectionsType = new TypeToken<List<PublicizeSkipConnection>>() {}.getType();
                 final List<PublicizeSkipConnection> list =
                         new Gson().fromJson(mPublicizeSkipConnectionsJson, publicizeSkipConnectionsType);
-                if (list.size() > 0) {
+                if (list != null) {
                     return list;
                 } else {
                     return Collections.emptyList();
