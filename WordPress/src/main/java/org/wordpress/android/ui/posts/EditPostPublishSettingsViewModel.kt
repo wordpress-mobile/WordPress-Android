@@ -320,7 +320,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
                 siteModel = siteModel,
                 url = HIRE_JETPACK_SOCIAL_BASIC_URL.replace(
                     oldValue = HIRE_JETPACK_SOCIAL_BASIC_SITE_PLACEHOLDER,
-                    newValue = siteModel.url,
+                    newValue = siteModel.url.replace(Regex("^(http[s]?://)", RegexOption.IGNORE_CASE), "")
                 ),
             )
         }
