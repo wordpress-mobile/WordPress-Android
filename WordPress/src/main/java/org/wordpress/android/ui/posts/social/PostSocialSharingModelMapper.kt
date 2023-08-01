@@ -20,7 +20,8 @@ class PostSocialSharingModelMapper @Inject constructor(
             val title = mapTitle(connections)
             val description = stringProvider.getString(
                 R.string.jetpack_social_social_shares_remaining,
-                shareLimit.sharesRemaining - connections.filter { it.isSharingEnabled }.size
+                (shareLimit.sharesRemaining - connections.filter { it.isSharingEnabled }.size)
+                    .coerceAtLeast(0)
             )
             val iconModels = mapIconModels(connections)
             val isLowOnShares = mapIsLowOnShares(shareLimit, connections)
