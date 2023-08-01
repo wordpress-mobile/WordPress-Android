@@ -22,6 +22,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
     private val localProvider: LocaleProvider = mock()
     private lateinit var connection1: PostSocialConnection
     private lateinit var connection2: PostSocialConnection
+
     private val classToTest = EditPostPublishSettingsJetpackSocialUiStateMapper(
         stringProvider = stringProvider,
         localeProvider = localProvider,
@@ -48,6 +49,8 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
             iconUrl = "https://i.wordpress.com/wp-content/publicize/assets/publicize-linkedin-2x.png",
             isSharingEnabled = true,
         )
+
+        whenever(localProvider.getAppLocale()).thenReturn(Locale.US)
     }
 
     @Test
@@ -60,10 +63,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         )
         val shareMessage = "Message"
         val subscribeButtonLabel = "SHARE MORE"
-        whenever(stringProvider.getString(R.string.post_settings_jetpack_social_subscribe_share_more))
-            .thenReturn(subscribeButtonLabel)
-        whenever(localProvider.getAppLocale()).thenReturn(Locale.US)
-
+        mockStringResource(R.string.post_settings_jetpack_social_subscribe_share_more, subscribeButtonLabel)
         val allConnections = listOf(connection1, connection2)
         val onConnectProfilesClick: () -> Unit = {}
         val onShareMessageClick: () -> Unit = {}
@@ -112,11 +112,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         )
         val shareMessage = "Message"
         val subscribeButtonLabel = "SHARE MORE"
-        whenever(stringProvider.getString(R.string.post_settings_jetpack_social_subscribe_share_more))
-            .thenReturn(subscribeButtonLabel)
-        whenever(localProvider.getAppLocale())
-            .thenReturn(Locale.US)
-
+        mockStringResource(R.string.post_settings_jetpack_social_subscribe_share_more, subscribeButtonLabel)
         val allConnections = listOf(connection1)
 
         val onConnectProfilesClick: () -> Unit = {}
@@ -142,11 +138,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         val shareLimit = ShareLimit.Disabled
         val shareMessage = "Message"
         val subscribeButtonLabel = "SHARE MORE"
-        whenever(stringProvider.getString(R.string.post_settings_jetpack_social_subscribe_share_more))
-            .thenReturn(subscribeButtonLabel)
-        whenever(localProvider.getAppLocale())
-            .thenReturn(Locale.US)
-
+        mockStringResource(R.string.post_settings_jetpack_social_subscribe_share_more, subscribeButtonLabel)
         val allConnections = listOf(connection2)
 
         val onConnectProfilesClick: () -> Unit = mock()
@@ -183,10 +175,10 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
     @Test
     fun `Should map no connections UI state`() {
         val connectProfilesButtonLabel = "Connect profiles button"
-        whenever(stringProvider.getString(R.string.post_settings_jetpack_social_connect_social_profiles_button))
-            .thenReturn(connectProfilesButtonLabel)
-        whenever(localProvider.getAppLocale())
-            .thenReturn(Locale.US)
+        mockStringResource(
+            R.string.post_settings_jetpack_social_connect_social_profiles_button,
+            connectProfilesButtonLabel
+        )
         val connectProfilesMessage = "Connect profiles message"
         whenever(stringProvider.getString(R.string.post_settings_jetpack_social_connect_social_profiles_message))
             .thenReturn(connectProfilesMessage)
@@ -199,5 +191,9 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
             onConnectProfilesClick = onConnectProfilesClick,
         )
         assertThat(actual).isEqualTo(expected)
+    }
+
+    private fun mockStringResource(stringResId: Int, stringLabel: String) {
+        whenever(stringProvider.getString(stringResId)).thenReturn(stringLabel)
     }
 }
