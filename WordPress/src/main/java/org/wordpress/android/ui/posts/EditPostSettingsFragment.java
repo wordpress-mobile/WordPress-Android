@@ -57,6 +57,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent.OpenEditShareMessage;
@@ -502,9 +503,10 @@ public class EditPostSettingsFragment extends Fragment {
                 ActivityLauncher.viewBlogSharing(requireActivity(), action.getSiteModel());
             } else if (actionEvent instanceof ActionEvent.OpenSubscribeJetpackSocial) {
                 final OpenSubscribeJetpackSocial action = (OpenSubscribeJetpackSocial) actionEvent;
-                ActivityLauncher.openUrlForSite(
-                        requireActivity(), action.getUrl(), action.getSiteModel()
+                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
+                        requireActivity(), action.getUrl()
                 );
+
             }
         });
     }
