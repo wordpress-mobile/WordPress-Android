@@ -506,7 +506,6 @@ public class EditPostSettingsFragment extends Fragment {
                 WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
                         requireActivity(), action.getUrl()
                 );
-
             }
         });
     }
