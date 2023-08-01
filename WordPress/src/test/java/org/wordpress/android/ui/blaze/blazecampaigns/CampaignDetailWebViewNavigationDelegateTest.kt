@@ -15,7 +15,7 @@ class CampaignDetailWebViewNavigationDelegateTest : BaseUnitTest() {
     fun `when advertising campaign url, then web view can navigate`() {
         assertThat(
             buildUrls(
-                "/advertising/dummywpcomsite.wordpress.com/campaigns/12345"
+                "/advertising/campaigns/12345/dummywpcomsite.wordpress.com"
             )
         ).allMatch {
             navigationDelegate.canNavigateTo(it)
@@ -28,7 +28,8 @@ class CampaignDetailWebViewNavigationDelegateTest : BaseUnitTest() {
             buildUrls(
                 "/dummywpcomsite.wordpress.com",
                 "/advertising/dummywpcomsite.wordpress.com/campaigns",
-                "/advertising/dummywpcomsite.wordpress.com"
+                "/advertising/dummywpcomsite.wordpress.com",
+                "/advertising/dummywpcomsite.wordpress.com/campaigns/12345"
             )
         ).noneMatch {
             navigationDelegate.canNavigateTo(it)
