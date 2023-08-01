@@ -75,9 +75,9 @@ class CampaignDetailViewModel @Inject constructor(
         val url = createURL(
             pathComponents = arrayOf(
                 ADVERTISING_PATH,
-                extractAndSanitizeSiteUrl(),
                 CAMPAIGNS_PATH,
-                campaignId.toString()
+                campaignId.toString(),
+                extractAndSanitizeSiteUrl()
             ),
             source = pageSource.trackingName
         )
