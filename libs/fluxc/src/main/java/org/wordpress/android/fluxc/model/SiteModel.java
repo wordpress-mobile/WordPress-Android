@@ -151,6 +151,8 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column
     private String mPlanShortName;
     @Column
+    private String mPlanProductSlug;
+    @Column
     private String mIconUrl;
     @Column
     private boolean mHasFreePlan;
@@ -646,6 +648,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setPlanShortName(String planShortName) {
         mPlanShortName = planShortName;
+    }
+
+    public String getPlanProductSlug() {
+        return mPlanProductSlug;
+    }
+
+    public void setPlanProductSlug(String planProductSlug) {
+        mPlanProductSlug = planProductSlug;
     }
 
     public long getPlanId() {

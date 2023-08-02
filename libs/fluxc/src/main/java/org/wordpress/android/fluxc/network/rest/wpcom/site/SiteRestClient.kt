@@ -1103,6 +1103,7 @@ class SiteRestClient @Inject constructor(
                 }
             }
             site.planShortName = from.plan.product_name_short
+            site.planProductSlug = from.plan.product_slug
             site.hasFreePlan = from.plan.is_free
         }
         if (from.capabilities != null) {
