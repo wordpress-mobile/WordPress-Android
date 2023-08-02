@@ -27,6 +27,7 @@ import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.CalendarEvent
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel
 import org.wordpress.android.ui.posts.social.PostSocialSharingModelMapper
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
 import org.wordpress.android.usecase.social.GetJetpackSocialShareMessageUseCase
 import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
@@ -84,6 +85,9 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
     lateinit var publicizeTableWrapper: PublicizeTableWrapper
 
     @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
     lateinit var editPostRepository: EditPostRepository
     private lateinit var viewModel: EditPostPublishSettingsViewModel
     private lateinit var post: PostModel
@@ -109,6 +113,7 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
             jetpackUiStateMapper,
             postSocialSharingModelMapper,
             publicizeTableWrapper,
+            appPrefsWrapper,
         )
         currentCalendar.set(2019, 6, 6, 10, 20)
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(currentCalendar)
