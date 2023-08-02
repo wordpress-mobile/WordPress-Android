@@ -37,7 +37,7 @@ class CampaignListingUIModelMapperTest : BaseUnitTest() {
         impressions = 1L,
         clicks = 1L,
         budgetCents = 100,
-        startDate = mock(),
+        createdAt = mock(),
         endDate = mock(),
     )
 
@@ -65,7 +65,7 @@ class CampaignListingUIModelMapperTest : BaseUnitTest() {
         impressions = 0,
         clicks = 0,
         budgetCents = 100,
-        startDate = mock(),
+        createdAt = mock(),
         endDate = mock(),
     )
 
