@@ -1689,7 +1689,7 @@ public class AppPrefs {
     }
 
     public static Boolean getShouldShowJetpackSocialNoConnections(final int siteId, final JetpackSocialFlow flow) {
-        return prefs().getBoolean(mapShouldShowJetpackSocialNoConnectionsKey(siteId, flow), false);
+        return prefs().getBoolean(mapShouldShowJetpackSocialNoConnectionsKey(siteId, flow), true);
     }
 
     public static void setShouldShowJetpackSocialNoConnections(final boolean show, final int siteId,
