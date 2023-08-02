@@ -720,20 +720,20 @@ public class PostRestClient extends BaseWPComRestClient {
         if (post.getPublicizeSkipConnectionsJson().length() > 0) {
             final List<PublicizeSkipConnection> publicizeSkipConnections = post.getPublicizeSkipConnectionsList();
             if (publicizeSkipConnections.size() > 0) {
-                Map<String, Object> publicizeSkipConnectionsMetadata = new HashMap<>();
                 for (final PublicizeSkipConnection connection : publicizeSkipConnections) {
-                    if (connection.getKey() != null && !connection.getKey().isEmpty()) {
+                    if (connection.getKey() != null && !connection.getKey().isEmpty()
+                        && !connection.getId().isEmpty()
+                        && connection.getValue() != null && !connection.getValue().isEmpty()) {
+                        final Map<String, Object> publicizeSkipConnectionsMetadata = new HashMap<>();
                         publicizeSkipConnectionsMetadata.put("key", connection.getKey());
-                    }
-                    if (connection.getId() > 0) {
-                        publicizeSkipConnectionsMetadata.put("id", connection.getId());
-                    }
-                    if (connection.getValue() != null && !connection.getValue().isEmpty()) {
+                        if (!connection.getId().equals("0")) {
+                            publicizeSkipConnectionsMetadata.put("id", connection.getId());
+                        }
                         publicizeSkipConnectionsMetadata.put("value", connection.getValue());
+                        publicizeSkipConnectionsMetadata.put("operation", "update");
+                        metadata.add(publicizeSkipConnectionsMetadata);
                     }
                 }
-                publicizeSkipConnectionsMetadata.put("operation", "update");
-                metadata.add(publicizeSkipConnectionsMetadata);
             }
         }
 
