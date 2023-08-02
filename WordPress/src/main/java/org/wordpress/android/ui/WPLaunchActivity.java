@@ -35,9 +35,9 @@ public class WPLaunchActivity extends LocaleAwareActivity {
 
     private void showMissingSplitsDialog() {
         new MaterialAlertDialogBuilder(this)
-                .setTitle(MissingSplitsUtils.DIALOG_TITLE)
-                .setMessage(MissingSplitsUtils.DIALOG_MESSAGE)
-                .setNegativeButton(MissingSplitsUtils.DIALOG_BUTTON, null)
+                .setTitle(R.string.missing_splits_dialog_title)
+                .setMessage(R.string.missing_splits_dialog_message)
+                .setNegativeButton(R.string.missing_splits_dialog_button, null)
                 .setOnDismissListener(dialog -> finish())
                 .show();
     }
