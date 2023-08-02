@@ -352,6 +352,7 @@ kapt {
 }
 
 dependencies {
+    implementation 'androidx.webkit:webkit:1.7.0'
     compileOnly project(path: ':libs:annotations')
     kapt project(':libs:processors')
     implementation (project(path:':libs:networking')) {
@@ -423,6 +424,7 @@ dependencies {
     implementation "androidx.preference:preference:$androidxPreferenceVersion"
     implementation "androidx.work:work-runtime:$androidxWorkManagerVersion"
     implementation "androidx.work:work-runtime-ktx:$androidxWorkManagerVersion"
+    implementation "androidx.webkit:webkit:$androidxWebkitVersion"
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidxLifecycleVersion"
