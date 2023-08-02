@@ -12,7 +12,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.Either
+import org.wordpress.android.Result
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsError
@@ -45,8 +45,8 @@ class FetchCampaignListUseCaseTest: BaseUnitTest() {
 
         val actualResult = fetchCampaignListUseCase.execute(siteModel, page)
 
-        assertThat(actualResult is Either.Left).isTrue
-        assertThat((actualResult as Either.Left).value).isEqualTo(GenericError)
+        assertThat(actualResult is Result.Failure).isTrue
+        assertThat((actualResult as Result.Failure).value).isEqualTo(GenericError)
     }
 
     @Test
@@ -59,8 +59,8 @@ class FetchCampaignListUseCaseTest: BaseUnitTest() {
 
         val actualResult = fetchCampaignListUseCase.execute(siteModel, page)
 
-        assertThat(actualResult is Either.Left).isTrue
-        assertThat((actualResult as Either.Left).value).isEqualTo(NoCampaigns)
+        assertThat(actualResult is Result.Failure).isTrue
+        assertThat((actualResult as Result.Failure).value).isEqualTo(NoCampaigns)
     }
 
     @Test
@@ -74,6 +74,6 @@ class FetchCampaignListUseCaseTest: BaseUnitTest() {
 
         val actualResult = fetchCampaignListUseCase.execute(siteModel, page)
 
-        assertThat(actualResult is Either.Right).isTrue
+        assertThat(actualResult is Result.Success).isTrue
     }
 }

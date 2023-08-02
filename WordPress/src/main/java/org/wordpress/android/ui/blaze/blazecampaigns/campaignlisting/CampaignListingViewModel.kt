@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import org.wordpress.android.Either
+import org.wordpress.android.Result
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
@@ -61,8 +61,8 @@ class CampaignListingViewModel @Inject constructor(
         _uiState.postValue(CampaignListingUiState.Loading)
         launch {
             when (val campaigns = getCampaignListFromDbUseCase.execute(site)) {
-                is Either.Right -> showCampaigns(campaigns.value)
-                is Either.Left -> fetchCampaigns()
+                is Result.Success -> showCampaigns(campaigns.value)
+                is Result.Failure -> fetchCampaigns()
             }
         }
     }
@@ -72,8 +72,8 @@ class CampaignListingViewModel @Inject constructor(
             showNoNetworkError()
         } else {
             when (val campaignResult = fetchCampaignListUseCase.execute(site, page)) {
-                is Either.Right -> showCampaigns(campaignResult.value)
-                is Either.Left -> {
+                is Result.Success -> showCampaigns(campaignResult.value)
+                is Result.Failure -> {
                     when (campaignResult.value) {
                         is GenericError -> showGenericError()
                         is NoCampaigns -> showNoCampaigns()
@@ -124,13 +124,13 @@ class CampaignListingViewModel @Inject constructor(
             showSnackBar(R.string.campaign_listing_page_error_refresh_no_network_available)
         } else {
             when (val campaignResult = fetchCampaignListUseCase.execute(site, page)) {
-                is Either.Right -> {
+                is Result.Success -> {
                     val currentUiState = _uiState.value as CampaignListingUiState.Success
                     isLastPage = campaignResult.value.isEmpty() || campaignResult.value.size < limitPerPage
                     showCampaigns(currentUiState.campaigns + campaignResult.value)
                 }
 
-                is Either.Left -> {
+                is Result.Failure -> {
                     when (campaignResult.value) {
                         is GenericError -> {
                             disableLoadingMore()
@@ -180,13 +180,13 @@ class CampaignListingViewModel @Inject constructor(
                 showSnackBar(R.string.campaign_listing_page_error_refresh_no_network_available)
             } else {
                 when (val campaignResult = fetchCampaignListUseCase.execute(site, page)) {
-                    is Either.Right -> {
+                    is Result.Success -> {
                         _refresh.postValue(false)
                         isLastPage = false
                         showCampaigns(campaignResult.value)
                     }
 
-                    is Either.Left -> {
+                    is Result.Failure -> {
                         when (campaignResult.value) {
                             is GenericError -> {
                                 _refresh.postValue(false)

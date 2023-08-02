@@ -19,7 +19,7 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingUiState
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingViewModel
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignModel
-import org.wordpress.android.Either
+import org.wordpress.android.Result
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.FetchCampaignListUseCase
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.GetCampaignListFromDbUseCase
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.NoCampaigns
@@ -103,7 +103,7 @@ class CampaignListingViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when viewmodel start, then should fetch campaigns`() = runTest {
-        val campaignFetchResult: Either<NoCampaigns, List<CampaignModel>> = Either.Right(mock())
+        val campaignFetchResult: Result<NoCampaigns, List<CampaignModel>> = Result.Success(mock())
         whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(campaignFetchResult)
 
         viewModel.start(CampaignListingPageSource.DASHBOARD_CARD)
@@ -114,7 +114,7 @@ class CampaignListingViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given no campaigns in db + api, when viewmodel start, then should show no campaigns error`() = runTest {
-        val noCampaigns: Either<NoCampaigns, List<CampaignModel>> = Either.Left(NoCampaigns)
+        val noCampaigns: Result<NoCampaigns, List<CampaignModel>> = Result.Failure(NoCampaigns)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(noCampaigns)
@@ -129,7 +129,7 @@ class CampaignListingViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given no campaigns in db + api, when click is invoked on create, then navigate to blaze flow`() = runTest {
-        val noCampaigns: Either<NoCampaigns, List<CampaignModel>> = Either.Left(NoCampaigns)
+        val noCampaigns: Result<NoCampaigns, List<CampaignModel>> = Result.Failure(NoCampaigns)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(noCampaigns)
         whenever(fetchCampaignListUseCase.execute(siteModel, 1)).thenReturn(noCampaigns)
@@ -144,7 +144,7 @@ class CampaignListingViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given campaigns available, when clicked on campaign, then navigate to detail`() = runTest {
-        val campaignFetchResult: Either<NoCampaigns, List<CampaignModel>> = Either.Right(getCampaigns(10))
+        val campaignFetchResult: Result<NoCampaigns, List<CampaignModel>> = Result.Success(getCampaigns(10))
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(campaignFetchResult)
 
@@ -158,7 +158,7 @@ class CampaignListingViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given campaigns available, when clicked on create campaign fab, then navigate to blaze flow`() = runTest {
-        val campaigns: Either<NoCampaigns, List<CampaignModel>> = Either.Right(mock())
+        val campaigns: Result<NoCampaigns, List<CampaignModel>> = Result.Success(mock())
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(campaigns)
 

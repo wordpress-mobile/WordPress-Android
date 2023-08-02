@@ -12,7 +12,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.Either
+import org.wordpress.android.Result
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
@@ -42,8 +42,8 @@ class GetCampaignListFromDbUseCaseTest: BaseUnitTest() {
 
         val actualResult = getCampaignListFromDbUseCase.execute(siteModel)
 
-        assertThat(actualResult is Either.Left).isTrue
-        assertThat((actualResult as Either.Left).value).isEqualTo(NoCampaigns)
+        assertThat(actualResult is Result.Failure).isTrue
+        assertThat((actualResult as Result.Failure).value).isEqualTo(NoCampaigns)
     }
 
     @Test
@@ -54,6 +54,6 @@ class GetCampaignListFromDbUseCaseTest: BaseUnitTest() {
 
         val actualResult = getCampaignListFromDbUseCase.execute(siteModel)
 
-        assertThat(actualResult is Either.Right).isTrue
+        assertThat(actualResult is Result.Success).isTrue
     }
 }
