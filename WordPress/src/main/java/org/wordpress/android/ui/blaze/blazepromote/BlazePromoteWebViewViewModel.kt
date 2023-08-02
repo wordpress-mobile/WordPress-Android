@@ -1,18 +1,18 @@
 package org.wordpress.android.ui.blaze.blazepromote
 
 import android.text.TextUtils
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.WPWebViewActivity.getAuthenticationPostData
 import org.wordpress.android.ui.blaze.BlazeActionEvent
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
@@ -22,13 +22,15 @@ import org.wordpress.android.ui.blaze.BlazeUiState
 import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState.DisabledCancelAction
 import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState.EnabledCancelAction
 import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState.DoneAction
-import org.wordpress.android.ui.blaze.BlazeWebViewContentUiState
 import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.config.BlazeCompletedStepHashConfig
 import org.wordpress.android.util.config.BlazeNonDismissableHashConfig
+import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class BlazePromoteWebViewViewModel @Inject constructor(
@@ -37,54 +39,80 @@ class BlazePromoteWebViewViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteStore: SiteStore,
     private val nonDismissableHashConfig: BlazeNonDismissableHashConfig,
-    private val completedStepHashConfig: BlazeCompletedStepHashConfig
-) : ViewModel() {
+    private val completedStepHashConfig: BlazeCompletedStepHashConfig,
+    private val mapper: BlazePromoteMapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+) : ScopedViewModel(bgDispatcher) {
     private lateinit var blazeFlowSource: BlazeFlowSource
     private lateinit var blazeFlowStep: BlazeFlowStep
+    private var promoteScreen: BlazeUiState.PromoteScreen? = null
 
     private val _actionEvents = Channel<BlazeActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
-    private val _blazeHeaderState =
-        MutableStateFlow<BlazeWebViewHeaderUiState>(EnabledCancelAction())
-    val blazeHeaderState: StateFlow<BlazeWebViewHeaderUiState> = _blazeHeaderState
+    private val _headerUiState = MutableStateFlow<BlazeWebViewHeaderUiState>(EnabledCancelAction())
+    val headerUiState = _headerUiState as StateFlow<BlazeWebViewHeaderUiState>
 
-    private val _model = MutableStateFlow(BlazeWebViewContentUiState())
-    val model: StateFlow<BlazeWebViewContentUiState> = _model
+    private val _uiState = MutableStateFlow<BlazePromoteUiState>(BlazePromoteUiState.Preparing)
+    val uiState = _uiState as StateFlow<BlazePromoteUiState>
 
     fun start(promoteScreen: BlazeUiState.PromoteScreen?, source: BlazeFlowSource) {
         blazeFlowSource = source
+        this.promoteScreen = promoteScreen
+
         blazeFeatureUtils.trackBlazeFlowStarted(source)
-        val url = buildUrl(promoteScreen)
-        blazeFlowStep = extractCurrentStep(url)
-        if (!validateAndPostFinishIfNeeded()) return
-        postScreenState(model.value.copy(url = url, addressToLoad = prepareUrl(url)))
+
+        loadPromote()
     }
 
-    private fun validateAndPostFinishIfNeeded(): Boolean {
+    private fun loadPromote() {
+        postUiState(BlazePromoteUiState.Preparing)
+
+        if (!checkForInternetConnectivityAndPostErrorIfNeeded()) return
+
+        val url = buildUrl(promoteScreen)
+        blazeFlowStep = extractCurrentStep(url)
+
+        if (!validateAndPostErrorIfNeeded()) return
+
+        assembleAndShowPromote(url)
+    }
+
+    private fun checkForInternetConnectivityAndPostErrorIfNeeded(): Boolean {
+        if (networkUtilsWrapper.isNetworkAvailable()) return true
+        postUiState(mapper.toNoNetworkError(this@BlazePromoteWebViewViewModel::loadPromote))
+        return false
+    }
+
+    private fun validateAndPostErrorIfNeeded(): Boolean {
         if (accountStore.account.userName.isNullOrEmpty() || accountStore.accessToken.isNullOrEmpty()) {
             blazeFeatureUtils.trackFlowError(blazeFlowSource, blazeFlowStep)
-            postActionEvent(BlazeActionEvent.FinishActivityWithMessage(R.string.promote_blaze_flow_error))
+            postUiState(mapper.toGenericError(this@BlazePromoteWebViewViewModel::loadPromote))
             return false
         }
         return true
     }
 
+    private fun assembleAndShowPromote(url: String) {
+        val addressToLoad = prepareUrl(url)
+        postUiState(mapper.toLoading(url, addressToLoad))
+    }
+
     private fun buildUrl(promoteScreen: BlazeUiState.PromoteScreen?): String {
         val siteUrl = extractAndSanitizeSiteUrl()
-        if (siteUrl.isEmpty()) {
-            postActionEvent(BlazeActionEvent.FinishActivity)
-        }
 
         val url = promoteScreen?.let {
             when (it) {
                 is BlazeUiState.PromoteScreen.PromotePost -> {
                     BLAZE_CREATION_FLOW_POST.format(siteUrl, it.postUIModel.postId, blazeFlowSource.trackingName)
                 }
+
                 is BlazeUiState.PromoteScreen.Site -> BLAZE_CREATION_FLOW_SITE.format(
                     siteUrl,
                     blazeFlowSource.trackingName
                 )
+
                 is BlazeUiState.PromoteScreen.PromotePage ->
                     BLAZE_CREATION_FLOW_PAGE.format(siteUrl, it.pagesUIModel.pageId, blazeFlowSource.trackingName)
             }
@@ -134,27 +162,27 @@ class BlazePromoteWebViewViewModel @Inject constructor(
 
     private fun postHeaderUiState(state: BlazeWebViewHeaderUiState) {
         viewModelScope.launch {
-            _blazeHeaderState.value = state
+            _headerUiState.value = state
         }
     }
 
-    private fun postScreenState(state: BlazeWebViewContentUiState) {
-        viewModelScope.launch {
-            _model.value = state
+    private fun postUiState(state: BlazePromoteUiState) {
+        launch {
+            _uiState.value = state
         }
     }
 
     private fun postActionEvent(actionEvent: BlazeActionEvent) {
-        viewModelScope.launch {
+        launch {
             _actionEvents.send(actionEvent)
         }
     }
 
     private fun extractAndSanitizeSiteUrl(): String {
-        return selectedSiteRepository.getSelectedSite()?.url?.replace(Regex(HTTP_PATTERN), "")?:""
+        return selectedSiteRepository.getSelectedSite()?.url?.replace(Regex(HTTP_PATTERN), "") ?: ""
     }
 
-    fun updateHeaderActionUiState() {
+    private fun updateHeaderActionUiState() {
         val nonDismissibleStep = nonDismissableHashConfig.getValue<String>()
         val completedStep = completedStepHashConfig.getValue<String>()
 
@@ -167,9 +195,14 @@ class BlazePromoteWebViewViewModel @Inject constructor(
         }
     }
 
+    fun onWebViewPageLoaded() {
+        updateHeaderActionUiState()
+        postUiState(BlazePromoteUiState.Loaded)
+    }
+
     fun onWebViewReceivedError() {
         blazeFeatureUtils.trackFlowError(blazeFlowSource, blazeFlowStep)
-        postActionEvent(BlazeActionEvent.FinishActivityWithMessage(R.string.promote_blaze_flow_error))
+        postUiState(mapper.toGenericError(this@BlazePromoteWebViewViewModel::loadPromote))
     }
 
     fun onRedirectToExternalBrowser(url: String) {
@@ -218,7 +251,7 @@ class BlazePromoteWebViewViewModel @Inject constructor(
         path?.let {
             val advertisingRegex = "^/advertising/[^/]+(/posts)?$".toRegex()
             return advertisingRegex.matches(it)
-        }?: return false
+        } ?: return false
     }
 
 

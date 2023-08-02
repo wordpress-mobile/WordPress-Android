@@ -18,6 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDa
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.LIKES
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.VISITORS
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -356,6 +357,12 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setShouldHideBlazeOverlay(isHidden: Boolean) =
         AppPrefs.setShouldHideBlazeOverlay(isHidden)
+
+    fun getShouldShowJetpackSocialNoConnections(siteId: Int, flow: JetpackSocialFlow): Boolean =
+        AppPrefs.getShouldShowJetpackSocialNoConnections(siteId, flow)
+
+    fun setShouldShowJetpackSocialNoConnections(show: Boolean, siteId: Int, flow: JetpackSocialFlow) =
+        AppPrefs.setShouldShowJetpackSocialNoConnections(show, siteId, flow)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
