@@ -96,7 +96,6 @@ fun EditPostSettingsJetpackSocialNoConnections(
                 fillMaxWidth = false,
             )
         }
-
     }
 }
 
