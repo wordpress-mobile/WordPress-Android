@@ -221,9 +221,6 @@ class EditPostPublishSettingsViewModel @Inject constructor(
                         // Use metadata to verify if this connection was previously disabled by the user
                         skipConnections.firstOrNull { it.connectionId() == connection.connectionId.toString() }
                             ?.let { connection.isSharingEnabled = it.isConnectionEnabled() }
-                        if (index == shareLimitValue.sharesRemaining) {
-                            return@loop
-                        }
                     }
                 }
             }
