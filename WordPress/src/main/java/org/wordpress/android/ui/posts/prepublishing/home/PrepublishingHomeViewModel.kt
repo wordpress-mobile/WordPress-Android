@@ -23,10 +23,12 @@ import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUi
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.posts.trackPrepublishingNudges
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.JetpackSocialFeatureConfig
@@ -46,6 +48,7 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val updateStoryPostTitleUseCase: UpdateStoryPostTitleUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val socialFeatureConfig: JetpackSocialFeatureConfig,
+    private val appPrefsWrapper: AppPrefsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
@@ -123,7 +126,7 @@ class PrepublishingHomeViewModel @Inject constructor(
             ))
 
             if (!editPostRepository.isPage && socialFeatureConfig.isEnabled()) {
-                showSocialItem()
+                showSocialItem(site)
             }
 
             add(getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
@@ -202,7 +205,7 @@ class PrepublishingHomeViewModel @Inject constructor(
         )
     }
 
-    private fun MutableList<PrepublishingHomeItemUiState>.showSocialItem() {
+    private fun MutableList<PrepublishingHomeItemUiState>.showSocialItem(site: SiteModel) {
         // TODO in other PR: use actual data, for now just using fake data
 //        add(
 //            SocialUiState.SocialSharingUiState(
@@ -216,19 +219,35 @@ class PrepublishingHomeViewModel @Inject constructor(
 //                onItemClicked = { Log.d("thomashorta", "hey there!") },
 //            )
 //        )
-        add(
-            SocialUiState.SocialConnectPromptUiState(
-                serviceIcons = listOf(
-                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_tumblr),
-                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_facebook),
-                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_instagram),
-                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_mastodon),
-                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_linkedin),
-                ),
-                onConnectClicked = { onActionClicked(Action.NavigateToSharingSettings) },
-                onDismissClicked = { /* TODO in other PR: hide this item forever */ },
+
+        // TODO in other PR: use this sharedPref to decide if we should show this in the actual data fetching logic
+        if (appPrefsWrapper.getShouldShowJetpackSocialNoConnections(site.id, JetpackSocialFlow.PRE_PUBLISHING)) {
+            add(
+                SocialUiState.SocialConnectPromptUiState(
+                    serviceIcons = listOf(
+                        SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_tumblr),
+                        SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_facebook),
+                        SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_instagram),
+                        SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_mastodon),
+                        SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_linkedin),
+                    ),
+                    onConnectClicked = { onActionClicked(Action.NavigateToSharingSettings) },
+                    onDismissClicked = {
+                        appPrefsWrapper.setShouldShowJetpackSocialNoConnections(
+                            false,
+                            site.id,
+                            JetpackSocialFlow.PRE_PUBLISHING
+                        )
+
+                        _uiState.value?.let { currentUiState ->
+                            _uiState.postValue(
+                                currentUiState.filterNot { it is SocialUiState.SocialConnectPromptUiState }
+                            )
+                        }
+                    },
+                )
             )
-        )
+        }
     }
 
     private fun onStoryTitleChanged(storyTitle: String) {
