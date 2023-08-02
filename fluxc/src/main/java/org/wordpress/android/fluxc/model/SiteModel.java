@@ -254,6 +254,8 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     // Comma-separated list of active features in the site's plan
     @Column
     private String mPlanActiveFeatures;
+    @Column
+    private Boolean mWasEcommerceTrial;
 
     @Override
     public int getId() {
@@ -1078,6 +1080,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setCanBlaze(Boolean mCanBlaze) {
         this.mCanBlaze = mCanBlaze;
+    }
+
+    public Boolean getWasEcommerceTrial() {
+        return mWasEcommerceTrial;
+    }
+
+    public void setWasEcommerceTrial(Boolean wasEcommerceTrial) {
+        this.mWasEcommerceTrial = wasEcommerceTrial;
     }
 
     public boolean isHostedAtWPCom() {
