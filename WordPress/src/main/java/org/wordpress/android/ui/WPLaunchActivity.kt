@@ -40,7 +40,7 @@ class WPLaunchActivity : LocaleAwareActivity() {
     }
 
     private fun launchWPMainActivity() {
-        if (WordPress.wpDB == null) {
+        if (!WordPress.isWordPressDBInitialized()) {
             ToastUtils.showToast(this, R.string.fatal_db_error, ToastUtils.Duration.LONG)
             finish()
             return
