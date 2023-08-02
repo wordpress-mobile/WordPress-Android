@@ -37,10 +37,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.card.UnelevatedCard
 import org.wordpress.android.ui.compose.styles.DashboardCardTypography
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DomainTransferCardModel
 import org.wordpress.android.ui.utils.ListItemInteraction
-import org.wordpress.android.ui.utils.UiString
 
 @Composable
 fun DomainTransferCard(
@@ -56,14 +54,17 @@ fun DomainTransferCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = uiStringText(uiString = domainTransferCardModel.title),
+                        text = stringResource(id = domainTransferCardModel.title),
                         style = DashboardCardTypography.smallTitle,
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    Box {
+                    Box() {
                         var isExpanded by remember { mutableStateOf(false) }
 
-                        IconButton(onClick = { isExpanded = true }) {
+                        IconButton(onClick = {
+                            isExpanded = true
+                            domainTransferCardModel.onMoreMenuClick.click()
+                        }) {
                             Icon(
                                 imageVector = Icons.Rounded.MoreVert,
                                 contentDescription = stringResource(id = R.string.more),
@@ -76,7 +77,7 @@ fun DomainTransferCard(
                             onDismissRequest = { isExpanded = false }) {
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = R.string.domain_transfer_card_menu_hide_this)) },
-                                onClick = { domainTransferCardModel.onClick.click() }
+                                onClick = { domainTransferCardModel.onHideMenuItemClick.click() }
                             )
                         }
                     }
@@ -93,23 +94,23 @@ fun DomainTransferCard(
                     )
                     Text(
                         modifier = Modifier.padding(start = 16.dp, end = 28.dp),
-                        text = uiStringText(uiString = domainTransferCardModel.subtitle),
+                        text = stringResource(id = domainTransferCardModel.subtitle),
                         style = DashboardCardTypography.subTitle
                     )
                 }
 
                 Text(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                    text = uiStringText(uiString = domainTransferCardModel.caption),
+                    text = stringResource(id = domainTransferCardModel.caption),
                     textAlign = TextAlign.Start,
                     style = TextStyle(color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium))
                 )
                 TextButton(
-                    modifier = Modifier.padding(start = 4.dp),
+                    modifier = Modifier.padding(start = 4.dp, bottom = 8.dp),
                     onClick = { domainTransferCardModel.onClick.click() }
                 ) {
                     Text(
-                        text = uiStringText(uiString = domainTransferCardModel.cta),
+                        text = stringResource(id = domainTransferCardModel.cta),
                         style = DashboardCardTypography.footerCTA
                     )
                 }
@@ -131,10 +132,10 @@ internal fun DomainTransferCardPreview() {
         Surface {
             DomainTransferCard(
                 domainTransferCardModel = DomainTransferCardModel(
-                    title = UiString.UiStringRes(R.string.domain_transfer_card_title),
-                    subtitle = UiString.UiStringRes(R.string.domain_transfer_card_sub_title),
-                    caption = UiString.UiStringRes(R.string.domain_transfer_card_caption),
-                    cta = UiString.UiStringRes(R.string.learn_more),
+                    title = R.string.domain_transfer_card_title,
+                    subtitle = R.string.domain_transfer_card_sub_title,
+                    caption = R.string.domain_transfer_card_caption,
+                    cta = R.string.domain_transfer_card_cta,
                     onClick = ListItemInteraction.create { },
                     onHideMenuItemClick = ListItemInteraction.create { },
                     onMoreMenuClick = ListItemInteraction.create { },
