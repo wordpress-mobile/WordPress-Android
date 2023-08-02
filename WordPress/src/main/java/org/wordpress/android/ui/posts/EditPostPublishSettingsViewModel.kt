@@ -164,7 +164,10 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         siteModel?.let {
             _showJetpackSocialContainer.value = true
             val state = if (showNoConnections()) {
-                jetpackUiStateMapper.mapNoConnections(::onJetpackSocialConnectProfilesClick)
+                jetpackUiStateMapper.mapNoConnections(
+                    ::onJetpackSocialConnectProfilesClick,
+                    ::onJetpackSocialNotNowClick
+                )
             } else {
                 mapLoaded()
             }
@@ -277,6 +280,11 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     }
 
     @VisibleForTesting
+    fun onJetpackSocialNotNowClick() {
+        // TODO
+    }
+
+    @VisibleForTesting
     fun onJetpackSocialConnectionClick(connection: PostSocialConnection, enabled: Boolean) {
         siteModel?.let {
             viewModelScope.launch {
@@ -359,6 +367,8 @@ class EditPostPublishSettingsViewModel @Inject constructor(
             val message: String,
             val connectProfilesButtonLabel: String,
             val onConnectProfilesClick: () -> Unit,
+            val notNowButtonLabel: String,
+            val onNotNowClick: () -> Unit,
         ) : JetpackSocialUiState()
     }
 

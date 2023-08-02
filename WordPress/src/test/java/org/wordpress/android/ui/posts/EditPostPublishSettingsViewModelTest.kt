@@ -166,7 +166,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             .thenReturn(true)
 
         classToTest.start(editPostRepository)
-        verify(jetpackUiStateMapper).mapNoConnections(any())
+        verify(jetpackUiStateMapper).mapNoConnections(any(), any())
     }
 
     @Test
@@ -174,8 +174,10 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         val noConnections = JetpackSocialUiState.NoConnections(
             trainOfIconsModels = listOf(),
             message = "message",
-            connectProfilesButtonLabel = "label",
+            connectProfilesButtonLabel = "connect label",
             onConnectProfilesClick = {},
+            notNowButtonLabel = "not now label",
+            onNotNowClick = {},
         )
         mockSiteModel(true)
         mockUserId()
@@ -187,7 +189,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             .thenReturn(listOf(PublicizeService().apply { status = PublicizeService.Status.OK }))
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(true)
-        whenever(jetpackUiStateMapper.mapNoConnections(any()))
+        whenever(jetpackUiStateMapper.mapNoConnections(any(), any()))
             .thenReturn(noConnections)
         classToTest.start(editPostRepository)
         verify(jetpackSocialUiStateObserver).onChanged(noConnections)

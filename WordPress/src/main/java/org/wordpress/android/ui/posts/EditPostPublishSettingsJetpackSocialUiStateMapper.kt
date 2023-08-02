@@ -50,6 +50,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
 
     fun mapNoConnections(
         onConnectProfilesClick: () -> Unit,
+        onNotNowClick: () -> Unit,
     ): NoConnections =
         NoConnections(
             trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
@@ -60,5 +61,9 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
                 R.string.post_settings_jetpack_social_connect_social_profiles_button
             ),
             onConnectProfilesClick = onConnectProfilesClick,
+            notNowButtonLabel = stringProvider.getString(
+                R.string.post_settings_jetpack_social_connect_not_now_button
+            ),
+            onNotNowClick = onNotNowClick,
         )
 }

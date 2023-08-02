@@ -17,13 +17,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.TrainOfIcons
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
-import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
 import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppThemeEditor
@@ -36,6 +33,8 @@ fun EditPostSettingsJetpackSocialNoConnections(
     message: String,
     connectProfilesButtonLabel: String,
     onConnectProfilesCLick: () -> Unit,
+    notNowButtonLabel: String,
+    onNotNowClick: () -> Unit,
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colors.surface,
 ) {
@@ -90,8 +89,8 @@ fun EditPostSettingsJetpackSocialNoConnections(
             Spacer(Modifier.width(Margin.Medium.value))
 
             SecondaryButton(
-                text = stringResource(R.string.button_not_now),
-                onClick = /*onDismissClick*/ {},
+                text = notNowButtonLabel,
+                onClick = onNotNowClick,
                 padding = PaddingValues(0.dp),
                 contentPadding = PaddingValues(0.dp),
                 fillMaxWidth = false,
@@ -110,7 +109,9 @@ fun EditPostSettingsJetpackSocialNoConnectionsPreview() {
             trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
             message = "Increase your traffic by auto-sharing your posts with your friends on social media.",
             connectProfilesButtonLabel = "Connect accounts",
-            onConnectProfilesCLick = {}
+            onConnectProfilesCLick = {},
+            notNowButtonLabel = "Not now",
+            onNotNowClick = {},
         )
     }
 }

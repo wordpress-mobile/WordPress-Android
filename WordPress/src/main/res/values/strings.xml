@@ -1715,6 +1715,7 @@
     <string name="post_settings_jetpack_social_header">Social Sharing</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Increase your traffic by auto-sharing your posts with your friends on social media.</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_button">Connect accounts</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Not now</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">Subscribe to share more</string>
     <string name="post_settings_jetpack_social_share_message_title">Customize the message</string>
     <string name="post_settings_jetpack_social_share_message_description">Customize the message you want to share. If you don\'t add your own text here, we\'ll use the post\'s title as the message.</string>
