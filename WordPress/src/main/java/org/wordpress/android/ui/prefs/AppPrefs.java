@@ -1700,6 +1700,6 @@ public class AppPrefs {
 
     private static String mapShouldShowJetpackSocialNoConnectionsKey(final int siteId, final JetpackSocialFlow flow) {
         return DeletablePrefKey.SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD.name() + "_" + siteId + "_"
-               + flow.getName();
+               + flow.getValue();
     }
 }
