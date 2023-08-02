@@ -144,6 +144,6 @@ class DashboardCardDomainTransferUtils @Inject constructor(
     companion object {
         const val POSITION_INDEX = "position_index"
         private const val CARD_VISIBLE_DEBOUNCE = 500L
-        const val DOMAIN_TRANSFER_PAGE_URL = "https://wordpress.com/setup/domain-transfer/intro"
+        const val DOMAIN_TRANSFER_PAGE_URL = "https://wordpress.com/setup/google-transfer/intro"
     }
 }
