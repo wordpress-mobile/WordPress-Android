@@ -13,6 +13,7 @@ android.useAndroidX=true
 android.enableJetifier=false
 
 android.nonTransitiveRClass=true
+android.nonFinalResIds=false
 
 # For more details on what these properties do visit
 # https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/README.md

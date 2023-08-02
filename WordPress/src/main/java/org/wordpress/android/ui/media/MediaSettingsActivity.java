@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.media;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
@@ -462,6 +463,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     public void onStart() {
         super.onStart();
         registerReceiver(mDownloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
@@ -504,6 +506,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     /*
      * adjust the toolbar so it doesn't overlap the status bar
      */
+    @SuppressLint({"InternalInsetResource", "DiscouragedApi"})
     private void adjustToolbar() {
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {

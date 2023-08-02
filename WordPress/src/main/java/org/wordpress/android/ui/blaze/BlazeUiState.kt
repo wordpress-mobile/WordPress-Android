@@ -4,7 +4,6 @@ import android.os.Parcelable
 import androidx.annotation.StringRes
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 
 sealed class BlazeUiState {
     sealed class PromoteScreen : BlazeUiState() {
@@ -69,15 +68,6 @@ sealed class BlazeWebViewHeaderUiState(
         override val headerActionEnabled: Boolean = true
     ): BlazeWebViewHeaderUiState(headerActionText, headerActionEnabled)
 }
-
-data class BlazeWebViewContentUiState(
-    val enableJavascript: Boolean = true,
-    val enableDomStorage: Boolean = true,
-    val userAgent: String = WordPress.getUserAgent(),
-    val enableChromeClient: Boolean = true,
-    val addressToLoad: String = "",
-    val url: String = ""
-)
 
 enum class BlazeFlowStep(val label: String, val trackingName: String) {
     CAMPAIGNS_LIST("campaigns_list", "campaigns_list"),

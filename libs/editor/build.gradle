@@ -27,6 +27,8 @@ repositories {
 }
 
 android {
+    namespace "org.wordpress.android.editor"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
@@ -41,6 +43,10 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 }
 
