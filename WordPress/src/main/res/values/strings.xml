@@ -4631,6 +4631,17 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="campaign_listing_page_no_campaigns_message_description">You have not created any campaigns yet. Click create to get started.</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Create</string>
     <string name="campaign_listing_page_create_campaign_fab_description" translatable="false"> @string/blaze_campaigns_card_footer_label</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Something went wrong, could not fetch campaigns</string>
+    <string name="campaign_listing_page_error_refresh_no_network_available" translatable="false">@string/no_network_message</string>
+
+    <string name="campaign_listing_page_no_network_error_title" translatable="false">@string/no_network_title</string>
+    <string name="campaign_listing_page_no_network_error_description" translatable="false">@string/no_network_message</string>
+    <string name="campaign_listing_page_no_network_error_button_text" translatable="false">@string/retry</string>
+
+    <string name="campaign_listing_page_error_title">Something went wrong</string>
+    <string name="campaign_listing_page_error_description" translatable="false">@string/request_failed_message</string>
+    <string name="campaign_listing_page_error_button_text" translatable="false">@string/retry</string>
+
 
     <string name="gutenberg_native_insert_audio_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Audio Block</string>
     <string name="gutenberg_native_insert_gallery_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Gallery Block</string>
