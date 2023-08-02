@@ -54,7 +54,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
             ),
             connectProfilesButtonLabel = stringProvider.getString(
                 R.string.post_settings_jetpack_social_connect_social_profiles_button
-            ).uppercase(localeProvider.getAppLocale()),
+            ),
             onConnectProfilesClick = onConnectProfilesClick,
         )
 }

@@ -187,7 +187,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         val expected = JetpackSocialUiState.NoConnections(
             trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
             message = connectProfilesMessage,
-            connectProfilesButtonLabel = "CONNECT PROFILES BUTTON",
+            connectProfilesButtonLabel = "Connect profiles button",
             onConnectProfilesClick = onConnectProfilesClick,
         )
         assertThat(actual).isEqualTo(expected)
