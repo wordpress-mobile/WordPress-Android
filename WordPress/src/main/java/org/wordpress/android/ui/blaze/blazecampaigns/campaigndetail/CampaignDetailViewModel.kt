@@ -1,9 +1,8 @@
 package org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail
 
 import android.text.TextUtils
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.wordpress.android.ui.blaze.BlazeActionEvent
@@ -12,61 +11,78 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.ScopedViewModel
+import javax.inject.Named
 
 @HiltViewModel
 class CampaignDetailViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val siteStore: SiteStore
-) : ViewModel() {
+    private val siteStore: SiteStore,
+    private val mapper: CampaignDetailMapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+) : ScopedViewModel(bgDispatcher) {
     private lateinit var pageSource: CampaignDetailPageSource
     private var campaignId: Int = 0
 
     private val _actionEvents = Channel<BlazeActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
-    private val _model = MutableStateFlow(CampaignDetailUIModel())
-    val model: StateFlow<CampaignDetailUIModel> = _model
+    private val _uiState = MutableStateFlow<CampaignDetailUiState>(CampaignDetailUiState.Preparing)
+    val uiState = _uiState as StateFlow<CampaignDetailUiState>
+
     fun start(campaignId: Int, campaignDetailPageSource: CampaignDetailPageSource) {
         this.campaignId = campaignId
         this.pageSource = campaignDetailPageSource
 
         blazeFeatureUtils.trackCampaignDetailsOpened(campaignDetailPageSource)
 
-        if (!validateAndPostFinishIfNeeded()) return
-        assembleAndPostUiState()
+        loadCampaignDetails()
     }
-    private fun validateAndPostFinishIfNeeded(): Boolean {
+
+    private fun loadCampaignDetails() {
+        postUiState(CampaignDetailUiState.Preparing)
+
+        if (!checkForInternetConnectivityAndPostErrorIfNeeded()) return
+
+        if (!validateAndPostErrorIfNeeded()) return
+
+        assembleAndShowCampaignDetail()
+    }
+
+    private fun validateAndPostErrorIfNeeded(): Boolean {
         if (accountStore.account.userName.isNullOrEmpty() || accountStore.accessToken.isNullOrEmpty()) {
-            postActionEvent(BlazeActionEvent.FinishActivityWithMessage(R.string.blaze_campaign_detail_error))
+            postUiState(mapper.toGenericError(this@CampaignDetailViewModel::loadCampaignDetails))
             return false
         }
         return true
     }
-    private fun assembleAndPostUiState() {
+
+    private fun checkForInternetConnectivityAndPostErrorIfNeeded(): Boolean {
+        if (networkUtilsWrapper.isNetworkAvailable()) return true
+        postUiState(mapper.toNoNetworkError(this@CampaignDetailViewModel::loadCampaignDetails))
+        return false
+    }
+
+    private fun assembleAndShowCampaignDetail() {
         val url = createURL(
             pathComponents = arrayOf(
                 ADVERTISING_PATH,
-                extractAndSanitizeSiteUrl(),
                 CAMPAIGNS_PATH,
-                campaignId.toString()
+                campaignId.toString(),
+                extractAndSanitizeSiteUrl()
             ),
             source = pageSource.trackingName
         )
         val addressToLoad = prepareAddressToLoad(url)
-        postScreenState(
-            model.value.copy(
-                addressToLoad = addressToLoad,
-                url = url,
-                userAgent = blazeFeatureUtils.getUserAgent()
-            )
-        )
+        postUiState(mapper.toPrepared(url, addressToLoad))
     }
     private fun createURL(vararg pathComponents: String, source: String): String {
         val basePath = pathComponents.joinToString("/")
@@ -103,13 +119,14 @@ class CampaignDetailViewModel @Inject constructor(
         )
     }
 
-    private fun postScreenState(state: CampaignDetailUIModel) {
-        viewModelScope.launch {
-            _model.value = state
+    private fun postUiState(state: CampaignDetailUiState) {
+        launch {
+            _uiState.value = state
         }
     }
+
     private fun postActionEvent(actionEvent: BlazeActionEvent) {
-        viewModelScope.launch {
+        launch {
             _actionEvents.send(actionEvent)
         }
     }
@@ -119,11 +136,11 @@ class CampaignDetailViewModel @Inject constructor(
     }
 
     fun onUrlLoaded() {
-        // no op
+        postUiState(CampaignDetailUiState.Loaded)
     }
 
     fun onWebViewError() {
-        postActionEvent(BlazeActionEvent.FinishActivityWithMessage(R.string.blaze_campaign_detail_error))
+        postUiState(mapper.toGenericError(this@CampaignDetailViewModel::loadCampaignDetails))
     }
 
     private fun String.withQueryParam(key: String, value: String) = "$this?$key=$value"
@@ -143,12 +160,3 @@ enum class CampaignDetailPageSource(val trackingName: String) {
     CAMPAIGN_LISTING_PAGE("campaign_listing_page"),
     UNKNOWN("unknown")
 }
-
-data class CampaignDetailUIModel(
-    val enableJavascript: Boolean = true,
-    val enableDomStorage: Boolean = true,
-    val userAgent: String = "",
-    val enableChromeClient: Boolean = true,
-    val url: String = "",
-    val addressToLoad: String = ""
-)
