@@ -44,6 +44,7 @@ public class SiteWPComRestResponse implements Response {
     public static class Plan {
         public String product_id;
         public String product_name_short;
+        public String product_slug;
         public boolean is_free;
         @Nullable public Features features;
     }

@@ -1968,6 +1968,7 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 192 -> migrate(version) {
                     db.execSQL("ALTER TABLE SiteModel ADD WAS_ECOMMERCE_TRIAL BOOLEAN")
+                    db.execSQL("ALTER TABLE SiteModel ADD PLAN_PRODUCT_SLUG TEXT")
                 }
             }
         }
