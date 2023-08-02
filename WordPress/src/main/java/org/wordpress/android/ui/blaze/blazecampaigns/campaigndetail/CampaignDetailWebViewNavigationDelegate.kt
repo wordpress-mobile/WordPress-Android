@@ -7,7 +7,7 @@ object CampaignDetailWebViewNavigationDelegate {
         UrlMatcher(
             "wordpress.com".toRegex(),
             listOf(
-                "/advertising/[a-zA-Z0-9.-]+/campaigns/\\d+\$".toRegex()
+                "/advertising/campaigns/\\d+/[a-zA-Z0-9.-]+\$".toRegex()
             )
         )
     )
