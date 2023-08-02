@@ -228,7 +228,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
                 }
             }
         } else {
-            // With share limit disabled we can enabled all connections but still considering the skip
+            // With share limit disabled we can enable all connections but still considering the skip
             // connections metadata
             connections.map { it.isSharingEnabled = true }
             connections.forEach { connection ->
