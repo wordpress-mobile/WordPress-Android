@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostPrepublishingHomeFragmentBinding
@@ -13,6 +14,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActionClickedListener
+import org.wordpress.android.ui.stats.refresh.utils.WrappingLinearLayoutManager
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
@@ -49,9 +51,7 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(PostPrepublishingHomeFragmentBinding.bind(view)) {
-            actionsRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-            actionsRecyclerView.adapter = PrepublishingHomeAdapter(requireActivity())
-
+            setupRecyclerView()
             initViewModel()
         }
     }
@@ -64,6 +64,30 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
             requireActivity().window.decorView.requestLayout()
         }
         super.onResume()
+    }
+
+    private fun PostPrepublishingHomeFragmentBinding.setupRecyclerView() {
+        val adapter = PrepublishingHomeAdapter(requireActivity())
+        // use WrappingLinearLayoutManager to properly handle recycler with wrap_content height
+        val layoutManager = WrappingLinearLayoutManager(
+            requireContext(),
+            LinearLayoutManager.VERTICAL,
+            false
+        )
+
+        adapter.registerAdapterDataObserver(
+            object : AdapterDataObserver() {
+                override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                    layoutManager.onItemRangeRemoved()
+                }
+            }
+        )
+
+        // since the recycler is anchored at the bottom, this is needed so the animation shrinks the item from the top
+        layoutManager.stackFromEnd = true
+
+        actionsRecyclerView.layoutManager = layoutManager
+        actionsRecyclerView.adapter = adapter
     }
 
     private fun PostPrepublishingHomeFragmentBinding.initViewModel() {
