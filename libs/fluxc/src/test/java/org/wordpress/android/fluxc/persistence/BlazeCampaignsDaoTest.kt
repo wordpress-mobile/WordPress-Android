@@ -17,11 +17,11 @@ import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.store.blaze.BUDGET_CENTS
 import org.wordpress.android.fluxc.store.blaze.CAMPAIGN_ID
 import org.wordpress.android.fluxc.store.blaze.CLICKS
+import org.wordpress.android.fluxc.store.blaze.CREATED_AT
 import org.wordpress.android.fluxc.store.blaze.END_DATE
 import org.wordpress.android.fluxc.store.blaze.IMAGE_URL
 import org.wordpress.android.fluxc.store.blaze.IMPRESSIONS
 import org.wordpress.android.fluxc.store.blaze.PAGE
-import org.wordpress.android.fluxc.store.blaze.START_DATE
 import org.wordpress.android.fluxc.store.blaze.TITLE
 import org.wordpress.android.fluxc.store.blaze.TOTAL_ITEMS
 import org.wordpress.android.fluxc.store.blaze.TOTAL_PAGES
@@ -33,7 +33,7 @@ private val BLAZE_CAMPAIGN_MODEL = BlazeCampaignModel(
     campaignId = CAMPAIGN_ID,
     title = TITLE,
     imageUrl = IMAGE_URL,
-    startDate = BlazeCampaignsUtils.stringToDate(START_DATE),
+    createdAt = BlazeCampaignsUtils.stringToDate(CREATED_AT),
     endDate = BlazeCampaignsUtils.stringToDate(END_DATE),
     uiStatus = UI_STATUS,
     budgetCents = BUDGET_CENTS,
