@@ -12,6 +12,11 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.support.SupportWebViewActivity
+import org.wordpress.android.support.SupportWebViewActivity.ChatCompletionEvent
+import org.wordpress.android.ui.domains.DomainRegistrationActivity
+import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
+import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -32,6 +37,9 @@ class HelpViewModel @Inject constructor(
     private val _onSignOutCompleted = SingleLiveEvent<Unit?>()
     val onSignOutCompleted: LiveData<Unit?> = _onSignOutCompleted
 
+    private val _onSupportChatCompleted = SingleLiveEvent<ChatCompletionEvent>()
+    val onSupportChatCompleted: LiveData<ChatCompletionEvent> = _onSupportChatCompleted
+
     fun signOutWordPress(application: WordPress) {
         launch {
             _showSigningOutDialog.value = Event(true)
@@ -48,5 +56,13 @@ class HelpViewModel @Inject constructor(
         if (!accountStore.hasAccessToken() && siteStore.hasSiteAccessedViaXMLRPC()) {
             dispatcher.dispatch(SiteActionBuilder.newRemoveAllSitesAction())
         }
+    }
+
+    fun finishSupportChat(event: ChatCompletionEvent) {
+        endChatSession(event)
+    }
+
+    private fun endChatSession(event: ChatCompletionEvent) {
+        _onSupportChatCompleted.value = event
     }
 }
