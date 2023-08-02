@@ -29,6 +29,7 @@ import org.wordpress.android.ui.quickstart.QuickStartType;
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.usecase.social.JetpackSocialFlow;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
@@ -194,6 +195,9 @@ public class AppPrefs {
         NOTIFICATIONS_PERMISSION_WARNING_DISMISSED,
         HAS_SAVED_PRIVACY_SETTINGS,
         SHOULD_HIDE_BLAZE_OVERLAY,
+
+        // Should show Jetpack Social no connections UI
+        SHOULD_SHOW_JETPACK_SOCIAL_NO_CONNECTIONS,
     }
 
     /**
@@ -1682,5 +1686,20 @@ public class AppPrefs {
 
     public static void setShouldHideBlazeOverlay(final boolean isHidden) {
         setBoolean(DeletablePrefKey.SHOULD_HIDE_BLAZE_OVERLAY, isHidden);
+    }
+
+    public static Boolean getShouldShowJetpackSocialNoConnections(final int siteId, final JetpackSocialFlow flow) {
+        return prefs().getBoolean(mapShouldShowJetpackSocialNoConnectionsKey(siteId, flow), false);
+    }
+
+    public static void setShouldShowJetpackSocialNoConnections(final boolean show, final int siteId,
+                                                               final JetpackSocialFlow flow) {
+        prefs().edit().putBoolean(mapShouldShowJetpackSocialNoConnectionsKey(siteId, flow), show)
+               .apply();
+    }
+
+    private static String mapShouldShowJetpackSocialNoConnectionsKey(final int siteId, final JetpackSocialFlow flow) {
+        return DeletablePrefKey.SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD.name() + "_" + siteId + "_"
+               + flow.getName();
     }
 }
