@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
@@ -578,6 +579,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
             }
             return Collections.emptyList();
         } catch (final Exception exception) {
+            AppLog.e(T.POSTS, exception);
             return Collections.emptyList();
         }
     }
