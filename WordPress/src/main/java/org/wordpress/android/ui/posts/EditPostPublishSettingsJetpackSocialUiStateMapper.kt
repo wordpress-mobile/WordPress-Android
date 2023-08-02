@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import org.wordpress.android.R
-import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState.Loaded
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState.NoConnections
@@ -16,34 +15,39 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
     private val stringProvider: StringProvider,
     private val localeProvider: LocaleProvider,
 ) {
+    @Suppress("LongParameterList")
     fun mapLoaded(
-        connections: List<PublicizeConnection>,
+        connections: List<PostSocialConnection>,
         shareLimit: ShareLimit,
         onSubscribeClick: () -> Unit,
         shareMessage: String,
         onShareMessageClick: () -> Unit,
+        onConnectionClick: (PostSocialConnection, Boolean) -> Unit,
+        isPostPublished: Boolean,
     ): Loaded =
         Loaded(
-            postSocialConnectionList = PostSocialConnection.fromPublicizeConnectionList(connections),
-            showShareLimitUi = shareLimit is ShareLimit.Enabled,
+            jetpackSocialConnectionDataList = connections.map { connection ->
+                JetpackSocialConnectionData(
+                    postSocialConnection = connection,
+                    onConnectionClick = { onConnectionClick(connection, it) },
+                    enabled = !isPostPublished && if (shareLimit is ShareLimit.Enabled) {
+                        shareLimit.sharesRemaining > 0
+                    } else true,
+                )
+            },
+            showShareLimitUi = !isPostPublished && shareLimit is ShareLimit.Enabled,
+            isShareMessageEnabled = !isPostPublished,
             shareMessage = shareMessage,
             onShareMessageClick = onShareMessageClick,
-            remainingSharesMessage = mapRemainingSharesMessage(shareLimit),
             subscribeButtonLabel = stringProvider.getString(R.string.post_settings_jetpack_social_subscribe_share_more)
                 .uppercase(localeProvider.getAppLocale()),
             onSubscribeClick = onSubscribeClick,
         )
 
-    private fun mapRemainingSharesMessage(shareLimit: ShareLimit) =
-        if (shareLimit is ShareLimit.Enabled) {
-            stringProvider.getString(R.string.jetpack_social_social_shares_remaining, shareLimit.sharesRemaining)
-        } else ""
-
     fun mapNoConnections(
         onConnectProfilesClick: () -> Unit,
     ): NoConnections =
         NoConnections(
-            // TODO
             trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
             message = stringProvider.getString(
                 R.string.post_settings_jetpack_social_connect_social_profiles_message

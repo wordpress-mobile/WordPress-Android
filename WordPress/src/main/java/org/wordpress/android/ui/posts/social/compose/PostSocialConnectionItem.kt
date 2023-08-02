@@ -63,9 +63,9 @@ fun PostSocialConnectionItem(
         )
         Spacer(modifier = Modifier.weight(1f))
         WPSwitch(
-            enabled = enabled,
             checked = connection.isSharingEnabled,
             onCheckedChange = onSharingChange,
+            enabled = enabled,
         )
     }
 }
