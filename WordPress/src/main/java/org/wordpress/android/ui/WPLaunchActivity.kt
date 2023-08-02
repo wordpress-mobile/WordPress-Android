@@ -35,7 +35,7 @@ class WPLaunchActivity : LocaleAwareActivity() {
             .setTitle(R.string.missing_splits_dialog_title)
             .setMessage(R.string.missing_splits_dialog_message)
             .setNegativeButton(R.string.missing_splits_dialog_button, null)
-            .setOnDismissListener { dialog: DialogInterface? -> finish() }
+            .setOnDismissListener { _: DialogInterface? -> finish() }
             .show()
     }
 
