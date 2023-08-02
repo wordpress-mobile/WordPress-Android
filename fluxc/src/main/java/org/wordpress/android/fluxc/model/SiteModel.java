@@ -1097,7 +1097,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     }
 
     public void setWasEcommerceTrial(Boolean wasEcommerceTrial) {
-        this.mWasEcommerceTrial = wasEcommerceTrial;
+        mWasEcommerceTrial = wasEcommerceTrial;
     }
 
     public boolean isHostedAtWPCom() {
