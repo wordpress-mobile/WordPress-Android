@@ -4507,7 +4507,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Dashboard Card Domain Transfer-->
     <string name="domain_transfer_card_title">News</string>
     <string name="domain_transfer_card_sub_title">Reclaim Your Google Domains</string>
-    <string name="domain_transfer_card_caption">Transfer your domains to WordPress.com and we\'ll not only pay the transfer fees for you, but also extend your domain\'s registration for an extra year on top of however much time is left on your Google account.</string>
+    <string name="domain_transfer_card_caption">As you may know, Google Domains has been sold to Squarespace. Transfer your domains to WordPress.com now, and we\'ll pay all transfer fees plus an extra year of your domain registration.</string>
     <string name="domain_transfer_card_cta">Transfer your domains</string>
     <string name="domain_transfer_card_menu_hide_this">Hide this</string>
 
