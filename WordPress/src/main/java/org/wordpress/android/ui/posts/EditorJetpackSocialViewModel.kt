@@ -45,8 +45,6 @@ class EditorJetpackSocialViewModel @Inject constructor(
     private lateinit var siteModel: SiteModel
     private lateinit var editPostRepository: EditPostRepository
 
-    // TODO thomashorta clean up and extract common logic from these live data and functions, so they can be reused in
-    //  different places in the Editor (and maybe even in the dashboard card)
     private val _jetpackSocialContainerVisibility = MutableLiveData<JetpackSocialContainerVisibility>()
     val jetpackSocialContainerVisibility: LiveData<JetpackSocialContainerVisibility> = _jetpackSocialContainerVisibility
 
