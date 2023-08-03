@@ -1699,7 +1699,7 @@ public class AppPrefs {
     }
 
     private static String mapShouldShowJetpackSocialNoConnectionsKey(final int siteId, final JetpackSocialFlow flow) {
-        return DeletablePrefKey.SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD.name() + "_" + siteId + "_"
+        return DeletablePrefKey.SHOULD_SHOW_JETPACK_SOCIAL_NO_CONNECTIONS.name() + "_" + siteId + "_"
                + flow.getValue();
     }
 }
