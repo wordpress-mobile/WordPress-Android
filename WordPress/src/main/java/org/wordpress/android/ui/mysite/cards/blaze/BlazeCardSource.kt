@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.Result
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.FetchCampaignListUseCase
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
@@ -23,8 +24,6 @@ class BlazeCardSource @Inject constructor(
 ) : MySiteRefreshSource<BlazeCardUpdate> {
     override val refresh = MutableLiveData(false)
 
-    private val site = selectedSiteRepository.getSelectedSite()!!
-
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<BlazeCardUpdate> {
         val result = MediatorLiveData<BlazeCardUpdate>()
         refresh()
@@ -39,7 +38,7 @@ class BlazeCardSource @Inject constructor(
             if (selectedSite != null && selectedSite.id == siteLocalId) {
                 if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(selectedSite)) {
                     if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {
-                        fetchCampaigns()
+                        fetchCampaigns(selectedSite)
                     } else {
                         // show blaze promo card if campaign feature is not available
                        showPromoteWithBlazeCard()
@@ -53,19 +52,19 @@ class BlazeCardSource @Inject constructor(
         }
     }
 
-    private suspend fun MediatorLiveData<BlazeCardUpdate>.fetchCampaigns() {
+    private suspend fun MediatorLiveData<BlazeCardUpdate>.fetchCampaigns(site: SiteModel) {
         if (networkUtilsWrapper.isNetworkAvailable().not()) {
-            getMostRecentCampaignFromDb()
+            getMostRecentCampaignFromDb(site)
         } else {
             when (fetchCampaignListUseCase.execute(site = site, page = 1)) {
-                is Result.Success -> getMostRecentCampaignFromDb()
+                is Result.Success -> getMostRecentCampaignFromDb(site)
                 // there are no campaigns or if there is an error , show blaze promo card
                 is Result.Failure -> showPromoteWithBlazeCard()
             }
         }
     }
 
-    private suspend fun MediatorLiveData<BlazeCardUpdate>.getMostRecentCampaignFromDb() {
+    private suspend fun MediatorLiveData<BlazeCardUpdate>.getMostRecentCampaignFromDb(site: SiteModel) {
         when(val result = mostRecentCampaignUseCase.execute(site)) {
             is Result.Success -> postState(BlazeCardUpdate(true, campaign = result.value))
             is Result.Failure -> showPromoteWithBlazeCard()
