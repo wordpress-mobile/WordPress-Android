@@ -114,7 +114,7 @@ class PostSocialSharingModelMapperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should map description correctly`() {
+    fun `Should map description correctly (multiple shares)`() {
         val connections = listOf(
             postSocialConnection(isSharingEnabled = false),
         )
@@ -125,6 +125,25 @@ class PostSocialSharingModelMapperTest : BaseUnitTest() {
             shareLimit = shareLimitEnabled,
         ).description
         assertThat(actual).isEqualTo(description)
+    }
+
+    @Test
+    fun `Should map description correctly (one share)`() {
+        val descriptionOneShare = "One share remaining"
+        val connections = listOf(
+            postSocialConnection(isSharingEnabled = false),
+        )
+        mockTitleSharingToZeroAccounts("")
+        whenever(stringProvider.getString(R.string.jetpack_social_social_shares_remaining_one))
+            .thenReturn(descriptionOneShare)
+        val shareLimit = shareLimitEnabled.copy(
+            sharesRemaining = 1,
+        )
+        val actual = classToTest.map(
+            connections = connections,
+            shareLimit = shareLimit,
+        ).description
+        assertThat(actual).isEqualTo(descriptionOneShare)
     }
 
     @Test
@@ -207,10 +226,11 @@ class PostSocialSharingModelMapperTest : BaseUnitTest() {
         val connections = listOf(
             postSocialConnection(isSharingEnabled = false),
             postSocialConnection(isSharingEnabled = false),
+            postSocialConnection(isSharingEnabled = false),
         )
         mockTitleSharingToZeroAccounts("")
         val shareLimit = shareLimitEnabled.copy(
-            sharesRemaining = 1,
+            sharesRemaining = 2,
         )
         mockDescription(connections, shareLimit)
         val actual = classToTest.map(
