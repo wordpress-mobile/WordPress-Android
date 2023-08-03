@@ -69,7 +69,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
         this.siteModel = siteModel
         this.editPostRepository = editPostRepository
 
-        if (jetpackSocialFeatureConfig.isEnabled()) {
+        if (jetpackSocialFeatureConfig.isEnabled() && !editPostRepository.isPage) {
             launch {
                 shareLimit = getJetpackSocialShareLimitStatusUseCase.execute(siteModel)
                 loadConnections()
