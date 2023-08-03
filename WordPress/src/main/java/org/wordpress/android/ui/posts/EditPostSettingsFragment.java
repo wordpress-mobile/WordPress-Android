@@ -59,10 +59,10 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent;
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent.OpenEditShareMessage;
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent.OpenSocialConnectionsList;
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent.OpenSubscribeJetpackSocial;
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent;
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenEditShareMessage;
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSocialConnectionsList;
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSubscribeJetpackSocial;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
@@ -169,6 +169,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
+    private EditorJetpackSocialViewModel mJetpackSocialViewModel;
 
     private final OnCheckedChangeListener mOnStickySwitchChangeListener =
             (buttonView, isChecked) -> onStickySwitchChanged(isChecked);
@@ -201,6 +202,7 @@ public class EditPostSettingsFragment extends Fragment {
         createEditShareMessageActivityResultLauncher();
     }
 
+    // TODO thomashorta move this to EditPostActivity
     private void createEditShareMessageActivityResultLauncher() {
         mEditShareMessageActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -211,7 +213,7 @@ public class EditPostSettingsFragment extends Fragment {
                             final String shareMessage = result.getData().getStringExtra(
                                     EditJetpackSocialShareMessageActivity.RESULT_UPDATED_SHARE_MESSAGE
                             );
-                            mPublishedViewModel.onJetpackSocialShareMessageChanged(shareMessage);
+                            mJetpackSocialViewModel.onJetpackSocialShareMessageChanged(shareMessage);
                         }
                     }
                 });
@@ -280,7 +282,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Override public void onResume() {
         super.onResume();
-        mPublishedViewModel.onResume();
+        mJetpackSocialViewModel.onResume();
     }
 
     @Override
@@ -462,6 +464,15 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setupJetpackSocialViewModel();
+    }
+
+    private void setupJetpackSocialViewModel() {
+        mJetpackSocialViewModel = new ViewModelProvider(
+                requireActivity(),
+                mViewModelFactory
+        ).get(EditorJetpackSocialViewModel.class);
+
         observeJetpackSocialContainerVisibility();
         observeJetpackSocialUiState();
         observeJetpackSocialPostSocialSharingModel();
@@ -469,7 +480,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void observeJetpackSocialContainerVisibility() {
-        mPublishedViewModel.getShowJetpackSocialContainer().observe(getViewLifecycleOwner(), show -> {
+        mJetpackSocialViewModel.getShowJetpackSocialContainer().observe(getViewLifecycleOwner(), show -> {
             if (show) {
                 mJetpackSocialContainer.setVisibility(View.VISIBLE);
             } else {
@@ -479,19 +490,20 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void observeJetpackSocialUiState() {
-        mPublishedViewModel.getJetpackSocialUiState().observe(getViewLifecycleOwner(), uiState -> {
+        mJetpackSocialViewModel.getJetpackSocialUiState().observe(getViewLifecycleOwner(), uiState -> {
             mJetpackSocialContainerView.setJetpackSocialUiState(uiState);
         });
     }
 
     private void observeJetpackSocialPostSocialSharingModel() {
-        mPublishedViewModel.getPostSocialSharingModel().observe(getViewLifecycleOwner(), model -> {
+        mJetpackSocialViewModel.getPostSocialSharingModel().observe(getViewLifecycleOwner(), model -> {
             mJetpackSocialContainerView.setPostSocialSharingModel(model);
         });
     }
 
+    // TODO thomashorta move this to EditPostActivity
     private void observeActionEvents() {
-        mPublishedViewModel.getActionEvents().observe(getViewLifecycleOwner(), actionEvent -> {
+        mJetpackSocialViewModel.getActionEvents().observe(getViewLifecycleOwner(), actionEvent -> {
             if (actionEvent instanceof ActionEvent.OpenEditShareMessage) {
                 final OpenEditShareMessage action = (OpenEditShareMessage) actionEvent;
                 final Intent intent = EditJetpackSocialShareMessageActivity.createIntent(

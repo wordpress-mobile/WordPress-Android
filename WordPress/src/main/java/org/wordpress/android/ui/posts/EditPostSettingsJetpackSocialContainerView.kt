@@ -8,10 +8,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.AbstractComposeView
 import org.wordpress.android.ui.compose.theme.AppThemeEditor
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState.Loaded
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState.Loading
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState.NoConnections
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.Loaded
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.Loading
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.NoConnections
 import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 
 class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
@@ -41,6 +41,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                     is Loading -> {
                         // no-op
                     }
+
                     is Loaded -> {
                         Column {
                             EditPostSettingsJetpackSocialConnectionsContainer(
@@ -58,6 +59,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                             }
                         }
                     }
+
                     is NoConnections -> {
                         EditPostSettingsJetpackSocialNoConnections(
                             trainOfIconsModels = trainOfIconsModels,

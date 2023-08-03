@@ -12,6 +12,7 @@ import org.wordpress.android.databinding.PostPrepublishingHomeFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActionClickedListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -28,6 +29,7 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingHomeViewModel
+    private lateinit var jetpackSocialViewModel: EditorJetpackSocialViewModel
 
     private var actionClickedListener: PrepublishingActionClickedListener? = null
 
@@ -53,6 +55,7 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
             actionsRecyclerView.adapter = PrepublishingHomeAdapter(requireActivity())
 
             initViewModel()
+            setupJetpackSocialViewModel()
         }
     }
 
@@ -92,6 +95,15 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
         }
 
         viewModel.start(getEditPostRepository(), getSite(), isStoryPost)
+    }
+
+    private fun setupJetpackSocialViewModel() {
+        jetpackSocialViewModel = ViewModelProvider(
+            requireActivity(),
+            viewModelFactory
+        )[EditorJetpackSocialViewModel::class.java]
+
+        // TODO observe live data here for jetpack social
     }
 
     private fun getSite(): SiteModel {

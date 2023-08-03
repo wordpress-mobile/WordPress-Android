@@ -34,6 +34,7 @@ import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 
+// TODO update tests (move to EditorJetpackSocialViewModelTest)
 @ExperimentalCoroutinesApi
 class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     private val resourceProvider: ResourceProvider = mock()
