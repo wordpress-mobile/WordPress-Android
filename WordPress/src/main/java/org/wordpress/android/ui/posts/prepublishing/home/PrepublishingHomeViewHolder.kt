@@ -29,7 +29,8 @@ import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUi
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
 import org.wordpress.android.ui.posts.prepublishing.home.compose.PrepublishingHomeSocialConnectItem
-import org.wordpress.android.ui.posts.prepublishing.home.compose.PrepublishingHomeSocialItem
+import org.wordpress.android.ui.posts.social.compose.PostSocialSharingItem
+import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -133,11 +134,13 @@ sealed class PrepublishingHomeViewHolder(
 
                 AppTheme {
                     (state as? SocialUiState.SocialSharingUiState)?.let { sharingState ->
-                        PrepublishingHomeSocialItem(
-                            title = sharingState.title.asString(),
-                            description = sharingState.description.asString(),
-                            iconModels = serviceIconModels,
-                            isLowOnShares = sharingState.isLowOnShares,
+                        PostSocialSharingItem(
+                            model = PostSocialSharingModel(
+                                title = sharingState.title.asString(),
+                                description = sharingState.description.asString(),
+                                iconModels = serviceIconModels,
+                                isLowOnShares = sharingState.isLowOnShares,
+                            ),
                             backgroundColor = MaterialTheme.colors.surface.withBottomSheetElevation(),
                             modifier = Modifier
                                 .fillMaxWidth()

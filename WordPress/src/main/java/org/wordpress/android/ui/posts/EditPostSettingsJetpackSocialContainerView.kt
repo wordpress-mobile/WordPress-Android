@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -11,17 +12,25 @@ import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSo
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState.Loaded
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState.Loading
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState.NoConnections
+import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 
 class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
 ) : AbstractComposeView(context, attrs) {
     private val uiState: MutableState<JetpackSocialUiState> = mutableStateOf(Loading)
-
     var jetpackSocialUiState: JetpackSocialUiState
         get() = uiState.value
         set(value) {
             if (uiState.value != value) uiState.value = value
+        }
+
+    private val postSocialSharingModelState: MutableState<PostSocialSharingModel> =
+        mutableStateOf(defaultPostSocialSharingModel)
+    var postSocialSharingModel: PostSocialSharingModel
+        get() = postSocialSharingModelState.value
+        set(value) {
+            if (postSocialSharingModelState.value != value) postSocialSharingModelState.value = value
         }
 
     @Composable
@@ -30,18 +39,24 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
             with(uiState.value) {
                 when (this) {
                     is Loading -> {
-                        /*TODO*/
+                        // no-op
                     }
                     is Loaded -> {
-                        EditPostSettingsJetpackSocialContainer(
-                            postSocialConnectionList = postSocialConnectionList,
-                            showShareLimitUi = showShareLimitUi,
-                            shareMessage = shareMessage,
-                            onShareMessageClick = onShareMessageClick,
-                            remainingSharesMessage = remainingSharesMessage,
-                            subscribeButtonLabel = subscribeButtonLabel,
-                            onSubscribeClick = onSubscribeClick,
-                        )
+                        Column {
+                            EditPostSettingsJetpackSocialConnectionsContainer(
+                                jetpackSocialConnectionDataList = jetpackSocialConnectionDataList,
+                                shareMessage = shareMessage,
+                                isShareMessageEnabled = isShareMessageEnabled,
+                                onShareMessageClick = onShareMessageClick,
+                            )
+                            if (showShareLimitUi) {
+                                EditPostSettingsJetpackSocialSharesContainer(
+                                    postSocialSharingModel = postSocialSharingModelState.value,
+                                    subscribeButtonLabel = subscribeButtonLabel,
+                                    onSubscribeClick = onSubscribeClick,
+                                )
+                            }
+                        }
                     }
                     is NoConnections -> {
                         EditPostSettingsJetpackSocialNoConnections(
@@ -56,3 +71,10 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
         }
     }
 }
+
+private val defaultPostSocialSharingModel = PostSocialSharingModel(
+    title = "",
+    iconModels = emptyList(),
+    description = "",
+    isLowOnShares = false,
+)

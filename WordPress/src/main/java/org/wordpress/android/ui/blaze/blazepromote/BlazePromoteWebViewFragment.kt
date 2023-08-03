@@ -40,12 +40,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.isActive
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebChromeClientWithFileChooser
 import org.wordpress.android.ui.WPWebViewActivity.WPCOM_LOGIN_URL
@@ -204,7 +200,6 @@ class BlazePromoteWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
     @Composable
     private fun BlazeWebViewContent(uiState: BlazePromoteUiState) {
         var webView: WebView? by remember { mutableStateOf(null) }
-        val delayScope = CoroutineScope(Dispatchers.Default)
 
         if (uiState is BlazePromoteUiState.Loading) {
             val model = uiState.model
@@ -238,7 +233,6 @@ class BlazePromoteWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
             if (uiState is BlazePromoteUiState.Loading) {
                 LoadingState()
             } else {
-                if (delayScope.isActive) delayScope.cancel()
                 webView?.let { theWebView ->
                     AndroidView(
                         factory = { theWebView },

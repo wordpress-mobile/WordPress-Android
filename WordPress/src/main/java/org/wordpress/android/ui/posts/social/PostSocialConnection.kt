@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts.social
 
 import org.wordpress.android.models.PublicizeConnection
 
+@Suppress("LongParameterList", "DataClassShouldBeImmutable")
 data class PostSocialConnection(
     val connectionId: Int,
     val service: String,
@@ -9,10 +10,10 @@ data class PostSocialConnection(
     val externalId: String,
     val externalName: String,
     val iconUrl: String,
-    val isSharingEnabled: Boolean,
+    var isSharingEnabled: Boolean,
 ) {
     companion object {
-        fun fromPublicizeConnection(connection: PublicizeConnection): PostSocialConnection {
+        fun fromPublicizeConnection(connection: PublicizeConnection, isSharingEnabled: Boolean): PostSocialConnection {
             return PostSocialConnection(
                 connectionId = connection.connectionId,
                 service = connection.service,
@@ -20,11 +21,8 @@ data class PostSocialConnection(
                 externalId = connection.externalId,
                 externalName = connection.externalDisplayName,
                 iconUrl = connection.externalProfilePictureUrl,
-                isSharingEnabled = true, // default to true
+                isSharingEnabled = isSharingEnabled,
             )
         }
-
-        fun fromPublicizeConnectionList(connections: List<PublicizeConnection>): List<PostSocialConnection> =
-            connections.map { fromPublicizeConnection(it) }
     }
 }

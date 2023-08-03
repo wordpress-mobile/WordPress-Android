@@ -82,7 +82,7 @@ fun EditPostSettingsJetpackSocialNoConnectionsPreview() {
         EditPostSettingsJetpackSocialNoConnections(
             trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
             message = "Increase your traffic by auto-sharing your posts with your friends on social media.",
-            connectProfilesButtonLabel = "Connect your social profiles",
+            connectProfilesButtonLabel = "Connect accounts",
             onConnectProfilesCLick = {}
         )
     }

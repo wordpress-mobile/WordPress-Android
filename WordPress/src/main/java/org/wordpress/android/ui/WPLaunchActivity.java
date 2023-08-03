@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.util.MissingSplitsUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -21,8 +24,22 @@ public class WPLaunchActivity extends LocaleAwareActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (MissingSplitsUtils.INSTANCE.isMissingSplits(this)) {
+            // There are missing splits. Display a warning message.
+            showMissingSplitsDialog();
+            return;
+        }
         ProfilingUtils.split("WPLaunchActivity.onCreate");
         launchWPMainActivity();
+    }
+
+    private void showMissingSplitsDialog() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.missing_splits_dialog_title)
+                .setMessage(R.string.missing_splits_dialog_message)
+                .setNegativeButton(R.string.missing_splits_dialog_button, null)
+                .setOnDismissListener(dialog -> finish())
+                .show();
     }
 
     private void launchWPMainActivity() {

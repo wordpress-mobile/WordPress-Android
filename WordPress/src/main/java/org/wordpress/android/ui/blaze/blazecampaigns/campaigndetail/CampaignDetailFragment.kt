@@ -39,12 +39,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.isActive
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
 import androidx.compose.ui.text.style.TextAlign
@@ -188,7 +184,6 @@ class CampaignDetailFragment : Fragment(), CampaignDetailWebViewClient.CampaignD
     @Composable
     private fun CampaignDetailWebView(uiState: CampaignDetailUiState) {
         var webView: WebView? by remember { mutableStateOf(null) }
-        val delayScope = CoroutineScope(Dispatchers.Default)
 
         if (uiState is CampaignDetailUiState.Prepared) {
             val model = uiState.model
@@ -215,7 +210,6 @@ class CampaignDetailFragment : Fragment(), CampaignDetailWebViewClient.CampaignD
             if (uiState is CampaignDetailUiState.Prepared) {
                 LoadingState()
             } else {
-                if (delayScope.isActive) delayScope.cancel()
                 webView?.let { theWebView ->
                     AndroidView(
                         factory = { theWebView },

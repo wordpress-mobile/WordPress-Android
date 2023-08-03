@@ -8,15 +8,18 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.wrappers.PublicizeTableWrapper
 import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.models.PublicizeService
+import org.wordpress.android.ui.publicize.services.PublicizeUpdateServicesV2
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 class GetPublicizeConnectionsForUserUseCaseTest : BaseUnitTest() {
     private val publicizeTableWrapper: PublicizeTableWrapper = mock()
+    private val publicizeUpdateServicesV2: PublicizeUpdateServicesV2 = mock()
 
     private val classToTest = GetPublicizeConnectionsForUserUseCase(
         ioDispatcher = testDispatcher(),
         publicizeTableWrapper = publicizeTableWrapper,
+        publicizeUpdateServicesV2 = publicizeUpdateServicesV2,
     )
 
     @Test
@@ -62,7 +65,11 @@ class GetPublicizeConnectionsForUserUseCaseTest : BaseUnitTest() {
         val expected = listOf(
             publicizeConnection,
         )
-        val actual = classToTest.execute(siteId, currentUserId)
+        val actual = classToTest.execute(
+            siteId = siteId,
+            userId = currentUserId,
+            shouldForceUpdate = false,
+        )
         assertEquals(expected, actual)
     }
 
@@ -100,7 +107,11 @@ class GetPublicizeConnectionsForUserUseCaseTest : BaseUnitTest() {
                 )
             )
         val expected = emptyList<PublicizeConnection>()
-        val actual = classToTest.execute(siteId, currentUserId)
+        val actual = classToTest.execute(
+            siteId = siteId,
+            userId = currentUserId,
+            shouldForceUpdate = false,
+        )
         assertEquals(expected, actual)
     }
 
@@ -130,7 +141,11 @@ class GetPublicizeConnectionsForUserUseCaseTest : BaseUnitTest() {
                 )
             )
         val expected = listOf(publicizeConnection)
-        val actual = classToTest.execute(siteId, currentUserId)
+        val actual = classToTest.execute(
+            siteId = siteId,
+            userId = currentUserId,
+            shouldForceUpdate = false,
+        )
         assertEquals(expected, actual)
     }
 }

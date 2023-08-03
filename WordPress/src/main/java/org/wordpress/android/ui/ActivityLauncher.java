@@ -964,6 +964,20 @@ public class ActivityLauncher {
         }
     }
 
+    public static void openUrlForSite(@NonNull final Context context, @NonNull final String url,
+                                      @NonNull final SiteModel site) {
+        if (!TextUtils.isEmpty(site.getUsername()) && !TextUtils.isEmpty(site.getPassword())) {
+            // Show self-hosted sites as authenticated since we should have the username & password
+            WPWebViewActivity
+                    .openUrlByUsingBlogCredentials(context, site, null, url, new String[]{}, false, true,
+                            false);
+        } else {
+            // Show non-wp.com sites without a password unauthenticated. These would be Jetpack sites that are
+            // connected through REST API.
+            WPWebViewActivity.openURL(context, url, true, site.isPrivateWPComAtomic() ? site.getSiteId() : 0);
+        }
+    }
+
     public static void viewBlogAdmin(Context context, SiteModel site) {
         if (site == null || site.getAdminUrl() == null) {
             ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
