@@ -27,6 +27,7 @@ import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUi
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewModel
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -63,6 +64,9 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     lateinit var socialFeatureConfig: JetpackSocialFeatureConfig
 
     @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
     lateinit var site: SiteModel
 
     @Before
@@ -77,6 +81,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
             updateStoryTitleUseCase,
             getCategoriesUseCase,
             socialFeatureConfig,
+            appPrefsWrapper,
             testDispatcher()
         )
         whenever(
@@ -94,6 +99,9 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(site.name).thenReturn("")
         whenever(storyRepositoryWrapper.getCurrentStoryThumbnailUrl()).thenReturn("")
         whenever(getCategoriesUseCase.getPostCategoriesString(any(), any())).thenReturn("")
+
+        // right now we have hardcoded fake data so better to just test this way for now
+        whenever(appPrefsWrapper.getShouldShowJetpackSocialNoConnections(any(), any())).thenReturn(true)
     }
 
     @Test
