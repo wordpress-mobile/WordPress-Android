@@ -2,12 +2,12 @@ package org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DomainTransferCardModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainTransferBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainTransferCardBuilderParams
 import org.wordpress.android.ui.utils.ListItemInteraction
 import javax.inject.Inject
 
-class DashboardCardDomainTransferBuilder @Inject constructor() {
-    fun build(params: DashboardCardDomainTransferBuilderParams): DomainTransferCardModel? {
+class DomainTransferCardBuilder @Inject constructor() {
+    fun build(params: DomainTransferCardBuilderParams): DomainTransferCardModel? {
         return if (params.isEligible) {
             DomainTransferCardModel(
                 title = R.string.domain_transfer_card_title,

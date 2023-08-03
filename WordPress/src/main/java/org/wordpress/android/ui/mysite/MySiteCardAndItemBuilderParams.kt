@@ -66,7 +66,7 @@ sealed class MySiteCardAndItemBuilderParams {
         val todaysStatsCardBuilderParams: TodaysStatsCardBuilderParams,
         val postCardBuilderParams: PostCardBuilderParams,
         val bloggingPromptCardBuilderParams: BloggingPromptCardBuilderParams,
-        val dashboardCardDomainTransferBuilderParams: DashboardCardDomainTransferBuilderParams,
+        val domainTransferCardBuilderParams: DomainTransferCardBuilderParams,
         val blazeCardBuilderParams: BlazeCardBuilderParams? = null,
         val dashboardCardDomainBuilderParams: DashboardCardDomainBuilderParams,
         val dashboardCardPlansBuilderParams: DashboardCardPlansBuilderParams,
@@ -154,7 +154,7 @@ sealed class MySiteCardAndItemBuilderParams {
         ) : BlazeCardBuilderParams()
     }
 
-    data class DashboardCardDomainTransferBuilderParams(
+    data class DomainTransferCardBuilderParams(
         val isEligible: Boolean = false,
         val onClick: () -> Unit,
         val onHideMenuItemClick: () -> Unit,
