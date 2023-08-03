@@ -9,7 +9,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.publicize.PublicizeServiceIcon
 import org.wordpress.android.usecase.social.ShareLimit
