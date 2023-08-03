@@ -154,9 +154,9 @@ class EditorJetpackSocialViewModel @Inject constructor(
         return jetpackUiStateMapper.mapLoaded(
             connections = connections,
             shareLimit = shareLimit,
+            socialSharingModel = socialSharingModel,
             onSubscribeClick = ::onJetpackSocialSubscribeClick,
             shareMessage = shareMessage,
-            socialSharingModel = socialSharingModel,
             onShareMessageClick = ::onJetpackSocialMessageClick,
             onConnectionClick = ::onJetpackSocialConnectionClick,
             isPostPublished = isPostPublished(),
@@ -323,10 +323,10 @@ class EditorJetpackSocialViewModel @Inject constructor(
 
         data class Loaded(
             val jetpackSocialConnectionDataList: List<JetpackSocialConnectionData>,
+            val socialSharingModel: PostSocialSharingModel,
             val showShareLimitUi: Boolean,
             val isShareMessageEnabled: Boolean,
             val shareMessage: String,
-            val socialSharingModel: PostSocialSharingModel,
             val onShareMessageClick: () -> Unit,
             val subscribeButtonLabel: String,
             val onSubscribeClick: () -> Unit,

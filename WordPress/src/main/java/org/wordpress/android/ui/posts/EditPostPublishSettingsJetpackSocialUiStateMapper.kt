@@ -24,9 +24,9 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
     fun mapLoaded(
         connections: List<PostSocialConnection>,
         shareLimit: ShareLimit,
+        socialSharingModel: PostSocialSharingModel,
         onSubscribeClick: () -> Unit,
         shareMessage: String,
-        socialSharingModel: PostSocialSharingModel,
         onShareMessageClick: () -> Unit,
         onConnectionClick: (PostSocialConnection, Boolean) -> Unit,
         isPostPublished: Boolean,
@@ -44,10 +44,10 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
                     } else true
                 )
             },
+            socialSharingModel = socialSharingModel,
             showShareLimitUi = !isPostPublished && shareLimit is ShareLimit.Enabled,
             isShareMessageEnabled = !isPostPublished,
             shareMessage = shareMessage,
-            socialSharingModel = socialSharingModel,
             onShareMessageClick = onShareMessageClick,
             subscribeButtonLabel = stringProvider.getString(R.string.post_settings_jetpack_social_subscribe_share_more)
                 .uppercase(localeProvider.getAppLocale()),

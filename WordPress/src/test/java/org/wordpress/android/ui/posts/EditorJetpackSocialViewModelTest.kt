@@ -23,6 +23,7 @@ import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocial
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.PostSocialSharingModelMapper
+import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
 import org.wordpress.android.usecase.social.GetJetpackSocialShareMessageUseCase
@@ -82,6 +83,8 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             appPrefsWrapper = appPrefsWrapper,
             bgDispatcher = testDispatcher(),
         )
+
+        whenever(postSocialSharingModelMapper.map(any(), any())).thenReturn(FAKE_SOCIAL_SHARING_MODEL)
 
         classToTest.jetpackSocialContainerVisibility.observeForever(showJetpackSocialContainerObserver)
         classToTest.jetpackSocialUiState.observeForever(jetpackSocialUiStateObserver)
@@ -218,7 +221,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(true)
         classToTest.start(fakeSiteModel(true), editPostRepository)
-        verify(jetpackUiStateMapper).mapLoaded(any(), any(), any(), any(), any(), any(), any())
+        verify(jetpackUiStateMapper).mapLoaded(any(), any(), any(), any(), any(), any(), any(), any())
     }
 
     @Test
@@ -231,13 +234,13 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
                     enabled = false
                 )
             ),
+            socialSharingModel = FAKE_SOCIAL_SHARING_MODEL,
             showShareLimitUi = true,
             isShareMessageEnabled = false,
             shareMessage = "message",
             onShareMessageClick = {},
-            subscribeButtonLabel = "label",
-            onSubscribeClick = {}
-        )
+            subscribeButtonLabel = "label"
+        ) {}
 
         mockUserId()
         whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
@@ -248,7 +251,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn("Message")
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(true)
-        whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any(), any(), any(), any(), any()))
+        whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any(), any(), any(), any(), any(), any()))
             .thenReturn(loaded)
         classToTest.start(fakeSiteModel(true), editPostRepository)
         verify(jetpackSocialUiStateObserver).onChanged(loaded)
@@ -264,13 +267,13 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
                     enabled = false
                 )
             ),
+            socialSharingModel = FAKE_SOCIAL_SHARING_MODEL,
             showShareLimitUi = true,
             isShareMessageEnabled = false,
             shareMessage = "message",
             onShareMessageClick = {},
-            subscribeButtonLabel = "label",
-            onSubscribeClick = {}
-        )
+            subscribeButtonLabel = "label"
+        ) {}
 
         mockUserId()
         whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
@@ -281,7 +284,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn("Message")
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(true)
-        whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any(), any(), any(), any(), any()))
+        whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any(), any(), any(), any(), any(), any()))
             .thenReturn(loaded)
 
         classToTest.start(fakeSiteModel(true), editPostRepository)
@@ -346,6 +349,11 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             externalName = "externalName",
             iconUrl = "iconUrl",
             isSharingEnabled = true
+        )
+        private val FAKE_SOCIAL_SHARING_MODEL = PostSocialSharingModel(
+            title = "Title",
+            description = "Description",
+            iconModels = emptyList(),
         )
     }
 }
