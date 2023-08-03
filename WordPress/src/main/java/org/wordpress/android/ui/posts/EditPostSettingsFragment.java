@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
@@ -57,12 +56,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
-import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent;
-import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenEditShareMessage;
-import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSocialConnectionsList;
-import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSubscribeJetpackSocial;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
@@ -70,7 +64,6 @@ import org.wordpress.android.ui.posts.FeaturedImageHelper.TrackableEvent;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel;
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase;
-import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
 import org.wordpress.android.ui.utils.UiHelpers;
@@ -199,24 +192,6 @@ public class EditPostSettingsFragment extends Fragment {
                 .getStringArray(R.array.post_format_display_names)));
         mPublishedViewModel = new ViewModelProvider(getActivity(), mViewModelFactory)
                 .get(EditPostPublishSettingsViewModel.class);
-        createEditShareMessageActivityResultLauncher();
-    }
-
-    // TODO thomashorta move this to EditPostActivity
-    private void createEditShareMessageActivityResultLauncher() {
-        mEditShareMessageActivityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        final Intent data = result.getData();
-                        if (data != null) {
-                            final String shareMessage = result.getData().getStringExtra(
-                                    EditJetpackSocialShareMessageActivity.RESULT_UPDATED_SHARE_MESSAGE
-                            );
-                            mJetpackSocialViewModel.onJetpackSocialShareMessageChanged(shareMessage);
-                        }
-                    }
-                });
     }
 
     @Override
@@ -476,7 +451,6 @@ public class EditPostSettingsFragment extends Fragment {
         observeJetpackSocialContainerVisibility();
         observeJetpackSocialUiState();
         observeJetpackSocialPostSocialSharingModel();
-        observeActionEvents();
     }
 
     private void observeJetpackSocialContainerVisibility() {
@@ -498,27 +472,6 @@ public class EditPostSettingsFragment extends Fragment {
     private void observeJetpackSocialPostSocialSharingModel() {
         mJetpackSocialViewModel.getPostSocialSharingModel().observe(getViewLifecycleOwner(), model -> {
             mJetpackSocialContainerView.setPostSocialSharingModel(model);
-        });
-    }
-
-    // TODO thomashorta move this to EditPostActivity
-    private void observeActionEvents() {
-        mJetpackSocialViewModel.getActionEvents().observe(getViewLifecycleOwner(), actionEvent -> {
-            if (actionEvent instanceof ActionEvent.OpenEditShareMessage) {
-                final OpenEditShareMessage action = (OpenEditShareMessage) actionEvent;
-                final Intent intent = EditJetpackSocialShareMessageActivity.createIntent(
-                        requireContext(), action.getShareMessage()
-                );
-                mEditShareMessageActivityResultLauncher.launch(intent);
-            } else if (actionEvent instanceof ActionEvent.OpenSocialConnectionsList) {
-                final OpenSocialConnectionsList action = (OpenSocialConnectionsList) actionEvent;
-                ActivityLauncher.viewBlogSharing(requireActivity(), action.getSiteModel());
-            } else if (actionEvent instanceof ActionEvent.OpenSubscribeJetpackSocial) {
-                final OpenSubscribeJetpackSocial action = (OpenSubscribeJetpackSocial) actionEvent;
-                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
-                        requireActivity(), action.getUrl()
-                );
-            }
         });
     }
 

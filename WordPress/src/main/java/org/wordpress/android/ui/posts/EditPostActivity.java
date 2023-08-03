@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -128,6 +130,7 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -142,6 +145,10 @@ import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent;
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenEditShareMessage;
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSocialConnectionsList;
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSubscribeJetpackSocial;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
@@ -172,6 +179,7 @@ import org.wordpress.android.ui.posts.prepublishing.home.usecases.PublishPostImm
 import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
+import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
@@ -441,6 +449,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private boolean mNetworkErrorOnLastMediaFetchAttempt = false;
 
+    private ActivityResultLauncher<Intent> mEditShareMessageActivityResultLauncher;
+
     public static boolean checkToRestart(@NonNull Intent data) {
         return data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR)
                && RestartEditorOptions.valueOf(data.getStringExtra(EditPostActivity.EXTRA_RESTART_EDITOR))
@@ -532,6 +542,22 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    private void createEditShareMessageActivityResultLauncher() {
+        mEditShareMessageActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        final Intent data = result.getData();
+                        if (data != null) {
+                            final String shareMessage = result.getData().getStringExtra(
+                                    EditJetpackSocialShareMessageActivity.RESULT_UPDATED_SHARE_MESSAGE
+                            );
+                            mEditorJetpackSocialViewModel.onJetpackSocialShareMessageChanged(shareMessage);
+                        }
+                    }
+                });
+    }
+
     @Override @SuppressWarnings("checkstyle:MethodLength")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -553,6 +579,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mEditorJetpackSocialViewModel = new ViewModelProvider(this, mViewModelFactory)
                 .get(EditorJetpackSocialViewModel.class);
         setContentView(R.layout.new_edit_post_activity);
+
+        createEditShareMessageActivityResultLauncher();
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -987,6 +1015,23 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     });
                 return null;
             });
+        });
+        mEditorJetpackSocialViewModel.getActionEvents().observe(this, actionEvent -> {
+            if (actionEvent instanceof ActionEvent.OpenEditShareMessage) {
+                final OpenEditShareMessage action = (OpenEditShareMessage) actionEvent;
+                final Intent intent = EditJetpackSocialShareMessageActivity.createIntent(
+                        this, action.getShareMessage()
+                );
+                mEditShareMessageActivityResultLauncher.launch(intent);
+            } else if (actionEvent instanceof ActionEvent.OpenSocialConnectionsList) {
+                final OpenSocialConnectionsList action = (OpenSocialConnectionsList) actionEvent;
+                ActivityLauncher.viewBlogSharing(this, action.getSiteModel());
+            } else if (actionEvent instanceof ActionEvent.OpenSubscribeJetpackSocial) {
+                final OpenSubscribeJetpackSocial action = (OpenSubscribeJetpackSocial) actionEvent;
+                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
+                        this, action.getUrl()
+                );
+            }
         });
     }
 
