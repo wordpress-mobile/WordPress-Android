@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 193
+        return 194
     }
 
     override fun getDbName(): String {
@@ -1967,6 +1967,10 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCRevenueStatsModel ADD RANGE_ID INTEGER")
                 }
                 192 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD WAS_ECOMMERCE_TRIAL BOOLEAN")
+                    db.execSQL("ALTER TABLE SiteModel ADD PLAN_PRODUCT_SLUG TEXT")
+                }
+                193 -> migrate(version) {
                     db.execSQL("ALTER TABLE PostModel ADD PUBLICIZE_SKIP_CONNECTIONS_JSON TEXT")
                 }
             }
