@@ -432,6 +432,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
     private EditorBloggingPromptsViewModel mEditorBloggingPromptsViewModel;
+    private EditorJetpackSocialViewModel mEditorJetpackSocialViewModel;
 
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
@@ -547,8 +548,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mDispatcher.register(this);
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorePostViewModel.class);
         mStorageUtilsViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorageUtilsViewModel.class);
-        mEditorBloggingPromptsViewModel =
-                new ViewModelProvider(this, mViewModelFactory).get(EditorBloggingPromptsViewModel.class);
+        mEditorBloggingPromptsViewModel = new ViewModelProvider(this, mViewModelFactory)
+                .get(EditorBloggingPromptsViewModel.class);
+        mEditorJetpackSocialViewModel = new ViewModelProvider(this, mViewModelFactory)
+                .get(EditorJetpackSocialViewModel.class);
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -786,6 +789,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // The check on savedInstanceState should allow to show the dialog only on first start
         // (even in cases when the VM could be re-created like when activity is destroyed in the background)
         mStorageUtilsViewModel.start(savedInstanceState == null);
+
+        mEditorJetpackSocialViewModel.start(mSite, mEditPostRepository);
     }
 
     private void customizeToolbar() {
