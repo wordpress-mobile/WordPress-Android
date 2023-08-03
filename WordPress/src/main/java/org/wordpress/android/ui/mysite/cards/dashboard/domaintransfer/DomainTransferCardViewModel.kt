@@ -6,7 +6,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainTransferCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -18,7 +17,6 @@ import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
 class DomainTransferCardViewModel @Inject constructor(
-    private val selectedSiteRepository: SelectedSiteRepository,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
@@ -40,12 +38,12 @@ class DomainTransferCardViewModel @Inject constructor(
         return DomainTransferCardBuilderParams(
             isEligible = shouldShowCard(site),
             onClick = { trackCardTapped(siteSelected) },
-            onHideMenuItemClick = { trackCardHiddenByUser(siteSelected) },
+            onHideMenuItemClick = { trackCardHiddenByUser(site, siteSelected) },
             onMoreMenuClick = { trackCardMoreMenuTapped(siteSelected) }
         )
     }
 
-    fun shouldShowCard(
+    private fun shouldShowCard(
         siteModel: SiteModel,
     ): Boolean {
         return buildConfigWrapper.isJetpackApp &&
@@ -84,14 +82,12 @@ class DomainTransferCardViewModel @Inject constructor(
             mapOf(POSITION_INDEX to positionIndex(siteSelected))
         )
     }
-    private fun trackCardHiddenByUser(siteSelected: SiteSelected?) {
+    private fun trackCardHiddenByUser(site: SiteModel, siteSelected: SiteSelected?) {
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.DASHBOARD_CARD_DOMAIN_TRANSFER_HIDDEN,
             mapOf(POSITION_INDEX to positionIndex(siteSelected))
         )
-        selectedSiteRepository.getSelectedSite()?.let {
-            appPrefsWrapper.setShouldHideDashboardDomainTransferCard(it.siteId, true)
-        }
+        appPrefsWrapper.setShouldHideDashboardDomainTransferCard(site.siteId, true)
         _refresh.value = Event(true)
     }
 

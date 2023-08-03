@@ -7,8 +7,8 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import javax.inject.Inject
 
 class DomainTransferCardBuilder @Inject constructor() {
-    fun build(params: DomainTransferCardBuilderParams): DomainTransferCardModel? {
-        return if (params.isEligible) {
+    fun build(params: DomainTransferCardBuilderParams?): DomainTransferCardModel? {
+        return if (params?.isEligible == true) {
             DomainTransferCardModel(
                 title = R.string.domain_transfer_card_title,
                 subtitle = R.string.domain_transfer_card_sub_title,

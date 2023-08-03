@@ -66,7 +66,7 @@ sealed class MySiteCardAndItemBuilderParams {
         val todaysStatsCardBuilderParams: TodaysStatsCardBuilderParams,
         val postCardBuilderParams: PostCardBuilderParams,
         val bloggingPromptCardBuilderParams: BloggingPromptCardBuilderParams,
-        val domainTransferCardBuilderParams: DomainTransferCardBuilderParams,
+        val domainTransferCardBuilderParams: DomainTransferCardBuilderParams? = null,
         val blazeCardBuilderParams: BlazeCardBuilderParams? = null,
         val dashboardCardDomainBuilderParams: DashboardCardDomainBuilderParams,
         val dashboardCardPlansBuilderParams: DashboardCardPlansBuilderParams,
