@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.datasets.wrappers.PublicizeTableWrapper
+import org.wordpress.android.fluxc.model.PublicizeSkipConnection
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
@@ -27,6 +28,7 @@ import org.wordpress.android.usecase.social.ShareLimit
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 import org.wordpress.android.util.extensions.doesNotContain
+import org.wordpress.android.util.extensions.updatePublicizeSkipConnections
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -199,25 +201,56 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         connections.isEmpty()
                 && publicizeTableWrapper.getServiceList().any { it.status != PublicizeService.Status.UNSUPPORTED }
 
-    private fun isPostPublished(): Boolean =
-        editPostRepository?.getPost()?.status?.let { post ->
-            post == PostStatus.PUBLISHED.toString()
-        } ?: false
-
     private fun updateInitialConnectionListSharingStatus() {
         if (isPostPublished()) {
             connections.map { it.isSharingEnabled = false }
+            return
+        }
+        val shareLimitValue = shareLimit
+        val skipConnections = postPublicizeSkipConnections()
+        if (shareLimitValue is ShareLimit.Enabled) {
+            // If shares remaining < number of connections, all connections are unchecked by default
+            updateInitialConnectionListShareLimitEnabled(shareLimitValue, skipConnections)
         } else {
-            // TODO refactor considering connection skip metadata
-            with(shareLimit) {
-                if (this is ShareLimit.Enabled) {
-                    connections.take(this.sharesRemaining).map {
-                        it.isSharingEnabled = true
-                    }
-                }
+            updateInitialConnectionListShareLimitDisabled(skipConnections)
+        }
+    }
+
+    private fun updateInitialConnectionListShareLimitEnabled(
+        shareLimitValue: ShareLimit.Enabled, skipConnections: List<PublicizeSkipConnection>
+    ) {
+        if (shareLimitValue.sharesRemaining < connections.size) {
+            connections.map { it.isSharingEnabled = false }
+        } else {
+            connections.take(shareLimitValue.sharesRemaining).map {
+                it.isSharingEnabled = true
+            }
+            connections.forEach { connection ->
+                // Use metadata to verify if this connection was previously disabled by the user
+                skipConnections.firstOrNull { it.connectionId() == connection.connectionId.toString() }
+                    ?.let { connection.isSharingEnabled = it.isConnectionEnabled() }
             }
         }
     }
+
+    private fun updateInitialConnectionListShareLimitDisabled(skipConnections: List<PublicizeSkipConnection>) {
+        // With share limit disabled we can enable all connections but still considering the skip
+        // connections metadata
+        connections.map { it.isSharingEnabled = true }
+        connections.forEach { connection ->
+            // Use metadata to verify if this connection was previously disabled by the user
+            skipConnections.firstOrNull { it.connectionId() == connection.connectionId.toString() }
+                ?.let { connection.isSharingEnabled = it.isConnectionEnabled() }
+        }
+    }
+
+    private fun postPublicizeSkipConnections(): List<PublicizeSkipConnection> =
+        editPostRepository?.getPost()?.publicizeSkipConnectionsList ?: emptyList()
+
+    private fun isPostPublished(): Boolean =
+        editPostRepository?.getPost()?.status?.let { status ->
+            status == PostStatus.PUBLISHED.toString()
+        } ?: false
 
     // This fetches authors page by page and combine the result in fetchedAuthors.
     private fun fetchAuthors(site: SiteModel) {
@@ -250,15 +283,29 @@ class EditPostPublishSettingsViewModel @Inject constructor(
 
     @VisibleForTesting
     fun onJetpackSocialConnectionClick(connection: PostSocialConnection, enabled: Boolean) {
-        // TODO update selected connections using post metadata
         siteModel?.let {
             viewModelScope.launch {
+                // Update UI
                 connections.firstOrNull { it.connectionId == connection.connectionId }?.let {
                     it.isSharingEnabled = enabled
                 }
                 _jetpackSocialUiState.postValue(mapLoaded())
                 _postSocialSharingModel.value =
                     postSocialSharingModelMapper.map(connections, shareLimit)
+                // Update local post
+                editPostRepository?.updateAsync({ postModel ->
+                    val connectionId = connection.connectionId.toString()
+                    with(postModel.publicizeSkipConnectionsList.toMutableList()) {
+                        firstOrNull { it.connectionId() == connectionId }?.updateValue(enabled)
+                            ?: run {
+                                // Connection wasn't part of skip connections before, so we must add it
+                                // with the correct value
+                                add(PublicizeSkipConnection.createNew(connectionId, enabled))
+                            }
+                        postModel.updatePublicizeSkipConnections(this)
+                    }
+                    true
+                })
             }
         }
     }
