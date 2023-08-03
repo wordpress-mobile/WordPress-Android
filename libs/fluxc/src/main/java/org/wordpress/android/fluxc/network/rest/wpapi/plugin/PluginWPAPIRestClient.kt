@@ -27,7 +27,7 @@ class PluginWPAPIRestClient @Inject constructor(
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
     suspend fun fetchPlugins(
         site: SiteModel,
-        enableCaching: Boolean = true
+        enableCaching: Boolean = false
     ): WPApiPluginsPayload<List<SitePluginModel>> {
         val url = buildUrl(site)
         val type = object : TypeToken<List<PluginResponseModel>>() {}.type
