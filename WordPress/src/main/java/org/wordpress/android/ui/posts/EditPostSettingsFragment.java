@@ -480,8 +480,8 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void observeJetpackSocialContainerVisibility() {
-        mJetpackSocialViewModel.getShowJetpackSocialContainer().observe(getViewLifecycleOwner(), show -> {
-            if (show) {
+        mJetpackSocialViewModel.getJetpackSocialContainerVisibility().observe(getViewLifecycleOwner(), visibility -> {
+            if (visibility.getShowInPostSettings()) {
                 mJetpackSocialContainer.setVisibility(View.VISIBLE);
             } else {
                 mJetpackSocialContainer.setVisibility(View.GONE);

@@ -47,8 +47,8 @@ class EditorJetpackSocialViewModel @Inject constructor(
 
     // TODO thomashorta clean up and extract common logic from these live data and functions, so they can be reused in
     //  different places in the Editor (and maybe even in the dashboard card)
-    private val _showJetpackSocialContainer = MutableLiveData<Boolean>()
-    val showJetpackSocialContainer: LiveData<Boolean> = _showJetpackSocialContainer
+    private val _jetpackSocialContainerVisibility = MutableLiveData<JetpackSocialContainerVisibility>()
+    val jetpackSocialContainerVisibility: LiveData<JetpackSocialContainerVisibility> = _jetpackSocialContainerVisibility
 
     private val _jetpackSocialUiState = MutableLiveData<JetpackSocialUiState>()
     val jetpackSocialUiState: LiveData<JetpackSocialUiState> = _jetpackSocialUiState
@@ -78,7 +78,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
                 loadJetpackSocialIfSupported()
             }
         } else {
-            _showJetpackSocialContainer.value = false
+            _jetpackSocialContainerVisibility.value = JetpackSocialContainerVisibility.ALL_HIDDEN
         }
     }
 
@@ -103,7 +103,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
             PostSocialConnection.fromPublicizeConnection(connection, false)
         })
         updateInitialConnectionListSharingStatus()
-        _postSocialSharingModel.value = postSocialSharingModelMapper.map(connections, shareLimit)
+        _postSocialSharingModel.postValue(postSocialSharingModelMapper.map(connections, shareLimit))
     }
 
     private suspend fun updateConnections() {
@@ -131,27 +131,23 @@ class EditorJetpackSocialViewModel @Inject constructor(
     private suspend fun loadJetpackSocialIfSupported() {
         val showJetpackSocial = jetpackSocialFeatureConfig.isEnabled() && siteModel.supportsPublicize()
         if (!showJetpackSocial) {
-            _showJetpackSocialContainer.value = false
+            _jetpackSocialContainerVisibility.postValue(JetpackSocialContainerVisibility.ALL_HIDDEN)
             return
         }
 
         if (showNoConnections()) {
-            val shouldShowJetpackSocialNoConnections =
-                appPrefsWrapper.getShouldShowJetpackSocialNoConnections(siteModel.id, JetpackSocialFlow.POST_SETTINGS)
             // If user previously dismissed the no connections container by tapping the "Not now" button,
             // we should hide the container.
-            if (shouldShowJetpackSocialNoConnections) {
-                _showJetpackSocialContainer.value = true
-                val state = jetpackUiStateMapper.mapNoConnections(
+            _jetpackSocialContainerVisibility.postValue(getJetpackSocialContainerVisibilityFromPrefs())
+
+            _jetpackSocialUiState.postValue(
+                jetpackUiStateMapper.mapNoConnections(
                     ::onJetpackSocialConnectProfilesClick,
                     ::onJetpackSocialNotNowClick
                 )
-                _jetpackSocialUiState.postValue(state)
-            } else {
-                _showJetpackSocialContainer.value = false
-            }
+            )
         } else {
-            _showJetpackSocialContainer.value = true
+            _jetpackSocialContainerVisibility.postValue(JetpackSocialContainerVisibility.ALL_VISIBLE)
             _jetpackSocialUiState.postValue(mapLoaded())
         }
     }
@@ -219,6 +215,19 @@ class EditorJetpackSocialViewModel @Inject constructor(
         }
     }
 
+    private fun getJetpackSocialContainerVisibilityFromPrefs(): JetpackSocialContainerVisibility {
+        return JetpackSocialContainerVisibility(
+            showInPrepublishingSheet = appPrefsWrapper.getShouldShowJetpackSocialNoConnections(
+                siteModel.id,
+                JetpackSocialFlow.PRE_PUBLISHING
+            ),
+            showInPostSettings = appPrefsWrapper.getShouldShowJetpackSocialNoConnections(
+                siteModel.id,
+                JetpackSocialFlow.POST_SETTINGS
+            )
+        )
+    }
+
     private fun postPublicizeSkipConnections(): List<PublicizeSkipConnection> =
         currentPost?.publicizeSkipConnectionsList ?: emptyList()
 
@@ -229,15 +238,13 @@ class EditorJetpackSocialViewModel @Inject constructor(
 
     @VisibleForTesting
     fun onJetpackSocialConnectProfilesClick() {
-        _actionEvents.value = ActionEvent.OpenSocialConnectionsList(
-            siteModel = siteModel
-        )
+        _actionEvents.value = ActionEvent.OpenSocialConnectionsList(siteModel = siteModel)
     }
 
     @VisibleForTesting
-    fun onJetpackSocialNotNowClick() {
-        appPrefsWrapper.setShouldShowJetpackSocialNoConnections(false, siteModel.id, JetpackSocialFlow.POST_SETTINGS)
-        _showJetpackSocialContainer.value = false
+    fun onJetpackSocialNotNowClick(jetpackSocialFlow: JetpackSocialFlow) {
+        appPrefsWrapper.setShouldShowJetpackSocialNoConnections(false, siteModel.id, jetpackSocialFlow)
+        _jetpackSocialContainerVisibility.value = getJetpackSocialContainerVisibilityFromPrefs()
     }
 
     @VisibleForTesting
@@ -248,8 +255,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
                 it.isSharingEnabled = enabled
             }
             _jetpackSocialUiState.postValue(mapLoaded())
-            _postSocialSharingModel.value =
-                postSocialSharingModelMapper.map(connections, shareLimit)
+            _postSocialSharingModel.postValue(postSocialSharingModelMapper.map(connections, shareLimit))
             // Update local post
             editPostRepository.updateAsync({ postModel ->
                 val connectionId = connection.connectionId.toString()
@@ -293,10 +299,27 @@ class EditorJetpackSocialViewModel @Inject constructor(
                 postModel.setAutoShareMessage(shareMessage)
                 true
             })
-            _jetpackSocialUiState.value = currentState.copy(
-                shareMessage = shareMessage
-            )
+            _jetpackSocialUiState.value = currentState.copy(shareMessage = shareMessage)
             jetpackSocialShareMessage = shareMessage
+        }
+    }
+
+    data class JetpackSocialContainerVisibility(
+        val showInPrepublishingSheet: Boolean,
+        val showInPostSettings: Boolean,
+    ) {
+        companion object {
+            @VisibleForTesting
+            val ALL_HIDDEN = JetpackSocialContainerVisibility(
+                showInPrepublishingSheet = false,
+                showInPostSettings = false,
+            )
+
+            @VisibleForTesting
+            val ALL_VISIBLE = JetpackSocialContainerVisibility(
+                showInPrepublishingSheet = true,
+                showInPostSettings = true,
+            )
         }
     }
 
@@ -319,7 +342,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
             val connectProfilesButtonLabel: String,
             val onConnectProfilesClick: () -> Unit,
             val notNowButtonLabel: String,
-            val onNotNowClick: () -> Unit,
+            val onNotNowClick: (JetpackSocialFlow) -> Unit,
         ) : JetpackSocialUiState()
     }
 

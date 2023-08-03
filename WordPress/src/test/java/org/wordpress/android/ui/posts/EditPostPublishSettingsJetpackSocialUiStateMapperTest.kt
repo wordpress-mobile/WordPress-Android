@@ -12,6 +12,7 @@ import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.publicize.PublicizeServiceIcon
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 import org.wordpress.android.usecase.social.ShareLimit
 import org.wordpress.android.util.LocaleProvider
 import org.wordpress.android.util.StringProvider
@@ -185,7 +186,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         whenever(stringProvider.getString(R.string.post_settings_jetpack_social_connect_not_now_button))
             .thenReturn(connectAccountsNotNowButtonLabel)
         val onConnectProfilesClick: () -> Unit = mock()
-        val onNotNowClick: () -> Unit = mock()
+        val onNotNowClick: (JetpackSocialFlow) -> Unit = mock()
         val actual = classToTest.mapNoConnections(onConnectProfilesClick, onNotNowClick)
         val expected = JetpackSocialUiState.NoConnections(
             trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },

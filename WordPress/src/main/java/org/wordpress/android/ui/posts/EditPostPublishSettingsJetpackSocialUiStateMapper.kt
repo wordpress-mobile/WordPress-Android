@@ -6,6 +6,7 @@ import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocial
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.NoConnections
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.publicize.PublicizeServiceIcon
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 import org.wordpress.android.usecase.social.ShareLimit
 import org.wordpress.android.util.LocaleProvider
 import org.wordpress.android.util.StringProvider
@@ -50,7 +51,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
 
     fun mapNoConnections(
         onConnectProfilesClick: () -> Unit,
-        onNotNowClick: () -> Unit,
+        onNotNowClick: (JetpackSocialFlow) -> Unit,
     ): NoConnections =
         NoConnections(
             trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },

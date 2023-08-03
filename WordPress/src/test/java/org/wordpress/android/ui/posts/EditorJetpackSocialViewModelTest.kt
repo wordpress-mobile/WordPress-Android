@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.models.PublicizeService
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialContainerVisibility
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.PostSocialSharingModelMapper
@@ -61,7 +62,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var editPostRepository: EditPostRepository
 
-    private val showJetpackSocialContainerObserver: Observer<Boolean> = mock()
+    private val showJetpackSocialContainerObserver: Observer<JetpackSocialContainerVisibility> = mock()
     private val jetpackSocialUiStateObserver: Observer<JetpackSocialUiState> = mock()
     private val actionEventsObserver: Observer<ActionEvent> = mock()
 
@@ -82,7 +83,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             bgDispatcher = testDispatcher(),
         )
 
-        classToTest.showJetpackSocialContainer.observeForever(showJetpackSocialContainerObserver)
+        classToTest.jetpackSocialContainerVisibility.observeForever(showJetpackSocialContainerObserver)
         classToTest.jetpackSocialUiState.observeForever(jetpackSocialUiStateObserver)
         classToTest.actionEvents.observeForever(actionEventsObserver)
     }
@@ -100,7 +101,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(false)
         classToTest.start(FAKE_SITE_MODEL, editPostRepository)
-        verify(showJetpackSocialContainerObserver).onChanged(false)
+        verify(showJetpackSocialContainerObserver).onChanged(JetpackSocialContainerVisibility.ALL_HIDDEN)
     }
 
     @Test
@@ -113,7 +114,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(true)
         classToTest.start(fakeSiteModel(true), editPostRepository)
-        verify(showJetpackSocialContainerObserver).onChanged(true)
+        verify(showJetpackSocialContainerObserver).onChanged(JetpackSocialContainerVisibility.ALL_VISIBLE)
     }
 
     @Test
@@ -202,7 +203,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(false)
 
         classToTest.start(fakeSiteModel(true), editPostRepository)
-        verify(showJetpackSocialContainerObserver).onChanged(false)
+        verify(showJetpackSocialContainerObserver).onChanged(JetpackSocialContainerVisibility.ALL_HIDDEN)
     }
 
     @Test

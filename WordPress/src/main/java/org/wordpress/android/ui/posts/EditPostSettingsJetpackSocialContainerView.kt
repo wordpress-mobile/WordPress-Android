@@ -13,6 +13,7 @@ import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocial
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.Loading
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.NoConnections
 import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 
 class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
     context: Context,
@@ -67,7 +68,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                             connectProfilesButtonLabel = connectProfilesButtonLabel,
                             onConnectProfilesCLick = onConnectProfilesClick,
                             notNowButtonLabel = notNowButtonLabel,
-                            onNotNowClick = onNotNowClick,
+                            onNotNowClick = { onNotNowClick(JetpackSocialFlow.POST_SETTINGS) },
                         )
                     }
                 }
