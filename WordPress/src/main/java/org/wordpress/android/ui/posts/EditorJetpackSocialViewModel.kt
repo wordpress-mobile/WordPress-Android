@@ -51,9 +51,6 @@ class EditorJetpackSocialViewModel @Inject constructor(
     private val _jetpackSocialUiState = MutableLiveData<JetpackSocialUiState>()
     val jetpackSocialUiState: LiveData<JetpackSocialUiState> = _jetpackSocialUiState
 
-    private val _postSocialSharingModel = MutableLiveData<PostSocialSharingModel>()
-    val postSocialSharingModel: LiveData<PostSocialSharingModel> = _postSocialSharingModel
-
     // this is a SingleLiveEvent so it should have one, and only one, observer (the Activity)
     private val _actionEvents = SingleLiveEvent<ActionEvent>()
     val actionEvents: LiveData<ActionEvent> = _actionEvents
@@ -101,7 +98,6 @@ class EditorJetpackSocialViewModel @Inject constructor(
             PostSocialConnection.fromPublicizeConnection(connection, false)
         })
         updateInitialConnectionListSharingStatus()
-        _postSocialSharingModel.postValue(postSocialSharingModelMapper.map(connections, shareLimit))
     }
 
     private suspend fun updateConnections() {
@@ -154,11 +150,13 @@ class EditorJetpackSocialViewModel @Inject constructor(
         val shareMessage = jetpackSocialShareMessage.ifEmpty {
             getJetpackSocialShareMessageUseCase.execute(currentPost?.id ?: -1)
         }
+        val socialSharingModel = postSocialSharingModelMapper.map(connections, shareLimit)
         return jetpackUiStateMapper.mapLoaded(
             connections = connections,
             shareLimit = shareLimit,
             onSubscribeClick = ::onJetpackSocialSubscribeClick,
             shareMessage = shareMessage,
+            socialSharingModel = socialSharingModel,
             onShareMessageClick = ::onJetpackSocialMessageClick,
             onConnectionClick = ::onJetpackSocialConnectionClick,
             isPostPublished = isPostPublished(),
@@ -253,7 +251,6 @@ class EditorJetpackSocialViewModel @Inject constructor(
                 it.isSharingEnabled = enabled
             }
             _jetpackSocialUiState.postValue(mapLoaded())
-            _postSocialSharingModel.postValue(postSocialSharingModelMapper.map(connections, shareLimit))
             // Update local post
             editPostRepository.updateAsync({ postModel ->
                 val connectionId = connection.connectionId.toString()
@@ -329,6 +326,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
             val showShareLimitUi: Boolean,
             val isShareMessageEnabled: Boolean,
             val shareMessage: String,
+            val socialSharingModel: PostSocialSharingModel,
             val onShareMessageClick: () -> Unit,
             val subscribeButtonLabel: String,
             val onSubscribeClick: () -> Unit,

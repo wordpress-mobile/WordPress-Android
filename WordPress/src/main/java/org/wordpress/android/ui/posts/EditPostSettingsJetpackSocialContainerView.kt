@@ -26,14 +26,6 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
             if (uiState.value != value) uiState.value = value
         }
 
-    private val postSocialSharingModelState: MutableState<PostSocialSharingModel> =
-        mutableStateOf(defaultPostSocialSharingModel)
-    var postSocialSharingModel: PostSocialSharingModel
-        get() = postSocialSharingModelState.value
-        set(value) {
-            if (postSocialSharingModelState.value != value) postSocialSharingModelState.value = value
-        }
-
     @Composable
     override fun Content() {
         AppThemeEditor {
@@ -53,7 +45,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                             )
                             if (showShareLimitUi) {
                                 EditPostSettingsJetpackSocialSharesContainer(
-                                    postSocialSharingModel = postSocialSharingModelState.value,
+                                    postSocialSharingModel = socialSharingModel,
                                     subscribeButtonLabel = subscribeButtonLabel,
                                     onSubscribeClick = onSubscribeClick,
                                 )

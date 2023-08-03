@@ -450,7 +450,6 @@ public class EditPostSettingsFragment extends Fragment {
 
         observeJetpackSocialContainerVisibility();
         observeJetpackSocialUiState();
-        observeJetpackSocialPostSocialSharingModel();
     }
 
     private void observeJetpackSocialContainerVisibility() {
@@ -466,12 +465,6 @@ public class EditPostSettingsFragment extends Fragment {
     private void observeJetpackSocialUiState() {
         mJetpackSocialViewModel.getJetpackSocialUiState().observe(getViewLifecycleOwner(), uiState -> {
             mJetpackSocialContainerView.setJetpackSocialUiState(uiState);
-        });
-    }
-
-    private void observeJetpackSocialPostSocialSharingModel() {
-        mJetpackSocialViewModel.getPostSocialSharingModel().observe(getViewLifecycleOwner(), model -> {
-            mJetpackSocialContainerView.setPostSocialSharingModel(model);
         });
     }
 
