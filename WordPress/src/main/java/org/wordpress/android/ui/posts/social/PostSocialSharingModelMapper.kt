@@ -69,12 +69,12 @@ class PostSocialSharingModelMapper @Inject constructor(
     }
 
     private fun mapIconModels(connections: List<PostSocialConnection>) =
-        connections.filter { it.isSharingEnabled }.mapNotNull {
-            PublicizeServiceIcon.fromServiceId(it.service)?.iconResId
-        }.map {
+        connections.map {
+            Pair(PublicizeServiceIcon.fromServiceId(it.service)?.iconResId, it)
+        }.map { (iconResId, connection) ->
             TrainOfIconsModel(
-                data = it,
-                alpha = 1f // TODO
+                data = iconResId,
+                alpha = if (connection.isSharingEnabled) 1f else 0.5f
             )
         }
 
@@ -85,11 +85,11 @@ class PostSocialSharingModelMapper @Inject constructor(
         val sharingEnabledConnections = connections.filter { it.isSharingEnabled }
         return when {
             // No more shares left.
-            shareLimit.sharesRemaining == 0 -> true
-            // Remaining shares < no. of accounts.
-            shareLimit.sharesRemaining < sharingEnabledConnections.size -> true
+                shareLimit.sharesRemaining <= 0 -> true
             // Sharing to some accounts, but not enough shares for all.
             sharingEnabledConnections.isNotEmpty() && shareLimit.sharesRemaining < connections.size -> true
+            // Remaining shares < no. of accounts.
+            shareLimit.sharesRemaining < connections.size -> true
             else -> false
         }
     }
