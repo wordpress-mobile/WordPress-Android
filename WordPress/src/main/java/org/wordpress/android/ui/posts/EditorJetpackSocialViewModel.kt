@@ -3,9 +3,7 @@ package org.wordpress.android.ui.posts
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.wordpress.android.datasets.wrappers.PublicizeTableWrapper
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PublicizeSkipConnection
@@ -74,7 +72,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
         this.editPostRepository = editPostRepository
 
         if (jetpackSocialFeatureConfig.isEnabled()) {
-            viewModelScope.launch {
+            launch {
                 shareLimit = getJetpackSocialShareLimitStatusUseCase.execute(siteModel)
                 loadConnections()
                 loadJetpackSocialIfSupported()
@@ -88,7 +86,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
         if (jetpackSocialFeatureConfig.isEnabled() && actionEvents.value is ActionEvent.OpenSocialConnectionsList) {
             // When getting back from publicize connections screen, we should update connections to
             // make sure we have the latest data.
-            viewModelScope.launch {
+            launch {
                 updateConnections()
                 loadJetpackSocialIfSupported()
             }
@@ -96,19 +94,16 @@ class EditorJetpackSocialViewModel @Inject constructor(
     }
 
     private suspend fun loadConnections() {
-        siteModel.let {
-            val publicizeConnections = getPublicizeConnectionsForUserUseCase.execute(
-                siteId = it.siteId,
-                userId = accountStore.account.userId
-            )
-            connections.clear()
-            connections.addAll(publicizeConnections.map { connection ->
-                PostSocialConnection.fromPublicizeConnection(connection, false)
-            })
-            updateInitialConnectionListSharingStatus()
-            _postSocialSharingModel.value =
-                postSocialSharingModelMapper.map(connections, shareLimit)
-        }
+        val publicizeConnections = getPublicizeConnectionsForUserUseCase.execute(
+            siteId = siteModel.siteId,
+            userId = accountStore.account.userId
+        )
+        connections.clear()
+        connections.addAll(publicizeConnections.map { connection ->
+            PostSocialConnection.fromPublicizeConnection(connection, false)
+        })
+        updateInitialConnectionListSharingStatus()
+        _postSocialSharingModel.value = postSocialSharingModelMapper.map(connections, shareLimit)
     }
 
     private suspend fun updateConnections() {
@@ -228,47 +223,41 @@ class EditorJetpackSocialViewModel @Inject constructor(
 
     @VisibleForTesting
     fun onJetpackSocialConnectProfilesClick() {
-        siteModel.let { siteModel ->
-            _actionEvents.value = ActionEvent.OpenSocialConnectionsList(
-                siteModel = siteModel
-            )
-        }
+        _actionEvents.value = ActionEvent.OpenSocialConnectionsList(
+            siteModel = siteModel
+        )
     }
 
     @VisibleForTesting
     fun onJetpackSocialNotNowClick() {
-        siteModel.let {
-            appPrefsWrapper.setShouldShowJetpackSocialNoConnections(false, it.id, JetpackSocialFlow.POST_SETTINGS)
-            _showJetpackSocialContainer.value = false
-        }
+        appPrefsWrapper.setShouldShowJetpackSocialNoConnections(false, siteModel.id, JetpackSocialFlow.POST_SETTINGS)
+        _showJetpackSocialContainer.value = false
     }
 
     @VisibleForTesting
     fun onJetpackSocialConnectionClick(connection: PostSocialConnection, enabled: Boolean) {
-        siteModel.let {
-            viewModelScope.launch {
-                // Update UI
-                connections.firstOrNull { it.connectionId == connection.connectionId }?.let {
-                    it.isSharingEnabled = enabled
-                }
-                _jetpackSocialUiState.postValue(mapLoaded())
-                _postSocialSharingModel.value =
-                    postSocialSharingModelMapper.map(connections, shareLimit)
-                // Update local post
-                editPostRepository.updateAsync({ postModel ->
-                    val connectionId = connection.connectionId.toString()
-                    with(postModel.publicizeSkipConnectionsList.toMutableList()) {
-                        firstOrNull { it.connectionId() == connectionId }?.updateValue(enabled)
-                            ?: run {
-                                // Connection wasn't part of skip connections before, so we must add it
-                                // with the correct value
-                                add(PublicizeSkipConnection.createNew(connectionId, enabled))
-                            }
-                        postModel.updatePublicizeSkipConnections(this)
-                    }
-                    true
-                })
+        launch {
+            // Update UI
+            connections.firstOrNull { it.connectionId == connection.connectionId }?.let {
+                it.isSharingEnabled = enabled
             }
+            _jetpackSocialUiState.postValue(mapLoaded())
+            _postSocialSharingModel.value =
+                postSocialSharingModelMapper.map(connections, shareLimit)
+            // Update local post
+            editPostRepository.updateAsync({ postModel ->
+                val connectionId = connection.connectionId.toString()
+                with(postModel.publicizeSkipConnectionsList.toMutableList()) {
+                    firstOrNull { it.connectionId() == connectionId }?.updateValue(enabled)
+                        ?: run {
+                            // Connection wasn't part of skip connections before, so we must add it
+                            // with the correct value
+                            add(PublicizeSkipConnection.createNew(connectionId, enabled))
+                        }
+                    postModel.updatePublicizeSkipConnections(this)
+                }
+                true
+            })
         }
     }
 
@@ -282,14 +271,12 @@ class EditorJetpackSocialViewModel @Inject constructor(
     }
 
     private fun onJetpackSocialSubscribeClick() {
-        siteModel.let { siteModel ->
-            _actionEvents.value = ActionEvent.OpenSubscribeJetpackSocial(
-                siteModel = siteModel,
-                url = HIRE_JETPACK_SOCIAL_BASIC_URL.format(
-                    siteModel.url.replace(Regex("^(https?://)", RegexOption.IGNORE_CASE), "")
-                ),
-            )
-        }
+        _actionEvents.value = ActionEvent.OpenSubscribeJetpackSocial(
+            siteModel = siteModel,
+            url = HIRE_JETPACK_SOCIAL_BASIC_URL.format(
+                siteModel.url.replace(Regex("^(https?://)", RegexOption.IGNORE_CASE), "")
+            ),
+        )
     }
 
     fun onJetpackSocialShareMessageChanged(newShareMessage: String?) {
