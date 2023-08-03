@@ -29,7 +29,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegi
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainTransferBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainTransferCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
@@ -246,7 +246,7 @@ class CardsBuilderTest {
                 ),
                 pagesCardBuilderParams = PagesCardBuilderParams(mock(), mock(), mock()),
                 activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock()),
-                dashboardCardDomainTransferBuilderParams = DashboardCardDomainTransferBuilderParams(
+                domainTransferCardBuilderParams = DomainTransferCardBuilderParams(
                     isEligible = isEligibleForDomainTransferCard,
                     mock(),
                     mock(),
