@@ -13,20 +13,21 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
-import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
-import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingNavigation
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingUiState
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingViewModel
+import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignModel
+import org.wordpress.android.Result
+import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.FetchCampaignListUseCase
+import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.GetCampaignListFromDbUseCase
+import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.NoCampaigns
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
-import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
-import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.NetworkUtilsWrapper
-import java.util.Date
+import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -37,10 +38,10 @@ class CampaignListingViewModelTest : BaseUnitTest() {
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
     @Mock
-    lateinit var blazeCampaignsStore: BlazeCampaignsStore
+    lateinit var fetchCampaignListUseCase: FetchCampaignListUseCase
 
     @Mock
-    lateinit var statsUtils: StatsUtils
+    lateinit var getCampaignListFromDbUseCase: GetCampaignListFromDbUseCase
 
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -48,25 +49,34 @@ class CampaignListingViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var siteModel: SiteModel
+
     private val uiStates = mutableListOf<CampaignListingUiState>()
 
     private val navigationEvents = mutableListOf<CampaignListingNavigation>()
-
-    lateinit var campaignModel: BlazeCampaignsModel
 
     @Before
     fun setUp() {
         viewModel = CampaignListingViewModel(
             testDispatcher(),
             blazeFeatureUtils,
-            blazeCampaignsStore,
-            statsUtils,
             selectedSiteRepository,
-            networkUtilsWrapper
+            networkUtilsWrapper,
+            resourceProvider,
+            fetchCampaignListUseCase,
+            getCampaignListFromDbUseCase
         )
         observeUIState()
         observeNavigationEvents()
-        setupCampaignModels()
+        mockSiteModel()
+    }
+
+    private fun mockSiteModel() {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
     }
 
     private fun observeUIState() {
@@ -92,47 +102,40 @@ class CampaignListingViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given internet available, when viewmodel start, then should fetch campaigns`() = runTest {
-        val siteModel = mock<SiteModel>()
-        setupCampaignModels()
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
-        whenever(blazeCampaignsStore.getBlazeCampaigns(siteModel)).thenReturn(campaignModel)
-        whenever(statsUtils.toFormattedString(1000L, ONE_THOUSAND)).thenReturn("1000")
-
+    fun `when viewmodel start, then should fetch campaigns`() = runTest {
+        val campaignFetchResult: Result<NoCampaigns, List<CampaignModel>> = Result.Success(mock())
+        whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(campaignFetchResult)
 
         viewModel.start(CampaignListingPageSource.DASHBOARD_CARD)
         advanceUntilIdle()
 
         assertThat(uiStates.last() is CampaignListingUiState.Success).isTrue
-        assertThat((uiStates.last() as CampaignListingUiState.Success).campaigns.size).isEqualTo(10)
     }
 
     @Test
-    fun `given no campaigns, when viewmodel start, then should show no campaigns error`() = runTest {
-        val siteModel = mock<SiteModel>()
-        val noCampaigns = BlazeCampaignsModel(emptyList(), 1, 1, 0)
-
+    fun `given no campaigns in db + api, when viewmodel start, then should show no campaigns error`() = runTest {
+        val noCampaigns: Result<NoCampaigns, List<CampaignModel>> = Result.Failure(NoCampaigns)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
-        whenever(blazeCampaignsStore.getBlazeCampaigns(siteModel)).thenReturn(noCampaigns)
+        whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(noCampaigns)
+        whenever(fetchCampaignListUseCase.execute(siteModel, 1)).thenReturn(noCampaigns)
 
         viewModel.start(CampaignListingPageSource.DASHBOARD_CARD)
         advanceUntilIdle()
 
-        assertThat(uiStates.last() is CampaignListingUiState.Error).isTrue
+        assertThat(uiStates.last() is CampaignListingUiState.Error.NoCampaignsError)
     }
 
 
     @Test
-    fun `given no campaigns, when click is invoked on create, then navigate to blaze flow`() = runTest {
-        val siteModel = mock<SiteModel>()
-        val noCampaigns = BlazeCampaignsModel(emptyList(), 1, 1, 0)
+    fun `given no campaigns in db + api, when click is invoked on create, then navigate to blaze flow`() = runTest {
+        val noCampaigns: Result<NoCampaigns, List<CampaignModel>> = Result.Failure(NoCampaigns)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
-        whenever(blazeCampaignsStore.getBlazeCampaigns(siteModel)).thenReturn(noCampaigns)
+        whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(noCampaigns)
+        whenever(fetchCampaignListUseCase.execute(siteModel, 1)).thenReturn(noCampaigns)
 
         viewModel.start(CampaignListingPageSource.DASHBOARD_CARD)
+        advanceUntilIdle()
         val noCampaignsState = uiStates.last() as CampaignListingUiState.Error
         noCampaignsState.button!!.click.invoke()
 
@@ -141,12 +144,9 @@ class CampaignListingViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given campaigns available, when clicked on campaign, then navigate to detail`() = runTest {
-        val siteModel = mock<SiteModel>()
-        setupCampaignModels()
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        val campaignFetchResult: Result<NoCampaigns, List<CampaignModel>> = Result.Success(getCampaigns(10))
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
-        whenever(blazeCampaignsStore.getBlazeCampaigns(siteModel)).thenReturn(campaignModel)
-        whenever(statsUtils.toFormattedString(1000L, ONE_THOUSAND)).thenReturn("1000")
+        whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(campaignFetchResult)
 
 
         viewModel.start(CampaignListingPageSource.DASHBOARD_CARD)
@@ -158,12 +158,9 @@ class CampaignListingViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given campaigns available, when clicked on create campaign fab, then navigate to blaze flow`() = runTest {
-        val siteModel = mock<SiteModel>()
-        setupCampaignModels()
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        val campaigns: Result<NoCampaigns, List<CampaignModel>> = Result.Success(mock())
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
-        whenever(blazeCampaignsStore.getBlazeCampaigns(siteModel)).thenReturn(campaignModel)
-        whenever(statsUtils.toFormattedString(1000L, ONE_THOUSAND)).thenReturn("1000")
+        whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(campaigns)
 
 
         viewModel.start(CampaignListingPageSource.DASHBOARD_CARD)
@@ -173,29 +170,19 @@ class CampaignListingViewModelTest : BaseUnitTest() {
         assertThat(navigationEvents.last() is CampaignListingNavigation.CampaignCreatePage).isTrue
     }
 
-    private fun setupCampaignModels() {
-        campaignModel = BlazeCampaignsModel(
-            campaigns = getCampaigns(10),
-            page = 1,
-            totalPages = 1,
-            totalItems = 10
-        )
-    }
 
-    private fun getCampaigns(numbers: Int): List<BlazeCampaignModel> {
-        val listOfCampaigns = mutableListOf<BlazeCampaignModel>()
+    private fun getCampaigns(numbers: Int): MutableList<CampaignModel> {
+        val listOfCampaigns = mutableListOf<CampaignModel>()
         for (i in 0 until numbers) {
             listOfCampaigns.add(
-                BlazeCampaignModel(
-                    campaignId = i,
-                    title = "Campaign $i",
-                    imageUrl = "https://picsum.photos/200/300",
-                    startDate = Date(),
-                    endDate = Date(),
-                    uiStatus = CampaignStatus.Active.status,
-                    budgetCents = 1000L,
-                    impressions = 1000L,
-                    clicks = 1000L,
+                CampaignModel(
+                    id = i.toString(),
+                    title = UiString.UiStringText("Campaign $i"),
+                    featureImageUrl = "https://picsum.photos/200/300",
+                    status = CampaignStatus.Active,
+                    budget = UiString.UiStringText("5$"),
+                    impressions = UiString.UiStringText("1000"),
+                    clicks = UiString.UiStringText("100"),
                 )
             )
         }

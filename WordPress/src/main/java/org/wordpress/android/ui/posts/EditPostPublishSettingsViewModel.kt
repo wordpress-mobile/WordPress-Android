@@ -210,32 +210,37 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         val skipConnections = postPublicizeSkipConnections()
         if (shareLimitValue is ShareLimit.Enabled) {
             // If shares remaining < number of connections, all connections are unchecked by default
-            if (shareLimitValue.sharesRemaining < connections.size) {
-                connections.map { it.isSharingEnabled = false }
-            } else {
-                run loop@{
-                    connections.take(shareLimitValue.sharesRemaining).map {
-                        it.isSharingEnabled = true
-                    }
-                    connections.forEachIndexed { index, connection ->
-                        // Use metadata to verify if this connection was previously disabled by the user
-                        skipConnections.firstOrNull { it.connectionId() == connection.connectionId.toString() }
-                            ?.let { connection.isSharingEnabled = it.isConnectionEnabled() }
-                        if (index == shareLimitValue.sharesRemaining) {
-                            return@loop
-                        }
-                    }
-                }
-            }
+            updateInitialConnectionListShareLimitEnabled(shareLimitValue, skipConnections)
         } else {
-            // With share limit disabled we can enabled all connections but still considering the skip
-            // connections metadata
-            connections.map { it.isSharingEnabled = true }
+            updateInitialConnectionListShareLimitDisabled(skipConnections)
+        }
+    }
+
+    private fun updateInitialConnectionListShareLimitEnabled(
+        shareLimitValue: ShareLimit.Enabled, skipConnections: List<PublicizeSkipConnection>
+    ) {
+        if (shareLimitValue.sharesRemaining < connections.size) {
+            connections.map { it.isSharingEnabled = false }
+        } else {
+            connections.take(shareLimitValue.sharesRemaining).map {
+                it.isSharingEnabled = true
+            }
             connections.forEach { connection ->
                 // Use metadata to verify if this connection was previously disabled by the user
                 skipConnections.firstOrNull { it.connectionId() == connection.connectionId.toString() }
                     ?.let { connection.isSharingEnabled = it.isConnectionEnabled() }
             }
+        }
+    }
+
+    private fun updateInitialConnectionListShareLimitDisabled(skipConnections: List<PublicizeSkipConnection>) {
+        // With share limit disabled we can enable all connections but still considering the skip
+        // connections metadata
+        connections.map { it.isSharingEnabled = true }
+        connections.forEach { connection ->
+            // Use metadata to verify if this connection was previously disabled by the user
+            skipConnections.firstOrNull { it.connectionId() == connection.connectionId.toString() }
+                ?.let { connection.isSharingEnabled = it.isConnectionEnabled() }
         }
     }
 

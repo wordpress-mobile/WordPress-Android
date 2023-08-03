@@ -85,7 +85,7 @@ class PostSocialSharingModelMapper @Inject constructor(
         val sharingEnabledConnections = connections.filter { it.isSharingEnabled }
         return when {
             // No more shares left.
-            shareLimit.sharesRemaining == 0 -> true
+            shareLimit.sharesRemaining <= 0 -> true
             // Sharing to some accounts, but not enough shares for all.
             connections.size > sharingEnabledConnections.size && shareLimit.sharesRemaining < connections.size -> true
             // Remaining shares < no. of accounts.
