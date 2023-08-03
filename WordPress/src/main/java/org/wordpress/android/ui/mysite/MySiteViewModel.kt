@@ -63,7 +63,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCa
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams.ActivityCardItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainTransferBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
@@ -93,8 +92,7 @@ import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
-import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DashboardCardDomainTransferUtils
-import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DashboardCardDomainTransferUtils.Companion.DOMAIN_TRANSFER_PAGE_URL
+import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
@@ -219,7 +217,7 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
     private val blazeCardViewModelSlice: BlazeCardViewModelSlice,
-    private val dashboardCardDomainTransferUtils: DashboardCardDomainTransferUtils
+    private val domainTransferCardViewModel: DomainTransferCardViewModel
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -303,7 +301,12 @@ class MySiteViewModel @Inject constructor(
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
     val onDynamicCardMenuShown = _onDynamicCardMenuShown as LiveData<Event<DynamicCardMenuModel>>
-    val onNavigation = merge(_onNavigation, siteStoriesHandler.onNavigation, blazeCardViewModelSlice.onNavigation)
+    val onNavigation = merge(
+        _onNavigation,
+        siteStoriesHandler.onNavigation,
+        blazeCardViewModelSlice.onNavigation,
+        domainTransferCardViewModel.onNavigation
+    )
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShareBloggingPrompt = _onShareBloggingPrompt as LiveData<Event<String>>
@@ -317,6 +320,7 @@ class MySiteViewModel @Inject constructor(
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     val blazeCardRefresh = blazeCardViewModelSlice.refresh
+    val domainTransferCardRefresh = domainTransferCardViewModel.refresh
 
     private var shouldMarkUpdateSiteTitleTaskComplete = false
 
@@ -376,7 +380,7 @@ class MySiteViewModel @Inject constructor(
 
             dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
 
-            dashboardCardDomainTransferUtils.onSiteChanged(site?.id, state as? SiteSelected)
+            domainTransferCardViewModel.onSiteChanged(site?.id, state as? SiteSelected)
 
             UiModel(currentAvatarUrl.orEmpty(), state)
         }
@@ -605,11 +609,9 @@ class MySiteViewModel @Inject constructor(
                     onViewAnswersClick = this::onBloggingPromptViewAnswersClick,
                     onRemoveClick = this::onBloggingPromptRemoveClick
                 ),
-                dashboardCardDomainTransferBuilderParams = DashboardCardDomainTransferBuilderParams(
-                    isEligible = dashboardCardDomainTransferUtils.shouldShowCard(site),
-                    onClick = this::onDashboardCardDomainTransferClick,
-                    onHideMenuItemClick = this::onDashboardCardDomainTransferHideMenuItemClick,
-                    onMoreMenuClick = this::onDashboardCardDomainTransferMoreMenuClick
+                domainTransferCardBuilderParams = domainTransferCardViewModel.buildDomainTransferCardParams(
+                    site,
+                    uiModel.value?.state as? SiteSelected
                 ),
                 blazeCardBuilderParams = blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate),
                 dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
@@ -1645,23 +1647,6 @@ class MySiteViewModel @Inject constructor(
         _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
     }
 
-    private fun onDashboardCardDomainTransferClick() {
-        dashboardCardDomainTransferUtils.trackCardTapped(uiModel.value?.state as? SiteSelected)
-        _onNavigation.value = Event(SiteNavigationAction.OpenDomainTransferPage(DOMAIN_TRANSFER_PAGE_URL))
-    }
-
-    private fun onDashboardCardDomainTransferMoreMenuClick() {
-        dashboardCardDomainTransferUtils.trackCardMoreMenuTapped(uiModel.value?.state as? SiteSelected)
-    }
-
-    private fun onDashboardCardDomainTransferHideMenuItemClick() {
-        dashboardCardDomainTransferUtils.trackCardHiddenByUser(uiModel.value?.state as? SiteSelected)
-        selectedSiteRepository.getSelectedSite()?.let {
-            dashboardCardDomainTransferUtils.hideCard(it.siteId)
-        }
-        refresh()
-    }
-
     private fun onDashboardCardDomainMoreMenuClick() {
         dashboardCardDomainUtils.trackDashboardCardDomainMoreMenuTapped(uiModel.value?.state as? SiteSelected)
     }
@@ -1779,7 +1764,6 @@ class MySiteViewModel @Inject constructor(
             .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type, quickStartRepository.currentTab) }
         dashboardCardDomainUtils.trackDashboardCardDomainShown(viewModelScope, siteSelected)
         dashboardCardPlansUtils.trackCardShown(viewModelScope, siteSelected)
-        dashboardCardDomainTransferUtils.trackCardShown(viewModelScope, siteSelected)
     }
 
     private fun resetShownTrackers() {
