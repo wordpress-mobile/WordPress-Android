@@ -27,14 +27,14 @@ abstract class BlazeCampaignsDao {
         )
     }
 
-    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY startDate DESC")
+    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY createdAt DESC")
     abstract fun getCampaigns(siteId: Long): List<BlazeCampaignEntity>?
 
     @Query("SELECT * from BlazeCampaignsPagination WHERE `siteId` = :siteId")
     abstract fun getCampaignsPagination(siteId: Long): BlazeCampaignsPaginationEntity?
 
     @Transaction
-    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY startDate DESC")
+    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY createdAt DESC")
     fun getMostRecentCampaignForSite(siteId: Long): BlazeCampaignModel? {
         return getCampaigns(siteId)?.firstOrNull()?.toDomainModel()
     }
@@ -92,7 +92,7 @@ abstract class BlazeCampaignsDao {
         val campaignId: Int,
         val title: String,
         val imageUrl: String?,
-        val startDate: Date,
+        val createdAt: Date,
         val endDate: Date?,
         val uiStatus: String,
         val budgetCents: Long,
@@ -103,7 +103,7 @@ abstract class BlazeCampaignsDao {
             campaignId = campaignId,
             title = title,
             imageUrl = imageUrl,
-            startDate = startDate,
+            createdAt = createdAt,
             endDate = endDate,
             uiStatus = uiStatus,
             budgetCents = budgetCents,
@@ -120,7 +120,7 @@ abstract class BlazeCampaignsDao {
                 campaignId = campaign.campaignId,
                 title = campaign.title,
                 imageUrl = campaign.imageUrl,
-                startDate = campaign.startDate,
+                createdAt = campaign.createdAt,
                 endDate = campaign.endDate,
                 uiStatus = campaign.uiStatus,
                 budgetCents = campaign.budgetCents,

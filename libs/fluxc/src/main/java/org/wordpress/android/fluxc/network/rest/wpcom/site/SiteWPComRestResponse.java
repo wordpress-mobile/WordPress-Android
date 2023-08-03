@@ -44,6 +44,7 @@ public class SiteWPComRestResponse implements Response {
     public static class Plan {
         public String product_id;
         public String product_name_short;
+        public String product_slug;
         public boolean is_free;
         @Nullable public Features features;
     }
@@ -123,4 +124,5 @@ public class SiteWPComRestResponse implements Response {
     public Meta meta;
     public Quota quota;
     public ZendeskSiteMeta zendesk_site_meta;
+    public boolean was_ecommerce_trial;
 }

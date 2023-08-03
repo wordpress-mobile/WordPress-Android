@@ -35,7 +35,7 @@ const val SITE_ID = 1L
 const val CAMPAIGN_ID = 1
 const val TITLE = "title"
 const val IMAGE_URL = "imageUrl"
-const val START_DATE = "2023-06-02T00:00:00.000Z"
+const val CREATED_AT = "2023-06-02T00:00:00.000Z"
 const val END_DATE = "2023-06-02T00:00:00.000Z"
 const val UI_STATUS = "rejected"
 const val BUDGET_CENTS = 5000L
@@ -68,7 +68,7 @@ private val CONTENT_CAMPAIGN_STATS = CampaignStats(
 
 private val CAMPAIGN_RESPONSE = Campaign(
     campaignId = CAMPAIGN_ID,
-    startDate = START_DATE,
+    createdAt = CREATED_AT,
     endDate = END_DATE,
     budgetCents = BUDGET_CENTS,
     uiStatus = UI_STATUS,
@@ -88,7 +88,7 @@ private val BLAZE_CAMPAIGN_MODEL = BlazeCampaignModel(
     campaignId = CAMPAIGN_ID,
     title = TITLE,
     imageUrl = IMAGE_URL,
-    startDate = BlazeCampaignsUtils.stringToDate(START_DATE),
+    createdAt = BlazeCampaignsUtils.stringToDate(CREATED_AT),
     endDate = BlazeCampaignsUtils.stringToDate(END_DATE),
     uiStatus = UI_STATUS,
     budgetCents = BUDGET_CENTS,
@@ -175,7 +175,7 @@ class BlazeCampaignsStoreTest {
         assertEquals(result?.campaignId, CAMPAIGN_ID)
         assertEquals(result?.title, TITLE)
         assertEquals(result?.imageUrl, IMAGE_URL)
-        assertEquals(result?.startDate, BlazeCampaignsUtils.stringToDate(START_DATE))
+        assertEquals(result?.createdAt, BlazeCampaignsUtils.stringToDate(CREATED_AT))
         assertEquals(result?.endDate, BlazeCampaignsUtils.stringToDate(END_DATE))
         assertEquals(result?.uiStatus, UI_STATUS)
         assertEquals(result?.budgetCents, BUDGET_CENTS)
