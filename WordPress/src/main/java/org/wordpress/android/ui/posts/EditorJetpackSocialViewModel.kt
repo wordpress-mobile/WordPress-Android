@@ -59,10 +59,15 @@ class EditorJetpackSocialViewModel @Inject constructor(
     private lateinit var shareLimit: ShareLimit
     private val connections = mutableListOf<PostSocialConnection>()
 
+    var isStarted: Boolean = false
+
     private val currentPost: PostImmutableModel?
         get() = editPostRepository.getPost()
 
     fun start(siteModel: SiteModel, editPostRepository: EditPostRepository) {
+        if (isStarted) return
+
+        isStarted = true
         this.siteModel = siteModel
         this.editPostRepository = editPostRepository
 
