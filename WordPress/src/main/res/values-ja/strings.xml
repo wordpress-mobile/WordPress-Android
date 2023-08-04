@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-12 11:54:08+0000
+Translation-Revision-Date: 2023-07-27 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.6
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_insert_video_block">動画ブロックを挿入</string>
+    <string name="gutenberg_native_insert_image_block">画像ブロックを挿入</string>
+    <string name="gutenberg_native_insert_gallery_block">ギャラリーブロックを挿入</string>
+    <string name="gutenberg_native_insert_audio_block">音声ブロックを挿入</string>
+    <string name="blaze_campaign_detail_error">キャンペーン詳細を読み込めませんでした</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">作成</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">まだキャンペーンを作成していません。 開始するには「作成」をクリックしてください。</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">キャンペーンがありません</string>
+    <string name="blaze_campaign_details_page_title">キャンペーン詳細</string>
+    <string name="blaze_campaigns_page_title">Blaze キャンペーン</string>
+    <string name="budget_campaign_stats">予算</string>
+    <string name="clicks_campaign_stats">クリック数</string>
+    <string name="impressions_campaign_stats">インプレッション</string>
+    <string name="campaign_status_scheduled">予約済み</string>
+    <string name="campaign_status_in_moderation">モデレーション中</string>
+    <string name="campaign_status_canceled">キャンセル済み</string>
+    <string name="campaign_status_rejected">却下</string>
+    <string name="campaign_status_completed">完了</string>
+    <string name="campaign_status_active">有効</string>
+    <string name="blaze_campaigns_card_footer_label">キャンペーンを作成</string>
+    <string name="blaze_campaigns_card_title">Blaze キャンペーン</string>
+    <string name="promote_blaze_flow_error">Blaze 宣伝フローを読み込めませんでした</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">ソーシャルプロフィールを連携する</string>
+    <string name="prepublishing_nudges_social_new_connection_text">ソーシャルメディアで自分の投稿を友人に自動共有してトラフィックを増やします。</string>
+    <string name="menu_close_editor">エディターを閉じる</string>
+    <string name="menu_redo_context">最後の変更をやり直す</string>
+    <string name="menu_undo_context">最後の変更を元に戻す</string>
+    <string name="jetpack_social_social_shares_remaining">残りのソーシャルシェア数は%1$d件です</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">購読してさらにシェア</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">ソーシャルプロフィールを連携する</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">ソーシャルメディアで自分の投稿を友人に自動共有してトラフィックを増やします。</string>
+    <string name="post_settings_jetpack_social_header">ソーシャル共有</string>
     <string name="gutenberg_native_s_detached">%sを切り離しました</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">同期済みパターンの編集は iOS 用 %s ではまだサポートされていません</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">同期済みパターンの編集は Android 用 %s ではまだサポートされていません</string>
