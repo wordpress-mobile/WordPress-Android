@@ -1688,18 +1688,20 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.SHOULD_HIDE_BLAZE_OVERLAY, isHidden);
     }
 
-    public static Boolean getShouldShowJetpackSocialNoConnections(final int siteId, final JetpackSocialFlow flow) {
-        return prefs().getBoolean(mapShouldShowJetpackSocialNoConnectionsKey(siteId, flow), true);
+    public static Boolean getShouldShowJetpackSocialNoConnections(final long remoteSiteId,
+                                                                  final JetpackSocialFlow flow) {
+        return prefs().getBoolean(mapShouldShowJetpackSocialNoConnectionsKey(remoteSiteId, flow), true);
     }
 
-    public static void setShouldShowJetpackSocialNoConnections(final boolean show, final int siteId,
+    public static void setShouldShowJetpackSocialNoConnections(final boolean show, final long remoteSiteId,
                                                                final JetpackSocialFlow flow) {
-        prefs().edit().putBoolean(mapShouldShowJetpackSocialNoConnectionsKey(siteId, flow), show)
+        prefs().edit().putBoolean(mapShouldShowJetpackSocialNoConnectionsKey(remoteSiteId, flow), show)
                .apply();
     }
 
-    private static String mapShouldShowJetpackSocialNoConnectionsKey(final int siteId, final JetpackSocialFlow flow) {
-        return DeletablePrefKey.SHOULD_SHOW_JETPACK_SOCIAL_NO_CONNECTIONS.name() + "_" + siteId + "_"
+    private static String mapShouldShowJetpackSocialNoConnectionsKey(final long remoteSiteId,
+                                                                     final JetpackSocialFlow flow) {
+        return DeletablePrefKey.SHOULD_SHOW_JETPACK_SOCIAL_NO_CONNECTIONS.name() + "_" + remoteSiteId + "_"
                + flow.getValue();
     }
 }

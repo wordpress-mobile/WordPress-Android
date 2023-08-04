@@ -167,7 +167,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         siteModel?.let {
             if (showNoConnections()) {
                 val shouldShowJetpackSocialNoConnections =
-                    appPrefsWrapper.getShouldShowJetpackSocialNoConnections(it.id, JetpackSocialFlow.POST_SETTINGS)
+                    appPrefsWrapper.getShouldShowJetpackSocialNoConnections(it.siteId, JetpackSocialFlow.POST_SETTINGS)
                 // If user previously dismissed the no connections container by tapping the "Not now" button,
                 // we should hide the container.
                 if (shouldShowJetpackSocialNoConnections) {
@@ -298,7 +298,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     @VisibleForTesting
     fun onJetpackSocialNotNowClick() {
         siteModel?.let {
-            appPrefsWrapper.setShouldShowJetpackSocialNoConnections(false, it.id, JetpackSocialFlow.POST_SETTINGS)
+            appPrefsWrapper.setShouldShowJetpackSocialNoConnections(false, it.siteId, JetpackSocialFlow.POST_SETTINGS)
             _showJetpackSocialContainer.value = false
         }
     }
