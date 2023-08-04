@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-12 14:54:08+0000
+Translation-Revision-Date: 2023-07-26 12:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.6
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_insert_image_block">Afbeeldingblok invoegen</string>
+    <string name="gutenberg_native_insert_audio_block">Audioblok invoegen</string>
+    <string name="blaze_campaign_detail_error">Campagnedetails kunnen niet worden geladen</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Aanmaken</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">Je hebt nog geen campagnes aangemaakt. Klik op Aanmaken om te beginnen.</string>
+    <string name="blaze_campaigns_page_title">Blaze-campagnes</string>
+    <string name="campaign_status_in_moderation">WORDT BEHEERD</string>
+    <string name="campaign_status_rejected">AFGEWEZEN</string>
+    <string name="campaign_status_completed">VOLTOOID</string>
+    <string name="blaze_campaigns_card_footer_label">Campagne aanmaken</string>
+    <string name="blaze_campaigns_card_title">Blaze-campagne</string>
+    <string name="promote_blaze_flow_error">De blaze-promotieflow kan niet worden geladen</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Koppel je social media-profielen</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Krijg meer bezoekers door je berichten automatisch te delen met je vrienden op social media.</string>
+    <string name="menu_redo_context">Laatste wijziging opnieuw uitvoeren</string>
+    <string name="menu_undo_context">Laatste wijziging ongedaan maken</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d keer delen op social media resterend</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Neem een abonnement om meer te delen</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Koppel je social media-profielen</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Krijg meer bezoekers door je berichten automatisch te delen met je vrienden op social media.</string>
+    <string name="post_settings_jetpack_social_header">Delen via social media</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Bewerken van gesynchroniseerde patronen wordt momenteel niet ondersteund door %s voor iOS</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Bewerken van gesynchroniseerde patronen wordt momenteel niet ondersteund door %s voor Android</string>
     <string name="gutenberg_native_reusable">Herbruikbaar</string>

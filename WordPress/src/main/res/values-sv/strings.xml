@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-12 16:54:30+0000
+Translation-Revision-Date: 2023-07-26 15:05:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.6
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_insert_video_block">Infoga videoblock</string>
+    <string name="gutenberg_native_insert_image_block">Infoga bildblock</string>
+    <string name="gutenberg_native_insert_gallery_block">Infoga galleriblock</string>
+    <string name="gutenberg_native_insert_audio_block">Infoga ljudblock</string>
+    <string name="blaze_campaign_detail_error">Det gick inte att läsa in kampanjinformationen</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Skapa</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">Du har inte skapat några kampanjer än. Klicka här för att komma igång.</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">Du har inga kampanjer</string>
+    <string name="blaze_campaign_details_page_title">Kampanjinformation</string>
+    <string name="blaze_campaigns_page_title">Blaze-kampanjer</string>
+    <string name="budget_campaign_stats">Budget</string>
+    <string name="clicks_campaign_stats">Klick</string>
+    <string name="impressions_campaign_stats">Visningar</string>
+    <string name="campaign_status_scheduled">TIDSINSTÄLLD</string>
+    <string name="campaign_status_in_moderation">UNDER GRANSKNING</string>
+    <string name="campaign_status_canceled">AVBRUTEN</string>
+    <string name="campaign_status_rejected">AVVISAD</string>
+    <string name="campaign_status_completed">SLUTFÖRD</string>
+    <string name="campaign_status_active">AKTIV</string>
+    <string name="blaze_campaigns_card_footer_label">Skapa kampanj</string>
+    <string name="blaze_campaigns_card_title">Blaze-kampanj</string>
+    <string name="promote_blaze_flow_error">Det gick inte att läsa in Blaze-marknadsföringsflödet</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Anslut dina sociala profiler</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Öka din trafik genom att automatiskt dela dina inlägg med dina vänner på sociala medier.</string>
+    <string name="menu_close_editor">Stäng redigerare</string>
+    <string name="menu_redo_context">Gör om den senaste ändringen</string>
+    <string name="menu_undo_context">Ångra den senaste ändringen</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d sociala delningar kvar</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Prenumerera för fler delningar</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Anslut dina sociala profiler</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Öka din trafik genom att automatiskt dela dina inlägg med dina vänner på sociala medier.</string>
+    <string name="post_settings_jetpack_social_header">Social delning</string>
     <string name="gutenberg_native_s_detached">%s frikopplad</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Redigering av synkroniserade mönster stöds ännu inte i %s för iOS</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Redigering av synkroniserade mönster stöds ännu inte i %s för Android</string>
