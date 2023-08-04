@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.posts
 
 import org.wordpress.android.R
+import org.wordpress.android.datasets.wrappers.PublicizeTableWrapper
+import org.wordpress.android.models.PublicizeService
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.Loaded
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.NoConnections
@@ -15,6 +17,7 @@ import javax.inject.Inject
 class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
     private val stringProvider: StringProvider,
     private val localeProvider: LocaleProvider,
+    private val publicizeTableWrapper: PublicizeTableWrapper,
 ) {
     @Suppress("LongParameterList")
     fun mapLoaded(
@@ -54,7 +57,10 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
         onNotNowClick: (JetpackSocialFlow) -> Unit,
     ): NoConnections =
         NoConnections(
-            trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
+            trainOfIconsModels = publicizeTableWrapper.getServiceList()
+                .filter { it.status != PublicizeService.Status.UNSUPPORTED }
+                .mapNotNull { PublicizeServiceIcon.fromServiceId(it.id) }
+                .map { TrainOfIconsModel(it.iconResId) },
             message = stringProvider.getString(
                 R.string.post_settings_jetpack_social_connect_social_profiles_message
             ),

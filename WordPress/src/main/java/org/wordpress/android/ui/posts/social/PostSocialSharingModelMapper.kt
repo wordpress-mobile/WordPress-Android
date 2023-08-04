@@ -18,11 +18,7 @@ class PostSocialSharingModelMapper @Inject constructor(
     ): PostSocialSharingModel {
         return if (shareLimit is ShareLimit.Enabled) {
             val title = mapTitle(connections)
-            val description = stringProvider.getString(
-                R.string.jetpack_social_social_shares_remaining,
-                (shareLimit.sharesRemaining - connections.filter { it.isSharingEnabled }.size)
-                    .coerceAtLeast(0)
-            )
+            val description = mapDescription(shareLimit, connections)
             val iconModels = mapIconModels(connections)
             val isLowOnShares = mapIsLowOnShares(shareLimit, connections)
             PostSocialSharingModel(
@@ -38,6 +34,16 @@ class PostSocialSharingModelMapper @Inject constructor(
                 iconModels = emptyList(),
                 isLowOnShares = false,
             )
+        }
+    }
+
+    private fun mapDescription(shareLimit: ShareLimit.Enabled, connections: List<PostSocialConnection>): String {
+        val sharesRemaining =
+            (shareLimit.sharesRemaining - connections.filter { it.isSharingEnabled }.size).coerceAtLeast(0)
+        return if (sharesRemaining == 1) {
+            stringProvider.getString(R.string.jetpack_social_social_shares_remaining_one)
+        } else {
+            stringProvider.getString(R.string.jetpack_social_social_shares_remaining, sharesRemaining)
         }
     }
 
