@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-12 11:54:08+0000
+Translation-Revision-Date: 2023-08-03 16:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.6
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_insert_video_block">비디오 블록 삽입</string>
+    <string name="gutenberg_native_insert_image_block">이미지 블록 삽입</string>
+    <string name="gutenberg_native_insert_gallery_block">갤러리 블록 삽입</string>
+    <string name="gutenberg_native_insert_audio_block">오디오 블록 삽입</string>
+    <string name="blaze_campaign_detail_error">캠페인 상세 정보를 로드할 수 없습니다.</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">생성</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">아직 캠페인을 생성하지 않았습니다. 시작하려면 생성을 클릭하세요.</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">캠페인이 없습니다.</string>
+    <string name="blaze_campaign_details_page_title">캠페인 상세 정보</string>
+    <string name="blaze_campaigns_page_title">Blaze 캠페인</string>
+    <string name="budget_campaign_stats">예산</string>
+    <string name="clicks_campaign_stats">클릭 수</string>
+    <string name="impressions_campaign_stats">노출 수</string>
+    <string name="campaign_status_scheduled">예약됨</string>
+    <string name="campaign_status_in_moderation">검토 중</string>
+    <string name="campaign_status_canceled">취소됨</string>
+    <string name="campaign_status_rejected">거부됨</string>
+    <string name="campaign_status_completed">완료됨</string>
+    <string name="campaign_status_active">활성</string>
+    <string name="blaze_campaigns_card_footer_label">캠페인 생성</string>
+    <string name="blaze_campaigns_card_title">Blaze 캠페인</string>
+    <string name="promote_blaze_flow_error">Blaze 홍보 절차를 로드할 수 없습니다.</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">소셜 프로필 연결</string>
+    <string name="prepublishing_nudges_social_new_connection_text">소셜 미디어에서 글을 친구와 자동으로 공유하여 트래픽을 늘려보세요.</string>
+    <string name="menu_close_editor">편집기 닫기</string>
+    <string name="menu_redo_context">마지막 변경 다시 실행</string>
+    <string name="menu_undo_context">마지막 변경 실행 취소</string>
+    <string name="jetpack_social_social_shares_remaining">소셜 공유 %1$d회 남음</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">구독 후 더 공유</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">소셜 프로필 연결</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">소셜 미디어에서 글을 친구와 자동으로 공유하여 트래픽을 늘려보세요.</string>
+    <string name="post_settings_jetpack_social_header">소셜 공유</string>
     <string name="gutenberg_native_s_detached">%s 분리됨</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">동기화된 패턴 편집은 아직 iOS용 %s에서 지원되지 않습니다.</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">동기화된 패턴 편집은 아직 Android용 %s에서 지원되지 않습니다.</string>

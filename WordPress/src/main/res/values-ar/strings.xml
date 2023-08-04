@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-12 14:54:08+0000
+Translation-Revision-Date: 2023-07-27 13:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.6
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_insert_video_block">إدراج مكوّن الفيديوهات</string>
+    <string name="gutenberg_native_insert_image_block">إدراج مكوّن الصور</string>
+    <string name="gutenberg_native_insert_gallery_block">إدراج مكوّن المعرض</string>
+    <string name="gutenberg_native_insert_audio_block">إدراج مكوّن الملفات الصوتية</string>
+    <string name="blaze_campaign_detail_error">يتعذر تحميل تفاصيل الحملة</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">إنشاء</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">لم تنشئ أي حملات حتى الآن. انقر هنا للبدء.</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">ليست لديك حملات</string>
+    <string name="blaze_campaign_details_page_title">تفاصيل الحملة</string>
+    <string name="blaze_campaigns_page_title">حملات Blaze</string>
+    <string name="budget_campaign_stats">الميزانية</string>
+    <string name="clicks_campaign_stats">النقرات</string>
+    <string name="impressions_campaign_stats">الانطباعات</string>
+    <string name="campaign_status_scheduled">مجدول</string>
+    <string name="campaign_status_in_moderation">قيد الإشراف</string>
+    <string name="campaign_status_canceled">تم الإلغاء</string>
+    <string name="campaign_status_rejected">مرفوض</string>
+    <string name="campaign_status_completed">مكتمل</string>
+    <string name="campaign_status_active">نشط</string>
+    <string name="blaze_campaigns_card_footer_label">إنشاء حملة</string>
+    <string name="blaze_campaigns_card_title">حملة Blaze</string>
+    <string name="promote_blaze_flow_error">يتعذر تحميل تدفق الترويج في blaze</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">ربط ملفاتك الشخصية على شبكات التواصل الاجتماعي</string>
+    <string name="prepublishing_nudges_social_new_connection_text">قم بزيادة حركة المرور لديك من حلال مشاركة تدويناتك تلقائيًا مع أصدقائك على شبكات التواصل الاجتماعي.</string>
+    <string name="menu_close_editor">إغلاق المحرر</string>
+    <string name="menu_redo_context">إعادة آخر تغيير</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">الاشتراك لمشاركة المزيد</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">ربط ملفاتك الشخصية على شبكات التواصل الاجتماعي</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">قم بزيادة حركة المرور لديك من حلال مشاركة تدويناتك تلقائيًا مع أصدقائك على شبكات التواصل الاجتماعي.</string>
+    <string name="post_settings_jetpack_social_header">المشاركة عبر شبكات التواصل الاجتماعي</string>
     <string name="gutenberg_native_s_detached">تم فصل %s</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">تحرير الأنماط التي تمت مزامنتها غير مدعوم حتى الآن على %s لنظام التشغيل iOS</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">تحرير الأنماط التي تمت مزامنتها غير مدعوم حتى الآن على %s لنظام التشغيل Android</string>
