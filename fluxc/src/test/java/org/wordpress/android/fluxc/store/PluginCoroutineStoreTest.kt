@@ -67,7 +67,7 @@ class PluginCoroutineStoreTest {
         val fetchedPlugins = listOf(
             SitePluginModel()
         )
-        whenever(pluginWPAPIRestClient.fetchPlugins(site, true)).thenReturn(
+        whenever(pluginWPAPIRestClient.fetchPlugins(site)).thenReturn(
             WPApiPluginsPayload(
                 site,
                 fetchedPlugins
@@ -83,7 +83,7 @@ class PluginCoroutineStoreTest {
 
     @Test
     fun `fetches WP Api plugins with error `() = test {
-        whenever(pluginWPAPIRestClient.fetchPlugins(site, true)).thenReturn(
+        whenever(pluginWPAPIRestClient.fetchPlugins(site)).thenReturn(
             WPApiPluginsPayload(
                 BaseNetworkError(
                     GenericErrorType.AUTHORIZATION_REQUIRED
@@ -103,7 +103,7 @@ class PluginCoroutineStoreTest {
         val fetchedPlugins = listOf(
             SitePluginModel()
         )
-        whenever(pluginWPAPIRestClient.fetchPlugins(site, true)).thenReturn(
+        whenever(pluginWPAPIRestClient.fetchPlugins(site)).thenReturn(
             WPApiPluginsPayload(
                 site,
                 fetchedPlugins
