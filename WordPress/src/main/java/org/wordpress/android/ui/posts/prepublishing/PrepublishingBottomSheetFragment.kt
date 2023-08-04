@@ -19,6 +19,8 @@ import org.wordpress.android.databinding.PostPrepublishingBottomSheetBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPBottomSheetDialogFragment
+import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.ADD_CATEGORY
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.CATEGORIES
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.HOME
@@ -33,6 +35,7 @@ import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActionClickedListener
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingSocialViewModelProvider
 import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsFragment
 import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFragment
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment
@@ -46,7 +49,7 @@ import javax.inject.Inject
 import com.google.android.material.R as MaterialR
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
-    PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
+    PrepublishingScreenClosedListener, PrepublishingActionClickedListener, PrepublishingSocialViewModelProvider {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -273,6 +276,31 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
         viewModel.onSubmitButtonClicked(publishPost)
+    }
+
+    override fun getEditorJetpackSocialViewModel(): EditorJetpackSocialViewModel {
+        return ViewModelProvider(
+            requireActivity(), // try using the activity-scoped ViewModel, but only if it's started
+            viewModelFactory
+        )[EditorJetpackSocialViewModel::class.java].takeIf {
+            it.isStarted
+        } ?: ViewModelProvider(
+            this, // if not, let's use our own scope to create the ViewModel and start it
+            viewModelFactory
+        )[EditorJetpackSocialViewModel::class.java].also {
+            val hook = getEditorHook()
+            it.start(hook.site, hook.editPostRepository)
+        }
+    }
+
+    @Suppress("TooGenericExceptionThrown")
+    private fun getEditorHook(): EditPostActivityHook {
+        val activity = activity
+        return if (activity is EditPostActivityHook) {
+            activity
+        } else {
+            throw RuntimeException("$activity must implement EditPostActivityHook")
+        }
     }
 
     companion object {
