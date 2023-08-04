@@ -41,18 +41,22 @@ class ContactUsTests : BaseTest() {
 
     @Test
     fun e2eHelpCanBeOpenedWhileEnteringEmail() {
-        LoginFlow()
-            .chooseContinueWithWpCom(super.mComposeTestRule)
-            .tapHelp()
-            .assertHelpScreenLoaded()
+        if (BuildConfig.IS_JETPACK_APP) {
+            LoginFlow()
+                .chooseContinueWithWpCom(super.mComposeTestRule)
+                .tapHelp()
+                .assertHelpScreenLoaded()
+        }
     }
 
     @Test
     fun e2eHelpCanBeOpenedWhileEnteringPassword() {
-        LoginFlow()
-            .chooseContinueWithWpCom(super.mComposeTestRule)
-            .enterEmailAddress(BuildConfig.E2E_WP_COM_USER_EMAIL)
-            .tapHelp()
-            .assertHelpScreenLoaded()
+        if (BuildConfig.IS_JETPACK_APP) {
+            LoginFlow()
+                .chooseContinueWithWpCom(super.mComposeTestRule)
+                .enterEmailAddress(BuildConfig.E2E_WP_COM_USER_EMAIL)
+                .tapHelp()
+                .assertHelpScreenLoaded()
+        }
     }
 }
