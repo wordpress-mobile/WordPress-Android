@@ -58,6 +58,8 @@ fun PostSocialSharingItem(
                 DescriptionText(
                     text = model.description,
                     isLowOnShares = model.isLowOnShares,
+                    baseTextStyle = MaterialTheme.typography.body2
+                        .copy(color = AppColor.Gray30),
                 )
             }
         }
@@ -99,21 +101,12 @@ private val warningColor: Color
     @Composable
     get() = AppColor.Yellow50
 
-private val lowOnSharesDescriptionStyle: TextStyle
-    @Composable
-    get() = MaterialTheme.typography.body2
-        .copy(color = warningColor)
-
-private val defaultDescriptionStyle: TextStyle
-    @Composable
-    get() = MaterialTheme.typography.body2
-        .copy(color = AppColor.Gray30)
-
 @Composable
 fun DescriptionText(
     text: String,
     isLowOnShares: Boolean,
     modifier: Modifier = Modifier,
+    baseTextStyle: TextStyle = MaterialTheme.typography.body2,
 ) {
     Row(
         modifier,
@@ -131,7 +124,9 @@ fun DescriptionText(
 
         Text(
             text = text,
-            style = if (isLowOnShares) lowOnSharesDescriptionStyle else defaultDescriptionStyle,
+            style = baseTextStyle.copy(
+                color = if (isLowOnShares) warningColor else baseTextStyle.color,
+            ),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
