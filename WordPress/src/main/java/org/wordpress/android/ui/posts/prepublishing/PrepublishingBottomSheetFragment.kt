@@ -22,6 +22,9 @@ import org.wordpress.android.ui.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.ADD_CATEGORY
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.CATEGORIES
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.HOME
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.PUBLISH
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.SOCIAL
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.TAGS
 import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesFragment
 import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryFragment
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeFragment
@@ -31,6 +34,7 @@ import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActio
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener
 import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsFragment
+import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFragment
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.KeyboardResizeViewUtil
@@ -184,12 +188,12 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 )
             }
 
-            PrepublishingScreen.PUBLISH -> Pair(
+            PUBLISH -> Pair(
                 PrepublishingPublishSettingsFragment.newInstance(),
                 PrepublishingPublishSettingsFragment.TAG
             )
 
-            PrepublishingScreen.TAGS -> {
+            TAGS -> {
                 val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
                     "arguments can't be null."
                 }
@@ -224,6 +228,13 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                         navigationTarget.bundle
                     ),
                     PrepublishingAddCategoryFragment.TAG
+                )
+            }
+
+            SOCIAL -> {
+                Pair(
+                    PrepublishingSocialFragment.newInstance(),
+                    PrepublishingSocialFragment.TAG
                 )
             }
         }
