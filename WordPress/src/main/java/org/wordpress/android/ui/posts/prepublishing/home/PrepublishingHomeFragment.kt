@@ -16,6 +16,7 @@ import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActionClickedListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -79,7 +80,7 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
         }
 
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            (actionsRecyclerView.adapter as PrepublishingHomeAdapter).update(uiState)
+            uiState?.let { (actionsRecyclerView.adapter as PrepublishingHomeAdapter).update(it) }
         }
 
         viewModel.onActionClicked.observeEvent(viewLifecycleOwner) { actionType ->
@@ -103,7 +104,16 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
             viewModelFactory
         )[EditorJetpackSocialViewModel::class.java]
 
-        // TODO observe live data here for jetpack social
+        merge(
+            jetpackSocialViewModel.jetpackSocialUiState,
+            jetpackSocialViewModel.jetpackSocialContainerVisibility
+        ) { uiState, visibility ->
+            Pair(uiState, visibility)
+        }.observe(viewLifecycleOwner) { pair ->
+            val uiState = pair.first ?: return@observe
+            val visibility = pair.second ?: return@observe
+            viewModel.updateJetpackSocialState(uiState.takeIf { visibility.showInPrepublishingSheet })
+        }
     }
 
     private fun getSite(): SiteModel {
