@@ -216,11 +216,11 @@ class EditorJetpackSocialViewModel @Inject constructor(
     private fun getJetpackSocialContainerVisibilityFromPrefs(): JetpackSocialContainerVisibility {
         return JetpackSocialContainerVisibility(
             showInPrepublishingSheet = appPrefsWrapper.getShouldShowJetpackSocialNoConnections(
-                siteModel.id,
+                siteModel.siteId,
                 JetpackSocialFlow.PRE_PUBLISHING
             ),
             showInPostSettings = appPrefsWrapper.getShouldShowJetpackSocialNoConnections(
-                siteModel.id,
+                siteModel.siteId,
                 JetpackSocialFlow.POST_SETTINGS
             )
         )
@@ -241,7 +241,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
 
     @VisibleForTesting
     fun onJetpackSocialNotNowClick(jetpackSocialFlow: JetpackSocialFlow) {
-        appPrefsWrapper.setShouldShowJetpackSocialNoConnections(false, siteModel.id, jetpackSocialFlow)
+        appPrefsWrapper.setShouldShowJetpackSocialNoConnections(false, siteModel.siteId, jetpackSocialFlow)
         _jetpackSocialContainerVisibility.value = getJetpackSocialContainerVisibilityFromPrefs()
     }
 

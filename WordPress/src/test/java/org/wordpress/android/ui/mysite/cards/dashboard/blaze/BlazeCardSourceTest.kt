@@ -11,28 +11,20 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.Result
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
-import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsError
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorType
-import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.FetchCampaignListUseCase
+import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.GenericError
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardSource
+import org.wordpress.android.ui.mysite.cards.blaze.MostRecentCampaignUseCase
+import org.wordpress.android.ui.mysite.cards.blaze.NoCampaigns
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 const val SITE_LOCAL_ID = 1
-
-val BLAZE_CAMPAIGNS_MODEL = BlazeCampaignsModel(
-    listOf(
-        mock()
-    ),
-    page = 0,
-    totalItems = 10,
-    totalPages = 1
-)
-
 
 @ExperimentalCoroutinesApi
 class BlazeCardSourceTest : BaseUnitTest() {
@@ -46,7 +38,13 @@ class BlazeCardSourceTest : BaseUnitTest() {
     private lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
     @Mock
-    private lateinit var blazeCampaignsStore: BlazeCampaignsStore
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    private lateinit var fetchCampaignListUseCase: FetchCampaignListUseCase
+
+    @Mock
+    private lateinit var mostRecentCampaignUseCase: MostRecentCampaignUseCase
 
     private lateinit var blazeCardSource: BlazeCardSource
 
@@ -59,7 +57,9 @@ class BlazeCardSourceTest : BaseUnitTest() {
         setUpMocks(isBlazeEnabled)
         blazeCardSource = BlazeCardSource(
             selectedSiteRepository,
-            blazeCampaignsStore,
+            networkUtilsWrapper,
+            fetchCampaignListUseCase,
+            mostRecentCampaignUseCase,
             blazeFeatureUtils
         )
     }
@@ -119,32 +119,34 @@ class BlazeCardSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given blaze campaign enabled, when build is invoked, then campaign card is shown`() = test {
-        init(true)
-        val campaign = mock<BlazeCampaignModel>()
-        val result = mutableListOf<BlazeCardUpdate>()
-        setUpMocksForBlazeCampaigns(campaign)
-
-        blazeCardSource.build(testScope(), SITE_LOCAL_ID)
-            .observeForever { it?.let { result.add(it) } }
-
-        assertThat(result.last()).isEqualTo(BlazeCardUpdate(true, campaign))
-    }
-
-    @Test
-    fun `given blaze campaign enabled + no campaigns, when build is invoked, then promo card shown`() = test {
+    fun `given no internet + no campaigns in db, when build is invoked, then promo card shown`() = test {
         init(true)
         val result = mutableListOf<BlazeCardUpdate>()
         whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(true)
-        whenever(blazeCampaignsStore.fetchBlazeCampaigns(siteModel)).thenReturn(
-            BlazeCampaignsStore.BlazeCampaignsResult()
-        )
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        whenever(mostRecentCampaignUseCase.execute(siteModel)).thenReturn(Result.Failure(NoCampaigns))
 
         blazeCardSource.build(testScope(), SITE_LOCAL_ID)
             .observeForever { it?.let { result.add(it) } }
 
-        verify(blazeCampaignsStore, never()).getMostRecentBlazeCampaign(siteModel)
+        verify(fetchCampaignListUseCase, never()).execute(siteModel,1)
         assertThat(result.last()).isEqualTo(BlazeCardUpdate(true, null))
+    }
+
+    @Test
+    fun `given no internet + campaigns in db, when build is invoked, then campaigns card shown`() = test {
+        init(true)
+        val result = mutableListOf<BlazeCardUpdate>()
+        val campaignInDb = mock<BlazeCampaignModel>()
+        whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(true)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        whenever(mostRecentCampaignUseCase.execute(siteModel)).thenReturn(Result.Success(campaignInDb))
+
+        blazeCardSource.build(testScope(), SITE_LOCAL_ID)
+            .observeForever { it?.let { result.add(it) } }
+
+        verify(fetchCampaignListUseCase, never()).execute(siteModel,1)
+        assertThat(result.last()).isEqualTo(BlazeCardUpdate(true, campaignInDb))
     }
 
     @Test
@@ -152,23 +154,30 @@ class BlazeCardSourceTest : BaseUnitTest() {
         init(true)
         val result = mutableListOf<BlazeCardUpdate>()
         whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(true)
-        whenever(blazeCampaignsStore.fetchBlazeCampaigns(siteModel)).thenReturn(
-            BlazeCampaignsStore.BlazeCampaignsResult(error = BlazeCampaignsError(BlazeCampaignsErrorType.API_ERROR))
-        )
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        whenever(fetchCampaignListUseCase.execute(siteModel,1)).thenReturn(Result.Failure(GenericError))
 
         blazeCardSource.build(testScope(), SITE_LOCAL_ID)
             .observeForever { it?.let { result.add(it) } }
 
-        verify(blazeCampaignsStore, never()).getMostRecentBlazeCampaign(siteModel)
+        verify(mostRecentCampaignUseCase, never()).execute(siteModel)
         assertThat(result.last()).isEqualTo(BlazeCardUpdate(true, null))
     }
 
-    private suspend fun setUpMocksForBlazeCampaigns(campaign: BlazeCampaignModel) {
-        whenever(blazeCampaignsStore.fetchBlazeCampaigns(siteModel)).thenReturn(
-            BlazeCampaignsStore.BlazeCampaignsResult(BLAZE_CAMPAIGNS_MODEL)
-        )
+    @Test
+    fun `given blaze campaign api returns campaigns, when build is invoked, then blaze card shown`() = test {
+        init(true)
+        val result = mutableListOf<BlazeCardUpdate>()
+        val campaignInDb = mock<BlazeCampaignModel>()
         whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(true)
-        whenever(blazeCampaignsStore.getMostRecentBlazeCampaign(siteModel)).thenReturn(campaign)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        whenever(fetchCampaignListUseCase.execute(siteModel,1)).thenReturn(Result.Success(mock()))
+        whenever(mostRecentCampaignUseCase.execute(siteModel)).thenReturn(Result.Success(campaignInDb))
+
+        blazeCardSource.build(testScope(), SITE_LOCAL_ID)
+            .observeForever { it?.let { result.add(it) } }
+
+        assertThat(result.last()).isEqualTo(BlazeCardUpdate(true, campaignInDb))
     }
 
     private fun setUpMocks(isBlazeEnabled: Boolean) {
