@@ -1325,10 +1325,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         if (undoItem != null) {
             undoItem.setEnabled(mMenuHasUndo);
+            undoItem.setVisible(!mHtmlModeMenuStateOn);
         }
 
         if (redoItem != null) {
             redoItem.setEnabled(mMenuHasRedo);
+            redoItem.setVisible(!mHtmlModeMenuStateOn);
         }
 
         if (secondaryAction != null && mEditPostRepository.hasPost()) {
