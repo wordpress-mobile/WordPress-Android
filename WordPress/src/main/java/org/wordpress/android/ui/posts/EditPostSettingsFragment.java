@@ -67,6 +67,7 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePo
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
 import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.usecase.social.JetpackSocialFlow;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -257,7 +258,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Override public void onResume() {
         super.onResume();
-        mJetpackSocialViewModel.onResume();
+        mJetpackSocialViewModel.onResume(JetpackSocialFlow.POST_SETTINGS);
     }
 
     @Override

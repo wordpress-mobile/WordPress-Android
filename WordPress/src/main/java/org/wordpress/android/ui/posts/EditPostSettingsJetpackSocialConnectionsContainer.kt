@@ -66,13 +66,13 @@ fun EditPostSettingsJetpackSocialContainerWithShareLimitPreview() {
             connections.add(
                 JetpackSocialConnectionData(
                     postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection1, true),
-                    onConnectionClick = {},
+                    onConnectionClick = { _, _ -> },
                 )
             )
             connections.add(
                 JetpackSocialConnectionData(
                     postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection2, false),
-                    onConnectionClick = {}
+                    onConnectionClick = { _, _ -> }
                 )
             )
             EditPostSettingsJetpackSocialConnectionsContainer(
@@ -113,13 +113,13 @@ fun EditPostSettingsJetpackSocialContainerWithoutShareLimitPreview() {
             connections.add(
                 JetpackSocialConnectionData(
                     postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection1, true),
-                    onConnectionClick = {},
+                    onConnectionClick = { _, _ -> },
                 )
             )
             connections.add(
                 JetpackSocialConnectionData(
                     postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection2, false),
-                    onConnectionClick = {}
+                    onConnectionClick = { _, _ -> }
                 )
             )
             EditPostSettingsJetpackSocialConnectionsContainer(

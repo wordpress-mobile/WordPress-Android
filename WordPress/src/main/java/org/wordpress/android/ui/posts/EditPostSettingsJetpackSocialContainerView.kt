@@ -55,7 +55,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                                 EditPostSettingsJetpackSocialSharesContainer(
                                     postSocialSharingModel = postSocialSharingModelState.value,
                                     subscribeButtonLabel = subscribeButtonLabel,
-                                    onSubscribeClick = onSubscribeClick,
+                                    onSubscribeClick = { onSubscribeClick(JetpackSocialFlow.POST_SETTINGS) },
                                 )
                             }
                         }
@@ -66,7 +66,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                             trainOfIconsModels = trainOfIconsModels,
                             message = message,
                             connectProfilesButtonLabel = connectProfilesButtonLabel,
-                            onConnectProfilesCLick = onConnectProfilesClick,
+                            onConnectProfilesCLick = { onConnectProfilesClick(JetpackSocialFlow.POST_SETTINGS) },
                             notNowButtonLabel = notNowButtonLabel,
                             onNotNowClick = { onNotNowClick(JetpackSocialFlow.POST_SETTINGS) },
                         )

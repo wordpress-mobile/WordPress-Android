@@ -11,6 +11,7 @@ import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.ui.compose.theme.AppThemeEditor
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.compose.PostSocialConnectionItem
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 
 @Composable
 fun EditPostSettingsJetpackSocialConnectionsList(jetpackSocialConnectionDataList: List<JetpackSocialConnectionData>) {
@@ -21,7 +22,7 @@ fun EditPostSettingsJetpackSocialConnectionsList(jetpackSocialConnectionDataList
         jetpackSocialConnectionDataList.forEach {
             PostSocialConnectionItem(
                 connection = it.postSocialConnection,
-                onSharingChange = it.onConnectionClick,
+                onSharingChange = { newValue -> it.onConnectionClick(newValue, JetpackSocialFlow.POST_SETTINGS) } ,
                 enabled = it.enabled,
             )
             Divider()
@@ -31,7 +32,7 @@ fun EditPostSettingsJetpackSocialConnectionsList(jetpackSocialConnectionDataList
 
 data class JetpackSocialConnectionData(
     val postSocialConnection: PostSocialConnection,
-    val onConnectionClick: (Boolean) -> Unit,
+    val onConnectionClick: (Boolean, JetpackSocialFlow) -> Unit,
     val enabled: Boolean = true,
 )
 
@@ -62,13 +63,13 @@ fun PreviewEditPostSettingsJetpackSocialConnectionsList() {
         connections.add(
             JetpackSocialConnectionData(
                 postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection1, true),
-                onConnectionClick = {},
+                onConnectionClick = { _, _ -> },
             )
         )
         connections.add(
             JetpackSocialConnectionData(
                 postSocialConnection = PostSocialConnection.fromPublicizeConnection(connection2, false),
-                onConnectionClick = {},
+                onConnectionClick = { _, _ -> },
             )
         )
         EditPostSettingsJetpackSocialConnectionsList(
