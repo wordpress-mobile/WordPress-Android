@@ -82,13 +82,10 @@ class EditorJetpackSocialViewModel @Inject constructor(
     fun onResume(jetpackSocialFlow: JetpackSocialFlow) {
         if (jetpackSocialFeatureConfig.isEnabled()) {
             _jetpackSocialUiState.value?.let { uiState ->
-                when(uiState) {
-                    is JetpackSocialUiState.Loaded -> if (uiState.showShareLimitUi) {
-                        jetpackSocialSharingTracker.trackShareLimitDisplayed(jetpackSocialFlow)
-                    }
-                    is JetpackSocialUiState.NoConnections ->
-                        jetpackSocialSharingTracker.trackAddConnectionCtaDisplayed(jetpackSocialFlow)
-                    else -> {}
+                if(uiState is JetpackSocialUiState.Loaded && uiState.showShareLimitUi) {
+                    jetpackSocialSharingTracker.trackShareLimitDisplayed(jetpackSocialFlow)
+                } else if (uiState is JetpackSocialUiState.NoConnections) {
+                    jetpackSocialSharingTracker.trackAddConnectionCtaDisplayed(jetpackSocialFlow)
                 }
             }
 

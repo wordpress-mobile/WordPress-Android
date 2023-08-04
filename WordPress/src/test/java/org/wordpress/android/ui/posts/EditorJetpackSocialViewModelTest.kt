@@ -25,9 +25,11 @@ import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.PostSocialSharingModelMapper
 import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.social.JetpackSocialSharingTracker
 import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
 import org.wordpress.android.usecase.social.GetJetpackSocialShareMessageUseCase
 import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 import org.wordpress.android.usecase.social.ShareLimit
 import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 
@@ -63,6 +65,9 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var editPostRepository: EditPostRepository
 
+    @Mock
+    lateinit var jetpackSocialSharingTracker: JetpackSocialSharingTracker
+
     private val showJetpackSocialContainerObserver: Observer<JetpackSocialContainerVisibility> = mock()
     private val jetpackSocialUiStateObserver: Observer<JetpackSocialUiState> = mock()
     private val actionEventsObserver: Observer<ActionEvent> = mock()
@@ -81,6 +86,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             postSocialSharingModelMapper = postSocialSharingModelMapper,
             publicizeTableWrapper = publicizeTableWrapper,
             appPrefsWrapper = appPrefsWrapper,
+            jetpackSocialSharingTracker = jetpackSocialSharingTracker,
             bgDispatcher = testDispatcher(),
         )
 
@@ -230,7 +236,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             jetpackSocialConnectionDataList = listOf(
                 JetpackSocialConnectionData(
                     postSocialConnection = FAKE_POST_SOCIAL_CONNECTION,
-                    onConnectionClick = {},
+                    onConnectionClick = { _, _ -> },
                     enabled = false
                 )
             ),
@@ -263,7 +269,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             jetpackSocialConnectionDataList = listOf(
                 JetpackSocialConnectionData(
                     postSocialConnection = FAKE_POST_SOCIAL_CONNECTION,
-                    onConnectionClick = {},
+                    onConnectionClick = { _, _ -> },
                     enabled = false
                 )
             ),
@@ -288,21 +294,21 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(loaded)
 
         classToTest.start(fakeSiteModel(true), editPostRepository)
-        classToTest.onResume()
+        classToTest.onResume(JetpackSocialFlow.POST_SETTINGS)
 
         verify(jetpackSocialUiStateObserver).onChanged(loaded)
     }
 
     @Test
     fun `Should NOT reload jetpack social on screen shown if last emitted action was NOT OpenSocialConnectionsList`() {
-        classToTest.onResume()
+        classToTest.onResume(JetpackSocialFlow.POST_SETTINGS)
         verify(jetpackSocialUiStateObserver, never()).onChanged(any())
     }
 
     @Test
     fun `Should emit OpenSocialConnectionList when onJetpackSocialConnectProfilesClick is called`() {
         classToTest.start(fakeSiteModel(), editPostRepository)
-        classToTest.onJetpackSocialConnectProfilesClick()
+        classToTest.onJetpackSocialConnectProfilesClick(JetpackSocialFlow.POST_SETTINGS)
         verify(actionEventsObserver).onChanged(
             ActionEvent.OpenSocialConnectionsList(
                 siteModel = FAKE_SITE_MODEL,
