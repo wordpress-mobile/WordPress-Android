@@ -3483,6 +3483,7 @@
     <string name="prepublishing_nudges_publish_action">Publish Date</string>
     <string name="prepublishing_nudges_tags_action">Tags</string>
     <string name="prepublishing_nudges_categories_action">Categories</string>
+    <string name="prepublishing_nudges_social_action">Social sharing</string>
     <string name="prepublishing_nudges_home_header_publishing_to">Publishing to</string>
     <string name="prepublishing_nudges_home_publish_button" translatable="false">@string/publish_now</string>
     <string name="prepublishing_nudges_home_schedule_button">Schedule Now</string>
@@ -3499,6 +3500,7 @@
     <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Add New Category</string>
     <string name="prepublishing_nudges_add_category_button">Add Category</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Social sharing</string>
     <string name="prepublishing_nudges_social_new_connection_text">Increase your traffic by auto-sharing your posts with your friends on social media.</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Connect accounts</string>
 
