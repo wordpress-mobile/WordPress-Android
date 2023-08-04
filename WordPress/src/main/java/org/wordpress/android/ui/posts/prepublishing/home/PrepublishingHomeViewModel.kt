@@ -241,7 +241,8 @@ class PrepublishingHomeViewModel @Inject constructor(
     fun updateJetpackSocialState(
         state: EditorJetpackSocialViewModel.JetpackSocialUiState?
     ) {
-        val newState = state?.let {
+        val isPostPublished = editPostRepository.getPost()?.status == PostStatus.PUBLISHED.toString()
+        val newState = state?.takeUnless { isPostPublished }?.let {
             SocialUiState.Visible(
                 it,
                 onItemClicked = { onActionClicked(PrepublishingScreenNavigation.Social) }
