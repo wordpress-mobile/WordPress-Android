@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostPrepublishingHomeFragmentBinding
@@ -14,8 +15,10 @@ import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActionClickedListener
+import org.wordpress.android.ui.stats.refresh.utils.WrappingLinearLayoutManager
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -51,9 +54,7 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(PostPrepublishingHomeFragmentBinding.bind(view)) {
-            actionsRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-            actionsRecyclerView.adapter = PrepublishingHomeAdapter(requireActivity())
-
+            setupRecyclerView()
             initViewModel()
             setupJetpackSocialViewModel()
         }
@@ -69,6 +70,30 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
         super.onResume()
     }
 
+    private fun PostPrepublishingHomeFragmentBinding.setupRecyclerView() {
+        val adapter = PrepublishingHomeAdapter(requireActivity())
+        // use WrappingLinearLayoutManager to properly handle recycler with wrap_content height
+        val layoutManager = WrappingLinearLayoutManager(
+            requireContext(),
+            LinearLayoutManager.VERTICAL,
+            false
+        )
+
+        adapter.registerAdapterDataObserver(
+            object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                    layoutManager.onItemRangeRemoved()
+                }
+            }
+        )
+
+        // since the recycler is anchored at the bottom, this is needed so the animation shrinks the item from the top
+        layoutManager.stackFromEnd = true
+
+        actionsRecyclerView.layoutManager = layoutManager
+        actionsRecyclerView.adapter = adapter
+    }
+
     private fun PostPrepublishingHomeFragmentBinding.initViewModel() {
         viewModel = ViewModelProvider(this@PrepublishingHomeFragment, viewModelFactory)
             .get(PrepublishingHomeViewModel::class.java)
@@ -79,7 +104,7 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
         }
 
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            (actionsRecyclerView.adapter as PrepublishingHomeAdapter).update(uiState)
+            uiState?.let { (actionsRecyclerView.adapter as PrepublishingHomeAdapter).update(it) }
         }
 
         viewModel.onActionClicked.observeEvent(viewLifecycleOwner) { actionType ->
@@ -103,7 +128,16 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
             viewModelFactory
         )[EditorJetpackSocialViewModel::class.java]
 
-        // TODO observe live data here for jetpack social
+        merge(
+            jetpackSocialViewModel.jetpackSocialUiState,
+            jetpackSocialViewModel.jetpackSocialContainerVisibility
+        ) { uiState, visibility ->
+            Pair(uiState, visibility)
+        }.observe(viewLifecycleOwner) { pair ->
+            val uiState = pair.first ?: return@observe
+            val visibility = pair.second ?: return@observe
+            viewModel.updateJetpackSocialState(uiState.takeIf { visibility.showInPrepublishingSheet })
+        }
     }
 
     private fun getSite(): SiteModel {

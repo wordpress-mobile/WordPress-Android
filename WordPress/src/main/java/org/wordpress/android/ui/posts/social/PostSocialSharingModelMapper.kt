@@ -16,30 +16,20 @@ class PostSocialSharingModelMapper @Inject constructor(
         connections: List<PostSocialConnection>,
         shareLimit: ShareLimit,
     ): PostSocialSharingModel {
-        return if (shareLimit is ShareLimit.Enabled) {
-            val title = mapTitle(connections)
-            val description = mapDescription(shareLimit, connections)
-            val iconModels = mapIconModels(connections)
-            val isLowOnShares = mapIsLowOnShares(shareLimit, connections)
-            PostSocialSharingModel(
-                title = title,
-                description = description,
-                iconModels = iconModels,
-                isLowOnShares = isLowOnShares,
-            )
-        } else {
-            PostSocialSharingModel(
-                title = "",
-                description = "",
-                iconModels = emptyList(),
-                isLowOnShares = false,
-            )
-        }
+        val title = mapTitle(connections)
+        val description = if (shareLimit is ShareLimit.Enabled) mapDescription(shareLimit) else ""
+        val iconModels = mapIconModels(connections)
+        val isLowOnShares = mapIsLowOnShares(shareLimit, connections)
+        return PostSocialSharingModel(
+            title = title,
+            description = description,
+            iconModels = iconModels,
+            isLowOnShares = isLowOnShares,
+        )
     }
 
-    private fun mapDescription(shareLimit: ShareLimit.Enabled, connections: List<PostSocialConnection>): String {
-        val sharesRemaining =
-            (shareLimit.sharesRemaining - connections.filter { it.isSharingEnabled }.size).coerceAtLeast(0)
+    private fun mapDescription(shareLimit: ShareLimit.Enabled): String {
+        val sharesRemaining = shareLimit.sharesRemaining.coerceAtLeast(0)
         return if (sharesRemaining == 1) {
             stringProvider.getString(R.string.jetpack_social_social_shares_remaining_one)
         } else {
@@ -75,19 +65,20 @@ class PostSocialSharingModelMapper @Inject constructor(
     }
 
     private fun mapIconModels(connections: List<PostSocialConnection>) =
-        connections.map {
-            Pair(PublicizeServiceIcon.fromServiceId(it.service)?.iconResId, it)
-        }.map { (iconResId, connection) ->
+        connections.map { connection ->
+            val iconResId = PublicizeServiceIcon.fromServiceId(connection.service)?.iconResId
             TrainOfIconsModel(
                 data = iconResId,
-                alpha = if (connection.isSharingEnabled) 1f else 0.5f
+                alpha = if (connection.isSharingEnabled) 1f else 0.3f
             )
-        }
+        }.sortedBy { it.alpha }
 
     private fun mapIsLowOnShares(
-        shareLimit: ShareLimit.Enabled,
+        shareLimit: ShareLimit,
         connections: List<PostSocialConnection>
     ): Boolean {
+        if (shareLimit !is ShareLimit.Enabled) return false
+
         val sharingEnabledConnections = connections.filter { it.isSharingEnabled }
         return when {
             // No more shares left.

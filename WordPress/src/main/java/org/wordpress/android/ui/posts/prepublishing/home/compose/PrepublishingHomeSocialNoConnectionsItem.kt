@@ -30,7 +30,7 @@ import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.publicize.PublicizeServiceIcon
 
 @Composable
-fun PrepublishingHomeSocialConnectItem(
+fun PrepublishingHomeSocialNoConnectionsItem(
     connectionIconModels: List<TrainOfIconsModel>,
     onConnectClick: () -> Unit,
     onDismissClick: () -> Unit,
@@ -88,9 +88,9 @@ fun PrepublishingHomeSocialConnectItem(
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun PrepublishingHomeSocialConnectItemPreview() {
+private fun PrepublishingHomeSocialNoConnectionsItemPreview() {
     AppTheme {
-        PrepublishingHomeSocialConnectItem(
+        PrepublishingHomeSocialNoConnectionsItem(
             connectionIconModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
             onConnectClick = { /*TODO*/ },
             onDismissClick = { /*TODO*/ },

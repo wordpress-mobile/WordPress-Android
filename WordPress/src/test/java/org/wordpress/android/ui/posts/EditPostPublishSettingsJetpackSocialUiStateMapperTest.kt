@@ -13,6 +13,7 @@ import org.wordpress.android.models.PublicizeService
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.social.PostSocialConnection
+import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 import org.wordpress.android.ui.publicize.PublicizeServiceIcon
 import org.wordpress.android.usecase.social.JetpackSocialFlow
 import org.wordpress.android.usecase.social.ShareLimit
@@ -77,6 +78,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         val actual = classToTest.mapLoaded(
             connections = allConnections,
             shareLimit = shareLimit,
+            socialSharingModel = FAKE_SOCIAL_SHARING_MODEL,
             onSubscribeClick = onConnectProfilesClick,
             shareMessage = shareMessage,
             onShareMessageClick = onShareMessageClick,
@@ -96,6 +98,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
                     enabled = true
                 )
             ),
+            socialSharingModel = FAKE_SOCIAL_SHARING_MODEL,
             showShareLimitUi = true,
             isShareMessageEnabled = true,
             shareMessage = shareMessage,
@@ -127,6 +130,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         val actual = classToTest.mapLoaded(
             connections = allConnections,
             shareLimit = shareLimit,
+            socialSharingModel = FAKE_SOCIAL_SHARING_MODEL,
             onSubscribeClick = onConnectProfilesClick,
             shareMessage = shareMessage,
             onShareMessageClick = onShareMessageClick,
@@ -153,6 +157,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         val actual = classToTest.mapLoaded(
             connections = allConnections,
             shareLimit = shareLimit,
+            socialSharingModel = FAKE_SOCIAL_SHARING_MODEL,
             onSubscribeClick = onConnectProfilesClick,
             shareMessage = shareMessage,
             onShareMessageClick = onShareMessageClick,
@@ -167,6 +172,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
                     enabled = false
                 ),
             ),
+            socialSharingModel = FAKE_SOCIAL_SHARING_MODEL,
             showShareLimitUi = false,
             isShareMessageEnabled = false,
             shareMessage = "Message",
@@ -224,5 +230,13 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
 
     private fun mockStringResource(stringResId: Int, stringLabel: String) {
         whenever(stringProvider.getString(stringResId)).thenReturn(stringLabel)
+    }
+
+    companion object {
+        private val FAKE_SOCIAL_SHARING_MODEL = PostSocialSharingModel(
+            title = "Title",
+            description = "Description",
+            iconModels = emptyList(),
+        )
     }
 }

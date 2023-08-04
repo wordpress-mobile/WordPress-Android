@@ -7,6 +7,7 @@ import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.Loaded
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.NoConnections
 import org.wordpress.android.ui.posts.social.PostSocialConnection
+import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 import org.wordpress.android.ui.publicize.PublicizeServiceIcon
 import org.wordpress.android.usecase.social.JetpackSocialFlow
 import org.wordpress.android.usecase.social.ShareLimit
@@ -23,6 +24,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
     fun mapLoaded(
         connections: List<PostSocialConnection>,
         shareLimit: ShareLimit,
+        socialSharingModel: PostSocialSharingModel,
         onSubscribeClick: () -> Unit,
         shareMessage: String,
         onShareMessageClick: () -> Unit,
@@ -42,6 +44,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapper @Inject constructor(
                     } else true
                 )
             },
+            socialSharingModel = socialSharingModel,
             showShareLimitUi = !isPostPublished && shareLimit is ShareLimit.Enabled,
             isShareMessageEnabled = !isPostPublished,
             shareMessage = shareMessage,
