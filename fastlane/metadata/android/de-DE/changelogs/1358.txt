@@ -1,3 +1,0 @@
-22.8:
-Die App wird nicht mehr abstürzen, nachdem du eine Website gelöscht hast. Puh.
-
