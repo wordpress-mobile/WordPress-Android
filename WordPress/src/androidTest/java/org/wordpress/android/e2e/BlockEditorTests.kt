@@ -89,5 +89,11 @@ class BlockEditorTests : BaseTest() {
             .redo()
             .redo()
             .verifyContentStructure(1, mPostText.split(" ").count(), mPostText.length)
+            .switchToHtmlMode()
+            .verifyUndoIsHidden()
+            .verifyRedoIsHidden()
+            .switchToVisualMode()
+            .verifyUndoIsVisible()
+            .verifyRedoIsVisible()
     }
 }
