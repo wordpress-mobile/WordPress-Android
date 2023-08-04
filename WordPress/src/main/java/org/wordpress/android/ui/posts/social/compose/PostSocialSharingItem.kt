@@ -108,7 +108,7 @@ private val defaultDescriptionStyle: TextStyle
         .copy(color = AppColor.Gray30)
 
 @Composable
-private fun DescriptionText(
+fun DescriptionText(
     text: String,
     isLowOnShares: Boolean,
     modifier: Modifier = Modifier,
