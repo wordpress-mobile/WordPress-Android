@@ -12,6 +12,7 @@ import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.posts.EditPostJetpackSocialConnectionsContainer
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.social.compose.DescriptionText
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 
 @Composable
 fun PrepublishingSocialScreen(
@@ -38,7 +39,7 @@ fun PrepublishingSocialScreen(
 
             PrimaryButton(
                 text = state.subscribeButtonLabel,
-                onClick = state.onSubscribeClick,
+                onClick = { state.onSubscribeClick(JetpackSocialFlow.PRE_PUBLISHING) },
                 padding = PaddingValues(horizontal = Margin.ExtraLarge.value)
             )
         }
