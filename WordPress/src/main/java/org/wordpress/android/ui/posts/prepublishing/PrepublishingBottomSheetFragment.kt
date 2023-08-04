@@ -1,13 +1,17 @@
 package org.wordpress.android.ui.posts.prepublishing
 
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -19,8 +23,12 @@ import org.wordpress.android.databinding.PostPrepublishingBottomSheetBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPBottomSheetDialogFragment
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenEditShareMessage
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSocialConnectionsList
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSubscribeJetpackSocial
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.ADD_CATEGORY
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.CATEGORIES
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.HOME
@@ -39,6 +47,8 @@ import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingSocia
 import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsFragment
 import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFragment
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment
+import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
+import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity.Companion.createIntent
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.KeyboardResizeViewUtil
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -60,6 +70,9 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     private var prepublishingBottomSheetListener: PrepublishingBottomSheetListener? = null
 
+    private var jetpackSocialViewModel: EditorJetpackSocialViewModel? = null
+    private lateinit var editShareMessageActivityResultLauncher: ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireNotNull(activity).application as WordPress).component().inject(this)
@@ -71,6 +84,19 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             context
         } else {
             throw RuntimeException("$context must implement PrepublishingBottomSheetListener")
+        }
+
+        editShareMessageActivityResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.let {
+                    val shareMessage = it.getStringExtra(
+                        EditJetpackSocialShareMessageActivity.RESULT_UPDATED_SHARE_MESSAGE
+                    )
+                    getEditorJetpackSocialViewModel().onJetpackSocialShareMessageChanged(shareMessage)
+                }
+            }
         }
     }
 
@@ -279,17 +305,48 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     }
 
     override fun getEditorJetpackSocialViewModel(): EditorJetpackSocialViewModel {
-        return ViewModelProvider(
-            requireActivity(), // try using the activity-scoped ViewModel, but only if it's started
-            viewModelFactory
-        )[EditorJetpackSocialViewModel::class.java].takeIf {
-            it.isStarted
-        } ?: ViewModelProvider(
-            this, // if not, let's use our own scope to create the ViewModel and start it
-            viewModelFactory
-        )[EditorJetpackSocialViewModel::class.java].also {
-            val hook = getEditorHook()
-            it.start(hook.site, hook.editPostRepository)
+        jetpackSocialViewModel?.let {
+            return it
+        } ?: run {
+            val viewModel = ViewModelProvider(
+                requireActivity(), // try using the activity-scoped ViewModel, but only if it's started
+                viewModelFactory
+            )[EditorJetpackSocialViewModel::class.java].takeIf {
+                it.isStarted
+            } ?: run {
+                ViewModelProvider(
+                    this, // if not, let's use our own scope to create the ViewModel and start it
+                    viewModelFactory
+                )[EditorJetpackSocialViewModel::class.java].also {
+                    val hook = getEditorHook()
+                    it.start(hook.site, hook.editPostRepository)
+                    // let's also handle the action events
+                    it.actionEvents.observe(viewLifecycleOwner) { actionEvent ->
+                        when (actionEvent) {
+                            is OpenEditShareMessage -> {
+                                val intent = createIntent(
+                                    requireActivity(),
+                                    actionEvent.shareMessage
+                                )
+                                editShareMessageActivityResultLauncher.launch(intent)
+                            }
+
+                            is OpenSocialConnectionsList -> {
+                                ActivityLauncher.viewBlogSharing(requireActivity(), actionEvent.siteModel)
+                            }
+
+                            is OpenSubscribeJetpackSocial -> {
+                                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
+                                    requireActivity(),
+                                    actionEvent.url
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            return viewModel.also { jetpackSocialViewModel = it }
         }
     }
 
