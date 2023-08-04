@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.prepublishing.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -11,11 +12,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.posts.GetPostTagsUseCase
 import org.wordpress.android.ui.posts.PostSettingsUtils
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.Action
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
@@ -29,7 +30,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.JetpackSocialFeatureConfig
+import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -45,15 +46,11 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val storyRepositoryWrapper: StoryRepositoryWrapper,
     private val updateStoryPostTitleUseCase: UpdateStoryPostTitleUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val socialFeatureConfig: JetpackSocialFeatureConfig,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     private var updateStoryTitleJob: Job? = null
     private lateinit var editPostRepository: EditPostRepository
-
-    private val _uiState = MutableLiveData<List<PrepublishingHomeItemUiState>>()
-    val uiState: LiveData<List<PrepublishingHomeItemUiState>> = _uiState
 
     private val _storyTitleUiState = MutableLiveData<StoryTitleUiState>()
     val storyTitleUiState: LiveData<StoryTitleUiState> = _storyTitleUiState
@@ -63,6 +60,22 @@ class PrepublishingHomeViewModel @Inject constructor(
 
     private val _onSubmitButtonClicked = MutableLiveData<Event<PublishPost>>()
     val onSubmitButtonClicked: LiveData<Event<PublishPost>> = _onSubmitButtonClicked
+
+    private val _uiState = MutableLiveData<List<PrepublishingHomeItemUiState>>()
+    private var _socialUiState: MutableLiveData<SocialUiState> = MutableLiveData(SocialUiState.Hidden)
+
+    val uiState: LiveData<List<PrepublishingHomeItemUiState>> = merge(
+        _uiState,
+        _socialUiState
+    ) { list, socialUiState ->
+        list?.map { item ->
+            if (item is SocialUiState) {
+                socialUiState ?: SocialUiState.Hidden
+            } else {
+                item
+            }
+        }
+    }
 
     fun start(editPostRepository: EditPostRepository, site: SiteModel, isStoryPost: Boolean) {
         this.editPostRepository = editPostRepository
@@ -122,9 +135,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                 onNavigationActionClicked = ::onActionClicked
             ))
 
-            if (!editPostRepository.isPage && socialFeatureConfig.isEnabled()) {
-                showSocialItem()
-            }
+            add(SocialUiState.Hidden)
 
             add(getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
                 launch(bgDispatcher) {
@@ -202,35 +213,6 @@ class PrepublishingHomeViewModel @Inject constructor(
         )
     }
 
-    private fun MutableList<PrepublishingHomeItemUiState>.showSocialItem() {
-        // TODO in other PR: use actual data, for now just using fake data
-//        add(
-//            SocialUiState.SocialSharingUiState(
-//                serviceIcons = listOf(
-//                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_facebook, isEnabled = false),
-//                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_tumblr)
-//                ),
-//                title = UiStringText("Sharing to 2 of 3 accounts"),
-//                description = UiStringText("27/30 social shares remaining"),
-//                isLowOnShares = false,
-//                onItemClicked = { Log.d("thomashorta", "hey there!") },
-//            )
-//        )
-        add(
-            SocialUiState.SocialConnectPromptUiState(
-                serviceIcons = listOf(
-                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_tumblr),
-                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_facebook),
-                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_instagram),
-                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_mastodon),
-                    SocialUiState.ConnectionServiceIcon(R.drawable.ic_social_linkedin),
-                ),
-                onConnectClicked = { onActionClicked(Action.NavigateToSharingSettings) },
-                onDismissClicked = { /* TODO in other PR: hide this item forever */ },
-            )
-        )
-    }
-
     private fun onStoryTitleChanged(storyTitle: String) {
         updateStoryTitleJob?.cancel()
         updateStoryTitleJob = launch(bgDispatcher) {
@@ -255,5 +237,18 @@ class PrepublishingHomeViewModel @Inject constructor(
 
     private fun onActionClicked(actionType: ActionType) {
         _onActionClicked.postValue(Event(actionType))
+    }
+
+    fun updateJetpackSocialState(
+        state: EditorJetpackSocialViewModel.JetpackSocialUiState?
+    ) {
+        val newState = state?.let {
+            SocialUiState.Visible(
+                it,
+                onItemClicked = { Log.d("thomashorta", "hey there!") }
+            )
+        } ?: SocialUiState.Hidden
+
+        _socialUiState.postValue(newState)
     }
 }

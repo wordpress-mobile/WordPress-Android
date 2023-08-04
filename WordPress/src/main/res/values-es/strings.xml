@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-11 11:46:08+0000
+Translation-Revision-Date: 2023-07-26 18:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.6
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_insert_video_block">Insertar bloque de video</string>
+    <string name="gutenberg_native_insert_image_block">Insertar bloque de imagen</string>
+    <string name="gutenberg_native_insert_gallery_block">Insertar bloque de galería</string>
+    <string name="gutenberg_native_insert_audio_block">Insertar bloque de audio</string>
+    <string name="blaze_campaign_detail_error">No se han podido cargar los detalles de la campaña</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Crear</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">No has creado ninguna campaña todavía. Haz clic en Crear para empezar.</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">No tienes campañas</string>
+    <string name="blaze_campaign_details_page_title">Detalles de la campaña</string>
+    <string name="blaze_campaigns_page_title">Campañas de Blaze</string>
+    <string name="budget_campaign_stats">Presupuesto</string>
+    <string name="clicks_campaign_stats">Clics</string>
+    <string name="impressions_campaign_stats">Impresiones</string>
+    <string name="campaign_status_scheduled">PROGRAMADA</string>
+    <string name="campaign_status_in_moderation">EN MODERACIÓN</string>
+    <string name="campaign_status_canceled">CANCELADA</string>
+    <string name="campaign_status_rejected">RECHAZADA</string>
+    <string name="campaign_status_completed">COMPLETADA</string>
+    <string name="campaign_status_active">ACTIVA</string>
+    <string name="blaze_campaigns_card_footer_label">Crear campaña</string>
+    <string name="blaze_campaigns_card_title">Campaña de Blaze</string>
+    <string name="promote_blaze_flow_error">No se ha podido cargar el flujo de promoción de Blaze</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Conecta tus perfiles de redes sociales</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Aumenta el tráfico compartiendo automáticamente las entradas con tus amigos a través de las redes sociales.</string>
+    <string name="menu_close_editor">Cerrar editor</string>
+    <string name="menu_redo_context">Rehacer el último cambio</string>
+    <string name="menu_undo_context">Deshacer el último cambio</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d entradas compartidas en redes sociales restantes</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Suscríbete ahora para compartir más</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Conecta tus perfiles de redes sociales</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Aumenta el tráfico compartiendo automáticamente las entradas con tus amigos a través de las redes sociales.</string>
+    <string name="post_settings_jetpack_social_header">Compartir en redes sociales</string>
     <string name="gutenberg_native_s_detached">%s separado</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">La edición de patrones sincronizados todavía no está incluida en %s para iOS</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">La edición de patrones sincronizados todavía no está incluida en %s para Android</string>

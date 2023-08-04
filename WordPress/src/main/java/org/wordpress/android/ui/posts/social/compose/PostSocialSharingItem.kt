@@ -52,12 +52,14 @@ fun PostSocialSharingItem(
                 overflow = TextOverflow.Ellipsis,
             )
 
-            Spacer(Modifier.height(Margin.ExtraSmall.value))
+            if (model.description.isNotBlank()) {
+                Spacer(Modifier.height(Margin.ExtraSmall.value))
 
-            DescriptionText(
-                text = model.description,
-                isLowOnShares = model.isLowOnShares,
-            )
+                DescriptionText(
+                    text = model.description,
+                    isLowOnShares = model.isLowOnShares,
+                )
+            }
         }
 
         if (model.iconModels.isNotEmpty()) {

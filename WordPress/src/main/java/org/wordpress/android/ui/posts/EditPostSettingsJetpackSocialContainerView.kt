@@ -12,7 +12,6 @@ import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocial
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.Loaded
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.Loading
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.NoConnections
-import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 import org.wordpress.android.usecase.social.JetpackSocialFlow
 
 class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
@@ -24,14 +23,6 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
         get() = uiState.value
         set(value) {
             if (uiState.value != value) uiState.value = value
-        }
-
-    private val postSocialSharingModelState: MutableState<PostSocialSharingModel> =
-        mutableStateOf(defaultPostSocialSharingModel)
-    var postSocialSharingModel: PostSocialSharingModel
-        get() = postSocialSharingModelState.value
-        set(value) {
-            if (postSocialSharingModelState.value != value) postSocialSharingModelState.value = value
         }
 
     @Composable
@@ -53,7 +44,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                             )
                             if (showShareLimitUi) {
                                 EditPostSettingsJetpackSocialSharesContainer(
-                                    postSocialSharingModel = postSocialSharingModelState.value,
+                                    postSocialSharingModel = socialSharingModel,
                                     subscribeButtonLabel = subscribeButtonLabel,
                                     onSubscribeClick = { onSubscribeClick(JetpackSocialFlow.POST_SETTINGS) },
                                 )
@@ -76,10 +67,3 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
         }
     }
 }
-
-private val defaultPostSocialSharingModel = PostSocialSharingModel(
-    title = "",
-    iconModels = emptyList(),
-    description = "",
-    isLowOnShares = false,
-)
