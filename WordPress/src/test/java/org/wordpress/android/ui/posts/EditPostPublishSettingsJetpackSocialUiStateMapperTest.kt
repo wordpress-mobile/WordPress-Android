@@ -8,6 +8,8 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
+import org.wordpress.android.datasets.wrappers.PublicizeTableWrapper
+import org.wordpress.android.models.PublicizeService
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.social.PostSocialConnection
@@ -20,12 +22,14 @@ import java.util.Locale
 class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
     private val stringProvider: StringProvider = mock()
     private val localProvider: LocaleProvider = mock()
+    private val publicizeTableWrapper: PublicizeTableWrapper = mock()
     private lateinit var connection1: PostSocialConnection
     private lateinit var connection2: PostSocialConnection
 
     private val classToTest = EditPostPublishSettingsJetpackSocialUiStateMapper(
         stringProvider = stringProvider,
         localeProvider = localProvider,
+        publicizeTableWrapper = publicizeTableWrapper,
     )
 
     @Before
@@ -184,11 +188,30 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         val connectAccountsNotNowButtonLabel = "Not now"
         whenever(stringProvider.getString(R.string.post_settings_jetpack_social_connect_not_now_button))
             .thenReturn(connectAccountsNotNowButtonLabel)
+        val publicizeServices = listOf(
+            // Publicize services with ID that matches any serviceId in PublicizeServiceIcon and also
+            // have OK status will have their icons shown
+            PublicizeService().apply {
+                id = "tumblr"
+                status = PublicizeService.Status.OK
+            },
+            // Unsupported publicize services will be filtered
+            PublicizeService().apply {
+                id = "tumblr"
+                status = PublicizeService.Status.UNSUPPORTED
+            },
+            // Publicize services with unknown or null ID will be filtered
+            PublicizeService().apply {
+                id = null
+            },
+        )
+        whenever(publicizeTableWrapper.getServiceList())
+            .thenReturn(publicizeServices)
         val onConnectProfilesClick: () -> Unit = mock()
         val onNotNowClick: () -> Unit = mock()
         val actual = classToTest.mapNoConnections(onConnectProfilesClick, onNotNowClick)
         val expected = JetpackSocialUiState.NoConnections(
-            trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
+            trainOfIconsModels = listOf(TrainOfIconsModel(PublicizeServiceIcon.TUMBLR.iconResId)),
             message = connectAccountsMessage,
             connectProfilesButtonLabel = connectAccountsButtonLabel,
             onConnectProfilesClick = onConnectProfilesClick,
