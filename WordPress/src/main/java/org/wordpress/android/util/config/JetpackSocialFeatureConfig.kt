@@ -13,4 +13,8 @@ class JetpackSocialFeatureConfig @Inject constructor(
     appConfig,
     BuildConfig.JETPACK_SOCIAL,
     JETPACK_SOCIAL_REMOTE_FIELD,
-)
+) {
+    override fun isEnabled(): Boolean {
+        return super.isEnabled() && BuildConfig.IS_JETPACK_APP
+    }
+}
