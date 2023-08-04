@@ -55,6 +55,7 @@ import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectoryFetched;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
@@ -1093,7 +1094,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
             return;
         }
 
-        if (mSite.getId() != event.site.getId() || !mSlug.equals(event.slug)) {
+        if ((event.site != null && mSite.getId() != event.site.getId()) || !mSlug.equals(event.slug)) {
             // Not the event we are interested in
             return;
         }
@@ -1102,12 +1103,15 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
         if (event.isError()) {
             AppLog.e(T.PLUGINS, "An error occurred while installing the plugin with type: "
                                 + event.error.type + " and message: " + event.error.message);
-            refreshPluginVersionViews();
-            showInstallFailedSnackbar();
+            if (event.error.type == InstallSitePluginErrorType.PLUGIN_ALREADY_INSTALLED) {
+                // The plugin is already installed. Fetch the plugin to update the screen.
+                fetchPluginDirectory(0);
+            } else {
+                refreshPluginVersionViews();
+                showInstallFailedSnackbar();
+            }
             return;
         }
-
-        mIsInstallingPlugin = false;
 
         refreshPluginFromStore();
 
