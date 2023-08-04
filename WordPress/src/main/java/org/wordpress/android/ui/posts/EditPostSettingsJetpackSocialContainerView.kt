@@ -12,7 +12,6 @@ import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocial
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.Loaded
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.Loading
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState.NoConnections
-import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 import org.wordpress.android.usecase.social.JetpackSocialFlow
 
 class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
@@ -68,10 +67,3 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
         }
     }
 }
-
-private val defaultPostSocialSharingModel = PostSocialSharingModel(
-    title = "",
-    iconModels = emptyList(),
-    description = "",
-    isLowOnShares = false,
-)
