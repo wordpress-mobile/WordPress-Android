@@ -16,13 +16,16 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState.PublishButtonUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewModel
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
@@ -413,6 +416,67 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         // assert
         assertThat(event).isNotNull
         verify(updateStoryTitleUseCase).updateStoryTitle(eq(storyTitle), any())
+    }
+
+    @Test
+    fun `given updateJetpackSocialState was not called then uiState contains social state = Hidden`() = test {
+        // act
+        viewModel.start(editPostRepository, site, true)
+
+        // assert
+        val uiSocialState = viewModel.uiState.value!!.find { it is SocialUiState }
+        assertThat(uiSocialState).isEqualTo(SocialUiState.Hidden)
+    }
+
+    @Test
+    fun `given non-published post when updateJetpackSocialState then it updates social state to Visible`() = test {
+        // arrange
+        whenever(editPostRepository.getPost()).thenReturn(
+            PostModel().apply { setStatus(PostStatus.DRAFT.toString()) }
+        )
+
+        // act
+        viewModel.start(editPostRepository, site, true)
+        val state = EditorJetpackSocialViewModel.JetpackSocialUiState.Loading
+        viewModel.updateJetpackSocialState(state)
+
+        // assert
+        val uiSocialState = viewModel.uiState.value!!.find { it is SocialUiState }
+        val visibleState = uiSocialState as SocialUiState.Visible
+        assertThat(visibleState.state).isEqualTo(state)
+    }
+
+    @Test
+    fun `given non-published post when updateJetpackSocialState(null) then it update social state to Hidden`() = test {
+        // arrange
+        whenever(editPostRepository.getPost()).thenReturn(
+            PostModel().apply { setStatus(PostStatus.DRAFT.toString()) }
+        )
+
+        // act
+        viewModel.start(editPostRepository, site, true)
+        viewModel.updateJetpackSocialState(null)
+
+        // assert
+        val uiSocialState = viewModel.uiState.value!!.find { it is SocialUiState }
+        assertThat(uiSocialState).isEqualTo(SocialUiState.Hidden)
+    }
+
+    @Test
+    fun `given published post when updateJetpackSocialState then it updates social state to Hidden`() = test {
+        // arrange
+        whenever(editPostRepository.getPost()).thenReturn(
+            PostModel().apply { setStatus(PostStatus.PUBLISHED.toString()) }
+        )
+
+        // act
+        viewModel.start(editPostRepository, site, true)
+        val state = EditorJetpackSocialViewModel.JetpackSocialUiState.Loading
+        viewModel.updateJetpackSocialState(state)
+
+        // assert
+        val uiSocialState = viewModel.uiState.value!!.find { it is SocialUiState }
+        assertThat(uiSocialState).isEqualTo(SocialUiState.Hidden)
     }
 
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
