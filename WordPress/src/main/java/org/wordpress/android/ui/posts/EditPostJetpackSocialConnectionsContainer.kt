@@ -4,33 +4,29 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.ui.compose.theme.AppThemeEditor
-import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.compose.PostSocialMessageItem
 
+@Suppress("UnusedReceiverParameter")
 @Composable
-fun ColumnScope.EditPostSettingsJetpackSocialConnectionsContainer(
+fun ColumnScope.EditPostJetpackSocialConnectionsContainer(
     jetpackSocialConnectionDataList: List<JetpackSocialConnectionData>,
     shareMessage: String,
     isShareMessageEnabled: Boolean,
     onShareMessageClick: () -> Unit,
 ) {
-    EditPostSettingsJetpackSocialConnectionsList(
+    EditPostJetpackSocialConnectionsList(
         jetpackSocialConnectionDataList = jetpackSocialConnectionDataList,
     )
     PostSocialMessageItem(
         message = shareMessage,
         modifier = Modifier
-            .padding(
-                vertical = Margin.MediumLarge.value,
-            )
             .fillMaxWidth(),
         enabled = isShareMessageEnabled,
         onClick = onShareMessageClick
@@ -41,7 +37,7 @@ fun ColumnScope.EditPostSettingsJetpackSocialConnectionsContainer(
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun EditPostSettingsJetpackSocialContainerWithShareLimitPreview() {
+fun EditPostJetpackSocialContainerWithShareLimitPreview() {
     AppThemeEditor {
         Column {
             val connections = mutableListOf<JetpackSocialConnectionData>()
@@ -75,7 +71,7 @@ fun EditPostSettingsJetpackSocialContainerWithShareLimitPreview() {
                     onConnectionClick = { _, _ -> }
                 )
             )
-            EditPostSettingsJetpackSocialConnectionsContainer(
+            EditPostJetpackSocialConnectionsContainer(
                 jetpackSocialConnectionDataList = connections,
                 shareMessage = "Share message.",
                 isShareMessageEnabled = true,
@@ -88,7 +84,7 @@ fun EditPostSettingsJetpackSocialContainerWithShareLimitPreview() {
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun EditPostSettingsJetpackSocialContainerWithoutShareLimitPreview() {
+fun EditPostJetpackSocialContainerWithoutShareLimitPreview() {
     AppThemeEditor {
         Column {
             val connections = mutableListOf<JetpackSocialConnectionData>()
@@ -122,7 +118,7 @@ fun EditPostSettingsJetpackSocialContainerWithoutShareLimitPreview() {
                     onConnectionClick = { _, _ -> }
                 )
             )
-            EditPostSettingsJetpackSocialConnectionsContainer(
+            EditPostJetpackSocialConnectionsContainer(
                 jetpackSocialConnectionDataList = connections,
                 shareMessage = "Share message.",
                 isShareMessageEnabled = true,

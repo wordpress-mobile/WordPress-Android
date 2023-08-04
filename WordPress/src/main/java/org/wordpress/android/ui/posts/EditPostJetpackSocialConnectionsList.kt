@@ -14,7 +14,7 @@ import org.wordpress.android.ui.posts.social.compose.PostSocialConnectionItem
 import org.wordpress.android.usecase.social.JetpackSocialFlow
 
 @Composable
-fun EditPostSettingsJetpackSocialConnectionsList(jetpackSocialConnectionDataList: List<JetpackSocialConnectionData>) {
+fun EditPostJetpackSocialConnectionsList(jetpackSocialConnectionDataList: List<JetpackSocialConnectionData>) {
     Column(
         Modifier
             .fillMaxWidth()
@@ -39,7 +39,7 @@ data class JetpackSocialConnectionData(
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun PreviewEditPostSettingsJetpackSocialConnectionsList() {
+fun PreviewEditPostJetpackSocialConnectionsList() {
     AppThemeEditor {
         val connections = mutableListOf<JetpackSocialConnectionData>()
         val connection1 = PublicizeConnection().apply {
@@ -72,7 +72,7 @@ fun PreviewEditPostSettingsJetpackSocialConnectionsList() {
                 onConnectionClick = { _, _ -> },
             )
         )
-        EditPostSettingsJetpackSocialConnectionsList(
+        EditPostJetpackSocialConnectionsList(
             jetpackSocialConnectionDataList = connections,
         )
     }

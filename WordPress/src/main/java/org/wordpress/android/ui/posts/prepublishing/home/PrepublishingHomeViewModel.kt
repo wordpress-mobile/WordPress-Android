@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts.prepublishing.home
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -242,10 +241,11 @@ class PrepublishingHomeViewModel @Inject constructor(
     fun updateJetpackSocialState(
         state: EditorJetpackSocialViewModel.JetpackSocialUiState?
     ) {
-        val newState = state?.let {
+        val isPostPublished = editPostRepository.getPost()?.status == PostStatus.PUBLISHED.toString()
+        val newState = state?.takeUnless { isPostPublished }?.let {
             SocialUiState.Visible(
                 it,
-                onItemClicked = { Log.d("thomashorta", "hey there!") }
+                onItemClicked = { onActionClicked(PrepublishingScreenNavigation.Social) }
             )
         } ?: SocialUiState.Hidden
 

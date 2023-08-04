@@ -68,6 +68,7 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
             requireActivity().window.decorView.requestLayout()
         }
         super.onResume()
+        jetpackSocialViewModel.onResume()
     }
 
     private fun PostPrepublishingHomeFragmentBinding.setupRecyclerView() {
