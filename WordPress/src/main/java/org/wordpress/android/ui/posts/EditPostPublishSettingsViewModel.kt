@@ -21,9 +21,11 @@ import org.wordpress.android.ui.people.utils.PeopleUtilsWrapper
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.PostSocialSharingModelMapper
 import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
 import org.wordpress.android.usecase.social.GetJetpackSocialShareMessageUseCase
 import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 import org.wordpress.android.usecase.social.ShareLimit
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.config.JetpackSocialFeatureConfig
@@ -49,6 +51,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     private val jetpackUiStateMapper: EditPostPublishSettingsJetpackSocialUiStateMapper,
     private val postSocialSharingModelMapper: PostSocialSharingModelMapper,
     private val publicizeTableWrapper: PublicizeTableWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper,
 ) : PublishSettingsViewModel(
     resourceProvider,
     postSettingsUtils,
@@ -162,13 +165,24 @@ class EditPostPublishSettingsViewModel @Inject constructor(
             return
         }
         siteModel?.let {
-            _showJetpackSocialContainer.value = true
-            val state = if (showNoConnections()) {
-                jetpackUiStateMapper.mapNoConnections(::onJetpackSocialConnectProfilesClick)
+            if (showNoConnections()) {
+                val shouldShowJetpackSocialNoConnections =
+                    appPrefsWrapper.getShouldShowJetpackSocialNoConnections(it.siteId, JetpackSocialFlow.POST_SETTINGS)
+                // If user previously dismissed the no connections container by tapping the "Not now" button,
+                // we should hide the container.
+                if (shouldShowJetpackSocialNoConnections) {
+                    _showJetpackSocialContainer.value = true
+                    val state = jetpackUiStateMapper.mapNoConnections(
+                        ::onJetpackSocialConnectProfilesClick, ::onJetpackSocialNotNowClick
+                    )
+                    _jetpackSocialUiState.postValue(state)
+                } else {
+                    _showJetpackSocialContainer.value = false
+                }
             } else {
-                mapLoaded()
+                _showJetpackSocialContainer.value = true
+                _jetpackSocialUiState.postValue(mapLoaded())
             }
-            _jetpackSocialUiState.postValue(state)
         } ?: run {
             _showJetpackSocialContainer.value = false
         }
@@ -282,6 +296,14 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     }
 
     @VisibleForTesting
+    fun onJetpackSocialNotNowClick() {
+        siteModel?.let {
+            appPrefsWrapper.setShouldShowJetpackSocialNoConnections(false, it.siteId, JetpackSocialFlow.POST_SETTINGS)
+            _showJetpackSocialContainer.value = false
+        }
+    }
+
+    @VisibleForTesting
     fun onJetpackSocialConnectionClick(connection: PostSocialConnection, enabled: Boolean) {
         siteModel?.let {
             viewModelScope.launch {
@@ -364,6 +386,8 @@ class EditPostPublishSettingsViewModel @Inject constructor(
             val message: String,
             val connectProfilesButtonLabel: String,
             val onConnectProfilesClick: () -> Unit,
+            val notNowButtonLabel: String,
+            val onNotNowClick: () -> Unit,
         ) : JetpackSocialUiState()
     }
 

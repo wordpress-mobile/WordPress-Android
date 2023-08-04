@@ -67,7 +67,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         val allConnections = listOf(connection1, connection2)
         val onConnectProfilesClick: () -> Unit = {}
         val onShareMessageClick: () -> Unit = {}
-        val onConnectionClick: (connection: PostSocialConnection, enable: Boolean ) -> Unit = mock()
+        val onConnectionClick: (connection: PostSocialConnection, enable: Boolean) -> Unit = mock()
 
         val actual = classToTest.mapLoaded(
             connections = allConnections,
@@ -117,7 +117,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
 
         val onConnectProfilesClick: () -> Unit = {}
         val onShareMessageClick: () -> Unit = {}
-        val onConnectionClick: (connection: PostSocialConnection, enable: Boolean ) -> Unit = mock()
+        val onConnectionClick: (connection: PostSocialConnection, enable: Boolean) -> Unit = mock()
 
         val actual = classToTest.mapLoaded(
             connections = allConnections,
@@ -143,7 +143,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
 
         val onConnectProfilesClick: () -> Unit = mock()
         val onShareMessageClick: () -> Unit = {}
-        val onConnectionClick: (connection: PostSocialConnection, enable: Boolean ) -> Unit = mock()
+        val onConnectionClick: (connection: PostSocialConnection, enable: Boolean) -> Unit = mock()
 
         val actual = classToTest.mapLoaded(
             connections = allConnections,
@@ -174,21 +174,26 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
 
     @Test
     fun `Should map no connections UI state`() {
-        val connectProfilesButtonLabel = "Connect profiles button"
+        val connectAccountsButtonLabel = "Connect accounts"
         mockStringResource(
-            R.string.post_settings_jetpack_social_connect_social_profiles_button,
-            connectProfilesButtonLabel
+            R.string.post_settings_jetpack_social_connect_social_profiles_button, connectAccountsButtonLabel
         )
-        val connectProfilesMessage = "Connect profiles message"
+        val connectAccountsMessage = "Connect accounts message"
         whenever(stringProvider.getString(R.string.post_settings_jetpack_social_connect_social_profiles_message))
-            .thenReturn(connectProfilesMessage)
+            .thenReturn(connectAccountsMessage)
+        val connectAccountsNotNowButtonLabel = "Not now"
+        whenever(stringProvider.getString(R.string.post_settings_jetpack_social_connect_not_now_button))
+            .thenReturn(connectAccountsNotNowButtonLabel)
         val onConnectProfilesClick: () -> Unit = mock()
-        val actual = classToTest.mapNoConnections(onConnectProfilesClick)
+        val onNotNowClick: () -> Unit = mock()
+        val actual = classToTest.mapNoConnections(onConnectProfilesClick, onNotNowClick)
         val expected = JetpackSocialUiState.NoConnections(
             trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
-            message = connectProfilesMessage,
-            connectProfilesButtonLabel = "CONNECT PROFILES BUTTON",
+            message = connectAccountsMessage,
+            connectProfilesButtonLabel = connectAccountsButtonLabel,
             onConnectProfilesClick = onConnectProfilesClick,
+            notNowButtonLabel = "Not now",
+            onNotNowClick = onNotNowClick,
         )
         assertThat(actual).isEqualTo(expected)
     }

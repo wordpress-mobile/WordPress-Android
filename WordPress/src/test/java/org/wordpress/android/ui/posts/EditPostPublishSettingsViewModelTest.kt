@@ -24,6 +24,7 @@ import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEve
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.PostSocialSharingModelMapper
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
 import org.wordpress.android.usecase.social.GetJetpackSocialShareMessageUseCase
 import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
@@ -49,6 +50,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     private val jetpackUiStateMapper: EditPostPublishSettingsJetpackSocialUiStateMapper = mock()
     private val postSocialSharingModelMapper: PostSocialSharingModelMapper = mock()
     private val publicizeTableWrapper: PublicizeTableWrapper = mock()
+    private val appPrefsWrapper: AppPrefsWrapper = mock()
 
     private val classToTest = EditPostPublishSettingsViewModel(
         resourceProvider = resourceProvider,
@@ -65,6 +67,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         jetpackUiStateMapper = jetpackUiStateMapper,
         postSocialSharingModelMapper = postSocialSharingModelMapper,
         publicizeTableWrapper = publicizeTableWrapper,
+        appPrefsWrapper = appPrefsWrapper,
     )
 
     private val showJetpackSocialContainerObserver: Observer<Boolean> = mock()
@@ -76,6 +79,24 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     private val siteModel = SiteModel().apply {
         siteId = 12345
     }
+    private val publicizeConnection = PublicizeConnection().apply {
+        connectionId = 0
+        service = "tumblr"
+        label = "Tumblr"
+        externalId = "myblog.tumblr.com"
+        externalName = "My blog"
+        externalProfilePictureUrl =
+            "http://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-tumblr-2x.png"
+    }
+    private val postSocialConnection = PostSocialConnection(
+        connectionId = 1,
+        service = "service",
+        label = "label",
+        externalId = "externalId",
+        externalName = "externalName",
+        iconUrl = "iconUrl",
+        isSharingEnabled = true
+    )
 
     @Before
     fun setup() {
@@ -153,7 +174,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should map no connections UI state if connections list is empty and jetpack social FF is enabled`() = test {
+    fun `Should map no connections UI if connections are empty, FF is enabled and never dismissed by user`() = test {
         mockSiteModel(true)
         mockUserId()
         whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
@@ -164,18 +185,22 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             .thenReturn(listOf(PublicizeService().apply { status = PublicizeService.Status.OK }))
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(true)
+        whenever(appPrefsWrapper.getShouldShowJetpackSocialNoConnections(any(), any()))
+            .thenReturn(true)
 
         classToTest.start(editPostRepository)
-        verify(jetpackUiStateMapper).mapNoConnections(any())
+        verify(jetpackUiStateMapper).mapNoConnections(any(), any())
     }
 
     @Test
-    fun `Should emit no connections UI state if connections list is empty and jetpack social FF is enabled`() = test {
+    fun `Should emit no connections UI if connections are empty, FF is enabled and never dismissed by user`() = test {
         val noConnections = JetpackSocialUiState.NoConnections(
             trainOfIconsModels = listOf(),
             message = "message",
-            connectProfilesButtonLabel = "label",
+            connectProfilesButtonLabel = "connect label",
             onConnectProfilesClick = {},
+            notNowButtonLabel = "not now label",
+            onNotNowClick = {},
         )
         mockSiteModel(true)
         mockUserId()
@@ -187,10 +212,31 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             .thenReturn(listOf(PublicizeService().apply { status = PublicizeService.Status.OK }))
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(true)
-        whenever(jetpackUiStateMapper.mapNoConnections(any()))
+        whenever(jetpackUiStateMapper.mapNoConnections(any(), any()))
             .thenReturn(noConnections)
+        whenever(appPrefsWrapper.getShouldShowJetpackSocialNoConnections(any(), any()))
+            .thenReturn(true)
         classToTest.start(editPostRepository)
         verify(jetpackSocialUiStateObserver).onChanged(noConnections)
+    }
+
+    @Test
+    fun `Should hide social sharing container if connections are empty but no connections dismissed by user`() = test {
+        mockSiteModel(true)
+        mockUserId()
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+            .thenReturn(emptyList())
+        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+            .thenReturn(ShareLimit.Disabled)
+        whenever(publicizeTableWrapper.getServiceList())
+            .thenReturn(listOf(PublicizeService().apply { status = PublicizeService.Status.OK }))
+        whenever(jetpackSocialFeatureConfig.isEnabled())
+            .thenReturn(true)
+        whenever(appPrefsWrapper.getShouldShowJetpackSocialNoConnections(any(), any()))
+            .thenReturn(false)
+
+        classToTest.start(editPostRepository)
+        verify(showJetpackSocialContainerObserver).onChanged(false)
     }
 
     @Test
@@ -198,19 +244,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         mockSiteModel(true)
         mockUserId()
         whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
-            .thenReturn(
-                listOf(
-                    PublicizeConnection().apply {
-                        connectionId = 0
-                        service = "tumblr"
-                        label = "Tumblr"
-                        externalId = "myblog.tumblr.com"
-                        externalName = "My blog"
-                        externalProfilePictureUrl =
-                            "http://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-tumblr-2x.png"
-                    },
-                )
-            )
+            .thenReturn(listOf(publicizeConnection))
         whenever(getJetpackSocialShareMessageUseCase.execute(any()))
             .thenReturn("Message")
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
@@ -226,15 +260,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         val loaded = JetpackSocialUiState.Loaded(
             jetpackSocialConnectionDataList = listOf(
                 JetpackSocialConnectionData(
-                    postSocialConnection = PostSocialConnection(
-                        connectionId = 1,
-                        service = "service",
-                        label = "label",
-                        externalId = "externalId",
-                        externalName = "externalName",
-                        iconUrl = "iconUrl",
-                        isSharingEnabled = true
-                    ),
+                    postSocialConnection = postSocialConnection,
                     onConnectionClick = {},
                     enabled = false
                 )
@@ -250,19 +276,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         mockSiteModel(true)
         mockUserId()
         whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
-            .thenReturn(
-                listOf(
-                    PublicizeConnection().apply {
-                        connectionId = 0
-                        service = "tumblr"
-                        label = "Tumblr"
-                        externalId = "myblog.tumblr.com"
-                        externalName = "My blog"
-                        externalProfilePictureUrl =
-                            "http://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-tumblr-2x.png"
-                    },
-                )
-            )
+            .thenReturn(listOf(publicizeConnection))
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
         whenever(getJetpackSocialShareMessageUseCase.execute(any()))
@@ -280,15 +294,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         val loaded = JetpackSocialUiState.Loaded(
             jetpackSocialConnectionDataList = listOf(
                 JetpackSocialConnectionData(
-                    postSocialConnection = PostSocialConnection(
-                        connectionId = 1,
-                        service = "service",
-                        label = "label",
-                        externalId = "externalId",
-                        externalName = "externalName",
-                        iconUrl = "iconUrl",
-                        isSharingEnabled = true
-                    ),
+                    postSocialConnection = postSocialConnection,
                     onConnectionClick = {},
                     enabled = false
                 )
@@ -304,19 +310,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         mockSiteModel(true)
         mockUserId()
         whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
-            .thenReturn(
-                listOf(
-                    PublicizeConnection().apply {
-                        connectionId = 0
-                        service = "tumblr"
-                        label = "Tumblr"
-                        externalId = "myblog.tumblr.com"
-                        externalName = "My blog"
-                        externalProfilePictureUrl =
-                            "http://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-tumblr-2x.png"
-                    },
-                )
-            )
+            .thenReturn(listOf(publicizeConnection))
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
         whenever(getJetpackSocialShareMessageUseCase.execute(any()))

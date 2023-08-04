@@ -64,6 +64,8 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                             message = message,
                             connectProfilesButtonLabel = connectProfilesButtonLabel,
                             onConnectProfilesCLick = onConnectProfilesClick,
+                            notNowButtonLabel = notNowButtonLabel,
+                            onNotNowClick = onNotNowClick,
                         )
                     }
                 }
