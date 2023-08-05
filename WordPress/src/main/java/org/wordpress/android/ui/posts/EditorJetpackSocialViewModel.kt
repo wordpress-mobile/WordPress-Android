@@ -23,6 +23,7 @@ import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.PostSocialSharingModelMapper
 import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.social.JetpackSocialSharingTracker
 import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
 import org.wordpress.android.usecase.social.GetJetpackSocialShareMessageUseCase
 import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
@@ -48,6 +49,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
     private val publicizeTableWrapper: PublicizeTableWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val siteStore: SiteStore,
+    private val jetpackSocialSharingTracker: JetpackSocialSharingTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private lateinit var siteModel: SiteModel
@@ -94,8 +96,16 @@ class EditorJetpackSocialViewModel @Inject constructor(
         }
     }
 
-    fun onResume() {
-        if (jetpackSocialFeatureConfig.isEnabled() && !isLastActionOnResumeHandled) {
+    fun onResume(jetpackSocialFlow: JetpackSocialFlow) {
+        if (!jetpackSocialFeatureConfig.isEnabled()) return
+        _jetpackSocialUiState.value?.let { uiState ->
+            if (uiState is JetpackSocialUiState.Loaded && uiState.showShareLimitUi) {
+                jetpackSocialSharingTracker.trackShareLimitDisplayed(jetpackSocialFlow)
+            } else if (uiState is JetpackSocialUiState.NoConnections) {
+                trackAddConnectionCtaDisplayedIfVisible(jetpackSocialFlow)
+            }
+        }
+        if (!isLastActionOnResumeHandled) {
             isLastActionOnResumeHandled = true
             when (actionEvents.value) {
                 is ActionEvent.OpenSocialConnectionsList -> {
@@ -106,10 +116,12 @@ class EditorJetpackSocialViewModel @Inject constructor(
                         loadJetpackSocialIfSupported()
                     }
                 }
+
                 is ActionEvent.OpenSubscribeJetpackSocial -> {
                     // We have to update SiteModel to make sure we have the latest data regarding user hired plans
                     dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(siteModel))
                 }
+
                 else -> {
                     // Do nothing
                 }
@@ -262,19 +274,26 @@ class EditorJetpackSocialViewModel @Inject constructor(
         } ?: false
 
     @VisibleForTesting
-    fun onJetpackSocialConnectProfilesClick() {
+    fun onJetpackSocialConnectProfilesClick(jetpackSocialFlow: JetpackSocialFlow) {
         isLastActionOnResumeHandled = false
+        jetpackSocialSharingTracker.trackAddConnectionTapped(jetpackSocialFlow)
         _actionEvents.value = ActionEvent.OpenSocialConnectionsList(siteModel = siteModel)
     }
 
     @VisibleForTesting
     fun onJetpackSocialNotNowClick(jetpackSocialFlow: JetpackSocialFlow) {
         appPrefsWrapper.setShouldShowJetpackSocialNoConnections(false, siteModel.siteId, jetpackSocialFlow)
+        jetpackSocialSharingTracker.trackAddConnectionDismissCtaTapped(jetpackSocialFlow)
         _jetpackSocialContainerVisibility.value = getJetpackSocialContainerVisibilityFromPrefs()
     }
 
     @VisibleForTesting
-    fun onJetpackSocialConnectionClick(connection: PostSocialConnection, enabled: Boolean) {
+    fun onJetpackSocialConnectionClick(
+        connection: PostSocialConnection,
+        enabled: Boolean,
+        jetpackSocialFlow: JetpackSocialFlow
+    ) {
+        jetpackSocialSharingTracker.trackConnectionToggled(jetpackSocialFlow, enabled)
         launch {
             // Update UI
             connections.firstOrNull { it.connectionId == connection.connectionId }?.let {
@@ -307,8 +326,10 @@ class EditorJetpackSocialViewModel @Inject constructor(
         _actionEvents.value = ActionEvent.OpenEditShareMessage(shareMessage)
     }
 
-    private fun onJetpackSocialSubscribeClick() {
+    @VisibleForTesting
+    fun onJetpackSocialSubscribeClick(jetpackSocialFlow: JetpackSocialFlow) {
         isLastActionOnResumeHandled = false
+        jetpackSocialSharingTracker.trackUpgradeLinkTapped(jetpackSocialFlow)
         _actionEvents.value = ActionEvent.OpenSubscribeJetpackSocial(
             siteModel = siteModel,
             url = HIRE_JETPACK_SOCIAL_BASIC_URL.format(
@@ -350,6 +371,18 @@ class EditorJetpackSocialViewModel @Inject constructor(
         }
     }
 
+    private fun trackAddConnectionCtaDisplayedIfVisible(jetpackSocialFlow: JetpackSocialFlow) {
+        val trackEvent = when (jetpackSocialFlow) {
+            JetpackSocialFlow.PRE_PUBLISHING ->
+                jetpackSocialContainerVisibility.value?.showInPrepublishingSheet == true
+            JetpackSocialFlow.POST_SETTINGS ->
+                _jetpackSocialContainerVisibility.value?.showInPostSettings == true
+            else -> false
+        }
+
+        if (trackEvent) jetpackSocialSharingTracker.trackAddConnectionCtaDisplayed(jetpackSocialFlow)
+    }
+
     data class JetpackSocialContainerVisibility(
         val showInPrepublishingSheet: Boolean,
         val showInPostSettings: Boolean,
@@ -380,14 +413,14 @@ class EditorJetpackSocialViewModel @Inject constructor(
             val shareMessage: String,
             val onShareMessageClick: () -> Unit,
             val subscribeButtonLabel: String,
-            val onSubscribeClick: () -> Unit,
+            val onSubscribeClick: (JetpackSocialFlow) -> Unit,
         ) : JetpackSocialUiState()
 
         data class NoConnections(
             val trainOfIconsModels: List<TrainOfIconsModel>,
             val message: String,
             val connectProfilesButtonLabel: String,
-            val onConnectProfilesClick: () -> Unit,
+            val onConnectProfilesClick: (JetpackSocialFlow) -> Unit,
             val notNowButtonLabel: String,
             val onNotNowClick: (JetpackSocialFlow) -> Unit,
         ) : JetpackSocialUiState()

@@ -27,9 +27,11 @@ import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.PostSocialSharingModelMapper
 import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.social.JetpackSocialSharingTracker
 import org.wordpress.android.usecase.social.GetJetpackSocialShareLimitStatusUseCase
 import org.wordpress.android.usecase.social.GetJetpackSocialShareMessageUseCase
 import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 import org.wordpress.android.usecase.social.ShareLimit
 import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 
@@ -71,6 +73,9 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var editPostRepository: EditPostRepository
 
+    @Mock
+    lateinit var jetpackSocialSharingTracker: JetpackSocialSharingTracker
+
     private val showJetpackSocialContainerObserver: Observer<JetpackSocialContainerVisibility> = mock()
     private val jetpackSocialUiStateObserver: Observer<JetpackSocialUiState> = mock()
     private val actionEventsObserver: Observer<ActionEvent> = mock()
@@ -91,6 +96,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             publicizeTableWrapper = publicizeTableWrapper,
             appPrefsWrapper = appPrefsWrapper,
             siteStore = siteStore,
+            jetpackSocialSharingTracker = jetpackSocialSharingTracker,
             bgDispatcher = testDispatcher(),
         )
 
@@ -240,7 +246,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             jetpackSocialConnectionDataList = listOf(
                 JetpackSocialConnectionData(
                     postSocialConnection = FAKE_POST_SOCIAL_CONNECTION,
-                    onConnectionClick = {},
+                    onConnectionClick = { _, _ -> },
                     enabled = false
                 )
             ),
@@ -273,7 +279,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             jetpackSocialConnectionDataList = listOf(
                 JetpackSocialConnectionData(
                     postSocialConnection = FAKE_POST_SOCIAL_CONNECTION,
-                    onConnectionClick = {},
+                    onConnectionClick = { _, _ -> },
                     enabled = false
                 )
             ),
@@ -298,21 +304,21 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(loaded)
 
         classToTest.start(fakeSiteModel(true), editPostRepository)
-        classToTest.onResume()
+        classToTest.onResume(JetpackSocialFlow.POST_SETTINGS)
 
         verify(jetpackSocialUiStateObserver).onChanged(loaded)
     }
 
     @Test
     fun `Should NOT reload jetpack social on screen shown if last emitted action was NOT OpenSocialConnectionsList`() {
-        classToTest.onResume()
+        classToTest.onResume(JetpackSocialFlow.POST_SETTINGS)
         verify(jetpackSocialUiStateObserver, never()).onChanged(any())
     }
 
     @Test
     fun `Should emit OpenSocialConnectionList when onJetpackSocialConnectProfilesClick is called`() {
         classToTest.start(fakeSiteModel(), editPostRepository)
-        classToTest.onJetpackSocialConnectProfilesClick()
+        classToTest.onJetpackSocialConnectProfilesClick(JetpackSocialFlow.POST_SETTINGS)
         verify(actionEventsObserver).onChanged(
             ActionEvent.OpenSocialConnectionsList(
                 siteModel = FAKE_SITE_MODEL,
@@ -320,8 +326,207 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
         )
     }
 
+    @Test
+    fun `Should track ADD_CONNECTION_CTA_DISPLAYED on screen shown with NoConnection state`() = test {
+        // arrange
+        val noConnections = JetpackSocialUiState.NoConnections(
+            trainOfIconsModels = listOf(),
+            message = "message",
+            connectProfilesButtonLabel = "connect label",
+            onConnectProfilesClick = {},
+            notNowButtonLabel = "not now label",
+            onNotNowClick = {},
+        )
+        mockUserId()
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+            .thenReturn(emptyList())
+        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+            .thenReturn(ShareLimit.Disabled)
+        whenever(publicizeTableWrapper.getServiceList())
+            .thenReturn(listOf(PublicizeService().apply { status = PublicizeService.Status.OK }))
+        whenever(jetpackSocialFeatureConfig.isEnabled())
+            .thenReturn(true)
+        whenever(jetpackUiStateMapper.mapNoConnections(any(), any()))
+            .thenReturn(noConnections)
+        whenever(appPrefsWrapper.getShouldShowJetpackSocialNoConnections(any(), any()))
+            .thenReturn(true)
+        classToTest.start(fakeSiteModel(true), editPostRepository)
+
+        // act
+        classToTest.onResume(JetpackSocialFlow.PRE_PUBLISHING)
+
+        // assert
+        verify(jetpackSocialSharingTracker).trackAddConnectionCtaDisplayed(JetpackSocialFlow.PRE_PUBLISHING)
+    }
+
+    @Test
+    fun `Should not track ADD_CONNECTION_CTA_DISPLAYED on screen shown when NoConnection state was dismissed`() = test {
+        // arrange
+        mockUserId()
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+            .thenReturn(emptyList())
+        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+            .thenReturn(ShareLimit.Disabled)
+        whenever(publicizeTableWrapper.getServiceList())
+            .thenReturn(listOf(PublicizeService().apply { status = PublicizeService.Status.OK }))
+        whenever(jetpackSocialFeatureConfig.isEnabled())
+            .thenReturn(true)
+        whenever(appPrefsWrapper.getShouldShowJetpackSocialNoConnections(any(), any()))
+            .thenReturn(false)
+
+        classToTest.start(fakeSiteModel(true), editPostRepository)
+
+        // act
+        classToTest.onResume(JetpackSocialFlow.PRE_PUBLISHING)
+
+        // assert
+        verify(jetpackSocialSharingTracker, never()).trackAddConnectionCtaDisplayed(JetpackSocialFlow.PRE_PUBLISHING)
+    }
+
+    @Test
+    fun `Should track SHARE_LIMIT_DISPLAYED on screen shown for site with share limit UI visible`() = test {
+        // arrange
+        val loaded = JetpackSocialUiState.Loaded(
+            jetpackSocialConnectionDataList = listOf(
+                JetpackSocialConnectionData(
+                    postSocialConnection = FAKE_POST_SOCIAL_CONNECTION,
+                    onConnectionClick = { _, _ -> },
+                    enabled = false
+                )
+            ),
+            socialSharingModel = FAKE_SOCIAL_SHARING_MODEL,
+            showShareLimitUi = true, // this defines if the share limit ui is shown
+            isShareMessageEnabled = false,
+            shareMessage = "message",
+            onShareMessageClick = {},
+            subscribeButtonLabel = "label"
+        ) {}
+
+        mockUserId()
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+            .thenReturn(listOf(FAKE_PUBLICIZE_CONNECTION))
+        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+            .thenReturn(mock())
+        whenever(getJetpackSocialShareMessageUseCase.execute(any()))
+            .thenReturn("Message")
+        whenever(jetpackSocialFeatureConfig.isEnabled())
+            .thenReturn(true)
+        whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any(), any(), any(), any(), any(), any()))
+            .thenReturn(loaded)
+        classToTest.start(fakeSiteModel(true), editPostRepository)
+
+        // act
+        classToTest.onResume(JetpackSocialFlow.PRE_PUBLISHING)
+
+        // assert
+        verify(jetpackSocialSharingTracker).trackShareLimitDisplayed(JetpackSocialFlow.PRE_PUBLISHING)
+    }
+
+    @Test
+    fun `Should not track SHARE_LIMIT_DISPLAYED on screen shown for site with share limit UI not visible`() = test {
+        // arrange
+        val loaded = JetpackSocialUiState.Loaded(
+            jetpackSocialConnectionDataList = listOf(
+                JetpackSocialConnectionData(
+                    postSocialConnection = FAKE_POST_SOCIAL_CONNECTION,
+                    onConnectionClick = { _, _ -> },
+                    enabled = false
+                )
+            ),
+            socialSharingModel = FAKE_SOCIAL_SHARING_MODEL,
+            showShareLimitUi = false, // this defines if the share limit ui is shown
+            isShareMessageEnabled = false,
+            shareMessage = "message",
+            onShareMessageClick = {},
+            subscribeButtonLabel = "label"
+        ) {}
+
+        mockUserId()
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+            .thenReturn(listOf(FAKE_PUBLICIZE_CONNECTION))
+        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+            .thenReturn(mock())
+        whenever(getJetpackSocialShareMessageUseCase.execute(any()))
+            .thenReturn("Message")
+        whenever(jetpackSocialFeatureConfig.isEnabled())
+            .thenReturn(true)
+        whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any(), any(), any(), any(), any(), any()))
+            .thenReturn(loaded)
+        classToTest.start(fakeSiteModel(true), editPostRepository)
+
+        // act
+        classToTest.onResume(JetpackSocialFlow.PRE_PUBLISHING)
+
+        // assert
+        verify(jetpackSocialSharingTracker, never()).trackShareLimitDisplayed(JetpackSocialFlow.PRE_PUBLISHING)
+    }
+
+    @Test
+    fun `Should track ADD_CONNECTION_TAPPED when connect profiles button is clicked`() = test {
+        mockUserId()
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+            .thenReturn(emptyList())
+        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+            .thenReturn(ShareLimit.Disabled)
+        whenever(jetpackSocialFeatureConfig.isEnabled())
+            .thenReturn(true)
+        classToTest.start(fakeSiteModel(true), editPostRepository)
+
+        classToTest.onJetpackSocialConnectProfilesClick(JetpackSocialFlow.POST_SETTINGS)
+        verify(jetpackSocialSharingTracker).trackAddConnectionTapped(JetpackSocialFlow.POST_SETTINGS)
+    }
+
+    @Test
+    fun `Should track ADD_CONNECTION_DISMISSED when not now button is clicked`() = test {
+        mockUserId()
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+            .thenReturn(emptyList())
+        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+            .thenReturn(ShareLimit.Disabled)
+        whenever(jetpackSocialFeatureConfig.isEnabled())
+            .thenReturn(true)
+        classToTest.start(fakeSiteModel(true), editPostRepository)
+
+        classToTest.onJetpackSocialNotNowClick(JetpackSocialFlow.POST_SETTINGS)
+        verify(jetpackSocialSharingTracker).trackAddConnectionDismissCtaTapped(JetpackSocialFlow.POST_SETTINGS)
+    }
+
+    @Test
+    fun `Should track UPGRADE_LINK_TAPPED when subscribe button is clicked`() = test {
+        mockUserId()
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+            .thenReturn(emptyList())
+        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+            .thenReturn(ShareLimit.Disabled)
+        whenever(jetpackSocialFeatureConfig.isEnabled())
+            .thenReturn(true)
+        classToTest.start(fakeSiteModel(true), editPostRepository)
+
+        classToTest.onJetpackSocialSubscribeClick(JetpackSocialFlow.POST_SETTINGS)
+        verify(jetpackSocialSharingTracker).trackUpgradeLinkTapped(JetpackSocialFlow.POST_SETTINGS)
+    }
+
+    @Test
+    fun `Should track SHARING_CONNECTION_TOGGLED when connection item is clicked`() = test {
+        mockUserId()
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+            .thenReturn(emptyList())
+        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+            .thenReturn(ShareLimit.Disabled)
+        whenever(jetpackSocialFeatureConfig.isEnabled())
+            .thenReturn(true)
+        classToTest.start(fakeSiteModel(true), editPostRepository)
+
+        classToTest.onJetpackSocialConnectionClick(mock(), true, JetpackSocialFlow.POST_SETTINGS)
+        verify(jetpackSocialSharingTracker).trackConnectionToggled(JetpackSocialFlow.POST_SETTINGS, true)
+
+        classToTest.onJetpackSocialConnectionClick(mock(), false, JetpackSocialFlow.PRE_PUBLISHING)
+        verify(jetpackSocialSharingTracker).trackConnectionToggled(JetpackSocialFlow.PRE_PUBLISHING, false)
+    }
+
     private fun fakeSiteModel(supportsPublicize: Boolean = false): SiteModel = FAKE_SITE_MODEL.apply {
         siteId = FAKE_REMOTE_SITE_ID
+        url = "mysite.blog"
         if (supportsPublicize) {
             origin = SiteModel.ORIGIN_WPCOM_REST
             hasCapabilityPublishPosts = true

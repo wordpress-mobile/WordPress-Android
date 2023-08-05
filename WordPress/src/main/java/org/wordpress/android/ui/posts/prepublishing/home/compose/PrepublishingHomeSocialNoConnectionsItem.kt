@@ -28,11 +28,12 @@ import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.publicize.PublicizeServiceIcon
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 
 @Composable
 fun PrepublishingHomeSocialNoConnectionsItem(
     connectionIconModels: List<TrainOfIconsModel>,
-    onConnectClick: () -> Unit,
+    onConnectClick: (JetpackSocialFlow) -> Unit,
     onDismissClick: () -> Unit,
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colors.surface
@@ -64,7 +65,7 @@ fun PrepublishingHomeSocialNoConnectionsItem(
         ) {
             SecondaryButton(
                 text = stringResource(R.string.prepublishing_nudges_social_new_connection_cta),
-                onClick = onConnectClick,
+                onClick = { onConnectClick(JetpackSocialFlow.PRE_PUBLISHING) },
                 padding = PaddingValues(0.dp),
                 contentPadding = PaddingValues(0.dp),
                 fillMaxWidth = false,
