@@ -143,7 +143,9 @@ sealed class PrepublishingHomeViewHolder(
                             is JetpackSocialUiState.NoConnections -> {
                                 PrepublishingHomeSocialNoConnectionsItem(
                                     connectionIconModels = internalState.trainOfIconsModels,
-                                    onConnectClick = internalState.onConnectProfilesClick,
+                                    onConnectClick = {
+                                        internalState.onConnectProfilesClick(JetpackSocialFlow.PRE_PUBLISHING)
+                                     },
                                     onDismissClick = { internalState.onNotNowClick(JetpackSocialFlow.PRE_PUBLISHING) },
                                     backgroundColor = MaterialTheme.colors.surface.withBottomSheetElevation(),
                                     modifier = Modifier.fillMaxWidth()

@@ -2599,6 +2599,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "free_to_paid_plan_dashboard_card_hidden";
             case TWITTER_NOTICE_LINK_TAPPED:
                 return "twitter_notice_link_tapped";
+            case JETPACK_SOCIAL_AUTO_SHARING_CONNECTION_TOGGLED:
+                return "jetpack_social_auto_sharing_connection_toggled";
+            case JETPACK_SOCIAL_SHARE_LIMIT_DISPLAYED:
+                return "jetpack_social_share_limit_displayed";
+            case JETPACK_SOCIAL_UPGRADE_LINK_TAPPED:
+                return "jetpack_social_upgrade_link_tapped";
+            case JETPACK_SOCIAL_ADD_CONNECTION_CTA_DISPLAYED:
+                return "jetpack_social_add_connection_cta_displayed";
+            case JETPACK_SOCIAL_ADD_CONNECTION_TAPPED:
+                return "jetpack_social_add_connection_tapped";
+            case JETPACK_SOCIAL_ADD_CONNECTION_DISMISSED:
+                return "jetpack_social_add_connection_dismissed";
         }
         return null;
     }

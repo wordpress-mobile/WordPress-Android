@@ -38,6 +38,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                         Column {
                             EditPostJetpackSocialConnectionsContainer(
                                 jetpackSocialConnectionDataList = jetpackSocialConnectionDataList,
+                                jetpackSocialFlow = JetpackSocialFlow.POST_SETTINGS,
                                 shareMessage = shareMessage,
                                 isShareMessageEnabled = isShareMessageEnabled,
                                 onShareMessageClick = onShareMessageClick,
@@ -46,7 +47,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                                 EditPostSettingsJetpackSocialSharesContainer(
                                     postSocialSharingModel = socialSharingModel,
                                     subscribeButtonLabel = subscribeButtonLabel,
-                                    onSubscribeClick = onSubscribeClick,
+                                    onSubscribeClick = { onSubscribeClick(JetpackSocialFlow.POST_SETTINGS) },
                                 )
                             }
                         }
@@ -57,7 +58,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                             trainOfIconsModels = trainOfIconsModels,
                             message = message,
                             connectProfilesButtonLabel = connectProfilesButtonLabel,
-                            onConnectProfilesCLick = onConnectProfilesClick,
+                            onConnectProfilesCLick = { onConnectProfilesClick(JetpackSocialFlow.POST_SETTINGS) },
                             notNowButtonLabel = notNowButtonLabel,
                             onNotNowClick = { onNotNowClick(JetpackSocialFlow.POST_SETTINGS) },
                         )

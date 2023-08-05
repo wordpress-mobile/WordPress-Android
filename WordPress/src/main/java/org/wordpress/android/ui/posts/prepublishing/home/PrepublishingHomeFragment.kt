@@ -18,6 +18,7 @@ import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActio
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingSocialViewModelProvider
 import org.wordpress.android.ui.stats.refresh.utils.WrappingLinearLayoutManager
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.observeEvent
@@ -69,7 +70,7 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
             requireActivity().window.decorView.requestLayout()
         }
         super.onResume()
-        jetpackSocialViewModel.onResume()
+        jetpackSocialViewModel.onResume(JetpackSocialFlow.PRE_PUBLISHING)
     }
 
     private fun PostPrepublishingHomeFragmentBinding.setupRecyclerView() {
