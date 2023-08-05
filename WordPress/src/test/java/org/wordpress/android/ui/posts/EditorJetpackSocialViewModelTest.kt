@@ -13,9 +13,11 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.wrappers.PublicizeTableWrapper
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.models.PublicizeService
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent
@@ -35,6 +37,9 @@ import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class EditorJetpackSocialViewModelTest : BaseUnitTest() {
+    @Mock
+    lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var jetpackSocialFeatureConfig: JetpackSocialFeatureConfig
 
@@ -63,6 +68,9 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Mock
+    lateinit var siteStore: SiteStore
+
+    @Mock
     lateinit var editPostRepository: EditPostRepository
 
     @Mock
@@ -77,6 +85,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         classToTest = EditorJetpackSocialViewModel(
+            dispatcher = dispatcher,
             jetpackSocialFeatureConfig = jetpackSocialFeatureConfig,
             accountStore = accountStore,
             getPublicizeConnectionsForUserUseCase = getPublicizeConnectionsForUserUseCase,
@@ -86,6 +95,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             postSocialSharingModelMapper = postSocialSharingModelMapper,
             publicizeTableWrapper = publicizeTableWrapper,
             appPrefsWrapper = appPrefsWrapper,
+            siteStore = siteStore,
             jetpackSocialSharingTracker = jetpackSocialSharingTracker,
             bgDispatcher = testDispatcher(),
         )

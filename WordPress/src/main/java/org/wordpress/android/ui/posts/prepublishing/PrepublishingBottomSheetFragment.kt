@@ -49,6 +49,7 @@ import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFr
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity.Companion.createIntent
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.KeyboardResizeViewUtil
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -118,6 +119,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     override fun onResume() {
         super.onResume()
+        getEditorJetpackSocialViewModel().onResume(JetpackSocialFlow.PRE_PUBLISHING)
         /**
          * The back button normally closes the bottom sheet so now instead of doing that it goes back to
          * the home screen with the actions and only if pressed again will it close the bottom sheet.
