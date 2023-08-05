@@ -24,6 +24,7 @@ fun PrepublishingSocialScreen(
 
         EditPostJetpackSocialConnectionsContainer(
             jetpackSocialConnectionDataList = jetpackSocialConnectionDataList,
+            jetpackSocialFlow = JetpackSocialFlow.PRE_PUBLISHING,
             shareMessage = shareMessage,
             isShareMessageEnabled = isShareMessageEnabled,
             onShareMessageClick = onShareMessageClick,

@@ -38,6 +38,7 @@ class EditPostSettingsJetpackSocialContainerView @JvmOverloads constructor(
                         Column {
                             EditPostJetpackSocialConnectionsContainer(
                                 jetpackSocialConnectionDataList = jetpackSocialConnectionDataList,
+                                jetpackSocialFlow = JetpackSocialFlow.POST_SETTINGS,
                                 shareMessage = shareMessage,
                                 isShareMessageEnabled = isShareMessageEnabled,
                                 onShareMessageClick = onShareMessageClick,

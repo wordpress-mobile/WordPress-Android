@@ -12,17 +12,20 @@ import org.wordpress.android.models.PublicizeConnection
 import org.wordpress.android.ui.compose.theme.AppThemeEditor
 import org.wordpress.android.ui.posts.social.PostSocialConnection
 import org.wordpress.android.ui.posts.social.compose.PostSocialMessageItem
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 
 @Suppress("UnusedReceiverParameter")
 @Composable
 fun ColumnScope.EditPostJetpackSocialConnectionsContainer(
     jetpackSocialConnectionDataList: List<JetpackSocialConnectionData>,
+    jetpackSocialFlow: JetpackSocialFlow,
     shareMessage: String,
     isShareMessageEnabled: Boolean,
     onShareMessageClick: () -> Unit,
 ) {
     EditPostJetpackSocialConnectionsList(
         jetpackSocialConnectionDataList = jetpackSocialConnectionDataList,
+        jetpackSocialFlow = jetpackSocialFlow,
     )
     PostSocialMessageItem(
         message = shareMessage,
@@ -76,6 +79,7 @@ fun EditPostJetpackSocialContainerWithShareLimitPreview() {
                 shareMessage = "Share message.",
                 isShareMessageEnabled = true,
                 onShareMessageClick = {},
+                jetpackSocialFlow = JetpackSocialFlow.POST_SETTINGS,
             )
         }
     }
@@ -123,6 +127,7 @@ fun EditPostJetpackSocialContainerWithoutShareLimitPreview() {
                 shareMessage = "Share message.",
                 isShareMessageEnabled = true,
                 onShareMessageClick = {},
+                jetpackSocialFlow = JetpackSocialFlow.POST_SETTINGS,
             )
         }
     }

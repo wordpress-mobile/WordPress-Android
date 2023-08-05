@@ -14,7 +14,10 @@ import org.wordpress.android.ui.posts.social.compose.PostSocialConnectionItem
 import org.wordpress.android.usecase.social.JetpackSocialFlow
 
 @Composable
-fun EditPostJetpackSocialConnectionsList(jetpackSocialConnectionDataList: List<JetpackSocialConnectionData>) {
+fun EditPostJetpackSocialConnectionsList(
+    jetpackSocialConnectionDataList: List<JetpackSocialConnectionData>,
+    jetpackSocialFlow: JetpackSocialFlow,
+) {
     Column(
         Modifier
             .fillMaxWidth()
@@ -22,7 +25,7 @@ fun EditPostJetpackSocialConnectionsList(jetpackSocialConnectionDataList: List<J
         jetpackSocialConnectionDataList.forEach {
             PostSocialConnectionItem(
                 connection = it.postSocialConnection,
-                onSharingChange = { newValue -> it.onConnectionClick(newValue, JetpackSocialFlow.POST_SETTINGS) } ,
+                onSharingChange = { newValue -> it.onConnectionClick(newValue, jetpackSocialFlow) },
                 enabled = it.enabled,
             )
             Divider()
@@ -74,6 +77,7 @@ fun PreviewEditPostJetpackSocialConnectionsList() {
         )
         EditPostJetpackSocialConnectionsList(
             jetpackSocialConnectionDataList = connections,
+            jetpackSocialFlow = JetpackSocialFlow.POST_SETTINGS
         )
     }
 }
