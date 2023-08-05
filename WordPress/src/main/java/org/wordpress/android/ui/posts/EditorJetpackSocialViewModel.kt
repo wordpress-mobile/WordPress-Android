@@ -4,12 +4,17 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.datasets.wrappers.PublicizeTableWrapper
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PublicizeSkipConnection
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.PublicizeService
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
@@ -31,6 +36,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class EditorJetpackSocialViewModel @Inject constructor(
+    private val dispatcher: Dispatcher,
     private val jetpackSocialFeatureConfig: JetpackSocialFeatureConfig,
     private val accountStore: AccountStore,
     private val getPublicizeConnectionsForUserUseCase: GetPublicizeConnectionsForUserUseCase,
@@ -40,6 +46,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
     private val postSocialSharingModelMapper: PostSocialSharingModelMapper,
     private val publicizeTableWrapper: PublicizeTableWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val siteStore: SiteStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private lateinit var siteModel: SiteModel
@@ -61,11 +68,15 @@ class EditorJetpackSocialViewModel @Inject constructor(
 
     var isStarted: Boolean = false
 
+    private var isLastActionOnResumeHandled = false
+
     private val currentPost: PostImmutableModel?
         get() = editPostRepository.getPost()
 
     fun start(siteModel: SiteModel, editPostRepository: EditPostRepository) {
         if (isStarted) return
+
+        dispatcher.register(this)
 
         isStarted = true
         this.siteModel = siteModel
@@ -83,12 +94,24 @@ class EditorJetpackSocialViewModel @Inject constructor(
     }
 
     fun onResume() {
-        if (jetpackSocialFeatureConfig.isEnabled() && actionEvents.value is ActionEvent.OpenSocialConnectionsList) {
-            // When getting back from publicize connections screen, we should update connections to
-            // make sure we have the latest data.
-            launch {
-                updateConnections()
-                loadJetpackSocialIfSupported()
+        if (jetpackSocialFeatureConfig.isEnabled() && !isLastActionOnResumeHandled) {
+            isLastActionOnResumeHandled = true
+            when (actionEvents.value) {
+                is ActionEvent.OpenSocialConnectionsList -> {
+                    // When getting back from publicize connections screen, we should update connections to
+                    // make sure we have the latest data.
+                    launch {
+                        updateConnections()
+                        loadJetpackSocialIfSupported()
+                    }
+                }
+                is ActionEvent.OpenSubscribeJetpackSocial -> {
+                    // We have to update SiteModel to make sure we have the latest data regarding user hired plans
+                    dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(siteModel))
+                }
+                else -> {
+                    // Do nothing
+                }
             }
         }
     }
@@ -239,6 +262,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
 
     @VisibleForTesting
     fun onJetpackSocialConnectProfilesClick() {
+        isLastActionOnResumeHandled = false
         _actionEvents.value = ActionEvent.OpenSocialConnectionsList(siteModel = siteModel)
     }
 
@@ -283,6 +307,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
     }
 
     private fun onJetpackSocialSubscribeClick() {
+        isLastActionOnResumeHandled = false
         _actionEvents.value = ActionEvent.OpenSubscribeJetpackSocial(
             siteModel = siteModel,
             url = HIRE_JETPACK_SOCIAL_BASIC_URL.format(
@@ -301,6 +326,26 @@ class EditorJetpackSocialViewModel @Inject constructor(
             })
             _jetpackSocialUiState.value = currentState.copy(shareMessage = shareMessage)
             jetpackSocialShareMessage = shareMessage
+        }
+    }
+
+    override fun onCleared() {
+        dispatcher.unregister(this)
+        super.onCleared()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onSiteChanged(event: SiteStore.OnSiteChanged) {
+        if (event.isError) {
+            return
+        }
+        launch {
+            val updatedSite = siteStore.getSiteByLocalId(siteModel.id)
+            if (updatedSite != null) {
+                siteModel = updatedSite
+                shareLimit = getJetpackSocialShareLimitStatusUseCase.execute(siteModel)
+                loadJetpackSocialIfSupported()
+            }
         }
     }
 
