@@ -15,6 +15,7 @@ import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActionClickedListener
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingSocialViewModelProvider
 import org.wordpress.android.ui.stats.refresh.utils.WrappingLinearLayoutManager
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -124,10 +125,8 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
     }
 
     private fun setupJetpackSocialViewModel() {
-        jetpackSocialViewModel = ViewModelProvider(
-            requireActivity(),
-            viewModelFactory
-        )[EditorJetpackSocialViewModel::class.java]
+        jetpackSocialViewModel = (parentFragment as PrepublishingSocialViewModelProvider)
+            .getEditorJetpackSocialViewModel()
 
         merge(
             jetpackSocialViewModel.jetpackSocialUiState,

@@ -17,6 +17,7 @@ import org.wordpress.android.ui.compose.utils.withBottomSheetElevation
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingSocialViewModelProvider
 import org.wordpress.android.ui.posts.prepublishing.social.compose.PrepublishingSocialScreen
 import javax.inject.Inject
 
@@ -59,10 +60,7 @@ class PrepublishingSocialFragment : Fragment(R.layout.prepublishing_social_fragm
             viewModelFactory
         )[PrepublishingViewModel::class.java]
 
-        socialViewModel = ViewModelProvider(
-            requireActivity(),
-            viewModelFactory
-        )[EditorJetpackSocialViewModel::class.java]
+        socialViewModel = (parentFragment as PrepublishingSocialViewModelProvider).getEditorJetpackSocialViewModel()
     }
 
     private fun setupObservers() {
