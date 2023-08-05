@@ -82,10 +82,10 @@ class EditorJetpackSocialViewModel @Inject constructor(
     fun onResume(jetpackSocialFlow: JetpackSocialFlow) {
         if (jetpackSocialFeatureConfig.isEnabled()) {
             _jetpackSocialUiState.value?.let { uiState ->
-                if(uiState is JetpackSocialUiState.Loaded && uiState.showShareLimitUi) {
+                if (uiState is JetpackSocialUiState.Loaded && uiState.showShareLimitUi) {
                     jetpackSocialSharingTracker.trackShareLimitDisplayed(jetpackSocialFlow)
                 } else if (uiState is JetpackSocialUiState.NoConnections) {
-                    jetpackSocialSharingTracker.trackAddConnectionCtaDisplayed(jetpackSocialFlow)
+                    trackAddConnectionCtaDisplayedIfVisible(jetpackSocialFlow)
                 }
             }
 
@@ -317,6 +317,18 @@ class EditorJetpackSocialViewModel @Inject constructor(
             _jetpackSocialUiState.value = currentState.copy(shareMessage = shareMessage)
             jetpackSocialShareMessage = shareMessage
         }
+    }
+
+    private fun trackAddConnectionCtaDisplayedIfVisible(jetpackSocialFlow: JetpackSocialFlow) {
+        val trackEvent = when (jetpackSocialFlow) {
+            JetpackSocialFlow.PRE_PUBLISHING ->
+                jetpackSocialContainerVisibility.value?.showInPrepublishingSheet == true
+            JetpackSocialFlow.POST_SETTINGS ->
+                _jetpackSocialContainerVisibility.value?.showInPostSettings == true
+            else -> false
+        }
+
+        if (trackEvent) jetpackSocialSharingTracker.trackAddConnectionCtaDisplayed(jetpackSocialFlow)
     }
 
     data class JetpackSocialContainerVisibility(
