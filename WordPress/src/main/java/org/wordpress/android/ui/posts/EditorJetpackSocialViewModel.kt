@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.models.PublicizeService
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
@@ -335,7 +336,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSiteChanged(event: SiteStore.OnSiteChanged) {
+    fun onSiteChanged(event: OnSiteChanged) {
         if (event.isError) {
             return
         }
