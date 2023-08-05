@@ -118,6 +118,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     override fun onResume() {
         super.onResume()
+        getEditorJetpackSocialViewModel().onResume()
         /**
          * The back button normally closes the bottom sheet so now instead of doing that it goes back to
          * the home screen with the actions and only if pressed again will it close the bottom sheet.
