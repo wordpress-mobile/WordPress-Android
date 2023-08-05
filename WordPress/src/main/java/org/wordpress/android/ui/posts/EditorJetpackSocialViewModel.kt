@@ -296,7 +296,8 @@ class EditorJetpackSocialViewModel @Inject constructor(
         _actionEvents.value = ActionEvent.OpenEditShareMessage(shareMessage)
     }
 
-    private fun onJetpackSocialSubscribeClick(jetpackSocialFlow: JetpackSocialFlow) {
+    @VisibleForTesting
+    fun onJetpackSocialSubscribeClick(jetpackSocialFlow: JetpackSocialFlow) {
         jetpackSocialSharingTracker.trackUpgradeLinkTapped(jetpackSocialFlow)
         _actionEvents.value = ActionEvent.OpenSubscribeJetpackSocial(
             siteModel = siteModel,
