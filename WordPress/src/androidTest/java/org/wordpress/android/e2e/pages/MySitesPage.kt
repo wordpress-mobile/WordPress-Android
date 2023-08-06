@@ -24,6 +24,7 @@ import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.wordpress.android.R
 import org.wordpress.android.support.BetterScrollToAction.Companion.scrollTo
+import org.wordpress.android.support.ComposeEspressoLink
 import org.wordpress.android.support.WPSupportUtils
 import org.wordpress.android.ui.prefs.WPPreference
 import android.R as AndroidR
@@ -52,6 +53,8 @@ class MySitesPage {
     }
 
     fun startNewPost() {
+        ComposeEspressoLink().unregister()
+
         WPSupportUtils.clickOn(R.id.fab_button)
         if (WPSupportUtils.isElementDisplayed(MaterialR.id.design_bottom_sheet)) {
             // If Stories are enabled, FAB opens a bottom sheet with options - select the 'Blog post' option

@@ -7,12 +7,14 @@ import org.junit.Test
 import org.wordpress.android.e2e.pages.BlockEditorPage
 import org.wordpress.android.e2e.pages.MySitesPage
 import org.wordpress.android.support.BaseTest
+import org.wordpress.android.support.ComposeEspressoLink
 import java.time.Instant
 
 @HiltAndroidTest
 class BlockEditorTests : BaseTest() {
     @Before
     fun setUp() {
+        ComposeEspressoLink().unregister()
         logoutIfNecessary()
         wpLogin()
     }
