@@ -51,13 +51,16 @@ class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<Prepubli
     }
 
     fun update(newItems: List<PrepublishingHomeItemUiState>) {
+        // don't even account for items that are not visible, they are completely ignored
+        val visibleNewItems = newItems.filter { it.isVisible }
+
         val diffResult = DiffUtil.calculateDiff(
             PrepublishingHomeDiffCallback(
                 this.items,
-                newItems
+                visibleNewItems
             )
         )
-        this.items = newItems
+        this.items = visibleNewItems
         diffResult.dispatchUpdatesTo(this)
     }
 

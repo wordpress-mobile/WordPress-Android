@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-12 14:54:08+0000
+Translation-Revision-Date: 2023-07-26 14:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.6
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_insert_video_block">插入视频区块</string>
+    <string name="gutenberg_native_insert_image_block">插入图像区块</string>
+    <string name="gutenberg_native_insert_gallery_block">插入画廊区块</string>
+    <string name="gutenberg_native_insert_audio_block">插入音频区块</string>
+    <string name="blaze_campaign_detail_error">无法加载活动详细信息</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">创建</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">您还没有创建任何活动。 点击“创建”开始。</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">您没有活动</string>
+    <string name="blaze_campaign_details_page_title">活动详细信息</string>
+    <string name="blaze_campaigns_page_title">Blaze 活动</string>
+    <string name="budget_campaign_stats">预算</string>
+    <string name="clicks_campaign_stats">点击次数</string>
+    <string name="impressions_campaign_stats">展示次数</string>
+    <string name="campaign_status_scheduled">已预发布</string>
+    <string name="campaign_status_in_moderation">审核中</string>
+    <string name="campaign_status_canceled">已取消</string>
+    <string name="campaign_status_rejected">已拒绝</string>
+    <string name="campaign_status_completed">已完成</string>
+    <string name="campaign_status_active">启用</string>
+    <string name="blaze_campaigns_card_footer_label">创建活动</string>
+    <string name="blaze_campaigns_card_title">Blaze 活动</string>
+    <string name="promote_blaze_flow_error">无法加载 Blaze 宣传流</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">关联您的社交个人资料</string>
+    <string name="prepublishing_nudges_social_new_connection_text">通过在社交媒体上自动与好友共享文章来增加流量。</string>
+    <string name="menu_close_editor">关闭编辑器</string>
+    <string name="menu_redo_context">重做上一次更改</string>
+    <string name="menu_undo_context">撤消上一次更改</string>
+    <string name="jetpack_social_social_shares_remaining">还剩 %1$d 个社交共享</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">订阅以共享更多</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">关联您的社交个人资料</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">通过在社交媒体上自动与好友共享文章来增加流量。</string>
+    <string name="post_settings_jetpack_social_header">社交共享</string>
     <string name="gutenberg_native_s_detached">%s 已分离</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Android 版 %s 尚不支持编辑已同步的样板</string>
     <string name="gutenberg_native_reusable">可重用</string>

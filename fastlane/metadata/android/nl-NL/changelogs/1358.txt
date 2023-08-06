@@ -1,2 +1,0 @@
-22.8:
-- De app crasht niet meer als je een site verwijdert. Gelukkig!

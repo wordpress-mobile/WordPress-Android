@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts.prepublishing.home
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -10,7 +11,9 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 
 typealias PublishPost = Boolean
 
-sealed class PrepublishingHomeItemUiState {
+sealed class PrepublishingHomeItemUiState(
+    val isVisible: Boolean = true
+) {
     data class HomeUiState(
         val navigationAction: ActionType.PrepublishingScreenNavigation,
         @ColorRes val actionTypeColor: Int = R.color.prepublishing_action_type_enabled_color,
@@ -62,22 +65,23 @@ sealed class PrepublishingHomeItemUiState {
         )
     }
 
-    sealed class SocialUiState : PrepublishingHomeItemUiState() {
+    sealed class SocialUiState(
+        isVisible: Boolean = true
+    ) : PrepublishingHomeItemUiState(isVisible) {
         abstract val serviceIcons: List<ConnectionServiceIcon>
 
-        data class SocialSharingUiState(
-            override val serviceIcons: List<ConnectionServiceIcon>,
-            val title: UiString,
-            val description: UiString,
-            val isLowOnShares: Boolean,
+        data class Visible(
+            val state: EditorJetpackSocialViewModel.JetpackSocialUiState,
             val onItemClicked: (() -> Unit),
-        ) : SocialUiState()
+        ) : SocialUiState() {
+            override val serviceIcons: List<ConnectionServiceIcon> = emptyList()
+        }
 
-        data class SocialConnectPromptUiState(
-            override val serviceIcons: List<ConnectionServiceIcon>,
-            val onConnectClicked: (() -> Unit),
-            val onDismissClicked: (() -> Unit),
-        ) : SocialUiState()
+        object Hidden : SocialUiState(
+            isVisible = false
+        ) {
+            override val serviceIcons: List<ConnectionServiceIcon> = emptyList()
+        }
 
         data class ConnectionServiceIcon(
             @DrawableRes val iconRes: Int,
@@ -105,6 +109,10 @@ sealed class PrepublishingHomeItemUiState {
             object AddCategory : PrepublishingScreenNavigation(
                 UiStringRes(R.string.prepublishing_nudges_categories_action),
                 PrepublishingScreen.ADD_CATEGORY,
+            )
+            object Social : PrepublishingScreenNavigation(
+                UiStringRes(R.string.prepublishing_nudges_social_action),
+                PrepublishingScreen.SOCIAL,
             )
         }
 

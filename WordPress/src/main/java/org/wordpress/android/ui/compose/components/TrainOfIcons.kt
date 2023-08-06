@@ -60,7 +60,9 @@ fun TrainOfIcons(
     iconBorderColor: Color = MaterialTheme.colors.surface,
     placeholderPainter: Painter = ColorPainter(colorResource(R.color.placeholder)),
 ) {
-    require(iconModels.isNotEmpty()) { "TrainOfIcons must have at least 1 icon" }
+    if (iconModels.isEmpty()) {
+        return
+    }
 
     val iconSizeWithBorder = (iconSize.value + 2 * iconBorderWidth.value).toInt()
     val semanticsModifier = contentDescription?.let {

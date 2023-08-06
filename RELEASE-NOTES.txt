@@ -8,6 +8,7 @@
 * [*] Block editor: Remove Gallery caption button on mobile [https://github.com/WordPress/gutenberg/pull/53010]
 * [*] Block editor: Fix Gallery block selection when adding media [https://github.com/WordPress/gutenberg/pull/53127]
 * [**] Fixed occasional crashes on plugin installs [https://github.com/wordpress-mobile/WordPress-Android/pull/18890]
+* [***] [Jetpack-only] Jetpack Social: Control your post's social sharing settings from the post editor [https://github.com/wordpress-mobile/WordPress-Android/pull/18897]
 
 22.9
 -----

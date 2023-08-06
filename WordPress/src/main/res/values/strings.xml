@@ -1719,7 +1719,8 @@
     <string name="post_settings_jetpack_social_subscribe_share_more">Subscribe to share more</string>
     <string name="post_settings_jetpack_social_share_message_title">Customize the message</string>
     <string name="post_settings_jetpack_social_share_message_description">Customize the message you want to share. If you don\'t add your own text here, we\'ll use the post\'s title as the message.</string>
-    <string name="jetpack_social_social_shares_remaining">%1$d Social shares remaining</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d social shares remaining</string>
+    <string name="jetpack_social_social_shares_remaining_one">1 social share remaining</string>
     <string name="jetpack_social_social_shares_title_not_sharing">Not sharing to social</string>
     <string name="jetpack_social_social_shares_title_single_account">Sharing to %1$s</string>
     <string name="jetpack_social_social_shares_title_part_of_the_accounts">Sharing to %1$d of %2$d accounts</string>
@@ -3482,6 +3483,7 @@
     <string name="prepublishing_nudges_publish_action">Publish Date</string>
     <string name="prepublishing_nudges_tags_action">Tags</string>
     <string name="prepublishing_nudges_categories_action">Categories</string>
+    <string name="prepublishing_nudges_social_action">Social sharing</string>
     <string name="prepublishing_nudges_home_header_publishing_to">Publishing to</string>
     <string name="prepublishing_nudges_home_publish_button" translatable="false">@string/publish_now</string>
     <string name="prepublishing_nudges_home_schedule_button">Schedule Now</string>
@@ -3498,6 +3500,7 @@
     <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Add New Category</string>
     <string name="prepublishing_nudges_add_category_button">Add Category</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Social sharing</string>
     <string name="prepublishing_nudges_social_new_connection_text">Increase your traffic by auto-sharing your posts with your friends on social media.</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Connect accounts</string>
 
