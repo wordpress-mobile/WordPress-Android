@@ -5,11 +5,13 @@ import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.e2e.pages.ReaderPage
 import org.wordpress.android.support.BaseTest
+import org.wordpress.android.support.ComposeEspressoLink
 
 @HiltAndroidTest
 class ReaderTests : BaseTest() {
     @Before
     fun setUp() {
+        ComposeEspressoLink().unregister()
         logoutIfNecessary()
         wpLogin()
         ReaderPage().go()

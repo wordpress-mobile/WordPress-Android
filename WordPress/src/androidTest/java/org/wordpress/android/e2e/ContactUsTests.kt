@@ -1,18 +1,23 @@
 package org.wordpress.android.e2e
 
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.Assume
 import org.junit.Before
 import org.junit.Test
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.e2e.flows.LoginFlow
 import org.wordpress.android.e2e.pages.ContactSupportScreen
-import org.wordpress.android.e2e.pages.HelpScreen
 import org.wordpress.android.support.BaseTest
+import org.wordpress.android.support.ComposeEspressoLink
+import org.wordpress.android.test.BuildConfig
 
 @HiltAndroidTest
 class ContactUsTests : BaseTest() {
     @Before
     fun setUp() {
+        // We run the class for JP only (so far the class contains
+        // only a test for Domains card, which in not valid for WP)
+        Assume.assumeTrue(BuildConfig.IS_JETPACK_APP)
+        ComposeEspressoLink().unregister()
         logoutIfNecessary()
     }
 
@@ -23,17 +28,13 @@ class ContactUsTests : BaseTest() {
                 .chooseContinueWithWpCom(super.mComposeTestRule)
                 .tapHelp()
                 .assertHelpScreenLoaded()
-
-            // Contact Us is only available on Jetpack App, see: https://github.com/wordpress-mobile/WordPress-Android/pull/18818
-            if (BuildConfig.IS_JETPACK_APP) {
-                HelpScreen().openContactUs()
-                    .assertContactSupportScreenLoaded()
-                    .assertSendButtonDisabled()
-                    .setMessageText("Hello")
-                    .assertSendButtonEnabled()
-                    .setMessageText("")
-                    .assertSendButtonDisabled()
-            }
+                .openContactUs()
+                .assertContactSupportScreenLoaded()
+                .assertSendButtonDisabled()
+                .setMessageText("Hello")
+                .assertSendButtonEnabled()
+                .setMessageText("")
+                .assertSendButtonDisabled()
         } finally {
             ContactSupportScreen().goBackAndDeleteUnsentMessageIfNeeded()
         }

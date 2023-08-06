@@ -33,6 +33,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardC
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainTransferCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardBuilder
@@ -42,6 +43,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.CREATE
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.DRAFT
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardDomainCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
@@ -72,6 +74,9 @@ class CardsBuilderTest : BaseUnitTest() {
     @Mock
     lateinit var activityCardBuilder: ActivityCardBuilder
 
+    @Mock
+    lateinit var mDomainTransferCardBuilder: DomainTransferCardBuilder
+
     private lateinit var cardsBuilder: CardsBuilder
 
     @Before
@@ -80,6 +85,7 @@ class CardsBuilderTest : BaseUnitTest() {
             todaysStatsCardBuilder,
             postCardBuilder,
             bloggingPromptCardsBuilder,
+            mDomainTransferCardBuilder,
             blazeCardBuilder,
             dashboardDomainCardBuilder,
             dashboardPlansCardBuilder,
@@ -326,6 +332,7 @@ class CardsBuilderTest : BaseUnitTest() {
         hasPostsForPostCard: Boolean = false,
         hasBlogginPrompt: Boolean = false,
         showErrorCard: Boolean = false,
+        isEligibleForDomainTransferCard: Boolean = false,
         isEligibleForBlaze: Boolean = false,
         isEligibleForDomainCard: Boolean = false,
         isEligibleForPlansCard: Boolean = false,
@@ -352,6 +359,9 @@ class CardsBuilderTest : BaseUnitTest() {
                 postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
                 bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                     mock(), false, false, false, mock(), mock(), mock(), mock(), mock(), mock()
+                ),
+                domainTransferCardBuilderParams = DomainTransferCardBuilderParams(
+                    isEligibleForDomainTransferCard, mock(), mock(), mock()
                 ),
                 blazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
                     mock(),

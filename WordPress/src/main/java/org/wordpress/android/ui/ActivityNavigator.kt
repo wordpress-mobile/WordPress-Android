@@ -49,4 +49,11 @@ class ActivityNavigator @Inject constructor() {
         intent.putExtra(ARG_BLAZE_FLOW_SOURCE, source)
         context.startActivity(intent)
     }
+
+    fun openDomainTransfer(
+        context: Context,
+        url: String
+    ) {
+        WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url)
+    }
 }

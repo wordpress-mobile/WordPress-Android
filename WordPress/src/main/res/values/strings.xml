@@ -4512,6 +4512,13 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="dashboard_card_domain_sub_title">Stake your claim on your corner of the web with a site address that\'s easy to find, share, and follow.</string>
     <string name="dashboard_card_domain_menu_hide_this">Hide this</string>
 
+    <!-- Dashboard Card Domain Transfer-->
+    <string name="domain_transfer_card_title">News</string>
+    <string name="domain_transfer_card_sub_title">Reclaim Your Google Domains</string>
+    <string name="domain_transfer_card_caption">As you may know, Google Domains has been sold to Squarespace. Transfer your domains to WordPress.com now, and we\'ll pay all transfer fees plus an extra year of your domain registration.</string>
+    <string name="domain_transfer_card_cta">Transfer your domains</string>
+    <string name="domain_transfer_card_menu_hide_this">Hide this</string>
+
     <!-- Dashboard Card Plans-->
     <string name="dashboard_card_plans_title">Free domain with annual plan</string>
     <string name="dashboard_card_plans_sub_title">Get a free domain for the first year, remove ads on your site, and increase your storage.</string>

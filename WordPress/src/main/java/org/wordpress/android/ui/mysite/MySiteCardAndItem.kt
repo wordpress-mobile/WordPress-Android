@@ -59,6 +59,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         POST_CARD_WITH_POST_ITEMS,
         BLOGGING_PROMPT_CARD,
         PROMOTE_WITH_BLAZE_CARD,
+        DASHBOARD_DOMAIN_TRANSFER_CARD,
         BLAZE_CAMPAIGNS_CARD,
         DASHBOARD_DOMAIN_CARD,
         DASHBOARD_PLANS_CARD,
@@ -327,7 +328,15 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val onRemoveClick: () -> Unit,
                     ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD)
                 }
-
+                data class DomainTransferCardModel(
+                    @StringRes val title: Int,
+                    @StringRes val subtitle: Int,
+                    @StringRes val caption: Int,
+                    @StringRes val cta: Int,
+                    val onClick: ListItemInteraction,
+                    val onHideMenuItemClick: ListItemInteraction,
+                    val onMoreMenuClick: ListItemInteraction,
+                ) : DashboardCard(dashboardCardType = DashboardCardType.DASHBOARD_DOMAIN_TRANSFER_CARD)
                 sealed class BlazeCard(
                     override val dashboardCardType: DashboardCardType
                 ) : DashboardCard(dashboardCardType) {

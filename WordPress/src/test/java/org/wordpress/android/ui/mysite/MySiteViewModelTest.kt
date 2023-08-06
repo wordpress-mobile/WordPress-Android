@@ -116,6 +116,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
+import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder.Companion.NOT_SET
@@ -340,6 +341,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper
 
+    @Mock
+    lateinit var domainTransferCardViewModel: DomainTransferCardViewModel
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -521,6 +525,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(jetpackBrandingUtils.getBrandingTextForScreen(any())).thenReturn(mock())
         whenever(jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()).thenReturn(true)
         whenever(blazeCardViewModelSlice.refresh).thenReturn(refresh)
+        whenever(domainTransferCardViewModel.refresh).thenReturn(refresh)
+
         viewModel = MySiteViewModel(
             networkUtilsWrapper,
             testDispatcher(),
@@ -576,7 +582,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             plansCardUtils,
             jetpackFeatureRemovalPhaseHelper,
             wpJetpackIndividualPluginHelper,
-            blazeCardViewModelSlice
+            blazeCardViewModelSlice,
+            domainTransferCardViewModel
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()

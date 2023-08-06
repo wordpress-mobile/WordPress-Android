@@ -11,6 +11,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.e2e.pages.MySitesPage
 import org.wordpress.android.support.BaseTest
+import org.wordpress.android.support.ComposeEspressoLink
 import org.wordpress.android.support.WPSupportUtils
 import org.wordpress.android.util.StatsKeyValueData
 import org.wordpress.android.util.StatsMocksReader
@@ -23,7 +24,7 @@ class StatsTests : BaseTest() {
         // We're not running Stats tests for JP.
         // See https://github.com/wordpress-mobile/WordPress-Android/issues/18065
         assumeTrue(!BuildConfig.IS_JETPACK_APP)
-
+        ComposeEspressoLink().unregister()
         logoutIfNecessary()
         wpLogin()
     }

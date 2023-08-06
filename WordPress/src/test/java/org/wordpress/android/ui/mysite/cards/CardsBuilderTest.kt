@@ -29,6 +29,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegi
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainTransferCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
@@ -188,7 +189,8 @@ class CardsBuilderTest {
         isEligibleForPlansCard: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         isQuickStartDynamicCardEnabled: Boolean = false,
-        isMySiteTabsEnabled: Boolean = false
+        isMySiteTabsEnabled: Boolean = false,
+        isEligibleForDomainTransferCard: Boolean = false,
     ): List<MySiteCardAndItem> {
         whenever(buildConfigWrapper.isQuickActionEnabled).thenReturn(isQuickActionEnabled)
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
@@ -244,6 +246,12 @@ class CardsBuilderTest {
                 ),
                 pagesCardBuilderParams = PagesCardBuilderParams(mock(), mock(), mock()),
                 activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock()),
+                domainTransferCardBuilderParams = DomainTransferCardBuilderParams(
+                    isEligible = isEligibleForDomainTransferCard,
+                    mock(),
+                    mock(),
+                    mock()
+                )
             ),
             quickLinkRibbonBuilderParams = QuickLinkRibbonBuilderParams(
                 siteModel = mock(),

@@ -30,6 +30,7 @@ class CardsTracker @Inject constructor(
         ACTIVITY("activity_log"),
         DASHBOARD_CARD_DOMAIN("dashboard_card_domain"),
         DASHBOARD_CARD_PLANS("dashboard_card_plans"),
+        DASHBOARD_CARD_DOMAIN_TRANSFER("dashboard_card_domain_transfer"),
     }
 
     enum class QuickStartSubtype(val label: String) {
@@ -157,6 +158,7 @@ fun DashboardCardType.toTypeValue(): Type {
         DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST
         DashboardCardType.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
         DashboardCardType.PROMOTE_WITH_BLAZE_CARD -> Type.PROMOTE_WITH_BLAZE
+        DashboardCardType.DASHBOARD_DOMAIN_TRANSFER_CARD -> Type.DASHBOARD_CARD_DOMAIN_TRANSFER
         DashboardCardType.BLAZE_CAMPAIGNS_CARD -> Type.PROMOTE_WITH_BLAZE
         DashboardCardType.DASHBOARD_DOMAIN_CARD -> Type.DASHBOARD_CARD_DOMAIN
         DashboardCardType.DASHBOARD_PLANS_CARD -> Type.DASHBOARD_CARD_PLANS

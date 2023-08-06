@@ -6,6 +6,7 @@ import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.e2e.pages.MySitesPage
 import org.wordpress.android.support.BaseTest
+import org.wordpress.android.support.ComposeEspressoLink
 import org.wordpress.android.test.BuildConfig
 
 @HiltAndroidTest
@@ -15,7 +16,7 @@ class DashboardTests : BaseTest() {
         // We run the class for JP only (so far the class contains
         // only a test for Domains card, which in not valid for WP)
         assumeTrue(BuildConfig.IS_JETPACK_APP)
-
+        ComposeEspressoLink().unregister()
         logoutIfNecessary()
         wpLogin()
     }

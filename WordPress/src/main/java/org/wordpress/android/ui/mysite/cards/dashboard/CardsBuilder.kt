@@ -12,6 +12,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardDomainCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import javax.inject.Inject
@@ -20,6 +21,7 @@ class CardsBuilder @Inject constructor(
     private val todaysStatsCardBuilder: TodaysStatsCardBuilder,
     private val postCardBuilder: PostCardBuilder,
     private val bloggingPromptCardBuilder: BloggingPromptCardBuilder,
+    private val domainTransferCardBuilder: DomainTransferCardBuilder,
     private val blazeCardBuilder: BlazeCardBuilder,
     private val dashboardDomainCardBuilder: DashboardDomainCardBuilder,
     private val plansCardBuilder: PlansCardBuilder,
@@ -37,6 +39,12 @@ class CardsBuilder @Inject constructor(
                 bloggingPromptCardBuilder.build(dashboardCardsBuilderParams.bloggingPromptCardBuilderParams)
                     ?.let {
                         bloggingPromptCardAdded = true
+                        add(it)
+                    }
+
+                domainTransferCardBuilder
+                    .build(dashboardCardsBuilderParams.domainTransferCardBuilderParams)
+                    ?.let {
                         add(it)
                     }
 

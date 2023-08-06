@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardDomainCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DomainTransferCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.BlazeCampaignsCardModel
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardDomainCardViewHolder
+import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.HtmlCompatWrapper
@@ -60,6 +62,7 @@ class CardsAdapter(
                 htmlCompatWrapper,
                 learnMoreClicked
             )
+            DashboardCardType.DASHBOARD_DOMAIN_TRANSFER_CARD.ordinal -> DomainTransferCardViewHolder(parent)
             DashboardCardType.PROMOTE_WITH_BLAZE_CARD.ordinal -> PromoteWithBlazeCardViewHolder(parent, uiHelpers)
             DashboardCardType.BLAZE_CAMPAIGNS_CARD.ordinal -> BlazeCampaignsCardViewHolder(parent)
             DashboardCardType.DASHBOARD_DOMAIN_CARD.ordinal -> DashboardDomainCardViewHolder(parent, uiHelpers)
@@ -79,6 +82,7 @@ class CardsAdapter(
             is TodaysStatsCardViewHolder -> holder.bind(items[position] as TodaysStatsCardWithData)
             is PostCardViewHolder<*> -> holder.bind(items[position] as PostCard)
             is BloggingPromptCardViewHolder -> holder.bind(items[position] as BloggingPromptCardWithData)
+            is DomainTransferCardViewHolder -> holder.bind(items[position] as DomainTransferCardModel)
             is PromoteWithBlazeCardViewHolder -> holder.bind(items[position] as PromoteWithBlazeCard)
             is BlazeCampaignsCardViewHolder -> holder.bind(items[position] as BlazeCampaignsCardModel)
             is DashboardDomainCardViewHolder -> holder.bind(items[position] as DashboardDomainCard)
@@ -116,6 +120,7 @@ class CardsAdapter(
                 oldItem is PromoteWithBlazeCard && newItem is PromoteWithBlazeCard -> true
                 oldItem is BlazeCampaignsCardModel && newItem is BlazeCampaignsCardModel -> true
                 oldItem is DashboardDomainCard && newItem is DashboardDomainCard -> true
+                oldItem is DomainTransferCardModel && newItem is DomainTransferCardModel -> true
                 oldItem is DashboardPlansCard && newItem is DashboardPlansCard -> true
                 oldItem is PagesCard && newItem is PagesCard -> true
                 oldItem is ActivityCard && newItem is ActivityCard -> true
