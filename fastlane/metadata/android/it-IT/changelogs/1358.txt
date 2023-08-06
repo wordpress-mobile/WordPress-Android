@@ -1,2 +1,0 @@
-22.8:
-L'app non si arresterà più in modo anomalo dopo aver eliminato un sito. Meno male.

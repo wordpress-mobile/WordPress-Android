@@ -1,1 +1,0 @@
-The app will no longer crash after you delete a site. Phew.

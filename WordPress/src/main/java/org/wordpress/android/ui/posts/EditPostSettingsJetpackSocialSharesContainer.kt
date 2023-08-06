@@ -3,14 +3,16 @@ package org.wordpress.android.ui.posts
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
+import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppThemeEditor
 import org.wordpress.android.ui.compose.unit.Margin
-import org.wordpress.android.ui.posts.social.compose.PostSocialSharingItem
+import org.wordpress.android.ui.posts.social.compose.DescriptionText
 import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 import org.wordpress.android.ui.publicize.PublicizeServiceIcon
 
@@ -20,12 +22,15 @@ fun EditPostSettingsJetpackSocialSharesContainer(
     subscribeButtonLabel: String,
     onSubscribeClick: () -> Unit,
 ) {
-    PostSocialSharingItem(
-        model = postSocialSharingModel,
+    DescriptionText(
+        text = postSocialSharingModel.description,
+        isLowOnShares = postSocialSharingModel.isLowOnShares,
+        baseTextStyle = MaterialTheme.typography.body2
+            .copy(color = AppColor.Gray30),
         modifier = Modifier.padding(
             vertical = Margin.ExtraLarge.value,
             horizontal = Margin.ExtraLarge.value,
-        ),
+        )
     )
     PrimaryButton(
         text = subscribeButtonLabel,

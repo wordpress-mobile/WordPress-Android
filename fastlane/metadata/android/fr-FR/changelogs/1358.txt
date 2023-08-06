@@ -1,2 +1,0 @@
-22.8:
-L’application ne se bloquera plus une fois le site supprimé. Ouf !

@@ -16,6 +16,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation
@@ -31,7 +32,6 @@ import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
@@ -60,9 +60,6 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     lateinit var getCategoriesUseCase: GetCategoriesUseCase
 
     @Mock
-    lateinit var socialFeatureConfig: JetpackSocialFeatureConfig
-
-    @Mock
     lateinit var site: SiteModel
 
     @Before
@@ -76,7 +73,6 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
             storyRepositoryWrapper,
             updateStoryTitleUseCase,
             getCategoriesUseCase,
-            socialFeatureConfig,
             testDispatcher()
         )
         whenever(
@@ -94,6 +90,9 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(site.name).thenReturn("")
         whenever(storyRepositoryWrapper.getCurrentStoryThumbnailUrl()).thenReturn("")
         whenever(getCategoriesUseCase.getPostCategoriesString(any(), any())).thenReturn("")
+
+        // need to observe forever to be able to access `value` since it's a MediatorLiveData
+        viewModel.uiState.observeForever(mock())
     }
 
     @Test
@@ -419,39 +418,64 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify social item is not propagated to prepublishingHomeUiState for post with feature config off`() {
-        // arrange
-        whenever(socialFeatureConfig.isEnabled()).thenReturn(false)
-
+    fun `given updateJetpackSocialState was not called then uiState contains social state = Hidden`() = test {
         // act
-        viewModel.start(editPostRepository, site, false)
+        viewModel.start(editPostRepository, site, true)
 
         // assert
-        assertThat(viewModel.uiState.value?.filterIsInstance(SocialUiState::class.java)?.size).isEqualTo(0)
+        val uiSocialState = viewModel.uiState.value!!.find { it is SocialUiState }
+        assertThat(uiSocialState).isEqualTo(SocialUiState.Hidden)
     }
 
     @Test
-    fun `verify social item is propagated to prepublishingHomeUiState for post with feature config on`() {
+    fun `given non-published post when updateJetpackSocialState then it updates social state to Visible`() = test {
         // arrange
-        whenever(socialFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(editPostRepository.getPost()).thenReturn(
+            PostModel().apply { setStatus(PostStatus.DRAFT.toString()) }
+        )
 
         // act
-        viewModel.start(mock(), site, false)
+        viewModel.start(editPostRepository, site, true)
+        val state = EditorJetpackSocialViewModel.JetpackSocialUiState.Loading
+        viewModel.updateJetpackSocialState(state)
 
         // assert
-        assertThat(viewModel.uiState.value?.filterIsInstance(SocialUiState::class.java)?.size).isEqualTo(1)
+        val uiSocialState = viewModel.uiState.value!!.find { it is SocialUiState }
+        val visibleState = uiSocialState as SocialUiState.Visible
+        assertThat(visibleState.state).isEqualTo(state)
     }
 
     @Test
-    fun `verify social item is not propagated to prepublishingHomeUiState for page`() {
+    fun `given non-published post when updateJetpackSocialState(null) then it update social state to Hidden`() = test {
         // arrange
-        whenever(editPostRepository.isPage).thenReturn(true)
+        whenever(editPostRepository.getPost()).thenReturn(
+            PostModel().apply { setStatus(PostStatus.DRAFT.toString()) }
+        )
 
         // act
-        viewModel.start(editPostRepository, site, false)
+        viewModel.start(editPostRepository, site, true)
+        viewModel.updateJetpackSocialState(null)
 
         // assert
-        assertThat(viewModel.uiState.value?.filterIsInstance(SocialUiState::class.java)?.size).isEqualTo(0)
+        val uiSocialState = viewModel.uiState.value!!.find { it is SocialUiState }
+        assertThat(uiSocialState).isEqualTo(SocialUiState.Hidden)
+    }
+
+    @Test
+    fun `given published post when updateJetpackSocialState then it updates social state to Hidden`() = test {
+        // arrange
+        whenever(editPostRepository.getPost()).thenReturn(
+            PostModel().apply { setStatus(PostStatus.PUBLISHED.toString()) }
+        )
+
+        // act
+        viewModel.start(editPostRepository, site, true)
+        val state = EditorJetpackSocialViewModel.JetpackSocialUiState.Loading
+        viewModel.updateJetpackSocialState(state)
+
+        // assert
+        val uiSocialState = viewModel.uiState.value!!.find { it is SocialUiState }
+        assertThat(uiSocialState).isEqualTo(SocialUiState.Hidden)
     }
 
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()

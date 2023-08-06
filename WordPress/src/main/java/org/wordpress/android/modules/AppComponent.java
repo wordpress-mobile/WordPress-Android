@@ -104,6 +104,7 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFrag
 import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesFragment;
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeAdapter;
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeFragment;
+import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFragment;
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment;
 import org.wordpress.android.ui.posts.PublishNotificationReceiver;
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment;
@@ -496,6 +497,8 @@ public interface AppComponent {
     void inject(PrepublishingCategoriesFragment object);
 
     void inject(PrepublishingAddCategoryFragment object);
+
+    void inject(PrepublishingSocialFragment object);
 
     void inject(ActivityLogTypeFilterFragment object);
 

@@ -364,11 +364,11 @@ class AppPrefsWrapper @Inject constructor() {
     fun setShouldHideBlazeOverlay(isHidden: Boolean) =
         AppPrefs.setShouldHideBlazeOverlay(isHidden)
 
-    fun getShouldShowJetpackSocialNoConnections(siteId: Int, flow: JetpackSocialFlow): Boolean =
-        AppPrefs.getShouldShowJetpackSocialNoConnections(siteId, flow)
+    fun getShouldShowJetpackSocialNoConnections(remoteSiteId: Long, flow: JetpackSocialFlow): Boolean =
+        AppPrefs.getShouldShowJetpackSocialNoConnections(remoteSiteId, flow)
 
-    fun setShouldShowJetpackSocialNoConnections(show: Boolean, siteId: Int, flow: JetpackSocialFlow) =
-        AppPrefs.setShouldShowJetpackSocialNoConnections(show, siteId, flow)
+    fun setShouldShowJetpackSocialNoConnections(show: Boolean, remoteSiteId: Long, flow: JetpackSocialFlow) =
+        AppPrefs.setShouldShowJetpackSocialNoConnections(show, remoteSiteId, flow)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 

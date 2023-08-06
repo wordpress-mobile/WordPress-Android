@@ -2,12 +2,14 @@
 
 23.0
 -----
+* [**] [Jetpack-only] Blaze Manage Campaigns: Added a dashboard card that displays the most recent campaign, a campaigns list screen, and a campaign details screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/18783]
 * [**] [internal] Upgrade React Native to 0.71.11 [https://github.com/wordpress-mobile/WordPress-Android/pull/18613]
 * [**] [Jetpack-only] Adds a dashboard card for domain transfers campaign [https://github.com/wordpress-mobile/WordPress-Android/pull/18852]
 
 * [*] Block editor: Remove visual gap in mobile toolbar when a Gallery block is selected [https://github.com/WordPress/gutenberg/pull/52966]
 * [*] Block editor: Remove Gallery caption button on mobile [https://github.com/WordPress/gutenberg/pull/53010]
 * [*] Block editor: Fix Gallery block selection when adding media [https://github.com/WordPress/gutenberg/pull/53127]
+* [***] [Jetpack-only] Jetpack Social: Control your post's social sharing settings from the post editor [https://github.com/wordpress-mobile/WordPress-Android/pull/18897]
 
 22.9
 -----

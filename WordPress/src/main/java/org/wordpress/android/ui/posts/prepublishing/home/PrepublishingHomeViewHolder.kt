@@ -10,7 +10,6 @@ import androidx.annotation.LayoutRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,18 +19,17 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.compose.utils.asString
 import org.wordpress.android.ui.compose.utils.withBottomSheetElevation
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
-import org.wordpress.android.ui.posts.prepublishing.home.compose.PrepublishingHomeSocialConnectItem
+import org.wordpress.android.ui.posts.prepublishing.home.compose.PrepublishingHomeSocialNoConnectionsItem
 import org.wordpress.android.ui.posts.social.compose.PostSocialSharingItem
-import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 
@@ -125,41 +123,37 @@ sealed class PrepublishingHomeViewHolder(
                     mutableStateOf(uiState)
                 }
 
-                val serviceIconModels = state.serviceIcons.map { icon ->
-                    TrainOfIconsModel(
-                        data = icon.iconRes,
-                        alpha = if (icon.isEnabled) 1f else ContentAlpha.disabled,
-                    )
-                }
-
                 AppTheme {
-                    (state as? SocialUiState.SocialSharingUiState)?.let { sharingState ->
-                        PostSocialSharingItem(
-                            model = PostSocialSharingModel(
-                                title = sharingState.title.asString(),
-                                description = sharingState.description.asString(),
-                                iconModels = serviceIconModels,
-                                isLowOnShares = sharingState.isLowOnShares,
-                            ),
-                            backgroundColor = MaterialTheme.colors.surface.withBottomSheetElevation(),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null, // no ripple
-                                    onClick = sharingState.onItemClicked,
-                                ),
-                        )
-                    }
+                    (state as? SocialUiState.Visible)?.let { visibleState ->
+                        when (val internalState = visibleState.state) {
+                            is JetpackSocialUiState.Loaded -> {
+                                PostSocialSharingItem(
+                                    model = internalState.socialSharingModel,
+                                    backgroundColor = MaterialTheme.colors.surface.withBottomSheetElevation(),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable(
+                                            interactionSource = remember { MutableInteractionSource() },
+                                            indication = null, // no ripple
+                                            onClick = visibleState.onItemClicked,
+                                        ),
+                                )
+                            }
 
-                    (state as? SocialUiState.SocialConnectPromptUiState)?.let { promptState ->
-                        PrepublishingHomeSocialConnectItem(
-                            connectionIconModels = serviceIconModels,
-                            onConnectClick = promptState.onConnectClicked,
-                            onDismissClick = promptState.onDismissClicked,
-                            backgroundColor = MaterialTheme.colors.surface.withBottomSheetElevation(),
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                            is JetpackSocialUiState.NoConnections -> {
+                                PrepublishingHomeSocialNoConnectionsItem(
+                                    connectionIconModels = internalState.trainOfIconsModels,
+                                    onConnectClick = {
+                                        internalState.onConnectProfilesClick(JetpackSocialFlow.PRE_PUBLISHING)
+                                     },
+                                    onDismissClick = { internalState.onNotNowClick(JetpackSocialFlow.PRE_PUBLISHING) },
+                                    backgroundColor = MaterialTheme.colors.surface.withBottomSheetElevation(),
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+
+                            JetpackSocialUiState.Loading -> {} // do nothing
+                        }
                     }
                 }
             }

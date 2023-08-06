@@ -8,10 +8,14 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
+import org.wordpress.android.datasets.wrappers.PublicizeTableWrapper
+import org.wordpress.android.models.PublicizeService
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.JetpackSocialUiState
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.social.PostSocialConnection
+import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 import org.wordpress.android.ui.publicize.PublicizeServiceIcon
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 import org.wordpress.android.usecase.social.ShareLimit
 import org.wordpress.android.util.LocaleProvider
 import org.wordpress.android.util.StringProvider
@@ -20,12 +24,14 @@ import java.util.Locale
 class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
     private val stringProvider: StringProvider = mock()
     private val localProvider: LocaleProvider = mock()
+    private val publicizeTableWrapper: PublicizeTableWrapper = mock()
     private lateinit var connection1: PostSocialConnection
     private lateinit var connection2: PostSocialConnection
 
     private val classToTest = EditPostPublishSettingsJetpackSocialUiStateMapper(
         stringProvider = stringProvider,
         localeProvider = localProvider,
+        publicizeTableWrapper = publicizeTableWrapper,
     )
 
     @Before
@@ -65,13 +71,18 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         val subscribeButtonLabel = "SHARE MORE"
         mockStringResource(R.string.post_settings_jetpack_social_subscribe_share_more, subscribeButtonLabel)
         val allConnections = listOf(connection1, connection2)
-        val onConnectProfilesClick: () -> Unit = {}
+        val onConnectProfilesClick: (JetpackSocialFlow) -> Unit = {}
         val onShareMessageClick: () -> Unit = {}
-        val onConnectionClick: (connection: PostSocialConnection, enable: Boolean ) -> Unit = mock()
+        val onConnectionClick: (
+            connection: PostSocialConnection,
+            enable: Boolean,
+            flow: JetpackSocialFlow
+        ) -> Unit = mock()
 
         val actual = classToTest.mapLoaded(
             connections = allConnections,
             shareLimit = shareLimit,
+            socialSharingModel = FAKE_SOCIAL_SHARING_MODEL,
             onSubscribeClick = onConnectProfilesClick,
             shareMessage = shareMessage,
             onShareMessageClick = onShareMessageClick,
@@ -91,6 +102,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
                     enabled = true
                 )
             ),
+            socialSharingModel = FAKE_SOCIAL_SHARING_MODEL,
             showShareLimitUi = true,
             isShareMessageEnabled = true,
             shareMessage = shareMessage,
@@ -115,13 +127,18 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         mockStringResource(R.string.post_settings_jetpack_social_subscribe_share_more, subscribeButtonLabel)
         val allConnections = listOf(connection1)
 
-        val onConnectProfilesClick: () -> Unit = {}
+        val onConnectProfilesClick: (JetpackSocialFlow) -> Unit = {}
         val onShareMessageClick: () -> Unit = {}
-        val onConnectionClick: (connection: PostSocialConnection, enable: Boolean ) -> Unit = mock()
+        val onConnectionClick: (
+            connection: PostSocialConnection,
+            enable: Boolean,
+            flow: JetpackSocialFlow
+        ) -> Unit = mock()
 
         val actual = classToTest.mapLoaded(
             connections = allConnections,
             shareLimit = shareLimit,
+            socialSharingModel = FAKE_SOCIAL_SHARING_MODEL,
             onSubscribeClick = onConnectProfilesClick,
             shareMessage = shareMessage,
             onShareMessageClick = onShareMessageClick,
@@ -129,8 +146,8 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
             isPostPublished = true
         )
 
-        actual.jetpackSocialConnectionDataList[0].onConnectionClick.invoke(false)
-        verify(onConnectionClick, times(1)).invoke(connection1, false)
+        actual.jetpackSocialConnectionDataList[0].onConnectionClick.invoke(false, JetpackSocialFlow.POST_SETTINGS)
+        verify(onConnectionClick, times(1)).invoke(connection1, false, JetpackSocialFlow.POST_SETTINGS)
     }
 
     @Test
@@ -141,13 +158,18 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
         mockStringResource(R.string.post_settings_jetpack_social_subscribe_share_more, subscribeButtonLabel)
         val allConnections = listOf(connection2)
 
-        val onConnectProfilesClick: () -> Unit = mock()
+        val onConnectProfilesClick: (JetpackSocialFlow) -> Unit = mock()
         val onShareMessageClick: () -> Unit = {}
-        val onConnectionClick: (connection: PostSocialConnection, enable: Boolean ) -> Unit = mock()
+        val onConnectionClick: (
+            connection: PostSocialConnection,
+            enable: Boolean,
+            flow: JetpackSocialFlow
+        ) -> Unit = mock()
 
         val actual = classToTest.mapLoaded(
             connections = allConnections,
             shareLimit = shareLimit,
+            socialSharingModel = FAKE_SOCIAL_SHARING_MODEL,
             onSubscribeClick = onConnectProfilesClick,
             shareMessage = shareMessage,
             onShareMessageClick = onShareMessageClick,
@@ -162,6 +184,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
                     enabled = false
                 ),
             ),
+            socialSharingModel = FAKE_SOCIAL_SHARING_MODEL,
             showShareLimitUi = false,
             isShareMessageEnabled = false,
             shareMessage = "Message",
@@ -174,26 +197,58 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
 
     @Test
     fun `Should map no connections UI state`() {
-        val connectProfilesButtonLabel = "Connect profiles button"
+        val connectAccountsButtonLabel = "Connect accounts"
         mockStringResource(
-            R.string.post_settings_jetpack_social_connect_social_profiles_button,
-            connectProfilesButtonLabel
+            R.string.post_settings_jetpack_social_connect_social_profiles_button, connectAccountsButtonLabel
         )
-        val connectProfilesMessage = "Connect profiles message"
+        val connectAccountsMessage = "Connect accounts message"
         whenever(stringProvider.getString(R.string.post_settings_jetpack_social_connect_social_profiles_message))
-            .thenReturn(connectProfilesMessage)
-        val onConnectProfilesClick: () -> Unit = mock()
-        val actual = classToTest.mapNoConnections(onConnectProfilesClick)
+            .thenReturn(connectAccountsMessage)
+        val connectAccountsNotNowButtonLabel = "Not now"
+        whenever(stringProvider.getString(R.string.post_settings_jetpack_social_connect_not_now_button))
+            .thenReturn(connectAccountsNotNowButtonLabel)
+        val publicizeServices = listOf(
+            // Publicize services with ID that matches any serviceId in PublicizeServiceIcon and also
+            // have OK status will have their icons shown
+            PublicizeService().apply {
+                id = "tumblr"
+                status = PublicizeService.Status.OK
+            },
+            // Unsupported publicize services will be filtered
+            PublicizeService().apply {
+                id = "tumblr"
+                status = PublicizeService.Status.UNSUPPORTED
+            },
+            // Publicize services with unknown or null ID will be filtered
+            PublicizeService().apply {
+                id = null
+            },
+        )
+        whenever(publicizeTableWrapper.getServiceList())
+            .thenReturn(publicizeServices)
+        val onConnectProfilesClick: (JetpackSocialFlow) -> Unit = mock()
+        val onNotNowClick: (JetpackSocialFlow) -> Unit = mock()
+        val actual = classToTest.mapNoConnections(onConnectProfilesClick, onNotNowClick)
         val expected = JetpackSocialUiState.NoConnections(
-            trainOfIconsModels = PublicizeServiceIcon.values().map { TrainOfIconsModel(it.iconResId) },
-            message = connectProfilesMessage,
-            connectProfilesButtonLabel = "CONNECT PROFILES BUTTON",
+            trainOfIconsModels = listOf(TrainOfIconsModel(PublicizeServiceIcon.TUMBLR.iconResId)),
+            message = connectAccountsMessage,
+            connectProfilesButtonLabel = connectAccountsButtonLabel,
             onConnectProfilesClick = onConnectProfilesClick,
+            notNowButtonLabel = "Not now",
+            onNotNowClick = onNotNowClick,
         )
         assertThat(actual).isEqualTo(expected)
     }
 
     private fun mockStringResource(stringResId: Int, stringLabel: String) {
         whenever(stringProvider.getString(stringResId)).thenReturn(stringLabel)
+    }
+
+    companion object {
+        private val FAKE_SOCIAL_SHARING_MODEL = PostSocialSharingModel(
+            title = "Title",
+            description = "Description",
+            iconModels = emptyList(),
+        )
     }
 }

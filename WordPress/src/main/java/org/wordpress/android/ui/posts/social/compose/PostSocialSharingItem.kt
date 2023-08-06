@@ -52,12 +52,16 @@ fun PostSocialSharingItem(
                 overflow = TextOverflow.Ellipsis,
             )
 
-            Spacer(Modifier.height(Margin.ExtraSmall.value))
+            if (model.description.isNotBlank()) {
+                Spacer(Modifier.height(Margin.ExtraSmall.value))
 
-            DescriptionText(
-                text = model.description,
-                isLowOnShares = model.isLowOnShares,
-            )
+                DescriptionText(
+                    text = model.description,
+                    isLowOnShares = model.isLowOnShares,
+                    baseTextStyle = MaterialTheme.typography.body2
+                        .copy(color = AppColor.Gray30),
+                )
+            }
         }
 
         if (model.iconModels.isNotEmpty()) {
@@ -97,21 +101,12 @@ private val warningColor: Color
     @Composable
     get() = AppColor.Yellow50
 
-private val lowOnSharesDescriptionStyle: TextStyle
-    @Composable
-    get() = MaterialTheme.typography.body2
-        .copy(color = warningColor)
-
-private val defaultDescriptionStyle: TextStyle
-    @Composable
-    get() = MaterialTheme.typography.body2
-        .copy(color = AppColor.Gray30)
-
 @Composable
-private fun DescriptionText(
+fun DescriptionText(
     text: String,
     isLowOnShares: Boolean,
     modifier: Modifier = Modifier,
+    baseTextStyle: TextStyle = MaterialTheme.typography.body2,
 ) {
     Row(
         modifier,
@@ -129,7 +124,9 @@ private fun DescriptionText(
 
         Text(
             text = text,
-            style = if (isLowOnShares) lowOnSharesDescriptionStyle else defaultDescriptionStyle,
+            style = baseTextStyle.copy(
+                color = if (isLowOnShares) warningColor else baseTextStyle.color,
+            ),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )

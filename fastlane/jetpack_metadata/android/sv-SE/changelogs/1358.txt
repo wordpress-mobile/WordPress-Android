@@ -1,3 +1,0 @@
-22.8:
-- Appen kommer inte längre att krascha när du tar bort en webbplats. Skönt.
-- Återanvändbara block kallas nu synkroniserade mönster, precis som i skrivbordsredigeraren.

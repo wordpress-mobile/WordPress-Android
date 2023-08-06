@@ -8,7 +8,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
-import org.wordpress.android.ui.posts.social.compose.PostSocialSharingModel
 import org.wordpress.android.usecase.social.ShareLimit
 import org.wordpress.android.util.StringProvider
 
@@ -28,15 +27,12 @@ class PostSocialSharingModelMapperTest : BaseUnitTest() {
     private val description = "description"
 
     @Test
-    fun `Should return default model if share limit is disabled`() {
-        val actual = classToTest.map(listOf(), ShareLimit.Disabled)
-        val expected = PostSocialSharingModel(
-            title = "",
-            description = "",
-            iconModels = emptyList(),
-            isLowOnShares = false,
-        )
-        assertThat(actual).isEqualTo(expected)
+    fun `Should return model with blank description and isLowShares = false if share limit is disabled`() {
+        mockTitleSharingToZeroAccounts("title")
+        val actual = classToTest.map(emptyList(), ShareLimit.Disabled)
+        assertThat(actual.title).isNotBlank
+        assertThat(actual.description).isBlank
+        assertThat(actual.isLowOnShares).isFalse
     }
 
     @Test
@@ -45,7 +41,7 @@ class PostSocialSharingModelMapperTest : BaseUnitTest() {
             postSocialConnection(isSharingEnabled = false),
             postSocialConnection(isSharingEnabled = false),
         )
-        mockDescription(connections)
+        mockDescription()
         val expected = "Sharing to 0 accounts"
         mockTitleSharingToZeroAccounts(expected)
         val actual = classToTest.map(
@@ -61,7 +57,7 @@ class PostSocialSharingModelMapperTest : BaseUnitTest() {
         val connections = listOf(
             singleEnabledConnection,
         )
-        mockDescription(connections)
+        mockDescription()
         val expected = "Sharing to @account"
         whenever(
             stringProvider.getString(
@@ -84,7 +80,7 @@ class PostSocialSharingModelMapperTest : BaseUnitTest() {
             enabledConnection,
             enabledConnection,
         )
-        mockDescription(connections)
+        mockDescription()
         val expected = "Sharing to all account"
         whenever(
             stringProvider.getString(R.string.jetpack_social_social_shares_title_all_accounts, connections.size)
@@ -103,7 +99,7 @@ class PostSocialSharingModelMapperTest : BaseUnitTest() {
             postSocialConnection(isSharingEnabled = true),
             postSocialConnection(isSharingEnabled = false),
         )
-        mockDescription(connections)
+        mockDescription()
         val expected = "Sharing to 2 out of 3 accounts"
         mockSharingToSomeAccounts(connections, expected)
         val actual = classToTest.map(
@@ -114,17 +110,36 @@ class PostSocialSharingModelMapperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should map description correctly`() {
+    fun `Should map description correctly (multiple shares)`() {
         val connections = listOf(
             postSocialConnection(isSharingEnabled = false),
         )
         mockTitleSharingToZeroAccounts("")
-        mockDescription(connections)
+        mockDescription()
         val actual = classToTest.map(
             connections = connections,
             shareLimit = shareLimitEnabled,
         ).description
         assertThat(actual).isEqualTo(description)
+    }
+
+    @Test
+    fun `Should map description correctly (one share)`() {
+        val descriptionOneShare = "One share remaining"
+        val connections = listOf(
+            postSocialConnection(isSharingEnabled = false),
+        )
+        mockTitleSharingToZeroAccounts("")
+        whenever(stringProvider.getString(R.string.jetpack_social_social_shares_remaining_one))
+            .thenReturn(descriptionOneShare)
+        val shareLimit = shareLimitEnabled.copy(
+            sharesRemaining = 1,
+        )
+        val actual = classToTest.map(
+            connections = connections,
+            shareLimit = shareLimit,
+        ).description
+        assertThat(actual).isEqualTo(descriptionOneShare)
     }
 
     @Test
@@ -134,19 +149,19 @@ class PostSocialSharingModelMapperTest : BaseUnitTest() {
             postSocialConnection(isSharingEnabled = false),
             postSocialConnection(isSharingEnabled = true),
         )
-        mockDescription(connections)
+        mockDescription()
         mockSharingToSomeAccounts(connections, "")
         // data is null because we get it from static method PublicizeServiceIcon#fromServiceId
         val expected = listOf(
             TrainOfIconsModel(
                 data = null,
-                // isSharingEnabled = true
-                alpha = 1F,
+                // isSharingEnabled = false
+                alpha = 0.3F,
             ),
             TrainOfIconsModel(
                 data = null,
-                // isSharingEnabled = false
-                alpha = 0.5F,
+                // isSharingEnabled = true
+                alpha = 1F,
             ),
             TrainOfIconsModel(
                 data = null,
@@ -171,7 +186,7 @@ class PostSocialSharingModelMapperTest : BaseUnitTest() {
         val shareLimit = shareLimitEnabled.copy(
             sharesRemaining = 0,
         )
-        mockDescription(connections, shareLimit)
+        mockDescription(shareLimit)
         val actual = classToTest.map(
             connections = connections,
             shareLimit = shareLimit,
@@ -193,7 +208,7 @@ class PostSocialSharingModelMapperTest : BaseUnitTest() {
         val shareLimit = shareLimitEnabled.copy(
             sharesRemaining = 4,
         )
-        mockDescription(connections, shareLimit)
+        mockDescription(shareLimit)
         val actual = classToTest.map(
             connections = connections,
             shareLimit = shareLimit,
@@ -207,12 +222,13 @@ class PostSocialSharingModelMapperTest : BaseUnitTest() {
         val connections = listOf(
             postSocialConnection(isSharingEnabled = false),
             postSocialConnection(isSharingEnabled = false),
+            postSocialConnection(isSharingEnabled = false),
         )
         mockTitleSharingToZeroAccounts("")
         val shareLimit = shareLimitEnabled.copy(
-            sharesRemaining = 1,
+            sharesRemaining = 2,
         )
-        mockDescription(connections, shareLimit)
+        mockDescription(shareLimit)
         val actual = classToTest.map(
             connections = connections,
             shareLimit = shareLimit,
@@ -222,13 +238,12 @@ class PostSocialSharingModelMapperTest : BaseUnitTest() {
     }
 
     private fun mockDescription(
-        connections: List<PostSocialConnection>,
         shareLimit: ShareLimit.Enabled = shareLimitEnabled,
     ) {
         whenever(
             stringProvider.getString(
                 R.string.jetpack_social_social_shares_remaining,
-                shareLimit.sharesRemaining - connections.filter { it.isSharingEnabled }.size
+                shareLimit.sharesRemaining
             )
         ).thenReturn(description)
     }

@@ -11,6 +11,7 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.ADD_CATE
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.CATEGORIES
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.PUBLISH
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.SOCIAL
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.TAGS
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.Action
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation
@@ -149,6 +150,21 @@ class PrepublishingViewModelTest : BaseUnitTest() {
 
         viewModel.start(mock(), mock())
         viewModel.onActionClicked(PrepublishingScreenNavigation.AddCategory)
+
+        assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
+    }
+
+    @Test
+    fun `when onActionClicked is called with Social, navigate to SOCIAL screen`() {
+        val expectedScreen = SOCIAL
+
+        var event: Event<PrepublishingNavigationTarget>? = null
+        viewModel.navigationTarget.observeForever {
+            event = it
+        }
+
+        viewModel.start(mock(), mock())
+        viewModel.onActionClicked(PrepublishingScreenNavigation.Social)
 
         assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
     }
