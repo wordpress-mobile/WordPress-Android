@@ -1,1 +1,9 @@
-We made some big changes to the block editor, including styles, colors, and icons. You’ll also find more buttons and block options in the header toolbar, including the undo and redo buttons. That’s right, you now have more tools than Batman’s utility belt.
+* [**] [Jetpack-only] Blaze Manage Campaigns: Added a dashboard card that displays the most recent campaign, a campaigns list screen, and a campaign details screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/18783]
+* [**] [Jetpack-only] Adds a dashboard card for domain transfers campaign [https://github.com/wordpress-mobile/WordPress-Android/pull/18852]
+
+* [*] Block editor: Remove visual gap in mobile toolbar when a Gallery block is selected [https://github.com/WordPress/gutenberg/pull/52966]
+* [*] Block editor: Remove Gallery caption button on mobile [https://github.com/WordPress/gutenberg/pull/53010]
+* [*] Block editor: Fix Gallery block selection when adding media [https://github.com/WordPress/gutenberg/pull/53127]
+* [**] Fixed occasional crashes on plugin installs [https://github.com/wordpress-mobile/WordPress-Android/pull/18890]
+* [***] [Jetpack-only] Jetpack Social: Control your post's social sharing settings from the post editor [https://github.com/wordpress-mobile/WordPress-Android/pull/18897]
+
