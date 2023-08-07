@@ -348,6 +348,7 @@ public class PostRestClient extends BaseWPComRestClient {
         );
 
         request.addQueryParameter("context", "edit");
+        if (post.isLocalDraft()) request.addQueryParameter("for", "mobile");
 
         request.disableRetries();
         add(request);
