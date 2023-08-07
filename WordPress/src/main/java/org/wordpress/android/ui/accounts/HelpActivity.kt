@@ -29,6 +29,9 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.support.SupportHelper
+import org.wordpress.android.support.SupportWebViewActivity
+import org.wordpress.android.support.SupportWebViewActivity.ChatCompletionEvent
+import org.wordpress.android.support.SupportWebViewActivity.OpenChatWidget.ChatDetails
 import org.wordpress.android.support.ZendeskExtraTags
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
@@ -42,6 +45,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.config.ContactSupportFeatureConfig
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -70,6 +74,9 @@ class HelpActivity : LocaleAwareActivity() {
     @Inject
     lateinit var mDispatcher: Dispatcher
 
+    @Inject
+    lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
+
     private lateinit var binding: HelpActivityBinding
 
     @Suppress("DEPRECATION")
@@ -85,6 +92,12 @@ class HelpActivity : LocaleAwareActivity() {
     }
     private val selectedSiteFromExtras by lazy {
         intent.extras?.get(WordPress.SITE) as SiteModel?
+    }
+
+    private val openChatWidget = registerForActivityResult(SupportWebViewActivity.OpenChatWidget()) {
+        it?.let {
+            viewModel.finishSupportChat(it)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -163,6 +176,15 @@ class HelpActivity : LocaleAwareActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun launchSupportWidget() {
+        openChatWidget.launch(
+            ChatDetails(
+                selectedSiteFromExtras,
+                "https://appassets.androidplatform.net/assets/support_chat_widget.html"
+            )
+        )
+    }
+
     private fun createNewZendeskTicket() {
         zendeskHelper.createNewTicket(
             this,
@@ -205,7 +227,13 @@ class HelpActivity : LocaleAwareActivity() {
             AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_VIEWED)
             JpFaqContainer.setOnClickListener { showMigrationFaq() }
         }
-        contactUsButton.setOnClickListener { createNewZendeskTicket() }
+        contactUsButton.setOnClickListener {
+            if (contactSupportFeatureConfig.isEnabled()) {
+                launchSupportWidget()
+            } else {
+                createNewZendeskTicket()
+            }
+        }
         ticketsButton.setOnClickListener { showZendeskTickets() }
 
         contactEmailContainer.setOnClickListener {
@@ -307,6 +335,15 @@ class HelpActivity : LocaleAwareActivity() {
             // Load Main Activity once signed out, which launches the login flow
             ActivityLauncher.showMainActivity(this@HelpActivity, true)
         }
+
+        viewModel.onSupportChatCompleted.observe(this@HelpActivity) {
+            finishSupportChat(it)
+        }
+    }
+
+    private fun finishSupportChat(event: ChatCompletionEvent) {
+        setResult(RESULT_OK, Intent().putExtra(SupportWebViewActivity.OpenChatWidget.CHAT_EMAIL, event.email))
+        finish()
     }
 
     private fun HelpActivityBinding.loadAvatar(avatarUrl: String) {
