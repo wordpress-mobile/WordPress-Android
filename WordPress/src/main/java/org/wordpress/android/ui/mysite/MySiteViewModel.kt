@@ -14,6 +14,8 @@ import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
@@ -149,6 +151,7 @@ import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.merge
+import org.wordpress.android.util.mergeAsync
 import org.wordpress.android.util.publicdata.AppStatus
 import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
@@ -341,50 +344,54 @@ class MySiteViewModel @Inject constructor(
             result.filter { it.siteId == null || it.state.site != null }.mapSafe { it.state }
         }
 
-    val uiModel: LiveData<UiModel> = merge(tabsUiState, state) { tabsUiState, mySiteUiState ->
-        with(requireNotNull(mySiteUiState)) {
-            val state = if (site != null) {
-                cardsUpdate?.checkAndShowSnackbarError()
-                val state = buildSiteSelectedStateAndScroll(
-                    tabsUiState,
-                    site,
-                    showSiteIconProgressBar,
-                    activeTask,
-                    isDomainCreditAvailable,
-                    quickStartCategories,
-                    pinnedDynamicCard,
-                    visibleDynamicCards,
-                    backupAvailable,
-                    scanAvailable,
-                    cardsUpdate,
-                    bloggingPromptsUpdate,
-                    blazeCardUpdate,
-                    hasSiteCustomDomains
-                )
-                selectDefaultTabIfNeeded()
-                trackCardsAndItemsShownIfNeeded(state)
+    private val bgScope = CoroutineScope(bgDispatcher)
 
-                bloggingPromptsCardTrackHelper.onDashboardCardsUpdated(
-                    viewModelScope,
-                    state.dashboardCardsAndItems.filterIsInstance<DashboardCards>().firstOrNull()
-                )
+    val uiModel: LiveData<UiModel?> =
+        mergeAsync(bgScope, tabsUiState, state) { tabsUiState, mySiteUiState ->
+            Log.e("Current Thread", "Current Thread ${Thread.currentThread().name}")
+            with(requireNotNull(mySiteUiState)) {
+                val state = if (site != null) {
+                    cardsUpdate?.checkAndShowSnackbarError()
+                    val state = buildSiteSelectedStateAndScroll(
+                        tabsUiState,
+                        site,
+                        showSiteIconProgressBar,
+                        activeTask,
+                        isDomainCreditAvailable,
+                        quickStartCategories,
+                        pinnedDynamicCard,
+                        visibleDynamicCards,
+                        backupAvailable,
+                        scanAvailable,
+                        cardsUpdate,
+                        bloggingPromptsUpdate,
+                        blazeCardUpdate,
+                        hasSiteCustomDomains
+                    )
+                    selectDefaultTabIfNeeded()
+                    trackCardsAndItemsShownIfNeeded(state)
 
-                state
-            } else {
-                buildNoSiteState()
+                    bloggingPromptsCardTrackHelper.onDashboardCardsUpdated(
+                        viewModelScope,
+                        state.dashboardCardsAndItems.filterIsInstance<DashboardCards>().firstOrNull()
+                    )
+
+                    state
+                } else {
+                    buildNoSiteState()
+                }
+
+                bloggingPromptsCardTrackHelper.onSiteChanged(site?.id)
+
+                dashboardCardDomainUtils.onSiteChanged(site?.id, state as? SiteSelected)
+
+                dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
+
+                domainTransferCardViewModel.onSiteChanged(site?.id, state as? SiteSelected)
+
+                UiModel(currentAvatarUrl.orEmpty(), state)
             }
-
-            bloggingPromptsCardTrackHelper.onSiteChanged(site?.id)
-
-            dashboardCardDomainUtils.onSiteChanged(site?.id, state as? SiteSelected)
-
-            dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
-
-            domainTransferCardViewModel.onSiteChanged(site?.id, state as? SiteSelected)
-
-            UiModel(currentAvatarUrl.orEmpty(), state)
         }
-    }
 
     private fun CardsUpdate.checkAndShowSnackbarError() {
         if (showSnackbarError) {
@@ -1397,6 +1404,7 @@ class MySiteViewModel @Inject constructor(
         quickStartRepository.clear()
         mySiteSourceManager.clear()
         dispatcher.unregister(this)
+        bgScope.coroutineContext.cancelChildren()
         super.onCleared()
     }
 
@@ -1829,7 +1837,7 @@ class MySiteViewModel @Inject constructor(
 
     data class UiModel(
         val accountAvatarUrl: String,
-        val state: State
+        val state: State?
     )
 
     sealed class State {
