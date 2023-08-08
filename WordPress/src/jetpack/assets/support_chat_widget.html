@@ -4,14 +4,36 @@
 </head>
 <body>
 <script type="text/javascript">
-    DocsBotAI.init({
+    window.DocsBotAI.init({
             id: 'TqTdebbGjJeUjrmBIFjh/YbAMwiheXLs2Ue5j7elH',
             options: {
+                botName: "Jetpack Mobile",
+                description: "Ask me anything about using Jetpack mobile app.",
                 horizontalMargin: 40,
                 verticalMargin: 60,
+                color: "#9dd977",
+                alignment: "left", // may need to update this for RTL.
+                supportLink: "https://wordpress.com/contact-form?mode=CHAT",
+                labels: {
+                    inputPlaceholder: "Send a message...",
+                    firstMessage: "What can I help you with?",
+                    sources: "Sources",
+                    helpful: "Rate as helpful",
+                    unhelpful: "Rate as unhelpful",
+                    getSupport: "Contact support",
+                    floatingButton: "Help",
+                    suggestions: "Not sure what to ask?",
+                    thinking: "Thinking..."
+              }, // Override all the default labels for your own language.
+              questions: [
+                "How do I change home page?",
+                "Account or billing issues?",
+                "Need to report an error or crash?"
+              ] // Array of example questions to show in the widget. Three are picked at random.
             },
         }).then(() => {
             // Safely do stuff here after the widget is loaded.
+            DocsBotAI.open()
         })
         setTimeout(() => {
            DocsBotAI.open()
@@ -19,3 +41,4 @@
     </script>
 </body>
 </html>
+
