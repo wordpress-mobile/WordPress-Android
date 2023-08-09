@@ -273,7 +273,7 @@ class PostSocialSharingModelMapperTest : BaseUnitTest() {
         label = "label",
         externalId = "externalId",
         externalName = "externalName",
-        iconUrl = "iconUrl",
+        iconResId = R.drawable.ic_social_tumblr,
         isSharingEnabled = isSharingEnabled,
     )
 }
