@@ -2,11 +2,12 @@ package org.wordpress.android.fluxc.network.rest.wpcom;
 
 import android.content.Context;
 
+import androidx.annotation.Nullable;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.network.AcceptHeaderStrategy;
