@@ -42,7 +42,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
             label = "Tumblr",
             externalId = "myblog.tumblr.com",
             externalName = "My blog",
-            iconUrl = "http://i.wordpress.com/wp-content/publicize/assets/publicize-tumblr-2x.png",
+            iconResId = R.drawable.ic_social_tumblr,
             isSharingEnabled = true,
         )
 
@@ -52,7 +52,7 @@ class EditPostPublishSettingsJetpackSocialUiStateMapperTest {
             label = "LinkedIn",
             externalId = "linkedin.com",
             externalName = "My Profile",
-            iconUrl = "https://i.wordpress.com/wp-content/publicize/assets/publicize-linkedin-2x.png",
+            iconResId = R.drawable.ic_social_linkedin,
             isSharingEnabled = true,
         )
 
