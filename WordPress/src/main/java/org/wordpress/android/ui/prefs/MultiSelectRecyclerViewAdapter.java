@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
         holder.mContainer.setSelected(isItemSelected(position));
     }
 
-    @NotNull @Override
+    @NonNull @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int type) {
         return new ItemHolder(
                 LayoutInflater.from(parent.getContext()).inflate(R.layout.wp_simple_list_item_1, parent, false));

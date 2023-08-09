@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -283,7 +282,7 @@ public class SiteUtils {
         return type;
     }
 
-    public static SiteAccessibilityInfo getAccessibilityInfoFromSite(@NotNull SiteModel site) {
+    public static SiteAccessibilityInfo getAccessibilityInfoFromSite(@NonNull SiteModel site) {
         SiteVisibility siteVisibility;
 
         if (site.isPrivateWPComAtomic()) {
