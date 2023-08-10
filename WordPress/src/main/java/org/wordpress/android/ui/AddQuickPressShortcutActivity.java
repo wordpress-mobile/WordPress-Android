@@ -15,6 +15,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
@@ -52,7 +54,7 @@ public class AddQuickPressShortcutActivity extends LocaleAwareActivity {
     @Inject FluxCImageLoader mImageLoader;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
@@ -69,7 +71,7 @@ public class AddQuickPressShortcutActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();
             return true;
@@ -131,7 +133,8 @@ public class AddQuickPressShortcutActivity extends LocaleAwareActivity {
         dialogBuilder.setView(dialogView);
 
         dialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(@Nullable DialogInterface dialog, int which) {
                 if (TextUtils.isEmpty(quickPressShortcutName.getText())) {
                     ToastUtils.showToast(AddQuickPressShortcutActivity.this, R.string.quickpress_add_error,
                             ToastUtils.Duration.LONG);
@@ -162,7 +165,8 @@ public class AddQuickPressShortcutActivity extends LocaleAwareActivity {
         });
         dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             // just let the dialog close
-            public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(@Nullable DialogInterface dialog, int which) {
             }
         });
 
@@ -171,7 +175,7 @@ public class AddQuickPressShortcutActivity extends LocaleAwareActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RequestCodes.ADD_ACCOUNT:
