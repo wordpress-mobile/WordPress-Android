@@ -444,7 +444,8 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
     private void handleConnectSiteInfoForWordPress(ConnectSiteInfoPayload siteInfo) {
         if (siteInfo.isWPCom) {
             // It's a Simple or Atomic site
-            if (mLoginListener.getLoginMode() == LoginMode.SELFHOSTED_ONLY) {
+            LoginMode mode = mLoginListener.getLoginMode();
+            if (mode == LoginMode.SELFHOSTED_ONLY || mode == LoginMode.JETPACK_SELFHOSTED) {
                 // We're only interested in self-hosted sites
                 if (siteInfo.hasJetpack) {
                     // This is an Atomic site, so treat it as self-hosted and start the discovery process
