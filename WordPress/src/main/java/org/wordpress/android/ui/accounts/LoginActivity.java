@@ -140,7 +140,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Inject LandingScreenRevampFeatureConfig mLandingScreenRevampFeatureConfig;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
@@ -239,7 +239,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(KEY_SMARTLOCK_HELPER_STATE, mSmartLockHelperState.name());
         outState.putBoolean(KEY_SIGNUP_FROM_LOGIN_ENABLED, mIsSignupFromLoginEnabled);
@@ -291,7 +291,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();
             return true;
@@ -366,7 +366,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         AppLog.d(T.MAIN, "LoginActivity: onActivity Result - requestCode" + requestCode);
         super.onActivityResult(requestCode, resultCode, data);
 
