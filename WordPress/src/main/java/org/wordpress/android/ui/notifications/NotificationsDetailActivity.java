@@ -20,7 +20,6 @@ import androidx.viewpager.widget.ViewPager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -264,7 +263,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void trackCommentNote(@NotNull Note note) {
+    private void trackCommentNote(@NonNull Note note) {
         if (note.isCommentType()) {
             SiteModel site = mSiteStore.getSiteBySiteId(note.getSiteId());
             AnalyticsUtils.trackCommentActionWithSiteDetails(
@@ -593,7 +592,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public void onPositiveClicked(@NotNull String instanceTag) {
+    public void onPositiveClicked(@NonNull String instanceTag) {
         if (mBinding != null) {
             Fragment fragment = mAdapter.getItem(mBinding.viewpager.getCurrentItem());
             if (fragment instanceof BasicFragmentDialog.BasicDialogPositiveClickInterface) {
