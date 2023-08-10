@@ -8,6 +8,9 @@ import android.view.Menu;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -81,7 +84,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         mSource = (JetpackConnectionSource) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY);
         // We need to get the site before calling super since it'll create the web client
@@ -96,7 +99,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == JETPACK_LOGIN && resultCode == RESULT_OK) {
             JetpackConnectionWebViewActivity.startJetpackConnectionFlow(
@@ -113,19 +116,19 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(REDIRECT_PAGE_STATE_ITEM, mWebViewClient.getRedirectPage());
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mWebViewClient.setRedirectPage(savedInstanceState.getString(REDIRECT_PAGE_STATE_ITEM));
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         return true;
     }
 
