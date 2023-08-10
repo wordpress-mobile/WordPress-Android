@@ -7,19 +7,15 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-import com.google.android.material.appbar.AppBarLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -29,6 +25,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.databinding.NotificationsDetailActivityBinding;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -67,7 +64,6 @@ import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig;
 import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
-import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 
 import java.util.ArrayList;
@@ -101,11 +97,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     private String mNoteId;
     private boolean mIsTappedOnNotification;
 
-    private WPViewPager mViewPager;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private NotificationDetailFragmentAdapter mAdapter;
-    private AppBarLayout mAppBarLayout;
-    private Toolbar mToolbar;
+
+    @Nullable private NotificationsDetailActivityBinding mBinding = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,7 +108,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         ((WordPress) getApplication()).component().inject(this);
         AppLog.i(AppLog.T.NOTIFS, "Creating NotificationsDetailActivity");
 
-        setContentView(R.layout.notifications_detail_activity);
+        mBinding = NotificationsDetailActivityBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -130,10 +126,9 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         };
         getOnBackPressedDispatcher().addCallback(this, callback);
 
-        mToolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(mToolbar);
-
-        mAppBarLayout = findViewById(R.id.appbar_main);
+        if (mBinding != null) {
+            setSupportActionBar(mBinding.toolbarMain);
+        }
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -152,9 +147,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         }
 
         // set up the viewpager and adapter for lateral navigation
-        mViewPager = findViewById(R.id.viewpager);
-        mViewPager.setPageTransformer(false,
-                new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+        if (mBinding != null) {
+            mBinding.viewpager.setPageTransformer(false,
+                    new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+        }
 
         Note note = NotificationsTable.getNoteById(mNoteId);
         // if this is coming from a tapped push notification, let's try refreshing it as its contents may have been
@@ -229,7 +225,9 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
     private void resetOnPageChangeListener() {
         if (mOnPageChangeListener != null) {
-            mViewPager.removeOnPageChangeListener(mOnPageChangeListener);
+            if (mBinding != null) {
+                mBinding.viewpager.removeOnPageChangeListener(mOnPageChangeListener);
+            }
         } else {
             mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
                 @Override
@@ -238,9 +236,11 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
                 @Override
                 public void onPageSelected(int position) {
-                    Fragment fragment = mAdapter.getItem(mViewPager.getCurrentItem());
-                    boolean hideToolbar = (fragment instanceof ReaderPostDetailFragment);
-                    showHideToolbar(hideToolbar);
+                    if (mBinding != null) {
+                        Fragment fragment = mAdapter.getItem(mBinding.viewpager.getCurrentItem());
+                        boolean hideToolbar = (fragment instanceof ReaderPostDetailFragment);
+                        showHideToolbar(hideToolbar);
+                    }
 
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
                     // change the action bar title for the current note
@@ -259,7 +259,9 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                 }
             };
         }
-        mViewPager.addOnPageChangeListener(mOnPageChangeListener);
+        if (mBinding != null) {
+            mBinding.viewpager.addOnPageChangeListener(mOnPageChangeListener);
+        }
     }
 
     private void trackCommentNote(@NotNull Note note) {
@@ -275,8 +277,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             if (hide) {
                 getSupportActionBar().hide();
             } else {
-                setSupportActionBar(mToolbar);
-                getSupportActionBar().show();
+                if (mBinding != null) {
+                    setSupportActionBar(mBinding.toolbarMain);
+                    getSupportActionBar().show();
+                }
             }
             getSupportActionBar().setDisplayShowTitleEnabled(!hide);
         }
@@ -309,8 +313,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         // If the user hasn't used swipe yet and if the adapter is initialised and have at least 2 notifications,
         // show a hint to promote swipe usage on the ViewPager
         if (!AppPrefs.isNotificationsSwipeToNavigateShown() && mAdapter != null && mAdapter.getCount() > 1) {
-            WPSwipeSnackbar.show(mViewPager);
-            AppPrefs.setNotificationsSwipeToNavigateShown(true);
+            if (mBinding != null) {
+                WPSwipeSnackbar.show(mBinding.viewpager);
+                AppPrefs.setNotificationsSwipeToNavigateShown(true);
+            }
         }
     }
 
@@ -379,8 +385,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         NotesAdapter.buildFilteredNotesList(filteredNotes, notes, filter);
         adapter = new NotificationDetailFragmentAdapter(getSupportFragmentManager(), filteredNotes);
 
-        mViewPager.setAdapter(adapter);
-        mViewPager.setCurrentItem(NotificationsUtils.findNoteInNoteArray(filteredNotes, note.getId()));
+        if (mBinding != null) {
+            mBinding.viewpager.setAdapter(adapter);
+            mBinding.viewpager.setCurrentItem(NotificationsUtils.findNoteInNoteArray(filteredNotes, note.getId()));
+        }
 
         return adapter;
     }
@@ -545,10 +553,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     }
 
     private void setProgressVisible(boolean visible) {
-        final ProgressBar progress =
-                findViewById(R.id.progress_loading);
-        if (progress != null) {
-            progress.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if (mBinding != null) {
+            mBinding.progressLoading.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -588,15 +594,19 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
     @Override
     public void onPositiveClicked(@NotNull String instanceTag) {
-        Fragment fragment = mAdapter.getItem(mViewPager.getCurrentItem());
-        if (fragment instanceof BasicFragmentDialog.BasicDialogPositiveClickInterface) {
-            ((BasicDialogPositiveClickInterface) fragment).onPositiveClicked(instanceTag);
+        if (mBinding != null) {
+            Fragment fragment = mAdapter.getItem(mBinding.viewpager.getCurrentItem());
+            if (fragment instanceof BasicFragmentDialog.BasicDialogPositiveClickInterface) {
+                ((BasicDialogPositiveClickInterface) fragment).onPositiveClicked(instanceTag);
+            }
         }
     }
 
     @Override
     public void onScrollableViewInitialized(int containerId) {
-        AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBarLayout, containerId);
+        if (mBinding != null) {
+            AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mBinding.appbarMain, containerId);
+        }
     }
 
     private class NotificationDetailFragmentAdapter extends FragmentStatePagerAdapter {
