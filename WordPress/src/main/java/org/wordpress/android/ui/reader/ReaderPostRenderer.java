@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Handler;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
@@ -166,7 +168,7 @@ public class ReaderPostRenderer {
      * called once the content is ready to be rendered in the webView
      */
     private void renderHtmlContent(final String htmlContent) {
-        mRenderedHtml = htmlContent;
+        String updatedHtmlContent = htmlContent;
 
         // make sure webView is still valid (containing fragment may have been detached)
         ReaderWebView webView = mWeakWebView.get();
@@ -175,11 +177,63 @@ public class ReaderPostRenderer {
             return;
         }
 
+        if (hasVideo(htmlContent)) {
+            updatedHtmlContent = muteVideo(htmlContent);
+        }
+
+        mRenderedHtml = updatedHtmlContent;
+
         // IMPORTANT: use loadDataWithBaseURL() since loadData() may fail
         // https://code.google.com/p/android/issues/detail?id=4401
         // also important to use null as the baseUrl since onPageFinished
         // doesn't appear to fire when it's set to an actual url
-        webView.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null);
+        webView.loadDataWithBaseURL(null, updatedHtmlContent, "text/html", "UTF-8", null);
+    }
+
+    private boolean hasVideo(final String htmlContent) {
+        return htmlContent.contains("<video") || htmlContent.contains("data-wpcom-embed-url");
+    }
+
+    private String muteVideo(final String htmlContent) {
+        final Document document = Jsoup.parse(htmlContent);
+        final Element videoElement = document.select("video").first();
+        if (videoElement != null) {
+            // Mute video in video tag
+            videoElement.attr("muted", "1");
+        } else if (htmlContent.contains("wp-block-embed__wrapper")) {
+            // Mute video in wp-block-embed__wrapper div
+            final Element iframeElement = document.select("iframe").first();
+            if (iframeElement != null) {
+                // Get attribute data-wpcom-embed-url, append URL with &muted=true
+                final String embedUrlAttrName = "data-wpcom-embed-url";
+                final String embedUrlAttrValue = iframeElement.attr(embedUrlAttrName);
+                if (!embedUrlAttrValue.isEmpty()) {
+                    final String mutedRegex = "&amp;muted=(true|false)";
+                    if (Pattern.compile(mutedRegex).matcher(embedUrlAttrValue).find()) {
+                        // If muted query parameter already exists, replace with value true
+                        iframeElement.attr(embedUrlAttrName,
+                                embedUrlAttrValue.replaceAll(mutedRegex, "&muted=true"));
+                    } else {
+                        // If muted query parameter doesn't exist, append it with value true to the end of the URL
+                        iframeElement.attr(embedUrlAttrName, embedUrlAttrValue + "&muted=true");
+                    }
+                }
+                // Get attribute src and append &muted=1
+                final String srcAttrName = "src";
+                final String srcAttrValue = iframeElement.attr(srcAttrName);
+                if (!srcAttrValue.isEmpty()) {
+                    final String mutedRegex = "&amp;muted=[0-9]";
+                    if (Pattern.compile(mutedRegex).matcher(srcAttrValue).find()) {
+                        // If muted query parameter already exists, replace with value 1
+                        iframeElement.attr(srcAttrName, srcAttrValue.replaceAll(mutedRegex, "&muted=1"));
+                    } else {
+                        // If muted query parameter doesn't exist, append it with value 1 to the end of the URL
+                        iframeElement.attr(srcAttrName, srcAttrValue + "&muted=1");
+                    }
+                }
+            }
+        }
+        return document.html();
     }
 
     /*
