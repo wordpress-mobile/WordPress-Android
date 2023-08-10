@@ -41,6 +41,7 @@ window.DocsBotAI.init({
     setTimeout(() => {
         hideTopCloseButton(); // hide after init
         hideTopHeader();
+        resetConversation();
     }, 300);
 });
 
@@ -66,7 +67,7 @@ function getQueryParams(location) {
 
 function openDocsBot() {
     const widget = document.querySelector("#docsbotai-root").shadowRoot.querySelector("a.floating-button");
-    if (widget && typeof widget !== 'undefined') {
+    if (widget && widget !== null && typeof widget !== 'undefined') {
         widget.click()
     }
     DocsBotAI.open()
@@ -84,4 +85,8 @@ function hideTopHeader() {
     if (header && header !== null && header !== 'undefined') {
         header.style.display = 'none';
     }
+}
+
+function resetConversation() {
+    localStorage.removeItem("docsbot_chat_history");
 }
