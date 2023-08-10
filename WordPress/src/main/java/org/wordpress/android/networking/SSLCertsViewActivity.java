@@ -2,6 +2,7 @@ package org.wordpress.android.networking;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 
 import org.wordpress.android.R;
@@ -14,7 +15,7 @@ public class SSLCertsViewActivity extends WebViewActivity {
     public static final String CERT_DETAILS_KEYS = "CertDetails";
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(getResources().getText(R.string.ssl_certificate_details));
 
