@@ -29,3 +29,33 @@
           })
       })
     })
+
+    function sendAndroidMessage(history) {
+        /* In this implementation, only the single-arg version of postMessage is supported. As noted
+         * in the WebViewCompat reference doc, the second parameter, MessagePorts, is optional.
+         * Also note that onmessage, addEventListener and removeEventListener are not supported.
+         */
+        jsObject.postMessage(history);
+    }
+
+    function getQueryParams(location) {
+      return location.search
+        ? location.search.substr(1).split`&`.reduce((qd, item) => {let [k,v] = item.split`=`; v = v && decodeURIComponent(v); (qd[k] = qd[k] || []).push(v); return qd}, {})
+        : {}
+    }
+
+    function hideTopCloseButton() {
+        document
+            .querySelector("#docsbotai-root")
+            .shadowRoot.querySelector("div > div > div > a")
+            .style.visibility = 'hidden';
+//            .style.display = 'none';
+    }
+
+    function hideTopHeader() {
+        document
+            .querySelector("#docsbotai-root")
+            .shadowRoot.querySelector("div > div > div > div.docsbot-chat-header")
+            .style.visibility = 'hidden';
+//            .style.display = 'none';
+    }
