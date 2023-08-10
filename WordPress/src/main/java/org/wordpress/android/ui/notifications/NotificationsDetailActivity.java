@@ -80,6 +80,7 @@ import static org.wordpress.android.ui.notifications.services.NotificationsUpdat
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
+@SuppressWarnings("deprecation")
 public class NotificationsDetailActivity extends LocaleAwareActivity implements
         CommentActions.OnNoteCommentActionListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface, ScrollableViewInitializedListener {
@@ -396,6 +397,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
      * Tries to pick the correct fragment detail type for a given note
      * Defaults to NotificationDetailListFragment
      */
+    @SuppressWarnings("deprecation")
     private Fragment getDetailFragmentForNote(Note note) {
         if (note == null) {
             return null;
@@ -607,6 +609,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         }
     }
 
+    @SuppressWarnings("deprecation")
     private class NotificationDetailFragmentAdapter extends FragmentStatePagerAdapter {
         private final ArrayList<Note> mNoteList;
 
