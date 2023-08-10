@@ -348,7 +348,7 @@ class MySiteViewModel @Inject constructor(
 
     val uiModel: LiveData<UiModel?> =
         mergeAsync(bgScope, tabsUiState, state) { tabsUiState, mySiteUiState ->
-            Log.e("Current Thread", "Current Thread ${Thread.currentThread().name}")
+            val startTime = System.currentTimeMillis()
             with(requireNotNull(mySiteUiState)) {
                 val state = if (site != null) {
                     cardsUpdate?.checkAndShowSnackbarError()
@@ -389,6 +389,7 @@ class MySiteViewModel @Inject constructor(
 
                 domainTransferCardViewModel.onSiteChanged(site?.id, state as? SiteSelected)
 
+                Log.e("Time Taken", "${System.currentTimeMillis() - startTime} milliseconds")
                 UiModel(currentAvatarUrl.orEmpty(), state)
             }
         }
@@ -1837,7 +1838,7 @@ class MySiteViewModel @Inject constructor(
 
     data class UiModel(
         val accountAvatarUrl: String,
-        val state: State?
+        val state: State
     )
 
     sealed class State {

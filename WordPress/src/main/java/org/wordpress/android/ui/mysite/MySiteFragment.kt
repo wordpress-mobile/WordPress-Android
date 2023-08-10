@@ -139,9 +139,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner) { uiModel ->
-            when (val state = uiModel.state) {
+            uiModel?.state?.let {  when (val state = uiModel.state) {
                 is State.SiteSelected -> loadData(state)
                 is State.NoSites -> loadEmptyView(state)
+            }
             }
         }
         viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
