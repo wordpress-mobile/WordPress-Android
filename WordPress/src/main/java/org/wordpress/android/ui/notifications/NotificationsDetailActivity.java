@@ -103,7 +103,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     @Nullable private NotificationsDetailActivityBinding mBinding = null;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         AppLog.i(AppLog.T.NOTIFS, "Creating NotificationsDetailActivity");
@@ -287,7 +287,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
@@ -297,7 +297,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         if (getSupportActionBar() != null && getSupportActionBar().getTitle() != null) {
             outState.putString(ARG_TITLE, getSupportActionBar().getTitle().toString());
         }
@@ -617,6 +617,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             mNoteList = (ArrayList<Note>) notes.clone();
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             return getDetailFragmentForNote(mNoteList.get(position));
@@ -628,7 +629,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         }
 
         @Override
-        public void restoreState(Parcelable state, ClassLoader loader) {
+        public void restoreState(@Nullable Parcelable state, @Nullable ClassLoader loader) {
             // work around "Fragment no longer exists for key" Android bug
             // by catching the IllegalStateException
             // https://code.google.com/p/android/issues/detail?id=42601
@@ -640,6 +641,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             }
         }
 
+        @Nullable
         @Override
         public Parcelable saveState() {
             AppLog.d(AppLog.T.NOTIFS, "notifications pager > adapter saveState");
