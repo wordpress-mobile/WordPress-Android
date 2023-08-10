@@ -77,8 +77,20 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     // if the overlay is not shown, then show it
     // if the overlay is shown and the remote config value is 0, then don't show
     // if the overlay is shown and the remote config value is not 0, then check the frequency
-    private fun shouldShowPhaseFourFeatureCollectionOverlay(): Boolean{
-        return !jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown(PhaseFour)
+    private fun shouldShowPhaseFourFeatureCollectionOverlay(): Boolean {
+        val isOverlayShown = jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown(PhaseFour)
+        if (!isOverlayShown) return true
+        val phaseFourOverlayFrequency = jetpackFeatureRemovalPhaseHelper.getPhaseFourOverlayFrequency()
+        if (phaseFourOverlayFrequency == 0) return false
+        val overlayShownDate = jetpackFeatureOverlayShownTracker.getPhaseFourOverlayShownTimeStamp()
+        if (overlayShownDate != null) {
+            val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
+                Date(overlayShownDate),
+                dateTimeUtilsWrapper.getTodaysDate()
+            )
+            return daysPastOverlayShown >= phaseFourOverlayFrequency
+        }
+        return false
     }
 
     private fun isInSiteCreationPhase(): Boolean {
