@@ -1,6 +1,5 @@
 package org.wordpress.android.support
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -36,6 +35,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         supportActionBar?.subtitle = ""
 
         setupWebView()
+        setupJsInterfaceForWebView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -49,11 +49,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         finish()
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
-        val jsObjName = "jsObject"
-        val allowedOriginRules = setOf("https://$DEFAULT_DOMAIN")
-
         val assetLoader = WebViewAssetLoader.Builder()
             .addPathHandler("/assets/", AssetsPathHandler(this))
             .addPathHandler("/res/", ResourcesPathHandler(this))
@@ -65,6 +61,13 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
             WebView.setWebContentsDebuggingEnabled(true)
         }
 
+        intent.getStringExtra(URL_TO_LOAD)?.let { mWebView.loadUrl(it) }
+    }
+
+    private fun setupJsInterfaceForWebView() {
+        val jsObjName = "jsObject"
+        val allowedOriginRules = setOf("https://$DEFAULT_DOMAIN")
+
         // Create a JS object to be injected into frames; Determines if WebMessageListener
         // or WebAppInterface should be used
         createJsObject(
@@ -75,8 +78,6 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
             Log.d("Chat history", message)
             onChatSessionClosed(message)
         }
-
-        intent.getStringExtra(URL_TO_LOAD)?.let { mWebView.loadUrl(it) }
     }
 
 
@@ -125,7 +126,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
 
     data class BotOptions(
         val id: String,
-        val inputPlaceHolder: String,
+        val inputPlaceholder: String,
         val firstMessage: String,
         val getSupport: String
     )

@@ -1,60 +1,9 @@
 <html>
-<head>
-    <script type="text/javascript" src="/assets/support_chat_widget.js"></script>
-</head>
-<body>
-<script type="text/javascript">
-    const queryString = window.location.search;
-    console.log(queryString);
-    //const urlParams = new URLSearchParams(queryString);
-    const urlParams = getQueryParams(window.location)
-    const inputPlaceholder = urlParams.inputPlaceholder; //urlParams.get('inputPlaceholder');
-    console.log(inputPlaceholder);
-    const firstMessage = urlParams.firstMessage; //urlParams.get('firstMessage');
-
-    window.DocsBotAI.init({
-            id: 'TqTdebbGjJeUjrmBIFjh/YbAMwiheXLs2Ue5j7elH',
-            supportCallback: function (event, history) {
-               event.preventDefault() // Optionally prevent default behavior opening the url.
-               console.log(history) // Safely access the chat history.
-               sendAndroidMessage(history)
-               DocsBotAI.close() // Close the widget.
-            },
-            options: {
-                botName: "Jetpack Mobile",
-                description: "Ask me anything about using Jetpack mobile app.",
-                color: "#9dd977",
-                supportLink: "https://wordpress.com/contact-form?mode=CHAT",
-                labels: {
-                    inputPlaceholder: inputPlaceholder,
-                    firstMessage: firstMessage, //"What can I help you with?",
-                    sources: "Sources",
-                    helpful: "Rate as helpful",
-                    unhelpful: "Rate as unhelpful",
-                    getSupport: "Contact support",
-                    floatingButton: "Help",
-                    suggestions: "Not sure what to ask?",
-                    thinking: "Thinking..."
-              }, // Override all the default labels for your own language.
-              questions: [
-                "How do I change home page?",
-                "Account or billing issues?",
-                "Need to report an error or crash?"
-              ] // Array of example questions to show in the widget. Three are picked at random.
-            },
-        }).then(() => {
-            // Safely do stuff here after the widget is loaded.
-            DocsBotAI.toggle();
-        })
-        setTimeout(() => {
-           DocsBotAI.open();
-        }, 200);
-
-        setTimeout(() => {
-           hideTopCloseButton();
-           hideTopHeader();
-        }, 300);
-    </script>
-</body>
+    <head>
+        <script type="text/javascript" src="/assets/bot_widget.js"></script>
+    </head>
+    <body>
+        <script type="text/javascript" src="/assets/support_chat_widget.js"></script>
+    </body>
 </html>
 

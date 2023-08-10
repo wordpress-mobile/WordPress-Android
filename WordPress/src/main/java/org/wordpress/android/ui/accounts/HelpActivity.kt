@@ -178,8 +178,8 @@ class HelpActivity : LocaleAwareActivity() {
     private fun launchSupportWidget() {
         openChatWidget.launch(
             BotOptions(
-                id = "TqTdebbGjJeUjrmBIFjh/YbAMwiheXLs2Ue5j7elH",
-                inputPlaceHolder = "Send a message...",
+                id = "TqTdebbGjJeUjrmBIFjh/YbAMwiheXLs2Ue5j7elH", // BuildConfig.DOCSBOT_ID,
+                inputPlaceholder = "Send a message...",
                 firstMessage = "What can we help you with?",
                 getSupport = "Contact support"
             )
