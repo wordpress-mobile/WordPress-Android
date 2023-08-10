@@ -97,7 +97,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     @Nullable private String mNoteId;
     private boolean mIsTappedOnNotification;
 
-    private ViewPager.OnPageChangeListener mOnPageChangeListener;
+    @Nullable private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private NotificationDetailFragmentAdapter mAdapter;
 
     @Nullable private NotificationsDetailActivityBinding mBinding = null;
