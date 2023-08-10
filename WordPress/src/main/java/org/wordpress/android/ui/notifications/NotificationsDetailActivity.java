@@ -587,7 +587,6 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         if (note == null) {
             // no note found
             showErrorToastAndFinish();
-            return;
         }
     }
 
