@@ -98,7 +98,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     private boolean mIsTappedOnNotification;
 
     @Nullable private ViewPager.OnPageChangeListener mOnPageChangeListener;
-    private NotificationDetailFragmentAdapter mAdapter;
+    @Nullable private NotificationDetailFragmentAdapter mAdapter;
 
     @Nullable private NotificationsDetailActivityBinding mBinding = null;
 
@@ -236,21 +236,21 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
                 @Override
                 public void onPageSelected(int position) {
-                    if (mBinding != null) {
+                    if (mBinding != null && mAdapter != null) {
                         Fragment fragment = mAdapter.getItem(mBinding.viewpager.getCurrentItem());
                         boolean hideToolbar = (fragment instanceof ReaderPostDetailFragment);
                         showHideToolbar(hideToolbar);
-                    }
 
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
-                    // change the action bar title for the current note
-                    Note currentNote = mAdapter.getNoteAtPosition(position);
-                    if (currentNote != null) {
-                        setActionBarTitleForNote(currentNote);
-                        markNoteAsRead(currentNote);
-                        NotificationsActions.updateSeenTimestamp(currentNote);
-                        // track subsequent comment note views
-                        trackCommentNote(currentNote);
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
+                        // change the action bar title for the current note
+                        Note currentNote = mAdapter.getNoteAtPosition(position);
+                        if (currentNote != null) {
+                            setActionBarTitleForNote(currentNote);
+                            markNoteAsRead(currentNote);
+                            NotificationsActions.updateSeenTimestamp(currentNote);
+                            // track subsequent comment note views
+                            trackCommentNote(currentNote);
+                        }
                     }
                 }
 
@@ -594,7 +594,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
     @Override
     public void onPositiveClicked(@NonNull String instanceTag) {
-        if (mBinding != null) {
+        if (mBinding != null && mAdapter != null) {
             Fragment fragment = mAdapter.getItem(mBinding.viewpager.getCurrentItem());
             if (fragment instanceof BasicFragmentDialog.BasicDialogPositiveClickInterface) {
                 ((BasicDialogPositiveClickInterface) fragment).onPositiveClicked(instanceTag);
