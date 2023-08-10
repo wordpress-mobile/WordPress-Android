@@ -1,5 +1,5 @@
-const queryString = window.location.search;
-console.log(queryString);
+//const queryString = window.location.search;
+//console.log(queryString);
 const urlParams = getQueryParams(window.location);
 
 window.DocsBotAI.init({
@@ -16,20 +16,20 @@ window.DocsBotAI.init({
         color: "#9dd977",
         supportLink: "#",
         labels: {
-            inputPlaceholder: urlParams.inputPlaceholder,
-            firstMessage: urlParams.firstMessage,
+            inputPlaceholder: decodeURIComponent(urlParams.inputPlaceholder),
+            firstMessage: decodeURIComponent(urlParams.firstMessage),
             sources: "Sources",
             helpful: "Rate as helpful",
             unhelpful: "Rate as unhelpful",
-            getSupport: urlParams.getSupport,
+            getSupport: decodeURIComponent(urlParams.getSupport),
             floatingButton: "Help",
-            suggestions: urlParams.suggestions,
+            suggestions: decodeURIComponent(urlParams.suggestions),
             thinking: "Thinking..."
         }, // Override all the default labels for your own language.
         questions: [
-            urlParams.questionOne,
-            urlParams.questionTwo,
-            urlParams.questionThree
+            decodeURIComponent(urlParams.questionOne),
+            decodeURIComponent(urlParams.questionTwo),
+            decodeURIComponent(urlParams.questionThree)
         ] // Array of example questions to show in the widget. Three are picked at random.
     },
 }).then(() => {
