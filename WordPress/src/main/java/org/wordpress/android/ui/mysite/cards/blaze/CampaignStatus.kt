@@ -29,18 +29,18 @@ enum class CampaignStatus(val status: String, @StringRes val stringResource: Int
     fun textColor(isInDarkMode: Boolean): Color {
         return when (this) {
             Active -> if (isInDarkMode) Color(0xFF68DE86) else Color(0xFF00450C)
-            Completed -> if (isInDarkMode) Color(0xFF91CAF2) else Color(0xFF02395C)
+            Completed, Scheduled -> if (isInDarkMode) Color(0xFF91CAF2) else Color(0xFF02395C)
             Rejected, Canceled -> if (isInDarkMode) Color(0xFFFFABAF) else Color(0xFF8A2424)
-            InModeration, Scheduled -> if (isInDarkMode) Color(0xFFF2D76B) else Color(0xFF4F3500)
+            InModeration -> if (isInDarkMode) Color(0xFFF2D76B) else Color(0xFF4F3500)
         }
     }
 
     fun textViewBackgroundColor(isInDarkMode: Boolean): Color {
         return when (this) {
             Active -> if (isInDarkMode) Color(0xFF003008) else Color(0xFFB8E6BF)
-            Completed -> if (isInDarkMode) Color(0xFF01283D) else Color(0xFFBBE0FA)
+            Completed, Scheduled -> if (isInDarkMode) Color(0xFF01283D) else Color(0xFFBBE0FA)
             Rejected, Canceled -> if (isInDarkMode) Color(0xFF451313) else Color(0xFFFACFD2)
-            InModeration, Scheduled -> if (isInDarkMode) Color(0xFF332200) else Color(0xFFF5E6B3)
+            InModeration -> if (isInDarkMode) Color(0xFF332200) else Color(0xFFF5E6B3)
         }
     }
 }
