@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.TaskStackBuilder;
 import androidx.preference.PreferenceManager;
 
@@ -56,14 +57,14 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
     private ArrayList<Uri> mLocalMediaUris = new ArrayList<>();
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
         refreshContent();
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.share_intent_receiver_activity);
@@ -123,7 +124,7 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_SELECTED_SITE_LOCAL_ID, mClickedSiteLocalId);
         outState.putString(KEY_SHARE_ACTION_ID, mShareActionName);
@@ -136,7 +137,7 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.DO_LOGIN) {
             if (resultCode == RESULT_OK) {
