@@ -610,6 +610,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     private class NotificationDetailFragmentAdapter extends FragmentStatePagerAdapter {
         private final ArrayList<Note> mNoteList;
 
+        @SuppressWarnings("unchecked")
         NotificationDetailFragmentAdapter(FragmentManager fm, ArrayList<Note> notes) {
             super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             mNoteList = (ArrayList<Note>) notes.clone();
