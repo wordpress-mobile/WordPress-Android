@@ -2,6 +2,7 @@
 
 package org.wordpress.android.ui.mysite
 
+import android.util.Log
 import android.content.Intent
 import android.net.Uri
 import android.text.TextUtils
