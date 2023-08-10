@@ -10,6 +10,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -91,7 +94,7 @@ public class WPWebChromeClientWithFileChooser extends WPWebChromeClient {
         return true;
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent intent) {
         Uri[] selectedUris = null;
 
         if (intent != null && resultCode == RESULT_OK && requestCode == WEB_CHROME_CLIENT_FILE_PICKER) {
@@ -118,6 +121,6 @@ public class WPWebChromeClientWithFileChooser extends WPWebChromeClient {
     }
 
     public interface OnShowFileChooserListener {
-        void startActivityForFileChooserResult(Intent intent, int requestCode);
+        void startActivityForFileChooserResult(@NonNull Intent intent, int requestCode);
     }
 }
