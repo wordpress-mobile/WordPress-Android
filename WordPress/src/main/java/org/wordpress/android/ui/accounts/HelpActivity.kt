@@ -179,9 +179,13 @@ class HelpActivity : LocaleAwareActivity() {
         openChatWidget.launch(
             BotOptions(
                 id = "TqTdebbGjJeUjrmBIFjh/YbAMwiheXLs2Ue5j7elH", // BuildConfig.DOCSBOT_ID,
-                inputPlaceholder = "Send a message...",
-                firstMessage = "What can we help you with?",
-                getSupport = "Contact support"
+                inputPlaceholder = getString(R.string.contact_support_input_placeholder),
+                firstMessage = getString(R.string.contact_support_first_message),
+                getSupport = getString(R.string.contact_support_get_support),
+                suggestions = getString(R.string.contact_support_suggestions),
+                questionOne = getString(R.string.contact_support_question_one),
+                questionTwo = getString(R.string.contact_support_question_two),
+                questionThree = getString(R.string.contact_support_question_three)
             )
         )
     }

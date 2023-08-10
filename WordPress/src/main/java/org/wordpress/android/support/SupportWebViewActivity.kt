@@ -128,6 +128,10 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         val id: String,
         val inputPlaceholder: String,
         val firstMessage: String,
-        val getSupport: String
+        val getSupport: String,
+        val suggestions: String,
+        val questionOne: String,
+        val questionTwo: String,
+        val questionThree: String
     )
 }

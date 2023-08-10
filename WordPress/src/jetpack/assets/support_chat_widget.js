@@ -23,13 +23,13 @@ window.DocsBotAI.init({
             unhelpful: "Rate as unhelpful",
             getSupport: urlParams.getSupport,
             floatingButton: "Help",
-            suggestions: "Not sure what to ask?",
+            suggestions: urlParams.suggestions,
             thinking: "Thinking..."
         }, // Override all the default labels for your own language.
         questions: [
-            "How do I change home page?",
-            "Account or billing issues?",
-            "Need to report an error or crash?"
+            urlParams.questionOne,
+            urlParams.questionTwo,
+            urlParams.questionThree
         ] // Array of example questions to show in the widget. Three are picked at random.
     },
 }).then(() => {
@@ -68,9 +68,8 @@ function openDocsBot() {
     const widget = document.querySelector("#docsbotai-root").shadowRoot.querySelector("a.floating-button");
     if (widget && typeof widget !== 'undefined') {
         widget.click()
-    } else {
-        DocsBotAI.open()
     }
+    DocsBotAI.open()
 }
 
 function hideTopCloseButton() {
