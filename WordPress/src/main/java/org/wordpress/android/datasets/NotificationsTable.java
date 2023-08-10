@@ -6,6 +6,8 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
+import androidx.annotation.Nullable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
@@ -164,7 +166,8 @@ public class NotificationsTable {
                                      args);
     }
 
-    public static Note getNoteById(String noteID) {
+    @Nullable
+    public static Note getNoteById(@Nullable String noteID) {
         if (TextUtils.isEmpty(noteID)) {
             AppLog.e(AppLog.T.DB, "Asking for a note with null Id. Really?" + noteID);
             return null;

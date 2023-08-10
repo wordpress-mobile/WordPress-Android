@@ -94,7 +94,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     @Inject LikesEnhancementsFeatureConfig mLikesEnhancementsFeatureConfig;
     @Inject ListScenarioUtils mListScenarioUtils;
 
-    private String mNoteId;
+    @Nullable private String mNoteId;
     private boolean mIsTappedOnNotification;
 
     private ViewPager.OnPageChangeListener mOnPageChangeListener;

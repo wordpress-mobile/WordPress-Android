@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.PersistableBundle;
 
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.AppLog;
 
@@ -23,7 +25,7 @@ public class NotificationsUpdateServiceStarter {
         startService(context, null);
     }
 
-    public static void startService(Context context, String noteId) {
+    public static void startService(Context context, @Nullable String noteId) {
         if (context == null) {
             return;
         }
