@@ -558,7 +558,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public void onModerateCommentForNote(Note note, CommentStatus newStatus) {
+    public void onModerateCommentForNote(@NonNull Note note, @NonNull CommentStatus newStatus) {
         Intent resultIntent = new Intent();
         resultIntent.putExtra(NotificationsListFragment.NOTE_MODERATE_ID_EXTRA, note.getId());
         resultIntent.putExtra(NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA, newStatus.toString());

@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.comments;
 
+import androidx.annotation.NonNull;
+
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -33,6 +35,6 @@ public class CommentActions {
     }
 
     public interface OnNoteCommentActionListener {
-        void onModerateCommentForNote(Note note, CommentStatus newStatus);
+        void onModerateCommentForNote(@NonNull Note note, @NonNull CommentStatus newStatus);
     }
 }
