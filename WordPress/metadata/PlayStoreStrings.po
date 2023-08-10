@@ -10,16 +10,19 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
+msgctxt "release_note_230"
+msgid ""
+"23.0:\n"
+"- Removed visual gap between selected gallery blocks and toolbar\n"
+"- Hid the gallery caption button on mobile devices.\n"
+"- Made correct gallery block remain selected while you’re adding media\n"
+"- Fixed a plugin install bug that caused the app to crash\n"
+msgstr ""
+
 msgctxt "release_note_229"
 msgid ""
 "22.9:\n"
 "We made some big changes to the block editor, including styles, colors, and icons. You’ll also find more buttons and block options in the header toolbar, including the undo and redo buttons. That’s right, you now have more tools than Batman’s utility belt.\n"
-msgstr ""
-
-msgctxt "release_note_228"
-msgid ""
-"22.8:\n"
-"The app will no longer crash after you delete a site. Phew.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
@@ -91,7 +94,7 @@ msgid ""
 "\n"
 "Whether you need a website builder to create your website, or a simple blog maker, WordPress can help. It gives you beautiful designs, powerful features, and the freedom to build anything you want.\n"
 "\n"
-"California users privacy notice: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa."
+"California users privacy notice: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.\n"
 msgstr ""
 
 #. translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!
