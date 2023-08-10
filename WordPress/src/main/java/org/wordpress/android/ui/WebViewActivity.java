@@ -7,6 +7,8 @@ import android.view.Window;
 import android.webkit.WebView;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
@@ -29,7 +31,7 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
     protected WebView mWebView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_PROGRESS);
 
         super.onCreate(savedInstanceState);
@@ -82,7 +84,7 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
      * save the webView state with the bundle so it can be restored
      */
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         mWebView.saveState(outState);
         super.onSaveInstanceState(outState);
     }
@@ -91,7 +93,7 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
      * restore the webView state saved above
      */
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mWebView.restoreState(savedInstanceState);
     }
@@ -161,7 +163,7 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             cancel();
             finish();
