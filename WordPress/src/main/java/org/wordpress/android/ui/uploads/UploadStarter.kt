@@ -136,7 +136,7 @@ class UploadStarter @Inject constructor(
         }
 
         sites.forEach {
-            launch(ioDispatcher) {
+            launch {
                 upload(site = it)
             }
         }
@@ -148,8 +148,8 @@ class UploadStarter @Inject constructor(
     private suspend fun upload(site: SiteModel) = coroutineScope {
         try {
             mutex.withLock {
-                val posts = async { postStore.getPostsWithLocalChanges(site) }
-                val pages = async { pageStore.getPagesWithLocalChanges(site) }
+                val posts = async(ioDispatcher) { postStore.getPostsWithLocalChanges(site) }
+                val pages = async(ioDispatcher) { pageStore.getPagesWithLocalChanges(site) }
                 val list = posts.await() + pages.await()
 
                 list.asSequence()
