@@ -154,7 +154,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private ConversationNotificationsViewModel mConversationViewModel;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_comment_list);
 
@@ -207,15 +207,15 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
         mEditComment.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(@NonNull CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(@NonNull Editable s) {
                 mSubmitReplyBtn.setEnabled(!TextUtils.isEmpty(s.toString().trim()));
             }
         });
@@ -317,7 +317,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             if (content != null && layoutManager != null) {
                 if (content.isSmooth()) {
                     RecyclerView.SmoothScroller smoothScrollerToTop = new LinearSmoothScroller(this) {
-                        @Override protected int getVerticalSnapPreference() {
+                        @Override
+                        protected int getVerticalSnapPreference() {
                             return LinearSmoothScroller.SNAP_TO_START;
                         }
                     };
@@ -416,7 +417,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
     private final View.OnClickListener mSignInClickListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(@NonNull View v) {
             if (isFinishing()) {
                 return;
             }
@@ -468,54 +469,52 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.threaded_comments_menu, menu);
 
         mConversationViewModel.getUpdateFollowUiState().observe(this, uiState -> {
-                    if (menu != null) {
-                        MenuItem bellItem = menu.findItem(R.id.manage_notifications_item);
-                        MenuItem followItem = menu.findItem(R.id.follow_item);
+                    MenuItem bellItem = menu.findItem(R.id.manage_notifications_item);
+                    MenuItem followItem = menu.findItem(R.id.follow_item);
 
-                        if (bellItem != null && followItem != null) {
-                            ShimmerFrameLayout shimmerView =
-                                    followItem.getActionView().findViewById(R.id.shimmer_view_container);
-                            TextView followText = followItem.getActionView().findViewById(R.id.follow_button);
+                    if (bellItem != null && followItem != null) {
+                        ShimmerFrameLayout shimmerView =
+                                followItem.getActionView().findViewById(R.id.shimmer_view_container);
+                        TextView followText = followItem.getActionView().findViewById(R.id.follow_button);
 
-                            followItem.getActionView().setOnClickListener(
-                                    uiState.getOnFollowTapped() != null
-                                            ? v -> uiState.getOnFollowTapped().invoke()
-                                            : null
-                            );
+                        followItem.getActionView().setOnClickListener(
+                                uiState.getOnFollowTapped() != null
+                                        ? v -> uiState.getOnFollowTapped().invoke()
+                                        : null
+                        );
 
-                            bellItem.setOnMenuItemClickListener(item -> {
-                                uiState.getOnManageNotificationsTapped().invoke();
-                                return true;
-                            });
+                        bellItem.setOnMenuItemClickListener(item -> {
+                            uiState.getOnManageNotificationsTapped().invoke();
+                            return true;
+                        });
 
-                            followItem.getActionView().setEnabled(uiState.getFlags().isMenuEnabled());
-                            followText.setEnabled(uiState.getFlags().isMenuEnabled());
-                            bellItem.setEnabled(uiState.getFlags().isMenuEnabled());
+                        followItem.getActionView().setEnabled(uiState.getFlags().isMenuEnabled());
+                        followText.setEnabled(uiState.getFlags().isMenuEnabled());
+                        bellItem.setEnabled(uiState.getFlags().isMenuEnabled());
 
-                            if (uiState.getFlags().getShowMenuShimmer()) {
-                                if (!shimmerView.isShimmerVisible()) {
-                                    shimmerView.showShimmer(true);
-                                } else if (!shimmerView.isShimmerStarted()) {
-                                    shimmerView.startShimmer();
-                                }
-                            } else {
-                                shimmerView.hideShimmer();
+                        if (uiState.getFlags().getShowMenuShimmer()) {
+                            if (!shimmerView.isShimmerVisible()) {
+                                shimmerView.showShimmer(true);
+                            } else if (!shimmerView.isShimmerStarted()) {
+                                shimmerView.startShimmer();
                             }
-
-                            followItem.setVisible(uiState.getFlags().isFollowMenuVisible());
-                            bellItem.setVisible(uiState.getFlags().isBellMenuVisible());
-
-                            setResult(RESULT_OK, new Intent().putExtra(
-                                    FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY,
-                                    uiState.getFlags()
-                            ));
+                        } else {
+                            shimmerView.hideShimmer();
                         }
+
+                        followItem.setVisible(uiState.getFlags().isFollowMenuVisible());
+                        bellItem.setVisible(uiState.getFlags().isBellMenuVisible());
+
+                        setResult(RESULT_OK, new Intent().putExtra(
+                                FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY,
+                                uiState.getFlags()
+                        ));
                     }
                 }
         );
@@ -523,7 +522,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -581,7 +580,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                                       });
 
         snackbar.addCallback(new BaseCallback<Snackbar>() {
-            @Override public void onDismissed(Snackbar transientBottomBar, int event) {
+            @Override
+            public void onDismissed(@Nullable Snackbar transientBottomBar, int event) {
                 super.onDismissed(transientBottomBar, event);
 
                 if (event == DISMISS_EVENT_ACTION) {
@@ -1062,7 +1062,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // if user is returning from login, make sure to update the post and its comments
