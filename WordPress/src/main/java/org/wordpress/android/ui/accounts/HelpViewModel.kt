@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,9 +34,6 @@ class HelpViewModel @Inject constructor(
     private val _onSignOutCompleted = SingleLiveEvent<Unit?>()
     val onSignOutCompleted: LiveData<Unit?> = _onSignOutCompleted
 
-    private val _onSupportChatCompleted = SingleLiveEvent<ChatCompletionEvent>()
-    val onSupportChatCompleted: LiveData<ChatCompletionEvent> = _onSupportChatCompleted
-
     fun signOutWordPress(application: WordPress) {
         launch {
             _showSigningOutDialog.value = Event(true)
@@ -54,11 +52,8 @@ class HelpViewModel @Inject constructor(
         }
     }
 
-    fun finishSupportChat(event: ChatCompletionEvent) {
-        endChatSession(event)
-    }
-
-    private fun endChatSession(event: ChatCompletionEvent) {
-        _onSupportChatCompleted.value = event
+    fun sendChatHistory(event: ChatCompletionEvent) {
+        // Submit to Zendesk
+        Log.d("Chat History: ", event.chatHistory)
     }
 }
