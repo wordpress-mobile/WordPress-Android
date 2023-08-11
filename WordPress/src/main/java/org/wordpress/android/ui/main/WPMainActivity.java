@@ -306,7 +306,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     };
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         ProfilingUtils.split("WPMainActivity.onCreate");
         ((WordPress) getApplication()).component().inject(this);
 
@@ -842,7 +842,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
         AppLog.i(T.MAIN, "main activity > new intent");
@@ -1311,7 +1311,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (!mSelectedSiteRepository.hasSelectedSite()) {
             initSelectedSite();
@@ -1344,7 +1344,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                             mUploadActionUseCase.getUploadAction(post),
                             new View.OnClickListener() {
                                 @Override
-                                public void onClick(View v) {
+                                public void onClick(@NonNull View v) {
                                     UploadUtils.publishPost(WPMainActivity.this, post, site, mDispatcher);
                                 }
                             },
@@ -1851,11 +1851,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mBloggingRemindersViewModel.onBloggingPromptSchedulingRequested(siteId);
     }
 
-    @Override public void onShowBloggingPromptsOnboarding() {
+    @Override
+    public void onShowBloggingPromptsOnboarding() {
         showBloggingPromptsOnboarding();
     }
 
-    @Override public void onUpdateSelectedSiteResult(int resultCode, @Nullable Intent data) {
+    @Override
+    public void onUpdateSelectedSiteResult(int resultCode, @Nullable Intent data) {
         onActivityResult(RequestCodes.SITE_PICKER, resultCode, data);
     }
 
