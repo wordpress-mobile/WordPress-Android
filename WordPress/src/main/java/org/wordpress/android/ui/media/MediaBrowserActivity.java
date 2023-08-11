@@ -160,7 +160,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ((WordPress) getApplication()).component().inject(this);
@@ -241,7 +241,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         showQuota(true);
     }
 
-    @Override protected void onNewIntent(Intent intent) {
+    @Override
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
 
         if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
@@ -328,15 +329,15 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             mTabLayout.clearOnTabSelectedListeners();
             mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
-                public void onTabSelected(TabLayout.Tab tab) {
+                public void onTabSelected(@NonNull TabLayout.Tab tab) {
                     setFilter(getFilterForPosition(tab.getPosition()));
                 }
                 @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
+                public void onTabUnselected(@NonNull TabLayout.Tab tab) {
                     // noop
                 }
                 @Override
-                public void onTabReselected(TabLayout.Tab tab) {
+                public void onTabReselected(@NonNull TabLayout.Tab tab) {
                     setFilter(getFilterForPosition(tab.getPosition()));
                 }
             });
@@ -493,7 +494,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
@@ -596,7 +597,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         mMenu = menu;
         getMenuInflater().inflate(R.menu.media_browser, menu);
 
@@ -636,7 +637,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 getOnBackPressedDispatcher().onBackPressed();
@@ -664,7 +665,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public boolean onMenuItemActionExpand(MenuItem item) {
+    public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(false);
         mMediaGridFragment.showActionableEmptyViewButton(false);
 
@@ -680,7 +681,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public boolean onMenuItemActionCollapse(MenuItem item) {
+    public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
         mMediaGridFragment.showActionableEmptyViewButton(true);
         invalidateOptionsMenu();
@@ -692,7 +693,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {
+    public boolean onQueryTextSubmit(@NonNull String query) {
         if (mMediaGridFragment != null) {
             mMediaGridFragment.search(query);
         }
@@ -704,7 +705,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
+    public boolean onQueryTextChange(@NonNull String newText) {
         if (mMediaGridFragment != null) {
             mMediaGridFragment.search(newText);
         }
@@ -936,7 +937,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(@NonNull Context context, @NonNull Intent intent) {
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
                 // Coming from zero connection. Continue what's pending for delete
                 if (mMediaStore.hasSiteMediaToDelete(mSite)) {
