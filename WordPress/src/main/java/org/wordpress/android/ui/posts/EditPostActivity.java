@@ -51,7 +51,6 @@ import com.google.android.material.snackbar.Snackbar;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -174,8 +173,8 @@ import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment;
-import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener;
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.PublishPostImmediatelyUseCase;
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener;
 import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
@@ -1295,7 +1294,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
      * called by PhotoPickerFragment when media is selected - may be a single item or a list of items
      */
     @Override
-    public void onPhotoPickerMediaChosen(@NotNull final List<? extends Uri> uriList) {
+    public void onPhotoPickerMediaChosen(@NonNull final List<? extends Uri> uriList) {
         mEditorPhotoPicker.hidePhotoPicker();
         mEditorMedia.onPhotoPickerMediaChosen(uriList);
     }
@@ -1536,7 +1535,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private RemotePreviewLogicHelper.RemotePreviewHelperFunctions getEditPostActivityStrategyFunctions() {
         return new RemotePreviewLogicHelper.RemotePreviewHelperFunctions() {
             @Override
-            public boolean notifyUploadInProgress(@NotNull PostImmutableModel post) {
+            public boolean notifyUploadInProgress(@NonNull PostImmutableModel post) {
                 if (UploadService.hasInProgressMediaUploadsForPost(post)) {
                     ToastUtils.showToast(EditPostActivity.this,
                             getString(R.string.editor_toast_uploading_please_wait), Duration.SHORT);
@@ -1995,7 +1994,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 // This method handles the custom Exception thrown by Aztec to notify the parent app of the error #8828
                 // We don't need to log the error, since it was already logged by Aztec, instead we need to write the
                 // prefs to disable HW acceleration for it.
-                private boolean isError8828(@NotNull Throwable throwable) {
+                private boolean isError8828(@NonNull Throwable throwable) {
                     if (!(throwable instanceof DynamicLayoutGetBlockIndexOutOfBoundsException)) {
                         return false;
                     }
@@ -2008,12 +2007,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
 
                 @Override
-                public void log(@NotNull String s) {
+                public void log(@NonNull String s) {
                     AppLog.e(T.EDITOR, s);
                 }
 
                 @Override
-                public void logException(@NotNull Throwable throwable) {
+                public void logException(@NonNull Throwable throwable) {
                     if (isError8828(throwable)) {
                         return;
                     }
@@ -2021,7 +2020,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
 
                 @Override
-                public void logException(@NotNull Throwable throwable, String s) {
+                public void logException(@NonNull Throwable throwable, String s) {
                     if (isError8828(throwable)) {
                         return;
                     }
@@ -2407,7 +2406,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         @Override
-        public @NotNull Object instantiateItem(@NotNull ViewGroup container, int position) {
+        public @NonNull Object instantiateItem(@NonNull ViewGroup container, int position) {
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
             switch (position) {
                 case PAGE_CONTENT:
@@ -3881,11 +3880,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     // EditorMediaListener
     @Override
-    public void appendMediaFiles(@NotNull Map<String, ? extends MediaFile> mediaFiles) {
+    public void appendMediaFiles(@NonNull Map<String, ? extends MediaFile> mediaFiles) {
         mEditorFragment.appendMediaFiles((Map<String, MediaFile>) mediaFiles);
     }
 
-    @NotNull @Override
+    @NonNull @Override
     public PostImmutableModel getImmutablePost() {
         return Objects.requireNonNull(mEditPostRepository.getPost());
     }
@@ -3895,12 +3894,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         updateAndSavePostAsync(listener);
     }
 
-    @Override public void advertiseImageOptimization(@NotNull Function0<Unit> listener) {
+    @Override public void advertiseImageOptimization(@NonNull Function0<Unit> listener) {
         WPMediaUtils.advertiseImageOptimization(this, listener::invoke);
     }
 
     @Override
-    public void onMediaModelsCreatedFromOptimizedUris(@NotNull Map<Uri, ? extends MediaModel> oldUriToMediaModels) {
+    public void onMediaModelsCreatedFromOptimizedUris(@NonNull Map<Uri, ? extends MediaModel> oldUriToMediaModels) {
         // no op - we're not doing any special handling on MediaModels in EditPostActivity
     }
 

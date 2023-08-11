@@ -8,7 +8,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -523,7 +522,7 @@ public class ReaderUtils {
         return slugs.toString();
     }
 
-    public static ReaderTagList getTagsFromCommaSeparatedSlugs(@NotNull String commaSeparatedTagSlugs) {
+    public static ReaderTagList getTagsFromCommaSeparatedSlugs(@NonNull String commaSeparatedTagSlugs) {
         ReaderTagList tags = new ReaderTagList();
         if (!commaSeparatedTagSlugs.trim().equals("")) {
             for (String slug : commaSeparatedTagSlugs.split(",", -1)) {

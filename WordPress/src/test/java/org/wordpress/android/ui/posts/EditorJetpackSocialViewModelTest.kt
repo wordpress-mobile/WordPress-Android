@@ -12,6 +12,7 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.datasets.wrappers.PublicizeTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.AccountModel
@@ -562,7 +563,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             label = "label",
             externalId = "externalId",
             externalName = "externalName",
-            iconUrl = "iconUrl",
+            iconResId = R.drawable.ic_social_tumblr,
             isSharingEnabled = true
         )
         private val FAKE_SOCIAL_SHARING_MODEL = PostSocialSharingModel(
