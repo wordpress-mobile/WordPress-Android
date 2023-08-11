@@ -40,7 +40,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -346,7 +345,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     }
 
     @Override
-    public void onPositiveClicked(@NotNull String instanceTag) {
+    public void onPositiveClicked(@NonNull String instanceTag) {
         // do nothing
     }
 
@@ -426,7 +425,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     }
 
     @Override
-    public void onSaveInstanceState(@NotNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putString(KEY_PLUGIN_SLUG, mSlug);

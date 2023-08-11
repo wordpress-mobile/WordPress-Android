@@ -37,7 +37,6 @@ import com.yalantis.ucrop.UCropActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -70,13 +69,13 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -632,7 +631,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                         }
 
                         @Override
-                        public void onResourceReady(@NotNull Drawable resource, @Nullable Object model) {
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
                             if (newAvatarUploaded && resource instanceof BitmapDrawable) {
                                 Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
                                 // create a copy since the original bitmap may by automatically recycled

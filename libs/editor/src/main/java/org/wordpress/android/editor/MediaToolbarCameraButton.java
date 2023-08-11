@@ -6,7 +6,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
+
 import org.wordpress.aztec.plugins.IMediaToolbarButton;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IToolbarAction;
@@ -28,13 +29,13 @@ public class MediaToolbarCameraButton implements IMediaToolbarButton {
         mClickListener = mediaToolbarClickListener;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public IToolbarAction getAction() {
         return mAction;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Context getContext() {
         return mContext;
