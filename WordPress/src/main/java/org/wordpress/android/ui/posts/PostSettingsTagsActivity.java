@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -24,7 +25,7 @@ public class PostSettingsTagsActivity extends LocaleAwareActivity implements Tag
     private String mTags;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -72,13 +73,13 @@ public class PostSettingsTagsActivity extends LocaleAwareActivity implements Tag
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
             saveAndFinish();
@@ -106,7 +107,8 @@ public class PostSettingsTagsActivity extends LocaleAwareActivity implements Tag
         }
     }
 
-    @Override public void onTagsSelected(@NonNull String selectedTags) {
+    @Override
+    public void onTagsSelected(@NonNull String selectedTags) {
         mTags = selectedTags;
     }
 }
