@@ -76,7 +76,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     private SearchView mSearchView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.plugin_browser_activity);
@@ -216,7 +216,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
@@ -236,7 +236,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();
             return true;
@@ -287,7 +287,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {
+    public boolean onQueryTextSubmit(@NonNull String query) {
         if (mSearchView != null) {
             mSearchView.clearFocus();
         }
@@ -296,8 +296,8 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onQueryTextChange(String query) {
-        mViewModel.setSearchQuery(query != null ? query : "");
+    public boolean onQueryTextChange(@NonNull String query) {
+        mViewModel.setSearchQuery(query);
         return true;
     }
 
@@ -328,14 +328,14 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+    public boolean onMenuItemActionExpand(@NonNull MenuItem menuItem) {
         showListFragment(PluginListType.SEARCH);
         mSearchView.setOnQueryTextListener(this);
         return true;
     }
 
     @Override
-    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+    public boolean onMenuItemActionCollapse(@NonNull MenuItem menuItem) {
         mSearchView.setOnQueryTextListener(null);
         hideListFragment();
         mViewModel.setSearchQuery("");
