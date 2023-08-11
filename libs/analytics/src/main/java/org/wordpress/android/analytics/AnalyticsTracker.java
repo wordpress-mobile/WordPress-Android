@@ -3,9 +3,8 @@ package org.wordpress.android.analytics;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
-
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;

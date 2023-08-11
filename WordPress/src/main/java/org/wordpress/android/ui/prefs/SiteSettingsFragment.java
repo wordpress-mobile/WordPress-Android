@@ -53,7 +53,6 @@ import com.google.android.material.snackbar.Snackbar;
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -2175,7 +2174,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     // Using an interface callback, cause this SiteSettingsFragment is a extending deprecated PreferenceFragment.  So,
     // can't use neither setTargetFragment nor onActivityResult before re-writing this!
     @Override
-    public void onSelectTimezone(@NotNull String timezone) {
+    public void onSelectTimezone(@NonNull String timezone) {
         mSiteSettings.setTimezone(timezone);
         onPreferenceChange(mTimezonePref, timezone);
     }

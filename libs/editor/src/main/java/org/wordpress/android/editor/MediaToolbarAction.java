@@ -1,7 +1,8 @@
 package org.wordpress.android.editor;
 
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
+
 import org.wordpress.aztec.AztecTextFormat;
 import org.wordpress.aztec.ITextFormat;
 import org.wordpress.aztec.toolbar.IToolbarAction;
@@ -44,13 +45,13 @@ public enum MediaToolbarAction implements IToolbarAction {
         return mButtonId;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public ToolbarActionType getActionType() {
         return mActionType;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Set<ITextFormat> getTextFormats() {
         return mTextFormats;

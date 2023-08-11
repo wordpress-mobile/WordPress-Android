@@ -27,7 +27,6 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -266,7 +265,7 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Fragme
     }
 
     @Override
-    public void onSaveInstanceState(@NotNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_IS_SHOWING_DISMISS_DIALOG, mIsShowingDismissDialog);
         outState.putBoolean(KEY_SHOULD_WATCH_TEXT, false);
