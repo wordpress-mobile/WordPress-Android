@@ -297,8 +297,8 @@ public class MediaSettingsActivity extends LocaleAwareActivity
             int mScrollRange = -1;
 
             @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (mScrollRange == -1) {
+            public void onOffsetChanged(@Nullable AppBarLayout appBarLayout, int verticalOffset) {
+                if (mScrollRange == -1 && appBarLayout != null) {
                     mScrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (mScrollRange + verticalOffset == 0) {
@@ -526,13 +526,13 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.media_settings, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         boolean showSaveMenu = mSite != null && !mSite.isPrivate() && !isMediaFromEditor();
         boolean showShareMenu = mSite != null && !mSite.isPrivate() && !isMediaFromEditor();
         boolean showTrashMenu = mSite != null && !isMediaFromEditor();
@@ -555,7 +555,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();
             return true;
@@ -676,15 +676,15 @@ public class MediaSettingsActivity extends LocaleAwareActivity
 
         mImageSizeSeekBarView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onStopTrackingTouch(@NonNull SeekBar seekBar) {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+            public void onStartTrackingTouch(@NonNull SeekBar seekBar) {
             }
 
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            public void onProgressChanged(@NonNull SeekBar seekBar, int progress, boolean fromUser) {
                 mImageSize = MediaSettingsImageSize.values()[progress];
                 mImageSizeView.setText(mImageSize.getLabel());
             }
@@ -865,7 +865,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
      */
     private final BroadcastReceiver mDownloadReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(@NonNull Context context, @NonNull Intent intent) {
             long thisId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             if (thisId == mDownloadId) {
                 DownloadManager.Query query = new DownloadManager.Query();
