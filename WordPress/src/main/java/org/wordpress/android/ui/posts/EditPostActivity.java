@@ -557,8 +557,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 });
     }
 
-    @Override @SuppressWarnings("checkstyle:MethodLength")
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    @SuppressWarnings("checkstyle:MethodLength")
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
@@ -1103,7 +1104,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
     }
 
-    @Override protected void onStop() {
+    @Override
+    protected void onStop() {
         super.onStop();
         if (mAztecImageLoader != null && isFinishing()) {
             mAztecImageLoader.clearTargets();
@@ -1147,7 +1149,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         // Saves both post objects so we can restore them in onCreate()
         updateAndSavePostAsync();
@@ -1181,7 +1183,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
         mHtmlModeMenuStateOn = savedInstanceState.getBoolean(STATE_KEY_HTML_MODE_ON);
@@ -1196,7 +1198,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
         mEditorPhotoPicker.onOrientationChanged(newConfig.orientation);
@@ -1349,7 +1351,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_post, menu);
@@ -1357,7 +1359,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         boolean showMenuItems = true;
         if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
             showMenuItems = false;
@@ -1511,7 +1513,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mEditorPhotoPicker.hidePhotoPicker();
         } else {
             performWhenNoStoriesBeingSaved(new DoWhenNoStoriesBeingSavedCallback() {
-                @Override public void doWhenNoStoriesBeingSaved() {
+                @Override
+                public void doWhenNoStoriesBeingSaved() {
                     savePostAndOptionallyFinish(true, false);
                 }
             });
@@ -1575,7 +1578,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     // Menu actions
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         int itemId = item.getItemId();
 
         if (itemId == android.R.id.home) {
@@ -2038,11 +2041,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
 
-    @Override public void onImagePreviewRequested(String mediaUrl) {
+    @Override
+    public void onImagePreviewRequested(String mediaUrl) {
         MediaPreviewActivity.showPreview(this, mSite, mediaUrl);
     }
 
-    @Override public void onMediaEditorRequested(String mediaUrl) {
+    @Override
+    public void onMediaEditorRequested(String mediaUrl) {
         String imageUrl = UrlUtils.removeQuery(StringUtils.notNullStr(mediaUrl));
 
         // We're using a separate cache in WPAndroid and RN's Gutenberg editor so we need to reload the image
@@ -2171,7 +2176,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private void checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet() {
         performWhenNoStoriesBeingSaved(new DoWhenNoStoriesBeingSavedCallback() {
-            @Override public void doWhenNoStoriesBeingSaved() {
+            @Override
+            public void doWhenNoStoriesBeingSaved() {
                 showPrepublishingNudgeBottomSheet();
             }
         });
@@ -2184,7 +2190,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mShowPrepublishingBottomSheetHandler.postDelayed(mShowPrepublishingBottomSheetRunnable, delayMs);
     }
 
-    @Override public void onSubmitButtonClicked(boolean publishPost) {
+    @Override
+    public void onSubmitButtonClicked(boolean publishPost) {
         uploadPost(publishPost);
         if (publishPost) {
             AppRatingDialog.INSTANCE
@@ -2353,6 +2360,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
@@ -2407,8 +2415,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
         }
 
+        @NonNull
         @Override
-        public @NonNull Object instantiateItem(@NonNull ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
             switch (position) {
                 case PAGE_CONTENT:
@@ -2777,7 +2786,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // In case of Remote Preview we need to change state even if (resultCode != Activity.RESULT_OK)
@@ -3169,13 +3178,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-    @Override public void onAddLibraryFileClicked(boolean allowMultipleSelection) {
+    @Override
+    public void onAddLibraryFileClicked(boolean allowMultipleSelection) {
         mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
         mMediaPickerLauncher
                 .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_FILE_PICKER);
     }
 
-    @Override public void onAddLibraryAudioFileClicked(boolean allowMultipleSelection) {
+    @Override
+    public void onAddLibraryAudioFileClicked(boolean allowMultipleSelection) {
         mMediaPickerLauncher
                 .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_AUDIO_FILE_PICKER);
     }
@@ -3233,11 +3244,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mMediaPickerLauncher.showFilePicker(this, allowMultipleSelection, getSite());
     }
 
-    @Override public void onAddAudioFileClicked(boolean allowMultipleSelection) {
+    @Override
+    public void onAddAudioFileClicked(boolean allowMultipleSelection) {
         mMediaPickerLauncher.showAudioFilePicker(this, allowMultipleSelection, getSite());
     }
 
-    @Override public void onPerformFetch(
+    @Override
+    public void onPerformFetch(
             String path,
             boolean enableCaching,
             Consumer<String> onResult,
@@ -3248,7 +3261,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-    @Override public void onPerformPost(
+    @Override
+    public void onPerformPost(
             String path,
             Map<String, Object> body,
             Consumer<String> onResult,
@@ -3513,11 +3527,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mPostEditorAnalyticsSession.applyTemplate(template);
     }
 
-    @Override public void showUserSuggestions(Consumer<String> onResult) {
+    @Override
+    public void showUserSuggestions(Consumer<String> onResult) {
         showSuggestions(SuggestionType.Users, onResult);
     }
 
-    @Override public void showXpostSuggestions(Consumer<String> onResult) {
+    @Override
+    public void showXpostSuggestions(Consumer<String> onResult) {
         showSuggestions(SuggestionType.XPosts, onResult);
     }
 
@@ -3526,11 +3542,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ActivityLauncher.viewSuggestionsForResult(this, mSite, type);
     }
 
-    @Override public void onGutenbergEditorSetFocalPointPickerTooltipShown(boolean tooltipShown) {
+    @Override
+    public void onGutenbergEditorSetFocalPointPickerTooltipShown(boolean tooltipShown) {
         AppPrefs.setGutenbergFocalPointPickerTooltipShown(tooltipShown);
     }
 
-    @Override public boolean onGutenbergEditorRequestFocalPointPickerTooltipShown() {
+    @Override
+    public boolean onGutenbergEditorRequestFocalPointPickerTooltipShown() {
         return AppPrefs.getGutenbergFocalPointPickerTooltipShown();
     }
 
@@ -3561,7 +3579,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mEditorTracker.trackEditorEvent(event, mEditorFragment.getEditorName(), properties);
     }
 
-    @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
+    @Override
+    public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
         // we need to save the latest before editing
         updateAndSavePostAsync(updatePostResult -> {
             boolean noSlidesLoaded = mStoriesEventListener.onRequestMediaFilesEditorLoad(
@@ -3579,19 +3598,23 @@ public class EditPostActivity extends LocaleAwareActivity implements
         });
     }
 
-    @Override public void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles) {
+    @Override
+    public void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles) {
         mStoriesEventListener.onRetryUploadForMediaCollection(this, mediaFiles, mEditorMediaUploadListener);
     }
 
-    @Override public void onCancelUploadForMediaCollection(ArrayList<Object> mediaFiles) {
+    @Override
+    public void onCancelUploadForMediaCollection(ArrayList<Object> mediaFiles) {
         mStoriesEventListener.onCancelUploadForMediaCollection(mediaFiles);
     }
 
-    @Override public void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles) {
+    @Override
+    public void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles) {
         mStoriesEventListener.onCancelSaveForMediaCollection(mediaFiles);
     }
 
-    @Override public boolean showPreview() {
+    @Override
+    public boolean showPreview() {
         PreviewLogicOperationResult opResult = mRemotePreviewLogicHelper.runPostPreviewLogic(
                 this,
                 mSite,
@@ -3608,34 +3631,41 @@ public class EditPostActivity extends LocaleAwareActivity implements
         return true;
     }
 
-    @Override public Map<String, Double> onRequestBlockTypeImpressions() {
+    @Override
+    public Map<String, Double> onRequestBlockTypeImpressions() {
         return AppPrefs.getGutenbergBlockTypeImpressions();
     }
 
-    @Override public void onSetBlockTypeImpressions(Map<String, Double> impressions) {
+    @Override
+    public void onSetBlockTypeImpressions(Map<String, Double> impressions) {
         AppPrefs.setGutenbergBlockTypeImpressions(impressions);
     }
 
-    @Override public void onContactCustomerSupport() {
+    @Override
+    public void onContactCustomerSupport() {
         EditPostCustomerSupportHelper.INSTANCE.onContactCustomerSupport(mZendeskHelper, this, getSite());
     }
 
-    @Override public void onGotoCustomerSupportOptions() {
+    @Override
+    public void onGotoCustomerSupportOptions() {
         EditPostCustomerSupportHelper.INSTANCE.onGotoCustomerSupportOptions(this, getSite());
     }
 
-    @Override public void onSendEventToHost(String eventName, Map<String, Object> properties) {
+    @Override
+    public void onSendEventToHost(String eventName, Map<String, Object> properties) {
         AnalyticsUtils.trackBlockEditorEvent(eventName, mSite, properties);
     }
 
-    @Override public void onToggleUndo(boolean isDisabled) {
+    @Override
+    public void onToggleUndo(boolean isDisabled) {
         if (mMenuHasUndo == !isDisabled) return;
 
         mMenuHasUndo = !isDisabled;
         new Handler(Looper.getMainLooper()).post(this::invalidateOptionsMenu);
     }
 
-    @Override public void onToggleRedo(boolean isDisabled) {
+    @Override
+    public void onToggleRedo(boolean isDisabled) {
         if (mMenuHasRedo == !isDisabled) return;
 
         mMenuHasRedo = !isDisabled;
@@ -3863,7 +3893,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
+    public boolean onMenuOpened(int featureId, @NonNull Menu menu) {
         // This is a workaround for bag discovered on Chromebooks, where Enter key will not work in the toolbar menu
         // Editor fragments are messing with window focus, which causes keyboard events to get ignored
 
@@ -3886,7 +3916,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mEditorFragment.appendMediaFiles((Map<String, MediaFile>) mediaFiles);
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public PostImmutableModel getImmutablePost() {
         return Objects.requireNonNull(mEditPostRepository.getPost());
     }
@@ -3896,7 +3927,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         updateAndSavePostAsync(listener);
     }
 
-    @Override public void advertiseImageOptimization(@NonNull Function0<Unit> listener) {
+    @Override
+    public void advertiseImageOptimization(@NonNull Function0<Unit> listener) {
         WPMediaUtils.advertiseImageOptimization(this, listener::invoke);
     }
 
@@ -3905,7 +3937,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // no op - we're not doing any special handling on MediaModels in EditPostActivity
     }
 
-    @Override public void showVideoDurationLimitWarning(@NonNull String fileName) {
+    @Override
+    public void showVideoDurationLimitWarning(@NonNull String fileName) {
         ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, ToastUtils.Duration.LONG);
     }
 
