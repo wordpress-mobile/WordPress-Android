@@ -183,7 +183,6 @@ class UploadStarter @Inject constructor(
             AppLog.e(T.MEDIA, e)
             // Do any needed actions while we are still holding the mutex lock, then release it and rethrow the
             // exception so it can be handled upstream
-            mutex.unlock()
             throw e
         }
     }
