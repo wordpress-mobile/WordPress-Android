@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.ActivityLauncherWrapper;
@@ -49,7 +50,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     private JetpackFeatureFullScreenOverlayViewModel mJetpackFullScreenViewModel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -142,7 +143,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // show the post if user is returning from successful login
         if (requestCode == RequestCodes.DO_LOGIN && resultCode == RESULT_OK) {
