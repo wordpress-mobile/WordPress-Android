@@ -11,7 +11,6 @@ import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.fluxc.BuildConfig;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
@@ -104,8 +103,8 @@ public class PostStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class FetchPostListResponsePayload extends Payload<PostError> {
-        @NotNull public PostListDescriptor listDescriptor;
-        @NotNull public List<PostListItem> postListItems;
+        @NonNull public PostListDescriptor listDescriptor;
+        @NonNull public List<PostListItem> postListItems;
         public boolean loadedMore;
         public boolean canLoadMore;
 

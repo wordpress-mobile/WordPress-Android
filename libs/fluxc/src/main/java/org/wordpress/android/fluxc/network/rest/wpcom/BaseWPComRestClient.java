@@ -2,11 +2,12 @@ package org.wordpress.android.fluxc.network.rest.wpcom;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.network.AcceptHeaderStrategy;
@@ -150,11 +151,11 @@ public abstract class BaseWPComRestClient {
     }
 
 
-    private @NotNull String getLocaleParamName(@NotNull String url) {
+    private @NonNull String getLocaleParamName(@NonNull String url) {
         return url.contains(WPCOM_V2_PREFIX) ? LOCALE_PARAM_NAME_FOR_V2 : LOCALE_PARAM_NAME_FOR_V1;
     }
 
-    protected @Nullable HttpUrl getHttpUrlWithLocale(@NotNull String url) {
+    protected @Nullable HttpUrl getHttpUrlWithLocale(@NonNull String url) {
         HttpUrl httpUrl = HttpUrl.parse(url);
 
         if (null != httpUrl) {
