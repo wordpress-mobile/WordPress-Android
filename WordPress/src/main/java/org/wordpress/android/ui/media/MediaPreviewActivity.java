@@ -220,7 +220,7 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();
             return true;
@@ -235,7 +235,7 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putInt(MediaPreviewFragment.ARG_MEDIA_ID, mMediaId);
@@ -282,16 +282,16 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
             if (!isFinishing() && mToolbar.getVisibility() == View.VISIBLE) {
                 AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_out_and_up, new Animation.AnimationListener() {
                     @Override
-                    public void onAnimationStart(Animation animation) {
+                    public void onAnimationStart(@NonNull Animation animation) {
                     }
 
                     @Override
-                    public void onAnimationEnd(Animation animation) {
+                    public void onAnimationEnd(@NonNull Animation animation) {
                         mToolbar.setVisibility(View.GONE);
                     }
 
                     @Override
-                    public void onAnimationRepeat(Animation animation) {
+                    public void onAnimationRepeat(@NonNull Animation animation) {
                     }
                 });
             }
@@ -317,16 +317,16 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
             if (mToolbar.getVisibility() != View.VISIBLE) {
                 AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_in_and_down, new Animation.AnimationListener() {
                     @Override
-                    public void onAnimationStart(Animation animation) {
+                    public void onAnimationStart(@NonNull Animation animation) {
                         mToolbar.setVisibility(View.VISIBLE);
                     }
 
                     @Override
-                    public void onAnimationEnd(Animation animation) {
+                    public void onAnimationEnd(@NonNull Animation animation) {
                     }
 
                     @Override
-                    public void onAnimationRepeat(Animation animation) {
+                    public void onAnimationRepeat(@NonNull Animation animation) {
                     }
                 });
             }
@@ -392,6 +392,7 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
             super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             MediaPreviewFragment fragment;
@@ -429,7 +430,7 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
 
         @NonNull
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
             Object item = super.instantiateItem(container, position);
             if (item instanceof Fragment) {
                 mFragmentMap.put(position, (Fragment) item);
@@ -438,13 +439,13 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             mFragmentMap.remove(position);
             super.destroyItem(container, position, object);
         }
 
         @Override
-        public void restoreState(Parcelable state, ClassLoader loader) {
+        public void restoreState(@Nullable Parcelable state, @Nullable ClassLoader loader) {
             // work around https://code.google.com/p/android/issues/detail?id=42601
             try {
                 super.restoreState(state, loader);
