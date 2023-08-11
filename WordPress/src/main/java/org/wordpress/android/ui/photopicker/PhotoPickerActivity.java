@@ -146,7 +146,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(ARG_BROWSER_TYPE, mBrowserType);
         outState.putInt(MediaPickerConstants.LOCAL_POST_ID, mLocalPostId);
@@ -159,13 +159,13 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mMediaCapturePath = savedInstanceState.getString(KEY_MEDIA_CAPTURE_PATH);
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             setResult(RESULT_CANCELED);
             finish();
@@ -175,7 +175,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != Activity.RESULT_OK) {
