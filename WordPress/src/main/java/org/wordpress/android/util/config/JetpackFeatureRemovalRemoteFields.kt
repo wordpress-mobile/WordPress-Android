@@ -76,7 +76,7 @@ class PhaseSelfHostedPostLinkConfig @Inject constructor(appConfig: AppConfig) :
     )
 
 const val PHASE_FOUR_OVERLAY_FREQUENCY_IN_DAYS_REMOTE_FIELD = "phase_four_overlay_frequency_in_days"
-const val PHASE_FOUR_OVERLAY_FREQUENCY_IN_DAYS_DEFAULT_VALUE = "4"
+const val PHASE_FOUR_OVERLAY_FREQUENCY_IN_DAYS_DEFAULT_VALUE = "0"
 
 @RemoteFieldDefaultGenerater(
     remoteField = PHASE_FOUR_OVERLAY_FREQUENCY_IN_DAYS_REMOTE_FIELD,
