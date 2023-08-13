@@ -18,11 +18,25 @@ import androidx.webkit.WebViewAssetLoader.DEFAULT_DOMAIN
 import androidx.webkit.WebViewAssetLoader.ResourcesPathHandler
 import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.toMap
-import org.wordpress.android.support.SupportWebViewActivity.OpenChatWidget.Companion.CHAT_HISTORY
 import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.util.extensions.getSerializableCompat
 
+@AndroidEntryPoint
 class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.SupportWebViewClientListener {
+    private val originFromExtras by lazy {
+        intent.extras?.getSerializableCompat<HelpActivity.Origin>(ORIGIN_KEY) ?: HelpActivity.Origin.UNKNOWN
+    }
+    private val extraTagsFromExtras by lazy {
+        intent.extras?.getStringArrayList(EXTRA_TAGS_KEY)
+    }
+    private val selectedSiteFromExtras by lazy {
+        intent.extras?.getSerializableCompat<SiteModel>(WordPress.SITE)
+    }
+
     lateinit var progress: ViewGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,13 +107,15 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         }
     }
 
-
-    class OpenChatWidget : ActivityResultContract<BotOptions, ChatCompletionEvent?>() {
-        override fun createIntent(context: Context, input: BotOptions) =
+    class OpenChatWidget : ActivityResultContract<OpenChatWidget.Args, ChatCompletionEvent?>() {
+        override fun createIntent(context: Context, input: Args) =
             Intent(context, SupportWebViewActivity::class.java).apply {
                 putExtra(USE_GLOBAL_WPCOM_USER, true)
                 putExtra(AUTHENTICATION_URL, WPCOM_LOGIN_URL)
-                putExtra(URL_TO_LOAD, buildURI(input))
+                putExtra(URL_TO_LOAD, buildURI(input.botOptions))
+                putExtra(ORIGIN_KEY, input.origin)
+                input.selectedSite?.let { site -> putExtra(WordPress.SITE, site) }
+                input.extraSupportTags?.let { tags -> putStringArrayListExtra(EXTRA_TAGS_KEY, tags) }
             }
 
         override fun parseResult(resultCode: Int, intent: Intent?): ChatCompletionEvent? {
@@ -130,6 +146,24 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
             return builder.build().toString()
         }
 
+        data class Args(
+            val origin: HelpActivity.Origin,
+            val selectedSite: SiteModel?,
+            val extraSupportTags: ArrayList<String>?,
+            val botOptions: BotOptions
+        )
+
+        data class BotOptions(
+            val id: String,
+            val inputPlaceholder: String,
+            val firstMessage: String,
+            val getSupport: String,
+            val suggestions: String,
+            val questionOne: String,
+            val questionTwo: String,
+            val questionThree: String
+        )
+
         companion object {
             const val CHAT_HISTORY = "CHAT_HISTORY"
         }
@@ -137,14 +171,8 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
 
     data class ChatCompletionEvent(val chatHistory: String)
 
-    data class BotOptions(
-        val id: String,
-        val inputPlaceholder: String,
-        val firstMessage: String,
-        val getSupport: String,
-        val suggestions: String,
-        val questionOne: String,
-        val questionTwo: String,
-        val questionThree: String
-    )
+    companion object {
+        private const val ORIGIN_KEY = "ORIGIN_KEY"
+        private const val EXTRA_TAGS_KEY = "EXTRA_TAGS_KEY"
+    }
 }
