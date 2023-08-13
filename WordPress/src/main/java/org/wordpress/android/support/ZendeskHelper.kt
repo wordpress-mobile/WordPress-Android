@@ -35,7 +35,9 @@ import zendesk.core.AnonymousIdentity
 import zendesk.core.Identity
 import zendesk.core.PushRegistrationProvider
 import zendesk.core.Zendesk
+import zendesk.support.CreateRequest
 import zendesk.support.CustomField
+import zendesk.support.Request
 import zendesk.support.Support
 import zendesk.support.request.RequestActivity
 import zendesk.support.requestlist.RequestListActivity
@@ -139,6 +141,44 @@ class ZendeskHelper(
                     )
                 )
         }
+    }
+
+    @Suppress("LongParameterList")
+    fun createRequest(
+        context: Context,
+        origin: Origin?,
+        selectedSite: SiteModel?,
+        extraTags: List<String>?,
+        requestDescription: String,
+        callback: CreateRequestCallback
+    ) {
+        require(isZendeskEnabled) {
+            zendeskNeedsToBeEnabledError
+            callback.onError()
+        }
+        val request = CreateRequest().apply {
+            subject = context.getString(R.string.support_ticket_subject)
+            description = requestDescription
+            customFields = buildZendeskCustomFields(context, siteStore.sites, selectedSite, buildConfigWrapper)
+            ticketFormId = TicketFieldIds.form
+            tags = buildZendeskTags(siteStore.sites, selectedSite, origin ?: Origin.UNKNOWN, extraTags)
+                .plus("DocsBot")
+        }
+
+        Support.INSTANCE.provider()?.requestProvider()?.createRequest(request, object : ZendeskCallback<Request>() {
+            override fun onSuccess(result: Request?) {
+                callback.onSuccess()
+            }
+
+            override fun onError(error: ErrorResponse?) {
+                callback.onError()
+            }
+        })
+    }
+
+    abstract class CreateRequestCallback {
+        abstract fun onSuccess()
+        abstract fun onError()
     }
 
     /**
