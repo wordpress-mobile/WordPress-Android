@@ -144,7 +144,6 @@ class ZendeskHelper(
     }
 
     fun parseChatHistory(chatHistory: String): String {
-        // TODO: parse the chat history
         return chatHistory
     }
 
