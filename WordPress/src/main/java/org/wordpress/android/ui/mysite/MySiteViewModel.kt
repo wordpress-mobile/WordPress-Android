@@ -1509,7 +1509,7 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let { site ->
             cardsTracker.trackPostItemClicked(params.postCardType)
             when (params.postCardType) {
-                PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> _onNavigation.value =
+                PostCardType.CREATE_FIRST -> _onNavigation.value =
                     Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
 
                 PostCardType.DRAFT -> _onNavigation.value =
@@ -1529,9 +1529,7 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let { site ->
             cardsTracker.trackPostCardFooterLinkClicked(postCardType)
             _onNavigation.value = when (postCardType) {
-                PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT ->
-                    Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
-
+                PostCardType.CREATE_FIRST -> Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
                 PostCardType.DRAFT -> Event(SiteNavigationAction.OpenDraftsPosts(site))
                 PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
             }
