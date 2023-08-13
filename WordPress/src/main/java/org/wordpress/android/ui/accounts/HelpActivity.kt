@@ -92,12 +92,6 @@ class HelpActivity : LocaleAwareActivity() {
         intent.extras?.get(WordPress.SITE) as SiteModel?
     }
 
-    private val openChatWidget = registerForActivityResult(SupportWebViewActivity.OpenChatWidget()) {
-        it?.let {
-            viewModel.sendChatHistory(it)
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(HelpActivityBinding.inflate(layoutInflater)) {
@@ -175,7 +169,7 @@ class HelpActivity : LocaleAwareActivity() {
     }
 
     private fun launchSupportWidget() {
-        val botOptions = SupportWebViewActivity.OpenChatWidget.BotOptions(
+        val botOptions = SupportWebViewActivity.BotOptions(
             id = "TqTdebbGjJeUjrmBIFjh/YbAMwiheXLs2Ue5j7elH", // BuildConfig.DOCSBOT_ID,
             inputPlaceholder = getString(R.string.contact_support_input_placeholder),
             firstMessage = getString(R.string.contact_support_first_message),
@@ -185,14 +179,14 @@ class HelpActivity : LocaleAwareActivity() {
             questionTwo = getString(R.string.contact_support_question_two),
             questionThree = getString(R.string.contact_support_question_three)
         )
-        openChatWidget.launch(
-            SupportWebViewActivity.OpenChatWidget.Args(
-                originFromExtras,
-                selectedSiteFromExtras,
-                extraTagsFromExtras,
-                botOptions
-            )
+        val intent = SupportWebViewActivity.createIntent(
+            this,
+            originFromExtras,
+            selectedSiteFromExtras,
+            extraTagsFromExtras,
+            botOptions
         )
+        startActivity(intent)
     }
 
     private fun createNewZendeskTicket() {

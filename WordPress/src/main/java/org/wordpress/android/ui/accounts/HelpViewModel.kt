@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +12,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.support.SupportWebViewActivity.ChatCompletionEvent
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -50,10 +48,5 @@ class HelpViewModel @Inject constructor(
         if (!accountStore.hasAccessToken() && siteStore.hasSiteAccessedViaXMLRPC()) {
             dispatcher.dispatch(SiteActionBuilder.newRemoveAllSitesAction())
         }
-    }
-
-    fun sendChatHistory(event: ChatCompletionEvent) {
-        // Submit to Zendesk
-        Log.d("Chat History: ", event.chatHistory)
     }
 }
