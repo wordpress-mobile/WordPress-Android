@@ -12,7 +12,7 @@ class SupportWebViewClient(
     private val assetLoader: WebViewAssetLoader
 ) : ErrorManagedWebViewClient(listener) {
     interface SupportWebViewClientListener : ErrorManagedWebViewClientListener {
-        fun onChatSessionClosed(chatHistory: String)
+        fun onSupportTapped(chatHistory: String)
     }
 
     override fun shouldInterceptRequest(

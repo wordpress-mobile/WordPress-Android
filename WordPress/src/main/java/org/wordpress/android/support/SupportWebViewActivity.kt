@@ -43,7 +43,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         return true
     }
 
-    override fun onChatSessionClosed(chatHistory: String) {
+    override fun onSupportTapped(chatHistory: String) {
         intent.putExtra(CHAT_HISTORY, chatHistory)
         setResult(RESULT_OK, intent)
         finish()
@@ -57,7 +57,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         mWebView.webViewClient = SupportWebViewClient(this, assetLoader)
 
         // Setup debugging; See https://developers.google.com/web/tools/chrome-devtools/remote-debugging/webviews
-        if ( 0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
+        if (0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
             WebView.setWebContentsDebuggingEnabled(true)
         }
 
@@ -76,7 +76,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
             allowedOriginRules
         ) { message ->
             Log.d("Chat history", message)
-            onChatSessionClosed(message)
+            onSupportTapped(message)
         }
     }
 
