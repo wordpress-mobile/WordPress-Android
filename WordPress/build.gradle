@@ -169,6 +169,7 @@ android {
         buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
         buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
         buildConfigField "boolean", "BLAZE_MANAGE_CAMPAIGNS", "false"
+        buildConfigField "boolean", "DASHBOARD_PERSONALIZATION", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
