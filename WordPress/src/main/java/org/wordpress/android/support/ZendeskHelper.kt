@@ -143,6 +143,11 @@ class ZendeskHelper(
         }
     }
 
+    fun parseChatHistory(chatHistory: String): String {
+        // TODO: parse the chat history
+        return chatHistory
+    }
+
     @Suppress("LongParameterList")
     fun createRequest(
         context: Context,
@@ -301,7 +306,7 @@ class ZendeskHelper(
      * Otherwise, it'll show a dialog for the user to enter an email and name through a helper function which then
      * will be used to set the identity and call the callback. It'll also try to enable the push notifications.
      */
-    private fun requireIdentity(
+    fun requireIdentity(
         context: Context,
         selectedSite: SiteModel?,
         onIdentitySet: () -> Unit

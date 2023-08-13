@@ -16,7 +16,9 @@ import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewAssetLoader.AssetsPathHandler
 import androidx.webkit.WebViewAssetLoader.DEFAULT_DOMAIN
 import androidx.webkit.WebViewAssetLoader.ResourcesPathHandler
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -24,9 +26,14 @@ import org.wordpress.android.fluxc.network.utils.toMap
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.widgets.WPSnackbar
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.SupportWebViewClientListener {
+    @Inject
+    lateinit var zendeskHelper: ZendeskHelper
+
     private val originFromExtras by lazy {
         intent.extras?.getSerializableCompat<HelpActivity.Origin>(ORIGIN_KEY) ?: HelpActivity.Origin.UNKNOWN
     }
@@ -63,9 +70,14 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
     }
 
     override fun onSupportTapped(chatHistory: String) {
-        intent.putExtra(CHAT_HISTORY, chatHistory)
-        setResult(RESULT_OK, intent)
-        finish()
+        zendeskHelper.requireIdentity(this, selectedSiteFromExtras) {
+            progress.isVisible = true
+            val description = zendeskHelper.parseChatHistory(chatHistory)
+            createNewZendeskRequest(description) {
+                progress.isVisible = false
+                showTicketMessage()
+            }
+        }
     }
 
     private fun setupLoadingIndicator() {
@@ -74,6 +86,45 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
             setText(R.string.contact_support_bot_ticket_loading)
             isVisible = true
         }
+    }
+
+    private fun createNewZendeskRequest(description: String, complete: () -> Unit) {
+        val callback = object : ZendeskHelper.CreateRequestCallback() {
+            override fun onSuccess() {
+                complete()
+            }
+
+            override fun onError() {
+                complete()
+            }
+        }
+
+        zendeskHelper.createRequest(
+            this,
+            originFromExtras,
+            selectedSiteFromExtras,
+            extraTagsFromExtras,
+            description,
+            callback
+        )
+    }
+
+    private fun showTicketMessage() {
+        WPSnackbar.make(
+            findViewById(R.id.webview_wrapper),
+            R.string.contact_support_bot_ticket_message,
+            Snackbar.LENGTH_LONG
+        ).apply {
+            setAction(R.string.contact_support_bot_ticket_button) {
+                showZendeskTickets()
+                finish()
+            }
+            show()
+        }
+    }
+
+    private fun showZendeskTickets() {
+        zendeskHelper.showAllTickets(this, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
     }
 
     private fun setupWebView() {
