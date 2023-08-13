@@ -1,7 +1,6 @@
 package org.wordpress.android.ui
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -35,12 +34,12 @@ class WPLaunchActivity : LocaleAwareActivity() {
             .setTitle(R.string.missing_splits_dialog_title)
             .setMessage(R.string.missing_splits_dialog_message)
             .setNegativeButton(R.string.missing_splits_dialog_button, null)
-            .setOnDismissListener { _: DialogInterface? -> finish() }
+            .setOnDismissListener { finish() }
             .show()
     }
 
     private fun launchWPMainActivity() {
-        if (!WordPress.isWordPressDBInitialized()) {
+        if (!WordPress.isWpDBInitialized) {
             ToastUtils.showToast(this, R.string.fatal_db_error, ToastUtils.Duration.LONG)
             finish()
             return

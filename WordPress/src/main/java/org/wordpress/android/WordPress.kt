@@ -41,7 +41,8 @@ abstract class WordPress : Application() {
         @JvmField
         var imageLoader: FluxCImageLoader? = null
 
-        fun isWordPressDBInitialized() = ::wpDB.isInitialized
+        val isWpDBInitialized
+            get() = ::wpDB.isInitialized
 
         @JvmStatic
         fun getBitmapCache() = AppInitializer.getBitmapCache()
