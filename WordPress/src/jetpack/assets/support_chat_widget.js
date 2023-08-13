@@ -12,7 +12,6 @@
             supportCallback: function(event, history) {
                 event.preventDefault() // Optionally prevent default behavior opening the url.
                 console.log(history) // Safely access the chat history.
-                DocsBotAI.close() // Close the widget.
                 sendAndroidMessage(history)
             },
             options: {
