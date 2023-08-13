@@ -72,10 +72,17 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         zendeskHelper.requireIdentity(this, selectedSiteFromExtras) {
             progress.isVisible = true
             val description = zendeskHelper.parseChatHistory(chatHistory)
-            createNewZendeskRequest(description) {
-                progress.isVisible = false
-                showTicketMessage()
-            }
+            createNewZendeskRequest(description, object : ZendeskHelper.CreateRequestCallback() {
+                override fun onSuccess() {
+                    progress.isVisible = false
+                    showTicketMessage()
+                }
+
+                override fun onError() {
+                    progress.isVisible = false
+                    showTicketErrorMessage()
+                }
+            })
         }
     }
 
@@ -87,17 +94,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         }
     }
 
-    private fun createNewZendeskRequest(description: String, complete: () -> Unit) {
-        val callback = object : ZendeskHelper.CreateRequestCallback() {
-            override fun onSuccess() {
-                complete()
-            }
-
-            override fun onError() {
-                complete()
-            }
-        }
-
+    private fun createNewZendeskRequest(description: String, callback: ZendeskHelper.CreateRequestCallback) {
         zendeskHelper.createRequest(
             this,
             originFromExtras,
@@ -120,6 +117,14 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
             }
             show()
         }
+    }
+
+    private fun showTicketErrorMessage() {
+        WPSnackbar.make(
+            findViewById(R.id.webview_wrapper),
+            R.string.contact_support_bot_ticket_error,
+            Snackbar.LENGTH_LONG
+        ).show()
     }
 
     private fun showZendeskTickets() {
