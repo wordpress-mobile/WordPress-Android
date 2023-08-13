@@ -46,7 +46,6 @@ class CardsTracker @Inject constructor(
     }
 
     enum class PostSubtype(val label: String) {
-        CREATE_FIRST("create_first"),
         DRAFT("draft"),
         SCHEDULED("scheduled")
     }
@@ -153,7 +152,6 @@ fun DashboardCardType.toTypeValue(): Type {
         DashboardCardType.TODAYS_STATS_CARD_ERROR -> Type.ERROR
         DashboardCardType.TODAYS_STATS_CARD -> Type.STATS
         DashboardCardType.POST_CARD_ERROR -> Type.ERROR
-        DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS -> Type.POST
         DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST
         DashboardCardType.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
         DashboardCardType.PROMOTE_WITH_BLAZE_CARD -> Type.PROMOTE_WITH_BLAZE
@@ -169,7 +167,6 @@ fun DashboardCardType.toTypeValue(): Type {
 
 fun PostCardType.toSubtypeValue(): PostSubtype {
     return when (this) {
-        PostCardType.CREATE_FIRST -> PostSubtype.CREATE_FIRST
         PostCardType.DRAFT -> PostSubtype.DRAFT
         PostCardType.SCHEDULED -> PostSubtype.SCHEDULED
     }
