@@ -45,9 +45,7 @@ class PostCardBuilder @Inject constructor(
             val posts = params.posts
             posts?.hasPublished?.takeIf { !posts.hasDraftsOrScheduledPosts() }
                 ?.let { hasPublished ->
-                    if (hasPublished) {
-                        add(createNextPostCard(params.onPostItemClick, params.onFooterLinkClick))
-                    } else {
+                    if (!hasPublished) {
                         add(createFirstPostCard(params.onPostItemClick, params.onFooterLinkClick))
                     }
                 }
@@ -73,24 +71,6 @@ class PostCardBuilder @Inject constructor(
         ),
         onClick = ListItemInteraction.create(
             PostItemClickParams(postCardType = PostCardType.CREATE_FIRST, postId = NOT_SET),
-            onPostItemClick
-        )
-    )
-
-    private fun createNextPostCard(
-        onPostItemClick: (params: PostItemClickParams) -> Unit,
-        onFooterLinkClick: (postCardType: PostCardType) -> Unit
-    ) = PostCardWithoutPostItems(
-        postCardType = PostCardType.CREATE_NEXT,
-        title = UiStringRes(R.string.my_site_create_next_post_title),
-        excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
-        imageRes = R.drawable.img_write_212dp,
-        footerLink = FooterLink(
-            label = UiStringRes(R.string.my_site_post_card_link_create_post),
-            onClick = onFooterLinkClick
-        ),
-        onClick = ListItemInteraction.create(
-            PostItemClickParams(postCardType = PostCardType.CREATE_NEXT, postId = NOT_SET),
             onPostItemClick
         )
     )
