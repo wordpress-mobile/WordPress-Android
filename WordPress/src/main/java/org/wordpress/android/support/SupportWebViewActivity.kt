@@ -11,16 +11,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContract
+import androidx.core.view.isVisible
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewAssetLoader.AssetsPathHandler
 import androidx.webkit.WebViewAssetLoader.DEFAULT_DOMAIN
 import androidx.webkit.WebViewAssetLoader.ResourcesPathHandler
+import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.utils.toMap
 import org.wordpress.android.support.SupportWebViewActivity.OpenChatWidget.Companion.CHAT_HISTORY
 import org.wordpress.android.ui.WPWebViewActivity
 
 class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.SupportWebViewClientListener {
+    lateinit var progress: ViewGroup
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toggleNavbarVisibility(false)
@@ -34,6 +38,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         supportActionBar?.title = getString(R.string.help)
         supportActionBar?.subtitle = ""
 
+        setupLoadingIndicator()
         setupWebView()
         setupJsInterfaceForWebView()
     }
@@ -47,6 +52,14 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         intent.putExtra(CHAT_HISTORY, chatHistory)
         setResult(RESULT_OK, intent)
         finish()
+    }
+
+    private fun setupLoadingIndicator() {
+        progress = findViewById(R.id.progress_layout)
+        progress.findViewById<MaterialTextView>(R.id.progress_text).apply {
+            setText(R.string.contact_support_bot_ticket_loading)
+            isVisible = true
+        }
     }
 
     private fun setupWebView() {

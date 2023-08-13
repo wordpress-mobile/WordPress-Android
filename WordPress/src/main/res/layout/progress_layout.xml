@@ -13,7 +13,7 @@
         android:gravity="center"
         android:textAppearance="?attr/textAppearanceHeadline6"
         android:visibility="gone"
-        tools:text="We're creating your new site!" />
+        tools:text="Creating support ticket…" />
 
     <ProgressBar
         android:layout_width="wrap_content"
