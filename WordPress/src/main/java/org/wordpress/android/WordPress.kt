@@ -43,7 +43,6 @@ abstract class WordPress : Application() {
 
         val isWpDBInitialized
             get() = ::wpDB.isInitialized
-
         @JvmStatic
         fun getBitmapCache() = AppInitializer.getBitmapCache()
 
