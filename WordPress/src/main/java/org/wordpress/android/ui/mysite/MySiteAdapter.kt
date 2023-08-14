@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import android.os.Bundle
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import org.wordpress.android.fluxc.store.AccountStore
@@ -12,8 +13,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackSwitchMenu
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
@@ -47,6 +48,8 @@ class MySiteAdapter(
     val htmlCompatWrapper: HtmlCompatWrapper,
     val learnMoreClicked: () -> Unit
 ) : ListAdapter<MySiteCardAndItem, MySiteCardAndItemViewHolder<*>>(MySiteAdapterDiffCallback) {
+    private var nestedScrollStates = Bundle()
+
     @Suppress("ComplexMethod")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MySiteCardAndItemViewHolder<*> {
         return when (viewType) {
@@ -105,6 +108,14 @@ class MySiteAdapter(
     }
 
     override fun getItemViewType(position: Int) = getItem(position).type.ordinal
+
+    fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        nestedScrollStates = savedInstanceState
+    }
+
+    fun onSaveInstanceState(): Bundle {
+        return nestedScrollStates
+    }
 
     override fun getItemCount(): Int {
         return currentList.size
