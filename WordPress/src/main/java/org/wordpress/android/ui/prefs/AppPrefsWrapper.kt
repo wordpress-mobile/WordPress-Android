@@ -156,9 +156,6 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun removeAppWidgetHasData(appWidgetId: Int) = AppPrefs.removeStatsWidgetHasData(appWidgetId)
 
-    fun isMainFabTooltipDisabled() = AppPrefs.isMainFabTooltipDisabled()
-    fun setMainFabTooltipDisabled(disable: Boolean) = AppPrefs.setMainFabTooltipDisabled(disable)
-
     fun getLastReaderKnownAccessTokenStatus() = AppPrefs.getLastReaderKnownAccessTokenStatus()
     fun setLastReaderKnownAccessTokenStatus(lastKnownAccessTokenStatus: Boolean) =
         AppPrefs.setLastReaderKnownAccessTokenStatus(lastKnownAccessTokenStatus)
@@ -176,9 +173,6 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun shouldShowBookmarksSavedLocallyDialog(): Boolean = AppPrefs.shouldShowBookmarksSavedLocallyDialog()
     fun setBookmarksSavedLocallyDialogShown() = AppPrefs.setBookmarksSavedLocallyDialogShown()
-
-    fun isPostListFabTooltipDisabled() = AppPrefs.isPostListFabTooltipDisabled()
-    fun setPostListFabTooltipDisabled(disable: Boolean) = AppPrefs.setPostListFabTooltipDisabled(disable)
 
     fun hasManualFeatureConfig(featureKey: String): Boolean {
         return AppPrefs.hasManualFeatureConfig(featureKey)
