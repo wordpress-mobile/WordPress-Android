@@ -39,17 +39,12 @@
             },
         }).then(() => {
             // Safely do stuff here after the widget is loaded.
-            let timerId = setInterval(() => {
-                openDocsBot(); // wait for init
-            }, 200);
-
             setTimeout(() => {
-                clearInterval(timerId)
-
-                hideTopCloseButton(); // hide after init
-                hideTopHeader();
                 resetConversation();
-            }, 300);
+
+                hideTopCloseButton();
+                hideTopHeader();
+            }, 200)
         });
     }
 
@@ -71,17 +66,6 @@
                 return qd
             }, {}) :
             {}
-    }
-
-    function openDocsBot() {
-        const widget = document.querySelector("#docsbotai-root").shadowRoot.querySelector("a.floating-button");
-        if (widget && widget !== null && typeof widget !== 'undefined') {
-            widget.click();
-        }
-
-        if ( 'function' === typeof window.DocsBotAI ) {
-            DocsBotAI.open();
-        }
     }
 
     function hideTopCloseButton() {
