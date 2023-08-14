@@ -661,7 +661,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                         data.getBooleanExtra(LoginEpilogueActivity.KEY_SITE_CREATED_FROM_LOGIN_EPILOGUE, false)
                 viewModel.onCreateSiteResult()
                 viewModel.performFirstStepAfterSiteCreation(
-                    data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
                     data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                     isNewSite = isNewSite
                 )
@@ -670,7 +669,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                     viewModel.onCreateSiteResult()
                     viewModel.performFirstStepAfterSiteCreation(
-                        data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
                         data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                         isNewSite = true
                     )
@@ -680,7 +678,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             }
             RequestCodes.EDIT_LANDING_PAGE -> {
                 viewModel.checkAndStartQuickStart(
-                    data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
                     data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                     isNewSite = data.getBooleanExtra(EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false)
                 )

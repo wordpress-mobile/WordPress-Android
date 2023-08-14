@@ -144,7 +144,6 @@ import org.wordpress.android.util.config.BloggingPromptsListFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
-import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.mapSafe
@@ -180,7 +179,6 @@ class MySiteViewModel @Inject constructor(
     private val quickStartCardBuilder: QuickStartCardBuilder,
     private val siteInfoHeaderCardBuilder: SiteInfoHeaderCardBuilder,
     private val homePageDataLoader: HomePageDataLoader,
-    private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
@@ -1421,14 +1419,13 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun performFirstStepAfterSiteCreation(
-        siteLocalId: Int,
         isSiteTitleTaskCompleted: Boolean,
         isNewSite: Boolean
     ) {
         if (landOnTheEditorFeatureConfig.isEnabled()) {
             checkAndStartLandOnTheEditor(isNewSite)
         } else {
-            checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted, isNewSite)
+            checkAndStartQuickStart(isSiteTitleTaskCompleted, isNewSite)
         }
     }
 
@@ -1446,18 +1443,13 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun checkAndStartQuickStart(
-        siteLocalId: Int,
         isSiteTitleTaskCompleted: Boolean,
         isNewSite: Boolean
     ) {
         if (!jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()) return
         quickStartRepository.checkAndSetQuickStartType(isNewSite = isNewSite)
-        if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
-            startQuickStart(siteLocalId, isSiteTitleTaskCompleted)
-        } else {
-            shouldMarkUpdateSiteTitleTaskComplete = isSiteTitleTaskCompleted
-            showQuickStartDialog(selectedSiteRepository.getSelectedSite())
-        }
+        shouldMarkUpdateSiteTitleTaskComplete = isSiteTitleTaskCompleted
+        showQuickStartDialog(selectedSiteRepository.getSelectedSite())
     }
 
     private fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
