@@ -274,17 +274,11 @@ public class AppPrefs {
         // Used to indicate whether or not the the post-signup interstitial must be shown
         SHOULD_SHOW_POST_SIGNUP_INTERSTITIAL,
 
-        // used to indicate that we do not need to show the main FAB tooltip
-        IS_MAIN_FAB_TOOLTIP_DISABLED,
-
         // version of the last shown feature announcement
         FEATURE_ANNOUNCEMENT_SHOWN_VERSION,
 
         // last app version code feature announcement was shown for
         LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE,
-
-        // used to indicate that we do not need to show the Post List FAB tooltip
-        IS_POST_LIST_FAB_TOOLTIP_DISABLED,
 
         // Used to indicate whether or not the stories intro screen must be shown
         SHOULD_SHOW_STORIES_INTRO,
@@ -1074,22 +1068,6 @@ public class AppPrefs {
 
     public static void removeShouldTrackMagicLinkSignup() {
         remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
-    }
-
-    public static void setMainFabTooltipDisabled(Boolean disable) {
-        setBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, disable);
-    }
-
-    public static boolean isMainFabTooltipDisabled() {
-        return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
-    }
-
-    public static void setPostListFabTooltipDisabled(Boolean disable) {
-        setBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, disable);
-    }
-
-    public static boolean isPostListFabTooltipDisabled() {
-        return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
     }
 
     public static void setQuickStartNoticeRequired(Boolean shown) {
