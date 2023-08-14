@@ -384,7 +384,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
     sealed class DynamicCard(
         override val type: Type,
         override val activeQuickStartItem: Boolean = false,
-        open val dynamicCardType: DynamicCardType,
         open val onMoreClick: ListItemInteraction
     ) : MySiteCardAndItem(
         type,
@@ -397,7 +396,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             @ColorRes val accentColor: Int,
             val progress: Int,
             override val onMoreClick: ListItemInteraction
-        ) : DynamicCard(QUICK_START_DYNAMIC_CARD, dynamicCardType = id, onMoreClick = onMoreClick) {
+        ) : DynamicCard(QUICK_START_DYNAMIC_CARD, onMoreClick = onMoreClick) {
             data class QuickStartTaskCard(
                 val quickStartTask: QuickStartTask,
                 val title: UiString,
