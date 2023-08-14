@@ -638,7 +638,6 @@ class MySiteViewModel @Inject constructor(
                         it is ActivityCardModel
                     } as? ActivityCardModel,
                     onActivityItemClick = this::onActivityCardItemClick,
-                    onFooterLinkClick = this::onActivityCardFooterLinkClick,
                     onMoreMenuClick = this::onActivityCardMoreMenuClick,
                     onAllActivityMenuItemClick = this::onActivityCardAllActivityItemClick,
                     onHideMenuItemClick = this::onActivityCardHideMenuItemClick
@@ -777,13 +776,6 @@ class MySiteViewModel @Inject constructor(
             )
     }
 
-    private fun onActivityCardFooterLinkClick() {
-        cardsTracker.trackActivityCardFooterClicked()
-        _onNavigation.value =
-            Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
-    }
-
-    // todo: annmarie
     private fun onActivityCardHideMenuItemClick() {
         // todo: annmarie - add tracking for hide menu item click
         // todo: annmarie - add logic for hide menu item click
