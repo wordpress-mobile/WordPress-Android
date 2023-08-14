@@ -6,8 +6,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -18,16 +16,12 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PO
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
 class PostListCreateMenuViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PostListCreateMenuViewModel
-
-    @Mock
-    lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
@@ -44,7 +38,6 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
     fun setUp() {
         whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(true)
         viewModel = PostListCreateMenuViewModel(
-            appPrefsWrapper,
             analyticsTrackerWrapper,
             jetpackFeatureRemovalPhaseHelper,
             siteUtilsWrapper
@@ -85,54 +78,6 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
         viewModel.onFabClicked()
 
         Assertions.assertThat(viewModel.isBottomSheetShowing.value?.getContentIfNotHandled()).isTrue()
-    }
-
-    @Test
-    fun `actions shown by default on start`() {
-        viewModel.start(site, true)
-
-        Assertions.assertThat(viewModel.isBottomSheetShowing.value?.getContentIfNotHandled()).isTrue()
-        verify(appPrefsWrapper).setPostListFabTooltipDisabled(eq(true))
-    }
-
-    @Test
-    fun `when onFabClicked then appPrefsWrapper's setPostListFabTooltipDisabled is called with true`() {
-        viewModel.start(site, false)
-
-        viewModel.onFabClicked()
-
-        verify(appPrefsWrapper).setPostListFabTooltipDisabled(eq(true))
-    }
-
-    @Test
-    fun `if appPrefsWrapper's isPostListFabTooltipDisabled is false then isFabTooltipVisible is true`() {
-        whenever(appPrefsWrapper.isPostListFabTooltipDisabled()).thenReturn(false)
-        viewModel.start(site, false)
-
-        Assertions.assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isTrue()
-    }
-
-    @Test
-    fun `if appPrefsWrapper's isPostListFabTooltipDisabled is true then isFabTooltipVisible is false`() {
-        whenever(appPrefsWrapper.isPostListFabTooltipDisabled()).thenReturn(true)
-        viewModel.start(site, false)
-
-        Assertions.assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isFalse()
-    }
-
-    @Test
-    fun `when tooltipTapped then setPostListFabTooltipDisabled is called with true`() {
-        viewModel.onTooltipTapped()
-
-        verify(appPrefsWrapper).setPostListFabTooltipDisabled(eq(true))
-    }
-
-    @Test
-    fun `when tooltipTapped then isFabTooltipVisible is false`() {
-        viewModel.start(site, false)
-        viewModel.onTooltipTapped()
-
-        Assertions.assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isFalse()
     }
 
     @Test
