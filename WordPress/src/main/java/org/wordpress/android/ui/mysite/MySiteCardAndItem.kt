@@ -55,7 +55,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         TODAYS_STATS_CARD_ERROR,
         TODAYS_STATS_CARD,
         POST_CARD_ERROR,
-        POST_CARD_WITHOUT_POST_ITEMS,
         POST_CARD_WITH_POST_ITEMS,
         BLOGGING_PROMPT_CARD,
         PROMOTE_WITH_BLAZE_CARD,
@@ -243,18 +242,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     data class Error(
                         override val title: UiString
                     ) : PostCard(dashboardCardType = DashboardCardType.POST_CARD_ERROR), ErrorWithinCard
-
-                    data class PostCardWithoutPostItems(
-                        val postCardType: PostCardType,
-                        val title: UiString,
-                        val excerpt: UiString,
-                        @DrawableRes val imageRes: Int,
-                        override val footerLink: FooterLink,
-                        val onClick: ListItemInteraction
-                    ) : PostCard(
-                        dashboardCardType = DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS,
-                        footerLink = footerLink
-                    )
 
                     data class PostCardWithPostItems(
                         val postCardType: PostCardType,

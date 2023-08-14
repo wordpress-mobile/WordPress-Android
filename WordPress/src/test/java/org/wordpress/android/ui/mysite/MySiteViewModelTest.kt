@@ -119,7 +119,6 @@ import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomai
 import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
-import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder.Companion.NOT_SET
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
@@ -1678,17 +1677,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         }
 
     /* DASHBOARD POST CARD - FOOTER LINK */
-
-    @Test
-    fun `given create first card, when footer link is clicked, then editor is opened to create new post`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.CREATE_FIRST)
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenEditorToCreateNewPost(site))
-        }
-
     @Test
     fun `given draft post card, when footer link is clicked, then draft posts screen is opened`() = test {
         initSelectedSite()
@@ -1726,17 +1714,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* DASHBOARD POST CARD */
-
-    @Test
-    fun `when create first post card is clicked, then editor is opened to create new post`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.CREATE_FIRST, NOT_SET))
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenEditorToCreateNewPost(site))
-        }
-
     @Test
     fun `given draft post card, when post item is clicked, then post is opened for edit draft`() =
         test {
@@ -1773,15 +1750,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.DRAFT, postId))
 
         verify(cardsTracker).trackPostItemClicked(PostCardType.DRAFT)
-    }
-
-    @Test
-    fun `given create first post card, when item is clicked, then event is tracked`() = test {
-        initSelectedSite()
-
-        requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.CREATE_FIRST, NOT_SET))
-
-        verify(cardsTracker).trackPostItemClicked(PostCardType.CREATE_FIRST)
     }
 
     /* DASHBOARD BLOGGING PROMPT CARD */
