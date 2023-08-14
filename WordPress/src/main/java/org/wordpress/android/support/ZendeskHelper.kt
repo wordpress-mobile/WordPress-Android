@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.telephony.TelephonyManager
 import androidx.preference.PreferenceManager
+import com.google.gson.Gson
 import com.zendesk.logger.Logger
 import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
@@ -143,8 +144,13 @@ class ZendeskHelper(
         }
     }
 
-    fun parseChatHistory(chatHistory: String): String {
-        return chatHistory
+    fun parseChatHistory(startMessage: String, question: String, answer: String, chatHistory: String): String {
+        val messageList = Gson().fromJson(chatHistory, ArrayList<ArrayList<String>>().javaClass)
+        var description = startMessage
+        messageList.forEach {
+            description = description + "\n>\n" + question + "\n>\n" + it.first() + "\n>\n" + answer + "\n>\n" + it[1]
+        }
+        return description
     }
 
     @Suppress("LongParameterList")

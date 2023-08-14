@@ -2290,6 +2290,9 @@
     <string name="contact_support_bot_ticket_message">Ticket created</string>
     <string name="contact_support_bot_ticket_button">See ticket</string>
     <string name="contact_support_bot_ticket_error">Error submitting support ticket</string>
+    <string name="contact_support_bot_ticket_comment_start">Jetpack Mobile Bot transcript:</string>
+    <string name="contact_support_bot_ticket_comment_question">Question:</string>
+    <string name="contact_support_bot_ticket_comment_answer">Answer:</string>
 
     <!--My Site-->
     <string name="my_site_header_content">Content</string>

@@ -71,7 +71,12 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
     override fun onSupportTapped(chatHistory: String) {
         zendeskHelper.requireIdentity(this, selectedSiteFromExtras) {
             progress.isVisible = true
-            val description = zendeskHelper.parseChatHistory(chatHistory)
+            val description = zendeskHelper.parseChatHistory(
+                getString(R.string.contact_support_bot_ticket_comment_start),
+                getString(R.string.contact_support_bot_ticket_comment_question),
+                getString(R.string.contact_support_bot_ticket_comment_answer),
+                chatHistory
+            )
             createNewZendeskRequest(description, object : ZendeskHelper.CreateRequestCallback() {
                 override fun onSuccess() {
                     progress.isVisible = false

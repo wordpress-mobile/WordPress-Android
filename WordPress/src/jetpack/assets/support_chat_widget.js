@@ -12,7 +12,7 @@
             supportCallback: function(event, history) {
                 event.preventDefault() // Optionally prevent default behavior opening the url.
                 console.log(history) // Safely access the chat history.
-                sendAndroidMessage(history)
+                sendAndroidMessage(JSON.stringify(history))
             },
             options: {
                 botName: "Jetpack Mobile",
