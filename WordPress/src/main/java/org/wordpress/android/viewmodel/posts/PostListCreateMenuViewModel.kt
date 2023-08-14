@@ -14,7 +14,6 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_ST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -23,7 +22,6 @@ import java.util.Locale
 import javax.inject.Inject
 
 class PostListCreateMenuViewModel @Inject constructor(
-    private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val siteUtilsWrapper: SiteUtilsWrapper
@@ -101,7 +99,6 @@ class PostListCreateMenuViewModel @Inject constructor(
     private fun setMainFabUiState() {
         val newState = MainFabUiState(
             isFabVisible = true,
-            isFabTooltipVisible = !appPrefsWrapper.isPostListFabTooltipDisabled(),
             CreateContentMessageId = getCreateContentMessageId()
         )
 
@@ -109,31 +106,9 @@ class PostListCreateMenuViewModel @Inject constructor(
     }
 
     fun onFabClicked() {
-        appPrefsWrapper.setPostListFabTooltipDisabled(true)
         setMainFabUiState()
         analyticsTracker.track(Stat.POST_LIST_CREATE_SHEET_SHOWN)
         _isBottomSheetShowing.value = Event(true)
-    }
-
-    fun onTooltipTapped() {
-        disableTooltip()
-    }
-
-    fun onFabLongPressed() {
-        disableTooltip()
-    }
-
-    private fun disableTooltip() {
-        appPrefsWrapper.setPostListFabTooltipDisabled(true)
-
-        val oldState = _fabUiState.value
-        oldState?.let {
-            _fabUiState.value = MainFabUiState(
-                isFabVisible = it.isFabVisible,
-                isFabTooltipVisible = false,
-                CreateContentMessageId = getCreateContentMessageId()
-            )
-        }
     }
 
     fun onResume() {
@@ -141,7 +116,6 @@ class PostListCreateMenuViewModel @Inject constructor(
         oldState?.let {
             _fabUiState.value = MainFabUiState(
                 isFabVisible = it.isFabVisible,
-                isFabTooltipVisible = it.isFabTooltipVisible,
                 CreateContentMessageId = getCreateContentMessageId()
             )
         }
