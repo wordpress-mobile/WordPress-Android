@@ -274,6 +274,9 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     data class ActivityCardWithItems(
                         val title: UiString,
                         val activityItems: List<ActivityItem>,
+                        val onAllActivityItemClick: ListItemInteraction,
+                        val onHideMenuItemClick: ListItemInteraction,
+                        val onMoreMenuClick: ListItemInteraction,
                         override val footerLink: FooterLink
                     ) : ActivityCard(
                         dashboardCardType = DashboardCardType.ACTIVITY_CARD,
