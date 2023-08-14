@@ -82,7 +82,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         val isOverlayShown = jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown(PhaseFour)
         if (!isOverlayShown) return true
         val phaseFourOverlayFrequency = jetpackFeatureRemovalPhaseHelper.getPhaseFourOverlayFrequency()
-        if (phaseFourOverlayFrequency == 0) return false
+        if (phaseFourOverlayFrequency == -1) return false
         val overlayShownDate = jetpackFeatureOverlayShownTracker.getPhaseFourOverlayShownTimeStamp()
         if (overlayShownDate != null) {
             val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
