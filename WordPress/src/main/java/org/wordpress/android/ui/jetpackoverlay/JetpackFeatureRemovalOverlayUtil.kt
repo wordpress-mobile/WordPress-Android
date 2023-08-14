@@ -62,15 +62,36 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
 
     fun shouldShowFeatureCollectionJetpackOverlayForFirstTime(): Boolean {
         val phase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() ?: return false
-        val featureCollectionOverlayShown = jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown(phase)
-        return !featureCollectionOverlayShown && shouldShowFeatureCollectionOverlayInCurrentPhase(phase)
+        return shouldShowFeatureCollectionOverlayInCurrentPhase(phase)
     }
 
     private fun shouldShowFeatureCollectionOverlayInCurrentPhase(phase: JetpackFeatureRemovalPhase): Boolean {
         return when (phase) {
-            PhaseThree, PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> true
+            PhaseThree, PhaseNewUsers, PhaseSelfHostedUsers ->
+                !jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown(phase)
+            PhaseFour -> shouldShowPhaseFourFeatureCollectionOverlay()
             else -> false
         }
+    }
+
+    // if the overlay is not shown, then show it
+    // if the overlay is shown and the remote config value is 0, then don't show
+    // if the overlay is shown and the remote config value is not 0, then check the frequency
+    @Suppress("ReturnCount")
+    private fun shouldShowPhaseFourFeatureCollectionOverlay(): Boolean {
+        val isOverlayShown = jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown(PhaseFour)
+        if (!isOverlayShown) return true
+        val phaseFourOverlayFrequency = jetpackFeatureRemovalPhaseHelper.getPhaseFourOverlayFrequency()
+        if (phaseFourOverlayFrequency == -1) return false
+        val overlayShownDate = jetpackFeatureOverlayShownTracker.getPhaseFourOverlayShownTimeStamp()
+        if (overlayShownDate != null) {
+            val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
+                Date(overlayShownDate),
+                dateTimeUtilsWrapper.getTodaysDate()
+            )
+            return daysPastOverlayShown >= phaseFourOverlayFrequency
+        }
+        return false
     }
 
     private fun isInSiteCreationPhase(): Boolean {
