@@ -28,7 +28,7 @@ DocsBotAI.init = function (c) {
                             localStorage.removeItem("docsbot_chat_history");
 
                             // Open DocsBotAI after shadowRoot is loaded
-                            window.DocsBotAI.open();  // Assuming there's an openChat() function
+                            window.DocsBotAI.open();
 
                             // Observe the shadowRoot for changes (including header appearance)
                             const shadowRootObserver = new MutationObserver(function (mutationsList, observer) {
