@@ -88,13 +88,6 @@ class CardsTrackerTest {
     }
 
     @Test
-    fun `when post create next footer link is clicked, then post create next event is tracked`() {
-        cardsTracker.trackPostCardFooterLinkClicked(PostCardType.CREATE_NEXT)
-
-        verifyFooterLinkClickedTracked(Type.POST, PostSubtype.CREATE_NEXT.label)
-    }
-
-    @Test
     fun `when post draft footer link is clicked, then post draft event is tracked`() {
         cardsTracker.trackPostCardFooterLinkClicked(PostCardType.DRAFT)
 

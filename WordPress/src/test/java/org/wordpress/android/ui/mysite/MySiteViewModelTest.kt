@@ -1690,16 +1690,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given create next card, when footer link is clicked, then editor is opened to create new post`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.CREATE_NEXT)
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenEditorToCreateNewPost(site))
-        }
-
-    @Test
     fun `given draft post card, when footer link is clicked, then draft posts screen is opened`() = test {
         initSelectedSite()
 
@@ -1743,16 +1733,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             initSelectedSite()
 
             requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.CREATE_FIRST, NOT_SET))
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenEditorToCreateNewPost(site))
-        }
-
-    @Test
-    fun `when create next post card is clicked, then editor is opened to create new post`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.CREATE_NEXT, NOT_SET))
 
             assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenEditorToCreateNewPost(site))
         }
@@ -1802,15 +1782,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.CREATE_FIRST, NOT_SET))
 
         verify(cardsTracker).trackPostItemClicked(PostCardType.CREATE_FIRST)
-    }
-
-    @Test
-    fun `given create next post card, when item is clicked, then event is tracked`() = test {
-        initSelectedSite()
-
-        requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.CREATE_NEXT, NOT_SET))
-
-        verify(cardsTracker).trackPostItemClicked(PostCardType.CREATE_NEXT)
     }
 
     /* DASHBOARD BLOGGING PROMPT CARD */

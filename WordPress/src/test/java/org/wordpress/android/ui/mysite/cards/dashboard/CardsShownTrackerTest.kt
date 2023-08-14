@@ -50,13 +50,6 @@ class CardsShownTrackerTest {
     }
 
     @Test
-    fun `when post card create next card is shown, then create next shown event is tracked`() {
-        cardsShownTracker.track(buildDashboardCards(PostCardType.CREATE_NEXT))
-
-        verifyCardShownTracked(Type.POST.label, PostSubtype.CREATE_NEXT.label)
-    }
-
-    @Test
     fun `when post card scheduled card is shown, then scheduled shown event is tracked`() {
         cardsShownTracker.track(buildDashboardCards(PostCardType.SCHEDULED))
 
@@ -105,7 +98,7 @@ class CardsShownTrackerTest {
         cards = mutableListOf<DashboardCard>().apply {
             when (postCardType) {
                 PostCardType.SCHEDULED, PostCardType.DRAFT -> addAll(buildPostCardsWithItems(postCardType))
-                PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> addAll(
+                PostCardType.CREATE_FIRST -> addAll(
                     buildPostCardsWithoutItems(
                         postCardType
                     )

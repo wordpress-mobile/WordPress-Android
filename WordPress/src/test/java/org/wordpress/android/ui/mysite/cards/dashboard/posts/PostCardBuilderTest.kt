@@ -149,68 +149,6 @@ class PostCardBuilderTest : BaseUnitTest() {
         )
     }
 
-    /* CREATE NEXT POST CARD */
-
-    @Test
-    fun `given published post without draft + sched post, when card is built, then create next card exists`() {
-        val posts = getPosts(hasPublished = true)
-
-        val postsCard = buildPostsCard(posts)
-
-        assertThat(postsCard.filterCreateNextPostCard()).isNotNull
-    }
-
-    @Test
-    fun `given no published post with draft post, when card is built, then create next card not exists`() {
-        val posts = getPosts(hasPublished = false, draftPosts = listOf(post))
-
-        val postsCard = buildPostsCard(posts)
-
-        assertThat(postsCard.filterCreateNextPostCard()).isNull()
-    }
-
-    @Test
-    fun `given no published post with scheduled post, when card is built, then create next card not exists`() {
-        val posts = getPosts(hasPublished = false, scheduledPosts = listOf(post))
-
-        val postsCard = buildPostsCard(posts)
-
-        assertThat(postsCard.filterCreateNextPostCard()).isNull()
-    }
-
-    @Test
-    fun `given published post not present, when card is built, then create next card not exists`() {
-        val posts = getPosts(hasPublished = false)
-
-        val postsCard = buildPostsCard(posts)
-
-        assertThat(postsCard.filterCreateNextPostCard()).isNull()
-    }
-
-    @Test
-    fun `given create next post, when card is built, then it contains correct preset elements`() {
-        val posts = getPosts(hasPublished = true)
-
-        val postsCard = buildPostsCard(posts).filterCreateNextPostCard()
-
-        assertThat(postsCard).isEqualTo(
-            PostCardWithoutPostItems(
-                postCardType = PostCardType.CREATE_NEXT,
-                title = UiStringRes(R.string.my_site_create_next_post_title),
-                excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
-                imageRes = R.drawable.img_write_212dp,
-                footerLink = FooterLink(
-                    label = UiStringRes(R.string.my_site_post_card_link_create_post),
-                    onClick = onPostCardFooterLinkClick
-                ),
-                ListItemInteraction.create(
-                    PostItemClickParams(postCardType = PostCardType.CREATE_NEXT, postId = NOT_SET),
-                    onPostItemClick
-                )
-            )
-        )
-    }
-
     /* DRAFT POST CARD */
 
     @Test
@@ -368,13 +306,6 @@ class PostCardBuilderTest : BaseUnitTest() {
                 it.dashboardCardType == DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS
             } as? List<PostCardWithoutPostItems>
             )?.firstOrNull { it.postCardType == PostCardType.CREATE_FIRST }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun List<PostCard>.filterCreateNextPostCard() = (
-            filter {
-                it.dashboardCardType == DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS
-            } as? List<PostCardWithoutPostItems>
-            )?.firstOrNull { it.postCardType == PostCardType.CREATE_NEXT }
 
     @Suppress("UNCHECKED_CAST")
     private fun List<PostCard>.filterDraftPostCard() = (
