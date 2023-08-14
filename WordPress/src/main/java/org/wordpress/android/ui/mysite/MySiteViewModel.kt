@@ -105,7 +105,6 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
@@ -1414,10 +1413,6 @@ class MySiteViewModel @Inject constructor(
                 )
             mySiteSourceManager.refreshQuickStart()
         }
-    }
-
-    fun onQuickStartMenuInteraction(interaction: DynamicCardMenuInteraction) {
-        launch { mySiteSourceManager.onQuickStartMenuInteraction(interaction) }
     }
 
     private fun showQuickStartDialog(siteModel: SiteModel?) {
