@@ -35,7 +35,7 @@ class ActivityCardBuilder @Inject constructor(
                 onClick = params.onFooterLinkClick
             ),
             onHideMenuItemClick = ListItemInteraction.create(params.onHideMenuItemClick),
-            onAllActivityItemClick = ListItemInteraction.create(params.onAllActivityItemClick),
+            onAllActivityMenuItemClick = ListItemInteraction.create(params.onAllActivityMenuItemClick),
             onMoreMenuClick = ListItemInteraction.create(params.onMoreMenuClick)
         )
     }

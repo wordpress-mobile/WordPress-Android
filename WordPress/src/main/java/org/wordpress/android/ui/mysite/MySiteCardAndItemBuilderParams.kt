@@ -107,7 +107,7 @@ sealed class MySiteCardAndItemBuilderParams {
         val activityCardModel: CardModel.ActivityCardModel?,
         val onActivityItemClick: (activityCardItemClickParams: ActivityCardItemClickParams) -> Unit,
         val onFooterLinkClick: () -> Unit,
-        val onAllActivityItemClick: () -> Unit,
+        val onAllActivityMenuItemClick: () -> Unit,
         val onHideMenuItemClick: () -> Unit,
         val onMoreMenuClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams() {

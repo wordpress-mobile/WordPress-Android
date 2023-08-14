@@ -36,7 +36,7 @@ class ActivityCardViewHolder(
         mySiteCardToolbarMore.setOnClickListener {
             showMoreMenu(
                 card.onHideMenuItemClick,
-                card.onAllActivityItemClick,
+                card.onAllActivityMenuItemClick,
                 card.onMoreMenuClick,
                 mySiteCardToolbarMore,
             )

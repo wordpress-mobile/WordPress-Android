@@ -638,7 +638,10 @@ class MySiteViewModel @Inject constructor(
                         it is ActivityCardModel
                     } as? ActivityCardModel,
                     onActivityItemClick = this::onActivityCardItemClick,
-                    onFooterLinkClick = this::onActivityCardFooterLinkClick
+                    onFooterLinkClick = this::onActivityCardFooterLinkClick,
+                    onMoreMenuClick = this::onActivityCardMoreMenuClick,
+                    onAllActivityMenuItemClick = this::onActivityCardAllActivityItemClick,
+                    onHideMenuItemClick = this::onActivityCardHideMenuItemClick
                 ),
             ),
             QuickLinkRibbonBuilderParams(
@@ -778,6 +781,28 @@ class MySiteViewModel @Inject constructor(
         cardsTracker.trackActivityCardFooterClicked()
         _onNavigation.value =
             Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
+    }
+
+    // todo: annmarie
+    private fun onActivityCardHideMenuItemClick() {
+        // todo: annmarie - add tracking for hide menu item click
+        // todo: annmarie - add logic for hide menu item click
+        // todo: annmarie - add logic for refreshing the dashboard after hiding the card
+        // cardsTracker.trackHideItemMenuClicked()
+        //        _onNavigation.value =
+        //            Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
+    }
+
+    private fun onActivityCardAllActivityItemClick() {
+        // todo: annmarie - add tracking for all activity menu item click
+        // cardsTracker.trackAllActivityItemMenuClicked()
+        _onNavigation.value =
+            Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
+    }
+
+    private fun onActivityCardMoreMenuClick() {
+        // todo: annmarie - add tracking for more menu click
+        // cardsTracker.trackMoreMenuClicked()
     }
 
     private fun buildJetpackBadgeIfEnabled(): JetpackBadge? {
