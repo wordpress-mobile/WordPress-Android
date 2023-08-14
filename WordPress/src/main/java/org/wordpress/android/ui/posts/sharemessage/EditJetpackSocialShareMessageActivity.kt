@@ -29,6 +29,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -89,18 +91,44 @@ class EditJetpackSocialShareMessageActivity : AppCompatActivity() {
                         .verticalScroll(rememberScrollState())
                         .padding(Margin.ExtraLarge.value)
                 ) {
-                    var shareMessage by remember { mutableStateOf(state.currentShareMessage) }
+                    var shareTextFieldValue by remember {
+                        val cursorIndex = state.currentShareMessage.length
+                        mutableStateOf(
+                            TextFieldValue(
+                                state.currentShareMessage,
+                                selection = TextRange(cursorIndex),
+                            )
+                        )
+                    }
                     val focusRequester = remember { FocusRequester() }
                     OutlinedTextField(
                         modifier = Modifier
                             .padding(vertical = Margin.ExtraLarge.value)
                             .fillMaxWidth()
                             .focusRequester(focusRequester),
-                        value = shareMessage,
+                        value = shareTextFieldValue,
                         onValueChange = {
-                            val truncatedMessage = it.take(state.shareMessageMaxLength)
-                            shareMessage = truncatedMessage
-                            viewModel.updateShareMessage(truncatedMessage)
+                            val maxLength = state.shareMessageMaxLength
+                            val newValue = if (it.text.length > maxLength) {
+                                TextFieldValue(
+                                    text = it.text.take(state.shareMessageMaxLength),
+                                    selection = TextRange(
+                                        start = it.selection.start.coerceIn(0, maxLength),
+                                        end = it.selection.end.coerceIn(0, maxLength),
+                                    ),
+                                    composition = it.composition?.let { comp ->
+                                        TextRange(
+                                            start = comp.start.coerceIn(0, maxLength),
+                                            end = comp.start.coerceIn(0, maxLength)
+                                        )
+                                    }
+                                )
+                            } else {
+                                it
+                            }
+
+                            shareTextFieldValue = newValue
+                            viewModel.updateShareMessage(newValue.text)
                         },
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             textColor = MaterialTheme.colors.onSurface,
