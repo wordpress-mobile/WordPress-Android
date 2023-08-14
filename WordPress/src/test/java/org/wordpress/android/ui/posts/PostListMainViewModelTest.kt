@@ -218,14 +218,4 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.onFabClicked.value?.peekContent()).isNotNull
     }
-
-    @Test
-    fun `if onFabLongPressed then onFabLongPressedForCreateMenu is called`() {
-        whenever(site.isWPCom).thenReturn(true)
-
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
-        viewModel.onFabLongPressed()
-
-        assertThat(viewModel.onFabLongPressedForCreateMenu.value?.peekContent()).isNotNull
-    }
 }

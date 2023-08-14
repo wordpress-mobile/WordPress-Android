@@ -85,5 +85,5 @@
         android:layout_gravity="end|bottom"
         app:borderWidth="0dp"
         app:layout_behavior="org.wordpress.android.ui.FloatingActionButtonBehavior" />
-    
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
