@@ -741,6 +741,7 @@
 
         <activity
             android:name=".support.SupportWebViewActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Lib activities-->
