@@ -268,19 +268,16 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 }
 
                 sealed class ActivityCard(
-                    override val dashboardCardType: DashboardCardType,
-                    open val footerLink: FooterLink? = null
+                    override val dashboardCardType: DashboardCardType
                 ) : DashboardCard(dashboardCardType) {
                     data class ActivityCardWithItems(
                         val title: UiString,
                         val activityItems: List<ActivityItem>,
                         val onAllActivityMenuItemClick: ListItemInteraction,
                         val onHideMenuItemClick: ListItemInteraction,
-                        val onMoreMenuClick: ListItemInteraction,
-                        override val footerLink: FooterLink
+                        val onMoreMenuClick: ListItemInteraction
                     ) : ActivityCard(
-                        dashboardCardType = DashboardCardType.ACTIVITY_CARD,
-                        footerLink = footerLink
+                        dashboardCardType = DashboardCardType.ACTIVITY_CARD
                     ) {
                         data class ActivityItem(
                             val label: UiString,
@@ -291,11 +288,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                             val onClick: ListItemInteraction
                         )
                     }
-
-                    data class FooterLink(
-                        val label: UiString,
-                        val onClick: () -> Unit
-                    )
                 }
 
                 sealed class BloggingPromptCard(

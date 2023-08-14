@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteActivityCardWithActivityItemsBinding
-import org.wordpress.android.databinding.MySiteCardFooterLinkBinding
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
@@ -27,12 +26,11 @@ class ActivityCardViewHolder(
         val activityCard = card as ActivityCard.ActivityCardWithItems
         (activityItems.adapter as ActivityItemsAdapter).update(activityCard.activityItems)
         mySiteToolbar.update(activityCard)
-        mySiteCardFooterLink.update(activityCard.footerLink)
     }
 
     private fun MySiteCardToolbarBinding.update(card: ActivityCard.ActivityCardWithItems) {
         uiHelpers.setTextOrHide(mySiteCardToolbarTitle, card.title)
-        mySiteCardToolbarMore.visibility = android.view.View.VISIBLE
+        mySiteCardToolbarMore.visibility = View.VISIBLE
         mySiteCardToolbarMore.setOnClickListener {
             showMoreMenu(
                 card.onHideMenuItemClick,
@@ -67,13 +65,5 @@ class ActivityCardViewHolder(
         }
         popupMenu.inflate(R.menu.activity_log_card_menu)
         popupMenu.show()
-    }
-
-
-    private fun MySiteCardFooterLinkBinding.update(footerLink: ActivityCard.FooterLink) {
-        uiHelpers.setTextOrHide(linkLabel, footerLink.label)
-        linkLabel.setOnClickListener {
-            footerLink.onClick.invoke()
-        }
     }
 }
