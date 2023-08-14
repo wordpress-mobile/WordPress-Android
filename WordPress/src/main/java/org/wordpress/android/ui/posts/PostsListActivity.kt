@@ -256,10 +256,6 @@ class PostsListActivity : LocaleAwareActivity(),
 
         fabButton.redirectContextClickToLongPressListener()
 
-        fabTooltip.setOnClickListener {
-            postListCreateMenuViewModel.onTooltipTapped()
-        }
-
         postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, supportFragmentManager)
         postPager.adapter = postsPagerAdapter
     }
@@ -285,14 +281,6 @@ class PostsListActivity : LocaleAwareActivity(),
 
         postListCreateMenuViewModel.fabUiState.observe(this@PostsListActivity, { fabUiState ->
             val message = resources.getString(fabUiState.CreateContentMessageId)
-
-            if (fabUiState.isFabTooltipVisible) {
-                fabTooltip.setMessage(message)
-                fabTooltip.show()
-            } else {
-                fabTooltip.hide()
-            }
-
             fabButton.contentDescription = message
         })
 
@@ -421,11 +409,6 @@ class PostsListActivity : LocaleAwareActivity(),
     private fun PostListActivityBinding.setupFabEvents() {
         viewModel.onFabClicked.observeEvent(this@PostsListActivity, {
             postListCreateMenuViewModel.onFabClicked()
-        })
-
-        viewModel.onFabLongPressedForCreateMenu.observeEvent(this@PostsListActivity, {
-            postListCreateMenuViewModel.onFabLongPressed()
-            Toast.makeText(fabButton.context, R.string.create_post_story_fab_tooltip, Toast.LENGTH_SHORT).show()
         })
 
         viewModel.onFabLongPressedForPostList.observe(this@PostsListActivity, {
