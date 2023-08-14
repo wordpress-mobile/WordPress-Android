@@ -37,14 +37,6 @@
                     decodeURIComponent(urlParams.questionThree)
                 ] // Array of example questions to show in the widget. Three are picked at random.
             },
-        }).then(() => {
-            // Safely do stuff here after the widget is loaded.
-            setTimeout(() => {
-                resetConversation();
-
-                hideTopCloseButton();
-                hideTopHeader();
-            }, 200)
         });
     }
 
@@ -67,26 +59,6 @@
             }, {}) :
             {}
     }
-
-    function hideTopCloseButton() {
-        const closeButton = document.querySelector("#docsbotai-root").shadowRoot.querySelector("div > div > div > a");
-        if (closeButton && closeButton !== null && closeButton !== 'undefined') {
-            closeButton.style.display = 'none';
-        }
-    }
-
-    function hideTopHeader() {
-        const header = document.querySelector("#docsbotai-root").shadowRoot.querySelector("div > div > div > div.docsbot-chat-header");
-        if (header && header !== null && header !== 'undefined') {
-            header.style.display = 'none';
-        }
-    }
-
-    function resetConversation() {
-        // reset button was in top header
-        localStorage.removeItem("docsbot_chat_history");
-    }
-
 
     document.addEventListener( 'DOMContentLoaded', init );
 } ) ();

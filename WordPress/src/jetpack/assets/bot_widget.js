@@ -1,7 +1,7 @@
 window.DocsBotAI = window.DocsBotAI || {};
 
-DocsBotAI.init = function(c) {
-    return new Promise(function(resolve, reject) {
+DocsBotAI.init = function (c) {
+    return new Promise(function (resolve, reject) {
         const chatScript = document.createElement("script");
         chatScript.type = "text/javascript";
         chatScript.async = true;
@@ -10,7 +10,7 @@ DocsBotAI.init = function(c) {
         const firstScript = document.getElementsByTagName("script")[0];
         firstScript.parentNode.insertBefore(chatScript, firstScript);
 
-        chatScript.addEventListener("load", function() {
+        chatScript.addEventListener("load", function () {
             window.DocsBotAI.mount({
                 id: c.id,
                 supportCallback: c.supportCallback,
@@ -19,15 +19,36 @@ DocsBotAI.init = function(c) {
                 signature: c.signature
             });
 
-            const waitForShadowRoot = function(selector) {
-                return new Promise(function(resolve) {
-                    const elementCheck = function(mutationsList, observer) {
-                        if (document.querySelector(selector)) {
-                            const shadowRoot = document.querySelector(selector).shadowRoot;
-                            if (shadowRoot) {
-                                resolve(shadowRoot);
-                                observer.disconnect();
-                            }
+            const waitForElementAndShadowRoot = function (selector) {
+                return new Promise(function (resolve) {
+                    const elementCheck = function (mutationsList, observer) {
+                        const shadowRoot = document.querySelector(selector)?.shadowRoot;
+                        if (shadowRoot) {
+                            // reset chat history
+                            localStorage.removeItem("docsbot_chat_history");
+
+                            // Open DocsBotAI after shadowRoot is loaded
+                            window.DocsBotAI.open();  // Assuming there's an openChat() function
+
+                            // Observe the shadowRoot for changes (including header appearance)
+                            const shadowRootObserver = new MutationObserver(function (mutationsList, observer) {
+                                const header = shadowRoot.querySelector("div > div > div > div.docsbot-chat-header");
+                                const closeButton = shadowRoot.querySelector("div > div > div > a");
+                                if (header) {
+                                    header.style.display = "none"; // hide the header
+                                }
+
+                                if (closeButton) {
+                                    closeButton.style.display = "none"; // hide the close button
+                                }
+                                // Disconnect the observer since we've achieved our goal
+                                shadowRootObserver.disconnect();
+                            });
+
+                            shadowRootObserver.observe(shadowRoot, { childList: true, subtree: true });
+
+                            resolve(shadowRoot);
+                            observer.disconnect();
                         }
                     };
 
@@ -36,20 +57,11 @@ DocsBotAI.init = function(c) {
                 });
             };
 
-            waitForShadowRoot("#docsbotai-root")
-                .then(function(shadowRoot) {
-                    // Open DocsBotAI after shadowRoot is loaded
-                    window.DocsBotAI.open();
-
-                    resolve(shadowRoot);
-                })
-                .catch(reject);
+            waitForElementAndShadowRoot("#docsbotai-root").catch(reject);
         });
 
-        chatScript.addEventListener("error", function(error) {
+        chatScript.addEventListener("error", function (error) {
             reject(error.message);
         });
     });
 };
-
-
