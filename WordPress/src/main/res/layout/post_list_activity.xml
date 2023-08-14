@@ -83,7 +83,6 @@
         android:contentDescription="@string/fab_create_desc"
         android:src="@drawable/ic_plus_white_24dp"
         android:layout_gravity="end|bottom"
-        app:borderWidth="0dp"
-        app:layout_behavior="org.wordpress.android.ui.FloatingActionButtonBehavior" />
+        app:borderWidth="0dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
