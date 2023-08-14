@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -57,6 +59,7 @@ class EditJetpackSocialShareMessageActivity : AppCompatActivity() {
                     is UiState.Loaded -> {
                         Loaded(state)
                     }
+
                     is UiState.Initial -> {
                         // no-op
                     }
@@ -67,45 +70,54 @@ class EditJetpackSocialShareMessageActivity : AppCompatActivity() {
 
     @Composable
     private fun Loaded(state: UiState.Loaded) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(Margin.ExtraLarge.value)
-        ) {
-            MainTopAppBar(
-                title = state.appBarLabel,
-                navigationIcon = NavigationIcons.BackIcon,
-                onNavigationIconClick = state.onBackClick,
-            )
-            var shareMessage by remember { mutableStateOf(state.currentShareMessage) }
-            val focusRequester = remember { FocusRequester() }
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(vertical = Margin.ExtraLarge.value)
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester),
-                value = shareMessage,
-                onValueChange = {
-                    val truncatedMessage = it.take(state.shareMessageMaxLength)
-                    shareMessage = truncatedMessage
-                    viewModel.updateShareMessage(truncatedMessage)
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    textColor = MaterialTheme.colors.onSurface,
-                    disabledTextColor = MaterialTheme.colors.onSurface
-                ),
-            )
-            Text(
-                text = state.customizeMessageDescription,
-                style = MaterialTheme.typography.body2,
-                color = MaterialTheme.colors.onSurface,
-            )
-            LaunchedEffect(Unit) {
-                // Without a delay the soft keyboard is not shown
-                delay(DELAY_SOFT_KEYBOARD_IN_MS)
-                focusRequester.requestFocus()
+        Scaffold(
+            topBar = {
+                MainTopAppBar(
+                    title = state.appBarLabel,
+                    navigationIcon = NavigationIcons.BackIcon,
+                    onNavigationIconClick = state.onBackClick,
+                )
+            }
+        ) { contentPadding ->
+            Box(
+                modifier = Modifier.padding(contentPadding)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(Margin.ExtraLarge.value)
+                ) {
+                    var shareMessage by remember { mutableStateOf(state.currentShareMessage) }
+                    val focusRequester = remember { FocusRequester() }
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .padding(vertical = Margin.ExtraLarge.value)
+                            .fillMaxWidth()
+                            .focusRequester(focusRequester),
+                        value = shareMessage,
+                        onValueChange = {
+                            val truncatedMessage = it.take(state.shareMessageMaxLength)
+                            shareMessage = truncatedMessage
+                            viewModel.updateShareMessage(truncatedMessage)
+                        },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            textColor = MaterialTheme.colors.onSurface,
+                            disabledTextColor = MaterialTheme.colors.onSurface
+                        ),
+                    )
+                    Text(
+                        text = state.customizeMessageDescription,
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.onSurface,
+                    )
+                    LaunchedEffect(Unit) {
+                        // Without a delay the soft keyboard is not shown
+                        delay(DELAY_SOFT_KEYBOARD_IN_MS)
+                        focusRequester.requestFocus()
+                    }
+                }
             }
         }
         BackHandler(
