@@ -781,8 +781,8 @@ class MySiteViewModel @Inject constructor(
         // todo: annmarie - add logic for hide menu item click
         // todo: annmarie - add logic for refreshing the dashboard after hiding the card
         // cardsTracker.trackHideItemMenuClicked()
-        //        _onNavigation.value =
-        //            Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
+        //     _onNavigation.value =
+        //        Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
     }
 
     private fun onActivityCardAllActivityItemClick() {
