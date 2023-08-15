@@ -12,11 +12,6 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
-import org.wordpress.android.fluxc.model.DynamicCardType
-import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
-import org.wordpress.android.fluxc.model.DynamicCardType.GET_TO_KNOW_APP_QUICK_START
-import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
-import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -49,7 +44,6 @@ import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
-import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -70,9 +64,7 @@ class QuickStartRepository
     private val resourceProvider: ResourceProvider,
     private val dispatcher: Dispatcher,
     private val eventBus: EventBusWrapper,
-    private val dynamicCardStore: DynamicCardStore,
     private val htmlCompat: HtmlCompatWrapper,
-    private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val contextProvider: ContextProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val quickStartTracker: QuickStartTracker,
@@ -145,17 +137,8 @@ class QuickStartRepository
         }
     }
 
-    suspend fun getQuickStartTaskTypes(siteLocalId: Int): List<QuickStartTaskType> {
-        val taskTypes = quickStartType.taskTypes.filterNot { it == UNKNOWN }
-        return if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
-            dynamicCardStore.getCards(siteLocalId).dynamicCardTypes
-                .filter { dynamicCardType ->
-                    dynamicCardType in taskTypes.map { it.toDynamicCardType() }
-                }
-                .map { it.toQuickStartTaskType() }
-        } else {
-            taskTypes
-        }
+    fun getQuickStartTaskTypes(): List<QuickStartTaskType> {
+        return quickStartType.taskTypes.filterNot { it == UNKNOWN }
     }
 
     fun skipQuickStart() {
@@ -222,7 +205,7 @@ class QuickStartRepository
         }
     }
 
-    fun setTaskDoneAndTrack(
+    private fun setTaskDoneAndTrack(
         task: QuickStartTask,
         siteLocalId: Int
     ) {
@@ -252,41 +235,19 @@ class QuickStartRepository
         job.cancel()
     }
 
-    suspend fun onCategoryCompleted(siteLocalId: Int, categoryType: QuickStartTaskType) {
-        if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
-            val completionMessage = getCategoryCompletionMessage(categoryType)
-            _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(completionMessage.asHtml()))))
-            dynamicCardStore.removeCard(siteLocalId, categoryType.toDynamicCardType())
-        }
+    suspend fun onCategoryCompleted(categoryType: QuickStartTaskType) {
+        val completionMessage = getCategoryCompletionMessage(categoryType)
+        _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(completionMessage.asHtml()))))
     }
 
-    @Suppress("ForbiddenComment")
     private fun getCategoryCompletionMessage(taskType: QuickStartTaskType) = when (taskType) {
         CUSTOMIZE -> R.string.quick_start_completed_type_customize_message
         GROW -> R.string.quick_start_completed_type_grow_message
-        // TODO: ashiagr GET_TO_KNOW_APP add message
         GET_TO_KNOW_APP -> R.string.quick_start_completed_type_grow_message
         UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
     }.let { resourceProvider.getString(it) }
 
     private fun String.asHtml() = htmlCompat.fromHtml(this)
-
-    private fun DynamicCardType.toQuickStartTaskType(): QuickStartTaskType {
-        return when (this) {
-            CUSTOMIZE_QUICK_START -> CUSTOMIZE
-            GROW_QUICK_START -> GROW
-            GET_TO_KNOW_APP_QUICK_START -> GET_TO_KNOW_APP
-        }
-    }
-
-    private fun QuickStartTaskType.toDynamicCardType(): DynamicCardType {
-        return when (this) {
-            CUSTOMIZE -> CUSTOMIZE_QUICK_START
-            GROW -> GROW_QUICK_START
-            GET_TO_KNOW_APP -> GET_TO_KNOW_APP_QUICK_START
-            UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
-        }
-    }
 
     fun checkAndShowQuickStartNotice() {
         val selectedSiteLocalId = selectedSiteRepository.getSelectedSite()?.id ?: -1

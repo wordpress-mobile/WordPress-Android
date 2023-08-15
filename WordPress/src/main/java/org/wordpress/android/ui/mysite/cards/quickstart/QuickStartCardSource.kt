@@ -30,11 +30,11 @@ class QuickStartCardSource @Inject constructor(
             refresh()
         }
         val quickStartTaskTypes = refresh.filter { it == true }.mapAsync(coroutineScope) {
-            quickStartRepository.getQuickStartTaskTypes(siteLocalId).onEach { taskType ->
+            quickStartRepository.getQuickStartTaskTypes().onEach { taskType ->
                 if (!isEmptyCategory(siteLocalId, taskType) &&
                     quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteLocalId, taskType)
                 ) {
-                    quickStartRepository.onCategoryCompleted(siteLocalId, taskType)
+                    quickStartRepository.onCategoryCompleted(taskType)
                 }
             }
         }
