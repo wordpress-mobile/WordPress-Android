@@ -31,7 +31,7 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.JetpackSocialEntity
 
 @Database(
-        version = 19,
+        version = 20,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -102,6 +102,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 .addMigrations(MIGRATION_14_15)
                 .addMigrations(MIGRATION_15_16)
                 .addMigrations(MIGRATION_18_19)
+                .addMigrations(MIGRATION_19_20)
                 .build()
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -267,6 +268,33 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                     execSQL(
                         "CREATE INDEX IF NOT EXISTS `index_BlazeCampaigns_siteId` " +
                             "ON `BlazeCampaigns` (`siteId`)"
+                    )
+                }
+            }
+        }
+
+        val MIGRATION_19_20 = object : Migration(19, 20) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.apply {
+                    execSQL("DROP TABLE IF EXISTS `BlazeCampaigns`")
+                    execSQL("DELETE FROM `BlazeCampaignsPagination`")
+                    execSQL("CREATE TABLE `BlazeCampaigns` (" +
+                            "`siteId` INTEGER NOT NULL, " +
+                            "`campaignId` INTEGER NOT NULL, " +
+                            "`title` TEXT NOT NULL, " +
+                            "`imageUrl` TEXT, " +
+                            "`createdAt` TEXT NOT NULL, " +
+                            "`endDate` TEXT, " +
+                            "`uiStatus` TEXT NOT NULL, " +
+                            "`budgetCents` INTEGER NOT NULL, " +
+                            "`impressions` INTEGER NOT NULL, " +
+                            "`clicks` INTEGER NOT NULL, " +
+                            "PRIMARY KEY (`siteId`, `campaignId`)" +
+                            ")"
+                    )
+                    execSQL(
+                        "CREATE INDEX IF NOT EXISTS `index_BlazeCampaigns_siteId` " +
+                                "ON `BlazeCampaigns` (`siteId`)"
                     )
                 }
             }
