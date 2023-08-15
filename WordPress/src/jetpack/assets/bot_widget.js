@@ -30,25 +30,10 @@ DocsBotAI.init = function (c) {
                             // Open DocsBotAI after shadowRoot is loaded
                             window.DocsBotAI.open();
 
-                            // Observe the shadowRoot for changes (including header appearance)
-                            const shadowRootObserver = new MutationObserver(function (mutationsList, observer) {
-                                const header = shadowRoot.querySelector("div > div > div > div.docsbot-chat-header");
-                                const closeButton = shadowRoot.querySelector("div > div > div > a");
-                                if (header) {
-                                    header.style.display = "none"; // hide the header
-                                }
-
-                                if (closeButton) {
-                                    closeButton.style.display = "none"; // hide the close button
-                                }
-                                // Disconnect the observer since we've achieved our goal
-                                shadowRootObserver.disconnect();
-                            });
-
-                            shadowRootObserver.observe(shadowRoot, { childList: true, subtree: true });
-
-                            resolve(shadowRoot);
-                            observer.disconnect();
+                            const linkElem = document.createElement("link");
+                            linkElem.setAttribute("rel", "stylesheet");
+                            linkElem.setAttribute("href", "/assets/support_chat_widget.css");
+                            shadowRoot.appendChild(linkElem);
                         }
                     };
 
