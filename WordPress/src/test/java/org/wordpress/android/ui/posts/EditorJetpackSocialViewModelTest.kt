@@ -550,7 +550,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
 
     @Test
     fun `Should start jetpack social if onPostVisibilityChanged is called`() {
-        classToTest.onPostVisibilityChanged()
+        classToTest.onPostStatusChanged()
         verify(showJetpackSocialContainerObserver).onChanged(any())
     }
 

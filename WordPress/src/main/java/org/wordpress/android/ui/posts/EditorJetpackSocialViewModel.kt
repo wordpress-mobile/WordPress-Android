@@ -391,7 +391,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
         if (trackEvent) jetpackSocialSharingTracker.trackAddConnectionCtaDisplayed(jetpackSocialFlow)
     }
 
-    fun onPostVisibilityChanged() {
+    fun onPostStatusChanged() {
         startJetpackSocial()
     }
 

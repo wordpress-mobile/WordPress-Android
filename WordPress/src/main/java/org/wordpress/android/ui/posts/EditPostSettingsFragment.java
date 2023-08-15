@@ -938,7 +938,7 @@ public class EditPostSettingsFragment extends Fragment {
                     postImmutableModel -> {
                         updatePostStatusRelatedViews(postImmutableModel);
                         updateSaveButton();
-                        mJetpackSocialViewModel.onPostVisibilityChanged();
+                        mJetpackSocialViewModel.onPostStatusChanged();
                         return null;
                     });
         }
