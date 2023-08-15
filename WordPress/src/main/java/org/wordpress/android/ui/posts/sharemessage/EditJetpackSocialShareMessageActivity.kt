@@ -13,11 +13,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.lifecycleScope
@@ -36,6 +41,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeEditor
@@ -134,6 +140,23 @@ class EditJetpackSocialShareMessageActivity : AppCompatActivity() {
                             textColor = MaterialTheme.colors.onSurface,
                             disabledTextColor = MaterialTheme.colors.onSurface
                         ),
+                        trailingIcon = {
+                            IconButton(
+                                modifier = Modifier.padding(end = Margin.Small.value),
+                                onClick = {
+                                    val newValue = TextFieldValue()
+                                    shareTextFieldValue = newValue
+                                    viewModel.updateShareMessage(newValue.text)
+                                }
+                            ) {
+                                Icon(
+                                    Icons.Default.Clear,
+                                    contentDescription = stringResource(
+                                        R.string.post_settings_jetpack_social_share_message_clear
+                                    ),
+                                )
+                            }
+                        }
                     )
                     Text(
                         text = state.customizeMessageDescription,
