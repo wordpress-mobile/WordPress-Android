@@ -26,9 +26,10 @@ class EditJetpackSocialShareMessageViewModel @Inject constructor(
     val actionEvents = _actionEvents.receiveAsFlow()
 
     private var currentShareMessage = ""
+    private var hasChangedMessage = false
 
-    fun start(currentShareMessage: String) {
-        this.currentShareMessage = currentShareMessage
+    fun start(initialShareMessage: String) {
+        if (!hasChangedMessage) currentShareMessage = initialShareMessage
         _uiState.value = Loaded(
             appBarLabel = stringProvider.getString(
                 R.string.post_settings_jetpack_social_share_message_title
@@ -44,6 +45,7 @@ class EditJetpackSocialShareMessageViewModel @Inject constructor(
 
     fun updateShareMessage(shareMessage: String) {
         currentShareMessage = shareMessage
+        hasChangedMessage = true
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)

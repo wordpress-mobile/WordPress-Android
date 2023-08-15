@@ -57,7 +57,7 @@ class EditJetpackSocialShareMessageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.start(
-            currentShareMessage = requireNotNull(intent.getStringExtra(EXTRA_SOCIAL_SHARE_MESSAGE))
+            initialShareMessage = requireNotNull(intent.getStringExtra(EXTRA_SOCIAL_SHARE_MESSAGE))
         )
         observeActionEvents()
         setContent {
