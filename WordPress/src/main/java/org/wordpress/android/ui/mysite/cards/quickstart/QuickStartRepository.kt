@@ -16,9 +16,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GET_TO_KNOW_APP
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
@@ -234,18 +231,6 @@ class QuickStartRepository
     fun clear() {
         job.cancel()
     }
-
-    suspend fun onCategoryCompleted(categoryType: QuickStartTaskType) {
-        val completionMessage = getCategoryCompletionMessage(categoryType)
-        _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(completionMessage.asHtml()))))
-    }
-
-    private fun getCategoryCompletionMessage(taskType: QuickStartTaskType) = when (taskType) {
-        CUSTOMIZE -> R.string.quick_start_completed_type_customize_message
-        GROW -> R.string.quick_start_completed_type_grow_message
-        GET_TO_KNOW_APP -> R.string.quick_start_completed_type_grow_message
-        UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
-    }.let { resourceProvider.getString(it) }
 
     private fun String.asHtml() = htmlCompat.fromHtml(this)
 

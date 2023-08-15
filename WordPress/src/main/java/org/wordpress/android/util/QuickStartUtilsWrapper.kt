@@ -40,10 +40,6 @@ class QuickStartUtilsWrapper
         )
     }
 
-    fun isEveryQuickStartTaskDoneForType(siteLocalId: Int, type: QuickStartTaskType): Boolean {
-        return quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), type).isEmpty()
-    }
-
     fun getTaskCompletedTracker(task: QuickStartTask): Stat {
         return QuickStartUtils.getTaskCompletedTracker(task)
     }
