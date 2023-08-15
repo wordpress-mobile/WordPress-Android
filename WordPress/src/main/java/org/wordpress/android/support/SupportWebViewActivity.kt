@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.toMap
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
@@ -65,6 +66,8 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
 
     override fun onSupportTapped(chatHistory: String) {
         zendeskHelper.requireIdentity(this, selectedSiteFromExtras) {
+            showTicketCreatingMessage()
+
             val description = zendeskHelper.parseChatHistory(
                 getString(R.string.contact_support_bot_ticket_comment_start),
                 getString(R.string.contact_support_bot_ticket_comment_question),
@@ -73,7 +76,12 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
             )
             createNewZendeskRequest(description, object : ZendeskHelper.CreateRequestCallback() {
                 override fun onSuccess() {
-                    showTicketMessage()
+                    showZendeskTickets()
+                    ToastUtils.showToast(
+                        this@SupportWebViewActivity,
+                        R.string.contact_support_bot_ticket_message,
+                        ToastUtils.Duration.LONG
+                    )
                 }
 
                 override fun onError() {
@@ -94,18 +102,12 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         )
     }
 
-    private fun showTicketMessage() {
+    private fun showTicketCreatingMessage() {
         WPSnackbar.make(
             findViewById(R.id.webview_wrapper),
-            R.string.contact_support_bot_ticket_message,
-            Snackbar.LENGTH_LONG
-        ).apply {
-            setAction(R.string.contact_support_bot_ticket_button) {
-                showZendeskTickets()
-                finish()
-            }
-            show()
-        }
+            R.string.contact_support_bot_ticket_loading,
+            Snackbar.LENGTH_INDEFINITE
+        ).show()
     }
 
     private fun showTicketErrorMessage() {
