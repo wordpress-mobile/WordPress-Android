@@ -162,7 +162,6 @@ import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
-
 @Suppress("LargeClass")
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
