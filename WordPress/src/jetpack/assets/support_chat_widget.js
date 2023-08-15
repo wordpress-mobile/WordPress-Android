@@ -34,22 +34,12 @@
                 questions: [
                     decodeURIComponent(urlParams.questionOne),
                     decodeURIComponent(urlParams.questionTwo),
-                    decodeURIComponent(urlParams.questionThree)
+                    decodeURIComponent(urlParams.questionThree),
+                    decodeURIComponent(urlParams.questionFour),
+                    decodeURIComponent(urlParams.questionFive),
+                    decodeURIComponent(urlParams.questionSix)
                 ] // Array of example questions to show in the widget. Three are picked at random.
             },
-        }).then(() => {
-            // Safely do stuff here after the widget is loaded.
-            let timerId = setInterval(() => {
-                openDocsBot(); // wait for init
-            }, 200);
-
-            setTimeout(() => {
-                clearInterval(timerId)
-
-                hideTopCloseButton(); // hide after init
-                hideTopHeader();
-                resetConversation();
-            }, 300);
         });
     }
 
@@ -72,37 +62,6 @@
             }, {}) :
             {}
     }
-
-    function openDocsBot() {
-        const widget = document.querySelector("#docsbotai-root").shadowRoot.querySelector("a.floating-button");
-        if (widget && widget !== null && typeof widget !== 'undefined') {
-            widget.click();
-        }
-
-        if ( 'function' === typeof window.DocsBotAI ) {
-            DocsBotAI.open();
-        }
-    }
-
-    function hideTopCloseButton() {
-        const closeButton = document.querySelector("#docsbotai-root").shadowRoot.querySelector("div > div > div > a");
-        if (closeButton && closeButton !== null && closeButton !== 'undefined') {
-            closeButton.style.display = 'none';
-        }
-    }
-
-    function hideTopHeader() {
-        const header = document.querySelector("#docsbotai-root").shadowRoot.querySelector("div > div > div > div.docsbot-chat-header");
-        if (header && header !== null && header !== 'undefined') {
-            header.style.display = 'none';
-        }
-    }
-
-    function resetConversation() {
-        // reset button was in top header
-        localStorage.removeItem("docsbot_chat_history");
-    }
-
 
     document.addEventListener( 'DOMContentLoaded', init );
 } ) ();
