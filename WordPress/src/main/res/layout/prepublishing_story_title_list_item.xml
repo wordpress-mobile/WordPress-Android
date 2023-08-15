@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingEnd="@dimen/margin_extra_large"
-        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle">
+        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle"
+        app:layout_constraintBottom_toTopOf="@id/bottom_divider">
 
         <FrameLayout
             android:id="@+id/story_thumbnail_layout"
@@ -75,5 +76,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/bottom_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
