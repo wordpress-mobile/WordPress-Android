@@ -1338,7 +1338,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given dynamic card disabled, when QS remove menu item is clicked, then remove next steps dialog shown`() {
+    fun `when QS remove menu item is clicked, then remove next steps dialog shown`() {
         initSelectedSite( isQuickStartInProgress = true)
 
         requireNotNull(removeMenuItemClickAction).invoke()

@@ -126,7 +126,7 @@ class CardsBuilderTest {
     }
 
     @Test
-    fun `given dynamic card disabled + quick start in progress, when site is selected, then QS card built`() {
+    fun `given quick start in progress, when site is selected, then QS card built`() {
         val cards = buildCards(isQuickStartInProgress = true)
 
         assertThat(cards.findQuickStartCard()).isNotNull
