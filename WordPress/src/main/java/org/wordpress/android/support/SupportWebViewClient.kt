@@ -13,6 +13,7 @@ class SupportWebViewClient(
 ) : ErrorManagedWebViewClient(listener) {
     interface SupportWebViewClientListener : ErrorManagedWebViewClientListener {
         fun onChatSessionClosed(chatHistory: String)
+        fun onRedirectToExternalBrowser(url: String)
     }
 
     override fun shouldInterceptRequest(
@@ -28,6 +29,11 @@ class SupportWebViewClient(
         url: String
     ): WebResourceResponse? {
         return assetLoader.shouldInterceptRequest(Uri.parse(url))
+    }
+
+    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+        listener.onRedirectToExternalBrowser(request.url.toString())
+        return true
     }
 }
 

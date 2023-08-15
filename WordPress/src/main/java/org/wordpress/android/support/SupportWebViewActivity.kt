@@ -18,6 +18,7 @@ import androidx.webkit.WebViewAssetLoader.ResourcesPathHandler
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.utils.toMap
 import org.wordpress.android.support.SupportWebViewActivity.OpenChatWidget.Companion.CHAT_HISTORY
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 
 class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.SupportWebViewClientListener {
@@ -47,6 +48,10 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         intent.putExtra(CHAT_HISTORY, chatHistory)
         setResult(RESULT_OK, intent)
         finish()
+    }
+
+    override fun onRedirectToExternalBrowser(url: String) {
+        ActivityLauncher.openUrlExternal(this, url)
     }
 
     private fun setupWebView() {
