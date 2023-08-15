@@ -132,6 +132,9 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         val suggestions: String,
         val questionOne: String,
         val questionTwo: String,
-        val questionThree: String
+        val questionThree: String,
+        val questionFour: String,
+        val questionFive: String,
+        val questionSix: String
     )
 }

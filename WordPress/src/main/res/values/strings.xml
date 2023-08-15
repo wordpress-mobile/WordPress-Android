@@ -2283,9 +2283,12 @@
     <string name="contact_support_first_message">What can we help you with?</string>
     <string name="contact_support_get_support">Contact support</string>
     <string name="contact_support_suggestions">Not sure what to ask?</string>
-    <string name="contact_support_question_one">How do I change home page?</string>
-    <string name="contact_support_question_two">Account or billing issues?</string>
-    <string name="contact_support_question_three">Need to report an error or crash?</string>
+    <string name="contact_support_question_one">What is my site address?</string>
+    <string name="contact_support_question_two">Help, my site is down!</string>
+    <string name="contact_support_question_three">I can\'t upload photos/videos</string>
+    <string name="contact_support_question_four">Why can\'t I login?</string>
+    <string name="contact_support_question_five">I forgot my login information</string>
+    <string name="contact_support_question_six">How can I use my custom domain in the app?</string>
 
     <!--My Site-->
     <string name="my_site_header_content">Content</string>
