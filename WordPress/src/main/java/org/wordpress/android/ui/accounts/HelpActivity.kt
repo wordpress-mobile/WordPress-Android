@@ -177,7 +177,10 @@ class HelpActivity : LocaleAwareActivity() {
             suggestions = getString(R.string.contact_support_suggestions),
             questionOne = getString(R.string.contact_support_question_one),
             questionTwo = getString(R.string.contact_support_question_two),
-            questionThree = getString(R.string.contact_support_question_three)
+            questionThree = getString(R.string.contact_support_question_three),
+            questionFour = getString(R.string.contact_support_question_four),
+            questionFive = getString(R.string.contact_support_question_five),
+            questionSix = getString(R.string.contact_support_question_six)
         )
         val intent = SupportWebViewActivity.createIntent(
             this,

@@ -2286,6 +2286,9 @@
     <string name="contact_support_question_one">How do I change home page?</string>
     <string name="contact_support_question_two">Account or billing issues?</string>
     <string name="contact_support_question_three">Need to report an error or crash?</string>
+    <string name="contact_support_question_four">Why can\'t I login?</string>
+    <string name="contact_support_question_five">I forgot my login information</string>
+    <string name="contact_support_question_six">How can I use my custom domain in the app?</string>
     <string name="contact_support_bot_ticket_loading">Creating support ticket…</string>
     <string name="contact_support_bot_ticket_message">Ticket created</string>
     <string name="contact_support_bot_ticket_button">See ticket</string>
