@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
