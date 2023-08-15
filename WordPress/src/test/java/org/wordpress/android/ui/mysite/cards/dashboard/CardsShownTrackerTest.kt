@@ -9,7 +9,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard.ActivityCardWithItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
@@ -113,7 +112,9 @@ class CardsShownTrackerTest {
         listOf(
             ActivityCardWithItems(
                 title = UiStringText("title"),
-                footerLink = ActivityCard.FooterLink(UiStringText("footer"), onClick = mock()),
+                onAllActivityMenuItemClick = mock(),
+                onHideMenuItemClick = mock(),
+                onMoreMenuClick = mock(),
                 activityItems = emptyList()
             )
         )
