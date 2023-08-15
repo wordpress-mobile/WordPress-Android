@@ -10,13 +10,11 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import androidx.core.view.isVisible
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewAssetLoader.AssetsPathHandler
 import androidx.webkit.WebViewAssetLoader.DEFAULT_DOMAIN
 import androidx.webkit.WebViewAssetLoader.ResourcesPathHandler
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textview.MaterialTextView
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -43,8 +41,6 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         intent.extras?.getSerializableCompat<SiteModel>(WordPress.SITE)
     }
 
-    lateinit var progress: ViewGroup
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toggleNavbarVisibility(false)
@@ -58,7 +54,6 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         supportActionBar?.title = getString(R.string.help)
         supportActionBar?.subtitle = ""
 
-        setupLoadingIndicator()
         setupWebView()
         setupJsInterfaceForWebView()
     }
@@ -70,7 +65,6 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
 
     override fun onSupportTapped(chatHistory: String) {
         zendeskHelper.requireIdentity(this, selectedSiteFromExtras) {
-            progress.isVisible = true
             val description = zendeskHelper.parseChatHistory(
                 getString(R.string.contact_support_bot_ticket_comment_start),
                 getString(R.string.contact_support_bot_ticket_comment_question),
@@ -79,23 +73,13 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
             )
             createNewZendeskRequest(description, object : ZendeskHelper.CreateRequestCallback() {
                 override fun onSuccess() {
-                    progress.isVisible = false
                     showTicketMessage()
                 }
 
                 override fun onError() {
-                    progress.isVisible = false
                     showTicketErrorMessage()
                 }
             })
-        }
-    }
-
-    private fun setupLoadingIndicator() {
-        progress = findViewById(R.id.progress_layout)
-        progress.findViewById<MaterialTextView>(R.id.progress_text).apply {
-            setText(R.string.contact_support_bot_ticket_loading)
-            isVisible = true
         }
     }
 
