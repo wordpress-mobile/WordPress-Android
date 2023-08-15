@@ -151,6 +151,8 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column
     private String mPlanShortName;
     @Column
+    private String mPlanProductSlug;
+    @Column
     private String mIconUrl;
     @Column
     private boolean mHasFreePlan;
@@ -254,6 +256,8 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     // Comma-separated list of active features in the site's plan
     @Column
     private String mPlanActiveFeatures;
+    @Column
+    private Boolean mWasEcommerceTrial;
 
     @Override
     public int getId() {
@@ -644,6 +648,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setPlanShortName(String planShortName) {
         mPlanShortName = planShortName;
+    }
+
+    public String getPlanProductSlug() {
+        return mPlanProductSlug;
+    }
+
+    public void setPlanProductSlug(String planProductSlug) {
+        mPlanProductSlug = planProductSlug;
     }
 
     public long getPlanId() {
@@ -1078,6 +1090,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setCanBlaze(Boolean mCanBlaze) {
         this.mCanBlaze = mCanBlaze;
+    }
+
+    public Boolean getWasEcommerceTrial() {
+        return mWasEcommerceTrial;
+    }
+
+    public void setWasEcommerceTrial(Boolean wasEcommerceTrial) {
+        mWasEcommerceTrial = wasEcommerceTrial;
     }
 
     public boolean isHostedAtWPCom() {
