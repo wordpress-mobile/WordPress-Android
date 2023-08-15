@@ -51,7 +51,7 @@ class EditJetpackSocialShareMessageViewModel @Inject constructor(
         viewModelScope.launch {
             _actionEvents.send(
                 ActionEvent.FinishActivity(
-                    updatedShareMessage = currentShareMessage,
+                    updatedShareMessage = currentShareMessage.trim(),
                 )
             )
         }
