@@ -3268,11 +3268,6 @@
     <string name="quick_start_completed_tour_title">Congrats! You know your way around&lt;br/&gt;</string>
     <string name="quick_start_completed_tour_subtitle">Doesn\'t it feel good to cross things off a list?</string>
 
-    <string name="quick_start_card_menu_pin">Pin this</string>
-    <string name="quick_start_card_menu_unpin">Unpin this</string>
-    <string name="quick_start_card_menu_hide">Hide for now</string>
-    <string name="quick_start_card_menu_remove">Don\'t show again</string>
-
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;All tasks completed&lt;/b&gt;&lt;br/&gt;You’ve customized your site. Well done!</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;All tasks completed&lt;/b&gt;&lt;br/&gt;You’ll reach more people. Nice job!</string>
 

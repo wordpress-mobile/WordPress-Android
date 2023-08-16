@@ -57,7 +57,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.MySiteFragment;
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment;
 import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment;
 import org.wordpress.android.ui.notifications.DismissNotificationReceiver;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
@@ -509,8 +508,6 @@ public interface AppComponent {
     void inject(BackupDownloadActivity object);
 
     void inject(RestoreActivity object);
-
-    void inject(DynamicCardMenuFragment object);
 
     void inject(BackupDownloadFragment object);
 

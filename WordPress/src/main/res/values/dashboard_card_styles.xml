@@ -150,11 +150,6 @@
         <item name="android:layout_marginTop">@dimen/margin_extra_small</item>
     </style>
 
-    <style name="ShapeAppearance.QuickStartTaskCardIllustration" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">@dimen/quick_start_task_card_corner_radius</item>
-    </style>
-
     <!--My Site Card - Domain Registration-->
 
     <style name="DomainRegistrationCardTitle" parent="DashboardCardSubtitle">
