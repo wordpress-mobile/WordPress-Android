@@ -186,7 +186,8 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
         }
 
         mTextAdd.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(@NonNull View v) {
                 if (null != mSite && mSite.hasDiskSpaceQuotaInformation() && mSite.getSpaceAvailable() <= 0) {
                     ToastUtils.showToast(StockMediaPickerActivity.this, R.string.error_media_quota_exceeded_toast);
                     return;
@@ -197,7 +198,8 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
 
         if (isMultiSelectEnabled()) {
             mTextPreview.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
+                @Override
+                public void onClick(@NonNull View v) {
                     previewSelection();
                 }
             });
@@ -220,7 +222,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_IS_SHOWING_EMPTY_VIEW, mIsShowingEmptyView);
@@ -262,7 +264,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             setResult(RESULT_CANCELED);
             finish();
@@ -276,7 +278,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {
+    public boolean onQueryTextSubmit(@NonNull String query) {
         if (mSearchView != null) {
             mSearchView.clearFocus();
         }
@@ -285,7 +287,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
     }
 
     @Override
-    public boolean onQueryTextChange(String query) {
+    public boolean onQueryTextChange(@NonNull String query) {
         if (!StringUtils.equals(query, mSearchQuery)) {
             submitSearch(query, true);
         }
@@ -297,7 +299,8 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
 
         // don't allow the SearchView to be closed
         mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override public boolean onClose() {
+            @Override
+            public boolean onClose() {
                 return true;
             }
         });
@@ -492,7 +495,8 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
         // sure the bar doesn't overlap the bottom row when showing
         long msDelay = AniUtils.Duration.SHORT.toMillis(this);
         mHandler.postDelayed(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 if (!isFinishing()) {
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mRecycler.getLayoutParams();
                     if (show) {
@@ -765,7 +769,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
 
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(@NonNull View v) {
                     int position = getBindingAdapterPosition();
                     if (mAdapter.isValidPosition(position)) {
                         mAdapter.toggleItemSelected(StockViewHolder.this, position);
@@ -775,7 +779,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
 
             mImageView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public boolean onLongClick(View v) {
+                public boolean onLongClick(@NonNull View v) {
                     int position = getAdapterPosition();
                     if (mAdapter.isValidPosition(position)) {
                         MediaPreviewActivity.showPreview(v.getContext(), mSite, mAdapter.mItems.get(position).getUrl());
