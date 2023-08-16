@@ -355,6 +355,11 @@ public class SiteUtils {
         return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, minimalJetpackVersion));
     }
 
+    public static boolean supportsPaywallFeature(SiteModel site, String minimalJetpackVersion) {
+        return site != null && (checkMinimalJetpackVersion(site, minimalJetpackVersion));
+    }
+
+
     public static boolean isNonAtomicBusinessPlanSite(@Nullable SiteModel site) {
         return site != null && !site.isAutomatedTransfer() && SiteUtils.hasNonJetpackBusinessPlan(site);
     }
