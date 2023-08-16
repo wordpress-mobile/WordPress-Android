@@ -65,7 +65,7 @@ import kotlin.coroutines.CoroutineContext
 
 private const val SCROLL_TO_DELAY = 50L
 private const val SEARCH_COLLAPSE_DELAY = 500L
-private val FAB_VISIBLE_POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS)
+private val FAB_VISIBLE_POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
 val POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
 private const val TRACKS_SELECTED_TAB = "selected_tab"
 private const val TRACKS_SELECTED_AUTHOR_FILTER = "author_filter_selection"
