@@ -21,6 +21,8 @@
         android:layout_width="0dp"
         android:visibility="gone"
         android:layout_height="wrap_content"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="1"
         app:layout_constraintBottom_toTopOf="@id/actions_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

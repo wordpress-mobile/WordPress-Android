@@ -103,7 +103,6 @@ public class ReaderWebView extends WPWebView {
             this.setWebChromeClient(mReaderChromeClient);
             this.setWebViewClient(new ReaderWebViewClient(this));
             this.getSettings().setUserAgentString(WordPress.getUserAgent());
-            this.getSettings().setMediaPlaybackRequiresUserGesture(false);
 
             // Enable third-party cookies since they are disabled by default;
             // we need third-party cookies to support authenticated images

@@ -6,6 +6,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.support.ComposeEspressoLink
 import org.wordpress.android.support.WPSupportUtils.clickOn
 import org.wordpress.android.support.WPSupportUtils.getTranslatedString
 import org.wordpress.android.ui.compose.TestTags
@@ -24,6 +25,8 @@ object LandingPage {
             // Old UI - See LoginPrologueFragment
             clickOn(R.id.continue_with_wpcom_button)
         }
+
+        ComposeEspressoLink().unregister()
     }
 
     @JvmStatic

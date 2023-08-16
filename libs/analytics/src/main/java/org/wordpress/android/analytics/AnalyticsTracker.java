@@ -3,9 +3,8 @@ package org.wordpress.android.analytics;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
-
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1056,6 +1055,16 @@ public final class AnalyticsTracker {
         PRIVACY_CHOICES_BANNER_PRESENTED,
         PRIVACY_CHOICES_BANNER_SETTINGS_BUTTON_TAPPED,
         PRIVACY_CHOICES_BANNER_SAVE_BUTTON_TAPPED,
+        DASHBOARD_CARD_DOMAIN_TRANSFER_SHOWN,
+        DASHBOARD_CARD_DOMAIN_TRANSFER_TAPPED,
+        DASHBOARD_CARD_DOMAIN_TRANSFER_MORE_MENU_TAPPED,
+        DASHBOARD_CARD_DOMAIN_TRANSFER_HIDDEN,
+        JETPACK_SOCIAL_AUTO_SHARING_CONNECTION_TOGGLED,
+        JETPACK_SOCIAL_SHARE_LIMIT_DISPLAYED,
+        JETPACK_SOCIAL_UPGRADE_LINK_TAPPED,
+        JETPACK_SOCIAL_ADD_CONNECTION_CTA_DISPLAYED,
+        JETPACK_SOCIAL_ADD_CONNECTION_TAPPED,
+        JETPACK_SOCIAL_ADD_CONNECTION_DISMISSED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

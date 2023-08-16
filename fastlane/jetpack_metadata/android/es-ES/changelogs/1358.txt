@@ -1,3 +1,0 @@
-22.8:
-- La aplicación ya no se bloqueará al eliminar un sitio. ¡Menos mal!
-- Ahora, los bloques reutilizables se llaman "patrones sincronizados" (como en el editor del escritorio).

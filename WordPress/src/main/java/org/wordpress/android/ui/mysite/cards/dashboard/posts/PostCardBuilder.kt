@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.posts
 
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardErrorType
@@ -10,7 +9,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems.PostItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -43,56 +41,12 @@ class PostCardBuilder @Inject constructor(
     private fun buildPostCardsWithData(params: PostCardBuilderParams) =
         mutableListOf<PostCard>().apply {
             val posts = params.posts
-            posts?.hasPublished?.takeIf { !posts.hasDraftsOrScheduledPosts() }
-                ?.let { hasPublished ->
-                    if (hasPublished) {
-                        add(createNextPostCard(params.onPostItemClick, params.onFooterLinkClick))
-                    } else {
-                        add(createFirstPostCard(params.onPostItemClick, params.onFooterLinkClick))
-                    }
-                }
             posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard(params)) }
             posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard(params)) }
         }.toList()
 
     private fun createPostErrorCard() = PostCard.Error(
         title = UiStringRes(R.string.posts)
-    )
-
-    private fun createFirstPostCard(
-        onPostItemClick: (params: PostItemClickParams) -> Unit,
-        onFooterLinkClick: (postCardType: PostCardType) -> Unit
-    ) = PostCardWithoutPostItems(
-        postCardType = PostCardType.CREATE_FIRST,
-        title = UiStringRes(R.string.my_site_create_first_post_title),
-        excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
-        imageRes = R.drawable.img_write_212dp,
-        footerLink = FooterLink(
-            label = UiStringRes(R.string.my_site_post_card_link_create_post),
-            onClick = onFooterLinkClick
-        ),
-        onClick = ListItemInteraction.create(
-            PostItemClickParams(postCardType = PostCardType.CREATE_FIRST, postId = NOT_SET),
-            onPostItemClick
-        )
-    )
-
-    private fun createNextPostCard(
-        onPostItemClick: (params: PostItemClickParams) -> Unit,
-        onFooterLinkClick: (postCardType: PostCardType) -> Unit
-    ) = PostCardWithoutPostItems(
-        postCardType = PostCardType.CREATE_NEXT,
-        title = UiStringRes(R.string.my_site_create_next_post_title),
-        excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
-        imageRes = R.drawable.img_write_212dp,
-        footerLink = FooterLink(
-            label = UiStringRes(R.string.my_site_post_card_link_create_post),
-            onClick = onFooterLinkClick
-        ),
-        onClick = ListItemInteraction.create(
-            PostItemClickParams(postCardType = PostCardType.CREATE_NEXT, postId = NOT_SET),
-            onPostItemClick
-        )
     )
 
     private fun List<PostCardModel>.createDraftPostsCard(params: PostCardBuilderParams) =
@@ -116,8 +70,6 @@ class PostCardBuilder @Inject constructor(
                 onClick = params.onFooterLinkClick
             )
         )
-
-    private fun PostsCardModel.hasDraftsOrScheduledPosts() = draft.isNotEmpty() || scheduled.isNotEmpty()
 
     private fun List<PostCardModel>.mapToDraftPostItems(
         onPostItemClick: (params: PostItemClickParams) -> Unit

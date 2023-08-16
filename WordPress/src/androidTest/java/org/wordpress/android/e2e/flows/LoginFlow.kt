@@ -20,6 +20,7 @@ import org.wordpress.android.R
 import org.wordpress.android.e2e.pages.HelpScreen
 import org.wordpress.android.e2e.pages.LandingPage.tapContinueWithWpCom
 import org.wordpress.android.e2e.pages.LandingPage.tapEnterYourSiteAddress
+import org.wordpress.android.support.ComposeEspressoLink
 import org.wordpress.android.support.WPSupportUtils
 import org.wordpress.android.login.R as LoginR
 
@@ -46,7 +47,7 @@ class LoginFlow {
         return this
     }
 
-    fun confirmLogin(isSelfHosted: Boolean) {
+    fun confirmLogin() {
         // If we get bumped to the "enter your username and password" screen, fill it in
         if (WPSupportUtils.atLeastOneElementWithIdIsDisplayed(LoginR.id.login_password_row)) {
             enterUsernameAndPassword(
@@ -59,21 +60,15 @@ class LoginFlow {
         // See LoginEpilogueFragment
         val sitesList = Espresso.onView(ViewMatchers.withId(R.id.recycler_view))
         WPSupportUtils.waitForElementToBeDisplayed(sitesList)
-        sitesList.perform(
-            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                1,
-                ViewActions.click()
-            )
-        )
-        if (!isSelfHosted) {
-            // Quick Start Prompt Dialog - Click the "No thanks" negative button to continue.
-            // See QuickStartPromptDialogFragment
-            WPSupportUtils.clickOn(R.id.quick_start_prompt_dialog_button_negative)
-        }
+        ComposeEspressoLink().unregister()
+        Espresso.pressBack()
+
         if (BuildConfig.IS_JETPACK_APP) {
             dismissNewFeaturesDialogIfDisplayed()
         }
+
         WPSupportUtils.waitForElementToBeDisplayed(R.id.nav_sites)
+        ComposeEspressoLink().unregister()
     }
 
     fun chooseMagicLink(): LoginFlow {

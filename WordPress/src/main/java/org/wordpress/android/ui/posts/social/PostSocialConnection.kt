@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.social
 
 import org.wordpress.android.models.PublicizeConnection
+import org.wordpress.android.ui.publicize.PublicizeServiceIcon
 
 @Suppress("LongParameterList", "DataClassShouldBeImmutable")
 data class PostSocialConnection(
@@ -9,7 +10,7 @@ data class PostSocialConnection(
     val label: String,
     val externalId: String,
     val externalName: String,
-    val iconUrl: String,
+    val iconResId: Int?,
     var isSharingEnabled: Boolean,
 ) {
     companion object {
@@ -20,7 +21,7 @@ data class PostSocialConnection(
                 label = connection.label,
                 externalId = connection.externalId,
                 externalName = connection.externalDisplayName,
-                iconUrl = connection.externalProfilePictureUrl,
+                iconResId = PublicizeServiceIcon.fromServiceId(connection.service)?.iconResId,
                 isSharingEnabled = isSharingEnabled,
             )
         }

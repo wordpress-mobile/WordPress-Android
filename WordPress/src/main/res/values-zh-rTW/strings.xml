@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-12 11:54:08+0000
+Translation-Revision-Date: 2023-07-26 16:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.6
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_insert_video_block">插入影片區塊</string>
+    <string name="gutenberg_native_insert_image_block">插入圖片區塊</string>
+    <string name="gutenberg_native_insert_gallery_block">插入圖庫區塊</string>
+    <string name="gutenberg_native_insert_audio_block">插入音訊區塊</string>
+    <string name="blaze_campaign_detail_error">無法載入行銷活動詳細資訊</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">建立</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">你尚未建立任何行銷活動。 按一下「建立」便可開始創建行銷活動。</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">你沒有任何行銷活動</string>
+    <string name="blaze_campaign_details_page_title">行銷活動詳細資訊</string>
+    <string name="blaze_campaigns_page_title">Blaze 行銷活動</string>
+    <string name="budget_campaign_stats">預算</string>
+    <string name="clicks_campaign_stats">點擊數</string>
+    <string name="impressions_campaign_stats">曝光數</string>
+    <string name="campaign_status_scheduled">已排程</string>
+    <string name="campaign_status_in_moderation">審核中</string>
+    <string name="campaign_status_canceled">已取消</string>
+    <string name="campaign_status_rejected">已拒絕</string>
+    <string name="campaign_status_completed">已完成</string>
+    <string name="campaign_status_active">已啟用</string>
+    <string name="blaze_campaigns_card_footer_label">建立行銷活動</string>
+    <string name="blaze_campaigns_card_title">Blaze 行銷活動</string>
+    <string name="promote_blaze_flow_error">無法載入 Blaze 推廣流程</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">連結你的社群個人檔案</string>
+    <string name="prepublishing_nudges_social_new_connection_text">將文章自動分享給社群媒體上的朋友，藉此提高流量。</string>
+    <string name="menu_close_editor">關閉編輯器</string>
+    <string name="menu_redo_context">取消復原上一個變更</string>
+    <string name="menu_undo_context">復原上一個變更</string>
+    <string name="jetpack_social_social_shares_remaining">剩下 %1$d 次社群分享額度</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">立即訂購，提高分享額度</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">連結你的社群個人檔案</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">將文章自動分享給社群媒體上的朋友，藉此提高流量。</string>
+    <string name="post_settings_jetpack_social_header">社群分享</string>
     <string name="gutenberg_native_s_detached">%s 已中斷連結</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Android 版 %s 尚不支援編輯同步的版面配置</string>
     <string name="gutenberg_native_reusable">可重複使用</string>

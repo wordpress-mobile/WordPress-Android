@@ -6,11 +6,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardDomainCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DomainTransferCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
@@ -62,12 +62,6 @@ class CardsShownTracker @Inject constructor(
                 Type.POST.label
             )
         )
-        is PostCardWithoutPostItems -> trackCardShown(
-            Pair(
-                card.dashboardCardType.toTypeValue().label,
-                card.postCardType.toSubtypeValue().label
-            )
-        )
         is PostCardWithPostItems -> trackCardShown(
             Pair(
                 card.dashboardCardType.toTypeValue().label,
@@ -84,6 +78,12 @@ class CardsShownTracker @Inject constructor(
             Pair(
                 card.dashboardCardType.toTypeValue().label,
                 BlazeSubtype.NO_CAMPAIGNS.label
+            )
+        )
+        is DomainTransferCardModel -> trackCardShown(
+            Pair(
+                card.dashboardCardType.toTypeValue().label,
+                Type.DASHBOARD_CARD_DOMAIN_TRANSFER.label
             )
         )
         is DashboardCard.BlazeCard.BlazeCampaignsCardModel -> trackCardShown(

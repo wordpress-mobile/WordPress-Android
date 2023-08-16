@@ -30,6 +30,7 @@ class CardsTracker @Inject constructor(
         ACTIVITY("activity_log"),
         DASHBOARD_CARD_DOMAIN("dashboard_card_domain"),
         DASHBOARD_CARD_PLANS("dashboard_card_plans"),
+        DASHBOARD_CARD_DOMAIN_TRANSFER("dashboard_card_domain_transfer"),
     }
 
     enum class QuickStartSubtype(val label: String) {
@@ -45,8 +46,6 @@ class CardsTracker @Inject constructor(
     }
 
     enum class PostSubtype(val label: String) {
-        CREATE_FIRST("create_first"),
-        CREATE_NEXT("create_next"),
         DRAFT("draft"),
         SCHEDULED("scheduled")
     }
@@ -153,10 +152,10 @@ fun DashboardCardType.toTypeValue(): Type {
         DashboardCardType.TODAYS_STATS_CARD_ERROR -> Type.ERROR
         DashboardCardType.TODAYS_STATS_CARD -> Type.STATS
         DashboardCardType.POST_CARD_ERROR -> Type.ERROR
-        DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS -> Type.POST
         DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST
         DashboardCardType.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
         DashboardCardType.PROMOTE_WITH_BLAZE_CARD -> Type.PROMOTE_WITH_BLAZE
+        DashboardCardType.DASHBOARD_DOMAIN_TRANSFER_CARD -> Type.DASHBOARD_CARD_DOMAIN_TRANSFER
         DashboardCardType.BLAZE_CAMPAIGNS_CARD -> Type.PROMOTE_WITH_BLAZE
         DashboardCardType.DASHBOARD_DOMAIN_CARD -> Type.DASHBOARD_CARD_DOMAIN
         DashboardCardType.DASHBOARD_PLANS_CARD -> Type.DASHBOARD_CARD_PLANS
@@ -168,8 +167,6 @@ fun DashboardCardType.toTypeValue(): Type {
 
 fun PostCardType.toSubtypeValue(): PostSubtype {
     return when (this) {
-        PostCardType.CREATE_FIRST -> PostSubtype.CREATE_FIRST
-        PostCardType.CREATE_NEXT -> PostSubtype.CREATE_NEXT
         PostCardType.DRAFT -> PostSubtype.DRAFT
         PostCardType.SCHEDULED -> PostSubtype.SCHEDULED
     }

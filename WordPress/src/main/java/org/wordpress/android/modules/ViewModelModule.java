@@ -32,6 +32,7 @@ import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.BasicDialogViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel;
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryViewModel;
 import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesViewModel;
@@ -545,4 +546,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PublicizeListViewModel.class)
     abstract ViewModel publicizeListViewModel(PublicizeListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EditorJetpackSocialViewModel.class)
+    abstract ViewModel editorJetpackSocialViewModel(EditorJetpackSocialViewModel viewModel);
 }

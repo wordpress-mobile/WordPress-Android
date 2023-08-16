@@ -79,7 +79,6 @@ sealed class SiteNavigationAction {
 
     data class OpenDraftsPosts(val site: SiteModel) : SiteNavigationAction()
     data class OpenScheduledPosts(val site: SiteModel) : SiteNavigationAction()
-    data class OpenEditorToCreateNewPost(val site: SiteModel) : SiteNavigationAction()
     data class EditDraftPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
     data class EditScheduledPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
     data class OpenStatsInsights(val site: SiteModel) : SiteNavigationAction()
@@ -98,4 +97,5 @@ sealed class SiteNavigationAction {
         : SiteNavigationAction()
     data class OpenCampaignDetailPage(val campaignId: Int, val campaignDetailPageSource: CampaignDetailPageSource)
         : SiteNavigationAction()
+    data class OpenDomainTransferPage(val url: String) : SiteNavigationAction()
 }

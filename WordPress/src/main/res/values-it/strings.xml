@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-12 14:54:08+0000
+Translation-Revision-Date: 2023-07-26 16:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.6
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_insert_video_block">Inserisci blocco video</string>
+    <string name="gutenberg_native_insert_image_block">Inserisci blocco immagine</string>
+    <string name="gutenberg_native_insert_gallery_block">Inserisci blocco galleria</string>
+    <string name="gutenberg_native_insert_audio_block">Inserisci blocco audio</string>
+    <string name="blaze_campaign_detail_error">Impossibile caricare i dettagli della campagna</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Crea</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">Non hai ancora creato alcuna campagna. Fai clic su Crea per iniziare.</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">Non hai campagne</string>
+    <string name="blaze_campaign_details_page_title">Dettagli della campagna</string>
+    <string name="blaze_campaigns_page_title">Campagne Blaze</string>
+    <string name="clicks_campaign_stats">Clic</string>
+    <string name="impressions_campaign_stats">Impressioni</string>
+    <string name="campaign_status_scheduled">PIANIFICATA</string>
+    <string name="campaign_status_in_moderation">IN MODERAZIONE</string>
+    <string name="campaign_status_canceled">ANNULLATA</string>
+    <string name="campaign_status_rejected">RIFIUTATA</string>
+    <string name="campaign_status_completed">COMPLETATA</string>
+    <string name="campaign_status_active">ATTIVA</string>
+    <string name="blaze_campaigns_card_footer_label">Crea campagna</string>
+    <string name="blaze_campaigns_card_title">Campagna Blaze</string>
+    <string name="promote_blaze_flow_error">Impossibile caricare il flusso promozionale Blaze</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Connetti i tuoi profili social</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Aumenta il traffico condividendo automaticamente gli articoli con amici sui social media.</string>
+    <string name="menu_close_editor">Chiudi editor</string>
+    <string name="menu_redo_context">Ripeti ultima modifica</string>
+    <string name="menu_undo_context">Annulla ultima modifica</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d condivisioni sui social rimanenti</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Iscriviti per avere più condivisioni</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Connetti i tuoi profili social</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Aumenta il traffico condividendo automaticamente gli articoli con amici sui social media.</string>
+    <string name="post_settings_jetpack_social_header">Condivisione sui social</string>
     <string name="gutenberg_native_s_detached">%s scollegato</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">La modifica dei pattern sincronizzati non è ancora supportata su %s per iOS</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">La modifica dei pattern sincronizzati non è ancora supportata su %s per Android</string>

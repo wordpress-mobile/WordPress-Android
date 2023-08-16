@@ -92,6 +92,7 @@ import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
+import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
@@ -215,7 +216,8 @@ class MySiteViewModel @Inject constructor(
     private val dashboardCardPlansUtils: PlansCardUtils,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
-    private val blazeCardViewModelSlice: BlazeCardViewModelSlice
+    private val blazeCardViewModelSlice: BlazeCardViewModelSlice,
+    private val domainTransferCardViewModel: DomainTransferCardViewModel
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -299,7 +301,12 @@ class MySiteViewModel @Inject constructor(
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
     val onDynamicCardMenuShown = _onDynamicCardMenuShown as LiveData<Event<DynamicCardMenuModel>>
-    val onNavigation = merge(_onNavigation, siteStoriesHandler.onNavigation, blazeCardViewModelSlice.onNavigation)
+    val onNavigation = merge(
+        _onNavigation,
+        siteStoriesHandler.onNavigation,
+        blazeCardViewModelSlice.onNavigation,
+        domainTransferCardViewModel.onNavigation
+    )
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShareBloggingPrompt = _onShareBloggingPrompt as LiveData<Event<String>>
@@ -313,6 +320,7 @@ class MySiteViewModel @Inject constructor(
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     val blazeCardRefresh = blazeCardViewModelSlice.refresh
+    val domainTransferCardRefresh = domainTransferCardViewModel.refresh
 
     private var shouldMarkUpdateSiteTitleTaskComplete = false
 
@@ -371,6 +379,8 @@ class MySiteViewModel @Inject constructor(
             dashboardCardDomainUtils.onSiteChanged(site?.id, state as? SiteSelected)
 
             dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
+
+            domainTransferCardViewModel.onSiteChanged(site?.id, state as? SiteSelected)
 
             UiModel(currentAvatarUrl.orEmpty(), state)
         }
@@ -598,6 +608,10 @@ class MySiteViewModel @Inject constructor(
                     onViewMoreClick = this::onBloggingPromptViewMoreClick,
                     onViewAnswersClick = this::onBloggingPromptViewAnswersClick,
                     onRemoveClick = this::onBloggingPromptRemoveClick
+                ),
+                domainTransferCardBuilderParams = domainTransferCardViewModel.buildDomainTransferCardParams(
+                    site,
+                    uiModel.value?.state as? SiteSelected
                 ),
                 blazeCardBuilderParams = blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate),
                 dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
@@ -1495,9 +1509,6 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let { site ->
             cardsTracker.trackPostItemClicked(params.postCardType)
             when (params.postCardType) {
-                PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> _onNavigation.value =
-                    Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
-
                 PostCardType.DRAFT -> _onNavigation.value =
                     Event(SiteNavigationAction.EditDraftPost(site, params.postId))
 
@@ -1515,9 +1526,6 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let { site ->
             cardsTracker.trackPostCardFooterLinkClicked(postCardType)
             _onNavigation.value = when (postCardType) {
-                PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT ->
-                    Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
-
                 PostCardType.DRAFT -> Event(SiteNavigationAction.OpenDraftsPosts(site))
                 PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
             }

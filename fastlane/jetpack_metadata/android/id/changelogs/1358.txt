@@ -1,3 +1,0 @@
-22.8:
-- Aplikasi tidak akan crash lagi setelah Anda menghapus situs. Fiuh, leganya!
-- Blok pakai ulang sekarang disebut sebagai pola tersinkron, sama seperti yang ada di editor desktop.

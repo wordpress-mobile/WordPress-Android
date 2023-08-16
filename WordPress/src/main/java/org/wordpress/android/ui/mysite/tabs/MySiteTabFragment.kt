@@ -444,15 +444,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
         is SiteNavigationAction.OpenScheduledPosts ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
-        is SiteNavigationAction.OpenEditorToCreateNewPost ->
-            ActivityLauncher.addNewPostForResult(
-                requireActivity(),
-                action.site,
-                false,
-                PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
-                -1,
-                null
-            )
         // The below navigation is temporary and as such not utilizing the 'action.postId' in order to navigate to the
         // 'Edit Post' screen. Instead, it fallbacks to navigating to the 'Posts' screen and targeting a specific tab.
         is SiteNavigationAction.EditDraftPost ->
@@ -501,6 +492,10 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             requireActivity(),
             action.campaignId,
             action.campaignDetailPageSource
+        )
+
+        is SiteNavigationAction.OpenDomainTransferPage -> activityNavigator.openDomainTransfer(
+            requireActivity(), action.url
         )
     }
 
