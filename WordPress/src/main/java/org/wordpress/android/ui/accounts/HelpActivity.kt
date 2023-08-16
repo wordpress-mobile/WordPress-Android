@@ -170,7 +170,7 @@ class HelpActivity : LocaleAwareActivity() {
 
     private fun launchSupportWidget() {
         val botOptions = SupportWebViewActivity.BotOptions(
-            id = BuildConfig.DOCSBOTAI_ID,
+            id = "TqTdebbGjJeUjrmBIFjh/YbAMwiheXLs2Ue5j7elH", // BuildConfig.DOCSBOT_ID,
             inputPlaceholder = getString(R.string.contact_support_input_placeholder),
             firstMessage = getString(R.string.contact_support_first_message),
             getSupport = getString(R.string.contact_support_get_support),
