@@ -30,7 +30,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.support.SupportHelper
 import org.wordpress.android.support.SupportWebViewActivity
-import org.wordpress.android.support.SupportWebViewActivity.BotOptions
 import org.wordpress.android.support.ZendeskExtraTags
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
@@ -91,12 +90,6 @@ class HelpActivity : LocaleAwareActivity() {
     }
     private val selectedSiteFromExtras by lazy {
         intent.extras?.get(WordPress.SITE) as SiteModel?
-    }
-
-    private val openChatWidget = registerForActivityResult(SupportWebViewActivity.OpenChatWidget()) {
-        it?.let {
-            viewModel.sendChatHistory(it)
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -176,21 +169,27 @@ class HelpActivity : LocaleAwareActivity() {
     }
 
     private fun launchSupportWidget() {
-        openChatWidget.launch(
-            BotOptions(
-                id = "TqTdebbGjJeUjrmBIFjh/YbAMwiheXLs2Ue5j7elH", // BuildConfig.DOCSBOT_ID,
-                inputPlaceholder = getString(R.string.contact_support_input_placeholder),
-                firstMessage = getString(R.string.contact_support_first_message),
-                getSupport = getString(R.string.contact_support_get_support),
-                suggestions = getString(R.string.contact_support_suggestions),
-                questionOne = getString(R.string.contact_support_question_one),
-                questionTwo = getString(R.string.contact_support_question_two),
-                questionThree = getString(R.string.contact_support_question_three),
-                questionFour = getString(R.string.contact_support_question_four),
-                questionFive = getString(R.string.contact_support_question_five),
-                questionSix = getString(R.string.contact_support_question_six)
-            )
+        val botOptions = SupportWebViewActivity.BotOptions(
+            id = "TqTdebbGjJeUjrmBIFjh/YbAMwiheXLs2Ue5j7elH", // BuildConfig.DOCSBOT_ID,
+            inputPlaceholder = getString(R.string.contact_support_input_placeholder),
+            firstMessage = getString(R.string.contact_support_first_message),
+            getSupport = getString(R.string.contact_support_get_support),
+            suggestions = getString(R.string.contact_support_suggestions),
+            questionOne = getString(R.string.contact_support_question_one),
+            questionTwo = getString(R.string.contact_support_question_two),
+            questionThree = getString(R.string.contact_support_question_three),
+            questionFour = getString(R.string.contact_support_question_four),
+            questionFive = getString(R.string.contact_support_question_five),
+            questionSix = getString(R.string.contact_support_question_six)
         )
+        val intent = SupportWebViewActivity.createIntent(
+            this,
+            originFromExtras,
+            selectedSiteFromExtras,
+            extraTagsFromExtras,
+            botOptions
+        )
+        startActivity(intent)
     }
 
     private fun createNewZendeskTicket() {

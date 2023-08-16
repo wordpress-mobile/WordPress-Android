@@ -2289,6 +2289,12 @@
     <string name="contact_support_question_four">Why can\'t I login?</string>
     <string name="contact_support_question_five">I forgot my login information</string>
     <string name="contact_support_question_six">How can I use my custom domain in the app?</string>
+    <string name="contact_support_bot_ticket_loading">Creating support ticket…</string>
+    <string name="contact_support_bot_ticket_message">Ticket created</string>
+    <string name="contact_support_bot_ticket_error">Error submitting support ticket</string>
+    <string name="contact_support_bot_ticket_comment_start">Jetpack Mobile Bot transcript:</string>
+    <string name="contact_support_bot_ticket_comment_question">Question:</string>
+    <string name="contact_support_bot_ticket_comment_answer">Answer:</string>
 
     <!--My Site-->
     <string name="my_site_header_content">Content</string>
