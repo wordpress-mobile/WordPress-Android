@@ -256,10 +256,10 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     private fun MySiteTabFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
             hideRefreshIndicatorIfNeeded()
-            when (val state = uiModel.state) {
+            uiModel?.state?.let {  when (val state = uiModel.state) {
                 is State.SiteSelected -> loadData(state)
                 is State.NoSites -> loadEmptyView()
-            }
+            }}
         })
         viewModel.onBasicDialogShown.observeEvent(viewLifecycleOwner, { model ->
             dialogViewModel.showDialog(requireActivity().supportFragmentManager,
