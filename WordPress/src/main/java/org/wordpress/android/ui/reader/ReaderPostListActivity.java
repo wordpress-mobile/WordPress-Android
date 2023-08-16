@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -214,6 +215,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     }
 
     @Override
+    @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
