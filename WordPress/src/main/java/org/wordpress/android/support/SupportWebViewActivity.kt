@@ -20,6 +20,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.toMap
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.util.ToastUtils
@@ -120,6 +121,10 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
 
     private fun showZendeskTickets() {
         zendeskHelper.showAllTickets(this, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
+    }
+
+    override fun onRedirectToExternalBrowser(url: String) {
+        ActivityLauncher.openUrlExternal(this, url)
     }
 
     private fun setupWebView() {
