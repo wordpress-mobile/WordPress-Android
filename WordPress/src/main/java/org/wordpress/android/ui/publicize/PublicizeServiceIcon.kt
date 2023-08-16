@@ -29,6 +29,7 @@ enum class PublicizeServiceIcon(
          *
          * @param serviceId The name of the service, as returned by the Publicize API.
          */
+        @JvmStatic
         fun fromServiceId(serviceId: String): PublicizeServiceIcon? {
             return values().find { it.serviceId == serviceId }
         }
