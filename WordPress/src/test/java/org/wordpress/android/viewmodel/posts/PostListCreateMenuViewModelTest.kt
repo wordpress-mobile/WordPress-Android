@@ -16,12 +16,16 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PO
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
 class PostListCreateMenuViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PostListCreateMenuViewModel
+
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
@@ -38,6 +42,7 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
     fun setUp() {
         whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(true)
         viewModel = PostListCreateMenuViewModel(
+            appPrefsWrapper,
             analyticsTrackerWrapper,
             jetpackFeatureRemovalPhaseHelper,
             siteUtilsWrapper
