@@ -150,6 +150,12 @@ class PostListMainViewModel @Inject constructor(
     private val _onFabClicked = MutableLiveData<Event<Unit>>()
     val onFabClicked: LiveData<Event<Unit>> = _onFabClicked
 
+    private val _onFabLongPressedForCreateMenu = MutableLiveData<Event<Unit>>()
+    val onFabLongPressedForCreateMenu: LiveData<Event<Unit>> = _onFabLongPressedForCreateMenu
+
+    private val _onFabLongPressedForPostList = MutableLiveData<Event<Unit>>()
+    val onFabLongPressedForPostList: LiveData<Event<Unit>> = _onFabLongPressedForPostList
+
     private val uploadStatusTracker = PostModelUploadStatusTracker(
         uploadStore = uploadStore,
         uploadActionUseCase = uploadActionUseCase
@@ -610,6 +616,14 @@ class PostListMainViewModel @Inject constructor(
     fun onBottomSheetPublishButtonClicked() {
         editPostRepository.getEditablePost()?.let {
             postActionHandler.publishPost(it)
+        }
+    }
+
+    fun onFabLongPressed() {
+        if (siteUtilsWrapper.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
+            _onFabLongPressedForCreateMenu.postValue(Event(Unit))
+        } else {
+            _onFabLongPressedForPostList.postValue(Event(Unit))
         }
     }
 }

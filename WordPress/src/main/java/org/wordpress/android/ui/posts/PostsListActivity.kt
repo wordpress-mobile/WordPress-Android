@@ -7,11 +7,13 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.HapticFeedbackConstants
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -247,6 +249,11 @@ class PostsListActivity : LocaleAwareActivity(),
             viewModel.fabClicked()
         }
 
+        fabButton.setOnLongClickListener {
+            viewModel.onFabLongPressed()
+            return@setOnLongClickListener true
+        }
+
         fabButton.redirectContextClickToLongPressListener()
 
         postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, supportFragmentManager)
@@ -402,6 +409,18 @@ class PostsListActivity : LocaleAwareActivity(),
     private fun PostListActivityBinding.setupFabEvents() {
         viewModel.onFabClicked.observeEvent(this@PostsListActivity, {
             postListCreateMenuViewModel.onFabClicked()
+        })
+
+        viewModel.onFabLongPressedForCreateMenu.observeEvent(this@PostsListActivity, {
+            postListCreateMenuViewModel.onFabLongPressed()
+            Toast.makeText(fabButton.context, R.string.create_post_story_fab_tooltip, Toast.LENGTH_SHORT).show()
+        })
+
+        viewModel.onFabLongPressedForPostList.observe(this@PostsListActivity, {
+            if (fabButton.isHapticFeedbackEnabled) {
+                fabButton.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            }
+            Toast.makeText(fabButton.context, R.string.create_post_fab_tooltip, Toast.LENGTH_SHORT).show()
         })
     }
 
