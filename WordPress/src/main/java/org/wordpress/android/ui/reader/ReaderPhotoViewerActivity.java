@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -47,7 +48,7 @@ public class ReaderPhotoViewerActivity extends LocaleAwareActivity
     private final Handler mFadeHandler = new Handler();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_photo_viewer);
 
@@ -117,16 +118,16 @@ public class ReaderPhotoViewerActivity extends LocaleAwareActivity
             if (mToolbar.getVisibility() != View.VISIBLE) {
                 AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_in_and_down, new Animation.AnimationListener() {
                     @Override
-                    public void onAnimationStart(Animation animation) {
+                    public void onAnimationStart(@NonNull Animation animation) {
                         mToolbar.setVisibility(View.VISIBLE);
                     }
 
                     @Override
-                    public void onAnimationEnd(Animation animation) {
+                    public void onAnimationEnd(@NonNull Animation animation) {
                     }
 
                     @Override
-                    public void onAnimationRepeat(Animation animation) {
+                    public void onAnimationRepeat(@NonNull Animation animation) {
                     }
                 });
             }
@@ -139,16 +140,16 @@ public class ReaderPhotoViewerActivity extends LocaleAwareActivity
             if (!isFinishing() && mToolbar.getVisibility() == View.VISIBLE) {
                 AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_out_and_up, new Animation.AnimationListener() {
                     @Override
-                    public void onAnimationStart(Animation animation) {
+                    public void onAnimationStart(@NonNull Animation animation) {
                     }
 
                     @Override
-                    public void onAnimationEnd(Animation animation) {
+                    public void onAnimationEnd(@NonNull Animation animation) {
                         mToolbar.setVisibility(View.GONE);
                     }
 
                     @Override
-                    public void onAnimationRepeat(Animation animation) {
+                    public void onAnimationRepeat(@NonNull Animation animation) {
                     }
                 });
             }
@@ -156,7 +157,7 @@ public class ReaderPhotoViewerActivity extends LocaleAwareActivity
     };
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();
             return true;
@@ -164,7 +165,8 @@ public class ReaderPhotoViewerActivity extends LocaleAwareActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @Override public void finish() {
+    @Override
+    public void finish() {
         super.finish();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
@@ -268,7 +270,7 @@ public class ReaderPhotoViewerActivity extends LocaleAwareActivity
         }
 
         @Override
-        public void restoreState(Parcelable state, ClassLoader loader) {
+        public void restoreState(@Nullable Parcelable state, @Nullable ClassLoader loader) {
             // work around "Fragement no longer exists for key" Android bug
             // by catching the IllegalStateException
             // https://code.google.com/p/android/issues/detail?id=42601
@@ -279,6 +281,7 @@ public class ReaderPhotoViewerActivity extends LocaleAwareActivity
             }
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             return ReaderPhotoViewerFragment.newInstance(
