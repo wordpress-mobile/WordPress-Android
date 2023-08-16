@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -176,7 +177,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
@@ -659,7 +660,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
@@ -973,8 +974,8 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         }
 
         @Override
-        public void restoreState(Parcelable state, ClassLoader loader) {
-            // work around "Fragement no longer exists for key" Android bug
+        public void restoreState(@Nullable Parcelable state, @Nullable ClassLoader loader) {
+            // work around "Fragment no longer exists for key" Android bug
             // by catching the IllegalStateException
             // https://code.google.com/p/android/issues/detail?id=42601
             try {
@@ -985,6 +986,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             }
         }
 
+        @Nullable
         @Override
         public Parcelable saveState() {
             AppLog.d(AppLog.T.READER, "reader pager > adapter saveState");
@@ -1007,6 +1009,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             return mIdList.size();
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             if ((position == getCount() - 1) && canRequestMostPosts()) {
@@ -1025,8 +1028,9 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     mPostSlugsResolutionUnderway);
         }
 
+        @NonNull
         @Override
-        public @NonNull Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
             Object item = super.instantiateItem(container, position);
             if (item instanceof Fragment) {
                 mFragmentMap.put(position, (Fragment) item);
@@ -1035,7 +1039,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             mFragmentMap.remove(position);
             super.destroyItem(container, position, object);
         }
@@ -1066,7 +1070,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
