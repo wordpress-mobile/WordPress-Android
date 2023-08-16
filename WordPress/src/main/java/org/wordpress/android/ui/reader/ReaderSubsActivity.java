@@ -91,7 +91,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
     @Inject ReaderTracker mReaderTracker;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
@@ -533,6 +533,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
             mFragments = fragments;
         }
 
+        @Nullable
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
@@ -545,6 +546,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
             }
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             return mFragments.get(position);
@@ -555,8 +557,9 @@ public class ReaderSubsActivity extends LocaleAwareActivity
             return mFragments.size();
         }
 
+        @NonNull
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
             Object ret = super.instantiateItem(container, position);
             mFragments.set(position, (Fragment) ret);
             return ret;
