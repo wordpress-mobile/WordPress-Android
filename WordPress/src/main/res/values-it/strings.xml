@@ -1,16 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-26 16:54:08+0000
+Translation-Revision-Date: 2023-08-09 12:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: it
 -->
 <resources>
+    <string name="jetpack_social_social_shares_remaining">%1$d condivisioni sui social rimanenti</string>
+    <string name="missing_splits_dialog_button">CHIUDI</string>
+    <string name="missing_splits_dialog_message">All\'app WordPress mancano alcuni componenti richiesti ed è necessario reinstallarla da Google Play Store.</string>
+    <string name="missing_splits_dialog_title">Installazione non riuscita</string>
+    <string name="campaign_detail_error_title">Si è verificato un problema</string>
+    <string name="campaign_listing_page_error_title">Si è verificato un problema</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Qualcosa è andato storto, impossibile recuperare le campagne</string>
+    <string name="domain_transfer_card_menu_hide_this">Nascondi</string>
+    <string name="domain_transfer_card_cta">Trasferisci i tuoi domini</string>
+    <string name="domain_transfer_card_caption">Come forse saprai, Google Domains è stato venduto a Squarespace. Trasferisci i tuoi domini a WordPress.com ora gratuitamente e noi ci faremo carico di tutti i costi di trasferimento, in aggiunta a un ulteriore anno di registrazione gratuita del dominio.</string>
+    <string name="domain_transfer_card_sub_title">Recupera i tuoi Google Domains</string>
+    <string name="domain_transfer_card_title">Notizie</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Connetti account</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Condivisione sui social</string>
+    <string name="prepublishing_nudges_social_action">Condivisione sui social</string>
+    <string name="sharing">Social</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Condivisione su %1$d account</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Condivisione su %1$d di %2$d account</string>
+    <string name="jetpack_social_social_shares_title_single_account">Condivisione su %1$s</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Non condividere sui social</string>
+    <string name="post_settings_jetpack_social_share_message_description">Personalizza il messaggio che desideri condividere. Se non aggiungi un tuo testo qui, utilizzeremo il titolo dell\'articolo come messaggio.</string>
+    <string name="post_settings_jetpack_social_share_message_title">Personalizza il messaggio</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Non ora</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Connetti account</string>
     <string name="gutenberg_native_insert_video_block">Inserisci blocco video</string>
     <string name="gutenberg_native_insert_image_block">Inserisci blocco immagine</string>
     <string name="gutenberg_native_insert_gallery_block">Inserisci blocco galleria</string>
     <string name="gutenberg_native_insert_audio_block">Inserisci blocco audio</string>
-    <string name="blaze_campaign_detail_error">Impossibile caricare i dettagli della campagna</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Crea</string>
     <string name="campaign_listing_page_no_campaigns_message_description">Non hai ancora creato alcuna campagna. Fai clic su Crea per iniziare.</string>
     <string name="campaign_listing_page_no_campaigns_message_title">Non hai campagne</string>
@@ -27,14 +50,12 @@ Language: it
     <string name="blaze_campaigns_card_footer_label">Crea campagna</string>
     <string name="blaze_campaigns_card_title">Campagna Blaze</string>
     <string name="promote_blaze_flow_error">Impossibile caricare il flusso promozionale Blaze</string>
-    <string name="prepublishing_nudges_social_new_connection_cta">Connetti i tuoi profili social</string>
     <string name="prepublishing_nudges_social_new_connection_text">Aumenta il traffico condividendo automaticamente gli articoli con amici sui social media.</string>
     <string name="menu_close_editor">Chiudi editor</string>
     <string name="menu_redo_context">Ripeti ultima modifica</string>
     <string name="menu_undo_context">Annulla ultima modifica</string>
-    <string name="jetpack_social_social_shares_remaining">%1$d condivisioni sui social rimanenti</string>
+    <string name="jetpack_social_social_shares_remaining_one">1 condivisione social rimanente</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">Iscriviti per avere più condivisioni</string>
-    <string name="post_settings_jetpack_social_connect_social_profiles_button">Connetti i tuoi profili social</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Aumenta il traffico condividendo automaticamente gli articoli con amici sui social media.</string>
     <string name="post_settings_jetpack_social_header">Condivisione sui social</string>
     <string name="gutenberg_native_s_detached">%s scollegato</string>
@@ -2868,11 +2889,10 @@ Language: it
     <string name="connection_service_description">Connettiti per condividere automaticamente gli articoli del tuo blog su %s.</string>
     <string name="connected_accounts_label">Account connessi</string>
     <string name="connections_description">Connetti i tuoi servizi di social media preferiti per condividere automaticamente i nuovi articoli con gli amici.</string>
-    <string name="sharing">Condivisione</string>
     <string name="tabbar_accessibility_label_notifications">Notifiche. Gestisci le tue notifiche.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Segui i contenuti dagli altri siti.</string>
     <string name="tabbar_accessibility_label_my_site">Il mio sito. Visualizza il tuo sito e gestiscilo insieme alle statistiche.</string>
-    <string name="my_site_btn_sharing">Condivisione</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="button_not_now">Non ora</string>
     <string name="media_error_internal_server_error">Errore nel caricamento. Prova cambiando le ottimizzazioni delle immagini dalle impostazioni dell\'applicazione</string>
     <string name="media_downloading">Salvataggio elemento media sulla periferica</string>

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-11-12 12:10:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: ku_TR
 -->
 <resources>
@@ -1628,11 +1628,9 @@ Language: ku_TR
     <string name="connection_service_description">Ji bo ku tu şandiyên blogê yên li ser %s\'ê bixweber parve bikî, lê girêde.</string>
     <string name="connected_accounts_label">Hesabên girêdayî</string>
     <string name="connections_description">Servîsên medyaya civakî yên kêfa te ji wan re tê lê girede û bila bixweber şandiyên nû bi hevalên te re werin parvekirin.</string>
-    <string name="sharing">Parvekirin</string>
     <string name="tabbar_accessibility_label_notifications">Danezan. Danezanên xwe bi rê ve bibe.</string>
     <string name="tabbar_accessibility_label_reader">Xwîner. Ji malperên din naverokan bişopîne.</string>
     <string name="tabbar_accessibility_label_my_site">Malpera Min. Malpera xwe bibîne, bi rê ve bibe û amaran kontrol bike.</string>
-    <string name="my_site_btn_sharing">Parvekirin</string>
     <string name="button_not_now">Ne niha</string>
     <string name="media_error_internal_server_error">Çewtiya hilxistinê. Di sazkariyên sepana xwe de guhertina vebijêrka \"Wêneyan Optîmîze Bike\"yê biceribîne</string>
     <string name="media_downloading">Medya li vê cîhazê tê tomarkirin</string>
