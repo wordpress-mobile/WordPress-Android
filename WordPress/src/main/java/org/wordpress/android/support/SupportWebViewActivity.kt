@@ -121,6 +121,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
 
     private fun showZendeskTickets() {
         zendeskHelper.showAllTickets(this, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
+        finish()
     }
 
     override fun onRedirectToExternalBrowser(url: String) {
