@@ -266,6 +266,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun onFabClicked(site: SiteModel?) {
+        appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true, site)
 
         _showQuickStarInBottomSheet.postValue(quickStartRepository.activeTask.value == PUBLISH_POST)
@@ -334,6 +335,7 @@ class WPMainActivityViewModel @Inject constructor(
     private fun setMainFabUiState(isFabVisible: Boolean, site: SiteModel?) {
         val newState = MainFabUiState(
             isFabVisible = isFabVisible,
+            isFabTooltipVisible = if (appPrefsWrapper.isMainFabTooltipDisabled()) false else isFabVisible,
             CreateContentMessageId = getCreateContentMessageId(site)
         )
 
