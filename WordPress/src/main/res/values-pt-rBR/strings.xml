@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-05-25 15:33:48+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: pt_BR
 -->
 <resources>
@@ -2797,11 +2797,9 @@ Language: pt_BR
     <string name="connection_service_description">Conectar para compartilhar automaticamente os posts do seu blog em %s.</string>
     <string name="connected_accounts_label">Contas conectadas</string>
     <string name="connections_description">Conecte seus serviços de mídias sociais para automaticamente compartilhar novos posts com seus amigos.</string>
-    <string name="sharing">Compartilhamento</string>
     <string name="tabbar_accessibility_label_notifications">Notificações. Gerencie suas notificações.</string>
     <string name="tabbar_accessibility_label_reader">Leitor. Siga conteúdo de outros sites.</string>
     <string name="tabbar_accessibility_label_my_site">Meu site. Veja e gerencie seu site, incluindo estatísticas.</string>
-    <string name="my_site_btn_sharing">Compartilhar</string>
     <string name="button_not_now">Não agora</string>
     <string name="media_error_internal_server_error">Erro no upload. Tente alterar Otimizar imagens nas configurações do seu aplicativo</string>
     <string name="media_downloading">Salvando mídia neste dispositivo</string>

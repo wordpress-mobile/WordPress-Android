@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-07-25 02:40:35+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: sr_RS
 -->
 <resources>
@@ -1393,10 +1393,8 @@ Language: sr_RS
     <string name="share_btn_disconnect">Прекини повезаност</string>
     <string name="share_btn_connect">Повежи</string>
     <string name="connected_accounts_label">Повезани налози</string>
-    <string name="sharing">Дељење</string>
     <string name="tabbar_accessibility_label_notifications">Обавештења. Управљајте обавештењима.</string>
     <string name="tabbar_accessibility_label_reader">Читач. Прати садржај са других веб места.</string>
-    <string name="my_site_btn_sharing">Дељење</string>
     <string name="button_not_now">Не сада</string>
     <string name="editor_draft_saved_locally">Нацрт сачуван на уређају</string>
     <string name="editor_draft_saved_online">Нацрт сачуван онлајн</string>

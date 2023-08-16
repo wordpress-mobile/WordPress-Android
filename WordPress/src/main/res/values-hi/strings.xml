@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-04 03:05:51+0000
+Translation-Revision-Date: 2023-08-08 10:50:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: hi_IN
 -->
 <resources>
     <string name="privacy_banner_save">सहेजें</string>
     <string name="help_buttons_screen_title">सहायता</string>
     <string name="about_news">समाचार</string>
+    <string name="dialog_button_ok">ठीक है</string>
+    <string name="stop_upload_dialog_button_no">नहीं</string>
+    <string name="stop_save_dialog_ok_button">ठीक हैं</string>
     <string name="my_site_menu_tab_title">मेनू</string>
     <string name="domains_primary_site_address">%s</string>
     <string name="user_profile_site_section_header">साइट</string>
@@ -29,6 +32,8 @@ Language: hi_IN
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="main_switch_default_title_on">ऑन</string>
+    <string name="main_switch_default_title_off">ऑफ</string>
+    <string name="site_settings_site_accelerator_off">ऑफ</string>
     <string name="site_settings_site_accelerator_on">ऑन</string>
     <string name="link_dialog_button_ok">ठीक है</string>
     <string name="domain_contact_information_city_hint">शहर</string>
@@ -103,6 +108,7 @@ Language: hi_IN
     <string name="editor_post_saved_locally">पोस्ट डिवाइस पर सहेजा गया</string>
     <string name="button_sync">सिंक</string>
     <string name="wp_media_title">वर्डप्रेस मीडिया </string>
+    <string name="media_encoder_quality_80">निम्न</string>
     <string name="error_unknown_post_type">अज्ञात पोस्ट प्रारूप</string>
     <string name="confirm">पुष्टि करें</string>
     <string name="reader_label_visit">साईट पर जाये</string>
@@ -147,6 +153,7 @@ Language: hi_IN
     <string name="email_address">ईमेल पता</string>
     <string name="comment_status_all">सभी</string>
     <string name="could_not_load_page">पृष्ठ लोड नहीं हो सका</string>
+    <string name="off">ऑफ</string>
     <string name="about_the_app">ऐप्प के बारे में</string>
     <string name="search">खोजे</string>
     <string name="remove">हटाये</string>

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-12-08 22:14:16+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: es_MX
 -->
 <resources>
@@ -1708,12 +1708,10 @@ Language: es_MX
     <string name="connection_service_description">Conéctate para compartir automáticamente las entradas de tu blog en %s</string>
     <string name="connected_accounts_label">Cuentas conectadas</string>
     <string name="connections_description">Conecta con tus servicios de medios sociales favoritos para compartir automáticamente las nuevas entradas con tus amigos.</string>
-    <string name="sharing">Compartir</string>
     <string name="tabbar_accessibility_label_notifications">Avisos. Gestiona tus avisos.</string>
     <string name="tabbar_accessibility_label_reader">Lector. Sigue contenido de otros sitios.</string>
     <string name="tabbar_accessibility_label_my_site">Mi sitio. Ve tu sitio y gestiónalo, estadísticas incluidas.</string>
     <string name="button_not_now">Ahora no</string>
-    <string name="my_site_btn_sharing">Compartir</string>
     <string name="media_error_internal_server_error">Error en la subida. Trata de cambiar la optimización de imágenes en los ajustes de tu aplicación</string>
     <string name="media_downloading">Guardando medios en este dispositivo</string>
     <string name="error_media_save">No fue posible guardar los medios</string>
