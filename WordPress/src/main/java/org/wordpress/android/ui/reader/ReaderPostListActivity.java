@@ -10,6 +10,7 @@ import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -66,7 +67,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.reader_activity_post_list);
@@ -106,7 +107,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
             }
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(@NonNull View view) {
                     finish();
                 }
             });
@@ -204,7 +205,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
             getMenuInflater().inflate(R.menu.share, menu);
         }
@@ -213,7 +214,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 getOnBackPressedDispatcher().onBackPressed();
@@ -316,7 +317,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
@@ -348,7 +349,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                                 mUploadActionUseCase.getUploadAction(post),
                                 new View.OnClickListener() {
                                     @Override
-                                    public void onClick(View v) {
+                                    public void onClick(@NonNull View v) {
                                         UploadUtils.publishPost(
                                                 ReaderPostListActivity.this,
                                                 post,
