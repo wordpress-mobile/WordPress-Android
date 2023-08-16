@@ -150,16 +150,15 @@ platform :android do
   lane :download_signed_apks_from_google_play do |options|
     # If no `app:` is specified, call this for both WordPress and Jetpack
     apps = options[:app].nil? ? %i[wordpress jetpack] : Array(options[:app]&.downcase&.to_sym)
+    version = options[:version] || android_get_release_version() # default to current release version
+    if version.is_a?(String) # for when calling from command line
+      (version_name, version_code) = version.split(',')
+      UI.user_error!('Please pass the `version` option as a comma-separated `name,code` value') if version_code.nil?
+      version = { 'name' => version_name, 'code' => version_code }
+    end
 
     apps.each do |app|
       package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
-      version = options[:version] || android_get_release_version() # default to current release version
-
-      if version.is_a?(String) # for when calling from command line
-        (version_name, version_code) = version.split(',')
-        UI.user_error!('Please pass the `version` option as a comma-separated `name,code` value') if version_code.nil?
-        version = { 'name' => version_name, 'code' => version_code }
-      end
 
       download_universal_apk_from_google_play(
           package_name: package_name,
