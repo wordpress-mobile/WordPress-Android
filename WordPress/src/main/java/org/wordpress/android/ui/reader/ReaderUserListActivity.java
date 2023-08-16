@@ -2,6 +2,8 @@ package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,7 +33,7 @@ public class ReaderUserListActivity extends LocaleAwareActivity {
     private int mRestorePosition;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.reader_activity_userlist);
@@ -67,7 +69,7 @@ public class ReaderUserListActivity extends LocaleAwareActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         int position = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         if (position > 0) {
             outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, position);
