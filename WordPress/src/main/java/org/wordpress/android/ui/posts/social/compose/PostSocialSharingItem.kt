@@ -47,7 +47,7 @@ fun PostSocialSharingItem(
         Column(modifier = textColumnModifier) {
             Text(
                 text = model.title,
-                style = MaterialTheme.typography.body1.copy(),
+                style = MaterialTheme.typography.subtitle1.copy(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
