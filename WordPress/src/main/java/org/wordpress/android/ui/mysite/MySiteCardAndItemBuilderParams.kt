@@ -95,11 +95,17 @@ sealed class MySiteCardAndItemBuilderParams {
     data class PagesCardBuilderParams(
         val pageCard: PagesCardModel?,
         val onPagesItemClick: (params: PagesItemClickParams) -> Unit,
-        val onFooterLinkClick: () -> Unit
+        val onFooterLinkClick: () -> Unit,
+        val moreMenuClickParams : MoreMenuParams
     ) : MySiteCardAndItemBuilderParams() {
         data class PagesItemClickParams(
             val pagesCardType: PagesCardContentType,
             val pageId: Int
+        )
+
+        data class MoreMenuParams(
+            val onHideThisCardClick: () -> Unit,
+            val onAllPagesItemClick: () -> Unit
         )
     }
 
