@@ -731,12 +731,12 @@ public class SitePickerActivity extends LocaleAwareActivity
         private Set<SiteRecord> mChangeSet;
 
         @Override
-        public boolean onCreateActionMode(@NonNull ActionMode actionMode, @NonNull Menu menu) {
-            mActionMode = actionMode;
+        public boolean onCreateActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
+            mActionMode = mode;
             mHasChanges = false;
             mChangeSet = new HashSet<>();
             updateActionModeTitle();
-            actionMode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
+            mode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
             return true;
         }
 
