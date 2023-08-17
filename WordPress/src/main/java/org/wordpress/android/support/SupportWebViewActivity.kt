@@ -16,6 +16,7 @@ import androidx.webkit.WebViewAssetLoader.DEFAULT_DOMAIN
 import androidx.webkit.WebViewAssetLoader.ResourcesPathHandler
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -177,22 +178,33 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         private const val ORIGIN_KEY = "ORIGIN_KEY"
         private const val EXTRA_TAGS_KEY = "EXTRA_TAGS_KEY"
 
+        @JvmStatic
         fun createIntent(
             context: Context,
             origin: HelpActivity.Origin,
             selectedSite: SiteModel?,
-            extraSupportTags: ArrayList<String>?,
-            botOptions: BotOptions
+            extraSupportTags: ArrayList<String>?
         ) = Intent(context, SupportWebViewActivity::class.java).apply {
-            putExtra(USE_GLOBAL_WPCOM_USER, true)
-            putExtra(AUTHENTICATION_URL, WPCOM_LOGIN_URL)
-            putExtra(URL_TO_LOAD, buildURI(botOptions))
+            putExtra(URL_TO_LOAD, buildURI(context))
             putExtra(ORIGIN_KEY, origin)
             selectedSite?.let { site -> putExtra(WordPress.SITE, site) }
             extraSupportTags?.let { tags -> putStringArrayListExtra(EXTRA_TAGS_KEY, tags) }
         }
 
-        private fun buildURI(options: BotOptions): String {
+        private fun buildURI(context: Context): String {
+            val options = BotOptions(
+                id = BuildConfig.DOCSBOTAI_ID,
+                inputPlaceholder = context.getString(R.string.contact_support_input_placeholder),
+                firstMessage = context.getString(R.string.contact_support_first_message),
+                getSupport = context.getString(R.string.contact_support_get_support),
+                suggestions = context.getString(R.string.contact_support_suggestions),
+                questionOne = context.getString(R.string.contact_support_question_one),
+                questionTwo = context.getString(R.string.contact_support_question_two),
+                questionThree = context.getString(R.string.contact_support_question_three),
+                questionFour = context.getString(R.string.contact_support_question_four),
+                questionFive = context.getString(R.string.contact_support_question_five),
+                questionSix = context.getString(R.string.contact_support_question_six)
+            )
             // build url with parameters.
             val botOptions = options.toMap()
 

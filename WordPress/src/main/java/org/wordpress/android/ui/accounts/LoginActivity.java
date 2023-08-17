@@ -42,6 +42,7 @@ import org.wordpress.android.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.login.SignupConfirmationFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
+import org.wordpress.android.support.SupportWebViewActivity;
 import org.wordpress.android.support.ZendeskExtraTags;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -683,7 +684,12 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         if (!mBuildConfigWrapper.isJetpackApp()) {
             viewHelp(Origin.LOGIN_SITE_ADDRESS);
         } else {
-            mZendeskHelper.createNewTicket(this, Origin.LOGIN_SITE_ADDRESS, null);
+            Intent intent = SupportWebViewActivity.createIntent(
+                    this,
+                    Origin.LOGIN_SITE_ADDRESS,
+                    null,
+                    null);
+            startActivity(intent);
         }
     }
 
