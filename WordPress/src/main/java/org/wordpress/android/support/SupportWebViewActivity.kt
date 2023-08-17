@@ -10,17 +10,39 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewAssetLoader.AssetsPathHandler
 import androidx.webkit.WebViewAssetLoader.DEFAULT_DOMAIN
 import androidx.webkit.WebViewAssetLoader.ResourcesPathHandler
+import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.toMap
-import org.wordpress.android.support.SupportWebViewActivity.OpenChatWidget.Companion.CHAT_HISTORY
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.widgets.WPSnackbar
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.SupportWebViewClientListener {
+    @Inject
+    lateinit var zendeskHelper: ZendeskHelper
+
+    private val originFromExtras by lazy {
+        intent.extras?.getSerializableCompat<HelpActivity.Origin>(ORIGIN_KEY) ?: HelpActivity.Origin.UNKNOWN
+    }
+    private val extraTagsFromExtras by lazy {
+        intent.extras?.getStringArrayList(EXTRA_TAGS_KEY)
+    }
+    private val selectedSiteFromExtras by lazy {
+        intent.extras?.getSerializableCompat<SiteModel>(WordPress.SITE)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toggleNavbarVisibility(false)
@@ -43,10 +65,67 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         return true
     }
 
-    override fun onChatSessionClosed(chatHistory: String) {
-        intent.putExtra(CHAT_HISTORY, chatHistory)
-        setResult(RESULT_OK, intent)
+    override fun onSupportTapped(chatHistory: String) {
+        zendeskHelper.requireIdentity(this, selectedSiteFromExtras) {
+            showTicketCreatingMessage()
+
+            val description = zendeskHelper.parseChatHistory(
+                getString(R.string.contact_support_bot_ticket_comment_start),
+                getString(R.string.contact_support_bot_ticket_comment_question),
+                getString(R.string.contact_support_bot_ticket_comment_answer),
+                chatHistory
+            )
+            createNewZendeskRequest(description, object : ZendeskHelper.CreateRequestCallback() {
+                override fun onSuccess() {
+                    showZendeskTickets()
+                    ToastUtils.showToast(
+                        this@SupportWebViewActivity,
+                        R.string.contact_support_bot_ticket_message,
+                        ToastUtils.Duration.LONG
+                    )
+                }
+
+                override fun onError() {
+                    showTicketErrorMessage()
+                }
+            })
+        }
+    }
+
+    private fun createNewZendeskRequest(description: String, callback: ZendeskHelper.CreateRequestCallback) {
+        zendeskHelper.createRequest(
+            this,
+            originFromExtras,
+            selectedSiteFromExtras,
+            extraTagsFromExtras,
+            description,
+            callback
+        )
+    }
+
+    private fun showTicketCreatingMessage() {
+        WPSnackbar.make(
+            findViewById(R.id.webview_wrapper),
+            R.string.contact_support_bot_ticket_loading,
+            Snackbar.LENGTH_INDEFINITE
+        ).show()
+    }
+
+    private fun showTicketErrorMessage() {
+        WPSnackbar.make(
+            findViewById(R.id.webview_wrapper),
+            R.string.contact_support_bot_ticket_error,
+            Snackbar.LENGTH_LONG
+        ).show()
+    }
+
+    private fun showZendeskTickets() {
+        zendeskHelper.showAllTickets(this, originFromExtras, selectedSiteFromExtras, extraTagsFromExtras)
         finish()
+    }
+
+    override fun onRedirectToExternalBrowser(url: String) {
+        ActivityLauncher.openUrlExternal(this, url)
     }
 
     private fun setupWebView() {
@@ -57,7 +136,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         mWebView.webViewClient = SupportWebViewClient(this, assetLoader)
 
         // Setup debugging; See https://developers.google.com/web/tools/chrome-devtools/remote-debugging/webviews
-        if ( 0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
+        if (0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
             WebView.setWebContentsDebuggingEnabled(true)
         }
 
@@ -76,26 +155,41 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
             allowedOriginRules
         ) { message ->
             Log.d("Chat history", message)
-            onChatSessionClosed(message)
+            onSupportTapped(message)
         }
     }
 
+    data class BotOptions(
+        val id: String,
+        val inputPlaceholder: String,
+        val firstMessage: String,
+        val getSupport: String,
+        val suggestions: String,
+        val questionOne: String,
+        val questionTwo: String,
+        val questionThree: String,
+        val questionFour: String,
+        val questionFive: String,
+        val questionSix: String
+    )
 
-    class OpenChatWidget : ActivityResultContract<BotOptions, ChatCompletionEvent?>() {
-        override fun createIntent(context: Context, input: BotOptions) =
-            Intent(context, SupportWebViewActivity::class.java).apply {
-                putExtra(USE_GLOBAL_WPCOM_USER, true)
-                putExtra(AUTHENTICATION_URL, WPCOM_LOGIN_URL)
-                putExtra(URL_TO_LOAD, buildURI(input))
-            }
+    companion object {
+        private const val ORIGIN_KEY = "ORIGIN_KEY"
+        private const val EXTRA_TAGS_KEY = "EXTRA_TAGS_KEY"
 
-        override fun parseResult(resultCode: Int, intent: Intent?): ChatCompletionEvent? {
-            val data = intent?.takeIf { it.hasExtra(CHAT_HISTORY) }
-            if (resultCode == RESULT_OK && data != null) {
-                val chatHistory = data.getStringExtra(CHAT_HISTORY).orEmpty()
-                return ChatCompletionEvent(chatHistory)
-            }
-            return null
+        fun createIntent(
+            context: Context,
+            origin: HelpActivity.Origin,
+            selectedSite: SiteModel?,
+            extraSupportTags: ArrayList<String>?,
+            botOptions: BotOptions
+        ) = Intent(context, SupportWebViewActivity::class.java).apply {
+            putExtra(USE_GLOBAL_WPCOM_USER, true)
+            putExtra(AUTHENTICATION_URL, WPCOM_LOGIN_URL)
+            putExtra(URL_TO_LOAD, buildURI(botOptions))
+            putExtra(ORIGIN_KEY, origin)
+            selectedSite?.let { site -> putExtra(WordPress.SITE, site) }
+            extraSupportTags?.let { tags -> putStringArrayListExtra(EXTRA_TAGS_KEY, tags) }
         }
 
         private fun buildURI(options: BotOptions): String {
@@ -116,22 +210,5 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
 
             return builder.build().toString()
         }
-
-        companion object {
-            const val CHAT_HISTORY = "CHAT_HISTORY"
-        }
     }
-
-    data class ChatCompletionEvent(val chatHistory: String)
-
-    data class BotOptions(
-        val id: String,
-        val inputPlaceholder: String,
-        val firstMessage: String,
-        val getSupport: String,
-        val suggestions: String,
-        val questionOne: String,
-        val questionTwo: String,
-        val questionThree: String
-    )
 }

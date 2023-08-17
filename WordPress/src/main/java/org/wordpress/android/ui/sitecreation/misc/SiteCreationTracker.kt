@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.sitecreation.misc
 
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.experiments.Variation
 import org.wordpress.android.ui.layoutpicker.LayoutPickerTracker
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
@@ -15,7 +14,6 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.S
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SITE_NAME
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.TEMPLATE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.THUMBNAIL_MODE
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VARIATION
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VERTICAL_SLUG
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
@@ -48,7 +46,6 @@ class SiteCreationTracker @Inject constructor(
         VERTICAL_SLUG("vertical_slug"),
         SITE_NAME("site_name"),
         RECOMMENDED("recommended"),
-        VARIATION("variation"),
         DOMAIN_COST("domain_cost"),
     }
 
@@ -287,17 +284,6 @@ class SiteCreationTracker @Inject constructor(
 
     fun trackSiteNameEntered(siteName: String?) {
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_NAME_ENTERED, mapOf(SITE_NAME.key to siteName))
-    }
-
-    // endregion
-
-    // region Domain Purchasing
-
-    fun trackSiteCreationDomainPurchasingExperimentVariation(variation: Variation) {
-        tracker.track(
-            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAIN_PURCHASING_EXPERIMENT,
-            mapOf(VARIATION.key to variation.name)
-        )
     }
 
     // endregion

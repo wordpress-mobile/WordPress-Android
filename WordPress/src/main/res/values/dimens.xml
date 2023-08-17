@@ -449,10 +449,6 @@
     <dimen name="quick_start_focus_point_elevation">100dp</dimen>
 
     <dimen name="quick_start_card_progress_indicator_size">24dp</dimen>
-    <dimen name="quick_start_task_card_width">168dp</dimen>
-    <dimen name="quick_start_task_card_elevation">0dp</dimen>
-    <dimen name="quick_start_task_card_corner_radius">8dp</dimen>
-    <dimen name="quick_start_task_card_overlay_alpha" format="float" type="dimen">0.8</dimen>
 
     <dimen name="new_quick_start_card_illustration_image_width">54dp</dimen>
     <dimen name="new_quick_start_card_task_completed_icon_size">16dp</dimen>
@@ -597,7 +593,6 @@
     <!--Main bottom sheet icon size -->
     <dimen name="main_bottom_sheet_list_row_icon_size">32dp</dimen>
     <dimen name="main_bottom_sheet_list_row_min_height">48dp</dimen>
-    <dimen name="main_fab_tooltip_offset_end">20dp</dimen>
     <dimen name="main_fab_tooltip_elevation">6dp</dimen>
     <dimen name="main_fab_tooltip_arrow_size">16dp</dimen>
 

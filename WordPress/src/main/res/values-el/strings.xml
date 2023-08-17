@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-06-13 08:27:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: el_GR
 -->
 <resources>
@@ -523,8 +523,6 @@ Language: el_GR
     <string name="share_btn_disconnect">Αποσύνδεση</string>
     <string name="share_btn_connect">Σύνδεση</string>
     <string name="connected_accounts_label">Συνδεδεμένοι λογαριασμοί</string>
-    <string name="sharing">Κοινοποίηση</string>
-    <string name="my_site_btn_sharing">Κοινοποίηση</string>
     <string name="button_not_now">Όχι τώρα</string>
     <string name="media_downloading">Αποθήκευση πολυμέσων σε αυτήν τη συσκευή</string>
     <string name="error_media_save">Αδυναμία αποθήκευσης πολυμέσων</string>
