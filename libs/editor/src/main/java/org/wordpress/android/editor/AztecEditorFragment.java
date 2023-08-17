@@ -45,6 +45,7 @@ import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -219,7 +220,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ProfilingUtils.start("Visual Editor Startup");
@@ -230,8 +231,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
         mFragmentView = view;
 
@@ -269,15 +272,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         mTitle.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(@NonNull CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(@NonNull Editable s) {
                 for (int i = s.length(); i > 0; i--) {
                     if (s.subSequence(i - 1, i).toString().equals("\n")) {
                         s.replace(i - 1, i, " ");
@@ -307,7 +310,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mTitle.setOnFocusChangeListener(
                 new View.OnFocusChangeListener() {
                     @Override
-                    public void onFocusChange(View view, boolean hasFocus) {
+                    public void onFocusChange(@NonNull View v, boolean hasFocus) {
                         mFormattingToolbar.enableFormatButtons(!hasFocus);
                     }
                 }
@@ -389,7 +392,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return view;
     }
 
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         mContent.getContentChangeWatcher().unregisterObserver(this);
     }
@@ -439,7 +443,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(@NonNull Activity activity) {
         super.onAttach(activity);
 
         try {
@@ -450,17 +454,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable(ATTR_TAPPED_MEDIA_PREDICATE, mTappedMediaPredicate);
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_aztec, menu);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         // TODO: disable undo/redo in media mode
         boolean canRedo = mContent.history.redoValid();
         boolean canUndo = mContent.history.undoValid();
@@ -502,7 +506,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.undo) {
             if (mContent.getVisibility() == View.VISIBLE) {
                 mContent.undo();
@@ -796,14 +800,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             new MaterialAlertDialogBuilder(getActivity())
                     .setMessage(R.string.editor_failed_uploads_switch_html)
                     .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
+                        @Override
+                        public void onClick(@Nullable DialogInterface dialog, int which) {
                             // Clear failed uploads and switch to HTML mode
                             removeAllFailedMediaUploads();
                             toggleHtmlMode();
                         }
                     }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(@Nullable DialogInterface dialog, int which) {
                     // nothing special to do
                 }
             })
@@ -1080,7 +1085,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     mContent.refreshText();
                 }
 
-                @Override public void onImageFailed() {
+                @Override
+                public void onImageFailed() {
                     if (!isAdded()) {
                         // the fragment is detached
                         return;
@@ -1088,7 +1094,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     replaceDrawable(getLoadingMediaErrorPlaceholder(null));
                 }
 
-                @Override public void onImageLoaded(Drawable drawable) {
+                @Override
+                public void onImageLoaded(Drawable drawable) {
                     if (!isAdded()) {
                         // the fragment is detached
                         return;
@@ -1106,7 +1113,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     replaceDrawable(drawable);
                 }
 
-                @Override public void onImageLoading(Drawable drawable) {
+                @Override
+                public void onImageLoading(Drawable drawable) {
                 }
             }, maxMediaSize);
             mActionStartedAt = System.currentTimeMillis();
@@ -1158,7 +1166,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    @Override public void appendMediaFiles(Map<String, MediaFile> mediaList) {
+    @Override
+    public void appendMediaFiles(Map<String, MediaFile> mediaList) {
         for (Map.Entry<String, MediaFile> pair : mediaList.entrySet()) {
             appendMediaFile(pair.getValue(), pair.getKey(), null);
         }
@@ -1221,7 +1230,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mContent.removeMedia(MediaPredicate.getLocalMediaIdPredicate(mediaId));
     }
 
-    @Override public void mediaSelectionCancelled() {
+    @Override
+    public void mediaSelectionCancelled() {
         // noop implementation for shared interface with block editor
     }
 
@@ -1341,7 +1351,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return attrs.getIndex(mAttributeName) > -1 && attrs.getValue(mAttributeName).equals(mId);
         }
 
-        protected MediaPredicate(Parcel in) {
+        protected MediaPredicate(@NonNull Parcel in) {
             mId = in.readString();
             mAttributeName = in.readString();
         }
@@ -1359,11 +1369,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         @SuppressWarnings("unused")
         public static final Parcelable.Creator<MediaPredicate> CREATOR = new Parcelable.Creator<MediaPredicate>() {
+            @NonNull
             @Override
-            public MediaPredicate createFromParcel(Parcel in) {
+            public MediaPredicate createFromParcel(@NonNull Parcel in) {
                 return new MediaPredicate(in);
             }
 
+            @NonNull
             @Override
             public MediaPredicate[] newArray(int size) {
                 return new MediaPredicate[size];
@@ -1447,7 +1459,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Toggle action bar auto-hiding for the new orientation
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -1461,7 +1473,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent event) {
+    public boolean onTouch(@NonNull View v, @NonNull MotionEvent event) {
         // In landscape mode, if the title or content view has received a touch event, the keyboard will be
         // displayed and the action bar should hide
         if (event.getAction() == MotionEvent.ACTION_UP
@@ -1531,7 +1543,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         @Override
-        public boolean onDrag(View view, DragEvent dragEvent) {
+        public boolean onDrag(@NonNull View v, @NonNull DragEvent dragEvent) {
             switch (dragEvent.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     return isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_TEXT)
@@ -1677,13 +1689,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         ToastUtils.showToast(getActivity(), message).show();
     }
 
-    @Override public void showEditorHelp() {
+    @Override
+    public void showEditorHelp() {
     }
 
-    @Override public void onUndoPressed() {
+    @Override
+    public void onUndoPressed() {
     }
 
-    @Override public void onRedoPressed() {
+    @Override
+    public void onRedoPressed() {
     }
 
     private void onMediaTapped(@NonNull final AztecAttributes attrs, int naturalWidth, int naturalHeight,
@@ -1724,7 +1739,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
                 builder.setPositiveButton(R.string.stop_upload_dialog_button_yes,
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
+                            @Override
+                            public void onClick(@Nullable DialogInterface dialog, int which) {
                                 if (mUploadingMediaProgressMax.containsKey(localMediaId)) {
                                     mEditorFragmentListener.onMediaUploadCancelClicked(localMediaId);
 
@@ -1740,13 +1756,18 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                     ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
                                 }
 
-                                dialog.dismiss();
+                                if (dialog != null) {
+                                    dialog.dismiss();
+                                }
                             }
                         });
 
                 builder.setNegativeButton(R.string.stop_upload_dialog_button_no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
+                    @Override
+                    public void onClick(@Nullable DialogInterface dialog, int which) {
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
                     }
                 });
 
@@ -1865,7 +1886,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == EDITOR_MEDIA_SETTINGS) {
