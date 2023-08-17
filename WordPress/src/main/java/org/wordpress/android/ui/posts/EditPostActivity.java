@@ -121,6 +121,7 @@ import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -222,6 +223,7 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.ContactSupportFeatureConfig;
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig;
 import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -431,8 +433,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject StoriesEventListener mStoriesEventListener;
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
     @Inject GlobalStyleSupportFeatureConfig mGlobalStyleSupportFeatureConfig;
+    @Inject ZendeskHelper mZendeskHelper;
     @Inject BloggingPromptsStore mBloggingPromptsStore;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject ContactSupportFeatureConfig mContactSupportFeatureConfig;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
@@ -3613,7 +3617,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onContactCustomerSupport() {
-        EditPostCustomerSupportHelper.INSTANCE.onContactCustomerSupport(this, getSite());
+        EditPostCustomerSupportHelper.INSTANCE.onContactCustomerSupport(
+                mZendeskHelper,
+                this,
+                getSite(),
+                mContactSupportFeatureConfig.isEnabled()
+        );
     }
 
     @Override public void onGotoCustomerSupportOptions() {
