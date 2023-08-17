@@ -390,7 +390,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onBloggingPromptRemoveClicked: (() -> Unit)? = null
     private var onPageCardFooterLinkClick: (() -> Unit)? = null
     private var onPageItemClick: ((params: PagesItemClickParams) -> Unit)? = null
-    private var onActivityCardFooterLinkClick: (() -> Unit)? = null
+    private var onActivityCardAllActivityMenuItemClick: (() -> Unit)? = null
+    private var onActivityCardHideMenuItemClick: (() -> Unit)? = null
+    private var onActivityCardMoreMenuClick: (() -> Unit)? = null
     private var onActivityItemClick: ((params: ActivityCardItemClickParams) -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
@@ -2074,23 +2076,13 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* DASHBOARD ACTIVITY CARD */
     @Test
-    fun `given activity card, when footer is clicked, then trigger navigate to activity log list`() =
+    fun `given activity card, when all activity menu item is clicked, then trigger navigate to activity log list`() =
         test {
             initSelectedSite()
 
-            requireNotNull(onActivityCardFooterLinkClick).invoke()
+            requireNotNull(onActivityCardAllActivityMenuItemClick).invoke()
 
             assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenActivityLog(site))
-        }
-
-    @Test
-    fun `given activity card, when footer clicked, then event is tracked`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onActivityCardFooterLinkClick).invoke()
-
-            verify(cardsTracker).trackActivityCardFooterClicked()
         }
 
     @Test
@@ -2098,7 +2090,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         test {
             initSelectedSite()
 
-            // requireNotNull(onActivityItemClick).invoke(ActivityCardItemClickParams(activityId, isRewindable))
             requireNotNull(onActivityItemClick).invoke(ActivityCardItemClickParams(activityId, isRewindable))
 
             assertThat(navigationActions).containsOnly(
@@ -3572,9 +3563,20 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun initActivityCard(mockInvocation: InvocationOnMock): DashboardCard.ActivityCard.ActivityCardWithItems {
         val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
         onActivityItemClick = params.activityCardBuilderParams.onActivityItemClick
-        onActivityCardFooterLinkClick = params.activityCardBuilderParams.onFooterLinkClick
+        onActivityCardMoreMenuClick = params.activityCardBuilderParams.onMoreMenuClick
+        onActivityCardAllActivityMenuItemClick = params.activityCardBuilderParams.onAllActivityMenuItemClick
+        onActivityCardHideMenuItemClick = params.activityCardBuilderParams.onHideMenuItemClick
         return DashboardCard.ActivityCard.ActivityCardWithItems(
             title = UiStringRes(0),
+            onAllActivityMenuItemClick = ListItemInteraction.create {
+                (onActivityCardAllActivityMenuItemClick as () -> Unit).invoke()
+            },
+            onHideMenuItemClick = ListItemInteraction.create {
+                (onActivityCardHideMenuItemClick as () -> Unit).invoke()
+            },
+            onMoreMenuClick = ListItemInteraction.create {
+                (onActivityCardMoreMenuClick as () -> Unit).invoke()
+            },
             activityItems = listOf(
                 DashboardCard.ActivityCard.ActivityCardWithItems.ActivityItem(
                     label = UiStringRes(0),
@@ -3585,10 +3587,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                     onClick = mock()
                 )
             ),
-            footerLink = DashboardCard.ActivityCard.FooterLink(
-                label = UiStringRes(0),
-                onClick = onActivityCardFooterLinkClick as (() -> Unit)
-            )
         )
     }
 

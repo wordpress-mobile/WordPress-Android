@@ -232,7 +232,7 @@ class CardsBuilderTest {
                     mock()
                 ),
                 pagesCardBuilderParams = PagesCardBuilderParams(mock(), mock(), mock()),
-                activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock()),
+                activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock(), mock(), mock()),
                 domainTransferCardBuilderParams = DomainTransferCardBuilderParams(
                     isEligible = isEligibleForDomainTransferCard,
                     mock(),
