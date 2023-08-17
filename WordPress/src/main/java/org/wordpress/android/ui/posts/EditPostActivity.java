@@ -121,7 +121,6 @@ import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
-import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -432,7 +431,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject StoriesEventListener mStoriesEventListener;
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
     @Inject GlobalStyleSupportFeatureConfig mGlobalStyleSupportFeatureConfig;
-    @Inject ZendeskHelper mZendeskHelper;
     @Inject BloggingPromptsStore mBloggingPromptsStore;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
 
@@ -3615,7 +3613,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onContactCustomerSupport() {
-        EditPostCustomerSupportHelper.INSTANCE.onContactCustomerSupport(mZendeskHelper, this, getSite());
+        EditPostCustomerSupportHelper.INSTANCE.onContactCustomerSupport(this, getSite());
     }
 
     @Override public void onGotoCustomerSupportOptions() {
