@@ -77,6 +77,8 @@ android {
         dexInProcess = true
     }
 
+    namespace "org.wordpress.android"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     def versionProperties = loadPropertiesFromFile(file("${rootDir}/version.properties"))
@@ -167,6 +169,7 @@ android {
         buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
         buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
         buildConfigField "boolean", "BLAZE_MANAGE_CAMPAIGNS", "false"
+        buildConfigField "boolean", "DASHBOARD_PERSONALIZATION", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -282,7 +285,7 @@ android {
         }
     }
 
-    lintOptions{
+    lint {
         warningsAsErrors = true
         checkDependencies = true
         checkGeneratedSources = true
@@ -315,6 +318,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig true
         viewBinding true
         compose true
 
@@ -352,6 +356,7 @@ kapt {
 }
 
 dependencies {
+    implementation 'androidx.webkit:webkit:1.7.0'
     compileOnly project(path: ':libs:annotations')
     kapt project(':libs:processors')
     implementation (project(path:':libs:networking')) {
@@ -423,6 +428,7 @@ dependencies {
     implementation "androidx.preference:preference:$androidxPreferenceVersion"
     implementation "androidx.work:work-runtime:$androidxWorkManagerVersion"
     implementation "androidx.work:work-runtime-ktx:$androidxWorkManagerVersion"
+    implementation "androidx.webkit:webkit:$androidxWebkitVersion"
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidxLifecycleVersion"

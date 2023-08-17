@@ -280,8 +280,10 @@ platform :android do
     apps = options[:app].nil? ? ['wordpress', 'jetpack'] : [get_app_name_option!(options)]
     versions = options[:version].nil? ? [android_get_release_version()] : [options[:version]]
 
+    download_signed_apks_from_google_play(app: options[:app])
+
     release_assets = apps.flat_map do |app|
-      versions.flat_map { |vers| bundle_file_path(app, vers) }
+      versions.flat_map { |vers| [bundle_file_path(app, vers), signed_apk_path(app, vers)] }
     end.select { |f| File.exist?(f) }
 
     release_title = versions.last['name']
@@ -363,5 +365,9 @@ platform :android do
   def bundle_file_path(app, version)
     prefix = APP_SPECIFIC_VALUES[app.to_sym][:bundle_name_prefix]
     File.join(ENV['PROJECT_ROOT_FOLDER'], 'build', "#{prefix}-#{version['name']}.aab")
+  end
+
+  def signed_apk_path(app, version)
+    bundle_file_path(app, version).sub('.aab', '.apk')
   end
 end

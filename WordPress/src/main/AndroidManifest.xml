@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="org.wordpress.android"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="auto">
 
@@ -739,6 +738,12 @@
             android:name=".ui.prefs.MyProfileActivity"
             android:label="@string/my_profile"
             android:theme="@style/WordPress.NoActionBar" />
+
+        <activity
+            android:name=".support.SupportWebViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/WordPress.NoActionBar"
+            tools:ignore="LockedOrientationActivity"/>
 
         <!-- Lib activities-->
         <activity

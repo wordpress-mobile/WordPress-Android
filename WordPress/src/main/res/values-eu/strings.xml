@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-07-23 20:48:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: eu_ES
 -->
 <resources>
@@ -167,7 +167,6 @@ Language: eu_ES
     <string name="media_images">Irudiak</string>
     <string name="media_videos">Bideoak</string>
     <string name="media_documents">Dokumentuak</string>
-    <string name="sharing">Partekatzea</string>
     <string name="tabbar_accessibility_label_notifications">Jakinarazpenak. Kudeatu zure jakinarazpenak.</string>
     <string name="sure_to_remove_account">Kendu gunea aplikaziotik?</string>
     <string name="reader_label_visit">Gunea bisitatu</string>

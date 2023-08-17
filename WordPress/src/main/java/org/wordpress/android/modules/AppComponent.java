@@ -57,7 +57,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.MySiteFragment;
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment;
 import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment;
 import org.wordpress.android.ui.notifications.DismissNotificationReceiver;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
@@ -104,6 +103,7 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFrag
 import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesFragment;
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeAdapter;
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeFragment;
+import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFragment;
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment;
 import org.wordpress.android.ui.posts.PublishNotificationReceiver;
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment;
@@ -497,6 +497,8 @@ public interface AppComponent {
 
     void inject(PrepublishingAddCategoryFragment object);
 
+    void inject(PrepublishingSocialFragment object);
+
     void inject(ActivityLogTypeFilterFragment object);
 
     void inject(MySiteFragment object);
@@ -506,8 +508,6 @@ public interface AppComponent {
     void inject(BackupDownloadActivity object);
 
     void inject(RestoreActivity object);
-
-    void inject(DynamicCardMenuFragment object);
 
     void inject(BackupDownloadFragment object);
 

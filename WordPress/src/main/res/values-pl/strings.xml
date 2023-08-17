@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-21 05:49:17+0000
+Translation-Revision-Date: 2023-08-08 09:40:32+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: pl
 -->
 <resources>
+    <string name="missing_splits_dialog_button">ZAMKNIJ</string>
+    <string name="gutenberg_native_insert_video_block">Wstaw blok filmu</string>
+    <string name="gutenberg_native_insert_image_block">Wstaw blok obrazka</string>
+    <string name="gutenberg_native_insert_gallery_block">Wstaw blok galerii</string>
+    <string name="gutenberg_native_insert_audio_block">Wstaw blok audio</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Utwórz</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">Nie utworzono żadnej kampanii. Kliknij utwórz, aby rozpocząć.</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">Nie masz żadnych kampanii</string>
+    <string name="blaze_campaign_details_page_title">Szczegóły kampanii</string>
+    <string name="budget_campaign_stats">Budżet</string>
+    <string name="clicks_campaign_stats">Kliknięcia</string>
+    <string name="impressions_campaign_stats">Wyświetlenia</string>
+    <string name="campaign_status_scheduled">ZAPLANOWANE</string>
+    <string name="campaign_status_in_moderation">W MODERACJI</string>
+    <string name="campaign_status_canceled">ANULOWANO</string>
+    <string name="campaign_status_rejected">ODRZUCONO</string>
+    <string name="campaign_status_completed">ZAKOŃCZONO</string>
+    <string name="campaign_status_active">WŁĄCZONO</string>
+    <string name="blaze_campaigns_card_footer_label">Utwórz kampanię</string>
+    <string name="menu_close_editor">Zamknij edytor</string>
+    <string name="menu_redo_context">Powtórz ostatnią zmianę</string>
+    <string name="menu_undo_context">Cofnij ostatnią zmianę</string>
     <string name="gutenberg_native_s_detached">odłączono %s</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Edycja zsynchronizowanych wzorców nie jest jeszcze obsługiwana w %s dla iOS</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Edytowanie zsynchronizowanych wzorców nie jest jeszcze obsługiwane w %s w androidzie</string>
@@ -16,6 +38,32 @@ Language: pl
     <string name="privacy_banner_analytics_description">Pozwól nam zoptymalizować wydajność poprzez gromadzenie informacji na temat interakcji użytkowników z naszymi aplikacjami mobilnymi.</string>
     <string name="privacy_banner_analytics">Analityka</string>
     <string name="privacy_banner_title">Zarządzaj prywatnością</string>
+    <string name="privacy_banner_description">Twoja prywatność jest dla nas niezwykle ważna i zawsze była. Używamy, przechowujemy i przetwarzamy twoje dane osobowe w celu optymalizacji naszej aplikacji (i łatwości użycia) na różne sposoby. Niektóre sposoby wykorzystania danych są nam absolutnie niezbędne do prawidłowego działania aplikacji, a inne możesz dostosować w ustawieniach.</string>
+    <string name="tabbar_accessibility_label_me">Ja. Zarządzaj szczegółami swojego profilu.</string>
+    <string name="social_item_message_title">Wiadomość</string>
+    <string name="gutenberg_native_block_ungrouped">Blok niezgrupowany</string>
+    <string name="gutenberg_native_block_grouped">Blok zgrupowany</string>
+    <string name="dashboard_card_plans_checkout_success_info">Rozpoczęcie prawidłowego działania domeny może potrwać około 30 minut.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">Twoja nowa domena &lt;b&gt;%s&lt;/b&gt; jest konfigurowana.</string>
+    <string name="dashboard_card_plans_checkout_success_title">Wszystko gotowe do pracy!</string>
+    <string name="dashboard_card_plans_menu_hide_this">Ukryj</string>
+    <string name="dashboard_card_plans_sub_title">Uzyskaj bezpłatną domenę na pierwszy rok, usuń reklamy ze swojej witryny i zwiększ przestrzeń dyskową.</string>
+    <string name="dashboard_card_plans_title">Darmowa domena z planem rocznym</string>
+    <string name="virtual_homepage_learn_more">Dowiedz się więcej o szablonach</string>
+    <string name="virtual_homepage_subtitle">Twoja strona główna korzysta z szablonu motywu i zostanie otwarta w edytorze witryny.</string>
+    <string name="virtual_homepage_title">Strona główna</string>
+    <string name="account_closure_dialog_success_message">Konto zostało zamknięte.</string>
+    <string name="account_closure_dialog_error_unknown">Wystąpił błąd podczas zamykania konta.</string>
+    <string name="account_closure_dialog_error_active_memberships">Konto użytkownika nie może zostać zamknięte, dopóki ma aktywne zakupy.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">Konto użytkownika nie może zostać zamknięte, dopóki ma aktywne subskrypcje.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">Konto użytkownika nie może zostać zamknięte, jeśli istnieją nierozwiązane zwroty.</string>
+    <string name="account_closure_dialog_error_atomic_site">Konto użytkownika nie może zostać natychmiast zamknięte, ponieważ ma aktywne zakupy. Skontaktuj się z naszym zespołem pomocy technicznej, aby dokończyć jego usuwanie.</string>
+    <string name="account_closure_dialog_error_unauthorized">Brak uprawnień do zamknięcia konta.</string>
+    <string name="account_closure_dialog_error_title">Nie udało się automatycznie zamknąć konta\"</string>
+    <string name="account_closure_dialog_title">Potwierdź zamknięcie konta…</string>
+    <string name="account_closure_dialog_message">Aby potwierdzić, wprowadź ponownie swoją nazwę użytkownika przed zamknięciem konta.</string>
+    <string name="close_account">Zamknij konto</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Dowiedz się więcej</string>
     <string name="dashboard_activity_card_title">Ostatnia aktywność</string>
     <string name="dashboard_activity_card_footer_link">Zobacz pełną aktywność</string>
     <string name="gutenberg_native_remove_blocks">Usuń bloki</string>
@@ -110,8 +158,17 @@ Language: pl
     <string name="stats_action_card_blogging_reminders_title">Ustaw przypomnienia o blogowaniu</string>
     <string name="gutenberg_native_drag_drop">Przeciągnij i upuść</string>
     <string name="gutenberg_native_image_file_not_found">Nie znaleziono pliku obrazka.</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Ukończono wszystkie zadania</string>
+    <string name="quick_start_list_task_complete">Zadanie zostało ukończone</string>
+    <string name="me_btn_scan_login_code">Zeskanuj kod logowania</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Twój ostatni wpis %1$s otrzymał %2$s polubień.</string>
+    <string name="stats_most_popular_percent_views_empty">Za mało aktywności. Sprawdź później, gdy witryna będzie miała więcej odwiedzających!</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% wszystkich obserwujących</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="quick_start_list_upload_media_title">Prześlij zdjęcia lub filmy</string>
     <string name="pages_copy_link">Skopiuj odnośnik</string>
+    <string name="quick_start_completed_tour_title">Gratulacje! Znasz się na rzeczy&lt;br/&gt;</string>
+    <string name="quick_start_sites_type_get_to_know_app">Poznaj aplikację</string>
     <string name="quick_start_dialog_check_notifications_title">Sprawdź swoje powiadomienia</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatura filmu</string>
     <string name="stats_published_years_ago">Opublikowano %1$d lat temu</string>
@@ -137,7 +194,10 @@ Language: pl
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="scan_vault_press_active_on_site_button_text">Przejdź do kokpitu</string>
     <string name="locale_picker_current_language">Aktualny język:</string>
+    <string name="hpp_choose_and_create_site">Utwórz witrynę</string>
     <string name="gutenberg_native_add_blocks_11d0841f">Dodaj bloki</string>
+    <string name="initial_screen">Ekran początkowy</string>
+    <string name="blogging_prompts_onboarding_notification_action">Dowiedz się więcej</string>
     <string name="new_site_creation_site_name_title">Nazwa witryny</string>
     <string name="featured_image_confirmation_notice">Ustaw obrazek wyróżniający</string>
     <string name="featured_image_removed_notice">Usuń obrazek wyróżniający</string>
@@ -160,11 +220,13 @@ Language: pl
     <string name="media_bar_description_gallery">Wybierz media z biblioteki</string>
     <string name="stop_save_dialog_message">Poczekaj aż wszystkie pliki zostaną zapisane</string>
     <string name="stop_save_dialog_title">Zapisywanie plików</string>
+    <string name="blogging_prompts_onboarding_content_note_title">Adnotacja:</string>
     <string name="blogging_prompt_set_reminders">Ustaw przypomnienia</string>
     <string name="site_creation_intent_technology">Technologia</string>
     <string name="site_creation_intent_real_estate">Nieruchomości</string>
     <string name="site_creation_intent_travel">Podróże</string>
     <string name="site_creation_intent_sports">Sport</string>
+    <string name="site_creation_intent_writing_poetry">Proza i poezja</string>
     <string name="site_creation_intent_people">Ludzie</string>
     <string name="site_creation_intent_photography">Fotografia</string>
     <string name="site_creation_intent_politics">Polityka</string>
@@ -178,12 +240,28 @@ Language: pl
     <string name="site_creation_intent_fashion">Moda</string>
     <string name="site_creation_intent_education">Edukacja</string>
     <string name="site_creation_intent_diy">Zrób to sam</string>
+    <string name="site_creation_intent_personal">Osobiste</string>
+    <string name="site_creation_intent_parenting">Rodzicielstwo</string>
+    <string name="site_creation_intent_news">Aktualności</string>
+    <string name="site_creation_intent_local_services">Usługi lokalne</string>
+    <string name="site_creation_intent_lifestyle">Styl życia</string>
+    <string name="site_creation_intent_interior_design">Projektowanie wnętrz</string>
+    <string name="site_creation_intent_community_nonprofit">Społeczność i organizacje non-profit</string>
     <string name="site_creation_intent_books">Książki</string>
     <string name="site_creation_intent_art">Sztuka</string>
     <string name="site_creation_intent_business">Biznes</string>
     <string name="site_creation_intent_beauty">Uroda</string>
     <string name="new_site_creation_intents_input_hint">Np. moda, poezja, polityka</string>
+    <string name="site_creation_intent_automotive">Motoryzacja</string>
+    <string name="new_site_creation_intents_title">Tematyka witryny</string>
+    <string name="quick_start_site_menu_tab_message_short">Stuknij &lt;b&gt;%1$s&lt;/b&gt;, aby kontynuować.</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Pomiń na dziś</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">Zobacz więcej podpowiedzi</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d odpowiedzi</string>
+    <string name="my_site_blogging_prompt_card_answered_prompt">✓ odpowiedziano</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">Odpowiedź</string>
+    <string name="my_site_blogging_prompt_card_title">Podpowiedzi</string>
+    <string name="my_site_all_tab_title">Wszystko</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Ta kombinacja kolorów może zmniejszyć czytelność. Spróbuj użyć jaśniejszego koloru tła i/lub ciemniejszego koloru tekstu.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Ta kombinacja kolorów może zmniejszyć czytelność. Spróbuj użyć ciemniejszego koloru tła i/lub jaśniejszego koloru tekstu.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Nie udało się wstawić mediów. Kliknij po więcej informacji.</string>
@@ -194,6 +272,7 @@ Language: pl
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="login_error_xml_rpc_services_disabled">Usługa XML-RPC jest wyłączona.</string>
     <string name="my_site_todays_stat_card_title">Dzisiejsze statystyki</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Przejdź do statystyk</string>
     <string name="reader_comment_menu_edit">Edytuj</string>
     <string name="reader_comment_menu_trash">Przenieś do kosza</string>
     <string name="reader_comment_menu_spam">Oznacz jako spam</string>
@@ -473,6 +552,7 @@ Language: pl
     <string name="likes_list_screen_title">Lista polubień %s</string>
     <string name="gutenberg_native_two">Dwa</string>
     <string name="gutenberg_native_three">Trzy</string>
+    <string name="gutenberg_native_no_title">Brak tytułu</string>
     <string name="gutenberg_native_s_social_icon">Ikona społecznościowa %s</string>
     <string name="gutenberg_native_mention">Wzmianka</string>
     <string name="gutenberg_native_new">NOWOŚĆ</string>
@@ -482,6 +562,8 @@ Language: pl
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Jeden</string>
     <string name="gutenberg_native_no_preview_available">Podgląd nie jest dostępny</string>
+    <string name="gutenberg_native_add_title">Dodaj tytuł</string>
+    <string name="gutenberg_native_loading">Wczytywanie</string>
     <string name="gutenberg_native_s_link">%s łącze</string>
     <string name="gutenberg_native_text_color">Kolor tekstu</string>
     <string name="gutenberg_native_padding">Dopełnienie</string>
@@ -2435,12 +2517,11 @@ Language: pl
     <string name="connection_service_description">Połącz się aby automatycznie udostępniać wpisy blogu w serwisie %s.</string>
     <string name="connected_accounts_label">Konta połączone</string>
     <string name="connections_description">Połącz się ze swoim ulubionym serwisem mediów społecznościowych aby automatycznie udostępniać nowe wpisy swoim znajomym.</string>
-    <string name="sharing">Udostępnianie</string>
     <string name="tabbar_accessibility_label_notifications">Powiadomienia. Zarządzaj powiadomieniami.</string>
     <string name="tabbar_accessibility_label_reader">Czytnik. Śledź treści z innych witryn.</string>
     <string name="tabbar_accessibility_label_my_site">Moja witryna. Zobacz swoją witrynę i zarządzaj ją.</string>
-    <string name="my_site_btn_sharing">Udostępnianie</string>
     <string name="button_not_now">Nie teraz</string>
+    <string name="my_site_btn_sharing">Społecznościowe</string>
     <string name="media_error_internal_server_error">Błąd przesyłania. Spróbuj zmienić opcję optymalizacji obrazków w ustawieniach aplikacji</string>
     <string name="media_downloading">Zapisywanie mediów na to urządzenie</string>
     <string name="error_media_save">Nie można zapisać pliku mediów</string>
@@ -2836,9 +2917,9 @@ Language: pl
     <string name="theme_try_and_customize">Wypróbuj i dostosuj</string>
     <string name="theme_details">Szczegóły</string>
     <string name="theme_support">Wsparcie</string>
-    <string name="theme_done">Wykonano</string>
     <string name="theme_manage_site">ZARZĄDZAJ WITRYNĄ</string>
     <string name="theme_view">Zobacz</string>
+    <string name="theme_done">Gotowe</string>
     <string name="theme_activate">Włącz</string>
     <string name="support">Wsparcie</string>
     <string name="details">Szczegóły</string>

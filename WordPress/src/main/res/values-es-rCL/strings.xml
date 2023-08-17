@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-05-09 06:46:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: es_CL
 -->
 <resources>
@@ -809,12 +809,10 @@ Language: es_CL
     <string name="share_btn_reconnect">Reconectar</string>
     <string name="connected_accounts_label">Cuentas conectadas</string>
     <string name="connections_description">Conecta tus servicios de medios sociales favoritos y comparte automáticamente las entradas nuevas con tus amigos.</string>
-    <string name="sharing">Compartir</string>
     <string name="tabbar_accessibility_label_notifications">Notificaciones. Administra tus notificaciones.</string>
     <string name="tabbar_accessibility_label_reader">Lector. Sigue el contenido de otros sitios.</string>
     <string name="tabbar_accessibility_label_my_site">Mi sitio. Ve tu sitio y adminístralo, incluyendo estadísticas.</string>
     <string name="button_not_now">No ahora</string>
-    <string name="my_site_btn_sharing">Compartir</string>
     <string name="media_error_internal_server_error">Error de carga. Intenta cambiar la configuración de optimizar imágenes</string>
     <string name="media_downloading">Guardando media a este dispositivo</string>
     <string name="error_media_save">No se puede guardar media</string>

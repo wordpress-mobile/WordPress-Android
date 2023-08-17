@@ -1,0 +1,37 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/wpcom/v2/sites/106707880/external-services",
+    "queryParameters": {
+      "locale": {
+        "matches": "(.*)"
+      },
+      "type": {
+        "equalTo": "publicize"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "services": {
+        "tumblr": {
+          "ID": "tumblr",
+          "label": "Tumblr",
+          "type": "publicize",
+          "description": "Publish your posts to your Tumblr blog.",
+          "genericon": {
+            "class": "tumblr",
+            "unicode": "\\f214"
+          },
+          "icon": "iconUrl",
+          "multiple_external_user_ID_support": true,
+          "external_users_only": false,
+          "connect_URL": "connectUrl",
+          "jetpack_support": true,
+          "jetpack_module_required": "publicize"
+        }
+      }
+    }
+  }
+}

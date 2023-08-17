@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-11-08 05:57:29+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: vi_VN
 -->
 <resources>
@@ -2472,11 +2472,9 @@ Language: vi_VN
     <string name="connection_service_description">Kết nối để tự động chia sẻ bài viết của bạn với %s.</string>
     <string name="connected_accounts_label">Tài khoản đã kết nối</string>
     <string name="connections_description">Kết nối tài khoản mạng xã hội của bạn để tự động chia sẻ bài viết mới với bạn bè trên đó.</string>
-    <string name="sharing">Chia sẻ</string>
     <string name="tabbar_accessibility_label_notifications">Thông báo. Quản lý thông báo.</string>
     <string name="tabbar_accessibility_label_reader">Đọc. Theo dõi nội dung các blog khác.</string>
     <string name="tabbar_accessibility_label_my_site">Viết. Xem blog của bạn và quản lý, thống kê.</string>
-    <string name="my_site_btn_sharing">Chia sẻ</string>
     <string name="button_not_now">Để sau</string>
     <string name="media_error_internal_server_error">Lỗi tải lên. Thử Tối Ưu Hóa Ảnh trong thiết lập ứng dụng</string>
     <string name="media_downloading">Đang lưu media vào thiết bị</string>

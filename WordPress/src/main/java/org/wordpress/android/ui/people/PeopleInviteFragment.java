@@ -31,7 +31,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -330,11 +329,11 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         }
 
         mUsernamesEmails.setItemsManager(new ItemsManagerInterface() {
-            @Override public void onRemoveItem(@NotNull String item) {
+            @Override public void onRemoveItem(@NonNull String item) {
                 removeUsername(item);
             }
 
-            @Override public void onAddItem(@NotNull String item) {
+            @Override public void onAddItem(@NonNull String item) {
                 addUsername(item, null);
             }
         });
@@ -412,7 +411,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         }
     }
 
-    private void addUsername(@NotNull String username, ValidationEndListener validationEndListener) {
+    private void addUsername(@NonNull String username, ValidationEndListener validationEndListener) {
         if (username.isEmpty() || mUsernamesEmails.containsChip(username)) {
             if (validationEndListener != null) {
                 validationEndListener.onValidationEnd();

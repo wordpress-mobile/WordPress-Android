@@ -9,7 +9,6 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -38,10 +37,6 @@ class QuickStartUtilsWrapper
             messageId = messageId,
             iconId = iconId
         )
-    }
-
-    fun isEveryQuickStartTaskDoneForType(siteLocalId: Int, type: QuickStartTaskType): Boolean {
-        return quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), type).isEmpty()
     }
 
     fun getTaskCompletedTracker(task: QuickStartTask): Stat {

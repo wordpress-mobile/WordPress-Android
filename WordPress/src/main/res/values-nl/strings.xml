@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-12 14:54:08+0000
+Translation-Revision-Date: 2023-08-09 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: nl
 -->
 <resources>
+    <string name="jetpack_social_social_shares_remaining">%1$d keer delen op social media resterend</string>
+    <string name="missing_splits_dialog_message">Er ontbreken vereiste onderdelen in de WordPress-app en deze moeten opnieuw worden geïnstalleerd vanuit de Google Play Store.</string>
+    <string name="campaign_detail_error_title">Er is iets fout gegaan</string>
+    <string name="campaign_listing_page_error_title">Er is iets fout gegaan</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Er is iets fout gegaan, er kunnen geen campagnes worden opgehaald</string>
+    <string name="domain_transfer_card_menu_hide_this">Dit verbergen</string>
+    <string name="domain_transfer_card_cta">Je domeinen overdragen</string>
+    <string name="domain_transfer_card_caption">Zoals je misschien weet is Google Domains verkocht aan Squarespace. Draag nu je domeinen over aan WordPress.com, en we betalen alle overdrachtskosten plus een extra jaar van je domeinregistratie.</string>
+    <string name="domain_transfer_card_sub_title">Je Google-domeinen opnieuw opeisen</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Accounts koppelen</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Delen op social media</string>
+    <string name="prepublishing_nudges_social_action">Delen op social media</string>
+    <string name="sharing">Social</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Niet delen naar social media</string>
+    <string name="post_settings_jetpack_social_share_message_description">Pas het bericht dat je wilt delen aan. Als je hier geen eigen tekst toevoegt, gebruiken we de titel als het bericht.</string>
+    <string name="post_settings_jetpack_social_share_message_title">Het bericht aanpassen</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Accounts koppelen</string>
+    <string name="gutenberg_native_insert_image_block">Afbeeldingblok invoegen</string>
+    <string name="gutenberg_native_insert_audio_block">Audioblok invoegen</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Aanmaken</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">Je hebt nog geen campagnes aangemaakt. Klik op Aanmaken om te beginnen.</string>
+    <string name="blaze_campaigns_page_title">Blaze-campagnes</string>
+    <string name="campaign_status_in_moderation">WORDT BEHEERD</string>
+    <string name="campaign_status_rejected">AFGEWEZEN</string>
+    <string name="campaign_status_completed">VOLTOOID</string>
+    <string name="blaze_campaigns_card_footer_label">Campagne aanmaken</string>
+    <string name="blaze_campaigns_card_title">Blaze-campagne</string>
+    <string name="promote_blaze_flow_error">De blaze-promotieflow kan niet worden geladen</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Krijg meer bezoekers door je berichten automatisch te delen met je vrienden op social media.</string>
+    <string name="menu_redo_context">Laatste wijziging opnieuw uitvoeren</string>
+    <string name="menu_undo_context">Laatste wijziging ongedaan maken</string>
+    <string name="jetpack_social_social_shares_remaining_one">1 keer delen op social media resterend</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Neem een abonnement om meer te delen</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Krijg meer bezoekers door je berichten automatisch te delen met je vrienden op social media.</string>
+    <string name="post_settings_jetpack_social_header">Delen via social media</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Bewerken van gesynchroniseerde patronen wordt momenteel niet ondersteund door %s voor iOS</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Bewerken van gesynchroniseerde patronen wordt momenteel niet ondersteund door %s voor Android</string>
     <string name="gutenberg_native_reusable">Herbruikbaar</string>
@@ -2836,11 +2871,10 @@ Language: nl
     <string name="connection_service_description">Maak verbinding om je blogberichten automatisch te delen met %s.</string>
     <string name="connected_accounts_label">Verbonden accounts</string>
     <string name="connections_description">Koppel je favoriete social media-services om nieuwe berichten automatisch met vrienden te delen.</string>
-    <string name="sharing">Delen</string>
     <string name="tabbar_accessibility_label_notifications">Meldingen. Beheer je meldingen.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Inhoud van andere sites volgen.</string>
     <string name="tabbar_accessibility_label_my_site">Mijn site. Je site bekijken en beheren, inclusief statistieken.</string>
-    <string name="my_site_btn_sharing">Delen</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="button_not_now">Niet nu</string>
     <string name="media_error_internal_server_error">Uploadfout. Probeer \"Afbeeldingen optimaliseren\" in te schakelen via de instellingen van je app</string>
     <string name="media_downloading">Media op dit apparaat opslaan</string>

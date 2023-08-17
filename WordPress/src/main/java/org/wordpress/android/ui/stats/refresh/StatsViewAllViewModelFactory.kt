@@ -70,7 +70,7 @@ class StatsViewAllViewModelFactory(
     @StringRes private val titleResource: Int
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        require(!modelClass.isAssignableFrom(StatsViewAllViewModel::class.java)) { "ViewModel Not Found" }
+        require(modelClass.isAssignableFrom(StatsViewAllViewModel::class.java)) { "ViewModel Not Found" }
         @Suppress("UNCHECKED_CAST")
         return StatsViewAllViewModel(
             mainDispatcher,

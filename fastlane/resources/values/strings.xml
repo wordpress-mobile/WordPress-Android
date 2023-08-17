@@ -1714,9 +1714,17 @@
     <string name="post_settings_add_to_calendar">Add to calendar</string>
     <string name="post_settings_jetpack_social_header">Social Sharing</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Increase your traffic by auto-sharing your posts with your friends on social media.</string>
-    <string name="post_settings_jetpack_social_connect_social_profiles_button">Connect your social profiles</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Connect accounts</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Not now</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">Subscribe to share more</string>
-    <string name="jetpack_social_social_shares_remaining">%1$d Social shares remaining</string>
+    <string name="post_settings_jetpack_social_share_message_title">Customize the message</string>
+    <string name="post_settings_jetpack_social_share_message_description">Customize the message you want to share. If you don\'t add your own text here, we\'ll use the post\'s title as the message.</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d social shares remaining</string>
+    <string name="jetpack_social_social_shares_remaining_one">1 social share remaining</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Not sharing to social</string>
+    <string name="jetpack_social_social_shares_title_single_account">Sharing to %1$s</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Sharing to %1$d of %2$d accounts</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Sharing to %1$d accounts</string>
 
     <string name="post_notification_off">Off</string>
     <string name="post_notification_one_hour_before">1 hour before</string>
@@ -2285,7 +2293,7 @@
     <string name="my_site_btn_jetpack_settings">Jetpack Settings</string>
     <string name="my_site_btn_site_pages">Pages</string>
     <string name="my_site_btn_blog_posts">Posts</string>
-    <string name="my_site_btn_sharing">Sharing</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="my_site_btn_domains">Domains</string>
     <string name="my_site_btn_site_settings">Site Settings</string>
     <string name="my_site_btn_comments" translatable="false">@string/comments</string>
@@ -2419,7 +2427,7 @@
     <string name="next_button" translatable="false">&gt;</string>
 
     <!-- Jetpack Social and sharing -->
-    <string name="sharing">Sharing</string>
+    <string name="sharing">Social</string>
     <string name="sharing_disabled">Sharing module disabled</string>
     <string name="sharing_disabled_description">You cannot access your sharing settings because your Sharing Jetpack module is disabled.</string>
     <string name="connections_label">Jetpack Social Connections</string>
@@ -3475,6 +3483,7 @@
     <string name="prepublishing_nudges_publish_action">Publish Date</string>
     <string name="prepublishing_nudges_tags_action">Tags</string>
     <string name="prepublishing_nudges_categories_action">Categories</string>
+    <string name="prepublishing_nudges_social_action">Social sharing</string>
     <string name="prepublishing_nudges_home_header_publishing_to">Publishing to</string>
     <string name="prepublishing_nudges_home_publish_button" translatable="false">@string/publish_now</string>
     <string name="prepublishing_nudges_home_schedule_button">Schedule Now</string>
@@ -3491,8 +3500,9 @@
     <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Add New Category</string>
     <string name="prepublishing_nudges_add_category_button">Add Category</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Social sharing</string>
     <string name="prepublishing_nudges_social_new_connection_text">Increase your traffic by auto-sharing your posts with your friends on social media.</string>
-    <string name="prepublishing_nudges_social_new_connection_cta">Connect your social profiles</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Connect accounts</string>
 
     <!-- Modal Layout Picker -->
     <string name="mlp_choose_layout_title">Choose a layout</string>
@@ -4502,6 +4512,13 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="dashboard_card_domain_sub_title">Stake your claim on your corner of the web with a site address that\'s easy to find, share, and follow.</string>
     <string name="dashboard_card_domain_menu_hide_this">Hide this</string>
 
+    <!-- Dashboard Card Domain Transfer-->
+    <string name="domain_transfer_card_title">News</string>
+    <string name="domain_transfer_card_sub_title">Reclaim Your Google Domains</string>
+    <string name="domain_transfer_card_caption">As you may know, Google Domains has been sold to Squarespace. Transfer your domains to WordPress.com now, and we\'ll pay all transfer fees plus an extra year of your domain registration.</string>
+    <string name="domain_transfer_card_cta">Transfer your domains</string>
+    <string name="domain_transfer_card_menu_hide_this">Hide this</string>
+
     <!-- Dashboard Card Plans-->
     <string name="dashboard_card_plans_title">Free domain with annual plan</string>
     <string name="dashboard_card_plans_sub_title">Get a free domain for the first year, remove ads on your site, and increase your storage.</string>
@@ -4624,9 +4641,40 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="campaign_listing_page_no_campaigns_message_title">You have no campaigns</string>
     <string name="campaign_listing_page_no_campaigns_message_description">You have not created any campaigns yet. Click create to get started.</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Create</string>
-    <string name="blaze_campaign_detail_error">Campaign Details couldn\'t be loaded</string>
+    <string name="campaign_listing_page_create_campaign_fab_description" translatable="false"> @string/blaze_campaigns_card_footer_label</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Something went wrong, could not fetch campaigns</string>
+    <string name="campaign_listing_page_error_refresh_no_network_available" translatable="false">@string/no_network_message</string>
+
+    <string name="campaign_listing_page_no_network_error_title" translatable="false">@string/no_network_title</string>
+    <string name="campaign_listing_page_no_network_error_description" translatable="false">@string/no_network_message</string>
+    <string name="campaign_listing_page_no_network_error_button_text" translatable="false">@string/retry</string>
+
+    <string name="campaign_listing_page_error_title">Something went wrong</string>
+    <string name="campaign_listing_page_error_description" translatable="false">@string/request_failed_message</string>
+    <string name="campaign_listing_page_error_button_text" translatable="false">@string/retry</string>
+
+
     <string name="gutenberg_native_insert_audio_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Audio Block</string>
     <string name="gutenberg_native_insert_gallery_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Gallery Block</string>
     <string name="gutenberg_native_insert_image_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Image Block</string>
     <string name="gutenberg_native_insert_video_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Video Block</string>
+
+    <!-- Jetpack - Blaze campaign detail page -->
+    <string name="campaign_detail_no_network_error_title" translatable="false">@string/no_network_title</string>
+    <string name="campaign_detail_no_network_error_description" translatable="false">@string/no_network_message</string>
+    <string name="campaign_detail_no_network_error_button_text" translatable="false">@string/retry</string>
+    <string name="campaign_detail_error_title">Something went wrong</string>
+    <string name="campaign_detail_error_description" translatable="false">@string/request_failed_message</string>
+    <string name="campaign_detail_error_button_text" translatable="false">@string/retry</string>
+
+    <string name="blaze_promote_no_network_error_title" translatable="false">@string/no_network_title</string>
+    <string name="blaze_promote_no_network_error_description" translatable="false">@string/no_network_message</string>
+    <string name="blaze_promote_no_network_error_button_text" translatable="false">@string/retry</string>
+    <string name="blaze_promote_error_title" translatable="false">@string/campaign_detail_error_title</string>
+    <string name="blaze_promote_error_description" translatable="false">@string/request_failed_message</string>
+    <string name="blaze_promote_error_button_text" translatable="false">@string/retry</string>
+
+    <string name="missing_splits_dialog_title">Installation failed</string>
+    <string name="missing_splits_dialog_message">The app WordPress is missing required components and must be reinstalled from the Google Play Store.</string>
+    <string name="missing_splits_dialog_button">CLOSE</string>
 </resources>

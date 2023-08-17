@@ -1,11 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-13 10:54:25+0000
+Translation-Revision-Date: 2023-08-09 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: he_IL
 -->
 <resources>
+    <string name="jetpack_social_social_shares_remaining">נותרו ⁦%1$d⁩ שיתופים ברשתות החברתיות</string>
+    <string name="missing_splits_dialog_button">לסגור</string>
+    <string name="missing_splits_dialog_message">באפליקציה של WordPress חסרים רכיבים חיוניים ועליך להתקין אותה מחדש מהחנות Google Play.</string>
+    <string name="missing_splits_dialog_title">ההתקנה נכשלה</string>
+    <string name="campaign_detail_error_title">משהו השתבש</string>
+    <string name="campaign_listing_page_error_title">משהו השתבש</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> משהו השתבש. לא ניתן להביא קמפיינים</string>
+    <string name="domain_transfer_card_menu_hide_this">להסתיר את המידע</string>
+    <string name="domain_transfer_card_cta">להעביר את הדומיינים שלך</string>
+    <string name="domain_transfer_card_caption">כפי שוודאי ידוע לך, שירות Google Domains נמכר ל-Squarespace. אפשר להעביר את הדומיינים שלך ל-WordPress.com עכשיו ואנחנו נשלם עבור דמי ההעברה וניתן לך שנה נוספת של רישום דומיין בחינם.</string>
+    <string name="domain_transfer_card_sub_title">לקבל בעלות על הדומיינים שלך ב-Google Domains</string>
+    <string name="domain_transfer_card_title">חדשות</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">לחבר חשבונות</string>
+    <string name="prepublishing_nudges_toolbar_title_social">שיתוף ברשתות חברתיות</string>
+    <string name="prepublishing_nudges_social_action">שיתוף ברשתות חברתיות</string>
+    <string name="sharing">רשתות חברתיות</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">משתף אל ⁦%1$d⁩ חשבונות</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">משתף אל ⁦%1$d⁩ מתוך ⁦%2$d⁩ חשבונות</string>
+    <string name="jetpack_social_social_shares_title_single_account">משתף אל ⁦%1$s⁩</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">לא משתף ברשתות חברתיות</string>
+    <string name="post_settings_jetpack_social_share_message_description">להתאים אישית את ההודעה שברצונך לשתף. אם הטקסט שלך לא יירשם כאן, אנחנו נשתמש בכותרת של הפוסט להודעה.</string>
+    <string name="post_settings_jetpack_social_share_message_title">התאמה אישית של ההודעה</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">לא עכשיו</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">לחבר חשבונות</string>
+    <string name="gutenberg_native_insert_video_block">להוסיף בלוק וידאו</string>
+    <string name="gutenberg_native_insert_image_block">להוסיף בלוק תמונה</string>
+    <string name="gutenberg_native_insert_gallery_block">להוסיף בלוק גלריה</string>
+    <string name="gutenberg_native_insert_audio_block">להוסיף בלוק אודיו</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">ליצור</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">עדיין לא יצרת קמפיינים. יש ללחוץ כאן כדי להתחיל.</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">אין לך קמפיינים</string>
+    <string name="blaze_campaign_details_page_title">פרטי הקמפיין</string>
+    <string name="blaze_campaigns_page_title">קמפיינים של Blaze</string>
+    <string name="budget_campaign_stats">תקציב</string>
+    <string name="clicks_campaign_stats">קליקים</string>
+    <string name="impressions_campaign_stats">צפיות</string>
+    <string name="campaign_status_scheduled">מתוזמן לפרסום</string>
+    <string name="campaign_status_in_moderation">בתהליך אישור</string>
+    <string name="campaign_status_canceled">בוטל</string>
+    <string name="campaign_status_rejected">נדחה</string>
+    <string name="campaign_status_completed">הושלם</string>
+    <string name="campaign_status_active">פעיל</string>
+    <string name="blaze_campaigns_card_footer_label">ליצור קמפיין</string>
+    <string name="blaze_campaigns_card_title">קמפיין של Blaze</string>
+    <string name="promote_blaze_flow_error">לא ניתן היה לטעון את תהליך הקידום של Blaze</string>
+    <string name="prepublishing_nudges_social_new_connection_text">ניתן להגדיל את התעבורה על ידי שיתוף אוטומטי של פוסטים עם חברים ברשתות החברתיות.</string>
+    <string name="menu_close_editor">לסגור את העורך</string>
+    <string name="menu_redo_context">לבצע שוב את השינוי האחרון</string>
+    <string name="menu_undo_context">לבטל את השינוי האחרון</string>
+    <string name="jetpack_social_social_shares_remaining_one">נותר שיתוף אחד ברשתות החברתיות</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">ניתן להירשם עכשיו לקבלת שיתופים נוספים</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">ניתן להגדיל את התעבורה על ידי שיתוף אוטומטי של פוסטים עם חברים ברשתות החברתיות.</string>
+    <string name="post_settings_jetpack_social_header">שיתוף ברשתות חברתיות</string>
     <string name="gutenberg_native_s_detached">המקבץ %s הופרד</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">עריכת מקבצי בלוקים מסונכרנים עדיין לא נתמכת ב-%s למערכת iOS</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">עריכת מקבצי בלוקים מסונכרנים עדיין לא נתמכת ב-%s למערכת Android</string>
@@ -2834,11 +2887,10 @@ Language: he_IL
     <string name="connection_service_description">יש להתחבר כדי לשתף את הפוסטים בבלוג שלך אוטומטית עם %s.</string>
     <string name="connected_accounts_label">חשבונות מחוברים</string>
     <string name="connections_description">חיבור שירותי הרשתות החברתיות המועדפים שלך כדי לשתף פוסטים חדשים עם חברים באופן אוטומטי.</string>
-    <string name="sharing">שיתוף</string>
     <string name="tabbar_accessibility_label_notifications">הודעות. ניהול התראות.</string>
     <string name="tabbar_accessibility_label_reader">Reader. מעקב אחר תוכן מאתרים אחרים.</string>
     <string name="tabbar_accessibility_label_my_site">האתר שלי. הצגת האתר שלך וניהולו, כולל נתונים סטטיסטיים.</string>
-    <string name="my_site_btn_sharing">שיתוף</string>
+    <string name="my_site_btn_sharing">רשתות חברתיות</string>
     <string name="button_not_now">לא עכשיו</string>
     <string name="media_error_internal_server_error">אירעה שגיאה במהלך ההעלאה. מומלץ להפעיל את מיטוב התמונות ב\'אתר\' -&gt; \'הגדרות\'</string>
     <string name="media_downloading">שומר את פריט המדיה במכשיר זה</string>

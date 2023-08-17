@@ -1,11 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-10 19:48:10+0000
+Translation-Revision-Date: 2023-08-09 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: de
 -->
 <resources>
+    <string name="jetpack_social_social_shares_remaining">Noch %1$d-mal teilen in sozialen Medien möglich</string>
+    <string name="missing_splits_dialog_button">SCHLIEßEN</string>
+    <string name="missing_splits_dialog_title">Installation fehlgeschlagen</string>
+    <string name="campaign_detail_error_title">Es ist ein Fehler aufgetreten</string>
+    <string name="campaign_listing_page_error_title">Es ist ein Fehler aufgetreten</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Es ist ein Fehler aufgetreten, Kampagnen konnten nicht abgerufen werden</string>
+    <string name="domain_transfer_card_menu_hide_this">Ausblenden</string>
+    <string name="domain_transfer_card_cta">Deine Domains übertragen</string>
+    <string name="domain_transfer_card_caption">Wie du vielleicht schon weißt, wurde Google Domains an Squarespace verkauft. Übertrage deine Domains jetzt zu WordPress.com und wir übernehmen die Übertragungsgebühren und ein zusätzliches Jahr Domain-Registrierung.</string>
+    <string name="domain_transfer_card_sub_title">Hol dir deine Google-Domains zurück</string>
+    <string name="domain_transfer_card_title">Neuigkeiten</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Konten verbinden</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Social Sharing</string>
+    <string name="prepublishing_nudges_social_action">Social Sharing</string>
+    <string name="missing_splits_dialog_message">Der WordPress-App fehlen erforderliche Komponenten. Die App muss erneut aus dem Google Play Store installiert werden.</string>
+    <string name="sharing">Social</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Mit %1$d Konten teilen</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Mit %1$d von %2$d Konten teilen</string>
+    <string name="jetpack_social_social_shares_title_single_account">Mit %1$s teilen</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Wird mit keinen Social-Media-Konten geteilt</string>
+    <string name="post_settings_jetpack_social_share_message_title">Passe Nachrichten an</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Jetzt nicht</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Konten verbinden</string>
+    <string name="post_settings_jetpack_social_share_message_description">Passe die Nachricht an, die du teilen möchtest. Wenn du hier keinen eigenen Text hinzufügst, verwenden wir den Beitragstitel als Nachricht.</string>
+    <string name="gutenberg_native_insert_video_block">Videoblock einfügen</string>
+    <string name="gutenberg_native_insert_image_block">Bildblock einfügen</string>
+    <string name="gutenberg_native_insert_gallery_block">Galerieblock einfügen</string>
+    <string name="gutenberg_native_insert_audio_block">Audioblock einfügen</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Erstellen</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">Du hast noch keine Kampagnen erstellt. Klicke auf „Erstellen“, um zu beginnen.</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">Du hast keine Kampagnen</string>
+    <string name="blaze_campaign_details_page_title">Details zur Kampagne</string>
+    <string name="blaze_campaigns_page_title">Blaze-Kampagnen</string>
+    <string name="budget_campaign_stats">Budget</string>
+    <string name="clicks_campaign_stats">Klicks</string>
+    <string name="impressions_campaign_stats">Aufrufe</string>
+    <string name="campaign_status_scheduled">GEPLANT</string>
+    <string name="campaign_status_in_moderation">FREISCHALTUNG LÄUFT</string>
+    <string name="campaign_status_canceled">ABGEBROCHEN</string>
+    <string name="campaign_status_rejected">ABGELEHNT</string>
+    <string name="campaign_status_completed">ABGESCHLOSSEN</string>
+    <string name="campaign_status_active">AKTIV</string>
+    <string name="blaze_campaigns_card_footer_label">Kampagne erstellen</string>
+    <string name="blaze_campaigns_card_title">Blaze-Kampagne</string>
+    <string name="promote_blaze_flow_error">Der Blaze Promote Flow konnte nicht geladen werden</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Erhöhe deinen Traffic, indem du deine Beiträge automatisch mit Freunden in den sozialen Medien teilst.</string>
+    <string name="menu_close_editor">Editor schließen</string>
+    <string name="menu_redo_context">Letzte Änderung wiederherstellen</string>
+    <string name="menu_undo_context">Letzte Änderung rückgängig machen</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Abonnieren, um noch mehr teilen zu können</string>
+    <string name="jetpack_social_social_shares_remaining_one">Noch 1-mal teilen in sozialen Medien möglich</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Erhöhe deinen Traffic, indem du deine Beiträge automatisch mit Freunden in den sozialen Medien teilst.</string>
+    <string name="post_settings_jetpack_social_header">Social Sharing</string>
     <string name="gutenberg_native_s_detached">%s losgelöst</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Das Bearbeiten synchronisierter Vorlagen wird noch nicht von %s unter iOS unterstützt</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Das Bearbeiten synchronisierter Vorlagen wird noch nicht von %s unter Android unterstützt</string>
@@ -2837,12 +2890,11 @@ Language: de
     <string name="connection_service_description">Verbinden, um Blogbeiträge automatisch mit %s zu teilen.</string>
     <string name="connected_accounts_label">Verbundene Konten</string>
     <string name="connections_description">Verbinde deine bevorzugten Social-Media-Dienste, wenn du neue Beiträge automatisch mit deinen Freunden teilen möchtest.</string>
-    <string name="sharing">Teilen</string>
     <string name="tabbar_accessibility_label_notifications">Benachrichtigungen. Verwalte deine Benachrichtigungen.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Inhalten anderer Websites folgen.</string>
     <string name="tabbar_accessibility_label_my_site">Meine Website. Zeige deine Website an und verwalte sie, einschließlich Statistiken.</string>
     <string name="button_not_now">Nicht jetzt</string>
-    <string name="my_site_btn_sharing">Teilen</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="media_error_internal_server_error">Fehler beim Hochladen. Versuche es mit der Funktion Optimize Images unter Site-&gt;Settings</string>
     <string name="media_downloading">Mediendatei auf diesem Gerät speichern</string>
     <string name="error_media_save">Medien konnten nicht gespeichert werden</string>

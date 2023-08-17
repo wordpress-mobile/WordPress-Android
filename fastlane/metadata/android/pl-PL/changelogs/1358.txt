@@ -1,2 +1,0 @@
-22.8:
-Aplikacja nie będzie się już zawieszać po usunięciu witryny. Uff.

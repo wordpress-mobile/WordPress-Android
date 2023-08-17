@@ -1,11 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-12 16:54:30+0000
+Translation-Revision-Date: 2023-08-09 00:33:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: sv_SE
 -->
 <resources>
+    <string name="jetpack_social_social_shares_remaining">%1$d sociala delningar kvar</string>
+    <string name="missing_splits_dialog_button">STÄNG</string>
+    <string name="missing_splits_dialog_message">WordPress-appen saknar obligatoriska komponenter och måster installeras på nytt från Google Play.</string>
+    <string name="missing_splits_dialog_title">Installation misslyckades</string>
+    <string name="campaign_detail_error_title">Något gick fel</string>
+    <string name="campaign_listing_page_error_title">Något gick fel</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Något gick fel: kunde inte hämta kampanjerna</string>
+    <string name="domain_transfer_card_menu_hide_this">Dölj detta</string>
+    <string name="domain_transfer_card_cta">Överför dina domäner</string>
+    <string name="domain_transfer_card_caption">Som du kanske vet, har Google Domains blivit uppköpta av Squarespace. Nu kan du föra över dina domäner till WordPress.com. Vi betalar kostnaden för överföringen och ett extra år på din domänregistrering.</string>
+    <string name="domain_transfer_card_sub_title">Ta tillbaka dina Google-domäner</string>
+    <string name="domain_transfer_card_title">Nyheter</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Anslut konton</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Social delning</string>
+    <string name="prepublishing_nudges_social_action">Social delning</string>
+    <string name="sharing">Social</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Delar till %1$d konton</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Delar till %1$d av %2$d konton</string>
+    <string name="jetpack_social_social_shares_title_single_account">Delar till %1$s</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Delar inte till sociala</string>
+    <string name="post_settings_jetpack_social_share_message_description">Anpassa meddelandet du vill dela. Om du inte lägger in egen text här kommer inläggets rubrik att användas som meddelandetext.</string>
+    <string name="post_settings_jetpack_social_share_message_title">Anpassa meddelandet</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Inte nu</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Anslut konton</string>
+    <string name="gutenberg_native_insert_video_block">Infoga videoblock</string>
+    <string name="gutenberg_native_insert_image_block">Infoga bildblock</string>
+    <string name="gutenberg_native_insert_gallery_block">Infoga galleriblock</string>
+    <string name="gutenberg_native_insert_audio_block">Infoga ljudblock</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Skapa</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">Du har inte skapat några kampanjer än. Klicka här för att komma igång.</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">Du har inga kampanjer</string>
+    <string name="blaze_campaign_details_page_title">Kampanjinformation</string>
+    <string name="blaze_campaigns_page_title">Blaze-kampanjer</string>
+    <string name="budget_campaign_stats">Budget</string>
+    <string name="clicks_campaign_stats">Klick</string>
+    <string name="impressions_campaign_stats">Visningar</string>
+    <string name="campaign_status_scheduled">TIDSINSTÄLLD</string>
+    <string name="campaign_status_in_moderation">UNDER GRANSKNING</string>
+    <string name="campaign_status_canceled">AVBRUTEN</string>
+    <string name="campaign_status_rejected">AVVISAD</string>
+    <string name="campaign_status_completed">SLUTFÖRD</string>
+    <string name="campaign_status_active">AKTIV</string>
+    <string name="blaze_campaigns_card_footer_label">Skapa kampanj</string>
+    <string name="blaze_campaigns_card_title">Blaze-kampanj</string>
+    <string name="promote_blaze_flow_error">Det gick inte att läsa in Blaze-marknadsföringsflödet</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Öka din trafik genom att automatiskt dela dina inlägg med dina vänner på sociala medier.</string>
+    <string name="menu_close_editor">Stäng redigerare</string>
+    <string name="menu_redo_context">Gör om den senaste ändringen</string>
+    <string name="menu_undo_context">Ångra den senaste ändringen</string>
+    <string name="jetpack_social_social_shares_remaining_one">1 social delning kvar</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Prenumerera för fler delningar</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Öka din trafik genom att automatiskt dela dina inlägg med dina vänner på sociala medier.</string>
+    <string name="post_settings_jetpack_social_header">Social delning</string>
     <string name="gutenberg_native_s_detached">%s frikopplad</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Redigering av synkroniserade mönster stöds ännu inte i %s för iOS</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Redigering av synkroniserade mönster stöds ännu inte i %s för Android</string>
@@ -2837,11 +2890,10 @@ Language: sv_SE
     <string name="connection_service_description">Anslut för att automatiskt dela dina blogginlägg till %s.</string>
     <string name="connected_accounts_label">Anslutna konton</string>
     <string name="connections_description">Anslut de sociala nätverk du gillar mest för att automatiskt dela nya inlägg med dina vänner.</string>
-    <string name="sharing">Delning</string>
     <string name="tabbar_accessibility_label_notifications">Aviseringar. Hantera dina aviseringar.</string>
     <string name="tabbar_accessibility_label_reader">Läsare. Följ innehåll från andra webbplatser.</string>
     <string name="tabbar_accessibility_label_my_site">Min webbplats. Se och hantera din webbplats, inklusive statistik.</string>
-    <string name="my_site_btn_sharing">Delning</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="button_not_now">Inte just nu.</string>
     <string name="media_error_internal_server_error">Fel vid uppladdning. Prova att aktivera ”Optimera bilder” i appens inställningar</string>
     <string name="media_downloading">Mediafilerna sparas i denna enhet</string>

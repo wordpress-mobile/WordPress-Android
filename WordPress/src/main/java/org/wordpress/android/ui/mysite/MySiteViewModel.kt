@@ -21,7 +21,6 @@ import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
@@ -92,6 +91,7 @@ import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
+import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
@@ -105,9 +105,6 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
@@ -143,7 +140,6 @@ import org.wordpress.android.util.config.BloggingPromptsListFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
-import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.mapSafe
@@ -179,11 +175,9 @@ class MySiteViewModel @Inject constructor(
     private val quickStartCardBuilder: QuickStartCardBuilder,
     private val siteInfoHeaderCardBuilder: SiteInfoHeaderCardBuilder,
     private val homePageDataLoader: HomePageDataLoader,
-    private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
-    private val dynamicCardsBuilder: DynamicCardsBuilder,
     private val landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig,
     private val mySiteSourceManager: MySiteSourceManager,
     private val cardsTracker: CardsTracker,
@@ -215,13 +209,13 @@ class MySiteViewModel @Inject constructor(
     private val dashboardCardPlansUtils: PlansCardUtils,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
-    private val blazeCardViewModelSlice: BlazeCardViewModelSlice
+    private val blazeCardViewModelSlice: BlazeCardViewModelSlice,
+    private val domainTransferCardViewModel: DomainTransferCardViewModel
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
-    private val _onDynamicCardMenuShown = MutableLiveData<Event<DynamicCardMenuModel>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
@@ -298,8 +292,12 @@ class MySiteViewModel @Inject constructor(
     val onQuickStartMySitePrompts = quickStartRepository.onQuickStartMySitePrompts
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
-    val onDynamicCardMenuShown = _onDynamicCardMenuShown as LiveData<Event<DynamicCardMenuModel>>
-    val onNavigation = merge(_onNavigation, siteStoriesHandler.onNavigation, blazeCardViewModelSlice.onNavigation)
+    val onNavigation = merge(
+        _onNavigation,
+        siteStoriesHandler.onNavigation,
+        blazeCardViewModelSlice.onNavigation,
+        domainTransferCardViewModel.onNavigation
+    )
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShareBloggingPrompt = _onShareBloggingPrompt as LiveData<Event<String>>
@@ -313,6 +311,7 @@ class MySiteViewModel @Inject constructor(
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     val blazeCardRefresh = blazeCardViewModelSlice.refresh
+    val domainTransferCardRefresh = domainTransferCardViewModel.refresh
 
     private var shouldMarkUpdateSiteTitleTaskComplete = false
 
@@ -344,8 +343,6 @@ class MySiteViewModel @Inject constructor(
                     activeTask,
                     isDomainCreditAvailable,
                     quickStartCategories,
-                    pinnedDynamicCard,
-                    visibleDynamicCards,
                     backupAvailable,
                     scanAvailable,
                     cardsUpdate,
@@ -372,6 +369,8 @@ class MySiteViewModel @Inject constructor(
 
             dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
 
+            domainTransferCardViewModel.onSiteChanged(site?.id, state as? SiteSelected)
+
             UiModel(currentAvatarUrl.orEmpty(), state)
         }
     }
@@ -395,8 +394,6 @@ class MySiteViewModel @Inject constructor(
         activeTask: QuickStartTask?,
         isDomainCreditAvailable: Boolean,
         quickStartCategories: List<QuickStartCategory>,
-        pinnedDynamicCard: DynamicCardType?,
-        visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
@@ -409,8 +406,6 @@ class MySiteViewModel @Inject constructor(
             activeTask,
             isDomainCreditAvailable,
             quickStartCategories,
-            pinnedDynamicCard,
-            visibleDynamicCards,
             backupAvailable,
             scanAvailable,
             cardsUpdate,
@@ -499,8 +494,6 @@ class MySiteViewModel @Inject constructor(
         activeTask: QuickStartTask?,
         isDomainCreditAvailable: Boolean,
         quickStartCategories: List<QuickStartCategory>,
-        pinnedDynamicCard: DynamicCardType?,
-        visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
@@ -599,6 +592,10 @@ class MySiteViewModel @Inject constructor(
                     onViewAnswersClick = this::onBloggingPromptViewAnswersClick,
                     onRemoveClick = this::onBloggingPromptRemoveClick
                 ),
+                domainTransferCardBuilderParams = domainTransferCardViewModel.buildDomainTransferCardParams(
+                    site,
+                    uiModel.value?.state as? SiteSelected
+                ),
                 blazeCardBuilderParams = blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate),
                 dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
                     isEligible = dashboardCardDomainUtils.shouldShowCard(
@@ -639,13 +636,6 @@ class MySiteViewModel @Inject constructor(
             jetpackInstallFullPluginCardParams,
             isMySiteTabsEnabled
         )
-        val dynamicCards = dynamicCardsBuilder.build(
-            quickStartCategories,
-            pinnedDynamicCard,
-            visibleDynamicCards,
-            this::onDynamicCardMoreClick,
-            this::onQuickStartTaskCardClick
-        )
 
         val siteItems = siteItemsBuilder.build(
             SiteItemsBuilderParams(
@@ -668,7 +658,6 @@ class MySiteViewModel @Inject constructor(
                 infoItem = infoItem,
                 migrationSuccessCard = migrationSuccessCard,
                 cards = cardsResult,
-                dynamicCards = dynamicCards,
                 siteItems = siteItems,
                 jetpackBadge = jetpackBadge,
                 jetpackFeatureCard = jetpackFeatureCard,
@@ -681,11 +670,6 @@ class MySiteViewModel @Inject constructor(
                 cards = cardsResult.filterNot {
                     getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
                 },
-                dynamicCards = if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) {
-                    dynamicCards
-                } else {
-                    listOf()
-                },
                 siteItems = siteItems,
                 jetpackFeatureCard = jetpackFeatureCard,
                 jetpackSwitchMenu = jetpackSwitchMenu
@@ -695,11 +679,6 @@ class MySiteViewModel @Inject constructor(
                 migrationSuccessCard = migrationSuccessCard,
                 cards = cardsResult.filterNot {
                     getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
-                },
-                dynamicCards = if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) {
-                    dynamicCards
-                } else {
-                    listOf()
                 },
                 siteItems = listOf(),
                 jetpackBadge = jetpackBadge,
@@ -815,12 +794,6 @@ class MySiteViewModel @Inject constructor(
         MySiteTabType.ALL -> emptyList()
     }
 
-    private fun shouldIncludeDynamicCards(tabType: MySiteTabType) = when (tabType) {
-        MySiteTabType.SITE_MENU -> defaultTab != MySiteTabType.DASHBOARD
-        MySiteTabType.DASHBOARD -> defaultTab != MySiteTabType.SITE_MENU
-        MySiteTabType.ALL -> true
-    }
-
     @Suppress("EmptyFunctionBlock")
     private fun onGetMoreViewsClick() {
         cardsTracker.trackTodaysStatsCardGetMoreViewsNudgeClicked()
@@ -874,23 +847,16 @@ class MySiteViewModel @Inject constructor(
         migrationSuccessCard: SingleActionCard? = null,
         jetpackInstallFullPluginCard: JetpackInstallFullPluginCard? = null,
         cards: List<MySiteCardAndItem>,
-        dynamicCards: List<MySiteCardAndItem>,
         siteItems: List<MySiteCardAndItem>,
         jetpackBadge: JetpackBadge? = null,
         jetpackFeatureCard: JetpackFeatureCard? = null,
         jetpackSwitchMenu: MySiteCardAndItem.Card.JetpackSwitchMenu? = null
     ): List<MySiteCardAndItem> {
-        val indexOfDashboardCards = cards.indexOfFirst { it is DashboardCards }
         return mutableListOf<MySiteCardAndItem>().apply {
             infoItem?.let { add(infoItem) }
             migrationSuccessCard?.let { add(migrationSuccessCard) }
             jetpackInstallFullPluginCard?.let { add(jetpackInstallFullPluginCard) }
             addAll(cards)
-            if (indexOfDashboardCards == -1) {
-                addAll(dynamicCards)
-            } else {
-                addAll(indexOfDashboardCards, dynamicCards)
-            }
             addAll(siteItems)
             jetpackBadge?.let { add(jetpackBadge) }
             jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
@@ -999,10 +965,6 @@ class MySiteViewModel @Inject constructor(
             }
             _onNavigation.postValue(Event(navigationAction))
         } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
-    }
-
-    private fun onDynamicCardMoreClick(model: DynamicCardMenuModel) {
-        _onDynamicCardMenuShown.postValue(Event(model))
     }
 
     private fun onQuickStartBlockRemoveMenuItemClick() {
@@ -1407,14 +1369,13 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun performFirstStepAfterSiteCreation(
-        siteLocalId: Int,
         isSiteTitleTaskCompleted: Boolean,
         isNewSite: Boolean
     ) {
         if (landOnTheEditorFeatureConfig.isEnabled()) {
             checkAndStartLandOnTheEditor(isNewSite)
         } else {
-            checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted, isNewSite)
+            checkAndStartQuickStart(isSiteTitleTaskCompleted, isNewSite)
         }
     }
 
@@ -1432,18 +1393,13 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun checkAndStartQuickStart(
-        siteLocalId: Int,
         isSiteTitleTaskCompleted: Boolean,
         isNewSite: Boolean
     ) {
         if (!jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()) return
         quickStartRepository.checkAndSetQuickStartType(isNewSite = isNewSite)
-        if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
-            startQuickStart(siteLocalId, isSiteTitleTaskCompleted)
-        } else {
-            shouldMarkUpdateSiteTitleTaskComplete = isSiteTitleTaskCompleted
-            showQuickStartDialog(selectedSiteRepository.getSelectedSite())
-        }
+        shouldMarkUpdateSiteTitleTaskComplete = isSiteTitleTaskCompleted
+        showQuickStartDialog(selectedSiteRepository.getSelectedSite())
     }
 
     private fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
@@ -1457,10 +1413,6 @@ class MySiteViewModel @Inject constructor(
                 )
             mySiteSourceManager.refreshQuickStart()
         }
-    }
-
-    fun onQuickStartMenuInteraction(interaction: DynamicCardMenuInteraction) {
-        launch { mySiteSourceManager.onQuickStartMenuInteraction(interaction) }
     }
 
     private fun showQuickStartDialog(siteModel: SiteModel?) {
@@ -1495,9 +1447,6 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let { site ->
             cardsTracker.trackPostItemClicked(params.postCardType)
             when (params.postCardType) {
-                PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> _onNavigation.value =
-                    Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
-
                 PostCardType.DRAFT -> _onNavigation.value =
                     Event(SiteNavigationAction.EditDraftPost(site, params.postId))
 
@@ -1515,9 +1464,6 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let { site ->
             cardsTracker.trackPostCardFooterLinkClicked(postCardType)
             _onNavigation.value = when (postCardType) {
-                PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT ->
-                    Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
-
                 PostCardType.DRAFT -> Event(SiteNavigationAction.OpenDraftsPosts(site))
                 PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
             }

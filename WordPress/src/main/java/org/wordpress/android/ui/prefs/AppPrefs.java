@@ -29,6 +29,7 @@ import org.wordpress.android.ui.quickstart.QuickStartType;
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.usecase.social.JetpackSocialFlow;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
@@ -184,6 +185,7 @@ public class AppPrefs {
         SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD,
         SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD,
         SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING,
+        SHOULD_HIDE_DASHBOARD_DOMAIN_TRANSFER_CARD,
         SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD,
         SHOULD_HIDE_DASHBOARD_DOMAIN_CARD,
         SHOULD_HIDE_DASHBOARD_PLANS_CARD,
@@ -194,6 +196,9 @@ public class AppPrefs {
         NOTIFICATIONS_PERMISSION_WARNING_DISMISSED,
         HAS_SAVED_PRIVACY_SETTINGS,
         SHOULD_HIDE_BLAZE_OVERLAY,
+
+        // Should show Jetpack Social no connections UI
+        SHOULD_SHOW_JETPACK_SOCIAL_NO_CONNECTIONS,
     }
 
     /**
@@ -1615,6 +1620,18 @@ public class AppPrefs {
         return DeletablePrefKey.SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING.name() + siteId;
     }
 
+    public static Boolean getShouldHideDashboardDomainTransferCard(long siteId) {
+        return prefs().getBoolean(getSiteIdHideDashboardDomainTransferCardKey(siteId), false);
+    }
+
+    public static void setShouldHideDashboardDomainTransferCard(long siteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHideDashboardDomainTransferCardKey(siteId), isHidden).apply();
+    }
+
+    @NonNull private static String getSiteIdHideDashboardDomainTransferCardKey(long siteId) {
+        return DeletablePrefKey.SHOULD_HIDE_DASHBOARD_DOMAIN_TRANSFER_CARD.name() + siteId;
+    }
+
     public static Boolean getShouldHidePromoteWithBlazeCard(long siteId) {
         return prefs().getBoolean(getSiteIdHideBlazeKey(siteId), false);
     }
@@ -1682,5 +1699,22 @@ public class AppPrefs {
 
     public static void setShouldHideBlazeOverlay(final boolean isHidden) {
         setBoolean(DeletablePrefKey.SHOULD_HIDE_BLAZE_OVERLAY, isHidden);
+    }
+
+    public static Boolean getShouldShowJetpackSocialNoConnections(final long remoteSiteId,
+                                                                  final JetpackSocialFlow flow) {
+        return prefs().getBoolean(mapShouldShowJetpackSocialNoConnectionsKey(remoteSiteId, flow), true);
+    }
+
+    public static void setShouldShowJetpackSocialNoConnections(final boolean show, final long remoteSiteId,
+                                                               final JetpackSocialFlow flow) {
+        prefs().edit().putBoolean(mapShouldShowJetpackSocialNoConnectionsKey(remoteSiteId, flow), show)
+               .apply();
+    }
+
+    private static String mapShouldShowJetpackSocialNoConnectionsKey(final long remoteSiteId,
+                                                                     final JetpackSocialFlow flow) {
+        return DeletablePrefKey.SHOULD_SHOW_JETPACK_SOCIAL_NO_CONNECTIONS.name() + "_" + remoteSiteId + "_"
+               + flow.getValue();
     }
 }

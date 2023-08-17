@@ -6,11 +6,13 @@ import org.junit.Test
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.e2e.flows.LoginFlow
 import org.wordpress.android.support.BaseTest
+import org.wordpress.android.support.ComposeEspressoLink
 
 @HiltAndroidTest
 class LoginTests : BaseTest() {
     @Before
     fun setUp() {
+        ComposeEspressoLink().unregister()
         logoutIfNecessary()
     }
 
@@ -19,7 +21,9 @@ class LoginTests : BaseTest() {
         LoginFlow().chooseContinueWithWpCom(super.mComposeTestRule)
             .enterEmailAddress(BuildConfig.E2E_WP_COM_USER_EMAIL)
             .enterPassword(BuildConfig.E2E_WP_COM_USER_PASSWORD)
-            .confirmLogin(false)
+            .confirmLogin()
+
+        ComposeEspressoLink().unregister()
     }
 
     @Test
@@ -27,7 +31,9 @@ class LoginTests : BaseTest() {
         LoginFlow().chooseContinueWithWpCom(super.mComposeTestRule)
             .enterEmailAddress(BuildConfig.E2E_WP_COM_PASSWORDLESS_USER_EMAIL)
             .openMagicLink()
-            .confirmLogin(false)
+            .confirmLogin()
+
+        ComposeEspressoLink().unregister()
     }
 
     @Test
@@ -36,7 +42,9 @@ class LoginTests : BaseTest() {
             .enterSiteAddress(BuildConfig.E2E_WP_COM_USER_SITE_ADDRESS)
             .enterEmailAddress(BuildConfig.E2E_WP_COM_USER_EMAIL)
             .enterPassword(BuildConfig.E2E_WP_COM_USER_PASSWORD)
-            .confirmLogin(false)
+            .confirmLogin()
+
+        ComposeEspressoLink().unregister()
     }
 
     @Test
@@ -46,7 +54,9 @@ class LoginTests : BaseTest() {
                 .enterEmailAddress(BuildConfig.E2E_WP_COM_USER_EMAIL)
                 .chooseMagicLink()
                 .openMagicLink()
-                .confirmLogin(false)
+                .confirmLogin()
+
+            ComposeEspressoLink().unregister()
         } finally {
             logoutIfNecessary()
         }
@@ -60,6 +70,8 @@ class LoginTests : BaseTest() {
                 BuildConfig.E2E_SELF_HOSTED_USER_USERNAME,
                 BuildConfig.E2E_SELF_HOSTED_USER_PASSWORD
             )
-            .confirmLogin(true)
+            .confirmLogin()
+
+        ComposeEspressoLink().unregister()
     }
 }

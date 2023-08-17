@@ -1,2 +1,0 @@
-22.8:
-La aplicación ya no se bloqueará al eliminar un sitio. ¡Menos mal!

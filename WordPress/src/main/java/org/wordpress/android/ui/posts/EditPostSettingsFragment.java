@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
@@ -58,8 +57,6 @@ import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent;
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.ActionEvent.OpenEditShareMessage;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
@@ -67,10 +64,10 @@ import org.wordpress.android.ui.posts.FeaturedImageHelper.TrackableEvent;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel;
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase;
-import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
 import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.usecase.social.JetpackSocialFlow;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -166,6 +163,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
+    private EditorJetpackSocialViewModel mJetpackSocialViewModel;
 
     private final OnCheckedChangeListener mOnStickySwitchChangeListener =
             (buttonView, isChecked) -> onStickySwitchChanged(isChecked);
@@ -195,23 +193,6 @@ public class EditPostSettingsFragment extends Fragment {
                 .getStringArray(R.array.post_format_display_names)));
         mPublishedViewModel = new ViewModelProvider(getActivity(), mViewModelFactory)
                 .get(EditPostPublishSettingsViewModel.class);
-        createEditShareMessageActivityResultLauncher();
-    }
-
-    private void createEditShareMessageActivityResultLauncher() {
-        mEditShareMessageActivityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        final Intent data = result.getData();
-                        if (data != null) {
-                            final String shareMessage = result.getData().getStringExtra(
-                                    EditJetpackSocialShareMessageActivity.RESULT_UPDATED_SHARE_MESSAGE
-                            );
-                            mPublishedViewModel.onJetpackSocialShareMessageChanged(shareMessage);
-                        }
-                    }
-                });
     }
 
     @Override
@@ -273,6 +254,11 @@ public class EditPostSettingsFragment extends Fragment {
             // init will fetch remote settings for us
             mSiteSettings.init(true);
         }
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        mJetpackSocialViewModel.onResume(JetpackSocialFlow.POST_SETTINGS);
     }
 
     @Override
@@ -454,14 +440,22 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setupJetpackSocialViewModel();
+    }
+
+    private void setupJetpackSocialViewModel() {
+        mJetpackSocialViewModel = new ViewModelProvider(
+                requireActivity(),
+                mViewModelFactory
+        ).get(EditorJetpackSocialViewModel.class);
+
         observeJetpackSocialContainerVisibility();
         observeJetpackSocialUiState();
-        observeActionEvents();
     }
 
     private void observeJetpackSocialContainerVisibility() {
-        mPublishedViewModel.getShowJetpackSocialContainer().observe(getViewLifecycleOwner(), show -> {
-            if (show) {
+        mJetpackSocialViewModel.getJetpackSocialContainerVisibility().observe(getViewLifecycleOwner(), visibility -> {
+            if (visibility.getShowInPostSettings()) {
                 mJetpackSocialContainer.setVisibility(View.VISIBLE);
             } else {
                 mJetpackSocialContainer.setVisibility(View.GONE);
@@ -470,20 +464,8 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void observeJetpackSocialUiState() {
-        mPublishedViewModel.getJetpackSocialUiState().observe(getViewLifecycleOwner(), uiState -> {
+        mJetpackSocialViewModel.getJetpackSocialUiState().observe(getViewLifecycleOwner(), uiState -> {
             mJetpackSocialContainerView.setJetpackSocialUiState(uiState);
-        });
-    }
-
-    private void observeActionEvents() {
-        mPublishedViewModel.getActionEvents().observe(getViewLifecycleOwner(), actionEvent -> {
-            if (actionEvent instanceof ActionEvent.OpenEditShareMessage) {
-                final OpenEditShareMessage action = (OpenEditShareMessage) actionEvent;
-                final Intent intent = EditJetpackSocialShareMessageActivity.createIntent(
-                        requireContext(), action.getShareMessage()
-                );
-                mEditShareMessageActivityResultLauncher.launch(intent);
-            }
         });
     }
 
@@ -956,6 +938,7 @@ public class EditPostSettingsFragment extends Fragment {
                     postImmutableModel -> {
                         updatePostStatusRelatedViews(postImmutableModel);
                         updateSaveButton();
+                        mJetpackSocialViewModel.onPostStatusChanged();
                         return null;
                     });
         }

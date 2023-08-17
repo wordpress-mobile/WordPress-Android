@@ -179,7 +179,8 @@ enum class PrepublishingScreen : Parcelable {
     PUBLISH,
     TAGS,
     CATEGORIES,
-    ADD_CATEGORY
+    ADD_CATEGORY,
+    SOCIAL,
 }
 
 data class PrepublishingNavigationTarget(

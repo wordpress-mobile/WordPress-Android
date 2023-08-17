@@ -25,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.buttons.WPSwitch
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
@@ -47,7 +48,7 @@ fun PostSocialConnectionItem(
             setToSaturation(if (enabled) 1f else 0f)
         }
         AsyncImage(
-            model = connection.iconUrl,
+            model = connection.iconResId,
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             colorFilter = ColorFilter.colorMatrix(saturationMatrix),
@@ -63,9 +64,9 @@ fun PostSocialConnectionItem(
         )
         Spacer(modifier = Modifier.weight(1f))
         WPSwitch(
-            enabled = enabled,
             checked = connection.isSharingEnabled,
             onCheckedChange = onSharingChange,
+            enabled = enabled,
         )
     }
 }
@@ -80,7 +81,7 @@ fun PostSocialConnectionItemPreview() {
         label = "Tumblr",
         externalId = "myblog.tumblr.com",
         externalName = "My blog",
-        iconUrl = "http://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-tumblr-2x.png",
+        iconResId = R.drawable.ic_social_tumblr,
         isSharingEnabled = true
     )
     var connectionState by remember { mutableStateOf(connection) }

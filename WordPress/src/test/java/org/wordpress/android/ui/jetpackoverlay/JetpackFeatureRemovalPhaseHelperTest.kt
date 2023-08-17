@@ -26,6 +26,7 @@ import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseThreeConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseTwoConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalSelfHostedUsersConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalStaticPostersConfig
+import org.wordpress.android.util.config.PhaseFourOverlayFrequencyConfig
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -54,6 +55,9 @@ class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
     @Mock
     private lateinit var jetpackFeatureRemovalStaticPostersConfig: JetpackFeatureRemovalStaticPostersConfig
 
+    @Mock
+    private lateinit var phaseFourOverlayFrequencyConfig: PhaseFourOverlayFrequencyConfig
+
     private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Before
@@ -66,7 +70,8 @@ class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
             jetpackFeatureRemovalPhaseFourConfig,
             jetpackFeatureRemovalNewUsersConfig,
             jetpackFeatureRemovalSelfHostedUsersConfig,
-            jetpackFeatureRemovalStaticPostersConfig
+            jetpackFeatureRemovalStaticPostersConfig,
+            phaseFourOverlayFrequencyConfig
         )
     }
 

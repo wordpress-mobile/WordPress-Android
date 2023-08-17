@@ -1,11 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-12 16:54:32+0000
+Translation-Revision-Date: 2023-08-08 22:08:04+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: tr
 -->
 <resources>
+    <string name="jetpack_social_social_shares_remaining">%1$d sosyal paylaşım hakkı kaldı</string>
+    <string name="missing_splits_dialog_button">KAPAT</string>
+    <string name="missing_splits_dialog_message">WordPress uygulamasında bazı gerekli parçalar bulunmuyor ve Googl Play Mağazasından tekrar yüklenmeli.</string>
+    <string name="missing_splits_dialog_title">Kurulum başarısız</string>
+    <string name="campaign_detail_error_title">Bir şeyler yanlış gitti</string>
+    <string name="campaign_listing_page_error_title">Bir şeyler yanlış gitti</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Bir şeyler yanlış gitti, kampanyalar çekilemiyor</string>
+    <string name="domain_transfer_card_menu_hide_this">Bunu gizle</string>
+    <string name="domain_transfer_card_cta">Alan adlarınızı aktarın</string>
+    <string name="domain_transfer_card_caption">Bildiğiniz gibi Google Domains, Squarespace firmasına satıldı. Alan adlarınızı şimdi WordPress.com\'a taşıyın, tüm taşıma masrafları ve ek bir yıllık alan adı kaydı ücretini biz üstlenelim.</string>
+    <string name="domain_transfer_card_sub_title">Google Domains için harekete geçin</string>
+    <string name="domain_transfer_card_title">Haberler</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Hesapları bağla</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Sosyal paylaşım</string>
+    <string name="prepublishing_nudges_social_action">Sosyal paylaşım</string>
+    <string name="sharing">Sosyal</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">%1$d hesaba paylaşılıyor</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">%1$d / %2$d hesaba paylaşılıyor</string>
+    <string name="jetpack_social_social_shares_title_single_account">%1$s ile paylaşılıyor</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Sosyal medyada paylaşılmıyor</string>
+    <string name="post_settings_jetpack_social_share_message_description">Paylaşmak istediğiniz mesajı özelleştirin. Eğer burada bir metin eklemezseniz, yazının başlığını mesaj olarak kullanacağız.</string>
+    <string name="post_settings_jetpack_social_share_message_title">Mesajı özelleştir</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Şimdi değil</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Hesapları bağla</string>
+    <string name="gutenberg_native_insert_video_block">Video Bloku Ekleyin</string>
+    <string name="gutenberg_native_insert_image_block">Görsel Bloku Ekleyin</string>
+    <string name="gutenberg_native_insert_gallery_block">Galeri Bloku Ekleyin</string>
+    <string name="gutenberg_native_insert_audio_block">Ses Bloku Ekleyin</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Oluştur</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">Henüz bir kampanya oluşturmadınız. Başlamak için oluştur\'a tıklayın.</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">Kampanyanız yok</string>
+    <string name="blaze_campaign_details_page_title">Kampanya Ayrıntıları</string>
+    <string name="blaze_campaigns_page_title">Kampanyaları Öne Çıkar</string>
+    <string name="budget_campaign_stats">Bütçe</string>
+    <string name="clicks_campaign_stats">Tıklamalar</string>
+    <string name="impressions_campaign_stats">İzlenimler</string>
+    <string name="campaign_status_scheduled">ZAMANLANDI</string>
+    <string name="campaign_status_in_moderation">DENETLEMEDE</string>
+    <string name="campaign_status_canceled">İPTAL EDİLDİ</string>
+    <string name="campaign_status_rejected">REDDEDİLDİ</string>
+    <string name="campaign_status_completed">TAMAMLANDI</string>
+    <string name="campaign_status_active">ETKİN</string>
+    <string name="blaze_campaigns_card_footer_label">Kampanya Oluştur</string>
+    <string name="blaze_campaigns_card_title">Kampanyayı Öne Çıkar</string>
+    <string name="promote_blaze_flow_error">Blaze tanıtım akışı yüklenemedi</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Blog gönderilerinizi sosyal medyada otomatik şekilde paylaşarak trafiğinizi artırın.</string>
+    <string name="menu_close_editor">Düzenleyiciyi kapat</string>
+    <string name="menu_redo_context">Son değişikliği yinele</string>
+    <string name="menu_undo_context">Son değişikliği geri al</string>
+    <string name="jetpack_social_social_shares_remaining_one">1 sosyal paylaşım hakkı kaldı</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Daha fazla paylaşım için abone olun</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Blog gönderilerinizi sosyal medyada otomatik şekilde paylaşarak trafiğinizi artırın.</string>
+    <string name="post_settings_jetpack_social_header">Sosyal Paylaşım</string>
     <string name="gutenberg_native_s_detached">%s ayrıldı</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Senkronize edilmiş desenlerin düzenlenmesi iOS için %s sitesinde henüz desteklenmemektedir</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Senkronize edilmiş desenlerin düzenlenmesi Android için %s sitesinde henüz desteklenmemektedir</string>
@@ -18,6 +71,7 @@ Language: tr
     <string name="privacy_banner_title">Gizlilik yönetimi</string>
     <string name="privacy_banner_description">Kullanıcı gizliliğiniz bizim için her zaman çok önemli olmuştur. Uygulamamızı (ve deneyiminizi) çeşitli şekillerde optimize etmek için kişisel verilerinizi kullanır, saklar ve işleriz. İşlerin sorunsuz yürümesi için verilerinizi bazı şekillerde kesinlikle kullanmamız gerekiyor. Diğer kullanımları Ayarlarınızdan özelleştirebilirsiniz.</string>
     <string name="tabbar_accessibility_label_me">Ben. Profil ayrıntılarınızı yönetin.</string>
+    <string name="social_item_message_title">Mesaj</string>
     <string name="gutenberg_native_block_ungrouped">Blok gruptan çıkarıldı</string>
     <string name="gutenberg_native_block_grouped">Blok gruplandı</string>
     <string name="dashboard_card_plans_checkout_success_info">Alan adınızın düzgün şekilde çalışmaya başlaması 30 dakika kadar sürebilir.</string>
@@ -841,12 +895,14 @@ Language: tr
     <string name="gutenberg_native_width_settings">Genişlik Ayarları</string>
     <string name="gutenberg_native_link_rel">Bağlantı için Rel</string>
     <string name="gutenberg_native_column_settings">Sütun Ayarları</string>
+    <string name="gutenberg_native_no_description">Açıklama yok</string>
     <string name="user_profile_untitled_site">(Başlıksız)</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Kullanıcı profili alt sayfa bilgileri</string>
     <string name="likes_list_screen_title">Beğeniler listesi %s</string>
     <string name="gutenberg_native_two">İki</string>
     <string name="gutenberg_native_three">Üç</string>
+    <string name="gutenberg_native_no_title">Başlık yok</string>
     <string name="gutenberg_native_s_social_icon">%s sosyal simge</string>
     <string name="gutenberg_native_mention">Bahsetme</string>
     <string name="gutenberg_native_new">YENİ</string>
@@ -2834,11 +2890,10 @@ Language: tr
     <string name="connection_service_description">%s üzerinde blog yazılarınızı otomatik paylaşmak için bağlayın.</string>
     <string name="connected_accounts_label">Bağlı hesaplar</string>
     <string name="connections_description">Sevdiğiniz sosyal medya servislerini bağlayarak yazılarınızı arkadaşlarınızla paylaşın.</string>
-    <string name="sharing">Paylaşım</string>
     <string name="tabbar_accessibility_label_notifications">Bildirimler. Bildirimlerinizi yönetin.</string>
     <string name="tabbar_accessibility_label_reader">Okuyucu. Diğer sitelerden içerikleri takip edin.</string>
     <string name="tabbar_accessibility_label_my_site">Sitem. Sitenizi görüntüleyin, yönetin ve istatistikleri inceleyin.</string>
-    <string name="my_site_btn_sharing">Paylaşım</string>
+    <string name="my_site_btn_sharing">Sosyal</string>
     <string name="button_not_now">Şimdi değil</string>
     <string name="media_error_internal_server_error">Yükleme hatası. Site ayarlarınızdan görselleri optimize et seçeneğini değiştirmeyi deneyin</string>
     <string name="media_downloading">Ortam dosyaları bu cihazda saklanıyor</string>
