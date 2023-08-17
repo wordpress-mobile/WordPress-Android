@@ -1311,7 +1311,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (!mSelectedSiteRepository.hasSelectedSite()) {
             initSelectedSite();
