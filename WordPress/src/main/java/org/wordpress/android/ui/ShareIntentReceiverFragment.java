@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -57,7 +58,7 @@ public class ShareIntentReceiverFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof ShareIntentFragmentListener) {
             mShareIntentFragmentListener = (ShareIntentFragmentListener) context;
@@ -76,7 +77,7 @@ public class ShareIntentReceiverFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.share_intent_receiver_fragment, container, false);
         initButtonsContainer(layout);
@@ -95,14 +96,14 @@ public class ShareIntentReceiverFragment extends Fragment {
         loadSavedState(savedInstanceState);
     }
 
-    private void loadSavedState(Bundle savedInstanceState) {
+    private void loadSavedState(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mLastUsedBlogLocalId = savedInstanceState.getInt(ARG_LAST_USED_BLOG_LOCAL_ID);
         }
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         int selectedItemLocalId = mAdapter.getSelectedItemLocalId();
         if (selectedItemLocalId != -1) {
@@ -129,7 +130,7 @@ public class ShareIntentReceiverFragment extends Fragment {
     private void addShareActionListener(final Button button, final ShareAction shareAction) {
         button.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(@NonNull View v) {
                 mShareIntentFragmentListener.share(shareAction, mAdapter.getSelectedItemLocalId());
             }
         });
