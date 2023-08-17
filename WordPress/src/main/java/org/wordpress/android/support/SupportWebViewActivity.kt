@@ -20,7 +20,6 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.utils.toMap
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.accounts.HelpActivity
@@ -160,20 +159,6 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         }
     }
 
-    data class BotOptions(
-        val id: String,
-        val inputPlaceholder: String,
-        val firstMessage: String,
-        val getSupport: String,
-        val suggestions: String,
-        val questionOne: String,
-        val questionTwo: String,
-        val questionThree: String,
-        val questionFour: String,
-        val questionFive: String,
-        val questionSix: String
-    )
-
     companion object {
         private const val ORIGIN_KEY = "ORIGIN_KEY"
         private const val EXTRA_TAGS_KEY = "EXTRA_TAGS_KEY"
@@ -191,36 +176,22 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
             extraSupportTags?.let { tags -> putStringArrayListExtra(EXTRA_TAGS_KEY, tags) }
         }
 
-        private fun buildURI(context: Context): String {
-            val options = BotOptions(
-                id = BuildConfig.DOCSBOTAI_ID,
-                inputPlaceholder = context.getString(R.string.contact_support_input_placeholder),
-                firstMessage = context.getString(R.string.contact_support_first_message),
-                getSupport = context.getString(R.string.contact_support_get_support),
-                suggestions = context.getString(R.string.contact_support_suggestions),
-                questionOne = context.getString(R.string.contact_support_question_one),
-                questionTwo = context.getString(R.string.contact_support_question_two),
-                questionThree = context.getString(R.string.contact_support_question_three),
-                questionFour = context.getString(R.string.contact_support_question_four),
-                questionFive = context.getString(R.string.contact_support_question_five),
-                questionSix = context.getString(R.string.contact_support_question_six)
-            )
-            // build url with parameters.
-            val botOptions = options.toMap()
-
-            Log.d("BotOptions Map", botOptions.toString())
-
-            val builder = Uri.Builder()
-            builder.scheme("https")
-                .authority(DEFAULT_DOMAIN)
-                .appendPath("assets")
-                .appendPath("support_chat_widget.html")
-
-            botOptions.forEach { (key, value) ->
-                builder.appendQueryParameter(key, value.toString())
-            }
-
-            return builder.build().toString()
-        }
+        private fun buildURI(context: Context) = Uri.Builder().scheme("https")
+            .authority(DEFAULT_DOMAIN)
+            .appendPath("assets")
+            .appendPath("support_chat_widget.html")
+            .appendQueryParameter("id", BuildConfig.DOCSBOTAI_ID)
+            .appendQueryParameter("inputPlaceholder", context.getString(R.string.contact_support_input_placeholder))
+            .appendQueryParameter("firstMessage", context.getString(R.string.contact_support_first_message))
+            .appendQueryParameter("getSupport", context.getString(R.string.contact_support_get_support))
+            .appendQueryParameter("suggestions", context.getString(R.string.contact_support_suggestions))
+            .appendQueryParameter("questionOne", context.getString(R.string.contact_support_question_one))
+            .appendQueryParameter("questionTwo", context.getString(R.string.contact_support_question_two))
+            .appendQueryParameter("questionThree", context.getString(R.string.contact_support_question_three))
+            .appendQueryParameter("questionFour", context.getString(R.string.contact_support_question_four))
+            .appendQueryParameter("questionFive", context.getString(R.string.contact_support_question_five))
+            .appendQueryParameter("questionSix", context.getString(R.string.contact_support_question_six))
+            .build()
+            .toString()
     }
 }
