@@ -108,7 +108,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
             }
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(@NonNull View view) {
+                public void onClick(@NonNull View v) {
                     finish();
                 }
             });
