@@ -195,7 +195,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @SuppressWarnings("unchecked")
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getGutenbergContainerFragment() == null) {
@@ -227,8 +227,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
 
         initializeSavingProgressDialog();
@@ -241,7 +243,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         ViewGroup gutenbergContainer = view.findViewById(R.id.gutenberg_container);
         getGutenbergContainerFragment().attachToContainer(gutenbergContainer,
                 new OnMediaLibraryButtonListener() {
-                    @Override public void onMediaLibraryImageButtonClicked(boolean allowMultipleSelection) {
+                    @Override
+                    public void onMediaLibraryImageButtonClicked(boolean allowMultipleSelection) {
                         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
                         mEditorFragmentListener.onAddMediaImageClicked(allowMultipleSelection);
                     }
@@ -258,12 +261,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         mEditorFragmentListener.onAddLibraryMediaClicked(allowMultipleSelection);
                     }
 
-                    @Override public void onMediaLibraryFileButtonClicked(boolean allowMultipleSelection) {
+                    @Override
+                    public void onMediaLibraryFileButtonClicked(boolean allowMultipleSelection) {
                         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
                         mEditorFragmentListener.onAddLibraryFileClicked(allowMultipleSelection);
                     }
 
-                    @Override public void onMediaLibraryAudioButtonClicked(boolean allowMultipleSelection) {
+                    @Override
+                    public void onMediaLibraryAudioButtonClicked(boolean allowMultipleSelection) {
                         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
                         mEditorFragmentListener.onAddLibraryAudioFileClicked(allowMultipleSelection);
                     }
@@ -328,7 +333,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         return otherMediaFileOptions;
                     }
 
-                    @Override public ArrayList<MediaOption> onGetOtherMediaAudioFileOptions() {
+                    @Override
+                    public ArrayList<MediaOption> onGetOtherMediaAudioFileOptions() {
                         return initOtherMediaAudioFileOptions();
                     }
 
@@ -361,7 +367,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
                 },
                 new OnReattachMediaSavingQueryListener() {
-                    @Override public void onQueryCurrentProgressForSavingMedia() {
+                    @Override
+                    public void onQueryCurrentProgressForSavingMedia() {
                         // TODO: probably go through mFailedMediaIds, and see if any block in the post content
                         // has these mediaFIleIds. If there's a match, mark such a block in FAILED state.
                         updateFailedMediaState();
@@ -441,7 +448,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
                 },
                 new OnGutenbergDidRequestEmbedFullscreenPreviewListener() {
-                    @Override public void gutenbergDidRequestEmbedFullscreenPreview(String html, String title) {
+                    @Override
+                    public void gutenbergDidRequestEmbedFullscreenPreview(String html, String title) {
                         openGutenbergEmbedWebViewActivity(html, title);
                     }
                 },
@@ -453,16 +461,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
 
                 new ShowSuggestionsUtil() {
-                    @Override public void showUserSuggestions(Consumer<String> onResult) {
+                    @Override
+                    public void showUserSuggestions(Consumer<String> onResult) {
                         mEditorFragmentListener.showUserSuggestions(onResult);
                     }
 
-                    @Override public void showXpostSuggestions(Consumer<String> onResult) {
+                    @Override
+                    public void showXpostSuggestions(Consumer<String> onResult) {
                         mEditorFragmentListener.showXpostSuggestions(onResult);
                     }
                 },
                 new OnMediaFilesCollectionBasedBlockEditorListener() {
-                    @Override public void onRequestMediaFilesEditorLoad(ArrayList<Object> mediaFiles, String blockId) {
+                    @Override
+                    public void onRequestMediaFilesEditorLoad(ArrayList<Object> mediaFiles, String blockId) {
                         // let's first calculate the hash on this mediaFiles array, this will let us
                         // identify the block later when we need to replace it as we come back from the Story
                         // composer
@@ -472,7 +483,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         mEditorFragmentListener.onStoryComposerLoadRequested(mediaFiles, blockId);
                     }
 
-                    @Override public void onCancelUploadForMediaCollection(ArrayList<Object> mediaFiles) {
+                    @Override
+                    public void onCancelUploadForMediaCollection(ArrayList<Object> mediaFiles) {
                         if (getActivity() != null) {
                             getActivity().runOnUiThread(() -> {
                                 showCancelMediaCollectionUploadDialog(mediaFiles);
@@ -480,7 +492,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         }
                     }
 
-                    @Override public void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles) {
+                    @Override
+                    public void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles) {
                         if (getActivity() != null) {
                             getActivity().runOnUiThread(() -> {
                                 showRetryMediaCollectionUploadDialog(mediaFiles);
@@ -488,7 +501,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         }
                     }
 
-                    @Override public void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles) {
+                    @Override
+                    public void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles) {
                         if (getActivity() != null) {
                             getActivity().runOnUiThread(() -> {
                                 showCancelMediaCollectionSaveDialog(mediaFiles);
@@ -496,7 +510,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         }
                     }
 
-                    @Override public void onMediaFilesBlockReplaceSync(ArrayList<Object> mediaFiles, String blockId) {
+                    @Override
+                    public void onMediaFilesBlockReplaceSync(ArrayList<Object> mediaFiles, String blockId) {
                         if (mStoryBlockReplacedSignalWait) {
                             // in case we were expecting a fresh block replacement sync signal, let the fragment
                             // listener know so it can process all of the pending block save / update / upload events
@@ -773,7 +788,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return otherMediaOptions;
     }
 
-    @Override public void onResume() {
+    @Override
+    public void onResume() {
         super.onResume();
 
         setEditorProgressBarVisibility(!mEditorDidMount);
@@ -861,7 +877,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         builder.setTitle(getString(R.string.stop_upload_dialog_title));
         builder.setPositiveButton(R.string.stop_upload_dialog_button_yes,
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+                @Override
+                public void onClick(@Nullable DialogInterface dialog, int which) {
                         if (mUploadingMediaProgressMax.containsKey(String.valueOf(localMediaId))) {
                             mEditorFragmentListener.onMediaUploadCancelClicked(String.valueOf(localMediaId));
                             // remove from editor
@@ -872,13 +889,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         } else {
                             ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
                         }
-                        dialog.dismiss();
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
                     }
                 });
 
         builder.setNegativeButton(R.string.stop_upload_dialog_button_no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
+            @Override
+            public void onClick(@Nullable DialogInterface dialog, int which) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
             }
         });
 
@@ -897,15 +919,21 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
         builder.setPositiveButton(R.string.retry_failed_upload_yes,
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
+                    @Override
+                    public void onClick(@Nullable DialogInterface dialog, int which) {
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
                         mEditorFragmentListener.onMediaRetryAllClicked(mFailedMediaIds);
                     }
                 });
 
         builder.setNegativeButton(R.string.retry_failed_upload_remove, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
+            @Override
+            public void onClick(@Nullable DialogInterface dialog, int which) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
                 mEditorFragmentListener.onMediaDeleted(String.valueOf(mediaId));
                 mFailedMediaIds.remove(String.valueOf(mediaId));
                 getGutenbergContainerFragment().clearMediaFileURL(mediaId);
@@ -953,8 +981,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         builder.setTitle(getString(R.string.stop_upload_dialog_title));
         builder.setPositiveButton(R.string.stop_upload_dialog_button_yes,
                 new DialogInterface.OnClickListener() {
+                    @Override
                     @SuppressWarnings("unchecked")
-                    public void onClick(DialogInterface dialog, int id) {
+                    public void onClick(@Nullable DialogInterface dialog, int which) {
                         mEditorFragmentListener.onCancelUploadForMediaCollection(mediaFiles);
                         // now signal Gutenberg upload failed, and remove the mediaIds from our tracking map
                         for (Object mediaFile : mediaFiles) {
@@ -966,13 +995,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             getGutenbergContainerFragment().mediaFileUploadFailed(localMediaId);
                             mUploadingMediaProgressMax.remove(localMediaId);
                         }
-                        dialog.dismiss();
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
                     }
                 });
 
         builder.setNegativeButton(R.string.stop_upload_dialog_button_no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
+            @Override
+            public void onClick(@Nullable DialogInterface dialog, int which) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
             }
         });
 
@@ -987,15 +1021,21 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         builder.setTitle(getString(R.string.retry_failed_upload_title));
         builder.setPositiveButton(R.string.retry_failed_upload_yes,
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+                    @Override
+                    public void onClick(@Nullable DialogInterface dialog, int which) {
                         mEditorFragmentListener.onRetryUploadForMediaCollection(mediaFiles);
-                        dialog.dismiss();
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
                     }
                 });
 
         builder.setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
+            @Override
+            public void onClick(@Nullable DialogInterface dialog, int which) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
             }
         });
 
@@ -1011,8 +1051,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         builder.setMessage(getString(R.string.stop_save_dialog_message));
         builder.setPositiveButton(R.string.stop_save_dialog_ok_button,
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
+                    @Override
+                    public void onClick(@Nullable DialogInterface dialog, int which) {
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
                     }
                 });
 
@@ -1026,7 +1069,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(@NonNull Activity activity) {
         super.onAttach(activity);
 
         try {
@@ -1049,7 +1092,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean(KEY_HTML_MODE_ENABLED, mHtmlModeEnabled);
         outState.putBoolean(KEY_EDITOR_DID_MOUNT, mEditorDidMount);
         outState.putString(ARG_STORY_BLOCK_EXTERNALLY_EDITED_ORIGINAL_HASH, mExternallyEditedBlockOriginalHash);
@@ -1058,22 +1101,20 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_gutenberg, menu);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        if (menu != null) {
-            MenuItem debugMenuItem = menu.findItem(R.id.debugmenu);
-            debugMenuItem.setVisible(BuildConfig.DEBUG);
-        }
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        MenuItem debugMenuItem = menu.findItem(R.id.debugmenu);
+        debugMenuItem.setVisible(BuildConfig.DEBUG);
 
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.debugmenu) {
             getGutenbergContainerFragment().showDevOptionsDialog();
             return true;
@@ -1209,7 +1250,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             throw new EditorFragmentNotAddedException();
         }
         return getGutenbergContainerFragment().getTitleAndContent(originalContent, new OnGetContentInterrupted() {
-            @Override public void onGetContentInterrupted(InterruptedException ie) {
+            @Override
+            public void onGetContentInterrupted(InterruptedException ie) {
                 AppLog.e(T.EDITOR, ie);
                 Thread.currentThread().interrupt();
             }
@@ -1237,7 +1279,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             throw new EditorFragmentNotAddedException();
         }
         return getGutenbergContainerFragment().getContent(originalContent, new OnGetContentInterrupted() {
-            @Override public void onGetContentInterrupted(InterruptedException ie) {
+            @Override
+            public void onGetContentInterrupted(InterruptedException ie) {
                 AppLog.e(T.EDITOR, ie);
                 Thread.currentThread().interrupt();
             }
@@ -1408,7 +1451,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         super.onDestroy();
     }
 
-    @Override public void mediaSelectionCancelled() {
+    @Override
+    public void mediaSelectionCancelled() {
         getGutenbergContainerFragment().mediaSelectionCancelled();
     }
 
@@ -1473,28 +1517,33 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         getGutenbergContainerFragment().updateTheme(editorTheme);
     }
 
-    @Override public void onMediaSaveReattached(String localId, float currentProgress) {
+    @Override
+    public void onMediaSaveReattached(String localId, float currentProgress) {
         mUploadingMediaProgressMax.put(localId, currentProgress);
         getGutenbergContainerFragment().mediaFileSaveProgress(localId, currentProgress);
     }
 
-    @Override public void onMediaSaveSucceeded(String localId, String mediaUrl) {
+    @Override
+    public void onMediaSaveSucceeded(String localId, String mediaUrl) {
         mUploadingMediaProgressMax.remove(localId);
         getGutenbergContainerFragment().mediaFileSaveSucceeded(localId, mediaUrl);
     }
 
-    @Override public void onMediaSaveProgress(String localId, float progress) {
+    @Override
+    public void onMediaSaveProgress(String localId, float progress) {
         mUploadingMediaProgressMax.put(localId, progress);
         getGutenbergContainerFragment().mediaFileSaveProgress(localId, progress);
     }
 
-    @Override public void onMediaSaveFailed(String localId) {
+    @Override
+    public void onMediaSaveFailed(String localId) {
         getGutenbergContainerFragment().mediaFileSaveFailed(localId);
         mFailedMediaIds.add(localId);
         mUploadingMediaProgressMax.remove(localId);
     }
 
-    @Override public void onStorySaveResult(String storyFirstMediaId, boolean success) {
+    @Override
+    public void onStorySaveResult(String storyFirstMediaId, boolean success) {
         if (!success) {
             mFailedMediaIds.add(storyFirstMediaId);
         }
@@ -1502,11 +1551,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         getGutenbergContainerFragment().onStorySaveResult(storyFirstMediaId, success);
     }
 
-    @Override public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
+    @Override
+    public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
         getGutenbergContainerFragment().onMediaModelCreatedForFile(oldId, newId, oldUrl);
     }
 
-    @Override public void onStoryMediaSavedToRemote(String localId, String remoteId, String oldUrl, String newUrl) {
+    @Override
+    public void onStoryMediaSavedToRemote(String localId, String remoteId, String oldUrl, String newUrl) {
         mUploadingMediaProgressMax.remove(localId);
         // this method may end up being called twice if the original FluxC OnMediaUploaded event was correctly caught
         // when posted, and can be retriggered by StoriesEventListener in the case a Gutenberg instance is re-mounted
@@ -1529,11 +1580,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         getGutenbergContainerFragment().showEditorHelp();
     }
 
-    @Override public void onUndoPressed() {
+    @Override
+    public void onUndoPressed() {
         getGutenbergContainerFragment().onUndoPressed();
     }
 
-    @Override public void onRedoPressed() {
+    @Override
+    public void onRedoPressed() {
         getGutenbergContainerFragment().onRedoPressed();
     }
 
