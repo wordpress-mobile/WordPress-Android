@@ -758,7 +758,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         @Override
-        public boolean onActionItemClicked(@NonNull ActionMode actionMode, @NonNull MenuItem menuItem) {
+        public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem menuItem) {
             int itemId = menuItem.getItemId();
             if (itemId == R.id.menu_show) {
                 Set<SiteRecord> changeSet = getAdapter().setVisibilityForSelectedSites(true);
