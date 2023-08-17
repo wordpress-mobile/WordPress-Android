@@ -664,7 +664,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onQueryTextSubmit(@NonNull String s) {
+    public boolean onQueryTextSubmit(@NonNull String query) {
         hideSoftKeyboard();
         return true;
     }
