@@ -188,14 +188,14 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         headerAvatarLayout.setEnabled(mIsEmailSignup);
         headerAvatarLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(@NonNull View v) {
                 mUnifiedLoginTracker.trackClick(Click.SELECT_AVATAR);
                 mMediaPickerLauncher.showGravatarPicker(SignupEpilogueFragment.this);
             }
         });
         headerAvatarLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View view) {
+            public boolean onLongClick(@NonNull View v) {
                 ToastUtils.showToast(getActivity(), getString(R.string.content_description_add_avatar),
                         ToastUtils.Duration.SHORT);
                 return true;
@@ -214,15 +214,15 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         mEditTextDisplayName.setText(mDisplayName);
         mEditTextDisplayName.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(@NonNull CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(@NonNull Editable s) {
                 mDisplayName = s.toString();
                 mHeaderDisplayName.setText(mDisplayName);
             }
@@ -232,14 +232,14 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         mEditTextUsername.setText(mUsername);
         mEditTextUsername.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(@NonNull View v) {
                 mUnifiedLoginTracker.trackClick(Click.EDIT_USERNAME);
                 launchDialog();
             }
         });
         mEditTextUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean hasFocus) {
+            public void onFocusChange(@NonNull View v, boolean hasFocus) {
                 if (hasFocus) {
                     launchDialog();
                 }
@@ -247,7 +247,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         });
         mEditTextUsername.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public boolean onKey(View view, int keyCode, KeyEvent event) {
+            public boolean onKey(@NonNull View v, int keyCode, @NonNull KeyEvent event) {
                 // Consume keyboard events except for Enter (i.e. click/tap) and Tab (i.e. focus/navigation).
                 // The onKey method returns true if the listener has consumed the event and false otherwise
                 // allowing hardware keyboard users to tap and navigate, but not input text as expected.
@@ -269,7 +269,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 (OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> showBottomShadowIfNeeded());
         // We must use onGlobalLayout here otherwise canScrollVertically will always return false
         mScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-            @Override public void onGlobalLayout() {
+            @Override
+            public void onGlobalLayout() {
                 mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 showBottomShadowIfNeeded();
             }
@@ -289,7 +290,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     protected void setupBottomButton(Button button) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(@NonNull View v) {
                 mUnifiedLoginTracker.trackClick(Click.CONTINUE);
                 updateAccountOrContinue();
             }
@@ -297,7 +298,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
         mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
@@ -364,7 +365,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (isAdded()) {
@@ -434,7 +435,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         if (context instanceof SignupEpilogueListener) {
@@ -468,7 +469,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(KEY_PHOTO_URL, mPhotoUrl);
         outState.putString(KEY_DISPLAY_NAME, mDisplayName);
@@ -482,15 +483,15 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    public void beforeTextChanged(@NonNull CharSequence s, int start, int count, int after) {
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
     }
 
     @Override
-    public void afterTextChanged(Editable s) {
+    public void afterTextChanged(@NonNull Editable s) {
     }
 
     @Override
@@ -665,7 +666,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     protected void showErrorDialog(String message) {
         DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@Nullable DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_NEGATIVE:
                         undoChanges();
