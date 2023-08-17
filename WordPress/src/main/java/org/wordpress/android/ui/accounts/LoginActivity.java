@@ -76,6 +76,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.util.config.ContactSupportFeatureConfig;
 import org.wordpress.android.util.config.LandingScreenRevampFeatureConfig;
 import org.wordpress.android.widgets.WPSnackbar;
 
@@ -139,6 +140,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     @Inject LandingScreenRevampFeatureConfig mLandingScreenRevampFeatureConfig;
+
+    @Inject ContactSupportFeatureConfig mContactSupportFeatureConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -684,12 +687,16 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         if (!mBuildConfigWrapper.isJetpackApp()) {
             viewHelp(Origin.LOGIN_SITE_ADDRESS);
         } else {
-            Intent intent = SupportWebViewActivity.createIntent(
-                    this,
-                    Origin.LOGIN_SITE_ADDRESS,
-                    null,
-                    null);
-            startActivity(intent);
+            if (mContactSupportFeatureConfig.isEnabled()) {
+                Intent intent = SupportWebViewActivity.createIntent(
+                        this,
+                        Origin.LOGIN_SITE_ADDRESS,
+                        null,
+                        null);
+                startActivity(intent);
+            } else {
+                mZendeskHelper.createNewTicket(this, Origin.LOGIN_SITE_ADDRESS, null);
+            }
         }
     }
 
