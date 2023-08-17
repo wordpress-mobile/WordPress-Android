@@ -1,16 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-27 13:54:08+0000
+Translation-Revision-Date: 2023-08-09 12:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: ar
 -->
 <resources>
+    <string name="missing_splits_dialog_button">إغلاق</string>
+    <string name="missing_splits_dialog_title">فشل التثبيت</string>
+    <string name="campaign_detail_error_title">حدث خطأ</string>
+    <string name="campaign_listing_page_error_title">حدث خطأ</string>
+    <string name="domain_transfer_card_menu_hide_this">إخفاء ذلك</string>
+    <string name="domain_transfer_card_cta">نقل نطاقاتك</string>
+    <string name="domain_transfer_card_title">الأخبار</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">ربط الحسابات</string>
+    <string name="prepublishing_nudges_toolbar_title_social">المشاركة عبر شبكات التواصل الاجتماعي</string>
+    <string name="prepublishing_nudges_social_action">المشاركة عبر شبكات التواصل الاجتماعي</string>
+    <string name="sharing">اجتماعي</string>
+    <string name="missing_splits_dialog_message">يفتقد تطبيق ووردبريس إلى المكوّنات المطلوبة ولا بد من إعادة تثبيته من متجر Google Play.</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> حدث خطأ، يتعذر إحضار الحملات</string>
+    <string name="domain_transfer_card_caption">مثلما تعرف، تم بيع Google Domains إلى Squarespace. انقل نطاقاتك إلى ووردبريس.كوم الآن، وسندفع كل رسوم النقل بالإضافة إلى عام إضافي من تسجيلك للنطاق.</string>
+    <string name="domain_transfer_card_sub_title">استعادة Google Domains الخاصة بك</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">المشاركة إلى ⁦%1$d⁩ من الحسابات</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">المشاركة إلى ⁦%1$d⁩ من أصل ⁦%2$d⁩ من الحسابات</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">لم تتم المشاركة على شبكات التواصل الاجتماعي</string>
+    <string name="post_settings_jetpack_social_share_message_title">تخصيص الرسالة</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">ليس الآن</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">ربط الحسابات</string>
+    <string name="jetpack_social_social_shares_title_single_account">المشاركة إلى ⁦%1$s⁩</string>
+    <string name="post_settings_jetpack_social_share_message_description">تخصيص الرسالة التي ترغب في مشاركتها. إذا لم تقم بإضافة النص الخاص بك هنا، فسنستخدم عنوان التدوينة كرسالة.</string>
     <string name="gutenberg_native_insert_video_block">إدراج مكوّن الفيديوهات</string>
     <string name="gutenberg_native_insert_image_block">إدراج مكوّن الصور</string>
     <string name="gutenberg_native_insert_gallery_block">إدراج مكوّن المعرض</string>
     <string name="gutenberg_native_insert_audio_block">إدراج مكوّن الملفات الصوتية</string>
-    <string name="blaze_campaign_detail_error">يتعذر تحميل تفاصيل الحملة</string>
     <string name="campaign_listing_page_no_campaigns_button_text">إنشاء</string>
     <string name="campaign_listing_page_no_campaigns_message_description">لم تنشئ أي حملات حتى الآن. انقر هنا للبدء.</string>
     <string name="campaign_listing_page_no_campaigns_message_title">ليست لديك حملات</string>
@@ -28,12 +50,10 @@ Language: ar
     <string name="blaze_campaigns_card_footer_label">إنشاء حملة</string>
     <string name="blaze_campaigns_card_title">حملة Blaze</string>
     <string name="promote_blaze_flow_error">يتعذر تحميل تدفق الترويج في blaze</string>
-    <string name="prepublishing_nudges_social_new_connection_cta">ربط ملفاتك الشخصية على شبكات التواصل الاجتماعي</string>
     <string name="prepublishing_nudges_social_new_connection_text">قم بزيادة حركة المرور لديك من حلال مشاركة تدويناتك تلقائيًا مع أصدقائك على شبكات التواصل الاجتماعي.</string>
     <string name="menu_close_editor">إغلاق المحرر</string>
     <string name="menu_redo_context">إعادة آخر تغيير</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">الاشتراك لمشاركة المزيد</string>
-    <string name="post_settings_jetpack_social_connect_social_profiles_button">ربط ملفاتك الشخصية على شبكات التواصل الاجتماعي</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">قم بزيادة حركة المرور لديك من حلال مشاركة تدويناتك تلقائيًا مع أصدقائك على شبكات التواصل الاجتماعي.</string>
     <string name="post_settings_jetpack_social_header">المشاركة عبر شبكات التواصل الاجتماعي</string>
     <string name="gutenberg_native_s_detached">تم فصل %s</string>
@@ -46,8 +66,8 @@ Language: ar
     <string name="privacy_banner_analytics_description">اسمح لنا بتحسين الأداء عن طريق جمع المعلومات حول كيفية تفاعل المستخدمين مع تطبيقاتنا للهواتف المحمولة.</string>
     <string name="privacy_banner_analytics">التحليلات</string>
     <string name="privacy_banner_title">إدارة الخصوصية</string>
-    <string name="tabbar_accessibility_label_me">أنا. Manage your profile details.</string>
     <string name="privacy_banner_description">تُمثِّل خصوصيتك أهمية بالغة بالنسبة إلينا وكانت دومًا كذلك. إننا نستخدم بياناتك الشخصية ونخزّنها ونعالجها لتحسين تطبيقنا (وتجربتك) بطرق متنوعة. إننا بحاجة إلى بعض استخدامات بياناتك بشكل كلي لكي تسير الأمور على ما يرام، إلى جانب استخدامات أخرى يمكنك تحسينها من إعداداتك.</string>
+    <string name="tabbar_accessibility_label_me">أنا. Manage your profile details.</string>
     <string name="social_item_message_title">رسالة</string>
     <string name="gutenberg_native_block_ungrouped">تم إلغاء تجميع المكوّنات</string>
     <string name="gutenberg_native_block_grouped">تم تجميع المكوّنات</string>
@@ -2866,12 +2886,11 @@ Language: ar
     <string name="connection_service_description">اتصل لمشاركة مقالات مدونتك تلقائيًا على %s.</string>
     <string name="connected_accounts_label">الحسابات المتصلة</string>
     <string name="connections_description">قم بتوصيل خدمات التواصل الاجتماعي المفضلة لديك لمشاركة المقالات الجديدة تلقائيًا مع الأصدقاء.</string>
-    <string name="sharing">مشاركة</string>
     <string name="tabbar_accessibility_label_notifications">تنبيهات. قم بإدارة تنبيهاتك.</string>
     <string name="tabbar_accessibility_label_reader">القارئ. متابعة محتوى من مواقع أخرى.</string>
     <string name="tabbar_accessibility_label_my_site">موقعي. اعرض موقعك وقم بإدارته، بما في ذلك الإحصاءات.</string>
-    <string name="my_site_btn_sharing">مشاركة</string>
     <string name="button_not_now">ليس الآن</string>
+    <string name="my_site_btn_sharing">اجتماعي</string>
     <string name="media_error_internal_server_error">خطأ أثناء الرفع. حاول تمكين إعدادات \"تحسين الصور في الموقع\"</string>
     <string name="media_downloading">حفظ الوسائط إلى هذا الجهاز</string>
     <string name="error_media_save">يتعذر حفظ الوسائط</string>

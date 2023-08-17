@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-07 09:54:19+0000
+Translation-Revision-Date: 2023-08-10 16:54:02+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="missing_splits_dialog_message">Jetpack uygulaması için gerekli bileşenler eksik ve Google Play Store\'dan yeniden yüklenmesi gerekiyor.</string>
     <string name="me_btn_share">Jetpack\'i bir arkadaşınızla paylaşın</string>
     <string name="login_prologue_revamped_jetpack_feature_text_12">Bir yazar ekleyin</string>
     <string name="login_prologue_revamped_jetpack_feature_text_11">Bir fotoğraf yayınlayın</string>
