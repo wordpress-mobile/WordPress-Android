@@ -741,7 +741,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         @Override
-        public boolean onPrepareActionMode(@NonNull ActionMode actionMode, @NonNull Menu menu) {
+        public boolean onPrepareActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
             MenuItem mnuShow = menu.findItem(R.id.menu_show);
             mnuShow.setEnabled(mShowMenuEnabled);
 
