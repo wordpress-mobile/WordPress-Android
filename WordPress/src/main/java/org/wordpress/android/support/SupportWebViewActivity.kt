@@ -18,12 +18,14 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.toMap
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
@@ -32,6 +34,9 @@ import javax.inject.Inject
 class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.SupportWebViewClientListener {
     @Inject
     lateinit var zendeskHelper: ZendeskHelper
+
+    @Inject
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private val originFromExtras by lazy {
         intent.extras?.getSerializableCompat<HelpActivity.Origin>(ORIGIN_KEY) ?: HelpActivity.Origin.UNKNOWN
@@ -58,6 +63,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
 
         setupWebView()
         setupJsInterfaceForWebView()
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_STARTED)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
