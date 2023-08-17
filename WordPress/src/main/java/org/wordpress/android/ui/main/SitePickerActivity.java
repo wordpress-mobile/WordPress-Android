@@ -670,11 +670,11 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onQueryTextChange(@NonNull String s) {
+    public boolean onQueryTextChange(@NonNull String newText) {
         if (getAdapter().getIsInSearchMode()) {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_SEARCH_PERFORMED);
-            getAdapter().setLastSearch(s);
-            getAdapter().searchSites(s);
+            getAdapter().setLastSearch(newText);
+            getAdapter().searchSites(newText);
         }
         return true;
     }

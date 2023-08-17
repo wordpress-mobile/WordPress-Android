@@ -296,8 +296,8 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onQueryTextChange(@NonNull String query) {
-        mViewModel.setSearchQuery(query);
+    public boolean onQueryTextChange(@NonNull String newText) {
+        mViewModel.setSearchQuery(newText);
         return true;
     }
 

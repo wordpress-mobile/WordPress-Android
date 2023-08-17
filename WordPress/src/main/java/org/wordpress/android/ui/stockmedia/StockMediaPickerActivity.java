@@ -287,9 +287,9 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
     }
 
     @Override
-    public boolean onQueryTextChange(@NonNull String query) {
-        if (!StringUtils.equals(query, mSearchQuery)) {
-            submitSearch(query, true);
+    public boolean onQueryTextChange(@NonNull String newText) {
+        if (!StringUtils.equals(newText, mSearchQuery)) {
+            submitSearch(newText, true);
         }
         return true;
     }

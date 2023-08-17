@@ -362,8 +362,8 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onQueryTextChange(@NonNull String query) {
-        mAdapter.filter(query);
+    public boolean onQueryTextChange(@NonNull String newText) {
+        mAdapter.filter(newText);
         return false;
     }
 
