@@ -229,7 +229,7 @@ public class SelectCategoriesActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_new_category) {
             if (NetworkUtils.checkConnection(this)) {

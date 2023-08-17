@@ -148,7 +148,7 @@ public class AppLogViewerActivity extends LocaleAwareActivity {
 
     @Override
     @SuppressLint("NonConstantResourceId")
-    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();

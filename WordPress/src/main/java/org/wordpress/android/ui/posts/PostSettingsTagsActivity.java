@@ -79,7 +79,7 @@ public class PostSettingsTagsActivity extends LocaleAwareActivity implements Tag
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
             saveAndFinish();
