@@ -779,7 +779,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         @Override
-        public void onDestroyActionMode(@NonNull ActionMode actionMode) {
+        public void onDestroyActionMode(@NonNull ActionMode mode) {
             if (mHasChanges) {
                 saveSitesVisibility(mChangeSet);
             }
