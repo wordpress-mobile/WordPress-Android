@@ -1,0 +1,4 @@
+- Upgraded the post editor with social sharing management
+- Added domain transfer and Blaze Campaign dashboard cards
+- Fixed a plugin install bug that caused the app to crash
+- Improved gallery block design and useability

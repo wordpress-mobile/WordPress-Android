@@ -1,0 +1,5 @@
+23.0:
+- Se ha mejorado el editor de entradas con la gestión de las publicaciones en redes sociales
+- Se han agregado tarjetas de escritorio de transferencia de dominio y de Blaze Campaign
+- Se ha solucionado un error que provocaba el fallo de la aplicación
+- Se ha mejorado el bloque de diseño de la galería y su uso
