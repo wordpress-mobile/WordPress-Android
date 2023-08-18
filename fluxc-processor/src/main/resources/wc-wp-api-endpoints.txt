@@ -28,6 +28,8 @@
 /products/tags/<id>/
 /products/tags/batch/
 
+
+
 /product-add-ons/
 
 /customers/<id>
@@ -37,6 +39,7 @@
 /reports/customers
 
 /reports/orders/totals/
+/reports/products/totals/
 /reports/revenue/stats/
 
 /settings/general/
