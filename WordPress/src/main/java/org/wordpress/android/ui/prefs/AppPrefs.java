@@ -199,6 +199,7 @@ public class AppPrefs {
 
         // Should show Jetpack Social no connections UI
         SHOULD_SHOW_JETPACK_SOCIAL_NO_CONNECTIONS,
+        SHOULD_HIDE_ACTIVITY_DASHBOARD_CARD,
     }
 
     /**
@@ -1716,5 +1717,13 @@ public class AppPrefs {
                                                                      final JetpackSocialFlow flow) {
         return DeletablePrefKey.SHOULD_SHOW_JETPACK_SOCIAL_NO_CONNECTIONS.name() + "_" + remoteSiteId + "_"
                + flow.getValue();
+    }
+
+    public static void setShouldHideActivityDashboardCard(final long remoteSiteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHideActivityDashboardCardKey(remoteSiteId), isHidden).apply();
+    }
+
+    @NonNull private static String getSiteIdHideActivityDashboardCardKey(long siteId) {
+        return DeletablePrefKey.SHOULD_HIDE_ACTIVITY_DASHBOARD_CARD.name() + siteId;
     }
 }
