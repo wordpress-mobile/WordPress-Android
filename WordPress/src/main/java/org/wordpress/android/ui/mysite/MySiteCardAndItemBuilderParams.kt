@@ -104,7 +104,8 @@ sealed class MySiteCardAndItemBuilderParams {
         )
 
         data class MoreMenuParams(
-            val onHideThisCardClick: () -> Unit,
+            val onMoreMenuClick: () -> Unit,
+            val onHideThisCardItemClick: () -> Unit,
             val onAllPagesItemClick: () -> Unit
         )
     }

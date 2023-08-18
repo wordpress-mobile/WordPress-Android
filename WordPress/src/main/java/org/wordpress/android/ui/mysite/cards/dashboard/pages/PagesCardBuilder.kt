@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.CreateNewPageItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.PageContentItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.MoreMenuOptions
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams.PagesItemClickParams
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.DRAFT
@@ -47,7 +48,12 @@ class PagesCardBuilder @Inject constructor(
         return PagesCard.PagesCardWithData(
             title = UiStringRes(R.string.dashboard_pages_card_title),
             pages = content,
-            footerLink = createPageCard
+            footerLink = createPageCard,
+            moreMenuOptionsLink = MoreMenuOptions(
+                onMoreClick = params.moreMenuClickParams.onMoreMenuClick,
+                allPagesMenuItemClick = params.moreMenuClickParams.onAllPagesItemClick,
+                hideThisMenuItemClick = params.moreMenuClickParams.onHideThisCardItemClick
+            )
         )
     }
 

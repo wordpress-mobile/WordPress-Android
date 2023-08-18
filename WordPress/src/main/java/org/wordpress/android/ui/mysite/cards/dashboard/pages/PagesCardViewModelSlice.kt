@@ -22,18 +22,27 @@ class PagesCardViewModelSlice @Inject constructor(
             onPagesItemClick = this::onPagesItemClick,
             onFooterLinkClick = this::onPagesCardFooterLinkClick,
             moreMenuClickParams = PagesCardBuilderParams.MoreMenuParams(
-                onHideThisCardClick = this::onPagesCardHideThisCardClick,
-                onAllPagesItemClick = this::onPagesCardManagePagesClick
+                onMoreMenuClick = this::onPagesCardMoreMenuClick,
+                onHideThisCardItemClick = this::onPagesCardHideThisCardClick,
+                onAllPagesItemClick = this::onAllPagesMenuItemClick
             )
         )
     }
 
-    private fun onPagesCardManagePagesClick() {
-        //todo implement the navigation to all pages
+    private fun onPagesCardMoreMenuClick() {
+        // todo implement the tracking
+    }
+
+    private fun onAllPagesMenuItemClick() {
+        //todo implement the tracking for navigation to all pages
+        _onNavigation.value = Event(
+            SiteNavigationAction
+                .OpenPages(requireNotNull(selectedSiteRepository.getSelectedSite()))
+        )
     }
 
     private fun onPagesCardHideThisCardClick() {
-        //todo implement the logic to hide the card
+        //todo implement the logic to hide the card and add tracking logic
     }
 
     private fun onPagesItemClick(params: PagesCardBuilderParams.PagesItemClickParams) {
