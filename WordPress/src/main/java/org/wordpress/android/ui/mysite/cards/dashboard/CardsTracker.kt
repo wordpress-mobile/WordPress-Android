@@ -142,6 +142,10 @@ class CardsTracker @Inject constructor(
         )
     }
 
+    private fun trackCardMoreMenuClicked(type: String) {
+        analyticsTrackerWrapper.track(Stat.MY_SITE_DASHBOARD_CONTEXTUAL_MENU_ACCESSED, mapOf(CARD to type))
+    }
+
     fun resetShown() {
         cardsShownTracker.reset()
     }
@@ -159,6 +163,7 @@ class CardsTracker @Inject constructor(
         const val SUBTYPE = "subtype"
         const val STATS = "stats"
         const val ITEM = "item"
+        const val CARD = "card"
     }
 }
 
