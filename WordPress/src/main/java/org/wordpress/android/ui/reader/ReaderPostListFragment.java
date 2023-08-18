@@ -349,7 +349,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     @Override
-    public void setArguments(Bundle args) {
+    public void setArguments(@Nullable Bundle args) {
         super.setArguments(args);
 
         if (args != null) {
@@ -378,7 +378,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -846,7 +846,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
@@ -1043,8 +1042,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_cards, container, false);
         mRecyclerView = rootView.findViewById(R.id.reader_recycler_view);
 
@@ -1215,7 +1216,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         mSearchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
                 if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
                     mReaderTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED);
                 }
@@ -1231,27 +1232,26 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 requireActivity().finish();
                 return false;
             }
         });
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                                               @Override
-                                               public boolean onQueryTextSubmit(String query) {
-                                                   submitSearchQuery(query);
-                                                   return true;
-                                               }
+            @Override
+            public boolean onQueryTextSubmit(@NonNull String query) {
+                submitSearchQuery(query);
+                return true;
+            }
 
-                                               @Override
-                                               public boolean onQueryTextChange(String newText) {
-                                                   populateSearchSuggestions(newText);
-                                                   showSearchMessageOrSuggestions();
-                                                   return true;
-                                               }
-                                           }
-        );
+            @Override
+            public boolean onQueryTextChange(@NonNull String newText) {
+                populateSearchSuggestions(newText);
+                showSearchMessageOrSuggestions();
+                return true;
+            }
+        });
     }
 
     private void showSearchMessageOrSuggestions() {
@@ -1459,7 +1459,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mSiteSearchAdapterPos = 0;
 
             mSearchTabs.addOnTabSelectedListener(new OnTabSelectedListener() {
-                @Override public void onTabSelected(Tab tab) {
+                @Override
+                public void onTabSelected(@NonNull Tab tab) {
                     if (tab.getPosition() == TAB_POSTS) {
                         mRecyclerView.setAdapter(getPostAdapter());
                         if (mPostSearchAdapterPos > 0) {
@@ -1485,7 +1486,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     }
                 }
 
-                @Override public void onTabUnselected(Tab tab) {
+                @Override
+                public void onTabUnselected(@NonNull Tab tab) {
                     if (tab.getPosition() == TAB_POSTS) {
                         mPostSearchAdapterPos = mRecyclerView.getCurrentPosition();
                     } else if (tab.getPosition() == TAB_SITES) {
@@ -1493,7 +1495,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     }
                 }
 
-                @Override public void onTabReselected(Tab tab) {
+                @Override
+                public void onTabReselected(@NonNull Tab tab) {
                     mRecyclerView.smoothScrollToPosition(0);
                 }
             });
@@ -1781,7 +1784,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_followed);
         mActionableEmptyView.button.setVisibility(View.VISIBLE);
         mActionableEmptyView.button.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
+            @Override
+            public void onClick(@NonNull View v) {
                 setCurrentTagFromEmptyViewButton(ActionableEmptyViewButtonType.FOLLOWED);
             }
         });
@@ -1848,7 +1852,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
 
             mActionableEmptyView.button.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View view) {
+                @Override
+                public void onClick(@NonNull View v) {
                     setCurrentTagFromEmptyViewButton(button);
                 }
             });
@@ -2444,11 +2449,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         Animation.AnimationListener listener = new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
+            public void onAnimationStart(@NonNull Animation animation) {
             }
 
             @Override
-            public void onAnimationEnd(Animation animation) {
+            public void onAnimationEnd(@NonNull Animation animation) {
                 if (isAdded()) {
                     mNewPostsBar.setVisibility(View.GONE);
                     mIsAnimatingOutNewPostsBar = false;
@@ -2456,7 +2461,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {
+            public void onAnimationRepeat(@NonNull Animation animation) {
             }
         };
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_out, listener);
@@ -2722,7 +2727,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                               Snackbar.LENGTH_LONG
                       ).setAction(getString(R.string.reader_followed_blog_notifications_action),
                               new View.OnClickListener() {
-                                  @Override public void onClick(View view) {
+                                  @Override
+                                  public void onClick(@NonNull View v) {
                                       mReaderTracker.trackBlog(
                                               AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
                                               blogId,
@@ -2789,7 +2795,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK) {
             int siteLocalId = data.getIntExtra(
