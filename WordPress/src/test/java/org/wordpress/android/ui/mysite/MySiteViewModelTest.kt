@@ -498,6 +498,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()).thenReturn(true)
         whenever(blazeCardViewModelSlice.refresh).thenReturn(refresh)
         whenever(domainTransferCardViewModel.refresh).thenReturn(refresh)
+        whenever(pagesCardViewModelSlice.getPagesCardBuilderParams(anyOrNull())).thenReturn(mock())
 
         viewModel = MySiteViewModel(
             networkUtilsWrapper,
@@ -1156,7 +1157,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `quick action stats click opens connect jetpack screen when user is logged in and site is self-hosted`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-
         site.setIsJetpackInstalled(false)
         site.setIsJetpackConnected(false)
 
