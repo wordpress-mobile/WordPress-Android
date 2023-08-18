@@ -2619,6 +2619,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_social_add_connection_dismissed";
             case MY_SITE_DASHBOARD_CARD_MENU_ITEM_TAPPED:
                 return "my_site_dashboard_card_menu_item_tapped";
+            case MY_SITE_DASHBOARD_CONTEXTUAL_MENU_ACCESSED:
+                return "my_site_dashboard_contextual_menu_accessed";
         }
         return null;
     }
