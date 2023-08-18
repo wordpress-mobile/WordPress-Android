@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -46,20 +47,23 @@ public class ReaderPostWebViewCachingFragment extends Fragment {
         return fragment;
     }
 
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mBlogId = getArguments().getLong(ARG_BLOG_ID);
         mPostId = getArguments().getLong(ARG_POST_ID);
     }
 
-    @Nullable @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return new ReaderWebView(getActivity());
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // check network again to detect disconnects during loading + configuration change
@@ -69,7 +73,8 @@ public class ReaderPostWebViewCachingFragment extends Fragment {
                 ((ReaderWebView) view).setIsPrivatePost(post.isPrivate);
                 ((ReaderWebView) view).setBlogSchemeIsHttps(UrlUtils.isHttps(post.getBlogUrl()));
                 ((ReaderWebView) view).setPageFinishedListener(new ReaderWebView.ReaderWebViewPageFinishedListener() {
-                    @Override public void onPageFinished(WebView view, String url) {
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
                         selfRemoveFragment();
                     }
                 });
