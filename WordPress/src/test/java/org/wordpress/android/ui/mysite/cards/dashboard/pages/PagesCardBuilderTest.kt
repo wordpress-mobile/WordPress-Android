@@ -16,7 +16,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardB
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.config.DashboardCardPagesConfig
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -65,9 +64,6 @@ private val PAGES_MODEL_3 = PagesCardModel(
 @ExperimentalCoroutinesApi
 class PagesCardBuilderTest : BaseUnitTest() {
     @Mock
-    private lateinit var dashboardCardPagesConfig: DashboardCardPagesConfig
-
-    @Mock
     private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
 
     private lateinit var builder: PagesCardBuilder
@@ -80,24 +76,13 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     @Before
     fun build() {
-        builder = PagesCardBuilder(dashboardCardPagesConfig, dateTimeUtilsWrapper)
+        builder = PagesCardBuilder(dateTimeUtilsWrapper)
         setupMocks()
     }
 
     private fun setupMocks() {
-        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("")
         whenever(dateTimeUtilsWrapper.getRelativeTimeSpanString(any())).thenReturn("")
-    }
-
-    @Test
-    fun `given config is false, when card is built, then return null`() {
-        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(false)
-        val params = getPagesBuildParams(PAGES_MODEL)
-
-        val result = builder.build(params)
-
-        assert(result == null)
     }
 
     @Test

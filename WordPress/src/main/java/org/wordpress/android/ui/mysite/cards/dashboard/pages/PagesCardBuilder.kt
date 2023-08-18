@@ -15,13 +15,11 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.config.DashboardCardPagesConfig
 import javax.inject.Inject
 
 private const val REQUIRED_PAGES_IN_CARD: Int = 3
 
 class PagesCardBuilder @Inject constructor(
-    private val dashboardCardPagesConfig: DashboardCardPagesConfig,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
     fun build(params: PagesCardBuilderParams): PagesCard? {
@@ -32,9 +30,7 @@ class PagesCardBuilder @Inject constructor(
     }
 
     private fun shouldBuildCard(params: PagesCardBuilderParams): Boolean {
-        if (!dashboardCardPagesConfig.isEnabled() ||
-            params.pageCard == null
-        ) return false
+        if (params.pageCard == null) return false
 
         return true
     }
