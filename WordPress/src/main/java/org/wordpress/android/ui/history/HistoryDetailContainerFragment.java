@@ -100,8 +100,10 @@ public class HistoryDetailContainerFragment extends Fragment {
         return fragment;
     }
 
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.history_detail_container_fragment, container, false);
 
         mIsFragmentRecreated = savedInstanceState != null;
@@ -227,20 +229,20 @@ public class HistoryDetailContainerFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.history_detail, menu);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         MenuItem viewMode = menu.findItem(R.id.history_toggle_view);
         viewMode.setTitle(isInVisualPreview() ? R.string.history_preview_html : R.string.history_preview_visual);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.history_load) {
             Intent intent = new Intent();
             intent.putExtra(KEY_REVISION, mRevision);
@@ -353,6 +355,7 @@ public class HistoryDetailContainerFragment extends Fragment {
             mRevisions = (ArrayList<Revision>) revisions.clone();
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             return HistoryDetailFragment.Companion.newInstance(mRevisions.get(position));
@@ -364,7 +367,7 @@ public class HistoryDetailContainerFragment extends Fragment {
         }
 
         @Override
-        public void restoreState(Parcelable state, ClassLoader loader) {
+        public void restoreState(@Nullable Parcelable state, @Nullable ClassLoader loader) {
             try {
                 super.restoreState(state, loader);
             } catch (IllegalStateException exception) {
@@ -372,6 +375,7 @@ public class HistoryDetailContainerFragment extends Fragment {
             }
         }
 
+        @Nullable
         @Override
         public Parcelable saveState() {
             Bundle bundle = (Bundle) super.saveState();
