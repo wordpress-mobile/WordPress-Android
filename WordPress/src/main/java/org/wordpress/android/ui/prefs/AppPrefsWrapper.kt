@@ -371,9 +371,9 @@ class AppPrefsWrapper @Inject constructor() {
         AppPrefs.setShouldShowJetpackSocialNoConnections(show, remoteSiteId, flow)
 
     fun setShouldHideActivityDashboardCard(
-        remoteSiteId: Long,
+        siteId: Long,
         isHidden: Boolean
-    ) = AppPrefs.setShouldHideActivityDashboardCard(remoteSiteId, isHidden)
+    ) = AppPrefs.setShouldHideActivityDashboardCard(siteId, isHidden)
 
     fun getShouldHideActivityDashboardCard(siteId: Long): Boolean =
         AppPrefs.getShouldHideActivityDashboardCard(siteId)

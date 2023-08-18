@@ -1719,15 +1719,15 @@ public class AppPrefs {
                + flow.getValue();
     }
 
-    public static void setShouldHideActivityDashboardCard(final long remoteSiteId, final boolean isHidden) {
-        prefs().edit().putBoolean(getSiteIdHideActivityDashboardCardKey(remoteSiteId), isHidden).apply();
+    public static void setShouldHideActivityDashboardCard(final long siteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHideActivityDashboardCardKey(siteId), isHidden).apply();
     }
 
     @NonNull private static String getSiteIdHideActivityDashboardCardKey(long siteId) {
         return DeletablePrefKey.SHOULD_HIDE_ACTIVITY_DASHBOARD_CARD.name() + siteId;
     }
 
-    public static Boolean getShouldHideActivityDashboardCard(long siteId) {
+    public static Boolean getShouldHideActivityDashboardCard(final long siteId) {
         return prefs().getBoolean(getSiteIdHideActivityDashboardCardKey(siteId), false);
     }
 }
