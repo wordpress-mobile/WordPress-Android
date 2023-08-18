@@ -12,6 +12,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
@@ -60,7 +61,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     }
 
     @Override
-    public void setArguments(Bundle args) {
+    public void setArguments(@Nullable Bundle args) {
         super.setArguments(args);
 
         if (args != null) {
@@ -71,7 +72,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -83,7 +84,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putInt(PublicizeConstants.ARG_CONNECTION_ID, mConnectionId);
@@ -91,8 +92,10 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         mWebView.saveState(outState);
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_webview_fragment, container, false);
 
         mProgress = rootView.findViewById(R.id.progress);
@@ -109,7 +112,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState == null) {
@@ -165,7 +168,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         }
 
         @Override
-        public void onPageFinished(WebView view, String url) {
+        public void onPageFinished(@NonNull WebView view, @Nullable String url) {
             super.onPageFinished(view, url);
 
             // does this url denotes that we made it past the auth stage?
@@ -197,7 +200,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         }
 
         @Override
-        public void onProgressChanged(WebView view, int newProgress) {
+        public void onProgressChanged(@NonNull WebView view, int newProgress) {
             super.onProgressChanged(view, newProgress);
             if (newProgress == 100 && isAdded()) {
                 mProgress.setVisibility(View.GONE);
@@ -205,7 +208,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         }
 
         @Override
-        public void onReceivedTitle(WebView view, String title) {
+        public void onReceivedTitle(@NonNull WebView view, @Nullable String title) {
             super.onReceivedTitle(view, title);
             if (title != null && !title.startsWith("http")) {
                 setTitle(title);
