@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import org.wordpress.android.R;
@@ -41,7 +43,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
     }
 
     @Override
-    public void setArguments(Bundle args) {
+    public void setArguments(@Nullable Bundle args) {
         super.setArguments(args);
         if (args != null) {
             mImageUrl = args.getString(ReaderConstants.ARG_IMAGE_URL);
@@ -49,8 +51,10 @@ public class ReaderPhotoViewerFragment extends Fragment {
         }
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment_photo_viewer, container, false);
         mPhotoView = (ReaderPhotoView) view.findViewById(R.id.photo_view);
 
@@ -64,7 +68,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
 
     @SuppressWarnings("deprecation")
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(@NonNull Activity activity) {
         super.onAttach(activity);
         if (activity instanceof PhotoViewListener) {
             mPhotoViewListener = (PhotoViewListener) activity;
@@ -78,7 +82,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString(ReaderConstants.ARG_IMAGE_URL, mImageUrl);
         outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mIsPrivate);
         super.onSaveInstanceState(outState);
