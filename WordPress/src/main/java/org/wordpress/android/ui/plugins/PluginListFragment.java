@@ -71,7 +71,7 @@ public class PluginListFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -133,8 +133,10 @@ public class PluginListFragment extends Fragment {
                   });
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.plugin_list_fragment, container, false);
 
         mRecycler = view.findViewById(R.id.recycler);
@@ -154,7 +156,7 @@ public class PluginListFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -211,7 +213,8 @@ public class PluginListFragment extends Fragment {
             diffResult.dispatchUpdatesTo(this);
         }
 
-        private @Nullable Object getItem(int position) {
+        @Nullable
+        private Object getItem(int position) {
             return mItems.getItem(position);
         }
 
@@ -233,16 +236,16 @@ public class PluginListFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
             if (plugin == null) {
                 return;
             }
 
-            PluginViewHolder holder = (PluginViewHolder) viewHolder;
-            holder.mName.setText(plugin.getDisplayName());
-            holder.mAuthor.setText(plugin.getAuthorName());
-            mImageManager.load(holder.mIcon, ImageType.PLUGIN, StringUtils.notNullStr(plugin.getIcon()));
+            PluginViewHolder pluginHolder = (PluginViewHolder) holder;
+            pluginHolder.mName.setText(plugin.getDisplayName());
+            pluginHolder.mAuthor.setText(plugin.getAuthorName());
+            mImageManager.load(pluginHolder.mIcon, ImageType.PLUGIN, StringUtils.notNullStr(plugin.getIcon()));
 
             if (plugin.isInstalled()) {
                 @StringRes int textResId;
@@ -250,38 +253,46 @@ public class PluginListFragment extends Fragment {
                 @DrawableRes int drawableResId;
                 if (PluginUtils.isAutoManaged(mViewModel.getSite(), plugin)) {
                     textResId = R.string.plugin_auto_managed;
-                    colorResId = ContextExtensionsKt
-                            .getColorResIdFromAttribute(holder.mStatusIcon.getContext(), R.attr.wpColorSuccess);
+                    colorResId = ContextExtensionsKt.getColorResIdFromAttribute(
+                            pluginHolder.mStatusIcon.getContext(),
+                            R.attr.wpColorSuccess
+                    );
                     drawableResId = android.R.color.transparent;
                 } else if (PluginUtils.isUpdateAvailable(plugin)) {
                     textResId = R.string.plugin_needs_update;
-                    colorResId = ContextExtensionsKt
-                            .getColorResIdFromAttribute(holder.mStatusIcon.getContext(), R.attr.wpColorWarningDark);
+                    colorResId = ContextExtensionsKt.getColorResIdFromAttribute(
+                            pluginHolder.mStatusIcon.getContext(),
+                            R.attr.wpColorWarningDark
+                    );
                     drawableResId = R.drawable.ic_sync_white_24dp;
                 } else if (plugin.isActive()) {
                     textResId = R.string.plugin_active;
-                    colorResId = ContextExtensionsKt
-                            .getColorResIdFromAttribute(holder.mStatusIcon.getContext(), R.attr.wpColorSuccess);
+                    colorResId = ContextExtensionsKt.getColorResIdFromAttribute(
+                            pluginHolder.mStatusIcon.getContext(),
+                            R.attr.wpColorSuccess
+                    );
                     drawableResId = R.drawable.ic_checkmark_white_24dp;
                 } else {
                     textResId = R.string.plugin_inactive;
-                    colorResId = ContextExtensionsKt
-                            .getColorResIdFromAttribute(holder.mStatusIcon.getContext(), R.attr.wpColorOnSurfaceMedium);
+                    colorResId = ContextExtensionsKt.getColorResIdFromAttribute(
+                            pluginHolder.mStatusIcon.getContext(),
+                            R.attr.wpColorOnSurfaceMedium
+                    );
                     drawableResId = R.drawable.ic_cross_white_24dp;
                 }
 
-                holder.mStatusText.setText(textResId);
-                holder.mStatusText.setTextColor(
-                        AppCompatResources.getColorStateList(holder.mStatusText.getContext(), colorResId));
-                ColorUtils.INSTANCE.setImageResourceWithTint(holder.mStatusIcon, drawableResId, colorResId);
-                holder.mStatusText.setVisibility(View.VISIBLE);
-                holder.mStatusIcon.setVisibility(View.VISIBLE);
-                holder.mRatingBar.setVisibility(View.GONE);
+                pluginHolder.mStatusText.setText(textResId);
+                pluginHolder.mStatusText.setTextColor(
+                        AppCompatResources.getColorStateList(pluginHolder.mStatusText.getContext(), colorResId));
+                ColorUtils.INSTANCE.setImageResourceWithTint(pluginHolder.mStatusIcon, drawableResId, colorResId);
+                pluginHolder.mStatusText.setVisibility(View.VISIBLE);
+                pluginHolder.mStatusIcon.setVisibility(View.VISIBLE);
+                pluginHolder.mRatingBar.setVisibility(View.GONE);
             } else {
-                holder.mStatusText.setVisibility(View.GONE);
-                holder.mStatusIcon.setVisibility(View.GONE);
-                holder.mRatingBar.setVisibility(View.VISIBLE);
-                holder.mRatingBar.setRating(plugin.getAverageStarRating());
+                pluginHolder.mStatusText.setVisibility(View.GONE);
+                pluginHolder.mStatusIcon.setVisibility(View.GONE);
+                pluginHolder.mRatingBar.setVisibility(View.VISIBLE);
+                pluginHolder.mRatingBar.setRating(plugin.getAverageStarRating());
             }
 
             if (position == getItemCount() - 1) {
