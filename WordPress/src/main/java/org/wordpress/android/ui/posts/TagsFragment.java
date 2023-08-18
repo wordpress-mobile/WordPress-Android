@@ -52,7 +52,8 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
 
     protected abstract String getTagsFromEditPostRepositoryOrArguments();
 
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
@@ -65,19 +66,22 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
         }
     }
 
-    @Override public void onDetach() {
+    @Override
+    public void onDetach() {
         super.onDetach();
         mTagsSelectedListener = null;
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(getContentLayout(), container, false);
     }
 
-    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.tags_suggestion_list);
@@ -123,7 +127,7 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
     }
 
     @Override
-    public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+    public boolean onKey(@NonNull View view, int keyCode, @NonNull KeyEvent keyEvent) {
         if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN)
             && (keyCode == KeyEvent.KEYCODE_ENTER)) {
             // Since we don't allow new lines, we should add comma on "enter" to separate the tags
@@ -138,18 +142,18 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
     }
 
     @Override
-    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    public void beforeTextChanged(@NonNull CharSequence s, int start, int count, int after) {
         // No-op
     }
 
     @Override
-    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
         filterListForCurrentText();
-        mTagsSelectedListener.onTagsSelected(charSequence.toString());
+        mTagsSelectedListener.onTagsSelected(s.toString());
     }
 
     @Override
-    public void afterTextChanged(Editable editable) {
+    public void afterTextChanged(@NonNull Editable s) {
         // No-op
     }
 
