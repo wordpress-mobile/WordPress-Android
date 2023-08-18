@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
@@ -59,7 +60,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
     }
 
     @Override
-    public void setArguments(Bundle args) {
+    public void setArguments(@Nullable Bundle args) {
         super.setArguments(args);
 
         if (args != null) {
@@ -69,7 +70,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -86,8 +87,10 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
         outState.putString(PublicizeConstants.ARG_SERVICE_ID, mServiceId);
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_detail_fragment, container, false);
 
         mConnectionsContainer = rootView.findViewById(R.id.connections_container);
