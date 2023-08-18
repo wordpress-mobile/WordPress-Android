@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.google.android.material.appbar.AppBarLayout;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -151,7 +150,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    protected void onSaveInstanceState(@NotNull Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mViewModel.writeToBundle(outState);
     }
@@ -373,15 +372,15 @@ public class PluginBrowserActivity extends LocaleAwareActivity
             return mItems.getItemId(position);
         }
 
-        @NotNull
+        @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = mLayoutInflater.inflate(R.layout.plugin_browser_row, parent, false);
             return new PluginBrowserViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NotNull ViewHolder viewHolder, int position) {
+        public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
             PluginBrowserViewHolder holder = (PluginBrowserViewHolder) viewHolder;
             ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
             if (plugin == null) {

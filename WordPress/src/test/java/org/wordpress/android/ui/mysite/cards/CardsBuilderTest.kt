@@ -21,20 +21,20 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainTransferCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonBuilder
@@ -43,16 +43,12 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.Qui
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder as DashboardCardsBuilder
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsBuilderTest {
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
-
-    @Mock
-    lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
 
     @Mock
     lateinit var quickActionsCardBuilder: QuickActionsCardBuilder
@@ -130,17 +126,10 @@ class CardsBuilderTest {
     }
 
     @Test
-    fun `given dynamic card disabled + quick start in progress, when site is selected, then QS card built`() {
-        val cards = buildCards(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+    fun `given quick start in progress, when site is selected, then QS card built`() {
+        val cards = buildCards(isQuickStartInProgress = true)
 
         assertThat(cards.findQuickStartCard()).isNotNull
-    }
-
-    @Test
-    fun `given dynamic card enabled + quick start in progress, when site is selected, then QS card not built`() {
-        val cards = buildCards(isQuickStartDynamicCardEnabled = true, isQuickStartInProgress = true)
-
-        assertThat(cards.findQuickStartCard()).isNull()
     }
 
     /* DASHBOARD CARDS */
@@ -188,12 +177,10 @@ class CardsBuilderTest {
         isEligibleForDomainCard: Boolean = false,
         isEligibleForPlansCard: Boolean = false,
         isQuickStartInProgress: Boolean = false,
-        isQuickStartDynamicCardEnabled: Boolean = false,
         isMySiteTabsEnabled: Boolean = false,
         isEligibleForDomainTransferCard: Boolean = false,
     ): List<MySiteCardAndItem> {
         whenever(buildConfigWrapper.isQuickActionEnabled).thenReturn(isQuickActionEnabled)
-        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
         return cardsBuilder.build(
             quickActionsCardBuilderParams = QuickActionsCardBuilderParams(
                 siteModel = site,
@@ -297,7 +284,6 @@ class CardsBuilderTest {
     private fun setUpCardsBuilder() {
         cardsBuilder = CardsBuilder(
             buildConfigWrapper,
-            quickStartDynamicCardsFeatureConfig,
             quickActionsCardBuilder,
             quickStartCardBuilder,
             quickLinkRibbonBuilder,

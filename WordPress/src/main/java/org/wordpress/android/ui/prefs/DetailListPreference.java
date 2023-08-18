@@ -22,7 +22,6 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ArrayUtils;
@@ -293,9 +292,9 @@ public class DetailListPreference extends ListPreference
             super(context, resource, new ArrayList<>(Arrays.asList(objects)));
         }
 
-        @NotNull
+        @NonNull
         @Override
-        public View getView(final int position, View convertView, @NotNull ViewGroup parent) {
+        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
             if (convertView == null) {
                 convertView = View.inflate(getContext(), R.layout.detail_list_preference, null);
             }

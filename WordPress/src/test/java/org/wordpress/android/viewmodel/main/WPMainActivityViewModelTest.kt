@@ -157,7 +157,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() = runBlocking {
-        whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(false)
         whenever(buildConfigWrapper.getAppVersionCode()).thenReturn(850)
         whenever(buildConfigWrapper.getAppVersionName()).thenReturn("14.7")
         whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)

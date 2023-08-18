@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.telephony.TelephonyManager
 import androidx.preference.PreferenceManager
+import com.google.gson.Gson
 import com.zendesk.logger.Logger
 import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
@@ -35,7 +36,9 @@ import zendesk.core.AnonymousIdentity
 import zendesk.core.Identity
 import zendesk.core.PushRegistrationProvider
 import zendesk.core.Zendesk
+import zendesk.support.CreateRequest
 import zendesk.support.CustomField
+import zendesk.support.Request
 import zendesk.support.Support
 import zendesk.support.request.RequestActivity
 import zendesk.support.requestlist.RequestListActivity
@@ -139,6 +142,53 @@ class ZendeskHelper(
                     )
                 )
         }
+    }
+
+    fun parseChatHistory(startMessage: String, question: String, answer: String, chatHistory: String): String {
+        val messageList = Gson().fromJson(chatHistory, ArrayList<ArrayList<String>>().javaClass)
+        var description = startMessage
+        messageList.forEach {
+            description = description + "\n>\n" + question + "\n>\n" + it.first() + "\n>\n" + answer + "\n>\n" + it[1]
+        }
+        return description
+    }
+
+    @Suppress("LongParameterList")
+    fun createRequest(
+        context: Context,
+        origin: Origin?,
+        selectedSite: SiteModel?,
+        extraTags: List<String>?,
+        requestDescription: String,
+        callback: CreateRequestCallback
+    ) {
+        require(isZendeskEnabled) {
+            zendeskNeedsToBeEnabledError
+            callback.onError()
+        }
+        val request = CreateRequest().apply {
+            subject = context.getString(R.string.support_ticket_subject)
+            description = requestDescription
+            customFields = buildZendeskCustomFields(context, siteStore.sites, selectedSite, buildConfigWrapper)
+            ticketFormId = TicketFieldIds.form
+            tags = buildZendeskTags(siteStore.sites, selectedSite, origin ?: Origin.UNKNOWN, extraTags)
+                .plus("DocsBot")
+        }
+
+        Support.INSTANCE.provider()?.requestProvider()?.createRequest(request, object : ZendeskCallback<Request>() {
+            override fun onSuccess(result: Request?) {
+                callback.onSuccess()
+            }
+
+            override fun onError(error: ErrorResponse?) {
+                callback.onError()
+            }
+        })
+    }
+
+    abstract class CreateRequestCallback {
+        abstract fun onSuccess()
+        abstract fun onError()
     }
 
     /**
@@ -261,7 +311,7 @@ class ZendeskHelper(
      * Otherwise, it'll show a dialog for the user to enter an email and name through a helper function which then
      * will be used to set the identity and call the callback. It'll also try to enable the push notifications.
      */
-    private fun requireIdentity(
+    fun requireIdentity(
         context: Context,
         selectedSite: SiteModel?,
         onIdentitySet: () -> Unit

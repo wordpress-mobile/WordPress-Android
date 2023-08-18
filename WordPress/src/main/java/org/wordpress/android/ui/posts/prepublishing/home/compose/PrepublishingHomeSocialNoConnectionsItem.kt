@@ -52,7 +52,7 @@ fun PrepublishingHomeSocialNoConnectionsItem(
 
         Text(
             text = stringResource(R.string.prepublishing_nudges_social_new_connection_text),
-            style = MaterialTheme.typography.body1.copy(color = AppColor.Gray30),
+            style = MaterialTheme.typography.subtitle1.copy(color = AppColor.Gray30),
             modifier = Modifier.fillMaxWidth(),
         )
 

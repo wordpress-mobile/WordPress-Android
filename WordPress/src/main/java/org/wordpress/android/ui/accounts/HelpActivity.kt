@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.support.SupportHelper
+import org.wordpress.android.support.SupportWebViewActivity
 import org.wordpress.android.support.ZendeskExtraTags
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
@@ -42,6 +43,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.config.ContactSupportFeatureConfig
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -69,6 +71,9 @@ class HelpActivity : LocaleAwareActivity() {
 
     @Inject
     lateinit var mDispatcher: Dispatcher
+
+    @Inject
+    lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
 
     private lateinit var binding: HelpActivityBinding
 
@@ -163,6 +168,16 @@ class HelpActivity : LocaleAwareActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun launchSupportWidget() {
+        val intent = SupportWebViewActivity.createIntent(
+            this,
+            originFromExtras,
+            selectedSiteFromExtras,
+            extraTagsFromExtras
+        )
+        startActivity(intent)
+    }
+
     private fun createNewZendeskTicket() {
         zendeskHelper.createNewTicket(
             this,
@@ -205,7 +220,13 @@ class HelpActivity : LocaleAwareActivity() {
             AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_VIEWED)
             JpFaqContainer.setOnClickListener { showMigrationFaq() }
         }
-        contactUsButton.setOnClickListener { createNewZendeskTicket() }
+        contactUsButton.setOnClickListener {
+            if (contactSupportFeatureConfig.isEnabled()) {
+                launchSupportWidget()
+            } else {
+                createNewZendeskTicket()
+            }
+        }
         ticketsButton.setOnClickListener { showZendeskTickets() }
 
         contactEmailContainer.setOnClickListener {

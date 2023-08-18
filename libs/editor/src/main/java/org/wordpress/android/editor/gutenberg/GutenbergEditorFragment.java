@@ -38,7 +38,6 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.EditorEditMediaListener;
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -49,8 +48,8 @@ import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.LiveTextWatcher;
 import org.wordpress.android.editor.R;
 import org.wordpress.android.editor.WPGutenbergWebViewActivity;
-import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface;
 import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogNegativeClickInterface;
+import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -1539,7 +1538,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onGutenbergDialogPositiveClicked(@NotNull String instanceTag, int mediaId) {
+    public void onGutenbergDialogPositiveClicked(@NonNull String instanceTag, int mediaId) {
         switch (instanceTag) {
             case TAG_REPLACE_FEATURED_DIALOG:
                 setFeaturedImage(mediaId);
@@ -1548,7 +1547,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onGutenbergDialogNegativeClicked(@NotNull String instanceTag) {
+    public void onGutenbergDialogNegativeClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case TAG_REPLACE_FEATURED_DIALOG:
                 // Dismiss dialog with no action.

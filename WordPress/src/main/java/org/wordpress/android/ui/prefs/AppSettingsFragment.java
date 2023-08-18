@@ -20,13 +20,13 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -251,7 +251,7 @@ public class AppSettingsFragment extends PreferenceFragment
         }
     }
 
-    private void openPreference(@NotNull String key, @NotNull Stat event) {
+    private void openPreference(@NonNull String key, @NonNull Stat event) {
         final PreferenceScreen preferenceScreen = getPreferenceScreen();
         final ListAdapter listAdapter = preferenceScreen.getRootAdapter();
 
@@ -706,7 +706,7 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onLocaleSelected(@NotNull String languageCode) {
+    public void onLocaleSelected(@NonNull String languageCode) {
         onPreferenceChange(mLanguagePreference, languageCode);
     }
 

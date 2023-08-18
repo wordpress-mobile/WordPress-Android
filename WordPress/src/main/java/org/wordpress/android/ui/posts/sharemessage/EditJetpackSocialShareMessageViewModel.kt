@@ -25,16 +25,16 @@ class EditJetpackSocialShareMessageViewModel @Inject constructor(
     private val _actionEvents = Channel<ActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
-    private var startingShareMessage = ""
-    private var updatedShareMessage = ""
+    private var currentShareMessage = ""
+    private var hasChangedMessage = false
 
-    fun start(currentShareMessage: String) {
-        this.startingShareMessage = currentShareMessage
+    fun start(initialShareMessage: String) {
+        if (!hasChangedMessage) currentShareMessage = initialShareMessage
         _uiState.value = Loaded(
             appBarLabel = stringProvider.getString(
                 R.string.post_settings_jetpack_social_share_message_title
             ),
-            currentShareMessage = shareMessage(),
+            currentShareMessage = currentShareMessage,
             shareMessageMaxLength = SHARE_MESSAGE_MAX_LENGTH,
             customizeMessageDescription = stringProvider.getString(
                 R.string.post_settings_jetpack_social_share_message_description
@@ -44,7 +44,8 @@ class EditJetpackSocialShareMessageViewModel @Inject constructor(
     }
 
     fun updateShareMessage(shareMessage: String) {
-        updatedShareMessage = shareMessage
+        currentShareMessage = shareMessage
+        hasChangedMessage = true
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -52,16 +53,11 @@ class EditJetpackSocialShareMessageViewModel @Inject constructor(
         viewModelScope.launch {
             _actionEvents.send(
                 ActionEvent.FinishActivity(
-                    updatedShareMessage = shareMessage(),
+                    updatedShareMessage = currentShareMessage.trim(),
                 )
             )
         }
     }
-
-    private fun shareMessage(): String =
-        updatedShareMessage.ifEmpty {
-            startingShareMessage
-        }
 
     sealed class UiState {
         object Initial : UiState()

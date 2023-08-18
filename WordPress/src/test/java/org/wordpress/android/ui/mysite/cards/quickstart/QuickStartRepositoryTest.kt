@@ -19,7 +19,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
@@ -39,7 +38,6 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
-import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -68,13 +66,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     lateinit var eventBus: EventBusWrapper
 
     @Mock
-    lateinit var dynamicCardStore: DynamicCardStore
-
-    @Mock
     lateinit var htmlCompat: HtmlCompatWrapper
-
-    @Mock
-    lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
 
     @Mock
     lateinit var contextProvider: ContextProvider
@@ -127,9 +119,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
             resourceProvider,
             dispatcher,
             eventBus,
-            dynamicCardStore,
             htmlCompat,
-            quickStartDynamicCardsFeatureConfig,
             contextProvider,
             htmlMessageUtils,
             quickStartTracker,

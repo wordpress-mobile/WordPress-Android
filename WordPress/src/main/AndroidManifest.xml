@@ -739,6 +739,12 @@
             android:label="@string/my_profile"
             android:theme="@style/WordPress.NoActionBar" />
 
+        <activity
+            android:name=".support.SupportWebViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/WordPress.NoActionBar"
+            tools:ignore="LockedOrientationActivity"/>
+
         <!-- Lib activities-->
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"

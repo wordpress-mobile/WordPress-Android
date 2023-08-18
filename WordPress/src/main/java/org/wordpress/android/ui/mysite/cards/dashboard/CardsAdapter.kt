@@ -16,7 +16,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorWithinCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
@@ -51,8 +50,6 @@ class CardsAdapter(
             DashboardCardType.TODAYS_STATS_CARD_ERROR.ordinal,
             DashboardCardType.POST_CARD_ERROR.ordinal -> ErrorWithinCardViewHolder(parent, uiHelpers)
             DashboardCardType.TODAYS_STATS_CARD.ordinal -> TodaysStatsCardViewHolder(parent, uiHelpers)
-            DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS.ordinal ->
-                PostCardViewHolder.PostCardWithoutPostItemsViewHolder(parent, imageManager, uiHelpers)
             DashboardCardType.POST_CARD_WITH_POST_ITEMS.ordinal ->
                 PostCardViewHolder.PostCardWithPostItemsViewHolder(parent, imageManager, uiHelpers)
             DashboardCardType.BLOGGING_PROMPT_CARD.ordinal -> BloggingPromptCardViewHolder(
@@ -115,7 +112,6 @@ class CardsAdapter(
                 oldItem is ErrorWithinCard && newItem is ErrorWithinCard -> true
                 oldItem is TodaysStatsCardWithData && newItem is TodaysStatsCardWithData -> true
                 oldItem is PostCardWithPostItems && newItem is PostCardWithPostItems -> true
-                oldItem is PostCardWithoutPostItems && newItem is PostCardWithoutPostItems -> true
                 oldItem is BloggingPromptCardWithData && newItem is BloggingPromptCardWithData -> true
                 oldItem is PromoteWithBlazeCard && newItem is PromoteWithBlazeCard -> true
                 oldItem is BlazeCampaignsCardModel && newItem is BlazeCampaignsCardModel -> true

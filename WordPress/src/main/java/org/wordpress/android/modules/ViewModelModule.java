@@ -25,7 +25,6 @@ import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel;
 import org.wordpress.android.ui.people.PeopleInviteViewModel;
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
@@ -428,11 +427,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(RestoreViewModel.class)
     abstract ViewModel restoreViewModel(RestoreViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(DynamicCardMenuViewModel.class)
-    abstract ViewModel dynamicCardMenuViewModel(DynamicCardMenuViewModel viewModel);
 
     @Binds
     @IntoMap

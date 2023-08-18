@@ -3,9 +3,8 @@ package org.wordpress.android.analytics;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
-
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -490,7 +489,6 @@ public final class AnalyticsTracker {
         SIGNUP_SOCIAL_TO_LOGIN,
         ENHANCED_SITE_CREATION_ACCESSED,
         ENHANCED_SITE_CREATION_DOMAINS_ACCESSED,
-        ENHANCED_SITE_CREATION_DOMAIN_PURCHASING_EXPERIMENT,
         ENHANCED_SITE_CREATION_DOMAINS_SELECTED,
         ENHANCED_SITE_CREATION_SUCCESS_LOADING,
         ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED,

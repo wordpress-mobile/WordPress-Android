@@ -228,6 +228,30 @@ class BlockEditorPage {
         return this
     }
 
+    fun verifyUndoIsVisible(): BlockEditorPage {
+        Espresso.onView(ViewMatchers.withId(R.id.menu_undo_action))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        return this
+    }
+
+    fun verifyRedoIsVisible(): BlockEditorPage {
+        Espresso.onView(ViewMatchers.withId(R.id.menu_redo_action))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        return this
+    }
+
+    fun verifyUndoIsHidden(): BlockEditorPage {
+        Espresso.onView(ViewMatchers.withId(R.id.menu_undo_action))
+            .check(ViewAssertions.doesNotExist())
+        return this
+    }
+
+    fun verifyRedoIsHidden(): BlockEditorPage {
+        Espresso.onView(ViewMatchers.withId(R.id.menu_redo_action))
+            .check(ViewAssertions.doesNotExist())
+        return this
+    }
+
     companion object {
         private val titleField = Espresso.onView(ViewMatchers.withHint("Add title"))
         private val postSettingButton =

@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
@@ -112,11 +113,15 @@ sealed class PrepublishingHomeViewHolder(
         val uiHelpers: UiHelpers,
     ) : PrepublishingHomeViewHolder(parentView, R.layout.prepublishing_home_compose_item) {
         private val composeView: ComposeView = itemView.findViewById(R.id.prepublishing_compose_view)
+        private val dividerView: View = itemView.findViewById(R.id.bottom_divider)
 
         override fun onBind(uiState: PrepublishingHomeItemUiState) {
             require(uiState is SocialUiState) {
                 "PrepublishingSocialItemViewHolder can only bind SocialUiState"
             }
+
+            dividerView.isGone = uiState is SocialUiState.Visible &&
+                    uiState.state is JetpackSocialUiState.NoConnections
 
             composeView.setContent {
                 val state: SocialUiState by remember(uiState) {

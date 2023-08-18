@@ -39,7 +39,6 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -257,7 +256,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     @Override
-    public void onSaveInstanceState(@NotNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mComment != null) {
             outState.putLong(KEY_COMMENT_ID, mComment.getRemoteCommentId());
@@ -592,7 +591,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     @SuppressWarnings("deprecation") // TODO: Remove when minSdkVersion >= 23
-    public void onAttach(@NotNull Activity activity) {
+    public void onAttach(@NonNull Activity activity) {
         super.onAttach(activity);
         if (activity instanceof OnPostClickListener) {
             mOnPostClickListener = (OnPostClickListener) activity;

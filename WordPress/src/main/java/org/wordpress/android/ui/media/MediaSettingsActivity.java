@@ -57,7 +57,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.editor.EditorImageMetaData;
@@ -445,7 +444,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
-    protected void onSaveInstanceState(@NotNull Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(ARG_MEDIA_LOCAL_ID, mMedia.getId());
         outState.putParcelable(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
@@ -768,7 +767,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, imageUrl, ScaleType.CENTER, null,
                 new RequestListener<Drawable>() {
                     @Override
-                    public void onResourceReady(@NotNull Drawable resource, @Nullable Object model) {
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
                         if (!isFinishing()) {
                             showProgress(false);
 
