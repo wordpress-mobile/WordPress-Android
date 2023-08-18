@@ -67,7 +67,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardC
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
@@ -92,7 +91,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
-import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
+import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
@@ -210,7 +209,8 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
     private val blazeCardViewModelSlice: BlazeCardViewModelSlice,
-    private val domainTransferCardViewModel: DomainTransferCardViewModel
+    private val domainTransferCardViewModel: DomainTransferCardViewModel,
+    private val pagesCardViewModelSlice: PagesCardViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -296,6 +296,7 @@ class MySiteViewModel @Inject constructor(
         _onNavigation,
         siteStoriesHandler.onNavigation,
         blazeCardViewModelSlice.onNavigation,
+        pagesCardViewModelSlice.onNavigation,
         domainTransferCardViewModel.onNavigation
     )
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
@@ -611,10 +612,8 @@ class MySiteViewModel @Inject constructor(
                     onHideMenuItemClick = this::onDashboardCardPlansHideMenuItemClick,
                     onMoreMenuClick = this::onDashboardCardPlansMoreMenuClick
                 ),
-                pagesCardBuilderParams = PagesCardBuilderParams(
-                    pageCard = cardsUpdate?.cards?.firstOrNull { it is PagesCardModel } as? PagesCardModel,
-                    onPagesItemClick = this::onPagesItemClick,
-                    onFooterLinkClick = this::onPagesCardFooterLinkClick
+                pagesCardBuilderParams = pagesCardViewModelSlice.getPagesCardBuilderParams(
+                    cardsUpdate?.cards?.firstOrNull { it is PagesCardModel } as? PagesCardModel,
                 ),
                 activityCardBuilderParams = ActivityCardBuilderParams(
                     activityCardModel = cardsUpdate?.cards?.firstOrNull {
@@ -687,46 +686,6 @@ class MySiteViewModel @Inject constructor(
                 jetpackSwitchMenu = jetpackSwitchMenu
             )
         )
-    }
-
-    private fun onPagesItemClick(params: PagesCardBuilderParams.PagesItemClickParams) {
-        cardsTracker.trackPagesItemClicked(params.pagesCardType)
-        _onNavigation.value = Event(getNavigationActionForPagesItem(params.pagesCardType, params.pageId))
-    }
-
-    private fun getNavigationActionForPagesItem(
-        pagesCardType: PagesCardContentType,
-        pageId: Int
-    ): SiteNavigationAction {
-        return when (pagesCardType) {
-            PagesCardContentType.SCHEDULED -> {
-                SiteNavigationAction.OpenPagesScheduledTab(
-                    requireNotNull(selectedSiteRepository.getSelectedSite()),
-                    pageId
-                )
-            }
-
-            PagesCardContentType.DRAFT -> {
-                SiteNavigationAction.OpenPagesDraftsTab(
-                    requireNotNull(selectedSiteRepository.getSelectedSite()),
-                    pageId
-                )
-            }
-
-            PagesCardContentType.PUBLISH -> {
-                SiteNavigationAction.OpenPages(requireNotNull(selectedSiteRepository.getSelectedSite()))
-            }
-        }
-    }
-
-    private fun onPagesCardFooterLinkClick() {
-        cardsTracker.trackPagesCardFooterClicked()
-        _onNavigation.value =
-            Event(
-                SiteNavigationAction.TriggerCreatePageFlow(
-                    requireNotNull(selectedSiteRepository.getSelectedSite())
-                )
-            )
     }
 
     private fun onActivityCardItemClick(activityCardItemClickParams: ActivityCardItemClickParams) {

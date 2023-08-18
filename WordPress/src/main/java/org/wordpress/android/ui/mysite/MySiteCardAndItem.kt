@@ -212,7 +212,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     data class PagesCardWithData(
                         val title: UiString,
                         val pages: List<PageContentItem>,
-                        val footerLink: CreateNewPageItem
+                        val footerLink: CreateNewPageItem,
+                        val moreMenuOptionsLink: MoreMenuOptions
                     ) : PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD) {
                         data class PageContentItem(
                             val title: UiString,
@@ -227,6 +228,12 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                             val description: UiString? = null,
                             @DrawableRes val imageRes: Int? = null,
                             val onClick: () -> Unit
+                        )
+
+                        data class MoreMenuOptions(
+                            val onMoreClick: () -> Unit,
+                            val allPagesMenuItemClick: () -> Unit,
+                            val hideThisMenuItemClick: () -> Unit
                         )
                     }
                 }

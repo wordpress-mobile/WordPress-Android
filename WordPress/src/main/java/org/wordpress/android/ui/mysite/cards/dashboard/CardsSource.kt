@@ -16,7 +16,6 @@ import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.DashboardActivityLogCardFeatureUtils
-import org.wordpress.android.util.config.DashboardCardPagesConfig
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
@@ -28,12 +27,9 @@ class CardsSource @Inject constructor(
     private val cardsStore: CardsStore,
     private val dashboardActivityLogCardFeatureUtils: DashboardActivityLogCardFeatureUtils,
     todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
-    dashboardCardPagesConfig: DashboardCardPagesConfig,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MySiteRefreshSource<CardsUpdate> {
     private val isTodaysStatsCardFeatureConfigEnabled = todaysStatsCardFeatureConfig.isEnabled()
-
-    private val isDashboardCardPagesConfigEnabled = dashboardCardPagesConfig.isEnabled()
 
     override val refresh = MutableLiveData(false)
 
@@ -111,8 +107,7 @@ class CardsSource @Inject constructor(
     }.toList()
 
     private fun shouldRequestPagesCard(selectedSite: SiteModel): Boolean {
-        return isDashboardCardPagesConfigEnabled &&
-                (selectedSite.hasCapabilityEditPages || selectedSite.isSelfHostedAdmin)
+        return (selectedSite.hasCapabilityEditPages || selectedSite.isSelfHostedAdmin)
     }
 
     private fun MediatorLiveData<CardsUpdate>.postErrorState() {
