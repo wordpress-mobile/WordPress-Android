@@ -146,8 +146,10 @@ public class MediaPreviewFragment extends Fragment {
         }
     }
 
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.media_preview_fragment, container, false);
@@ -330,7 +332,8 @@ public class MediaPreviewFragment extends Fragment {
     }
 
     private class PlayerEventListener implements Player.EventListener {
-        @Override public void onLoadingChanged(boolean isLoading) {
+        @Override
+        public void onLoadingChanged(boolean isLoading) {
             showProgress(isLoading);
         }
     }
