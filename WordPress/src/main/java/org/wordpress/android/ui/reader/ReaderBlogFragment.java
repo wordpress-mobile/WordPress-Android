@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
@@ -56,13 +57,13 @@ public class ReaderBlogFragment extends Fragment
     }
 
     @Override
-    public void setArguments(Bundle args) {
+    public void setArguments(@Nullable Bundle args) {
         super.setArguments(args);
         restoreState(args);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
         if (savedInstanceState != null) {
@@ -72,8 +73,10 @@ public class ReaderBlogFragment extends Fragment
         }
     }
 
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
         mRecyclerView = view.findViewById(R.id.recycler_view);
 
@@ -100,7 +103,8 @@ public class ReaderBlogFragment extends Fragment
             actionableEmptyView.subtitle.setText(R.string.reader_empty_followed_blogs_description);
             actionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_discover);
             actionableEmptyView.button.setOnClickListener(new OnClickListener() {
-                @Override public void onClick(View view) {
+                @Override
+                public void onClick(@NonNull View v) {
                     ReaderTag tag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
 
                     if (!ReaderTagTable.tagExists(tag)) {
@@ -139,7 +143,7 @@ public class ReaderBlogFragment extends Fragment
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mRecyclerView.setAdapter(getBlogAdapter());
     }
@@ -153,7 +157,7 @@ public class ReaderBlogFragment extends Fragment
         super.onSaveInstanceState(outState);
     }
 
-    private void restoreState(Bundle args) {
+    private void restoreState(@Nullable Bundle args) {
         if (args != null) {
             if (args.containsKey(ARG_BLOG_TYPE)) {
                 mBlogType = (ReaderBlogType) args.getSerializable(ARG_BLOG_TYPE);
@@ -174,7 +178,7 @@ public class ReaderBlogFragment extends Fragment
      * note this will only be called for followed blogs
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.reader_subs, menu);
 
@@ -185,25 +189,25 @@ public class ReaderBlogFragment extends Fragment
 
         searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
                 return true;
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 return true;
             }
         });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(@NonNull String query) {
                 setSearchFilter(query);
                 return false;
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
+            public boolean onQueryTextChange(@NonNull String newText) {
                 // when the fragment is recreated this will be called with an empty query
                 // string, causing the existing search query to be lost - work around this
                 // by ignoring the next search performed after recreation
