@@ -210,8 +210,8 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
     private val blazeCardViewModelSlice: BlazeCardViewModelSlice,
-    private val pagesCardViewModelSlice: PagesCardViewModelSlice,
-    private val domainTransferCardViewModel: DomainTransferCardViewModel
+    private val domainTransferCardViewModel: DomainTransferCardViewModel,
+    private val pagesCardViewModelSlice: PagesCardViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
