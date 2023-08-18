@@ -98,7 +98,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -130,8 +130,10 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         }
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_list_fragment, container, false);
 
         mRecycler = rootView.findViewById(R.id.recycler_view);
@@ -179,7 +181,8 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         return rootView;
     }
 
-    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViewModel();
         observeUIState();
@@ -266,13 +269,15 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     private void showQuickStartFocusPoint() {
         // we are waiting for RecyclerView to populate itself with views and then grab the first one when it's ready
         mRecycler.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override public void onGlobalLayout() {
+            @Override
+            public void onGlobalLayout() {
                 RecyclerView.ViewHolder holder = mRecycler.findViewHolderForAdapterPosition(0);
                 if (holder != null) {
                     final View quickStartTarget = holder.itemView;
 
                     quickStartTarget.post(new Runnable() {
-                        @Override public void run() {
+                        @Override
+                        public void run() {
                             if (getView() == null) {
                                 return;
                             }
@@ -371,12 +376,14 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         getAdapter().reload();
     }
 
-    @Override public void onStart() {
+    @Override
+    public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
     }
 
-    @Override public void onStop() {
+    @Override
+    public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
     }
