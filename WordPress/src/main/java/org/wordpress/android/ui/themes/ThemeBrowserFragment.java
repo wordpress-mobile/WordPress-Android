@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
@@ -111,7 +112,7 @@ public class ThemeBrowserFragment extends Fragment
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -130,7 +131,7 @@ public class ThemeBrowserFragment extends Fragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(@NonNull Activity activity) {
         super.onAttach(activity);
         try {
             mCallback = (ThemeBrowserFragmentCallback) activity;
@@ -148,8 +149,10 @@ public class ThemeBrowserFragment extends Fragment
         mCallback = null;
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.theme_browser_fragment, container, false);
 
         mActionableEmptyView = view.findViewById(R.id.actionable_empty_view);
@@ -189,7 +192,7 @@ public class ThemeBrowserFragment extends Fragment
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         getAdapter().setThemeList(fetchThemes());
@@ -206,7 +209,7 @@ public class ThemeBrowserFragment extends Fragment
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.search, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
@@ -222,7 +225,7 @@ public class ThemeBrowserFragment extends Fragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_search) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, mSite);
             return true;
@@ -231,7 +234,7 @@ public class ThemeBrowserFragment extends Fragment
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {
+    public boolean onQueryTextSubmit(@NonNull String query) {
         getAdapter().getFilter().filter(query);
         if (mSearchView != null) {
             mSearchView.clearFocus();
@@ -240,13 +243,13 @@ public class ThemeBrowserFragment extends Fragment
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
+    public boolean onQueryTextChange(@NonNull String newText) {
         getAdapter().getFilter().filter(newText);
         return true;
     }
 
     @Override
-    public void onMovedToScrapHeap(View view) {
+    public void onMovedToScrapHeap(@NonNull View view) {
         // cancel image fetch requests if the view has been moved to recycler.
         ImageView niv = view.findViewById(R.id.theme_grid_item_image);
         if (niv != null) {
@@ -476,11 +479,13 @@ public class ThemeBrowserFragment extends Fragment
     }
 
     private class ThemeDataSetObserver extends DataSetObserver {
-        @Override public void onChanged() {
+        @Override
+        public void onChanged() {
             updateDisplay();
         }
 
-        @Override public void onInvalidated() {
+        @Override
+        public void onInvalidated() {
             updateDisplay();
         }
     }
