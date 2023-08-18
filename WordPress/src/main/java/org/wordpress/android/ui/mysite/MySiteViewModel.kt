@@ -701,25 +701,17 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onActivityCardHideMenuItemClick() {
-        // todo: annmarie - add tracking for hide menu item click
-        // todo: annmarie - add logic for hide menu item click
-        // todo: annmarie - add logic for refreshing the dashboard after hiding the card
-        // cardsTracker.trackHideItemMenuClicked()
-        //     _onNavigation.value =
-        //        Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
+        // todo: annmarie - add logic for hide menu item click and for refreshing the dashboard after hiding the card
+         cardsTracker.trackActivityCardMenuItemClicked(CardsTracker.MenuItemType.HIDE_THIS)
     }
 
     private fun onActivityCardAllActivityItemClick() {
-        // todo: annmarie - add tracking for all activity menu item click
-        // cardsTracker.trackAllActivityItemMenuClicked()
+        cardsTracker.trackActivityCardMenuItemClicked(CardsTracker.MenuItemType.ALL_ACTIVITY)
         _onNavigation.value =
             Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
     }
 
-    private fun onActivityCardMoreMenuClick() {
-        // todo: annmarie - add tracking for more menu click
-        // cardsTracker.trackMoreMenuClicked()
-    }
+    private fun onActivityCardMoreMenuClick() = cardsTracker.trackActivityLogMoreMenuClicked()
 
     private fun buildJetpackBadgeIfEnabled(): JetpackBadge? {
         val screen = JetpackPoweredScreen.WithStaticText.HOME
