@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
@@ -197,7 +198,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -268,14 +269,16 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent);
         saveState(outState);
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.media_grid_fragment, container, false);
@@ -301,7 +304,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         });
         mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     getAdapter().setLoadThumbnails(true);
@@ -311,7 +314,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         mActionableEmptyView = (ActionableEmptyView) view.findViewById(R.id.actionable_empty_view);
         mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
-            @Override public void onClick(View view) {
+            @Override
+            public void onClick(@NonNull View v) {
                 if (isAdded() && getActivity() instanceof MediaBrowserActivity) {
                     ((MediaBrowserActivity) getActivity()).showAddMediaPopup();
                 }
@@ -359,7 +363,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(@NonNull Activity activity) {
         super.onAttach(activity);
 
         try {
@@ -849,7 +853,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private final class ActionModeCallback implements ActionMode.Callback {
         @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        public boolean onCreateActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
             mActionMode = mode;
             int selectCount = getAdapter().getSelectedItemCount();
             MenuInflater inflater = mode.getMenuInflater();
@@ -861,7 +865,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        public boolean onPrepareActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
             MenuItem mnuConfirm = menu.findItem(R.id.mnu_confirm_selection);
             mnuConfirm.setVisible(mBrowserType.isPicker());
 
@@ -870,7 +874,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
             if (item.getItemId() == R.id.mnu_confirm_selection) {
                 setResultIdsAndFinish();
             }
@@ -878,7 +882,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         @Override
-        public void onDestroyActionMode(ActionMode mode) {
+        public void onDestroyActionMode(@NonNull ActionMode mode) {
             setSwipeToRefreshEnabled(true);
             getAdapter().setInMultiSelect(false);
             mActionMode = null;
