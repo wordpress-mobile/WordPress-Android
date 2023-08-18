@@ -2345,7 +2345,7 @@
     <string name="my_site_bottom_sheet_add_story">Story post</string>
     <string name="my_site_quick_actions_title">Quick Links</string>
 
-    <string name="jetpack_feature_card_menu_item_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
+    <string name="jetpack_feature_card_more_menu_item_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
 
     <!-- My Site - Dashboard -->
     <string name="my_site_dashboard_card_more_menu_hide_card">Hide this</string>
@@ -4525,19 +4525,19 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Dashboard Card Domain-->
     <string name="dashboard_card_domain_title">Find a custom domain</string>
     <string name="dashboard_card_domain_sub_title">Stake your claim on your corner of the web with a site address that\'s easy to find, share, and follow.</string>
-    <string name="dashboard_card_domain_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
+    <string name="dashboard_card_domain_more_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
 
     <!-- Dashboard Card Domain Transfer-->
     <string name="domain_transfer_card_title">News</string>
     <string name="domain_transfer_card_sub_title">Reclaim Your Google Domains</string>
     <string name="domain_transfer_card_caption">As you may know, Google Domains has been sold to Squarespace. Transfer your domains to WordPress.com now, and we\'ll pay all transfer fees plus an extra year of your domain registration.</string>
     <string name="domain_transfer_card_cta">Transfer your domains</string>
-    <string name="domain_transfer_card_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
+    <string name="domain_transfer_card_more_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
 
     <!-- Dashboard Card Plans-->
     <string name="dashboard_card_plans_title">Free domain with annual plan</string>
     <string name="dashboard_card_plans_sub_title">Get a free domain for the first year, remove ads on your site, and increase your storage.</string>
-    <string name="dashboard_card_plans_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
+    <string name="dashboard_card_plans_more_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
     <string name="dashboard_card_plans_checkout_success_title">All ready to go!</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Your new domain &lt;b&gt;%s&lt;/b&gt; is being set up.</string>
     <string name="dashboard_card_plans_checkout_success_info">It may take up to 30 minutes for your domain to start working properly.</string>
@@ -4546,7 +4546,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Promote Blaze Card-->
     <string name="promote_blaze_card_title">Promote your content with Blaze</string>
     <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
-    <string name="promote_blaze_card_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
+    <string name="promote_blaze_card_more_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
     <string name="promote_blaze_flow_error">The blaze promote flow couldn\'t be loaded</string>
 
     <string name="gutenberg_native_blocks_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks menu</string>
