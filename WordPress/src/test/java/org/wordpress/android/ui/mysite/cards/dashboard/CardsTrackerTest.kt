@@ -23,6 +23,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 private const val TYPE = "type"
 private const val SUBTYPE = "subtype"
 private const val ITEM = "item"
+private const val CARD = "card"
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsTrackerTest {
@@ -200,7 +201,7 @@ class CardsTrackerTest {
     ) {
         verify(analyticsTracker).track(
             Stat.MY_SITE_DASHBOARD_CARD_MENU_ITEM_TAPPED,
-            mapOf(TYPE to typeValue.label, ITEM to menuItem)
+            mapOf(CARD to typeValue.label, ITEM to menuItem)
         )
     }
 }
