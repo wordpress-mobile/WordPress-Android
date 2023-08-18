@@ -1,2 +1,0 @@
-22.9:
-Blok düzenleyicisinde stiller, renkler ve simgeler dahil olmak üzere bazı büyük değişiklikler yaptık. Ayrıca, üst bilgi araç çubuğunda, geri alma ve yineleme düğmeleri dahil olmak üzere daha fazla düğme ve blok seçeneği göreceksiniz. Evet, bu doğru, artık Batman'in alet kemerindekinden daha fazla aracınız var.
