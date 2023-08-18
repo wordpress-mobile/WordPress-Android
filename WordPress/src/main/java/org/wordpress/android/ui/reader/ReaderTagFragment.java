@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import org.wordpress.android.R;
@@ -29,8 +30,10 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
         return new ReaderTagFragment();
     }
 
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
         mRecyclerView = view.findViewById(R.id.recycler_view);
         return view;
@@ -57,7 +60,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mRecyclerView.setAdapter(getTagAdapter());
         refresh();
