@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.pages
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +17,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 
-const val pageId = 1
+private const val MOCK_PAGE_ID = 1
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -56,18 +56,18 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
 
             pagesCardParams.onFooterLinkClick()
 
-            Assertions.assertThat(navigationActions).containsOnly(SiteNavigationAction.TriggerCreatePageFlow(site))
+            assertThat(navigationActions).containsOnly(SiteNavigationAction.TriggerCreatePageFlow(site))
         }
 
     @Test
     fun `given draft page card, when page item is clicked, then navigate to page list draft tab`() =
         test {
             val pagesCardParams = pagesCardViewModelSlice.getPagesCardBuilderParams(mock())
-            val pagesParams = PagesItemClickParams(PagesCardContentType.DRAFT, pageId)
+            val pagesParams = PagesItemClickParams(PagesCardContentType.DRAFT, MOCK_PAGE_ID)
 
             pagesCardParams.onPagesItemClick.invoke(pagesParams)
 
-            Assertions.assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPagesDraftsTab(site, pageId))
+            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPagesDraftsTab(site, MOCK_PAGE_ID))
             verify(cardsTracker).trackPagesItemClicked(PagesCardContentType.DRAFT)
         }
 
@@ -75,12 +75,11 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
     fun `given scheduled page card, when page item is clicked, then navigate to page list scheduled tab`() =
         test {
             val pagesCardParams = pagesCardViewModelSlice.getPagesCardBuilderParams(mock())
-            val pagesParams = PagesItemClickParams(PagesCardContentType.SCHEDULED, pageId)
+            val pagesParams = PagesItemClickParams(PagesCardContentType.SCHEDULED, MOCK_PAGE_ID)
 
             pagesCardParams.onPagesItemClick.invoke(pagesParams)
 
-            Assertions.assertThat(navigationActions)
-                .containsOnly(SiteNavigationAction.OpenPagesScheduledTab(site, pageId))
+            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPagesScheduledTab(site, MOCK_PAGE_ID))
             verify(cardsTracker).trackPagesItemClicked(PagesCardContentType.SCHEDULED)
         }
 
@@ -88,11 +87,11 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
     fun `given published page card, when page item is clicked, then navigate to page list published tab`() =
         test {
             val pagesCardParams = pagesCardViewModelSlice.getPagesCardBuilderParams(mock())
-            val pagesParams = PagesItemClickParams(PagesCardContentType.PUBLISH, pageId)
+            val pagesParams = PagesItemClickParams(PagesCardContentType.PUBLISH, MOCK_PAGE_ID)
 
             pagesCardParams.onPagesItemClick.invoke(pagesParams)
 
-            Assertions.assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
+            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
             verify(cardsTracker).trackPagesItemClicked(PagesCardContentType.PUBLISH)
         }
 }
