@@ -113,6 +113,10 @@ class CardsTracker @Inject constructor(
         trackCardMoreMenuItemClicked(Type.ACTIVITY.label, menuItemType.label)
     }
 
+    fun trackActivityLogMoreMenuClicked() {
+        trackCardMoreMenuClicked(Type.ACTIVITY.label)
+    }
+
     private fun trackCardFooterLinkClicked(type: String, subtype: String) {
         analyticsTrackerWrapper.track(
             Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,

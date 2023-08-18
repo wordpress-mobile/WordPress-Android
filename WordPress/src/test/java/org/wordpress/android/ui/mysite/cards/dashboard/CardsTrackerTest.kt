@@ -166,6 +166,13 @@ class CardsTrackerTest {
         verifyCardMenuItemClickedTracked(Type.ACTIVITY, MenuItemType.ALL_ACTIVITY.label)
     }
 
+    @Test
+    fun `when activity card more menu is clicked, then activity more menu event is tracked`() {
+        cardsTracker.trackActivityLogMoreMenuClicked()
+
+        verifyCardMoreMenuClickTracked(Type.ACTIVITY)
+    }
+
     private fun verifyFooterLinkClickedTracked(
         typeValue: Type,
         subtypeValue: String
@@ -202,6 +209,14 @@ class CardsTrackerTest {
         verify(analyticsTracker).track(
             Stat.MY_SITE_DASHBOARD_CARD_MENU_ITEM_TAPPED,
             mapOf(CARD to typeValue.label, ITEM to menuItem)
+        )
+    }
+    private fun verifyCardMoreMenuClickTracked(
+        typeValue: Type
+    ) {
+        verify(analyticsTracker).track(
+            Stat.MY_SITE_DASHBOARD_CONTEXTUAL_MENU_ACCESSED,
+            mapOf(CARD to typeValue.label)
         )
     }
 }
