@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.DashboardActivityLogCardFeatureUtils
-import org.wordpress.android.util.config.DashboardCardPagesConfig
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 
 /* SITE */
@@ -161,9 +160,6 @@ class CardsSourceTest : BaseUnitTest() {
     private lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
 
     @Mock
-    private lateinit var dashboardCardPagesConfig: DashboardCardPagesConfig
-
-    @Mock
     private lateinit var dashboardActivityLogCardFeatureUtils: DashboardActivityLogCardFeatureUtils
 
     private lateinit var cardSource: CardsSource
@@ -183,12 +179,10 @@ class CardsSourceTest : BaseUnitTest() {
 
     private fun init(
         isTodaysStatsCardFeatureConfigEnabled: Boolean = false,
-        isDashboardCardPagesConfigEnabled: Boolean = false,
         isDashboardCardActivityLogEnabled: Boolean = false
     ) {
         setUpMocks(
             isTodaysStatsCardFeatureConfigEnabled,
-            isDashboardCardPagesConfigEnabled,
             isDashboardCardActivityLogEnabled
         )
         cardSource = CardsSource(
@@ -196,18 +190,15 @@ class CardsSourceTest : BaseUnitTest() {
             cardsStore,
             dashboardActivityLogCardFeatureUtils,
             todaysStatsCardFeatureConfig,
-            dashboardCardPagesConfig,
             testDispatcher()
         )
     }
 
     private fun setUpMocks(
         isTodaysStatsCardFeatureConfigEnabled: Boolean,
-        isDashboardCardPagesConfigEnabled: Boolean = false,
         isDashboardCardActivityLogEnabled: Boolean = false
     ) {
         whenever(todaysStatsCardFeatureConfig.isEnabled()).thenReturn(isTodaysStatsCardFeatureConfigEnabled)
-        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(isDashboardCardPagesConfigEnabled)
         whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(dashboardActivityLogCardFeatureUtils.shouldRequestActivityCard(siteModel))
@@ -470,8 +461,8 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given pages enabled and site is capable, when build is invoked, then pages from store(database)`() = test {
-        init(isDashboardCardPagesConfigEnabled = true)
+    fun `given site is capable, when build is invoked, then pages from store(database)`() = test {
+        init()
         whenever(siteModel.hasCapabilityEditPages).thenReturn(true)
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)).thenReturn(flowOf(data))
@@ -484,8 +475,8 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given pages enabled and site is not capable, when build is invoked, then pages not requested`() = test {
-        init(isDashboardCardPagesConfigEnabled = true)
+    fun `given site is not capable, when build is invoked, then pages not requested`() = test {
+        init()
         val result = mutableListOf<CardsUpdate>()
         whenever(siteModel.hasCapabilityEditPages).thenReturn(false)
 
@@ -497,8 +488,8 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given pages enabled and hosted site not capable, when build is invoked, then pages not requested`() = test {
-        init(isDashboardCardPagesConfigEnabled = true)
+    fun `given hosted site not capable, when build is invoked, then pages not requested`() = test {
+        init()
         val result = mutableListOf<CardsUpdate>()
         whenever(siteModel.isSelfHostedAdmin).thenReturn(false)
 
@@ -512,7 +503,7 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `given pages feature enabled, when refresh is invoked, then pages are requested from network`() =
         test {
-            init(isDashboardCardPagesConfigEnabled = true)
+            init()
             val result = mutableListOf<CardsUpdate>()
             whenever(siteModel.hasCapabilityEditPages).thenReturn(true)
             whenever(cardsStore.getCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)).thenReturn(flowOf(data))
