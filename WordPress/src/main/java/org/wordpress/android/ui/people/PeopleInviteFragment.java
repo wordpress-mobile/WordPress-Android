@@ -133,19 +133,19 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.people_invite, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.getItem(0).setEnabled(!mInviteOperationInProgress); // here pass the index of send menu item
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mCurrentRole != null) {
             outState.putString(KEY_SELECTED_ROLE, mCurrentRole);
@@ -154,7 +154,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         updateSiteOrFinishActivity();
@@ -178,8 +178,10 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         setRetainInstance(true);
     }
 
+    @Nullable
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.people_invite_fragment, container, false);
 
@@ -329,11 +331,13 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         }
 
         mUsernamesEmails.setItemsManager(new ItemsManagerInterface() {
-            @Override public void onRemoveItem(@NonNull String item) {
+            @Override
+            public void onRemoveItem(@NonNull String item) {
                 removeUsername(item);
             }
 
-            @Override public void onAddItem(@NonNull String item) {
+            @Override
+            public void onAddItem(@NonNull String item) {
                 addUsername(item, null);
             }
         });
@@ -375,16 +379,16 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         mCustomMessageEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(@NonNull CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
                 mCustomMessage = mCustomMessageEditText.getText().toString();
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(@NonNull Editable s) {
             }
         });
 
