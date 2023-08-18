@@ -1726,4 +1726,8 @@ public class AppPrefs {
     @NonNull private static String getSiteIdHideActivityDashboardCardKey(long siteId) {
         return DeletablePrefKey.SHOULD_HIDE_ACTIVITY_DASHBOARD_CARD.name() + siteId;
     }
+
+    public static Boolean getShouldHideActivityDashboardCard(long siteId) {
+        return prefs().getBoolean(getSiteIdHideActivityDashboardCardKey(siteId), false);
+    }
 }

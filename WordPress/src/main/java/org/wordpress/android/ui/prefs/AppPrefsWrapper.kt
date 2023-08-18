@@ -375,6 +375,8 @@ class AppPrefsWrapper @Inject constructor() {
         isHidden: Boolean
     ) = AppPrefs.setShouldHideActivityDashboardCard(remoteSiteId, isHidden)
 
+    fun getShouldHideActivityDashboardCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideActivityDashboardCard(siteId)
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {
