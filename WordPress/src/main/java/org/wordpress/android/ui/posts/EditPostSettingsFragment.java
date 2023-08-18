@@ -180,7 +180,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         mDispatcher.register(this);
@@ -256,7 +256,8 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    @Override public void onResume() {
+    @Override
+    public void onResume() {
         super.onResume();
         mJetpackSocialViewModel.onResume(JetpackSocialFlow.POST_SETTINGS);
     }
@@ -270,6 +271,7 @@ public class EditPostSettingsFragment extends Fragment {
         super.onDestroy();
     }
 
+    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -309,8 +311,8 @@ public class EditPostSettingsFragment extends Fragment {
 
         OnClickListener showContextMenuListener = new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                view.showContextMenu();
+            public void onClick(@NonNull View v) {
+                v.showContextMenu();
             }
         };
 
@@ -326,7 +328,7 @@ public class EditPostSettingsFragment extends Fragment {
 
         mFeaturedImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(@NonNull View v) {
                 launchFeaturedMediaPicker();
             }
         });
@@ -334,7 +336,7 @@ public class EditPostSettingsFragment extends Fragment {
         mExcerptContainer = rootView.findViewById(R.id.post_excerpt_container);
         mExcerptContainer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(@NonNull View v) {
                 showPostExcerptDialog();
             }
         });
@@ -342,7 +344,7 @@ public class EditPostSettingsFragment extends Fragment {
         LinearLayout parentContainer = rootView.findViewById(R.id.post_parent_container);
         parentContainer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(@NonNull View v) {
                 showPageParentActivity();
             }
         });
@@ -350,7 +352,7 @@ public class EditPostSettingsFragment extends Fragment {
         final LinearLayout slugContainer = rootView.findViewById(R.id.post_slug_container);
         slugContainer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(@NonNull View v) {
                 showSlugDialog();
             }
         });
@@ -360,7 +362,7 @@ public class EditPostSettingsFragment extends Fragment {
         LinearLayout categoriesContainer = rootView.findViewById(R.id.post_categories_container);
         categoriesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(@NonNull View v) {
                 showCategoriesActivity();
             }
         });
@@ -368,7 +370,7 @@ public class EditPostSettingsFragment extends Fragment {
         LinearLayout tagsContainer = rootView.findViewById(R.id.post_tags_container);
         tagsContainer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(@NonNull View v) {
                 showTagsActivity();
             }
         });
@@ -376,7 +378,7 @@ public class EditPostSettingsFragment extends Fragment {
         final LinearLayout statusContainer = rootView.findViewById(R.id.post_status_container);
         statusContainer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(@NonNull View v) {
                 showStatusDialog();
             }
         });
@@ -384,7 +386,7 @@ public class EditPostSettingsFragment extends Fragment {
         mFormatContainer = rootView.findViewById(R.id.post_format_container);
         mFormatContainer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(@NonNull View v) {
                 showPostFormatDialog();
             }
         });
@@ -394,14 +396,14 @@ public class EditPostSettingsFragment extends Fragment {
         final LinearLayout passwordContainer = rootView.findViewById(R.id.post_password_container);
         passwordContainer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(@NonNull View v) {
                 showPostPasswordDialog();
             }
         });
 
         mPublishDateContainer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(@NonNull View v) {
                 FragmentActivity activity = getActivity();
                 if (activity instanceof EditPostSettingsCallback) {
                     ((EditPostSettingsCallback) activity).onEditPostPublishedSettingsClick();
@@ -418,13 +420,15 @@ public class EditPostSettingsFragment extends Fragment {
 
 
         mPublishedViewModel.getOnUiModel().observe(getViewLifecycleOwner(), new Observer<PublishUiModel>() {
-            @Override public void onChanged(PublishUiModel uiModel) {
+            @Override
+            public void onChanged(@NonNull PublishUiModel uiModel) {
                 updatePublishDateTextView(uiModel.getPublishDateLabel(),
                         Objects.requireNonNull(getEditPostRepository().getPost()));
             }
         });
         mPublishedViewModel.getOnPostStatusChanged().observe(getViewLifecycleOwner(), new Observer<PostStatus>() {
-            @Override public void onChanged(PostStatus postStatus) {
+            @Override
+            public void onChanged(@NonNull PostStatus postStatus) {
                 updatePostStatus(postStatus);
             }
         });
@@ -438,7 +442,8 @@ public class EditPostSettingsFragment extends Fragment {
         return rootView;
     }
 
-    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupJetpackSocialViewModel();
     }
@@ -470,7 +475,8 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v,
+                                    @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         if (mFeaturedImageRetryOverlay.getVisibility() == View.VISIBLE) {
             menu.add(0, RETRY_FEATURED_IMAGE_UPLOAD_MENU_ID, 0,
                     getString(R.string.post_settings_retry_featured_image));
@@ -483,7 +489,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
         SiteModel site = getSite();
         PostImmutableModel post = getEditPostRepository().getPost();
         if (site == null || post == null) {
@@ -558,7 +564,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO
@@ -1275,10 +1281,12 @@ public class EditPostSettingsFragment extends Fragment {
                 mImageManager.loadWithResultListener(mFeaturedImageView, ImageType.IMAGE,
                         currentFeaturedImageState.getMediaUri(), ScaleType.FIT_CENTER,
                         null, new RequestListener<Drawable>() {
-                            @Override public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
+                            @Override
+                            public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
                             }
 
-                            @Override public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
                                 if (currentFeaturedImageState.getUiState() == FeaturedImageState.REMOTE_IMAGE_LOADING) {
                                     updateFeaturedImageViews(FeaturedImageState.REMOTE_IMAGE_SET);
                                 }
