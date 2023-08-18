@@ -74,6 +74,9 @@ class PagesCardBuilderTest : BaseUnitTest() {
 
     private val onPagesCardFooterClick: () -> Unit = { }
     private val onPagesItemClick: (params: PagesItemClickParams) -> Unit = {}
+    private val onPagesCardMoreClick: () -> Unit = {}
+    private val onMoreMenuAllPagesClick: () -> Unit = {}
+    private val onMoreMenuHideCardClick: () -> Unit = {}
 
     @Before
     fun build() {
@@ -205,7 +208,12 @@ class PagesCardBuilderTest : BaseUnitTest() {
         return PagesCardBuilderParams(
             pageCard = pagesCardModel,
             onFooterLinkClick = onPagesCardFooterClick,
-            onPagesItemClick = onPagesItemClick
+            onPagesItemClick = onPagesItemClick,
+            moreMenuClickParams = PagesCardBuilderParams.MoreMenuParams(
+                onMoreMenuClick = onPagesCardMoreClick,
+                onHideThisCardItemClick = onMoreMenuHideCardClick,
+                onAllPagesItemClick = onMoreMenuAllPagesClick
+            )
         )
     }
 
