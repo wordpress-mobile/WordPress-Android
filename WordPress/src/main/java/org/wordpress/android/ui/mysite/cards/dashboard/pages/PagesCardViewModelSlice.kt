@@ -34,7 +34,7 @@ class PagesCardViewModelSlice @Inject constructor(
     }
 
     private fun onAllPagesMenuItemClick() {
-        //todo implement the tracking for navigation to all pages
+        // todo implement the tracking for navigation to all pages
         _onNavigation.value = Event(
             SiteNavigationAction
                 .OpenPages(requireNotNull(selectedSiteRepository.getSelectedSite()))
@@ -42,7 +42,7 @@ class PagesCardViewModelSlice @Inject constructor(
     }
 
     private fun onPagesCardHideThisCardClick() {
-        //todo implement the logic to hide the card and add tracking logic
+        // todo implement the logic to hide the card and add tracking logic
     }
 
     private fun onPagesItemClick(params: PagesCardBuilderParams.PagesItemClickParams) {
