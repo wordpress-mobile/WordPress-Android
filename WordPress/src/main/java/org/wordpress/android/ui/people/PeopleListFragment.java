@@ -93,19 +93,21 @@ public class PeopleListFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.people_list, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
@@ -260,7 +262,8 @@ public class PeopleListFragment extends Fragment {
         }
     }
 
-    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // important for accessibility - talkback
         getActivity().setTitle(R.string.people);
@@ -474,7 +477,8 @@ public class PeopleListFragment extends Fragment {
             }
         }
 
-        @Override public void onViewRecycled(@NonNull ViewHolder holder) {
+        @Override
+        public void onViewRecycled(@NonNull ViewHolder holder) {
             super.onViewRecycled(holder);
             PeopleViewHolder peopleViewHolder = (PeopleViewHolder) holder;
         }
@@ -498,7 +502,7 @@ public class PeopleListFragment extends Fragment {
             }
 
             @Override
-            public void onClick(View v) {
+            public void onClick(@NonNull View v) {
                 if (mOnPersonSelectedListener != null) {
                     Person person = getPerson(getBindingAdapterPosition());
                     mOnPersonSelectedListener.onPersonSelected(person);
