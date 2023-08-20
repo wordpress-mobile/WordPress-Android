@@ -1,0 +1,5 @@
+23.0:
+- Vi har uppgraderat inläggsredigeraren med hantering av social delning
+- Vi har lagt till adminpanelskort för domänöverföring och Blaze-kampanjer
+- Vi har åtgärdat en tilläggsinstallationsbugg som gjorde att appen kraschade
+- Vi har förbättrat galleriblockets design och användbarhet

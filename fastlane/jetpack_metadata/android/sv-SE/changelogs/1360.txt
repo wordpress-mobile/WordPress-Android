@@ -1,2 +1,0 @@
-22.9:
-Vi har gjort några stora ändringar av blockredigeraren, inklusive stilar, färger och ikoner. Du hittar även fler knappar och blockalternativ i rubrikverktygsfältet, inklusive knapparna ångra och gör om. Så är det, nu har du fler verktyg än i Batmanbältet att jobba med.

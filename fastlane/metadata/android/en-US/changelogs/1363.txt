@@ -1,0 +1,4 @@
+- Removed visual gap between selected gallery blocks and toolbar
+- Hid the gallery caption button on mobile devices.
+- Made correct gallery block remain selected while you’re adding media
+- Fixed a plugin install bug that caused the app to crash

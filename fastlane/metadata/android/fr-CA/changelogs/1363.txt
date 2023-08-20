@@ -1,0 +1,5 @@
+23.0:
+- Suppression de l’écart visuel entre les blocs Galerie et la barre d’outils
+- Suppression du bouton de légende de la Galerie sur les appareils mobiles.
+- Maintien de la sélection du bloc Galerie correct lors de l’ajout de médias.
+- Correction un bug d’installation d'extension qui entraînait le blocage de l’application
