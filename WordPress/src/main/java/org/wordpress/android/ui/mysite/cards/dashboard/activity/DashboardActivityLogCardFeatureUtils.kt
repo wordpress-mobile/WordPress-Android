@@ -12,8 +12,7 @@ class DashboardActivityLogCardFeatureUtils @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper
 ) {
     fun shouldRequestActivityCard(selectedSite: SiteModel): Boolean {
-        if (!dashboardCardActivityLogConfig.isEnabled()) return false
-        if (isActivityCardHiddenByUser(selectedSite.siteId)) return false
+        if (!dashboardCardActivityLogConfig.isEnabled() || isActivityCardHiddenByUser(selectedSite.siteId)) return false
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(selectedSite) ||
                 selectedSite.isJetpackConnected
         return selectedSite.hasCapabilityManageOptions
