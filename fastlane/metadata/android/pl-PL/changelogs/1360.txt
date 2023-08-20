@@ -1,2 +1,0 @@
-22.9:
-Wprowadziliśmy kilka dużych zmian w edytorze bloków, w tym w stylach, kolorach i ikonkach. Znajdziesz także więcej przycisków i opcji bloków na pasku narzędzi nagłówka, w tym przyciski cofania i ponawiania. Zgadza się, masz teraz więcej narzędzi niż Batman w swoim pasie narzędzi.
