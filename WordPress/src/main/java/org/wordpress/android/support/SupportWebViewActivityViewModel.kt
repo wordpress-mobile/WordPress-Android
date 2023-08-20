@@ -32,4 +32,9 @@ class SupportWebViewActivityViewModel @Inject constructor(
         errorMessage?.let { properties.put("error_message", errorMessage) }
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_TICKET_FAILURE, properties)
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_ENDED, chatIdProperty)
+    }
 }
