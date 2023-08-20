@@ -96,6 +96,11 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         }
     }
 
+    override fun onWebViewReceivedError() {
+        super.onWebViewReceivedError()
+        viewModel.onWebViewReceivedError()
+    }
+
     private fun createNewZendeskRequest(description: String, callback: ZendeskHelper.CreateRequestCallback) {
         zendeskHelper.createRequest(
             this,

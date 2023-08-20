@@ -18,4 +18,8 @@ class SupportWebViewActivityViewModel @Inject constructor(
     fun start() {
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_STARTED, chatIdProperty)
     }
+
+    fun onWebViewReceivedError() {
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_WEBVIEW_ERROR, chatIdProperty)
+    }
 }
