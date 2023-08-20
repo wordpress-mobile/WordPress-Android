@@ -103,6 +103,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
+        mWebView.getSettings().setUserAgentString(System.getProperty("http.agent"));
 
         return rootView;
     }
