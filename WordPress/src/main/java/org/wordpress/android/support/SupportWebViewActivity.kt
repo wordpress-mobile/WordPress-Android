@@ -87,6 +87,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
                         R.string.contact_support_bot_ticket_message,
                         ToastUtils.Duration.LONG
                     )
+                    viewModel.onTicketCreated()
                 }
 
                 override fun onError() {
