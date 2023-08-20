@@ -90,8 +90,9 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
                     viewModel.onTicketCreated()
                 }
 
-                override fun onError() {
+                override fun onError(errorMessage: String?) {
                     showTicketErrorMessage()
+                    viewModel.onTicketCreationError(errorMessage)
                 }
             })
         }

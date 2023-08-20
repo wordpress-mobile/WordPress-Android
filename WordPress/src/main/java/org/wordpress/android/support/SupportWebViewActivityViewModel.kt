@@ -26,4 +26,10 @@ class SupportWebViewActivityViewModel @Inject constructor(
     fun onTicketCreated() {
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_TICKET_SUCCESS, chatIdProperty)
     }
+
+    fun onTicketCreationError(errorMessage: String?) {
+        val properties = chatIdProperty.toMutableMap()
+        errorMessage?.let { properties.put("error_message", errorMessage) }
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_TICKET_FAILURE, properties)
+    }
 }
