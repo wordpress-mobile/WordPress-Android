@@ -164,7 +164,7 @@ class ZendeskHelper(
     ) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
-            callback.onError()
+            callback.onError(null)
         }
         val request = CreateRequest().apply {
             subject = context.getString(R.string.support_ticket_subject)
@@ -181,14 +181,14 @@ class ZendeskHelper(
             }
 
             override fun onError(error: ErrorResponse?) {
-                callback.onError()
+                callback.onError(error?.reason)
             }
         })
     }
 
     abstract class CreateRequestCallback {
         abstract fun onSuccess()
-        abstract fun onError()
+        abstract fun onError(errorMessage: String?)
     }
 
     /**

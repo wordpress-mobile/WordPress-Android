@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import androidx.activity.viewModels
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewAssetLoader.AssetsPathHandler
 import androidx.webkit.WebViewAssetLoader.DEFAULT_DOMAIN
@@ -26,12 +27,15 @@ import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.widgets.WPSnackbar
+import java.util.UUID
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.SupportWebViewClientListener {
     @Inject
     lateinit var zendeskHelper: ZendeskHelper
+
+    val viewModel: SupportWebViewActivityViewModel by viewModels()
 
     private val originFromExtras by lazy {
         intent.extras?.getSerializableCompat<HelpActivity.Origin>(ORIGIN_KEY) ?: HelpActivity.Origin.UNKNOWN
@@ -45,6 +49,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.start(chatIdProperty)
         toggleNavbarVisibility(false)
 
         // set send message box to appear above system navigation bar
@@ -83,13 +88,20 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
                         R.string.contact_support_bot_ticket_message,
                         ToastUtils.Duration.LONG
                     )
+                    viewModel.onTicketCreated()
                 }
 
-                override fun onError() {
+                override fun onError(errorMessage: String?) {
                     showTicketErrorMessage()
+                    viewModel.onTicketCreationError(errorMessage)
                 }
             })
         }
+    }
+
+    override fun onWebViewReceivedError() {
+        super.onWebViewReceivedError()
+        viewModel.onWebViewReceivedError()
     }
 
     private fun createNewZendeskRequest(description: String, callback: ZendeskHelper.CreateRequestCallback) {
@@ -162,6 +174,8 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
     companion object {
         private const val ORIGIN_KEY = "ORIGIN_KEY"
         private const val EXTRA_TAGS_KEY = "EXTRA_TAGS_KEY"
+        private val chatId = UUID.randomUUID().toString()
+        private val chatIdProperty = mapOf("chat_id" to chatId)
 
         @JvmStatic
         fun createIntent(
@@ -181,6 +195,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
             .appendPath("assets")
             .appendPath("support_chat_widget.html")
             .appendQueryParameter("id", BuildConfig.DOCSBOTAI_ID)
+            .appendQueryParameter("chatId", chatId)
             .appendQueryParameter("inputPlaceholder", context.getString(R.string.contact_support_input_placeholder))
             .appendQueryParameter("firstMessage", context.getString(R.string.contact_support_first_message))
             .appendQueryParameter("getSupport", context.getString(R.string.contact_support_get_support))
