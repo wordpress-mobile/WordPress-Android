@@ -4,37 +4,35 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class SupportWebViewActivityViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ViewModel() {
-    // Locally generated chat ID for analytics purposes
-    private val chatId = UUID.randomUUID().toString()
-    private val chatIdProperty = mapOf("chat_id" to chatId)
+    private lateinit var chatIdProp: Map<String, String>
 
-    fun start() {
-        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_STARTED, chatIdProperty)
+    fun start(chatIdProperty: Map<String, String>) {
+        this.chatIdProp = chatIdProperty
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_STARTED, chatIdProp)
     }
 
     fun onWebViewReceivedError() {
-        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_WEBVIEW_ERROR, chatIdProperty)
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_WEBVIEW_ERROR, chatIdProp)
     }
 
     fun onTicketCreated() {
-        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_TICKET_SUCCESS, chatIdProperty)
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_TICKET_SUCCESS, chatIdProp)
     }
 
     fun onTicketCreationError(errorMessage: String?) {
-        val properties = chatIdProperty.toMutableMap()
+        val properties = chatIdProp.toMutableMap()
         errorMessage?.let { properties.put("error_message", errorMessage) }
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_TICKET_FAILURE, properties)
     }
 
     override fun onCleared() {
         super.onCleared()
-        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_ENDED, chatIdProperty)
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_ENDED, chatIdProp)
     }
 }

@@ -27,6 +27,7 @@ import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.widgets.WPSnackbar
+import java.util.UUID
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -48,7 +49,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.start()
+        viewModel.start(chatIdProperty)
         toggleNavbarVisibility(false)
 
         // set send message box to appear above system navigation bar
@@ -173,6 +174,8 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
     companion object {
         private const val ORIGIN_KEY = "ORIGIN_KEY"
         private const val EXTRA_TAGS_KEY = "EXTRA_TAGS_KEY"
+        private val chatId = UUID.randomUUID().toString()
+        private val chatIdProperty = mapOf("chat_id" to chatId)
 
         @JvmStatic
         fun createIntent(
@@ -192,6 +195,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
             .appendPath("assets")
             .appendPath("support_chat_widget.html")
             .appendQueryParameter("id", BuildConfig.DOCSBOTAI_ID)
+            .appendQueryParameter("chatId", chatId)
             .appendQueryParameter("inputPlaceholder", context.getString(R.string.contact_support_input_placeholder))
             .appendQueryParameter("firstMessage", context.getString(R.string.contact_support_first_message))
             .appendQueryParameter("getSupport", context.getString(R.string.contact_support_get_support))
