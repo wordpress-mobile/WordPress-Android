@@ -1,0 +1,5 @@
+23.0:
+- Mise à niveau de l’éditeur d’articles avec gestion du partage sur les réseaux sociaux.
+- Ajout de la fonction de transfert de domaine et les cartes du tableau de bord de la campagne Blaze.
+- Correction un bug d’installation de plugin qui entraînait le plantage de l’application
+- Amélioration du design et de la convivialité du bloc Galerie

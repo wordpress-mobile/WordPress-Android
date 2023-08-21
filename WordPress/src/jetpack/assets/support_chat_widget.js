@@ -9,6 +9,9 @@
 
         window.DocsBotAI.init({
             id: urlParams.id,
+            identify: {
+                chatId: urlParams.chatId // This will be recorded in the question metadata and accessible via the API.
+            },
             supportCallback: function(event, history) {
                 event.preventDefault() // Optionally prevent default behavior opening the url.
                 console.log(history) // Safely access the chat history.

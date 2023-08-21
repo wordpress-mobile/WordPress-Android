@@ -1,2 +1,0 @@
-22.9:
-Kami menerapkan perubahan besar pada editor blok, termasuk gaya, warna, dan ikon. Kini ada lebih banyak tombol dan pilihan blok di bilah peralatan header, termasuk tombol batalkan dan ulangi. Ya, kini Anda memiliki lebih banyak peralatan dibandingkan sabuk serbaguna Batman.

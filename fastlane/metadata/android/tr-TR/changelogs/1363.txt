@@ -1,0 +1,5 @@
+23.0:
+- Seçili galeri blokları ile araç çubuğu arasında görünen görsel boşluk kaldırıldı
+- Galeri yazısı düğmesi mobil cihazlarda gizlendi.
+- Siz ortam eklerken, doğru galeri blokunun seçili kalmaya devam etmesi sağlandı.
+- Uygulamanın çökmesine neden olan bir eklenti yükleme sorunu giderildi
