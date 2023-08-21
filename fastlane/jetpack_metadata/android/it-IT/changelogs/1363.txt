@@ -1,0 +1,5 @@
+23.0:
+- Aggiornamento dell'editor di articoli con la funzionalità di gestione della condivisione sui social
+- Aggiunta del trasferimento di dominio e delle schede Campagna Blaze nella bacheca
+- Risolto un bug di installazione dei plugin che causava il blocco dell'app
+- Design e utilizzabilità migliori dei blocchi galleria

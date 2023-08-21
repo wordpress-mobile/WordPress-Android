@@ -1,2 +1,0 @@
-22.9:
-Wir haben umfassende Änderungen am Block-Editor vorgenommen, die u. a. Stile, Farben und Icons betreffen. Zudem gibt es in der Header-Toolbar jetzt mehr Buttons und Blockoption, darunter die Buttons zum Rückgängigmachen und Wiederherstellen. Dir stehen jetzt also mehr Tools zur Verfügung als in Batmans Werkzeuggürtel vorhanden sind.
