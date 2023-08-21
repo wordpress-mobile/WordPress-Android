@@ -123,7 +123,7 @@ class ActivityLogDetailViewModel @Inject constructor(
         }
 
         launch(bgDispatcher) {
-            cardsStore.getCards(site, listOf(CardModel.Type.ACTIVITY))
+            cardsStore.getCardsByType(site, listOf(CardModel.Type.ACTIVITY))
                 .map { it.model }
                 .collect { result ->
                     _item.postValue(
