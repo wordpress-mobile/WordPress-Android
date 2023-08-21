@@ -106,3 +106,5 @@
 /subscriptions/<id>/
 
 /reports/products
+
+/options
