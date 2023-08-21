@@ -18,11 +18,11 @@ ext {
     // libs
     automatticAboutVersion = '1.2.0'
     automatticRestVersion = '1.0.8'
-    automatticStoriesVersion = 'trunk-0e06284cc664d73e1ef9b894a45a6a535fa68bf1'
+    automatticStoriesVersion = '2.3.0'
     automatticTracksVersion = '3.2.0'
     gutenbergMobileVersion = 'v1.102.0'
     wordPressAztecVersion = 'v1.7.0'
-    wordPressFluxCVersion = 'trunk-eebc6c32e3a9d088c062124692b644bcf741ad34'
+    wordPressFluxCVersion = '2.42.0'
     wordPressLoginVersion = '1.5.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.7.0'
