@@ -65,7 +65,10 @@ class CardsTracker @Inject constructor(
         NO_CAMPAIGNS("no_campaigns"),
         CAMPAIGNS("campaigns")
     }
-
+    enum class MenuItemType(val label: String) {
+        ALL_ACTIVITY("all_activity"),
+        HIDE_THIS("hide_this")
+    }
     fun trackQuickStartCardItemClicked(quickStartTaskType: QuickStartTaskType) {
         trackCardItemClicked(Type.QUICK_START.label, quickStartTaskType.toSubtypeValue().label)
     }
@@ -106,6 +109,14 @@ class CardsTracker @Inject constructor(
         trackCardFooterLinkClicked(Type.PAGES.label, PagesSubType.CREATE_PAGE.label)
     }
 
+    fun trackActivityCardMenuItemClicked(menuItemType: MenuItemType) {
+        trackCardMoreMenuItemClicked(Type.ACTIVITY.label, menuItemType.label)
+    }
+
+    fun trackActivityLogMoreMenuClicked() {
+        trackCardMoreMenuClicked(Type.ACTIVITY.label)
+    }
+
     private fun trackCardFooterLinkClicked(type: String, subtype: String) {
         analyticsTrackerWrapper.track(
             Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
@@ -125,6 +136,20 @@ class CardsTracker @Inject constructor(
         }
     }
 
+    private fun trackCardMoreMenuItemClicked(card: String, item: String) {
+        analyticsTrackerWrapper.track(
+            Stat.MY_SITE_DASHBOARD_CARD_MENU_ITEM_TAPPED,
+            mapOf(
+                CARD to card,
+                ITEM to item
+            )
+        )
+    }
+
+    private fun trackCardMoreMenuClicked(type: String) {
+        analyticsTrackerWrapper.track(Stat.MY_SITE_DASHBOARD_CONTEXTUAL_MENU_ACCESSED, mapOf(CARD to type))
+    }
+
     fun resetShown() {
         cardsShownTracker.reset()
     }
@@ -141,6 +166,8 @@ class CardsTracker @Inject constructor(
         const val TYPE = "type"
         const val SUBTYPE = "subtype"
         const val STATS = "stats"
+        const val ITEM = "item"
+        const val CARD = "card"
     }
 }
 

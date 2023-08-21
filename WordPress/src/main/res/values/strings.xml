@@ -4602,8 +4602,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Jetpack - Dashboard cards - Activity Card -->
     <string name="dashboard_activity_card_title">Recent activity</string>
-    <string name="dashboard_activity_card_footer_link">View all activity</string>
-    <string name="dashboard_activity_card_menu_hide_this" translatable="false">@string/promote_blaze_card_more_menu_hide_this</string>
+    <string name="dashboard_activity_card_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
     <string name="dashboard_activity_card_menu_all_activity">All activity</string>
     <string name="dashboard_activity_card_dot_separator" translatable="false">@string/reader_dot_separator</string>
 
