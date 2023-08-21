@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store.dashboard
 
+import android.util.Log
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.single
 import org.assertj.core.api.Assertions.assertThat
@@ -453,51 +454,11 @@ class CardsStoreTest {
 
     @Test
     fun `when get cards gets triggered, then a flow of cards model is returned`() = test {
-        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES)).thenReturn(flowOf(CARDS_ENTITY))
+        whenever(dao.get(SITE_LOCAL_ID)).thenReturn(flowOf(CARDS_ENTITY))
 
-        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
+        val result = cardsStore.getCards(siteModel).single()
 
         assertThat(result).isEqualTo(CardsResult(CARDS_MODEL))
-    }
-
-    @Test
-    fun `when get cards gets triggered for today's stats only, then a flow of today's stats card model is returned`() =
-            test {
-                whenever(dao.get(SITE_LOCAL_ID, listOf(CardModel.Type.TODAYS_STATS)))
-                        .thenReturn(flowOf(listOf(TODAYS_STATS_ENTITY)))
-
-                val result = cardsStore.getCards(siteModel, listOf(CardModel.Type.TODAYS_STATS)).single()
-
-                assertThat(result).isEqualTo(CardsResult(listOf(TODAYS_STATS_MODEL)))
-            }
-
-    @Test
-    fun `when get cards gets triggered for posts only, then a flow of post card model is returned`() = test {
-        whenever(dao.get(SITE_LOCAL_ID, listOf(CardModel.Type.POSTS))).thenReturn(flowOf(listOf(POSTS_ENTITY)))
-
-        val result = cardsStore.getCards(siteModel, listOf(CardModel.Type.POSTS)).single()
-
-        assertThat(result).isEqualTo(CardsResult(listOf(POSTS_MODEL)))
-    }
-
-    @Test
-    fun `when get cards gets triggered for pages only, then a flow of pages card model is returned`() = test {
-        whenever(dao.get(SITE_LOCAL_ID, listOf(CardModel.Type.PAGES)))
-            .thenReturn(flowOf(listOf(PAGES_ENTITY)))
-
-        val result = cardsStore.getCards(siteModel, listOf(CardModel.Type.PAGES)).single()
-
-        assertThat(result).isEqualTo(CardsResult(listOf(PAGES_MODEL)))
-    }
-
-    @Test
-    fun `when get cards gets triggered for activity only, then a flow of activity card model is returned`() = test {
-        whenever(dao.get(SITE_LOCAL_ID, listOf(CardModel.Type.ACTIVITY)))
-            .thenReturn(flowOf(listOf(ACTIVITY_ENTITY)))
-
-        val result = cardsStore.getCards(siteModel, listOf(CardModel.Type.ACTIVITY)).single()
-
-        assertThat(result).isEqualTo(CardsResult(listOf(ACTIVITY_CARD_MODEL)))
     }
 
     /* TODAYS STATS CARD WITH ERROR */
@@ -515,38 +476,37 @@ class CardsStoreTest {
 
     @Test
     fun `given today's stats jetpack disconn error, when get cards triggered, then error exists in the card`() = test {
-        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES))
+        whenever(dao.get(SITE_LOCAL_ID))
                 .thenReturn(
                         flowOf(listOf(getTodaysStatsErrorCardEntity(TodaysStatsCardErrorType.JETPACK_DISCONNECTED)))
                 )
 
-        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
+        val result = cardsStore.getCards(siteModel).single()
 
         assertThat(result.findTodaysStatsCardError()?.type).isEqualTo(TodaysStatsCardErrorType.JETPACK_DISCONNECTED)
     }
 
     @Test
     fun `given today's stats jetpack disabled error, when get cards triggered, then error exists in the card`() = test {
-        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES))
+        whenever(dao.get(SITE_LOCAL_ID))
                 .thenReturn(flowOf(listOf(getTodaysStatsErrorCardEntity(TodaysStatsCardErrorType.JETPACK_DISABLED))))
 
-        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
+        val result = cardsStore.getCards(siteModel).single()
 
         assertThat(result.findTodaysStatsCardError()?.type).isEqualTo(TodaysStatsCardErrorType.JETPACK_DISABLED)
     }
 
     @Test
     fun `given today's stats jetpack unauth error, when get cards triggered, then error exists in the card`() = test {
-        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES))
+        whenever(dao.get(SITE_LOCAL_ID))
                 .thenReturn(flowOf(listOf(getTodaysStatsErrorCardEntity(TodaysStatsCardErrorType.UNAUTHORIZED))))
 
-        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
+        val result = cardsStore.getCards(siteModel).single()
 
         assertThat(result.findTodaysStatsCardError()?.type).isEqualTo(TodaysStatsCardErrorType.UNAUTHORIZED)
     }
 
     /* POSTS CARD WITH ERROR */
-
     @Test
     fun `given posts card with error, when fetch cards triggered, then card with error inserted into db`() = test {
         whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(CardsPayload(cardsRespone))
@@ -559,9 +519,9 @@ class CardsStoreTest {
 
     @Test
     fun `given posts card unauth error, when get cards triggered, then error exists in the card`() = test {
-        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES)).thenReturn(flowOf(listOf(POSTS_WITH_ERROR_ENTITY)))
+        whenever(dao.get(SITE_LOCAL_ID)).thenReturn(flowOf(listOf(POSTS_WITH_ERROR_ENTITY)))
 
-        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
+        val result = cardsStore.getCards(siteModel).single()
 
         assertThat(result.findPostsCardError()?.type).isEqualTo(PostCardErrorType.UNAUTHORIZED)
     }
@@ -569,10 +529,10 @@ class CardsStoreTest {
     /* ACTIVITY CARD WITH ERROR */
     @Test
     fun `given activity unauth error, when get cards triggered, then error exists in the card`() = test {
-        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES))
+        whenever(dao.get(SITE_LOCAL_ID))
             .thenReturn(flowOf(listOf(getActivityErrorCardEntity())))
 
-        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
+        val result = cardsStore.getCards(siteModel).single()
 
         assertThat(result.findActivityCardError()?.type).isEqualTo(ActivityCardErrorType.UNAUTHORIZED)
     }
