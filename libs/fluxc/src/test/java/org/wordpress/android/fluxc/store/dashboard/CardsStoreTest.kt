@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store.dashboard
 
-import android.util.Log
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.single
 import org.assertj.core.api.Assertions.assertThat
