@@ -1,0 +1,5 @@
+23.0:
+- Gönderi düzenleyici, sosyal paylaşım yönetimi ile yükseltildi
+- Alan adı aktarma ve Blaze Kampanyası pano kartları eklendi
+- Uygulamanın çökmesine neden olan bir eklenti yükleme sorunu giderildi
+- Galeri blokunun tasarımı ve kullanılabilirliği geliştirildi
