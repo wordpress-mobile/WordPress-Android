@@ -2,7 +2,6 @@ package org.wordpress.android.viewmodel.activitylog
 
 import android.text.SpannableString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -411,9 +410,6 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
     @Test
     fun `given card entry, when no results exist, then emits null`() {
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf())
-        whenever(cardsStore.getCards(any(), any())).thenReturn(flowOf(emptyData))
-
-        lastEmittedItem = mock()
 
         startViewModel(isDashboardCardEntry = true)
 
@@ -423,9 +419,8 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
     @Test
     fun `given card entry, when activityLog is empty, then emits value from dashboard table`() {
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf())
-        whenever(cardsStore.getCards(any(), any())).thenReturn(flowOf(data))
 
-        lastEmittedItem = null
+        lastEmittedItem = mock()
 
         startViewModel(activityID = ACTIVITY_ID, isDashboardCardEntry = true)
 
@@ -434,9 +429,7 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given card entry, when activityId is not found in activity log, then emits value from dashboard table`() {
-        whenever(cardsStore.getCards(any(), any())).thenReturn(flowOf(data))
-
-        lastEmittedItem = null
+        lastEmittedItem = mock()
 
         startViewModel(activityID = ACTIVITY_ID, isDashboardCardEntry = true)
 
