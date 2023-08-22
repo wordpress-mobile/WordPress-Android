@@ -2,7 +2,7 @@
 
 23.2
 -----
-
+* [*] The Zendesk ticket screen will be displayed for error dialogs resulting from account closure. [https://github.com/wordpress-mobile/WordPress-Android/pull/19023]
 
 23.1
 -----

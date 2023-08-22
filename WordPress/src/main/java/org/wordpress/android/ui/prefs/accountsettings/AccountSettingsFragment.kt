@@ -25,6 +25,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.accounts.signup.BaseUsernameChangerFullScreenDialogFragment
@@ -85,6 +86,10 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
 
     @set:Inject
     lateinit var navigationHandler: AccountSettingsNavigationHandler
+
+    @Inject
+    lateinit var zendeskHelper: ZendeskHelper
+
     private lateinit var usernamePreference: Preference
     private lateinit var emailPreference: EditTextPreferenceWithValidation
     private lateinit var primarySitePreference: DetailListPreference
@@ -405,18 +410,18 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
 
     private fun handleUserAction(action: AccountClosureAction) {
         when (action) {
-            AccountClosureAction.HELP_VIEWED -> viewHelp()
+            AccountClosureAction.SUPPORT_CONTACTED -> contactSupport()
             AccountClosureAction.ACCOUNT_CLOSED -> signOut()
             AccountClosureAction.USER_LOGGED_OUT -> {
                 ActivityLauncher.showMainActivity(context, true)
             }
         }
     }
-    private fun viewHelp() = ActivityLauncher.viewHelp(
+
+    private fun contactSupport() = zendeskHelper.createNewTicket(
         context,
         HelpActivity.Origin.ACCOUNT_CLOSURE_DIALOG,
-        null,
-        null,
+        null
     )
 
     private fun signOut() {

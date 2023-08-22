@@ -6,7 +6,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.Companion.AccountClosureAction.ACCOUNT_CLOSED
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.Companion.AccountClosureAction.HELP_VIEWED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.Companion.AccountClosureAction.SUPPORT_CONTACTED
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -31,7 +31,7 @@ fun AccountClosureUi(viewModel: AccountSettingsViewModel) {
 
                 is Opened.Error -> DialogErrorUi(
                     onDismissRequest = { viewModel.dismissAccountClosureDialog() },
-                    onHelpRequested = { viewModel.userAction(HELP_VIEWED) },
+                    onHelpRequested = { viewModel.userAction(SUPPORT_CONTACTED) },
                     it.errorType,
                 )
                 is Opened.Success -> DialogSuccessUi(
