@@ -32,6 +32,9 @@ class AppSettingsActivity : LocaleAwareActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    // overridePendingTransition is deprecated in SDK 34 in favor of overrideActivityTransition, but the latter requires
+    // SDK 34. overridePendingTransition still works on Android 14 so using it should be safe for now.
+    @Suppress("DEPRECATION")
     override fun recreate() {
         startActivity(
             Intent(this, this::class.java).apply {
