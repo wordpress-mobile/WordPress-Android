@@ -83,7 +83,7 @@ private const val BACKING_UP_CURRENTLY = "Creating downloadable backup"
 private const val BACKING_UP_DATE_TIME = "Backing up site from date time"
 private const val BACKING_UP_NO_DATE = "Backing up site"
 private const val BACKED_UP_DATE_TIME = "Your site has been successfully backed up\nBacked up from date time"
-private const val BACKED_UP_NO_DATE = "Your site has been successfully backed up"
+// private const val BACKED_UP_NO_DATE = "Your site has been successfully backed up"
 private const val BACKUP_NOTICE = "We successfully created a backup of your site from date time"
 
 private const val REWIND_ID = "rewindId"
