@@ -25,8 +25,8 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Dismissed
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened.Error
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened.Default
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened.Error
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountClosureUiState.Opened.Success
 import org.wordpress.android.ui.prefs.accountsettings.usecase.AccountClosureUseCase
 import org.wordpress.android.ui.prefs.accountsettings.usecase.FetchAccountSettingsUseCase
@@ -370,7 +370,7 @@ class AccountSettingsViewModel @Inject constructor(
 
     companion object {
         enum class AccountClosureAction {
-            HELP_VIEWED, ACCOUNT_CLOSED, USER_LOGGED_OUT;
+            SUPPORT_CONTACTED, ACCOUNT_CLOSED, USER_LOGGED_OUT;
         }
     }
 }
