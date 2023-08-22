@@ -30,7 +30,7 @@ class PagesCardViewModelSlice @Inject constructor(
     }
 
     private fun onPagesCardMoreMenuClick() {
-        cardsTracker.trackPagesCardMoreMenuClicked()
+        cardsTracker.trackCardMoreMenuClicked(CardsTracker.Type.PAGES.label)
     }
 
     private fun onAllPagesMenuItemClick() {

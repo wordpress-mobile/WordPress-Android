@@ -117,10 +117,6 @@ class CardsTracker @Inject constructor(
         trackCardMoreMenuClicked(Type.ACTIVITY.label)
     }
 
-    fun trackPagesCardMoreMenuClicked(){
-        trackCardMoreMenuClicked(Type.PAGES.label)
-    }
-
     private fun trackCardFooterLinkClicked(type: String, subtype: String) {
         analyticsTrackerWrapper.track(
             Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
@@ -150,7 +146,7 @@ class CardsTracker @Inject constructor(
         )
     }
 
-    private fun trackCardMoreMenuClicked(type: String) {
+    fun trackCardMoreMenuClicked(type: String) {
         analyticsTrackerWrapper.track(Stat.MY_SITE_DASHBOARD_CONTEXTUAL_MENU_ACCESSED, mapOf(CARD to type))
     }
 
