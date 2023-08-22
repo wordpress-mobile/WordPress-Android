@@ -10,10 +10,8 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
@@ -98,7 +96,6 @@ private val DOWNLOAD_VALID_UNTIL = Date()
 
 @Suppress("LargeClass")
 @ExperimentalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var store: ActivityLogStore
