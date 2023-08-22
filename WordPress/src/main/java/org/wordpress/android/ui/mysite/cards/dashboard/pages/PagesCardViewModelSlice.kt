@@ -30,7 +30,7 @@ class PagesCardViewModelSlice @Inject constructor(
     }
 
     private fun onPagesCardMoreMenuClick() {
-        // todo implement the tracking
+        cardsTracker.trackPagesCardMoreMenuClicked()
     }
 
     private fun onAllPagesMenuItemClick() {
