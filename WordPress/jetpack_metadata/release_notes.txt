@@ -1,4 +1,4 @@
-- Upgraded the post editor with social sharing management
-- Added domain transfer and Blaze Campaign dashboard cards
-- Fixed a plugin install bug that caused the app to crash
-- Improved gallery block design and useability
+* [*] Block editor: Hide undo/redo buttons when using the HTML editor [https://github.com/wordpress-mobile/WordPress-Android/pull/18889]
+* [*] Block editor: Display custom color value in mobile Cover Block color picker [https://github.com/WordPress/gutenberg/pull/51414]
+* [**] Block editor: Display outline around selected Social Link block [https://github.com/WordPress/gutenberg/pull/53377]
+
