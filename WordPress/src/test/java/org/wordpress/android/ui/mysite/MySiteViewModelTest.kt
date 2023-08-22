@@ -2040,6 +2040,16 @@ class MySiteViewModelTest : BaseUnitTest() {
             verify(cardsTracker).trackActivityCardItemClicked()
         }
 
+    @Test
+    fun `given activity card, when hide this menu item is clicked, then the sources are refreshed`() =
+        test {
+            initSelectedSite()
+
+            requireNotNull(onActivityCardHideMenuItemClick).invoke()
+
+            verify(mySiteSourceManager).refresh()
+        }
+
     /* DASHBOARD ERROR SNACKBAR */
 
     @Test

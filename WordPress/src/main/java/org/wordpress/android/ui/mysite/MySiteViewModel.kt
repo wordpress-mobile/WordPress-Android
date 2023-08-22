@@ -699,10 +699,11 @@ class MySiteViewModel @Inject constructor(
                 )
             )
     }
-
     private fun onActivityCardHideMenuItemClick() {
-        // todo: annmarie - add logic for hide menu item click and for refreshing the dashboard after hiding the card
-         cardsTracker.trackActivityCardMenuItemClicked(CardsTracker.MenuItemType.HIDE_THIS)
+        cardsTracker.trackActivityCardMenuItemClicked(CardsTracker.MenuItemType.HIDE_THIS)
+        appPrefsWrapper.setShouldHideActivityDashboardCard(
+            requireNotNull(selectedSiteRepository.getSelectedSite()).siteId,true)
+        refresh()
     }
 
     private fun onActivityCardAllActivityItemClick() {

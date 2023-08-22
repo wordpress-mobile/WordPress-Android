@@ -370,6 +370,13 @@ class AppPrefsWrapper @Inject constructor() {
     fun setShouldShowJetpackSocialNoConnections(show: Boolean, remoteSiteId: Long, flow: JetpackSocialFlow) =
         AppPrefs.setShouldShowJetpackSocialNoConnections(show, remoteSiteId, flow)
 
+    fun setShouldHideActivityDashboardCard(
+        siteId: Long,
+        isHidden: Boolean
+    ) = AppPrefs.setShouldHideActivityDashboardCard(siteId, isHidden)
+
+    fun getShouldHideActivityDashboardCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideActivityDashboardCard(siteId)
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {
