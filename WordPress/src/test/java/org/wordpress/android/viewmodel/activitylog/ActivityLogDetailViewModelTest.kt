@@ -21,8 +21,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel
-import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.fluxc.tools.FormattableContent
@@ -36,57 +34,7 @@ import java.util.Date
 
 /* ACTIVITY */
 const val ACTIVITY_ID = "activity123"
-const val ACTIVITY_SUMMARY = "activity"
-const val ACTIVITY_NAME = "name"
-const val ACTIVITY_TYPE = "create a blog"
-const val ACTIVITY_IS_REWINDABLE = false
-const val ACTIVITY_REWIND_ID = "10.0"
-const val ACTIVITY_GRID_ICON = "gridicon.jpg"
-const val ACTIVITY_STATUS = "OK"
-const val ACTIVITY_ACTOR_TYPE = "author"
-const val ACTIVITY_ACTOR_NAME = "John Smith"
-const val ACTIVITY_ACTOR_WPCOM_USER_ID = 15L
-const val ACTIVITY_ACTOR_ROLE = "admin"
-const val ACTIVITY_ACTOR_ICON_URL = "dog.jpg"
-const val ACTIVITY_PUBLISHED_DATE = "2021-12-27 11:33:55"
-const val ACTIVITY_CONTENT = "content"
 
-private val ACTIVITY_LOG_MODEL = ActivityLogModel(
-    summary = ACTIVITY_SUMMARY,
-    content = FormattableContent(text = ACTIVITY_CONTENT),
-    name = ACTIVITY_NAME,
-    actor = ActivityLogModel.ActivityActor(
-        displayName = ACTIVITY_ACTOR_NAME,
-        type = ACTIVITY_ACTOR_TYPE,
-        wpcomUserID = ACTIVITY_ACTOR_WPCOM_USER_ID,
-        avatarURL = ACTIVITY_ACTOR_ICON_URL,
-        role = ACTIVITY_ACTOR_ROLE,
-    ),
-    type = ACTIVITY_TYPE,
-    published = CardsUtils.fromDate(ACTIVITY_PUBLISHED_DATE),
-    rewindable = ACTIVITY_IS_REWINDABLE,
-    rewindID = ACTIVITY_REWIND_ID,
-    gridicon = ACTIVITY_GRID_ICON,
-    status = ACTIVITY_STATUS,
-    activityID = ACTIVITY_ID
-)
-
-private val ACTIVITY_CARD_MODEL = CardModel.ActivityCardModel(
-    activities = listOf(ACTIVITY_LOG_MODEL)
-)
-
-private val CARDS_MODEL: List<CardModel> = listOf(
-    ACTIVITY_CARD_MODEL
-)
-
-
-private val data = CardsStore.CardsResult(
-    model = CARDS_MODEL
-)
-
-private val emptyData = CardsStore.CardsResult(
-    model = emptyList<CardModel>()
-)
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogDetailViewModelTest : BaseUnitTest() {

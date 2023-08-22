@@ -144,8 +144,6 @@ private val DEFAULT_CARD_TYPE = listOf(CardModel.Type.POSTS)
 private val STATS_FEATURED_ENABLED_CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.POSTS)
 private val PAGES_FEATURED_ENABLED_CARD_TYPE = listOf(CardModel.Type.PAGES, CardModel.Type.POSTS)
 private val ACTIVITY_FEATURED_ENABLED_CARD_TYPE = listOf(CardModel.Type.ACTIVITY, CardModel.Type.POSTS)
-private val ALL_CARD_TYPES =
-    listOf(CardModel.Type.ACTIVITY, CardModel.Type.POSTS, CardModel.Type.TODAYS_STATS, CardModel.Type.PAGES)
 
 @ExperimentalCoroutinesApi
 class CardsSourceTest : BaseUnitTest() {
