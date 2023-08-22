@@ -12,6 +12,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams.PagesItemClickParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -94,4 +95,39 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
             assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
             verify(cardsTracker).trackPagesItemClicked(PagesCardContentType.PUBLISH)
         }
+
+    @Test
+    fun `given pages card, when more menu is accessed, then event is tracked`() = test {
+        val pagesCardParams = pagesCardViewModelSlice.getPagesCardBuilderParams(mock())
+
+        pagesCardParams.moreMenuClickParams.onMoreMenuClick.invoke()
+
+        verify(cardsTracker).trackCardMoreMenuClicked(CardsTracker.Type.PAGES.label)
+    }
+
+    @Test
+    fun `given pages card, when more menu item all pages is accessed, then event is tracked`() = test {
+        val pagesCardParams = pagesCardViewModelSlice.getPagesCardBuilderParams(mock())
+
+        pagesCardParams.moreMenuClickParams.onAllPagesItemClick.invoke()
+
+        verify(cardsTracker).trackCardMoreMenuItemClicked(
+            CardsTracker.Type.PAGES.label,
+            PagesMenuItemType.ALL_PAGES.label
+        )
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
+    }
+
+
+    @Test
+    fun `given pages card, when more menu item hide this is accessed, then event is tracked`() = test {
+        val pagesCardParams = pagesCardViewModelSlice.getPagesCardBuilderParams(mock())
+
+        pagesCardParams.moreMenuClickParams.onHideThisCardItemClick.invoke()
+
+        verify(cardsTracker).trackCardMoreMenuItemClicked(
+            CardsTracker.Type.PAGES.label,
+            PagesMenuItemType.HIDE_THIS.label
+        )
+    }
 }
