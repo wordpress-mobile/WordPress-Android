@@ -136,7 +136,7 @@ class CardsTracker @Inject constructor(
         }
     }
 
-    private fun trackCardMoreMenuItemClicked(card: String, item: String) {
+    fun trackCardMoreMenuItemClicked(card: String, item: String) {
         analyticsTrackerWrapper.track(
             Stat.MY_SITE_DASHBOARD_CARD_MENU_ITEM_TAPPED,
             mapOf(
