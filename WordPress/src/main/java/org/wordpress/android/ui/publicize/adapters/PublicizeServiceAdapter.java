@@ -78,17 +78,6 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         }
     }
 
-    public void reload() {
-        clear();
-        refresh();
-    }
-
-    private void clear() {
-        mServices.clear();
-        mConnections.clear();
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getItemCount() {
         return mServices.size();
