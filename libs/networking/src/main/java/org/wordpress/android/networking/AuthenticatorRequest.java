@@ -67,7 +67,7 @@ public class AuthenticatorRequest {
     /**
      * Attempt to send the request, checks to see if we have an access token and if not
      * asks the Authenticator to authenticate the request.
-     *
+     * <p>
      * If no Authenticator is provided the request is always sent.
      */
     protected void send() {
