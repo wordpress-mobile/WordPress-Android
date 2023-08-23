@@ -1,7 +1,6 @@
 package org.wordpress.android.networking;
 
 import com.android.volley.VolleyError;
-import com.wordpress.rest.Oauth;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 import com.wordpress.rest.RestRequest.ErrorListener;
@@ -81,10 +80,6 @@ public class AuthenticatorRequest {
     public void sendWithAccessToken(String token) {
         mRequest.setAccessToken(token);
         mRestClient.send(mRequest);
-    }
-
-    public void sendWithAccessToken(Oauth.Token token) {
-        sendWithAccessToken(token.toString());
     }
 
     /**
