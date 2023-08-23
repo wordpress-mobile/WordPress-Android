@@ -43,10 +43,6 @@ class TodaysStatsCardViewHolder(
         uiHelpers.setTextOrHide(likesCount, card.likes)
         uiHelpers.setTextOrHide(getMoreViewsMessage, card.message?.text)
         card.message?.links?.let { getMoreViewsMessage.updateLink(it) }
-        uiHelpers.setTextOrHide(footerLink.linkLabel, card.footerLink.label)
-        footerLink.linkLabel.setOnClickListener {
-            card.footerLink.onClick.invoke()
-        }
         mySiteTodaysStatCard.setOnClickListener {
             card.onCardClick.invoke()
         }
