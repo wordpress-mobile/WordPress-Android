@@ -6,7 +6,6 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardErr
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TextWithLinks
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TextWithLinks.Clickable
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
@@ -59,10 +58,6 @@ class TodaysStatsCardBuilder @Inject constructor(
                     links = listOf(Clickable(ListItemInteraction.create(params.onGetMoreViewsClick)))
                 )
             },
-            footerLink = FooterLink(
-                label = UiStringRes(R.string.my_site_todays_stats_card_footer_link_go_to_stats),
-                onClick = params.onFooterLinkClick
-            )
         )
 
     private fun shouldShowError(error: TodaysStatsCardError) = error.type == TodaysStatsCardErrorType.GENERIC_ERROR
