@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.wordpress.android.FactoryUtils;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
 
 import dagger.hilt.android.testing.HiltAndroidTest;
 
@@ -31,13 +32,13 @@ public class AuthenticatorRequestTest {
     @Test
     public void testExtractSiteIdFromUrl1() {
         String url = "";
-        assertEquals(null, mAuthenticatorRequest.extractSiteIdFromUrl(mRestClient.getEndpointURL(), url));
+        assertNull(mAuthenticatorRequest.extractSiteIdFromUrl(mRestClient.getEndpointURL(), url));
     }
 
     @Test
     public void testExtractSiteIdFromUrl2() {
         String url = null;
-        assertEquals(null, mAuthenticatorRequest.extractSiteIdFromUrl(mRestClient.getEndpointURL(), url));
+        assertNull(mAuthenticatorRequest.extractSiteIdFromUrl(mRestClient.getEndpointURL(), url));
     }
 
     @Test
@@ -62,12 +63,12 @@ public class AuthenticatorRequestTest {
 
     public void testExtractSiteIdFromUrl6() {
         String url = "https://public-api.wordpress.com/rest/v1/batch/?urls%5B%5D=%2Fsites%2F";
-        assertEquals(null, mAuthenticatorRequest.extractSiteIdFromUrl(mRestClient.getEndpointURL(), url));
+        assertNull(mAuthenticatorRequest.extractSiteIdFromUrl(mRestClient.getEndpointURL(), url));
     }
 
     @Test
     public void testExtractSiteIdFromUrl7() {
         String url = "https://public-api.wordpress.com/rest/v1/sites/";
-        assertEquals(null, mAuthenticatorRequest.extractSiteIdFromUrl(mRestClient.getEndpointURL(), url));
+        assertNull(mAuthenticatorRequest.extractSiteIdFromUrl(mRestClient.getEndpointURL(), url));
     }
 }
