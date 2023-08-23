@@ -124,20 +124,10 @@
             style="@style/MySiteTodaysStatsCardMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/footer_link"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/views_layout"
             tools:text="@string/my_site_todays_stats_get_more_views_message" />
-
-        <include
-            android:id="@+id/footer_link"
-            layout="@layout/my_site_card_footer_link"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/get_more_views_message" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
