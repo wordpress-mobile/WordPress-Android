@@ -38,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.SparseArrayCompat;
@@ -1112,6 +1113,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         initBloggingSection();
+        removeEmptyCategories();
     }
 
     private void updateHomepageSummary() {
@@ -1989,6 +1991,53 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_category);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_format);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
+    }
+
+    private boolean isEmptyCategory(@StringRes int section) {
+        PreferenceCategory pref = (PreferenceCategory) findPreference(getString(section));
+        return (pref != null && pref.getPreferenceCount() == 0);
+    }
+
+    private void removeEmptyCategories() {
+        if (isEmptyCategory(R.string.pref_key_site_general)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_general);
+        }
+        if (isEmptyCategory(R.string.pref_key_blogging)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_blogging);
+        }
+        if (isEmptyCategory(R.string.pref_key_homepage)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_homepage);
+        }
+        if (isEmptyCategory(R.string.pref_key_site_account)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
+        }
+        if (isEmptyCategory(R.string.pref_key_site_editor)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_editor);
+        }
+        if (isEmptyCategory(R.string.pref_key_site_writing)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
+        }
+        if (isEmptyCategory(R.string.pref_key_site_quota)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_quota);
+        }
+        if (isEmptyCategory(R.string.pref_key_site_traffic)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_traffic);
+        }
+        if (isEmptyCategory(R.string.pref_key_jetpack_performance_settings)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                    R.string.pref_key_jetpack_performance_settings);
+        }
+        if (isEmptyCategory(R.string.pref_key_site_discussion)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                    R.string.pref_key_site_discussion);
+        }
+        if (isEmptyCategory(R.string.pref_key_jetpack_settings)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                    R.string.pref_key_jetpack_settings);
+        }
+        if (isEmptyCategory(R.string.pref_key_site_advanced)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
+        }
     }
 
     private void removeNonSelfHostedPreferences() {
