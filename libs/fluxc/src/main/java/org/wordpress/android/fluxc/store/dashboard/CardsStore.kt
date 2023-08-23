@@ -58,14 +58,6 @@ class CardsStore @Inject constructor(
         CardsResult(CardsError(CardsErrorType.GENERIC_ERROR))
     }
 
-    fun getCardsByType(
-        site: SiteModel,
-        cardTypes: List<CardModel.Type>
-    ) = cardsDao.get(site.id).map { cards ->
-            cards.map { it.toCard() }}
-        .map { cards -> cards.filter { cardTypes.contains(it.type) } }
-        .map { CardsResult(it) }
-
     fun getCards(
         site: SiteModel,
     ) = cardsDao.get(site.id).map { cards ->
