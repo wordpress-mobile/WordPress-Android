@@ -123,8 +123,9 @@ class ActivityLogDetailViewModel @Inject constructor(
         }
 
         launch(bgDispatcher) {
-            cardsStore.getCardsByType(site, listOf(CardModel.Type.ACTIVITY))
+            cardsStore.getCards(site)
                 .map { it.model }
+                .map { cards -> cards?.filter { it.type == CardModel.Type.ACTIVITY } }
                 .collect { result ->
                     _item.postValue(
                         result.takeIf { !it.isNullOrEmpty() }
