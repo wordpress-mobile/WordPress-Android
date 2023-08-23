@@ -11,10 +11,10 @@ import com.wordpress.rest.RestRequest.ErrorListener;
  * allows the request maker to disregard the authentication state when making requests.
  */
 public class AuthenticatorRequest {
-    private RestRequest mRequest;
-    private RestRequest.ErrorListener mListener;
-    private RestClient mRestClient;
-    private Authenticator mAuthenticator;
+    private final RestRequest mRequest;
+    private final RestRequest.ErrorListener mListener;
+    private final RestClient mRestClient;
+    private final Authenticator mAuthenticator;
 
     protected AuthenticatorRequest(RestRequest request, ErrorListener listener, RestClient restClient,
                                    Authenticator authenticator) {
