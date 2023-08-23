@@ -1,9 +1,7 @@
 package org.wordpress.android.networking;
 
-import com.android.volley.VolleyError;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
-import com.wordpress.rest.RestRequest.ErrorListener;
 
 /**
  * Encapsulates the behaviour for asking the Authenticator for an access token. This
@@ -11,14 +9,11 @@ import com.wordpress.rest.RestRequest.ErrorListener;
  */
 public class AuthenticatorRequest {
     private final RestRequest mRequest;
-    private final RestRequest.ErrorListener mListener;
     private final RestClient mRestClient;
     private final Authenticator mAuthenticator;
 
-    protected AuthenticatorRequest(RestRequest request, ErrorListener listener, RestClient restClient,
-                                   Authenticator authenticator) {
+    protected AuthenticatorRequest(RestRequest request, RestClient restClient, Authenticator authenticator) {
         mRequest = request;
-        mListener = listener;
         mRestClient = restClient;
         mAuthenticator = authenticator;
     }
@@ -80,15 +75,5 @@ public class AuthenticatorRequest {
     public void sendWithAccessToken(String token) {
         mRequest.setAccessToken(token);
         mRestClient.send(mRequest);
-    }
-
-    /**
-     * If an access token cannot be obtained the request can be aborted and the
-     * handler's onFailure method is called
-     */
-    public void abort(VolleyError error) {
-        if (mListener != null) {
-            mListener.onErrorResponse(error);
-        }
     }
 }

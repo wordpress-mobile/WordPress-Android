@@ -20,7 +20,7 @@ public class AuthenticatorRequestTest {
     public void setUp() {
         FactoryUtils.initWithTestFactories();
         mRestClient = RestClientFactory.instantiate(null);
-        mAuthenticatorRequest = new AuthenticatorRequest(null, null, mRestClient, null);
+        mAuthenticatorRequest = new AuthenticatorRequest(null, mRestClient, null);
     }
 
     @After

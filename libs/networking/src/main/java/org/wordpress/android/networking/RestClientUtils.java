@@ -267,7 +267,7 @@ public class RestClientUtils {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
         }
         request.setRetryPolicy(retryPolicy);
-        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
+        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, mRestClient, mAuthenticator);
         authCheck.send();
         return request;
     }
@@ -291,7 +291,7 @@ public class RestClientUtils {
                     REST_BACKOFF_MULT); // Do not retry on failure
         }
         request.setRetryPolicy(retryPolicy);
-        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
+        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, mRestClient, mAuthenticator);
         authCheck.send();
     }
 
@@ -308,7 +308,7 @@ public class RestClientUtils {
                     REST_BACKOFF_MULT); // Do not retry on failure
         }
         request.setRetryPolicy(retryPolicy);
-        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
+        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, mRestClient, mAuthenticator);
         authCheck.send();
     }
 
