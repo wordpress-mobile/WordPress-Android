@@ -186,13 +186,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val likes: UiString,
                         val onCardClick: () -> Unit,
                         val message: TextWithLinks? = null,
-                        val footerLink: FooterLink
                     ) : TodaysStatsCard(dashboardCardType = DashboardCardType.TODAYS_STATS_CARD)
-
-                    data class FooterLink(
-                        val label: UiString,
-                        val onClick: () -> Unit
-                    )
 
                     data class TextWithLinks(
                         val text: UiString,
