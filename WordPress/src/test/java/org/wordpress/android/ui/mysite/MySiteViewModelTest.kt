@@ -63,8 +63,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems.PostItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
@@ -114,7 +112,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTran
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
-import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
+import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
@@ -327,6 +325,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var domainTransferCardViewModel: DomainTransferCardViewModel
 
+    @Mock
+    lateinit var todaysStatsViewModelSlice: TodaysStatsViewModelSlice
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -379,9 +380,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
     private var onPostCardFooterLinkClick: ((postCardType: PostCardType) -> Unit)? = null
     private var onPostItemClick: ((params: PostItemClickParams) -> Unit)? = null
-    private var onTodaysStatsCardGetMoreViewsClick: (() -> Unit) = {}
-    private var onTodaysStatsCardClick: (() -> Unit) = {}
-    private var onTodaysStatsCardFooterLinkClick: (() -> Unit) = {}
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
     private var onBloggingPromptAnswerClicked: ((promptId: Int) -> Unit)? = null
@@ -499,6 +497,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(blazeCardViewModelSlice.refresh).thenReturn(refresh)
         whenever(domainTransferCardViewModel.refresh).thenReturn(refresh)
         whenever(pagesCardViewModelSlice.getPagesCardBuilderParams(anyOrNull())).thenReturn(mock())
+        whenever(todaysStatsViewModelSlice.getTodaysStatsBuilderParams(anyOrNull())).thenReturn(mock())
 
         viewModel = MySiteViewModel(
             networkUtilsWrapper,
@@ -555,7 +554,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             wpJetpackIndividualPluginHelper,
             blazeCardViewModelSlice,
             domainTransferCardViewModel,
-            pagesCardViewModelSlice
+            pagesCardViewModelSlice,
+            todaysStatsViewModelSlice
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1539,42 +1539,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(quickStartRepository).setActiveTask(pendingTask)
     }
-
-    /* DASHBOARD TODAYS STATS CARD */
-    @Test
-    fun `given todays stat card, when card item is clicked, then stats page is opened`() =
-        test {
-            initSelectedSite()
-
-            onTodaysStatsCardClick.invoke()
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsInsights(site))
-        }
-
-    @Test
-    fun `given todays stat card, when footer link is clicked, then stats page is opened`() =
-        test {
-            initSelectedSite()
-
-            onTodaysStatsCardFooterLinkClick.invoke()
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsInsights(site))
-        }
-
-    @Test
-    fun `given todays stat card, when get more views url is clicked, then external link is opened`() =
-        test {
-            initSelectedSite()
-
-            onTodaysStatsCardGetMoreViewsClick.invoke()
-
-            assertThat(navigationActions)
-                .containsOnly(
-                    SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl(
-                        URL_GET_MORE_VIEWS_AND_TRAFFIC
-                    )
-                )
-        }
 
     /* DASHBOARD POST CARD - FOOTER LINK */
     @Test
@@ -3347,28 +3311,10 @@ class MySiteViewModelTest : BaseUnitTest() {
                     add(initErrorCard(mockInvocation))
                 } else {
                     add(initPostCard(mockInvocation))
-                    add(initTodaysStatsCard(mockInvocation))
                     if (bloggingPromptsFeatureConfig.isEnabled()) add(initBloggingPromptCard(mockInvocation))
                     add(initActivityCard(mockInvocation))
                 }
             }
-        )
-    }
-
-    private fun initTodaysStatsCard(mockInvocation: InvocationOnMock): TodaysStatsCard {
-        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
-        onTodaysStatsCardGetMoreViewsClick = params.todaysStatsCardBuilderParams.onGetMoreViewsClick
-        onTodaysStatsCardClick = params.todaysStatsCardBuilderParams.onTodaysStatsCardClick
-        onTodaysStatsCardFooterLinkClick = params.todaysStatsCardBuilderParams.onFooterLinkClick
-        return TodaysStatsCardWithData(
-            views = UiStringText(mock()),
-            visitors = UiStringText(mock()),
-            likes = UiStringText(mock()),
-            onCardClick = onTodaysStatsCardClick,
-            footerLink = TodaysStatsCard.FooterLink(
-                label = UiStringRes(R.string.my_site_todays_stats_card_footer_link_go_to_stats),
-                onClick = onTodaysStatsCardFooterLinkClick
-            )
         )
     }
 
