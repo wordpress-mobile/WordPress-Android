@@ -30,11 +30,11 @@ class PagesCardViewModelSlice @Inject constructor(
     }
 
     private fun onPagesCardMoreMenuClick() {
-        // todo implement the tracking
+        cardsTracker.trackCardMoreMenuClicked(CardsTracker.Type.PAGES.label)
     }
 
     private fun onAllPagesMenuItemClick() {
-        // todo implement the tracking for navigation to all pages
+        cardsTracker.trackCardMoreMenuItemClicked(CardsTracker.Type.PAGES.label, PagesMenuItemType.ALL_PAGES.label)
         _onNavigation.value = Event(
             SiteNavigationAction
                 .OpenPages(requireNotNull(selectedSiteRepository.getSelectedSite()))
@@ -42,6 +42,7 @@ class PagesCardViewModelSlice @Inject constructor(
     }
 
     private fun onPagesCardHideThisCardClick() {
+        cardsTracker.trackCardMoreMenuItemClicked(CardsTracker.Type.PAGES.label, PagesMenuItemType.HIDE_THIS.label)
         // todo implement the logic to hide the card and add tracking logic
     }
 
@@ -84,4 +85,9 @@ class PagesCardViewModelSlice @Inject constructor(
                 )
             )
     }
+}
+
+enum class PagesMenuItemType(val label: String) {
+    ALL_PAGES("all_pages"),
+    HIDE_THIS("hide_this")
 }
