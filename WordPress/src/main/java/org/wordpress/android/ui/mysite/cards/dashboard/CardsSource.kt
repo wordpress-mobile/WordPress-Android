@@ -48,8 +48,9 @@ class CardsSource @Inject constructor(
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
             coroutineScope.launch(bgDispatcher) {
-                cardsStore.getCards(selectedSite, getCardTypes(selectedSite))
+                cardsStore.getCards(selectedSite)
                     .map { it.model }
+                    .map { cards -> cards?.filter { getCardTypes(selectedSite).contains(it.type) } }
                     .collect { result ->
                         postValue(CardsUpdate(result))
                     }
