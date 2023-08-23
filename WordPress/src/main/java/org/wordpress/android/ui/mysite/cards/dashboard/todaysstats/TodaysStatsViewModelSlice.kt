@@ -23,13 +23,7 @@ class TodaysStatsViewModelSlice @Inject constructor(
             todaysStatsCard = todaysStatsCardModel,
             onTodaysStatsCardClick = this::onTodaysStatsCardClick,
             onGetMoreViewsClick = this::onGetMoreViewsClick,
-            onFooterLinkClick = this::onTodaysStatsCardFooterLinkClick
         )
-    }
-
-    private fun onTodaysStatsCardFooterLinkClick() {
-        cardsTracker.trackTodaysStatsCardFooterLinkClicked()
-        navigateToTodaysStats()
     }
 
     private fun onTodaysStatsCardClick() {
