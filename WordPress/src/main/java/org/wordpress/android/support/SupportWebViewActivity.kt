@@ -60,6 +60,7 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
 
         supportActionBar?.title = getString(R.string.help)
         supportActionBar?.subtitle = ""
+        window.navigationBarColor = getColor(R.color.docsbot_chat_container)
 
         setupWebView()
         setupJsInterfaceForWebView()
