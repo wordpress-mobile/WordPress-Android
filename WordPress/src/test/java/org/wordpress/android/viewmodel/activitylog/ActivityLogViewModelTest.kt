@@ -10,8 +10,10 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
@@ -83,7 +85,7 @@ private const val BACKING_UP_CURRENTLY = "Creating downloadable backup"
 private const val BACKING_UP_DATE_TIME = "Backing up site from date time"
 private const val BACKING_UP_NO_DATE = "Backing up site"
 private const val BACKED_UP_DATE_TIME = "Your site has been successfully backed up\nBacked up from date time"
-// private const val BACKED_UP_NO_DATE = "Your site has been successfully backed up"
+private const val BACKED_UP_NO_DATE = "Your site has been successfully backed up"
 private const val BACKUP_NOTICE = "We successfully created a backup of your site from date time"
 
 private const val REWIND_ID = "rewindId"
@@ -96,6 +98,7 @@ private val DOWNLOAD_VALID_UNTIL = Date()
 
 @Suppress("LargeClass")
 @ExperimentalCoroutinesApi
+@RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var store: ActivityLogStore
@@ -1441,16 +1444,16 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         assertEquals(snackbarMessages.firstOrNull(), BACKED_UP_DATE_TIME)
     }
 
-//    @Test
-//    fun `given no published date, when query backup status complete, then show no dates backup finished message`() {
-//        whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(null)
-//        whenever(resourceProvider.getString(eq(R.string.activity_log_backup_finished_snackbar_message_no_dates)))
-//            .thenReturn(BACKED_UP_NO_DATE)
-//
-//        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID, JetpackBackupDownloadActionState.COMPLETE.id)
-//
-//        assertEquals(snackbarMessages.firstOrNull(), BACKED_UP_NO_DATE)
-//    }
+    @Test
+    fun `given no published date, when query backup status complete, then show no dates backup finished message`() {
+        whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(null)
+        whenever(resourceProvider.getString(eq(R.string.activity_log_backup_finished_snackbar_message_no_dates)))
+            .thenReturn(BACKED_UP_NO_DATE)
+
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID, JetpackBackupDownloadActionState.COMPLETE.id)
+
+        assertEquals(snackbarMessages.firstOrNull(), BACKED_UP_NO_DATE)
+    }
 
     /* PRIVATE */
 
