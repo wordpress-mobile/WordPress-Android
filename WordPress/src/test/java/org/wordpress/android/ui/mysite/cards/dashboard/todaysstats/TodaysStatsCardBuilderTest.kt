@@ -55,6 +55,10 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
         comments = TODAYS_STATS_COMMENTS
     )
 
+    private val onMoreMenuClick: () -> Unit = {}
+    private val onViewStatsMenuItemClick: () -> Unit = {}
+    private val onHideThisMenuItemClick: () -> Unit = {}
+
     @Before
     fun setUp() {
         builder = TodaysStatsCardBuilder(statsUtils, appLogWrapper, htmlMessageUtils)
@@ -171,7 +175,12 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
             TodaysStatsCardBuilderParams(
                 todaysStatsCardModel,
                 onTodaysStatsCardClick,
-                onGetMoreViewsClick
+                onGetMoreViewsClick,
+                moreMenuClickParams = TodaysStatsCardBuilderParams.MoreMenuParams(
+                    onMoreMenuClick,
+                    onHideThisMenuItemClick,
+                    onViewStatsMenuItemClick
+                )
             )
         )
     }
@@ -183,6 +192,11 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
         views = UiStringText(TODAYS_STATS_VIEWS_FORMATTED_STRING),
         visitors = UiStringText(TODAYS_STATS_VISITORS_FORMATTED_STRING),
         likes = UiStringText(TODAYS_STATS_LIKES_FORMATTED_STRING),
-        onCardClick = onTodaysStatsCardClick
+        onCardClick = onTodaysStatsCardClick,
+        moreMenuOptions = TodaysStatsCard.MoreMenuOptions(
+            onMoreMenuClick = onMoreMenuClick,
+            onHideThisMenuItemClick = onHideThisMenuItemClick,
+            onViewStatsMenuItemClick = onViewStatsMenuItemClick
+        )
     )
 }
