@@ -18,46 +18,6 @@ public class AuthenticatorRequest {
         mAuthenticator = authenticator;
     }
 
-    public String getSiteId() {
-        return extractSiteIdFromUrl(mRestClient.getEndpointURL(), mRequest.getUrl());
-    }
-
-    /**
-     * Parse out the site ID from an URL.
-     * Note: For batch REST API calls, only the first siteID is returned
-     *
-     * @return The site ID
-     */
-    public static String extractSiteIdFromUrl(String restEndpointUrl, String url) {
-        if (url == null) {
-            return null;
-        }
-
-        final String sitePrefix = restEndpointUrl.endsWith("/")
-                ? restEndpointUrl + "sites/"
-                : restEndpointUrl + "/sites/";
-        final String batchCallPrefix = restEndpointUrl.endsWith("/")
-                ? restEndpointUrl + "batch/?urls%5B%5D=%2Fsites%2F"
-                : restEndpointUrl + "/batch/?urls%5B%5D=%2Fsites%2F";
-
-        if (url.startsWith(sitePrefix) && !sitePrefix.equals(url)) {
-            int marker = sitePrefix.length();
-            if (url.indexOf("/", marker) < marker) {
-                return null;
-            }
-            return url.substring(marker, url.indexOf("/", marker));
-        } else if (url.startsWith(batchCallPrefix) && !batchCallPrefix.equals(url)) {
-            int marker = batchCallPrefix.length();
-            if (url.indexOf("%2F", marker) < marker) {
-                return null;
-            }
-            return url.substring(marker, url.indexOf("%2F", marker));
-        }
-
-        // not a sites/$siteId request or a batch request
-        return null;
-    }
-
     /**
      * Attempt to send the request, checks to see if we have an access token and if not
      * asks the Authenticator to authenticate the request.
