@@ -58,6 +58,11 @@ class TodaysStatsCardBuilder @Inject constructor(
                     links = listOf(Clickable(ListItemInteraction.create(params.onGetMoreViewsClick)))
                 )
             },
+            moreMenuOptions = TodaysStatsCard.MoreMenuOptions(
+                onMoreMenuClick = params.moreMenuClickParams.onMoreMenuClick,
+                onHideThisMenuItemClick = params.moreMenuClickParams.onHideThisMenuItemClick,
+                onViewStatsMenuItemClick = params.moreMenuClickParams.onViewStatsMenuItemClick
+            )
         )
 
     private fun shouldShowError(error: TodaysStatsCardError) = error.type == TodaysStatsCardErrorType.GENERIC_ERROR
