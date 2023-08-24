@@ -200,6 +200,7 @@ public class AppPrefs {
         // Should show Jetpack Social no connections UI
         SHOULD_SHOW_JETPACK_SOCIAL_NO_CONNECTIONS,
         SHOULD_HIDE_ACTIVITY_DASHBOARD_CARD,
+        SHOULD_HIDE_PAGES_DASHBOARD_CARD
     }
 
     /**
@@ -1729,5 +1730,17 @@ public class AppPrefs {
 
     public static Boolean getShouldHideActivityDashboardCard(final long siteId) {
         return prefs().getBoolean(getSiteIdHideActivityDashboardCardKey(siteId), false);
+    }
+
+    public static void setShouldHidePagesDashboardCard(final long siteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHidePagesDashboardCardKey(siteId), isHidden).apply();
+    }
+
+    @NonNull private static String getSiteIdHidePagesDashboardCardKey(long siteId) {
+        return DeletablePrefKey.SHOULD_HIDE_PAGES_DASHBOARD_CARD.name() + siteId;
+    }
+
+    public static Boolean getShouldHidePagesDashboardCard(final long siteId) {
+        return prefs().getBoolean(getSiteIdHidePagesDashboardCardKey(siteId), false);
     }
 }
