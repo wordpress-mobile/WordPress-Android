@@ -62,6 +62,10 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
             pagesCardParams.onFooterLinkClick()
 
             assertThat(navigationActions).containsOnly(SiteNavigationAction.TriggerCreatePageFlow(site))
+            verify(cardsTracker).trackCardFooterLinkClicked(
+                CardsTracker.Type.PAGES.label,
+                CardsTracker.PagesSubType.CREATE_PAGE.label
+            )
         }
 
     @Test

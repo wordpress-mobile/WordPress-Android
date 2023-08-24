@@ -83,7 +83,10 @@ class PagesCardViewModelSlice @Inject constructor(
     }
 
     private fun onPagesCardFooterLinkClick() {
-        cardsTracker.trackPagesCardFooterClicked()
+        cardsTracker.trackCardFooterLinkClicked(
+            CardsTracker.Type.PAGES.label,
+            CardsTracker.PagesSubType.CREATE_PAGE.label
+        )
         _onNavigation.value =
             Event(
                 SiteNavigationAction.TriggerCreatePageFlow(

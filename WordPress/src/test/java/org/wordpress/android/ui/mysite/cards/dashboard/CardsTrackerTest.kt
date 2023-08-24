@@ -117,13 +117,6 @@ class CardsTrackerTest {
     }
 
     @Test
-    fun `when pages card footer link is clicked, then footer link clicked is tracked`() {
-        cardsTracker.trackPagesCardFooterClicked()
-
-        verifyFooterLinkClickedTracked(Type.PAGES, PagesSubType.CREATE_PAGE.label)
-    }
-
-    @Test
     fun `when activity card hide this menu item is clicked, then hide this event is tracked`() {
         cardsTracker.trackActivityCardMenuItemClicked(MenuItemType.HIDE_THIS)
 

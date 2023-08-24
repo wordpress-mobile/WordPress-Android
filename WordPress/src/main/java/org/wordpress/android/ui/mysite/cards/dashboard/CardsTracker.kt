@@ -97,10 +97,6 @@ class CardsTracker @Inject constructor(
         trackCardFooterLinkClicked(Type.ACTIVITY.label, ActivityLogSubtype.ACTIVITY_LOG.label)
     }
 
-    fun trackPagesCardFooterClicked() {
-        trackCardFooterLinkClicked(Type.PAGES.label, PagesSubType.CREATE_PAGE.label)
-    }
-
     fun trackActivityCardMenuItemClicked(menuItemType: MenuItemType) {
         trackCardMoreMenuItemClicked(Type.ACTIVITY.label, menuItemType.label)
     }
@@ -109,7 +105,7 @@ class CardsTracker @Inject constructor(
         trackCardMoreMenuClicked(Type.ACTIVITY.label)
     }
 
-    private fun trackCardFooterLinkClicked(type: String, subtype: String) {
+    fun trackCardFooterLinkClicked(type: String, subtype: String) {
         analyticsTrackerWrapper.track(
             Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
             mapOf(
