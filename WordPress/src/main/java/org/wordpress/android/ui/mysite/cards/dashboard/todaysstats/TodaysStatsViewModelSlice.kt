@@ -19,7 +19,7 @@ class TodaysStatsViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    fun getTodaysStatsBuilderParams(todaysStatsCardModel: TodaysStatsCardModel?) : TodaysStatsCardBuilderParams {
+    fun getTodaysStatsBuilderParams(todaysStatsCardModel: TodaysStatsCardModel?): TodaysStatsCardBuilderParams {
         return TodaysStatsCardBuilderParams(
             todaysStatsCard = todaysStatsCardModel,
             onTodaysStatsCardClick = this::onTodaysStatsCardClick,
@@ -33,13 +33,15 @@ class TodaysStatsViewModelSlice @Inject constructor(
     }
 
     private fun onTodaysStatsCardClick() {
-        cardsTracker.trackTodaysStatsCardClicked()
+        cardsTracker.trackCardItemClicked(CardsTracker.Type.STATS.label, CardsTracker.StatsSubtype.TODAYS_STATS.label)
         navigateToTodaysStats()
     }
 
-    @Suppress("EmptyFunctionBlock")
     private fun onGetMoreViewsClick() {
-        cardsTracker.trackTodaysStatsCardGetMoreViewsNudgeClicked()
+        cardsTracker.trackCardItemClicked(
+            CardsTracker.Type.STATS.label,
+            CardsTracker.StatsSubtype.TODAYS_STATS_NUDGE.label
+        )
         if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
             _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
         } else {
