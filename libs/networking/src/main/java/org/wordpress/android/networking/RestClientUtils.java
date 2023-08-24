@@ -95,11 +95,6 @@ public class RestClientUtils {
         mRestClient.setUserAgent(sUserAgent);
     }
 
-    @Nullable
-    public Authenticator getAuthenticator() {
-        return mAuthenticator;
-    }
-
     public RestClient getRestClient() {
         return mRestClient;
     }
