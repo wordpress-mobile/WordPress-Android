@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -35,7 +36,7 @@ public class RestClientUtils {
     public static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
     private static String sUserAgent = "WordPress Networking Android";
 
-    private RestClient mRestClient;
+    @NonNull private RestClient mRestClient;
     @Nullable private Authenticator mAuthenticator;
     private Context mContext;
 
@@ -65,7 +66,7 @@ public class RestClientUtils {
 
     public RestClientUtils(
             Context context,
-            RequestQueue queue,
+            @Nullable RequestQueue queue,
             @Nullable Authenticator authenticator,
             RestRequest.OnAuthFailedListener onAuthFailedListener
     ) {
@@ -80,10 +81,10 @@ public class RestClientUtils {
 
     public RestClientUtils(
             Context context,
-            RequestQueue queue,
+            @Nullable RequestQueue queue,
             @Nullable Authenticator authenticator,
             RestRequest.OnAuthFailedListener onAuthFailedListener,
-            RestClient.REST_CLIENT_VERSIONS version
+            @NonNull RestClient.REST_CLIENT_VERSIONS version
     ) {
         // load an existing access token from prefs if we have one
         mContext = context;
@@ -95,6 +96,7 @@ public class RestClientUtils {
         mRestClient.setUserAgent(sUserAgent);
     }
 
+    @NonNull
     public RestClient getRestClient() {
         return mRestClient;
     }

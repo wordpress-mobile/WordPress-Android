@@ -1,5 +1,6 @@
 package org.wordpress.android.networking;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.wordpress.rest.RestClient;
@@ -11,12 +12,12 @@ import com.wordpress.rest.RestRequest;
  */
 public class AuthenticatorRequest {
     private final RestRequest mRequest;
-    private final RestClient mRestClient;
+    @NonNull private final RestClient mRestClient;
     @Nullable private final Authenticator mAuthenticator;
 
     protected AuthenticatorRequest(
             RestRequest request,
-            RestClient restClient,
+            @NonNull RestClient restClient,
             @Nullable Authenticator authenticator
     ) {
         mRequest = request;
