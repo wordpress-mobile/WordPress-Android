@@ -19,7 +19,7 @@
             android:layout_marginTop="@dimen/margin_large"
             app:layout_constraintEnd_toStartOf="@+id/visitors_layout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title">
+            app:layout_constraintTop_toBottomOf="@+id/my_site_toolbar">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/views_title"
@@ -50,7 +50,7 @@
             android:layout_marginTop="@dimen/margin_large"
             app:layout_constraintEnd_toStartOf="@+id/likes_layout"
             app:layout_constraintStart_toEndOf="@+id/views_layout"
-            app:layout_constraintTop_toBottomOf="@+id/title">
+            app:layout_constraintTop_toBottomOf="@+id/my_site_toolbar">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/visitors_title"
@@ -82,7 +82,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/visitors_layout"
-            app:layout_constraintTop_toBottomOf="@+id/title">
+            app:layout_constraintTop_toBottomOf="@+id/my_site_toolbar">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/likes_title"
@@ -106,14 +106,11 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/title"
-            style="@style/MySiteTodaysStatsCardTitle"
-            android:layout_width="wrap_content"
+        <include
+            android:id="@+id/my_site_toolbar"
+            layout="@layout/my_site_card_toolbar"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/my_site_todays_stat_card_title"
-            android:layout_marginTop="@dimen/margin_medium_large"
-            android:layout_marginStart="@dimen/margin_extra_large"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
