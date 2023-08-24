@@ -246,10 +246,6 @@ public class RestClientUtils {
         post(path, params, null, listener, errorListener);
     }
 
-    public void sendLoginEmail(Map<String, String> params, Listener listener, ErrorListener errorListener) {
-        post("auth/send-login-email", params, null, listener, errorListener);
-    }
-
     /**
      * Make GET request
      */
