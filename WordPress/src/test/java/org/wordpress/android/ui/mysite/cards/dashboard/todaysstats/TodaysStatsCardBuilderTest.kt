@@ -27,6 +27,7 @@ private const val TODAYS_STATS_VISITORS = 1000
 private const val TODAYS_STATS_LIKES = 100
 private const val TODAYS_STATS_COMMENTS = 1000
 
+private const val TODAYS_STATS_TITLE = "Todays Stats"
 private const val TODAYS_STATS_VIEWS_FORMATTED_STRING = "10,000"
 private const val TODAYS_STATS_VISITORS_FORMATTED_STRING = "1,000"
 private const val TODAYS_STATS_LIKES_FORMATTED_STRING = "100"
@@ -189,6 +190,7 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
     private val onTodaysStatsCardClick: () -> Unit = { }
 
     private val todaysStatsCard = TodaysStatsCardWithData(
+        title = UiStringText(TODAYS_STATS_TITLE),
         views = UiStringText(TODAYS_STATS_VIEWS_FORMATTED_STRING),
         visitors = UiStringText(TODAYS_STATS_VISITORS_FORMATTED_STRING),
         likes = UiStringText(TODAYS_STATS_LIKES_FORMATTED_STRING),
