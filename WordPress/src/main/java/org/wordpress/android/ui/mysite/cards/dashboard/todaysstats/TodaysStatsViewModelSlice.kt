@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.todaysstats
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
@@ -23,16 +24,12 @@ class TodaysStatsViewModelSlice @Inject constructor(
             todaysStatsCard = todaysStatsCardModel,
             onTodaysStatsCardClick = this::onTodaysStatsCardClick,
             onGetMoreViewsClick = this::onGetMoreViewsClick,
-            onFooterLinkClick = this::onTodaysStatsCardFooterLinkClick
+            moreMenuClickParams = TodaysStatsCardBuilderParams.MoreMenuParams(
+                onMoreMenuClick = this::onMoreMenuClick,
+                onHideThisMenuItemClick = this::onHideThisMenuItemClick,
+                onViewStatsMenuItemClick = this::onViewStatsMenuItemClick
+            )
         )
-    }
-
-    private fun onTodaysStatsCardFooterLinkClick() {
-        cardsTracker.trackCardFooterLinkClicked(
-            CardsTracker.Type.STATS.label,
-            CardsTracker.StatsSubtype.TODAYS_STATS.label
-        )
-        navigateToTodaysStats()
     }
 
     private fun onTodaysStatsCardClick() {
@@ -54,6 +51,24 @@ class TodaysStatsViewModelSlice @Inject constructor(
                 )
             )
         }
+    }
+
+    private fun onMoreMenuClick() {
+        // todo: track click cardsTracker.trackCardMoreMenuClicked(CardsTracker.Type.TODAYS_STATS.label)
+        Log.i(javaClass.simpleName, "***=> onMoreMenuClick")
+    }
+
+    private fun onHideThisMenuItemClick() {
+        // todo: track click cardsTracker.trackCardMoreMenuItemClicked
+        // todo implement the logic to hide the card and add tracking logic
+        Log.i(javaClass.simpleName, "***=> onHideThisMenuItemClick")
+    }
+
+    private fun onViewStatsMenuItemClick() {
+        // todo: track click
+        Log.i(javaClass.simpleName, "***=> onViewStatsMenuItemClick")
+        // cardsTracker.trackCardMoreMenuItemClicked(
+        navigateToTodaysStats()
     }
 
     private fun navigateToTodaysStats() {

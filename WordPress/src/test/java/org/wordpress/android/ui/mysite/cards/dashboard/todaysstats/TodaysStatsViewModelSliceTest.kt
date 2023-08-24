@@ -66,20 +66,6 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given todays stat card, when footer link is clicked, then stats page is opened`() =
-        test {
-            val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(mock())
-
-            params.onFooterLinkClick()
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsInsights(site))
-            verify(cardsTracker).trackCardFooterLinkClicked(
-                CardsTracker.Type.STATS.label,
-                CardsTracker.StatsSubtype.TODAYS_STATS.label
-            )
-        }
-
-    @Test
     fun `given todays stat card, when get more views url is clicked, then external link is opened`() =
         test {
             val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(mock())
