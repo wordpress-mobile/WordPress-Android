@@ -11,7 +11,10 @@ import android.text.style.StyleSpan
 import android.text.style.URLSpan
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.TextView
+import org.wordpress.android.R
+import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.databinding.MySiteTodaysStatsCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TextWithLinks.Clickable
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
@@ -46,9 +49,10 @@ class TodaysStatsCardViewHolder(
         mySiteTodaysStatCard.setOnClickListener {
             card.onCardClick.invoke()
         }
+        mySiteToolbar.update(card)
     }
 
-    fun TextView.updateLink(links: List<Clickable>) {
+    private fun TextView.updateLink(links: List<Clickable>) {
         val spannable = SpannableString(text)
         for (urlSpan in spannable.getSpans(0, spannable.length, URLSpan::class.java)) {
             val startIndex = spannable.getSpanStart(urlSpan)
@@ -64,6 +68,18 @@ class TodaysStatsCardViewHolder(
         text = spannable
     }
 
+    private fun MySiteCardToolbarBinding.update(card: TodaysStatsCardWithData) {
+        uiHelpers.setTextOrHide(mySiteCardToolbarTitle, card.title)
+        mySiteCardToolbarMore.visibility = View.VISIBLE
+        mySiteCardToolbarMore.setOnClickListener {
+            showMoreMenu(
+                card.moreMenuOptions.onMoreMenuClick,
+                card.moreMenuOptions.onViewStatsMenuItemClick,
+                card.moreMenuOptions.onHideThisMenuItemClick,
+                mySiteCardToolbarMore
+            )
+        }
+    }
     private fun SpannableString.withClickableSpan(
         startIndex: Int,
         endIndex: Int,
@@ -101,5 +117,31 @@ class TodaysStatsCardViewHolder(
             endIndex,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
+    }
+
+    private fun showMoreMenu(
+        onMoreMenuClick: () -> Unit,
+        onViewStatsMenuItemClick: () -> Unit,
+        onHideThisMenuItemClick: () -> Unit,
+        anchor: View
+    ) {
+        onMoreMenuClick.invoke()
+        val popupMenu = PopupMenu(itemView.context, anchor)
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.todays_stats_card_menu_item_view_stats -> {
+                    onViewStatsMenuItemClick.invoke()
+                    return@setOnMenuItemClickListener true
+                }
+
+                R.id.todays_stats_card_menu_item_hide_this -> {
+                    onHideThisMenuItemClick.invoke()
+                    return@setOnMenuItemClickListener true
+                }
+                else -> return@setOnMenuItemClickListener true
+            }
+        }
+        popupMenu.inflate(R.menu.dashboard_card_todays_stats_menu)
+        popupMenu.show()
     }
 }
