@@ -73,10 +73,6 @@ class CardsTracker @Inject constructor(
         trackCardItemClicked(Type.QUICK_START.label, quickStartTaskType.toSubtypeValue().label)
     }
 
-    fun trackTodaysStatsCardClicked() {
-        trackCardItemClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS.label)
-    }
-
     fun trackPostCardFooterLinkClicked(postCardType: PostCardType) {
         trackCardFooterLinkClicked(Type.POST.label, postCardType.toSubtypeValue().label)
     }

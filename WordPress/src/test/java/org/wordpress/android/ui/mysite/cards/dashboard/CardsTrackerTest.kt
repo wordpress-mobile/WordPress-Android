@@ -13,7 +13,6 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.MenuItemType
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PagesSubType
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.QuickStartSubtype
-import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.StatsSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
@@ -56,13 +55,6 @@ class CardsTrackerTest {
         cardsTracker.trackQuickStartCardItemClicked(QuickStartTaskType.CUSTOMIZE)
 
         verifyQuickStartCardItemClickedTracked(QuickStartSubtype.CUSTOMIZE.label)
-    }
-
-    @Test
-    fun `when today's stats card is clicked, then today's stats card item click event is tracked`() {
-        cardsTracker.trackTodaysStatsCardClicked()
-
-        verifyCardItemClickedTracked(Type.STATS, StatsSubtype.TODAYS_STATS.label)
     }
 
     /* POST CARDS */
