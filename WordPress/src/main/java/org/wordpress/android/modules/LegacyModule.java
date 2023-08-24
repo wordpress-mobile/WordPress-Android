@@ -26,7 +26,7 @@ public class LegacyModule {
 
     @Singleton
     @Provides
-    OAuthAuthenticator provideOAuthAuthenicator(@NonNull AccessToken accessToken) {
+    OAuthAuthenticator provideOAuthAuthenticator(@NonNull AccessToken accessToken) {
         return new OAuthAuthenticator(accessToken);
     }
 }
