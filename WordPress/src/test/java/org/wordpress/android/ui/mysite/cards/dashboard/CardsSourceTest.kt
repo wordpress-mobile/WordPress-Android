@@ -195,7 +195,7 @@ class CardsSourceTest : BaseUnitTest() {
             .thenReturn(isDashboardCardActivityLogEnabled)
         whenever(siteModel.hasCapabilityEditPages).thenReturn(isRequestPages)
         whenever(appPrefsWrapper.getShouldHidePagesDashboardCard(siteModel.id.toLong()))
-            .thenReturn(isDashboardCardActivityLogEnabled)
+            .thenReturn(isPagesCardHidden)
     }
 
     /* GET DATA */
