@@ -181,6 +181,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     ) : TodaysStatsCard(dashboardCardType = DashboardCardType.TODAYS_STATS_CARD_ERROR), ErrorWithinCard
 
                     data class TodaysStatsCardWithData(
+                        val title: UiString,
                         val views: UiString,
                         val visitors: UiString,
                         val likes: UiString,

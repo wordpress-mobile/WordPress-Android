@@ -43,6 +43,7 @@ class TodaysStatsCardBuilder @Inject constructor(
 
     private fun createTodaysStatsCardWithData(model: TodaysStatsCardModel, params: TodaysStatsCardBuilderParams) =
         TodaysStatsCardWithData(
+            title = UiStringRes(R.string.my_site_todays_stat_card_title),
             views = statToUiString(model.views),
             visitors = statToUiString(model.visitors),
             likes = statToUiString(model.likes),
