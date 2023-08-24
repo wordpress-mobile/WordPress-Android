@@ -30,7 +30,6 @@ import org.wordpress.android.widgets.WPSnackbar
 import java.util.UUID
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.SupportWebViewClientListener {
     @Inject
