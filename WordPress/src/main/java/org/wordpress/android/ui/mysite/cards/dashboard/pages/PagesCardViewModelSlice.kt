@@ -6,12 +6,14 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardB
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class PagesCardViewModelSlice @Inject constructor(
     private val cardsTracker: CardsTracker,
-    private val selectedSiteRepository: SelectedSiteRepository
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
@@ -43,7 +45,7 @@ class PagesCardViewModelSlice @Inject constructor(
 
     private fun onPagesCardHideThisCardClick() {
         cardsTracker.trackCardMoreMenuItemClicked(CardsTracker.Type.PAGES.label, PagesMenuItemType.HIDE_THIS.label)
-        // todo implement the logic to hide the card and add tracking logic
+        appPrefsWrapper.setShouldHidePagesDashboardCard(selectedSiteRepository.getSelectedSite()!!.siteId, true)
     }
 
     private fun onPagesItemClick(params: PagesCardBuilderParams.PagesItemClickParams) {

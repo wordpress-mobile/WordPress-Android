@@ -16,6 +16,7 @@ import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.DashboardActivityLogCardFeatureUtils
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -25,7 +26,8 @@ class CardsSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val cardsStore: CardsStore,
     private val dashboardActivityLogCardFeatureUtils: DashboardActivityLogCardFeatureUtils,
-    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) : MySiteRefreshSource<CardsUpdate> {
     override val refresh = MutableLiveData(false)
 
@@ -104,7 +106,8 @@ class CardsSource @Inject constructor(
     }.toList()
 
     private fun shouldRequestPagesCard(selectedSite: SiteModel): Boolean {
-        return (selectedSite.hasCapabilityEditPages || selectedSite.isSelfHostedAdmin)
+        return (selectedSite.hasCapabilityEditPages || selectedSite.isSelfHostedAdmin) &&
+                !appPrefsWrapper.getShouldHidePagesDashboardCard(selectedSite.siteId)
     }
 
     private fun MediatorLiveData<CardsUpdate>.postErrorState() {
