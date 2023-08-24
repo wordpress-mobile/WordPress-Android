@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 196
+        return 195
     }
 
     override fun getDbName(): String {
@@ -1975,14 +1975,6 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 194 -> migrate(version) {
                     db.execSQL("DROP TABLE IF EXISTS DynamicCard")
-                }
-                195 -> migrate(version) {
-                    db.execSQL("CREATE TABLE WCTaxBasedOnSettingsModel (" +
-                            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                            "LOCAL_SITE_ID INTEGER, " +
-                            "AVAILABLE_OPTIONS TEXT NOT NULL, " +
-                            "SELECTED_OPTION TEXT NOT NULL)"
-                    )
                 }
             }
         }
