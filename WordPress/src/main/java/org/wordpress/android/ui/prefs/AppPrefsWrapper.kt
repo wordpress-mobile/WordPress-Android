@@ -378,7 +378,6 @@ class AppPrefsWrapper @Inject constructor() {
     fun getShouldHideActivityDashboardCard(siteId: Long): Boolean =
         AppPrefs.getShouldHideActivityDashboardCard(siteId)
 
-
     fun setShouldHidePagesDashboardCard(
         siteId: Long,
         isHidden: Boolean
