@@ -20,6 +20,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStat
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.HtmlMessageUtils
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 private const val TODAYS_STATS_VIEWS = 10000
@@ -27,7 +28,6 @@ private const val TODAYS_STATS_VISITORS = 1000
 private const val TODAYS_STATS_LIKES = 100
 private const val TODAYS_STATS_COMMENTS = 1000
 
-private const val TODAYS_STATS_TITLE = "Todays Stats"
 private const val TODAYS_STATS_VIEWS_FORMATTED_STRING = "10,000"
 private const val TODAYS_STATS_VISITORS_FORMATTED_STRING = "1,000"
 private const val TODAYS_STATS_LIKES_FORMATTED_STRING = "100"
@@ -190,7 +190,7 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
     private val onTodaysStatsCardClick: () -> Unit = { }
 
     private val todaysStatsCard = TodaysStatsCardWithData(
-        title = UiStringText(TODAYS_STATS_TITLE),
+        title = UiString.UiStringRes(R.string.my_site_todays_stat_card_title),
         views = UiStringText(TODAYS_STATS_VIEWS_FORMATTED_STRING),
         visitors = UiStringText(TODAYS_STATS_VISITORS_FORMATTED_STRING),
         likes = UiStringText(TODAYS_STATS_LIKES_FORMATTED_STRING),
