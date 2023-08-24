@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.DashboardActivityLogCardFeatureUtils
-import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 
 /* SITE */
 
@@ -140,10 +139,11 @@ private val CARDS_MODEL: List<CardModel> = listOf(
     ACTIVITY_CARD_MODEL
 )
 
-private val DEFAULT_CARD_TYPE = listOf(CardModel.Type.POSTS)
-private val STATS_FEATURED_ENABLED_CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.POSTS)
-private val PAGES_FEATURED_ENABLED_CARD_TYPE = listOf(CardModel.Type.PAGES, CardModel.Type.POSTS)
-private val ACTIVITY_FEATURED_ENABLED_CARD_TYPE = listOf(CardModel.Type.ACTIVITY, CardModel.Type.POSTS)
+private val DEFAULT_CARD_TYPE = listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.POSTS)
+private val PAGES_FEATURED_ENABLED_CARD_TYPE =
+    listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.PAGES, CardModel.Type.POSTS)
+private val ACTIVITY_FEATURED_ENABLED_CARD_TYPE =
+    listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.ACTIVITY, CardModel.Type.POSTS)
 
 @ExperimentalCoroutinesApi
 class CardsSourceTest : BaseUnitTest() {
@@ -155,9 +155,6 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Mock
     private lateinit var siteModel: SiteModel
-
-    @Mock
-    private lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
 
     @Mock
     private lateinit var dashboardActivityLogCardFeatureUtils: DashboardActivityLogCardFeatureUtils
@@ -178,12 +175,10 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     private fun init(
-        isTodaysStatsCardFeatureConfigEnabled: Boolean = false,
         isDashboardCardActivityLogEnabled: Boolean = false,
         isRequestPages: Boolean = false
     ) {
         setUpMocks(
-            isTodaysStatsCardFeatureConfigEnabled,
             isDashboardCardActivityLogEnabled,
             isRequestPages
         )
@@ -191,17 +186,14 @@ class CardsSourceTest : BaseUnitTest() {
             selectedSiteRepository,
             cardsStore,
             dashboardActivityLogCardFeatureUtils,
-            todaysStatsCardFeatureConfig,
             testDispatcher()
         )
     }
 
     private fun setUpMocks(
-        isTodaysStatsCardFeatureConfigEnabled: Boolean,
         isDashboardCardActivityLogEnabled: Boolean = false,
         isRequestPages: Boolean = false
     ) {
-        whenever(todaysStatsCardFeatureConfig.isEnabled()).thenReturn(isTodaysStatsCardFeatureConfigEnabled)
         whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(dashboardActivityLogCardFeatureUtils.shouldRequestActivityCard(siteModel))
@@ -221,8 +213,8 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given today's stats feature enabled, when build is invoked, then todays stats is from store(db)`() = test {
-        init(isTodaysStatsCardFeatureConfigEnabled = true)
+    fun `when build is invoked, then todays stats is from store(db)`() = test {
+        init()
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
 
@@ -237,7 +229,6 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `given build is invoked, when cards are collected, then data is loaded (database)`() = test {
         init(
-            isTodaysStatsCardFeatureConfigEnabled = true,
             isDashboardCardActivityLogEnabled = true,
             isRequestPages = true
         )
@@ -269,7 +260,6 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `given no error, when build is invoked, then data is only loaded from get cards (database)`() = test {
         init(
-            isTodaysStatsCardFeatureConfigEnabled = true,
             isDashboardCardActivityLogEnabled = true,
             isRequestPages = true
         )
@@ -286,12 +276,12 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given today's stats feature enabled, when refresh is invoked, then todays stats are requested from network`() =
+    fun `when refresh is invoked, then todays stats are requested from network`() =
         test {
-            init(isTodaysStatsCardFeatureConfigEnabled = true)
+            init()
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
-            whenever(cardsStore.fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(success)
+            whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success)
             cardSource.refresh.observeForever { }
 
             cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
@@ -299,14 +289,14 @@ class CardsSourceTest : BaseUnitTest() {
             }
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)
+            verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
         }
 
     @Test
     fun `given error, when build is invoked, then error snackbar with stale message is also shown (network)`() = test {
         val result = mutableListOf<CardsUpdate>()
-        val filteredData = CardsResult(model = data.model?.filterIsInstance<PostsCardModel>()?.toList())
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = filteredData.model)))
+        val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
+        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(apiError)
         cardSource.refresh.observeForever { }
 
@@ -318,14 +308,14 @@ class CardsSourceTest : BaseUnitTest() {
         assertThat(result.size).isEqualTo(2)
         assertThat(result[0]).isEqualTo(
             CardsUpdate(
-                cards = filteredData.model,
+                cards = testData.model,
                 showSnackbarError = false,
                 showStaleMessage = false
             )
         )
         assertThat(result[1]).isEqualTo(
             CardsUpdate(
-                cards = filteredData.model,
+                cards = testData.model,
                 showSnackbarError = true,
                 showStaleMessage = true
             )
@@ -351,9 +341,9 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given error, when refresh is invoked, then error snackbar with stale message also shown (network)`() = test {
-        val filteredData = CardsResult(model = data.model?.filterIsInstance<PostsCardModel>()?.toList())
+        val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<CardsUpdate>()
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = filteredData.model)))
+        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(apiError)
         cardSource.refresh.observeForever { }
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
@@ -364,10 +354,10 @@ class CardsSourceTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(result.size).isEqualTo(2)
-        assertThat(result.first()).isEqualTo(CardsUpdate(filteredData.model))
+        assertThat(result.first()).isEqualTo(CardsUpdate(testData.model))
         assertThat(result.last()).isEqualTo(
             CardsUpdate(
-                cards = filteredData.model,
+                cards = testData.model,
                 showSnackbarError = true,
                 showStaleMessage = true
             )
@@ -390,10 +380,11 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `when refresh is invoked, then refresh is set to false`() = test {
-        val filteredData = CardsResult(model = data.model?.filterIsInstance<PostsCardModel>()?.toList())
+        val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<Boolean>()
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = filteredData.model)))
-        whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(success)
+        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
+        whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE))
+            .thenReturn(success)
         cardSource.refresh.observeForever { result.add(it) }
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
@@ -410,9 +401,9 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given no error, when data has been refreshed, then refresh is set to true`() = test {
-        val filteredData = CardsResult(model = data.model?.filterIsInstance<PostsCardModel>()?.toList())
+        val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<Boolean>()
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = filteredData.model)))
+        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success)
         cardSource.refresh.observeForever { result.add(it) }
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
@@ -430,9 +421,9 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given error, when data has been refreshed, then refresh is set to false`() = test {
-        val filteredData = CardsResult(model = data.model?.filterIsInstance<PostsCardModel>()?.toList())
+        val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<Boolean>()
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = filteredData.model)))
+        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(apiError)
         cardSource.refresh.observeForever { result.add(it) }
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
