@@ -124,27 +124,6 @@ class CardsTrackerTest {
     }
 
     @Test
-    fun `when page draft item is clicked, then page item event is tracked`() {
-        cardsTracker.trackPagesItemClicked(PagesCardContentType.DRAFT)
-
-        verifyCardItemClickedTracked(Type.PAGES, PagesSubType.DRAFT.label)
-    }
-
-    @Test
-    fun `when page published item is clicked, then page item event is tracked`() {
-        cardsTracker.trackPagesItemClicked(PagesCardContentType.PUBLISH)
-
-        verifyCardItemClickedTracked(Type.PAGES, PagesSubType.PUBLISHED.label)
-    }
-
-    @Test
-    fun `when page scheduled item is clicked, then page item event is tracked`() {
-        cardsTracker.trackPagesItemClicked(PagesCardContentType.SCHEDULED)
-
-        verifyCardItemClickedTracked(Type.PAGES, PagesSubType.SCHEDULED.label)
-    }
-
-    @Test
     fun `when activity card hide this menu item is clicked, then hide this event is tracked`() {
         cardsTracker.trackActivityCardMenuItemClicked(MenuItemType.HIDE_THIS)
 

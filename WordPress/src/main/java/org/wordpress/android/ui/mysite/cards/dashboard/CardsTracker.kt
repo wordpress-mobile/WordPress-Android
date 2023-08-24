@@ -97,10 +97,6 @@ class CardsTracker @Inject constructor(
         trackCardFooterLinkClicked(Type.ACTIVITY.label, ActivityLogSubtype.ACTIVITY_LOG.label)
     }
 
-    fun trackPagesItemClicked(pageCardType: PagesCardContentType) {
-        trackCardItemClicked(Type.PAGES.label, pageCardType.toSubtypeValue().label)
-    }
-
     fun trackPagesCardFooterClicked() {
         trackCardFooterLinkClicked(Type.PAGES.label, PagesSubType.CREATE_PAGE.label)
     }
@@ -123,7 +119,7 @@ class CardsTracker @Inject constructor(
         )
     }
 
-    private fun trackCardItemClicked(type: String, subtype: String) {
+    fun trackCardItemClicked(type: String, subtype: String) {
         val props = mapOf(TYPE to type, SUBTYPE to subtype)
         if (type == Type.QUICK_START.label) {
             quickStartTracker.track(Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED, props)
@@ -195,13 +191,7 @@ fun PostCardType.toSubtypeValue(): PostSubtype {
     }
 }
 
-fun PagesCardContentType.toSubtypeValue(): CardsTracker.PagesSubType {
-    return when (this) {
-        PagesCardContentType.DRAFT -> CardsTracker.PagesSubType.DRAFT
-        PagesCardContentType.PUBLISH -> CardsTracker.PagesSubType.PUBLISHED
-        PagesCardContentType.SCHEDULED -> CardsTracker.PagesSubType.SCHEDULED
-    }
-}
+
 
 fun QuickStartTaskType.toSubtypeValue(): QuickStartSubtype {
     return when (this) {

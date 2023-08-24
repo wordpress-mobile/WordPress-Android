@@ -53,7 +53,7 @@ class PagesCardViewModelSlice @Inject constructor(
     }
 
     private fun onPagesItemClick(params: PagesCardBuilderParams.PagesItemClickParams) {
-        cardsTracker.trackPagesItemClicked(params.pagesCardType)
+        cardsTracker.trackCardItemClicked(CardsTracker.Type.PAGES.label, params.pagesCardType.toSubtypeValue().label)
         _onNavigation.value = Event(getNavigationActionForPagesItem(params.pagesCardType, params.pageId))
     }
 
@@ -96,4 +96,12 @@ class PagesCardViewModelSlice @Inject constructor(
 enum class PagesMenuItemType(val label: String) {
     ALL_PAGES("all_pages"),
     HIDE_THIS("hide_this")
+}
+
+fun PagesCardContentType.toSubtypeValue(): CardsTracker.PagesSubType {
+    return when (this) {
+        PagesCardContentType.DRAFT -> CardsTracker.PagesSubType.DRAFT
+        PagesCardContentType.PUBLISH -> CardsTracker.PagesSubType.PUBLISHED
+        PagesCardContentType.SCHEDULED -> CardsTracker.PagesSubType.SCHEDULED
+    }
 }
