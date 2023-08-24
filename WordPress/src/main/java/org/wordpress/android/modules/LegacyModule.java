@@ -1,5 +1,7 @@
 package org.wordpress.android.modules;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 
 import org.wordpress.android.WordPress;
@@ -24,7 +26,7 @@ public class LegacyModule {
 
     @Singleton
     @Provides
-    OAuthAuthenticator provideOAuthAuthenicator(AccessToken accessToken) {
+    OAuthAuthenticator provideOAuthAuthenicator(@NonNull AccessToken accessToken) {
         return new OAuthAuthenticator(accessToken);
     }
 }
