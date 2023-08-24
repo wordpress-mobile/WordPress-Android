@@ -19,7 +19,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class TodaysStatsViewModelSliceTest  : BaseUnitTest() {
+class TodaysStatsViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var cardsTracker: CardsTracker
 
@@ -86,6 +86,9 @@ class TodaysStatsViewModelSliceTest  : BaseUnitTest() {
                         TodaysStatsCardBuilder.URL_GET_MORE_VIEWS_AND_TRAFFIC
                     )
                 )
-            verify(cardsTracker).trackTodaysStatsCardGetMoreViewsNudgeClicked()
+            verify(cardsTracker).trackCardItemClicked(
+                CardsTracker.Type.STATS.label,
+                CardsTracker.StatsSubtype.TODAYS_STATS_NUDGE.label
+            )
         }
 }

@@ -73,10 +73,6 @@ class CardsTracker @Inject constructor(
         trackCardItemClicked(Type.QUICK_START.label, quickStartTaskType.toSubtypeValue().label)
     }
 
-    fun trackTodaysStatsCardGetMoreViewsNudgeClicked() {
-        trackCardItemClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS_NUDGE.label)
-    }
-
     fun trackTodaysStatsCardFooterLinkClicked() {
         trackCardFooterLinkClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS.label)
     }
@@ -127,7 +123,7 @@ class CardsTracker @Inject constructor(
         )
     }
 
-    private fun trackCardItemClicked(type: String, subtype: String) {
+    fun trackCardItemClicked(type: String, subtype: String) {
         val props = mapOf(TYPE to type, SUBTYPE to subtype)
         if (type == Type.QUICK_START.label) {
             quickStartTracker.track(Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED, props)
