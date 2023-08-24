@@ -101,10 +101,10 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
         params.moreMenuClickParams.onViewStatsMenuItemClick.invoke()
 
         verify(cardsTracker).trackCardMoreMenuItemClicked(
-            CardsTracker.Type.PAGES.label,
+            CardsTracker.Type.STATS.label,
             TodaysStatsMenuItemType.VIEW_STATS.label
         )
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsInsights(site))
     }
 
 
@@ -115,7 +115,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
         params.moreMenuClickParams.onHideThisMenuItemClick.invoke()
 
         verify(cardsTracker).trackCardMoreMenuItemClicked(
-            CardsTracker.Type.PAGES.label,
+            CardsTracker.Type.STATS.label,
             TodaysStatsMenuItemType.HIDE_THIS.label
         )
     }
