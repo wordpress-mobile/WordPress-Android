@@ -7,6 +7,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -194,7 +195,7 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(dashboardActivityLogCardFeatureUtils.shouldRequestActivityCard(siteModel))
             .thenReturn(isDashboardCardActivityLogEnabled)
         whenever(siteModel.hasCapabilityEditPages).thenReturn(isRequestPages)
-        whenever(appPrefsWrapper.getShouldHidePagesDashboardCard(siteModel.id.toLong()))
+        whenever(appPrefsWrapper.getShouldHidePagesDashboardCard(any()))
             .thenReturn(isPagesCardHidden)
     }
 
@@ -202,6 +203,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `when build is invoked, then start collecting cards from store (database)`() = test {
+        setUpMocks()
         cardSource.refresh.observeForever { }
 
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
@@ -245,6 +247,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `when build is invoked, then cards are fetched from store (network)`() = test {
+        setUpMocks()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(CARDS_MODEL)))
         cardSource.refresh.observeForever { }
 
@@ -291,6 +294,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given error, when build is invoked, then error snackbar with stale message is also shown (network)`() = test {
+        setUpMocks()
         val result = mutableListOf<CardsUpdate>()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
@@ -321,6 +325,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given no error, when refresh is invoked, then data is only loaded from get cards (database)`() = test {
+        setUpMocks()
         val filteredData = CardsResult(model = data.model?.filterIsInstance<PostsCardModel>()?.toList())
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = filteredData.model)))
@@ -338,6 +343,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given error, when refresh is invoked, then error snackbar with stale message also shown (network)`() = test {
+        setUpMocks()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
@@ -365,6 +371,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `when build is invoked, then refresh is set to true`() = test {
+        setUpMocks()
         val result = mutableListOf<Boolean>()
         cardSource.refresh.observeForever { result.add(it) }
 
@@ -377,6 +384,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `when refresh is invoked, then refresh is set to false`() = test {
+        setUpMocks()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<Boolean>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
@@ -398,6 +406,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given no error, when data has been refreshed, then refresh is set to true`() = test {
+        setUpMocks()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<Boolean>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
@@ -418,6 +427,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given error, when data has been refreshed, then refresh is set to false`() = test {
+        setUpMocks()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<Boolean>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
