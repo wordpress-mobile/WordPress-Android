@@ -36,9 +36,9 @@ public class RestClientUtils {
     public static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
     private static String sUserAgent = "WordPress Networking Android";
 
-    @NonNull private RestClient mRestClient;
-    @Nullable private Authenticator mAuthenticator;
-    private Context mContext;
+    @NonNull private final RestClient mRestClient;
+    @Nullable private final Authenticator mAuthenticator;
+    private final Context mContext;
 
     /**
      * Socket timeout in milliseconds for rest requests
