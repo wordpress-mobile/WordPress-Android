@@ -109,7 +109,7 @@ public class RestClientUtils {
     /**
      * Get notifications with the provided params.
      * <p/>
-     * https://developer.wordpress.com/docs/api/1/get/notifications/
+     * <a href="https://developer.wordpress.com/docs/api/1/get/notifications/">api/1/get/notifications</a>
      */
     public void getNotifications(Map<String, String> params, Listener listener, ErrorListener errorListener) {
         get("notifications", params, null, listener, errorListener);
@@ -129,7 +129,7 @@ public class RestClientUtils {
     /**
      * Get the notification identified by ID with default params.
      * <p/>
-     * https://developer.wordpress.com/docs/api/1/get/notifications/%s
+     * <a href="https://developer.wordpress.com/docs/api/1/get/notifications/%s">api/1/get/notifications/%s</a>
      */
     public void getNotification(String noteId, Listener listener, ErrorListener errorListener) {
         HashMap<String, String> params = new HashMap<>();
@@ -141,7 +141,7 @@ public class RestClientUtils {
     /**
      * Update the seen timestamp.
      * <p/>
-     * https://developer.wordpress.com/docs/api/1/post/notifications/seen
+     * <a href="https://developer.wordpress.com/docs/api/1/post/notifications/seen">api/1/post/notifications/seen</a>
      */
     public void markNotificationsSeen(String timestamp, Listener listener, ErrorListener errorListener) {
         Map<String, String> params = new HashMap<>();
@@ -154,7 +154,7 @@ public class RestClientUtils {
      * Decrement the unread count for a notification. Key=note_ID, Value=decrement amount.
      *
      * <p/>
-     * https://developer.wordpress.com/docs/api/1/post/notifications/read/
+     * <a href="https://developer.wordpress.com/docs/api/1/post/notifications/read/">api/1/post/notifications/read</a>
      */
     public void decrementUnreadCount(String noteId, String decrementAmount,
                                      Listener listener, ErrorListener errorListener) {
