@@ -59,13 +59,6 @@ class CardsTrackerTest {
     }
 
     @Test
-    fun `when today's stats card footer link is clicked, then today's stats card footer click event is tracked`() {
-        cardsTracker.trackTodaysStatsCardFooterLinkClicked()
-
-        verifyFooterLinkClickedTracked(Type.STATS, StatsSubtype.TODAYS_STATS.label)
-    }
-
-    @Test
     fun `when today's stats card is clicked, then today's stats card item click event is tracked`() {
         cardsTracker.trackTodaysStatsCardClicked()
 

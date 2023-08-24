@@ -28,7 +28,10 @@ class TodaysStatsViewModelSlice @Inject constructor(
     }
 
     private fun onTodaysStatsCardFooterLinkClick() {
-        cardsTracker.trackTodaysStatsCardFooterLinkClicked()
+        cardsTracker.trackCardFooterLinkClicked(
+            CardsTracker.Type.STATS.label,
+            CardsTracker.StatsSubtype.TODAYS_STATS.label
+        )
         navigateToTodaysStats()
     }
 

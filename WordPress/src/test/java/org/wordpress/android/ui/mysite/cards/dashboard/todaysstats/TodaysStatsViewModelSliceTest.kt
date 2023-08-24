@@ -70,7 +70,10 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
             params.onFooterLinkClick()
 
             assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsInsights(site))
-            verify(cardsTracker).trackTodaysStatsCardFooterLinkClicked()
+            verify(cardsTracker).trackCardFooterLinkClicked(
+                CardsTracker.Type.STATS.label,
+                CardsTracker.StatsSubtype.TODAYS_STATS.label
+            )
         }
 
     @Test

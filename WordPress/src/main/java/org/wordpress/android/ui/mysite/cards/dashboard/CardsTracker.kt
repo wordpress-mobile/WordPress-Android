@@ -73,10 +73,6 @@ class CardsTracker @Inject constructor(
         trackCardItemClicked(Type.QUICK_START.label, quickStartTaskType.toSubtypeValue().label)
     }
 
-    fun trackTodaysStatsCardFooterLinkClicked() {
-        trackCardFooterLinkClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS.label)
-    }
-
     fun trackTodaysStatsCardClicked() {
         trackCardItemClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS.label)
     }
@@ -113,7 +109,7 @@ class CardsTracker @Inject constructor(
         trackCardMoreMenuClicked(Type.ACTIVITY.label)
     }
 
-    private fun trackCardFooterLinkClicked(type: String, subtype: String) {
+    fun trackCardFooterLinkClicked(type: String, subtype: String) {
         analyticsTrackerWrapper.track(
             Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
             mapOf(
