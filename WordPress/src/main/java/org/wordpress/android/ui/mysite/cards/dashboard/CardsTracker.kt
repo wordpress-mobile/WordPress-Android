@@ -77,10 +77,6 @@ class CardsTracker @Inject constructor(
         trackCardItemClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS_NUDGE.label)
     }
 
-    fun trackTodaysStatsCardFooterLinkClicked() {
-        trackCardFooterLinkClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS.label)
-    }
-
     fun trackTodaysStatsCardClicked() {
         trackCardItemClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS.label)
     }
