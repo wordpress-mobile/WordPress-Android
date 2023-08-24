@@ -14,7 +14,7 @@ public class OAuthAuthenticator implements Authenticator {
     }
 
     @Override
-    public void authenticate(final AuthenticatorRequest request) {
+    public void authenticate(@NonNull AuthenticatorRequest request) {
         request.sendWithAccessToken(StringUtils.notNullStr(mAccessToken.get()));
     }
 }
