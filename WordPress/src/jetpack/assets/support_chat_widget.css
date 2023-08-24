@@ -14,3 +14,30 @@ a.floating-button {
     bottom: 0 !important;
     max-height: none !important;
 }
+
+.docsbot-chat-bot-message {
+    font-size: 16px;
+}
+
+.docsbot-chat-suggested-questions-container span {
+    font-size: 16px;
+}
+
+.docsbot-chat-suggested-questions-container button {
+    height: 48px;
+    font-size: 16px;
+}
+
+.docsbot-chat-bot-message-meta {
+    margin-top: 16px;
+}
+
+.docsbot-chat-input {
+    height: 48px;
+    font-size: 16px !important;
+}
+
+.docsbot-chat-bot-message-support a {
+    height: 48px;
+    font-size: 16px;
+}
