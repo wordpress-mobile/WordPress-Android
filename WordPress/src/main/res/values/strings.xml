@@ -2281,7 +2281,7 @@
     <string name="support_ticket_subject">WordPress for Android Support</string>
 
     <string name="contact_support_input_placeholder">Send a message…</string>
-    <string name="contact_support_first_message">What can we help you with?</string>
+    <string name="contact_support_first_message">What can I help you with?</string>
     <string name="contact_support_get_support">Contact support</string>
     <string name="contact_support_suggestions">Not sure what to ask?</string>
     <string name="contact_support_question_one">What is my site address?</string>
