@@ -181,18 +181,14 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     ) : TodaysStatsCard(dashboardCardType = DashboardCardType.TODAYS_STATS_CARD_ERROR), ErrorWithinCard
 
                     data class TodaysStatsCardWithData(
+                        val title: UiString,
                         val views: UiString,
                         val visitors: UiString,
                         val likes: UiString,
                         val onCardClick: () -> Unit,
                         val message: TextWithLinks? = null,
-                        val footerLink: FooterLink
+                        val moreMenuOptions: MoreMenuOptions
                     ) : TodaysStatsCard(dashboardCardType = DashboardCardType.TODAYS_STATS_CARD)
-
-                    data class FooterLink(
-                        val label: UiString,
-                        val onClick: () -> Unit
-                    )
 
                     data class TextWithLinks(
                         val text: UiString,
@@ -200,6 +196,12 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     ) {
                         data class Clickable(val navigationAction: ListItemInteraction)
                     }
+
+                    data class MoreMenuOptions(
+                        val onMoreMenuClick: () -> Unit,
+                        val onViewStatsMenuItemClick: () -> Unit,
+                        val onHideThisMenuItemClick: () -> Unit
+                    )
                 }
 
                 sealed class PagesCard(

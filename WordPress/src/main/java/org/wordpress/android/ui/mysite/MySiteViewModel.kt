@@ -297,7 +297,8 @@ class MySiteViewModel @Inject constructor(
         siteStoriesHandler.onNavigation,
         blazeCardViewModelSlice.onNavigation,
         pagesCardViewModelSlice.onNavigation,
-        domainTransferCardViewModel.onNavigation
+        domainTransferCardViewModel.onNavigation,
+        todaysStatsViewModelSlice.onNavigation
     )
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem

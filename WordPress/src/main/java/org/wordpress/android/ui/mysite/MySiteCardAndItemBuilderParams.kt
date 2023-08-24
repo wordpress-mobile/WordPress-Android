@@ -78,8 +78,14 @@ sealed class MySiteCardAndItemBuilderParams {
         val todaysStatsCard: TodaysStatsCardModel?,
         val onTodaysStatsCardClick: () -> Unit,
         val onGetMoreViewsClick: () -> Unit,
-        val onFooterLinkClick: () -> Unit
-    ) : MySiteCardAndItemBuilderParams()
+        val moreMenuClickParams : MoreMenuParams
+    ) : MySiteCardAndItemBuilderParams() {
+        data class MoreMenuParams(
+            val onMoreMenuClick: () -> Unit,
+            val onHideThisMenuItemClick: () -> Unit,
+            val onViewStatsMenuItemClick: () -> Unit
+        )
+    }
 
     data class PostCardBuilderParams(
         val posts: PostsCardModel?,
