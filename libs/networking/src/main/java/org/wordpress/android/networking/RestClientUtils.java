@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import androidx.annotation.Nullable;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Request.Method;
@@ -34,7 +36,7 @@ public class RestClientUtils {
     private static String sUserAgent = "WordPress Networking Android";
 
     private RestClient mRestClient;
-    private Authenticator mAuthenticator;
+    @Nullable private Authenticator mAuthenticator;
     private Context mContext;
 
     /**
@@ -61,14 +63,28 @@ public class RestClientUtils {
         sUserAgent = userAgent;
     }
 
-    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator,
-                           RestRequest.OnAuthFailedListener onAuthFailedListener) {
-        this(context, queue, authenticator, onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1);
+    public RestClientUtils(
+            Context context,
+            RequestQueue queue,
+            @Nullable Authenticator authenticator,
+            RestRequest.OnAuthFailedListener onAuthFailedListener
+    ) {
+        this(
+                context,
+                queue,
+                authenticator,
+                onAuthFailedListener,
+                RestClient.REST_CLIENT_VERSIONS.V1
+        );
     }
 
-    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator,
-                           RestRequest.OnAuthFailedListener onAuthFailedListener,
-                           RestClient.REST_CLIENT_VERSIONS version) {
+    public RestClientUtils(
+            Context context,
+            RequestQueue queue,
+            @Nullable Authenticator authenticator,
+            RestRequest.OnAuthFailedListener onAuthFailedListener,
+            RestClient.REST_CLIENT_VERSIONS version
+    ) {
         // load an existing access token from prefs if we have one
         mContext = context;
         mAuthenticator = authenticator;
@@ -79,6 +95,7 @@ public class RestClientUtils {
         mRestClient.setUserAgent(sUserAgent);
     }
 
+    @Nullable
     public Authenticator getAuthenticator() {
         return mAuthenticator;
     }
