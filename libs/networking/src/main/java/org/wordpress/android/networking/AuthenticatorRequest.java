@@ -11,12 +11,12 @@ import com.wordpress.rest.RestRequest;
  * allows the request maker to disregard the authentication state when making requests.
  */
 public class AuthenticatorRequest {
-    private final RestRequest mRequest;
+    @NonNull private final RestRequest mRequest;
     @NonNull private final RestClient mRestClient;
     @Nullable private final Authenticator mAuthenticator;
 
     protected AuthenticatorRequest(
-            RestRequest request,
+            @NonNull RestRequest request,
             @NonNull RestClient restClient,
             @Nullable Authenticator authenticator
     ) {
