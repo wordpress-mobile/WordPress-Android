@@ -39,7 +39,7 @@ public class AuthenticatorRequest {
         }
     }
 
-    public void sendWithAccessToken(String token) {
+    public void sendWithAccessToken(@NonNull String token) {
         mRequest.setAccessToken(token);
         mRestClient.send(mRequest);
     }
