@@ -311,7 +311,7 @@ class MySiteViewModel @Inject constructor(
     val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
-    val blazeCardRefresh = blazeCardViewModelSlice.refresh
+    val refresh = merge(blazeCardViewModelSlice.refresh, pagesCardViewModelSlice.refresh)
     val domainTransferCardRefresh = domainTransferCardViewModel.refresh
 
     private var shouldMarkUpdateSiteTitleTaskComplete = false
