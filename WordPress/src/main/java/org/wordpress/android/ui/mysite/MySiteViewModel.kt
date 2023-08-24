@@ -74,7 +74,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkR
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
@@ -94,7 +93,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTran
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
-import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
+import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
@@ -210,7 +209,8 @@ class MySiteViewModel @Inject constructor(
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
     private val blazeCardViewModelSlice: BlazeCardViewModelSlice,
     private val domainTransferCardViewModel: DomainTransferCardViewModel,
-    private val pagesCardViewModelSlice: PagesCardViewModelSlice
+    private val pagesCardViewModelSlice: PagesCardViewModelSlice,
+    private val todaysStatsViewModelSlice: TodaysStatsViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -567,12 +567,8 @@ class MySiteViewModel @Inject constructor(
             DashboardCardsBuilderParams(
                 showErrorCard = cardsUpdate?.showErrorCard == true,
                 onErrorRetryClick = this::onDashboardErrorRetry,
-                todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(
-                    todaysStatsCard = cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel }
-                            as? TodaysStatsCardModel,
-                    onTodaysStatsCardClick = this::onTodaysStatsCardClick,
-                    onGetMoreViewsClick = this::onGetMoreViewsClick,
-                    onFooterLinkClick = this::onTodaysStatsCardFooterLinkClick
+                todaysStatsCardBuilderParams = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(
+                        cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel } as? TodaysStatsCardModel
                 ),
                 postCardBuilderParams = PostCardBuilderParams(
                     posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
@@ -761,37 +757,6 @@ class MySiteViewModel @Inject constructor(
         }
 
         MySiteTabType.ALL -> emptyList()
-    }
-
-    @Suppress("EmptyFunctionBlock")
-    private fun onGetMoreViewsClick() {
-        cardsTracker.trackTodaysStatsCardGetMoreViewsNudgeClicked()
-        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
-        } else {
-            _onNavigation.value = Event(
-                SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl(URL_GET_MORE_VIEWS_AND_TRAFFIC)
-            )
-        }
-    }
-
-    private fun onTodaysStatsCardFooterLinkClick() {
-        cardsTracker.trackTodaysStatsCardFooterLinkClicked()
-        navigateToTodaysStats()
-    }
-
-    private fun onTodaysStatsCardClick() {
-        cardsTracker.trackTodaysStatsCardClicked()
-        navigateToTodaysStats()
-    }
-
-    private fun navigateToTodaysStats() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
-        } else {
-            _onNavigation.value = Event(SiteNavigationAction.OpenStatsInsights(selectedSite))
-        }
     }
 
     private fun buildNoSiteState(): NoSites {
