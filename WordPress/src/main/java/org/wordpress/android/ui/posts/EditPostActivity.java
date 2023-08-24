@@ -831,16 +831,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
         View closeHeader = mToolbar.findViewById(R.id.edit_post_header);
         closeHeader.setOnClickListener(v -> handleBackPressed());
 
-        // Update site icon
-        String siteIconUrl = SiteUtils.getSiteIconUrl(
-                mSite,
-                getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        );
-        ImageView siteIcon = mToolbar.findViewById(R.id.close_editor_site_icon);
-        ImageType blavatarType = SiteUtils.getSiteImageType(
-                mSite.isWpForTeamsSite(), BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES);
-        mImageManager.loadImageWithCorners(siteIcon, blavatarType, siteIconUrl,
-                getResources().getDimensionPixelSize(R.dimen.edit_post_header_image_corner_radius));
+        if (mSite != null) {
+            // Update site icon if mSite is available, if not it will use the placeholder.
+            String siteIconUrl = SiteUtils.getSiteIconUrl(
+                    mSite,
+                    getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small)
+            );
+            ImageView siteIcon = mToolbar.findViewById(R.id.close_editor_site_icon);
+            ImageType blavatarType = SiteUtils.getSiteImageType(
+                    mSite.isWpForTeamsSite(), BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES);
+            mImageManager.loadImageWithCorners(siteIcon, blavatarType, siteIconUrl,
+                    getResources().getDimensionPixelSize(R.dimen.edit_post_header_image_corner_radius));
+        }
     }
 
     private void presentNewPageNoticeIfNeeded() {
