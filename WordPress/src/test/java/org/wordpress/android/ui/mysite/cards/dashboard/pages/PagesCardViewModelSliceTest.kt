@@ -36,6 +36,8 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
 
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
 
+    private lateinit var refreshEvents: MutableList<Boolean>
+
     private val site = mock<SiteModel>()
 
     @Before
@@ -49,6 +51,12 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
         pagesCardViewModelSlice.onNavigation.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
                 navigationActions.add(it)
+            }
+        }
+        refreshEvents = mutableListOf()
+        pagesCardViewModelSlice.refresh.observeForever { event ->
+            event?.getContentIfNotHandled()?.let {
+                refreshEvents.add(it)
             }
         }
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
@@ -138,13 +146,17 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `given pages card, when more menu item hide this is accessed, then event is tracked`() = test {
+        val siteId = 1L
+        whenever(selectedSiteRepository.getSelectedSite()?.siteId).thenReturn(siteId)
         val pagesCardParams = pagesCardViewModelSlice.getPagesCardBuilderParams(mock())
 
         pagesCardParams.moreMenuClickParams.onHideThisCardItemClick.invoke()
 
+        verify(appPrefsWrapper).setShouldHidePagesDashboardCard(siteId,true)
         verify(cardsTracker).trackCardMoreMenuItemClicked(
             CardsTracker.Type.PAGES.label,
             PagesMenuItemType.HIDE_THIS.label
         )
+        assertThat(refreshEvents).containsOnly(true)
     }
 }
