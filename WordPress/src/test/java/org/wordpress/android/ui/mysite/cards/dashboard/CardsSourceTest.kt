@@ -7,6 +7,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -27,6 +28,7 @@ import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.DashboardActivityLogCardFeatureUtils
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 /* SITE */
 
@@ -159,6 +161,9 @@ class CardsSourceTest : BaseUnitTest() {
     @Mock
     private lateinit var dashboardActivityLogCardFeatureUtils: DashboardActivityLogCardFeatureUtils
 
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
+
     private lateinit var cardSource: CardsSource
 
     private val data = CardsResult(
@@ -171,40 +176,34 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        init()
-    }
-
-    private fun init(
-        isDashboardCardActivityLogEnabled: Boolean = false,
-        isRequestPages: Boolean = false
-    ) {
-        setUpMocks(
-            isDashboardCardActivityLogEnabled,
-            isRequestPages
-        )
         cardSource = CardsSource(
             selectedSiteRepository,
             cardsStore,
             dashboardActivityLogCardFeatureUtils,
-            testDispatcher()
+            testDispatcher(),
+            appPrefsWrapper
         )
     }
 
     private fun setUpMocks(
         isDashboardCardActivityLogEnabled: Boolean = false,
-        isRequestPages: Boolean = false
+        isRequestPages: Boolean = false,
+        isPagesCardHidden: Boolean = false
     ) {
         whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(dashboardActivityLogCardFeatureUtils.shouldRequestActivityCard(siteModel))
             .thenReturn(isDashboardCardActivityLogEnabled)
         whenever(siteModel.hasCapabilityEditPages).thenReturn(isRequestPages)
+        whenever(appPrefsWrapper.getShouldHidePagesDashboardCard(any()))
+            .thenReturn(isPagesCardHidden)
     }
 
     /* GET DATA */
 
     @Test
     fun `when build is invoked, then start collecting cards from store (database)`() = test {
+        setUpMocks()
         cardSource.refresh.observeForever { }
 
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
@@ -214,7 +213,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `when build is invoked, then todays stats is from store(db)`() = test {
-        init()
+        setUpMocks()
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
 
@@ -228,7 +227,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given build is invoked, when cards are collected, then data is loaded (database)`() = test {
-        init(
+        setUpMocks(
             isDashboardCardActivityLogEnabled = true,
             isRequestPages = true
         )
@@ -248,6 +247,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `when build is invoked, then cards are fetched from store (network)`() = test {
+        setUpMocks()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(CARDS_MODEL)))
         cardSource.refresh.observeForever { }
 
@@ -259,7 +259,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given no error, when build is invoked, then data is only loaded from get cards (database)`() = test {
-        init(
+        setUpMocks(
             isDashboardCardActivityLogEnabled = true,
             isRequestPages = true
         )
@@ -278,7 +278,7 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `when refresh is invoked, then todays stats are requested from network`() =
         test {
-            init()
+            setUpMocks()
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
             whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success)
@@ -294,6 +294,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given error, when build is invoked, then error snackbar with stale message is also shown (network)`() = test {
+        setUpMocks()
         val result = mutableListOf<CardsUpdate>()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
@@ -324,6 +325,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given no error, when refresh is invoked, then data is only loaded from get cards (database)`() = test {
+        setUpMocks()
         val filteredData = CardsResult(model = data.model?.filterIsInstance<PostsCardModel>()?.toList())
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = filteredData.model)))
@@ -341,6 +343,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given error, when refresh is invoked, then error snackbar with stale message also shown (network)`() = test {
+        setUpMocks()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
@@ -368,6 +371,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `when build is invoked, then refresh is set to true`() = test {
+        setUpMocks()
         val result = mutableListOf<Boolean>()
         cardSource.refresh.observeForever { result.add(it) }
 
@@ -380,6 +384,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `when refresh is invoked, then refresh is set to false`() = test {
+        setUpMocks()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<Boolean>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
@@ -401,6 +406,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given no error, when data has been refreshed, then refresh is set to true`() = test {
+        setUpMocks()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<Boolean>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
@@ -421,6 +427,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given error, when data has been refreshed, then refresh is set to false`() = test {
+        setUpMocks()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<Boolean>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
@@ -472,9 +479,9 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given pages feature enabled, when refresh is invoked, then pages are requested from network`() =
+    fun `given pages feature enabled + card not hidden, when refresh is invoked, then pages requested from network`() =
         test {
-            init(isRequestPages = true)
+            setUpMocks(isRequestPages = true)
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
             whenever(cardsStore.fetchCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)).thenReturn(success)
@@ -489,9 +496,25 @@ class CardsSourceTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given pages feature enabled + card hidden, when refresh is invoked, then pages not requested from network`() =
+        test {
+            setUpMocks(isRequestPages = true, isPagesCardHidden = true)
+            val result = mutableListOf<CardsUpdate>()
+            whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
+            cardSource.refresh.observeForever { }
+
+            cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+                it?.let { result.add(it) }
+            }
+            advanceUntilIdle()
+
+            verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
+        }
+
+    @Test
     fun `given activity feature enabled, when refresh is invoked, then activity are requested from network`() =
         test {
-            init(isDashboardCardActivityLogEnabled = true)
+            setUpMocks(isDashboardCardActivityLogEnabled = true)
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
             whenever(cardsStore.fetchCards(siteModel, ACTIVITY_FEATURED_ENABLED_CARD_TYPE)).thenReturn(success)
@@ -508,7 +531,7 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `given activity feature disabled, when refresh is invoked, then activity not requested`() =
         test {
-            init(isDashboardCardActivityLogEnabled = false)
+            setUpMocks(isDashboardCardActivityLogEnabled = false)
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
             whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(success)

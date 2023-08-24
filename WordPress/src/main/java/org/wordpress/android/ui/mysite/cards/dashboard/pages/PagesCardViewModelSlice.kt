@@ -6,15 +6,20 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardB
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class PagesCardViewModelSlice @Inject constructor(
     private val cardsTracker: CardsTracker,
-    private val selectedSiteRepository: SelectedSiteRepository
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
+
+    private val _refresh = MutableLiveData<Event<Boolean>>()
+    val refresh = _refresh
 
     fun getPagesCardBuilderParams(pagesCardModel: PagesCardModel?): PagesCardBuilderParams {
         return PagesCardBuilderParams(
@@ -43,11 +48,12 @@ class PagesCardViewModelSlice @Inject constructor(
 
     private fun onPagesCardHideThisCardClick() {
         cardsTracker.trackCardMoreMenuItemClicked(CardsTracker.Type.PAGES.label, PagesMenuItemType.HIDE_THIS.label)
-        // todo implement the logic to hide the card and add tracking logic
+        appPrefsWrapper.setShouldHidePagesDashboardCard(selectedSiteRepository.getSelectedSite()!!.siteId, true)
+        _refresh.postValue(Event(true))
     }
 
     private fun onPagesItemClick(params: PagesCardBuilderParams.PagesItemClickParams) {
-        cardsTracker.trackPagesItemClicked(params.pagesCardType)
+        cardsTracker.trackCardItemClicked(CardsTracker.Type.PAGES.label, params.pagesCardType.toSubtypeValue().label)
         _onNavigation.value = Event(getNavigationActionForPagesItem(params.pagesCardType, params.pageId))
     }
 
@@ -77,7 +83,10 @@ class PagesCardViewModelSlice @Inject constructor(
     }
 
     private fun onPagesCardFooterLinkClick() {
-        cardsTracker.trackPagesCardFooterClicked()
+        cardsTracker.trackCardFooterLinkClicked(
+            CardsTracker.Type.PAGES.label,
+            CardsTracker.PagesSubType.CREATE_PAGE.label
+        )
         _onNavigation.value =
             Event(
                 SiteNavigationAction.TriggerCreatePageFlow(
@@ -90,4 +99,12 @@ class PagesCardViewModelSlice @Inject constructor(
 enum class PagesMenuItemType(val label: String) {
     ALL_PAGES("all_pages"),
     HIDE_THIS("hide_this")
+}
+
+fun PagesCardContentType.toSubtypeValue(): CardsTracker.PagesSubType {
+    return when (this) {
+        PagesCardContentType.DRAFT -> CardsTracker.PagesSubType.DRAFT
+        PagesCardContentType.PUBLISH -> CardsTracker.PagesSubType.PUBLISHED
+        PagesCardContentType.SCHEDULED -> CardsTracker.PagesSubType.SCHEDULED
+    }
 }

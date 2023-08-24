@@ -16,6 +16,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardB
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 private const val MOCK_PAGE_ID = 1
 
@@ -28,9 +29,14 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
     private lateinit var pagesCardViewModelSlice: PagesCardViewModelSlice
 
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
+
+    private lateinit var refreshEvents: MutableList<Boolean>
 
     private val site = mock<SiteModel>()
 
@@ -38,12 +44,19 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
     fun setUp() {
         pagesCardViewModelSlice = PagesCardViewModelSlice(
             cardsTracker,
-            selectedSiteRepository
+            selectedSiteRepository,
+            appPrefsWrapper
         )
         navigationActions = mutableListOf()
         pagesCardViewModelSlice.onNavigation.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
                 navigationActions.add(it)
+            }
+        }
+        refreshEvents = mutableListOf()
+        pagesCardViewModelSlice.refresh.observeForever { event ->
+            event?.getContentIfNotHandled()?.let {
+                refreshEvents.add(it)
             }
         }
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
@@ -57,6 +70,10 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
             pagesCardParams.onFooterLinkClick()
 
             assertThat(navigationActions).containsOnly(SiteNavigationAction.TriggerCreatePageFlow(site))
+            verify(cardsTracker).trackCardFooterLinkClicked(
+                CardsTracker.Type.PAGES.label,
+                CardsTracker.PagesSubType.CREATE_PAGE.label
+            )
         }
 
     @Test
@@ -68,7 +85,10 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
             pagesCardParams.onPagesItemClick.invoke(pagesParams)
 
             assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPagesDraftsTab(site, MOCK_PAGE_ID))
-            verify(cardsTracker).trackPagesItemClicked(PagesCardContentType.DRAFT)
+            verify(cardsTracker).trackCardItemClicked(
+                CardsTracker.Type.PAGES.label,
+                CardsTracker.PagesSubType.DRAFT.label
+            )
         }
 
     @Test
@@ -80,7 +100,10 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
             pagesCardParams.onPagesItemClick.invoke(pagesParams)
 
             assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPagesScheduledTab(site, MOCK_PAGE_ID))
-            verify(cardsTracker).trackPagesItemClicked(PagesCardContentType.SCHEDULED)
+            verify(cardsTracker).trackCardItemClicked(
+                CardsTracker.Type.PAGES.label,
+                CardsTracker.PagesSubType.SCHEDULED.label
+            )
         }
 
     @Test
@@ -92,7 +115,10 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
             pagesCardParams.onPagesItemClick.invoke(pagesParams)
 
             assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
-            verify(cardsTracker).trackPagesItemClicked(PagesCardContentType.PUBLISH)
+            verify(cardsTracker).trackCardItemClicked(
+                CardsTracker.Type.PAGES.label,
+                CardsTracker.PagesSubType.PUBLISHED.label
+            )
         }
 
     @Test
@@ -120,13 +146,17 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `given pages card, when more menu item hide this is accessed, then event is tracked`() = test {
+        val siteId = 1L
+        whenever(selectedSiteRepository.getSelectedSite()?.siteId).thenReturn(siteId)
         val pagesCardParams = pagesCardViewModelSlice.getPagesCardBuilderParams(mock())
 
         pagesCardParams.moreMenuClickParams.onHideThisCardItemClick.invoke()
 
+        verify(appPrefsWrapper).setShouldHidePagesDashboardCard(siteId,true)
         verify(cardsTracker).trackCardMoreMenuItemClicked(
             CardsTracker.Type.PAGES.label,
             PagesMenuItemType.HIDE_THIS.label
         )
+        assertThat(refreshEvents).containsOnly(true)
     }
 }

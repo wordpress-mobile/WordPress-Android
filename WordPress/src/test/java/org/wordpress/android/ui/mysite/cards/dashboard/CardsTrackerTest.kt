@@ -10,11 +10,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.ActivityLogSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.MenuItemType
-import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PagesSubType
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.QuickStartSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
-import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -98,34 +96,6 @@ class CardsTrackerTest {
         cardsTracker.trackActivityCardFooterClicked()
 
         verifyFooterLinkClickedTracked(Type.ACTIVITY, ActivityLogSubtype.ACTIVITY_LOG.label)
-    }
-
-    @Test
-    fun `when pages card footer link is clicked, then footer link clicked is tracked`() {
-        cardsTracker.trackPagesCardFooterClicked()
-
-        verifyFooterLinkClickedTracked(Type.PAGES, PagesSubType.CREATE_PAGE.label)
-    }
-
-    @Test
-    fun `when page draft item is clicked, then page item event is tracked`() {
-        cardsTracker.trackPagesItemClicked(PagesCardContentType.DRAFT)
-
-        verifyCardItemClickedTracked(Type.PAGES, PagesSubType.DRAFT.label)
-    }
-
-    @Test
-    fun `when page published item is clicked, then page item event is tracked`() {
-        cardsTracker.trackPagesItemClicked(PagesCardContentType.PUBLISH)
-
-        verifyCardItemClickedTracked(Type.PAGES, PagesSubType.PUBLISHED.label)
-    }
-
-    @Test
-    fun `when page scheduled item is clicked, then page item event is tracked`() {
-        cardsTracker.trackPagesItemClicked(PagesCardContentType.SCHEDULED)
-
-        verifyCardItemClickedTracked(Type.PAGES, PagesSubType.SCHEDULED.label)
     }
 
     @Test

@@ -7,7 +7,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.QuickStartSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
-import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType
@@ -87,14 +86,6 @@ class CardsTracker @Inject constructor(
 
     fun trackActivityCardFooterClicked() {
         trackCardFooterLinkClicked(Type.ACTIVITY.label, ActivityLogSubtype.ACTIVITY_LOG.label)
-    }
-
-    fun trackPagesItemClicked(pageCardType: PagesCardContentType) {
-        trackCardItemClicked(Type.PAGES.label, pageCardType.toSubtypeValue().label)
-    }
-
-    fun trackPagesCardFooterClicked() {
-        trackCardFooterLinkClicked(Type.PAGES.label, PagesSubType.CREATE_PAGE.label)
     }
 
     fun trackActivityCardMenuItemClicked(menuItemType: MenuItemType) {
@@ -187,13 +178,7 @@ fun PostCardType.toSubtypeValue(): PostSubtype {
     }
 }
 
-fun PagesCardContentType.toSubtypeValue(): CardsTracker.PagesSubType {
-    return when (this) {
-        PagesCardContentType.DRAFT -> CardsTracker.PagesSubType.DRAFT
-        PagesCardContentType.PUBLISH -> CardsTracker.PagesSubType.PUBLISHED
-        PagesCardContentType.SCHEDULED -> CardsTracker.PagesSubType.SCHEDULED
-    }
-}
+
 
 fun QuickStartTaskType.toSubtypeValue(): QuickStartSubtype {
     return when (this) {
