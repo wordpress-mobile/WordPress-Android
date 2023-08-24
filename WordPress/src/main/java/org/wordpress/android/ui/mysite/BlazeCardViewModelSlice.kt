@@ -37,11 +37,18 @@ class BlazeCardViewModelSlice @Inject constructor(
                     )
                 } ?: PromoteWithBlazeCardBuilderParams(
                     onClick = this::onPromoteWithBlazeCardClick,
-                    onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
-                    onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
+                    moreMenuParams = PromoteWithBlazeCardBuilderParams.MoreMenuParams(
+                        onHideThisCardItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
+                        onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick,
+                        onLearnMoreClick = this::onLearnMoreBlazeClick
+                    )
                 )
             } else null
         }
+    }
+
+    private fun onLearnMoreBlazeClick() {
+        // todo implement the navigation and tracking
     }
 
     private fun onCreateCampaignClick() {
@@ -50,7 +57,7 @@ class BlazeCardViewModelSlice @Inject constructor(
             Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
     }
 
-        private fun onCampaignClick(campaignId: Int) {
+    private fun onCampaignClick(campaignId: Int) {
         _onNavigation.value =
             Event(SiteNavigationAction.OpenCampaignDetailPage(campaignId, CampaignDetailPageSource.DASHBOARD_CARD))
     }
