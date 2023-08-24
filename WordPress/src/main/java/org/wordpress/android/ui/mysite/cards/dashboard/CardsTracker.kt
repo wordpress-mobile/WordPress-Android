@@ -7,7 +7,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.QuickStartSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
-import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType
