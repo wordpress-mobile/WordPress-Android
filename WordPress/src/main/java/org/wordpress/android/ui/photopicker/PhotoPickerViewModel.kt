@@ -167,6 +167,7 @@ class PhotoPickerViewModel @Inject constructor(
             browserType.canMultiselect() -> {
                 UiStringText(String.format(resourceProvider.getString(R.string.cab_selected), numSelected))
             }
+
             else -> {
                 if (browserType.isImagePicker && browserType.isVideoPicker) {
                     UiStringRes(R.string.photo_picker_use_media)
@@ -327,24 +328,29 @@ class PhotoPickerViewModel @Inject constructor(
                 MEDIA_PICKER_OPEN_CAPTURE_MEDIA,
                 false
             )
+
             PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_VIDEO -> trackSelectedOtherSourceEvents(
                 MEDIA_PICKER_OPEN_CAPTURE_MEDIA,
                 true
             )
+
             PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO -> trackSelectedOtherSourceEvents(
                 MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
                 false
             )
+
             PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_VIDEO -> trackSelectedOtherSourceEvents(
                 MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
                 true
             )
+
             PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA -> AnalyticsTracker.track(MEDIA_PICKER_OPEN_WP_MEDIA)
             PhotoPickerFragment.PhotoPickerIcon.STOCK_MEDIA -> Unit // Do nothing
             PhotoPickerFragment.PhotoPickerIcon.GIF -> Unit // Do nothing
             PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE -> AnalyticsTracker.track(
                 MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
             )
+
             PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO -> Unit // Do nothing
         }
         _onIconClicked.postValue(Event(IconClickEvent(icon, browserType.canMultiselect())))
@@ -416,8 +422,14 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     fun checkMediaPermissions(isPhotosVideosAlwaysDenied: Boolean, isMusicAudioAlwaysDenied: Boolean) {
-        val isAlwaysDenied = ((browserType.isImagePicker || browserType.isVideoPicker) && isPhotosVideosAlwaysDenied) ||
-                (browserType.isAudioPicker && isMusicAudioAlwaysDenied)
+        val isPartialAccessGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            permissionsHandler.hasReadMediaVisualUserSelectedPermission()
+        } else false
+        val isAlwaysDenied = (
+                (browserType.isImagePicker || browserType.isVideoPicker) &&
+                        isPhotosVideosAlwaysDenied &&
+                        !isPartialAccessGranted
+                ) || (browserType.isAudioPicker && isMusicAudioAlwaysDenied)
 
         if (!needPhotosVideoPermission() && !needMusicAudioPermission()) {
             _softAskRequest.value = SoftAskRequest(show = false, isAlwaysDenied = isAlwaysDenied)
@@ -461,9 +473,11 @@ class PhotoPickerViewModel @Inject constructor(
                     browserType.isImagePicker && browserType.isVideoPicker && browserType.isAudioPicker -> {
                         R.string.photo_picker_soft_ask_photos_videos_audio_label
                     }
+
                     browserType.isImagePicker && browserType.isVideoPicker -> {
                         R.string.photo_picker_soft_ask_photos_videos_label
                     }
+
                     browserType.isImagePicker -> R.string.photo_picker_soft_ask_photos_label
                     browserType.isVideoPicker -> R.string.photo_picker_soft_ask_videos_label
                     browserType.isAudioPicker -> R.string.photo_picker_soft_ask_audios_label

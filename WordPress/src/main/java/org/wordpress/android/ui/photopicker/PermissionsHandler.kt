@@ -16,7 +16,10 @@ class PermissionsHandler
     }
 
     fun hasPhotosVideosPermission(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            (hasReadMediaImagesPermission() && hasReadMediaVideoPermission()) ||
+                    hasReadMediaVisualUserSelectedPermission()
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             hasReadMediaImagesPermission() && hasReadMediaVideoPermission()
         } else {
             // For devices lower than API 33, storage permission is the equivalent of Photos and Videos permission
@@ -31,6 +34,13 @@ class PermissionsHandler
             // For devices lower than API 33, storage permission is the equivalent of Music and Audio permission
             hasReadStoragePermission()
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    fun hasReadMediaVisualUserSelectedPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context, permission.READ_MEDIA_VISUAL_USER_SELECTED
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)

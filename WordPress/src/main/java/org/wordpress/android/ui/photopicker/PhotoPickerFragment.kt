@@ -449,6 +449,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
             // For devices lower than API 33, storage permission is the equivalent of Music and Audio permission
             isStoragePermissionAlwaysDenied
         }
+
         viewModel.checkMediaPermissions(isPhotosVideosPermissionAlwaysDenied, isMusicAudioPermissionAlwaysDenied)
     }
 
@@ -459,6 +460,9 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
             if (browserType.isImagePicker || browserType.isVideoPicker) {
                 permissions.add(permission.READ_MEDIA_IMAGES)
                 permissions.add(permission.READ_MEDIA_VIDEO)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    permissions.add(permission.READ_MEDIA_VISUAL_USER_SELECTED)
+                }
             }
             if (browserType.isAudioPicker) {
                 permissions.add(permission.READ_MEDIA_AUDIO)

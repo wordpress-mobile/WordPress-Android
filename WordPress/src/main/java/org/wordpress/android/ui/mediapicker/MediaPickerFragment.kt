@@ -665,6 +665,9 @@ class MediaPickerFragment : Fragment(), MenuProvider {
             if (mediaPickerSetup.requiresPhotosVideosPermissions) {
                 permissions.add(permission.READ_MEDIA_IMAGES)
                 permissions.add(permission.READ_MEDIA_VIDEO)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    permissions.add(permission.READ_MEDIA_VISUAL_USER_SELECTED)
+                }
             }
             if (mediaPickerSetup.requiresMusicAudioPermissions) {
                 permissions.add(permission.READ_MEDIA_AUDIO)

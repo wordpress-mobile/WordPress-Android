@@ -567,7 +567,14 @@ class MediaPickerViewModel @Inject constructor(
             // No permission is required, so there is no need to check permissions.
             return
         }
-        val isAlwaysDenied = (mediaPickerSetup.requiresPhotosVideosPermissions && isPhotosVideosAlwaysDenied) ||
+        val isPartialAccessGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            permissionsHandler.hasReadMediaVisualUserSelectedPermission()
+        } else false
+        val isAlwaysDenied = (
+                mediaPickerSetup.requiresPhotosVideosPermissions &&
+                        isPhotosVideosAlwaysDenied &&
+                        !isPartialAccessGranted
+                ) ||
                 (mediaPickerSetup.requiresMusicAudioPermissions && isMusicAudioAlwaysDenied)
         if (!needPhotosVideoPermission() && !needMusicAudioPermission()) {
             _softAskRequest.value = SoftAskRequest(show = false, isAlwaysDenied = isAlwaysDenied)
