@@ -157,16 +157,29 @@ sealed class MySiteCardAndItemBuilderParams {
     sealed class BlazeCardBuilderParams : MySiteCardAndItemBuilderParams() {
         data class PromoteWithBlazeCardBuilderParams(
             val onClick: () -> Unit,
-            val onHideMenuItemClick: () -> Unit,
-            val onMoreMenuClick: () -> Unit
-        ) : BlazeCardBuilderParams()
+            val moreMenuParams : MoreMenuParams
+        ) : BlazeCardBuilderParams() {
+            data class MoreMenuParams(
+                val onMoreMenuClick: () -> Unit,
+                val onHideThisCardItemClick: () -> Unit,
+                val onLearnMoreClick: () -> Unit
+            )
+        }
 
         data class CampaignWithBlazeCardBuilderParams(
             val campaign: BlazeCampaignModel,
             val onCreateCampaignClick: () -> Unit,
             val onCampaignClick: (campaignId: Int) -> Unit,
-            val onCardClick: () -> Unit
-        ) : BlazeCardBuilderParams()
+            val onCardClick: () -> Unit,
+            val moreMenuParams: MoreMenuParams
+        ) : BlazeCardBuilderParams() {
+            data class MoreMenuParams(
+                val viewAllCampaignsItemClick: () -> Unit,
+                val onLearnMoreClick: () -> Unit,
+                val onHideThisCardItemClick: () -> Unit,
+                val onMoreMenuClick: () -> Unit
+            )
+        }
     }
 
     data class DomainTransferCardBuilderParams(

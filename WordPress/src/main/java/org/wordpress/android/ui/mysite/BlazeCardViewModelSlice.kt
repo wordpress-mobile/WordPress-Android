@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
@@ -29,20 +30,77 @@ class BlazeCardViewModelSlice @Inject constructor(
         return blazeCardUpdate?.let {
             if (it.blazeEligible) {
                 it.campaign?.let { campaign ->
-                    CampaignWithBlazeCardBuilderParams(
-                        campaign = campaign,
-                        onCreateCampaignClick = this::onCreateCampaignClick,
-                        onCampaignClick = this::onCampaignClick,
-                        onCardClick = this::onCampaignsCardClick,
-                    )
-                } ?: PromoteWithBlazeCardBuilderParams(
-                    onClick = this::onPromoteWithBlazeCardClick,
-                    onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
-                    onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
-                )
+                    getCampaignWithBlazeCardBuilderParams(campaign)
+                } ?: getPromoteWithBlazeCardBuilderParams()
             } else null
         }
     }
+
+    private fun getCampaignWithBlazeCardBuilderParams(campaign: BlazeCampaignModel) =
+        CampaignWithBlazeCardBuilderParams(
+            campaign = campaign,
+            onCreateCampaignClick = this::onCreateCampaignClick,
+            onCampaignClick = this::onCampaignClick,
+            onCardClick = this::onCampaignsCardClick,
+            moreMenuParams = CampaignWithBlazeCardBuilderParams.MoreMenuParams(
+                viewAllCampaignsItemClick = this::onViewAllCampaignsClick,
+                onLearnMoreClick = this::onCampaignCardLearnMoreClick,
+                onHideThisCardItemClick = this::onCampaignCardHideMenuItemClick,
+                onMoreMenuClick = this::onCampaignCardMoreMenuClick
+            )
+        )
+
+    private fun onViewAllCampaignsClick() {
+        // todo add tracking for the click
+        _onNavigation.value =
+            Event(SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.DASHBOARD_CARD))
+    }
+
+    private fun onCampaignCardLearnMoreClick() {
+        // todo implement the navigation and tracking
+    }
+
+    private fun onCampaignCardHideMenuItemClick() {
+        // todo implement the hide logic and tracking
+    }
+
+    private fun onCampaignCardMoreMenuClick() {
+        // todo implement the logic and tracking
+    }
+
+    private fun getPromoteWithBlazeCardBuilderParams() =
+        PromoteWithBlazeCardBuilderParams(
+            onClick = this::onPromoteWithBlazeCardClick,
+            moreMenuParams = PromoteWithBlazeCardBuilderParams.MoreMenuParams(
+                onLearnMoreClick = this::onPromoteCardLearnMoreClick,
+                onHideThisCardItemClick = this::onPromoteCardHideMenuItemClick,
+                onMoreMenuClick = this::onPromoteCardMoreMenuClick
+            )
+        )
+
+
+    private fun onPromoteCardLearnMoreClick() {
+        // todo implement the navigation and tracking
+    }
+
+    private fun onPromoteCardHideMenuItemClick() {
+        blazeFeatureUtils.track(
+            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
+        selectedSiteRepository.getSelectedSite()?.let {
+            blazeFeatureUtils.hidePromoteWithBlazeCard(it.siteId)
+        }
+        _refresh.value = Event(true)
+    }
+
+    private fun onPromoteCardMoreMenuClick() {
+        blazeFeatureUtils.track(
+            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
+    }
+
 
     private fun onCreateCampaignClick() {
         blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.DASHBOARD_CARD)
@@ -50,7 +108,7 @@ class BlazeCardViewModelSlice @Inject constructor(
             Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
     }
 
-        private fun onCampaignClick(campaignId: Int) {
+    private fun onCampaignClick(campaignId: Int) {
         _onNavigation.value =
             Event(SiteNavigationAction.OpenCampaignDetailPage(campaignId, CampaignDetailPageSource.DASHBOARD_CARD))
     }
@@ -64,24 +122,6 @@ class BlazeCardViewModelSlice @Inject constructor(
         blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.DASHBOARD_CARD)
         _onNavigation.value =
             Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
-    }
-
-    private fun onPromoteWithBlazeCardHideMenuItemClick() {
-        blazeFeatureUtils.track(
-            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
-            BlazeFlowSource.DASHBOARD_CARD
-        )
-        selectedSiteRepository.getSelectedSite()?.let {
-            blazeFeatureUtils.hidePromoteWithBlazeCard(it.siteId)
-        }
-        _refresh.value = Event(true)
-    }
-
-    private fun onPromoteWithBlazeCardMoreMenuClick() {
-        blazeFeatureUtils.track(
-            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
-            BlazeFlowSource.DASHBOARD_CARD
-        )
     }
 
     fun onBlazeMenuItemClick(): SiteNavigationAction {

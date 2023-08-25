@@ -331,7 +331,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val title: UiString,
                         val campaign: BlazeCampaignsCardItem,
                         val footer: BlazeCampaignsCardFooter,
-                        val onClick: ListItemInteraction
+                        val onClick: ListItemInteraction,
+                        val moreMenuOptions: MoreMenuOptions
                         ) : BlazeCard(dashboardCardType = DashboardCardType.BLAZE_CAMPAIGNS_CARD) {
                         data class BlazeCampaignsCardItem(
                             val id: Int,
@@ -351,15 +352,27 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                             val label: UiString,
                             val onClick: ListItemInteraction,
                         )
+
+                        data class MoreMenuOptions(
+                            val viewAllCampaignsItemClick: ListItemInteraction,
+                            val learnMoreClick: ListItemInteraction,
+                            val hideThisMenuItemClick: ListItemInteraction,
+                            val onMoreClick: ListItemInteraction
+                        )
                     }
 
                     data class PromoteWithBlazeCard(
                         val title: UiString?,
                         val subtitle: UiString?,
                         val onClick: ListItemInteraction,
-                        val onHideMenuItemClick: ListItemInteraction,
-                        val onMoreMenuClick: ListItemInteraction,
-                    ) : BlazeCard(dashboardCardType = DashboardCardType.PROMOTE_WITH_BLAZE_CARD)
+                        val moreMenuOptions: MoreMenuOptions
+                    ) : BlazeCard(dashboardCardType = DashboardCardType.PROMOTE_WITH_BLAZE_CARD) {
+                        data class MoreMenuOptions(
+                            val onMoreClick: ListItemInteraction,
+                            val hideThisMenuItemClick: ListItemInteraction,
+                            val learnMoreClick: ListItemInteraction
+                        )
+                    }
                 }
 
                 data class DashboardDomainCard(

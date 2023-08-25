@@ -4547,6 +4547,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="promote_blaze_card_title">Promote your content with Blaze</string>
     <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
     <string name="promote_blaze_card_more_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
+    <string name="promote_blaze_card_more_menu_learn_more" translatable="false">@string/learn_more</string>
     <string name="promote_blaze_flow_error">The blaze promote flow couldn\'t be loaded</string>
 
     <string name="gutenberg_native_blocks_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks menu</string>
@@ -4642,6 +4643,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Jetpack - Blaze campaigns card -->
     <string name="blaze_campaigns_card_title">Blaze Campaign</string>
     <string name="blaze_campaigns_card_footer_label">Create Campaign</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">View all campaigns</string>
+    <string name="blaze_campaigns_card_more_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
+    <string name="blaze_campaigns_card_more_menu_learn_more" translatable="false">@string/learn_more</string>
+
     <string name="campaign_status_active">ACTIVE</string>
     <string name="campaign_status_completed">COMPLETED</string>
     <string name="campaign_status_rejected">REJECTED</string>
