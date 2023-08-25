@@ -146,11 +146,6 @@ class EditorMedia @Inject constructor(
         }
     }
 
-    fun addFreshlyTakenVideoToEditor() {
-        addNewMediaItemsToEditorAsync(listOf(mediaUtilsWrapper.getLastRecordedVideoUri()), true)
-            .also { AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW) }
-    }
-
     fun onPhotoPickerMediaChosen(uriList: List<Uri>) {
         val onlyVideos = uriList.all { mediaUtilsWrapper.isVideo(it.toString()) }
         if (onlyVideos) {

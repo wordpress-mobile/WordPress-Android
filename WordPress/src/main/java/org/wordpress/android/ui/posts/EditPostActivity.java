@@ -2909,7 +2909,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     mEditorMedia.addNewMediaItemsToEditorAsync(WPMediaUtils.retrieveMediaUris(data), false);
                     break;
                 case RequestCodes.TAKE_VIDEO:
-                    mEditorMedia.addFreshlyTakenVideoToEditor();
+                    Uri videoUri = data.getData();
+                    mEditorMedia.addNewMediaToEditorAsync(videoUri, true);
+                    mEditorTracker.trackAddMediaFromDevice(mSite, true, true, videoUri);
                     break;
                 case RequestCodes.MEDIA_SETTINGS:
                     if (mEditorFragment instanceof AztecEditorFragment) {

@@ -480,9 +480,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         );
     }
 
-    private void checkRecordedVideoDurationBeforeUploadAndTrack() {
-        Uri uri = MediaUtils.getLastRecordedVideoUri(this);
-
+    private void checkRecordedVideoDurationBeforeUploadAndTrack(Uri uri) {
         if (mMediaUtilsWrapper.isProhibitedVideoDuration(this, mSite, uri)) {
             ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, LONG);
         } else {
@@ -522,7 +520,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 break;
             case RequestCodes.TAKE_VIDEO:
                 if (resultCode == Activity.RESULT_OK) {
-                    checkRecordedVideoDurationBeforeUploadAndTrack();
+                    Uri uri = data.getData();
+                    checkRecordedVideoDurationBeforeUploadAndTrack(uri);
                 }
                 break;
             case RequestCodes.MEDIA_SETTINGS:
