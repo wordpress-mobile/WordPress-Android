@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-10 09:54:08+0000
+Translation-Revision-Date: 2023-08-24 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.7
 Language: zh_TW
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">回答：</string>
+    <string name="contact_support_bot_ticket_comment_question">問題：</string>
+    <string name="contact_support_bot_ticket_comment_start">Jetpack 行動版 Bot 文字稿：</string>
+    <string name="contact_support_bot_ticket_error">提交客服聯絡單時發生錯誤</string>
+    <string name="contact_support_bot_ticket_message">已建立聯絡單</string>
+    <string name="contact_support_bot_ticket_loading">正在建立客服聯絡單…</string>
+    <string name="contact_support_question_six">如何在應用程式中使用自訂網域？</string>
+    <string name="contact_support_question_five">我忘記登入資訊</string>
+    <string name="contact_support_question_four">為何無法登入？</string>
+    <string name="contact_support_question_three">我無法上傳照片/影片</string>
+    <string name="contact_support_question_two">我的網站停機了，幫幫我！</string>
+    <string name="contact_support_question_one">我的網站位址是？</string>
+    <string name="contact_support_suggestions">不確定要詢問什麼嗎？</string>
+    <string name="contact_support_get_support">聯絡支援團隊</string>
+    <string name="contact_support_first_message">你需要什麼協助？</string>
+    <string name="contact_support_input_placeholder">傳送訊息…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">清除</string>
     <string name="jetpack_social_social_shares_remaining">剩下 %1$d 次社群分享額度</string>
     <string name="missing_splits_dialog_button">關閉</string>
     <string name="missing_splits_dialog_message">WordPress 應用程式缺少必要組件，必須自 Google Play 商店重新下載安裝。</string>
@@ -977,7 +994,6 @@ Language: zh_TW
     <string name="new_site_creation_search_domain_input_hint">輸入網站的名稱</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;已完成所有任務&lt;/b&gt;&lt;br/&gt;你將觸及更多使用者。 做得好！</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;已完成所有任務&lt;/b&gt;&lt;br/&gt;你已自訂網站。 做得好！</string>
-    <string name="quick_start_card_menu_hide">暫時隱藏</string>
     <string name="magic_link_not_meaning_to_create_account">不是要建立一個新帳號嗎？ 返回並重新輸入你的電子郵件地址。</string>
     <string name="invite_links_disable_dialog_message">停用此邀請連結後，就沒有人能再用此連結加入你的團隊。 你確定嗎？</string>
     <string name="invite_links_disable_dialog_title">停用邀請連結</string>
@@ -1000,7 +1016,6 @@ Language: zh_TW
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;掃描完成&lt;/b&gt; &lt;br&gt; 未發現威脅</string>
     <string name="scan_fixing_threats_title_singular">正在修正威脅</string>
     <string name="disable">停用</string>
-    <string name="quick_start_card_menu_unpin">取消釘選此項目</string>
     <string name="quick_start_list_review_pages_subtitle">檢查你的頁面並進行變更，或新增/移除頁面。</string>
     <string name="quick_start_list_view_site_title">查看你的網站</string>
     <string name="quick_start_list_follow_site_subtitle">探索並追蹤帶給你啟發的網站。</string>
@@ -1096,8 +1111,6 @@ Language: zh_TW
     <string name="backup_download_complete_failed_title">下載失敗</string>
     <string name="web_preview_tablet">平板電腦</string>
     <string name="web_preview_mobile">行動裝置</string>
-    <string name="quick_start_card_menu_remove">不要再顯示</string>
-    <string name="quick_start_card_menu_pin">釘選此項目</string>
     <string name="quick_start_dialog_review_pages_message_short">選取%1$s「頁面」%2$s以檢視頁面清單。</string>
     <string name="quick_start_dialog_review_pages_message">變更、新增或移除網站的頁面。</string>
     <string name="quick_start_dialog_review_pages_title">檢閱網站頁面</string>
