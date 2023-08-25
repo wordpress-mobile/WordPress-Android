@@ -355,9 +355,9 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
                         data class MoreMenuOptions(
                             val viewAllCampaignsItemClick: ListItemInteraction,
-                            val onMoreClick: ListItemInteraction,
+                            val learnMoreClick: ListItemInteraction,
                             val hideThisMenuItemClick: ListItemInteraction,
-                            val learnMoreClick: ListItemInteraction
+                            val onMoreClick: ListItemInteraction
                         )
                     }
 

@@ -37,9 +37,9 @@ class BlazeCardBuilder @Inject constructor(private val statsUtils: StatsUtils) {
     private fun getMoreMenuOptions(params: CampaignWithBlazeCardBuilderParams) =
         BlazeCampaignsCardModel.MoreMenuOptions(
             viewAllCampaignsItemClick = ListItemInteraction.create(params.moreMenuParams.viewAllCampaignsItemClick),
-            onMoreClick = ListItemInteraction.create(params.moreMenuParams.onMoreMenuClick),
+            learnMoreClick = ListItemInteraction.create(params.moreMenuParams.onLearnMoreClick),
             hideThisMenuItemClick = ListItemInteraction.create(params.moreMenuParams.onHideThisCardItemClick),
-            learnMoreClick = ListItemInteraction.create(params.moreMenuParams.onLearnMoreClick)
+            onMoreClick = ListItemInteraction.create(params.moreMenuParams.onMoreMenuClick)
         )
 
 

@@ -212,7 +212,7 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
         // When
         val result =
             blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate) as PromoteWithBlazeCardBuilderParams
-        result.onHideMenuItemClick()
+        result.moreMenuParams.onHideThisCardItemClick()
 
         // Then
         verify(blazeFeatureUtils).track(
@@ -233,7 +233,7 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
         // When
         val result =
             blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate) as PromoteWithBlazeCardBuilderParams
-        result.onMoreMenuClick()
+        result.moreMenuParams.onMoreMenuClick()
 
         // Then
         verify(blazeFeatureUtils).track(
