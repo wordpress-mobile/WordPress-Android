@@ -1492,6 +1492,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         renderer?.beginRender()
     }
 
+    // overridePendingTransition is deprecated in SDK 34 in favor of overrideActivityTransition, but the latter requires
+    // SDK 34. overridePendingTransition still works on Android 14 so using it should be safe for now.
+    @Suppress("DEPRECATION")
     private fun handleDirectOperation() = when (directOperation) {
         DirectOperation.COMMENT_JUMP, DirectOperation.COMMENT_REPLY, DirectOperation.COMMENT_LIKE -> {
             viewModel.post?.let {

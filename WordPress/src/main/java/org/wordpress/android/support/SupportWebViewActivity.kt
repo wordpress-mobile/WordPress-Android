@@ -7,14 +7,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.viewModels
+import androidx.appcompat.widget.Toolbar
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewAssetLoader.AssetsPathHandler
 import androidx.webkit.WebViewAssetLoader.DEFAULT_DOMAIN
 import androidx.webkit.WebViewAssetLoader.ResourcesPathHandler
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.BuildConfig
@@ -52,14 +52,14 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         viewModel.start(chatIdProperty)
         toggleNavbarVisibility(false)
 
-        // set send message box to appear above system navigation bar
-        val previewContainer = findViewById<View>(R.id.preview_container)
-        val params = previewContainer.layoutParams as ViewGroup.MarginLayoutParams
-        params.bottomMargin = resources.getDimensionPixelSize(R.dimen.margin_64dp)
-        previewContainer.layoutParams = params
-
         supportActionBar?.title = getString(R.string.help)
         supportActionBar?.subtitle = ""
+        window.navigationBarColor = getColor(R.color.docsbot_chat_container)
+
+        // Prevent AppBar scrolling away
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val toolbarLayoutParams = toolbar.layoutParams as AppBarLayout.LayoutParams
+        toolbarLayoutParams.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
 
         setupWebView()
         setupJsInterfaceForWebView()

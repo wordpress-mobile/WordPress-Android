@@ -203,6 +203,9 @@ class SuggestionActivity : LocaleAwareActivity() {
         }
     }
 
+    // overridePendingTransition is deprecated in SDK 34 in favor of overrideActivityTransition, but the latter requires
+    // SDK 34. overridePendingTransition still works on Android 14 so using it should be safe for now.
+    @Suppress("DEPRECATION")
     override fun finish() {
         super.finish()
         overridePendingTransition(R.anim.do_nothing, R.anim.do_nothing)

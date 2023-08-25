@@ -122,4 +122,7 @@
     <color name="dashboard_card_plans_info_background">@color/gray_0</color>
     <color name="dashboard_card_plans_info_text_color">@color/gray_20</color>
 
+    <!-- Support Chat Bot -->
+    <color name="docsbot_chat_container">#F9FAF9</color>
+
 </resources>
