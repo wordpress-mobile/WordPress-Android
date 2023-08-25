@@ -331,7 +331,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val title: UiString,
                         val campaign: BlazeCampaignsCardItem,
                         val footer: BlazeCampaignsCardFooter,
-                        val onClick: ListItemInteraction
+                        val onClick: ListItemInteraction,
+                        val moreMenuOptions: MoreMenuOptions
                         ) : BlazeCard(dashboardCardType = DashboardCardType.BLAZE_CAMPAIGNS_CARD) {
                         data class BlazeCampaignsCardItem(
                             val id: Int,
@@ -350,6 +351,13 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         data class BlazeCampaignsCardFooter(
                             val label: UiString,
                             val onClick: ListItemInteraction,
+                        )
+
+                        data class MoreMenuOptions(
+                            val viewAllCampaignsItemClick: ListItemInteraction,
+                            val onMoreClick: ListItemInteraction,
+                            val hideThisMenuItemClick: ListItemInteraction,
+                            val learnMoreClick: ListItemInteraction
                         )
                     }
 
