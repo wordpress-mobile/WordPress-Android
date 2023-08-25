@@ -219,7 +219,7 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
             AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
             BlazeFlowSource.DASHBOARD_CARD
         )
-        verify(blazeFeatureUtils).hidePromoteWithBlazeCard(any())
+        verify(blazeFeatureUtils).hideBlazeCard(any())
         assertThat(refreshActions).containsOnly(true)
     }
 

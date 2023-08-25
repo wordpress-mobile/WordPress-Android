@@ -64,11 +64,12 @@ class BlazeCardViewModelSlice @Inject constructor(
     }
 
     private fun onCampaignCardHideMenuItemClick() {
-        // todo implement the hide logic and tracking
+        // todo implement the tracking
+        onHideCardClick()
     }
 
     private fun onCampaignCardMoreMenuClick() {
-        TODO("Not yet implemented")
+        // todo implement the tracking
     }
 
     private fun onPromoteCardLearnMoreClick() {
@@ -80,8 +81,12 @@ class BlazeCardViewModelSlice @Inject constructor(
             AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
             BlazeFlowSource.DASHBOARD_CARD
         )
+        onHideCardClick()
+    }
+
+    private fun onHideCardClick() {
         selectedSiteRepository.getSelectedSite()?.let {
-            blazeFeatureUtils.hidePromoteWithBlazeCard(it.siteId)
+            blazeFeatureUtils.hideBlazeCard(it.siteId)
         }
         _refresh.value = Event(true)
     }
@@ -92,7 +97,6 @@ class BlazeCardViewModelSlice @Inject constructor(
             BlazeFlowSource.DASHBOARD_CARD
         )
     }
-
 
     private fun onCreateCampaignClick() {
         blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.DASHBOARD_CARD)
