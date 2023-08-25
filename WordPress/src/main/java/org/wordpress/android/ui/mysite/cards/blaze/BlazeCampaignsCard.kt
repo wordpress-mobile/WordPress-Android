@@ -218,15 +218,24 @@ private fun CardDropDownMenu(moreMenuOptions: BlazeCampaignsCardModel.MoreMenuOp
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(id = R.string.blaze_campaigns_card_more_menu_view_all_campaigns)) },
-                onClick = { moreMenuOptions.viewAllCampaignsItemClick.click() }
+                onClick = {
+                    isExpanded = false
+                    moreMenuOptions.viewAllCampaignsItemClick.click()
+                }
             )
             DropdownMenuItem(
                 text = { Text(stringResource(id = R.string.blaze_campaigns_card_more_menu_learn_more)) },
-                onClick = { moreMenuOptions.learnMoreClick.click() }
+                onClick = {
+                    isExpanded = false
+                    moreMenuOptions.learnMoreClick.click()
+                }
             )
             DropdownMenuItem(
                 text = { Text(stringResource(id = R.string.blaze_campaigns_card_more_menu_hide_this)) },
-                onClick = { moreMenuOptions.hideThisMenuItemClick.click() }
+                onClick = {
+                    isExpanded = false
+                    moreMenuOptions.hideThisMenuItemClick.click()
+                }
             )
         }
     }

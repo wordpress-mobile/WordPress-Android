@@ -86,16 +86,21 @@ sealed class SiteNavigationAction {
     object OpenJetpackPoweredBottomSheet : SiteNavigationAction()
     object OpenJetpackMigrationDeleteWP : SiteNavigationAction()
     data class OpenJetpackFeatureOverlay(val source: JetpackFeatureCollectionOverlaySource) : SiteNavigationAction()
-    data class OpenPromoteWithBlazeOverlay(val source: BlazeFlowSource) : SiteNavigationAction()
+    data class OpenPromoteWithBlazeOverlay(val source: BlazeFlowSource, val shouldShowBlazeOverlay: Boolean = false) :
+        SiteNavigationAction()
+
     object ShowJetpackRemovalStaticPostersView : SiteNavigationAction()
     data class OpenActivityLogDetail(val site: SiteModel, val activityId: String, val isRewindable: Boolean) :
         SiteNavigationAction()
-    data class TriggerCreatePageFlow(val site: SiteModel):SiteNavigationAction()
+
+    data class TriggerCreatePageFlow(val site: SiteModel) : SiteNavigationAction()
     data class OpenPagesDraftsTab(val site: SiteModel, val pageId: Int) : SiteNavigationAction()
     data class OpenPagesScheduledTab(val site: SiteModel, val pageId: Int) : SiteNavigationAction()
-    data class OpenCampaignListingPage(val campaignListingPageSource: CampaignListingPageSource)
-        : SiteNavigationAction()
-    data class OpenCampaignDetailPage(val campaignId: Int, val campaignDetailPageSource: CampaignDetailPageSource)
-        : SiteNavigationAction()
+    data class OpenCampaignListingPage(val campaignListingPageSource: CampaignListingPageSource) :
+        SiteNavigationAction()
+
+    data class OpenCampaignDetailPage(val campaignId: Int, val campaignDetailPageSource: CampaignDetailPageSource) :
+        SiteNavigationAction()
+
     data class OpenDomainTransferPage(val url: String) : SiteNavigationAction()
 }
