@@ -60,9 +60,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems.PostItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
@@ -79,7 +76,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCa
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
@@ -111,7 +107,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomai
 import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
-import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
@@ -328,6 +324,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var todaysStatsViewModelSlice: TodaysStatsViewModelSlice
 
+    @Mock
+    lateinit var postsCardViewModelSlice: PostsCardViewModelSlice
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -349,7 +348,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val siteIcon = "http://site.com/icon.jpg"
     private val siteName = "Site"
     private val emailAddress = "test@email.com"
-    private val postId = 100
     private val localHomepageId = 1
     private val bloggingPromptId = 123
     private val activityId = "activityId"
@@ -378,8 +376,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private var removeMenuItemClickAction: (() -> Unit)? = null
     private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
-    private var onPostCardFooterLinkClick: ((postCardType: PostCardType) -> Unit)? = null
-    private var onPostItemClick: ((params: PostItemClickParams) -> Unit)? = null
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
     private var onBloggingPromptAnswerClicked: ((promptId: Int) -> Unit)? = null
@@ -498,6 +494,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(domainTransferCardViewModel.refresh).thenReturn(refresh)
         whenever(pagesCardViewModelSlice.getPagesCardBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(todaysStatsViewModelSlice.getTodaysStatsBuilderParams(anyOrNull())).thenReturn(mock())
+        whenever(postsCardViewModelSlice.getPostsCardBuilderParams(anyOrNull())).thenReturn(mock())
 
         viewModel = MySiteViewModel(
             networkUtilsWrapper,
@@ -555,7 +552,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             blazeCardViewModelSlice,
             domainTransferCardViewModel,
             pagesCardViewModelSlice,
-            todaysStatsViewModelSlice
+            todaysStatsViewModelSlice,
+            postsCardViewModelSlice
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1540,82 +1538,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartRepository).setActiveTask(pendingTask)
     }
 
-    /* DASHBOARD POST CARD - FOOTER LINK */
-    @Test
-    fun `given draft post card, when footer link is clicked, then draft posts screen is opened`() = test {
-        initSelectedSite()
-
-        requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.DRAFT)
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenDraftsPosts(site))
-    }
-
-    @Test
-    fun `given scheduled post card, when footer link is clicked, then scheduled posts screen is opened`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.SCHEDULED)
-
-            assertThat(navigationActions)
-                .containsOnly(SiteNavigationAction.OpenScheduledPosts(site))
-        }
-
-    @Test
-    fun `given post card, when footer link is clicked, then event is tracked`() = test {
-        initSelectedSite()
-
-        requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.SCHEDULED)
-
-        verify(cardsTracker).trackPostCardFooterLinkClicked(PostCardType.SCHEDULED)
-    }
-
-    @Test
-    fun `when dashboard cards are shown, then card shown event is tracked`() = test {
-        initSelectedSite()
-
-        verify(cardsTracker, atLeastOnce()).trackShown(any())
-    }
-
-    /* DASHBOARD POST CARD */
-    @Test
-    fun `given draft post card, when post item is clicked, then post is opened for edit draft`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.DRAFT, postId))
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.EditDraftPost(site, postId))
-        }
-
-    @Test
-    fun `given scheduled post card, when post item is clicked, then post is opened for edit scheduled`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.SCHEDULED, postId))
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.EditScheduledPost(site, postId))
-        }
-
-    @Test
-    fun `given scheduled post card, when item is clicked, then event is tracked`() = test {
-        initSelectedSite()
-
-        requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.SCHEDULED, postId))
-
-        verify(cardsTracker).trackPostItemClicked(PostCardType.SCHEDULED)
-    }
-
-    @Test
-    fun `given draft post card, when item is clicked, then event is tracked`() = test {
-        initSelectedSite()
-
-        requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.DRAFT, postId))
-
-        verify(cardsTracker).trackPostItemClicked(PostCardType.DRAFT)
-    }
-
     /* DASHBOARD BLOGGING PROMPT CARD */
 
     @Test
@@ -1965,6 +1887,14 @@ class MySiteViewModelTest : BaseUnitTest() {
                     it.cards.any { card -> card is DashboardCard.BloggingPromptCard }
                 }
             )
+    }
+
+    /* DASHBOARD */
+    @Test
+    fun `when dashboard cards are shown, then card shown event is tracked`() = test {
+        initSelectedSite()
+
+        verify(cardsTracker, atLeastOnce()).trackShown(any())
     }
 
     /* DASHBOARD ACTIVITY CARD */
@@ -3310,7 +3240,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 if (params.showErrorCard) {
                     add(initErrorCard(mockInvocation))
                 } else {
-                    add(initPostCard(mockInvocation))
+                //    add(initPostCard(mockInvocation))
                     if (bloggingPromptsFeatureConfig.isEnabled()) add(initBloggingPromptCard(mockInvocation))
                     add(initActivityCard(mockInvocation))
                 }
@@ -3323,33 +3253,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         onDashboardErrorRetryClick = params.onErrorRetryClick
         return ErrorCard(onRetryClick = ListItemInteraction.create { onDashboardErrorRetryClick })
     }
-
-    private fun initPostCard(mockInvocation: InvocationOnMock): PostCardWithPostItems {
-        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
-        onPostItemClick = params.postCardBuilderParams.onPostItemClick
-        onPostCardFooterLinkClick = params.postCardBuilderParams.onFooterLinkClick
-        return PostCardWithPostItems(
-            postCardType = PostCardType.DRAFT,
-            title = UiStringRes(0),
-            postItems = listOf(
-                PostItem(
-                    title = UiStringRes(0),
-                    excerpt = UiStringRes(0),
-                    featuredImageUrl = "",
-                    onClick = ListItemInteraction.create {
-                        (onPostItemClick as (PostItemClickParams) -> Unit).invoke(
-                            PostItemClickParams(PostCardType.DRAFT, postId)
-                        )
-                    }
-                )
-            ),
-            footerLink = FooterLink(
-                label = UiStringRes(0),
-                onClick = onPostCardFooterLinkClick as ((postCardType: PostCardType) -> Unit)
-            )
-        )
-    }
-
     private fun initBloggingPromptCard(mockInvocation: InvocationOnMock): BloggingPromptCardWithData {
         val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
         onBloggingPromptShareClicked = params.bloggingPromptCardBuilderParams.onShareClick
