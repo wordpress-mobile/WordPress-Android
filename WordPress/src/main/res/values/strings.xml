@@ -4643,6 +4643,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Jetpack - Blaze campaigns card -->
     <string name="blaze_campaigns_card_title">Blaze Campaign</string>
     <string name="blaze_campaigns_card_footer_label">Create Campaign</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">View All Campaigns</string>
+    <string name="blaze_campaigns_card_more_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
+    <string name="blaze_campaigns_card_more_menu_learn_more" translatable="false">@string/learn_more</string>
+
     <string name="campaign_status_active">ACTIVE</string>
     <string name="campaign_status_completed">COMPLETED</string>
     <string name="campaign_status_rejected">REJECTED</string>
