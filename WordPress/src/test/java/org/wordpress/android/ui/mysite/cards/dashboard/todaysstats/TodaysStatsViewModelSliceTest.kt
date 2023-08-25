@@ -83,4 +83,40 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
                 CardsTracker.StatsSubtype.TODAYS_STATS_NUDGE.label
             )
         }
+
+
+    @Test
+    fun `given todays stats card, when more menu is accessed, then event is tracked`() = test {
+        val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(mock())
+
+        params.moreMenuClickParams.onMoreMenuClick.invoke()
+
+        verify(cardsTracker).trackCardMoreMenuClicked(CardsTracker.Type.STATS.label)
+    }
+
+    @Test
+    fun `given todays stats card, when more menu item view stats is accessed, then event is tracked`() = test {
+        val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(mock())
+
+        params.moreMenuClickParams.onViewStatsMenuItemClick.invoke()
+
+        verify(cardsTracker).trackCardMoreMenuItemClicked(
+            CardsTracker.Type.STATS.label,
+            TodaysStatsMenuItemType.VIEW_STATS.label
+        )
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsInsights(site))
+    }
+
+
+    @Test
+    fun `given todays stats card, when more menu item hide this is accessed, then event is tracked`() = test {
+        val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(mock())
+
+        params.moreMenuClickParams.onHideThisMenuItemClick.invoke()
+
+        verify(cardsTracker).trackCardMoreMenuItemClicked(
+            CardsTracker.Type.STATS.label,
+            TodaysStatsMenuItemType.HIDE_THIS.label
+        )
+    }
 }
