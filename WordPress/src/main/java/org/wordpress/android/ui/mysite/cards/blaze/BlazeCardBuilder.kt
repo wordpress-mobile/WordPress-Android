@@ -34,14 +34,14 @@ class BlazeCardBuilder @Inject constructor(private val statsUtils: StatsUtils) {
         )
     }
 
-    private fun getMoreMenuOptions(params: CampaignWithBlazeCardBuilderParams): BlazeCampaignsCardModel.MoreMenuOptions {
-        return BlazeCampaignsCardModel.MoreMenuOptions(
+    private fun getMoreMenuOptions(params: CampaignWithBlazeCardBuilderParams) =
+        BlazeCampaignsCardModel.MoreMenuOptions(
             viewAllCampaignsItemClick = ListItemInteraction.create(params.moreMenuParams.viewAllCampaignsItemClick),
             onMoreClick = ListItemInteraction.create(params.moreMenuParams.onMoreMenuClick),
             hideThisMenuItemClick = ListItemInteraction.create(params.moreMenuParams.onHideThisCardItemClick),
             learnMoreClick = ListItemInteraction.create(params.moreMenuParams.onLearnMoreClick)
         )
-    }
+
 
     private fun getBlazeCardFooter(params: CampaignWithBlazeCardBuilderParams): BlazeCampaignsCardFooter {
         return BlazeCampaignsCardFooter(
@@ -84,11 +84,14 @@ class BlazeCardBuilder @Inject constructor(private val statsUtils: StatsUtils) {
             title = UiString.UiStringRes(R.string.promote_blaze_card_title),
             subtitle = UiString.UiStringRes(R.string.promote_blaze_card_sub_title),
             onClick = ListItemInteraction.create(params.onClick),
-            moreMenuOptions = PromoteWithBlazeCard.MoreMenuOptions(
-                onMoreClick = ListItemInteraction.create(params.moreMenuParams.onMoreMenuClick),
-                hideThisMenuItemClick = ListItemInteraction.create(params.moreMenuParams.onHideThisCardItemClick),
-                learnMoreClick = ListItemInteraction.create(params.moreMenuParams.onLearnMoreClick)
-            )
+            moreMenuOptions = getMoreMenuOptions(params)
         )
     }
+
+    private fun getMoreMenuOptions(params: PromoteWithBlazeCardBuilderParams) =
+        PromoteWithBlazeCard.MoreMenuOptions(
+            onMoreClick = ListItemInteraction.create(params.moreMenuParams.onMoreMenuClick),
+            hideThisMenuItemClick = ListItemInteraction.create(params.moreMenuParams.onHideThisCardItemClick),
+            learnMoreClick = ListItemInteraction.create(params.moreMenuParams.onLearnMoreClick)
+        )
 }
