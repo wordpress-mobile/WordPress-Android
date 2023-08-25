@@ -338,7 +338,6 @@ class CardsBuilderTest : BaseUnitTest() {
                 ),
                 blazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
                     mock(),
-                    mock(),
                     mock()
                 ),
                 dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(

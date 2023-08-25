@@ -216,7 +216,6 @@ class CardsBuilderTest {
                 ),
                 blazeCardBuilderParams = BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams(
                     mock(),
-                    mock(),
                     mock()
                 ),
                 dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
