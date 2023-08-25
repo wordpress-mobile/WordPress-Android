@@ -252,7 +252,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val postCardType: PostCardType,
                         val title: UiString,
                         val postItems: List<PostItem>,
-                        override val footerLink: FooterLink
+                        override val footerLink: FooterLink,
+                        val moreMenuOptions: MoreMenuOptions
                     ) : PostCard(
                         dashboardCardType = DashboardCardType.POST_CARD_WITH_POST_ITEMS,
                         footerLink = footerLink
@@ -269,6 +270,11 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     data class FooterLink(
                         val label: UiString,
                         val onClick: (postCardType: PostCardType) -> Unit
+                    )
+                    data class MoreMenuOptions(
+                        val onMoreClick: (postCardType: PostCardType) -> Unit,
+                        val allPostsMenuItemClick: (postCardType: PostCardType) -> Unit,
+                        val hideThisMenuItemClick: (postCardType: PostCardType) -> Unit
                     )
                 }
 
