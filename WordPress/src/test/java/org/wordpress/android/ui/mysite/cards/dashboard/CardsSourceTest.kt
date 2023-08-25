@@ -188,7 +188,8 @@ class CardsSourceTest : BaseUnitTest() {
     private fun setUpMocks(
         isDashboardCardActivityLogEnabled: Boolean = false,
         isRequestPages: Boolean = false,
-        isPagesCardHidden: Boolean = false
+        isPagesCardHidden: Boolean = false,
+        isTodaysStatsCardHidden: Boolean = false
     ) {
         whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
@@ -197,6 +198,8 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(siteModel.hasCapabilityEditPages).thenReturn(isRequestPages)
         whenever(appPrefsWrapper.getShouldHidePagesDashboardCard(any()))
             .thenReturn(isPagesCardHidden)
+        whenever(appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(any()))
+            .thenReturn(isTodaysStatsCardHidden)
     }
 
     /* GET DATA */
@@ -543,5 +546,38 @@ class CardsSourceTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
+        }
+
+    @Test
+    fun `given stats card not hidden, when refresh is invoked, then stats requested from network`() =
+        test {
+            setUpMocks(isTodaysStatsCardHidden = false)
+            val result = mutableListOf<CardsUpdate>()
+            whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
+            whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success)
+            cardSource.refresh.observeForever { }
+
+            cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+                it?.let { result.add(it) }
+            }
+            advanceUntilIdle()
+
+            verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
+        }
+
+    @Test
+    fun `given stats card is hidden, when refresh is invoked, then stats not requested from network`() =
+        test {
+            setUpMocks(isTodaysStatsCardHidden = true)
+            val result = mutableListOf<CardsUpdate>()
+            whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
+            cardSource.refresh.observeForever { }
+
+            cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+                it?.let { result.add(it) }
+            }
+            advanceUntilIdle()
+
+            verify(cardsStore).fetchCards(siteModel, listOf(CardModel.Type.POSTS))
         }
 }
