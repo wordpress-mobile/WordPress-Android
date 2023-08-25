@@ -174,10 +174,10 @@ sealed class MySiteCardAndItemBuilderParams {
             val moreMenuParams: MoreMenuParams
         ) : BlazeCardBuilderParams() {
             data class MoreMenuParams(
-                val onMoreMenuClick: () -> Unit,
-                val onHideThisCardItemClick: () -> Unit,
                 val viewAllCampaignsItemClick: () -> Unit,
-                val onLearnMoreClick: () -> Unit
+                val onLearnMoreClick: () -> Unit,
+                val onHideThisCardItemClick: () -> Unit,
+                val onMoreMenuClick: () -> Unit
             )
         }
     }

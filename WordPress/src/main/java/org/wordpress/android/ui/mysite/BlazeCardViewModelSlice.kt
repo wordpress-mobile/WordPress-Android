@@ -36,9 +36,7 @@ class BlazeCardViewModelSlice @Inject constructor(
                         onCardClick = this::onCampaignsCardClick,
                         moreMenuParams = CampaignWithBlazeCardBuilderParams.MoreMenuParams(
                             onHideThisCardItemClick = this::onHideMenuItemClick,
-                            onMoreMenuClick = this::onMoreMenuClick,
-                            viewAllCampaignsItemClick = this::onCampaignsCardClick,
-                            onLearnMoreClick = this::onLearnMoreClick
+                            onMoreMenuClick = this::onMoreMenuClick
                         )
                     )
                 } ?: PromoteWithBlazeCardBuilderParams(
@@ -51,6 +49,12 @@ class BlazeCardViewModelSlice @Inject constructor(
                 )
             } else null
         }
+    }
+
+    private fun onViewAllCampaignsClick() {
+        // todo add tracking for the click
+        _onNavigation.value =
+            Event(SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.DASHBOARD_CARD))
     }
 
     private fun onMoreMenuClick() {
