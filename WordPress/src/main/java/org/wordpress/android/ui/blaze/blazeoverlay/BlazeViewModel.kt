@@ -35,13 +35,15 @@ class BlazeViewModel @Inject constructor(
     private val featuredImageTracker =
         PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
 
-    fun start(source: BlazeFlowSource, blazeUIModel: BlazeUIModel?) {
+    fun start(source: BlazeFlowSource, blazeUIModel: BlazeUIModel?, shouldShowOverlay: Boolean) {
         blazeFlowSource = source
-        blazeUIModel?.let { initializePromoteContentUIState(it) } ?: run { initializePromoteSiteUIState() }
+        blazeUIModel?.let { initializePromoteContentUIState(it) } ?: run {
+            initializePromoteSiteUIState(shouldShowOverlay)
+        }
     }
 
     private fun initializePromoteContentUIState(blazeUIModel: BlazeUIModel) {
-        when(blazeUIModel) {
+        when (blazeUIModel) {
             is PostUIModel -> initializePromotePostUIState(blazeUIModel)
             is PageUIModel -> initializePromotePageUIState(blazeUIModel)
         }
@@ -53,7 +55,8 @@ class BlazeViewModel @Inject constructor(
             featuredImageUrl = siteSelectedSiteRepository.getSelectedSite()?.let {
                 featuredImageTracker.getFeaturedImageUrl(
                     it,
-                    postModel.featuredImageId)
+                    postModel.featuredImageId
+                )
             }
         )
 
@@ -82,16 +85,16 @@ class BlazeViewModel @Inject constructor(
         }
     }
 
-    private fun initializePromoteSiteUIState() {
+    private fun initializePromoteSiteUIState(shouldShowOverlay: Boolean) {
         _promoteUiState.value = BlazeUiState.PromoteScreen.Site
-        _uiState.value = if (shouldShowOverlayAndTrack()) {
+        _uiState.value = if (shouldShowOverlayAndTrack() || shouldShowOverlay) {
             BlazeUiState.PromoteScreen.Site
         } else {
             BlazeUiState.WebViewScreen
         }
     }
 
-    private fun shouldShowOverlayAndTrack() : Boolean  {
+    private fun shouldShowOverlayAndTrack(): Boolean {
         val shouldShowOverlay = !blazeFeatureUtils.shouldHideBlazeOverlay()
         if (shouldShowOverlay) {
             blazeFeatureUtils.trackOverlayDisplayed(blazeFlowSource)
