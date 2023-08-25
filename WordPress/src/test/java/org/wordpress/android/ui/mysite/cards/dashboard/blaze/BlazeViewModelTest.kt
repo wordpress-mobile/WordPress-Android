@@ -63,7 +63,7 @@ class BlazeViewModelTest : BaseUnitTest() {
         val model = PostUIModel(postId = 1L, title = "title", featuredImageId = 1L,
             url = "url", featuredImageUrl = "featuredImageUrl"
         )
-        val result = blazeViewModel.start(BlazeFlowSource.POSTS_LIST, model, getShouldShowOverlay())
+        val result = blazeViewModel.start(BlazeFlowSource.POSTS_LIST, model, false)
 
 
         Assertions.assertThat(result).isNotNull
@@ -77,7 +77,7 @@ class BlazeViewModelTest : BaseUnitTest() {
         val model = PostUIModel(postId = 1L, title = "title", featuredImageId = 1L,
             url = "url", featuredImageUrl = "featuredImageUrl"
         )
-        blazeViewModel.start(BlazeFlowSource.POSTS_LIST, model, getShouldShowOverlay())
+        blazeViewModel.start(BlazeFlowSource.POSTS_LIST, model, false)
 
         Assertions.assertThat(uiStates.last()).isInstanceOf(BlazeUiState.PromoteScreen.PromotePost::class.java)
     }
@@ -90,7 +90,7 @@ class BlazeViewModelTest : BaseUnitTest() {
         val model = PostUIModel(postId = 1L, title = "title", featuredImageId = 1L,
             url = "url", featuredImageUrl = "featuredImageUrl"
         )
-        blazeViewModel.start(BlazeFlowSource.POSTS_LIST, model, getShouldShowOverlay())
+        blazeViewModel.start(BlazeFlowSource.POSTS_LIST, model, false)
 
         Assertions.assertThat(uiStates.last()).isInstanceOf(BlazeUiState.WebViewScreen::class.java)
     }
@@ -103,7 +103,7 @@ class BlazeViewModelTest : BaseUnitTest() {
         val model = PageUIModel(pageId = 1L, title = "title", featuredImageId = 1L,
             url = "url", featuredImageUrl = "featuredImageUrl"
         )
-        blazeViewModel.start(BlazeFlowSource.PAGES_LIST, model, getShouldShowOverlay())
+        blazeViewModel.start(BlazeFlowSource.PAGES_LIST, model, false)
 
         Assertions.assertThat(uiStates.last()).isInstanceOf(BlazeUiState.PromoteScreen.PromotePage::class.java)
     }
@@ -116,7 +116,7 @@ class BlazeViewModelTest : BaseUnitTest() {
         val model = PageUIModel(pageId = 1L, title = "title", featuredImageId = 1L,
             url = "url", featuredImageUrl = "featuredImageUrl"
         )
-        blazeViewModel.start(BlazeFlowSource.PAGES_LIST, model, getShouldShowOverlay())
+        blazeViewModel.start(BlazeFlowSource.PAGES_LIST, model, false)
 
         Assertions.assertThat(uiStates.last()).isInstanceOf(BlazeUiState.WebViewScreen::class.java)
     }
@@ -125,7 +125,7 @@ class BlazeViewModelTest : BaseUnitTest() {
     fun `given blaze overlay shown is false, when started from dashboard card, then uiState is set to site`() {
         whenever(blazeFeatureUtils.shouldHideBlazeOverlay()).thenReturn(false)
 
-        blazeViewModel.start(BlazeFlowSource.DASHBOARD_CARD, null, getShouldShowOverlay())
+        blazeViewModel.start(BlazeFlowSource.DASHBOARD_CARD, null, false)
 
         Assertions.assertThat(uiStates.last()).isInstanceOf(BlazeUiState.PromoteScreen.Site::class.java)
     }
@@ -134,16 +134,25 @@ class BlazeViewModelTest : BaseUnitTest() {
     fun `given blaze overlay shown is true, when started from dashboard card, then uiState is set to webview screen`() {
         whenever(blazeFeatureUtils.shouldHideBlazeOverlay()).thenReturn(true)
 
-        blazeViewModel.start(BlazeFlowSource.DASHBOARD_CARD, null, getShouldShowOverlay())
+        blazeViewModel.start(BlazeFlowSource.DASHBOARD_CARD, null, false)
 
         Assertions.assertThat(uiStates.last()).isInstanceOf(BlazeUiState.WebViewScreen::class.java)
+    }
+
+    @Test
+    fun `given blaze overlay shown is true, when started from learn more, then uiState is set to site screen`() {
+        whenever(blazeFeatureUtils.shouldHideBlazeOverlay()).thenReturn(true)
+
+        blazeViewModel.start(BlazeFlowSource.DASHBOARD_CARD, null, true)
+
+        Assertions.assertThat(uiStates.last()).isInstanceOf(BlazeUiState.PromoteScreen::class.java)
     }
 
     @Test
     fun `given blaze overlay shown is false, when started from no campaigns list, then uiState is set to site`() {
         whenever(blazeFeatureUtils.shouldHideBlazeOverlay()).thenReturn(false)
 
-        blazeViewModel.start(BlazeFlowSource.CAMPAIGN_LISTING_PAGE, null, getShouldShowOverlay())
+        blazeViewModel.start(BlazeFlowSource.CAMPAIGN_LISTING_PAGE, null, false)
 
         Assertions.assertThat(uiStates.last()).isInstanceOf(BlazeUiState.PromoteScreen.Site::class.java)
     }
@@ -152,7 +161,7 @@ class BlazeViewModelTest : BaseUnitTest() {
     fun `given blaze overlay shown is true, when started from no campaigns list, then uiState is set to webview`() {
         whenever(blazeFeatureUtils.shouldHideBlazeOverlay()).thenReturn(true)
 
-        blazeViewModel.start(BlazeFlowSource.CAMPAIGN_LISTING_PAGE, null, getShouldShowOverlay())
+        blazeViewModel.start(BlazeFlowSource.CAMPAIGN_LISTING_PAGE, null, false)
 
         Assertions.assertThat(uiStates.last()).isInstanceOf(BlazeUiState.WebViewScreen::class.java)
     }
