@@ -99,7 +99,7 @@ class CardsSource @Inject constructor(
     }
 
     private fun getCardTypes(selectedSite: SiteModel) = mutableListOf<Type>().apply {
-        add(Type.TODAYS_STATS)
+        if (shouldRequestStatsCard(selectedSite)) add(Type.TODAYS_STATS)
         if (shouldRequestPagesCard(selectedSite)) add(Type.PAGES)
         if (dashboardActivityLogCardFeatureUtils.shouldRequestActivityCard(selectedSite)) add(Type.ACTIVITY)
         add(Type.POSTS)
@@ -108,6 +108,10 @@ class CardsSource @Inject constructor(
     private fun shouldRequestPagesCard(selectedSite: SiteModel): Boolean {
         return (selectedSite.hasCapabilityEditPages || selectedSite.isSelfHostedAdmin) &&
                 !appPrefsWrapper.getShouldHidePagesDashboardCard(selectedSite.siteId)
+    }
+
+    private fun shouldRequestStatsCard(selectedSite: SiteModel): Boolean {
+        return !appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(selectedSite.siteId)
     }
 
     private fun MediatorLiveData<CardsUpdate>.postErrorState() {
