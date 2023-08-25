@@ -233,10 +233,6 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 mediaCapturePath -> mMediaCapturePath = mediaCapturePath);
     }
 
-    private void launchCameraForVideo() {
-        WPMediaUtils.launchVideoCamera(this);
-    }
-
     private void launchPictureLibrary(boolean multiSelect) {
         WPMediaUtils.launchPictureLibrary(this, multiSelect);
     }
@@ -361,9 +357,6 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 break;
             case ANDROID_CHOOSE_PHOTO:
                 launchPictureLibrary(multiple);
-                break;
-            case ANDROID_CAPTURE_VIDEO:
-                launchCameraForVideo();
                 break;
             case ANDROID_CHOOSE_VIDEO:
                 launchVideoLibrary(multiple);
