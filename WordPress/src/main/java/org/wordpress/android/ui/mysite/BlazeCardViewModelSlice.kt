@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
@@ -29,29 +30,25 @@ class BlazeCardViewModelSlice @Inject constructor(
         return blazeCardUpdate?.let {
             if (it.blazeEligible) {
                 it.campaign?.let { campaign ->
-                    CampaignWithBlazeCardBuilderParams(
-                        campaign = campaign,
-                        onCreateCampaignClick = this::onCreateCampaignClick,
-                        onCampaignClick = this::onCampaignClick,
-                        onCardClick = this::onCampaignsCardClick,
-                        moreMenuParams = CampaignWithBlazeCardBuilderParams.MoreMenuParams(
-                            viewAllCampaignsItemClick = this::onViewAllCampaignsClick,
-                            onLearnMoreClick = this::onCampaignCardLearnMoreClick,
-                            onHideThisCardItemClick = this::onCampaignCardHideMenuItemClick,
-                            onMoreMenuClick = this::onCampaignCardMoreMenuClick
-                        )
-                    )
-                } ?: PromoteWithBlazeCardBuilderParams(
-                    onClick = this::onPromoteWithBlazeCardClick,
-                    moreMenuParams = PromoteWithBlazeCardBuilderParams.MoreMenuParams(
-                        onLearnMoreClick = this::onPromoteCardLearnMoreClick,
-                        onHideThisCardItemClick = this::onPromoteCardHideMenuItemClick,
-                        onMoreMenuClick = this::onPromoteCardMoreMenuClick
-                    )
-                )
+                    getCampaignWithBlazeCardBuilderParams(campaign)
+                } ?: getPromoteWithBlazeCardBuilderParams()
             } else null
         }
     }
+
+    private fun getCampaignWithBlazeCardBuilderParams(campaign: BlazeCampaignModel) =
+        CampaignWithBlazeCardBuilderParams(
+            campaign = campaign,
+            onCreateCampaignClick = this::onCreateCampaignClick,
+            onCampaignClick = this::onCampaignClick,
+            onCardClick = this::onCampaignsCardClick,
+            moreMenuParams = CampaignWithBlazeCardBuilderParams.MoreMenuParams(
+                viewAllCampaignsItemClick = this::onViewAllCampaignsClick,
+                onLearnMoreClick = this::onCampaignCardLearnMoreClick,
+                onHideThisCardItemClick = this::onCampaignCardHideMenuItemClick,
+                onMoreMenuClick = this::onCampaignCardMoreMenuClick
+            )
+        )
 
     private fun onViewAllCampaignsClick() {
         // todo add tracking for the click
@@ -70,6 +67,17 @@ class BlazeCardViewModelSlice @Inject constructor(
     private fun onCampaignCardMoreMenuClick() {
         TODO("Not yet implemented")
     }
+
+    private fun getPromoteWithBlazeCardBuilderParams() =
+        PromoteWithBlazeCardBuilderParams(
+            onClick = this::onPromoteWithBlazeCardClick,
+            moreMenuParams = PromoteWithBlazeCardBuilderParams.MoreMenuParams(
+                onLearnMoreClick = this::onPromoteCardLearnMoreClick,
+                onHideThisCardItemClick = this::onPromoteCardHideMenuItemClick,
+                onMoreMenuClick = this::onPromoteCardMoreMenuClick
+            )
+        )
+
 
     private fun onPromoteCardLearnMoreClick() {
         // todo implement the navigation and tracking
