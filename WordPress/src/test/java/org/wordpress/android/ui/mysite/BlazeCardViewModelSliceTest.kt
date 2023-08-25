@@ -184,6 +184,61 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
             .containsOnly(SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.DASHBOARD_CARD))
     }
 
+    @Test
+    fun `given campaign card built, when learn more menu option clicked, then site navigation is triggered`() {
+        // Given
+        val blazeCardUpdate: MySiteUiState.PartialState.BlazeCardUpdate = mock()
+        whenever(blazeCardUpdate.blazeEligible).thenReturn(true)
+        whenever(blazeCardUpdate.campaign).thenReturn(mock())
+
+        // When
+        val result =
+            blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate) as CampaignWithBlazeCardBuilderParams
+        result.moreMenuParams.onLearnMoreClick()
+
+        // Then
+        assertThat(navigationActions)
+            .containsOnly(
+                SiteNavigationAction.OpenPromoteWithBlazeOverlay(
+                    source = BlazeFlowSource.DASHBOARD_CARD,
+                    shouldShowBlazeOverlay = true
+                )
+            )
+    }
+
+    @Test
+    fun `given campaign card built, when view all campaings menu option clicked, then site navigation is triggered`() {
+        // Given
+        val blazeCardUpdate: MySiteUiState.PartialState.BlazeCardUpdate = mock()
+        whenever(blazeCardUpdate.blazeEligible).thenReturn(true)
+        whenever(blazeCardUpdate.campaign).thenReturn(mock())
+
+        // When
+        val result =
+            blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate) as CampaignWithBlazeCardBuilderParams
+        result.moreMenuParams.viewAllCampaignsItemClick()
+
+        // Then
+        assertThat(navigationActions)
+            .containsOnly(SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.DASHBOARD_CARD))
+    }
+
+    @Test
+    fun `given campaign card built, when hide campaings menu option clicked, then site navigation is triggered`() {
+        // Given
+        val blazeCardUpdate: MySiteUiState.PartialState.BlazeCardUpdate = mock()
+        whenever(blazeCardUpdate.blazeEligible).thenReturn(true)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mock())
+        whenever(blazeCardUpdate.campaign).thenReturn(mock())
+
+        // When
+        val result =
+            blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate) as CampaignWithBlazeCardBuilderParams
+        result.moreMenuParams.onHideThisCardItemClick()
+
+        // Then
+        verify(blazeFeatureUtils).hideBlazeCard(any())
+    }
 
     @Test
     fun `given promote blaze card built, when card click invoked, then event is triggered`() {
@@ -240,6 +295,28 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
             AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
             BlazeFlowSource.DASHBOARD_CARD
         )
+    }
+
+    @Test
+    fun `given promote blaze card built, when learn more menu option clicked, then site navigation is triggered`() {
+        // Given
+        val blazeCardUpdate: MySiteUiState.PartialState.BlazeCardUpdate = mock()
+        whenever(blazeCardUpdate.blazeEligible).thenReturn(true)
+        whenever(blazeCardUpdate.campaign).thenReturn(null)
+
+        // When
+        val result =
+            blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate) as PromoteWithBlazeCardBuilderParams
+        result.moreMenuParams.onLearnMoreClick()
+
+        // Then
+        assertThat(navigationActions)
+            .containsOnly(
+                SiteNavigationAction.OpenPromoteWithBlazeOverlay(
+                    source = BlazeFlowSource.DASHBOARD_CARD,
+                    shouldShowBlazeOverlay = true
+                )
+            )
     }
 
     @Test
