@@ -65,7 +65,7 @@ class BlazeCardViewModelSlice @Inject constructor(
     }
 
     private fun onCampaignCardMoreMenuClick() {
-        TODO("Not yet implemented")
+        // todo implement the logic and tracking
     }
 
     private fun getPromoteWithBlazeCardBuilderParams() =
