@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-09 14:54:08+0000
+Translation-Revision-Date: 2023-08-24 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.7
 Language: he_IL
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">תשובה:</string>
+    <string name="contact_support_bot_ticket_comment_question">שאלה:</string>
+    <string name="contact_support_bot_ticket_comment_start">תסריט לבוט האפליקציה של Jetpack לנייד:</string>
+    <string name="contact_support_bot_ticket_error">שגיאה בשליחת הקריאה לתמיכה</string>
+    <string name="contact_support_bot_ticket_message">הקריאה נוצרה</string>
+    <string name="contact_support_bot_ticket_loading">פותח קריאה לתמיכה…</string>
+    <string name="contact_support_question_six">איך אפשר להשתמש בדומיין האישי שלי באפליקציה?</string>
+    <string name="contact_support_question_five">שכחתי את פרטי הכניסה שלי</string>
+    <string name="contact_support_question_four">למה לא הצלחתי להתחבר?</string>
+    <string name="contact_support_question_three">לא הצלחתי להעלות תמונות/סרטונים</string>
+    <string name="contact_support_question_two">הצילו, האתר שלי מושבת!</string>
+    <string name="contact_support_question_one">מהי כתובת האתר שלי?</string>
+    <string name="contact_support_suggestions">לא הצלחת להבין לך מה צריך לשאול?</string>
+    <string name="contact_support_get_support">לפנות לתמיכה</string>
+    <string name="contact_support_first_message">איך אוכל לעזור?</string>
+    <string name="contact_support_input_placeholder">לשלוח הודעה…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">למחוק</string>
     <string name="jetpack_social_social_shares_remaining">נותרו ⁦%1$d⁩ שיתופים ברשתות החברתיות</string>
     <string name="missing_splits_dialog_button">לסגור</string>
     <string name="missing_splits_dialog_message">באפליקציה של WordPress חסרים רכיבים חיוניים ועליך להתקין אותה מחדש מהחנות Google Play.</string>
@@ -977,7 +994,6 @@ Language: he_IL
     <string name="new_site_creation_search_domain_input_hint">יש להקליד שם לאתר שלך</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;כל המשימות הושלמו&lt;/b&gt;&lt;br/&gt;האתר שלך יקבל חשיפה ליותר אנשים. עבודה מצוינת!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;כל המשימות הושלמו&lt;/b&gt;&lt;br/&gt;האתר שלך הותאם אישית. כל הכבוד!</string>
-    <string name="quick_start_card_menu_hide">להסתיר לעת עתה</string>
     <string name="magic_link_not_meaning_to_create_account">לא התכוונת ליצור חשבון חדש? יש לחזור אחורה כדי להזין מחדש את כתובת האימייל שלך.</string>
     <string name="invite_links_disable_dialog_message">לאחר שהקישור להזמנה יושבת, לא תהיה עוד לאף אחד אפשרות להשתמש בו כדי להצטרף לצוות שלך. האם ברצונך להמשיך?</string>
     <string name="invite_links_disable_dialog_title">להשבית את הקישור להזמנה</string>
@@ -1000,7 +1016,6 @@ Language: he_IL
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;הסריקה הסתיימה&lt;/b&gt; &lt;br&gt; לא נמצאו איומים</string>
     <string name="scan_fixing_threats_title_singular">מתקן את האיום</string>
     <string name="disable">להשבית</string>
-    <string name="quick_start_card_menu_unpin">להסיר את הנעץ מהתוכן</string>
     <string name="quick_start_list_review_pages_subtitle">לבדוק את העמודים ולבצע שינויים או להוסיף ולהסיר עמודים.</string>
     <string name="quick_start_list_view_site_title">הצגת האתר שלך</string>
     <string name="quick_start_list_follow_site_subtitle">לגלות אתרים שמספקים לך השראה ולעקוב אחריהם.</string>
@@ -1096,8 +1111,6 @@ Language: he_IL
     <string name="backup_download_complete_failed_title">ההורדה נכשלה</string>
     <string name="web_preview_tablet">טאבלט</string>
     <string name="web_preview_mobile">טלפון נייד</string>
-    <string name="quick_start_card_menu_remove">לא להציג שוב</string>
-    <string name="quick_start_card_menu_pin">לנעוץ את הפריט</string>
     <string name="quick_start_dialog_review_pages_message_short">יש לבחור באפשרות ⁦%1$s⁩ עמודים ⁦%2$s⁩ כדי להציג את רשימת העמודים שלך.</string>
     <string name="quick_start_dialog_review_pages_message">לשנות, להוסיף או להסיר עמודים באתר.</string>
     <string name="quick_start_dialog_review_pages_title">לבדוק עמודים באתר</string>

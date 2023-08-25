@@ -229,7 +229,6 @@ Language: nb_NO
     <string name="reader_title_interests">Følg emner</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Avvis</string>
     <string name="activity_log_backup_download_notice_download_action">Last ned</string>
-    <string name="quick_start_card_menu_hide">Skjul for nå</string>
     <string name="invite_links_expire_date">Utløper %1$s</string>
     <string name="invite_links_disable_invite_link">Slå av invitasjonslenke</string>
     <string name="invite_links_share_invite_link">Del invitasjonslenke</string>
@@ -271,8 +270,6 @@ Language: nb_NO
     <string name="backup_download_complete_failed_action_button">Utført</string>
     <string name="web_preview_tablet">Nettbrett</string>
     <string name="web_preview_mobile">Mobil</string>
-    <string name="quick_start_card_menu_remove">Ikke vis igjen</string>
-    <string name="quick_start_card_menu_pin">Fest dette</string>
     <string name="reader_menu_mark_as_unseen">Merk som usett</string>
     <string name="reader_menu_mark_as_seen">Merk som sett</string>
     <string name="threat_fix_all_warning_title">Fjern alle trusler</string>

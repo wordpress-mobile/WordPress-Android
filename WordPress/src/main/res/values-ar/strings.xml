@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-09 12:54:07+0000
+Translation-Revision-Date: 2023-08-23 14:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.7
 Language: ar
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">الإجابة:</string>
+    <string name="contact_support_bot_ticket_comment_question">السؤال:</string>
+    <string name="contact_support_bot_ticket_comment_start">النص المكتوب في Jetpack Mobile Bot:</string>
+    <string name="contact_support_bot_ticket_error">خطأ في إرسال بطاقة الدعم</string>
+    <string name="contact_support_bot_ticket_message">تم إنشاء بطاقة</string>
+    <string name="contact_support_bot_ticket_loading">جارٍ إنشاء بطاقة الدعم…</string>
+    <string name="contact_support_question_six">كيف يمكنني استخدام نطاقي المخصص في التطبيق؟</string>
+    <string name="contact_support_question_five">نسيتُ معلومات تسجيل الدخول الخاصة بي</string>
+    <string name="contact_support_question_four">ما السبب في عدم تسجيلي الدخول؟</string>
+    <string name="contact_support_question_three">يتعذر عليَّ رفع الصور/الفيديوهات</string>
+    <string name="contact_support_question_two">ساعدوني، لقد تعطَّل موقعي!</string>
+    <string name="contact_support_question_one">ما عنوان موقعي؟</string>
+    <string name="contact_support_suggestions">ألست متأكد ماذا تسأل؟</string>
+    <string name="contact_support_get_support">الاتصال بالدعم</string>
+    <string name="contact_support_first_message">بماذا يمكننا مساعدتك؟</string>
+    <string name="contact_support_input_placeholder">إرسال رسالة…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">واضح</string>
     <string name="missing_splits_dialog_button">إغلاق</string>
     <string name="missing_splits_dialog_title">فشل التثبيت</string>
     <string name="campaign_detail_error_title">حدث خطأ</string>
@@ -979,7 +996,6 @@ Language: ar
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;اكتملت جميع المهام&lt;/b&gt;&lt;br/&gt;لقد قمت بتخصيص موقعك. أحسنت!</string>
     <string name="invite_links_disable_dialog_message">بمجرد تعطيل رابط الدعوة هذا، لن يتمكن أي شخص من استخدامه للانضمام إلى فريقك. هل أنتَ متأكد؟</string>
     <string name="magic_link_not_meaning_to_create_account">ألم تقصد إنشاء حساب جديد؟ العودة للخلف لإعادة إدخال عنوان بريدك الإلكتروني.</string>
-    <string name="quick_start_card_menu_hide">إخفاء حاليًا</string>
     <string name="invite_links_null_response">لم يتم تلقي أي ردّ</string>
     <string name="invite_links_bad_format_response">تم تلقي ردّ غير صالح</string>
     <string name="invite_links_disable_dialog_title">تعطيل رابط الدعوة</string>
@@ -1001,7 +1017,6 @@ Language: ar
     <string name="disable">تعطيل</string>
     <string name="scan_fixing_threats_title_singular">جاري معالجة التهديد</string>
     <string name="quick_start_list_review_pages_subtitle">تحقّق من صفحاتك وقم بإجراء تغييرات، أو إضافة الصفحات أو إزالتها.</string>
-    <string name="quick_start_card_menu_unpin">إلغاء تثبيت هذا</string>
     <string name="quick_start_list_enable_sharing_subtitle">شارك المقالات الجديدة تلقائيًّا على وسائل التواصل الاجتماعي الخاصة بك.</string>
     <string name="quick_start_list_follow_site_subtitle">استكشف وتابع المواقع التي تُلهمك.</string>
     <string name="quick_start_list_update_site_title_subtitle">حدِّد اسمًا لموقعك يعكس هويته وموضوعه.</string>
@@ -1093,7 +1108,6 @@ Language: ar
     <string name="restore_details_action_button">استعادة الموقع</string>
     <string name="restore_details_icon_content_description">أيقونة الاستعادة</string>
     <string name="backup_download_complete_failed_icon_content_description">سحابة مع أيقونة X</string>
-    <string name="quick_start_card_menu_remove">عدم العرض مرة أخرى</string>
     <string name="web_preview_mobile">الجوال</string>
     <string name="web_preview_tablet">الأجهزة اللوحية</string>
     <string name="backup_download_complete_failed_title">فشل في التنزيل</string>
@@ -1101,7 +1115,6 @@ Language: ar
     <string name="quick_start_dialog_review_pages_message">تغيير أو إضافة أو إزالة صفحات موقعك.</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">حدّد %1$s الصفحة الرئيسية %2$s لتحرير صفحتك الرئيسية.</string>
     <string name="quick_start_dialog_review_pages_message_short">حدّد %1$s الصفحات %2$s لرؤية قائمة صفحاتك.</string>
-    <string name="quick_start_card_menu_pin">تثبيت هذا</string>
     <string name="error_media_not_enough_storage">لا توجد مساحة تخزين كافية في الموقع</string>
     <string name="error_media_upload_failed_for_reason">فشل رفع الوسائط.\n%1$s</string>
     <string name="reader_menu_mark_as_seen">وضع علامة تمت المشاهدة</string>

@@ -912,7 +912,6 @@ Language: en_GB
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;All tasks completed&lt;/b&gt;&lt;br/&gt;You’ve customised your site. Well done!</string>
     <string name="invite_links_disable_dialog_message">Once this invite link is disabled, nobody will be able to use it to join your team. Are you sure?</string>
     <string name="magic_link_not_meaning_to_create_account">Didn\'t mean to create a new account? Go back to re-enter your email address.</string>
-    <string name="quick_start_card_menu_hide">Hide for now</string>
     <string name="invite_links_helper_text">Use this link to onboard your team members without having to invite them one by one. Anybody visiting this URL will be able to sign up to your organisation, even if they received the link from somebody else, so make sure that you share it with trusted people.</string>
     <string name="invite_links_generic_get_data_error">Unknown error fetching invite links data</string>
     <string name="invite_links_cannot_get_roles_error">There was an error getting roles</string>
@@ -934,7 +933,6 @@ Language: en_GB
     <string name="disable">Disable</string>
     <string name="scan_fixing_threats_title_singular">Fixing Threat</string>
     <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
-    <string name="quick_start_card_menu_unpin">Unpin this</string>
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic.</string>
     <string name="quick_start_list_enable_sharing_subtitle">Automatically share new posts to your social media.</string>
     <string name="quick_start_list_follow_site_subtitle">Discover and follow sites that inspire you.</string>
@@ -1030,11 +1028,9 @@ Language: en_GB
     <string name="quick_start_dialog_review_pages_title">Review site pages</string>
     <string name="quick_start_dialog_review_pages_message">Change, add, or remove your site\'s pages.</string>
     <string name="quick_start_dialog_review_pages_message_short">Select %1$s Pages %2$s to see your page list.</string>
-    <string name="quick_start_card_menu_remove">Don\'t show again</string>
     <string name="web_preview_mobile">Mobile</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="backup_download_complete_failed_title">Download failed</string>
-    <string name="quick_start_card_menu_pin">Pin this</string>
     <string name="reader_marked_post_as_seen">Marked post as seen</string>
     <string name="reader_marked_post_as_unseen">Marked post as unseen</string>
     <string name="reader_error_changing_seen_status_of_unsupported_post">Can\'t toggle seen status of this post</string>
