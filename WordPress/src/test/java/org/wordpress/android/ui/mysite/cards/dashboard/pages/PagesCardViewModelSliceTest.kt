@@ -87,7 +87,7 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
             assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPagesDraftsTab(site, MOCK_PAGE_ID))
             verify(cardsTracker).trackCardItemClicked(
                 CardsTracker.Type.PAGES.label,
-                CardsTracker.PagesSubType.DRAFT.name
+                CardsTracker.PagesSubType.DRAFT.label
             )
         }
 
@@ -102,7 +102,7 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
             assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPagesScheduledTab(site, MOCK_PAGE_ID))
             verify(cardsTracker).trackCardItemClicked(
                 CardsTracker.Type.PAGES.label,
-                CardsTracker.PagesSubType.SCHEDULED.name
+                CardsTracker.PagesSubType.SCHEDULED.label
             )
         }
 
@@ -117,7 +117,7 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
             assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
             verify(cardsTracker).trackCardItemClicked(
                 CardsTracker.Type.PAGES.label,
-                CardsTracker.PagesSubType.PUBLISHED.name
+                CardsTracker.PagesSubType.PUBLISHED.label
             )
         }
 
