@@ -60,7 +60,8 @@ class BlazeCardViewModelSlice @Inject constructor(
     }
 
     private fun onCampaignCardLearnMoreClick() {
-        // todo implement the navigation and tracking
+        // todo implement the tracking
+        onLearnMoreClick()
     }
 
     private fun onCampaignCardHideMenuItemClick() {
@@ -74,6 +75,17 @@ class BlazeCardViewModelSlice @Inject constructor(
 
     private fun onPromoteCardLearnMoreClick() {
         // todo implement the navigation and tracking
+        onLearnMoreClick()
+    }
+
+    private fun onLearnMoreClick() {
+        _onNavigation.value =
+            Event(
+                SiteNavigationAction.OpenPromoteWithBlazeOverlay(
+                    source = BlazeFlowSource.DASHBOARD_CARD,
+                    shouldShowBlazeOverlay = true
+                )
+            )
     }
 
     private fun onPromoteCardHideMenuItemClick() {
