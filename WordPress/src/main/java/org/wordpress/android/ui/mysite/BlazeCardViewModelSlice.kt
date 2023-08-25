@@ -34,20 +34,33 @@ class BlazeCardViewModelSlice @Inject constructor(
                         onCreateCampaignClick = this::onCreateCampaignClick,
                         onCampaignClick = this::onCampaignClick,
                         onCardClick = this::onCampaignsCardClick,
+                        moreMenuParams = CampaignWithBlazeCardBuilderParams.MoreMenuParams(
+                            onHideThisCardItemClick = this::onHideMenuItemClick,
+                            onMoreMenuClick = this::onMoreMenuClick,
+                            viewAllCampaignsItemClick = this::onCampaignsCardClick,
+                            onLearnMoreClick = this::onLearnMoreClick
+                        )
                     )
                 } ?: PromoteWithBlazeCardBuilderParams(
                     onClick = this::onPromoteWithBlazeCardClick,
                     moreMenuParams = PromoteWithBlazeCardBuilderParams.MoreMenuParams(
-                        onHideThisCardItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
-                        onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick,
-                        onLearnMoreClick = this::onLearnMoreBlazeClick
+                        onHideThisCardItemClick = this::onHideMenuItemClick,
+                        onMoreMenuClick = this::onMoreMenuClick,
+                        onLearnMoreClick = this::onLearnMoreClick
                     )
                 )
             } else null
         }
     }
 
-    private fun onLearnMoreBlazeClick() {
+    private fun onMoreMenuClick() {
+        blazeFeatureUtils.track(
+            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
+    }
+
+    private fun onLearnMoreClick() {
         // todo implement the navigation and tracking
     }
 
@@ -73,7 +86,7 @@ class BlazeCardViewModelSlice @Inject constructor(
             Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
     }
 
-    private fun onPromoteWithBlazeCardHideMenuItemClick() {
+    private fun onHideMenuItemClick() {
         blazeFeatureUtils.track(
             AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
             BlazeFlowSource.DASHBOARD_CARD
@@ -82,13 +95,6 @@ class BlazeCardViewModelSlice @Inject constructor(
             blazeFeatureUtils.hidePromoteWithBlazeCard(it.siteId)
         }
         _refresh.value = Event(true)
-    }
-
-    private fun onPromoteWithBlazeCardMoreMenuClick() {
-        blazeFeatureUtils.track(
-            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
-            BlazeFlowSource.DASHBOARD_CARD
-        )
     }
 
     fun onBlazeMenuItemClick(): SiteNavigationAction {
