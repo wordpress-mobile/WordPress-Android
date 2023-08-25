@@ -35,16 +35,18 @@ class BlazeCardViewModelSlice @Inject constructor(
                         onCampaignClick = this::onCampaignClick,
                         onCardClick = this::onCampaignsCardClick,
                         moreMenuParams = CampaignWithBlazeCardBuilderParams.MoreMenuParams(
-                            onHideThisCardItemClick = this::onHideMenuItemClick,
-                            onMoreMenuClick = this::onMoreMenuClick
+                            viewAllCampaignsItemClick = this::onViewAllCampaignsClick,
+                            onLearnMoreClick = this::onCampaignCardLearnMoreClick,
+                            onHideThisCardItemClick = this::onCampaignCardHideMenuItemClick,
+                            onMoreMenuClick = this::onCampaignCardMoreMenuClick
                         )
                     )
                 } ?: PromoteWithBlazeCardBuilderParams(
                     onClick = this::onPromoteWithBlazeCardClick,
                     moreMenuParams = PromoteWithBlazeCardBuilderParams.MoreMenuParams(
-                        onHideThisCardItemClick = this::onHideMenuItemClick,
-                        onMoreMenuClick = this::onMoreMenuClick,
-                        onLearnMoreClick = this::onLearnMoreClick
+                        onLearnMoreClick = this::onPromoteCardLearnMoreClick,
+                        onHideThisCardItemClick = this::onPromoteCardHideMenuItemClick,
+                        onMoreMenuClick = this::onPromoteCardMoreMenuClick
                     )
                 )
             } else null
@@ -57,16 +59,40 @@ class BlazeCardViewModelSlice @Inject constructor(
             Event(SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.DASHBOARD_CARD))
     }
 
-    private fun onMoreMenuClick() {
+    private fun onCampaignCardLearnMoreClick() {
+        // todo implement the navigation and tracking
+    }
+
+    private fun onCampaignCardHideMenuItemClick() {
+        // todo implement the hide logic and tracking
+    }
+
+    private fun onCampaignCardMoreMenuClick() {
+        TODO("Not yet implemented")
+    }
+
+    private fun onPromoteCardLearnMoreClick() {
+        // todo implement the navigation and tracking
+    }
+
+    private fun onPromoteCardHideMenuItemClick() {
+        blazeFeatureUtils.track(
+            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
+        selectedSiteRepository.getSelectedSite()?.let {
+            blazeFeatureUtils.hidePromoteWithBlazeCard(it.siteId)
+        }
+        _refresh.value = Event(true)
+    }
+
+    private fun onPromoteCardMoreMenuClick() {
         blazeFeatureUtils.track(
             AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
             BlazeFlowSource.DASHBOARD_CARD
         )
     }
 
-    private fun onLearnMoreClick() {
-        // todo implement the navigation and tracking
-    }
 
     private fun onCreateCampaignClick() {
         blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.DASHBOARD_CARD)
@@ -88,17 +114,6 @@ class BlazeCardViewModelSlice @Inject constructor(
         blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.DASHBOARD_CARD)
         _onNavigation.value =
             Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
-    }
-
-    private fun onHideMenuItemClick() {
-        blazeFeatureUtils.track(
-            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
-            BlazeFlowSource.DASHBOARD_CARD
-        )
-        selectedSiteRepository.getSelectedSite()?.let {
-            blazeFeatureUtils.hidePromoteWithBlazeCard(it.siteId)
-        }
-        _refresh.value = Event(true)
     }
 
     fun onBlazeMenuItemClick(): SiteNavigationAction {
