@@ -2987,20 +2987,19 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private void addLastTakenPicture() {
         try {
-            // TODO why do we scan the file twice? Also how come it can result in OOM?
             WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
             File f = new File(mMediaCapturePath);
             Uri capturedImageUri = Uri.fromFile(f);
             if (capturedImageUri != null) {
                 mEditorMedia.addNewMediaToEditorAsync(capturedImageUri, true);
-                final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                scanIntent.setData(capturedImageUri);
-                sendBroadcast(scanIntent);
+                mEditorTracker.trackAddMediaFromDevice(mSite, true, false, capturedImageUri);
             } else {
                 ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
             }
         } catch (RuntimeException | OutOfMemoryError e) {
             AppLog.e(T.EDITOR, e);
+        } finally {
+            mMediaCapturePath = null;
         }
     }
 
