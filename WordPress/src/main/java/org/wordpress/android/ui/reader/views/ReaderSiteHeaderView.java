@@ -26,6 +26,7 @@ import org.wordpress.android.util.PhotonUtils.Quality;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 
@@ -54,6 +55,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
     @Inject AccountStore mAccountStore;
     @Inject ImageManager mImageManager;
     @Inject ReaderTracker mReaderTracker;
+    @Inject ReaderImprovementsFeatureConfig mReaderImprovementsFeatureConfig;
 
     public ReaderSiteHeaderView(Context context) {
         this(context, null);
@@ -71,7 +73,13 @@ public class ReaderSiteHeaderView extends LinearLayout {
     }
 
     private void initView(Context context) {
-        View view = inflate(context, R.layout.reader_site_header_view_new, this);
+        final int layoutRes;
+        if (mReaderImprovementsFeatureConfig.isEnabled()) {
+            layoutRes = R.layout.reader_site_header_view_new;
+        } else {
+            layoutRes = R.layout.reader_site_header_view;
+        }
+        final View view = inflate(context, layoutRes, this);
         mFollowButton = view.findViewById(R.id.follow_button);
         view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
