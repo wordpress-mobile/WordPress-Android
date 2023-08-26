@@ -281,12 +281,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
-
-        String title = ReaderBlogTable.getBlogName(blogId);
-        if (title.isEmpty()) {
-            title = getString(R.string.reader_title_blog_preview);
-        }
-        setTitle(title);
+        setTitle("");
     }
 
     private void showListFragmentForFeed(long feedId) {
