@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
+import android.icu.text.CompactDecimalFormat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,8 +71,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
     }
 
     private void initView(Context context) {
-        View view = inflate(context, R.layout.reader_site_header_view, this);
+        View view = inflate(context, R.layout.reader_site_header_view_new, this);
         mFollowButton = view.findViewById(R.id.follow_button);
+        view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 
     public void setOnFollowListener(OnFollowListener listener) {
@@ -166,10 +168,14 @@ public class ReaderSiteHeaderView extends LinearLayout {
                 SiteUtils.getSiteImageType(blogInfo.isP2orA8C(), BlavatarShape.CIRCULAR),
                 PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.HIGH));
 
+        final CompactDecimalFormat compactDecimalFormat =
+                CompactDecimalFormat.getInstance(LocaleManager.getSafeLocale(getContext()),
+                        CompactDecimalFormat.CompactStyle.SHORT);
+         final String formattedNumberSubscribers = compactDecimalFormat.format(blogInfo.numSubscribers);
         txtFollowCount.setText(String.format(
                 LocaleManager.getSafeLocale(getContext()),
-                getContext().getString(R.string.reader_label_follow_count),
-                blogInfo.numSubscribers));
+                getContext().getString(R.string.reader_label_followers_count), formattedNumberSubscribers)
+        );
 
         if (!mAccountStore.hasAccessToken()) {
             mFollowButton.setVisibility(View.GONE);
