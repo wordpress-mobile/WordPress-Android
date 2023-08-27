@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
@@ -15,7 +16,6 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -1776,8 +1776,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mSite == null || mSite.getHasFreePlan()) {
             return;
         }
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType(ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE);
+        final Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"help@wordpress.com"});
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.start_over_email_subject,
                 SiteUtils.getHomeURLOrHostName(mSite)));

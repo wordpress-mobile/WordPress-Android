@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-07 21:19:22+0000
+Translation-Revision-Date: 2023-08-21 16:09:24+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.7
 Language: ru
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">Ответ:</string>
+    <string name="contact_support_bot_ticket_comment_question">Вопрос:</string>
+    <string name="contact_support_bot_ticket_comment_start">Расшифровка мобильного бота Jetpack:</string>
+    <string name="contact_support_bot_ticket_error">Ошибка отправки запроса в поддержку</string>
+    <string name="contact_support_bot_ticket_message">Обращение создано</string>
+    <string name="contact_support_bot_ticket_loading">Создать запрос в поддержку…</string>
+    <string name="contact_support_question_six">Как можно использовать свой пользовательский домен в приложении?</string>
+    <string name="contact_support_question_five">Я не помню свои учётные данные</string>
+    <string name="contact_support_question_four">Почему я не могу войти?</string>
+    <string name="contact_support_question_three">Невозможно загрузить фото/видео</string>
+    <string name="contact_support_question_two">Помогите, сайт не работает!</string>
+    <string name="contact_support_question_one">Какой адрес у моего сайта?</string>
+    <string name="contact_support_suggestions">Не знаете, что спросить?</string>
+    <string name="contact_support_get_support">Обратиться в поддержку</string>
+    <string name="contact_support_first_message">Чем мы можем вам помочь?</string>
+    <string name="contact_support_input_placeholder">Отправить сообщение…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">Очистить</string>
     <string name="jetpack_social_social_shares_remaining">Осталось %1$d возможностей поделиться</string>
     <string name="missing_splits_dialog_button">ЗАКРЫТЬ</string>
     <string name="missing_splits_dialog_message">В приложении WordPress отсутствуют необходимые компоненты, и его необходимо переустановить из магазина Google Play.</string>
@@ -980,7 +997,6 @@ Language: ru
     <string name="new_site_creation_search_domain_input_hint">Выберите название для вашего сайта.</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Все задачи выполнены&lt;/b&gt;&lt;br/&gt; Вы привлечёте больше посетителей. Хорошая работа!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Все задачи выполнены&lt;/b&gt;&lt;br/&gt;Вы персонализировали ваш сайт. Отлично!</string>
-    <string name="quick_start_card_menu_hide">Временно скрыть</string>
     <string name="magic_link_not_meaning_to_create_account">Не планировали создание новой учётной записи? Перейдите назад и введите ваш адрес email.</string>
     <string name="invite_links_disable_dialog_message">Если эта ссылка для приглашения будет отключена, никто не сможет использовать её для присоединения к вашей команде. Вы уверены в этом?</string>
     <string name="invite_links_disable_dialog_title">Отключить пригласительную ссылку</string>
@@ -1003,7 +1019,6 @@ Language: ru
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Проверка завершена&lt;/b&gt; &lt;br&gt;&lt;/br&gt; Угроз не найдено</string>
     <string name="scan_fixing_threats_title_singular">Устранение угрозы</string>
     <string name="disable">Отключить</string>
-    <string name="quick_start_card_menu_unpin">Открепить</string>
     <string name="quick_start_list_review_pages_subtitle">Просмотрите ваши страницы, внесите изменение или добавьте/удалите страницы.</string>
     <string name="quick_start_list_view_site_title">Просмотрите свой сайт</string>
     <string name="quick_start_list_follow_site_subtitle">Находите и подписывайтесь на сайты вдохновляющие вас.</string>
@@ -1099,8 +1114,6 @@ Language: ru
     <string name="backup_download_complete_failed_title">Загрузка не удалась.</string>
     <string name="web_preview_tablet">Планшет</string>
     <string name="web_preview_mobile">Мобильное устройство</string>
-    <string name="quick_start_card_menu_remove">Не показывать снова</string>
-    <string name="quick_start_card_menu_pin">Прикрепить</string>
     <string name="quick_start_dialog_review_pages_message_short">Выберите %1$s страницы %2$s для просмотра списка страниц.</string>
     <string name="quick_start_dialog_review_pages_message">Изменить, добавить или удалить страницы вашего сайта.</string>
     <string name="quick_start_dialog_review_pages_title">Обзор страниц сайта</string>

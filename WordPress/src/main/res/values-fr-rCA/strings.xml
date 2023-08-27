@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-09 12:54:07+0000
+Translation-Revision-Date: 2023-08-23 16:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.7
 Language: fr
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">Réponse :</string>
+    <string name="contact_support_bot_ticket_comment_question">Question :</string>
+    <string name="contact_support_bot_ticket_comment_start">Script pour le robot Jetpack mobile :</string>
+    <string name="contact_support_bot_ticket_error">Erreur lors de l’envoi du ticket d’assistance</string>
+    <string name="contact_support_bot_ticket_message">Ticket créé</string>
+    <string name="contact_support_bot_ticket_loading">Création du ticket d’assistance…</string>
+    <string name="contact_support_question_six">Comment puis-je utiliser mon domaine personnalisé dans l’application ?</string>
+    <string name="contact_support_question_five">J’ai oublié mes identifiants de connexion</string>
+    <string name="contact_support_question_four">Pourquoi ne puis-je pas me connecter ?</string>
+    <string name="contact_support_question_three">Je ne peux pas charger de photos/vidéos</string>
+    <string name="contact_support_question_two">Aidez-moi, mon site ne fonctionne pas !</string>
+    <string name="contact_support_question_one">Quelle est l’adresse de mon site ?</string>
+    <string name="contact_support_suggestions">Vous ne savez pas quelle question poser ?</string>
+    <string name="contact_support_get_support">Contacter l’assistance</string>
+    <string name="contact_support_first_message">Comment pouvons-nous vous aider ?</string>
+    <string name="contact_support_input_placeholder">Envoyer un message…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">Effacer</string>
     <string name="jetpack_social_social_shares_remaining">%1$d partages sur les réseaux sociaux restants</string>
     <string name="missing_splits_dialog_button">FERMER</string>
     <string name="missing_splits_dialog_message">Des composants obligatoires sur l’application WordPress sont manquants. Il est nécessaire de les réinstaller depuis le Play Store de Google.</string>
@@ -978,7 +995,6 @@ Language: fr
     <string name="new_site_creation_search_domain_input_hint">Saisissez un nom pour votre site</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Toutes les tâches sont terminées&lt;/b&gt;.&lt;br/&gt;Vous toucherez plus de personnes. Bon travail !</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Toutes les tâches sont terminées&lt;/b&gt;.&lt;br/&gt;Vous avez personnalisé votre site. Bravo !</string>
-    <string name="quick_start_card_menu_hide">Masquer pour le moment</string>
     <string name="magic_link_not_meaning_to_create_account">Vous ne voulez pas créer de nouveau compte ? Revenez en arrière et ressaisissez votre adresse e-mail.</string>
     <string name="invite_links_disable_dialog_message">Une fois le lien d’invitation désactivé, plus personne ne pourra l’utiliser pour rejoindre votre équipe. Confirmez-vous ?</string>
     <string name="invite_links_disable_dialog_title">Désactiver le lien d’invitation</string>
@@ -1001,7 +1017,6 @@ Language: fr
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Analyse terminée&lt;/b&gt; &lt;br&gt; Aucune menace détectée</string>
     <string name="scan_fixing_threats_title_singular">Menace en cours de correction…</string>
     <string name="disable">Désactiver</string>
-    <string name="quick_start_card_menu_unpin">Désépingler</string>
     <string name="quick_start_list_review_pages_subtitle">Vérifiez vos pages et apportez des modifications, ou ajoutez ou supprimez des pages.</string>
     <string name="quick_start_list_view_site_title">Voir votre site</string>
     <string name="quick_start_list_follow_site_subtitle">Découvrez et abonnez-vous aux sites qui vous inspirent.</string>
@@ -1097,8 +1112,6 @@ Language: fr
     <string name="backup_download_complete_failed_title">Échec du téléchargement</string>
     <string name="web_preview_tablet">Tablette</string>
     <string name="web_preview_mobile">Portable</string>
-    <string name="quick_start_card_menu_remove">Ne plus afficher</string>
-    <string name="quick_start_card_menu_pin">Épingler ceci</string>
     <string name="quick_start_dialog_review_pages_message_short">Sélectionnez %1$s Pages %2$s pour afficher votre liste de pages.</string>
     <string name="quick_start_dialog_review_pages_message">Modifiez, ajoutez ou supprimez les pages de votre site.</string>
     <string name="quick_start_dialog_review_pages_title">Passer en revue les pages du site</string>

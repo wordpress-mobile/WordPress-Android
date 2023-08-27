@@ -629,7 +629,6 @@ Language: pl
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Wszystkie zadania ukończone&lt;/b&gt;&lt;br/&gt;Dotrzesz do większej liczby ludzi. Dobra robota!</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Stuknij dwukrotnie aby otworzyć dolną zakładkę, aby edytować, zamienić lub usunąć obrazek</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Wszystkie zadania ukończone&lt;/b&gt;&lt;br/&gt;Twoja witryna została spersonalizowana. Dobra robota!</string>
-    <string name="quick_start_card_menu_hide">Pomiń na razie</string>
     <string name="magic_link_not_meaning_to_create_account">Nie zamierzałaś/eś tworzyć nowego konta? Cofnij się i wprowadź ponownie swój adres email.</string>
     <string name="invite_links_disable_dialog_message">Po włączeniu tego łącza z zaproszeniem, nie będzie możliwości wykorzystania go do zaproszenia kogoś do zespołu. Czy jesteś pewien/pewna?</string>
     <string name="invite_links_bad_format_response">Otrzymano nieprawidłową odpowiedź</string>
@@ -651,7 +650,6 @@ Language: pl
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Zakończono skanowanie&lt;/b&gt; &lt;br&gt; nie odnaleziono zagrożeń</string>
     <string name="scan_fixing_threats_title_singular">Naprawianie zagrożeń</string>
     <string name="disable">Wyłącz</string>
-    <string name="quick_start_card_menu_unpin">Odepnij to</string>
     <string name="quick_start_list_review_pages_subtitle">Sprawdź swoje strony aby dokonywać zmian, lub dodawać lub usuwać strony.</string>
     <string name="quick_start_list_follow_site_subtitle">Odkrywaj i obserwuj witryny, które ciebie inspirują.</string>
     <string name="quick_start_list_view_site_title">Przejdź do swojej witryny</string>
@@ -737,8 +735,6 @@ Language: pl
     <string name="restore_details_description_with_two_parameters">%1$s %2$s jest wybranym punktem do odzyskania.</string>
     <string name="backup_download_complete_failed_icon_content_description">Chmura z ikoną X</string>
     <string name="web_preview_tablet">Tablet</string>
-    <string name="quick_start_card_menu_remove">Nie pokazuj ponownie</string>
-    <string name="quick_start_card_menu_pin">Przypnij ten element</string>
     <string name="backup_download_complete_failed_title">Nie powiodło się pobieranie</string>
     <string name="web_preview_mobile">Urządzenie przenośne</string>
     <string name="quick_start_dialog_review_pages_title">Przejrzyj strony witryny</string>

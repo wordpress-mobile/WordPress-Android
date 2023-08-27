@@ -152,6 +152,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 bottomSheet?.let {
                     val behavior = BottomSheetBehavior.from(it)
                     behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    behavior.skipCollapsed = true
                 }
             }
             setupMinimumHeightForFragmentContainer()

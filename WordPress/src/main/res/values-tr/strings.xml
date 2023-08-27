@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-08 22:08:04+0000
+Translation-Revision-Date: 2023-08-23 09:44:57+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.7
 Language: tr
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">Cevap:</string>
+    <string name="contact_support_bot_ticket_comment_question">Soru:</string>
+    <string name="contact_support_bot_ticket_comment_start">Jetpack Mobil Bot transkripti:</string>
+    <string name="contact_support_bot_ticket_error">Destek bileti gönderilirken hata oluştu</string>
+    <string name="contact_support_bot_ticket_message">Bilet oluşturuldu</string>
+    <string name="contact_support_bot_ticket_loading">Destek bileti oluşturuluyor…</string>
+    <string name="contact_support_question_six">Kendi alan adımı uygulamada nasıl kullanabilirim?</string>
+    <string name="contact_support_question_five">Giriş bilgilerimi unuttum</string>
+    <string name="contact_support_question_four">Neden giriş yapamıyorum?</string>
+    <string name="contact_support_question_three">Fotoğraf/video yükleyemiyorum</string>
+    <string name="contact_support_question_two">Yardım edin, sitem kapandı!</string>
+    <string name="contact_support_question_one">Sitemin adresi ne?</string>
+    <string name="contact_support_suggestions">Ne soracağınızdan emin değil misiniz?</string>
+    <string name="contact_support_get_support">Destek ile iletişim kur</string>
+    <string name="contact_support_first_message">Size ne konuda yardımcı olabiliriz?</string>
+    <string name="contact_support_input_placeholder">Mesaj gönder…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">Temizle</string>
     <string name="jetpack_social_social_shares_remaining">%1$d sosyal paylaşım hakkı kaldı</string>
     <string name="missing_splits_dialog_button">KAPAT</string>
     <string name="missing_splits_dialog_message">WordPress uygulamasında bazı gerekli parçalar bulunmuyor ve Googl Play Mağazasından tekrar yüklenmeli.</string>
@@ -980,7 +997,6 @@ Language: tr
     <string name="new_site_creation_search_domain_input_hint">Siteniz için bir ad yazın</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Tüm görevler tamamlandı&lt;/b&gt;&lt;br/&gt;Daha fazla kişiye ulaşacaksınız. İyi iş!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Tüm görevler tamamlandı&lt;/b&gt; &lt;br/&gt;Sitenizi özelleştirdiniz. İyi iş!</string>
-    <string name="quick_start_card_menu_hide">Şimdilik gizle</string>
     <string name="magic_link_not_meaning_to_create_account">Yeni bir hesap oluşturmak istemediniz mi? E-posta adresinizi yeniden girmek için geri dönün.</string>
     <string name="invite_links_disable_dialog_message">Davet bağlantısı etkisizleştirildiğinde, ekibinizden kimse katılamaz. Emin misiniz?</string>
     <string name="invite_links_disable_dialog_title">Davet bağlantısını etkisizleştir</string>
@@ -1003,7 +1019,6 @@ Language: tr
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Tarama Bitti&lt;/b&gt; &lt;br&gt; Tehdit bulunmadı</string>
     <string name="scan_fixing_threats_title_singular">Tehditler düzeltiliyor</string>
     <string name="disable">Etkisizleştir</string>
-    <string name="quick_start_card_menu_unpin">Sabitlemeyi kaldır</string>
     <string name="quick_start_list_review_pages_subtitle">Sayfalarınızı kontrol edin ve değişiklikler yapın veya sayfa ekleyin ya da kaldırın.</string>
     <string name="quick_start_list_view_site_title">Sitenizi görüntüleyin</string>
     <string name="quick_start_list_follow_site_subtitle">Size ilham veren siteleri keşfedin ve takip edin.</string>
@@ -1099,8 +1114,6 @@ Language: tr
     <string name="backup_download_complete_failed_title">Dosya indirilemedi</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Mobil</string>
-    <string name="quick_start_card_menu_remove">Tekrar gösterme</string>
-    <string name="quick_start_card_menu_pin">Sabitle</string>
     <string name="quick_start_dialog_review_pages_message_short">Sayfa listenizi görmek için %1$s Sayfalar %2$s öğesini seçin.</string>
     <string name="quick_start_dialog_review_pages_message">Sitenizde sayfaları değiştirin, ekleyin veya kaldırın.</string>
     <string name="quick_start_dialog_review_pages_title">Site sayfalarını inceleyin</string>

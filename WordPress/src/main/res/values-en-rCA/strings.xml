@@ -748,7 +748,6 @@ Language: en_CA
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;All tasks completed&lt;/b&gt;&lt;br/&gt;You’ve customized your site. Well done!</string>
     <string name="invite_links_disable_dialog_message">Once this invite link is disabled, nobody will be able to use it to join your team. Are you sure?</string>
     <string name="magic_link_not_meaning_to_create_account">Didn\'t mean to create a new account? Go back to re-enter your email address.</string>
-    <string name="quick_start_card_menu_hide">Hide for now</string>
     <string name="invite_links_bad_format_response">Invalid response received</string>
     <string name="invite_links_cannot_get_role_data_error">There was an error getting data for role %1$s</string>
     <string name="invite_links_cannot_get_roles_error">There was an error getting roles</string>
@@ -770,7 +769,6 @@ Language: en_CA
     <string name="disable">Disable</string>
     <string name="scan_fixing_threats_title_singular">Fixing Threat</string>
     <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
-    <string name="quick_start_card_menu_unpin">Unpin this</string>
     <string name="quick_start_list_follow_site_subtitle">Discover and follow sites that inspire you.</string>
     <string name="quick_start_list_enable_sharing_subtitle">Automatically share new posts to your social media.</string>
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic.</string>
@@ -865,12 +863,10 @@ Language: en_CA
     <string name="backup_download_complete_failed_title">Download failed</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Mobile</string>
-    <string name="quick_start_card_menu_remove">Don\'t show again</string>
     <string name="quick_start_dialog_review_pages_message_short">Select %1$s Pages %2$s to see your page list.</string>
     <string name="quick_start_dialog_review_pages_message">Change, add, or remove your site\'s pages.</string>
     <string name="quick_start_dialog_review_pages_title">Review site pages</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Select %1$s Homepage %2$s to edit your Homepage.</string>
-    <string name="quick_start_card_menu_pin">Pin this</string>
     <string name="reader_menu_mark_as_unseen">Mark as unseen</string>
     <string name="reader_menu_mark_as_seen">Mark as seen</string>
     <string name="error_media_upload_failed_for_reason">Media upload failed.\n%1$s</string>
