@@ -1481,10 +1481,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         mMenuView = null;
                     }
                     break;
-                case WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE:
-                    mEditorMedia.addNewMediaItemsToEditorAsync(mEditorMedia.getDroppedMediaUris(), false);
-                    mEditorMedia.getDroppedMediaUris().clear();
-                    break;
             }
         }
     }
@@ -3273,11 +3269,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public void onMediaDropped(final ArrayList<Uri> mediaUris) {
         mEditorMedia.setDroppedMediaUris(mediaUris);
         ArrayList<Uri> media = new ArrayList<>(mediaUris);
-        if (PermissionUtils
-                .checkAndRequestStoragePermission(this, WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE)) {
-            mEditorMedia.addNewMediaItemsToEditorAsync(media, false);
-            mEditorMedia.getDroppedMediaUris().clear();
-        }
+        mEditorMedia.addNewMediaItemsToEditorAsync(media, false);
+        mEditorMedia.getDroppedMediaUris().clear();
     }
 
     @Override

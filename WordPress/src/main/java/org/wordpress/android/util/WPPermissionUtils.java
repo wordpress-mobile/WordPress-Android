@@ -29,6 +29,8 @@ import java.util.Map;
 
 public class WPPermissionUtils {
     // permission request codes - note these are reported to analytics so they shouldn't be changed
+    @Deprecated
+    // This is deprecated to keep to request code taken but media shared to our app does not require permissions
     public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE = 10;
     public static final int MEDIA_BROWSER_PERMISSION_REQUEST_CODE = 20;
     public static final int MEDIA_PREVIEW_PERMISSION_REQUEST_CODE = 30;
@@ -36,6 +38,8 @@ public class WPPermissionUtils {
     public static final int PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE = 41;
     public static final int EDITOR_LOCATION_PERMISSION_REQUEST_CODE = 50;
     public static final int EDITOR_MEDIA_PERMISSION_REQUEST_CODE = 60;
+    @Deprecated
+    // This is deprecated to keep to request code taken but media dropped to our app does not require permissions
     public static final int EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE = 70;
     public static final int READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE = 80;
 

@@ -149,45 +149,17 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        boolean allGranted = WPPermissionUtils.setPermissionListAsked(
-                this, requestCode, permissions, grantResults, true);
-        if (allGranted && requestCode == WPPermissionUtils.SHARE_MEDIA_PERMISSION_REQUEST_CODE) {
-            // permissions granted
-            share(ShareAction.valueOf(mShareActionName), mClickedSiteLocalId);
-        } else {
-            Toast.makeText(this, R.string.share_media_permission_required, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
     public void share(ShareAction shareAction, int selectedSiteLocalId) {
-        if (checkAndRequestPermissions()) {
-            bumpAnalytics(shareAction, selectedSiteLocalId);
-            Intent intent = new Intent(this, shareAction.targetClass);
-            startActivityAndFinish(intent, selectedSiteLocalId);
-        } else {
-            mShareActionName = shareAction.name();
-            mClickedSiteLocalId = selectedSiteLocalId;
-        }
+        mShareActionName = shareAction.name();
+        mClickedSiteLocalId = selectedSiteLocalId;
+
+        bumpAnalytics(shareAction, selectedSiteLocalId);
+        Intent intent = new Intent(this, shareAction.targetClass);
+        startActivityAndFinish(intent, selectedSiteLocalId);
     }
 
     private boolean isSharingText() {
         return "text/plain".equals(getIntent().getType());
-    }
-
-    private boolean checkAndRequestPermissions() {
-        if (!isSharingText()) {
-            // If we're sharing media, we must check we have Storage permission (needed for media upload).
-            if (!PermissionUtils
-                    .checkAndRequestStoragePermission(this, WPPermissionUtils.SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private void startActivityAndFinish(@NonNull Intent intent, int mSelectedSiteLocalId) {
@@ -234,8 +206,8 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
         analyticsProperties.put("share_to", shareAction.analyticsName);
 
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SHARE_TO_WP_SUCCEEDED,
-                                            selectedSite,
-                                            analyticsProperties);
+                selectedSite,
+                analyticsProperties);
 
         if (doesContainMediaAndWasSharedToMediaLibrary(shareAction, numberOfMediaShared)) {
             trackMediaAddedToMediaLibrary(selectedSite);
