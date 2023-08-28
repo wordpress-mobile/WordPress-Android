@@ -41,9 +41,8 @@ class PostsCardViewModelSlice @Inject constructor(
     }
 
     private fun onViewPostsMenuItemClick(postCardType: PostCardType) {
-        // todo: annmarie implement logic
+        onPostCardViewAllClick(postCardType)
         // todo: annmarie implement cards tracker
-        Log.i(javaClass.simpleName, "***=> onViewPostsMenuItemClick $postCardType")
     }
 
     private fun onPostItemClick(params: PostCardBuilderParams.PostItemClickParams) {
@@ -59,14 +58,13 @@ class PostsCardViewModelSlice @Inject constructor(
         }
     }
 
-    // todo: annmarie - repurpose for menu item click
-//    private fun onPostCardFooterLinkClick(postCardType: PostCardType) {
-//        selectedSiteRepository.getSelectedSite()?.let { site ->
-//            cardsTracker.trackPostCardFooterLinkClicked(postCardType)
-//            _onNavigation.value = when (postCardType) {
-//                PostCardType.DRAFT -> Event(SiteNavigationAction.OpenDraftsPosts(site))
-//                PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
-//            }
-//        }
-//    }
+    private fun onPostCardViewAllClick(postCardType: PostCardType) {
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+           // todo: annmarie implement tracking cardsTracker.trackPostCardFooterLinkClicked(postCardType)
+            _onNavigation.value = when (postCardType) {
+                PostCardType.DRAFT -> Event(SiteNavigationAction.OpenDraftsPosts(site))
+                PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
+            }
+        }
+    }
 }
