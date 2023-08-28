@@ -77,9 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="top"
-            app:barrierAllowsGoneWidgets="false"
-            app:constraint_referenced_ids="container_insert_edit_bar,container_media_source_bar"
-            />
+            app:constraint_referenced_ids="container_insert_edit_bar,container_media_source_bar" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/container_media_source_bar"
