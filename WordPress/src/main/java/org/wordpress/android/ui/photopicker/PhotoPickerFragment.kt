@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -204,6 +205,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
                     isShowingActionMode = false
                 }
                 setupFab(uiState.fabUiModel)
+                setupPartialAccessPrompt(uiState.isPartialMediaAccessPromptVisible)
             }
         }
     }
@@ -261,6 +263,13 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
             }
         } else {
             wpStoriesTakePicture.visibility = View.GONE
+        }
+    }
+
+    private fun PhotoPickerFragmentBinding.setupPartialAccessPrompt(isVisible: Boolean) {
+        partialMediaAccessPrompt.root.isVisible = isVisible
+        partialMediaAccessPrompt.partialAccessPromptCta.setOnClickListener {
+            requestMediaPermission()
         }
     }
 
@@ -422,7 +431,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
      * load the photos if we have the necessary permission, otherwise show the "soft ask" view
      * which asks the user to allow the permission
      */
-    private fun checkMediaPermission() {
+    private fun checkMediaPermission(didJustRequestPermissions: Boolean = false) {
         if (!isAdded) {
             return
         }
@@ -450,7 +459,11 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
             isStoragePermissionAlwaysDenied
         }
 
-        viewModel.checkMediaPermissions(isPhotosVideosPermissionAlwaysDenied, isMusicAudioPermissionAlwaysDenied)
+        viewModel.checkMediaPermissions(
+            isPhotosVideosPermissionAlwaysDenied,
+            isMusicAudioPermissionAlwaysDenied,
+            didJustRequestPermissions,
+        )
     }
 
     @Suppress("DEPRECATION")
@@ -492,7 +505,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
             requireActivity(), requestCode, permissions, grantResults, checkForAlwaysDenied
         )
         when (requestCode) {
-            WPPermissionUtils.PHOTO_PICKER_MEDIA_PERMISSION_REQUEST_CODE -> checkMediaPermission()
+            WPPermissionUtils.PHOTO_PICKER_MEDIA_PERMISSION_REQUEST_CODE -> checkMediaPermission(true)
             WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE -> if (allGranted) {
                 viewModel.clickOnLastTappedIcon()
             }

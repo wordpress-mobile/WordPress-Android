@@ -70,6 +70,7 @@ class PhotoPickerViewModel @Inject constructor(
     private val _onCameraPermissionsRequested = MutableLiveData<Event<Unit>>()
     private val _softAskRequest = MutableLiveData<SoftAskRequest>()
     private val _showProgressDialog = MutableLiveData<ProgressDialogUiModel>()
+    private val _showPartialMediaAccessPrompt = MutableLiveData<Boolean>()
 
     val onNavigateToPreview: LiveData<Event<UriWrapper>> = _navigateToPreview
     val onInsert: LiveData<Event<List<UriWrapper>>> = _onInsert
@@ -85,21 +86,23 @@ class PhotoPickerViewModel @Inject constructor(
         _photoPickerItems.distinct(),
         _selectedIds.distinct(),
         _softAskRequest,
-        _showProgressDialog
-    ) { photoPickerItems, selectedIds, softAskRequest, progressDialogModel ->
+        _showProgressDialog,
+        _showPartialMediaAccessPrompt
+    ) { photoPickerItems, selectedIds, softAskRequest, progressDialogModel, showPartialAccessPrompt ->
         PhotoPickerUiState(
             buildPhotoPickerUiModel(photoPickerItems, selectedIds),
             buildBottomBar(
                 photoPickerItems,
                 selectedIds,
-                softAskRequest?.show == true
+                softAskRequest?.show == true,
             ),
             buildSoftAskView(softAskRequest),
             FabUiModel(browserType.isWPStoriesPicker && selectedIds.isNullOrEmpty()) {
                 clickIcon(PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE)
             },
             buildActionModeUiModel(selectedIds),
-            progressDialogModel ?: ProgressDialogUiModel.Hidden
+            progressDialogModel ?: ProgressDialogUiModel.Hidden,
+            showPartialAccessPrompt ?: false,
         )
     }
 
@@ -421,9 +424,13 @@ class PhotoPickerViewModel @Inject constructor(
         }
     }
 
-    fun checkMediaPermissions(isPhotosVideosAlwaysDenied: Boolean, isMusicAudioAlwaysDenied: Boolean) {
+    fun checkMediaPermissions(
+        isPhotosVideosAlwaysDenied: Boolean,
+        isMusicAudioAlwaysDenied: Boolean,
+        didJustRequestPermissions: Boolean,
+    ) {
         val isPartialAccessGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            permissionsHandler.hasReadMediaVisualUserSelectedPermission()
+            permissionsHandler.hasPartialAccessPhotosVideosPermission()
         } else false
         val isAlwaysDenied = (
                 (browserType.isImagePicker || browserType.isVideoPicker) &&
@@ -432,11 +439,13 @@ class PhotoPickerViewModel @Inject constructor(
                 ) || (browserType.isAudioPicker && isMusicAudioAlwaysDenied)
 
         if (!needPhotosVideoPermission() && !needMusicAudioPermission()) {
+            _showPartialMediaAccessPrompt.value = isPartialAccessGranted
             _softAskRequest.value = SoftAskRequest(show = false, isAlwaysDenied = isAlwaysDenied)
-            if (_photoPickerItems.value.isNullOrEmpty()) {
-                refreshData(false)
+            if (didJustRequestPermissions || _photoPickerItems.value.isNullOrEmpty()) {
+                refreshData(didJustRequestPermissions)
             }
         } else {
+            _showPartialMediaAccessPrompt.value = false
             _softAskRequest.value = SoftAskRequest(show = true, isAlwaysDenied = isAlwaysDenied)
         }
     }
@@ -528,7 +537,8 @@ class PhotoPickerViewModel @Inject constructor(
         val softAskViewUiModel: SoftAskViewUiModel,
         val fabUiModel: FabUiModel,
         val actionModeUiModel: ActionModeUiModel,
-        val progressDialogUiModel: ProgressDialogUiModel
+        val progressDialogUiModel: ProgressDialogUiModel,
+        val isPartialMediaAccessPromptVisible: Boolean,
     )
 
     @Suppress("DEPRECATION")
