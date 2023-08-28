@@ -10,6 +10,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems.PostItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -21,7 +23,9 @@ import javax.inject.Inject
 
 class PostCardBuilder @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
-    private val appLogWrapper: AppLogWrapper
+    private val appLogWrapper: AppLogWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val siteRepository: SelectedSiteRepository
 ) {
     fun build(params: PostCardBuilderParams): List<PostCard> {
         val error = params.posts?.error
@@ -40,10 +44,14 @@ class PostCardBuilder @Inject constructor(
     private fun buildPostCardsWithData(params: PostCardBuilderParams) =
         mutableListOf<PostCard>().apply {
             val posts = params.posts
-            posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard(params)) }
-            posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard(params)) }
+            posts?.draft?.takeIf {
+                it.isNotEmpty() && shouldShowCard(PostCardType.DRAFT)}?.let { add(it.createDraftPostsCard(params)) }
+            posts?.scheduled?.takeIf {
+                it.isNotEmpty() && shouldShowCard(PostCardType.SCHEDULED)}?.let { add(it.createScheduledPostsCard(params)) }
         }.toList()
 
+    private fun shouldShowCard(postCardType: PostCardType) =
+        appPrefsWrapper.getShouldHidePostDashboardCard(siteRepository.getSelectedSite()!!.siteId, postCardType.name).not()
     private fun createPostErrorCard() = PostCard.Error(
         title = UiStringRes(R.string.posts)
     )
