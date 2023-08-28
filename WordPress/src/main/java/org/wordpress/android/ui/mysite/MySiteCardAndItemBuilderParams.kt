@@ -90,7 +90,6 @@ sealed class MySiteCardAndItemBuilderParams {
     data class PostCardBuilderParams(
         val posts: PostsCardModel?,
         val onPostItemClick: (params: PostItemClickParams) -> Unit,
-        val onFooterLinkClick: (postCardType: PostCardType) -> Unit,
         val moreMenuClickParams : MoreMenuParams
     ) : MySiteCardAndItemBuilderParams() {
         data class PostItemClickParams(
