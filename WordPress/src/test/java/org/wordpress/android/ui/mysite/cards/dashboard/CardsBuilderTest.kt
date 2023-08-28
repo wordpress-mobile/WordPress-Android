@@ -296,7 +296,9 @@ class CardsBuilderTest : BaseUnitTest() {
             postCardType = DRAFT,
             title = UiStringText(""),
             postItems = emptyList(),
-            footerLink = FooterLink(UiStringText(""), onClick = mock())
+            footerLink = FooterLink(UiStringText(""), onClick = mock()),
+            moreMenuResId = 0,
+            moreMenuOptions = mock()
         )
     )
 
@@ -329,7 +331,7 @@ class CardsBuilderTest : BaseUnitTest() {
                 showErrorCard = showErrorCard,
                 onErrorRetryClick = { },
                 todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
-                postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
+                postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock(), mock()),
                 bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                     mock(), false, false, false, mock(), mock(), mock(), mock(), mock(), mock()
                 ),

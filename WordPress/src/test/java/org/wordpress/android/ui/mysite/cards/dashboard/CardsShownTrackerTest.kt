@@ -98,7 +98,9 @@ class CardsShownTrackerTest {
             postCardType = postCardType,
             title = UiStringText(""),
             postItems = emptyList(),
-            footerLink = FooterLink(UiStringText(""), onClick = mock())
+            footerLink = FooterLink(UiStringText(""), onClick = mock()),
+            moreMenuResId = 0,
+            moreMenuOptions = mock()
         )
     )
 

@@ -201,7 +201,7 @@ class CardsBuilderTest {
             dashboardCardsBuilderParams = DashboardCardsBuilderParams(
                 onErrorRetryClick = mock(),
                 todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
-                postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
+                postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock(), mock()),
                 bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                     mock(),
                     false,

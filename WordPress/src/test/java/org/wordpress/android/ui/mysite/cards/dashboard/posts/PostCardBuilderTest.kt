@@ -51,6 +51,9 @@ class PostCardBuilderTest : BaseUnitTest() {
 
     private val onPostCardFooterLinkClick: (PostCardType) -> Unit = { }
     private val onPostItemClick: (params: PostItemClickParams) -> Unit = { }
+    private val onMoreMenuClick: (PostCardType) -> Unit = { }
+    private val onHideThisMenuItemClick: (PostCardType) -> Unit = { }
+    private val onViewPostsMenuItemClick: (PostCardType) -> Unit = { }
 
     @Before
     fun setUp() {
@@ -247,11 +250,16 @@ class PostCardBuilderTest : BaseUnitTest() {
             } as? List<PostCardWithPostItems>
             )?.firstOrNull { it.postCardType == PostCardType.SCHEDULED }
 
+
     private fun buildPostsCard(posts: PostsCardModel) = builder.build(
         PostCardBuilderParams(
             posts = posts,
             onPostItemClick = onPostItemClick,
-            onFooterLinkClick = onPostCardFooterLinkClick
+            onFooterLinkClick = onPostCardFooterLinkClick,
+            moreMenuClickParams = PostCardBuilderParams.MoreMenuParams(
+                onMoreMenuClick = onMoreMenuClick,
+                onHideThisMenuItemClick = onHideThisMenuItemClick,
+                onViewPostsMenuItemClick = onViewPostsMenuItemClick)
         )
     )
 
