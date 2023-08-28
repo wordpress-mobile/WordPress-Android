@@ -45,13 +45,16 @@ class PostCardBuilder @Inject constructor(
         mutableListOf<PostCard>().apply {
             val posts = params.posts
             posts?.draft?.takeIf {
-                it.isNotEmpty() && shouldShowCard(PostCardType.DRAFT)}?.let { add(it.createDraftPostsCard(params)) }
+                it.isNotEmpty() && shouldShowCard(PostCardType.DRAFT)
+            }?.let { add(it.createDraftPostsCard(params)) }
             posts?.scheduled?.takeIf {
-                it.isNotEmpty() && shouldShowCard(PostCardType.SCHEDULED)}?.let { add(it.createScheduledPostsCard(params)) }
+                it.isNotEmpty() && shouldShowCard(PostCardType.SCHEDULED)
+            }?.let { add(it.createScheduledPostsCard(params)) }
         }.toList()
 
     private fun shouldShowCard(postCardType: PostCardType) =
-        appPrefsWrapper.getShouldHidePostDashboardCard(siteRepository.getSelectedSite()!!.siteId, postCardType.name).not()
+        appPrefsWrapper.getShouldHidePostDashboardCard(siteRepository.getSelectedSite()!!.siteId, postCardType.name)
+            .not()
     private fun createPostErrorCard() = PostCard.Error(
         title = UiStringRes(R.string.posts)
     )
