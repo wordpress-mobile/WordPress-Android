@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.text.HtmlCompat
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -269,6 +270,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                         isShowingActionMode = false
                     }
                     setupFab(uiState.fabUiModel)
+                    setupPartialAccessPrompt(uiState.isPartialMediaAccessPromptVisible)
                     swipeToRefreshHelper.isRefreshing = uiState.isRefreshing
                 }
             }
@@ -554,6 +556,13 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         }
     }
 
+    private fun MediaPickerFragmentBinding.setupPartialAccessPrompt(isVisible: Boolean) {
+        partialMediaAccessPrompt.root.isVisible = isVisible
+        partialMediaAccessPrompt.partialAccessPromptCta.setOnClickListener {
+            requestMediaPermission()
+        }
+    }
+
     private fun setupProgressDialog() {
         var progressDialog: AlertDialog? = null
         viewModel.uiState.observe(viewLifecycleOwner) {
@@ -628,7 +637,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
      * load the photos if we have the necessary permission, otherwise show the "soft ask" view
      * which asks the user to allow the permission
      */
-    private fun checkMediaPermission() {
+    private fun checkMediaPermission(didJustRequestPermissions: Boolean = false) {
         if (!isAdded) {
             return
         }
@@ -655,7 +664,11 @@ class MediaPickerFragment : Fragment(), MenuProvider {
             // For devices lower than API 33, storage permission is the equivalent of Music and Audio permission
             isStoragePermissionAlwaysDenied
         }
-        viewModel.checkMediaPermissions(isPhotosVideosPermissionAlwaysDenied, isMusicAudioPermissionAlwaysDenied)
+        viewModel.checkMediaPermissions(
+            isPhotosVideosPermissionAlwaysDenied,
+            isMusicAudioPermissionAlwaysDenied,
+            didJustRequestPermissions
+        )
     }
 
     @Suppress("DEPRECATION")
@@ -697,7 +710,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
             requireActivity(), requestCode, permissions, grantResults, checkForAlwaysDenied
         )
         when (requestCode) {
-            WPPermissionUtils.PHOTO_PICKER_MEDIA_PERMISSION_REQUEST_CODE -> checkMediaPermission()
+            WPPermissionUtils.PHOTO_PICKER_MEDIA_PERMISSION_REQUEST_CODE -> checkMediaPermission(true)
             WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE -> if (allGranted) {
                 viewModel.clickOnLastTappedIcon()
             }

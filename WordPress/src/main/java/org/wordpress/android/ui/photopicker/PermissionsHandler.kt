@@ -27,6 +27,24 @@ class PermissionsHandler
         }
     }
 
+    fun hasFullAccessPhotosVideosPermission(): Boolean {
+        // UPSIDE_DOWN_CAKE and above the user can give partial access (READ_MEDIA_VISUAL_USER_SELECTED) but FULL access
+        // follows the same rules as TIRAMISU, so no extra checks are needed
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            hasReadMediaImagesPermission() && hasReadMediaVideoPermission()
+        } else {
+            // For devices lower than API 33, storage permission is the equivalent of Photos and Videos permission
+            hasReadStoragePermission()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    fun hasPartialAccessPhotosVideosPermission(): Boolean {
+        // UPSIDE_DOWN_CAKE and above the user can give partial access (READ_MEDIA_VISUAL_USER_SELECTED) and PARTIAL
+        // access rules are: does NOT have full access permissions BUT has READ_MEDIA_VISUAL_USER_SELECTED permission
+        return !hasFullAccessPhotosVideosPermission() && hasReadMediaVisualUserSelectedPermission()
+    }
+
     fun hasMusicAudioPermission(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             hasReadMediaAudioPermission()
