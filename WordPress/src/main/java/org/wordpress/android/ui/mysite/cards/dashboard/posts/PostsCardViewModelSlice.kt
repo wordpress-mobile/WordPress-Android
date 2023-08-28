@@ -59,13 +59,14 @@ class PostsCardViewModelSlice @Inject constructor(
         }
     }
 
-    private fun onPostCardFooterLinkClick(postCardType: PostCardType) {
-        selectedSiteRepository.getSelectedSite()?.let { site ->
-            cardsTracker.trackPostCardFooterLinkClicked(postCardType)
-            _onNavigation.value = when (postCardType) {
-                PostCardType.DRAFT -> Event(SiteNavigationAction.OpenDraftsPosts(site))
-                PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
-            }
-        }
-    }
+    // todo: annmarie - repurpose for menu item click
+//    private fun onPostCardFooterLinkClick(postCardType: PostCardType) {
+//        selectedSiteRepository.getSelectedSite()?.let { site ->
+//            cardsTracker.trackPostCardFooterLinkClicked(postCardType)
+//            _onNavigation.value = when (postCardType) {
+//                PostCardType.DRAFT -> Event(SiteNavigationAction.OpenDraftsPosts(site))
+//                PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
+//            }
+//        }
+//    }
 }
