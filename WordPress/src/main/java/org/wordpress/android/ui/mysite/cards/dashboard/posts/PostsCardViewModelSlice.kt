@@ -21,7 +21,6 @@ class PostsCardViewModelSlice @Inject constructor(
        return  PostCardBuilderParams(
             posts = postsCardModel,
             onPostItemClick = this::onPostItemClick,
-            onFooterLinkClick = this::onPostCardFooterLinkClick,
             moreMenuClickParams = PostCardBuilderParams.MoreMenuParams(
                onMoreMenuClick = this::onMoreMenuClick,
                onHideThisMenuItemClick = this::onHideThisMenuItemClick,

@@ -6,7 +6,6 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems.PostItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
@@ -54,10 +53,6 @@ class PostCardBuilder @Inject constructor(
             postCardType = PostCardType.DRAFT,
             title = UiStringRes(R.string.my_site_post_card_draft_title),
             postItems = mapToDraftPostItems(params.onPostItemClick),
-            footerLink = FooterLink(
-                label = UiStringRes(R.string.my_site_post_card_link_go_to_drafts),
-                onClick = params.onFooterLinkClick
-            ),
             moreMenuResId = R.menu.dashboard_card_draft_posts_menu,
             moreMenuOptions = PostCardWithPostItems.MoreMenuOptions(
                 onMoreMenuClick = params.moreMenuClickParams.onMoreMenuClick,
@@ -71,10 +66,6 @@ class PostCardBuilder @Inject constructor(
             postCardType = PostCardType.SCHEDULED,
             title = UiStringRes(R.string.my_site_post_card_scheduled_title),
             postItems = mapToScheduledPostItems(params.onPostItemClick),
-            footerLink = FooterLink(
-                label = UiStringRes(R.string.my_site_post_card_link_go_to_scheduled_posts),
-                onClick = params.onFooterLinkClick
-            ),
             moreMenuResId = R.menu.dashboard_card_scheduled_posts_menu,
             moreMenuOptions = PostCardWithPostItems.MoreMenuOptions(
                 onMoreMenuClick = params.moreMenuClickParams.onMoreMenuClick,
@@ -125,6 +116,5 @@ class PostCardBuilder @Inject constructor(
 
     companion object {
         private const val MONTH_DAY_FORMAT = "MMM d"
-        const val NOT_SET = -1
     }
 }
