@@ -34,10 +34,6 @@ sealed class PostCardViewHolder<T : ViewBinding>(
             val postCard = card as PostCardWithPostItems
             mySiteToolbar.update(postCard)
             (postItems.adapter as PostItemsAdapter).update(postCard.postItems)
-            uiHelpers.setTextOrHide(mySiteCardFooterLink.linkLabel, postCard.footerLink.label)
-            mySiteCardFooterLink.linkLabel.setOnClickListener {
-                postCard.footerLink.onClick.invoke(card.postCardType)
-            }
         }
 
         private fun MySiteCardToolbarBinding.update(card: PostCardWithPostItems) {
