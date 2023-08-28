@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_blog_follow_count"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:alpha="@dimen/material_emphasis_high_type"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="@dimen/text_sz_medium"
+        app:layout_constraintBaseline_toBaselineOf="@+id/follow_button"
+        app:layout_constraintEnd_toStartOf="@+id/follow_button"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="123 posts • 1.2m followers" />
+
+    <org.wordpress.android.ui.reader.views.ReaderFollowButton
+        android:id="@+id/follow_button"
+        style="@style/Reader.Follow.Button.New"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_blog_follow_count"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
