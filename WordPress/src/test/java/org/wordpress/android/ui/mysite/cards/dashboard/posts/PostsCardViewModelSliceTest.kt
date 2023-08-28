@@ -105,7 +105,7 @@ class PostsCardViewModelSliceTest : BaseUnitTest() {
             )
         )
 
-        verify(cardsTracker).trackPostItemClicked(PostCardType.SCHEDULED)
+        verify(cardsTracker).trackCardItemClicked(CardsTracker.Type.POST.label, CardsTracker.PostSubtype.SCHEDULED.label)
     }
 
     @Test
@@ -119,7 +119,7 @@ class PostsCardViewModelSliceTest : BaseUnitTest() {
             )
         )
 
-        verify(cardsTracker).trackPostItemClicked(PostCardType.DRAFT)
+        verify(cardsTracker).trackCardItemClicked(CardsTracker.Type.POST.label, CardsTracker.PostSubtype.DRAFT.label)
     }
 
     @Test
@@ -129,7 +129,7 @@ class PostsCardViewModelSliceTest : BaseUnitTest() {
         params.moreMenuClickParams.onViewPostsMenuItemClick(PostCardType.DRAFT)
 
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenDraftsPosts(site))
-        //  verify(cardsTracker).trackPostCardFooterLinkClicked(PostCardType.DRAFT)
+        // todo: annmarie verify(cardsTracker).trackPostCardFooterLinkClicked(PostCardType.DRAFT)
     }
 
     @Test

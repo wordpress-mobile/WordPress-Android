@@ -7,6 +7,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBu
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.toSubtypeValue
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -56,7 +57,7 @@ class PostsCardViewModelSlice @Inject constructor(
 
     private fun onPostItemClick(params: PostCardBuilderParams.PostItemClickParams) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
-            cardsTracker.trackPostItemClicked(params.postCardType)
+            trackPostItemClicked(params.postCardType)
             when (params.postCardType) {
                 PostCardType.DRAFT -> _onNavigation.value =
                     Event(SiteNavigationAction.EditDraftPost(site, params.postId))
@@ -75,5 +76,9 @@ class PostsCardViewModelSlice @Inject constructor(
                 PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
             }
         }
+    }
+
+    private fun trackPostItemClicked(postCardType: PostCardType) {
+        cardsTracker.trackCardItemClicked(CardsTracker.Type.POST.label, postCardType.toSubtypeValue().label)
     }
 }
