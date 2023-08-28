@@ -10,10 +10,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.ActivityLogSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.MenuItemType
-import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.QuickStartSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
-import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -53,21 +51,6 @@ class CardsTrackerTest {
         cardsTracker.trackQuickStartCardItemClicked(QuickStartTaskType.CUSTOMIZE)
 
         verifyQuickStartCardItemClickedTracked(QuickStartSubtype.CUSTOMIZE.label)
-    }
-
-    /* POST CARDS */
-    @Test
-    fun `when post draft item is clicked, then post item event is tracked`() {
-        cardsTracker.trackPostItemClicked(PostCardType.DRAFT)
-
-        verifyCardItemClickedTracked(Type.POST, PostSubtype.DRAFT.label)
-    }
-
-    @Test
-    fun `when post scheduled item is clicked, then post item event is tracked`() {
-        cardsTracker.trackPostItemClicked(PostCardType.SCHEDULED)
-
-        verifyCardItemClickedTracked(Type.POST, PostSubtype.SCHEDULED.label)
     }
 
     @Test
