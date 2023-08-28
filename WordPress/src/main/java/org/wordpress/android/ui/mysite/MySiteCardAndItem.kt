@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.MenuRes
 import androidx.annotation.StringRes
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
@@ -253,6 +254,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val title: UiString,
                         val postItems: List<PostItem>,
                         override val footerLink: FooterLink,
+                        @MenuRes val moreMenuResId: Int,
                         val moreMenuOptions: MoreMenuOptions
                     ) : PostCard(
                         dashboardCardType = DashboardCardType.POST_CARD_WITH_POST_ITEMS,
@@ -265,16 +267,16 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                             val isTimeIconVisible: Boolean = false,
                             val onClick: ListItemInteraction
                         )
+                        data class MoreMenuOptions(
+                            val onMoreMenuClick: (postCardType: PostCardType) -> Unit,
+                            val onViewPostsMenuItemClick: (postCardType: PostCardType) -> Unit,
+                            val onHideThisMenuItemClick: (postCardType: PostCardType) -> Unit
+                        )
                     }
 
                     data class FooterLink(
                         val label: UiString,
                         val onClick: (postCardType: PostCardType) -> Unit
-                    )
-                    data class MoreMenuOptions(
-                        val onMoreClick: (postCardType: PostCardType) -> Unit,
-                        val allPostsMenuItemClick: (postCardType: PostCardType) -> Unit,
-                        val hideThisMenuItemClick: (postCardType: PostCardType) -> Unit
                     )
                 }
 
