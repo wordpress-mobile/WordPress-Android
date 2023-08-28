@@ -57,6 +57,12 @@ class PostCardBuilder @Inject constructor(
             footerLink = FooterLink(
                 label = UiStringRes(R.string.my_site_post_card_link_go_to_drafts),
                 onClick = params.onFooterLinkClick
+            ),
+            moreMenuResId = R.menu.dashboard_card_draft_posts_menu,
+            moreMenuOptions = PostCardWithPostItems.MoreMenuOptions(
+                onMoreMenuClick = params.moreMenuClickParams.onMoreMenuClick,
+                onHideThisMenuItemClick = params.moreMenuClickParams.onHideThisMenuItemClick,
+                onViewPostsMenuItemClick = params.moreMenuClickParams.onViewPostsMenuItemClick
             )
         )
 
@@ -68,6 +74,12 @@ class PostCardBuilder @Inject constructor(
             footerLink = FooterLink(
                 label = UiStringRes(R.string.my_site_post_card_link_go_to_scheduled_posts),
                 onClick = params.onFooterLinkClick
+            ),
+            moreMenuResId = R.menu.dashboard_card_scheduled_posts_menu,
+            moreMenuOptions = PostCardWithPostItems.MoreMenuOptions(
+                onMoreMenuClick = params.moreMenuClickParams.onMoreMenuClick,
+                onHideThisMenuItemClick = params.moreMenuClickParams.onHideThisMenuItemClick,
+                onViewPostsMenuItemClick = params.moreMenuClickParams.onViewPostsMenuItemClick
             )
         )
 
