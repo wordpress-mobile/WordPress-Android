@@ -83,3 +83,15 @@ fun RecyclerView.disableAnimation() {
 }
 
 fun View.getString(@StringRes stringRes: Int) = context.getString(stringRes)
+
+fun View.visible() {
+    this.visibility = View.VISIBLE
+}
+
+fun View.gone() {
+    this.visibility = View.GONE
+}
+
+fun View.invisible() {
+    this.visibility = View.INVISIBLE
+}
