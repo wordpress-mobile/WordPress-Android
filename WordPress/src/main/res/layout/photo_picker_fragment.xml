@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/wp_stories_take_picture"
@@ -27,7 +26,7 @@
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/container_media_source_bar"
+            android:layout_above="@id/partial_media_access_prompt"
             android:fadeScrollbars="true"
             android:scrollbars="vertical" />
 
@@ -35,7 +34,7 @@
             android:id="@+id/actionable_empty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/container_media_source_bar"
+            android:layout_above="@id/partial_media_access_prompt"
             android:visibility="gone"
             app:aevImage="@drawable/img_illustration_media_105dp"
             app:aevTitle="@string/media_empty_list"
@@ -45,12 +44,22 @@
             android:id="@+id/soft_ask_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@id/partial_media_access_prompt"
             android:visibility="gone"
             app:aevButton="@string/photo_picker_soft_ask_allow"
             app:aevImage="@drawable/img_illustration_add_media_150dp"
             app:aevTitle="@string/photo_picker_soft_ask_label"
             tools:visibility="visible" />
 
+        <include
+            layout="@layout/media_picker_include_partial_access_prompt"
+            android:id="@+id/partial_media_access_prompt"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_above="@id/container_media_source_bar"
+            tools:visibility="visible" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/container_media_source_bar"
@@ -122,7 +131,7 @@
                 android:textAppearance="?attr/textAppearanceButton"
                 android:textColor="?attr/colorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/container_selection_bar" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/text_insert"
@@ -135,7 +144,7 @@
                 android:textAppearance="?attr/textAppearanceButton"
                 android:textColor="?attr/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/container_selection_bar" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
