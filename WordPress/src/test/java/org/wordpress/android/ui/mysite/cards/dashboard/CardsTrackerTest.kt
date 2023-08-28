@@ -57,20 +57,6 @@ class CardsTrackerTest {
 
     /* POST CARDS */
     @Test
-    fun `when post draft footer link is clicked, then post draft event is tracked`() {
-        cardsTracker.trackPostCardFooterLinkClicked(PostCardType.DRAFT)
-
-        verifyFooterLinkClickedTracked(Type.POST, PostSubtype.DRAFT.label)
-    }
-
-    @Test
-    fun `when post scheduled footer link is clicked, then post scheduled event is tracked`() {
-        cardsTracker.trackPostCardFooterLinkClicked(PostCardType.SCHEDULED)
-
-        verifyFooterLinkClickedTracked(Type.POST, PostSubtype.SCHEDULED.label)
-    }
-
-    @Test
     fun `when post draft item is clicked, then post item event is tracked`() {
         cardsTracker.trackPostItemClicked(PostCardType.DRAFT)
 
