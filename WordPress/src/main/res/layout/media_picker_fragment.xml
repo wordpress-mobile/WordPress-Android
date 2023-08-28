@@ -25,37 +25,46 @@
         android:layout_below="@id/toolbar"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
                 android:id="@+id/recycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:fadeScrollbars="true"
                 android:scrollbars="vertical"
-                android:layout_above="@id/partial_media_access_prompt" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/partial_media_access_prompt" />
 
             <org.wordpress.android.ui.ActionableEmptyView
                 android:id="@+id/actionable_empty_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:visibility="gone"
-                android:layout_above="@id/partial_media_access_prompt"
                 app:aevImage="@drawable/img_illustration_media_105dp"
                 app:aevButton="@string/retry"
                 app:aevTitle="@string/media_empty_list"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/partial_media_access_prompt"
                 tools:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/loading_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:visibility="gone"
-                android:layout_above="@id/partial_media_access_prompt"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/partial_media_access_prompt"
                 tools:visibility="visible">
 
                 <ProgressBar
@@ -75,25 +84,30 @@
 
             <org.wordpress.android.ui.ActionableEmptyView
                 android:id="@+id/soft_ask_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:visibility="gone"
-                android:layout_above="@id/partial_media_access_prompt"
                 app:aevButton="@string/photo_picker_soft_ask_allow"
                 app:aevImage="@drawable/img_illustration_add_media_150dp"
                 app:aevTitle="@string/photo_picker_soft_ask_photos_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/partial_media_access_prompt"
                 tools:visibility="visible" />
 
             <include
                 layout="@layout/media_picker_include_partial_access_prompt"
                 android:id="@+id/partial_media_access_prompt"
                 android:visibility="gone"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:layout_alignParentBottom="true"
+                android:layout_margin="@dimen/margin_extra_large"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 tools:visibility="visible" />
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
