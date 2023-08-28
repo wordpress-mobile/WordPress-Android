@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.posts
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
@@ -36,12 +35,14 @@ class PostsCardViewModelSlice @Inject constructor(
     }
 
     private fun onMoreMenuClick(postCardType: PostCardType) {
-        // todo: annmarie implement cards tracker
-        Log.i(javaClass.simpleName, "***=> onMoreMenuClick $postCardType")
+        cardsTracker.trackCardMoreMenuClicked(postCardType.toPostMenuCardValue().label)
     }
 
     private fun onHideThisMenuItemClick(postCardType: PostCardType) {
-        // todo: annmarie implement cards tracker
+        cardsTracker.trackCardMoreMenuItemClicked(
+            postCardType.toPostMenuCardValue().label,
+            PostMenuItemType.HIDE_THIS.label
+        )
         appPrefsWrapper.setShouldHidePostDashboardCard(
             selectedSiteRepository.getSelectedSite()!!.siteId,
             postCardType.name,
@@ -51,8 +52,14 @@ class PostsCardViewModelSlice @Inject constructor(
     }
 
     private fun onViewPostsMenuItemClick(postCardType: PostCardType) {
+        cardsTracker.trackCardMoreMenuItemClicked(
+            card = postCardType.toPostMenuCardValue().label,
+            item = when (postCardType) {
+                PostCardType.DRAFT -> PostMenuItemType.VIEW_ALL_DRAFTS.label
+                PostCardType.SCHEDULED -> PostMenuItemType.VIEW_ALL_SCHEDULED_POSTS.label
+            }
+        )
         onPostCardViewAllClick(postCardType)
-        // todo: annmarie implement cards tracker
     }
 
     private fun onPostItemClick(params: PostCardBuilderParams.PostItemClickParams) {
@@ -70,7 +77,6 @@ class PostsCardViewModelSlice @Inject constructor(
 
     private fun onPostCardViewAllClick(postCardType: PostCardType) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
-           // todo: annmarie implement tracking cardsTracker.trackPostCardFooterLinkClicked(postCardType)
             _onNavigation.value = when (postCardType) {
                 PostCardType.DRAFT -> Event(SiteNavigationAction.OpenDraftsPosts(site))
                 PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
@@ -80,5 +86,23 @@ class PostsCardViewModelSlice @Inject constructor(
 
     private fun trackPostItemClicked(postCardType: PostCardType) {
         cardsTracker.trackCardItemClicked(CardsTracker.Type.POST.label, postCardType.toSubtypeValue().label)
+    }
+
+    enum class PostMenuItemType(val label: String) {
+        VIEW_ALL_DRAFTS("view_all_drafts"),
+        VIEW_ALL_SCHEDULED_POSTS("scheduled_posts"),
+        HIDE_THIS("hide_this")
+    }
+
+    enum class PostMenuCard(val label: String) {
+        DRAFT_POSTS("draft_posts"),
+        SCHEDULED_POSTS("scheduled_posts")
+    }
+
+    private fun PostCardType.toPostMenuCardValue(): PostMenuCard {
+        return when (this) {
+            PostCardType.DRAFT -> PostMenuCard.DRAFT_POSTS
+            PostCardType.SCHEDULED -> PostMenuCard.SCHEDULED_POSTS
+        }
     }
 }
