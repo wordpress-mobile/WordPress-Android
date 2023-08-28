@@ -90,7 +90,7 @@ class PostsCardViewModelSlice @Inject constructor(
 
     enum class PostMenuItemType(val label: String) {
         VIEW_ALL_DRAFTS("view_all_drafts"),
-        VIEW_ALL_SCHEDULED_POSTS("scheduled_posts"),
+        VIEW_ALL_SCHEDULED_POSTS("view_all_scheduled_posts"),
         HIDE_THIS("hide_this")
     }
 
