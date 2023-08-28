@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.posts
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
@@ -20,8 +21,30 @@ class PostsCardViewModelSlice @Inject constructor(
        return  PostCardBuilderParams(
             posts = postsCardModel,
             onPostItemClick = this::onPostItemClick,
-            onFooterLinkClick = this::onPostCardFooterLinkClick
+            onFooterLinkClick = this::onPostCardFooterLinkClick,
+            moreMenuClickParams = PostCardBuilderParams.MoreMenuParams(
+               onMoreMenuClick = this::onMoreMenuClick,
+               onHideThisMenuItemClick = this::onHideThisMenuItemClick,
+               onViewPostsMenuItemClick = this::onViewPostsMenuItemClick
+           )
         )
+    }
+
+    private fun onMoreMenuClick(postCardType: PostCardType) {
+        // todo: annmarie implement cards tracker
+        Log.i(javaClass.simpleName, "***=> onMoreMenuClick $postCardType")
+    }
+
+    private fun onHideThisMenuItemClick(postCardType: PostCardType) {
+        // todo: annmarie implement logic
+        // todo: annmarie implement cards tracker
+        Log.i(javaClass.simpleName, "***=> onHideThisMenuItemClick $postCardType")
+    }
+
+    private fun onViewPostsMenuItemClick(postCardType: PostCardType) {
+        // todo: annmarie implement logic
+        // todo: annmarie implement cards tracker
+        Log.i(javaClass.simpleName, "***=> onViewPostsMenuItemClick $postCardType")
     }
 
     private fun onPostItemClick(params: PostCardBuilderParams.PostItemClickParams) {
