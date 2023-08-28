@@ -115,7 +115,10 @@ class PostsCardViewModelSliceTest : BaseUnitTest() {
             )
         )
 
-        verify(cardsTracker).trackCardItemClicked(CardsTracker.Type.POST.label, CardsTracker.PostSubtype.SCHEDULED.label)
+        verify(cardsTracker).trackCardItemClicked(
+            CardsTracker.Type.POST.label,
+            CardsTracker.PostSubtype.SCHEDULED.label
+        )
     }
 
     @Test
