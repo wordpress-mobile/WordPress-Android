@@ -108,4 +108,24 @@ class PostsCardViewModelSliceTest : BaseUnitTest() {
 
         verify(cardsTracker).trackPostItemClicked(PostCardType.DRAFT)
     }
+
+    @Test
+    fun `given draft post card, when view all drafts posts is clicked, then draft posts screen is opened`() = test {
+        val params = postsCardViewModelSlice.getPostsCardBuilderParams(mock())
+
+        params.moreMenuClickParams.onViewPostsMenuItemClick(PostCardType.DRAFT)
+
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenDraftsPosts(site))
+      //  verify(cardsTracker).trackPostCardFooterLinkClicked(PostCardType.DRAFT)
+    }
+    @Test
+    fun `given scheduled post card, when footer link is clicked, then scheduled posts screen is opened`() =
+        test {
+            val params = postsCardViewModelSlice.getPostsCardBuilderParams(mock())
+
+            params.moreMenuClickParams.onViewPostsMenuItemClick(PostCardType.SCHEDULED)
+
+            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenScheduledPosts(site))
+           // verify(cardsTracker).trackPostCardFooterLinkClicked(PostCardType.SCHEDULED)
+        }
 }
