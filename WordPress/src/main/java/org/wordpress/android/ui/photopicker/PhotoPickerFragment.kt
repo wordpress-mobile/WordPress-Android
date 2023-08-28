@@ -240,6 +240,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
     @Suppress("DEPRECATION")
     private fun PhotoPickerFragmentBinding.setupPhotoList(uiModel: PhotoPickerViewModel.PhotoListUiModel) {
+        actionableEmptyView.isVisible = uiModel is PhotoPickerViewModel.PhotoListUiModel.Empty
         if (uiModel is PhotoPickerViewModel.PhotoListUiModel.Data) {
             if (recycler.adapter == null) {
                 recycler.adapter = PhotoPickerAdapter(
