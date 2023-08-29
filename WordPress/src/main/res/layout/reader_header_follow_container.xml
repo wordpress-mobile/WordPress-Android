@@ -9,6 +9,7 @@
         android:id="@+id/text_blog_follow_count"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:layout_marginEnd="@dimen/margin_large"
         android:alpha="@dimen/material_emphasis_high_type"
         android:textColor="?attr/colorOnSurface"
