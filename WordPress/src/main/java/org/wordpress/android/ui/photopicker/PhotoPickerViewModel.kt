@@ -90,7 +90,7 @@ class PhotoPickerViewModel @Inject constructor(
         _showPartialMediaAccessPrompt
     ) { photoPickerItems, selectedIds, softAskRequest, progressDialogModel, showPartialAccessPrompt ->
         PhotoPickerUiState(
-            buildPhotoPickerUiModel(photoPickerItems, selectedIds),
+            buildPhotoPickerUiModel(photoPickerItems, selectedIds, softAskRequest),
             buildBottomBar(
                 photoPickerItems,
                 selectedIds,
@@ -114,10 +114,13 @@ class PhotoPickerViewModel @Inject constructor(
     @Suppress("DEPRECATION")
     private fun buildPhotoPickerUiModel(
         data: List<PhotoPickerItem>?,
-        selectedIds: List<Long>?
+        selectedIds: List<Long>?,
+        softAskRequest: SoftAskRequest?,
     ): PhotoListUiModel {
         var isVideoSelected = false
-        return if (data != null) {
+        return if (null != softAskRequest && softAskRequest.show) {
+            PhotoListUiModel.Hidden
+        } else if (data != null) {
             val uiItems = data.map {
                 val showOrderCounter = browserType.canMultiselect()
                 val toggleAction = PhotoPickerUiItem.ToggleAction(it.id, showOrderCounter, this::toggleItem)
@@ -165,8 +168,7 @@ class PhotoPickerViewModel @Inject constructor(
         if (numSelected == 0) {
             return ActionModeUiModel.Hidden
         }
-        val title: UiString? = when {
-            numSelected == 0 -> null
+        val title: UiString = when {
             browserType.canMultiselect() -> {
                 UiStringText(String.format(resourceProvider.getString(R.string.cab_selected), numSelected))
             }
@@ -547,6 +549,8 @@ class PhotoPickerViewModel @Inject constructor(
             PhotoListUiModel()
 
         object Empty : PhotoListUiModel()
+
+        object Hidden : PhotoListUiModel()
     }
 
     data class BottomBarUiModel(
