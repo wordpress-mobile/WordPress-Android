@@ -1730,4 +1730,9 @@
         <item name="android:layout_marginTop">@dimen/margin_small</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
+
+    <!-- Media Picker -->
+    <style name="MediaPickerPartialAccessTextButton" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textColor">@color/primary_emphasis_medium_selector</item>
+    </style>
 </resources>

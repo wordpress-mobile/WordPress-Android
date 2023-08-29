@@ -1,23 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/margin_extra_large"
+    android:background="@color/on_surface_emphasis_extra_low">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/partial_access_prompt_text"
+        style="@style/TextAppearance.Material3.BodySmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/on_surface_selector"
+        android:text="@string/partial_media_access_prompt_text"
         app:fixWidowWords="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/partial_access_prompt_select_more_button"
+        style="@style/MediaPickerPartialAccessTextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/partial_media_access_prompt_text" />
+        android:layout_marginTop="@dimen/margin_large"
+        android:text="@string/partial_media_access_prompt_select_more"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintTop_toBottomOf="@id/partial_access_prompt_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/partial_access_prompt_change_settings_button"
+        app:layout_constrainedWidth="true" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/partial_access_prompt_cta"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/partial_access_prompt_change_settings_button"
+        style="@style/MediaPickerPartialAccessTextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/partial_media_access_prompt_cta_text" />
+        android:layout_marginTop="@dimen/margin_large"
+        android:text="@string/partial_media_access_prompt_change_settings"
+        app:layout_constraintTop_toBottomOf="@id/partial_access_prompt_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/partial_access_prompt_select_more_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constrainedWidth="true" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

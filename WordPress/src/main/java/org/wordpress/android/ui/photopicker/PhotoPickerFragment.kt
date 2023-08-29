@@ -270,8 +270,11 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
     private fun PhotoPickerFragmentBinding.setupPartialAccessPrompt(isVisible: Boolean) {
         partialMediaAccessPrompt.root.isVisible = isVisible
-        partialMediaAccessPrompt.partialAccessPromptCta.setOnClickListener {
+        partialMediaAccessPrompt.partialAccessPromptSelectMoreButton.setOnClickListener {
             requestMediaPermission()
+        }
+        partialMediaAccessPrompt.partialAccessPromptChangeSettingsButton.setOnClickListener {
+            WPPermissionUtils.showAppSettings(requireActivity())
         }
     }
 

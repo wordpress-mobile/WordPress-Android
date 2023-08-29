@@ -558,8 +558,11 @@ class MediaPickerFragment : Fragment(), MenuProvider {
 
     private fun MediaPickerFragmentBinding.setupPartialAccessPrompt(isVisible: Boolean) {
         partialMediaAccessPrompt.root.isVisible = isVisible
-        partialMediaAccessPrompt.partialAccessPromptCta.setOnClickListener {
+        partialMediaAccessPrompt.partialAccessPromptSelectMoreButton.setOnClickListener {
             requestMediaPermission()
+        }
+        partialMediaAccessPrompt.partialAccessPromptChangeSettingsButton.setOnClickListener {
+            WPPermissionUtils.showAppSettings(requireActivity())
         }
     }
 
