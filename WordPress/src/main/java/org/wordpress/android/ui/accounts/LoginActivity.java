@@ -144,7 +144,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Inject ContactSupportFeatureConfig mContactSupportFeatureConfig;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
