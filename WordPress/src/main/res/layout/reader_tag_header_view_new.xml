@@ -11,10 +11,10 @@
         android:id="@+id/layout_tag_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/reader_tag_header_vertical_padding"
-        android:paddingEnd="@dimen/reader_tag_header_horizontal_padding"
-        android:paddingStart="@dimen/reader_tag_header_horizontal_padding"
-        android:paddingTop="@dimen/reader_tag_header_vertical_padding">
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_medium">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_tag"
