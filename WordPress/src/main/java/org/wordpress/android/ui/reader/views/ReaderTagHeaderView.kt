@@ -34,6 +34,7 @@ class ReaderTagHeaderView @JvmOverloads constructor(
     private var onFollowBtnClicked: (() -> Unit)? = null
 
     init {
+        (context.applicationContext as WordPress).component().inject(this)
         binding = if (readerImprovementsFeatureConfig.isEnabled()) {
             val readerTagHeaderViewNewBinding =
                 ReaderTagHeaderViewNewBinding.inflate(LayoutInflater.from(context), this, true)
@@ -50,7 +51,6 @@ class ReaderTagHeaderView @JvmOverloads constructor(
                 followButton = readerTagHeaderViewBinding.followButton,
             )
         }
-        (context.applicationContext as WordPress).component().inject(this)
         binding.followButton.visible()
         binding.followButton.setOnClickListener { onFollowBtnClicked?.invoke() }
     }
