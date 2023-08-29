@@ -376,7 +376,7 @@ class EditorMediaTest : BaseUnitTest() {
         }
 
         fun createMediaUtilsWrapper(
-            shouldAdvertiseImageOptimization: Boolean = false,
+            shouldAdvertiseImageOptimization: Boolean = false
         ) =
             mock<MediaUtilsWrapper> {
                 on { shouldAdvertiseImageOptimization() }
