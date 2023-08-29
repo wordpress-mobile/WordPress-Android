@@ -38,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -312,7 +313,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private ProgressDialog mDeleteSiteProgressDialog;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Activity activity = getActivity();
         ((WordPress) activity.getApplication()).component().inject(this);
