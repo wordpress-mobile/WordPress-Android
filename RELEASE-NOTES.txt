@@ -3,6 +3,7 @@
 23.2
 -----
 * [*] The Zendesk ticket screen will be displayed for error dialogs resulting from account closure. [https://github.com/wordpress-mobile/WordPress-Android/pull/19023]
+* [***] [Jetpack-only] Contact Support: Need assistance? Use Jetpack mobile assistant for immediate help. Create a support ticket for further assistance. [https://github.com/wordpress-mobile/WordPress-Android/pull/18879]
 
 23.1
 -----
