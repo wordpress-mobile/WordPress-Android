@@ -208,10 +208,14 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
                     shouldShowBlazeOverlay = true
                 )
             )
+        verify(cardsTracker).trackCardMoreMenuItemClicked(
+            CardsTracker.Type.BLAZE_CAMPAIGNS.label,
+            CampaignCardMenuItem.LEARN_MORE.label
+        )
     }
 
     @Test
-    fun `given campaign card built, when view all campaings menu option clicked, then site navigation is triggered`() {
+    fun `given campaign card built, when view all campaigns menu option clicked, then site navigation is triggered`() {
         // Given
         val blazeCardUpdate: MySiteUiState.PartialState.BlazeCardUpdate = mock()
         whenever(blazeCardUpdate.blazeEligible).thenReturn(true)
@@ -225,10 +229,14 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
         // Then
         assertThat(navigationActions)
             .containsOnly(SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.DASHBOARD_CARD))
+        verify(cardsTracker).trackCardMoreMenuItemClicked(
+            CardsTracker.Type.BLAZE_CAMPAIGNS.label,
+            CampaignCardMenuItem.VIEW_ALL_CAMPAIGNS.label
+        )
     }
 
     @Test
-    fun `given campaign card built, when hide campaings menu option clicked, then site navigation is triggered`() {
+    fun `given campaign card built, when hide campaigns menu option clicked, then site navigation is triggered`() {
         // Given
         val blazeCardUpdate: MySiteUiState.PartialState.BlazeCardUpdate = mock()
         whenever(blazeCardUpdate.blazeEligible).thenReturn(true)
@@ -321,6 +329,10 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
                     shouldShowBlazeOverlay = true
                 )
             )
+        verify(cardsTracker).trackCardMoreMenuItemClicked(
+            CardsTracker.Type.PROMOTE_WITH_BLAZE.label,
+            PromoteWithBlazeCardMenuItem.LEARN_MORE.label
+        )
     }
 
     @Test
