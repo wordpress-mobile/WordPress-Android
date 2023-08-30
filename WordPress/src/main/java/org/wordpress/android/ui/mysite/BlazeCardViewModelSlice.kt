@@ -70,7 +70,10 @@ class BlazeCardViewModelSlice @Inject constructor(
     }
 
     private fun onCampaignCardHideMenuItemClick() {
-        // todo implement the tracking
+        cardsTracker.trackCardMoreMenuItemClicked(
+            CardsTracker.Type.BLAZE_CAMPAIGNS.label,
+            CampaignCardMenuItem.HIDE_THIS.label
+        )
         onHideCardClick()
     }
 
