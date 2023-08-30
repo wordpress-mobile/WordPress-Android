@@ -290,6 +290,11 @@ class QuickStartRepository
         }
     }
 
+    fun shouldShowQuickStartCard(siteId: Long) = appPrefsWrapper.getShouldHideNextStepsDashboardCard(siteId).not()
+
+    fun onHideQuickStartCard(siteId: Long) = appPrefsWrapper.setShouldHideNextStepsDashboardCard(siteId, true)
+
+
     private fun onQuickStartNoticeButtonAction(task: QuickStartTask) {
         quickStartTracker.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED)
         setActiveTask(task)
