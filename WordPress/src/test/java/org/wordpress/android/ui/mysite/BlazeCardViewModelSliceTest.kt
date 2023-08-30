@@ -307,6 +307,8 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
             AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
             BlazeFlowSource.DASHBOARD_CARD
         )
+        verify(cardsTracker)
+            .trackCardMoreMenuClicked(CardsTracker.Type.PROMOTE_WITH_BLAZE.label)
     }
 
     @Test
