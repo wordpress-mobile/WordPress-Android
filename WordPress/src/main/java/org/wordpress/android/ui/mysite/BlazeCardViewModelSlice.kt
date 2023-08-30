@@ -11,12 +11,14 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardB
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class BlazeCardViewModelSlice @Inject constructor(
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val selectedSiteRepository: SelectedSiteRepository
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val cardsTracker: CardsTracker
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
@@ -51,7 +53,10 @@ class BlazeCardViewModelSlice @Inject constructor(
         )
 
     private fun onViewAllCampaignsClick() {
-        // todo add tracking for the click
+        cardsTracker.trackCardMoreMenuItemClicked(
+            CardsTracker.Type.BLAZE_CAMPAIGNS.label,
+            CampaignCardMenuItem.VIEW_ALL_CAMPAIGNS.label
+        )
         _onNavigation.value =
             Event(SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.DASHBOARD_CARD))
     }
@@ -148,3 +153,10 @@ class BlazeCardViewModelSlice @Inject constructor(
         return SiteNavigationAction.OpenPromoteWithBlazeOverlay(BlazeFlowSource.MENU_ITEM)
     }
 }
+
+enum class CampaignCardMenuItem(val label: String) {
+    VIEW_ALL_CAMPAIGNS("view_stats"),
+    LEARN_MORE("learn_more"),
+    HIDE_THIS("hide_this")
+}
+
