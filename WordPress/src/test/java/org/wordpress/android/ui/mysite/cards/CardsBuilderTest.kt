@@ -302,7 +302,6 @@ class CardsBuilderTest {
 
     private fun initQuickStartCard() = QuickStartCard(
         title = UiStringText(""),
-        onRemoveMenuItemClick = mock(),
         taskTypeItems = listOf(
             QuickStartTaskTypeItem(
                 quickStartTaskType = mock(),
@@ -314,7 +313,8 @@ class CardsBuilderTest {
                 progress = 0,
                 onClick = mock()
             )
-        )
+        ),
+        moreMenuOptions = mock()
     )
 
     private fun initDashboardCards() = DashboardCards(cards = mock())

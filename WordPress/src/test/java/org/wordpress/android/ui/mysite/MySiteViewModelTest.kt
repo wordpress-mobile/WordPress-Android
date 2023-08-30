@@ -97,7 +97,6 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
-import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
@@ -374,7 +373,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val activeTask = MutableLiveData<QuickStartTask>()
     private val quickStartTabStep = MutableLiveData<QuickStartTabStep?>()
 
-    private var removeMenuItemClickAction: (() -> Unit)? = null
+    private var quickStartHideThisMenuItemClickAction: (() -> Unit)? = null
+    private var quickStartMoreMenuClickAction: (() -> Unit)? = null
     private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
@@ -1338,48 +1338,12 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when QS remove menu item is clicked, then remove next steps dialog shown`() {
-        initSelectedSite( isQuickStartInProgress = true)
-
-        requireNotNull(removeMenuItemClickAction).invoke()
-
-        assertThat(dialogModels.last()).isEqualTo(ShowRemoveNextStepsDialog)
-    }
-
-    @Test
     fun `when remove next steps dialog negative btn clicked, then QS is not skipped`() {
         initSelectedSite( isQuickStartInProgress = true)
 
         viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
 
         verify(quickStartRepository, never()).skipQuickStart()
-    }
-
-    @Test
-    fun `when remove next steps dialog positive btn clicked, then QS is skipped`() {
-        initSelectedSite( isQuickStartInProgress = true)
-
-        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
-
-        verify(quickStartRepository).skipQuickStart()
-    }
-
-    @Test
-    fun `when remove next steps dialog positive btn clicked, then QS repo refreshed`() {
-        initSelectedSite( isQuickStartInProgress = true)
-
-        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
-
-        verify(mySiteSourceManager).refresh()
-    }
-
-    @Test
-    fun `when remove next steps dialog positive btn clicked, then QS active task cleared`() {
-        initSelectedSite( isQuickStartInProgress = true)
-
-        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
-
-        verify(quickStartRepository).clearActiveTask()
     }
 
     @Test
@@ -3208,13 +3172,15 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun initQuickStartCard(mockInvocation: InvocationOnMock): QuickStartCard {
         val params = (mockInvocation.arguments.filterIsInstance<QuickStartCardBuilderParams>()).first()
-        removeMenuItemClickAction = params.onQuickStartBlockRemoveMenuItemClick
+        quickStartHideThisMenuItemClickAction = params.moreMenuClickParams.onHideThisMenuItemClick
+        quickStartMoreMenuClickAction = params.moreMenuClickParams.onMoreMenuClick
         quickStartTaskTypeItemClickAction = params.onQuickStartTaskTypeItemClick
         return QuickStartCard(
             title = UiStringText(""),
-            onRemoveMenuItemClick = ListItemInteraction.create {
-                params.onQuickStartBlockRemoveMenuItemClick.invoke()
-            },
+            moreMenuOptions = QuickStartCard.MoreMenuOptions(
+                onMoreMenuClick = { (quickStartMoreMenuClickAction as (() -> Unit)).invoke() },
+                onHideThisMenuItemClick = { (quickStartHideThisMenuItemClickAction as (() -> Unit)).invoke() }
+            ),
             taskTypeItems = listOf(
                 QuickStartTaskTypeItem(
                     quickStartTaskType = mock(),
