@@ -377,7 +377,6 @@ class EditorMediaTest : BaseUnitTest() {
 
         fun createMediaUtilsWrapper(
             shouldAdvertiseImageOptimization: Boolean = false,
-            lastRecordedVideoUri: Uri = mock()
         ) =
             mock<MediaUtilsWrapper> {
                 on { shouldAdvertiseImageOptimization() }
