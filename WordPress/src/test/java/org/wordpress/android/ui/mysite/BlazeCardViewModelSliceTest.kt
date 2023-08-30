@@ -20,6 +20,7 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDeta
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
@@ -31,6 +32,9 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
+    @Mock
+    lateinit var cardsTracker: CardsTracker
+
     private lateinit var blazeCardViewModelSlice: BlazeCardViewModelSlice
 
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
@@ -41,7 +45,7 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
 
     @Before
     fun setup() {
-        blazeCardViewModelSlice = BlazeCardViewModelSlice(blazeFeatureUtils, selectedSiteRepository)
+        blazeCardViewModelSlice = BlazeCardViewModelSlice(blazeFeatureUtils, selectedSiteRepository, cardsTracker)
 
         navigationActions = mutableListOf()
         refreshActions = mutableListOf()
