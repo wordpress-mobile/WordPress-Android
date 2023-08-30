@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/margin_extra_large"
-    android:background="@color/on_surface_emphasis_extra_low">
+    android:background="@color/partial_media_access_prompt_background">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/partial_access_prompt_text"
