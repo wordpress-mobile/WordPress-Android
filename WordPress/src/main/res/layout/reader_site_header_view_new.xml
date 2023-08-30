@@ -58,7 +58,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            android:alpha="@dimen/material_emphasis_high_type"
+            android:alpha="@dimen/material_emphasis_medium"
             android:ellipsize="end"
             android:gravity="start"
             android:maxLines="3"
