@@ -111,6 +111,10 @@ class BlazeCardViewModelSlice @Inject constructor(
     }
 
     private fun onLearnMoreClick() {
+        blazeFeatureUtils.track(
+            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_LEARN_MORE_TAPPED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
         _onNavigation.value =
             Event(
                 SiteNavigationAction.OpenPromoteWithBlazeOverlay(

@@ -2567,6 +2567,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blaze_entry_point_tapped";
             case BLAZE_ENTRY_POINT_MENU_ACCESSED:
                 return "blaze_entry_point_menu_accessed";
+            case BLAZE_ENTRY_POINT_LEARN_MORE_TAPPED:
+                return "blaze_entry_point_learn_more_tapped";
             case BLAZE_ENTRY_POINT_HIDE_TAPPED:
                 return "blaze_entry_point_hide_tapped";
             case BLAZE_FEATURE_OVERLAY_DISPLAYED:
