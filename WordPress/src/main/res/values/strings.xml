@@ -2374,8 +2374,9 @@
     <string name="my_site_create_next_post_title">Create your next post</string>
     <string name="my_site_create_next_post_excerpt">Posting regularly helps build your audience!</string>
     <string name="my_site_post_card_link_create_post">Create a post</string>
-    <string name="my_site_post_card_link_go_to_drafts">Go to drafts</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Go to scheduled posts</string>
+    <string name="my_site_post_card_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
+    <string name="my_site_post_card_menu_view_all_drafts">View all drafts</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">View all scheduled posts</string>
 
     <!-- My Site - Error Card -->
     <string name="my_site_error_card_title">Some data hasn\'t loaded</string>

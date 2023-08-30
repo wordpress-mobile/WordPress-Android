@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.MenuRes
 import androidx.annotation.StringRes
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
@@ -241,8 +242,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 }
 
                 sealed class PostCard(
-                    override val dashboardCardType: DashboardCardType,
-                    open val footerLink: FooterLink? = null
+                    override val dashboardCardType: DashboardCardType
                 ) : DashboardCard(dashboardCardType) {
                     data class Error(
                         override val title: UiString
@@ -252,10 +252,10 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val postCardType: PostCardType,
                         val title: UiString,
                         val postItems: List<PostItem>,
-                        override val footerLink: FooterLink
+                        @MenuRes val moreMenuResId: Int,
+                        val moreMenuOptions: MoreMenuOptions
                     ) : PostCard(
-                        dashboardCardType = DashboardCardType.POST_CARD_WITH_POST_ITEMS,
-                        footerLink = footerLink
+                        dashboardCardType = DashboardCardType.POST_CARD_WITH_POST_ITEMS
                     ) {
                         data class PostItem(
                             val title: UiString,
@@ -264,12 +264,12 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                             val isTimeIconVisible: Boolean = false,
                             val onClick: ListItemInteraction
                         )
+                        data class MoreMenuOptions(
+                            val onMoreMenuClick: (postCardType: PostCardType) -> Unit,
+                            val onViewPostsMenuItemClick: (postCardType: PostCardType) -> Unit,
+                            val onHideThisMenuItemClick: (postCardType: PostCardType) -> Unit
+                        )
                     }
-
-                    data class FooterLink(
-                        val label: UiString,
-                        val onClick: (postCardType: PostCardType) -> Unit
-                    )
                 }
 
                 sealed class ActivityCard(

@@ -49,8 +49,10 @@ class PostCardBuilderTest : BaseUnitTest() {
         date = POST_DATE
     )
 
-    private val onPostCardFooterLinkClick: (PostCardType) -> Unit = { }
     private val onPostItemClick: (params: PostItemClickParams) -> Unit = { }
+    private val onMoreMenuClick: (PostCardType) -> Unit = { }
+    private val onHideThisMenuItemClick: (PostCardType) -> Unit = { }
+    private val onViewPostsMenuItemClick: (PostCardType) -> Unit = { }
 
     @Before
     fun setUp() {
@@ -102,16 +104,6 @@ class PostCardBuilderTest : BaseUnitTest() {
         assertThat(postsCard.filterDraftPostCard()).isNull()
     }
 
-    @Test
-    fun `given draft post, when card is built, then it contains go to drafts link`() {
-        val posts = getPosts(draftPosts = listOf(post))
-
-        val postsCard = buildPostsCard(posts).filterDraftPostCard()
-
-        assertThat(postsCard?.footerLink?.label)
-            .isEqualTo(UiStringRes(R.string.my_site_post_card_link_go_to_drafts))
-    }
-
     /* SCHEDULED POST CARD */
 
     @Test
@@ -130,16 +122,6 @@ class PostCardBuilderTest : BaseUnitTest() {
         val postsCard = buildPostsCard(posts)
 
         assertThat(postsCard.filterScheduledPostCard()).isNull()
-    }
-
-    @Test
-    fun `given scheduled post, when card is built, then it contains go to scheduled posts link`() {
-        val posts = getPosts(scheduledPosts = listOf(post))
-
-        val postsCard = buildPostsCard(posts).filterScheduledPostCard()
-
-        assertThat(postsCard?.footerLink?.label)
-            .isEqualTo(UiStringRes(R.string.my_site_post_card_link_go_to_scheduled_posts))
     }
 
     /* DRAFT OR SCHEDULED POST ITEM - TITLE */
@@ -247,11 +229,15 @@ class PostCardBuilderTest : BaseUnitTest() {
             } as? List<PostCardWithPostItems>
             )?.firstOrNull { it.postCardType == PostCardType.SCHEDULED }
 
+
     private fun buildPostsCard(posts: PostsCardModel) = builder.build(
         PostCardBuilderParams(
             posts = posts,
             onPostItemClick = onPostItemClick,
-            onFooterLinkClick = onPostCardFooterLinkClick
+            moreMenuClickParams = PostCardBuilderParams.MoreMenuParams(
+                onMoreMenuClick = onMoreMenuClick,
+                onHideThisMenuItemClick = onHideThisMenuItemClick,
+                onViewPostsMenuItemClick = onViewPostsMenuItemClick)
         )
     )
 
