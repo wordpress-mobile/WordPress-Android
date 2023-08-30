@@ -172,9 +172,16 @@ public class ReaderSiteHeaderView extends LinearLayout {
             txtDescription.setVisibility(View.GONE);
         }
 
-        mImageManager.loadIntoCircle(blavatarImg,
-                SiteUtils.getSiteImageType(blogInfo.isP2orA8C(), BlavatarShape.CIRCULAR),
-                PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.HIGH));
+        if (mReaderImprovementsFeatureConfig.isEnabled()) {
+            final String imageUrl = blogInfo.getImageUrl();
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                loadBlavatarImage(blogInfo, blavatarImg);
+            } else {
+                blavatarImg.setVisibility(View.GONE);
+            }
+        } else {
+            loadBlavatarImage(blogInfo, blavatarImg);
+        }
 
         final CompactDecimalFormat compactDecimalFormat =
                 CompactDecimalFormat.getInstance(LocaleManager.getSafeLocale(getContext()),
@@ -205,6 +212,13 @@ public class ReaderSiteHeaderView extends LinearLayout {
         if (mBlogInfoListener != null) {
             mBlogInfoListener.onBlogInfoLoaded(blogInfo);
         }
+    }
+
+    private void loadBlavatarImage(ReaderBlog blogInfo, ImageView blavatarImg) {
+        blavatarImg.setVisibility(View.VISIBLE);
+        mImageManager.loadIntoCircle(blavatarImg,
+                SiteUtils.getSiteImageType(blogInfo.isP2orA8C(), BlavatarShape.CIRCULAR),
+                PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.HIGH));
     }
 
     private void toggleFollowStatus(final View followButton, final String source) {
