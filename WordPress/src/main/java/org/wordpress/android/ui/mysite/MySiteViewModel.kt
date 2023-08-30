@@ -67,8 +67,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardC
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
@@ -92,7 +90,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomai
 import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
-import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
@@ -210,7 +208,8 @@ class MySiteViewModel @Inject constructor(
     private val blazeCardViewModelSlice: BlazeCardViewModelSlice,
     private val domainTransferCardViewModel: DomainTransferCardViewModel,
     private val pagesCardViewModelSlice: PagesCardViewModelSlice,
-    private val todaysStatsViewModelSlice: TodaysStatsViewModelSlice
+    private val todaysStatsViewModelSlice: TodaysStatsViewModelSlice,
+    private val postsCardViewModelSlice: PostsCardViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -298,7 +297,8 @@ class MySiteViewModel @Inject constructor(
         blazeCardViewModelSlice.onNavigation,
         pagesCardViewModelSlice.onNavigation,
         domainTransferCardViewModel.onNavigation,
-        todaysStatsViewModelSlice.onNavigation
+        todaysStatsViewModelSlice.onNavigation,
+        postsCardViewModelSlice.onNavigation
     )
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
@@ -572,10 +572,8 @@ class MySiteViewModel @Inject constructor(
                 todaysStatsCardBuilderParams = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(
                         cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel } as? TodaysStatsCardModel
                 ),
-                postCardBuilderParams = PostCardBuilderParams(
-                    posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
-                    onPostItemClick = this::onPostItemClick,
-                    onFooterLinkClick = this::onPostCardFooterLinkClick
+                postCardBuilderParams = postsCardViewModelSlice.getPostsCardBuilderParams(
+                    cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel
                 ),
                 bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                     bloggingPrompt = if (isBloggingPromptsEnabled) {
@@ -1379,31 +1377,8 @@ class MySiteViewModel @Inject constructor(
         quickStartTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
-    private fun onPostItemClick(params: PostItemClickParams) {
-        selectedSiteRepository.getSelectedSite()?.let { site ->
-            cardsTracker.trackPostItemClicked(params.postCardType)
-            when (params.postCardType) {
-                PostCardType.DRAFT -> _onNavigation.value =
-                    Event(SiteNavigationAction.EditDraftPost(site, params.postId))
-
-                PostCardType.SCHEDULED -> _onNavigation.value =
-                    Event(SiteNavigationAction.EditScheduledPost(site, params.postId))
-            }
-        }
-    }
-
     private fun onDashboardErrorRetry() {
         mySiteSourceManager.refresh()
-    }
-
-    private fun onPostCardFooterLinkClick(postCardType: PostCardType) {
-        selectedSiteRepository.getSelectedSite()?.let { site ->
-            cardsTracker.trackPostCardFooterLinkClicked(postCardType)
-            _onNavigation.value = when (postCardType) {
-                PostCardType.DRAFT -> Event(SiteNavigationAction.OpenDraftsPosts(site))
-                PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
-            }
-        }
     }
 
     private fun onBloggingPromptShareClick(message: String) {
