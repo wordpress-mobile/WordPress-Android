@@ -58,7 +58,7 @@ class ReaderFileDownloadManagerTest {
         val mimeType = "application/pdf"
         whenever(authenticationUtils.getAuthHeaders(url)).thenReturn(mapOf(header to headerValue))
         whenever(downloadManager.buildRequest(url)).thenReturn(request)
-        whenever(downloadManager.guessUrl(url)).thenReturn(fileName)
+        whenever(downloadManager.guessFileName(url)).thenReturn(fileName)
         whenever(downloadManager.getMimeType(url)).thenReturn(mimeType)
 
         readerFileDownloadManager.downloadFile(url)
