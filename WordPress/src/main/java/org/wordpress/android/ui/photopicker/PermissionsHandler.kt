@@ -38,11 +38,12 @@ class PermissionsHandler
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-    fun hasPartialAccessPhotosVideosPermission(): Boolean {
+    fun hasOnlyPartialAccessPhotosVideosPermission(): Boolean {
         // UPSIDE_DOWN_CAKE and above the user can give partial access (READ_MEDIA_VISUAL_USER_SELECTED) and PARTIAL
         // access rules are: does NOT have full access permissions BUT has READ_MEDIA_VISUAL_USER_SELECTED permission
-        return !hasFullAccessPhotosVideosPermission() && hasReadMediaVisualUserSelectedPermission()
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            !hasFullAccessPhotosVideosPermission() && hasReadMediaVisualUserSelectedPermission()
+        } else false
     }
 
     fun hasMusicAudioPermission(): Boolean {

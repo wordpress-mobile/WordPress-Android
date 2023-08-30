@@ -431,9 +431,7 @@ class PhotoPickerViewModel @Inject constructor(
         isMusicAudioAlwaysDenied: Boolean,
         didJustRequestPermissions: Boolean,
     ) {
-        val isPartialAccessGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            permissionsHandler.hasPartialAccessPhotosVideosPermission()
-        } else false
+        val isPartialAccessGranted = permissionsHandler.hasOnlyPartialAccessPhotosVideosPermission()
         val isAlwaysDenied = (
                 (browserType.isImagePicker || browserType.isVideoPicker) &&
                         isPhotosVideosAlwaysDenied &&

@@ -574,9 +574,7 @@ class MediaPickerViewModel @Inject constructor(
             // No permission is required, so there is no need to check permissions.
             return
         }
-        val isPartialAccessGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            permissionsHandler.hasPartialAccessPhotosVideosPermission()
-        } else false
+        val isPartialAccessGranted = permissionsHandler.hasOnlyPartialAccessPhotosVideosPermission()
         val isAlwaysDenied = (
                 mediaPickerSetup.requiresPhotosVideosPermissions &&
                         isPhotosVideosAlwaysDenied &&
