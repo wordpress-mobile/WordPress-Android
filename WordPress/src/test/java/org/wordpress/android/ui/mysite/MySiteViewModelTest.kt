@@ -113,6 +113,7 @@ import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardSh
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
@@ -373,8 +374,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val activeTask = MutableLiveData<QuickStartTask>()
     private val quickStartTabStep = MutableLiveData<QuickStartTabStep?>()
 
-    private var quickStartHideThisMenuItemClickAction: (() -> Unit)? = null
-    private var quickStartMoreMenuClickAction: (() -> Unit)? = null
+    private var quickStartHideThisMenuItemClickAction: ((type: QuickStartCardType) -> Unit)? = null
+    private var quickStartMoreMenuClickAction: ((type: QuickStartCardType) -> Unit)? = null
     private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
@@ -3178,9 +3179,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         return QuickStartCard(
             title = UiStringText(""),
             moreMenuOptions = QuickStartCard.MoreMenuOptions(
-                onMoreMenuClick = { (quickStartMoreMenuClickAction as (() -> Unit)).invoke() },
-                onHideThisMenuItemClick = { (quickStartHideThisMenuItemClickAction as (() -> Unit)).invoke() }
+                onMoreMenuClick = { (quickStartMoreMenuClickAction as ((type: QuickStartCardType) -> Unit)).invoke(QuickStartCardType.NEXT_STEPS) },
+                onHideThisMenuItemClick = { (quickStartHideThisMenuItemClickAction as ((type: QuickStartCardType) -> Unit)).invoke(QuickStartCardType.NEXT_STEPS) }
             ),
+            quickStartCardType = QuickStartCardType.NEXT_STEPS,
             taskTypeItems = listOf(
                 QuickStartTaskTypeItem(
                     quickStartTaskType = mock(),
