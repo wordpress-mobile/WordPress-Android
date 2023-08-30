@@ -22,6 +22,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
 import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 
@@ -120,6 +121,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         data class QuickStartCard(
             val title: UiString,
             val toolbarVisible: Boolean = true,
+            val quickStartCardType: QuickStartCardType,
             val taskTypeItems: List<QuickStartTaskTypeItem>,
             val moreMenuOptions: MoreMenuOptions,
         ) : Card(QUICK_START_CARD) {
@@ -135,8 +137,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             )
 
             data class MoreMenuOptions(
-                val onMoreMenuClick: () -> Unit,
-                val onHideThisMenuItemClick: () -> Unit
+                val onMoreMenuClick: (type: QuickStartCardType) -> Unit,
+                val onHideThisMenuItemClick: (type: QuickStartCardType) -> Unit
             )
         }
 

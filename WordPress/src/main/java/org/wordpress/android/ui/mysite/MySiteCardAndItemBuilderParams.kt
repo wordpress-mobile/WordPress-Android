@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 
@@ -60,8 +61,8 @@ sealed class MySiteCardAndItemBuilderParams {
         val moreMenuClickParams : MoreMenuParams
     ) : MySiteCardAndItemBuilderParams() {
         data class MoreMenuParams(
-            val onMoreMenuClick: () -> Unit,
-            val onHideThisMenuItemClick: () -> Unit,
+            val onMoreMenuClick: (type: QuickStartCardType) -> Unit,
+            val onHideThisMenuItemClick: (type: QuickStartCardType) -> Unit,
         )
     }
 
