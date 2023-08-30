@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -21,7 +19,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -29,7 +26,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -41,7 +37,6 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 import javax.inject.Inject;
@@ -194,55 +189,13 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            getMenuInflater().inflate(R.menu.share, menu);
-        }
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getOnBackPressedDispatcher().onBackPressed();
-                return true;
-            case R.id.menu_share:
-                shareSite();
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            getOnBackPressedDispatcher().onBackPressed();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void shareSite() {
-        ReaderBlog blog = ReaderBlogTable.getBlogInfo(mSiteId);
-
-        if (blog != null && blog.hasUrl()) {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_TEXT, blog.getUrl());
-
-            if (blog.hasName()) {
-                intent.putExtra(Intent.EXTRA_SUBJECT, blog.getName());
-            }
-
-            try {
-                mReaderTracker.trackBlog(
-                        AnalyticsTracker.Stat.READER_SITE_SHARED,
-                        blog.blogId,
-                        blog.feedId,
-                        blog.isFollowing,
-                        mSource
-                );
-                startActivity(Intent.createChooser(intent, getString(R.string.share_link)));
-            } catch (ActivityNotFoundException exception) {
-                ToastUtils.showToast(ReaderPostListActivity.this, R.string.reader_toast_err_share_intent);
-            }
-        } else {
-            ToastUtils.showToast(ReaderPostListActivity.this, R.string.reader_toast_err_share_intent);
-        }
     }
 
     /*
