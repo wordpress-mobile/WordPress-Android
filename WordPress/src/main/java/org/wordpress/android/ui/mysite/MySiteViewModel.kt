@@ -916,6 +916,8 @@ class MySiteViewModel @Inject constructor(
     private fun onQuickStartHideThisMenuItemClick() {
         // todo: annmarie - track this
         Log.i(javaClass.simpleName, "***=> onQuickStartHideThisMenuItemClick")
+            refresh()
+            clearActiveQuickStartTask()
     }
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
@@ -1135,8 +1137,6 @@ class MySiteViewModel @Inject constructor(
                         )
                     )
                 }
-
-                TAG_REMOVE_NEXT_STEPS_DIALOG -> onRemoveNextStepsDialogPositiveButtonClicked()
             }
 
             is Negative -> when (interaction.tag) {
@@ -1151,8 +1151,6 @@ class MySiteViewModel @Inject constructor(
                     quickStartRepository.checkAndShowQuickStartNotice()
                     selectedSiteRepository.updateSiteIconMediaId(0, true)
                 }
-
-                TAG_REMOVE_NEXT_STEPS_DIALOG -> onRemoveNextStepsDialogNegativeButtonClicked()
             }
 
             is Dismissed -> when (interaction.tag) {
@@ -1162,17 +1160,6 @@ class MySiteViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun onRemoveNextStepsDialogPositiveButtonClicked() {
-        quickStartTracker.track(Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED)
-        quickStartRepository.skipQuickStart()
-        refresh()
-        clearActiveQuickStartTask()
-    }
-
-    private fun onRemoveNextStepsDialogNegativeButtonClicked() {
-        quickStartTracker.track(Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED)
     }
 
     @Suppress("DEPRECATION")
