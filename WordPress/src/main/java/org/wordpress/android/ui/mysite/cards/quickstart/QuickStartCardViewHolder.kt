@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
@@ -22,7 +21,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
-import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.extensions.viewBinding
@@ -37,28 +35,25 @@ class QuickStartCardViewHolder(
         mySiteCardToolbar.update(card)
         quickStartCustomize.update(CUSTOMIZE, card.taskTypeItems)
         quickStartGrow.update(GROW, card.taskTypeItems)
-        quickStartGetToKnowApp.update(GET_TO_KNOW_APP, card.taskTypeItems, card.onRemoveMenuItemClick)
+        quickStartGetToKnowApp.update(GET_TO_KNOW_APP, card.taskTypeItems, card.moreMenuOptions)
     }
 
     private fun MySiteCardToolbarBinding.update(card: QuickStartCard) {
-        if (!card.toolbarVisible) {
-            mySiteCardToolbar.visibility = View.GONE
-            return
-        }
         mySiteCardToolbarTitle.text = uiHelpers.getTextOfUiString(itemView.context, card.title)
-        mySiteCardToolbarMore.isVisible = card.moreMenuVisible
+        mySiteCardToolbarMore.visibility = View.VISIBLE
         mySiteCardToolbarMore.setOnClickListener {
             showQuickStartCardMenu(
-                card.onRemoveMenuItemClick,
+                card.moreMenuOptions,
                 mySiteCardToolbarMore
             )
         }
     }
 
-    private fun showQuickStartCardMenu(onRemoveMenuItemClick: ListItemInteraction, anchor: View) {
+    private fun showQuickStartCardMenu(moreMenuOptions: QuickStartCard.MoreMenuOptions, anchor: View) {
+        moreMenuOptions.onMoreMenuClick.invoke()
         val quickStartPopupMenu = PopupMenu(itemView.context, anchor)
         quickStartPopupMenu.setOnMenuItemClickListener {
-            onRemoveMenuItemClick.click()
+            moreMenuOptions.onHideThisMenuItemClick.invoke()
             return@setOnMenuItemClickListener true
         }
         quickStartPopupMenu.inflate(R.menu.quick_start_card_menu)
@@ -86,7 +81,7 @@ class QuickStartCardViewHolder(
     private fun NewQuickStartTaskTypeItemBinding.update(
         taskType: QuickStartTaskType,
         taskTypeItems: List<QuickStartTaskTypeItem>,
-        onRemoveMenuItemClick: ListItemInteraction
+        moreMenuOptions: QuickStartCard.MoreMenuOptions
     ) {
         val hasItemOfTaskType = taskTypeItems.any { it.quickStartTaskType == taskType }
         quickStartItemRoot.setVisible(hasItemOfTaskType)
@@ -102,7 +97,7 @@ class QuickStartCardViewHolder(
         quickStartItemRoot.setOnClickListener { item.onClick.click() }
         quickStartItemMoreIcon.setOnClickListener {
             showQuickStartCardMenu(
-                onRemoveMenuItemClick,
+                moreMenuOptions,
                 quickStartItemMoreIcon
             )
         }
