@@ -35,7 +35,12 @@ class QuickStartCardViewHolder(
         mySiteCardToolbar.update(card)
         quickStartCustomize.update(CUSTOMIZE, card.taskTypeItems)
         quickStartGrow.update(GROW, card.taskTypeItems)
-        quickStartGetToKnowApp.update(GET_TO_KNOW_APP, card.taskTypeItems, card.moreMenuOptions)
+        quickStartGetToKnowApp.update(
+            card.quickStartCardType,
+            GET_TO_KNOW_APP,
+            card.taskTypeItems,
+            card.moreMenuOptions
+        )
     }
 
     private fun MySiteCardToolbarBinding.update(card: QuickStartCard) {
@@ -43,21 +48,27 @@ class QuickStartCardViewHolder(
             mySiteCardToolbar.visibility = View.GONE
             return
         }
+        mySiteCardToolbar.visibility = View.VISIBLE
         mySiteCardToolbarTitle.text = uiHelpers.getTextOfUiString(itemView.context, card.title)
         mySiteCardToolbarMore.visibility = View.VISIBLE
         mySiteCardToolbarMore.setOnClickListener {
             showQuickStartCardMenu(
                 card.moreMenuOptions,
+                card.quickStartCardType,
                 mySiteCardToolbarMore
             )
         }
     }
 
-    private fun showQuickStartCardMenu(moreMenuOptions: QuickStartCard.MoreMenuOptions, anchor: View) {
-        moreMenuOptions.onMoreMenuClick.invoke()
+    private fun showQuickStartCardMenu(
+        moreMenuOptions: QuickStartCard.MoreMenuOptions,
+        cardType: QuickStartCardType,
+        anchor: View
+    ) {
+        moreMenuOptions.onMoreMenuClick.invoke(cardType)
         val quickStartPopupMenu = PopupMenu(itemView.context, anchor)
         quickStartPopupMenu.setOnMenuItemClickListener {
-            moreMenuOptions.onHideThisMenuItemClick.invoke()
+            moreMenuOptions.onHideThisMenuItemClick.invoke(cardType)
             return@setOnMenuItemClickListener true
         }
         quickStartPopupMenu.inflate(R.menu.quick_start_card_menu)
@@ -83,6 +94,7 @@ class QuickStartCardViewHolder(
     }
 
     private fun NewQuickStartTaskTypeItemBinding.update(
+        cardType: QuickStartCardType,
         taskType: QuickStartTaskType,
         taskTypeItems: List<QuickStartTaskTypeItem>,
         moreMenuOptions: QuickStartCard.MoreMenuOptions
@@ -102,6 +114,7 @@ class QuickStartCardViewHolder(
         quickStartItemMoreIcon.setOnClickListener {
             showQuickStartCardMenu(
                 moreMenuOptions,
+                cardType,
                 quickStartItemMoreIcon
             )
         }
