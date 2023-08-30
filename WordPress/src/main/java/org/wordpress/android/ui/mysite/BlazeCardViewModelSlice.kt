@@ -127,6 +127,7 @@ class BlazeCardViewModelSlice @Inject constructor(
     }
 
     private fun onPromoteCardMoreMenuClick() {
+        cardsTracker.trackCardMoreMenuClicked(CardsTracker.Type.PROMOTE_WITH_BLAZE.label)
         blazeFeatureUtils.track(
             AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
             BlazeFlowSource.DASHBOARD_CARD
