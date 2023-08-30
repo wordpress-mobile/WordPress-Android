@@ -99,17 +99,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
 
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW
             || getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            // show an X in the toolbar which closes the activity - if this is blog preview
-            boolean showCrossButton = getPostListType() == ReaderPostListType.BLOG_PREVIEW;
-            if (showCrossButton) {
-                toolbar.setNavigationIcon(R.drawable.ic_cross_white_24dp);
-            }
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    finish();
-                }
-            });
+            toolbar.setNavigationOnClickListener(view -> finish());
 
             if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 setTitle(R.string.reader_title_blog_preview);
