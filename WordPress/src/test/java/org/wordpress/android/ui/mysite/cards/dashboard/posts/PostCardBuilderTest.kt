@@ -5,9 +5,12 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
@@ -19,6 +22,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType.POST_CARD_ERROR
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -31,7 +36,6 @@ private const val POST_CONTENT = "content"
 private const val FEATURED_IMAGE_URL = "featuredImage"
 private val POST_DATE = SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2021-12-06 12:34:56")!!
 
-// This class contains placeholder tests until mock data is removed
 @ExperimentalCoroutinesApi
 class PostCardBuilderTest : BaseUnitTest() {
     @Mock
@@ -39,6 +43,12 @@ class PostCardBuilderTest : BaseUnitTest() {
 
     @Mock
     private lateinit var appLogWrapper: AppLogWrapper
+
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    private lateinit var selectedSiteRepository: SelectedSiteRepository
 
     private lateinit var builder: PostCardBuilder
     private val post = PostCardModel(
@@ -54,14 +64,19 @@ class PostCardBuilderTest : BaseUnitTest() {
     private val onHideThisMenuItemClick: (PostCardType) -> Unit = { }
     private val onViewPostsMenuItemClick: (PostCardType) -> Unit = { }
 
+    private val siteId = 1L
+    private val site = mock<SiteModel>()
     @Before
     fun setUp() {
-        builder = PostCardBuilder(localeManagerWrapper, appLogWrapper)
+        builder = PostCardBuilder(localeManagerWrapper, appLogWrapper, appPrefsWrapper, selectedSiteRepository)
         setUpMocks()
     }
 
     private fun setUpMocks() {
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
+        whenever(appPrefsWrapper.getShouldHidePostDashboardCard(any(), any())).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(site.siteId).thenReturn(siteId)
     }
 
     /* POST CARD ERROR */
@@ -104,6 +119,16 @@ class PostCardBuilderTest : BaseUnitTest() {
         assertThat(postsCard.filterDraftPostCard()).isNull()
     }
 
+    @Test
+    fun `given draft is hidden, when card is built, then draft post card not exists`() {
+        val posts = getPosts(draftPosts = listOf(post))
+        whenever(appPrefsWrapper.getShouldHidePostDashboardCard(any(), any())).thenReturn(true)
+
+        val postsCard = buildPostsCard(posts)
+
+        assertThat(postsCard.filterDraftPostCard()).isNull()
+    }
+
     /* SCHEDULED POST CARD */
 
     @Test
@@ -118,6 +143,16 @@ class PostCardBuilderTest : BaseUnitTest() {
     @Test
     fun `given no scheduled post, when card is built, then scheduled post card not exists`() {
         val posts = getPosts(scheduledPosts = emptyList())
+
+        val postsCard = buildPostsCard(posts)
+
+        assertThat(postsCard.filterScheduledPostCard()).isNull()
+    }
+
+    @Test
+    fun `given scheduled post is hidden, when card is built, then scheduled post card not exists`() {
+        val posts = getPosts(scheduledPosts = listOf(post))
+        whenever(appPrefsWrapper.getShouldHidePostDashboardCard(any(), any())).thenReturn(true)
 
         val postsCard = buildPostsCard(posts)
 

@@ -313,7 +313,12 @@ class MySiteViewModel @Inject constructor(
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     val refresh =
-        merge(blazeCardViewModelSlice.refresh, pagesCardViewModelSlice.refresh, todaysStatsViewModelSlice.refresh)
+        merge(
+            blazeCardViewModelSlice.refresh,
+            pagesCardViewModelSlice.refresh,
+            todaysStatsViewModelSlice.refresh,
+            postsCardViewModelSlice.refresh
+        )
     val domainTransferCardRefresh = domainTransferCardViewModel.refresh
 
     private var shouldMarkUpdateSiteTitleTaskComplete = false

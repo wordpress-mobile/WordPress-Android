@@ -394,6 +394,15 @@ class AppPrefsWrapper @Inject constructor() {
     fun getShouldHideTodaysStatsDashboardCard(siteId: Long): Boolean =
         AppPrefs.getShouldHideTodaysStatsDashboardCard(siteId)
 
+    fun setShouldHidePostDashboardCard(
+        siteId: Long,
+        postCardType: String,
+        isHidden: Boolean
+    ) = AppPrefs.setShouldHidePostDashboardCard(siteId, postCardType, isHidden)
+
+    fun getShouldHidePostDashboardCard(siteId: Long, postCardType: String,): Boolean =
+        AppPrefs.getShouldHidePostDashboardCard(siteId, postCardType)
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {
