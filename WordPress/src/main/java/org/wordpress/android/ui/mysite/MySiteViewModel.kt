@@ -96,6 +96,7 @@ import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardSh
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
@@ -908,12 +909,19 @@ class MySiteViewModel @Inject constructor(
         } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
     }
 
-    private fun onQuickStartMoreMenuClick() =
-        quickStartTracker.trackMoreMenuClicked(QuickStartTracker.QuickStartMenuCard.NEXT_STEPS)
-    private fun onQuickStartHideThisMenuItemClick() {
-        quickStartTracker.trackMoreMenuItemClicked(QuickStartTracker.QuickStartMenuCard.NEXT_STEPS)
+    private fun onQuickStartMoreMenuClick(quickStartCardType: QuickStartCardType) =
+        quickStartTracker.trackMoreMenuClicked(quickStartCardType)
+    private fun onQuickStartHideThisMenuItemClick(quickStartCardType: QuickStartCardType) {
+        quickStartTracker.trackMoreMenuItemClicked(quickStartCardType)
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
-            quickStartRepository.onHideQuickStartCard(selectedSite.siteId)
+            when (quickStartCardType) {
+                QuickStartCardType.GET_TO_KNOW_THE_APP -> {
+                    quickStartRepository.onHideShowGetToKnowTheAppCard(selectedSite.siteId)
+                }
+                QuickStartCardType.NEXT_STEPS -> {
+                    quickStartRepository.onHideNextStepsCard(selectedSite.siteId)
+                }
+            }
             refresh()
             clearActiveQuickStartTask()
         }
