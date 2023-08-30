@@ -39,6 +39,10 @@ class QuickStartCardViewHolder(
     }
 
     private fun MySiteCardToolbarBinding.update(card: QuickStartCard) {
+        if (!card.toolbarVisible) {
+            mySiteCardToolbar.visibility = View.GONE
+            return
+        }
         mySiteCardToolbarTitle.text = uiHelpers.getTextOfUiString(itemView.context, card.title)
         mySiteCardToolbarMore.visibility = View.VISIBLE
         mySiteCardToolbarMore.setOnClickListener {

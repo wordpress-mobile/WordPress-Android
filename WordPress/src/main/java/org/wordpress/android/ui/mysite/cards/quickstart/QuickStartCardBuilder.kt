@@ -17,6 +17,7 @@ import kotlin.math.roundToInt
 class QuickStartCardBuilder @Inject constructor() {
     fun build(params: QuickStartCardBuilderParams) = QuickStartCard(
         title = UiStringRes(R.string.quick_start_sites),
+        toolbarVisible = shouldShowCardToolbar(params.quickStartCategories),
         taskTypeItems = params.quickStartCategories.map {
             buildQuickStartTaskTypeItem(
                 it,
@@ -96,6 +97,13 @@ class QuickStartCardBuilder @Inject constructor() {
 
     private fun getProgress(countCompleted: Int, totalCount: Int) =
         if (totalCount > 0) ((countCompleted / totalCount.toFloat()) * PERCENT_HUNDRED).roundToInt() else 0
+
+    private fun shouldShowCardToolbar(quickStartCategories: List<QuickStartCategory>) =
+        !isNewQuickStartType(quickStartCategories)
+
+    private fun isNewQuickStartType(quickStartCategories: List<QuickStartCategory>): Boolean {
+        return quickStartCategories.any { it.taskType == QuickStartTaskType.GET_TO_KNOW_APP }
+    }
 
     companion object {
         private const val UNEXPECTED_QUICK_START_TYPE = "Unexpected quick start type"

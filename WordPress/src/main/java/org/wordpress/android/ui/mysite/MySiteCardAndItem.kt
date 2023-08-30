@@ -119,6 +119,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
         data class QuickStartCard(
             val title: UiString,
+            val toolbarVisible: Boolean = true,
             val taskTypeItems: List<QuickStartTaskTypeItem>,
             val moreMenuOptions: MoreMenuOptions,
         ) : Card(QUICK_START_CARD) {
