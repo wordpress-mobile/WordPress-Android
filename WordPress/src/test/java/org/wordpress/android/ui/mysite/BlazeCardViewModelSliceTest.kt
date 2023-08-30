@@ -271,6 +271,14 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
 
         // Then
         verify(blazeFeatureUtils).hideBlazeCard(any())
+        verify(cardsTracker).trackCardMoreMenuItemClicked(
+            CardsTracker.Type.BLAZE_CAMPAIGNS.label,
+            CampaignCardMenuItem.HIDE_THIS.label
+        )
+        verify(blazeFeatureUtils).track(
+            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
     }
 
     @Test
