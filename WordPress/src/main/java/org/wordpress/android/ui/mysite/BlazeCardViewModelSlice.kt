@@ -72,7 +72,7 @@ class BlazeCardViewModelSlice @Inject constructor(
     }
 
     private fun onCampaignCardMoreMenuClick() {
-        // todo implement the tracking
+        cardsTracker.trackCardMoreMenuClicked(CardsTracker.Type.BLAZE_CAMPAIGNS.label)
     }
 
     private fun getPromoteWithBlazeCardBuilderParams() =
