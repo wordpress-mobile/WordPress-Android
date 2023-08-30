@@ -5,6 +5,7 @@ package org.wordpress.android.ui.mysite
 import android.content.Intent
 import android.net.Uri
 import android.text.TextUtils
+import android.util.Log
 import androidx.annotation.DimenRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -81,7 +82,6 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
-import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
@@ -568,7 +568,10 @@ class MySiteViewModel @Inject constructor(
             ),
             QuickStartCardBuilderParams(
                 quickStartCategories = quickStartCategories,
-                onQuickStartBlockRemoveMenuItemClick = this::onQuickStartBlockRemoveMenuItemClick,
+                moreMenuClickParams = QuickStartCardBuilderParams.MoreMenuParams(
+                    onMoreMenuClick = this::onQuickStartMoreMenuClick,
+                    onHideThisMenuItemClick = this::onQuickStartHideThisMenuItemClick
+                ),
                 onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
             ),
             DashboardCardsBuilderParams(
@@ -906,8 +909,13 @@ class MySiteViewModel @Inject constructor(
         } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
     }
 
-    private fun onQuickStartBlockRemoveMenuItemClick() {
-        _onBasicDialogShown.value = Event(ShowRemoveNextStepsDialog)
+    private fun onQuickStartMoreMenuClick() {
+        // todo: annmarie - track this
+        Log.i(javaClass.simpleName, "***=> onQuickStartMoreMenuClick")
+    }
+    private fun onQuickStartHideThisMenuItemClick() {
+        // todo: annmarie - track this
+        Log.i(javaClass.simpleName, "***=> onQuickStartHideThisMenuItemClick")
     }
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
