@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.icu.text.CompactDecimalFormat;
+import android.icu.text.NumberFormat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,8 @@ import javax.inject.Inject;
  * count, and follow button
  */
 public class ReaderSiteHeaderView extends LinearLayout {
+    private static final int MINIMUM_NUMBER_FOLLOWERS_FORMAT = 10000;
+
     private final int mBlavatarSz;
 
     public interface OnBlogInfoLoadedListener {
@@ -183,14 +186,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
             loadBlavatarImage(blogInfo, blavatarImg);
         }
 
-        final CompactDecimalFormat compactDecimalFormat =
-                CompactDecimalFormat.getInstance(LocaleManager.getSafeLocale(getContext()),
-                        CompactDecimalFormat.CompactStyle.SHORT);
-         final String formattedNumberSubscribers = compactDecimalFormat.format(blogInfo.numSubscribers);
-        txtFollowCount.setText(String.format(
-                LocaleManager.getSafeLocale(getContext()),
-                getContext().getString(R.string.reader_label_followers_count), formattedNumberSubscribers)
-        );
+        loadFollowCount(blogInfo, txtFollowCount);
 
         if (!mAccountStore.hasAccessToken()) {
             mFollowButton.setVisibility(View.GONE);
@@ -211,6 +207,38 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         if (mBlogInfoListener != null) {
             mBlogInfoListener.onBlogInfoLoaded(blogInfo);
+        }
+    }
+
+    private void loadFollowCount(ReaderBlog blogInfo, TextView txtFollowCount) {
+        if (mReaderImprovementsFeatureConfig.isEnabled()) {
+            final CompactDecimalFormat compactDecimalFormat =
+                    CompactDecimalFormat.getInstance(LocaleManager.getSafeLocale(getContext()),
+                            CompactDecimalFormat.CompactStyle.SHORT);
+
+            final int followersStringRes;
+            if (blogInfo.numSubscribers == 1) {
+                followersStringRes = R.string.reader_label_followers_count_single;
+            } else {
+                followersStringRes = R.string.reader_label_followers_count;
+            }
+
+            final String formattedNumberSubscribers;
+            // Reference: pcdRpT-3BI-p2#comment-5978
+            if (blogInfo.numSubscribers >= MINIMUM_NUMBER_FOLLOWERS_FORMAT) {
+                formattedNumberSubscribers = compactDecimalFormat.format(blogInfo.numSubscribers);
+            } else {
+                formattedNumberSubscribers = NumberFormat.getInstance().format(blogInfo.numSubscribers);
+            }
+            txtFollowCount.setText(String.format(
+                    LocaleManager.getSafeLocale(getContext()),
+                    getContext().getString(followersStringRes), formattedNumberSubscribers)
+            );
+        } else {
+            txtFollowCount.setText(String.format(
+                    LocaleManager.getSafeLocale(getContext()),
+                    getContext().getString(R.string.reader_label_follow_count),
+                    blogInfo.numSubscribers));
         }
     }
 
