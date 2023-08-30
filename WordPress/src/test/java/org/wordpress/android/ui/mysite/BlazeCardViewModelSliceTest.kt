@@ -188,6 +188,27 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
             .containsOnly(SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.DASHBOARD_CARD))
     }
 
+
+    @Test
+    fun `given campaign card built, when more menu clicked, then events are tracked`() {
+        // Given
+        val blazeCardUpdate: MySiteUiState.PartialState.BlazeCardUpdate = mock()
+        whenever(blazeCardUpdate.blazeEligible).thenReturn(true)
+        whenever(blazeCardUpdate.campaign).thenReturn(mock())
+
+        // When
+        val result =
+            blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate) as CampaignWithBlazeCardBuilderParams
+        result.moreMenuParams.onMoreMenuClick()
+
+        // Then
+        verify(cardsTracker).trackCardMoreMenuClicked(CardsTracker.Type.BLAZE_CAMPAIGNS.label)
+        verify(blazeFeatureUtils).track(
+            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
+    }
+
     @Test
     fun `given campaign card built, when learn more menu option clicked, then site navigation is triggered`() {
         // Given
