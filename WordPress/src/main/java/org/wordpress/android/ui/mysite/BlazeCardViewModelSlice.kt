@@ -97,7 +97,10 @@ class BlazeCardViewModelSlice @Inject constructor(
 
 
     private fun onPromoteCardLearnMoreClick() {
-        // todo implement the navigation and tracking
+        cardsTracker.trackCardMoreMenuItemClicked(
+            CardsTracker.Type.PROMOTE_WITH_BLAZE.label,
+            PromoteWithBlazeCardMenuItem.LEARN_MORE.label
+        )
         onLearnMoreClick()
     }
 
@@ -112,6 +115,10 @@ class BlazeCardViewModelSlice @Inject constructor(
     }
 
     private fun onPromoteCardHideMenuItemClick() {
+        cardsTracker.trackCardMoreMenuItemClicked(
+            CardsTracker.Type.PROMOTE_WITH_BLAZE.label,
+            PromoteWithBlazeCardMenuItem.HIDE_THIS.label
+        )
         blazeFeatureUtils.track(
             AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
             BlazeFlowSource.DASHBOARD_CARD
@@ -167,6 +174,11 @@ class BlazeCardViewModelSlice @Inject constructor(
 
 enum class CampaignCardMenuItem(val label: String) {
     VIEW_ALL_CAMPAIGNS("view_stats"),
+    LEARN_MORE("learn_more"),
+    HIDE_THIS("hide_this")
+}
+
+enum class PromoteWithBlazeCardMenuItem(val label: String) {
     LEARN_MORE("learn_more"),
     HIDE_THIS("hide_this")
 }
