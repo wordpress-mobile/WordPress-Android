@@ -56,7 +56,7 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
     private ArrayList<Uri> mLocalMediaUris = new ArrayList<>();
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
         refreshContent();

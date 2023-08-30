@@ -842,7 +842,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
         AppLog.i(T.MAIN, "main activity > new intent");
@@ -854,7 +854,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void handleOpenPageIntent(Intent intent) {
+    private void handleOpenPageIntent(@NonNull Intent intent) {
         String pagePosition = intent.getStringExtra(ARG_OPEN_PAGE);
         if (!TextUtils.isEmpty(pagePosition)) {
             switch (pagePosition) {

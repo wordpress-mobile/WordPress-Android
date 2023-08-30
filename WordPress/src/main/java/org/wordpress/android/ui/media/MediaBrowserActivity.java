@@ -241,7 +241,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         showQuota(true);
     }
 
-    @Override protected void onNewIntent(Intent intent) {
+    @Override
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
 
         if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
