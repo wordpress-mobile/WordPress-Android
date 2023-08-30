@@ -916,8 +916,11 @@ class MySiteViewModel @Inject constructor(
     private fun onQuickStartHideThisMenuItemClick() {
         // todo: annmarie - track this
         Log.i(javaClass.simpleName, "***=> onQuickStartHideThisMenuItemClick")
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            quickStartRepository.onHideQuickStartCard(selectedSite.siteId)
             refresh()
             clearActiveQuickStartTask()
+        }
     }
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
