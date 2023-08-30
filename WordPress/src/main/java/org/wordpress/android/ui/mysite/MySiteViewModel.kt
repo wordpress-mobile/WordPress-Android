@@ -908,9 +908,10 @@ class MySiteViewModel @Inject constructor(
         } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
     }
 
-    private fun onQuickStartMoreMenuClick() = quickStartTracker.trackMoreMenuClicked()
+    private fun onQuickStartMoreMenuClick() =
+        quickStartTracker.trackMoreMenuClicked(QuickStartTracker.QuickStartMenuCard.NEXT_STEPS)
     private fun onQuickStartHideThisMenuItemClick() {
-        quickStartTracker.trackMoreMenuItemClicked()
+        quickStartTracker.trackMoreMenuItemClicked(QuickStartTracker.QuickStartMenuCard.NEXT_STEPS)
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             quickStartRepository.onHideQuickStartCard(selectedSite.siteId)
             refresh()

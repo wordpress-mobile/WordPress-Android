@@ -65,18 +65,18 @@ class QuickStartTracker @Inject constructor(
         }
     }
 
-    fun trackMoreMenuClicked() {
+    fun trackMoreMenuClicked(card: QuickStartMenuCard) {
         analyticsTrackerWrapper.track(
             Stat.MY_SITE_DASHBOARD_CONTEXTUAL_MENU_ACCESSED,
-            mapOf(CardsTracker.CARD to QuickStartMenuCard.NEXT_STEPS.label)
+            mapOf(CardsTracker.CARD to card.label)
         )
     }
 
-    fun trackMoreMenuItemClicked() {
+    fun trackMoreMenuItemClicked(card: QuickStartMenuCard) {
         analyticsTrackerWrapper.track(
             Stat.MY_SITE_DASHBOARD_CARD_MENU_ITEM_TAPPED,
             mapOf(
-                CARD to QuickStartMenuCard.NEXT_STEPS.label,
+                CARD to card.label,
                 ITEM to QuickStartMenuItemType.HIDE_THIS.label
             )
         )
@@ -97,6 +97,7 @@ class QuickStartTracker @Inject constructor(
     }
 
     enum class QuickStartMenuCard(val label: String) {
+        GET_TO_KNOW_THE_APP("get_to_know_the_app"),
         NEXT_STEPS("next_steps")
     }
     companion object {
