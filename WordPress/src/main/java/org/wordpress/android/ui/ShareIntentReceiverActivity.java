@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.TaskStackBuilder;
@@ -23,9 +22,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.ArrayList;
