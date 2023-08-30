@@ -3197,9 +3197,7 @@
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
     <string name="quick_start_button_positive" tools:ignore="UnusedResources">Go</string>
     <string name="quick_start_task_skip_menu_title">Skip task</string>
-    <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
+    <string name="quick_start_hide_next_steps_menu_title" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
     <string name="quick_start_dialog_check_stats_message">Keep up to date with your site\'s performance.</string>
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
     <string name="quick_start_dialog_enable_sharing_message" tools:ignore="UnusedResources">Automatically share new posts to your social media accounts.</string>
