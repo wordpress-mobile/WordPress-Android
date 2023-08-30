@@ -14,7 +14,9 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdat
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class BlazeCardViewModelSlice @Inject constructor(
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -73,6 +75,10 @@ class BlazeCardViewModelSlice @Inject constructor(
         cardsTracker.trackCardMoreMenuItemClicked(
             CardsTracker.Type.BLAZE_CAMPAIGNS.label,
             CampaignCardMenuItem.HIDE_THIS.label
+        )
+        blazeFeatureUtils.track(
+            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
+            BlazeFlowSource.DASHBOARD_CARD
         )
         onHideCardClick()
     }
