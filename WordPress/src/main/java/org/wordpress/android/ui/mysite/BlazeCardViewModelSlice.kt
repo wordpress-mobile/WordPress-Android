@@ -183,7 +183,7 @@ class BlazeCardViewModelSlice @Inject constructor(
 }
 
 enum class CampaignCardMenuItem(val label: String) {
-    VIEW_ALL_CAMPAIGNS("view_stats"),
+    VIEW_ALL_CAMPAIGNS("view_all_campaigns"),
     LEARN_MORE("learn_more"),
     HIDE_THIS("hide_this")
 }
