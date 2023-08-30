@@ -5,7 +5,6 @@ package org.wordpress.android.ui.mysite
 import android.content.Intent
 import android.net.Uri
 import android.text.TextUtils
-import android.util.Log
 import androidx.annotation.DimenRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -909,13 +908,9 @@ class MySiteViewModel @Inject constructor(
         } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
     }
 
-    private fun onQuickStartMoreMenuClick() {
-        // todo: annmarie - track this
-        Log.i(javaClass.simpleName, "***=> onQuickStartMoreMenuClick")
-    }
+    private fun onQuickStartMoreMenuClick() = quickStartTracker.trackMoreMenuClicked()
     private fun onQuickStartHideThisMenuItemClick() {
-        // todo: annmarie - track this
-        Log.i(javaClass.simpleName, "***=> onQuickStartHideThisMenuItemClick")
+        quickStartTracker.trackMoreMenuItemClicked()
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             quickStartRepository.onHideQuickStartCard(selectedSite.siteId)
             refresh()
