@@ -62,7 +62,10 @@ class BlazeCardViewModelSlice @Inject constructor(
     }
 
     private fun onCampaignCardLearnMoreClick() {
-        // todo implement the tracking
+        cardsTracker.trackCardMoreMenuItemClicked(
+            CardsTracker.Type.BLAZE_CAMPAIGNS.label,
+            CampaignCardMenuItem.LEARN_MORE.label
+        )
         onLearnMoreClick()
     }
 
