@@ -56,9 +56,14 @@ sealed class MySiteCardAndItemBuilderParams {
 
     data class QuickStartCardBuilderParams(
         val quickStartCategories: List<QuickStartCategory>,
-        val onQuickStartBlockRemoveMenuItemClick: () -> Unit,
-        val onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit
-    ) : MySiteCardAndItemBuilderParams()
+        val onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit,
+        val moreMenuClickParams : MoreMenuParams
+    ) : MySiteCardAndItemBuilderParams() {
+        data class MoreMenuParams(
+            val onMoreMenuClick: () -> Unit,
+            val onHideThisMenuItemClick: () -> Unit,
+        )
+    }
 
     data class DashboardCardsBuilderParams(
         val showErrorCard: Boolean = false,
