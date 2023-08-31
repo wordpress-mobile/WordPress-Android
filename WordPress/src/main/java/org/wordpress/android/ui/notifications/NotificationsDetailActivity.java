@@ -397,12 +397,9 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
      * Tries to pick the correct fragment detail type for a given note
      * Defaults to NotificationDetailListFragment
      */
+    @NonNull
     @SuppressWarnings("deprecation")
-    private Fragment getDetailFragmentForNote(Note note) {
-        if (note == null) {
-            return null;
-        }
-
+    private Fragment getDetailFragmentForNote(@NonNull Note note) {
         Fragment fragment;
         if (note.isCommentType()) {
             // show comment detail for comment notifications
