@@ -66,6 +66,8 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
         isVideo(mediaUri) || isVideoMimeType(getMimeType(mediaUri))
 
     fun isProhibitedVideoDuration(context: Context, site: SiteModel, uri: Uri): Boolean {
+        if (site == null || uri == null) return false
+
         if (isVideoFile(uri) && site.hasFreePlan && !site.isActiveModuleEnabled("videopress")) {
             val retriever = MediaMetadataRetriever()
 
