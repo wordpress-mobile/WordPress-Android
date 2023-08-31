@@ -54,7 +54,7 @@
         <ignore path="**/generated/source/kapt/**/org/wordpress/android/ui/main/Hilt_WPMainNavigationView.java" />
     </issue>
     <!-- INTEROPERABILITY -->
-    <issue id="UnknownNullness">
+    <issue id="UnknownNullness" severity="informational">
         <ignore path="**/generated/**" />
     </issue>
 </lint>
