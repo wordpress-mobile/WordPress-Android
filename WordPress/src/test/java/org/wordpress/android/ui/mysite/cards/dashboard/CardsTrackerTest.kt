@@ -51,13 +51,6 @@ class CardsTrackerTest {
     }
 
     @Test
-    fun `when activity log item is clicked, then activity card item event is tracked`() {
-        cardsTracker.trackActivityCardItemClicked()
-
-        verifyCardItemClickedTracked(Type.ACTIVITY, ActivityLogSubtype.ACTIVITY_LOG.label)
-    }
-
-    @Test
     fun `when activity card footer link is clicked, then footer link clicked is tracked`() {
         cardsTracker.trackActivityCardFooterClicked()
 
@@ -70,16 +63,6 @@ class CardsTrackerTest {
     ) {
         verify(analyticsTracker).track(
             Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
-            mapOf(TYPE to typeValue.label, SUBTYPE to subtypeValue)
-        )
-    }
-
-    private fun verifyCardItemClickedTracked(
-        typeValue: Type,
-        subtypeValue: String
-    ) {
-        verify(analyticsTracker).track(
-            Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED,
             mapOf(TYPE to typeValue.label, SUBTYPE to subtypeValue)
         )
     }

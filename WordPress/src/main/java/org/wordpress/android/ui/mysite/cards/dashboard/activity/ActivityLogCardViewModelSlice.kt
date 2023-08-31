@@ -34,7 +34,10 @@ class ActivityLogCardViewModelSlice @Inject constructor(
         )
 
     private fun onActivityCardItemClick(activityCardItemClickParams: ActivityCardItemClickParams) {
-        cardsTracker.trackActivityCardItemClicked()
+        cardsTracker.trackCardItemClicked(
+            CardsTracker.Type.ACTIVITY.label,
+            CardsTracker.ActivityLogSubtype.ACTIVITY_LOG.label
+        )
         _onNavigation.value =
             Event(
                 SiteNavigationAction.OpenActivityLogDetail(

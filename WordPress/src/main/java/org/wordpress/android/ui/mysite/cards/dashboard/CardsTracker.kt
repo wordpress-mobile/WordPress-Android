@@ -70,10 +70,6 @@ class CardsTracker @Inject constructor(
         trackCardItemClicked(Type.QUICK_START.label, quickStartTaskType.toSubtypeValue().label)
     }
 
-    fun trackActivityCardItemClicked() {
-        trackCardItemClicked(Type.ACTIVITY.label, ActivityLogSubtype.ACTIVITY_LOG.label)
-    }
-
     fun trackActivityCardFooterClicked() {
         trackCardFooterLinkClicked(Type.ACTIVITY.label, ActivityLogSubtype.ACTIVITY_LOG.label)
     }
