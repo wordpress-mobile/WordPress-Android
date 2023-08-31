@@ -1166,6 +1166,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     // This check should only handle events for already installed plugins - onSitePluginConfigured,
     // onSitePluginUpdated, onSitePluginDeleted
     private boolean shouldHandleFluxCSitePluginEvent(SiteModel eventSite, String eventPluginName) {
+        if (mSite == null) return false;
         return mSite.getId() == eventSite.getId() // correct site
                && mPlugin.isInstalled() // needs plugin to be already installed
                && mPlugin.getName() != null // sanity check for NPE since if plugin is installed it'll have the name
