@@ -59,5 +59,5 @@ class ActivityLogCardViewModelSlice @Inject constructor(
             Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
     }
 
-    private fun onActivityCardMoreMenuClick() = cardsTracker.trackActivityLogMoreMenuClicked()
+    private fun onActivityCardMoreMenuClick() = cardsTracker.trackCardMoreMenuClicked(CardsTracker.Type.ACTIVITY.label)
 }

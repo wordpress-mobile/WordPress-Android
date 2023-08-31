@@ -81,13 +81,6 @@ class CardsTrackerTest {
         verifyCardMenuItemClickedTracked(Type.ACTIVITY, MenuItemType.ALL_ACTIVITY.label)
     }
 
-    @Test
-    fun `when activity card more menu is clicked, then activity more menu event is tracked`() {
-        cardsTracker.trackActivityLogMoreMenuClicked()
-
-        verifyCardMoreMenuClickTracked(Type.ACTIVITY)
-    }
-
     private fun verifyFooterLinkClickedTracked(
         typeValue: Type,
         subtypeValue: String

@@ -8,6 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
@@ -77,5 +78,15 @@ class ActivityLogCardViewModelSliceTest : BaseUnitTest() {
                     isRewindable
                 )
             )
+        }
+
+    @Test
+    fun `given activity log card, when card more menu is clicked, then event is tracked`() =
+        test {
+            val params = activityLogCardViewModelSlice.getActivityLogCardBuilderParams(mock())
+
+            params.onMoreMenuClick()
+
+            verify(cardsTracker).trackCardMoreMenuClicked(CardsTracker.Type.ACTIVITY.label)
         }
 }
