@@ -11,10 +11,7 @@
         android:id="@+id/layout_tag_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/margin_medium"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_medium">
+        android:padding="@dimen/margin_extra_large">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_tag"

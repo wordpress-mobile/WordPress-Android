@@ -11,6 +11,7 @@ import org.wordpress.android.databinding.ReaderTagHeaderViewNewBinding
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderViewUiState.ReaderTagHeaderUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
+import org.wordpress.android.util.extensions.gone
 import org.wordpress.android.util.extensions.visible
 import javax.inject.Inject
 
@@ -51,7 +52,6 @@ class ReaderTagHeaderView @JvmOverloads constructor(
                 followButton = readerTagHeaderViewBinding.followButton,
             )
         }
-        binding.followButton.visible()
         binding.followButton.setOnClickListener { onFollowBtnClicked?.invoke() }
     }
 
@@ -73,6 +73,7 @@ class ReaderTagHeaderView @JvmOverloads constructor(
     }
 
     fun updateUi(uiState: ReaderTagHeaderUiState) = with(binding) {
+        (binding as? ReaderTagBinding.ImprovementsEnabled)?.textTagFollowCount?.gone()
         textTag.text = uiState.title
         with(uiState.followButtonUiState) {
             followButton.setIsFollowed(isFollowed)
