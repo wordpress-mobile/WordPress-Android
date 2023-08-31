@@ -7,6 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -88,5 +89,36 @@ class ActivityLogCardViewModelSliceTest : BaseUnitTest() {
             params.onMoreMenuClick()
 
             verify(cardsTracker).trackCardMoreMenuClicked(CardsTracker.Type.ACTIVITY.label)
+        }
+
+    @Test
+    fun `given activity log card, when all activity menu item is clicked, all activity page is opened`() =
+        test {
+            val params = activityLogCardViewModelSlice.getActivityLogCardBuilderParams(mock())
+
+            params.onAllActivityMenuItemClick()
+
+            Assertions.assertThat(navigationActions).containsOnly(
+                SiteNavigationAction.OpenActivityLog(site)
+            )
+            verify(cardsTracker).trackCardMoreMenuItemClicked(
+                CardsTracker.Type.ACTIVITY.label,
+                ActivityLogCardViewModelSlice.MenuItemType.ALL_ACTIVITY.label
+            )
+        }
+
+    @Test
+    fun `given activity log card, when hide menu item is clicked, all activity page is opened`() =
+        test {
+            val params = activityLogCardViewModelSlice.getActivityLogCardBuilderParams(mock())
+
+            params.onHideMenuItemClick()
+
+            Assertions.assertThat(refreshEvents).containsOnly(true)
+            verify(cardsTracker).trackCardMoreMenuItemClicked(
+                CardsTracker.Type.ACTIVITY.label,
+                ActivityLogCardViewModelSlice.MenuItemType.HIDE_THIS.label
+            )
+            verify(appPrefsWrapper).setShouldHideActivityDashboardCard(any(), any())
         }
 }
