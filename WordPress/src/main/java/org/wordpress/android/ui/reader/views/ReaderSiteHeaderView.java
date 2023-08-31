@@ -178,12 +178,12 @@ public class ReaderSiteHeaderView extends LinearLayout {
         if (mReaderImprovementsFeatureConfig.isEnabled()) {
             final String imageUrl = blogInfo.getImageUrl();
             if (imageUrl != null && !imageUrl.isEmpty()) {
-                loadBlavatarImage(blogInfo, blavatarImg);
+                showBlavatarImage(blogInfo, blavatarImg);
             } else {
                 blavatarImg.setVisibility(View.GONE);
             }
         } else {
-            loadBlavatarImage(blogInfo, blavatarImg);
+            showBlavatarImage(blogInfo, blavatarImg);
         }
 
         loadFollowCount(blogInfo, txtFollowCount);
@@ -242,7 +242,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
     }
 
-    private void loadBlavatarImage(ReaderBlog blogInfo, ImageView blavatarImg) {
+    private void showBlavatarImage(ReaderBlog blogInfo, ImageView blavatarImg) {
         blavatarImg.setVisibility(View.VISIBLE);
         mImageManager.loadIntoCircle(blavatarImg,
                 SiteUtils.getSiteImageType(blogInfo.isP2orA8C(), BlavatarShape.CIRCULAR),
