@@ -1292,7 +1292,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when quick start task type item is clicked, then quick start full screen dialog is opened`() {
-        initSelectedSite( isQuickStartInProgress = true)
+        initSelectedSite(isQuickStartInProgress = true)
 
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
@@ -1302,7 +1302,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when quick start task type item is clicked, then quick start active task is cleared`() {
-        initSelectedSite( isQuickStartInProgress = true)
+        initSelectedSite(isQuickStartInProgress = true)
 
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
@@ -1340,7 +1340,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when remove next steps dialog negative btn clicked, then QS is not skipped`() {
-        initSelectedSite( isQuickStartInProgress = true)
+        initSelectedSite(isQuickStartInProgress = true)
 
         viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
 
@@ -1349,7 +1349,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when QS fullscreen dialog dismiss is triggered, then quick start repository is refreshed`() {
-        initSelectedSite( isQuickStartInProgress = true)
+        initSelectedSite(isQuickStartInProgress = true)
 
         viewModel.onQuickStartFullScreenDialogDismiss()
 
@@ -1359,7 +1359,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `when quick start task is clicked, then task is set as active task`() {
         val task = QuickStartNewSiteTask.VIEW_SITE
-        initSelectedSite( isQuickStartInProgress = true)
+        initSelectedSite(isQuickStartInProgress = true)
 
         viewModel.onQuickStartTaskCardClick(task)
 
@@ -3179,8 +3179,16 @@ class MySiteViewModelTest : BaseUnitTest() {
         return QuickStartCard(
             title = UiStringText(""),
             moreMenuOptions = QuickStartCard.MoreMenuOptions(
-                onMoreMenuClick = { (quickStartMoreMenuClickAction as ((type: QuickStartCardType) -> Unit)).invoke(QuickStartCardType.NEXT_STEPS) },
-                onHideThisMenuItemClick = { (quickStartHideThisMenuItemClickAction as ((type: QuickStartCardType) -> Unit)).invoke(QuickStartCardType.NEXT_STEPS) }
+                onMoreMenuClick = {
+                    (quickStartMoreMenuClickAction as ((type: QuickStartCardType) -> Unit)).invoke(
+                        QuickStartCardType.NEXT_STEPS
+                    )
+                },
+                onHideThisMenuItemClick = {
+                    (quickStartHideThisMenuItemClickAction as ((type: QuickStartCardType) -> Unit)).invoke(
+                        QuickStartCardType.NEXT_STEPS
+                    )
+                }
             ),
             quickStartCardType = QuickStartCardType.NEXT_STEPS,
             taskTypeItems = listOf(
@@ -3208,7 +3216,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 if (params.showErrorCard) {
                     add(initErrorCard(mockInvocation))
                 } else {
-                //    add(initPostCard(mockInvocation))
+                    //    add(initPostCard(mockInvocation))
                     if (bloggingPromptsFeatureConfig.isEnabled()) add(initBloggingPromptCard(mockInvocation))
                     add(initActivityCard(mockInvocation))
                 }
@@ -3221,6 +3229,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onDashboardErrorRetryClick = params.onErrorRetryClick
         return ErrorCard(onRetryClick = ListItemInteraction.create { onDashboardErrorRetryClick })
     }
+
     private fun initBloggingPromptCard(mockInvocation: InvocationOnMock): BloggingPromptCardWithData {
         val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
         onBloggingPromptShareClicked = params.bloggingPromptCardBuilderParams.onShareClick
