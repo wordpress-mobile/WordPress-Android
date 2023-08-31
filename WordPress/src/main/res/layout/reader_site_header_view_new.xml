@@ -21,7 +21,7 @@
             android:background="@drawable/bg_oval_placeholder"
             android:contentDescription="@null"
             android:padding="@dimen/reader_site_header_avatar_padding_new"
-            android:src="@drawable/bg_oval_placeholder_globe_no_border_24dp"
+            android:src="@drawable/bg_oval_placeholder_image_32dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
