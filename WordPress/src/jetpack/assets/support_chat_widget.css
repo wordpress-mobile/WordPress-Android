@@ -15,6 +15,10 @@ a.floating-button {
     max-height: none !important;
 }
 
+.docsbot-chat-input-form {
+    margin-bottom: 0px;
+}
+
 .docsbot-chat-bot-message {
     font-size: 16px;
 }
