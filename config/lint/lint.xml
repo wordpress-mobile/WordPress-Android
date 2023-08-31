@@ -53,4 +53,8 @@
     <issue id="ObsoleteSdkInt">
         <ignore path="**/generated/source/kapt/**/org/wordpress/android/ui/main/Hilt_WPMainNavigationView.java" />
     </issue>
+    <!-- INTEROPERABILITY -->
+    <issue id="UnknownNullness">
+        <ignore path="**/generated/**" />
+    </issue>
 </lint>
