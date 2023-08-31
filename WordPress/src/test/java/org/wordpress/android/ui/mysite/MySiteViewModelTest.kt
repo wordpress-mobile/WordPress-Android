@@ -100,6 +100,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
@@ -326,6 +327,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var postsCardViewModelSlice: PostsCardViewModelSlice
 
+    @Mock
+    lateinit var activityLogCardViewModelSlice: ActivityLogCardViewModelSlice
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -349,8 +353,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val emailAddress = "test@email.com"
     private val localHomepageId = 1
     private val bloggingPromptId = 123
-    private val activityId = "activityId"
-    private val isRewindable = false
     private lateinit var site: SiteModel
     private lateinit var siteInfoHeader: SiteInfoHeaderCard
     private lateinit var homepage: PageModel
@@ -383,10 +385,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onBloggingPromptViewMoreClicked: (() -> Unit)? = null
     private var onBloggingPromptViewAnswersClicked: ((promptId: Int) -> Unit)? = null
     private var onBloggingPromptRemoveClicked: (() -> Unit)? = null
-    private var onActivityCardAllActivityMenuItemClick: (() -> Unit)? = null
-    private var onActivityCardHideMenuItemClick: (() -> Unit)? = null
-    private var onActivityCardMoreMenuClick: (() -> Unit)? = null
-    private var onActivityItemClick: ((params: ActivityCardItemClickParams) -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
             taskType = QuickStartTaskType.CUSTOMIZE,
@@ -495,6 +493,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(pagesCardViewModelSlice.getPagesCardBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(todaysStatsViewModelSlice.getTodaysStatsBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(postsCardViewModelSlice.getPostsCardBuilderParams(anyOrNull())).thenReturn(mock())
+        whenever(activityLogCardViewModelSlice.getActivityLogCardBuilderParams(anyOrNull())).thenReturn(mock())
 
         viewModel = MySiteViewModel(
             networkUtilsWrapper,
@@ -553,7 +552,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             domainTransferCardViewModel,
             pagesCardViewModelSlice,
             todaysStatsViewModelSlice,
-            postsCardViewModelSlice
+            postsCardViewModelSlice,
+            activityLogCardViewModelSlice
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1852,61 +1852,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 }
             )
     }
-
-    /* DASHBOARD */
-    @Test
-    fun `when dashboard cards are shown, then card shown event is tracked`() = test {
-        initSelectedSite()
-
-        verify(cardsTracker, atLeastOnce()).trackShown(any())
-    }
-
-    /* DASHBOARD ACTIVITY CARD */
-    @Test
-    fun `given activity card, when all activity menu item is clicked, then trigger navigate to activity log list`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onActivityCardAllActivityMenuItemClick).invoke()
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenActivityLog(site))
-        }
-
-    @Test
-    fun `given activity card, when activity item is clicked, then navigate to activity detail`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onActivityItemClick).invoke(ActivityCardItemClickParams(activityId, isRewindable))
-
-            assertThat(navigationActions).containsOnly(
-                SiteNavigationAction.OpenActivityLogDetail(
-                    site,
-                    activityId,
-                    isRewindable
-                )
-            )
-        }
-
-    @Test
-    fun `given activity card, when activity item is clicked, then event is tracked`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onActivityItemClick).invoke(ActivityCardItemClickParams(activityId, isRewindable))
-
-            verify(cardsTracker).trackActivityCardItemClicked()
-        }
-
-    @Test
-    fun `given activity card, when hide this menu item is clicked, then the sources are refreshed`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onActivityCardHideMenuItemClick).invoke()
-
-            verify(mySiteSourceManager).refresh()
-        }
 
     /* DASHBOARD ERROR SNACKBAR */
 
@@ -3208,7 +3153,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 } else {
                 //    add(initPostCard(mockInvocation))
                     if (bloggingPromptsFeatureConfig.isEnabled()) add(initBloggingPromptCard(mockInvocation))
-                    add(initActivityCard(mockInvocation))
                 }
             }
         )
@@ -3285,36 +3229,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         }
 
         return items
-    }
-
-    private fun initActivityCard(mockInvocation: InvocationOnMock): DashboardCard.ActivityCard.ActivityCardWithItems {
-        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
-        onActivityItemClick = params.activityCardBuilderParams.onActivityItemClick
-        onActivityCardMoreMenuClick = params.activityCardBuilderParams.onMoreMenuClick
-        onActivityCardAllActivityMenuItemClick = params.activityCardBuilderParams.onAllActivityMenuItemClick
-        onActivityCardHideMenuItemClick = params.activityCardBuilderParams.onHideMenuItemClick
-        return DashboardCard.ActivityCard.ActivityCardWithItems(
-            title = UiStringRes(0),
-            onAllActivityMenuItemClick = ListItemInteraction.create {
-                (onActivityCardAllActivityMenuItemClick as () -> Unit).invoke()
-            },
-            onHideMenuItemClick = ListItemInteraction.create {
-                (onActivityCardHideMenuItemClick as () -> Unit).invoke()
-            },
-            onMoreMenuClick = ListItemInteraction.create {
-                (onActivityCardMoreMenuClick as () -> Unit).invoke()
-            },
-            activityItems = listOf(
-                DashboardCard.ActivityCard.ActivityCardWithItems.ActivityItem(
-                    label = UiStringRes(0),
-                    subLabel = "",
-                    displayDate = "",
-                    icon = 0,
-                    iconBackgroundColor = 0,
-                    onClick = mock()
-                )
-            ),
-        )
     }
 
     fun ViewModel.invokeOnCleared() {
