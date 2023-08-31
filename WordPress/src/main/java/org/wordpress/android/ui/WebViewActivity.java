@@ -7,6 +7,7 @@ import android.view.Window;
 import android.webkit.WebView;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
@@ -29,7 +30,7 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
     protected WebView mWebView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_PROGRESS);
 
         super.onCreate(savedInstanceState);

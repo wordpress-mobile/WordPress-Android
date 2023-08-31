@@ -306,7 +306,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     };
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         ProfilingUtils.split("WPMainActivity.onCreate");
         ((WordPress) getApplication()).component().inject(this);
 

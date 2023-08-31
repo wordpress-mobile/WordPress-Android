@@ -155,7 +155,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private WPWebChromeClientWithFileChooser mWPWebChromeClientWithFileChooser;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
 
