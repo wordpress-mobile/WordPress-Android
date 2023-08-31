@@ -26,11 +26,16 @@ android {
         }
         consumerProguardFiles 'proguard-rules.pro'
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    lint {
+        enable += 'UnknownNullness'
     }
 
     testOptions {
