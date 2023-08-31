@@ -12,7 +12,6 @@ import org.wordpress.android.ui.reader.views.ReaderTagHeaderViewUiState.ReaderTa
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.util.extensions.gone
-import org.wordpress.android.util.extensions.visible
 import javax.inject.Inject
 
 /**
@@ -55,8 +54,7 @@ class ReaderTagHeaderView @JvmOverloads constructor(
         binding.followButton.setOnClickListener { onFollowBtnClicked?.invoke() }
     }
 
-    abstract class ReaderTagBinding(
-    ) {
+    abstract class ReaderTagBinding {
         abstract val textTag: MaterialTextView
         abstract val followButton: ReaderFollowButton
 
