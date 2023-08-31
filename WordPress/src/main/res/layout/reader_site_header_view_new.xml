@@ -66,17 +66,10 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_blog_name"
-            style="@style/ReaderTextView.Site.Header.Title"
+            style="@style/ReaderTextView.Site.Header.NewTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_extra_large"
-            android:ellipsize="end"
-            android:fontFamily="@font/noto_serif"
-            android:maxLines="5"
-            android:textColor="?attr/colorOnSurface"
-            android:textStyle="bold"
-            app:autoSizeMaxTextSize="@dimen/text_sz_double_extra_large"
-            app:autoSizeMinTextSize="@dimen/text_sz_larger"
             app:layout_constraintBottom_toTopOf="@+id/text_domain"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
