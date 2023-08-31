@@ -46,7 +46,10 @@ class ActivityLogCardViewModelSlice @Inject constructor(
     }
 
     private fun onActivityCardHideMenuItemClick() {
-        cardsTracker.trackActivityCardMenuItemClicked(CardsTracker.MenuItemType.HIDE_THIS)
+        cardsTracker.trackCardMoreMenuItemClicked(
+            CardsTracker.Type.ACTIVITY.label,
+            MenuItemType.HIDE_THIS.label
+        )
         appPrefsWrapper.setShouldHideActivityDashboardCard(
             requireNotNull(selectedSiteRepository.getSelectedSite()).siteId, true
         )
@@ -54,10 +57,20 @@ class ActivityLogCardViewModelSlice @Inject constructor(
     }
 
     private fun onActivityCardAllActivityItemClick() {
-        cardsTracker.trackActivityCardMenuItemClicked(CardsTracker.MenuItemType.ALL_ACTIVITY)
+        cardsTracker.trackCardMoreMenuItemClicked(
+            CardsTracker.Type.ACTIVITY.label,
+            MenuItemType.ALL_ACTIVITY.label
+        )
         _onNavigation.value =
             Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
     }
 
     private fun onActivityCardMoreMenuClick() = cardsTracker.trackCardMoreMenuClicked(CardsTracker.Type.ACTIVITY.label)
+
+    enum class MenuItemType(val label: String) {
+        ALL_ACTIVITY("all_activity"),
+        HIDE_THIS("hide_this")
+    }
 }
+
+
