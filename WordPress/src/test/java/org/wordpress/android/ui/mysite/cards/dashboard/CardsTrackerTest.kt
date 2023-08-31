@@ -8,7 +8,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.ActivityLogSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.QuickStartSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
 import org.wordpress.android.ui.quickstart.QuickStartTracker
@@ -27,6 +26,7 @@ class CardsTrackerTest {
 
     @Mock
     lateinit var quickStartTracker: QuickStartTracker
+
     private lateinit var cardsTracker: CardsTracker
 
     @Before
@@ -48,23 +48,6 @@ class CardsTrackerTest {
         cardsTracker.trackQuickStartCardItemClicked(QuickStartTaskType.CUSTOMIZE)
 
         verifyQuickStartCardItemClickedTracked(QuickStartSubtype.CUSTOMIZE.label)
-    }
-
-    @Test
-    fun `when activity card footer link is clicked, then footer link clicked is tracked`() {
-        cardsTracker.trackActivityCardFooterClicked()
-
-        verifyFooterLinkClickedTracked(Type.ACTIVITY, ActivityLogSubtype.ACTIVITY_LOG.label)
-    }
-
-    private fun verifyFooterLinkClickedTracked(
-        typeValue: Type,
-        subtypeValue: String
-    ) {
-        verify(analyticsTracker).track(
-            Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
-            mapOf(TYPE to typeValue.label, SUBTYPE to subtypeValue)
-        )
     }
 
     private fun verifyQuickStartCardItemClickedTracked(
