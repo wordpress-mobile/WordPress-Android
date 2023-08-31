@@ -22,7 +22,6 @@ class ReaderTagHeaderView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : RelativeLayout(context, attrs, defStyleAttr) {
-
     private var binding: ReaderTagBinding
 
     @Inject
