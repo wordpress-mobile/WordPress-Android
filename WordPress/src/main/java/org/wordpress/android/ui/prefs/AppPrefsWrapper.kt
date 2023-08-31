@@ -403,6 +403,12 @@ class AppPrefsWrapper @Inject constructor() {
     fun getShouldHidePostDashboardCard(siteId: Long, postCardType: String,): Boolean =
         AppPrefs.getShouldHidePostDashboardCard(siteId, postCardType)
 
+    fun setShouldHideNextStepsDashboardCard(siteId: Long, isHidden: Boolean) =
+        AppPrefs.setShouldHideNextStepsDashboardCard(siteId, isHidden)
+
+    fun getShouldHideNextStepsDashboardCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideNextStepsDashboardCard(siteId)
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {

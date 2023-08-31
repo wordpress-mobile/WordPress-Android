@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
@@ -64,6 +65,22 @@ class QuickStartTracker @Inject constructor(
         }
     }
 
+    fun trackMoreMenuClicked() {
+        analyticsTrackerWrapper.track(
+            Stat.MY_SITE_DASHBOARD_CONTEXTUAL_MENU_ACCESSED,
+            mapOf(CardsTracker.CARD to QuickStartMenuCard.NEXT_STEPS.label)
+        )
+    }
+
+    fun trackMoreMenuItemClicked() {
+        analyticsTrackerWrapper.track(
+            Stat.MY_SITE_DASHBOARD_CARD_MENU_ITEM_TAPPED,
+            mapOf(
+                CARD to QuickStartMenuCard.NEXT_STEPS.label,
+                ITEM to QuickStartMenuItemType.HIDE_THIS.label
+            )
+        )
+    }
     fun resetShown() {
         cardsShownTracked.clear()
     }
@@ -75,8 +92,17 @@ class QuickStartTracker @Inject constructor(
         } ?: NewSiteQuickStartType
     }
 
+    enum class QuickStartMenuItemType(val label: String) {
+        HIDE_THIS("hide_this")
+    }
+
+    enum class QuickStartMenuCard(val label: String) {
+        NEXT_STEPS("next_steps")
+    }
     companion object {
         private const val SITE_TYPE = "site_type"
         private const val TAB = "tab"
+        private const val CARD = "card"
+        private const val ITEM = "item"
     }
 }

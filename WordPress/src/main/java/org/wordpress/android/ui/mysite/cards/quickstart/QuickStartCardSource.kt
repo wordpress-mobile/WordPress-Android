@@ -44,7 +44,11 @@ class QuickStartCardSource @Inject constructor(
                 } else {
                     listOf()
                 }
-            getState(QuickStartUpdate(activeTask, categories))
+            if (selectedSite != null && quickStartRepository.shouldShowQuickStartCard(selectedSite.siteId)) {
+                 getState(QuickStartUpdate(activeTask, categories))
+            } else {
+                getState(QuickStartUpdate(null, listOf()))
+            }
         }
     }
 

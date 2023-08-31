@@ -119,10 +119,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
         data class QuickStartCard(
             val title: UiString,
-            val toolbarVisible: Boolean = true,
-            val moreMenuVisible: Boolean = true,
-            val onRemoveMenuItemClick: ListItemInteraction,
-            val taskTypeItems: List<QuickStartTaskTypeItem>
+            val taskTypeItems: List<QuickStartTaskTypeItem>,
+            val moreMenuOptions: MoreMenuOptions,
         ) : Card(QUICK_START_CARD) {
             data class QuickStartTaskTypeItem(
                 val quickStartTaskType: QuickStartTaskType,
@@ -133,6 +131,11 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 @ColorRes val progressColor: Int,
                 val progress: Int,
                 val onClick: ListItemInteraction
+            )
+
+            data class MoreMenuOptions(
+                val onMoreMenuClick: () -> Unit,
+                val onHideThisMenuItemClick: () -> Unit
             )
         }
 

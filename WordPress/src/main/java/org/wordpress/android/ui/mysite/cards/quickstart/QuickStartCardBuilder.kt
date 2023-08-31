@@ -17,22 +17,17 @@ import kotlin.math.roundToInt
 class QuickStartCardBuilder @Inject constructor() {
     fun build(params: QuickStartCardBuilderParams) = QuickStartCard(
         title = UiStringRes(R.string.quick_start_sites),
-        toolbarVisible = shouldShowCardToolbar(params.quickStartCategories),
-        onRemoveMenuItemClick = ListItemInteraction.create(params.onQuickStartBlockRemoveMenuItemClick),
         taskTypeItems = params.quickStartCategories.map {
             buildQuickStartTaskTypeItem(
                 it,
                 params.onQuickStartTaskTypeItemClick
             )
-        }
+        },
+        moreMenuOptions = QuickStartCard.MoreMenuOptions(
+            onMoreMenuClick = params.moreMenuClickParams.onMoreMenuClick,
+            onHideThisMenuItemClick = params.moreMenuClickParams.onHideThisMenuItemClick
+        )
     )
-
-    private fun shouldShowCardToolbar(quickStartCategories: List<QuickStartCategory>) =
-        !isNewQuickStartType(quickStartCategories)
-
-    private fun isNewQuickStartType(quickStartCategories: List<QuickStartCategory>): Boolean {
-        return quickStartCategories.any { it.taskType == QuickStartTaskType.GET_TO_KNOW_APP }
-    }
 
     private fun buildQuickStartTaskTypeItem(
         category: QuickStartCategory,

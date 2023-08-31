@@ -202,7 +202,8 @@ public class AppPrefs {
         SHOULD_HIDE_ACTIVITY_DASHBOARD_CARD,
         SHOULD_HIDE_PAGES_DASHBOARD_CARD,
         SHOULD_HIDE_TODAY_STATS_DASHBOARD_CARD,
-        SHOULD_HIDE_POST_DASHBOARD_CARD
+        SHOULD_HIDE_POST_DASHBOARD_CARD,
+        SHOULD_HIDE_NEXT_STEPS_DASHBOARD_CARD
     }
 
     /**
@@ -1769,5 +1770,17 @@ public class AppPrefs {
 
     public static Boolean getShouldHidePostDashboardCard(final long siteId, final String postType) {
         return prefs().getBoolean(getSiteIdHidePostDashboardCardKey(siteId, postType), false);
+    }
+
+    public static void setShouldHideNextStepsDashboardCard(final long siteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHideNextStepsDashboardCardKey(siteId), isHidden).apply();
+    }
+
+    @NonNull private static String getSiteIdHideNextStepsDashboardCardKey(long siteId) {
+        return DeletablePrefKey.SHOULD_HIDE_NEXT_STEPS_DASHBOARD_CARD.name() + siteId;
+    }
+
+    public static Boolean getShouldHideNextStepsDashboardCard(final long siteId) {
+        return prefs().getBoolean(getSiteIdHideNextStepsDashboardCardKey(siteId), false);
     }
 }

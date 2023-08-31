@@ -81,7 +81,6 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
-import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
@@ -568,7 +567,10 @@ class MySiteViewModel @Inject constructor(
             ),
             QuickStartCardBuilderParams(
                 quickStartCategories = quickStartCategories,
-                onQuickStartBlockRemoveMenuItemClick = this::onQuickStartBlockRemoveMenuItemClick,
+                moreMenuClickParams = QuickStartCardBuilderParams.MoreMenuParams(
+                    onMoreMenuClick = this::onQuickStartMoreMenuClick,
+                    onHideThisMenuItemClick = this::onQuickStartHideThisMenuItemClick
+                ),
                 onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
             ),
             DashboardCardsBuilderParams(
@@ -906,8 +908,14 @@ class MySiteViewModel @Inject constructor(
         } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
     }
 
-    private fun onQuickStartBlockRemoveMenuItemClick() {
-        _onBasicDialogShown.value = Event(ShowRemoveNextStepsDialog)
+    private fun onQuickStartMoreMenuClick() = quickStartTracker.trackMoreMenuClicked()
+    private fun onQuickStartHideThisMenuItemClick() {
+        quickStartTracker.trackMoreMenuItemClicked()
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            quickStartRepository.onHideQuickStartCard(selectedSite.siteId)
+            refresh()
+            clearActiveQuickStartTask()
+        }
     }
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
@@ -1127,8 +1135,6 @@ class MySiteViewModel @Inject constructor(
                         )
                     )
                 }
-
-                TAG_REMOVE_NEXT_STEPS_DIALOG -> onRemoveNextStepsDialogPositiveButtonClicked()
             }
 
             is Negative -> when (interaction.tag) {
@@ -1143,8 +1149,6 @@ class MySiteViewModel @Inject constructor(
                     quickStartRepository.checkAndShowQuickStartNotice()
                     selectedSiteRepository.updateSiteIconMediaId(0, true)
                 }
-
-                TAG_REMOVE_NEXT_STEPS_DIALOG -> onRemoveNextStepsDialogNegativeButtonClicked()
             }
 
             is Dismissed -> when (interaction.tag) {
@@ -1154,17 +1158,6 @@ class MySiteViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun onRemoveNextStepsDialogPositiveButtonClicked() {
-        quickStartTracker.track(Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED)
-        quickStartRepository.skipQuickStart()
-        refresh()
-        clearActiveQuickStartTask()
-    }
-
-    private fun onRemoveNextStepsDialogNegativeButtonClicked() {
-        quickStartTracker.track(Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED)
     }
 
     @Suppress("DEPRECATION")
