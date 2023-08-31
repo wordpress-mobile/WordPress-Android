@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -46,7 +47,7 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
     @Inject LoginEpilogueViewModel mViewModel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());

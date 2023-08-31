@@ -3,6 +3,7 @@ package org.wordpress.android.ui.prefs;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
@@ -19,7 +20,7 @@ public class MyProfileActivity extends LocaleAwareActivity {
     @Inject AccountStore mAccountStore;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 

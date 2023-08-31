@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-09 16:54:08+0000
+Translation-Revision-Date: 2023-08-24 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.7
 Language: id
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">Jawaban:</string>
+    <string name="contact_support_bot_ticket_comment_question">Pertanyaan:</string>
+    <string name="contact_support_bot_ticket_comment_start">Transkrip Bot Seluler Jetpack:</string>
+    <string name="contact_support_bot_ticket_error">Terjadi error saat mengirimkan tiket dukungan</string>
+    <string name="contact_support_bot_ticket_message">Tiket dibuat</string>
+    <string name="contact_support_bot_ticket_loading">Membuat tiket dukungan…</string>
+    <string name="contact_support_question_six">Bagaimana caranya menggunakan domain khusus saya di aplikasi?</string>
+    <string name="contact_support_question_five">Saya lupa informasi login saya</string>
+    <string name="contact_support_question_four">Mengapa saya tidak bisa login?</string>
+    <string name="contact_support_question_three">Saya tidak bisa mengunggah foto/video</string>
+    <string name="contact_support_question_two">Tolong, situs saya tidak aktif!</string>
+    <string name="contact_support_question_one">Apa alamat situs saya?</string>
+    <string name="contact_support_suggestions">Tidak yakin ingin menanyakan apa?</string>
+    <string name="contact_support_get_support">Hubungi dukungan</string>
+    <string name="contact_support_first_message">Apa yang bisa kami bantu?</string>
+    <string name="contact_support_input_placeholder">Mengirimkan pesan…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">Hapus</string>
     <string name="jetpack_social_social_shares_remaining">Tersisa %1$d kesempatan berbagi pos ke media sosial</string>
     <string name="missing_splits_dialog_button">TUTUP</string>
     <string name="missing_splits_dialog_message">Beberapa komponen penting aplikasi Jetpack tidak tersedia. Aplikasi perlu diinstal ulang dari Google Play Store.</string>
@@ -980,7 +997,6 @@ Language: id
     <string name="new_site_creation_search_domain_input_hint">Ketik nama untuk situs Anda</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Semua tugas selesai&lt;/b&gt;&lt;br/&gt;Anda akan menjangkau lebih banyak orang. Bagus!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Semua tugas selesai&lt;/b&gt;&lt;br/&gt;Anda telah menyesuaikan situs. Bagus!</string>
-    <string name="quick_start_card_menu_hide">Sembunyikan untuk sekarang</string>
     <string name="magic_link_not_meaning_to_create_account">Tidak ingin membuat akun baru? Silakan kembali dan masukkan lagi alamat email Anda.</string>
     <string name="invite_links_disable_dialog_message">Setelah tautan undangan ini dinonaktifkan, calon anggota tidak akan bisa lagi menggunakannya untuk bergabung dengan tim Anda. Apakah Anda yakin?</string>
     <string name="invite_links_disable_dialog_title">Nonaktifkan tautan undangan</string>
@@ -1003,7 +1019,6 @@ Language: id
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Pemindaian Selesai&lt;/b&gt; &lt;br&gt; Potensi ancaman tidak ditemukan</string>
     <string name="scan_fixing_threats_title_singular">Memperbaiki Ancaman</string>
     <string name="disable">Nonaktifkan</string>
-    <string name="quick_start_card_menu_unpin">Lepas sematan ini</string>
     <string name="quick_start_list_review_pages_subtitle">Periksa halaman dan lakukan perubahan, atau tambahkan atau hapus halaman.</string>
     <string name="quick_start_list_view_site_title">Lihat situs Anda</string>
     <string name="quick_start_list_follow_site_subtitle">Temukan dan ikuti situs yang menginspirasi Anda.</string>
@@ -1099,8 +1114,6 @@ Language: id
     <string name="backup_download_complete_failed_title">Pengunduhan gagal</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Seluler</string>
-    <string name="quick_start_card_menu_remove">Jangan tampilkan lagi</string>
-    <string name="quick_start_card_menu_pin">Sematkan ini</string>
     <string name="quick_start_dialog_review_pages_message_short">Pilih %1$s Halaman %2$s untuk melihat daftar halaman Anda.</string>
     <string name="quick_start_dialog_review_pages_message">Ubah, tambahkan, atau hapus halaman situs.</string>
     <string name="quick_start_dialog_review_pages_title">Tinjau laman situs</string>

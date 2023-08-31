@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.view.DragEvent;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
@@ -126,7 +127,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {

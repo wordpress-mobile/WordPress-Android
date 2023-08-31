@@ -101,7 +101,6 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.Qui
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
-import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -176,7 +175,6 @@ class MySiteViewModel @Inject constructor(
     private val landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig,
     private val mySiteSourceManager: MySiteSourceManager,
     private val cardsTracker: CardsTracker,
-    private val siteItemsTracker: SiteItemsTracker,
     private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
@@ -826,7 +824,7 @@ class MySiteViewModel @Inject constructor(
     @Suppress("ComplexMethod")
     private fun onItemClick(action: ListItemAction) {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
-            siteItemsTracker.trackSiteItemClicked(action)
+            analyticsTrackerWrapper.track(Stat.MY_SITE_MENU_ITEM_TAPPED, mapOf(TYPE to action.trackingLabel))
             val navigationAction = when (action) {
                 ListItemAction.ACTIVITY_LOG -> SiteNavigationAction.OpenActivityLog(selectedSite)
                 ListItemAction.BACKUP -> SiteNavigationAction.OpenBackup(selectedSite)

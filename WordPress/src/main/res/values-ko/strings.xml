@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-09 12:54:07+0000
+Translation-Revision-Date: 2023-08-23 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.7
 Language: ko_KR
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">답변:</string>
+    <string name="contact_support_bot_ticket_comment_question">질문:</string>
+    <string name="contact_support_bot_ticket_comment_start">젯팩 모바일 봇 대본:</string>
+    <string name="contact_support_bot_ticket_error">지원 티켓 제출 중 오류 발생</string>
+    <string name="contact_support_bot_ticket_message">티켓 생성됨</string>
+    <string name="contact_support_bot_ticket_loading">지원 티켓 생성 중…</string>
+    <string name="contact_support_question_six">앱에서 사용자 정의 도메인을 사용하려면 어떻게 해야 하나요?</string>
+    <string name="contact_support_question_five">로그인 정보가 기억나지 않습니다.</string>
+    <string name="contact_support_question_four">로그인할 수 없는 이유가 무엇인가요?</string>
+    <string name="contact_support_question_three">사진/비디오를 업로드할 수 없습니다.</string>
+    <string name="contact_support_question_two">내 사이트가 중단되었습니다.</string>
+    <string name="contact_support_question_one">내 사이트 주소가 무엇인가요?</string>
+    <string name="contact_support_suggestions">어떤 질문을 해야 할지 잘 모르시겠나요?</string>
+    <string name="contact_support_get_support">지원팀에 문의</string>
+    <string name="contact_support_first_message">무엇을 도와 드릴까요?</string>
+    <string name="contact_support_input_placeholder">메시지 보내기…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">지우기</string>
     <string name="jetpack_social_social_shares_remaining">소셜 공유 %1$d회 남음</string>
     <string name="missing_splits_dialog_button">닫기</string>
     <string name="missing_splits_dialog_message">필수 구성 요소가 워드프레스 앱에 없습니다. Google Play 스토어에서 다시 설치해야 합니다.</string>
@@ -980,7 +997,6 @@ Language: ko_KR
     <string name="new_site_creation_search_domain_input_hint">사이트의 이름 입력</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;모든 작업 완료됨&lt;/b&gt;&lt;br/&gt;더 많은 사람에게 도달하게 됩니다. 훌륭합니다!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;모든 작업 완료됨&lt;/b&gt;&lt;br/&gt;사이트를 사용자 정의하셨습니다. 잘하셨습니다!</string>
-    <string name="quick_start_card_menu_hide">일시적으로 숨기기</string>
     <string name="magic_link_not_meaning_to_create_account">새 계정을 만들 계획이 없으신가요? 뒤로 이동하여 이메일 주소를 다시 입력하세요.</string>
     <string name="invite_links_disable_dialog_message">초대 링크를 비활성화하면 아무도 이 링크를 사용해서 이 팀에 참여할 수 없습니다. 계속할까요?</string>
     <string name="invite_links_disable_dialog_title">초대 링크 비활성화</string>
@@ -1003,7 +1019,6 @@ Language: ko_KR
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;스캔 완료됨&lt;/b&gt; &lt;br&gt; 찾은 위협 없음</string>
     <string name="scan_fixing_threats_title_singular">위협 해결 중</string>
     <string name="disable">비활성화</string>
-    <string name="quick_start_card_menu_unpin">이 항목 고정 취소</string>
     <string name="quick_start_list_review_pages_subtitle">페이지를 점검하고 내용을 변경하거나 페이지를 추가 또는 제거하세요.</string>
     <string name="quick_start_list_view_site_title">사이트 보기</string>
     <string name="quick_start_list_follow_site_subtitle">회원님께 영감을 주는 사이트를 발견하고 팔로우하세요.</string>
@@ -1099,8 +1114,6 @@ Language: ko_KR
     <string name="backup_download_complete_failed_title">다운로드 실패</string>
     <string name="web_preview_tablet">태블릿</string>
     <string name="web_preview_mobile">모바일</string>
-    <string name="quick_start_card_menu_remove">다시 보지 않음</string>
-    <string name="quick_start_card_menu_pin">이 항목 고정</string>
     <string name="quick_start_dialog_review_pages_message_short">페이지 목록을 참조하려면 %1$s 페이지 %2$s을(를) 선택하세요.</string>
     <string name="quick_start_dialog_review_pages_message">사이트의 페이지를 변경, 추가 또는 제거합니다.</string>
     <string name="quick_start_dialog_review_pages_title">사이트 페이지 검토</string>

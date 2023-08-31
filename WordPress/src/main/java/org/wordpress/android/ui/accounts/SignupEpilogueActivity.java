@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentTransaction;
 
 import org.wordpress.android.R;
@@ -28,7 +29,7 @@ public class SignupEpilogueActivity extends LocaleAwareActivity implements Signu
     @Inject SiteStore mSiteStore;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());

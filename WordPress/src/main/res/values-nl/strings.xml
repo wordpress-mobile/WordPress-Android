@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-09 14:54:08+0000
+Translation-Revision-Date: 2023-08-23 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.7
 Language: nl
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_start">Transcriptie Jetpack Mobile Bot:</string>
+    <string name="contact_support_bot_ticket_error">Fout bij het indienen van het ondersteuningsticket</string>
+    <string name="contact_support_bot_ticket_message">Ticket aangemaakt</string>
+    <string name="contact_support_bot_ticket_loading">Een ondersteuningsticket aanmaken …</string>
+    <string name="contact_support_question_six">Hoe kan ik mijn aangepaste domein gebruiken in de app?</string>
+    <string name="contact_support_question_five">Ik ben mijn inloggegevens vergeten</string>
+    <string name="contact_support_question_two">Help, mijn site is onbereikbaar!</string>
+    <string name="contact_support_question_one">Wat is mijn siteadres?</string>
+    <string name="contact_support_suggestions">Weet je niet wat je moet vragen?</string>
+    <string name="contact_support_get_support">Neem contact op met support</string>
+    <string name="contact_support_first_message">Waarmee kunnen we je helpen?</string>
+    <string name="contact_support_input_placeholder">Verstuur een bericht …</string>
     <string name="jetpack_social_social_shares_remaining">%1$d keer delen op social media resterend</string>
     <string name="missing_splits_dialog_message">Er ontbreken vereiste onderdelen in de WordPress-app en deze moeten opnieuw worden geïnstalleerd vanuit de Google Play Store.</string>
     <string name="campaign_detail_error_title">Er is iets fout gegaan</string>
@@ -961,7 +973,6 @@ Language: nl
     <string name="new_site_creation_search_domain_input_hint">Typ een naam voor je site</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Alle taken zijn afgerond&lt;/b&gt;&lt;br/&gt; Je bereikt meer mensen. Goed werk!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Alle taken zijn afgerond&lt;/b&gt;&lt;br/&gt; Je hebt je site aangepast. Goed gedaan!</string>
-    <string name="quick_start_card_menu_hide">Verberg voor nu</string>
     <string name="magic_link_not_meaning_to_create_account">Wilde je geen nieuw account aanmaken? Ga terug om je e-mailadres opnieuw in te voeren.</string>
     <string name="invite_links_disable_dialog_message">Zodra deze uitnodigingslink is uitgeschakeld, kan niemand deze gebruiken om lid te worden van je team. Weet je het zeker?</string>
     <string name="invite_links_disable_dialog_title">Schakel uitnodigingslink uit</string>
@@ -984,7 +995,6 @@ Language: nl
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan afgerond&lt;/b&gt;&lt;br&gt;Geen bedreigingen gevonden</string>
     <string name="scan_fixing_threats_title_singular">Bedreiging oplossen</string>
     <string name="disable">Uitschakelen</string>
-    <string name="quick_start_card_menu_unpin">Losmaken</string>
     <string name="quick_start_list_review_pages_subtitle">Controleer je pagina\'s en maak wijzigingen, of voeg pagina\'s toe of verwijder ze.</string>
     <string name="quick_start_list_view_site_title">Je site bekijken</string>
     <string name="quick_start_list_follow_site_subtitle">Ontdek en volg sites die je inspireren.</string>
@@ -1080,8 +1090,6 @@ Language: nl
     <string name="backup_download_complete_failed_title">Download mislukt</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Mobiel</string>
-    <string name="quick_start_card_menu_remove">Niet opnieuw tonen</string>
-    <string name="quick_start_card_menu_pin">Pin dit</string>
     <string name="quick_start_dialog_review_pages_message_short">Selecteer %1$s Pagina\'s %2$s om je paginalijst te zien.</string>
     <string name="quick_start_dialog_review_pages_message">Verander, voeg toe, of verwijder pagina\'s van je site.</string>
     <string name="quick_start_dialog_review_pages_title">Beoordeel site pagina\'s</string>
