@@ -12,6 +12,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
@@ -65,18 +66,18 @@ class QuickStartTracker @Inject constructor(
         }
     }
 
-    fun trackMoreMenuClicked() {
+    fun trackMoreMenuClicked(card: QuickStartCardType) {
         analyticsTrackerWrapper.track(
             Stat.MY_SITE_DASHBOARD_CONTEXTUAL_MENU_ACCESSED,
-            mapOf(CardsTracker.CARD to QuickStartMenuCard.NEXT_STEPS.label)
+            mapOf(CardsTracker.CARD to card.toQuickStartMenuCard().label)
         )
     }
 
-    fun trackMoreMenuItemClicked() {
+    fun trackMoreMenuItemClicked(card: QuickStartCardType) {
         analyticsTrackerWrapper.track(
             Stat.MY_SITE_DASHBOARD_CARD_MENU_ITEM_TAPPED,
             mapOf(
-                CARD to QuickStartMenuCard.NEXT_STEPS.label,
+                CARD to card.toQuickStartMenuCard().label,
                 ITEM to QuickStartMenuItemType.HIDE_THIS.label
             )
         )
@@ -97,7 +98,15 @@ class QuickStartTracker @Inject constructor(
     }
 
     enum class QuickStartMenuCard(val label: String) {
+        GET_TO_KNOW_THE_APP("get_to_know_the_app"),
         NEXT_STEPS("next_steps")
+    }
+
+    private fun QuickStartCardType.toQuickStartMenuCard(): QuickStartMenuCard {
+        return when (this) {
+            QuickStartCardType.GET_TO_KNOW_THE_APP -> QuickStartMenuCard.GET_TO_KNOW_THE_APP
+            QuickStartCardType.NEXT_STEPS -> QuickStartMenuCard.NEXT_STEPS
+        }
     }
     companion object {
         private const val SITE_TYPE = "site_type"

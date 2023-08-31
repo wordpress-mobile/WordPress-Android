@@ -23,8 +23,8 @@ class QuickStartCardBuilderTest : BaseUnitTest() {
     private val completedTasks: List<QuickStartTaskDetails> = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE)
     private val uncompletedTasks: List<QuickStartTaskDetails> = listOf(QuickStartTaskDetails.VIEW_SITE_TUTORIAL)
     private val onItemClick: (QuickStartTaskType) -> Unit = {}
-    private val onHideThisMenuItemClick: () -> Unit = {}
-    private val onMoreMenuClick: () -> Unit = {}
+    private val onHideThisMenuItemClick: (QuickStartCardType) -> Unit = {}
+    private val onMoreMenuClick: (QuickStartCardType) -> Unit = {}
 
     @Before
     fun setUp() {
