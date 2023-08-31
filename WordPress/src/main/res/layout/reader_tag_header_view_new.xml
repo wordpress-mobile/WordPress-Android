@@ -18,7 +18,6 @@
             style="@style/ReaderTextView.Site.Header.NewTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
             app:layout_constraintBottom_toTopOf="@+id/follow_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
