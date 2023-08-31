@@ -35,6 +35,7 @@ android {
     }
 
     lint {
+        lintConfig file("${project.rootDir}/config/lint/lint.xml")
         enable += 'UnknownNullness'
     }
 
