@@ -914,7 +914,7 @@ class MySiteViewModel @Inject constructor(
     @Suppress("ComplexMethod")
     private fun onItemClick(action: ListItemAction) {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
-            siteItemsTracker.trackSiteItemClicked(action)
+            analyticsTrackerWrapper.track(Stat.MY_SITE_MENU_ITEM_TAPPED, mapOf(TYPE to action.trackingLabel))
             val navigationAction = when (action) {
                 ListItemAction.ACTIVITY_LOG -> SiteNavigationAction.OpenActivityLog(selectedSite)
                 ListItemAction.BACKUP -> SiteNavigationAction.OpenBackup(selectedSite)
