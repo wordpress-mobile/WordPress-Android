@@ -58,8 +58,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams.ActivityCardItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
@@ -84,6 +82,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
@@ -209,7 +208,8 @@ class MySiteViewModel @Inject constructor(
     private val domainTransferCardViewModel: DomainTransferCardViewModel,
     private val pagesCardViewModelSlice: PagesCardViewModelSlice,
     private val todaysStatsViewModelSlice: TodaysStatsViewModelSlice,
-    private val postsCardViewModelSlice: PostsCardViewModelSlice
+    private val postsCardViewModelSlice: PostsCardViewModelSlice,
+    private val activityLogCardViewModelSlice: ActivityLogCardViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -298,7 +298,8 @@ class MySiteViewModel @Inject constructor(
         pagesCardViewModelSlice.onNavigation,
         domainTransferCardViewModel.onNavigation,
         todaysStatsViewModelSlice.onNavigation,
-        postsCardViewModelSlice.onNavigation
+        postsCardViewModelSlice.onNavigation,
+        activityLogCardViewModelSlice.onNavigation
     )
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
@@ -317,7 +318,8 @@ class MySiteViewModel @Inject constructor(
             blazeCardViewModelSlice.refresh,
             pagesCardViewModelSlice.refresh,
             todaysStatsViewModelSlice.refresh,
-            postsCardViewModelSlice.refresh
+            postsCardViewModelSlice.refresh,
+            activityLogCardViewModelSlice.refresh
         )
     val domainTransferCardRefresh = domainTransferCardViewModel.refresh
 
@@ -578,7 +580,7 @@ class MySiteViewModel @Inject constructor(
                 showErrorCard = cardsUpdate?.showErrorCard == true,
                 onErrorRetryClick = this::onDashboardErrorRetry,
                 todaysStatsCardBuilderParams = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(
-                        cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel } as? TodaysStatsCardModel
+                    cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel } as? TodaysStatsCardModel
                 ),
                 postCardBuilderParams = postsCardViewModelSlice.getPostsCardBuilderParams(
                     cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel
@@ -619,14 +621,8 @@ class MySiteViewModel @Inject constructor(
                 pagesCardBuilderParams = pagesCardViewModelSlice.getPagesCardBuilderParams(
                     cardsUpdate?.cards?.firstOrNull { it is PagesCardModel } as? PagesCardModel,
                 ),
-                activityCardBuilderParams = ActivityCardBuilderParams(
-                    activityCardModel = cardsUpdate?.cards?.firstOrNull {
-                        it is ActivityCardModel
-                    } as? ActivityCardModel,
-                    onActivityItemClick = this::onActivityCardItemClick,
-                    onMoreMenuClick = this::onActivityCardMoreMenuClick,
-                    onAllActivityMenuItemClick = this::onActivityCardAllActivityItemClick,
-                    onHideMenuItemClick = this::onActivityCardHideMenuItemClick
+                activityCardBuilderParams = activityLogCardViewModelSlice.getActivityLogCardBuilderParams(
+                    cardsUpdate?.cards?.firstOrNull { it is ActivityCardModel } as? ActivityCardModel
                 ),
             ),
             QuickLinkRibbonBuilderParams(
@@ -691,32 +687,6 @@ class MySiteViewModel @Inject constructor(
             )
         )
     }
-
-    private fun onActivityCardItemClick(activityCardItemClickParams: ActivityCardItemClickParams) {
-        cardsTracker.trackActivityCardItemClicked()
-        _onNavigation.value =
-            Event(
-                SiteNavigationAction.OpenActivityLogDetail(
-                    requireNotNull(selectedSiteRepository.getSelectedSite()),
-                    activityCardItemClickParams.activityId,
-                    activityCardItemClickParams.isRewindable
-                )
-            )
-    }
-    private fun onActivityCardHideMenuItemClick() {
-        cardsTracker.trackActivityCardMenuItemClicked(CardsTracker.MenuItemType.HIDE_THIS)
-        appPrefsWrapper.setShouldHideActivityDashboardCard(
-            requireNotNull(selectedSiteRepository.getSelectedSite()).siteId,true)
-        refresh()
-    }
-
-    private fun onActivityCardAllActivityItemClick() {
-        cardsTracker.trackActivityCardMenuItemClicked(CardsTracker.MenuItemType.ALL_ACTIVITY)
-        _onNavigation.value =
-            Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
-    }
-
-    private fun onActivityCardMoreMenuClick() = cardsTracker.trackActivityLogMoreMenuClicked()
 
     private fun buildJetpackBadgeIfEnabled(): JetpackBadge? {
         val screen = JetpackPoweredScreen.WithStaticText.HOME

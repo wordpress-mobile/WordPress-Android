@@ -65,28 +65,9 @@ class CardsTracker @Inject constructor(
         NO_CAMPAIGNS("no_campaigns"),
         CAMPAIGNS("campaigns")
     }
-    enum class MenuItemType(val label: String) {
-        ALL_ACTIVITY("all_activity"),
-        HIDE_THIS("hide_this")
-    }
+
     fun trackQuickStartCardItemClicked(quickStartTaskType: QuickStartTaskType) {
         trackCardItemClicked(Type.QUICK_START.label, quickStartTaskType.toSubtypeValue().label)
-    }
-
-    fun trackActivityCardItemClicked() {
-        trackCardItemClicked(Type.ACTIVITY.label, ActivityLogSubtype.ACTIVITY_LOG.label)
-    }
-
-    fun trackActivityCardFooterClicked() {
-        trackCardFooterLinkClicked(Type.ACTIVITY.label, ActivityLogSubtype.ACTIVITY_LOG.label)
-    }
-
-    fun trackActivityCardMenuItemClicked(menuItemType: MenuItemType) {
-        trackCardMoreMenuItemClicked(Type.ACTIVITY.label, menuItemType.label)
-    }
-
-    fun trackActivityLogMoreMenuClicked() {
-        trackCardMoreMenuClicked(Type.ACTIVITY.label)
     }
 
     fun trackCardFooterLinkClicked(type: String, subtype: String) {

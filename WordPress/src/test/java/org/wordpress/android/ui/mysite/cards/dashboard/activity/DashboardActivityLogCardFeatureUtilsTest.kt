@@ -11,13 +11,9 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
-import org.wordpress.android.util.config.DashboardCardActivityLogConfig
 
 @ExperimentalCoroutinesApi
 class DashboardActivityLogCardFeatureUtilsTest : BaseUnitTest() {
-    @Mock
-    private lateinit var dashboardCardActivityLogConfig: DashboardCardActivityLogConfig
-
     @Mock
     private lateinit var siteUtilsWrapper: SiteUtilsWrapper
 
@@ -32,7 +28,6 @@ class DashboardActivityLogCardFeatureUtilsTest : BaseUnitTest() {
     @Before
     fun setUp() {
         dashboardActivityLogCardFeatureUtils = DashboardActivityLogCardFeatureUtils(
-            dashboardCardActivityLogConfig,
             siteUtilsWrapper,
             appPrefsWrapper
         )
@@ -40,23 +35,12 @@ class DashboardActivityLogCardFeatureUtilsTest : BaseUnitTest() {
     }
 
     private fun setUpMocks() {
-        whenever(dashboardCardActivityLogConfig.isEnabled()).thenReturn(true)
         whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(true)
         whenever(siteModel.hasCapabilityManageOptions).thenReturn(true)
         whenever(siteModel.isJetpackConnected).thenReturn(true)
         whenever(siteModel.isWpForTeamsSite).thenReturn(false)
         whenever(appPrefsWrapper.getShouldHideActivityDashboardCard(any())).thenReturn(false)
     }
-
-    @Test
-    fun `given feature flag is disabled, when isEnaled is called, then false is returned`() {
-        whenever(dashboardCardActivityLogConfig.isEnabled()).thenReturn(false)
-
-        val result = dashboardActivityLogCardFeatureUtils.shouldRequestActivityCard(siteModel)
-
-        Assertions.assertThat(result).isFalse
-    }
-
 
     @Test
     fun `given site accessed is not via wpComOrJetpack, when build is called, then null is returned`() {
