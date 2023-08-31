@@ -291,6 +291,7 @@ android {
         checkGeneratedSources = true
         lintConfig file("${project.rootDir}/config/lint/lint.xml")
         baseline file("${project.rootDir}/config/lint/baseline.xml")
+        enable += 'UnknownNullness'
     }
 
     packagingOptions {
