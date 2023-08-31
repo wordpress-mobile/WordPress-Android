@@ -9,14 +9,13 @@
         android:id="@+id/text_blog_follow_count"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:layout_marginEnd="@dimen/margin_large"
         android:alpha="@dimen/material_emphasis_high_type"
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/text_sz_medium"
-        app:layout_constraintBaseline_toBaselineOf="@+id/follow_button"
-        app:layout_constraintEnd_toStartOf="@+id/follow_button"
+        app:layout_constraintBottom_toTopOf="@+id/follow_button"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="123 posts • 1.2m followers" />
 
     <org.wordpress.android.ui.reader.views.ReaderFollowButton
@@ -24,11 +23,11 @@
         style="@style/Reader.Follow.Button.New"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small_medium"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/text_blog_follow_count"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_blog_follow_count"
         tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
