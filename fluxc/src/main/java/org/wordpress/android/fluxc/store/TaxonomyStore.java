@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -152,19 +153,23 @@ public class TaxonomyStore extends Store {
         AppLog.d(AppLog.T.API, "TaxonomyStore onRegister");
     }
 
-    public TermModel instantiateCategory(SiteModel site) {
+    @Nullable
+    public TermModel instantiateCategory(@NonNull SiteModel site) {
         return instantiateTermModel(site, DEFAULT_TAXONOMY_CATEGORY);
     }
 
-    public TermModel instantiateTag(SiteModel site) {
+    @Nullable
+    public TermModel instantiateTag(@NonNull SiteModel site) {
         return instantiateTermModel(site, DEFAULT_TAXONOMY_TAG);
     }
 
-    public TermModel instantiateTerm(SiteModel site, TaxonomyModel taxonomy) {
+    @Nullable
+    public TermModel instantiateTerm(@NonNull SiteModel site, @NonNull TaxonomyModel taxonomy) {
         return instantiateTermModel(site, taxonomy.getName());
     }
 
-    private TermModel instantiateTermModel(SiteModel site, String taxonomyName) {
+    @Nullable
+    private TermModel instantiateTermModel(@NonNull SiteModel site, @NonNull String taxonomyName) {
         TermModel newTerm = new TermModel();
         newTerm.setLocalSiteId(site.getId());
         newTerm.setTaxonomy(taxonomyName);
