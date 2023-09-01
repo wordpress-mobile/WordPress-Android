@@ -1,5 +1,0 @@
-23.0:
-- Die visuelle Lücke zwischen ausgewählten Galerie-Blöcken und der Toolbar wurde entfernt
-- Der Button für die Bildunterschriften in der Galerie wurde auf mobilen Geräten ausgeblendet.
-- Der korrekte Galerie-Block bleibt ausgewählt, während du Medien hinzufügst
-- Fehler beim Installieren eines Plugins behoben, wodurch die App abstürzte

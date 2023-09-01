@@ -1,0 +1,4 @@
+23.1:
+- Blok Tautan Media Sosial kini punya garis tepi jadi terlihat saat terpilih.
+- Tombol urung dan ulangi tidak lagi ditampilkan di editor HTML.
+- Di fitur pemilih warna pada Blok Sampul, kode hex akan ditampilkan untuk warna yang dipilih.
