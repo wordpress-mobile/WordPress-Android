@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.network.rest.wpcom.taxonomy;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.RequestQueue;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -43,7 +45,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
 
-    public void fetchTerm(final TermModel term, final SiteModel site) {
+    public void fetchTerm(@NonNull final TermModel term, @NonNull final SiteModel site) {
         final String taxonomy = term.getTaxonomy();
         final String slug = term.getSlug();
         String url = WPCOMREST.sites.site(site.getSiteId()).taxonomies.taxonomy(taxonomy).terms.slug(slug).getUrlV1_1();
