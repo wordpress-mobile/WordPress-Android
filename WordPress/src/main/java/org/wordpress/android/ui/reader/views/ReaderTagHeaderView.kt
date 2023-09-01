@@ -10,6 +10,7 @@ import org.wordpress.android.databinding.ReaderTagHeaderViewBinding
 import org.wordpress.android.databinding.ReaderTagHeaderViewNewBinding
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderViewUiState.ReaderTagHeaderUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.LocaleProvider
 import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.util.extensions.gone
 import javax.inject.Inject
@@ -29,6 +30,9 @@ class ReaderTagHeaderView @JvmOverloads constructor(
 
     @Inject
     lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
+
+    @Inject
+    lateinit var localeProvider: LocaleProvider
 
     private var onFollowBtnClicked: (() -> Unit)? = null
 
@@ -71,7 +75,12 @@ class ReaderTagHeaderView @JvmOverloads constructor(
 
     fun updateUi(uiState: ReaderTagHeaderUiState) = with(binding) {
         (binding as? ReaderTagBinding.ImprovementsEnabled)?.textTagFollowCount?.gone()
+        // creative-writing -> Creative Writing
         textTag.text = uiState.title
+            .split("-")
+            .joinToString(separator = " ") {
+                it.replaceFirstChar { it.titlecase(localeProvider.getAppLocale()) }
+            }
         with(uiState.followButtonUiState) {
             followButton.setIsFollowed(isFollowed)
             followButton.isEnabled = isEnabled
