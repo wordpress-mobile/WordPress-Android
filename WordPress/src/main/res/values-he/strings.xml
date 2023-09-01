@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-26 17:54:08+0000
+Translation-Revision-Date: 2023-08-24 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: he_IL
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">תשובה:</string>
+    <string name="contact_support_bot_ticket_comment_question">שאלה:</string>
+    <string name="contact_support_bot_ticket_comment_start">תסריט לבוט האפליקציה של Jetpack לנייד:</string>
+    <string name="contact_support_bot_ticket_error">שגיאה בשליחת הקריאה לתמיכה</string>
+    <string name="contact_support_bot_ticket_message">הקריאה נוצרה</string>
+    <string name="contact_support_bot_ticket_loading">פותח קריאה לתמיכה…</string>
+    <string name="contact_support_question_six">איך אפשר להשתמש בדומיין האישי שלי באפליקציה?</string>
+    <string name="contact_support_question_five">שכחתי את פרטי הכניסה שלי</string>
+    <string name="contact_support_question_four">למה לא הצלחתי להתחבר?</string>
+    <string name="contact_support_question_three">לא הצלחתי להעלות תמונות/סרטונים</string>
+    <string name="contact_support_question_two">הצילו, האתר שלי מושבת!</string>
+    <string name="contact_support_question_one">מהי כתובת האתר שלי?</string>
+    <string name="contact_support_suggestions">לא הצלחת להבין לך מה צריך לשאול?</string>
+    <string name="contact_support_get_support">לפנות לתמיכה</string>
+    <string name="contact_support_first_message">איך אוכל לעזור?</string>
+    <string name="contact_support_input_placeholder">לשלוח הודעה…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">למחוק</string>
+    <string name="jetpack_social_social_shares_remaining">נותרו ⁦%1$d⁩ שיתופים ברשתות החברתיות</string>
+    <string name="missing_splits_dialog_button">לסגור</string>
+    <string name="missing_splits_dialog_message">באפליקציה של WordPress חסרים רכיבים חיוניים ועליך להתקין אותה מחדש מהחנות Google Play.</string>
+    <string name="missing_splits_dialog_title">ההתקנה נכשלה</string>
+    <string name="campaign_detail_error_title">משהו השתבש</string>
+    <string name="campaign_listing_page_error_title">משהו השתבש</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> משהו השתבש. לא ניתן להביא קמפיינים</string>
+    <string name="domain_transfer_card_menu_hide_this">להסתיר את המידע</string>
+    <string name="domain_transfer_card_cta">להעביר את הדומיינים שלך</string>
+    <string name="domain_transfer_card_caption">כפי שוודאי ידוע לך, שירות Google Domains נמכר ל-Squarespace. אפשר להעביר את הדומיינים שלך ל-WordPress.com עכשיו ואנחנו נשלם עבור דמי ההעברה וניתן לך שנה נוספת של רישום דומיין בחינם.</string>
+    <string name="domain_transfer_card_sub_title">לקבל בעלות על הדומיינים שלך ב-Google Domains</string>
+    <string name="domain_transfer_card_title">חדשות</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">לחבר חשבונות</string>
+    <string name="prepublishing_nudges_toolbar_title_social">שיתוף ברשתות חברתיות</string>
+    <string name="prepublishing_nudges_social_action">שיתוף ברשתות חברתיות</string>
+    <string name="sharing">רשתות חברתיות</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">משתף אל ⁦%1$d⁩ חשבונות</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">משתף אל ⁦%1$d⁩ מתוך ⁦%2$d⁩ חשבונות</string>
+    <string name="jetpack_social_social_shares_title_single_account">משתף אל ⁦%1$s⁩</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">לא משתף ברשתות חברתיות</string>
+    <string name="post_settings_jetpack_social_share_message_description">להתאים אישית את ההודעה שברצונך לשתף. אם הטקסט שלך לא יירשם כאן, אנחנו נשתמש בכותרת של הפוסט להודעה.</string>
+    <string name="post_settings_jetpack_social_share_message_title">התאמה אישית של ההודעה</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">לא עכשיו</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">לחבר חשבונות</string>
     <string name="gutenberg_native_insert_video_block">להוסיף בלוק וידאו</string>
     <string name="gutenberg_native_insert_image_block">להוסיף בלוק תמונה</string>
     <string name="gutenberg_native_insert_gallery_block">להוסיף בלוק גלריה</string>
     <string name="gutenberg_native_insert_audio_block">להוסיף בלוק אודיו</string>
-    <string name="blaze_campaign_detail_error">לא ניתן היה לטעון את פרטי הקמפיין</string>
     <string name="campaign_listing_page_no_campaigns_button_text">ליצור</string>
     <string name="campaign_listing_page_no_campaigns_message_description">עדיין לא יצרת קמפיינים. יש ללחוץ כאן כדי להתחיל.</string>
     <string name="campaign_listing_page_no_campaigns_message_title">אין לך קמפיינים</string>
@@ -28,14 +68,12 @@ Language: he_IL
     <string name="blaze_campaigns_card_footer_label">ליצור קמפיין</string>
     <string name="blaze_campaigns_card_title">קמפיין של Blaze</string>
     <string name="promote_blaze_flow_error">לא ניתן היה לטעון את תהליך הקידום של Blaze</string>
-    <string name="prepublishing_nudges_social_new_connection_cta">לחבר את הפרופילים שלך ברשתות החברתיות</string>
     <string name="prepublishing_nudges_social_new_connection_text">ניתן להגדיל את התעבורה על ידי שיתוף אוטומטי של פוסטים עם חברים ברשתות החברתיות.</string>
     <string name="menu_close_editor">לסגור את העורך</string>
     <string name="menu_redo_context">לבצע שוב את השינוי האחרון</string>
     <string name="menu_undo_context">לבטל את השינוי האחרון</string>
-    <string name="jetpack_social_social_shares_remaining">נותרו ⁦%1$d⁩ שיתופים ברשתות החברתיות</string>
+    <string name="jetpack_social_social_shares_remaining_one">נותר שיתוף אחד ברשתות החברתיות</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">ניתן להירשם עכשיו לקבלת שיתופים נוספים</string>
-    <string name="post_settings_jetpack_social_connect_social_profiles_button">לחבר את הפרופילים שלך ברשתות החברתיות</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">ניתן להגדיל את התעבורה על ידי שיתוף אוטומטי של פוסטים עם חברים ברשתות החברתיות.</string>
     <string name="post_settings_jetpack_social_header">שיתוף ברשתות חברתיות</string>
     <string name="gutenberg_native_s_detached">המקבץ %s הופרד</string>
@@ -956,7 +994,6 @@ Language: he_IL
     <string name="new_site_creation_search_domain_input_hint">יש להקליד שם לאתר שלך</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;כל המשימות הושלמו&lt;/b&gt;&lt;br/&gt;האתר שלך יקבל חשיפה ליותר אנשים. עבודה מצוינת!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;כל המשימות הושלמו&lt;/b&gt;&lt;br/&gt;האתר שלך הותאם אישית. כל הכבוד!</string>
-    <string name="quick_start_card_menu_hide">להסתיר לעת עתה</string>
     <string name="magic_link_not_meaning_to_create_account">לא התכוונת ליצור חשבון חדש? יש לחזור אחורה כדי להזין מחדש את כתובת האימייל שלך.</string>
     <string name="invite_links_disable_dialog_message">לאחר שהקישור להזמנה יושבת, לא תהיה עוד לאף אחד אפשרות להשתמש בו כדי להצטרף לצוות שלך. האם ברצונך להמשיך?</string>
     <string name="invite_links_disable_dialog_title">להשבית את הקישור להזמנה</string>
@@ -979,7 +1016,6 @@ Language: he_IL
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;הסריקה הסתיימה&lt;/b&gt; &lt;br&gt; לא נמצאו איומים</string>
     <string name="scan_fixing_threats_title_singular">מתקן את האיום</string>
     <string name="disable">להשבית</string>
-    <string name="quick_start_card_menu_unpin">להסיר את הנעץ מהתוכן</string>
     <string name="quick_start_list_review_pages_subtitle">לבדוק את העמודים ולבצע שינויים או להוסיף ולהסיר עמודים.</string>
     <string name="quick_start_list_view_site_title">הצגת האתר שלך</string>
     <string name="quick_start_list_follow_site_subtitle">לגלות אתרים שמספקים לך השראה ולעקוב אחריהם.</string>
@@ -1075,8 +1111,6 @@ Language: he_IL
     <string name="backup_download_complete_failed_title">ההורדה נכשלה</string>
     <string name="web_preview_tablet">טאבלט</string>
     <string name="web_preview_mobile">טלפון נייד</string>
-    <string name="quick_start_card_menu_remove">לא להציג שוב</string>
-    <string name="quick_start_card_menu_pin">לנעוץ את הפריט</string>
     <string name="quick_start_dialog_review_pages_message_short">יש לבחור באפשרות ⁦%1$s⁩ עמודים ⁦%2$s⁩ כדי להציג את רשימת העמודים שלך.</string>
     <string name="quick_start_dialog_review_pages_message">לשנות, להוסיף או להסיר עמודים באתר.</string>
     <string name="quick_start_dialog_review_pages_title">לבדוק עמודים באתר</string>
@@ -2866,11 +2900,10 @@ Language: he_IL
     <string name="connection_service_description">יש להתחבר כדי לשתף את הפוסטים בבלוג שלך אוטומטית עם %s.</string>
     <string name="connected_accounts_label">חשבונות מחוברים</string>
     <string name="connections_description">חיבור שירותי הרשתות החברתיות המועדפים שלך כדי לשתף פוסטים חדשים עם חברים באופן אוטומטי.</string>
-    <string name="sharing">שיתוף</string>
     <string name="tabbar_accessibility_label_notifications">הודעות. ניהול התראות.</string>
     <string name="tabbar_accessibility_label_reader">Reader. מעקב אחר תוכן מאתרים אחרים.</string>
     <string name="tabbar_accessibility_label_my_site">האתר שלי. הצגת האתר שלך וניהולו, כולל נתונים סטטיסטיים.</string>
-    <string name="my_site_btn_sharing">שיתוף</string>
+    <string name="my_site_btn_sharing">רשתות חברתיות</string>
     <string name="button_not_now">לא עכשיו</string>
     <string name="media_error_internal_server_error">אירעה שגיאה במהלך ההעלאה. מומלץ להפעיל את מיטוב התמונות ב\'אתר\' -&gt; \'הגדרות\'</string>
     <string name="media_downloading">שומר את פריט המדיה במכשיר זה</string>

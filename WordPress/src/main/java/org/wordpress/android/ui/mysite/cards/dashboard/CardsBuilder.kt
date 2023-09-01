@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite.cards.dashboard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityCardBuilder
@@ -35,10 +34,8 @@ class CardsBuilder @Inject constructor(
             if (dashboardCardsBuilderParams.showErrorCard) {
                 add(createErrorCard(dashboardCardsBuilderParams.onErrorRetryClick))
             } else {
-                var bloggingPromptCardAdded = false
                 bloggingPromptCardBuilder.build(dashboardCardsBuilderParams.bloggingPromptCardBuilderParams)
                     ?.let {
-                        bloggingPromptCardAdded = true
                         add(it)
                     }
 
@@ -63,17 +60,7 @@ class CardsBuilder @Inject constructor(
                 todaysStatsCardBuilder.build(dashboardCardsBuilderParams.todaysStatsCardBuilderParams)
                     ?.let { add(it) }
 
-                // if blogging prompt card is visible and the post card is "Write first/next post" we only show
-                // blogging prompt, since they are very similar
-                val postCards = postCardBuilder.build(dashboardCardsBuilderParams.postCardBuilderParams)
-                val hasNextPostPrompt = postCards.find {
-                    it.dashboardCardType == POST_CARD_WITHOUT_POST_ITEMS
-                } != null
-                val showPostCards = !hasNextPostPrompt || !bloggingPromptCardAdded
-
-                if (showPostCards) {
-                    addAll(postCards)
-                }
+                addAll(postCardBuilder.build(dashboardCardsBuilderParams.postCardBuilderParams))
 
                 pagesCardBuilder.build(dashboardCardsBuilderParams.pagesCardBuilderParams)?.let { add(it) }
 

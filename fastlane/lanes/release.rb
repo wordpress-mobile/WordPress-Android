@@ -280,8 +280,10 @@ platform :android do
     apps = options[:app].nil? ? ['wordpress', 'jetpack'] : [get_app_name_option!(options)]
     versions = options[:version].nil? ? [android_get_release_version()] : [options[:version]]
 
+    download_signed_apks_from_google_play(app: options[:app])
+
     release_assets = apps.flat_map do |app|
-      versions.flat_map { |vers| bundle_file_path(app, vers) }
+      versions.flat_map { |vers| [bundle_file_path(app, vers), signed_apk_path(app, vers)] }
     end.select { |f| File.exist?(f) }
 
     release_title = versions.last['name']

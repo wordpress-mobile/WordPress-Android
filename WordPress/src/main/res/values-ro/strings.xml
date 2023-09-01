@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-25 13:45:23+0000
+Translation-Revision-Date: 2023-08-21 15:41:13+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: ro
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">Răspuns:</string>
+    <string name="contact_support_bot_ticket_comment_question">Întrebare:</string>
+    <string name="contact_support_bot_ticket_error">Eroare la trimiterea tichetului pentru suport</string>
+    <string name="contact_support_bot_ticket_message">Am creat tichetul</string>
+    <string name="contact_support_bot_ticket_loading">Creez tichetului pentru suport…</string>
+    <string name="contact_support_bot_ticket_comment_start">Transcriere bot Jetpack Mobile:</string>
+    <string name="contact_support_question_six">Cum pot să-mi folosesc domeniul personalizat în aplicație?</string>
+    <string name="contact_support_question_five">Am uitat datele de autentificare</string>
+    <string name="contact_support_question_four">De ce nu pot să mă autentific?</string>
+    <string name="contact_support_question_three">Nu pot să încarc fotografii/videouri</string>
+    <string name="contact_support_question_two">Ajutor, site-ul meu a căzut!</string>
+    <string name="contact_support_question_one">Care este adresa site-ului meu?</string>
+    <string name="contact_support_suggestions">Nu știi ce să întrebi?</string>
+    <string name="contact_support_get_support">Contactează suportul</string>
+    <string name="contact_support_first_message">Cu ce te putem ajuta?</string>
+    <string name="contact_support_input_placeholder">Trimite un mesaj…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">Șterge</string>
+    <string name="jetpack_social_social_shares_remaining">Ți-au rămas %1$d partajări pe media socială</string>
+    <string name="missing_splits_dialog_button">ÎNCHIDE</string>
+    <string name="missing_splits_dialog_message">Aplicației WordPress îi lipsesc componentele necesare și trebuie reinstalată din Magazinul Google Play.</string>
+    <string name="missing_splits_dialog_title">Instalarea a eșuat</string>
+    <string name="campaign_detail_error_title">Ceva nu a mers bine</string>
+    <string name="campaign_listing_page_error_title">Ceva nu a mers bine</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Ceva nu a mers bine, nu am putut să preiau campaniile</string>
+    <string name="domain_transfer_card_menu_hide_this">Ascunde asta</string>
+    <string name="domain_transfer_card_cta">Transferă-ți domeniile</string>
+    <string name="domain_transfer_card_sub_title">Revendică-ți domeniile Google</string>
+    <string name="domain_transfer_card_title">Noutăți</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Conectează conturile</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Partajare pe media socială</string>
+    <string name="prepublishing_nudges_social_action">Partajare pe media socială</string>
+    <string name="sharing">Social</string>
+    <string name="domain_transfer_card_caption">După cum probabil știi, Google Domains a fost vândut la Squarespace. Transferă-ți domeniile la WordPress.com acum și îți vom plăti toate taxele de transfer, în plus ai un an suplimentar la înregistrarea domeniului.</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Partajez pe %1$d conturi</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Partajez pe %1$d conturi din %2$d</string>
+    <string name="jetpack_social_social_shares_title_single_account">Partajez pe %1$s</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Fără partajare pe media socială</string>
+    <string name="post_settings_jetpack_social_share_message_description">Personalizează mesajul pe care vrei să-l partajezi. Dacă nu adaugi aici propriul text, vom folosi titlul articolului ca mesaj.</string>
+    <string name="post_settings_jetpack_social_share_message_title">Personalizează mesajul</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Nu acum</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Conectează conturile</string>
     <string name="gutenberg_native_insert_video_block">Inserează blocul Video</string>
     <string name="gutenberg_native_insert_image_block">Inserează blocul Imagine</string>
     <string name="gutenberg_native_insert_gallery_block">Inserează blocul Galerie</string>
     <string name="gutenberg_native_insert_audio_block">Inserează blocul Audio</string>
-    <string name="blaze_campaign_detail_error">Nu am putut să încarc detaliile campaniei</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Creează</string>
     <string name="campaign_listing_page_no_campaigns_message_description">Nu ai creat nicio campanie până acum. Dă clic pe Creează pentru a începe.</string>
     <string name="campaign_listing_page_no_campaigns_message_title">Nu creat nicio campanie</string>
@@ -27,15 +67,13 @@ Language: ro
     <string name="campaign_status_active">ACTIVĂ</string>
     <string name="blaze_campaigns_card_footer_label">Creează o campanie</string>
     <string name="blaze_campaigns_card_title">Campanie Blaze</string>
-    <string name="jetpack_social_social_shares_remaining">Partajări sociale rămase: %1$d</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">Abonează-te ca să partajezi mai mult</string>
-    <string name="post_settings_jetpack_social_connect_social_profiles_button">Conectează profilurile sociale</string>
     <string name="menu_redo_context">Refă ultima modificare</string>
     <string name="menu_undo_context">Anulează ultima modificare</string>
     <string name="menu_close_editor">Închide editorul</string>
-    <string name="prepublishing_nudges_social_new_connection_cta">Conectează profilurile sociale</string>
     <string name="prepublishing_nudges_social_new_connection_text">Îți crești traficul prin partajarea automată a articolelor tale cu prietenii pe media socială.</string>
     <string name="promote_blaze_flow_error">Nu am putut să încarc fluxul pentru promovare pe Blaze</string>
+    <string name="jetpack_social_social_shares_remaining_one">Ți-a rămas o singură partajare pe media socială</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Îți crești traficul prin partajarea automată a articolelor tale pe media socială.</string>
     <string name="post_settings_jetpack_social_header">Partajare pe media socială</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">%s pentru Android nu suportă încă editarea modelelor sincronizate</string>
@@ -959,7 +997,6 @@ Language: ro
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Atinge de două ori pentru a deschide foaia de jos pentru a edita, înlocui sau șterge imaginea</string>
     <string name="new_site_creation_search_domain_input_hint">Scrie un nume pentru site-ul tău</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Ai finalizat toate sarcinile&lt;/b&gt;&lt;br/&gt;Ți-ai personalizat site-ul. Foarte bine!</string>
-    <string name="quick_start_card_menu_hide">Ascunde deocamdată</string>
     <string name="magic_link_not_meaning_to_create_account">Nu ai vrut să creezi un cont nou? Mergi înapoi și reintrodu adresa ta de email.</string>
     <string name="invite_links_disable_dialog_message">După ce această legătură la invitație este dezactivată, nimeni nu o va putea folosi pentru a se alătura echipei. Sigur?</string>
     <string name="invite_links_generic_get_data_error">Eroare necunoscută la aducerea datelor pentru legăturile la invitații</string>
@@ -983,7 +1020,6 @@ Language: ro
     <string name="scan_fixing_threats_title_singular">Înlătur amenințarea</string>
     <string name="disable">Dezactivează</string>
     <string name="quick_start_list_review_pages_subtitle">Verifică-ți paginile și fă modificări sau adaugă ori înlătură pagini.</string>
-    <string name="quick_start_card_menu_unpin">Anulează fixarea</string>
     <string name="quick_start_list_enable_sharing_subtitle">Partajezi automat articole noi în media socială.</string>
     <string name="quick_start_list_follow_site_subtitle">Descoperă și urmărește site-urile care te inspiră.</string>
     <string name="quick_start_list_update_site_title_subtitle">Dă-i site-ului un nume care să-ți reflecte personalitatea și prin care să arăți la ce se referă.</string>
@@ -1078,10 +1114,8 @@ Language: ro
     <string name="backup_download_complete_failed_title">Descărcarea a eșuat</string>
     <string name="web_preview_tablet">Tabletă</string>
     <string name="web_preview_mobile">Mobil</string>
-    <string name="quick_start_card_menu_remove">Nu arăta din nou</string>
     <string name="quick_start_dialog_review_pages_message_short">Selectează %1$s Pagini %2$s pentru a vedea lista cu pagini.</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Selectează %1$s Prima pagină %2$s pentru a edita prima pagină.</string>
-    <string name="quick_start_card_menu_pin">Fixează asta</string>
     <string name="quick_start_dialog_review_pages_message">Modifică paginile, adaugă sau înlătură pagini pe site.</string>
     <string name="quick_start_dialog_review_pages_title">Revizuiește paginile site-ului</string>
     <string name="reader_marked_post_as_seen">Articolul a fost marcat ca văzut</string>
@@ -2306,7 +2340,6 @@ Language: ro
     <string name="button_discard">Renunță</string>
     <string name="reader_avatar_desc">poză de profil</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
-    <string name="support_identity_input_dialog_enter_email">Te rog introdu adresa ta de email</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Pentru a continua te rog introdu adresa ta de email și numele</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Nesetat</string>
@@ -2315,6 +2348,7 @@ Language: ro
     <string name="support_push_notification_message">Mesaj nou de la „Ajutor și suport”</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restaurare în curs de desfășurare</string>
     <string name="activity_log_currently_restoring_message">Restaurez la %1$s %2$s</string>
+    <string name="support_identity_input_dialog_enter_email">Te rog să introduci adresa ta de email</string>
     <string name="activity_log_button">Buton acțiune jurnal de activități</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Site-ul tău a fost restaurat cu succes</string>
     <string name="activity_log_currently_restoring_title">Acum îți restaurăm site-ul</string>
@@ -2869,12 +2903,11 @@ Language: ro
     <string name="connection_service_description">Conectează-te pentru a partaja automat articolele blogului tău pe %s.</string>
     <string name="connected_accounts_label">Conturi conectate</string>
     <string name="connections_description">Conectează-ți serviciile media socială preferate pentru a partaja automat articole noi cu prietenii.</string>
-    <string name="sharing">Partajare</string>
     <string name="tabbar_accessibility_label_notifications">Notificări. Administrează-ți notificările.</string>
     <string name="tabbar_accessibility_label_reader">Cititor. Urmărește conținutul de pe alte site-uri.</string>
     <string name="tabbar_accessibility_label_my_site">Site-ul meu. Vizualizează-ți site-ul și administrează-l, inclusiv statistici.</string>
-    <string name="my_site_btn_sharing">Partajare</string>
     <string name="button_not_now">Nu acum</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="media_error_internal_server_error">Eroare la încărcare. Încearcă să modifici Optimizează imaginile în setările aplicației tale</string>
     <string name="media_downloading">Salvez media pe acest dispozitiv</string>
     <string name="error_media_save">Nu pot salva media</string>

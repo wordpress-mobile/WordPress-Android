@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-26 07:22:53+0000
+Translation-Revision-Date: 2023-08-08 09:40:32+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: pl
 -->
 <resources>
+    <string name="missing_splits_dialog_button">ZAMKNIJ</string>
     <string name="gutenberg_native_insert_video_block">Wstaw blok filmu</string>
     <string name="gutenberg_native_insert_image_block">Wstaw blok obrazka</string>
     <string name="gutenberg_native_insert_gallery_block">Wstaw blok galerii</string>
     <string name="gutenberg_native_insert_audio_block">Wstaw blok audio</string>
-    <string name="blaze_campaign_detail_error">Nie można załadować szczegółów kampanii</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Utwórz</string>
     <string name="campaign_listing_page_no_campaigns_message_description">Nie utworzono żadnej kampanii. Kliknij utwórz, aby rozpocząć.</string>
     <string name="campaign_listing_page_no_campaigns_message_title">Nie masz żadnych kampanii</string>
@@ -629,7 +629,6 @@ Language: pl
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Wszystkie zadania ukończone&lt;/b&gt;&lt;br/&gt;Dotrzesz do większej liczby ludzi. Dobra robota!</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Stuknij dwukrotnie aby otworzyć dolną zakładkę, aby edytować, zamienić lub usunąć obrazek</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Wszystkie zadania ukończone&lt;/b&gt;&lt;br/&gt;Twoja witryna została spersonalizowana. Dobra robota!</string>
-    <string name="quick_start_card_menu_hide">Pomiń na razie</string>
     <string name="magic_link_not_meaning_to_create_account">Nie zamierzałaś/eś tworzyć nowego konta? Cofnij się i wprowadź ponownie swój adres email.</string>
     <string name="invite_links_disable_dialog_message">Po włączeniu tego łącza z zaproszeniem, nie będzie możliwości wykorzystania go do zaproszenia kogoś do zespołu. Czy jesteś pewien/pewna?</string>
     <string name="invite_links_bad_format_response">Otrzymano nieprawidłową odpowiedź</string>
@@ -651,7 +650,6 @@ Language: pl
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Zakończono skanowanie&lt;/b&gt; &lt;br&gt; nie odnaleziono zagrożeń</string>
     <string name="scan_fixing_threats_title_singular">Naprawianie zagrożeń</string>
     <string name="disable">Wyłącz</string>
-    <string name="quick_start_card_menu_unpin">Odepnij to</string>
     <string name="quick_start_list_review_pages_subtitle">Sprawdź swoje strony aby dokonywać zmian, lub dodawać lub usuwać strony.</string>
     <string name="quick_start_list_follow_site_subtitle">Odkrywaj i obserwuj witryny, które ciebie inspirują.</string>
     <string name="quick_start_list_view_site_title">Przejdź do swojej witryny</string>
@@ -737,8 +735,6 @@ Language: pl
     <string name="restore_details_description_with_two_parameters">%1$s %2$s jest wybranym punktem do odzyskania.</string>
     <string name="backup_download_complete_failed_icon_content_description">Chmura z ikoną X</string>
     <string name="web_preview_tablet">Tablet</string>
-    <string name="quick_start_card_menu_remove">Nie pokazuj ponownie</string>
-    <string name="quick_start_card_menu_pin">Przypnij ten element</string>
     <string name="backup_download_complete_failed_title">Nie powiodło się pobieranie</string>
     <string name="web_preview_mobile">Urządzenie przenośne</string>
     <string name="quick_start_dialog_review_pages_title">Przejrzyj strony witryny</string>
@@ -2517,12 +2513,11 @@ Language: pl
     <string name="connection_service_description">Połącz się aby automatycznie udostępniać wpisy blogu w serwisie %s.</string>
     <string name="connected_accounts_label">Konta połączone</string>
     <string name="connections_description">Połącz się ze swoim ulubionym serwisem mediów społecznościowych aby automatycznie udostępniać nowe wpisy swoim znajomym.</string>
-    <string name="sharing">Udostępnianie</string>
     <string name="tabbar_accessibility_label_notifications">Powiadomienia. Zarządzaj powiadomieniami.</string>
     <string name="tabbar_accessibility_label_reader">Czytnik. Śledź treści z innych witryn.</string>
     <string name="tabbar_accessibility_label_my_site">Moja witryna. Zobacz swoją witrynę i zarządzaj ją.</string>
-    <string name="my_site_btn_sharing">Udostępnianie</string>
     <string name="button_not_now">Nie teraz</string>
+    <string name="my_site_btn_sharing">Społecznościowe</string>
     <string name="media_error_internal_server_error">Błąd przesyłania. Spróbuj zmienić opcję optymalizacji obrazków w ustawieniach aplikacji</string>
     <string name="media_downloading">Zapisywanie mediów na to urządzenie</string>
     <string name="error_media_save">Nie można zapisać pliku mediów</string>

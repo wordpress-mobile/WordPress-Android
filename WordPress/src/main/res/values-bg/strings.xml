@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2018-12-10 19:56:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: bg
 -->
 <resources>
@@ -188,8 +188,6 @@ Language: bg
     <string name="share_btn_connect">Свързване</string>
     <string name="share_btn_disconnect">Изключване на връзката</string>
     <string name="share_btn_reconnect">Повторен опит за свързване</string>
-    <string name="sharing">Споделяне</string>
-    <string name="my_site_btn_sharing">Споделяне</string>
     <string name="button_not_now">Не сега</string>
     <string name="media_downloading">Запазване на медийни файлове на това устройство</string>
     <string name="editor_draft_saved_locally">Черновата е запазена на устройството</string>

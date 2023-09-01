@@ -85,7 +85,11 @@ class EditorJetpackSocialViewModel @Inject constructor(
         this.siteModel = siteModel
         this.editPostRepository = editPostRepository
 
-        if (jetpackSocialFeatureConfig.isEnabled() && !editPostRepository.isPage) {
+        startJetpackSocial()
+    }
+
+    private fun startJetpackSocial() {
+        if (shouldShowJetpackSocial()) {
             launch {
                 shareLimit = getJetpackSocialShareLimitStatusUseCase.execute(siteModel)
                 loadConnections()
@@ -164,8 +168,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
     }
 
     private suspend fun loadJetpackSocialIfSupported() {
-        val showJetpackSocial = jetpackSocialFeatureConfig.isEnabled() && siteModel.supportsPublicize()
-        if (!showJetpackSocial) {
+        if (!shouldShowJetpackSocial()) {
             _jetpackSocialContainerVisibility.postValue(JetpackSocialContainerVisibility.ALL_HIDDEN)
             return
         }
@@ -186,6 +189,11 @@ class EditorJetpackSocialViewModel @Inject constructor(
             _jetpackSocialUiState.postValue(mapLoaded())
         }
     }
+
+    private fun shouldShowJetpackSocial() = jetpackSocialFeatureConfig.isEnabled()
+            && !editPostRepository.isPage
+            && siteModel.supportsPublicize()
+            && currentPost?.status != PostStatus.PRIVATE.toString()
 
     private suspend fun mapLoaded(): JetpackSocialUiState.Loaded {
         val shareMessage = jetpackSocialShareMessage.ifEmpty {
@@ -381,6 +389,10 @@ class EditorJetpackSocialViewModel @Inject constructor(
         }
 
         if (trackEvent) jetpackSocialSharingTracker.trackAddConnectionCtaDisplayed(jetpackSocialFlow)
+    }
+
+    fun onPostStatusChanged() {
+        startJetpackSocial()
     }
 
     data class JetpackSocialContainerVisibility(

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-09-28 09:53:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: en_AU
 -->
 <resources>
@@ -1033,11 +1033,9 @@ Language: en_AU
     <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
     <string name="connected_accounts_label">Connected accounts</string>
     <string name="connections_description">Connect your favourite social media services to automatically share new posts with friends.</string>
-    <string name="sharing">Sharing</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
-    <string name="my_site_btn_sharing">Sharing</string>
     <string name="button_not_now">Not now</string>
     <string name="media_error_internal_server_error">Upload error. Try changing Optimise Images in your app\'s settings</string>
     <string name="media_downloading">Saving media to this device</string>

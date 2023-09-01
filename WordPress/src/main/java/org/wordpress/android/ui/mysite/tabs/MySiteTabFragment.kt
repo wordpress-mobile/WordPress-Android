@@ -50,12 +50,9 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemDecoration
 import org.wordpress.android.ui.mysite.MySiteViewModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.MySiteTrackWithTabSource
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
@@ -153,7 +150,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
-    private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var mySiteTabType: MySiteTabType
 
@@ -189,8 +185,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         viewModel = ViewModelProvider(requireParentFragment(), viewModelFactory).get(MySiteViewModel::class.java)
         dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
             .get(BasicDialogViewModel::class.java)
-        dynamicCardMenuViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-            .get(DynamicCardMenuViewModel::class.java)
     }
 
     private fun initTabType() {
@@ -284,14 +278,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             inputDialog.setTargetFragment(this@MySiteTabFragment, 0)
             inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
         })
-        viewModel.onDynamicCardMenuShown.observeEvent(viewLifecycleOwner, { dynamicCardMenuModel ->
-            ((parentFragmentManager.findFragmentByTag(dynamicCardMenuModel.id) as? DynamicCardMenuFragment)
-                ?: DynamicCardMenuFragment.newInstance(
-                    dynamicCardMenuModel.cardType,
-                    dynamicCardMenuModel.isPinned
-                ))
-                .show(parentFragmentManager, dynamicCardMenuModel.id)
-        })
         viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
         viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner, { showSnackbar(it) })
         viewModel.onQuickStartMySitePrompts.observeEvent(viewLifecycleOwner, { activeTutorialPrompt ->
@@ -304,9 +290,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         })
         viewModel.onMediaUpload.observeEvent(viewLifecycleOwner, { UploadService.uploadMedia(requireActivity(), it) })
         dialogViewModel.onInteraction.observeEvent(viewLifecycleOwner, { viewModel.onDialogInteraction(it) })
-        dynamicCardMenuViewModel.onInteraction.observeEvent(viewLifecycleOwner, { interaction ->
-            viewModel.onQuickStartMenuInteraction(interaction)
-        })
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
         viewModel.onShareBloggingPrompt.observeEvent(viewLifecycleOwner) { shareMessage(it) }
         viewModel.onAnswerBloggingPrompt.observeEvent(viewLifecycleOwner) {
@@ -444,15 +427,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
         is SiteNavigationAction.OpenScheduledPosts ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
-        is SiteNavigationAction.OpenEditorToCreateNewPost ->
-            ActivityLauncher.addNewPostForResult(
-                requireActivity(),
-                action.site,
-                false,
-                PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
-                -1,
-                null
-            )
         // The below navigation is temporary and as such not utilizing the 'action.postId' in order to navigate to the
         // 'Edit Post' screen. Instead, it fallbacks to navigating to the 'Posts' screen and targeting a specific tab.
         is SiteNavigationAction.EditDraftPost ->
@@ -670,7 +644,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                         data.getBooleanExtra(LoginEpilogueActivity.KEY_SITE_CREATED_FROM_LOGIN_EPILOGUE, false)
                 viewModel.onCreateSiteResult()
                 viewModel.performFirstStepAfterSiteCreation(
-                    data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
                     data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                     isNewSite = isNewSite
                 )
@@ -679,7 +652,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                     viewModel.onCreateSiteResult()
                     viewModel.performFirstStepAfterSiteCreation(
-                        data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
                         data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                         isNewSite = true
                     )
@@ -689,7 +661,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             }
             RequestCodes.EDIT_LANDING_PAGE -> {
                 viewModel.checkAndStartQuickStart(
-                    data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
                     data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                     isNewSite = data.getBooleanExtra(EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false)
                 )

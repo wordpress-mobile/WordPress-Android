@@ -153,7 +153,7 @@ android {
         buildConfigField "boolean", "DASHBOARD_CARD_FREE_TO_PAID_PLANS", "false"
         buildConfigField "boolean", "SITE_EDITOR_MVP", "false"
         buildConfigField "boolean", "JETPACK_SOCIAL", "false"
-        buildConfigField "boolean", "CONTACT_SUPPORT", "false"
+        buildConfigField "boolean", "CONTACT_SUPPORT_CHATBOT", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -169,6 +169,7 @@ android {
         buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
         buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
         buildConfigField "boolean", "BLAZE_MANAGE_CAMPAIGNS", "false"
+        buildConfigField "boolean", "DASHBOARD_PERSONALIZATION", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -218,7 +219,7 @@ android {
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
             buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "false"
-            buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "true"
+            buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
 
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
 

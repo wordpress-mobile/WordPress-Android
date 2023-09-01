@@ -1,0 +1,51 @@
+.docsbot-chat-header,
+.mobile-close-button,
+a.floating-button {
+    display: none !important;
+}
+
+.docsbot-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    max-height: none !important;
+}
+
+.docsbot-chat-input-form {
+    margin-bottom: 0px;
+}
+
+.docsbot-chat-bot-message {
+    font-size: 16px;
+}
+
+.docsbot-user-chat-message {
+    font-size: 16px;
+}
+
+.docsbot-chat-suggested-questions-container span {
+    font-size: 16px;
+}
+
+.docsbot-chat-suggested-questions-container button {
+    height: 48px;
+    font-size: 16px;
+}
+
+.docsbot-chat-bot-message-meta {
+    margin-top: 16px;
+}
+
+.docsbot-chat-input {
+    height: 48px !important;
+    font-size: 16px !important;
+}
+
+.docsbot-chat-bot-message-support a {
+    height: 48px;
+    font-size: 16px;
+}

@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-26 12:54:08+0000
+Translation-Revision-Date: 2023-08-23 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: nl
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_start">Transcriptie Jetpack Mobile Bot:</string>
+    <string name="contact_support_bot_ticket_error">Fout bij het indienen van het ondersteuningsticket</string>
+    <string name="contact_support_bot_ticket_message">Ticket aangemaakt</string>
+    <string name="contact_support_bot_ticket_loading">Een ondersteuningsticket aanmaken …</string>
+    <string name="contact_support_question_six">Hoe kan ik mijn aangepaste domein gebruiken in de app?</string>
+    <string name="contact_support_question_five">Ik ben mijn inloggegevens vergeten</string>
+    <string name="contact_support_question_two">Help, mijn site is onbereikbaar!</string>
+    <string name="contact_support_question_one">Wat is mijn siteadres?</string>
+    <string name="contact_support_suggestions">Weet je niet wat je moet vragen?</string>
+    <string name="contact_support_get_support">Neem contact op met support</string>
+    <string name="contact_support_first_message">Waarmee kunnen we je helpen?</string>
+    <string name="contact_support_input_placeholder">Verstuur een bericht …</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d keer delen op social media resterend</string>
+    <string name="missing_splits_dialog_message">Er ontbreken vereiste onderdelen in de WordPress-app en deze moeten opnieuw worden geïnstalleerd vanuit de Google Play Store.</string>
+    <string name="campaign_detail_error_title">Er is iets fout gegaan</string>
+    <string name="campaign_listing_page_error_title">Er is iets fout gegaan</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Er is iets fout gegaan, er kunnen geen campagnes worden opgehaald</string>
+    <string name="domain_transfer_card_menu_hide_this">Dit verbergen</string>
+    <string name="domain_transfer_card_cta">Je domeinen overdragen</string>
+    <string name="domain_transfer_card_caption">Zoals je misschien weet is Google Domains verkocht aan Squarespace. Draag nu je domeinen over aan WordPress.com, en we betalen alle overdrachtskosten plus een extra jaar van je domeinregistratie.</string>
+    <string name="domain_transfer_card_sub_title">Je Google-domeinen opnieuw opeisen</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Accounts koppelen</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Delen op social media</string>
+    <string name="prepublishing_nudges_social_action">Delen op social media</string>
+    <string name="sharing">Social</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Niet delen naar social media</string>
+    <string name="post_settings_jetpack_social_share_message_description">Pas het bericht dat je wilt delen aan. Als je hier geen eigen tekst toevoegt, gebruiken we de titel als het bericht.</string>
+    <string name="post_settings_jetpack_social_share_message_title">Het bericht aanpassen</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Accounts koppelen</string>
     <string name="gutenberg_native_insert_image_block">Afbeeldingblok invoegen</string>
     <string name="gutenberg_native_insert_audio_block">Audioblok invoegen</string>
-    <string name="blaze_campaign_detail_error">Campagnedetails kunnen niet worden geladen</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Aanmaken</string>
     <string name="campaign_listing_page_no_campaigns_message_description">Je hebt nog geen campagnes aangemaakt. Klik op Aanmaken om te beginnen.</string>
     <string name="blaze_campaigns_page_title">Blaze-campagnes</string>
@@ -18,13 +46,11 @@ Language: nl
     <string name="blaze_campaigns_card_footer_label">Campagne aanmaken</string>
     <string name="blaze_campaigns_card_title">Blaze-campagne</string>
     <string name="promote_blaze_flow_error">De blaze-promotieflow kan niet worden geladen</string>
-    <string name="prepublishing_nudges_social_new_connection_cta">Koppel je social media-profielen</string>
     <string name="prepublishing_nudges_social_new_connection_text">Krijg meer bezoekers door je berichten automatisch te delen met je vrienden op social media.</string>
     <string name="menu_redo_context">Laatste wijziging opnieuw uitvoeren</string>
     <string name="menu_undo_context">Laatste wijziging ongedaan maken</string>
-    <string name="jetpack_social_social_shares_remaining">%1$d keer delen op social media resterend</string>
+    <string name="jetpack_social_social_shares_remaining_one">1 keer delen op social media resterend</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">Neem een abonnement om meer te delen</string>
-    <string name="post_settings_jetpack_social_connect_social_profiles_button">Koppel je social media-profielen</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Krijg meer bezoekers door je berichten automatisch te delen met je vrienden op social media.</string>
     <string name="post_settings_jetpack_social_header">Delen via social media</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Bewerken van gesynchroniseerde patronen wordt momenteel niet ondersteund door %s voor iOS</string>
@@ -947,7 +973,6 @@ Language: nl
     <string name="new_site_creation_search_domain_input_hint">Typ een naam voor je site</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Alle taken zijn afgerond&lt;/b&gt;&lt;br/&gt; Je bereikt meer mensen. Goed werk!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Alle taken zijn afgerond&lt;/b&gt;&lt;br/&gt; Je hebt je site aangepast. Goed gedaan!</string>
-    <string name="quick_start_card_menu_hide">Verberg voor nu</string>
     <string name="magic_link_not_meaning_to_create_account">Wilde je geen nieuw account aanmaken? Ga terug om je e-mailadres opnieuw in te voeren.</string>
     <string name="invite_links_disable_dialog_message">Zodra deze uitnodigingslink is uitgeschakeld, kan niemand deze gebruiken om lid te worden van je team. Weet je het zeker?</string>
     <string name="invite_links_disable_dialog_title">Schakel uitnodigingslink uit</string>
@@ -970,7 +995,6 @@ Language: nl
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan afgerond&lt;/b&gt;&lt;br&gt;Geen bedreigingen gevonden</string>
     <string name="scan_fixing_threats_title_singular">Bedreiging oplossen</string>
     <string name="disable">Uitschakelen</string>
-    <string name="quick_start_card_menu_unpin">Losmaken</string>
     <string name="quick_start_list_review_pages_subtitle">Controleer je pagina\'s en maak wijzigingen, of voeg pagina\'s toe of verwijder ze.</string>
     <string name="quick_start_list_view_site_title">Je site bekijken</string>
     <string name="quick_start_list_follow_site_subtitle">Ontdek en volg sites die je inspireren.</string>
@@ -1066,8 +1090,6 @@ Language: nl
     <string name="backup_download_complete_failed_title">Download mislukt</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Mobiel</string>
-    <string name="quick_start_card_menu_remove">Niet opnieuw tonen</string>
-    <string name="quick_start_card_menu_pin">Pin dit</string>
     <string name="quick_start_dialog_review_pages_message_short">Selecteer %1$s Pagina\'s %2$s om je paginalijst te zien.</string>
     <string name="quick_start_dialog_review_pages_message">Verander, voeg toe, of verwijder pagina\'s van je site.</string>
     <string name="quick_start_dialog_review_pages_title">Beoordeel site pagina\'s</string>
@@ -2857,11 +2879,10 @@ Language: nl
     <string name="connection_service_description">Maak verbinding om je blogberichten automatisch te delen met %s.</string>
     <string name="connected_accounts_label">Verbonden accounts</string>
     <string name="connections_description">Koppel je favoriete social media-services om nieuwe berichten automatisch met vrienden te delen.</string>
-    <string name="sharing">Delen</string>
     <string name="tabbar_accessibility_label_notifications">Meldingen. Beheer je meldingen.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Inhoud van andere sites volgen.</string>
     <string name="tabbar_accessibility_label_my_site">Mijn site. Je site bekijken en beheren, inclusief statistieken.</string>
-    <string name="my_site_btn_sharing">Delen</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="button_not_now">Niet nu</string>
     <string name="media_error_internal_server_error">Uploadfout. Probeer \"Afbeeldingen optimaliseren\" in te schakelen via de instellingen van je app</string>
     <string name="media_downloading">Media op dit apparaat opslaan</string>

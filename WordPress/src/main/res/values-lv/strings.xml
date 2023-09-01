@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-10 20:24:08+0000
+Translation-Revision-Date: 2023-08-07 03:19:13+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: lv
 -->
 <resources>
+    <string name="menu_undo_context">Atcelt pēdējās izmaiņas</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Abonēt, lai kopīgotu vairāk</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Palieliniet datplūsmu, automātiski kopīgojot savus ziņojumus ar draugiem sociālajos tīklos.</string>
     <string name="gutenberg_native_s_detached">%s atdalīts</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Sinhronizēto modeļu rediģēšana programmā %s iOS ierīcē vēl netiek atbalstīta.</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Sinhronizēto modeļu rediģēšana programmā %s Android ierīcē vēl netiek atbalstīta.</string>
@@ -927,7 +930,6 @@ Language: lv
     <string name="new_site_creation_search_domain_input_hint">Ievadiet savas vietnes nosaukumu</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Visi uzdevumi izpildīti&lt;/b&gt; &lt;br/&gt;Jūs sasniegsiet vairāk cilvēku. Jauks darbs!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Visi uzdevumi izpildīti&lt;/b&gt; &lt;br/&gt;Jūs esat pielāgojis savu vietni. Paveikts labi!</string>
-    <string name="quick_start_card_menu_hide">Pagaidām paslēpt</string>
     <string name="magic_link_not_meaning_to_create_account">Vai nedomājāt izveidot jaunu kontu? Atgriezieties atpakaļ, lai atkārtoti ievadītu savu e-pasta adresi.</string>
     <string name="invite_links_disable_dialog_message">Kad šī ielūguma saite būs atspējota, neviens to nevarēs izmantot, lai pievienotos jūsu komandai. Vai esat pārliecināts?</string>
     <string name="invite_links_disable_dialog_title">Atspējot uzaicinājuma saiti</string>
@@ -950,7 +952,6 @@ Language: lv
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Skenēšana pabeigta&lt;/b&gt; &lt;br&gt; Draudi nav atrasti</string>
     <string name="scan_fixing_threats_title_singular">Draudu novēršana</string>
     <string name="disable">Atspējot</string>
-    <string name="quick_start_card_menu_unpin">Atspraudiet to</string>
     <string name="quick_start_list_review_pages_subtitle">Pārbaudiet savas lapas un veiciet izmaiņas, vai pievienojiet vai noņemiet lapas.</string>
     <string name="quick_start_list_view_site_title">Apmeklējiet savu vietni</string>
     <string name="quick_start_list_follow_site_subtitle">Atklājiet un sekojiet vietnēm, kas jūs iedvesmo.</string>
@@ -1046,8 +1047,6 @@ Language: lv
     <string name="backup_download_complete_failed_title">Neizdevās lejupielādēt</string>
     <string name="web_preview_tablet">Planšetdators</string>
     <string name="web_preview_mobile">Mobilais</string>
-    <string name="quick_start_card_menu_remove">Vairs nerādīt </string>
-    <string name="quick_start_card_menu_pin">Piespraudiet šo</string>
     <string name="quick_start_dialog_review_pages_message_short">Atlasiet %1$s Pages %2$s, lai redzētu savu lapu sarakstu.</string>
     <string name="quick_start_dialog_review_pages_message">Mainiet, pievienojiet vai noņemiet savas vietnes lapas.</string>
     <string name="quick_start_dialog_review_pages_title">Pārskatiet vietnes lapas</string>
@@ -2749,7 +2748,7 @@ Language: lv
     <string name="error_media_parse_error">Negaidīta atbilde no servera</string>
     <string name="upload_finished_toast">Nevar apturēt augšupielādi, jo tā jau ir pabeigta</string>
     <string name="post_title">Virsraksts</string>
-    <string name="menu_redo">Pārtaisīt</string>
+    <string name="menu_redo">Atkārtot</string>
     <string name="menu_undo">Atsaukt</string>
     <string name="media_insert_unimplemented">Atvainojiet! Funkcija vēl nav ieviesta :(</string>
     <string name="error_media_small">Multivide ir pārāk maza, lai to parādītu</string>
@@ -2837,11 +2836,9 @@ Language: lv
     <string name="connection_service_description">Izveidojiet savienojumu, lai automātiski kopīgotu savus emuāra ziņojumus ar %s.</string>
     <string name="connected_accounts_label">Saistītie konti</string>
     <string name="connections_description">Pievienojiet savus iecienītos sociālo mediju pakalpojumus, lai automātiski kopīgotu jaunus ierakstus ar draugiem.</string>
-    <string name="sharing">Dalīšanās</string>
     <string name="tabbar_accessibility_label_notifications">Paziņojumi. Pārvaldiet savus paziņojumus.</string>
     <string name="tabbar_accessibility_label_reader">Lasītājs. Sekojiet citu vietņu saturam.</string>
     <string name="tabbar_accessibility_label_my_site">Mana vietne. Skatiet savu vietni un pārvaldiet to, ieskaitot statistiku.</string>
-    <string name="my_site_btn_sharing">Dalīšanās</string>
     <string name="button_not_now">Ne tagad</string>
     <string name="media_error_internal_server_error">Augšupielādes kļūda. Mēģiniet lietotnes iestatījumos mainīt attēlu optimizēšanu</string>
     <string name="media_downloading">Notiek multivides saglabāšana šajā ierīcē</string>

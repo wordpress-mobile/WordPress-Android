@@ -189,7 +189,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     @Inject ImageManager mImageManager;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);

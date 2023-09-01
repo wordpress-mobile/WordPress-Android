@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-07-25 02:40:35+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: sr_RS
 -->
 <resources>
@@ -97,7 +97,6 @@ Language: sr_RS
     <string name="threat_fix_all_status_success_message_plural">Претње су успешно исправљене.</string>
     <string name="threat_fix_all_confirmation_message_plural">Молимо потврдите да желите да исправите свих %s активних претњи.</string>
     <string name="scan_idle_threats_description_plural">Скенирањем је пронађено %1$s потенцијалних претњи са %2$s. Молимо прегледајте их и примените радњу или притисните дугме за поправку свих. Ми смо %3$s ако смо Вам потребни.</string>
-    <string name="quick_start_card_menu_hide">Сакриј за сада</string>
     <string name="quick_start_list_follow_site_subtitle">Откријте и пратите веб места која Вас инспиришу.</string>
     <string name="quick_start_list_enable_sharing_title">Дељење на друштвеним мрежама</string>
     <string name="quick_start_list_view_site_title">Видите своје веб место</string>
@@ -134,7 +133,6 @@ Language: sr_RS
     <string name="backup_download_complete_failed_title">Неуспело преузимање</string>
     <string name="web_preview_tablet">Таблет</string>
     <string name="web_preview_mobile">Мобилни</string>
-    <string name="quick_start_card_menu_remove">Не приказуј поново</string>
     <string name="reader_menu_mark_as_unseen">Означи као непрегледано</string>
     <string name="reader_menu_mark_as_seen">Означи као прегледано</string>
     <string name="scan_history_all_threats_tab">Све</string>
@@ -1393,10 +1391,8 @@ Language: sr_RS
     <string name="share_btn_disconnect">Прекини повезаност</string>
     <string name="share_btn_connect">Повежи</string>
     <string name="connected_accounts_label">Повезани налози</string>
-    <string name="sharing">Дељење</string>
     <string name="tabbar_accessibility_label_notifications">Обавештења. Управљајте обавештењима.</string>
     <string name="tabbar_accessibility_label_reader">Читач. Прати садржај са других веб места.</string>
-    <string name="my_site_btn_sharing">Дељење</string>
     <string name="button_not_now">Не сада</string>
     <string name="editor_draft_saved_locally">Нацрт сачуван на уређају</string>
     <string name="editor_draft_saved_online">Нацрт сачуван онлајн</string>

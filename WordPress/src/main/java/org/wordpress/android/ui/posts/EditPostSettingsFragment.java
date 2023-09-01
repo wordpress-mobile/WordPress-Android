@@ -180,7 +180,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         mDispatcher.register(this);
@@ -938,6 +938,7 @@ public class EditPostSettingsFragment extends Fragment {
                     postImmutableModel -> {
                         updatePostStatusRelatedViews(postImmutableModel);
                         updateSaveButton();
+                        mJetpackSocialViewModel.onPostStatusChanged();
                         return null;
                     });
         }

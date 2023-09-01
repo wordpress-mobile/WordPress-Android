@@ -120,7 +120,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private static final String TRACK_ENABLED = "enabled";
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
         mDispatcher.register(this);

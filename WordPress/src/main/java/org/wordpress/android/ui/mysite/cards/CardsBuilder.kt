@@ -15,12 +15,10 @@ import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonBui
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import javax.inject.Inject
 
 class CardsBuilder @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val quickActionsCardBuilder: QuickActionsCardBuilder,
     private val quickStartCardBuilder: QuickStartCardBuilder,
     private val quickLinkRibbonBuilder: QuickLinkRibbonBuilder,
@@ -50,10 +48,8 @@ class CardsBuilder @Inject constructor(
         if (domainRegistrationCardBuilderParams.isDomainCreditAvailable) {
             cards.add(trackAndBuildDomainRegistrationCard(domainRegistrationCardBuilderParams))
         }
-        if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
-            quickStartCardBuilderParams.quickStartCategories.takeIf { it.isNotEmpty() }?.let {
-                cards.add(quickStartCardBuilder.build(quickStartCardBuilderParams))
-            }
+        quickStartCardBuilderParams.quickStartCategories.takeIf { it.isNotEmpty() }?.let {
+            cards.add(quickStartCardBuilder.build(quickStartCardBuilderParams))
         }
         cards.add(dashboardCardsBuilder.build(dashboardCardsBuilderParams))
         return cards

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-05-25 15:33:48+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: pt_BR
 -->
 <resources>
@@ -888,7 +888,6 @@ Language: pt_BR
     <string name="new_site_creation_search_domain_input_hint">Digite um nome para o seu site</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Todas as tarefas foram concluídas&lt;/b&gt;&lt;br/&gt;Você alcançará mais pessoas. Bom trabalho!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Todas as tarefas foram concluídas&lt;/b&gt;&lt;br/&gt;Você personalizou seu site. Bom trabalho!</string>
-    <string name="quick_start_card_menu_hide">Ocultar por enquanto</string>
     <string name="magic_link_not_meaning_to_create_account">Não queria criar uma conta nova? Volte para reinserir seu endereço de e-mail.</string>
     <string name="invite_links_disable_dialog_message">Assim que esse link de convite for desativado, ninguém poderá usá-lo para ingressar em sua equipe. Você tem certeza?</string>
     <string name="invite_links_disable_dialog_title">Desativar link de convite</string>
@@ -911,7 +910,6 @@ Language: pt_BR
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Varredura concluída&lt;/b&gt; &lt;br&gt; Nenhuma ameaça encontrada</string>
     <string name="scan_fixing_threats_title_singular">Corrigindo ameaça</string>
     <string name="disable">Desativar</string>
-    <string name="quick_start_card_menu_unpin">Desafixar isso</string>
     <string name="quick_start_list_review_pages_subtitle">Verifique suas páginas e faça alterações ou adicione e remova páginas.</string>
     <string name="quick_start_list_view_site_title">Veja seu site</string>
     <string name="quick_start_list_follow_site_subtitle">Descubra e siga sites que te inspiram.</string>
@@ -1007,8 +1005,6 @@ Language: pt_BR
     <string name="backup_download_complete_failed_title">Falha no download</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Dispositivo móvel</string>
-    <string name="quick_start_card_menu_remove">Não mostrar novamente</string>
-    <string name="quick_start_card_menu_pin">Fixar isso</string>
     <string name="quick_start_dialog_review_pages_message_short">Selecione %1$s Páginas %2$s para exibir sua lista de páginas.</string>
     <string name="quick_start_dialog_review_pages_message">Altere, adicione ou remova as páginas do seu site.</string>
     <string name="quick_start_dialog_review_pages_title">Revise as páginas do site</string>
@@ -2797,11 +2793,9 @@ Language: pt_BR
     <string name="connection_service_description">Conectar para compartilhar automaticamente os posts do seu blog em %s.</string>
     <string name="connected_accounts_label">Contas conectadas</string>
     <string name="connections_description">Conecte seus serviços de mídias sociais para automaticamente compartilhar novos posts com seus amigos.</string>
-    <string name="sharing">Compartilhamento</string>
     <string name="tabbar_accessibility_label_notifications">Notificações. Gerencie suas notificações.</string>
     <string name="tabbar_accessibility_label_reader">Leitor. Siga conteúdo de outros sites.</string>
     <string name="tabbar_accessibility_label_my_site">Meu site. Veja e gerencie seu site, incluindo estatísticas.</string>
-    <string name="my_site_btn_sharing">Compartilhar</string>
     <string name="button_not_now">Não agora</string>
     <string name="media_error_internal_server_error">Erro no upload. Tente alterar Otimizar imagens nas configurações do seu aplicativo</string>
     <string name="media_downloading">Salvando mídia neste dispositivo</string>

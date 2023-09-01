@@ -16,7 +16,9 @@ import org.wordpress.android.R
 import org.wordpress.android.datasets.wrappers.PublicizeTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.AccountModel
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.PublicizeConnection
@@ -112,6 +114,27 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
     fun `Should NOT load jetpack social if FF is disabled`() = test {
         whenever(jetpackSocialFeatureConfig.isEnabled())
             .thenReturn(false)
+        classToTest.start(FAKE_SITE_MODEL, editPostRepository)
+        verify(getPublicizeConnectionsForUserUseCase, never()).execute(any(), any(), any())
+    }
+
+    @Test
+    fun `Should NOT load jetpack social if post is page`() = test {
+        whenever(jetpackSocialFeatureConfig.isEnabled())
+            .thenReturn(true)
+        whenever(editPostRepository.isPage).thenReturn(true)
+        classToTest.start(FAKE_SITE_MODEL, editPostRepository)
+        verify(getPublicizeConnectionsForUserUseCase, never()).execute(any(), any(), any())
+    }
+
+    @Test
+    fun `Should NOT load jetpack social if PostStatus is PRIVATE`() = test {
+        whenever(jetpackSocialFeatureConfig.isEnabled())
+            .thenReturn(true)
+        whenever(editPostRepository.isPage).thenReturn(false)
+        whenever(editPostRepository.getPost()).thenReturn(PostModel().apply {
+            setStatus(PostStatus.PRIVATE.toString())
+        })
         classToTest.start(FAKE_SITE_MODEL, editPostRepository)
         verify(getPublicizeConnectionsForUserUseCase, never()).execute(any(), any(), any())
     }
@@ -523,6 +546,12 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
 
         classToTest.onJetpackSocialConnectionClick(mock(), false, JetpackSocialFlow.PRE_PUBLISHING)
         verify(jetpackSocialSharingTracker).trackConnectionToggled(JetpackSocialFlow.PRE_PUBLISHING, false)
+    }
+
+    @Test
+    fun `Should start jetpack social if onPostVisibilityChanged is called`() {
+        classToTest.onPostStatusChanged()
+        verify(showJetpackSocialContainerObserver).onChanged(any())
     }
 
     private fun fakeSiteModel(supportsPublicize: Boolean = false): SiteModel = FAKE_SITE_MODEL.apply {

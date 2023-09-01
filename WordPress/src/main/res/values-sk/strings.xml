@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-04-09 10:22:41+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: sk
 -->
 <resources>
@@ -778,11 +778,9 @@ Language: sk
     <string name="connection_service_description">Pripojiť a automaticky zdieľať články blogu na %s.</string>
     <string name="connected_accounts_label">Pripojené účty</string>
     <string name="connections_description">Pripojiť obľúbené služby sociálnych médií a automaticky zdieľať nové články s priateľmi.</string>
-    <string name="sharing">Zdieľanie</string>
     <string name="tabbar_accessibility_label_notifications">Upozornenia. Upraviť upozornenia.</string>
     <string name="tabbar_accessibility_label_reader">Čitateľ. Nasledovať obsah z ostatných webový stránok.</string>
     <string name="tabbar_accessibility_label_my_site">Moja webová stránka. Zobraziť moju webovú stránku a spravovať ju, vrátane štatistky.</string>
-    <string name="my_site_btn_sharing">Zdieľanie</string>
     <string name="button_not_now">Teraz nie</string>
     <string name="media_error_internal_server_error">Nahraná chyba. Skúste zmeniť Optimalizovať Obrázky v nastaveniach aplikácie.</string>
     <string name="media_downloading">Ukladanie médií na toto zariadenie</string>

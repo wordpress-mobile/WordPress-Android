@@ -15,7 +15,6 @@
 
     <!-- Dangerous permissions, access must be requested at runtime -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- Required for storing and retrieving screenshots, taking photos, accessing media files -->
@@ -741,7 +740,9 @@
 
         <activity
             android:name=".support.SupportWebViewActivity"
-            android:theme="@style/WordPress.NoActionBar"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/WordPress.NoActionBar"
+            tools:ignore="LockedOrientationActivity"/>
 
         <!-- Lib activities-->
         <activity

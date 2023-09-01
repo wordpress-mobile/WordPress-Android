@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-03 16:54:08+0000
+Translation-Revision-Date: 2023-08-23 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: ko_KR
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">답변:</string>
+    <string name="contact_support_bot_ticket_comment_question">질문:</string>
+    <string name="contact_support_bot_ticket_comment_start">젯팩 모바일 봇 대본:</string>
+    <string name="contact_support_bot_ticket_error">지원 티켓 제출 중 오류 발생</string>
+    <string name="contact_support_bot_ticket_message">티켓 생성됨</string>
+    <string name="contact_support_bot_ticket_loading">지원 티켓 생성 중…</string>
+    <string name="contact_support_question_six">앱에서 사용자 정의 도메인을 사용하려면 어떻게 해야 하나요?</string>
+    <string name="contact_support_question_five">로그인 정보가 기억나지 않습니다.</string>
+    <string name="contact_support_question_four">로그인할 수 없는 이유가 무엇인가요?</string>
+    <string name="contact_support_question_three">사진/비디오를 업로드할 수 없습니다.</string>
+    <string name="contact_support_question_two">내 사이트가 중단되었습니다.</string>
+    <string name="contact_support_question_one">내 사이트 주소가 무엇인가요?</string>
+    <string name="contact_support_suggestions">어떤 질문을 해야 할지 잘 모르시겠나요?</string>
+    <string name="contact_support_get_support">지원팀에 문의</string>
+    <string name="contact_support_first_message">무엇을 도와 드릴까요?</string>
+    <string name="contact_support_input_placeholder">메시지 보내기…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">지우기</string>
+    <string name="jetpack_social_social_shares_remaining">소셜 공유 %1$d회 남음</string>
+    <string name="missing_splits_dialog_button">닫기</string>
+    <string name="missing_splits_dialog_message">필수 구성 요소가 워드프레스 앱에 없습니다. Google Play 스토어에서 다시 설치해야 합니다.</string>
+    <string name="missing_splits_dialog_title">설치 실패</string>
+    <string name="campaign_detail_error_title">문제가 발생했습니다.</string>
+    <string name="campaign_listing_page_error_title">문제가 발생했습니다.</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> 문제가 발생했습니다. 캠페인을 가져올 수 없습니다.</string>
+    <string name="domain_transfer_card_menu_hide_this">숨기기</string>
+    <string name="domain_transfer_card_cta">도메인 이전</string>
+    <string name="domain_transfer_card_caption">아시다시피 Google 도메인이 Squarespace에 매각되었습니다. 지금 도메인을 워드프레스닷컴으로 이전하면 모든 이전 수수료와 도메인 1년 추가 등록을 결제해 드립니다.</string>
+    <string name="domain_transfer_card_sub_title">Google 도메인 되찾기</string>
+    <string name="domain_transfer_card_title">뉴스</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">계정 연결</string>
+    <string name="prepublishing_nudges_toolbar_title_social">소셜 공유</string>
+    <string name="prepublishing_nudges_social_action">소셜 공유</string>
+    <string name="sharing">소셜</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">%1$d개 계정과 공유 중</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">%1$d/%2$d개 계정과 공유 중</string>
+    <string name="jetpack_social_social_shares_title_single_account">%1$s에 공유 중</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">소셜 계정과 공유 안 함</string>
+    <string name="post_settings_jetpack_social_share_message_description">공유할 메시지를 사용자 정의합니다. 여기에 텍스트를 추가하지 않으면 글의 제목이 메시지로 사용됩니다.</string>
+    <string name="post_settings_jetpack_social_share_message_title">메시지 사용자 정의</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">지금 안 함</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">계정 연결</string>
     <string name="gutenberg_native_insert_video_block">비디오 블록 삽입</string>
     <string name="gutenberg_native_insert_image_block">이미지 블록 삽입</string>
     <string name="gutenberg_native_insert_gallery_block">갤러리 블록 삽입</string>
     <string name="gutenberg_native_insert_audio_block">오디오 블록 삽입</string>
-    <string name="blaze_campaign_detail_error">캠페인 상세 정보를 로드할 수 없습니다.</string>
     <string name="campaign_listing_page_no_campaigns_button_text">생성</string>
     <string name="campaign_listing_page_no_campaigns_message_description">아직 캠페인을 생성하지 않았습니다. 시작하려면 생성을 클릭하세요.</string>
     <string name="campaign_listing_page_no_campaigns_message_title">캠페인이 없습니다.</string>
@@ -28,14 +68,12 @@ Language: ko_KR
     <string name="blaze_campaigns_card_footer_label">캠페인 생성</string>
     <string name="blaze_campaigns_card_title">Blaze 캠페인</string>
     <string name="promote_blaze_flow_error">Blaze 홍보 절차를 로드할 수 없습니다.</string>
-    <string name="prepublishing_nudges_social_new_connection_cta">소셜 프로필 연결</string>
     <string name="prepublishing_nudges_social_new_connection_text">소셜 미디어에서 글을 친구와 자동으로 공유하여 트래픽을 늘려보세요.</string>
     <string name="menu_close_editor">편집기 닫기</string>
     <string name="menu_redo_context">마지막 변경 다시 실행</string>
     <string name="menu_undo_context">마지막 변경 실행 취소</string>
-    <string name="jetpack_social_social_shares_remaining">소셜 공유 %1$d회 남음</string>
+    <string name="jetpack_social_social_shares_remaining_one">소셜 공유 1회 남음</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">구독 후 더 공유</string>
-    <string name="post_settings_jetpack_social_connect_social_profiles_button">소셜 프로필 연결</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">소셜 미디어에서 글을 친구와 자동으로 공유하여 트래픽을 늘려보세요.</string>
     <string name="post_settings_jetpack_social_header">소셜 공유</string>
     <string name="gutenberg_native_s_detached">%s 분리됨</string>
@@ -959,7 +997,6 @@ Language: ko_KR
     <string name="new_site_creation_search_domain_input_hint">사이트의 이름 입력</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;모든 작업 완료됨&lt;/b&gt;&lt;br/&gt;더 많은 사람에게 도달하게 됩니다. 훌륭합니다!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;모든 작업 완료됨&lt;/b&gt;&lt;br/&gt;사이트를 사용자 정의하셨습니다. 잘하셨습니다!</string>
-    <string name="quick_start_card_menu_hide">일시적으로 숨기기</string>
     <string name="magic_link_not_meaning_to_create_account">새 계정을 만들 계획이 없으신가요? 뒤로 이동하여 이메일 주소를 다시 입력하세요.</string>
     <string name="invite_links_disable_dialog_message">초대 링크를 비활성화하면 아무도 이 링크를 사용해서 이 팀에 참여할 수 없습니다. 계속할까요?</string>
     <string name="invite_links_disable_dialog_title">초대 링크 비활성화</string>
@@ -982,7 +1019,6 @@ Language: ko_KR
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;스캔 완료됨&lt;/b&gt; &lt;br&gt; 찾은 위협 없음</string>
     <string name="scan_fixing_threats_title_singular">위협 해결 중</string>
     <string name="disable">비활성화</string>
-    <string name="quick_start_card_menu_unpin">이 항목 고정 취소</string>
     <string name="quick_start_list_review_pages_subtitle">페이지를 점검하고 내용을 변경하거나 페이지를 추가 또는 제거하세요.</string>
     <string name="quick_start_list_view_site_title">사이트 보기</string>
     <string name="quick_start_list_follow_site_subtitle">회원님께 영감을 주는 사이트를 발견하고 팔로우하세요.</string>
@@ -1078,8 +1114,6 @@ Language: ko_KR
     <string name="backup_download_complete_failed_title">다운로드 실패</string>
     <string name="web_preview_tablet">태블릿</string>
     <string name="web_preview_mobile">모바일</string>
-    <string name="quick_start_card_menu_remove">다시 보지 않음</string>
-    <string name="quick_start_card_menu_pin">이 항목 고정</string>
     <string name="quick_start_dialog_review_pages_message_short">페이지 목록을 참조하려면 %1$s 페이지 %2$s을(를) 선택하세요.</string>
     <string name="quick_start_dialog_review_pages_message">사이트의 페이지를 변경, 추가 또는 제거합니다.</string>
     <string name="quick_start_dialog_review_pages_title">사이트 페이지 검토</string>
@@ -2869,11 +2903,10 @@ Language: ko_KR
     <string name="connection_service_description">연결하여 자동으로 블로그 글을 %s에 공유합니다.</string>
     <string name="connected_accounts_label">연결된 계정</string>
     <string name="connections_description">즐겨 찾는 소셜 미디어 서비스에 연결하여 새 글을 친구와 자동으로 공유하세요.</string>
-    <string name="sharing">공유</string>
     <string name="tabbar_accessibility_label_notifications">알림. 알림을 관리합니다.</string>
     <string name="tabbar_accessibility_label_reader">리더. 다른 사이트의 콘텐츠를 팔로우합니다.</string>
     <string name="tabbar_accessibility_label_my_site">내 사이트. 통계를 포함하여 사이트를 보고 관리합니다.</string>
-    <string name="my_site_btn_sharing">공유</string>
+    <string name="my_site_btn_sharing">소셜</string>
     <string name="button_not_now">지금 안 함</string>
     <string name="media_error_internal_server_error">업로드 오류입니다. 사이트-&gt;설정에서 이미지 최적화를 사용해 보세요.</string>
     <string name="media_downloading">이 기기에 미디어 저장 중</string>

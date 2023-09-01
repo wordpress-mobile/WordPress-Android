@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-26 12:54:07+0000
+Translation-Revision-Date: 2023-08-24 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: id
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">Jawaban:</string>
+    <string name="contact_support_bot_ticket_comment_question">Pertanyaan:</string>
+    <string name="contact_support_bot_ticket_comment_start">Transkrip Bot Seluler Jetpack:</string>
+    <string name="contact_support_bot_ticket_error">Terjadi error saat mengirimkan tiket dukungan</string>
+    <string name="contact_support_bot_ticket_message">Tiket dibuat</string>
+    <string name="contact_support_bot_ticket_loading">Membuat tiket dukungan…</string>
+    <string name="contact_support_question_six">Bagaimana caranya menggunakan domain khusus saya di aplikasi?</string>
+    <string name="contact_support_question_five">Saya lupa informasi login saya</string>
+    <string name="contact_support_question_four">Mengapa saya tidak bisa login?</string>
+    <string name="contact_support_question_three">Saya tidak bisa mengunggah foto/video</string>
+    <string name="contact_support_question_two">Tolong, situs saya tidak aktif!</string>
+    <string name="contact_support_question_one">Apa alamat situs saya?</string>
+    <string name="contact_support_suggestions">Tidak yakin ingin menanyakan apa?</string>
+    <string name="contact_support_get_support">Hubungi dukungan</string>
+    <string name="contact_support_first_message">Apa yang bisa kami bantu?</string>
+    <string name="contact_support_input_placeholder">Mengirimkan pesan…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">Hapus</string>
+    <string name="jetpack_social_social_shares_remaining">Tersisa %1$d kesempatan berbagi pos ke media sosial</string>
+    <string name="missing_splits_dialog_button">TUTUP</string>
+    <string name="missing_splits_dialog_message">Beberapa komponen penting aplikasi Jetpack tidak tersedia. Aplikasi perlu diinstal ulang dari Google Play Store.</string>
+    <string name="missing_splits_dialog_title">Instalasi gagal</string>
+    <string name="campaign_detail_error_title">Terjadi kesalahan</string>
+    <string name="campaign_listing_page_error_title">Terjadi kesalahan</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Terjadi kesalahan, kampanye tidak bisa ditampilkan</string>
+    <string name="domain_transfer_card_menu_hide_this">Sembunyikan</string>
+    <string name="domain_transfer_card_cta">Transfer domain Anda</string>
+    <string name="domain_transfer_card_caption">Anda mungkin tahu bahwa Google Domains telah dibeli oleh Squarespace. Transfer domain Anda ke WordPress.com sekarang, dan kami akan menanggung semua biaya transfer beserta tambahan satu tahun untuk registrasi domain.</string>
+    <string name="domain_transfer_card_sub_title">Klaim Kembali Google Domains Anda</string>
+    <string name="domain_transfer_card_title">Berita</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Hubungkan akun</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Berbagi ke media sosial</string>
+    <string name="prepublishing_nudges_social_action">Berbagi ke media sosial</string>
+    <string name="sharing">Media Sosial</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Berbagi ke %1$d akun</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Berbagi ke %1$d dari %2$d akun</string>
+    <string name="jetpack_social_social_shares_title_single_account">Bagikan pos ke %1$s</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Tidak berbagi ke media sosial</string>
+    <string name="post_settings_jetpack_social_share_message_description">Sesuaikan pesan yang ingin Anda bagikan. Jika Anda tidak menambahkan pesan di sini, judul pos Anda akan dijadikan pesan.</string>
+    <string name="post_settings_jetpack_social_share_message_title">Sesuaikan pesan</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Lain kali</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Hubungkan akun</string>
     <string name="gutenberg_native_insert_video_block">Masukkan Blok Video</string>
     <string name="gutenberg_native_insert_image_block">Masukkan Blok Gambar</string>
     <string name="gutenberg_native_insert_gallery_block">Masukkan Blok Galeri</string>
     <string name="gutenberg_native_insert_audio_block">Masukkan Blok Audio</string>
-    <string name="blaze_campaign_detail_error">Tidak dapat memuat Detail Kampanye</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Buat</string>
     <string name="campaign_listing_page_no_campaigns_message_description">Anda belum membuat kampanye. Klik buat untuk memulai.</string>
     <string name="campaign_listing_page_no_campaigns_message_title">Anda tidak memiliki kampanye</string>
@@ -28,14 +68,12 @@ Language: id
     <string name="blaze_campaigns_card_footer_label">Buat Kampanye</string>
     <string name="blaze_campaigns_card_title">Kampanye Blaze</string>
     <string name="promote_blaze_flow_error">Tidak dapat memuat alur promosi blaze</string>
-    <string name="prepublishing_nudges_social_new_connection_cta">Hubungkan ke profil-profil media sosial Anda</string>
     <string name="prepublishing_nudges_social_new_connection_text">Tingkatkan lalu lintas dengan membagikan pos secara otomatis kepada teman-teman di media sosial.</string>
     <string name="menu_close_editor">Tutup editor</string>
     <string name="menu_redo_context">Ulangi perubahan terakhir</string>
     <string name="menu_undo_context">Urungkan perubahan terakhir</string>
-    <string name="jetpack_social_social_shares_remaining">%1$d kesempatan berbagi di media sosial yang tersisa</string>
+    <string name="jetpack_social_social_shares_remaining_one">Tersisa 1 kesempatan berbagi pos ke media sosial</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">Langganan sekarang untuk kesempatan berbagi lebih banyak</string>
-    <string name="post_settings_jetpack_social_connect_social_profiles_button">Hubungkan ke profil-profil media sosial Anda</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Tingkatkan lalu lintas dengan membagikan pos secara otomatis kepada teman-teman di media sosial.</string>
     <string name="post_settings_jetpack_social_header">Berbagi di Media Sosial</string>
     <string name="gutenberg_native_s_detached">%s terpisah</string>
@@ -959,7 +997,6 @@ Language: id
     <string name="new_site_creation_search_domain_input_hint">Ketik nama untuk situs Anda</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Semua tugas selesai&lt;/b&gt;&lt;br/&gt;Anda akan menjangkau lebih banyak orang. Bagus!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Semua tugas selesai&lt;/b&gt;&lt;br/&gt;Anda telah menyesuaikan situs. Bagus!</string>
-    <string name="quick_start_card_menu_hide">Sembunyikan untuk sekarang</string>
     <string name="magic_link_not_meaning_to_create_account">Tidak ingin membuat akun baru? Silakan kembali dan masukkan lagi alamat email Anda.</string>
     <string name="invite_links_disable_dialog_message">Setelah tautan undangan ini dinonaktifkan, calon anggota tidak akan bisa lagi menggunakannya untuk bergabung dengan tim Anda. Apakah Anda yakin?</string>
     <string name="invite_links_disable_dialog_title">Nonaktifkan tautan undangan</string>
@@ -982,7 +1019,6 @@ Language: id
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Pemindaian Selesai&lt;/b&gt; &lt;br&gt; Potensi ancaman tidak ditemukan</string>
     <string name="scan_fixing_threats_title_singular">Memperbaiki Ancaman</string>
     <string name="disable">Nonaktifkan</string>
-    <string name="quick_start_card_menu_unpin">Lepas sematan ini</string>
     <string name="quick_start_list_review_pages_subtitle">Periksa halaman dan lakukan perubahan, atau tambahkan atau hapus halaman.</string>
     <string name="quick_start_list_view_site_title">Lihat situs Anda</string>
     <string name="quick_start_list_follow_site_subtitle">Temukan dan ikuti situs yang menginspirasi Anda.</string>
@@ -1078,8 +1114,6 @@ Language: id
     <string name="backup_download_complete_failed_title">Pengunduhan gagal</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Seluler</string>
-    <string name="quick_start_card_menu_remove">Jangan tampilkan lagi</string>
-    <string name="quick_start_card_menu_pin">Sematkan ini</string>
     <string name="quick_start_dialog_review_pages_message_short">Pilih %1$s Halaman %2$s untuk melihat daftar halaman Anda.</string>
     <string name="quick_start_dialog_review_pages_message">Ubah, tambahkan, atau hapus halaman situs.</string>
     <string name="quick_start_dialog_review_pages_title">Tinjau laman situs</string>
@@ -2869,11 +2903,10 @@ Language: id
     <string name="connection_service_description">Sambungkan agar pos blog Anda dibagikan secara otomatis %s.</string>
     <string name="connected_accounts_label">Akun Terhubung</string>
     <string name="connections_description">Sambungkan layanan media sosial favorit Anda untuk membagikan pos Anda secara otomatis dengan teman Anda.</string>
-    <string name="sharing">Berbagi</string>
     <string name="tabbar_accessibility_label_notifications">Pemberitahuan. Kelola pemberitahuan.</string>
     <string name="tabbar_accessibility_label_reader">Pembaca. Ikuti konten dari situs lain.</string>
     <string name="tabbar_accessibility_label_my_site">Situs Saya. Lihat situs dan kelola, termasuk statusnya.</string>
-    <string name="my_site_btn_sharing">Berbagi</string>
+    <string name="my_site_btn_sharing">Media Sosial</string>
     <string name="button_not_now">Jangan sekarang</string>
     <string name="media_error_internal_server_error">Terjadi eror saat mengunggah. Coba aktifkan Optimalkan Gambar di pengaturan aplikasi.</string>
     <string name="media_downloading">Menyimpan media ke perangkat ini</string>

@@ -1397,8 +1397,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_accessed";
             case ENHANCED_SITE_CREATION_DOMAINS_ACCESSED:
                 return "enhanced_site_creation_domains_accessed";
-            case ENHANCED_SITE_CREATION_DOMAIN_PURCHASING_EXPERIMENT:
-                return "enhanced_site_creation_domain_purchasing_experiment";
             case ENHANCED_SITE_CREATION_DOMAINS_SELECTED:
                 return "enhanced_site_creation_domains_selected";
             case ENHANCED_SITE_CREATION_SUCCESS_LOADING:
@@ -1807,6 +1805,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "support_identity_set";
             case SUPPORT_OPEN_MOBILE_FORUM_TAPPED:
                 return "support_open_mobile_forum_tapped";
+            case SUPPORT_CHATBOT_STARTED:
+                return "support_chatbot_started";
+            case SUPPORT_CHATBOT_USER_SUBMITS_MESSAGE:
+                return "support_chatbot_user_submits_message";
+            case SUPPORT_CHATBOT_TOPIC:
+                return "support_chatbot_topic";
+            case SUPPORT_CHATBOT_WEBVIEW_ERROR:
+                return "support_chatbot_webview_error";
+            case SUPPORT_CHATBOT_TICKET_SUCCESS:
+                return "support_chatbot_ticket_success";
+            case SUPPORT_CHATBOT_TICKET_FAILURE:
+                return "support_chatbot_ticket_failure";
+            case SUPPORT_CHATBOT_ENDED:
+                return "support_chatbot_ended";
             case QUICK_START_TASK_DIALOG_VIEWED:
                 return "quick_start_task_dialog_viewed";
             case QUICK_START_STARTED:

@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-26 15:05:38+0000
+Translation-Revision-Date: 2023-08-23 14:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: sv_SE
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">Svar:</string>
+    <string name="contact_support_bot_ticket_comment_question">Fråga:</string>
+    <string name="contact_support_bot_ticket_comment_start">Jetpack Mobile Bot-kopia:</string>
+    <string name="contact_support_bot_ticket_error">Det gick inte att skicka in supportärende</string>
+    <string name="contact_support_bot_ticket_message">Supportärende skapat</string>
+    <string name="contact_support_bot_ticket_loading">Skapar supportärende …</string>
+    <string name="contact_support_question_six">Hur kan jag använda min anpassade domän i appen?</string>
+    <string name="contact_support_question_five">Jag har glömt min inloggningsinformation</string>
+    <string name="contact_support_question_four">Varför kan jag inte logga in?</string>
+    <string name="contact_support_question_three">Jag kan inte ladda upp foton/videoklipp</string>
+    <string name="contact_support_question_two">Hjälp, min webbplats är nere!</string>
+    <string name="contact_support_question_one">Vad är min webbplatsadress?</string>
+    <string name="contact_support_suggestions">Är du inte säker på vad du ska fråga?</string>
+    <string name="contact_support_get_support">Kontakta supporten</string>
+    <string name="contact_support_first_message">Vad kan vi hjälpa dig med?</string>
+    <string name="contact_support_input_placeholder">Skicka ett meddelande …</string>
+    <string name="post_settings_jetpack_social_share_message_clear">Rensa</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d sociala delningar kvar</string>
+    <string name="missing_splits_dialog_button">STÄNG</string>
+    <string name="missing_splits_dialog_message">WordPress-appen saknar obligatoriska komponenter och måster installeras på nytt från Google Play.</string>
+    <string name="missing_splits_dialog_title">Installation misslyckades</string>
+    <string name="campaign_detail_error_title">Något gick fel</string>
+    <string name="campaign_listing_page_error_title">Något gick fel</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Något gick fel: kunde inte hämta kampanjerna</string>
+    <string name="domain_transfer_card_menu_hide_this">Dölj detta</string>
+    <string name="domain_transfer_card_cta">Överför dina domäner</string>
+    <string name="domain_transfer_card_caption">Som du kanske vet, har Google Domains blivit uppköpta av Squarespace. Nu kan du föra över dina domäner till WordPress.com. Vi betalar kostnaden för överföringen och ett extra år på din domänregistrering.</string>
+    <string name="domain_transfer_card_sub_title">Ta tillbaka dina Google-domäner</string>
+    <string name="domain_transfer_card_title">Nyheter</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Anslut konton</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Social delning</string>
+    <string name="prepublishing_nudges_social_action">Social delning</string>
+    <string name="sharing">Social</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Delar till %1$d konton</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Delar till %1$d av %2$d konton</string>
+    <string name="jetpack_social_social_shares_title_single_account">Delar till %1$s</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Delar inte till sociala</string>
+    <string name="post_settings_jetpack_social_share_message_description">Anpassa meddelandet du vill dela. Om du inte lägger in egen text här kommer inläggets rubrik att användas som meddelandetext.</string>
+    <string name="post_settings_jetpack_social_share_message_title">Anpassa meddelandet</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Inte nu</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Anslut konton</string>
     <string name="gutenberg_native_insert_video_block">Infoga videoblock</string>
     <string name="gutenberg_native_insert_image_block">Infoga bildblock</string>
     <string name="gutenberg_native_insert_gallery_block">Infoga galleriblock</string>
     <string name="gutenberg_native_insert_audio_block">Infoga ljudblock</string>
-    <string name="blaze_campaign_detail_error">Det gick inte att läsa in kampanjinformationen</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Skapa</string>
     <string name="campaign_listing_page_no_campaigns_message_description">Du har inte skapat några kampanjer än. Klicka här för att komma igång.</string>
     <string name="campaign_listing_page_no_campaigns_message_title">Du har inga kampanjer</string>
@@ -28,14 +68,12 @@ Language: sv_SE
     <string name="blaze_campaigns_card_footer_label">Skapa kampanj</string>
     <string name="blaze_campaigns_card_title">Blaze-kampanj</string>
     <string name="promote_blaze_flow_error">Det gick inte att läsa in Blaze-marknadsföringsflödet</string>
-    <string name="prepublishing_nudges_social_new_connection_cta">Anslut dina sociala profiler</string>
     <string name="prepublishing_nudges_social_new_connection_text">Öka din trafik genom att automatiskt dela dina inlägg med dina vänner på sociala medier.</string>
     <string name="menu_close_editor">Stäng redigerare</string>
     <string name="menu_redo_context">Gör om den senaste ändringen</string>
     <string name="menu_undo_context">Ångra den senaste ändringen</string>
-    <string name="jetpack_social_social_shares_remaining">%1$d sociala delningar kvar</string>
+    <string name="jetpack_social_social_shares_remaining_one">1 social delning kvar</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">Prenumerera för fler delningar</string>
-    <string name="post_settings_jetpack_social_connect_social_profiles_button">Anslut dina sociala profiler</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Öka din trafik genom att automatiskt dela dina inlägg med dina vänner på sociala medier.</string>
     <string name="post_settings_jetpack_social_header">Social delning</string>
     <string name="gutenberg_native_s_detached">%s frikopplad</string>
@@ -959,7 +997,6 @@ Language: sv_SE
     <string name="new_site_creation_search_domain_input_hint">Skriv ett namn för din webbplats</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Alla uppgifter är utförda&lt;/b&gt;&lt;br/&gt;Nu kommer du att nå fler. Bra gjort!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Alla uppgifter är utförda&lt;/b&gt;&lt;br/&gt;Nu har du anpassat webbplatsen. Bra gjort!</string>
-    <string name="quick_start_card_menu_hide">Dölj tills vidare</string>
     <string name="magic_link_not_meaning_to_create_account">Vill du inte registrera ett nytt konto? Gå tillbaka för att mata in e-postadressen igen.</string>
     <string name="invite_links_disable_dialog_message">När denna inbjudningslänk har inaktiverats kan ingen använda den för att ansluta sig till ditt team. Är du säker?</string>
     <string name="invite_links_disable_dialog_title">Inaktivera inbjudningslänk</string>
@@ -982,7 +1019,6 @@ Language: sv_SE
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Genomsökningen genomförd&lt;/b&gt; &lt;br&gt;Inga hot hittades</string>
     <string name="scan_fixing_threats_title_singular">Åtgärdar hot</string>
     <string name="disable">Inaktivera</string>
-    <string name="quick_start_card_menu_unpin">Avklistra detta</string>
     <string name="quick_start_list_review_pages_subtitle">Kontrollera dina sidor och gör ändringar, lägg till eller ta bort sidor.</string>
     <string name="quick_start_list_view_site_title">Besök din webbplats</string>
     <string name="quick_start_list_follow_site_subtitle">Hitta och följ webbplatser som inspirerar dig.</string>
@@ -1078,8 +1114,6 @@ Language: sv_SE
     <string name="backup_download_complete_failed_title">Nedladdning misslyckades</string>
     <string name="web_preview_tablet">Surfplatta</string>
     <string name="web_preview_mobile">Mobil</string>
-    <string name="quick_start_card_menu_remove">Visa inte igen</string>
-    <string name="quick_start_card_menu_pin">Klistra detta</string>
     <string name="quick_start_dialog_review_pages_message_short">Välj %1$s Sidor %2$s för att visa listan med dina sidor.</string>
     <string name="quick_start_dialog_review_pages_message">Ändra, lägg till eller ta bort sidor på webbplatsen.</string>
     <string name="quick_start_dialog_review_pages_title">Granska webbplatsens sidor</string>
@@ -2869,11 +2903,10 @@ Language: sv_SE
     <string name="connection_service_description">Anslut för att automatiskt dela dina blogginlägg till %s.</string>
     <string name="connected_accounts_label">Anslutna konton</string>
     <string name="connections_description">Anslut de sociala nätverk du gillar mest för att automatiskt dela nya inlägg med dina vänner.</string>
-    <string name="sharing">Delning</string>
     <string name="tabbar_accessibility_label_notifications">Aviseringar. Hantera dina aviseringar.</string>
     <string name="tabbar_accessibility_label_reader">Läsare. Följ innehåll från andra webbplatser.</string>
     <string name="tabbar_accessibility_label_my_site">Min webbplats. Se och hantera din webbplats, inklusive statistik.</string>
-    <string name="my_site_btn_sharing">Delning</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="button_not_now">Inte just nu.</string>
     <string name="media_error_internal_server_error">Fel vid uppladdning. Prova att aktivera ”Optimera bilder” i appens inställningar</string>
     <string name="media_downloading">Mediafilerna sparas i denna enhet</string>

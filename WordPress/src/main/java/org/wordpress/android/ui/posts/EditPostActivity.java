@@ -223,6 +223,7 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.ContactSupportFeatureConfig;
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig;
 import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -435,6 +436,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ZendeskHelper mZendeskHelper;
     @Inject BloggingPromptsStore mBloggingPromptsStore;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject ContactSupportFeatureConfig mContactSupportFeatureConfig;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
@@ -558,7 +560,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override @SuppressWarnings("checkstyle:MethodLength")
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
@@ -829,16 +831,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
         View closeHeader = mToolbar.findViewById(R.id.edit_post_header);
         closeHeader.setOnClickListener(v -> handleBackPressed());
 
-        // Update site icon
-        String siteIconUrl = SiteUtils.getSiteIconUrl(
-                mSite,
-                getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        );
-        ImageView siteIcon = mToolbar.findViewById(R.id.close_editor_site_icon);
-        ImageType blavatarType = SiteUtils.getSiteImageType(
-                mSite.isWpForTeamsSite(), BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES);
-        mImageManager.loadImageWithCorners(siteIcon, blavatarType, siteIconUrl,
-                getResources().getDimensionPixelSize(R.dimen.edit_post_header_image_corner_radius));
+        if (mSite != null) {
+            // Update site icon if mSite is available, if not it will use the placeholder.
+            String siteIconUrl = SiteUtils.getSiteIconUrl(
+                    mSite,
+                    getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small)
+            );
+            ImageView siteIcon = mToolbar.findViewById(R.id.close_editor_site_icon);
+            ImageType blavatarType = SiteUtils.getSiteImageType(
+                    mSite.isWpForTeamsSite(), BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES);
+            mImageManager.loadImageWithCorners(siteIcon, blavatarType, siteIconUrl,
+                    getResources().getDimensionPixelSize(R.dimen.edit_post_header_image_corner_radius));
+        }
     }
 
     private void presentNewPageNoticeIfNeeded() {
@@ -1374,10 +1378,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         if (undoItem != null) {
             undoItem.setEnabled(mMenuHasUndo);
+            undoItem.setVisible(!mHtmlModeMenuStateOn);
         }
 
         if (redoItem != null) {
             redoItem.setEnabled(mMenuHasRedo);
+            redoItem.setVisible(!mHtmlModeMenuStateOn);
         }
 
         if (secondaryAction != null && mEditPostRepository.hasPost()) {
@@ -3615,7 +3621,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onContactCustomerSupport() {
-        EditPostCustomerSupportHelper.INSTANCE.onContactCustomerSupport(mZendeskHelper, this, getSite());
+        EditPostCustomerSupportHelper.INSTANCE.onContactCustomerSupport(
+                mZendeskHelper,
+                this,
+                getSite(),
+                mContactSupportFeatureConfig.isEnabled()
+        );
     }
 
     @Override public void onGotoCustomerSupportOptions() {

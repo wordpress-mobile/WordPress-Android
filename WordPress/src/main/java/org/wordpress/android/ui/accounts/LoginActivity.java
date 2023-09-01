@@ -42,6 +42,7 @@ import org.wordpress.android.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.login.SignupConfirmationFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
+import org.wordpress.android.support.SupportWebViewActivity;
 import org.wordpress.android.support.ZendeskExtraTags;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -75,6 +76,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.util.config.ContactSupportFeatureConfig;
 import org.wordpress.android.util.config.LandingScreenRevampFeatureConfig;
 import org.wordpress.android.widgets.WPSnackbar;
 
@@ -139,8 +141,10 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Inject LandingScreenRevampFeatureConfig mLandingScreenRevampFeatureConfig;
 
+    @Inject ContactSupportFeatureConfig mContactSupportFeatureConfig;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
@@ -167,6 +171,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     mIsSignupFromLoginEnabled = mBuildConfigWrapper.isSignupEnabled();
                     checkSmartLockPasswordAndStartLogin();
                     break;
+                case JETPACK_SELFHOSTED:
                 case SELFHOSTED_ONLY:
                     mUnifiedLoginTracker.setSource(Source.SELF_HOSTED);
                     showFragment(new LoginSiteAddressFragment(), LoginSiteAddressFragment.TAG);
@@ -335,6 +340,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, false);
                 break;
             case SHARE_INTENT:
+            case JETPACK_SELFHOSTED:
             case SELFHOSTED_ONLY:
                 // We are comparing list of site ID's before self-hosted site was added and after, trying to find a
                 // newly added self-hosted site's ID, so we can select it
@@ -681,7 +687,16 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         if (!mBuildConfigWrapper.isJetpackApp()) {
             viewHelp(Origin.LOGIN_SITE_ADDRESS);
         } else {
-            mZendeskHelper.createNewTicket(this, Origin.LOGIN_SITE_ADDRESS, null);
+            if (mContactSupportFeatureConfig.isEnabled()) {
+                Intent intent = SupportWebViewActivity.createIntent(
+                        this,
+                        Origin.LOGIN_SITE_ADDRESS,
+                        null,
+                        null);
+                startActivity(intent);
+            } else {
+                mZendeskHelper.createNewTicket(this, Origin.LOGIN_SITE_ADDRESS, null);
+            }
         }
     }
 
@@ -761,7 +776,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Override
     public void saveCredentialsInSmartLock(@Nullable final String username, @Nullable final String password,
                                            @NonNull final String displayName, @Nullable final Uri profilePicture) {
-        if (getLoginMode() == LoginMode.SELFHOSTED_ONLY) {
+        LoginMode mode = getLoginMode();
+        if (mode == LoginMode.SELFHOSTED_ONLY || mode == LoginMode.JETPACK_SELFHOSTED) {
             // bail if we are on the selfhosted flow since we haven't initialized SmartLock-for-Passwords for it.
             // Otherwise, logging in to WPCOM via the site-picker flow (for example) results in a crash.
             // See https://github.com/wordpress-mobile/WordPress-Android/issues/7182#issuecomment-362791364

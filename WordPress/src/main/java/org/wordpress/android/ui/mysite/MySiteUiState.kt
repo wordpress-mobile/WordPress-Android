@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite
 
-import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
@@ -10,7 +9,6 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPrompt
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
@@ -26,8 +24,6 @@ data class MySiteUiState(
     val backupAvailable: Boolean = false,
     val activeTask: QuickStartTask? = null,
     val quickStartCategories: List<QuickStartCategory> = listOf(),
-    val pinnedDynamicCard: DynamicCardType? = null,
-    val visibleDynamicCards: List<DynamicCardType> = listOf(),
     val cardsUpdate: CardsUpdate? = null,
     val bloggingPromptsUpdate: BloggingPromptUpdate? = null,
     val blazeCardUpdate: PartialState.BlazeCardUpdate? = null,
@@ -44,11 +40,6 @@ data class MySiteUiState(
         data class QuickStartUpdate(
             val activeTask: QuickStartTask? = null,
             val categories: List<QuickStartCategory> = listOf()
-        ) : PartialState()
-
-        data class DynamicCardsUpdate(
-            val pinnedDynamicCard: DynamicCardType? = null,
-            val cards: List<DynamicCardType>
         ) : PartialState()
 
         data class CardsUpdate(
@@ -86,10 +77,6 @@ data class MySiteUiState(
             is QuickStartUpdate -> uiState.copy(
                 activeTask = partialState.activeTask,
                 quickStartCategories = partialState.categories
-            )
-            is DynamicCardsUpdate -> uiState.copy(
-                pinnedDynamicCard = partialState.pinnedDynamicCard,
-                visibleDynamicCards = partialState.cards
             )
             is CardsUpdate -> uiState.copy(cardsUpdate = partialState)
             is BloggingPromptUpdate -> uiState.copy(bloggingPromptsUpdate = partialState)

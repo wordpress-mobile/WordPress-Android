@@ -1,4 +1,3 @@
-- Upgraded the post editor with social sharing management
-- Added domain transfer and Blaze Campaign dashboard cards
-- Fixed a plugin install bug that caused the app to crash
-- Improved gallery block design and useability
+- The Social Link block now includes an outline so you can see when it’s selected.
+- The undo and redo buttons are no longer visible in the HTML editor.
+- You’ll now see hex codes for the selected color when you’re using the Cover Block color picker.

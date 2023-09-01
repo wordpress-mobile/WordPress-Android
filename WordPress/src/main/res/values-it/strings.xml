@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-26 16:54:08+0000
+Translation-Revision-Date: 2023-08-23 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: it
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">Risposta:</string>
+    <string name="contact_support_bot_ticket_comment_question">Domanda:</string>
+    <string name="contact_support_bot_ticket_comment_start">Trascrizione di bot di Jetpack per dispositivi mobili:</string>
+    <string name="contact_support_bot_ticket_error">Errore durante l\'invio di un ticket di supporto</string>
+    <string name="contact_support_bot_ticket_message">Ticket creato</string>
+    <string name="contact_support_bot_ticket_loading">Creazione del ticket di supporto…</string>
+    <string name="contact_support_question_six">Come posso usare il mio dominio personalizzato nell\'app?</string>
+    <string name="contact_support_question_five">Ho dimenticato le mie informazioni di accesso</string>
+    <string name="contact_support_question_four">Perché non posso accedere?</string>
+    <string name="contact_support_question_three">Non posso caricare foto/video</string>
+    <string name="contact_support_question_two">Mi serve aiuto, il mio sito è inattivo.</string>
+    <string name="contact_support_question_one">Qual è il mio indirizzo del sito?</string>
+    <string name="contact_support_suggestions">Non sei sicuro di cosa chiedere?</string>
+    <string name="contact_support_get_support">Contatta il supporto</string>
+    <string name="contact_support_first_message">Con cosa possiamo aiutarti?</string>
+    <string name="contact_support_input_placeholder">Invia un messaggio…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">Chiaro</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d condivisioni sui social rimanenti</string>
+    <string name="missing_splits_dialog_button">CHIUDI</string>
+    <string name="missing_splits_dialog_message">All\'app WordPress mancano alcuni componenti richiesti ed è necessario reinstallarla da Google Play Store.</string>
+    <string name="missing_splits_dialog_title">Installazione non riuscita</string>
+    <string name="campaign_detail_error_title">Si è verificato un problema</string>
+    <string name="campaign_listing_page_error_title">Si è verificato un problema</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Qualcosa è andato storto, impossibile recuperare le campagne</string>
+    <string name="domain_transfer_card_menu_hide_this">Nascondi</string>
+    <string name="domain_transfer_card_cta">Trasferisci i tuoi domini</string>
+    <string name="domain_transfer_card_caption">Come forse saprai, Google Domains è stato venduto a Squarespace. Trasferisci i tuoi domini a WordPress.com ora gratuitamente e noi ci faremo carico di tutti i costi di trasferimento, in aggiunta a un ulteriore anno di registrazione gratuita del dominio.</string>
+    <string name="domain_transfer_card_sub_title">Recupera i tuoi Google Domains</string>
+    <string name="domain_transfer_card_title">Notizie</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Connetti account</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Condivisione sui social</string>
+    <string name="prepublishing_nudges_social_action">Condivisione sui social</string>
+    <string name="sharing">Social</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Condivisione su %1$d account</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Condivisione su %1$d di %2$d account</string>
+    <string name="jetpack_social_social_shares_title_single_account">Condivisione su %1$s</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Non condividere sui social</string>
+    <string name="post_settings_jetpack_social_share_message_description">Personalizza il messaggio che desideri condividere. Se non aggiungi un tuo testo qui, utilizzeremo il titolo dell\'articolo come messaggio.</string>
+    <string name="post_settings_jetpack_social_share_message_title">Personalizza il messaggio</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Non ora</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Connetti account</string>
     <string name="gutenberg_native_insert_video_block">Inserisci blocco video</string>
     <string name="gutenberg_native_insert_image_block">Inserisci blocco immagine</string>
     <string name="gutenberg_native_insert_gallery_block">Inserisci blocco galleria</string>
     <string name="gutenberg_native_insert_audio_block">Inserisci blocco audio</string>
-    <string name="blaze_campaign_detail_error">Impossibile caricare i dettagli della campagna</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Crea</string>
     <string name="campaign_listing_page_no_campaigns_message_description">Non hai ancora creato alcuna campagna. Fai clic su Crea per iniziare.</string>
     <string name="campaign_listing_page_no_campaigns_message_title">Non hai campagne</string>
@@ -27,14 +67,12 @@ Language: it
     <string name="blaze_campaigns_card_footer_label">Crea campagna</string>
     <string name="blaze_campaigns_card_title">Campagna Blaze</string>
     <string name="promote_blaze_flow_error">Impossibile caricare il flusso promozionale Blaze</string>
-    <string name="prepublishing_nudges_social_new_connection_cta">Connetti i tuoi profili social</string>
     <string name="prepublishing_nudges_social_new_connection_text">Aumenta il traffico condividendo automaticamente gli articoli con amici sui social media.</string>
     <string name="menu_close_editor">Chiudi editor</string>
     <string name="menu_redo_context">Ripeti ultima modifica</string>
     <string name="menu_undo_context">Annulla ultima modifica</string>
-    <string name="jetpack_social_social_shares_remaining">%1$d condivisioni sui social rimanenti</string>
+    <string name="jetpack_social_social_shares_remaining_one">1 condivisione social rimanente</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">Iscriviti per avere più condivisioni</string>
-    <string name="post_settings_jetpack_social_connect_social_profiles_button">Connetti i tuoi profili social</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Aumenta il traffico condividendo automaticamente gli articoli con amici sui social media.</string>
     <string name="post_settings_jetpack_social_header">Condivisione sui social</string>
     <string name="gutenberg_native_s_detached">%s scollegato</string>
@@ -958,7 +996,6 @@ Language: it
     <string name="new_site_creation_search_domain_input_hint">Digita un nome per il sito</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Tutti i task completati&lt;/b&gt;&lt;br/&gt;Raggiungerai più persone. Buon lavoro.</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Tutti i task completati&lt;/b&gt;&lt;br/&gt;Hai personalizzato il sito. Ben fatto!</string>
-    <string name="quick_start_card_menu_hide">Nascondi per ora</string>
     <string name="magic_link_not_meaning_to_create_account">Non volevi creare un nuovo account? Torna indietro per inserire nuovamente l\'indirizzo email.</string>
     <string name="invite_links_disable_dialog_message">Una volta disattivato il link di invito, nessuno sarà in grado di usarlo per unirsi al tuo team. Sei sicuro?</string>
     <string name="invite_links_disable_dialog_title">Disattiva il link di invito</string>
@@ -981,7 +1018,6 @@ Language: it
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scansione terminata&lt;/b&gt; &lt;br&gt; Nessuna minaccia trovata</string>
     <string name="scan_fixing_threats_title_singular">Risoluzione della minaccia</string>
     <string name="disable">Disabilita</string>
-    <string name="quick_start_card_menu_unpin">Rimuovi questo elemento</string>
     <string name="quick_start_list_review_pages_subtitle">Controlla le pagine e apporta modifiche oppure aggiungi o rimuovi le pagine.</string>
     <string name="quick_start_list_view_site_title">Visualizza il tuo sito</string>
     <string name="quick_start_list_follow_site_subtitle">Scopri e segui i siti che ti ispirano.</string>
@@ -1077,8 +1113,6 @@ Language: it
     <string name="backup_download_complete_failed_title">Download non riuscito</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Dispositivo mobile</string>
-    <string name="quick_start_card_menu_remove">Non mostrare più</string>
-    <string name="quick_start_card_menu_pin">Aggancia</string>
     <string name="quick_start_dialog_review_pages_message_short">Seleziona %1$s Pagine %2$s per visualizzare l\'elenco delle tue pagine.</string>
     <string name="quick_start_dialog_review_pages_message">Modifica, aggiungi o rimuovi le pagine del tuo sito.</string>
     <string name="quick_start_dialog_review_pages_title">Verifica le pagine del sito</string>
@@ -2868,11 +2902,10 @@ Language: it
     <string name="connection_service_description">Connettiti per condividere automaticamente gli articoli del tuo blog su %s.</string>
     <string name="connected_accounts_label">Account connessi</string>
     <string name="connections_description">Connetti i tuoi servizi di social media preferiti per condividere automaticamente i nuovi articoli con gli amici.</string>
-    <string name="sharing">Condivisione</string>
     <string name="tabbar_accessibility_label_notifications">Notifiche. Gestisci le tue notifiche.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Segui i contenuti dagli altri siti.</string>
     <string name="tabbar_accessibility_label_my_site">Il mio sito. Visualizza il tuo sito e gestiscilo insieme alle statistiche.</string>
-    <string name="my_site_btn_sharing">Condivisione</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="button_not_now">Non ora</string>
     <string name="media_error_internal_server_error">Errore nel caricamento. Prova cambiando le ottimizzazioni delle immagini dalle impostazioni dell\'applicazione</string>
     <string name="media_downloading">Salvataggio elemento media sulla periferica</string>

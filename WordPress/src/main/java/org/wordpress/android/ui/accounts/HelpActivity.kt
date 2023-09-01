@@ -30,8 +30,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.support.SupportHelper
 import org.wordpress.android.support.SupportWebViewActivity
-import org.wordpress.android.support.SupportWebViewActivity.ChatCompletionEvent
-import org.wordpress.android.support.SupportWebViewActivity.OpenChatWidget.ChatDetails
 import org.wordpress.android.support.ZendeskExtraTags
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
@@ -92,12 +90,6 @@ class HelpActivity : LocaleAwareActivity() {
     }
     private val selectedSiteFromExtras by lazy {
         intent.extras?.get(WordPress.SITE) as SiteModel?
-    }
-
-    private val openChatWidget = registerForActivityResult(SupportWebViewActivity.OpenChatWidget()) {
-        it?.let {
-            viewModel.finishSupportChat(it)
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -177,12 +169,13 @@ class HelpActivity : LocaleAwareActivity() {
     }
 
     private fun launchSupportWidget() {
-        openChatWidget.launch(
-            ChatDetails(
-                selectedSiteFromExtras,
-                "https://appassets.androidplatform.net/assets/support_chat_widget.html"
-            )
+        val intent = SupportWebViewActivity.createIntent(
+            this,
+            originFromExtras,
+            selectedSiteFromExtras,
+            extraTagsFromExtras
         )
+        startActivity(intent)
     }
 
     private fun createNewZendeskTicket() {
@@ -335,15 +328,6 @@ class HelpActivity : LocaleAwareActivity() {
             // Load Main Activity once signed out, which launches the login flow
             ActivityLauncher.showMainActivity(this@HelpActivity, true)
         }
-
-        viewModel.onSupportChatCompleted.observe(this@HelpActivity) {
-            finishSupportChat(it)
-        }
-    }
-
-    private fun finishSupportChat(event: ChatCompletionEvent) {
-        setResult(RESULT_OK, Intent().putExtra(SupportWebViewActivity.OpenChatWidget.CHAT_EMAIL, event.email))
-        finish()
     }
 
     private fun HelpActivityBinding.loadAvatar(avatarUrl: String) {

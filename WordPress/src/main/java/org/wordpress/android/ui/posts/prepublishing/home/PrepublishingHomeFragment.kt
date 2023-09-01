@@ -93,6 +93,7 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
 
         actionsRecyclerView.layoutManager = layoutManager
         actionsRecyclerView.adapter = adapter
+        actionsRecyclerView.isNestedScrollingEnabled = false
     }
 
     private fun PostPrepublishingHomeFragmentBinding.initViewModel() {

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-05 14:54:22+0000
+Translation-Revision-Date: 2023-08-08 21:54:26+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="missing_splits_dialog_message">Estão faltando componentes obrigatórios no app Jetpack. É necessário fazer a reinstalação pela Google Play Store.</string>
     <string name="me_btn_share">Compartilhe o Jetpack com amigos</string>
     <string name="login_prologue_revamped_jetpack_feature_text_12">Adicionar um autor</string>
     <string name="login_prologue_revamped_jetpack_feature_text_11">Publicar uma foto</string>

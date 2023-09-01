@@ -1,2 +1,0 @@
-22.9:
-Fizemos grandes mudanças no editor de blocos, inclusive nas opções de estilos, cores e ícones. Você também encontrará mais botões e opções de blocos na barra de ferramentas do cabeçalho, incluindo os botões de desfazer e refazer. Isso mesmo. Agora você tem mais ferramentas do que o cinto de utilidades do Batman.

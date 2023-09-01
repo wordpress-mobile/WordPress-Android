@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-26 16:54:08+0000
+Translation-Revision-Date: 2023-08-24 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.6
+Generator: GlotPress/4.0.0-alpha.7
 Language: zh_TW
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">回答：</string>
+    <string name="contact_support_bot_ticket_comment_question">問題：</string>
+    <string name="contact_support_bot_ticket_comment_start">Jetpack 行動版 Bot 文字稿：</string>
+    <string name="contact_support_bot_ticket_error">提交客服聯絡單時發生錯誤</string>
+    <string name="contact_support_bot_ticket_message">已建立聯絡單</string>
+    <string name="contact_support_bot_ticket_loading">正在建立客服聯絡單…</string>
+    <string name="contact_support_question_six">如何在應用程式中使用自訂網域？</string>
+    <string name="contact_support_question_five">我忘記登入資訊</string>
+    <string name="contact_support_question_four">為何無法登入？</string>
+    <string name="contact_support_question_three">我無法上傳照片/影片</string>
+    <string name="contact_support_question_two">我的網站停機了，幫幫我！</string>
+    <string name="contact_support_question_one">我的網站位址是？</string>
+    <string name="contact_support_suggestions">不確定要詢問什麼嗎？</string>
+    <string name="contact_support_get_support">聯絡支援團隊</string>
+    <string name="contact_support_first_message">你需要什麼協助？</string>
+    <string name="contact_support_input_placeholder">傳送訊息…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">清除</string>
+    <string name="jetpack_social_social_shares_remaining">剩下 %1$d 次社群分享額度</string>
+    <string name="missing_splits_dialog_button">關閉</string>
+    <string name="missing_splits_dialog_message">WordPress 應用程式缺少必要組件，必須自 Google Play 商店重新下載安裝。</string>
+    <string name="missing_splits_dialog_title">安裝失敗</string>
+    <string name="campaign_detail_error_title">發生錯誤</string>
+    <string name="campaign_listing_page_error_title">發生錯誤</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> 發生錯誤，無法擷取行銷活動</string>
+    <string name="domain_transfer_card_menu_hide_this">隱藏</string>
+    <string name="domain_transfer_card_cta">轉移你的網域</string>
+    <string name="domain_transfer_card_caption">如你所知，Google Domains 已由 Squarespace 收購。 立即將網域轉移至 WordPress.com，我們不僅會全額負擔轉移費用，還附贈一年網域註冊。</string>
+    <string name="domain_transfer_card_sub_title">重新申請你的 Google Domains</string>
+    <string name="domain_transfer_card_title">新聞</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">連結帳號</string>
+    <string name="prepublishing_nudges_toolbar_title_social">社群分享</string>
+    <string name="prepublishing_nudges_social_action">社群分享</string>
+    <string name="sharing">社群</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">分享至 %1$d 個帳號</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">分享至 %1$d 個帳號 (總額度為 %2$d 個帳號)</string>
+    <string name="jetpack_social_social_shares_title_single_account">分享至 %1$s</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">未分享至社群</string>
+    <string name="post_settings_jetpack_social_share_message_description">自訂你希望分享的訊息。 若你不在此新增文字，我們會使用文章標題做為訊息內容。</string>
+    <string name="post_settings_jetpack_social_share_message_title">自訂訊息</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">現在不要</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">連結帳號</string>
     <string name="gutenberg_native_insert_video_block">插入影片區塊</string>
     <string name="gutenberg_native_insert_image_block">插入圖片區塊</string>
     <string name="gutenberg_native_insert_gallery_block">插入圖庫區塊</string>
     <string name="gutenberg_native_insert_audio_block">插入音訊區塊</string>
-    <string name="blaze_campaign_detail_error">無法載入行銷活動詳細資訊</string>
     <string name="campaign_listing_page_no_campaigns_button_text">建立</string>
     <string name="campaign_listing_page_no_campaigns_message_description">你尚未建立任何行銷活動。 按一下「建立」便可開始創建行銷活動。</string>
     <string name="campaign_listing_page_no_campaigns_message_title">你沒有任何行銷活動</string>
@@ -28,14 +68,12 @@ Language: zh_TW
     <string name="blaze_campaigns_card_footer_label">建立行銷活動</string>
     <string name="blaze_campaigns_card_title">Blaze 行銷活動</string>
     <string name="promote_blaze_flow_error">無法載入 Blaze 推廣流程</string>
-    <string name="prepublishing_nudges_social_new_connection_cta">連結你的社群個人檔案</string>
     <string name="prepublishing_nudges_social_new_connection_text">將文章自動分享給社群媒體上的朋友，藉此提高流量。</string>
     <string name="menu_close_editor">關閉編輯器</string>
     <string name="menu_redo_context">取消復原上一個變更</string>
     <string name="menu_undo_context">復原上一個變更</string>
-    <string name="jetpack_social_social_shares_remaining">剩下 %1$d 次社群分享額度</string>
+    <string name="jetpack_social_social_shares_remaining_one">剩下 1 次社群分享額度</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">立即訂購，提高分享額度</string>
-    <string name="post_settings_jetpack_social_connect_social_profiles_button">連結你的社群個人檔案</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">將文章自動分享給社群媒體上的朋友，藉此提高流量。</string>
     <string name="post_settings_jetpack_social_header">社群分享</string>
     <string name="gutenberg_native_s_detached">%s 已中斷連結</string>
@@ -956,7 +994,6 @@ Language: zh_TW
     <string name="new_site_creation_search_domain_input_hint">輸入網站的名稱</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;已完成所有任務&lt;/b&gt;&lt;br/&gt;你將觸及更多使用者。 做得好！</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;已完成所有任務&lt;/b&gt;&lt;br/&gt;你已自訂網站。 做得好！</string>
-    <string name="quick_start_card_menu_hide">暫時隱藏</string>
     <string name="magic_link_not_meaning_to_create_account">不是要建立一個新帳號嗎？ 返回並重新輸入你的電子郵件地址。</string>
     <string name="invite_links_disable_dialog_message">停用此邀請連結後，就沒有人能再用此連結加入你的團隊。 你確定嗎？</string>
     <string name="invite_links_disable_dialog_title">停用邀請連結</string>
@@ -979,7 +1016,6 @@ Language: zh_TW
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;掃描完成&lt;/b&gt; &lt;br&gt; 未發現威脅</string>
     <string name="scan_fixing_threats_title_singular">正在修正威脅</string>
     <string name="disable">停用</string>
-    <string name="quick_start_card_menu_unpin">取消釘選此項目</string>
     <string name="quick_start_list_review_pages_subtitle">檢查你的頁面並進行變更，或新增/移除頁面。</string>
     <string name="quick_start_list_view_site_title">查看你的網站</string>
     <string name="quick_start_list_follow_site_subtitle">探索並追蹤帶給你啟發的網站。</string>
@@ -1075,8 +1111,6 @@ Language: zh_TW
     <string name="backup_download_complete_failed_title">下載失敗</string>
     <string name="web_preview_tablet">平板電腦</string>
     <string name="web_preview_mobile">行動裝置</string>
-    <string name="quick_start_card_menu_remove">不要再顯示</string>
-    <string name="quick_start_card_menu_pin">釘選此項目</string>
     <string name="quick_start_dialog_review_pages_message_short">選取%1$s「頁面」%2$s以檢視頁面清單。</string>
     <string name="quick_start_dialog_review_pages_message">變更、新增或移除網站的頁面。</string>
     <string name="quick_start_dialog_review_pages_title">檢閱網站頁面</string>
@@ -2865,11 +2899,10 @@ Language: zh_TW
     <string name="connection_service_description">連結後，你的網誌文章便能自動分享至 %s。</string>
     <string name="connected_accounts_label">已連結的帳號</string>
     <string name="connections_description">連結你最愛的社交媒體服務，自動與朋友分享新文章。</string>
-    <string name="sharing">分享</string>
     <string name="tabbar_accessibility_label_notifications">通知。管理你的通知。</string>
     <string name="tabbar_accessibility_label_reader">讀取器。關注其他網站的內容。</string>
     <string name="tabbar_accessibility_label_my_site">我的網站。檢視和管理你的網站，包括統計資料。</string>
-    <string name="my_site_btn_sharing">分享</string>
+    <string name="my_site_btn_sharing">社群</string>
     <string name="button_not_now">現在不要</string>
     <string name="media_error_internal_server_error">上傳錯誤。請試著在應用程式設定中變更「最佳化圖片」</string>
     <string name="media_downloading">將媒體儲存到此裝置</string>
