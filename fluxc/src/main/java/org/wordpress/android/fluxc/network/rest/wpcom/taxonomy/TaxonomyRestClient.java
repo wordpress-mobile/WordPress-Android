@@ -136,7 +136,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void deleteTerm(final TermModel term, final SiteModel site) {
+    public void deleteTerm(@NonNull final TermModel term, @NonNull final SiteModel site) {
         final String taxonomy = term.getTaxonomy();
         String url = WPCOMREST.sites.site(site.getSiteId()).taxonomies.taxonomy(taxonomy).terms
                 .slug(term.getSlug()).delete.getUrlV1_1();
