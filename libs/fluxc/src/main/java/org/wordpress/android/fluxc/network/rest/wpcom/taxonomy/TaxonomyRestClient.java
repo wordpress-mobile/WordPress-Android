@@ -71,7 +71,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchTerms(final SiteModel site, final String taxonomyName) {
+    public void fetchTerms(@NonNull final SiteModel site, @NonNull final String taxonomyName) {
         String url = WPCOMREST.sites.site(site.getSiteId()).taxonomies.taxonomy(taxonomyName).terms.getUrlV1_1();
 
         Map<String, String> params = new HashMap<>();
