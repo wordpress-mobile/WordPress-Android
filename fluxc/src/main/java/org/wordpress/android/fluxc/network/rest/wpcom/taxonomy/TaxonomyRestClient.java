@@ -102,7 +102,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void pushTerm(final TermModel term, final SiteModel site) {
+    public void pushTerm(@NonNull final TermModel term, @NonNull final SiteModel site) {
         final String taxonomy = term.getTaxonomy();
         TaxonomiesEndpoint endpoint = WPCOMREST.sites.site(site.getSiteId()).taxonomies;
         String url = term.getRemoteTermId() > 0
