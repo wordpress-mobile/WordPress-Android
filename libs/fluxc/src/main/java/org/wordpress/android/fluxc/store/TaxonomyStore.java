@@ -427,7 +427,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void deleteTerm(RemoteTermPayload payload) {
+    private void deleteTerm(@NonNull RemoteTermPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.deleteTerm(payload.term, payload.site);
         } else {
