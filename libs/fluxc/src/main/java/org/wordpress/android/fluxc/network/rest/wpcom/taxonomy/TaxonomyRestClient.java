@@ -158,7 +158,8 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    private TermModel termResponseToTermModel(TermWPComRestResponse from) {
+    @NonNull
+    private TermModel termResponseToTermModel(@NonNull TermWPComRestResponse from) {
         TermModel term = new TermModel();
         term.setRemoteTermId(from.ID);
         term.setName(StringEscapeUtils.unescapeHtml4(from.name));
@@ -166,7 +167,6 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         term.setDescription(StringEscapeUtils.unescapeHtml4(from.description));
         term.setParentRemoteId(from.parent);
         term.setPostCount(from.post_count);
-
         return term;
     }
 
