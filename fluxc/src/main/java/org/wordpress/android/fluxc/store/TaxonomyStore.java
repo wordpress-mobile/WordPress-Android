@@ -307,7 +307,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void fetchTerm(RemoteTermPayload payload) {
+    private void fetchTerm(@NonNull RemoteTermPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerm(payload.term, payload.site);
         } else {
