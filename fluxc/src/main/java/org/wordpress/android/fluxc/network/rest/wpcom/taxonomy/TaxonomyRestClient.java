@@ -39,11 +39,12 @@ import javax.inject.Singleton;
 
 @Singleton
 public class TaxonomyRestClient extends BaseWPComRestClient {
-    @Inject public TaxonomyRestClient(Context appContext,
-                              Dispatcher dispatcher,
-                              @Named("regular") RequestQueue requestQueue,
-                              AccessToken accessToken,
-                              UserAgent userAgent) {
+    @Inject public TaxonomyRestClient(
+            Context appContext,
+            Dispatcher dispatcher,
+            @Named("regular") RequestQueue requestQueue,
+            AccessToken accessToken,
+            UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
 
@@ -75,8 +76,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
                         payload.error = taxonomyError;
                         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermAction(payload));
                     }
-                }
-        );
+                });
         add(request);
     }
 
@@ -113,8 +113,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
                         FetchTermsResponsePayload payload = new FetchTermsResponsePayload(taxonomyError, taxonomyName);
                         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(payload));
                     }
-                }
-        );
+                });
         add(request);
     }
 
@@ -150,8 +149,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
                         payload.error = new TaxonomyError(error.apiError, error.message);
                         mDispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload));
                     }
-                }
-        );
+                });
 
         request.addQueryParameter("context", "edit");
 
@@ -181,8 +179,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
                         payload.error = new TaxonomyError(error.apiError, error.message);
                         mDispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload));
                     }
-                }
-        );
+                });
 
         request.disableRetries();
         add(request);
