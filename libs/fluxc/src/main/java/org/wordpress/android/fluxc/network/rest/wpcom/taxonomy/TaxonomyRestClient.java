@@ -53,7 +53,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         final String slug = term.getSlug();
         String url = WPCOMREST.sites.site(site.getSiteId()).taxonomies.taxonomy(taxonomy).terms.slug(slug).getUrlV1_1();
 
-        final WPComGsonRequest request = WPComGsonRequest.buildGetRequest(url, null,
+        final WPComGsonRequest<TermWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
                 TermWPComRestResponse.class,
                 new Listener<TermWPComRestResponse>() {
                     @Override
@@ -86,7 +86,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         Map<String, String> params = new HashMap<>();
         params.put("number", "1000");
 
-        final WPComGsonRequest request = WPComGsonRequest.buildGetRequest(url, params,
+        final WPComGsonRequest<TermsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 TermsResponse.class,
                 new Listener<TermsResponse>() {
                     @Override
@@ -126,7 +126,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
 
         Map<String, Object> body = termModelToParams(term);
 
-        final WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, body,
+        final WPComGsonRequest<TermWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, body,
                 TermWPComRestResponse.class,
                 new Listener<TermWPComRestResponse>() {
                     @Override
@@ -162,7 +162,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.sites.site(site.getSiteId()).taxonomies.taxonomy(taxonomy).terms
                 .slug(term.getSlug()).delete.getUrlV1_1();
 
-        final WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, null,
+        final WPComGsonRequest<TermWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 TermWPComRestResponse.class,
                 new Listener<TermWPComRestResponse>() {
                     @Override
