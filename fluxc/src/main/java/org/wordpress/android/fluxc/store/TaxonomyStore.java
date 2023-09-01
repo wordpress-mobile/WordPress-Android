@@ -316,7 +316,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void fetchTerms(SiteModel site, String taxonomyName) {
+    private void fetchTerms(@NonNull SiteModel site, @NonNull String taxonomyName) {
         // TODO: Support large number of terms (currently pulling 100 from REST, and ? from XML-RPC) - pagination?
         if (site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerms(site, taxonomyName);
@@ -326,7 +326,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void fetchTerms(FetchTermsPayload payload) {
+    private void fetchTerms(@NonNull FetchTermsPayload payload) {
         fetchTerms(payload.site, payload.taxonomy.getName());
     }
 
