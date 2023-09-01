@@ -1,5 +1,0 @@
-23.0:
-- Mengupgrade editor pos dengan pengelolaan berbagi ke media sosial
-- Menambahkan kartu dasbor Kampanye Blaze dan transfer domain
-- Memperbaiki bug pemasangan plugin yang menyebabkan crash pada aplikasi
-- Meningkatkan usabilitas dan desain blok galeri

@@ -1,5 +1,0 @@
-23.0:
-- Fizemos upgrade do editor de posts com gestão de compartilhamento em redes sociais
-- Adicionamos cartões de painel de campanha do Blaze e transferência de domínio
-- Corrigimos um bug na instalação de plugin que causava uma falha no aplicativo
-- Aprimoramos o design e a usabilidade do bloco de galeria
