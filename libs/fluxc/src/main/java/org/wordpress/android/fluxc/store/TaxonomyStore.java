@@ -59,19 +59,20 @@ public class TaxonomyStore extends Store {
     }
 
     public static class RemoteTermPayload extends Payload<TaxonomyError> {
-        public TermModel term;
-        public SiteModel site;
+        @NonNull public TermModel term;
+        @NonNull public SiteModel site;
 
-        public RemoteTermPayload(TermModel term, SiteModel site) {
+        public RemoteTermPayload(@NonNull TermModel term, @NonNull SiteModel site) {
             this.term = term;
             this.site = site;
         }
     }
 
     public static class FetchTermResponsePayload extends RemoteTermPayload {
-        public TaxonomyAction origin = TaxonomyAction.FETCH_TERM; // Used to track fetching newly uploaded XML-RPC terms
+        // Used to track fetching newly uploaded XML-RPC terms
+        @NonNull public TaxonomyAction origin = TaxonomyAction.FETCH_TERM;
 
-        public FetchTermResponsePayload(TermModel term, SiteModel site) {
+        public FetchTermResponsePayload(@NonNull TermModel term, @NonNull SiteModel site) {
             super(term, site);
         }
     }
