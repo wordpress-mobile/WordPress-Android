@@ -3,7 +3,6 @@
 23.2
 -----
 * [*] The Zendesk ticket screen will be displayed for error dialogs resulting from account closure. [https://github.com/wordpress-mobile/WordPress-Android/pull/19023]
-* [***] [Jetpack-only] Contact Support: Need assistance? Use Jetpack mobile assistant for immediate help. Create a support ticket for further assistance. [https://github.com/wordpress-mobile/WordPress-Android/pull/18879]
 * [*] Block Editor: Fix crash when using the Search block TextInput in the block inserter [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6090]
 * [**] [Jetpack-only] Block Editor: Add basic support to view, relocate, and remove the Jetpack Paywall block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6076]
 * [*] Block Editor: Columns block - Fix transforming into a Group block crash [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6129]
