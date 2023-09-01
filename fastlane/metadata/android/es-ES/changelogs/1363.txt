@@ -1,5 +1,0 @@
-23.0:
-- Eliminado el espacio visual entre los bloques de galería seleccionados y la barra de herramientas
-- Oculta el botón de leyenda de la galería en dispositivos móviles.
-- Hacer que el bloque de galería correcto permanezca seleccionado mientras añades medios
-- Corregido un fallo de instalación de plugins que provocaba que la aplicación fallase
