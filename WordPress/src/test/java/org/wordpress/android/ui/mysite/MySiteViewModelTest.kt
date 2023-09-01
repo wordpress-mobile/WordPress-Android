@@ -126,7 +126,6 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.Qui
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
-import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -231,9 +230,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var cardsTracker: CardsTracker
-
-    @Mock
-    lateinit var siteItemsTracker: SiteItemsTracker
 
     @Mock
     lateinit var domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
@@ -523,7 +519,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             landOnTheEditorFeatureConfig,
             mySiteSourceManager,
             cardsTracker,
-            siteItemsTracker,
             domainRegistrationCardShownTracker,
             buildConfigWrapper,
             mySiteDashboardTabsFeatureConfig,
@@ -2342,7 +2337,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when site item is clicked, then event is tracked`() = test {
         invokeItemClickAction(ListItemAction.POSTS)
 
-        verify(siteItemsTracker).trackSiteItemClicked(ListItemAction.POSTS)
+        verify(analyticsTrackerWrapper).track(
+            Stat.MY_SITE_MENU_ITEM_TAPPED,
+            mapOf("type" to ListItemAction.POSTS.trackingLabel)
+        )
     }
 
     @Test

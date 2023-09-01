@@ -4,6 +4,7 @@
 -----
 * [*] The Zendesk ticket screen will be displayed for error dialogs resulting from account closure. [https://github.com/wordpress-mobile/WordPress-Android/pull/19023]
 * [***] [Jetpack-only] Contact Support: Need assistance? Use Jetpack mobile assistant for immediate help. Create a support ticket for further assistance. [https://github.com/wordpress-mobile/WordPress-Android/pull/18879]
+* [***] [Jetpack-only] Contact Support: Add a new chat-based support channel where users can get answers from a bot trained to help app users. Users can still create a support ticket to talk to a Happiness Engineer if they don't find the answer they're looking for  [https://github.com/wordpress-mobile/WordPress-Android/pull/18879]
 * [*] [Jetpack-only] Block editor: Fix crash when contacting customer support within the editor [https://github.com/wordpress-mobile/WordPress-Android/pull/19102]
 
 23.1

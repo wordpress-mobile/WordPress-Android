@@ -154,7 +154,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private ConversationNotificationsViewModel mConversationViewModel;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_comment_list);
 

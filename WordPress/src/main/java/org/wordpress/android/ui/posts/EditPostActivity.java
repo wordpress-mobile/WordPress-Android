@@ -560,7 +560,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override @SuppressWarnings("checkstyle:MethodLength")
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 

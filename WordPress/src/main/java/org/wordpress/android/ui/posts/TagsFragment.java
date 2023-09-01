@@ -52,7 +52,8 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
 
     protected abstract String getTagsFromEditPostRepositoryOrArguments();
 
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
