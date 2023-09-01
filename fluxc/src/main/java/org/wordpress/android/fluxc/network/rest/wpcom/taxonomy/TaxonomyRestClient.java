@@ -170,7 +170,8 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         return term;
     }
 
-    private Map<String, Object> termModelToParams(TermModel term) {
+    @NonNull
+    private Map<String, Object> termModelToParams(@NonNull TermModel term) {
         Map<String, Object> body = new HashMap<>();
 
         body.put("name", StringUtils.notNullStr(term.getName()));
