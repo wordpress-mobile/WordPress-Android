@@ -5,7 +5,7 @@ import org.wordpress.android.fluxc.network.Response;
 import java.util.List;
 
 public class TermWPComRestResponse implements Response {
-    public class TermsResponse {
+    public static class TermsResponse {
         public List<TermWPComRestResponse> terms;
     }
 
@@ -17,10 +17,10 @@ public class TermWPComRestResponse implements Response {
     public long parent;
     public Meta meta;
 
-    public class Meta {
+    public static class Meta {
         public Links links;
 
-        public class Links {
+        public static class Links {
             public String self;
             public String help;
             public String site;
