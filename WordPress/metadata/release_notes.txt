@@ -1,3 +1,4 @@
-- The Social Link block now includes an outline so you can see when it’s selected.
-- The undo and redo buttons are no longer visible in the HTML editor.
-- You’ll now see hex codes for the selected color when you’re using the Cover Block color picker.
+* [*] Block Editor: Fix crash when using the Search block TextInput in the block inserter [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6090]
+* [*] Block Editor: Columns block - Fix transforming into a Group block crash [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6129]
+* [**] Block Editor: Add block outline to all Social Link blocks when selected [https://github.com/WordPress/gutenberg/pull/54011]
+
