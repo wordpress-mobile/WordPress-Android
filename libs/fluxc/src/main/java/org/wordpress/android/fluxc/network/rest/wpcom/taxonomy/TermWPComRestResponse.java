@@ -15,15 +15,4 @@ public class TermWPComRestResponse implements Response {
     public String description;
     public int post_count;
     public long parent;
-    public Meta meta;
-
-    public static class Meta {
-        public Links links;
-
-        public static class Links {
-            public String self;
-            public String help;
-            public String site;
-        }
-    }
 }
