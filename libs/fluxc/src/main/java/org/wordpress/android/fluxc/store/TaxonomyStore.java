@@ -231,21 +231,24 @@ public class TaxonomyStore extends Store {
     /**
      * Returns a category as a {@link TermModel} given its name.
      */
-    public TermModel getCategoryByName(SiteModel site, String categoryName) {
+    @Nullable
+    public TermModel getCategoryByName(@NonNull SiteModel site, @NonNull String categoryName) {
         return TaxonomySqlUtils.getTermByName(site, categoryName, DEFAULT_TAXONOMY_CATEGORY);
     }
 
     /**
      * Returns a tag as a {@link TermModel} given its name.
      */
-    public TermModel getTagByName(SiteModel site, String tagName) {
+    @Nullable
+    public TermModel getTagByName(@NonNull SiteModel site, @NonNull String tagName) {
         return TaxonomySqlUtils.getTermByName(site, tagName, DEFAULT_TAXONOMY_TAG);
     }
 
     /**
      * Returns a term as a {@link TermModel} given its name.
      */
-    public TermModel getTermByName(SiteModel site, String termName, String taxonomyName) {
+    @Nullable
+    public TermModel getTermByName(@NonNull SiteModel site, @NonNull String termName, @NonNull String taxonomyName) {
         return TaxonomySqlUtils.getTermByName(site, termName, taxonomyName);
     }
 
