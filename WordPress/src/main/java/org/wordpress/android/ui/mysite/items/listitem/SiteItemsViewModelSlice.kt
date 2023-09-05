@@ -55,9 +55,7 @@ class SiteItemsViewModelSlice @Inject constructor(
                 activeTask = activeTask,
                 backupAvailable = backupAvailable,
                 scanAvailable = scanAvailable,
-                enableStatsFocusPoint = shouldEnableFocusPoint,
-                enablePagesFocusPoint = shouldEnableFocusPoint,
-                enableMediaFocusPoint = shouldEnableFocusPoint,
+                enableFocusPoints = shouldEnableFocusPoint,
                 onClick = this::onItemClick,
                 isBlazeEligible = isSiteBlazeEligible()
             )

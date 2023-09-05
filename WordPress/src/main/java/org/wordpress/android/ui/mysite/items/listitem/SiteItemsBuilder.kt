@@ -40,10 +40,10 @@ class SiteItemsBuilder @Inject constructor(
         params: SiteItemsBuilderParams
     ): List<MySiteCardAndItem> {
         val showPagesFocusPoint = params.activeTask == QuickStartNewSiteTask.REVIEW_PAGES &&
-                params.enablePagesFocusPoint
+                params.enableFocusPoints
         val uploadMediaTask = quickStartRepository.quickStartType
                 .getTaskFromString(QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL)
-        val showMediaFocusPoint = params.activeTask == uploadMediaTask && params.enableMediaFocusPoint
+        val showMediaFocusPoint = params.activeTask == uploadMediaTask && params.enableFocusPoints
 
         return listOfNotNull(
                 CategoryHeaderItem(UiStringRes(R.string.my_site_header_content)),
@@ -75,7 +75,7 @@ class SiteItemsBuilder @Inject constructor(
 
         val checkStatsTask = quickStartRepository.quickStartType
             .getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL)
-        val showStatsFocusPoint = params.activeTask == checkStatsTask && params.enableStatsFocusPoint
+        val showStatsFocusPoint = params.activeTask == checkStatsTask && params.enableFocusPoints
 
         return listOfNotNull(
             CategoryHeaderItem(UiStringRes(R.string.my_site_header_traffic)),
