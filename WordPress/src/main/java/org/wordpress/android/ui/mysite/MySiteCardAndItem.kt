@@ -14,7 +14,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_BADGE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_FEATURE_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_LINK_RIBBON
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SINGLE_ACTION_CARD
@@ -31,7 +30,6 @@ typealias PromptID = Int
 sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartItem: Boolean = false) {
     enum class Type {
         SITE_INFO_CARD,
-        QUICK_ACTIONS_CARD,
         QUICK_LINK_RIBBON,
         DOMAIN_REGISTRATION_CARD,
         QUICK_START_CARD,
@@ -90,15 +88,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         override val type: Type,
         override val activeQuickStartItem: Boolean = false
     ) : MySiteCardAndItem(type, activeQuickStartItem) {
-        data class QuickActionsCard(
-            val title: UiString,
-            val onStatsClick: ListItemInteraction,
-            val onPagesClick: ListItemInteraction,
-            val onPostsClick: ListItemInteraction,
-            val onMediaClick: ListItemInteraction,
-            val showPages: Boolean = true
-        ) : Card(QUICK_ACTIONS_CARD)
-
         data class QuickLinkRibbon(
             val quickLinkRibbonItems: List<QuickLinkRibbonItem>,
             val showPagesFocusPoint: Boolean = false,

@@ -721,7 +721,6 @@ class MySiteViewModel @Inject constructor(
             if (defaultTab == MySiteTabType.SITE_MENU) {
                 add(Type.QUICK_START_CARD)
             }
-            add(Type.QUICK_ACTIONS_CARD)
         }
 
         MySiteTabType.ALL -> emptyList()
