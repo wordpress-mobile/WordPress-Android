@@ -91,22 +91,6 @@ class CardsBuilderTest {
         assertThat(cards.findDomainRegistrationCard()).isNull()
     }
 
-    /* QUICK ACTIONS CARD */
-
-    @Test
-    fun `given quick action enabled + tabs disabled, when cards built, then quick actions card is built`() {
-        val cards = buildCards(isQuickActionEnabled = true, isMySiteTabsEnabled = false)
-
-        assertThat(cards.findQuickActionsCard()).isNotNull
-    }
-
-    @Test
-    fun `given quick action disabled, when cards built, then quick actions card is not built`() {
-        val cards = buildCards(isQuickActionEnabled = false)
-
-        assertThat(cards.findQuickActionsCard()).isNull()
-    }
-
     /* QUICK START CARD */
 
     @Test
@@ -147,9 +131,6 @@ class CardsBuilderTest {
         assertThat(cards.findQuickLinkRibbon()).isNotNull
     }
 
-    private fun List<MySiteCardAndItem>.findQuickActionsCard() =
-        this.find { it is QuickActionsCard } as QuickActionsCard?
-
     private fun List<MySiteCardAndItem>.findQuickStartCard() = this.find { it is QuickStartCard } as QuickStartCard?
 
     private fun List<MySiteCardAndItem>.findDashboardCards() = this.find { it is DashboardCards }
@@ -162,7 +143,6 @@ class CardsBuilderTest {
 
     @Suppress("LongMethod")
     private fun buildCards(
-        isQuickActionEnabled: Boolean = true,
         activeTask: QuickStartTask? = null,
         isDomainCreditAvailable: Boolean = false,
         isEligibleForDomainCard: Boolean = false,
@@ -171,7 +151,6 @@ class CardsBuilderTest {
         isMySiteTabsEnabled: Boolean = false,
         isEligibleForDomainTransferCard: Boolean = false,
     ): List<MySiteCardAndItem> {
-        whenever(buildConfigWrapper.isQuickActionEnabled).thenReturn(isQuickActionEnabled)
         return cardsBuilder.build(
             domainRegistrationCardBuilderParams = DomainRegistrationCardBuilderParams(
                 isDomainCreditAvailable = isDomainCreditAvailable,
@@ -266,15 +245,6 @@ class CardsBuilderTest {
             jetpackInstallFullPluginCardBuilder,
         )
     }
-
-    private fun initQuickActionsCard() = QuickActionsCard(
-        title = UiStringText(""),
-        onStatsClick = mock(),
-        onPagesClick = mock(),
-        onPostsClick = mock(),
-        onMediaClick = mock(),
-        showPages = false
-    )
 
     private fun initQuickStartCard() = QuickStartCard(
         title = UiStringText(""),
