@@ -252,7 +252,8 @@ public class TaxonomyStore extends Store {
     /**
      * Returns all the categories for the given post as a {@link TermModel} list.
      */
-    public List<TermModel> getCategoriesForPost(PostImmutableModel post, SiteModel site) {
+    @NonNull
+    public List<TermModel> getCategoriesForPost(@NonNull PostImmutableModel post, @NonNull SiteModel site) {
         return TaxonomySqlUtils.getTermsFromRemoteIdList(post.getCategoryIdList(), site, DEFAULT_TAXONOMY_CATEGORY);
     }
 
