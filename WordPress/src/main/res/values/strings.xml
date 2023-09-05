@@ -4520,11 +4520,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contact support</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Close</string>
 
-    <!-- Dashboard Card Domain-->
-    <string name="dashboard_card_domain_title">Find a custom domain</string>
-    <string name="dashboard_card_domain_sub_title">Stake your claim on your corner of the web with a site address that\'s easy to find, share, and follow.</string>
-    <string name="dashboard_card_domain_menu_hide_this">Hide this</string>
-
     <!-- Dashboard Card Domain Transfer-->
     <string name="domain_transfer_card_title">News</string>
     <string name="domain_transfer_card_sub_title">Reclaim Your Google Domains</string>
