@@ -95,9 +95,9 @@ public class TaxonomyStore extends Store {
     }
 
     public static class OnTermUploaded extends OnChanged<TaxonomyError> {
-        public TermModel term;
+        @NonNull public TermModel term;
 
-        public OnTermUploaded(TermModel term) {
+        public OnTermUploaded(@NonNull TermModel term) {
             this.term = term;
         }
     }
