@@ -99,8 +99,8 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
-import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
+import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
@@ -206,7 +206,8 @@ class MySiteViewModel @Inject constructor(
     private val pagesCardViewModelSlice: PagesCardViewModelSlice,
     private val todaysStatsViewModelSlice: TodaysStatsViewModelSlice,
     private val postsCardViewModelSlice: PostsCardViewModelSlice,
-    private val activityLogCardViewModelSlice: ActivityLogCardViewModelSlice
+    private val activityLogCardViewModelSlice: ActivityLogCardViewModelSlice,
+    private val siteItemsViewModelSlice: SiteItemsViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -628,18 +629,12 @@ class MySiteViewModel @Inject constructor(
             isMySiteTabsEnabled
         )
 
-        val siteItems = siteItemsBuilder.build(
-            SiteItemsBuilderParams(
-                site = site,
-                activeTask = activeTask,
-                backupAvailable = backupAvailable,
-                scanAvailable = scanAvailable,
-                enableStatsFocusPoint = shouldEnableSiteItemsFocusPoints(),
-                enablePagesFocusPoint = shouldEnableSiteItemsFocusPoints(),
-                enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
-                onClick = this::onItemClick,
-                isBlazeEligible = blazeCardViewModelSlice.isSiteBlazeEligible()
-            )
+        val siteItems = siteItemsViewModelSlice.buildItems(
+            defaultTab = defaultTab,
+            site = site,
+            activeTask = activeTask,
+            backupAvailable = backupAvailable,
+            scanAvailable = scanAvailable,
         )
 
         val jetpackBadge = buildJetpackBadgeIfEnabled()
@@ -703,8 +698,6 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun shouldEnableQuickLinkRibbonFocusPoints() = defaultTab == MySiteTabType.DASHBOARD
-
-    private fun shouldEnableSiteItemsFocusPoints() = defaultTab != MySiteTabType.DASHBOARD
 
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
@@ -812,64 +805,9 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    @Suppress("ComplexMethod")
-    private fun onItemClick(action: ListItemAction) {
-        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
-            analyticsTrackerWrapper.track(Stat.MY_SITE_MENU_ITEM_TAPPED, mapOf(TYPE to action.trackingLabel))
-            val navigationAction = when (action) {
-                ListItemAction.ACTIVITY_LOG -> SiteNavigationAction.OpenActivityLog(selectedSite)
-                ListItemAction.BACKUP -> SiteNavigationAction.OpenBackup(selectedSite)
-                ListItemAction.SCAN -> SiteNavigationAction.OpenScan(selectedSite)
-                ListItemAction.PLAN -> {
-                    SiteNavigationAction.OpenPlan(selectedSite)
-                }
-
-                ListItemAction.POSTS -> SiteNavigationAction.OpenPosts(selectedSite)
-                ListItemAction.PAGES -> {
-                    quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
-                    SiteNavigationAction.OpenPages(selectedSite)
-                }
-
-                ListItemAction.ADMIN -> SiteNavigationAction.OpenAdmin(selectedSite)
-                ListItemAction.PEOPLE -> SiteNavigationAction.OpenPeople(selectedSite)
-                ListItemAction.SHARING -> {
-                    quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.ENABLE_POST_SHARING)
-                    SiteNavigationAction.OpenSharing(selectedSite)
-                }
-
-                ListItemAction.DOMAINS -> SiteNavigationAction.OpenDomains(selectedSite)
-                ListItemAction.ME -> SiteNavigationAction.OpenMeScreen
-                ListItemAction.SITE_SETTINGS -> SiteNavigationAction.OpenSiteSettings(selectedSite)
-                ListItemAction.THEMES -> SiteNavigationAction.OpenThemes(selectedSite)
-                ListItemAction.PLUGINS -> SiteNavigationAction.OpenPlugins(selectedSite)
-                ListItemAction.STATS -> {
-                    quickStartRepository.completeTask(
-                        quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
-                    )
-                    getStatsNavigationActionForSite(selectedSite)
-                }
-
-                ListItemAction.MEDIA -> {
-                    quickStartRepository.requestNextStepOfTask(
-                        quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
-                    )
-                    SiteNavigationAction.OpenMedia(selectedSite)
-                }
-
-                ListItemAction.COMMENTS -> SiteNavigationAction.OpenUnifiedComments(selectedSite)
-                ListItemAction.VIEW_SITE -> {
-                    SiteNavigationAction.OpenSite(selectedSite)
-                }
-
-                ListItemAction.JETPACK_SETTINGS -> SiteNavigationAction.OpenJetpackSettings(selectedSite)
-                ListItemAction.BLAZE -> blazeCardViewModelSlice.onBlazeMenuItemClick()
-            }
-            _onNavigation.postValue(Event(navigationAction))
-        } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
-    }
-
     private fun onQuickStartMoreMenuClick(quickStartCardType: QuickStartCardType) =
         quickStartTracker.trackMoreMenuClicked(quickStartCardType)
+
     private fun onQuickStartHideThisMenuItemClick(quickStartCardType: QuickStartCardType) {
         quickStartTracker.trackMoreMenuItemClicked(quickStartCardType)
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
@@ -877,6 +815,7 @@ class MySiteViewModel @Inject constructor(
                 QuickStartCardType.GET_TO_KNOW_THE_APP -> {
                     quickStartRepository.onHideShowGetToKnowTheAppCard(selectedSite.siteId)
                 }
+
                 QuickStartCardType.NEXT_STEPS -> {
                     quickStartRepository.onHideNextStepsCard(selectedSite.siteId)
                 }
