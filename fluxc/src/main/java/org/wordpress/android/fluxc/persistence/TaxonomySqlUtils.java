@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.wellsql.generated.TermModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -76,11 +77,11 @@ public class TaxonomySqlUtils {
         return null;
     }
 
-    public static TermModel getTermByName(SiteModel site, String termName, String taxonomyName) {
-        if (site == null || taxonomyName == null) {
-            return null;
-        }
-
+    @Nullable
+    public static TermModel getTermByName(
+            @NonNull SiteModel site,
+            @NonNull String termName,
+            @NonNull String taxonomyName) {
         List<TermModel> termResult = WellSql.select(TermModel.class)
                 .where().beginGroup()
                 .equals(TermModelTable.LOCAL_SITE_ID, site.getId())
