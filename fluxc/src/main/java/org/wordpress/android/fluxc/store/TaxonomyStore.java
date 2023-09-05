@@ -436,7 +436,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void updateTerm(TermModel term) {
+    private void updateTerm(@NonNull TermModel term) {
         int rowsAffected = TaxonomySqlUtils.insertOrUpdateTerm(term);
 
         OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
@@ -444,7 +444,7 @@ public class TaxonomyStore extends Store {
         emitChange(onTaxonomyChanged);
     }
 
-    private void removeTerm(TermModel term) {
+    private void removeTerm(@NonNull TermModel term) {
         int rowsAffected = TaxonomySqlUtils.removeTerm(term);
 
         OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
