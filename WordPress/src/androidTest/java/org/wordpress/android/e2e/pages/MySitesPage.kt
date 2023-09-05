@@ -3,7 +3,6 @@ package org.wordpress.android.e2e.pages
 import android.view.View
 import android.widget.Checkable
 import android.widget.TextView
-import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
