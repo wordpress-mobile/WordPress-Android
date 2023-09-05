@@ -23,9 +23,12 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val TYPE = "type"
 
+@Singleton
+@Suppress("LongParameterList")
 class SiteItemsViewModelSlice @Inject constructor(
     private val quickStartRepository: QuickStartRepository,
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -142,7 +145,8 @@ class SiteItemsViewModelSlice @Inject constructor(
         else -> SiteNavigationAction.ConnectJetpackForStats(site)
     }
 
-    fun isSiteBlazeEligible() = blazeFeatureUtils.isSiteBlazeEligible(selectedSiteRepository.getSelectedSite()!!)
+    private fun isSiteBlazeEligible() =
+        blazeFeatureUtils.isSiteBlazeEligible(selectedSiteRepository.getSelectedSite()!!)
 
     private fun onBlazeMenuItemClick(): SiteNavigationAction {
         blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.MENU_ITEM)
