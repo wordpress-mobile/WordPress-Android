@@ -68,7 +68,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackIns
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
@@ -99,7 +98,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
-import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
+import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -154,7 +153,6 @@ class MySiteViewModel @Inject constructor(
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val siteItemsBuilder: SiteItemsBuilder,
     private val accountStore: AccountStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val wpMediaUtilsWrapper: WPMediaUtilsWrapper,
@@ -207,7 +205,8 @@ class MySiteViewModel @Inject constructor(
     private val todaysStatsViewModelSlice: TodaysStatsViewModelSlice,
     private val postsCardViewModelSlice: PostsCardViewModelSlice,
     private val activityLogCardViewModelSlice: ActivityLogCardViewModelSlice,
-    private val siteItemsViewModelSlice: SiteItemsViewModelSlice
+    private val siteItemsViewModelSlice: SiteItemsViewModelSlice,
+    private val mySiteInfoItemBuilder: MySiteInfoItemBuilder
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -285,7 +284,12 @@ class MySiteViewModel @Inject constructor(
             null
         }
     }
-    val onSnackbarMessage = merge(_onSnackbarMessage, siteStoriesHandler.onSnackbar, quickStartRepository.onSnackbar)
+    val onSnackbarMessage = merge(
+        _onSnackbarMessage,
+        siteStoriesHandler.onSnackbar,
+        quickStartRepository.onSnackbar,
+        siteItemsViewModelSlice.onSnackbarMessage
+    )
     val onQuickStartMySitePrompts = quickStartRepository.onQuickStartMySitePrompts
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
@@ -297,7 +301,8 @@ class MySiteViewModel @Inject constructor(
         domainTransferCardViewModel.onNavigation,
         todaysStatsViewModelSlice.onNavigation,
         postsCardViewModelSlice.onNavigation,
-        activityLogCardViewModelSlice.onNavigation
+        activityLogCardViewModelSlice.onNavigation,
+        siteItemsViewModelSlice.onNavigation,
     )
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
@@ -509,7 +514,7 @@ class MySiteViewModel @Inject constructor(
         blazeCardUpdate: BlazeCardUpdate?,
         hasSiteCustomDomains: Boolean?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
-        val infoItem = siteItemsBuilder.build(
+        val infoItem = mySiteInfoItemBuilder.build(
             InfoItemBuilderParams(
                 isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
             )
