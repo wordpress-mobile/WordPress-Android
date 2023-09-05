@@ -259,7 +259,8 @@ public class TaxonomyStore extends Store {
     /**
      * Returns all the tags for the given post as a {@link TermModel} list.
      */
-    public List<TermModel> getTagsForPost(PostImmutableModel post, SiteModel site) {
+    @NonNull
+    public List<TermModel> getTagsForPost(@NonNull PostImmutableModel post, @NonNull SiteModel site) {
         return TaxonomySqlUtils.getTermsFromRemoteNameList(post.getTagNameList(), site, DEFAULT_TAXONOMY_TAG);
     }
 
