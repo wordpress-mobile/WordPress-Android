@@ -23,7 +23,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.Qui
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardDomainBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
@@ -174,7 +173,6 @@ class CardsBuilderTest {
         isQuickActionEnabled: Boolean = true,
         activeTask: QuickStartTask? = null,
         isDomainCreditAvailable: Boolean = false,
-        isEligibleForDomainCard: Boolean = false,
         isEligibleForPlansCard: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         isMySiteTabsEnabled: Boolean = false,
@@ -215,12 +213,6 @@ class CardsBuilderTest {
                     mock(),
                 ),
                 blazeCardBuilderParams = BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams(
-                    mock(),
-                    mock(),
-                    mock()
-                ),
-                dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
-                    isEligible = isEligibleForDomainCard,
                     mock(),
                     mock(),
                     mock()

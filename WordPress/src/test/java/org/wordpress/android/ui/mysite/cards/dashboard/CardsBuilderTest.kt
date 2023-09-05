@@ -281,7 +281,6 @@ class CardsBuilderTest : BaseUnitTest() {
         showErrorCard: Boolean = false,
         isEligibleForDomainTransferCard: Boolean = false,
         isEligibleForBlaze: Boolean = false,
-        isEligibleForDomainCard: Boolean = false,
         isEligibleForPlansCard: Boolean = false,
         hasPagesCard: Boolean = false,
         hasActivityCard: Boolean = false
