@@ -1650,18 +1650,6 @@ public class AppPrefs {
         return DeletablePrefKey.SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD.name() + siteId;
     }
 
-    public static Boolean getShouldHideDashboardDomainCard(long siteId) {
-        return prefs().getBoolean(getSiteIdHideDashboardDomainCardKey(siteId), false);
-    }
-
-    public static void setShouldHideDashboardDomainCard(long siteId, final boolean isHidden) {
-        prefs().edit().putBoolean(getSiteIdHideDashboardDomainCardKey(siteId), isHidden).apply();
-    }
-
-    @NonNull private static String getSiteIdHideDashboardDomainCardKey(long siteId) {
-        return DeletablePrefKey.SHOULD_HIDE_DASHBOARD_DOMAIN_CARD.name() + siteId;
-    }
-
     public static Boolean getShouldHideDashboardPlansCard(long siteId) {
         return prefs().getBoolean(getSiteIdHideDashboardPlansCardKey(siteId), false);
     }
