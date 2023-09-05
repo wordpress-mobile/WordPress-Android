@@ -20,7 +20,6 @@ Language: ja_JP
     <string name="contact_support_question_one">サイトのアドレスがわかりません。</string>
     <string name="contact_support_suggestions">どうすればいいかわからない場合</string>
     <string name="contact_support_get_support">サポートに連絡</string>
-    <string name="contact_support_first_message">サポートできることはありますか ?</string>
     <string name="contact_support_input_placeholder">メッセージを送信…</string>
     <string name="post_settings_jetpack_social_share_message_clear">消去</string>
     <string name="jetpack_social_social_shares_remaining">残りのソーシャルシェア数は%1$d件です</string>
@@ -107,7 +106,6 @@ Language: ja_JP
     <string name="account_closure_dialog_error_chargebacked_site">未解決のチャージバックがある場合、このユーザーアカウントを閉鎖できません。</string>
     <string name="account_closure_dialog_error_atomic_site">有効になっている購入があるため、すぐにはこのユーザーアカウントを閉鎖できません。 サポートチームにご連絡いただき、アカウントの削除を完了してください。</string>
     <string name="account_closure_dialog_error_unauthorized">アカウントを閉鎖する権限がありません。</string>
-    <string name="account_closure_dialog_error_title">アカウントを自動的にクローズできませんでした。</string>
     <string name="account_closure_dialog_title">アカウントの閉鎖を確認…</string>
     <string name="account_closure_dialog_message">確認するには、閉鎖する前のユーザーアカウントをもう一度入力してください。</string>
     <string name="close_account">アカウントを閉鎖</string>

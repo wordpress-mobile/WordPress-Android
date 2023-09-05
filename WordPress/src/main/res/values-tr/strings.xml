@@ -20,7 +20,6 @@ Language: tr
     <string name="contact_support_question_one">Sitemin adresi ne?</string>
     <string name="contact_support_suggestions">Ne soracağınızdan emin değil misiniz?</string>
     <string name="contact_support_get_support">Destek ile iletişim kur</string>
-    <string name="contact_support_first_message">Size ne konuda yardımcı olabiliriz?</string>
     <string name="contact_support_input_placeholder">Mesaj gönder…</string>
     <string name="post_settings_jetpack_social_share_message_clear">Temizle</string>
     <string name="jetpack_social_social_shares_remaining">%1$d sosyal paylaşım hakkı kaldı</string>
@@ -107,7 +106,6 @@ Language: tr
     <string name="account_closure_dialog_error_chargebacked_site">Çözülmemiş geri ödeme varsa bu kullanıcı hesabı kapatılamaz.</string>
     <string name="account_closure_dialog_error_atomic_site">Aktif satın alma işlemleri içerdiğinden, bu kullanıcı hesabı hemen kapatılamaz. Hesabı silme işlemini tamamlamak için lütfen destek ekibimizle iletişime geçin.</string>
     <string name="account_closure_dialog_error_unauthorized">Hesabı kapatma yetkiniz yok.</string>
-    <string name="account_closure_dialog_error_title">Hesap otomatik olarak kapatılamadı\"</string>
     <string name="account_closure_dialog_title">Hesabı Kapatmayı Onayla…</string>
     <string name="account_closure_dialog_message">Onaylamak için lütfen kapatmadan önce kullanıcı adınızı tekrar girin.</string>
     <string name="close_account">Hesabı Kapat</string>

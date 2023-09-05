@@ -20,7 +20,6 @@ Language: de
     <string name="contact_support_question_one">Wie lautet meine Website-Adresse?</string>
     <string name="contact_support_suggestions">Nicht sicher, was du fragen sollst?</string>
     <string name="contact_support_get_support">Kontaktiere den Support</string>
-    <string name="contact_support_first_message">Wie können wir dir helfen?</string>
     <string name="contact_support_input_placeholder">Sende eine Nachricht …</string>
     <string name="post_settings_jetpack_social_share_message_clear">Wolkenlos</string>
     <string name="jetpack_social_social_shares_remaining">Noch %1$d-mal teilen in sozialen Medien möglich</string>
@@ -107,7 +106,6 @@ Language: de
     <string name="account_closure_dialog_error_chargebacked_site">Dieses Benutzerkonto kann nicht geschlossen werden, solange noch ungelöste Rückbuchungen bestehen.</string>
     <string name="account_closure_dialog_error_atomic_site">Dieses Benutzerkonto kann nicht sofort geschlossen werden, da es aktive Käufe hat. Wende dich bitte an das Support-Team, um das Konto zu löschen.</string>
     <string name="account_closure_dialog_error_unauthorized">Du bist nicht autorisiert, dieses Konto zu schließen.</string>
-    <string name="account_closure_dialog_error_title">Konto konnte nicht automatisch geschlossen werden</string>
     <string name="account_closure_dialog_title">Schließen des Kontos bestätigen …</string>
     <string name="account_closure_dialog_message">Bitte gib den Benutzernamen vor dem Schließen erneut an, um den Vorgang zu bestätigen.</string>
     <string name="close_account">Konto schließen</string>

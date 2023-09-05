@@ -20,7 +20,6 @@ Language: ko_KR
     <string name="contact_support_question_one">내 사이트 주소가 무엇인가요?</string>
     <string name="contact_support_suggestions">어떤 질문을 해야 할지 잘 모르시겠나요?</string>
     <string name="contact_support_get_support">지원팀에 문의</string>
-    <string name="contact_support_first_message">무엇을 도와 드릴까요?</string>
     <string name="contact_support_input_placeholder">메시지 보내기…</string>
     <string name="post_settings_jetpack_social_share_message_clear">지우기</string>
     <string name="jetpack_social_social_shares_remaining">소셜 공유 %1$d회 남음</string>
@@ -107,7 +106,6 @@ Language: ko_KR
     <string name="account_closure_dialog_error_chargebacked_site">해결되지 않는 결제 승인 거부가 있는 경우 이 사용자 계정을 종료할 수 없습니다.</string>
     <string name="account_closure_dialog_error_atomic_site">이 사용자 계정은 활성 구매 항목이 있어서 즉시 닫을 수 없습니다. 지원팀에 문의하여 계정 삭제를 마무리하세요.</string>
     <string name="account_closure_dialog_error_unauthorized">계정을 종료할 권한이 없습니다.</string>
-    <string name="account_closure_dialog_error_title">계정을 자동으로 종료할 수 없습니다.</string>
     <string name="account_closure_dialog_title">계정 종료 확인…</string>
     <string name="account_closure_dialog_message">확인하려면 종료하기 전에 사용자명을 다시 입력하세요.</string>
     <string name="close_account">계정 종료</string>

@@ -20,7 +20,6 @@ Language: fr
     <string name="contact_support_question_one">Quelle est l’adresse de mon site ?</string>
     <string name="contact_support_suggestions">Vous ne savez pas quelle question poser ?</string>
     <string name="contact_support_get_support">Contacter l’assistance</string>
-    <string name="contact_support_first_message">Comment pouvons-nous vous aider ?</string>
     <string name="contact_support_input_placeholder">Envoyer un message…</string>
     <string name="post_settings_jetpack_social_share_message_clear">Effacer</string>
     <string name="jetpack_social_social_shares_remaining">%1$d partages sur les réseaux sociaux restants</string>
@@ -106,7 +105,6 @@ Language: fr
     <string name="account_closure_dialog_error_chargebacked_site">Ce compte utilisateur ne peut pas être clôturé s’il y a des contestations de paiement non résolues.</string>
     <string name="account_closure_dialog_error_atomic_site">Ce compte d’utilisateur ne peut pas être fermé immédiatement, car il est associé à des achats actifs. Veuillez contacter notre équipe d’assistance pour terminer la suppression du compte.</string>
     <string name="account_closure_dialog_error_unauthorized">Nous n’êtes pas autorisé à clôturer le compte.</string>
-    <string name="account_closure_dialog_error_title">Fermeture automatique du compte impossible »</string>
     <string name="account_closure_dialog_title">Confirmer la clôture du compte…</string>
     <string name="account_closure_dialog_message">Pour confirmer, saisissez à nouveau votre identifiant avant de fermer.</string>
     <string name="close_account">Clôturer le compte</string>

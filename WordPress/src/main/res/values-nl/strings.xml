@@ -16,7 +16,6 @@ Language: nl
     <string name="contact_support_question_one">Wat is mijn siteadres?</string>
     <string name="contact_support_suggestions">Weet je niet wat je moet vragen?</string>
     <string name="contact_support_get_support">Neem contact op met support</string>
-    <string name="contact_support_first_message">Waarmee kunnen we je helpen?</string>
     <string name="contact_support_input_placeholder">Verstuur een bericht …</string>
     <string name="jetpack_social_social_shares_remaining">%1$d keer delen op social media resterend</string>
     <string name="missing_splits_dialog_message">Er ontbreken vereiste onderdelen in de WordPress-app en deze moeten opnieuw worden geïnstalleerd vanuit de Google Play Store.</string>
@@ -83,7 +82,6 @@ Language: nl
     <string name="account_closure_dialog_error_chargebacked_site">Dit gebruikersaccount kan niet worden gesloten terwijl het onopgeloste terugvorderingen bevat.</string>
     <string name="account_closure_dialog_error_atomic_site">Dit gebruikersaccount kan niet onmiddellijk worden gesloten omdat het actieve aankopen bevat. Neem contact op met ons ondersteuningsteam om de verwijdering van dit account te voltooien.</string>
     <string name="account_closure_dialog_error_unauthorized">Je hebt geen toestemming om het account te sluiten.</string>
-    <string name="account_closure_dialog_error_title">Kon account niet automatisch sluiten\'</string>
     <string name="account_closure_dialog_title">Account sluiten bevestigen …</string>
     <string name="account_closure_dialog_message">Geef voordat je dit sluit je je gebruikersnaam opnieuw op om te bevestigen.</string>
     <string name="close_account">Account sluiten</string>

@@ -20,7 +20,6 @@ Language: zh_TW
     <string name="contact_support_question_one">我的網站位址是？</string>
     <string name="contact_support_suggestions">不確定要詢問什麼嗎？</string>
     <string name="contact_support_get_support">聯絡支援團隊</string>
-    <string name="contact_support_first_message">你需要什麼協助？</string>
     <string name="contact_support_input_placeholder">傳送訊息…</string>
     <string name="post_settings_jetpack_social_share_message_clear">清除</string>
     <string name="jetpack_social_social_shares_remaining">剩下 %1$d 次社群分享額度</string>
@@ -106,7 +105,6 @@ Language: zh_TW
     <string name="account_closure_dialog_error_chargebacked_site">若有未解決的退款，將無法關閉此使用者帳號。</string>
     <string name="account_closure_dialog_error_atomic_site">此使用者帳號內還有購買項目處於有效狀態，因此無法立即關閉。 請聯絡我們的支援團隊，以完成帳號刪除程序。</string>
     <string name="account_closure_dialog_error_unauthorized">你無權關閉此帳號。</string>
-    <string name="account_closure_dialog_error_title">無法自動關閉帳號</string>
     <string name="account_closure_dialog_title">確認關閉帳號…</string>
     <string name="account_closure_dialog_message">若要確認，請在關閉前重新輸入你的使用者名稱。</string>
     <string name="close_account">關閉帳號</string>

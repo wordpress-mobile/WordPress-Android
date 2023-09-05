@@ -20,7 +20,6 @@ Language: zh_CN
     <string name="contact_support_question_one">我的站点地址是什么？</string>
     <string name="contact_support_suggestions">不确定提问内容？</string>
     <string name="contact_support_get_support">联系支持人员</string>
-    <string name="contact_support_first_message">我们能为您提供什么帮助？</string>
     <string name="contact_support_input_placeholder">发送消息……</string>
     <string name="post_settings_jetpack_social_share_message_clear">清除</string>
     <string name="jetpack_social_social_shares_remaining">还剩 %1$d 次社交分享机会</string>
@@ -106,7 +105,6 @@ Language: zh_CN
     <string name="account_closure_dialog_error_chargebacked_site">如果存在未解决的退款，则无法关闭此用户账户。</string>
     <string name="account_closure_dialog_error_atomic_site">无法立即关闭此用户账户，因为该账户存在活跃的购买。 请联系我们的支持团队，完成账户删除操作。</string>
     <string name="account_closure_dialog_error_unauthorized">您不具备关闭此账户的权限。</string>
-    <string name="account_closure_dialog_error_title">无法自动关闭账户\"</string>
     <string name="account_closure_dialog_title">确认关闭账户…</string>
     <string name="account_closure_dialog_message">如果您确认关闭账户，请在关闭之前重新输入您的用户名。</string>
     <string name="close_account">关闭账户</string>

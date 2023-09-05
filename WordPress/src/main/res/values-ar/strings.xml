@@ -20,7 +20,6 @@ Language: ar
     <string name="contact_support_question_one">ما عنوان موقعي؟</string>
     <string name="contact_support_suggestions">ألست متأكد ماذا تسأل؟</string>
     <string name="contact_support_get_support">الاتصال بالدعم</string>
-    <string name="contact_support_first_message">بماذا يمكننا مساعدتك؟</string>
     <string name="contact_support_input_placeholder">إرسال رسالة…</string>
     <string name="post_settings_jetpack_social_share_message_clear">واضح</string>
     <string name="missing_splits_dialog_button">إغلاق</string>
@@ -104,7 +103,6 @@ Language: ar
     <string name="account_closure_dialog_error_chargebacked_site">يتعذر إغلاق حساب المستخدم هذا إذا كانت هناك عمليات رد مبالغ مدفوعة لم يتم حلها.</string>
     <string name="account_closure_dialog_error_atomic_site">يتعذر إغلاق حساب المستخدم هذا على الفور لأنه يتضمن عمليات شراء نشطة. يرجى الاتصال بفريق الدعم لدينا لإنهاء حذف الحساب.</string>
     <string name="account_closure_dialog_error_unauthorized">لست مخولاً لإغلاق الحساب.</string>
-    <string name="account_closure_dialog_error_title">يتعذر إغلاق الحساب تلقائيًا\"</string>
     <string name="account_closure_dialog_title">تأكيد إغلاق الحساب…</string>
     <string name="account_closure_dialog_message">للتأكيد، ترجى إعادة إدخال اسم المستخدم الخاص بك قبل الإغلاق.</string>
     <string name="close_account">إغلاق الحساب</string>

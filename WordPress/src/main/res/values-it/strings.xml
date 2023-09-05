@@ -20,7 +20,6 @@ Language: it
     <string name="contact_support_question_one">Qual è il mio indirizzo del sito?</string>
     <string name="contact_support_suggestions">Non sei sicuro di cosa chiedere?</string>
     <string name="contact_support_get_support">Contatta il supporto</string>
-    <string name="contact_support_first_message">Con cosa possiamo aiutarti?</string>
     <string name="contact_support_input_placeholder">Invia un messaggio…</string>
     <string name="post_settings_jetpack_social_share_message_clear">Chiaro</string>
     <string name="jetpack_social_social_shares_remaining">%1$d condivisioni sui social rimanenti</string>
@@ -106,7 +105,6 @@ Language: it
     <string name="account_closure_dialog_error_chargebacked_site">Questo account utente non può essere chiuso se sono presenti revoche non risolte.</string>
     <string name="account_closure_dialog_error_atomic_site">Questo account utente non può essere chiuso immediatamente perché ha acquisti attivi. Contatta il nostro team di supporto per completare l\'eliminazione dell\'account.</string>
     <string name="account_closure_dialog_error_unauthorized">Non possiedi l\'autorizzazione necessaria per chiudere l\'account.</string>
-    <string name="account_closure_dialog_error_title">Impossibile chiudere l\'account automaticamente\"</string>
     <string name="account_closure_dialog_title">Conferma chiusura dell\'account…</string>
     <string name="account_closure_dialog_message">Per confermare, inserisci nuovamente il nome utente prima di chiudere.</string>
     <string name="close_account">Chiudi account</string>
