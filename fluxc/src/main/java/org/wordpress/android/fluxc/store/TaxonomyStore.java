@@ -32,10 +32,10 @@ public class TaxonomyStore extends Store {
     public static final String DEFAULT_TAXONOMY_TAG = "post_tag";
 
     public static class FetchTermsPayload extends Payload<BaseNetworkError> {
-        public SiteModel site;
-        public TaxonomyModel taxonomy;
+        @NonNull public SiteModel site;
+        @NonNull public TaxonomyModel taxonomy;
 
-        public FetchTermsPayload(SiteModel site, TaxonomyModel taxonomy) {
+        public FetchTermsPayload(@NonNull SiteModel site, @NonNull TaxonomyModel taxonomy) {
             this.site = site;
             this.taxonomy = taxonomy;
         }
