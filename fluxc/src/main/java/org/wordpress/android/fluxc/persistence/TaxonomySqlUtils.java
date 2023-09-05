@@ -95,9 +95,12 @@ public class TaxonomySqlUtils {
         return null;
     }
 
-    public static List<TermModel> getTermsFromRemoteIdList(List<Long> remoteTermIds, SiteModel site,
-                                                           String taxonomyName) {
-        if (taxonomyName == null || remoteTermIds == null || remoteTermIds.isEmpty()) {
+    @NonNull
+    public static List<TermModel> getTermsFromRemoteIdList(
+            @NonNull List<Long> remoteTermIds,
+            @NonNull SiteModel site,
+            @NonNull String taxonomyName) {
+        if (remoteTermIds.isEmpty()) {
             return Collections.emptyList();
         }
 
