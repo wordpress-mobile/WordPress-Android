@@ -23,7 +23,8 @@ class QuickStartCardBuilderTest : BaseUnitTest() {
     private val completedTasks: List<QuickStartTaskDetails> = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE)
     private val uncompletedTasks: List<QuickStartTaskDetails> = listOf(QuickStartTaskDetails.VIEW_SITE_TUTORIAL)
     private val onItemClick: (QuickStartTaskType) -> Unit = {}
-    private val onRemoveMenuItemClick: () -> Unit = {}
+    private val onHideThisMenuItemClick: (QuickStartCardType) -> Unit = {}
+    private val onMoreMenuClick: (QuickStartCardType) -> Unit = {}
 
     @Before
     fun setUp() {
@@ -154,24 +155,6 @@ class QuickStartCardBuilderTest : BaseUnitTest() {
             .isEqualTo(ListItemInteraction.create(taskTypeItem.quickStartTaskType, onItemClick))
     }
 
-    /* MORE MENU */
-
-    @Test
-    fun `when card is built, then more menu is visible`() {
-        val quickStartCard = buildQuickStartCard()
-
-        assertThat(quickStartCard.moreMenuVisible).isTrue
-    }
-
-    /* REMOVE MENU ITEM */
-
-    @Test
-    fun `when card is built, then remove menu item click is set on the card`() {
-        val quickStartCard = buildQuickStartCard()
-
-        assertThat(quickStartCard.onRemoveMenuItemClick).isNotNull
-    }
-
     private fun buildQuickStartCard(
         completedTasks: List<QuickStartTaskDetails>? = null,
         uncompletedTasks: List<QuickStartTaskDetails>? = null
@@ -180,9 +163,12 @@ class QuickStartCardBuilderTest : BaseUnitTest() {
         val growCategory = buildQuickStartCategory(QuickStartTaskType.GROW, completedTasks, uncompletedTasks)
         return builder.build(
             QuickStartCardBuilderParams(
-                listOf(customizeCategory, growCategory),
-                onRemoveMenuItemClick,
-                onItemClick
+                quickStartCategories = listOf(customizeCategory, growCategory),
+                onQuickStartTaskTypeItemClick = onItemClick,
+                moreMenuClickParams = QuickStartCardBuilderParams.MoreMenuParams(
+                    onMoreMenuClick = onMoreMenuClick,
+                    onHideThisMenuItemClick = onHideThisMenuItemClick
+                )
             )
         )
     }

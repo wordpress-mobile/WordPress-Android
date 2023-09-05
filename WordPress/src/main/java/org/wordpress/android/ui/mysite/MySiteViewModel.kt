@@ -58,23 +58,17 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams.ActivityCardItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
@@ -84,21 +78,22 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
-import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
-import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
+import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
-import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
-import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice
+import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
@@ -205,7 +200,11 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
     private val blazeCardViewModelSlice: BlazeCardViewModelSlice,
-    private val domainTransferCardViewModel: DomainTransferCardViewModel
+    private val domainTransferCardViewModel: DomainTransferCardViewModel,
+    private val pagesCardViewModelSlice: PagesCardViewModelSlice,
+    private val todaysStatsViewModelSlice: TodaysStatsViewModelSlice,
+    private val postsCardViewModelSlice: PostsCardViewModelSlice,
+    private val activityLogCardViewModelSlice: ActivityLogCardViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -291,7 +290,11 @@ class MySiteViewModel @Inject constructor(
         _onNavigation,
         siteStoriesHandler.onNavigation,
         blazeCardViewModelSlice.onNavigation,
-        domainTransferCardViewModel.onNavigation
+        pagesCardViewModelSlice.onNavigation,
+        domainTransferCardViewModel.onNavigation,
+        todaysStatsViewModelSlice.onNavigation,
+        postsCardViewModelSlice.onNavigation,
+        activityLogCardViewModelSlice.onNavigation
     )
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
@@ -305,7 +308,14 @@ class MySiteViewModel @Inject constructor(
     val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
-    val blazeCardRefresh = blazeCardViewModelSlice.refresh
+    val refresh =
+        merge(
+            blazeCardViewModelSlice.refresh,
+            pagesCardViewModelSlice.refresh,
+            todaysStatsViewModelSlice.refresh,
+            postsCardViewModelSlice.refresh,
+            activityLogCardViewModelSlice.refresh
+        )
     val domainTransferCardRefresh = domainTransferCardViewModel.refresh
 
     private var shouldMarkUpdateSiteTitleTaskComplete = false
@@ -549,23 +559,20 @@ class MySiteViewModel @Inject constructor(
             ),
             QuickStartCardBuilderParams(
                 quickStartCategories = quickStartCategories,
-                onQuickStartBlockRemoveMenuItemClick = this::onQuickStartBlockRemoveMenuItemClick,
+                moreMenuClickParams = QuickStartCardBuilderParams.MoreMenuParams(
+                    onMoreMenuClick = this::onQuickStartMoreMenuClick,
+                    onHideThisMenuItemClick = this::onQuickStartHideThisMenuItemClick
+                ),
                 onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
             ),
             DashboardCardsBuilderParams(
                 showErrorCard = cardsUpdate?.showErrorCard == true,
                 onErrorRetryClick = this::onDashboardErrorRetry,
-                todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(
-                    todaysStatsCard = cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel }
-                            as? TodaysStatsCardModel,
-                    onTodaysStatsCardClick = this::onTodaysStatsCardClick,
-                    onGetMoreViewsClick = this::onGetMoreViewsClick,
-                    onFooterLinkClick = this::onTodaysStatsCardFooterLinkClick
+                todaysStatsCardBuilderParams = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(
+                    cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel } as? TodaysStatsCardModel
                 ),
-                postCardBuilderParams = PostCardBuilderParams(
-                    posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
-                    onPostItemClick = this::onPostItemClick,
-                    onFooterLinkClick = this::onPostCardFooterLinkClick
+                postCardBuilderParams = postsCardViewModelSlice.getPostsCardBuilderParams(
+                    cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel
                 ),
                 bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                     bloggingPrompt = if (isBloggingPromptsEnabled) {
@@ -592,17 +599,11 @@ class MySiteViewModel @Inject constructor(
                     onHideMenuItemClick = this::onDashboardCardPlansHideMenuItemClick,
                     onMoreMenuClick = this::onDashboardCardPlansMoreMenuClick
                 ),
-                pagesCardBuilderParams = PagesCardBuilderParams(
-                    pageCard = cardsUpdate?.cards?.firstOrNull { it is PagesCardModel } as? PagesCardModel,
-                    onPagesItemClick = this::onPagesItemClick,
-                    onFooterLinkClick = this::onPagesCardFooterLinkClick
+                pagesCardBuilderParams = pagesCardViewModelSlice.getPagesCardBuilderParams(
+                    cardsUpdate?.cards?.firstOrNull { it is PagesCardModel } as? PagesCardModel,
                 ),
-                activityCardBuilderParams = ActivityCardBuilderParams(
-                    activityCardModel = cardsUpdate?.cards?.firstOrNull {
-                        it is ActivityCardModel
-                    } as? ActivityCardModel,
-                    onActivityItemClick = this::onActivityCardItemClick,
-                    onFooterLinkClick = this::onActivityCardFooterLinkClick
+                activityCardBuilderParams = activityLogCardViewModelSlice.getActivityLogCardBuilderParams(
+                    cardsUpdate?.cards?.firstOrNull { it is ActivityCardModel } as? ActivityCardModel
                 ),
             ),
             QuickLinkRibbonBuilderParams(
@@ -668,64 +669,6 @@ class MySiteViewModel @Inject constructor(
         )
     }
 
-    private fun onPagesItemClick(params: PagesCardBuilderParams.PagesItemClickParams) {
-        cardsTracker.trackPagesItemClicked(params.pagesCardType)
-        _onNavigation.value = Event(getNavigationActionForPagesItem(params.pagesCardType, params.pageId))
-    }
-
-    private fun getNavigationActionForPagesItem(
-        pagesCardType: PagesCardContentType,
-        pageId: Int
-    ): SiteNavigationAction {
-        return when (pagesCardType) {
-            PagesCardContentType.SCHEDULED -> {
-                SiteNavigationAction.OpenPagesScheduledTab(
-                    requireNotNull(selectedSiteRepository.getSelectedSite()),
-                    pageId
-                )
-            }
-
-            PagesCardContentType.DRAFT -> {
-                SiteNavigationAction.OpenPagesDraftsTab(
-                    requireNotNull(selectedSiteRepository.getSelectedSite()),
-                    pageId
-                )
-            }
-
-            PagesCardContentType.PUBLISH -> {
-                SiteNavigationAction.OpenPages(requireNotNull(selectedSiteRepository.getSelectedSite()))
-            }
-        }
-    }
-
-    private fun onPagesCardFooterLinkClick() {
-        cardsTracker.trackPagesCardFooterClicked()
-        _onNavigation.value =
-            Event(
-                SiteNavigationAction.TriggerCreatePageFlow(
-                    requireNotNull(selectedSiteRepository.getSelectedSite())
-                )
-            )
-    }
-
-    private fun onActivityCardItemClick(activityCardItemClickParams: ActivityCardItemClickParams) {
-        cardsTracker.trackActivityCardItemClicked()
-        _onNavigation.value =
-            Event(
-                SiteNavigationAction.OpenActivityLogDetail(
-                    requireNotNull(selectedSiteRepository.getSelectedSite()),
-                    activityCardItemClickParams.activityId,
-                    activityCardItemClickParams.isRewindable
-                )
-            )
-    }
-
-    private fun onActivityCardFooterLinkClick() {
-        cardsTracker.trackActivityCardFooterClicked()
-        _onNavigation.value =
-            Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
-    }
-
     private fun buildJetpackBadgeIfEnabled(): JetpackBadge? {
         val screen = JetpackPoweredScreen.WithStaticText.HOME
         return JetpackBadge(
@@ -773,37 +716,6 @@ class MySiteViewModel @Inject constructor(
         }
 
         MySiteTabType.ALL -> emptyList()
-    }
-
-    @Suppress("EmptyFunctionBlock")
-    private fun onGetMoreViewsClick() {
-        cardsTracker.trackTodaysStatsCardGetMoreViewsNudgeClicked()
-        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
-        } else {
-            _onNavigation.value = Event(
-                SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl(URL_GET_MORE_VIEWS_AND_TRAFFIC)
-            )
-        }
-    }
-
-    private fun onTodaysStatsCardFooterLinkClick() {
-        cardsTracker.trackTodaysStatsCardFooterLinkClicked()
-        navigateToTodaysStats()
-    }
-
-    private fun onTodaysStatsCardClick() {
-        cardsTracker.trackTodaysStatsCardClicked()
-        navigateToTodaysStats()
-    }
-
-    private fun navigateToTodaysStats() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
-        } else {
-            _onNavigation.value = Event(SiteNavigationAction.OpenStatsInsights(selectedSite))
-        }
     }
 
     private fun buildNoSiteState(): NoSites {
@@ -948,8 +860,22 @@ class MySiteViewModel @Inject constructor(
         } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
     }
 
-    private fun onQuickStartBlockRemoveMenuItemClick() {
-        _onBasicDialogShown.value = Event(ShowRemoveNextStepsDialog)
+    private fun onQuickStartMoreMenuClick(quickStartCardType: QuickStartCardType) =
+        quickStartTracker.trackMoreMenuClicked(quickStartCardType)
+    private fun onQuickStartHideThisMenuItemClick(quickStartCardType: QuickStartCardType) {
+        quickStartTracker.trackMoreMenuItemClicked(quickStartCardType)
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            when (quickStartCardType) {
+                QuickStartCardType.GET_TO_KNOW_THE_APP -> {
+                    quickStartRepository.onHideShowGetToKnowTheAppCard(selectedSite.siteId)
+                }
+                QuickStartCardType.NEXT_STEPS -> {
+                    quickStartRepository.onHideNextStepsCard(selectedSite.siteId)
+                }
+            }
+            refresh()
+            clearActiveQuickStartTask()
+        }
     }
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
@@ -1168,8 +1094,6 @@ class MySiteViewModel @Inject constructor(
                         )
                     )
                 }
-
-                TAG_REMOVE_NEXT_STEPS_DIALOG -> onRemoveNextStepsDialogPositiveButtonClicked()
             }
 
             is Negative -> when (interaction.tag) {
@@ -1184,8 +1108,6 @@ class MySiteViewModel @Inject constructor(
                     quickStartRepository.checkAndShowQuickStartNotice()
                     selectedSiteRepository.updateSiteIconMediaId(0, true)
                 }
-
-                TAG_REMOVE_NEXT_STEPS_DIALOG -> onRemoveNextStepsDialogNegativeButtonClicked()
             }
 
             is Dismissed -> when (interaction.tag) {
@@ -1195,17 +1117,6 @@ class MySiteViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun onRemoveNextStepsDialogPositiveButtonClicked() {
-        quickStartTracker.track(Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED)
-        quickStartRepository.skipQuickStart()
-        refresh()
-        clearActiveQuickStartTask()
-    }
-
-    private fun onRemoveNextStepsDialogNegativeButtonClicked() {
-        quickStartTracker.track(Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED)
     }
 
     @Suppress("DEPRECATION")
@@ -1379,7 +1290,7 @@ class MySiteViewModel @Inject constructor(
         if (!jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()) return
         quickStartRepository.checkAndSetQuickStartType(isNewSite = isNewSite)
         shouldMarkUpdateSiteTitleTaskComplete = isSiteTitleTaskCompleted
-        showQuickStartDialog(selectedSiteRepository.getSelectedSite())
+        showQuickStartDialog(selectedSiteRepository.getSelectedSite(), isNewSite)
     }
 
     private fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
@@ -1395,7 +1306,7 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun showQuickStartDialog(siteModel: SiteModel?) {
+    private fun showQuickStartDialog(siteModel: SiteModel?, isNewSite: Boolean) {
         if (siteModel != null && quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteModel) &&
             !jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()
         ) {
@@ -1405,7 +1316,8 @@ class MySiteViewModel @Inject constructor(
                         R.string.quick_start_dialog_need_help_manage_site_title,
                         R.string.quick_start_dialog_need_help_manage_site_message,
                         R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                        R.string.quick_start_dialog_need_help_button_negative
+                        R.string.quick_start_dialog_need_help_button_negative,
+                        isNewSite
                     )
                 )
             )
@@ -1423,31 +1335,8 @@ class MySiteViewModel @Inject constructor(
         quickStartTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
-    private fun onPostItemClick(params: PostItemClickParams) {
-        selectedSiteRepository.getSelectedSite()?.let { site ->
-            cardsTracker.trackPostItemClicked(params.postCardType)
-            when (params.postCardType) {
-                PostCardType.DRAFT -> _onNavigation.value =
-                    Event(SiteNavigationAction.EditDraftPost(site, params.postId))
-
-                PostCardType.SCHEDULED -> _onNavigation.value =
-                    Event(SiteNavigationAction.EditScheduledPost(site, params.postId))
-            }
-        }
-    }
-
     private fun onDashboardErrorRetry() {
         mySiteSourceManager.refresh()
-    }
-
-    private fun onPostCardFooterLinkClick(postCardType: PostCardType) {
-        selectedSiteRepository.getSelectedSite()?.let { site ->
-            cardsTracker.trackPostCardFooterLinkClicked(postCardType)
-            _onNavigation.value = when (postCardType) {
-                PostCardType.DRAFT -> Event(SiteNavigationAction.OpenDraftsPosts(site))
-                PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
-            }
-        }
     }
 
     private fun onBloggingPromptShareClick(message: String) {

@@ -2567,6 +2567,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blaze_entry_point_tapped";
             case BLAZE_ENTRY_POINT_MENU_ACCESSED:
                 return "blaze_entry_point_menu_accessed";
+            case BLAZE_ENTRY_POINT_LEARN_MORE_TAPPED:
+                return "blaze_entry_point_learn_more_tapped";
             case BLAZE_ENTRY_POINT_HIDE_TAPPED:
                 return "blaze_entry_point_hide_tapped";
             case BLAZE_FEATURE_OVERLAY_DISPLAYED:
@@ -2623,6 +2625,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_social_add_connection_tapped";
             case JETPACK_SOCIAL_ADD_CONNECTION_DISMISSED:
                 return "jetpack_social_add_connection_dismissed";
+            case MY_SITE_DASHBOARD_CARD_MENU_ITEM_TAPPED:
+                return "my_site_dashboard_card_menu_item_tapped";
+            case MY_SITE_DASHBOARD_CONTEXTUAL_MENU_ACCESSED:
+                return "my_site_dashboard_contextual_menu_accessed";
         }
         return null;
     }

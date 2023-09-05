@@ -3,6 +3,6 @@
 
     <item
         android:id="@+id/quick_start_card_menu_remove"
-        android:title="@string/quick_start_remove_next_steps_menu_title"/>
+        android:title="@string/quick_start_hide_next_steps_menu_title"/>
 
 </menu>

@@ -30,8 +30,18 @@ class BlazeCardBuilder @Inject constructor(private val statsUtils: StatsUtils) {
             campaign = getRecentCampaign(params),
             footer = getBlazeCardFooter(params),
             onClick = ListItemInteraction.create(params.onCardClick),
+            moreMenuOptions = getMoreMenuOptions(params),
         )
     }
+
+    private fun getMoreMenuOptions(params: CampaignWithBlazeCardBuilderParams) =
+        BlazeCampaignsCardModel.MoreMenuOptions(
+            viewAllCampaignsItemClick = ListItemInteraction.create(params.moreMenuParams.viewAllCampaignsItemClick),
+            learnMoreClick = ListItemInteraction.create(params.moreMenuParams.onLearnMoreClick),
+            hideThisMenuItemClick = ListItemInteraction.create(params.moreMenuParams.onHideThisCardItemClick),
+            onMoreClick = ListItemInteraction.create(params.moreMenuParams.onMoreMenuClick)
+        )
+
 
     private fun getBlazeCardFooter(params: CampaignWithBlazeCardBuilderParams): BlazeCampaignsCardFooter {
         return BlazeCampaignsCardFooter(
@@ -74,8 +84,14 @@ class BlazeCardBuilder @Inject constructor(private val statsUtils: StatsUtils) {
             title = UiString.UiStringRes(R.string.promote_blaze_card_title),
             subtitle = UiString.UiStringRes(R.string.promote_blaze_card_sub_title),
             onClick = ListItemInteraction.create(params.onClick),
-            onHideMenuItemClick = ListItemInteraction.create(params.onHideMenuItemClick),
-            onMoreMenuClick = ListItemInteraction.create(params.onMoreMenuClick)
+            moreMenuOptions = getMoreMenuOptions(params)
         )
     }
+
+    private fun getMoreMenuOptions(params: PromoteWithBlazeCardBuilderParams) =
+        PromoteWithBlazeCard.MoreMenuOptions(
+            onMoreClick = ListItemInteraction.create(params.moreMenuParams.onMoreMenuClick),
+            hideThisMenuItemClick = ListItemInteraction.create(params.moreMenuParams.onHideThisCardItemClick),
+            learnMoreClick = ListItemInteraction.create(params.moreMenuParams.onLearnMoreClick)
+        )
 }

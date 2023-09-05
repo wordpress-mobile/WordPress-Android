@@ -362,19 +362,6 @@ class MySitesPage {
         return scrollToCard(R.id.dashboard_card_activity_log)
     }
 
-    fun tapViewAllActivity(): ActivityLogScreen {
-        val viewAllActivityButton = Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.dashboard_card_activity_log)),
-                ViewMatchers.withText(R.string.dashboard_activity_card_footer_link),
-                ViewMatchers.withId(R.id.link_label),
-            )
-        )
-
-        WPSupportUtils.clickOn(viewAllActivityButton)
-        return ActivityLogScreen()
-    }
-
     fun tapActivity(activityPartial: String): EventScreen {
         val activityRow = Espresso.onView(
             Matchers.allOf(
@@ -401,13 +388,6 @@ class MySitesPage {
                 ),
 
                 ViewMatchers.hasDescendant(ViewMatchers.withId(R.id.my_site_card_toolbar_more)),
-
-                ViewMatchers.hasDescendant(
-                    Matchers.allOf(
-                        ViewMatchers.withText(R.string.dashboard_activity_card_footer_link),
-                        ViewMatchers.withId(R.id.link_label),
-                    )
-                )
             )
         )
             .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))

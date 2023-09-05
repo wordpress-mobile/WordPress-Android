@@ -18,21 +18,18 @@ class QuickStartCardBuilder @Inject constructor() {
     fun build(params: QuickStartCardBuilderParams) = QuickStartCard(
         title = UiStringRes(R.string.quick_start_sites),
         toolbarVisible = shouldShowCardToolbar(params.quickStartCategories),
-        onRemoveMenuItemClick = ListItemInteraction.create(params.onQuickStartBlockRemoveMenuItemClick),
+        quickStartCardType = getQuickStartCardType(params.quickStartCategories),
         taskTypeItems = params.quickStartCategories.map {
             buildQuickStartTaskTypeItem(
                 it,
                 params.onQuickStartTaskTypeItemClick
             )
-        }
+        },
+        moreMenuOptions = QuickStartCard.MoreMenuOptions(
+            onMoreMenuClick = params.moreMenuClickParams.onMoreMenuClick,
+            onHideThisMenuItemClick = params.moreMenuClickParams.onHideThisMenuItemClick
+        )
     )
-
-    private fun shouldShowCardToolbar(quickStartCategories: List<QuickStartCategory>) =
-        !isNewQuickStartType(quickStartCategories)
-
-    private fun isNewQuickStartType(quickStartCategories: List<QuickStartCategory>): Boolean {
-        return quickStartCategories.any { it.taskType == QuickStartTaskType.GET_TO_KNOW_APP }
-    }
 
     private fun buildQuickStartTaskTypeItem(
         category: QuickStartCategory,
@@ -82,7 +79,7 @@ class QuickStartCardBuilder @Inject constructor() {
         }
     }
 
-    fun getProgressColor(progress: Int, isNewQuickStartType: Boolean): Int {
+    private fun getProgressColor(progress: Int, isNewQuickStartType: Boolean): Int {
         return if (progress == PERCENT_HUNDRED && isNewQuickStartType) {
             R.color.green_40
         } else {
@@ -101,6 +98,17 @@ class QuickStartCardBuilder @Inject constructor() {
 
     private fun getProgress(countCompleted: Int, totalCount: Int) =
         if (totalCount > 0) ((countCompleted / totalCount.toFloat()) * PERCENT_HUNDRED).roundToInt() else 0
+
+    private fun shouldShowCardToolbar(quickStartCategories: List<QuickStartCategory>) =
+        !isNewQuickStartType(quickStartCategories)
+
+    private fun isNewQuickStartType(quickStartCategories: List<QuickStartCategory>) =
+        quickStartCategories.any { it.taskType == QuickStartTaskType.GET_TO_KNOW_APP }
+
+    private fun getQuickStartCardType(quickStartCategories: List<QuickStartCategory>) = when {
+        isNewQuickStartType(quickStartCategories) -> QuickStartCardType.GET_TO_KNOW_THE_APP
+        else -> QuickStartCardType.NEXT_STEPS
+    }
 
     companion object {
         private const val UNEXPECTED_QUICK_START_TYPE = "Unexpected quick start type"
