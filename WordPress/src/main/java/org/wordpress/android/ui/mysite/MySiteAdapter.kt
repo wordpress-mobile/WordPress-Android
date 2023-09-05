@@ -89,7 +89,6 @@ class MySiteAdapter(
     @Suppress("ComplexMethod")
     override fun onBindViewHolder(holder: MySiteCardAndItemViewHolder<*>, position: Int) {
         when (holder) {
-            is QuickActionsViewHolder -> holder.bind(getItem(position) as QuickActionsCard)
             is QuickLinkRibbonViewHolder -> holder.bind(getItem(position) as QuickLinkRibbon)
             is DomainRegistrationViewHolder -> holder.bind(getItem(position) as DomainRegistrationCard)
             is QuickStartCardViewHolder -> holder.bind(getItem(position) as QuickStartCard)
