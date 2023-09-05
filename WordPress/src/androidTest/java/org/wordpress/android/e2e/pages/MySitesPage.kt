@@ -82,10 +82,7 @@ class MySitesPage {
 
     fun goToPosts() {
         goToMenuTab()
-        clickQuickActionOrSiteMenuItem(
-            R.id.quick_action_posts_button,
-            R.string.my_site_btn_blog_posts
-        )
+        clickSiteMenuItem(R.string.my_site_btn_blog_posts)
     }
 
     fun goToActivityLog() {
@@ -152,19 +149,17 @@ class MySitesPage {
         goToMenuTab()
 
         // Using RecyclerViewActions.click doesn't work for some reason when quick actions are displayed.
-        if (WPSupportUtils.isElementDisplayed(R.id.quick_actions_card)) {
-            WPSupportUtils.clickOn(Espresso.onView(ViewMatchers.withText(R.string.backup)))
-        } else {
-            clickItemWithText(R.string.backup)
-        }
+        clickItemWithText(R.string.backup)
     }
 
     fun goToStats(): StatsPage {
         goToMenuTab()
-        val statsButton = Espresso.onView(Matchers.allOf(
-            ViewMatchers.withText(R.string.stats),
-            ViewMatchers.withId(R.id.my_site_item_primary_text)
-        ))
+        val statsButton = Espresso.onView(
+            Matchers.allOf(
+                ViewMatchers.withText(R.string.stats),
+                ViewMatchers.withId(R.id.my_site_item_primary_text)
+            )
+        )
         WPSupportUtils.clickOn(statsButton)
         WPSupportUtils.idleFor(4000)
         WPSupportUtils.dismissJetpackAdIfPresent()
@@ -177,7 +172,7 @@ class MySitesPage {
 
     fun goToMedia() {
         goToMenuTab()
-        clickQuickActionOrSiteMenuItem(R.id.quick_action_media_button, R.string.media)
+        clickSiteMenuItem(R.string.media)
     }
 
     fun createPost() {
@@ -215,20 +210,13 @@ class MySitesPage {
     }
 
     /**
-     * Clicks on the "Quick Action" item or the Site menu item if the quick actions card is hidden.
-     * Needed because locating site menu items by text fails if the quick actions are available.
-     * @param quickActionItemId Id of the quick actions menu item.
+     * Clicks on the Site menu item
      * @param siteMenuItemString String resource id of the site menu item.
      */
-    private fun clickQuickActionOrSiteMenuItem(
-        @IdRes quickActionItemId: Int,
+    private fun clickSiteMenuItem(
         @StringRes siteMenuItemString: Int
     ) {
-        if (WPSupportUtils.isElementDisplayed(quickActionItemId)) {
-            WPSupportUtils.clickOn(quickActionItemId)
-        } else {
-            clickItemWithText(siteMenuItemString)
-        }
+        clickItemWithText(siteMenuItemString)
     }
 
     companion object {
