@@ -110,7 +110,6 @@ import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
-import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
@@ -305,9 +304,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var blazeCardViewModelSlice: BlazeCardViewModelSlice
-
-    @Mock
-    lateinit var dashboardCardDomainUtils: DashboardCardDomainUtils
 
     @Mock
     lateinit var plansCardUtils: PlansCardUtils
@@ -542,7 +538,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             bloggingPromptsCardTrackHelper,
             getShowJetpackFullPluginInstallOnboardingUseCase,
             jetpackInstallFullPluginShownTracker,
-            dashboardCardDomainUtils,
             plansCardUtils,
             jetpackFeatureRemovalPhaseHelper,
             wpJetpackIndividualPluginHelper,
