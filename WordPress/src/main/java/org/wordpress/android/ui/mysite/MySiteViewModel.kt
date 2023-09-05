@@ -1308,7 +1308,7 @@ class MySiteViewModel @Inject constructor(
         if (!jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()) return
         quickStartRepository.checkAndSetQuickStartType(isNewSite = isNewSite)
         shouldMarkUpdateSiteTitleTaskComplete = isSiteTitleTaskCompleted
-        showQuickStartDialog(selectedSiteRepository.getSelectedSite())
+        showQuickStartDialog(selectedSiteRepository.getSelectedSite(), isNewSite)
     }
 
     private fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
@@ -1324,7 +1324,7 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun showQuickStartDialog(siteModel: SiteModel?) {
+    private fun showQuickStartDialog(siteModel: SiteModel?, isNewSite: Boolean) {
         if (siteModel != null && quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteModel) &&
             !jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()
         ) {
@@ -1334,7 +1334,8 @@ class MySiteViewModel @Inject constructor(
                         R.string.quick_start_dialog_need_help_manage_site_title,
                         R.string.quick_start_dialog_need_help_manage_site_message,
                         R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                        R.string.quick_start_dialog_need_help_button_negative
+                        R.string.quick_start_dialog_need_help_button_negative,
+                        isNewSite
                     )
                 )
             )

@@ -1406,7 +1406,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 R.string.quick_start_dialog_need_help_manage_site_title,
                 R.string.quick_start_dialog_need_help_manage_site_message,
                 R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                R.string.quick_start_dialog_need_help_button_negative
+                R.string.quick_start_dialog_need_help_button_negative,
+                true
             )
         )
     }
@@ -1424,7 +1425,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 R.string.quick_start_dialog_need_help_manage_site_title,
                 R.string.quick_start_dialog_need_help_manage_site_message,
                 R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                R.string.quick_start_dialog_need_help_button_negative
+                R.string.quick_start_dialog_need_help_button_negative,
+                false
             )
         )
     }
