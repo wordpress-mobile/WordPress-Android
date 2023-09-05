@@ -90,6 +90,7 @@ public class TaxonomyModel extends Payload<BaseNetworkError> implements Identifi
     }
 
     @Override
+    @SuppressWarnings("ConditionCoveredByFurtherCondition")
     public boolean equals(@Nullable Object other) {
         if (this == other) return true;
         if (other == null || !(other instanceof TaxonomyModel)) return false;
