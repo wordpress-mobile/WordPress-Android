@@ -41,18 +41,19 @@ public class TaxonomyStore extends Store {
         }
     }
 
+    @SuppressWarnings("NotNullFieldNotInitialized")
     public static class FetchTermsResponsePayload extends Payload<TaxonomyError> {
-        public TermsModel terms;
-        public SiteModel site;
-        public String taxonomy;
+        @NonNull public TermsModel terms;
+        @NonNull public SiteModel site;
+        @NonNull public String taxonomy; // This field is also included in error payload.
 
-        public FetchTermsResponsePayload(TermsModel terms, SiteModel site, String taxonomy) {
+        public FetchTermsResponsePayload(@NonNull TermsModel terms, @NonNull SiteModel site, @NonNull String taxonomy) {
             this.terms = terms;
             this.site = site;
             this.taxonomy = taxonomy;
         }
 
-        public FetchTermsResponsePayload(TaxonomyError error, String taxonomy) {
+        public FetchTermsResponsePayload(@NonNull TaxonomyError error, @NonNull String taxonomy) {
             this.error = error;
             this.taxonomy = taxonomy;
         }
@@ -330,7 +331,7 @@ public class TaxonomyStore extends Store {
         fetchTerms(payload.site, payload.taxonomy.getName());
     }
 
-    private void handleFetchTermsCompleted(FetchTermsResponsePayload payload) {
+    private void handleFetchTermsCompleted(@NonNull FetchTermsResponsePayload payload) {
         OnTaxonomyChanged onTaxonomyChanged;
 
         if (payload.isError()) {
