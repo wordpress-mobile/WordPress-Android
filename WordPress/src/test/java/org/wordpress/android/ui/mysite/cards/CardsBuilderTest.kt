@@ -31,29 +31,20 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainTran
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
-import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder as DashboardCardsBuilder
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsBuilderTest {
-    @Mock
-    lateinit var buildConfigWrapper: BuildConfigWrapper
-
-    @Mock
-    lateinit var quickActionsCardBuilder: QuickActionsCardBuilder
-
     @Mock
     lateinit var quickStartCardBuilder: QuickStartCardBuilder
 
@@ -80,7 +71,6 @@ class CardsBuilderTest {
     @Before
     fun setUp() {
         setUpCardsBuilder()
-        setUpQuickActionsBuilder()
         setUpQuickStartCardBuilder()
         setUpDashboardCardsBuilder()
         setUpQuickLinkRibbonBuilder()
@@ -183,13 +173,6 @@ class CardsBuilderTest {
     ): List<MySiteCardAndItem> {
         whenever(buildConfigWrapper.isQuickActionEnabled).thenReturn(isQuickActionEnabled)
         return cardsBuilder.build(
-            quickActionsCardBuilderParams = QuickActionsCardBuilderParams(
-                siteModel = site,
-                onQuickActionMediaClick = mock(),
-                onQuickActionPagesClick = mock(),
-                onQuickActionPostsClick = mock(),
-                onQuickActionStatsClick = mock()
-            ),
             domainRegistrationCardBuilderParams = DomainRegistrationCardBuilderParams(
                 isDomainCreditAvailable = isDomainCreditAvailable,
                 domainRegistrationClick = mock()
@@ -257,12 +240,6 @@ class CardsBuilderTest {
         )
     }
 
-    private fun setUpQuickActionsBuilder() {
-        doAnswer {
-            initQuickActionsCard()
-        }.whenever(quickActionsCardBuilder).build(any())
-    }
-
     private fun setUpQuickStartCardBuilder() {
         doAnswer {
             initQuickStartCard()
@@ -283,8 +260,6 @@ class CardsBuilderTest {
 
     private fun setUpCardsBuilder() {
         cardsBuilder = CardsBuilder(
-            buildConfigWrapper,
-            quickActionsCardBuilder,
             quickStartCardBuilder,
             quickLinkRibbonBuilder,
             dashboardCardsBuilder,
