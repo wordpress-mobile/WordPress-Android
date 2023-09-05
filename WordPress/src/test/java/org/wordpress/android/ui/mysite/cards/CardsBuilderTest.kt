@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
