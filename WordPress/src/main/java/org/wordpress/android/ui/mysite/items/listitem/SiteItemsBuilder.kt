@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.items
+package org.wordpress.android.ui.mysite.items.listitem
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.QuickStartStore
@@ -12,11 +12,9 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.COMMENTS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.MEDIA
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.POSTS
-import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
