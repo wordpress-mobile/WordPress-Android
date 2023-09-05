@@ -18,8 +18,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import javax.inject.Inject
 
 class CardsBuilder @Inject constructor(
-    private val buildConfigWrapper: BuildConfigWrapper,
-    private val quickActionsCardBuilder: QuickActionsCardBuilder,
     private val quickStartCardBuilder: QuickStartCardBuilder,
     private val quickLinkRibbonBuilder: QuickLinkRibbonBuilder,
     private val dashboardCardsBuilder: CardsBuilder,
@@ -27,7 +25,6 @@ class CardsBuilder @Inject constructor(
 ) {
     @Suppress("LongParameterList")
     fun build(
-        quickActionsCardBuilderParams: QuickActionsCardBuilderParams,
         domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,
         quickStartCardBuilderParams: QuickStartCardBuilderParams,
         dashboardCardsBuilderParams: DashboardCardsBuilderParams,
@@ -38,9 +35,6 @@ class CardsBuilder @Inject constructor(
         val cards = mutableListOf<MySiteCardAndItem>()
         if (isMySiteTabsEnabled) {
             cards.add(quickLinkRibbonBuilder.build(quickLinkRibbonBuilderParams))
-        }
-        if (shouldShowQuickActionsCard(isMySiteTabsEnabled)) {
-            cards.add(quickActionsCardBuilder.build(quickActionsCardBuilderParams))
         }
         jetpackInstallFullPluginCardBuilder.build(jetpackInstallFullPluginCardBuilderParams)?.let {
             cards.add(it)
@@ -53,10 +47,6 @@ class CardsBuilder @Inject constructor(
         }
         cards.add(dashboardCardsBuilder.build(dashboardCardsBuilderParams))
         return cards
-    }
-
-    private fun shouldShowQuickActionsCard(isMySiteTabsEnabled: Boolean): Boolean {
-        return buildConfigWrapper.isQuickActionEnabled && !isMySiteTabsEnabled
     }
 
     private fun trackAndBuildDomainRegistrationCard(
