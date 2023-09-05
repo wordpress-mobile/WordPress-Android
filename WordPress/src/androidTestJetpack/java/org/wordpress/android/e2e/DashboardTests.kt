@@ -13,9 +13,6 @@ import org.wordpress.android.test.BuildConfig
 class DashboardTests : BaseTest() {
     @Before
     fun setUp() {
-        // We run the class for JP only (so far the class contains
-        // only a test for Domains card, which in not valid for WP)
-        assumeTrue(BuildConfig.IS_JETPACK_APP)
         ComposeEspressoLink().unregister()
         logoutIfNecessary()
         wpLogin()
