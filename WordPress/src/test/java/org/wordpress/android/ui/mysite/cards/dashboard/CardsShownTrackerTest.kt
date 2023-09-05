@@ -9,11 +9,9 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard.ActivityCardWithItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.ActivityLogSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
@@ -99,7 +97,8 @@ class CardsShownTrackerTest {
             postCardType = postCardType,
             title = UiStringText(""),
             postItems = emptyList(),
-            footerLink = FooterLink(UiStringText(""), onClick = mock())
+            moreMenuResId = 0,
+            moreMenuOptions = mock()
         )
     )
 
@@ -113,7 +112,9 @@ class CardsShownTrackerTest {
         listOf(
             ActivityCardWithItems(
                 title = UiStringText("title"),
-                footerLink = ActivityCard.FooterLink(UiStringText("footer"), onClick = mock()),
+                onAllActivityMenuItemClick = mock(),
+                onHideMenuItemClick = mock(),
+                onMoreMenuClick = mock(),
                 activityItems = emptyList()
             )
         )

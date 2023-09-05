@@ -70,12 +70,6 @@
     </style>
 
     <!--My Site Card - Today's Stats Item-->
-    <style name="MySiteTodaysStatsCardTitle" parent="DashboardCardSmallTitle">
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:layout_marginStart">@dimen/margin_medium</item>
-        <item name="android:lineSpacingExtra">@dimen/my_site_todays_stats_card_title_line_spacing_extra</item>
-    </style>
-
     <style name="MySiteTodaysStatsCardStatTitle" parent="DashboardCardDetail" >
         <item name="android:textAlignment">viewStart</item>
         <item name="android:lineSpacingExtra">@dimen/my_site_todays_stats_card_stat_title_line_spacing_extra</item>

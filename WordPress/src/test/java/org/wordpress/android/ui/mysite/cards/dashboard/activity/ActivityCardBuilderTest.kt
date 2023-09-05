@@ -49,7 +49,10 @@ class ActivityCardBuilderTest : BaseUnitTest() {
 
     private val activityCardModel = ActivityCardModel(activities = listOf(activityLogModel))
 
-    private val onActivityCardFooterLinkClick: () -> Unit = {}
+    private val onAllActivityMenuItemClick: () -> Unit = {}
+    private val onHideMenuItemClick: () -> Unit = {}
+    private val onMoreMenuItemClick: () -> Unit = {}
+
     private val onActivityItemClick: (ActivityCardBuilderParams.ActivityCardItemClickParams) -> Unit = {}
 
     @Before
@@ -97,7 +100,9 @@ class ActivityCardBuilderTest : BaseUnitTest() {
     private fun buildActivityCard(model: ActivityCardModel) = builder.build(
         ActivityCardBuilderParams(
             activityCardModel = model,
-            onFooterLinkClick = onActivityCardFooterLinkClick,
+            onAllActivityMenuItemClick = onAllActivityMenuItemClick,
+            onHideMenuItemClick = onHideMenuItemClick,
+            onMoreMenuClick = onMoreMenuItemClick,
             onActivityItemClick = onActivityItemClick
         )
     )

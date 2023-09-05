@@ -60,11 +60,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems.PostItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
@@ -77,12 +72,9 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams.ActivityCardItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams.PagesItemClickParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
@@ -104,23 +96,24 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
-import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
-import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
+import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
-import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
-import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice
+import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
@@ -307,6 +300,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var blazeCardViewModelSlice: BlazeCardViewModelSlice
 
     @Mock
+    lateinit var pagesCardViewModelSlice: PagesCardViewModelSlice
+
+    @Mock
     lateinit var dashboardCardDomainUtils: DashboardCardDomainUtils
 
     @Mock
@@ -320,6 +316,15 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var domainTransferCardViewModel: DomainTransferCardViewModel
+
+    @Mock
+    lateinit var todaysStatsViewModelSlice: TodaysStatsViewModelSlice
+
+    @Mock
+    lateinit var postsCardViewModelSlice: PostsCardViewModelSlice
+
+    @Mock
+    lateinit var activityLogCardViewModelSlice: ActivityLogCardViewModelSlice
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
@@ -342,12 +347,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val siteIcon = "http://site.com/icon.jpg"
     private val siteName = "Site"
     private val emailAddress = "test@email.com"
-    private val postId = 100
-    private val pageId = 100
     private val localHomepageId = 1
     private val bloggingPromptId = 123
-    private val activityId = "activityId"
-    private val isRewindable = false
     private lateinit var site: SiteModel
     private lateinit var siteInfoHeader: SiteInfoHeaderCard
     private lateinit var homepage: PageModel
@@ -370,13 +371,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val activeTask = MutableLiveData<QuickStartTask>()
     private val quickStartTabStep = MutableLiveData<QuickStartTabStep?>()
 
-    private var removeMenuItemClickAction: (() -> Unit)? = null
+    private var quickStartHideThisMenuItemClickAction: ((type: QuickStartCardType) -> Unit)? = null
+    private var quickStartMoreMenuClickAction: ((type: QuickStartCardType) -> Unit)? = null
     private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
-    private var onPostCardFooterLinkClick: ((postCardType: PostCardType) -> Unit)? = null
-    private var onPostItemClick: ((params: PostItemClickParams) -> Unit)? = null
-    private var onTodaysStatsCardGetMoreViewsClick: (() -> Unit) = {}
-    private var onTodaysStatsCardClick: (() -> Unit) = {}
-    private var onTodaysStatsCardFooterLinkClick: (() -> Unit) = {}
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
     private var onBloggingPromptAnswerClicked: ((promptId: Int) -> Unit)? = null
@@ -384,10 +381,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onBloggingPromptViewMoreClicked: (() -> Unit)? = null
     private var onBloggingPromptViewAnswersClicked: ((promptId: Int) -> Unit)? = null
     private var onBloggingPromptRemoveClicked: (() -> Unit)? = null
-    private var onPageCardFooterLinkClick: (() -> Unit)? = null
-    private var onPageItemClick: ((params: PagesItemClickParams) -> Unit)? = null
-    private var onActivityCardFooterLinkClick: (() -> Unit)? = null
-    private var onActivityItemClick: ((params: ActivityCardItemClickParams) -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
             taskType = QuickStartTaskType.CUSTOMIZE,
@@ -493,6 +486,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()).thenReturn(true)
         whenever(blazeCardViewModelSlice.refresh).thenReturn(refresh)
         whenever(domainTransferCardViewModel.refresh).thenReturn(refresh)
+        whenever(pagesCardViewModelSlice.getPagesCardBuilderParams(anyOrNull())).thenReturn(mock())
+        whenever(todaysStatsViewModelSlice.getTodaysStatsBuilderParams(anyOrNull())).thenReturn(mock())
+        whenever(postsCardViewModelSlice.getPostsCardBuilderParams(anyOrNull())).thenReturn(mock())
+        whenever(activityLogCardViewModelSlice.getActivityLogCardBuilderParams(anyOrNull())).thenReturn(mock())
 
         viewModel = MySiteViewModel(
             networkUtilsWrapper,
@@ -547,7 +544,11 @@ class MySiteViewModelTest : BaseUnitTest() {
             jetpackFeatureRemovalPhaseHelper,
             wpJetpackIndividualPluginHelper,
             blazeCardViewModelSlice,
-            domainTransferCardViewModel
+            domainTransferCardViewModel,
+            pagesCardViewModelSlice,
+            todaysStatsViewModelSlice,
+            postsCardViewModelSlice,
+            activityLogCardViewModelSlice
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1149,7 +1150,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `quick action stats click opens connect jetpack screen when user is logged in and site is self-hosted`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-
         site.setIsJetpackInstalled(false)
         site.setIsJetpackConnected(false)
 
@@ -1286,7 +1286,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when quick start task type item is clicked, then quick start full screen dialog is opened`() {
-        initSelectedSite( isQuickStartInProgress = true)
+        initSelectedSite(isQuickStartInProgress = true)
 
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
@@ -1296,7 +1296,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when quick start task type item is clicked, then quick start active task is cleared`() {
-        initSelectedSite( isQuickStartInProgress = true)
+        initSelectedSite(isQuickStartInProgress = true)
 
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
@@ -1333,17 +1333,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when QS remove menu item is clicked, then remove next steps dialog shown`() {
-        initSelectedSite( isQuickStartInProgress = true)
-
-        requireNotNull(removeMenuItemClickAction).invoke()
-
-        assertThat(dialogModels.last()).isEqualTo(ShowRemoveNextStepsDialog)
-    }
-
-    @Test
     fun `when remove next steps dialog negative btn clicked, then QS is not skipped`() {
-        initSelectedSite( isQuickStartInProgress = true)
+        initSelectedSite(isQuickStartInProgress = true)
 
         viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
 
@@ -1351,35 +1342,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when remove next steps dialog positive btn clicked, then QS is skipped`() {
-        initSelectedSite( isQuickStartInProgress = true)
-
-        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
-
-        verify(quickStartRepository).skipQuickStart()
-    }
-
-    @Test
-    fun `when remove next steps dialog positive btn clicked, then QS repo refreshed`() {
-        initSelectedSite( isQuickStartInProgress = true)
-
-        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
-
-        verify(mySiteSourceManager).refresh()
-    }
-
-    @Test
-    fun `when remove next steps dialog positive btn clicked, then QS active task cleared`() {
-        initSelectedSite( isQuickStartInProgress = true)
-
-        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
-
-        verify(quickStartRepository).clearActiveTask()
-    }
-
-    @Test
     fun `when QS fullscreen dialog dismiss is triggered, then quick start repository is refreshed`() {
-        initSelectedSite( isQuickStartInProgress = true)
+        initSelectedSite(isQuickStartInProgress = true)
 
         viewModel.onQuickStartFullScreenDialogDismiss()
 
@@ -1389,7 +1353,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `when quick start task is clicked, then task is set as active task`() {
         val task = QuickStartNewSiteTask.VIEW_SITE
-        initSelectedSite( isQuickStartInProgress = true)
+        initSelectedSite(isQuickStartInProgress = true)
 
         viewModel.onQuickStartTaskCardClick(task)
 
@@ -1442,7 +1406,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 R.string.quick_start_dialog_need_help_manage_site_title,
                 R.string.quick_start_dialog_need_help_manage_site_message,
                 R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                R.string.quick_start_dialog_need_help_button_negative
+                R.string.quick_start_dialog_need_help_button_negative,
+                true
             )
         )
     }
@@ -1460,7 +1425,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 R.string.quick_start_dialog_need_help_manage_site_title,
                 R.string.quick_start_dialog_need_help_manage_site_message,
                 R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                R.string.quick_start_dialog_need_help_button_negative
+                R.string.quick_start_dialog_need_help_button_negative,
+                false
             )
         )
     }
@@ -1531,118 +1497,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(quickStartRepository).setActiveTask(pendingTask)
-    }
-
-    /* DASHBOARD TODAYS STATS CARD */
-    @Test
-    fun `given todays stat card, when card item is clicked, then stats page is opened`() =
-        test {
-            initSelectedSite()
-
-            onTodaysStatsCardClick.invoke()
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsInsights(site))
-        }
-
-    @Test
-    fun `given todays stat card, when footer link is clicked, then stats page is opened`() =
-        test {
-            initSelectedSite()
-
-            onTodaysStatsCardFooterLinkClick.invoke()
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsInsights(site))
-        }
-
-    @Test
-    fun `given todays stat card, when get more views url is clicked, then external link is opened`() =
-        test {
-            initSelectedSite()
-
-            onTodaysStatsCardGetMoreViewsClick.invoke()
-
-            assertThat(navigationActions)
-                .containsOnly(
-                    SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl(
-                        URL_GET_MORE_VIEWS_AND_TRAFFIC
-                    )
-                )
-        }
-
-    /* DASHBOARD POST CARD - FOOTER LINK */
-    @Test
-    fun `given draft post card, when footer link is clicked, then draft posts screen is opened`() = test {
-        initSelectedSite()
-
-        requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.DRAFT)
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenDraftsPosts(site))
-    }
-
-    @Test
-    fun `given scheduled post card, when footer link is clicked, then scheduled posts screen is opened`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.SCHEDULED)
-
-            assertThat(navigationActions)
-                .containsOnly(SiteNavigationAction.OpenScheduledPosts(site))
-        }
-
-    @Test
-    fun `given post card, when footer link is clicked, then event is tracked`() = test {
-        initSelectedSite()
-
-        requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.SCHEDULED)
-
-        verify(cardsTracker).trackPostCardFooterLinkClicked(PostCardType.SCHEDULED)
-    }
-
-    @Test
-    fun `when dashboard cards are shown, then card shown event is tracked`() = test {
-        initSelectedSite()
-
-        verify(cardsTracker, atLeastOnce()).trackShown(any())
-    }
-
-    /* DASHBOARD POST CARD */
-    @Test
-    fun `given draft post card, when post item is clicked, then post is opened for edit draft`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.DRAFT, postId))
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.EditDraftPost(site, postId))
-        }
-
-    @Test
-    fun `given scheduled post card, when post item is clicked, then post is opened for edit scheduled`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.SCHEDULED, postId))
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.EditScheduledPost(site, postId))
-        }
-
-    @Test
-    fun `given scheduled post card, when item is clicked, then event is tracked`() = test {
-        initSelectedSite()
-
-        requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.SCHEDULED, postId))
-
-        verify(cardsTracker).trackPostItemClicked(PostCardType.SCHEDULED)
-    }
-
-    @Test
-    fun `given draft post card, when item is clicked, then event is tracked`() = test {
-        initSelectedSite()
-
-        requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.DRAFT, postId))
-
-        verify(cardsTracker).trackPostItemClicked(PostCardType.DRAFT)
     }
 
     /* DASHBOARD BLOGGING PROMPT CARD */
@@ -1995,125 +1849,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 }
             )
     }
-
-    /* DASHBOARD PAGES CARD */
-    @Test
-    fun `when create new pages card is clicked, then trigger create page flow`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPageCardFooterLinkClick).invoke()
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.TriggerCreatePageFlow(site))
-        }
-
-    @Test
-    fun `given draft page card, when page item is clicked, then navigate to page list draft tab`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPageItemClick).invoke(PagesItemClickParams(PagesCardContentType.DRAFT, pageId))
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPagesDraftsTab(site, pageId))
-        }
-
-    @Test
-    fun `given scheduled page card, when page item is clicked, then navigate to page list scheduled tab`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPageItemClick).invoke(PagesItemClickParams(PagesCardContentType.SCHEDULED, pageId))
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPagesScheduledTab(site, pageId))
-        }
-
-    @Test
-    fun `given published page card, when page item is clicked, then navigate to page list published tab`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPageItemClick).invoke(PagesItemClickParams(PagesCardContentType.PUBLISH, pageId))
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
-        }
-
-    @Test
-    fun `given draft page card, when page item is clicked, then event is tracked`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPageItemClick).invoke(PagesItemClickParams(PagesCardContentType.DRAFT, pageId))
-
-            verify(cardsTracker).trackPagesItemClicked(PagesCardContentType.DRAFT)
-        }
-
-    @Test
-    fun `given scheduled page card, when page item is clicked, then event is tracked`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPageItemClick).invoke(PagesItemClickParams(PagesCardContentType.SCHEDULED, pageId))
-
-            verify(cardsTracker).trackPagesItemClicked(PagesCardContentType.SCHEDULED)
-        }
-
-    @Test
-    fun `given published page card, when page item is clicked, then event is tracked`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onPageItemClick).invoke(PagesItemClickParams(PagesCardContentType.PUBLISH, pageId))
-
-            verify(cardsTracker).trackPagesItemClicked(PagesCardContentType.PUBLISH)
-        }
-
-    /* DASHBOARD ACTIVITY CARD */
-    @Test
-    fun `given activity card, when footer is clicked, then trigger navigate to activity log list`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onActivityCardFooterLinkClick).invoke()
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenActivityLog(site))
-        }
-
-    @Test
-    fun `given activity card, when footer clicked, then event is tracked`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onActivityCardFooterLinkClick).invoke()
-
-            verify(cardsTracker).trackActivityCardFooterClicked()
-        }
-
-    @Test
-    fun `given activity card, when activity item is clicked, then navigate to activity detail`() =
-        test {
-            initSelectedSite()
-
-            // requireNotNull(onActivityItemClick).invoke(ActivityCardItemClickParams(activityId, isRewindable))
-            requireNotNull(onActivityItemClick).invoke(ActivityCardItemClickParams(activityId, isRewindable))
-
-            assertThat(navigationActions).containsOnly(
-                SiteNavigationAction.OpenActivityLogDetail(
-                    site,
-                    activityId,
-                    isRewindable
-                )
-            )
-        }
-
-    @Test
-    fun `given activity card, when activity item is clicked, then event is tracked`() =
-        test {
-            initSelectedSite()
-
-            requireNotNull(onActivityItemClick).invoke(ActivityCardItemClickParams(activityId, isRewindable))
-
-            verify(cardsTracker).trackActivityCardItemClicked()
-        }
 
     /* DASHBOARD ERROR SNACKBAR */
 
@@ -3382,13 +3117,24 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun initQuickStartCard(mockInvocation: InvocationOnMock): QuickStartCard {
         val params = (mockInvocation.arguments.filterIsInstance<QuickStartCardBuilderParams>()).first()
-        removeMenuItemClickAction = params.onQuickStartBlockRemoveMenuItemClick
+        quickStartHideThisMenuItemClickAction = params.moreMenuClickParams.onHideThisMenuItemClick
+        quickStartMoreMenuClickAction = params.moreMenuClickParams.onMoreMenuClick
         quickStartTaskTypeItemClickAction = params.onQuickStartTaskTypeItemClick
         return QuickStartCard(
             title = UiStringText(""),
-            onRemoveMenuItemClick = ListItemInteraction.create {
-                params.onQuickStartBlockRemoveMenuItemClick.invoke()
-            },
+            moreMenuOptions = QuickStartCard.MoreMenuOptions(
+                onMoreMenuClick = {
+                    (quickStartMoreMenuClickAction as ((type: QuickStartCardType) -> Unit)).invoke(
+                        QuickStartCardType.NEXT_STEPS
+                    )
+                },
+                onHideThisMenuItemClick = {
+                    (quickStartHideThisMenuItemClickAction as ((type: QuickStartCardType) -> Unit)).invoke(
+                        QuickStartCardType.NEXT_STEPS
+                    )
+                }
+            ),
+            quickStartCardType = QuickStartCardType.NEXT_STEPS,
             taskTypeItems = listOf(
                 QuickStartTaskTypeItem(
                     quickStartTaskType = mock(),
@@ -3414,30 +3160,10 @@ class MySiteViewModelTest : BaseUnitTest() {
                 if (params.showErrorCard) {
                     add(initErrorCard(mockInvocation))
                 } else {
-                    add(initPostCard(mockInvocation))
-                    add(initTodaysStatsCard(mockInvocation))
+                    //    add(initPostCard(mockInvocation))
                     if (bloggingPromptsFeatureConfig.isEnabled()) add(initBloggingPromptCard(mockInvocation))
-                    add(initPageCard(mockInvocation))
-                    add(initActivityCard(mockInvocation))
                 }
             }
-        )
-    }
-
-    private fun initTodaysStatsCard(mockInvocation: InvocationOnMock): TodaysStatsCard {
-        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
-        onTodaysStatsCardGetMoreViewsClick = params.todaysStatsCardBuilderParams.onGetMoreViewsClick
-        onTodaysStatsCardClick = params.todaysStatsCardBuilderParams.onTodaysStatsCardClick
-        onTodaysStatsCardFooterLinkClick = params.todaysStatsCardBuilderParams.onFooterLinkClick
-        return TodaysStatsCardWithData(
-            views = UiStringText(mock()),
-            visitors = UiStringText(mock()),
-            likes = UiStringText(mock()),
-            onCardClick = onTodaysStatsCardClick,
-            footerLink = TodaysStatsCard.FooterLink(
-                label = UiStringRes(R.string.my_site_todays_stats_card_footer_link_go_to_stats),
-                onClick = onTodaysStatsCardFooterLinkClick
-            )
         )
     }
 
@@ -3445,32 +3171,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
         onDashboardErrorRetryClick = params.onErrorRetryClick
         return ErrorCard(onRetryClick = ListItemInteraction.create { onDashboardErrorRetryClick })
-    }
-
-    private fun initPostCard(mockInvocation: InvocationOnMock): PostCardWithPostItems {
-        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
-        onPostItemClick = params.postCardBuilderParams.onPostItemClick
-        onPostCardFooterLinkClick = params.postCardBuilderParams.onFooterLinkClick
-        return PostCardWithPostItems(
-            postCardType = PostCardType.DRAFT,
-            title = UiStringRes(0),
-            postItems = listOf(
-                PostItem(
-                    title = UiStringRes(0),
-                    excerpt = UiStringRes(0),
-                    featuredImageUrl = "",
-                    onClick = ListItemInteraction.create {
-                        (onPostItemClick as (PostItemClickParams) -> Unit).invoke(
-                            PostItemClickParams(PostCardType.DRAFT, postId)
-                        )
-                    }
-                )
-            ),
-            footerLink = FooterLink(
-                label = UiStringRes(0),
-                onClick = onPostCardFooterLinkClick as ((postCardType: PostCardType) -> Unit)
-            )
-        )
     }
 
     private fun initBloggingPromptCard(mockInvocation: InvocationOnMock): BloggingPromptCardWithData {
@@ -3539,55 +3239,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         }
 
         return items
-    }
-
-    private fun initPageCard(mockInvocation: InvocationOnMock): DashboardCard.PagesCard.PagesCardWithData {
-        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
-        onPageItemClick = params.pagesCardBuilderParams.onPagesItemClick
-        onPageCardFooterLinkClick = params.pagesCardBuilderParams.onFooterLinkClick
-        return DashboardCard.PagesCard.PagesCardWithData(
-            title = UiStringRes(0),
-            pages = listOf(
-                DashboardCard.PagesCard.PagesCardWithData.PageContentItem(
-                    title = UiStringRes(0),
-                    status = UiStringRes(0),
-                    statusIcon = 0,
-                    lastEditedOrScheduledTime = UiStringRes(0),
-                    onClick = ListItemInteraction.create {
-                        (onPageItemClick as (PagesItemClickParams) -> Unit).invoke(
-                            PagesItemClickParams(PagesCardContentType.DRAFT, pageId)
-                        )
-                    }
-                )
-            ),
-            footerLink = DashboardCard.PagesCard.PagesCardWithData.CreateNewPageItem(
-                label = UiStringRes(0),
-                onClick = onPageCardFooterLinkClick as (() -> Unit)
-            )
-        )
-    }
-
-    private fun initActivityCard(mockInvocation: InvocationOnMock): DashboardCard.ActivityCard.ActivityCardWithItems {
-        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
-        onActivityItemClick = params.activityCardBuilderParams.onActivityItemClick
-        onActivityCardFooterLinkClick = params.activityCardBuilderParams.onFooterLinkClick
-        return DashboardCard.ActivityCard.ActivityCardWithItems(
-            title = UiStringRes(0),
-            activityItems = listOf(
-                DashboardCard.ActivityCard.ActivityCardWithItems.ActivityItem(
-                    label = UiStringRes(0),
-                    subLabel = "",
-                    displayDate = "",
-                    icon = 0,
-                    iconBackgroundColor = 0,
-                    onClick = mock()
-                )
-            ),
-            footerLink = DashboardCard.ActivityCard.FooterLink(
-                label = UiStringRes(0),
-                onClick = onActivityCardFooterLinkClick as (() -> Unit)
-            )
-        )
     }
 
     fun ViewModel.invokeOnCleared() {

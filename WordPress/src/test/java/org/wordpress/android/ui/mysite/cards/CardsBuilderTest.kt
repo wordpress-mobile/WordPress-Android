@@ -39,6 +39,7 @@ import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallF
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -216,7 +217,6 @@ class CardsBuilderTest {
                 ),
                 blazeCardBuilderParams = BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams(
                     mock(),
-                    mock(),
                     mock()
                 ),
                 dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
@@ -231,8 +231,8 @@ class CardsBuilderTest {
                     mock(),
                     mock()
                 ),
-                pagesCardBuilderParams = PagesCardBuilderParams(mock(), mock(), mock()),
-                activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock()),
+                pagesCardBuilderParams = PagesCardBuilderParams(mock(), mock(), mock(), mock()),
+                activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock(), mock(), mock()),
                 domainTransferCardBuilderParams = DomainTransferCardBuilderParams(
                     isEligible = isEligibleForDomainTransferCard,
                     mock(),
@@ -303,7 +303,6 @@ class CardsBuilderTest {
 
     private fun initQuickStartCard() = QuickStartCard(
         title = UiStringText(""),
-        onRemoveMenuItemClick = mock(),
         taskTypeItems = listOf(
             QuickStartTaskTypeItem(
                 quickStartTaskType = mock(),
@@ -315,7 +314,9 @@ class CardsBuilderTest {
                 progress = 0,
                 onClick = mock()
             )
-        )
+        ),
+        quickStartCardType = QuickStartCardType.NEXT_STEPS,
+        moreMenuOptions = mock()
     )
 
     private fun initDashboardCards() = DashboardCards(cards = mock())
