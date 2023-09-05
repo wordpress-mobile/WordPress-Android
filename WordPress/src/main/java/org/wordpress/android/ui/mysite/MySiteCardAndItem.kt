@@ -358,14 +358,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     ) : BlazeCard(dashboardCardType = DashboardCardType.PROMOTE_WITH_BLAZE_CARD)
                 }
 
-                data class DashboardDomainCard(
-                    val title: UiString?,
-                    val subtitle: UiString?,
-                    val onClick: ListItemInteraction,
-                    val onHideMenuItemClick: ListItemInteraction,
-                    val onMoreMenuClick: ListItemInteraction,
-                ) : DashboardCard(dashboardCardType = DashboardCardType.DASHBOARD_DOMAIN_CARD)
-
                 data class DashboardPlansCard(
                     val title: UiString?,
                     val subtitle: UiString?,
