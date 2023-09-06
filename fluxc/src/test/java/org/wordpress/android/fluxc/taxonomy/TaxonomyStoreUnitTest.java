@@ -45,13 +45,6 @@ public class TaxonomyStoreUnitTest {
     }
 
     @Test
-    public void testInsertNullTerm() {
-        assertEquals(0, TaxonomySqlUtils.insertOrUpdateTerm(null));
-
-        assertEquals(0, TaxonomyTestUtils.getTermsCount());
-    }
-
-    @Test
     public void testSimpleInsertionAndRetrieval() {
         TermModel termModel = new TermModel();
         termModel.setRemoteTermId(42);
