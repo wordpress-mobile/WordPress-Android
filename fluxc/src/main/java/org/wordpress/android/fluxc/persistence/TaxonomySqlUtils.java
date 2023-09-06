@@ -39,9 +39,9 @@ public class TaxonomySqlUtils {
         }
     }
 
-    public static TermModel insertTermForResult(TermModel term) {
+    @NonNull
+    public static TermModel insertTermForResult(@NonNull TermModel term) {
         WellSql.insert(term).asSingleTransaction(true).execute();
-
         return term;
     }
 
