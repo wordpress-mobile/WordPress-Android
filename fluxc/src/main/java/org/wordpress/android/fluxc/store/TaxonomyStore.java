@@ -285,8 +285,9 @@ public class TaxonomyStore extends Store {
         return TaxonomySqlUtils.getTermsFromRemoteNameList(post.getTagNameList(), site, DEFAULT_TAXONOMY_TAG);
     }
 
-    @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
+    @Subscribe(threadMode = ThreadMode.ASYNC)
+    @SuppressWarnings("rawtypes")
     public void onAction(Action action) {
         IAction actionType = action.getType();
         if (!(actionType instanceof TaxonomyAction)) {
