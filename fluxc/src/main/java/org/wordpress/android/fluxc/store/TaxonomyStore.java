@@ -189,21 +189,24 @@ public class TaxonomyStore extends Store {
     /**
      * Returns all categories for the given site as a {@link TermModel} list.
      */
-    public List<TermModel> getCategoriesForSite(SiteModel site) {
+    @NonNull
+    public List<TermModel> getCategoriesForSite(@NonNull SiteModel site) {
         return TaxonomySqlUtils.getTermsForSite(site, DEFAULT_TAXONOMY_CATEGORY);
     }
 
     /**
      * Returns all tags for the given site as a {@link TermModel} list.
      */
-    public List<TermModel> getTagsForSite(SiteModel site) {
+    @NonNull
+    public List<TermModel> getTagsForSite(@NonNull SiteModel site) {
         return TaxonomySqlUtils.getTermsForSite(site, DEFAULT_TAXONOMY_TAG);
     }
 
     /**
      * Returns all the terms of a taxonomy for the given site as a {@link TermModel} list.
      */
-    public List<TermModel> getTermsForSite(SiteModel site, String taxonomyName) {
+    @NonNull
+    public List<TermModel> getTermsForSite(@NonNull SiteModel site, @NonNull String taxonomyName) {
         return TaxonomySqlUtils.getTermsForSite(site, taxonomyName);
     }
 
