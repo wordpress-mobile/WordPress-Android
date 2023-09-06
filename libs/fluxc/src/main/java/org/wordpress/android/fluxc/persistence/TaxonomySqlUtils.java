@@ -144,11 +144,7 @@ public class TaxonomySqlUtils {
                 .execute();
     }
 
-    public static int removeTerm(TermModel term) {
-        if (term == null) {
-            return 0;
-        }
-
+    public static int removeTerm(@NonNull TermModel term) {
         return WellSql.delete(TermModel.class)
                 .where().beginGroup()
                 .equals(TermModelTable.TAXONOMY, term.getTaxonomy())
