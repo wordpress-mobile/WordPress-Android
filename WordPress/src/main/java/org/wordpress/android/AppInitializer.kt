@@ -398,10 +398,8 @@ class AppInitializer @Inject constructor(
 
         debugCookieManager.sync()
 
-        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= VERSION_CODES.R) {
-            if (!initialized) {
-                initAppOpsManager()
-            }
+        if (!initialized && BuildConfig.DEBUG && Build.VERSION.SDK_INT >= VERSION_CODES.R) {
+            initAppOpsManager()
         }
 
         initialized = true
