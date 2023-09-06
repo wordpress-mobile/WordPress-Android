@@ -81,16 +81,40 @@ public class TaxonomyStore extends Store {
     // OnChanged events
     public static class OnTaxonomyChanged extends OnChanged<TaxonomyError> {
         public int rowsAffected;
-        public String taxonomyName;
-        public TaxonomyAction causeOfChange;
+        @Nullable public String taxonomyName;
+        @NonNull public TaxonomyAction causeOfChange;
 
-        public OnTaxonomyChanged(int rowsAffected, String taxonomyName) {
+        public OnTaxonomyChanged(
+                int rowsAffected,
+                @NonNull String taxonomyName,
+                @NonNull TaxonomyAction causeOfChange
+        ) {
             this.rowsAffected = rowsAffected;
             this.taxonomyName = taxonomyName;
+            this.causeOfChange = causeOfChange;
         }
 
-        public OnTaxonomyChanged(int rowsAffected) {
+        public OnTaxonomyChanged(int rowsAffected, @NonNull String taxonomyName) {
             this.rowsAffected = rowsAffected;
+            this.taxonomyName = taxonomyName;
+            this.causeOfChange = taxonomyActionFromName(taxonomyName);
+        }
+
+        public OnTaxonomyChanged(int rowsAffected, @NonNull TaxonomyAction causeOfChange) {
+            this.rowsAffected = rowsAffected;
+            this.causeOfChange = causeOfChange;
+        }
+
+        @NonNull
+        private TaxonomyAction taxonomyActionFromName(@NonNull String taxonomy) {
+            switch (taxonomy) {
+                case DEFAULT_TAXONOMY_CATEGORY:
+                    return TaxonomyAction.FETCH_CATEGORIES;
+                case DEFAULT_TAXONOMY_TAG:
+                    return TaxonomyAction.FETCH_TAGS;
+                default:
+                    return TaxonomyAction.FETCH_TERMS;
+            }
         }
     }
 
@@ -378,17 +402,6 @@ public class TaxonomyStore extends Store {
             onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, payload.taxonomy);
         }
 
-        switch (payload.taxonomy) {
-            case DEFAULT_TAXONOMY_CATEGORY:
-                onTaxonomyChanged.causeOfChange = TaxonomyAction.FETCH_CATEGORIES;
-                break;
-            case DEFAULT_TAXONOMY_TAG:
-                onTaxonomyChanged.causeOfChange = TaxonomyAction.FETCH_TAGS;
-                break;
-            default:
-                onTaxonomyChanged.causeOfChange = TaxonomyAction.FETCH_TERMS;
-        }
-
         emitChange(onTaxonomyChanged);
     }
 
@@ -405,9 +418,12 @@ public class TaxonomyStore extends Store {
         }
 
         if (payload.isError()) {
-            OnTaxonomyChanged event = new OnTaxonomyChanged(0, payload.term.getTaxonomy());
+            OnTaxonomyChanged event = new OnTaxonomyChanged(
+                    0,
+                    payload.term.getTaxonomy(),
+                    TaxonomyAction.UPDATE_TERM
+            );
             event.error = payload.error;
-            event.causeOfChange = TaxonomyAction.UPDATE_TERM;
             emitChange(event);
         } else {
             updateTerm(payload.term);
@@ -416,9 +432,12 @@ public class TaxonomyStore extends Store {
 
     private void handleDeleteTermCompleted(@NonNull RemoteTermPayload payload) {
         if (payload.isError()) {
-            OnTaxonomyChanged event = new OnTaxonomyChanged(0, payload.term.getTaxonomy());
+            OnTaxonomyChanged event = new OnTaxonomyChanged(
+                    0,
+                    payload.term.getTaxonomy(),
+                    TaxonomyAction.DELETE_TERM
+            );
             event.error = payload.error;
-            event.causeOfChange = TaxonomyAction.DELETE_TERM;
             emitChange(event);
         } else {
             removeTerm(payload.term);
@@ -465,24 +484,32 @@ public class TaxonomyStore extends Store {
     private void updateTerm(@NonNull TermModel term) {
         int rowsAffected = TaxonomySqlUtils.insertOrUpdateTerm(term);
 
-        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
-        onTaxonomyChanged.causeOfChange = TaxonomyAction.UPDATE_TERM;
+        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(
+                rowsAffected,
+                term.getTaxonomy(),
+                TaxonomyAction.UPDATE_TERM
+        );
         emitChange(onTaxonomyChanged);
     }
 
     private void removeTerm(@NonNull TermModel term) {
         int rowsAffected = TaxonomySqlUtils.removeTerm(term);
 
-        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
-        onTaxonomyChanged.causeOfChange = TaxonomyAction.REMOVE_TERM;
+        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(
+                rowsAffected,
+                term.getTaxonomy(),
+                TaxonomyAction.REMOVE_TERM
+        );
         emitChange(onTaxonomyChanged);
     }
 
     private void removeAllTerms() {
         int rowsAffected = TaxonomySqlUtils.deleteAllTerms();
 
-        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected);
-        onTaxonomyChanged.causeOfChange = TaxonomyAction.REMOVE_ALL_TERMS;
+        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(
+                rowsAffected,
+                TaxonomyAction.REMOVE_ALL_TERMS
+        );
         emitChange(onTaxonomyChanged);
     }
 }
