@@ -134,7 +134,7 @@ class SiteItemsBuilderTest {
                 site = siteModel,
                 onClick = SITE_ITEM_ACTION,
                 activeTask = QuickStartNewSiteTask.CHECK_STATS,
-                enableStatsFocusPoint = enableStatsFocusPoint
+                enableFocusPoints = enableStatsFocusPoint
             )
         )
 
@@ -153,7 +153,7 @@ class SiteItemsBuilderTest {
                 site = siteModel,
                 onClick = SITE_ITEM_ACTION,
                 activeTask = QuickStartNewSiteTask.CHECK_STATS,
-                enableStatsFocusPoint = enableStatsFocusPoint
+                enableFocusPoints = enableStatsFocusPoint
             )
         )
 
@@ -172,7 +172,7 @@ class SiteItemsBuilderTest {
                 site = siteModel,
                 onClick = SITE_ITEM_ACTION,
                 activeTask = QuickStartExistingSiteTask.CHECK_STATS,
-                enableStatsFocusPoint = enableStatsFocusPoint
+                enableFocusPoints = enableStatsFocusPoint
             )
         )
 
@@ -191,46 +191,11 @@ class SiteItemsBuilderTest {
                 site = siteModel,
                 onClick = SITE_ITEM_ACTION,
                 activeTask = QuickStartExistingSiteTask.CHECK_STATS,
-                enableStatsFocusPoint = enableStatsFocusPoint
+                enableFocusPoints = enableStatsFocusPoint
             )
         )
 
         assertThat(buildSiteItems).contains(STATS_ITEM.copy(showFocusPoint = enableStatsFocusPoint))
-    }
-
-    /* INFO ITEM */
-
-    @Test
-    fun `when build info item is invoked, then info item is built`() {
-        val infoItem = siteItemsBuilder.build(
-            InfoItemBuilderParams(
-                isStaleMessagePresent = true
-            )
-        )
-
-        assertThat(infoItem).isNotNull
-    }
-
-    @Test
-    fun `given stale message present, when build info item is invoked, then info item is built`() {
-        val infoItem = siteItemsBuilder.build(
-            InfoItemBuilderParams(
-                isStaleMessagePresent = true
-            )
-        )
-
-        assertThat(infoItem).isNotNull
-    }
-
-    @Test
-    fun `given stale message not present, when build info item is invoked, then info item is not built`() {
-        val infoItem = siteItemsBuilder.build(
-            InfoItemBuilderParams(
-                isStaleMessagePresent = false
-            )
-        )
-
-        assertThat(infoItem).isNull()
     }
 
     @Test

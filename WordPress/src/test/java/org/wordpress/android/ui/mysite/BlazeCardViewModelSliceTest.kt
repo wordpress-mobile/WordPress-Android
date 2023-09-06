@@ -13,7 +13,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
@@ -21,7 +20,6 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
-import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -61,34 +59,6 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
                 refreshActions.add(it)
             }
         }
-    }
-
-    @Test
-    fun `given site blaze eligible, when isSiteBlazeEligible is called, then return true`() {
-        // Given
-        val site: SiteModel = mock()
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(blazeFeatureUtils.isSiteBlazeEligible(site)).thenReturn(true)
-
-        // When
-        val result = blazeCardViewModelSlice.isSiteBlazeEligible()
-
-        // Then
-        assertThat(result).isTrue()
-    }
-
-    @Test
-    fun `given site blaze ineligible, when isSiteBlazeEligible is called, then return false`() {
-        // Given
-        val site: SiteModel = mock()
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(blazeFeatureUtils.isSiteBlazeEligible(site)).thenReturn(false)
-
-        // When
-        val result = blazeCardViewModelSlice.isSiteBlazeEligible()
-
-        // Then
-        assertThat(result).isFalse()
     }
 
     @Test
@@ -363,38 +333,6 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
         verify(cardsTracker).trackCardMoreMenuItemClicked(
             CardsTracker.Type.PROMOTE_WITH_BLAZE.label,
             PromoteWithBlazeCardMenuItem.LEARN_MORE.label
-        )
-    }
-
-    @Test
-    fun `given campaigns enabled, when menu clicked, then navigated to campaign listing page`() {
-        // Given
-        whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(true)
-
-        // When
-        val navigationAction = blazeCardViewModelSlice.onBlazeMenuItemClick()
-
-        // Then
-        verify(blazeFeatureUtils).trackEntryPointTapped(BlazeFlowSource.MENU_ITEM)
-        assertEquals(
-            SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.MENU_ITEM),
-            navigationAction
-        )
-    }
-
-    @Test
-    fun `given campaigns disabled, when menu clicked, then event is tracked`() {
-        // Given
-        whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(false)
-
-        // When
-        val navigationAction = blazeCardViewModelSlice.onBlazeMenuItemClick()
-
-        // Then
-        verify(blazeFeatureUtils).trackEntryPointTapped(BlazeFlowSource.MENU_ITEM)
-        assertEquals(
-            SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.MENU_ITEM),
-            navigationAction
         )
     }
 }
