@@ -392,7 +392,7 @@ public class TaxonomyStore extends Store {
         emitChange(onTaxonomyChanged);
     }
 
-    private void handleFetchSingleTermCompleted(FetchTermResponsePayload payload) {
+    private void handleFetchSingleTermCompleted(@NonNull FetchTermResponsePayload payload) {
         if (payload.origin == TaxonomyAction.PUSH_TERM) {
             OnTermUploaded onTermUploaded = new OnTermUploaded(payload.term);
             if (payload.isError()) {
