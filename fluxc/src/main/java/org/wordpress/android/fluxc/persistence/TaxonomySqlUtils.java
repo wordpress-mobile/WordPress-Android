@@ -13,11 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class TaxonomySqlUtils {
-    public static int insertOrUpdateTerm(TermModel term) {
-        if (term == null) {
-            return 0;
-        }
-
+    public static int insertOrUpdateTerm(@NonNull TermModel term) {
         List<TermModel> termResult = WellSql.select(TermModel.class)
                 .where().beginGroup()
                 .equals(TermModelTable.ID, term.getId())
