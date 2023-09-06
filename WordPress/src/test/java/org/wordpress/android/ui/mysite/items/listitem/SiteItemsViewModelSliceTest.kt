@@ -28,7 +28,7 @@ import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class SiteItemsViewModelSliceTest() : BaseUnitTest() {
+class SiteItemsViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var quickStartRepository: QuickStartRepository
 
