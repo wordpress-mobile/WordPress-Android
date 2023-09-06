@@ -289,7 +289,6 @@ class AppInitializer @Inject constructor(
             logPrivateDataAccess(syncNotedAppOp.op, Throwable("Stack Trace: ").stackTrace.toString())
         }
 
-        @RequiresApi(VERSION_CODES.R)
         override fun onAsyncNoted(asyncNotedAppOp: AsyncNotedAppOp) {
             logPrivateDataAccess(asyncNotedAppOp.op, asyncNotedAppOp.message)
         }
