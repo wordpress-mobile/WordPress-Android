@@ -178,7 +178,8 @@ public class TaxonomyStoreUnitTest {
         assertEquals(4, TaxonomyTestUtils.getTermsCount());
         assertEquals(2, mTaxonomyStore.getCategoriesForSite(site).size());
 
-        TaxonomySqlUtils.clearTaxonomyForSite(site, DEFAULT_TAXONOMY_CATEGORY);
+        int deletedTermModels = TaxonomySqlUtils.clearTaxonomyForSite(site, DEFAULT_TAXONOMY_CATEGORY);
+        assertEquals(2, deletedTermModels);
 
         assertEquals(0, mTaxonomyStore.getCategoriesForSite(site).size());
         assertEquals(2, TaxonomyTestUtils.getTermsCount());
