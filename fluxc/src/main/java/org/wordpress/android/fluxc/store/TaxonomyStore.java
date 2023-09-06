@@ -414,7 +414,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void handleDeleteTermCompleted(RemoteTermPayload payload) {
+    private void handleDeleteTermCompleted(@NonNull RemoteTermPayload payload) {
         if (payload.isError()) {
             OnTaxonomyChanged event = new OnTaxonomyChanged(0, payload.term.getTaxonomy());
             event.error = payload.error;
@@ -425,7 +425,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void handlePushTermCompleted(RemoteTermPayload payload) {
+    private void handlePushTermCompleted(@NonNull RemoteTermPayload payload) {
         if (payload.isError()) {
             OnTermUploaded onTermUploaded = new OnTermUploaded(payload.term);
             onTermUploaded.error = payload.error;
