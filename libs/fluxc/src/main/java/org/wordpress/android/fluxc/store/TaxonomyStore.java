@@ -177,13 +177,13 @@ public class TaxonomyStore extends Store {
         newTerm.setTaxonomy(taxonomyName);
 
         // Insert the term into the db, updating the object to include the local ID
-        newTerm = TaxonomySqlUtils.insertTermForResult(newTerm);
+        TermModel insertedTerm = TaxonomySqlUtils.insertTermForResult(newTerm);
 
         // id is set to -1 if insertion fails
-        if (newTerm.getId() == -1) {
+        if (insertedTerm.getId() == -1) {
             return null;
         }
-        return newTerm;
+        return insertedTerm;
     }
 
     /**
