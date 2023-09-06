@@ -115,10 +115,10 @@ public class TaxonomyStore extends Store {
     }
 
     public static class TaxonomyError implements OnChangedError {
-        public TaxonomyErrorType type;
-        public String message;
+        @NonNull public TaxonomyErrorType type;
+        @NonNull public String message;
 
-        public TaxonomyError(TaxonomyErrorType type, @NonNull String message) {
+        public TaxonomyError(@NonNull TaxonomyErrorType type, @NonNull String message) {
             this.type = type;
             this.message = message;
         }
@@ -128,7 +128,7 @@ public class TaxonomyStore extends Store {
             this.message = message;
         }
 
-        public TaxonomyError(TaxonomyErrorType type) {
+        public TaxonomyError(@NonNull TaxonomyErrorType type) {
             this(type, "");
         }
     }
@@ -140,12 +140,11 @@ public class TaxonomyStore extends Store {
         INVALID_RESPONSE,
         GENERIC_ERROR;
 
-        public static TaxonomyErrorType fromString(String string) {
-            if (string != null) {
-                for (TaxonomyErrorType v : TaxonomyErrorType.values()) {
-                    if (string.equalsIgnoreCase(v.name())) {
-                        return v;
-                    }
+        @NonNull
+        public static TaxonomyErrorType fromString(@NonNull String string) {
+            for (TaxonomyErrorType v : TaxonomyErrorType.values()) {
+                if (string.equalsIgnoreCase(v.name())) {
+                    return v;
                 }
             }
             return GENERIC_ERROR;
