@@ -29,8 +29,11 @@ import static org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_T
 
 @RunWith(RobolectricTestRunner.class)
 public class TaxonomyStoreUnitTest {
-    private TaxonomyStore mTaxonomyStore = new TaxonomyStore(new Dispatcher(), Mockito.mock(TaxonomyRestClient.class),
-            Mockito.mock(TaxonomyXMLRPCClient.class));
+    private final TaxonomyStore mTaxonomyStore = new TaxonomyStore(
+            new Dispatcher(),
+            Mockito.mock(TaxonomyRestClient.class),
+            Mockito.mock(TaxonomyXMLRPCClient.class)
+    );
 
     @Before
     public void setUp() {
