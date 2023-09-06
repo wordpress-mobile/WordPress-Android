@@ -81,22 +81,10 @@ public class TaxonomyStore extends Store {
     // OnChanged events
     public static class OnTaxonomyChanged extends OnChanged<TaxonomyError> {
         public int rowsAffected;
-        @Nullable public String taxonomyName;
         @NonNull public TaxonomyAction causeOfChange;
-
-        public OnTaxonomyChanged(
-                int rowsAffected,
-                @NonNull String taxonomyName,
-                @NonNull TaxonomyAction causeOfChange
-        ) {
-            this.rowsAffected = rowsAffected;
-            this.taxonomyName = taxonomyName;
-            this.causeOfChange = causeOfChange;
-        }
 
         public OnTaxonomyChanged(int rowsAffected, @NonNull String taxonomyName) {
             this.rowsAffected = rowsAffected;
-            this.taxonomyName = taxonomyName;
             this.causeOfChange = taxonomyActionFromName(taxonomyName);
         }
 
@@ -420,7 +408,6 @@ public class TaxonomyStore extends Store {
         if (payload.isError()) {
             OnTaxonomyChanged event = new OnTaxonomyChanged(
                     0,
-                    payload.term.getTaxonomy(),
                     TaxonomyAction.UPDATE_TERM
             );
             event.error = payload.error;
@@ -434,7 +421,6 @@ public class TaxonomyStore extends Store {
         if (payload.isError()) {
             OnTaxonomyChanged event = new OnTaxonomyChanged(
                     0,
-                    payload.term.getTaxonomy(),
                     TaxonomyAction.DELETE_TERM
             );
             event.error = payload.error;
@@ -486,7 +472,6 @@ public class TaxonomyStore extends Store {
 
         OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(
                 rowsAffected,
-                term.getTaxonomy(),
                 TaxonomyAction.UPDATE_TERM
         );
         emitChange(onTaxonomyChanged);
@@ -497,7 +482,6 @@ public class TaxonomyStore extends Store {
 
         OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(
                 rowsAffected,
-                term.getTaxonomy(),
                 TaxonomyAction.REMOVE_TERM
         );
         emitChange(onTaxonomyChanged);
