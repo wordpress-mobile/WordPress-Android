@@ -99,6 +99,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.Qui
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
+import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -153,6 +154,7 @@ class MySiteViewModel @Inject constructor(
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val siteItemsBuilder: SiteItemsBuilder,
     private val accountStore: AccountStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val wpMediaUtilsWrapper: WPMediaUtilsWrapper,
@@ -634,12 +636,14 @@ class MySiteViewModel @Inject constructor(
             isMySiteTabsEnabled
         )
 
-        val siteItems = siteItemsViewModelSlice.buildItems(
-            defaultTab = defaultTab,
-            site = site,
-            activeTask = activeTask,
-            backupAvailable = backupAvailable,
-            scanAvailable = scanAvailable,
+        val siteItems = siteItemsBuilder.build(
+            siteItemsViewModelSlice.buildItems(
+                defaultTab = defaultTab,
+                site = site,
+                activeTask = activeTask,
+                backupAvailable = backupAvailable,
+                scanAvailable = scanAvailable
+            )
         )
 
         val jetpackBadge = buildJetpackBadgeIfEnabled()

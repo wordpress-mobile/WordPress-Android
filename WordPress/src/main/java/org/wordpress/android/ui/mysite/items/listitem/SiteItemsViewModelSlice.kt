@@ -12,7 +12,6 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
-import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -36,7 +35,6 @@ class SiteItemsViewModelSlice @Inject constructor(
     private val accountStore: AccountStore,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val siteItemsBuilder: SiteItemsBuilder
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
@@ -50,18 +48,16 @@ class SiteItemsViewModelSlice @Inject constructor(
         activeTask: QuickStartStore.QuickStartTask? = null,
         backupAvailable: Boolean = false,
         scanAvailable: Boolean = false
-    ): List<MySiteCardAndItem> {
+    ): MySiteCardAndItemBuilderParams.SiteItemsBuilderParams {
         val shouldEnableFocusPoint = shouldEnableSiteItemsFocusPoints(defaultTab)
-        return siteItemsBuilder.build(
-            MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
-                site = site,
-                activeTask = activeTask,
-                backupAvailable = backupAvailable,
-                scanAvailable = scanAvailable,
-                enableFocusPoints = shouldEnableFocusPoint,
-                onClick = this::onItemClick,
-                isBlazeEligible = isSiteBlazeEligible()
-            )
+        return MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
+            site = site,
+            activeTask = activeTask,
+            backupAvailable = backupAvailable,
+            scanAvailable = scanAvailable,
+            enableFocusPoints = shouldEnableFocusPoint,
+            onClick = this::onItemClick,
+            isBlazeEligible = isSiteBlazeEligible()
         )
     }
 
