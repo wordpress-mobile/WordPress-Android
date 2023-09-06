@@ -316,6 +316,9 @@ public class TaxonomyStore extends Store {
             case REMOVE_ALL_TERMS:
                 removeAllTerms();
                 break;
+            case UPDATE_TERM:
+            case REMOVE_TERM:
+                break;
         }
     }
 
