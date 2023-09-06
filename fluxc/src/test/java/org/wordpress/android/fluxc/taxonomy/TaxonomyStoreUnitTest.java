@@ -37,7 +37,7 @@ public class TaxonomyStoreUnitTest {
 
     @Before
     public void setUp() {
-        Context appContext = RuntimeEnvironment.application.getApplicationContext();
+        Context appContext = RuntimeEnvironment.getApplication().getApplicationContext();
 
         WellSqlConfig config = new SingleStoreWellSqlConfigForTests(appContext, TermModel.class);
         WellSql.init(config);
