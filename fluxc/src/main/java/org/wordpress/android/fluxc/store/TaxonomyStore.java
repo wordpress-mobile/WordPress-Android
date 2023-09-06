@@ -190,6 +190,7 @@ public class TaxonomyStore extends Store {
      * Returns all categories for the given site as a {@link TermModel} list.
      */
     @NonNull
+    @SuppressWarnings("unused")
     public List<TermModel> getCategoriesForSite(@NonNull SiteModel site) {
         return TaxonomySqlUtils.getTermsForSite(site, DEFAULT_TAXONOMY_CATEGORY);
     }
@@ -198,6 +199,7 @@ public class TaxonomyStore extends Store {
      * Returns all tags for the given site as a {@link TermModel} list.
      */
     @NonNull
+    @SuppressWarnings("unused")
     public List<TermModel> getTagsForSite(@NonNull SiteModel site) {
         return TaxonomySqlUtils.getTermsForSite(site, DEFAULT_TAXONOMY_TAG);
     }
@@ -206,6 +208,7 @@ public class TaxonomyStore extends Store {
      * Returns all the terms of a taxonomy for the given site as a {@link TermModel} list.
      */
     @NonNull
+    @SuppressWarnings("unused")
     public List<TermModel> getTermsForSite(@NonNull SiteModel site, @NonNull String taxonomyName) {
         return TaxonomySqlUtils.getTermsForSite(site, taxonomyName);
     }
@@ -214,6 +217,7 @@ public class TaxonomyStore extends Store {
      * Returns a category as a {@link TermModel} given its remote id.
      */
     @Nullable
+    @SuppressWarnings("unused")
     public TermModel getCategoryByRemoteId(@NonNull SiteModel site, long remoteId) {
         return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, DEFAULT_TAXONOMY_CATEGORY);
     }
@@ -222,6 +226,7 @@ public class TaxonomyStore extends Store {
      * Returns a tag as a {@link TermModel} given its remote id.
      */
     @Nullable
+    @SuppressWarnings("unused")
     public TermModel getTagByRemoteId(@NonNull SiteModel site, long remoteId) {
         return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, DEFAULT_TAXONOMY_TAG);
     }
@@ -230,6 +235,7 @@ public class TaxonomyStore extends Store {
      * Returns a term as a {@link TermModel} given its remote id.
      */
     @Nullable
+    @SuppressWarnings("unused")
     public TermModel getTermByRemoteId(@NonNull SiteModel site, long remoteId, @NonNull String taxonomyName) {
         return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, taxonomyName);
     }
@@ -238,6 +244,7 @@ public class TaxonomyStore extends Store {
      * Returns a category as a {@link TermModel} given its name.
      */
     @Nullable
+    @SuppressWarnings("unused")
     public TermModel getCategoryByName(@NonNull SiteModel site, @NonNull String categoryName) {
         return TaxonomySqlUtils.getTermByName(site, categoryName, DEFAULT_TAXONOMY_CATEGORY);
     }
@@ -246,6 +253,7 @@ public class TaxonomyStore extends Store {
      * Returns a tag as a {@link TermModel} given its name.
      */
     @Nullable
+    @SuppressWarnings("unused")
     public TermModel getTagByName(@NonNull SiteModel site, @NonNull String tagName) {
         return TaxonomySqlUtils.getTermByName(site, tagName, DEFAULT_TAXONOMY_TAG);
     }
@@ -254,6 +262,7 @@ public class TaxonomyStore extends Store {
      * Returns a term as a {@link TermModel} given its name.
      */
     @Nullable
+    @SuppressWarnings("unused")
     public TermModel getTermByName(@NonNull SiteModel site, @NonNull String termName, @NonNull String taxonomyName) {
         return TaxonomySqlUtils.getTermByName(site, termName, taxonomyName);
     }
@@ -262,6 +271,7 @@ public class TaxonomyStore extends Store {
      * Returns all the categories for the given post as a {@link TermModel} list.
      */
     @NonNull
+    @SuppressWarnings("unused")
     public List<TermModel> getCategoriesForPost(@NonNull PostImmutableModel post, @NonNull SiteModel site) {
         return TaxonomySqlUtils.getTermsFromRemoteIdList(post.getCategoryIdList(), site, DEFAULT_TAXONOMY_CATEGORY);
     }
@@ -270,6 +280,7 @@ public class TaxonomyStore extends Store {
      * Returns all the tags for the given post as a {@link TermModel} list.
      */
     @NonNull
+    @SuppressWarnings("unused")
     public List<TermModel> getTagsForPost(@NonNull PostImmutableModel post, @NonNull SiteModel site) {
         return TaxonomySqlUtils.getTermsFromRemoteNameList(post.getTagNameList(), site, DEFAULT_TAXONOMY_TAG);
     }
