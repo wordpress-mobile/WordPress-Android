@@ -127,11 +127,9 @@ public class TaxonomySqlUtils {
                 .getAsModel();
     }
 
-    public static int clearTaxonomyForSite(SiteModel site, String taxonomyName) {
-        if (site == null || taxonomyName == null) {
-            return 0;
-        }
-
+    public static int clearTaxonomyForSite(
+            @NonNull SiteModel site,
+            @NonNull String taxonomyName) {
         return WellSql.delete(TermModel.class)
                 .where().beginGroup()
                 .equals(TermModelTable.LOCAL_SITE_ID, site.getId())
