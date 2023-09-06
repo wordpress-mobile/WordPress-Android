@@ -58,11 +58,11 @@ public class TaxonomySqlUtils {
                 .getAsModel();
     }
 
-    public static TermModel getTermByRemoteId(SiteModel site, long remoteTermId, String taxonomyName) {
-        if (site == null || taxonomyName == null) {
-            return null;
-        }
-
+    @Nullable
+    public static TermModel getTermByRemoteId(
+            @NonNull SiteModel site,
+            long remoteTermId,
+            @NonNull String taxonomyName) {
         List<TermModel> termResult = WellSql.select(TermModel.class)
                 .where().beginGroup()
                 .equals(TermModelTable.LOCAL_SITE_ID, site.getId())

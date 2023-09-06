@@ -210,21 +210,24 @@ public class TaxonomyStore extends Store {
     /**
      * Returns a category as a {@link TermModel} given its remote id.
      */
-    public TermModel getCategoryByRemoteId(SiteModel site, long remoteId) {
+    @Nullable
+    public TermModel getCategoryByRemoteId(@NonNull SiteModel site, long remoteId) {
         return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, DEFAULT_TAXONOMY_CATEGORY);
     }
 
     /**
      * Returns a tag as a {@link TermModel} given its remote id.
      */
-    public TermModel getTagByRemoteId(SiteModel site, long remoteId) {
+    @Nullable
+    public TermModel getTagByRemoteId(@NonNull SiteModel site, long remoteId) {
         return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, DEFAULT_TAXONOMY_TAG);
     }
 
     /**
      * Returns a term as a {@link TermModel} given its remote id.
      */
-    public TermModel getTermByRemoteId(SiteModel site, long remoteId, String taxonomyName) {
+    @Nullable
+    public TermModel getTermByRemoteId(@NonNull SiteModel site, long remoteId, @NonNull String taxonomyName) {
         return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, taxonomyName);
     }
 
