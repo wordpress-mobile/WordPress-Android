@@ -449,19 +449,8 @@ class MySiteViewModel @Inject constructor(
         )
     }
 
-    private fun getSiteInfoToolbarViewParams(): SiteInfoToolbarViewParams {
-        return if (isMySiteTabsEnabled) {
-            SiteInfoToolbarViewParams(
-                R.dimen.app_bar_with_site_info_tabs_height,
-                R.dimen.toolbar_bottom_margin_with_tabs
-            )
-        } else {
-            SiteInfoToolbarViewParams(
-                R.dimen.app_bar_with_site_info_height,
-                R.dimen.toolbar_bottom_margin_with_no_tabs
-            )
-        }
-    }
+    private fun getSiteInfoToolbarViewParams() =
+        SiteInfoToolbarViewParams(R.dimen.app_bar_with_site_info_height, R.dimen.toolbar_bottom_margin_with_no_tabs)
 
     private fun getPositionOfQuickStartItem(
         siteItems: Map<MySiteTabType, List<MySiteCardAndItem>>,
