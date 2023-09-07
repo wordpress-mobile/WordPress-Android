@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
@@ -102,4 +103,14 @@ sealed class SiteNavigationAction {
         SiteNavigationAction()
 
     data class OpenDomainTransferPage(val url: String) : SiteNavigationAction()
+}
+
+sealed class BloggingPromptCardNavigationAction: SiteNavigationAction() {
+    data class ShareBloggingPrompt(val message: String) : BloggingPromptCardNavigationAction()
+    data class AnswerBloggingPrompt(val selectedSite: SiteModel, val promptId: Int) :
+        BloggingPromptCardNavigationAction()
+    data class onBloggingPromptViewAnswers(val readerTag: ReaderTag): BloggingPromptCardNavigationAction()
+    object onBloggingPromptsLearnMore: BloggingPromptCardNavigationAction()
+    object onBloggingPromptsViewMore: BloggingPromptCardNavigationAction()
+    object onBloggingPromptsRemoved: BloggingPromptCardNavigationAction()
 }
