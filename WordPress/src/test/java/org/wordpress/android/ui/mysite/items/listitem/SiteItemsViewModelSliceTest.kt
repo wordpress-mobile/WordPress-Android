@@ -23,6 +23,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import kotlin.test.assertEquals
 
@@ -55,6 +56,8 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
 
     private val site = SiteModel()
 
+    private val quickStartType = QuickStartType.ExistingSiteQuickStartType
+
     @Before
     fun setup() {
         siteItemsViewModelSlice = SiteItemsViewModelSlice(
@@ -65,6 +68,10 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
             jetpackFeatureRemovalPhaseHelper,
             blazeFeatureUtils
         )
+
+        whenever(blazeFeatureUtils.isSiteBlazeEligible(site)).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartRepository.activeTask).thenReturn(null)
 
         navigationActions = mutableListOf()
         snackBarMessages = mutableListOf()
@@ -168,13 +175,6 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `view site item click emits OpenSite navigation event`() {
-        invokeItemClickAction(ListItemAction.VIEW_SITE)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenSite(site))
-    }
-
-    @Test
     fun `stats item click emits OpenStats navigation event if site is WPCom and has access token`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         site.setIsWPCom(true)
@@ -223,6 +223,9 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
     fun `stats item click emits StartWPComLoginForJetpackStats if site is Jetpack and doesn't have access token`() {
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         site.setIsJetpackConnected(true)
+        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+            .thenReturn(QuickStartStore.QuickStartExistingSiteTask.UNKNOWN)
 
         invokeItemClickAction(ListItemAction.STATS)
 

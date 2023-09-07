@@ -17,7 +17,6 @@ enum class ListItemAction (val trackingLabel: String) {
     STATS("stats"),
     MEDIA("media"),
     COMMENTS("comments"),
-    VIEW_SITE("view_site"),
     BLAZE("blaze"),
     ME("me"),
 }

@@ -108,7 +108,6 @@ class SiteItemsViewModelSlice @Inject constructor(
                 }
 
                 ListItemAction.COMMENTS -> SiteNavigationAction.OpenUnifiedComments(selectedSite)
-                ListItemAction.VIEW_SITE -> SiteNavigationAction.OpenSite(selectedSite)
 
                 ListItemAction.BLAZE -> onBlazeMenuItemClick()
             }
