@@ -32,14 +32,6 @@ sealed class MySiteCardAndItemBuilderParams {
         val isStaleMessagePresent: Boolean
     ) : MySiteCardAndItemBuilderParams()
 
-    data class QuickActionsCardBuilderParams(
-        val siteModel: SiteModel,
-        val onQuickActionStatsClick: () -> Unit,
-        val onQuickActionPagesClick: () -> Unit,
-        val onQuickActionPostsClick: () -> Unit,
-        val onQuickActionMediaClick: () -> Unit
-    ) : MySiteCardAndItemBuilderParams()
-
     data class QuickLinkRibbonBuilderParams(
         val siteModel: SiteModel,
         val onPagesClick: () -> Unit,
