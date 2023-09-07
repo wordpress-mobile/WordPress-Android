@@ -37,7 +37,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.models.JetpackPoweredScreen
-import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -219,12 +218,6 @@ class MySiteViewModel @Inject constructor(
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
-    private val _onShareBloggingPrompt = MutableLiveData<Event<String>>()
-    private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<SiteModel, PromptID>>>()
-    private val _onBloggingPromptsViewAnswers = SingleLiveEvent<Event<ReaderTag>>()
-    private val _onBloggingPromptsLearnMore = SingleLiveEvent<Event<Unit>>()
-    private val _onBloggingPromptsViewMore = SingleLiveEvent<Event<Unit>>()
-    private val _onBloggingPromptsRemoved = SingleLiveEvent<Event<Unit>>()
     private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
     private val _onShowJetpackIndividualPluginOverlay = SingleLiveEvent<Event<Unit>>()
 
@@ -308,12 +301,6 @@ class MySiteViewModel @Inject constructor(
     )
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
-    val onShareBloggingPrompt = _onShareBloggingPrompt as LiveData<Event<String>>
-    val onAnswerBloggingPrompt = _onAnswerBloggingPrompt as LiveData<Event<Pair<SiteModel, Int>>>
-    val onBloggingPromptsViewAnswers = _onBloggingPromptsViewAnswers as LiveData<Event<ReaderTag>>
-    val onBloggingPromptsLearnMore = _onBloggingPromptsLearnMore as LiveData<Event<Unit>>
-    val onBloggingPromptsViewMore = _onBloggingPromptsViewMore as LiveData<Event<Unit>>
-    val onBloggingPromptsRemoved = _onBloggingPromptsRemoved as LiveData<Event<Unit>>
     val onOpenJetpackInstallFullPluginOnboarding = _onOpenJetpackInstallFullPluginOnboarding as LiveData<Event<Unit>>
     val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
@@ -1265,13 +1252,13 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onBloggingPromptShareClick(message: String) {
-        _onShareBloggingPrompt.value = Event(message)
+        _onNavigation.value = Event(BloggingPromptCardNavigationAction.ShareBloggingPrompt(message))
     }
 
     private fun onBloggingPromptAnswerClick(promptId: Int) {
         bloggingPromptsCardAnalyticsTracker.trackMySiteCardAnswerPromptClicked()
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        _onAnswerBloggingPrompt.value = Event(Pair(selectedSite, promptId))
+        _onNavigation.value = Event(BloggingPromptCardNavigationAction.AnswerBloggingPrompt(selectedSite, promptId))
     }
 
     private fun onBloggingPromptSkipClick() {
@@ -1299,17 +1286,17 @@ class MySiteViewModel @Inject constructor(
     private fun onBloggingPromptViewAnswersClick(promptId: Int) {
         bloggingPromptsCardAnalyticsTracker.trackMySiteCardViewAnswersClicked()
         val tag = BloggingPromptsPostTagProvider.promptIdSearchReaderTag(promptId)
-        _onBloggingPromptsViewAnswers.value = Event(tag)
+        _onNavigation.value = Event(BloggingPromptCardNavigationAction.onBloggingPromptViewAnswers(tag))
     }
 
     private fun onBloggingPromptViewMoreClick() {
-        _onBloggingPromptsViewMore.value = Event(Unit)
+        _onNavigation.value = Event(BloggingPromptCardNavigationAction.onBloggingPromptsViewMore)
     }
 
     private fun onBloggingPromptRemoveClick() {
         launch {
             updatePromptsCardEnabled(isEnabled = false).join()
-            _onBloggingPromptsRemoved.postValue(Event(Unit))
+            _onNavigation.value = Event(BloggingPromptCardNavigationAction.onBloggingPromptsRemoved)
         }
     }
 
@@ -1446,7 +1433,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onBloggingPromptsLearnMoreClicked() {
-        _onBloggingPromptsLearnMore.postValue(Event(Unit))
+        _onNavigation.postValue(Event(BloggingPromptCardNavigationAction.onBloggingPromptsLearnMore))
     }
 
     private fun trackWithTabSourceIfNeeded(stat: Stat, properties: HashMap<String, *>? = null) {
