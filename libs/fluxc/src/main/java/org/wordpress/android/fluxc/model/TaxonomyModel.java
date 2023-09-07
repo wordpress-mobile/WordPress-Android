@@ -15,7 +15,6 @@ import org.wordpress.android.util.StringUtils;
 import java.io.Serializable;
 
 @Table
-@SuppressWarnings("NotNullFieldNotInitialized")
 public class TaxonomyModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
     private static final long serialVersionUID = 8855881690971305398L;
 
@@ -27,6 +26,48 @@ public class TaxonomyModel extends Payload<BaseNetworkError> implements Identifi
     @Nullable @Column private String mDescription;
     @Column private boolean mIsHierarchical;
     @Column private boolean mIsPublic;
+
+    @Deprecated
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    public TaxonomyModel() {
+        this.mId = 0;
+        this.mLocalSiteId = 0;
+        this.mName = "";
+        this.mLabel = null;
+        this.mDescription = null;
+        this.mIsHierarchical = false;
+        this.mIsPublic = false;
+    }
+
+    /**
+     * Use when adding a new taxonomy.
+     */
+    public TaxonomyModel(@NonNull String name) {
+        this.mId = 0;
+        this.mLocalSiteId = 0;
+        this.mName = name;
+        this.mLabel = null;
+        this.mDescription = null;
+        this.mIsHierarchical = false;
+        this.mIsPublic = false;
+    }
+
+    public TaxonomyModel(
+            int id,
+            int localSiteId,
+            @NonNull String name,
+            @Nullable String label,
+            @Nullable String description,
+            boolean isHierarchical,
+            boolean isPublic) {
+        this.mId = id;
+        this.mLocalSiteId = localSiteId;
+        this.mName = name;
+        this.mLabel = label;
+        this.mDescription = description;
+        this.mIsHierarchical = isHierarchical;
+        this.mIsPublic = isPublic;
+    }
 
     @Override
     public int getId() {
