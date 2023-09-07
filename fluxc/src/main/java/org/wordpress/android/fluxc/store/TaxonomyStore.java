@@ -166,37 +166,6 @@ public class TaxonomyStore extends Store {
         AppLog.d(AppLog.T.API, "TaxonomyStore onRegister");
     }
 
-    @Nullable
-    public TermModel instantiateCategory(@NonNull SiteModel site) {
-        return instantiateTermModel(site, DEFAULT_TAXONOMY_CATEGORY);
-    }
-
-    @Nullable
-    public TermModel instantiateTag(@NonNull SiteModel site) {
-        return instantiateTermModel(site, DEFAULT_TAXONOMY_TAG);
-    }
-
-    @Nullable
-    public TermModel instantiateTerm(@NonNull SiteModel site, @NonNull TaxonomyModel taxonomy) {
-        return instantiateTermModel(site, taxonomy.getName());
-    }
-
-    @Nullable
-    private TermModel instantiateTermModel(@NonNull SiteModel site, @NonNull String taxonomyName) {
-        TermModel newTerm = new TermModel();
-        newTerm.setLocalSiteId(site.getId());
-        newTerm.setTaxonomy(taxonomyName);
-
-        // Insert the term into the db, updating the object to include the local ID
-        TermModel insertedTerm = TaxonomySqlUtils.insertTermForResult(newTerm);
-
-        // id is set to -1 if insertion fails
-        if (insertedTerm.getId() == -1) {
-            return null;
-        }
-        return insertedTerm;
-    }
-
     /**
      * Returns all categories for the given site as a {@link TermModel} list.
      */

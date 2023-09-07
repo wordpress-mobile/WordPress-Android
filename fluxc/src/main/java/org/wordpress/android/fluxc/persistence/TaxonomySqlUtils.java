@@ -36,12 +36,6 @@ public class TaxonomySqlUtils {
     }
 
     @NonNull
-    public static TermModel insertTermForResult(@NonNull TermModel term) {
-        WellSql.insert(term).asSingleTransaction(true).execute();
-        return term;
-    }
-
-    @NonNull
     public static List<TermModel> getTermsForSite(
             @NonNull SiteModel site,
             @NonNull String taxonomyName) {
