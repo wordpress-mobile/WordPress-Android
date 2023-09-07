@@ -17,15 +17,6 @@ class DashboardTests : BaseTest() {
     }
 
     @Test
-    fun e2eDomainsCardNavigation() {
-        MySitesPage()
-            .scrollToDomainsCard()
-            .assertDomainsCard()
-            .tapDomainsCard()
-            .assertDomainsScreenLoaded()
-    }
-
-    @Test
     fun e2ePagesCardNavigation() {
         MySitesPage()
             .scrollToPagesCard()

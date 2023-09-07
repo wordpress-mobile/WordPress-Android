@@ -343,12 +343,6 @@ class AppPrefsWrapper @Inject constructor() {
     fun setShouldHideBlazeCard(siteId: Long, isHidden: Boolean) =
         AppPrefs.setShouldHidePromoteWithBlazeCard(siteId, isHidden)
 
-    fun getShouldHideDashboardDomainCard(siteId: Long): Boolean =
-        AppPrefs.getShouldHideDashboardDomainCard(siteId)
-
-    fun setShouldHideDashboardDomainCard(siteId: Long, isHidden: Boolean) =
-        AppPrefs.setShouldHideDashboardDomainCard(siteId, isHidden)
-
     fun getShouldHideDashboardPlansCard(siteId: Long): Boolean =
         AppPrefs.getShouldHideDashboardPlansCard(siteId)
 

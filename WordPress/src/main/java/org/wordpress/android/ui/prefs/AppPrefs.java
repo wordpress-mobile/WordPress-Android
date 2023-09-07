@@ -187,7 +187,6 @@ public class AppPrefs {
         SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING,
         SHOULD_HIDE_DASHBOARD_DOMAIN_TRANSFER_CARD,
         SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD,
-        SHOULD_HIDE_DASHBOARD_DOMAIN_CARD,
         SHOULD_HIDE_DASHBOARD_PLANS_CARD,
 
         // Jetpack Individual Plugin overlay for WordPress app
@@ -1648,18 +1647,6 @@ public class AppPrefs {
 
     @NonNull private static String getSiteIdHideBlazeKey(long siteId) {
         return DeletablePrefKey.SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD.name() + siteId;
-    }
-
-    public static Boolean getShouldHideDashboardDomainCard(long siteId) {
-        return prefs().getBoolean(getSiteIdHideDashboardDomainCardKey(siteId), false);
-    }
-
-    public static void setShouldHideDashboardDomainCard(long siteId, final boolean isHidden) {
-        prefs().edit().putBoolean(getSiteIdHideDashboardDomainCardKey(siteId), isHidden).apply();
-    }
-
-    @NonNull private static String getSiteIdHideDashboardDomainCardKey(long siteId) {
-        return DeletablePrefKey.SHOULD_HIDE_DASHBOARD_DOMAIN_CARD.name() + siteId;
     }
 
     public static Boolean getShouldHideDashboardPlansCard(long siteId) {
