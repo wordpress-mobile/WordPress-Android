@@ -109,6 +109,7 @@ public class TermModel extends Payload<BaseNetworkError> implements Identifiable
     }
 
     @Override
+    @SuppressWarnings("ConditionCoveredByFurtherCondition")
     public boolean equals(@Nullable Object other) {
         if (this == other) return true;
         if (other == null || !(other instanceof TermModel)) return false;
