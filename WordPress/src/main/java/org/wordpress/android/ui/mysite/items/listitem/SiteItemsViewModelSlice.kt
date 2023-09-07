@@ -74,16 +74,12 @@ class SiteItemsViewModelSlice @Inject constructor(
                 ListItemAction.ACTIVITY_LOG -> SiteNavigationAction.OpenActivityLog(selectedSite)
                 ListItemAction.BACKUP -> SiteNavigationAction.OpenBackup(selectedSite)
                 ListItemAction.SCAN -> SiteNavigationAction.OpenScan(selectedSite)
-                ListItemAction.PLAN -> {
-                    SiteNavigationAction.OpenPlan(selectedSite)
-                }
-
+                ListItemAction.PLAN -> SiteNavigationAction.OpenPlan(selectedSite)
                 ListItemAction.POSTS -> SiteNavigationAction.OpenPosts(selectedSite)
                 ListItemAction.PAGES -> {
                     quickStartRepository.completeTask(QuickStartStore.QuickStartNewSiteTask.REVIEW_PAGES)
                     SiteNavigationAction.OpenPages(selectedSite)
                 }
-
                 ListItemAction.ADMIN -> SiteNavigationAction.OpenAdmin(selectedSite)
                 ListItemAction.PEOPLE -> SiteNavigationAction.OpenPeople(selectedSite)
                 ListItemAction.SHARING -> {
@@ -92,7 +88,6 @@ class SiteItemsViewModelSlice @Inject constructor(
                     )
                     SiteNavigationAction.OpenSharing(selectedSite)
                 }
-
                 ListItemAction.DOMAINS -> SiteNavigationAction.OpenDomains(selectedSite)
                 ListItemAction.ME -> SiteNavigationAction.OpenMeScreen
                 ListItemAction.SITE_SETTINGS -> SiteNavigationAction.OpenSiteSettings(selectedSite)
@@ -113,11 +108,8 @@ class SiteItemsViewModelSlice @Inject constructor(
                 }
 
                 ListItemAction.COMMENTS -> SiteNavigationAction.OpenUnifiedComments(selectedSite)
-                ListItemAction.VIEW_SITE -> {
-                    SiteNavigationAction.OpenSite(selectedSite)
-                }
+                ListItemAction.VIEW_SITE -> SiteNavigationAction.OpenSite(selectedSite)
 
-                ListItemAction.JETPACK_SETTINGS -> SiteNavigationAction.OpenJetpackSettings(selectedSite)
                 ListItemAction.BLAZE -> onBlazeMenuItemClick()
             }
             _onNavigation.postValue(Event(navigationAction))

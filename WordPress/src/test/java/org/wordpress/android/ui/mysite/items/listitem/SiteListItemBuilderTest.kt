@@ -262,63 +262,6 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `returns jetpack item when site is jetpack, WPCom, can manage options and is not atomic`() {
-        setupJetpackItem(isJetpackConnected = true, isWpCom = true, canManageOptions = true, isAtomic = false)
-
-        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(lookAndFeelHeader).isEqualTo(JETPACK_ITEM)
-    }
-
-    @Test
-    fun `does not return jetpack item when site is not jetpack`() {
-        setupJetpackItem(isJetpackConnected = false)
-
-        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(lookAndFeelHeader).isNull()
-    }
-
-    @Test
-    fun `does not return jetpack item when site is not WPCom`() {
-        setupJetpackItem(isWpCom = false)
-
-        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(lookAndFeelHeader).isNull()
-    }
-
-    @Test
-    fun `does not return jetpack item when site can manage options`() {
-        setupJetpackItem(canManageOptions = false)
-
-        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(lookAndFeelHeader).isNull()
-    }
-
-    @Test
-    fun `does not return jetpack item when site is atomic`() {
-        setupJetpackItem(isAtomic = true)
-
-        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(lookAndFeelHeader).isNull()
-    }
-
-    private fun setupJetpackItem(
-        isJetpackConnected: Boolean = true,
-        isAtomic: Boolean = false,
-        isWpCom: Boolean = true,
-        canManageOptions: Boolean = true
-    ) {
-        whenever(siteModel.isJetpackConnected).thenReturn(isJetpackConnected)
-        whenever(siteModel.isWPComAtomic).thenReturn(isAtomic)
-        whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(isWpCom)
-        whenever(siteModel.hasCapabilityManageOptions).thenReturn(canManageOptions)
-    }
-
-    @Test
     fun `pages item not built when not self-hosted admin and cannot edit pages`() {
         setupPagesItem(isSelfHostedAdmin = false, canEditPages = false)
 
