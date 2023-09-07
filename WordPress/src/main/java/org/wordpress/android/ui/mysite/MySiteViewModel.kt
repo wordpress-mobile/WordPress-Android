@@ -1252,13 +1252,13 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onBloggingPromptShareClick(message: String) {
-        _onNavigation.value = Event(BloggingPromptCardNavigationAction.ShareBloggingPrompt(message))
+        _onNavigation.value = Event(BloggingPromptCardNavigationAction.SharePrompt(message))
     }
 
     private fun onBloggingPromptAnswerClick(promptId: Int) {
         bloggingPromptsCardAnalyticsTracker.trackMySiteCardAnswerPromptClicked()
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        _onNavigation.value = Event(BloggingPromptCardNavigationAction.AnswerBloggingPrompt(selectedSite, promptId))
+        _onNavigation.value = Event(BloggingPromptCardNavigationAction.AnswerPrompt(selectedSite, promptId))
     }
 
     private fun onBloggingPromptSkipClick() {
@@ -1286,17 +1286,17 @@ class MySiteViewModel @Inject constructor(
     private fun onBloggingPromptViewAnswersClick(promptId: Int) {
         bloggingPromptsCardAnalyticsTracker.trackMySiteCardViewAnswersClicked()
         val tag = BloggingPromptsPostTagProvider.promptIdSearchReaderTag(promptId)
-        _onNavigation.value = Event(BloggingPromptCardNavigationAction.onBloggingPromptViewAnswers(tag))
+        _onNavigation.value = Event(BloggingPromptCardNavigationAction.ViewAnswers(tag))
     }
 
     private fun onBloggingPromptViewMoreClick() {
-        _onNavigation.value = Event(BloggingPromptCardNavigationAction.onBloggingPromptsViewMore)
+        _onNavigation.value = Event(BloggingPromptCardNavigationAction.ViewMore)
     }
 
     private fun onBloggingPromptRemoveClick() {
         launch {
             updatePromptsCardEnabled(isEnabled = false).join()
-            _onNavigation.value = Event(BloggingPromptCardNavigationAction.onBloggingPromptsRemoved)
+            _onNavigation.value = Event(BloggingPromptCardNavigationAction.CardRemoved)
         }
     }
 
@@ -1433,7 +1433,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onBloggingPromptsLearnMoreClicked() {
-        _onNavigation.postValue(Event(BloggingPromptCardNavigationAction.onBloggingPromptsLearnMore))
+        _onNavigation.postValue(Event(BloggingPromptCardNavigationAction.LearnMore))
     }
 
     private fun trackWithTabSourceIfNeeded(stat: Stat, properties: HashMap<String, *>? = null) {

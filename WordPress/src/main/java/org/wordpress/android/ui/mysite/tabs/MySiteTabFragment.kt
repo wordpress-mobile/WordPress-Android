@@ -440,8 +440,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     private fun handleNavigation(action: BloggingPromptCardNavigationAction) {
         when (action) {
-            is BloggingPromptCardNavigationAction.ShareBloggingPrompt -> shareMessage(action.message)
-            is BloggingPromptCardNavigationAction.AnswerBloggingPrompt -> {
+            is BloggingPromptCardNavigationAction.SharePrompt -> shareMessage(action.message)
+            is BloggingPromptCardNavigationAction.AnswerPrompt -> {
                 ActivityLauncher.addNewPostForResult(
                     activity,
                     action.selectedSite,
@@ -451,7 +451,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                     EntryPoint.MY_SITE_CARD_ANSWER_PROMPT
                 )
             }
-            is BloggingPromptCardNavigationAction.onBloggingPromptViewAnswers -> {
+            is BloggingPromptCardNavigationAction.ViewAnswers -> {
                 ReaderActivityLauncher.showReaderTagPreview(
                     activity,
                     action.readerTag,
@@ -459,10 +459,10 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                     readerTracker,
                 )
             }
-            BloggingPromptCardNavigationAction.onBloggingPromptsLearnMore ->
+            BloggingPromptCardNavigationAction.LearnMore ->
                 (activity as? BloggingPromptsOnboardingListener)?.onShowBloggingPromptsOnboarding()
-            BloggingPromptCardNavigationAction.onBloggingPromptsRemoved ->  showBloggingPromptCardRemoveConfirmation()
-            BloggingPromptCardNavigationAction.onBloggingPromptsViewMore ->
+            BloggingPromptCardNavigationAction.CardRemoved ->  showBloggingPromptCardRemoveConfirmation()
+            BloggingPromptCardNavigationAction.ViewMore ->
                 ActivityLauncher.showBloggingPromptsListActivity(activity)
         }
     }

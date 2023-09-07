@@ -106,11 +106,11 @@ sealed class SiteNavigationAction {
 }
 
 sealed class BloggingPromptCardNavigationAction: SiteNavigationAction() {
-    data class ShareBloggingPrompt(val message: String) : BloggingPromptCardNavigationAction()
-    data class AnswerBloggingPrompt(val selectedSite: SiteModel, val promptId: Int) :
+    data class SharePrompt(val message: String) : BloggingPromptCardNavigationAction()
+    data class AnswerPrompt(val selectedSite: SiteModel, val promptId: Int) :
         BloggingPromptCardNavigationAction()
-    data class onBloggingPromptViewAnswers(val readerTag: ReaderTag): BloggingPromptCardNavigationAction()
-    object onBloggingPromptsLearnMore: BloggingPromptCardNavigationAction()
-    object onBloggingPromptsViewMore: BloggingPromptCardNavigationAction()
-    object onBloggingPromptsRemoved: BloggingPromptCardNavigationAction()
+    data class ViewAnswers(val readerTag: ReaderTag): BloggingPromptCardNavigationAction()
+    object LearnMore: BloggingPromptCardNavigationAction()
+    object ViewMore: BloggingPromptCardNavigationAction()
+    object CardRemoved: BloggingPromptCardNavigationAction()
 }
