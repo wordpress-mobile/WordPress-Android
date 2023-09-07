@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.items.listitem
 
-import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -57,12 +56,8 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
 
     private val site = SiteModel()
 
-    private val activeTask = MutableLiveData<QuickStartStore.QuickStartTask>()
-
     @Mock
     lateinit var quickStartType: QuickStartType
-
-    private val quickStartTabStep = MutableLiveData<QuickStartRepository.QuickStartTabStep?>()
 
 
     @Before
