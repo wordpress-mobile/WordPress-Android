@@ -204,6 +204,9 @@ class MimeTypes {
     fun getAudioTypesOnly(plan: Plan = NO_PLAN_SPECIFIED) =
             (getAudioMimeTypesOnly(plan).toStrings()).toSet().toTypedArray()
 
+    fun getDocumentTypesOnly(plan: Plan = NO_PLAN_SPECIFIED) =
+        (getDocumentMimeTypesOnly(plan).toStrings()).toSet().toTypedArray()
+
     private fun getAudioMimeTypesOnly(plan: Plan = NO_PLAN_SPECIFIED): List<MimeType> {
         return when (plan) {
             WP_COM_PAID, SELF_HOSTED, NO_PLAN_SPECIFIED -> audioTypes
