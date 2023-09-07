@@ -62,7 +62,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
@@ -75,7 +74,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.Icon
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
@@ -434,11 +432,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             campaign = null
         )
     )
-
-    private var quickActionsStatsClickAction: (() -> Unit)? = null
-    private var quickActionsPagesClickAction: (() -> Unit)? = null
-    private var quickActionsPostsClickAction: (() -> Unit)? = null
-    private var quickActionsMediaClickAction: (() -> Unit)? = null
 
     private var quickLinkRibbonStatsClickAction: (() -> Unit)? = null
     private var quickLinkRibbonPagesClickAction: (() -> Unit)? = null
@@ -1102,135 +1095,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSitePicker(site))
     }
 
-    /* QUICK ACTIONS CARD */
-    @Test
-    fun `quick actions does not show pages button when site doesn't have the required capability`() {
-        site.hasCapabilityEditPages = false
-
-        initSelectedSite()
-
-        val quickActionsCard = findQuickActionsCard()
-
-        assertThat(quickActionsCard).isNotNull
-        assertThat(quickActionsCard?.showPages).isFalse
-    }
-
-    @Test
-    fun `quick action stats click opens stats screen when user is logged in and site is WPCOM`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-
-        site.setIsWPCom(true)
-
-        initSelectedSite()
-
-        requireNotNull(quickActionsStatsClickAction).invoke()
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
-    }
-
-    @Test
-    fun `quick action stats click opens stats screen when user is logged in and site is Jetpack`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-
-        site.setIsJetpackInstalled(true)
-        site.setIsJetpackConnected(true)
-
-        initSelectedSite()
-
-        requireNotNull(quickActionsStatsClickAction).invoke()
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
-    }
-
-    @Test
-    fun `quick action stats click opens connect jetpack screen when user is logged in and site is self-hosted`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        site.setIsJetpackInstalled(false)
-        site.setIsJetpackConnected(false)
-
-        initSelectedSite(isSiteUsingWpComRestApi = false)
-
-        requireNotNull(quickActionsStatsClickAction).invoke()
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.ConnectJetpackForStats(site))
-    }
-
-    @Test
-    fun `quick action stats click starts login when user is not logged in and site is Jetpack`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
-
-        site.setIsJetpackInstalled(true)
-        site.setIsJetpackConnected(true)
-
-        initSelectedSite()
-
-        requireNotNull(quickActionsStatsClickAction).invoke()
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.StartWPComLoginForJetpackStats)
-    }
-
-    @Test
-    fun `quick action stats click opens connect jetpack screen when user is not logged in and site is self-hosted`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
-
-        site.setIsJetpackInstalled(false)
-        site.setIsJetpackConnected(false)
-
-        initSelectedSite(isSiteUsingWpComRestApi = false)
-
-        requireNotNull(quickActionsStatsClickAction).invoke()
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.ConnectJetpackForStats(site))
-    }
-
-    @Test
-    fun `given new site QS, when quick action stats clicked, then CHECK_STATS task completes`() {
-        initSelectedSite()
-        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-            .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
-
-        requireNotNull(quickActionsStatsClickAction).invoke()
-
-        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.CHECK_STATS)
-    }
-
-    @Test
-    fun `quick action pages click opens pages screen`() {
-        initSelectedSite()
-
-        requireNotNull(quickActionsPagesClickAction).invoke()
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
-    }
-
-    @Test
-    fun `quick action pages click opens pages screen and completes REVIEW_PAGES task`() {
-        initSelectedSite()
-
-        requireNotNull(quickActionsPagesClickAction).invoke()
-
-        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
-    }
-
-    @Test
-    fun `quick action posts click opens posts screen`() {
-        initSelectedSite()
-
-        requireNotNull(quickActionsPostsClickAction).invoke()
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPosts(site))
-    }
-
-    @Test
-    fun `quick action media click opens media screen`() {
-        initSelectedSite()
-
-        requireNotNull(quickActionsMediaClickAction).invoke()
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenMedia(site))
-    }
-
     /* DOMAIN REGISTRATION CARD */
     @Test
     fun `domain registration item click opens domain registration`() {
@@ -1501,7 +1365,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(isBloggingPromptsEnabled = true)
 
         verify(cardsBuilder).build(
-            any(), any(), any(),
+            any(), any(),
             argWhere {
                 it.bloggingPromptCardBuilderParams.bloggingPrompt != null
             },
@@ -1516,7 +1380,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(isBloggingPromptsEnabled = false)
 
         verify(cardsBuilder).build(
-            any(), any(), any(),
+            any(), any(),
             argWhere {
                 it.bloggingPromptCardBuilderParams.bloggingPrompt == null
             },
@@ -1532,7 +1396,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(isBloggingPromptsListEnabled = true)
 
         verify(cardsBuilder).build(
-            any(), any(), any(),
+            any(), any(),
             argWhere {
                 it.bloggingPromptCardBuilderParams.showViewMoreAction == true
             },
@@ -1548,7 +1412,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(isBloggingPromptsListEnabled = false)
 
         verify(cardsBuilder).build(
-            any(), any(), any(),
+            any(), any(),
             argWhere {
                 it.bloggingPromptCardBuilderParams.showViewMoreAction == false
             },
@@ -1564,7 +1428,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(isBloggingPromptsSocialEnabled = true)
 
         verify(cardsBuilder).build(
-            any(), any(), any(),
+            any(), any(),
             argWhere {
                 it.bloggingPromptCardBuilderParams.showViewAnswersAction == true
             },
@@ -1580,7 +1444,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(isBloggingPromptsSocialEnabled = false)
 
         verify(cardsBuilder).build(
-            any(), any(), any(),
+            any(), any(),
             argWhere {
                 it.bloggingPromptCardBuilderParams.showViewAnswersAction == false
             },
@@ -1596,7 +1460,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(isBloggingPromptsEnhancementsEnabled = true)
 
         verify(cardsBuilder).build(
-            any(), any(), any(),
+            any(), any(),
             argWhere {
                 it.bloggingPromptCardBuilderParams.showRemoveAction == true
             },
@@ -1612,7 +1476,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(isBloggingPromptsEnhancementsEnabled = false)
 
         verify(cardsBuilder).build(
-            any(), any(), any(),
+            any(), any(),
             argWhere {
                 it.bloggingPromptCardBuilderParams.showRemoveAction == false
             },
@@ -2588,85 +2452,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given tabs are enabled, when quick link stats tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
-
-        requireNotNull(quickActionsStatsClickAction).invoke()
-
-        assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.QUICK_ACTION_STATS_TAPPED)
-    }
-
-    @Test
-    fun `given tabs are enabled, when quick link pages tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
-
-        requireNotNull(quickActionsPagesClickAction).invoke()
-
-        assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.QUICK_ACTION_PAGES_TAPPED)
-    }
-
-    @Test
-    fun `given tabs are enabled, when quick link posts tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
-
-        requireNotNull(quickActionsPostsClickAction).invoke()
-
-        assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.QUICK_ACTION_POSTS_TAPPED)
-    }
-
-    @Test
-    fun `given tabs are enabled, when quick link media tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
-
-        requireNotNull(quickActionsMediaClickAction).invoke()
-
-        assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.QUICK_ACTION_MEDIA_TAPPED)
-    }
-
-    @Test
-    fun `given tabs are disabled, when quick link stats tapped, then track with tab source is not requested`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsEnabled = false)
-
-        requireNotNull(quickActionsStatsClickAction).invoke()
-
-        assertThat(trackWithTabSource).isEmpty()
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_ACTION_STATS_TAPPED, emptyMap())
-    }
-
-    @Test
-    fun `given tabs are disabled, when quick link pages tapped, then track with tab source is not requested`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsEnabled = false)
-
-        requireNotNull(quickActionsPagesClickAction).invoke()
-
-        assertThat(trackWithTabSource).isEmpty()
-
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_ACTION_PAGES_TAPPED, emptyMap())
-    }
-
-    @Test
-    fun `given tabs are disabled, when quick link posts tapped, then track with tab source is not requested`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsEnabled = false)
-
-        requireNotNull(quickActionsPostsClickAction).invoke()
-
-        assertThat(trackWithTabSource).isEmpty()
-
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_ACTION_POSTS_TAPPED, emptyMap())
-    }
-
-    @Test
-    fun `given tabs are disabled, when quick link media tapped, then track with tab source is not requested`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsEnabled = false)
-
-        requireNotNull(quickActionsMediaClickAction).invoke()
-
-        assertThat(trackWithTabSource).isEmpty()
-
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_ACTION_MEDIA_TAPPED, emptyMap())
-    }
-
-    @Test
     fun `given tabs are enabled, when quick link ribbon pages tapped, then track with tab source is requested`() {
         initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
 
@@ -2762,18 +2547,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when quick link ribbon pages click, then pages screen is shown and completes REVIEW_PAGES task `() {
         initSelectedSite()
 
-        requireNotNull(quickActionsPagesClickAction).invoke()
+        requireNotNull(quickLinkRibbonPagesClickAction).invoke()
 
         verify(quickStartRepository).completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
-    }
-
-    @Test
-    fun `when quick link ribbon pages click, then pages screen is shown`() {
-        initSelectedSite()
-
-        requireNotNull(quickActionsPagesClickAction).invoke()
-
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
@@ -2781,7 +2557,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when quick link ribbon posts click, then posts screen is shown `() {
         initSelectedSite()
 
-        requireNotNull(quickActionsPostsClickAction).invoke()
+        requireNotNull(quickLinkRibbonPostsClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPosts(site))
     }
@@ -2790,7 +2566,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when quick link ribbon media click, then media screen is shown`() {
         initSelectedSite()
 
-        requireNotNull(quickActionsMediaClickAction).invoke()
+        requireNotNull(quickLinkRibbonMediaClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenMedia(site))
     }
@@ -2918,9 +2694,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             assertThat(viewModel.onShowJetpackIndividualPluginOverlay.value?.peekContent()).isNull()
         }
 
-    private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
-
-
     private fun findDomainRegistrationCard() =
         getLastItems().find { it is DomainRegistrationCard } as DomainRegistrationCard?
 
@@ -3021,13 +2794,11 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun setUpCardsBuilder() {
         doAnswer {
-            val quickActionsCard = initQuickActionsCard(it)
             val quickLinkRibbon = initQuickLinkRibbon(it)
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
             val dashboardCards = initDashboardCards(it)
             val listOfCards = arrayListOf<MySiteCardAndItem>(
-                quickActionsCard,
                 domainRegistrationCard,
                 quickStartCard
             )
@@ -3037,7 +2808,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 listOfCards.add(quickLinkRibbon)
             listOfCards
         }.whenever(cardsBuilder).build(
-            quickActionsCardBuilderParams = any(),
             domainRegistrationCardBuilderParams = any(),
             quickStartCardBuilderParams = any(),
             dashboardCardsBuilderParams = any(),
@@ -3071,22 +2841,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             onIconClick = ListItemInteraction.create { params.iconClick.invoke() },
             onUrlClick = ListItemInteraction.create { params.urlClick.invoke() },
             onSwitchSiteClick = ListItemInteraction.create { params.switchSiteClick.invoke() }
-        )
-    }
-
-    private fun initQuickActionsCard(mockInvocation: InvocationOnMock): QuickActionsCard {
-        val params = (mockInvocation.arguments.filterIsInstance<QuickActionsCardBuilderParams>()).first()
-        quickActionsStatsClickAction = params.onQuickActionStatsClick
-        quickActionsPagesClickAction = params.onQuickActionPagesClick
-        quickActionsPostsClickAction = params.onQuickActionPostsClick
-        quickActionsMediaClickAction = params.onQuickActionMediaClick
-        return QuickActionsCard(
-            title = UiStringText(""),
-            onStatsClick = ListItemInteraction.create { params.onQuickActionStatsClick.invoke() },
-            onPagesClick = ListItemInteraction.create { params.onQuickActionPagesClick.invoke() },
-            onPostsClick = ListItemInteraction.create { params.onQuickActionPostsClick.invoke() },
-            onMediaClick = ListItemInteraction.create { params.onQuickActionMediaClick.invoke() },
-            showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages
         )
     }
 

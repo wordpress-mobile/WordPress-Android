@@ -64,7 +64,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardC
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
@@ -546,13 +545,6 @@ class MySiteViewModel @Inject constructor(
 
         val cardsResult = if (!jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()) emptyList()
         else cardsBuilder.build(
-            QuickActionsCardBuilderParams(
-                siteModel = site,
-                onQuickActionStatsClick = this::quickActionStatsClick,
-                onQuickActionPagesClick = this::quickActionPagesClick,
-                onQuickActionPostsClick = this::quickActionPostsClick,
-                onQuickActionMediaClick = this::quickActionMediaClick
-            ),
             DomainRegistrationCardBuilderParams(
                 isDomainCreditAvailable = isDomainCreditAvailable,
                 domainRegistrationClick = this::domainRegistrationClick
@@ -712,7 +704,6 @@ class MySiteViewModel @Inject constructor(
             if (defaultTab == MySiteTabType.SITE_MENU) {
                 add(Type.QUICK_START_CARD)
             }
-            add(Type.QUICK_ACTIONS_CARD)
         }
 
         MySiteTabType.ALL -> emptyList()
@@ -960,37 +951,6 @@ class MySiteViewModel @Inject constructor(
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.MY_SITE_SITE_SWITCHER_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenSitePicker(selectedSite))
-    }
-
-    private fun quickActionStatsClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_STATS_TAPPED)
-        quickStartRepository.completeTask(
-            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
-        )
-        _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
-    }
-
-    private fun quickActionPagesClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_PAGES_TAPPED)
-        quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
-        _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
-    }
-
-    private fun quickActionPostsClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_POSTS_TAPPED)
-        _onNavigation.value = Event(SiteNavigationAction.OpenPosts(selectedSite))
-    }
-
-    private fun quickActionMediaClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_MEDIA_TAPPED)
-        quickStartRepository.requestNextStepOfTask(
-            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
-        )
-        _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
     }
 
     private fun onQuickLinkRibbonStatsClick() {

@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
@@ -62,19 +61,6 @@ class MySiteCardAndItemTest {
         )
     }
 
-    @Test
-    fun `quick actions card is never active`() {
-        val quickActionsCard = QuickActionsCard(
-            title = UiStringText("test"),
-            onStatsClick = interaction,
-            onPagesClick = interaction,
-            onPostsClick = interaction,
-            onMediaClick = interaction,
-            showPages = true
-        )
-
-        assertThat(quickActionsCard.activeQuickStartItem).isFalse
-    }
 
     @Test
     fun `domain registration card is never active`() {

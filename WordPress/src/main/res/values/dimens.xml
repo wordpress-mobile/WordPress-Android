@@ -119,7 +119,6 @@
     <dimen name="margin_filter_spinner">16dp</dimen>
     <dimen name="margin_theme_browser_top">160dp</dimen>
     <dimen name="negative_margin_medium">-8dp</dimen>
-    <dimen name="margin_my_site_quick_actions_bottom">24dp</dimen>
 
     <!-- left/right margin for reader interests content -->
     <dimen name="interests_content_margin">@dimen/margin_medium_large</dimen>
@@ -313,7 +312,6 @@
     <dimen name="my_site_name_label_single_line_text_size">20sp</dimen>
     <dimen name="my_site_name_label_double_line_text_size">16sp</dimen>
     <dimen name="my_site_content_area">500dp</dimen>
-    <dimen name="my_site_quick_action_button_text_max_width">84dp</dimen>
     <dimen name="my_site_card_row_padding">16dp</dimen>
     <dimen name="my_site_card_row_top_padding">12dp</dimen>
     <dimen name="my_site_card_footer_link_padding">16dp</dimen>

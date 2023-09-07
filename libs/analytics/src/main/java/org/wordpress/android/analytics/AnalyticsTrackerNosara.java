@@ -419,18 +419,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST:
                 predefinedEventProperties.put("source", "opening_reader_post");
                 break;
-            case QUICK_ACTION_STATS_TAPPED:
-                predefinedEventProperties.put("button", "stats");
-                break;
-            case QUICK_ACTION_PAGES_TAPPED:
-                predefinedEventProperties.put("button", "pages");
-                break;
-            case QUICK_ACTION_POSTS_TAPPED:
-                predefinedEventProperties.put("button", "posts");
-                break;
-            case QUICK_ACTION_MEDIA_TAPPED:
-                predefinedEventProperties.put("button", "media");
-                break;
             case QUICK_LINK_RIBBON_PAGES_TAPPED:
                 predefinedEventProperties.put("button", "pages");
                 break;
@@ -1953,11 +1941,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domains_purchase_webview_viewed";
             case DOMAINS_PURCHASE_DOMAIN_SUCCESS:
                 return "domains_purchase_domain_success";
-            case QUICK_ACTION_STATS_TAPPED:
-            case QUICK_ACTION_PAGES_TAPPED:
-            case QUICK_ACTION_POSTS_TAPPED:
-            case QUICK_ACTION_MEDIA_TAPPED:
-                return "quick_action_tapped";
             case QUICK_LINK_RIBBON_PAGES_TAPPED:
             case QUICK_LINK_RIBBON_POSTS_TAPPED:
             case QUICK_LINK_RIBBON_MEDIA_TAPPED:
