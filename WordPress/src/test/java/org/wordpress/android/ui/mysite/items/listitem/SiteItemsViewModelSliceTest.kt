@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.items.listitem
 
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -56,10 +57,19 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
 
     private val site = SiteModel()
 
-    private val quickStartType = QuickStartType.ExistingSiteQuickStartType
+    private val activeTask = MutableLiveData<QuickStartStore.QuickStartTask>()
+
+    @Mock
+    lateinit var quickStartType: QuickStartType
+
+    private val quickStartTabStep = MutableLiveData<QuickStartRepository.QuickStartTabStep?>()
+
 
     @Before
     fun setup() {
+        whenever(blazeFeatureUtils.isSiteBlazeEligible(site)).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+
         siteItemsViewModelSlice = SiteItemsViewModelSlice(
             quickStartRepository,
             selectedSiteRepository,
@@ -69,9 +79,6 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
             blazeFeatureUtils
         )
 
-        whenever(blazeFeatureUtils.isSiteBlazeEligible(site)).thenReturn(false)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartRepository.activeTask).thenReturn(null)
 
         navigationActions = mutableListOf()
         snackBarMessages = mutableListOf()
@@ -161,7 +168,9 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `media item click emits OpenMedia navigation event`() {
+    fun `media item click emits OpenMedia navigation event`() = test {
+        mockQuickStart()
+
         invokeItemClickAction(ListItemAction.MEDIA)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenMedia(site))
@@ -169,6 +178,8 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `comments item click emits OpenUnifiedComments navigation event`() {
+        mockQuickStart()
+
         invokeItemClickAction(ListItemAction.COMMENTS)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenUnifiedComments(site))
@@ -178,6 +189,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
     fun `stats item click emits OpenStats navigation event if site is WPCom and has access token`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         site.setIsWPCom(true)
+        mockQuickStart()
 
         invokeItemClickAction(ListItemAction.STATS)
 
@@ -189,6 +201,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         site.setIsJetpackConnected(true)
         site.setIsJetpackInstalled(true)
+        mockQuickStart()
 
         invokeItemClickAction(ListItemAction.STATS)
 
@@ -197,11 +210,15 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `given new site QS stats task, when stats item clicked, then CHECK_STATS task completed`() {
+        mockQuickStart()
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+            .thenReturn(QuickStartStore.QuickStartNewSiteTask.CHECK_STATS)
         val builderParams = siteItemsViewModelSlice.buildItems(
             MySiteTabType.SITE_MENU,
             site,
             QuickStartStore.QuickStartNewSiteTask.CHECK_STATS
         )
+
         builderParams.onClick.invoke(ListItemAction.STATS)
 
         verify(quickStartRepository).completeTask(QuickStartStore.QuickStartNewSiteTask.CHECK_STATS)
@@ -209,11 +226,15 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `given existing site QS stats task, when stats item clicked, then CHECK_STATS task completed`() {
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+            .thenReturn(QuickStartStore.QuickStartExistingSiteTask.CHECK_STATS)
         val builderParams = siteItemsViewModelSlice.buildItems(
             MySiteTabType.SITE_MENU,
             site,
             QuickStartStore.QuickStartExistingSiteTask.CHECK_STATS
         )
+        mockQuickStart()
+
         builderParams.onClick.invoke(ListItemAction.STATS)
 
         verify(quickStartRepository).completeTask(QuickStartStore.QuickStartExistingSiteTask.CHECK_STATS)
@@ -238,6 +259,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         site.setIsJetpackConnected(false)
         site.setIsWPCom(false)
         site.origin = SiteModel.ORIGIN_XMLRPC
+        mockQuickStart()
 
         invokeItemClickAction(ListItemAction.STATS)
 
@@ -318,5 +340,10 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
     ) {
         val builderParams = siteItemsViewModelSlice.buildItems(MySiteTabType.SITE_MENU, site)
         builderParams.onClick.invoke(action)
+    }
+
+
+    private fun mockQuickStart() {
+        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
     }
 }
