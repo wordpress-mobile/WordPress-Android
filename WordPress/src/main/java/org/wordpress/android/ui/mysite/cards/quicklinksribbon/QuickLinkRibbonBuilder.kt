@@ -46,6 +46,14 @@ class QuickLinkRibbonBuilder @Inject constructor(
                     showFocusPoint = shouldShowMediaFocusPoint(params)
                 )
             )
+            add(
+                QuickLinkRibbonItem(
+                    label = R.string.more,
+                    icon = R.drawable.ic_more_horiz_white_24dp,
+                    onClick = ListItemInteraction.create(params.onMediaClick),
+                    showFocusPoint = false
+                )
+            )
         }
         if (params.siteModel.isSelfHostedAdmin || params.siteModel.hasCapabilityEditPages) {
             val pages = QuickLinkRibbonItem(
