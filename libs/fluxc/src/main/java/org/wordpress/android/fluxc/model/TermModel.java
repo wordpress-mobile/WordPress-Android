@@ -15,7 +15,6 @@ import org.wordpress.android.util.StringUtils;
 import java.io.Serializable;
 
 @Table
-@SuppressWarnings("NotNullFieldNotInitialized")
 public class TermModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
     private static final long serialVersionUID = -1484257248446576276L;
 
@@ -29,6 +28,75 @@ public class TermModel extends Payload<BaseNetworkError> implements Identifiable
     @Nullable @Column private String mDescription;
     @Column private long mParentRemoteId;
     @Column private int mPostCount;
+
+    @Deprecated
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    public TermModel() {
+        this.mId = 0;
+        this.mLocalSiteId = 0;
+        this.mRemoteTermId = 0;
+        this.mTaxonomy = "";
+        this.mName = "";
+        this.mSlug = null;
+        this.mDescription = null;
+        this.mParentRemoteId = 0;
+        this.mPostCount = 0;
+    }
+
+    /**
+     * Use when starting with an empty term.
+     */
+    public TermModel(@NonNull String taxonomy) {
+        this.mId = 0;
+        this.mLocalSiteId = 0;
+        this.mRemoteTermId = 0;
+        this.mTaxonomy = taxonomy;
+        this.mName = "";
+        this.mSlug = null;
+        this.mDescription = null;
+        this.mParentRemoteId = 0;
+        this.mPostCount = 0;
+    }
+
+    /**
+     * Use when adding a new term.
+     */
+    public TermModel(
+            @NonNull String taxonomy,
+            @NonNull String name,
+            long parentRemoteId
+    ) {
+        this.mId = 0;
+        this.mLocalSiteId = 0;
+        this.mRemoteTermId = 0;
+        this.mTaxonomy = taxonomy;
+        this.mName = name;
+        this.mSlug = null;
+        this.mDescription = null;
+        this.mParentRemoteId = parentRemoteId;
+        this.mPostCount = 0;
+    }
+
+    public TermModel(
+            int id,
+            int localSiteId,
+            long remoteTermId,
+            @NonNull String taxonomy,
+            @NonNull String name,
+            @Nullable String slug,
+            @Nullable String description,
+            long parentRemoteId,
+            int postCount) {
+        this.mId = id;
+        this.mLocalSiteId = localSiteId;
+        this.mRemoteTermId = remoteTermId;
+        this.mTaxonomy = taxonomy;
+        this.mName = name;
+        this.mSlug = slug;
+        this.mDescription = description;
+        this.mParentRemoteId = parentRemoteId;
+        this.mPostCount = postCount;
+    }
 
     @Override
     public int getId() {

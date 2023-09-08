@@ -46,8 +46,7 @@ public class TaxonomyStoreUnitTest {
 
     @Test
     public void testSimpleInsertionAndRetrieval() {
-        TermModel termModel = new TermModel();
-        termModel.setRemoteTermId(42);
+        TermModel termModel = new TermModel(TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY);
         TaxonomySqlUtils.insertOrUpdateTerm(termModel);
 
         assertEquals(1, TaxonomyTestUtils.getTermsCount());

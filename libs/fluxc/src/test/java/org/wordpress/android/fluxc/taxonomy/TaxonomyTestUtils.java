@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.taxonomy;
 
+import androidx.annotation.NonNull;
+
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.TermModel;
@@ -8,34 +10,37 @@ import org.wordpress.android.fluxc.store.TaxonomyStore;
 import java.util.List;
 
 class TaxonomyTestUtils {
-    private static TermModel generateSampleTerm() {
-        TermModel example = new TermModel();
-        example.setLocalSiteId(6);
-        example.setRemoteTermId(5);
-        example.setSlug("travel");
-        example.setName("Travel");
-        example.setDescription("Post about travelling");
-        return example;
+    @NonNull
+    private static TermModel generateSampleTerm(@NonNull String taxonomy) {
+        return new TermModel(
+                0,
+                6,
+                5,
+                taxonomy,
+                "Travel",
+                "travel",
+                "Post about travelling",
+                0,
+                0
+        );
     }
 
+    @NonNull
     public static TermModel generateSampleCategory() {
-        TermModel exampleCategory = generateSampleTerm();
-        exampleCategory.setTaxonomy(TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY);
-        return exampleCategory;
+        return generateSampleTerm(TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY);
     }
 
+    @NonNull
     public static TermModel generateSampleTag() {
-        TermModel exampleTag = generateSampleTerm();
-        exampleTag.setTaxonomy(TaxonomyStore.DEFAULT_TAXONOMY_TAG);
-        return exampleTag;
+        return generateSampleTerm(TaxonomyStore.DEFAULT_TAXONOMY_TAG);
     }
 
+    @NonNull
     public static TermModel generateSampleAuthor() {
-        TermModel exampleAuthor = generateSampleTerm();
-        exampleAuthor.setTaxonomy("author");
-        return exampleAuthor;
+        return generateSampleTerm("author");
     }
 
+    @NonNull
     static List<TermModel> getTerms() {
         return WellSql.select(TermModel.class).getAsModel();
     }
