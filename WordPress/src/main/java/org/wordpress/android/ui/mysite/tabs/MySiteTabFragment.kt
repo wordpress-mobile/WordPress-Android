@@ -4,12 +4,14 @@ package org.wordpress.android.ui.mysite.tabs
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.view.WindowManager
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -182,7 +184,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     }
 
     private fun initViewModels() {
-        viewModel = ViewModelProvider(requireParentFragment(), viewModelFactory).get(MySiteViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MySiteViewModel::class.java)
         dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
             .get(BasicDialogViewModel::class.java)
     }
@@ -199,6 +201,16 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     }
 
     private fun MySiteTabFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
+        with(requireActivity() as AppCompatActivity) {
+            setSupportActionBar(toolbarMain)
+            supportActionBar?.apply {
+                setHomeButtonEnabled(true)
+                setDisplayHomeAsUpEnabled(true)
+                // We need to set the title this way so it can be updated on locale change
+                setTitle(packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA).labelRes)
+            }
+        }
+
         val layoutManager = LinearLayoutManager(activity)
 
         savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
