@@ -13,27 +13,12 @@ import javax.inject.Inject
 
 class BloggingPromptCardBuilder @Inject constructor() {
     fun build(params: BloggingPromptCardBuilderParams) = params.bloggingPrompt?.let {
-        val trailingLabel = if (params.showViewAnswersAction) {
-            UiStringRes(
-                R.string.my_site_blogging_prompt_card_view_answers
-            )
-        } else {
-            UiStringPluralRes(
-                0,
-                R.string.my_site_blogging_prompt_card_number_of_answers_one,
-                R.string.my_site_blogging_prompt_card_number_of_answers_other,
-                params.bloggingPrompt.respondentsCount
-            )
-        }
+        val trailingLabel = UiStringRes(R.string.my_site_blogging_prompt_card_view_answers)
 
         val avatarsTrain = params.bloggingPrompt.respondentsAvatarUrls.map { respondent -> AvatarItem(respondent) }
             .toMutableList<TrainOfAvatarsItem>()
             .also { list ->
-                val labelColor = if (params.showViewAnswersAction) {
-                    R.color.primary_emphasis_medium_selector
-                } else {
-                    R.attr.wpColorOnSurfaceMedium
-                }
+                val labelColor = R.color.primary_emphasis_medium_selector
                 list.add(TrailingLabelTextItem(trailingLabel, labelColor))
             }
 
@@ -44,13 +29,11 @@ class BloggingPromptCardBuilder @Inject constructor() {
             isAnswered = params.bloggingPrompt.isAnswered,
             promptId = params.bloggingPrompt.id,
             attribution = BloggingPromptAttribution.fromString(params.bloggingPrompt.attribution),
-            showViewMoreAction = params.showViewMoreAction,
-            showRemoveAction = params.showRemoveAction,
             onShareClick = params.onShareClick,
             onAnswerClick = params.onAnswerClick,
             onSkipClick = params.onSkipClick,
             onViewMoreClick = params.onViewMoreClick,
-            onViewAnswersClick = params.onViewAnswersClick.takeIf { params.showViewAnswersAction },
+            onViewAnswersClick = params.onViewAnswersClick,
             onRemoveClick = params.onRemoveClick,
         )
     }
