@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -58,19 +59,20 @@ public class TaxonomyStore extends Store {
     }
 
     public static class RemoteTermPayload extends Payload<TaxonomyError> {
-        public TermModel term;
-        public SiteModel site;
+        @NonNull public TermModel term;
+        @NonNull public SiteModel site;
 
-        public RemoteTermPayload(TermModel term, SiteModel site) {
+        public RemoteTermPayload(@NonNull TermModel term, @NonNull SiteModel site) {
             this.term = term;
             this.site = site;
         }
     }
 
     public static class FetchTermResponsePayload extends RemoteTermPayload {
-        public TaxonomyAction origin = TaxonomyAction.FETCH_TERM; // Used to track fetching newly uploaded XML-RPC terms
+        // Used to track fetching newly uploaded XML-RPC terms
+        @NonNull public TaxonomyAction origin = TaxonomyAction.FETCH_TERM;
 
-        public FetchTermResponsePayload(TermModel term, SiteModel site) {
+        public FetchTermResponsePayload(@NonNull TermModel term, @NonNull SiteModel site) {
             super(term, site);
         }
     }
@@ -152,19 +154,23 @@ public class TaxonomyStore extends Store {
         AppLog.d(AppLog.T.API, "TaxonomyStore onRegister");
     }
 
-    public TermModel instantiateCategory(SiteModel site) {
+    @Nullable
+    public TermModel instantiateCategory(@NonNull SiteModel site) {
         return instantiateTermModel(site, DEFAULT_TAXONOMY_CATEGORY);
     }
 
-    public TermModel instantiateTag(SiteModel site) {
+    @Nullable
+    public TermModel instantiateTag(@NonNull SiteModel site) {
         return instantiateTermModel(site, DEFAULT_TAXONOMY_TAG);
     }
 
-    public TermModel instantiateTerm(SiteModel site, TaxonomyModel taxonomy) {
+    @Nullable
+    public TermModel instantiateTerm(@NonNull SiteModel site, @NonNull TaxonomyModel taxonomy) {
         return instantiateTermModel(site, taxonomy.getName());
     }
 
-    private TermModel instantiateTermModel(SiteModel site, String taxonomyName) {
+    @Nullable
+    private TermModel instantiateTermModel(@NonNull SiteModel site, @NonNull String taxonomyName) {
         TermModel newTerm = new TermModel();
         newTerm.setLocalSiteId(site.getId());
         newTerm.setTaxonomy(taxonomyName);
@@ -301,7 +307,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void fetchTerm(RemoteTermPayload payload) {
+    private void fetchTerm(@NonNull RemoteTermPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerm(payload.term, payload.site);
         } else {
@@ -310,7 +316,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void fetchTerms(SiteModel site, String taxonomyName) {
+    private void fetchTerms(@NonNull SiteModel site, @NonNull String taxonomyName) {
         // TODO: Support large number of terms (currently pulling 100 from REST, and ? from XML-RPC) - pagination?
         if (site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerms(site, taxonomyName);
@@ -320,7 +326,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void fetchTerms(FetchTermsPayload payload) {
+    private void fetchTerms(@NonNull FetchTermsPayload payload) {
         fetchTerms(payload.site, payload.taxonomy.getName());
     }
 
@@ -412,7 +418,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void pushTerm(RemoteTermPayload payload) {
+    private void pushTerm(@NonNull RemoteTermPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.pushTerm(payload.term, payload.site);
         } else {
@@ -421,7 +427,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void deleteTerm(RemoteTermPayload payload) {
+    private void deleteTerm(@NonNull RemoteTermPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.deleteTerm(payload.term, payload.site);
         } else {
