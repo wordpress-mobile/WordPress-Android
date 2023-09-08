@@ -88,6 +88,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel
 import java.io.File
 import javax.inject.Inject
 
+@Suppress("LargeClass")
 class MySiteFragment : Fragment(R.layout.my_site_fragment),
     TextInputDialogFragment.Callback,
     QuickStartPromptClickInterface,
@@ -203,7 +204,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     override fun onConfirm(result: Bundle?) {
-        val task = result?.getSerializableCompat(QuickStartFullScreenDialogFragment.RESULT_TASK) as? QuickStartStore.QuickStartTask
+        val task = result?.getSerializableCompat(
+            QuickStartFullScreenDialogFragment.RESULT_TASK
+        ) as? QuickStartStore.QuickStartTask
         task?.let { viewModel.onQuickStartTaskCardClick(it) }
     }
 
@@ -235,9 +238,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                             MediaPickerConstants.EXTRA_MEDIA_URIS
                         ) ?: return
 
-                        val source = org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.fromString(
-                            data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
-                        )
+                        val source =
+                            org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.fromString(
+                                data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
+                            )
                         val iconUrl = mediaUriStringsArray.getOrNull(0) ?: return
                         viewModel.handleTakenSiteIcon(iconUrl, source)
                     }
@@ -264,7 +268,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 viewModel.handleCropResult(UCrop.getOutput(data), resultCode == Activity.RESULT_OK)
             }
             RequestCodes.DOMAIN_REGISTRATION -> if (resultCode == Activity.RESULT_OK) {
-                viewModel.handleSuccessfulDomainRegistrationResult(data.getStringExtra(DomainRegistrationActivity.RESULT_REGISTERED_DOMAIN_EMAIL))
+                viewModel.handleSuccessfulDomainRegistrationResult(
+                    data.getStringExtra(DomainRegistrationActivity.RESULT_REGISTERED_DOMAIN_EMAIL)
+                )
             }
             RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
@@ -290,7 +296,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             RequestCodes.EDIT_LANDING_PAGE -> {
                 viewModel.checkAndStartQuickStart(
                     data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
-                    isNewSite = data.getBooleanExtra(EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false)
+                    isNewSite = data.getBooleanExtra(
+                        EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false
+                    )
                 )
             }
         }
@@ -552,7 +560,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
     }
 
-    private fun handleUploadedItem(itemUploadedModel: SiteIconUploadHandler.ItemUploadedModel) = when (itemUploadedModel) {
+    private fun handleUploadedItem(
+        itemUploadedModel: SiteIconUploadHandler.ItemUploadedModel
+    ) = when (itemUploadedModel) {
         is SiteIconUploadHandler.ItemUploadedModel.PostUploaded -> {
             uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                 activity,
@@ -810,7 +820,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         startActivity(intent)
     }
 
-    private fun showJetpackFeatureOverlay(source: JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource) {
+    private fun showJetpackFeatureOverlay(
+        source: JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
+    ) {
         JetpackFeatureFullScreenOverlayFragment
             .newInstance(
                 isFeatureCollectionOverlay = true,
