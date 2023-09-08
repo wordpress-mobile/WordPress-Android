@@ -983,6 +983,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_menu_opened";
             case OPENED_MEDIA_LIBRARY:
                 return "site_menu_opened";
+            case OPENED_QUICK_LINK_RIBBON_MORE:
+                return "site_menu_opened";
             case OPENED_BLOG_SETTINGS:
                 return "site_menu_opened";
             case OPENED_ACCOUNT_SETTINGS:
@@ -1944,6 +1946,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_LINK_RIBBON_PAGES_TAPPED:
             case QUICK_LINK_RIBBON_POSTS_TAPPED:
             case QUICK_LINK_RIBBON_MEDIA_TAPPED:
+            case QUICK_LINK_RIBBON_MORE_TAPPED:
             case QUICK_LINK_RIBBON_STATS_TAPPED:
                 return "quick_action_ribbon_tapped";
             case AUTO_UPLOAD_POST_INVOKED:
