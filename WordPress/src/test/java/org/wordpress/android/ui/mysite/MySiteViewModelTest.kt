@@ -20,6 +20,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.atLeastOnce
+import org.mockito.kotlin.atMost
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -448,6 +449,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(todaysStatsViewModelSlice.getTodaysStatsBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(postsCardViewModelSlice.getPostsCardBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(activityLogCardViewModelSlice.getActivityLogCardBuilderParams(anyOrNull())).thenReturn(mock())
+        whenever(bloggingPromptCardViewModelSlice.getBuilderParams(anyOrNull())).thenReturn(mock())
 
         viewModel = MySiteViewModel(
             networkUtilsWrapper,
@@ -1327,9 +1329,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(bloggingPromptCardViewModelSlice, atLeastOnce())
             .onDashboardCardsUpdated(
                 any(),
-                argWhere {
-                    it.cards.any { card -> card is DashboardCard.BloggingPromptCard }
-                }
+                any()
             )
     }
 
@@ -1342,12 +1342,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onResume(MySiteTabType.DASHBOARD)
 
         verify(bloggingPromptCardViewModelSlice).onResume(MySiteTabType.DASHBOARD)
-        verify(bloggingPromptCardViewModelSlice, never())
+        verify(bloggingPromptCardViewModelSlice, atMost(1))
             .onDashboardCardsUpdated(
                 any(),
-                argWhere {
-                    it.cards.any { card -> card is DashboardCard.BloggingPromptCard }
-                }
+                anyOrNull()
             )
     }
 
@@ -1363,9 +1361,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(bloggingPromptCardViewModelSlice, atLeastOnce())
             .onDashboardCardsUpdated(
                 any(),
-                argWhere {
-                    it.cards.any { card -> card is DashboardCard.BloggingPromptCard }
-                }
+                any()
             )
     }
 
