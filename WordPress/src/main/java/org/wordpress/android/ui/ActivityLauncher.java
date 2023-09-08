@@ -685,6 +685,13 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site);
     }
 
+    public static void viewQuickLinkMoreMenu(Context context, SiteModel site) {
+        Intent intent = new Intent(context, MeActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
+        AnalyticsUtils.trackWithSiteDetails(Stat.OPENED_QUICK_LINK_RIBBON_MORE, site);
+    }
+
     public static void viewCurrentBlogPages(@NonNull Context context, @NonNull SiteModel site) {
         Intent intent = new Intent(context, PagesActivity.class);
         intent.putExtra(WordPress.SITE, site);

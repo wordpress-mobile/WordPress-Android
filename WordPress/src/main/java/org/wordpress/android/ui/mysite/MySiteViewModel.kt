@@ -604,6 +604,7 @@ class MySiteViewModel @Inject constructor(
                 onPostsClick = this::onQuickLinkRibbonPostsClick,
                 onMediaClick = this::onQuickLinkRibbonMediaClick,
                 onStatsClick = this::onQuickLinkRibbonStatsClick,
+                onMoreClick = this::onQuickLinkRibbonMoreClick,
                 activeTask = activeTask,
                 enableFocusPoints = shouldEnableQuickLinkRibbonFocusPoints()
             ),
@@ -982,6 +983,12 @@ class MySiteViewModel @Inject constructor(
             quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
         )
         _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
+    }
+
+    private fun onQuickLinkRibbonMoreClick() {
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_MORE_TAPPED)
+        _onNavigation.value = Event(SiteNavigationAction.OpenMore(selectedSite))
     }
 
     private fun domainRegistrationClick() {
