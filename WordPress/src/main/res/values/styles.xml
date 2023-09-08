@@ -1668,9 +1668,7 @@
         <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
 
-    <style name="MySiteQuickLinkRibbon" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
-        <item name="strokeColor">@color/on_surface_divider</item>
-        <item name="strokeWidth">@dimen/unelevated_card_stroke_width</item>
+    <style name="MySiteQuickLinkRibbon" parent="Widget.MaterialComponents.Button.TextButton.Icon">
         <item name="iconSize">@dimen/quick_link_ribbon_icon_size</item>
         <item name="iconTint">?attr/wpColorOnSurfaceMedium</item>
         <item name="iconPadding">@dimen/quick_link_ribbon_icon_padding</item>
@@ -1684,6 +1682,7 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">@dimen/quick_link_ribbon_text_size</item>
+        <item name="android:textAlignment">textStart</item>
         <item name="rippleColor">@color/on_surface_disabled_transparent_selector</item>
     </style>
 
