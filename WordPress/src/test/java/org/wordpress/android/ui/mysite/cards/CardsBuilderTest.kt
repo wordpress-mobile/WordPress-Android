@@ -32,6 +32,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
+import org.wordpress.android.ui.mysite.cards.dashboard.blaze.onMoreMenuClick
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -199,6 +200,7 @@ class CardsBuilderTest {
                 onPostsClick = mock(),
                 onMediaClick = mock(),
                 onStatsClick = mock(),
+                onMoreClick = mock(),
                 activeTask = activeTask
             ),
             jetpackInstallFullPluginCardBuilderParams = JetpackInstallFullPluginCardBuilderParams(
