@@ -279,24 +279,23 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         }
 
         Map<?, ?> termMap = (Map<?, ?>) termObject;
-        TermModel term = new TermModel();
-
         String termId = MapUtils.getMapStr(termMap, "term_id");
         if (TextUtils.isEmpty(termId)) {
             // If we don't have a term ID, move on
             return null;
         }
 
-        term.setLocalSiteId(site.getId());
-        term.setRemoteTermId(Integer.valueOf(termId));
-        term.setSlug(MapUtils.getMapStr(termMap, "slug"));
-        term.setName(StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(termMap, "name")));
-        term.setDescription(StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(termMap, "description")));
-        term.setParentRemoteId(MapUtils.getMapLong(termMap, "parent"));
-        term.setTaxonomy(MapUtils.getMapStr(termMap, "taxonomy"));
-        term.setPostCount(MapUtils.getMapInt(termMap, "count", 0));
-
-        return term;
+        return new TermModel(
+                0,
+                site.getId(),
+                Long.parseLong(termId),
+                MapUtils.getMapStr(termMap, "taxonomy"),
+                StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(termMap, "name")),
+                MapUtils.getMapStr(termMap, "slug"),
+                StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(termMap, "description")),
+                MapUtils.getMapLong(termMap, "parent"),
+                MapUtils.getMapInt(termMap, "count", 0)
+        );
     }
 
     private static Map<String, Object> termModelToContentStruct(TermModel term) {

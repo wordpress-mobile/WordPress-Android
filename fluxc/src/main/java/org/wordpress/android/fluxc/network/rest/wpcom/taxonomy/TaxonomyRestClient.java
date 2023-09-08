@@ -53,11 +53,11 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         final WPComGsonRequest<TermWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
                 TermWPComRestResponse.class,
                 response -> {
-                    TermModel fetchedTerm = termResponseToTermModel(response);
-                    fetchedTerm.setId(term.getId());
-                    fetchedTerm.setTaxonomy(taxonomy);
-                    fetchedTerm.setLocalSiteId(site.getId());
-
+                    TermModel fetchedTerm = termResponseToTermModel(
+                            term.getId(),
+                            site.getId(),
+                            taxonomy,
+                            response);
                     FetchTermResponsePayload payload = new FetchTermResponsePayload(fetchedTerm, site);
                     mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermAction(payload));
                 },
@@ -83,9 +83,11 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
                     List<TermModel> termArray = new ArrayList<>();
                     TermModel term;
                     for (TermWPComRestResponse termResponse : response.terms) {
-                        term = termResponseToTermModel(termResponse);
-                        term.setTaxonomy(taxonomyName);
-                        term.setLocalSiteId(site.getId());
+                        term = termResponseToTermModel(
+                                0,
+                                site.getId(),
+                                taxonomyName,
+                                termResponse);
                         termArray.add(term);
                     }
 
@@ -114,12 +116,11 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         final WPComGsonRequest<TermWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, body,
                 TermWPComRestResponse.class,
                 response -> {
-                    TermModel uploadedTerm = termResponseToTermModel(response);
-
-                    uploadedTerm.setId(term.getId());
-                    uploadedTerm.setLocalSiteId(site.getId());
-                    uploadedTerm.setTaxonomy(taxonomy);
-
+                    TermModel uploadedTerm = termResponseToTermModel(
+                            term.getId(),
+                            site.getId(),
+                            taxonomy,
+                            response);
                     RemoteTermPayload payload = new RemoteTermPayload(uploadedTerm, site);
                     mDispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload));
                 },
@@ -159,15 +160,22 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
     }
 
     @NonNull
-    private TermModel termResponseToTermModel(@NonNull TermWPComRestResponse from) {
-        TermModel term = new TermModel();
-        term.setRemoteTermId(from.ID);
-        term.setName(StringEscapeUtils.unescapeHtml4(from.name));
-        term.setSlug(from.slug);
-        term.setDescription(StringEscapeUtils.unescapeHtml4(from.description));
-        term.setParentRemoteId(from.parent);
-        term.setPostCount(from.post_count);
-        return term;
+    private TermModel termResponseToTermModel(
+            int termId,
+            int siteId,
+            @NonNull String taxonomy,
+            @NonNull TermWPComRestResponse from) {
+        return new TermModel(
+                termId,
+                siteId,
+                from.ID,
+                taxonomy,
+                StringEscapeUtils.unescapeHtml4(from.name),
+                from.slug,
+                StringEscapeUtils.unescapeHtml4(from.description),
+                from.parent,
+                from.post_count
+        );
     }
 
     @NonNull
