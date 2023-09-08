@@ -179,7 +179,6 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil,
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
     private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
-    private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
     private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker,
     private val dashboardCardDomainUtils: DashboardCardDomainUtils,
@@ -340,7 +339,7 @@ class MySiteViewModel @Inject constructor(
                 selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
 
-                bloggingPromptsCardTrackHelper.onDashboardCardsUpdated(
+                bloggingPromptCardViewModelSlice.onDashboardCardsUpdated(
                     viewModelScope,
                     state.dashboardCardsAndItems.filterIsInstance<DashboardCards>().firstOrNull()
                 )
@@ -350,7 +349,7 @@ class MySiteViewModel @Inject constructor(
                 buildNoSiteState()
             }
 
-            bloggingPromptsCardTrackHelper.onSiteChanged(site?.id)
+            bloggingPromptCardViewModelSlice.onSiteChanged(site?.id)
 
             dashboardCardDomainUtils.onSiteChanged(site?.id, state as? SiteSelected)
 
@@ -926,7 +925,7 @@ class MySiteViewModel @Inject constructor(
         isSiteSelected = false
         checkAndShowJetpackFullPluginInstallOnboarding()
         checkAndShowQuickStartNotice()
-        bloggingPromptsCardTrackHelper.onResume(currentTab)
+        bloggingPromptCardViewModelSlice.onResume(currentTab)
         dashboardCardDomainUtils.onResume(currentTab, uiModel.value?.state as? SiteSelected)
         dashboardCardPlansUtils.onResume(currentTab, uiModel.value?.state as? SiteSelected)
     }

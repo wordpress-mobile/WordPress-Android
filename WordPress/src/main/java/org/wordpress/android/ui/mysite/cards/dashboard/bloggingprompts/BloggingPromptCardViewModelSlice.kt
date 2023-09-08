@@ -3,16 +3,20 @@ package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.BloggingPromptCardNavigationAction
+import org.wordpress.android.ui.mysite.BloggingPromptsCardTrackHelper
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteSourceManager
 import org.wordpress.android.ui.mysite.MySiteUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
@@ -30,8 +34,9 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private val mySiteSourceManager: MySiteSourceManager,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
-    private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper
-): ScopedViewModel(mainDispatcher) {
+    private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
+    private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper
+) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage as LiveData<Event<SnackbarMessageHolder>>
 
@@ -110,5 +115,17 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
             bloggingPromptsSettingsHelper.updatePromptsCardEnabled(siteId, isEnabled)
             mySiteSourceManager.refreshBloggingPrompts(true)
         }
+    }
+
+    fun onDashboardCardsUpdated(scope: CoroutineScope, dashboard: MySiteCardAndItem.Card.DashboardCards?) {
+        bloggingPromptsCardTrackHelper.onDashboardCardsUpdated(scope, dashboard)
+    }
+
+    fun onSiteChanged(siteId: Int?) {
+        bloggingPromptsCardTrackHelper.onSiteChanged(siteId)
+    }
+
+    fun onResume(currentTab: MySiteTabType) {
+        bloggingPromptsCardTrackHelper.onResume(currentTab)
     }
 }
