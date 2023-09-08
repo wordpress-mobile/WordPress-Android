@@ -711,12 +711,9 @@
 
     <dimen name="app_bar_with_site_info_height">62dp</dimen>
     <dimen name="app_bar_with_no_site_info_height">62dp</dimen>
-    <dimen name="app_bar_with_site_info_tabs_height">144dp</dimen>
     <dimen name="toolbar_bottom_margin_with_no_tabs">0dp</dimen>
-    <dimen name="toolbar_bottom_margin_with_tabs">168dp</dimen>
 
     <!-- quick link ribbon -->
-    <dimen name="quick_link_ribbon_margin">16dp</dimen>
     <dimen name="quick_link_ribbon_padding_start">12dp</dimen>
     <dimen name="quick_link_ribbon_padding_end">16dp</dimen>
     <dimen name="quick_link_ribbon_padding_vertical">8dp</dimen>
