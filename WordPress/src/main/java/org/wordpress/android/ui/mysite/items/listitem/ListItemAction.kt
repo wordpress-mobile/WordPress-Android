@@ -21,4 +21,5 @@ enum class ListItemAction (val trackingLabel: String) {
     VIEW_SITE("view_site"),
     BLAZE("blaze"),
     ME("me"),
+    MORE("more"),
 }

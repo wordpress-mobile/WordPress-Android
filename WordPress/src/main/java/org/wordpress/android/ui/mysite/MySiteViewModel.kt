@@ -829,6 +829,10 @@ class MySiteViewModel @Inject constructor(
                     SiteNavigationAction.OpenMedia(selectedSite)
                 }
 
+                ListItemAction.MORE -> {
+                    SiteNavigationAction.OpenMore(selectedSite)
+                }
+
                 ListItemAction.COMMENTS -> SiteNavigationAction.OpenUnifiedComments(selectedSite)
                 ListItemAction.VIEW_SITE -> {
                     SiteNavigationAction.OpenSite(selectedSite)
