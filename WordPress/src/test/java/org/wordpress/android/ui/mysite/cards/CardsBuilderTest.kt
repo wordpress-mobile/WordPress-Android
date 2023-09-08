@@ -166,9 +166,6 @@ class CardsBuilderTest {
                 postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
                 bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                     mock(),
-                    false,
-                    false,
-                    false,
                     mock(),
                     mock(),
                     mock(),
