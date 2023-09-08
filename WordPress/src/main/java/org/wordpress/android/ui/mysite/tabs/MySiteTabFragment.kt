@@ -461,13 +461,14 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             }
             BloggingPromptCardNavigationAction.LearnMore ->
                 (activity as? BloggingPromptsOnboardingListener)?.onShowBloggingPromptsOnboarding()
-            BloggingPromptCardNavigationAction.CardRemoved ->  showBloggingPromptCardRemoveConfirmation()
+            is BloggingPromptCardNavigationAction.CardRemoved ->
+                showBloggingPromptCardRemoveConfirmation(action.undoClick)
             BloggingPromptCardNavigationAction.ViewMore ->
                 ActivityLauncher.showBloggingPromptsListActivity(activity)
         }
     }
 
-    private fun showBloggingPromptCardRemoveConfirmation(){
+    private fun showBloggingPromptCardRemoveConfirmation(undoClick: () -> Unit) {
         context?.run {
             val title = getString(R.string.my_site_blogging_prompt_card_removed_snackbar_title)
             val subtitle = HtmlCompat.fromHtml(
@@ -479,7 +480,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             val snackbarContent = SnackbarMessageHolder(
                 message = UiStringText(message),
                 buttonTitle = UiString.UiStringRes(R.string.undo),
-                buttonAction = { viewModel.onBloggingPromptUndoClick() },
+                buttonAction = { undoClick() },
                 isImportant = true
             )
             showSnackbar(snackbarContent)

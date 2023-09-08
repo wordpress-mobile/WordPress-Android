@@ -112,5 +112,5 @@ sealed class BloggingPromptCardNavigationAction: SiteNavigationAction() {
     data class ViewAnswers(val readerTag: ReaderTag): BloggingPromptCardNavigationAction()
     object LearnMore: BloggingPromptCardNavigationAction()
     object ViewMore: BloggingPromptCardNavigationAction()
-    object CardRemoved: BloggingPromptCardNavigationAction()
+    data class CardRemoved(val undoClick: ()-> Unit): BloggingPromptCardNavigationAction()
 }

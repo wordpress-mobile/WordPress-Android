@@ -101,7 +101,8 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private fun onBloggingPromptRemoveClick() {
         launch {
             updatePromptsCardEnabled(isEnabled = false).join()
-            _onNavigation.value = Event(BloggingPromptCardNavigationAction.CardRemoved)
+            _onNavigation.value = Event(BloggingPromptCardNavigationAction
+                .CardRemoved(this@BloggingPromptCardViewModelSlice::onBloggingPromptUndoClick))
         }
     }
 
