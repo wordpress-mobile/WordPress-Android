@@ -37,9 +37,12 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.models.JetpackPoweredScreen
+import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.FEATURE_CARD
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
@@ -181,7 +184,6 @@ class MySiteViewModel @Inject constructor(
     private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
     private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker,
-    private val dashboardCardDomainUtils: DashboardCardDomainUtils,
     private val dashboardCardPlansUtils: PlansCardUtils,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
@@ -333,8 +335,7 @@ class MySiteViewModel @Inject constructor(
                     scanAvailable,
                     cardsUpdate,
                     bloggingPromptsUpdate,
-                    blazeCardUpdate,
-                    hasSiteCustomDomains
+                    blazeCardUpdate
                 )
                 selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
@@ -350,8 +351,6 @@ class MySiteViewModel @Inject constructor(
             }
 
             bloggingPromptCardViewModelSlice.onSiteChanged(site?.id)
-
-            dashboardCardDomainUtils.onSiteChanged(site?.id, state as? SiteSelected)
 
             dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
 
@@ -384,8 +383,7 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
-        blazeCardUpdate: BlazeCardUpdate?,
-        hasSiteCustomDomains: Boolean?
+        blazeCardUpdate: BlazeCardUpdate?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
             site,
@@ -396,8 +394,7 @@ class MySiteViewModel @Inject constructor(
             scanAvailable,
             cardsUpdate,
             bloggingPromptUpdate,
-            blazeCardUpdate,
-            hasSiteCustomDomains
+            blazeCardUpdate
         )
 
         val siteInfoCardBuilderParams = SiteInfoCardBuilderParams(
@@ -484,8 +481,7 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
-        blazeCardUpdate: BlazeCardUpdate?,
-        hasSiteCustomDomains: Boolean?
+        blazeCardUpdate: BlazeCardUpdate?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = mySiteInfoItemBuilder.build(
             InfoItemBuilderParams(
@@ -562,14 +558,6 @@ class MySiteViewModel @Inject constructor(
                     uiModel.value?.state as? SiteSelected
                 ),
                 blazeCardBuilderParams = blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate),
-                dashboardCardDomainBuilderParams = DashboardCardDomainBuilderParams(
-                    isEligible = dashboardCardDomainUtils.shouldShowCard(
-                        site, isDomainCreditAvailable, hasSiteCustomDomains
-                    ),
-                    onClick = this::onDashboardCardDomainClick,
-                    onHideMenuItemClick = this::onDashboardCardDomainHideMenuItemClick,
-                    onMoreMenuClick = this::onDashboardCardDomainMoreMenuClick
-                ),
                 dashboardCardPlansBuilderParams = DashboardCardPlansBuilderParams(
                     isEligible = dashboardCardPlansUtils.shouldShowCard(site),
                     onClick = this::onDashboardCardPlansClick,
@@ -926,7 +914,6 @@ class MySiteViewModel @Inject constructor(
         checkAndShowJetpackFullPluginInstallOnboarding()
         checkAndShowQuickStartNotice()
         bloggingPromptCardViewModelSlice.onResume(currentTab)
-        dashboardCardDomainUtils.onResume(currentTab, uiModel.value?.state as? SiteSelected)
         dashboardCardPlansUtils.onResume(currentTab, uiModel.value?.state as? SiteSelected)
     }
 
@@ -1176,7 +1163,7 @@ class MySiteViewModel @Inject constructor(
         if (!jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()) return
         quickStartRepository.checkAndSetQuickStartType(isNewSite = isNewSite)
         shouldMarkUpdateSiteTitleTaskComplete = isSiteTitleTaskCompleted
-        showQuickStartDialog(selectedSiteRepository.getSelectedSite())
+        showQuickStartDialog(selectedSiteRepository.getSelectedSite(), isNewSite)
     }
 
     private fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
@@ -1192,7 +1179,7 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun showQuickStartDialog(siteModel: SiteModel?) {
+    private fun showQuickStartDialog(siteModel: SiteModel?, isNewSite: Boolean) {
         if (siteModel != null && quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteModel) &&
             !jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()
         ) {
@@ -1202,7 +1189,8 @@ class MySiteViewModel @Inject constructor(
                         R.string.quick_start_dialog_need_help_manage_site_title,
                         R.string.quick_start_dialog_need_help_manage_site_message,
                         R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                        R.string.quick_start_dialog_need_help_button_negative
+                        R.string.quick_start_dialog_need_help_button_negative,
+                        isNewSite
                     )
                 )
             )
@@ -1271,24 +1259,6 @@ class MySiteViewModel @Inject constructor(
     private fun onJetpackInstallFullPluginLearnMoreClick() {
         trackWithTabSourceIfNeeded(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_TAPPED)
         _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
-    }
-
-    private fun onDashboardCardDomainMoreMenuClick() {
-        dashboardCardDomainUtils.trackDashboardCardDomainMoreMenuTapped(uiModel.value?.state as? SiteSelected)
-    }
-
-    private fun onDashboardCardDomainClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        dashboardCardDomainUtils.trackDashboardCardDomainTapped(uiModel.value?.state as? SiteSelected)
-        _onNavigation.value = Event(SiteNavigationAction.OpenPaidDomainSearch(selectedSite))
-    }
-
-    private fun onDashboardCardDomainHideMenuItemClick() {
-        dashboardCardDomainUtils.trackDashboardCardDomainHiddenByUser(uiModel.value?.state as? SiteSelected)
-        selectedSiteRepository.getSelectedSite()?.let {
-            dashboardCardDomainUtils.hideCard(it.siteId)
-        }
-        refresh()
     }
 
     private fun onDashboardCardPlansClick() {
@@ -1388,7 +1358,6 @@ class MySiteViewModel @Inject constructor(
             .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
         siteSelected.cardAndItems.filterIsInstance<JetpackInstallFullPluginCard>()
             .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type, quickStartRepository.currentTab) }
-        dashboardCardDomainUtils.trackDashboardCardDomainShown(viewModelScope, siteSelected)
         dashboardCardPlansUtils.trackCardShown(viewModelScope, siteSelected)
     }
 

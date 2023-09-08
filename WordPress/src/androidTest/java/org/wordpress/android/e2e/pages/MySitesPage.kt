@@ -286,45 +286,6 @@ class MySitesPage {
         WPSupportUtils.clickOn(elementID)
     }
 
-    // "Domains" Dashboard Card
-
-    fun scrollToDomainsCard(): MySitesPage {
-        return scrollToCard(R.id.dashboard_card_domain_cta)
-    }
-
-    fun tapDomainsCard(): DomainsScreen {
-        tapCard(R.id.dashboard_card_domain_cta)
-        return DomainsScreen()
-    }
-
-    fun assertDomainsCard(): MySitesPage {
-        Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.dashboard_card_domain_cta),
-                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.dashboard_cards)),
-                ViewMatchers.hasDescendant(ViewMatchers.withId(R.id.dashboard_domain_card_more)),
-                ViewMatchers.hasDescendant(ViewMatchers.withId(R.id.dashboard_card_domain_image)),
-
-                ViewMatchers.hasDescendant(
-                    Matchers.allOf(
-                        ViewMatchers.withText(R.string.dashboard_card_domain_title),
-                        ViewMatchers.withId(R.id.dashboard_card_domain_title),
-                    )
-                ),
-
-                ViewMatchers.hasDescendant(
-                    Matchers.allOf(
-                        ViewMatchers.withText(R.string.dashboard_card_domain_sub_title),
-                        ViewMatchers.withId(R.id.dashboard_card_domain_sub_title),
-                    )
-                )
-            )
-        )
-            .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
-
-        return this
-    }
-
     // "Pages" Dashboard Card
 
     fun scrollToPagesCard(): MySitesPage {

@@ -20,7 +20,6 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
-import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainSource
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 
@@ -59,9 +58,6 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     lateinit var blazeCardSource: BlazeCardSource
 
     @Mock
-    lateinit var dashboardCardDomainSource: DashboardCardDomainSource
-
-    @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
     @Mock
@@ -96,7 +92,6 @@ class MySiteSourceManagerTest : BaseUnitTest() {
             bloggingPromptCardSource,
             blazeCardSource,
             selectedSiteRepository,
-            dashboardCardDomainSource,
             jetpackFeatureRemovalPhaseHelper
         )
 

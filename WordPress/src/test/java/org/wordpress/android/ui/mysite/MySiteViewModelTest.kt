@@ -270,9 +270,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var pagesCardViewModelSlice: PagesCardViewModelSlice
 
     @Mock
-    lateinit var dashboardCardDomainUtils: DashboardCardDomainUtils
-
-    @Mock
     lateinit var plansCardUtils: PlansCardUtils
 
     @Mock
@@ -492,7 +489,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             jetpackInstallFullPluginCardBuilder,
             getShowJetpackFullPluginInstallOnboardingUseCase,
             jetpackInstallFullPluginShownTracker,
-            dashboardCardDomainUtils,
             plansCardUtils,
             jetpackFeatureRemovalPhaseHelper,
             wpJetpackIndividualPluginHelper,
@@ -1199,7 +1195,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 R.string.quick_start_dialog_need_help_manage_site_title,
                 R.string.quick_start_dialog_need_help_manage_site_message,
                 R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                R.string.quick_start_dialog_need_help_button_negative
+                R.string.quick_start_dialog_need_help_button_negative,
+                true
             )
         )
     }
@@ -1217,7 +1214,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 R.string.quick_start_dialog_need_help_manage_site_title,
                 R.string.quick_start_dialog_need_help_manage_site_message,
                 R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                R.string.quick_start_dialog_need_help_button_negative
+                R.string.quick_start_dialog_need_help_button_negative,
+                false
             )
         )
     }

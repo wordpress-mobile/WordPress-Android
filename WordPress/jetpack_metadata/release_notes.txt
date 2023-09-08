@@ -1,3 +1,5 @@
-- The Social Link block now includes an outline so you can see when it’s selected.
-- The undo and redo buttons are no longer visible in the HTML editor.
-- You’ll now see hex codes for the selected color when you’re using the Cover Block color picker.
+- New chat-based support channel with service bot
+- View, locate, and remove Jetpack Paywall block
+- Outlined selected Social Link block
+- Fixed crashes in the block editor and block inserter
+- Create support tickets for errors during account closure

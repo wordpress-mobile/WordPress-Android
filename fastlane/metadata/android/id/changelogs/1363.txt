@@ -1,5 +1,0 @@
-23.0:
-- Menghapus celah visual antara bilah peralatan dan blok galeri yang dipilih
-- Menyembunyikan tombol keterangan galeri pada perangkat seluler.
-- Membuat blok galeri yang tepat tetap dipilih selama Anda menambahkan media
-- Memperbaiki bug pemasangan plugin yang menyebabkan crash pada aplikasi

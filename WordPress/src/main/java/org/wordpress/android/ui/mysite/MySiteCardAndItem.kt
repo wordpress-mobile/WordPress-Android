@@ -56,7 +56,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         PROMOTE_WITH_BLAZE_CARD,
         DASHBOARD_DOMAIN_TRANSFER_CARD,
         BLAZE_CAMPAIGNS_CARD,
-        DASHBOARD_DOMAIN_CARD,
         DASHBOARD_PLANS_CARD,
         PAGES_CARD_ERROR,
         PAGES_CARD,
@@ -367,14 +366,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         )
                     }
                 }
-
-                data class DashboardDomainCard(
-                    val title: UiString?,
-                    val subtitle: UiString?,
-                    val onClick: ListItemInteraction,
-                    val onHideMenuItemClick: ListItemInteraction,
-                    val onMoreMenuClick: ListItemInteraction,
-                ) : DashboardCard(dashboardCardType = DashboardCardType.DASHBOARD_DOMAIN_CARD)
 
                 data class DashboardPlansCard(
                     val title: UiString?,

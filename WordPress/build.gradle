@@ -146,7 +146,6 @@ android {
         buildConfigField "boolean", "JETPACK_INSTALL_FULL_PLUGIN", "false"
         buildConfigField "boolean", "ENABLE_BLAZE_FEATURE", "false"
         buildConfigField "boolean", "WP_INDIVIDUAL_PLUGIN_OVERLAY", "false"
-        buildConfigField "boolean", "DASHBOARD_CARD_DOMAIN", "false"
         buildConfigField "boolean", "DASHBOARD_CARD_FREE_TO_PAID_PLANS", "false"
         buildConfigField "boolean", "SITE_EDITOR_MVP", "false"
         buildConfigField "boolean", "JETPACK_SOCIAL", "false"
@@ -286,6 +285,7 @@ android {
         checkGeneratedSources = true
         lintConfig file("${project.rootDir}/config/lint/lint.xml")
         baseline file("${project.rootDir}/config/lint/baseline.xml")
+        enable += 'UnknownNullness'
     }
 
     packagingOptions {

@@ -69,7 +69,8 @@ sealed class SiteNavigationAction {
         @StringRes val title: Int,
         @StringRes val message: Int,
         @StringRes val positiveButtonLabel: Int,
-        @StringRes val negativeButtonLabel: Int
+        @StringRes val negativeButtonLabel: Int,
+        val isNewSite: Boolean
     ) : SiteNavigationAction()
 
     data class OpenQuickStartFullScreenDialog(

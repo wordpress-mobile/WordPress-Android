@@ -374,7 +374,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             action.title,
             action.message,
             action.positiveButtonLabel,
-            action.negativeButtonLabel
+            action.negativeButtonLabel,
+            action.isNewSite
         )
         is SiteNavigationAction.OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
         is SiteNavigationAction.OpenDraftsPosts ->
@@ -677,7 +678,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         @StringRes title: Int,
         @StringRes message: Int,
         @StringRes positiveButtonLabel: Int,
-        @StringRes negativeButtonLabel: Int
+        @StringRes negativeButtonLabel: Int,
+        isNewSite: Boolean
     ) {
         val tag = TAG_QUICK_START_DIALOG
         val quickStartPromptDialogFragment = QuickStartPromptDialogFragment()
@@ -687,7 +689,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             getString(message),
             getString(positiveButtonLabel),
             R.drawable.img_illustration_site_about_280dp,
-            getString(negativeButtonLabel)
+            getString(negativeButtonLabel),
+            isNewSite
         )
         quickStartPromptDialogFragment.show(parentFragmentManager, tag)
         quickStartTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
