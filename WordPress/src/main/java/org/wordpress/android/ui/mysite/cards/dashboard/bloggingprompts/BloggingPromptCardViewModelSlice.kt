@@ -106,7 +106,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         }
     }
 
-    fun onBloggingPromptUndoClick() {
+    private fun onBloggingPromptUndoClick() {
         bloggingPromptsCardAnalyticsTracker.trackMySiteCardRemoveFromDashboardUndoClicked()
         updatePromptsCardEnabled(true)
     }
