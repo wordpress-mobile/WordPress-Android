@@ -1,0 +1,4 @@
+23.1:
+- Het blok Social Link heeft nu een omranding, zodat je kan zien wanneer het is geselecteerd.
+- De knoppen ongedaan maken en herstellen zijn niet zichtbaar meer in de HTML-editor.
+- Je ziet nu de hex-code van de geselecteerde kleur wanneer je de kleurenkiezer van het Omslagafbeeldingblok gebruikt.

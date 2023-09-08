@@ -100,7 +100,6 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
-import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
@@ -301,9 +300,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var pagesCardViewModelSlice: PagesCardViewModelSlice
-
-    @Mock
-    lateinit var dashboardCardDomainUtils: DashboardCardDomainUtils
 
     @Mock
     lateinit var plansCardUtils: PlansCardUtils
@@ -540,7 +536,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             bloggingPromptsCardTrackHelper,
             getShowJetpackFullPluginInstallOnboardingUseCase,
             jetpackInstallFullPluginShownTracker,
-            dashboardCardDomainUtils,
             plansCardUtils,
             jetpackFeatureRemovalPhaseHelper,
             wpJetpackIndividualPluginHelper,
@@ -1280,7 +1275,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 R.string.quick_start_dialog_need_help_manage_site_title,
                 R.string.quick_start_dialog_need_help_manage_site_message,
                 R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                R.string.quick_start_dialog_need_help_button_negative
+                R.string.quick_start_dialog_need_help_button_negative,
+                true
             )
         )
     }
@@ -1298,7 +1294,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 R.string.quick_start_dialog_need_help_manage_site_title,
                 R.string.quick_start_dialog_need_help_manage_site_message,
                 R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                R.string.quick_start_dialog_need_help_button_negative
+                R.string.quick_start_dialog_need_help_button_negative,
+                false
             )
         )
     }

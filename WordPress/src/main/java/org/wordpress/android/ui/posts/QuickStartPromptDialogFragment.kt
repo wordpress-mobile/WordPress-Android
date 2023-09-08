@@ -12,15 +12,19 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartPromptDialogViewModel
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.WPTextView
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
     companion object {
         private const val STATE_KEY_DRAWABLE_RES_ID = "state_key_drawable"
@@ -31,6 +35,7 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
         private const val STATE_KEY_NEGATIVE_BUTTON_LABEL = "state_key_negative_button_label"
         private const val UNDEFINED_RES_ID = -1
         private const val SITE_IMAGE_CORNER_RADIUS_IN_DP = 4
+        private const val STATE_KEY_IS_NEW_SITE = "state_key_is_new_site"
     }
 
     @DrawableRes
@@ -41,6 +46,8 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
     private lateinit var positiveButtonLabel: String
     private lateinit var title: String
     private lateinit var siteRecord: SiteRecord
+    private var isNewSite: Boolean = false
+    private val viewModel: QuickStartPromptDialogViewModel by viewModels()
 
     @Inject
     lateinit var imageManager: ImageManager
@@ -62,7 +69,8 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
         message: String,
         positiveButtonLabel: String,
         @DrawableRes drawableResId: Int = UNDEFINED_RES_ID,
-        negativeButtonLabel: String = ""
+        negativeButtonLabel: String = "",
+        isNewSite: Boolean = false
     ) {
         this.fragmentTag = tag
         this.title = title
@@ -70,6 +78,7 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
         this.positiveButtonLabel = positiveButtonLabel
         this.negativeButtonLabel = negativeButtonLabel
         this.drawableResId = drawableResId
+        this.isNewSite = isNewSite
     }
 
     override fun onAttach(context: Context) {
@@ -91,6 +100,7 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
             positiveButtonLabel = requireNotNull(savedInstanceState.getString(STATE_KEY_POSITIVE_BUTTON_LABEL))
             negativeButtonLabel = requireNotNull(savedInstanceState.getString(STATE_KEY_NEGATIVE_BUTTON_LABEL))
             drawableResId = savedInstanceState.getInt(STATE_KEY_DRAWABLE_RES_ID)
+            isNewSite = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_SITE)
         }
     }
 
@@ -101,6 +111,7 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
         outState.putString(STATE_KEY_POSITIVE_BUTTON_LABEL, positiveButtonLabel)
         outState.putString(STATE_KEY_NEGATIVE_BUTTON_LABEL, negativeButtonLabel)
         outState.putInt(STATE_KEY_DRAWABLE_RES_ID, drawableResId)
+        outState.putBoolean(STATE_KEY_IS_NEW_SITE, isNewSite)
 
         super.onSaveInstanceState(outState)
     }
@@ -169,6 +180,7 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
             buttonNegative.visibility = View.VISIBLE
             buttonNegative.text = negativeButtonLabel
             buttonNegative.setOnClickListener {
+                viewModel.onNegativeClicked(isNewSite)
                 if (activity is QuickStartPromptClickInterface) {
                     (activity as QuickStartPromptClickInterface).onNegativeClicked(fragmentTag)
                 }

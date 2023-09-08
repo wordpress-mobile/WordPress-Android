@@ -1,0 +1,4 @@
+23.1 :
+- Le bloc Réseaux sociaux inclut désormais un aperçu afin que vous puissiez voir quand l’option est sélectionnée.
+- Les boutons Annuler et Répéter ne sont plus visibles dans l’éditeur HTML.
+- Vous verrez désormais les codes hex pour la couleur sélectionnée lors de l’utilisation du sélecteur de couleur Bloc de bannière.

@@ -1,5 +1,7 @@
 package org.wordpress.android.networking;
 
+import androidx.annotation.NonNull;
+
 /**
  * Interface that provides a method that should perform the necessary task to make sure
  * the provided AuthenticatorRequest will be authenticated.
@@ -9,5 +11,5 @@ package org.wordpress.android.networking;
  * easily update the access token.
  */
 public interface Authenticator {
-    void authenticate(AuthenticatorRequest authenticatorRequest);
+    void authenticate(@NonNull AuthenticatorRequest authenticatorRequest);
 }

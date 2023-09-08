@@ -1,5 +1,0 @@
-23.0:
-- Beitragseditor mit Verwaltung für Social Sharing aktualisiert
-- Dashboard-Karten für Domain-Transfer und Blaze-Kampagne hinzugefügt
-- Fehler beim Installieren eines Plugins behoben, wodurch die App abstürzte
-- Design und Benutzerfreundlichkeit des Galerie-Blocks verbessert
