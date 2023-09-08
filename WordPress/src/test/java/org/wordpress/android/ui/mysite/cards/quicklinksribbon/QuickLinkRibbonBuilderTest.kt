@@ -35,6 +35,7 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
     private val onPostsClick: () -> Unit = {}
     private val onPagesClick: () -> Unit = {}
     private val onMediaClick: () -> Unit = {}
+    private val onMoreClick: () -> Unit = {}
 
     @Before
     fun setUp() {
@@ -46,10 +47,11 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
     fun `given site does have capabilities, when ribbon is built, then pages item is not built`() {
         val quickLinkRibbon = buildQuickLinkRibbon(showPages = false)
 
-        assertThat(quickLinkRibbon.quickLinkRibbonItems.size).isEqualTo(3)
+        assertThat(quickLinkRibbon.quickLinkRibbonItems.size).isEqualTo(4)
         assertThat(quickLinkRibbon.quickLinkRibbonItems[0].label).isEqualTo(R.string.stats)
         assertThat(quickLinkRibbon.quickLinkRibbonItems[1].label).isEqualTo(R.string.posts)
         assertThat(quickLinkRibbon.quickLinkRibbonItems[2].label).isEqualTo(R.string.media)
+        assertThat(quickLinkRibbon.quickLinkRibbonItems[3].label).isEqualTo(R.string.more)
     }
 
     /* ACTION CLICKS */
@@ -61,6 +63,7 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
         assertThat(quickLinkRibbon.quickLinkRibbonItems[1].onClick).isEqualTo(ListItemInteraction.create(onPostsClick))
         assertThat(quickLinkRibbon.quickLinkRibbonItems[2].onClick).isEqualTo(ListItemInteraction.create(onPagesClick))
         assertThat(quickLinkRibbon.quickLinkRibbonItems[3].onClick).isEqualTo(ListItemInteraction.create(onMediaClick))
+        assertThat(quickLinkRibbon.quickLinkRibbonItems[4].onClick).isEqualTo(ListItemInteraction.create(onMoreClick))
     }
 
     /* FOCUS POINT*/
@@ -120,6 +123,7 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
                 onPostsClick,
                 onMediaClick,
                 onStatsClick,
+                onMoreClick,
                 setActiveTask(showPagesFocusPoint, showStatsFocusPoint, checkStatsTask),
                 enableFocusPoints = enableFocusPoints
             )
