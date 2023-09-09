@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.avatars
 
 import android.annotation.SuppressLint
-import androidx.annotation.ColorRes
+import androidx.annotation.AttrRes
 import androidx.annotation.DimenRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.avatars.TrainOfAvatarsViewType.AVATAR
@@ -18,7 +18,7 @@ const val AVATAR_SIZE_DIMEN = R.dimen.avatar_sz_small
 
 sealed class TrainOfAvatarsItem(val type: TrainOfAvatarsViewType) {
     data class AvatarItem(val userAvatarUrl: String) : TrainOfAvatarsItem(AVATAR)
-    data class TrailingLabelTextItem(val text: UiString, @ColorRes val labelColor: Int) : TrainOfAvatarsItem(
+    data class TrailingLabelTextItem(val text: UiString, @AttrRes val labelColor: Int) : TrainOfAvatarsItem(
         TRAILING_LABEL
     )
 }
