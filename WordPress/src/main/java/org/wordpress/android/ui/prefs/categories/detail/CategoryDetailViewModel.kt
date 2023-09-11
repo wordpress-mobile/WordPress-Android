@@ -139,8 +139,8 @@ class CategoryDetailViewModel @Inject constructor(
         launch {
             _onCategoryPush.postValue(Event(InProgress(R.string.updating_cat)))
             editCategoryUseCase.editCategory(
+                existingCategory!!,
                 categoryId,
-                existingCategory!!.slug!!,
                 categoryText,
                 parentCategory.categoryId,
                 siteModel
