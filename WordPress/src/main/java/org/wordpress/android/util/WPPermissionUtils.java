@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.provider.Settings;
@@ -26,6 +27,10 @@ import org.wordpress.android.viewmodel.ResourceProvider;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.Manifest.permission.READ_MEDIA_IMAGES;
+import static android.Manifest.permission.READ_MEDIA_VIDEO;
+import static android.Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED;
 
 public class WPPermissionUtils {
     // permission request codes - note these are reported to analytics so they shouldn't be changed
@@ -64,15 +69,48 @@ public class WPPermissionUtils {
             }
         }
 
+        // on Android 14 there's a new READ_MEDIA_VISUAL_USER_SELECTED which changes the behavior of the
+        // READ_MEDIA_IMAGES and READ_MEDIA_VIDEO permissions such that if any of these 2 are denied BUT
+        // the READ_MEDIA_VISUAL_USER_SELECTED is granted, they should NOT be considered denied, as the
+        // user gave partial access to media, so we are able to work properly. Let's track that in different
+        // variables to confirm user REALLY denied the permissions we need in that scenario
+        String firstDeniedMediaPermission = null;
+        boolean isReadMediaVisualUserSelectedGranted = true;
+
         boolean allGranted = true;
         for (int i = 0; i < grantResults.length; i++) {
             if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                String permission = permissions[i];
+
+                // logic for checking READ_MEDIA_VISUAL_USER_SELECTED permission and "denied" media permissions
+                // for later checking if media is in fact denied to decide to show the always denied dialog or not
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    if (permission.equals(READ_MEDIA_IMAGES) || permission.equals(READ_MEDIA_VIDEO)) {
+                        firstDeniedMediaPermission = permission;
+                        continue;
+                    } else if (permission.equals(READ_MEDIA_VISUAL_USER_SELECTED)) {
+                        isReadMediaVisualUserSelectedGranted = false;
+                        continue;
+                    }
+                }
+
                 allGranted = false;
                 if (checkForAlwaysDenied
                     && !ActivityCompat.shouldShowRequestPermissionRationale(activity, permissions[i])) {
                     showPermissionAlwaysDeniedDialog(activity, permissions[i]);
                     break;
                 }
+            }
+        }
+
+        // check if we should consider the media permissions actually denied or if it's the partial access case
+        if (allGranted && null != firstDeniedMediaPermission && !isReadMediaVisualUserSelectedGranted) {
+            // the user actually denied media access
+            allGranted = false;
+
+            if (checkForAlwaysDenied
+                && !ActivityCompat.shouldShowRequestPermissionRationale(activity, firstDeniedMediaPermission)) {
+                showPermissionAlwaysDeniedDialog(activity, firstDeniedMediaPermission);
             }
         }
 
@@ -145,9 +183,9 @@ public class WPPermissionUtils {
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_STORAGE_WRITE;
             case android.Manifest.permission.READ_EXTERNAL_STORAGE:
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_STORAGE_READ;
-            case android.Manifest.permission.READ_MEDIA_IMAGES:
+            case READ_MEDIA_IMAGES:
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_IMAGES_READ;
-            case android.Manifest.permission.READ_MEDIA_VIDEO:
+            case READ_MEDIA_VIDEO:
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_VIDEO_READ;
             case android.Manifest.permission.READ_MEDIA_AUDIO:
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_AUDIO_READ;
@@ -169,9 +207,9 @@ public class WPPermissionUtils {
             case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
             case android.Manifest.permission.READ_EXTERNAL_STORAGE:
                 return context.getString(R.string.permission_storage);
-            case android.Manifest.permission.READ_MEDIA_IMAGES:
+            case READ_MEDIA_IMAGES:
                 return context.getString(R.string.permission_images);
-            case android.Manifest.permission.READ_MEDIA_VIDEO:
+            case READ_MEDIA_VIDEO:
                 return context.getString(R.string.permission_video);
             case android.Manifest.permission.READ_MEDIA_AUDIO:
                 return context.getString(R.string.permission_audio);
@@ -193,9 +231,9 @@ public class WPPermissionUtils {
             case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
             case android.Manifest.permission.READ_EXTERNAL_STORAGE:
                 return resourceProvider.getString(R.string.permission_storage);
-            case android.Manifest.permission.READ_MEDIA_IMAGES:
+            case READ_MEDIA_IMAGES:
                 return resourceProvider.getString(R.string.permission_images);
-            case android.Manifest.permission.READ_MEDIA_VIDEO:
+            case READ_MEDIA_VIDEO:
                 return resourceProvider.getString(R.string.permission_video);
             case android.Manifest.permission.READ_MEDIA_AUDIO:
                 return resourceProvider.getString(R.string.permission_audio);

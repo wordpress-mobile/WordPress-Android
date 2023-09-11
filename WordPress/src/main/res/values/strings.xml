@@ -4693,4 +4693,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="missing_splits_dialog_message">The app WordPress is missing required components and must be reinstalled from the Google Play Store.</string>
     <string name="missing_splits_dialog_button">CLOSE</string>
     <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Access this Paywall block on your web browser for advanced settings.</string>
+
+    <string name="partial_media_access_prompt_text">Only selected photos and videos you’ve given access to are available.</string>
+    <string name="partial_media_access_prompt_select_more">Select More</string>
+    <string name="partial_media_access_prompt_change_settings">Change Settings</string>
 </resources>
