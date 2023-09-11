@@ -35,14 +35,14 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.usecase.SaveFirstBlog
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsSocialFeature
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
 @ExperimentalCoroutinesApi
 class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
-    private val bloggingPromptsSocialFeatureConfig: BloggingPromptsSocialFeatureConfig = mock()
-    private val uiStateMapper = BloggingPromptsOnboardingUiStateMapper(bloggingPromptsSocialFeatureConfig)
+    private val bloggingPromptsSocialFeature: BloggingPromptsSocialFeature = mock()
+    private val uiStateMapper = BloggingPromptsOnboardingUiStateMapper(bloggingPromptsSocialFeature)
     private val siteStore: SiteStore = mock()
     private val selectedSiteRepository: SelectedSiteRepository = mock()
     private val bloggingPromptsStore: BloggingPromptsStore = mock()

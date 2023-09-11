@@ -10,12 +10,12 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
 import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsSocialFeature
 import javax.inject.Inject
 import com.google.android.material.R as MaterialR
 
 class BloggingPromptsOnboardingUiStateMapper @Inject constructor(
-    private val bloggingPromptsSocialFeatureConfig: BloggingPromptsSocialFeatureConfig
+    private val bloggingPromptsSocialFeature: BloggingPromptsSocialFeature
 ) {
     @Suppress("MagicNumber")
     fun mapReady(
@@ -31,7 +31,7 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor(
             dummyRespondent
         )
 
-        val trailingLabel = if (bloggingPromptsSocialFeatureConfig.isEnabled()) {
+        val trailingLabel = if (bloggingPromptsSocialFeature.isEnabled()) {
             UiStringRes(
                 R.string.my_site_blogging_prompt_card_view_answers
             )
@@ -47,7 +47,7 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor(
         val avatarsTrain = dummyRespondents.take(3).map { respondent -> AvatarItem(respondent) }
             .toMutableList<TrainOfAvatarsItem>()
             .also { list ->
-                val labelColor = if (bloggingPromptsSocialFeatureConfig.isEnabled()) {
+                val labelColor = if (bloggingPromptsSocialFeature.isEnabled()) {
                     R.color.primary_emphasis_medium_selector
                 } else {
                     MaterialR.attr.colorOnSurface
