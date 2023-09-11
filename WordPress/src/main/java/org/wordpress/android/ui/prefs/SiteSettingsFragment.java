@@ -185,7 +185,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject Dispatcher mDispatcher;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    @Inject BloggingPromptsFeature bloggingPromptsFeature;
+    @Inject BloggingPromptsFeature mBloggingPromptsFeature;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
