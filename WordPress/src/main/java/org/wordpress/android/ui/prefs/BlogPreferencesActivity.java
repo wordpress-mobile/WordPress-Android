@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
@@ -42,7 +43,7 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
     @Inject Dispatcher mDispatcher;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.site_settings_activity);

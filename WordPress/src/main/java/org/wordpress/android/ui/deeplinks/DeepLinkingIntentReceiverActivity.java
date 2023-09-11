@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.ActivityLauncherWrapper;
@@ -49,7 +50,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     private JetpackFeatureFullScreenOverlayViewModel mJetpackFullScreenViewModel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {

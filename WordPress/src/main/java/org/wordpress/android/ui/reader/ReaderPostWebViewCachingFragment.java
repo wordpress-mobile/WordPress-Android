@@ -46,7 +46,8 @@ public class ReaderPostWebViewCachingFragment extends Fragment {
         return fragment;
     }
 
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mBlogId = getArguments().getLong(ARG_BLOG_ID);

@@ -1,14 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-07 03:19:13+0000
+Translation-Revision-Date: 2023-09-01 07:54:03+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.7
 Language: lv
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">Atbilde:</string>
+    <string name="contact_support_bot_ticket_comment_question">Jautājums:</string>
+    <string name="contact_support_bot_ticket_comment_start">Jetpack Mobile Bot transkripts:</string>
+    <string name="contact_support_bot_ticket_error">Kļūda, iesniedzot atbalsta biļeti</string>
+    <string name="contact_support_bot_ticket_message">Biļete izveidota</string>
+    <string name="contact_support_bot_ticket_loading">Veido atbalsta biļeti…</string>
+    <string name="contact_support_question_six">Kā es varu izmantot savu pielāgoto domēnu lietotnē?</string>
+    <string name="contact_support_question_five">Aizmirsu savu pieteikšanās informāciju</string>
+    <string name="contact_support_question_four">Kāpēc es nevaru pieteikties?</string>
+    <string name="contact_support_question_three">Es nevaru augšupielādēt fotoattēlus vai video</string>
+    <string name="contact_support_question_two">Palīdziet, mana vietne nedarbojas!</string>
+    <string name="contact_support_question_one">Kāda ir manas vietnes adrese?</string>
+    <string name="contact_support_suggestions">Vai neesat drošs, ko jautāt?</string>
+    <string name="contact_support_get_support">Sazināties ar atbalsta dienestu</string>
+    <string name="contact_support_first_message">Kā mēs varam jums palīdzēt?</string>
+    <string name="contact_support_input_placeholder">Sūtīt ziņu…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">Notīrīt</string>
+    <string name="jetpack_social_social_shares_remaining">Atlikušas %1$d sociālās kopīgošanas</string>
+    <string name="missing_splits_dialog_button">AIZVĒRT</string>
+    <string name="missing_splits_dialog_message">Programmā WordPress trūkst nepieciešamo komponentu, un tā ir jāpārinstalē no Google Play veikala.</string>
+    <string name="missing_splits_dialog_title">Instalēšana neizdevās</string>
+    <string name="campaign_detail_error_title">Kaut kas nogāja greizi</string>
+    <string name="campaign_listing_page_error_title">Kaut kas ir nogājis greizi</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Kaut kas nogāja greizi, nevarēja ielādēt kampaņas</string>
+    <string name="domain_transfer_card_menu_hide_this">Slēpt šo</string>
+    <string name="domain_transfer_card_cta">Pārcelt savus domēnus</string>
+    <string name="domain_transfer_card_caption">Kā jūs varbūt zināt, Google Domains tika pārdots Squarespace. Pārceliet savus domēnus uz WordPress.com tagad, un mēs segsim visas pārneses maksas, kā arī nodrošināsim papildu gadu jūsu domēna reģistrācijai.</string>
+    <string name="domain_transfer_card_sub_title">Atgūstiet savus Google domēnus</string>
+    <string name="domain_transfer_card_title">Jaunumi</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Pievienot kontus</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Sociālā kopīgošana</string>
+    <string name="prepublishing_nudges_social_action">Sociālā kopīgošana</string>
+    <string name="sharing">Sociālie tīkli</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Dalīties ar %1$d kontiem</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Dalīties ar %1$d no %2$d kontiem</string>
+    <string name="jetpack_social_social_shares_title_single_account">Dalīties ar %1$s</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Nedalīties sociālajos tīklos</string>
+    <string name="post_settings_jetpack_social_share_message_description">Pielāgojiet ziņojumu, ko vēlaties kopīgot. Ja šeit nepievienosiet savu tekstu, mēs izmantosim ziņas nosaukumu kā ziņojumu.</string>
+    <string name="post_settings_jetpack_social_share_message_title">Pielāgot ziņojumu</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Ne tagad</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Pievienot kontus</string>
+    <string name="gutenberg_native_insert_video_block">Ievietot video bloku</string>
+    <string name="gutenberg_native_insert_image_block">Ievietot attēlu bloku</string>
+    <string name="gutenberg_native_insert_gallery_block">Ievietot galerijas bloku</string>
+    <string name="gutenberg_native_insert_audio_block">Ievietot audio bloku</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Izveidot</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">Jūs vēl neesat izveidojis nevienu kampaņu. Klikšķiniet uz \"veidot\", lai sāktu.</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">Jums nav kampaņu</string>
+    <string name="blaze_campaign_details_page_title">Kampaņas detaļas</string>
+    <string name="blaze_campaigns_page_title">Blaze kampaņas</string>
+    <string name="budget_campaign_stats">Budžets</string>
+    <string name="clicks_campaign_stats">Klikšķi</string>
+    <string name="impressions_campaign_stats">Iespaidi</string>
+    <string name="campaign_status_scheduled">IEPLĀNOTS</string>
+    <string name="campaign_status_in_moderation">MODERĀCIJĀ</string>
+    <string name="campaign_status_canceled">ATCELTS</string>
+    <string name="campaign_status_rejected">NORAIDĪTS</string>
+    <string name="campaign_status_completed">PABEIGTS</string>
+    <string name="campaign_status_active">AKTĪVS</string>
+    <string name="blaze_campaigns_card_footer_label">Izveidot kampaņu</string>
+    <string name="blaze_campaigns_card_title">Blaze kampaņa</string>
+    <string name="promote_blaze_flow_error">Blaze plūsmas veicināšanu nevarēja ielādēt</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Palieliniet datplūsmu, automātiski kopīgojot savas ziņas ar draugiem sociālajos tīklos.</string>
+    <string name="menu_close_editor">Aizvērt redaktoru</string>
+    <string name="menu_redo_context">Atkārtot pēdējo izmaiņu</string>
     <string name="menu_undo_context">Atcelt pēdējās izmaiņas</string>
+    <string name="jetpack_social_social_shares_remaining_one">Atlikusi 1 sociālā kopīgošana</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">Abonēt, lai kopīgotu vairāk</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Palieliniet datplūsmu, automātiski kopīgojot savus ziņojumus ar draugiem sociālajos tīklos.</string>
+    <string name="post_settings_jetpack_social_header">Sociālā kopīgošana</string>
     <string name="gutenberg_native_s_detached">%s atdalīts</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Sinhronizēto modeļu rediģēšana programmā %s iOS ierīcē vēl netiek atbalstīta.</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Sinhronizēto modeļu rediģēšana programmā %s Android ierīcē vēl netiek atbalstīta.</string>
@@ -2839,6 +2906,7 @@ Language: lv
     <string name="tabbar_accessibility_label_notifications">Paziņojumi. Pārvaldiet savus paziņojumus.</string>
     <string name="tabbar_accessibility_label_reader">Lasītājs. Sekojiet citu vietņu saturam.</string>
     <string name="tabbar_accessibility_label_my_site">Mana vietne. Skatiet savu vietni un pārvaldiet to, ieskaitot statistiku.</string>
+    <string name="my_site_btn_sharing">Sociālie</string>
     <string name="button_not_now">Ne tagad</string>
     <string name="media_error_internal_server_error">Augšupielādes kļūda. Mēģiniet lietotnes iestatījumos mainīt attēlu optimizēšanu</string>
     <string name="media_downloading">Notiek multivides saglabāšana šajā ierīcē</string>

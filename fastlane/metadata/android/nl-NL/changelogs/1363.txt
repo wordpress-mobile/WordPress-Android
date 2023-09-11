@@ -1,5 +1,0 @@
-23.0:
-- De zichtbare ruimte tussen de geselecteerde galerijblokken en de toolbar verwijderd
-- De galerijbijschriftknop verborgen op mobiele apparaten.
-- Het juiste galerijblok blijft geselecteerd bij het toevoegen van media
-- Een probleem bij het installeren van de plugin verholpen waardoor de app zou crashen

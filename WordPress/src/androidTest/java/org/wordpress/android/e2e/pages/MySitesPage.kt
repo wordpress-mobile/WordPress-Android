@@ -3,7 +3,6 @@ package org.wordpress.android.e2e.pages
 import android.view.View
 import android.widget.Checkable
 import android.widget.TextView
-import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
@@ -82,10 +81,7 @@ class MySitesPage {
 
     fun goToPosts() {
         goToMenuTab()
-        clickQuickActionOrSiteMenuItem(
-            R.id.quick_action_posts_button,
-            R.string.my_site_btn_blog_posts
-        )
+        clickSiteMenuItem(R.string.my_site_btn_blog_posts)
     }
 
     fun goToActivityLog() {
@@ -152,19 +148,17 @@ class MySitesPage {
         goToMenuTab()
 
         // Using RecyclerViewActions.click doesn't work for some reason when quick actions are displayed.
-        if (WPSupportUtils.isElementDisplayed(R.id.quick_actions_card)) {
-            WPSupportUtils.clickOn(Espresso.onView(ViewMatchers.withText(R.string.backup)))
-        } else {
-            clickItemWithText(R.string.backup)
-        }
+        clickItemWithText(R.string.backup)
     }
 
     fun goToStats(): StatsPage {
         goToMenuTab()
-        val statsButton = Espresso.onView(Matchers.allOf(
-            ViewMatchers.withText(R.string.stats),
-            ViewMatchers.withId(R.id.my_site_item_primary_text)
-        ))
+        val statsButton = Espresso.onView(
+            Matchers.allOf(
+                ViewMatchers.withText(R.string.stats),
+                ViewMatchers.withId(R.id.my_site_item_primary_text)
+            )
+        )
         WPSupportUtils.clickOn(statsButton)
         WPSupportUtils.idleFor(4000)
         WPSupportUtils.dismissJetpackAdIfPresent()
@@ -177,7 +171,7 @@ class MySitesPage {
 
     fun goToMedia() {
         goToMenuTab()
-        clickQuickActionOrSiteMenuItem(R.id.quick_action_media_button, R.string.media)
+        clickSiteMenuItem(R.string.media)
     }
 
     fun createPost() {
@@ -215,20 +209,13 @@ class MySitesPage {
     }
 
     /**
-     * Clicks on the "Quick Action" item or the Site menu item if the quick actions card is hidden.
-     * Needed because locating site menu items by text fails if the quick actions are available.
-     * @param quickActionItemId Id of the quick actions menu item.
+     * Clicks on the Site menu item
      * @param siteMenuItemString String resource id of the site menu item.
      */
-    private fun clickQuickActionOrSiteMenuItem(
-        @IdRes quickActionItemId: Int,
+    private fun clickSiteMenuItem(
         @StringRes siteMenuItemString: Int
     ) {
-        if (WPSupportUtils.isElementDisplayed(quickActionItemId)) {
-            WPSupportUtils.clickOn(quickActionItemId)
-        } else {
-            clickItemWithText(siteMenuItemString)
-        }
+        clickItemWithText(siteMenuItemString)
     }
 
     companion object {
@@ -299,45 +286,6 @@ class MySitesPage {
         WPSupportUtils.clickOn(elementID)
     }
 
-    // "Domains" Dashboard Card
-
-    fun scrollToDomainsCard(): MySitesPage {
-        return scrollToCard(R.id.dashboard_card_domain_cta)
-    }
-
-    fun tapDomainsCard(): DomainsScreen {
-        tapCard(R.id.dashboard_card_domain_cta)
-        return DomainsScreen()
-    }
-
-    fun assertDomainsCard(): MySitesPage {
-        Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.dashboard_card_domain_cta),
-                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.dashboard_cards)),
-                ViewMatchers.hasDescendant(ViewMatchers.withId(R.id.dashboard_domain_card_more)),
-                ViewMatchers.hasDescendant(ViewMatchers.withId(R.id.dashboard_card_domain_image)),
-
-                ViewMatchers.hasDescendant(
-                    Matchers.allOf(
-                        ViewMatchers.withText(R.string.dashboard_card_domain_title),
-                        ViewMatchers.withId(R.id.dashboard_card_domain_title),
-                    )
-                ),
-
-                ViewMatchers.hasDescendant(
-                    Matchers.allOf(
-                        ViewMatchers.withText(R.string.dashboard_card_domain_sub_title),
-                        ViewMatchers.withId(R.id.dashboard_card_domain_sub_title),
-                    )
-                )
-            )
-        )
-            .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
-
-        return this
-    }
-
     // "Pages" Dashboard Card
 
     fun scrollToPagesCard(): MySitesPage {
@@ -401,19 +349,6 @@ class MySitesPage {
         return scrollToCard(R.id.dashboard_card_activity_log)
     }
 
-    fun tapViewAllActivity(): ActivityLogScreen {
-        val viewAllActivityButton = Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.dashboard_card_activity_log)),
-                ViewMatchers.withText(R.string.dashboard_activity_card_footer_link),
-                ViewMatchers.withId(R.id.link_label),
-            )
-        )
-
-        WPSupportUtils.clickOn(viewAllActivityButton)
-        return ActivityLogScreen()
-    }
-
     fun tapActivity(activityPartial: String): EventScreen {
         val activityRow = Espresso.onView(
             Matchers.allOf(
@@ -440,13 +375,6 @@ class MySitesPage {
                 ),
 
                 ViewMatchers.hasDescendant(ViewMatchers.withId(R.id.my_site_card_toolbar_more)),
-
-                ViewMatchers.hasDescendant(
-                    Matchers.allOf(
-                        ViewMatchers.withText(R.string.dashboard_activity_card_footer_link),
-                        ViewMatchers.withId(R.id.link_label),
-                    )
-                )
             )
         )
             .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))

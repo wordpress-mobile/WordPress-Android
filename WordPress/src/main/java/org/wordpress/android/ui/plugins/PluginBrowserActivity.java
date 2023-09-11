@@ -76,7 +76,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     private SearchView mSearchView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.plugin_browser_activity);

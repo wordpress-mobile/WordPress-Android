@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.TaskStackBuilder;
 import androidx.preference.PreferenceManager;
 
@@ -60,7 +61,7 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.share_intent_receiver_activity);

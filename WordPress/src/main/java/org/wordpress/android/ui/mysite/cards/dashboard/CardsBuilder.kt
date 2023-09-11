@@ -10,7 +10,6 @@ import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingP
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder
-import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardDomainCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -22,7 +21,6 @@ class CardsBuilder @Inject constructor(
     private val bloggingPromptCardBuilder: BloggingPromptCardBuilder,
     private val domainTransferCardBuilder: DomainTransferCardBuilder,
     private val blazeCardBuilder: BlazeCardBuilder,
-    private val dashboardDomainCardBuilder: DashboardDomainCardBuilder,
     private val plansCardBuilder: PlansCardBuilder,
     private val pagesCardBuilder: PagesCardBuilder,
     private val activityCardBuilder: ActivityCardBuilder
@@ -47,10 +45,6 @@ class CardsBuilder @Inject constructor(
 
                 if(dashboardCardsBuilderParams.blazeCardBuilderParams != null){
                     add(blazeCardBuilder.build(dashboardCardsBuilderParams.blazeCardBuilderParams))
-                }
-
-                dashboardDomainCardBuilder.build(dashboardCardsBuilderParams.dashboardCardDomainBuilderParams)?.let {
-                    add(it)
                 }
 
                 plansCardBuilder.build(dashboardCardsBuilderParams.dashboardCardPlansBuilderParams)?.let {

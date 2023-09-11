@@ -7,6 +7,7 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -22,7 +23,7 @@ public class ReaderVideoViewerActivity extends LocaleAwareActivity {
     private ProgressBar mProgress;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_video_player);
 

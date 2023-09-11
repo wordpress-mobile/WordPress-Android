@@ -58,7 +58,7 @@ class BlazeFeatureUtils @Inject constructor(
 
     fun shouldShowBlazeCardEntryPoint(siteModel: SiteModel): Boolean =
         isSiteBlazeEligible(siteModel) &&
-                !isPromoteWithBlazeCardHiddenByUser(siteModel.siteId)
+                !isBlazeCardHiddenByUser(siteModel.siteId)
 
     fun shouldShowBlazeCampaigns() = blazeManageCampaignFeatureConfig.isEnabled()
 
@@ -73,8 +73,8 @@ class BlazeFeatureUtils @Inject constructor(
         )
     }
 
-    fun hidePromoteWithBlazeCard(siteId: Long) {
-        appPrefsWrapper.setShouldHidePromoteWithBlazeCard(siteId, true)
+    fun hideBlazeCard(siteId: Long) {
+        appPrefsWrapper.setShouldHideBlazeCard(siteId, true)
     }
 
     fun trackEntryPointTapped(blazeFlowSource: BlazeFlowSource) {
@@ -84,8 +84,8 @@ class BlazeFeatureUtils @Inject constructor(
         )
     }
 
-    private fun isPromoteWithBlazeCardHiddenByUser(siteId: Long): Boolean {
-        return appPrefsWrapper.getShouldHidePromoteWithBlazeCard(siteId)
+    private fun isBlazeCardHiddenByUser(siteId: Long): Boolean {
+        return appPrefsWrapper.hideBlazeCard(siteId)
     }
 
     fun trackOverlayDisplayed(blazeFlowSource: BlazeFlowSource) {

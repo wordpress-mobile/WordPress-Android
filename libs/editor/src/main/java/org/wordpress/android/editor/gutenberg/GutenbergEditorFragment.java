@@ -195,7 +195,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @SuppressWarnings("unchecked")
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getGutenbergContainerFragment() == null) {
@@ -561,7 +561,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnCustomerSupportOptionsListener() {
                     @Override
                     public void onContactCustomerSupport() {
-                        mEditorFragmentListener.onContactCustomerSupport();
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                mEditorFragmentListener.onContactCustomerSupport();
+                            });
+                        }
                     }
 
                     @Override

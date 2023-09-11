@@ -144,7 +144,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private CommentModel mComment;
     private SiteModel mSite;
 
-    private Note mNote;
+    @Nullable private Note mNote;
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
     private TextView mTxtStatus;
@@ -224,7 +224,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -979,7 +979,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     /*
      * approve, disapprove, spam, or trash the current comment
      */
-    private void moderateComment(CommentStatus newStatus) {
+    private void moderateComment(@NonNull CommentStatus newStatus) {
         if (!isAdded() || mComment == null) {
             return;
         }
