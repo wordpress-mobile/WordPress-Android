@@ -2907,7 +2907,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.TAKE_VIDEO:
                     Uri videoUri = data.getData();
                     mEditorMedia.addNewMediaToEditorAsync(videoUri, true);
-                    mEditorTracker.trackAddMediaFromDevice(mSite, true, true, videoUri);
                     break;
                 case RequestCodes.MEDIA_SETTINGS:
                     if (mEditorFragment instanceof AztecEditorFragment) {
@@ -2988,7 +2987,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
             Uri capturedImageUri = Uri.fromFile(f);
             if (capturedImageUri != null) {
                 mEditorMedia.addNewMediaToEditorAsync(capturedImageUri, true);
-                mEditorTracker.trackAddMediaFromDevice(mSite, true, false, capturedImageUri);
             } else {
                 ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
             }
