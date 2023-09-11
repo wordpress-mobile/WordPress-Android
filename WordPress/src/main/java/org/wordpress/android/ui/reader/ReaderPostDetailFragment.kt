@@ -479,9 +479,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onResume() {
         super.onResume()
-        if (isVisible) {
-            replaceActivityToolbarWithCollapsingToolbar()
-        }
+        replaceActivityToolbarWithCollapsingToolbar()
     }
 
     private fun replaceActivityToolbarWithCollapsingToolbar() {
