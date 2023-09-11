@@ -11,7 +11,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.DateUtils.isSameDay
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeature
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import java.util.Date
 import javax.inject.Inject
@@ -21,7 +21,7 @@ class BloggingPromptsSettingsHelper @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
-    private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig,
+    private val bloggingPromptsEnhancementsFeature: BloggingPromptsEnhancementsFeature,
     private val analyticsTracker: AnalyticsTrackerWrapper,
 ) {
     fun getPromptsCardEnabledLiveData(
@@ -55,14 +55,14 @@ class BloggingPromptsSettingsHelper @Inject constructor(
         val siteId = selectedSiteRepository.getSelectedSite()?.localId()?.value ?: return false
 
         // if the enhancements is turned off, consider the prompts user-enabled, otherwise check the user setting
-        val isPromptsSettingUserEnabled = !bloggingPromptsEnhancementsFeatureConfig.isEnabled() ||
+        val isPromptsSettingUserEnabled = !bloggingPromptsEnhancementsFeature.isEnabled() ||
                 isPromptsSettingEnabled(siteId)
 
         return isPromptsFeatureAvailable() && isPromptsSettingUserEnabled && !isPromptSkippedForToday()
     }
 
     fun shouldShowPromptsSetting(): Boolean {
-        return isPromptsFeatureAvailable() && bloggingPromptsEnhancementsFeatureConfig.isEnabled()
+        return isPromptsFeatureAvailable() && bloggingPromptsEnhancementsFeature.isEnabled()
     }
 
     private fun isPromptSkippedForToday(): Boolean {

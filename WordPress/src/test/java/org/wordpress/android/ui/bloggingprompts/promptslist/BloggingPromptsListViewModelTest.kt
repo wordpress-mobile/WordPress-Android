@@ -20,7 +20,7 @@ import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggin
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Failure
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeature
 import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
@@ -38,7 +38,7 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     @Mock
-    private lateinit var bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig
+    private lateinit var bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeature
 
     lateinit var viewModel: BloggingPromptsListViewModel
 
