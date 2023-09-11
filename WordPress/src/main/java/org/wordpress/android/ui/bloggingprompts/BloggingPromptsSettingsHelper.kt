@@ -12,7 +12,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.DateUtils.isSameDay
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeature
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsFeature
 import java.util.Date
 import javax.inject.Inject
 
@@ -20,7 +20,7 @@ class BloggingPromptsSettingsHelper @Inject constructor(
     private val bloggingRemindersStore: BloggingRemindersStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    private val bloggingPromptsFeature: BloggingPromptsFeature,
     private val bloggingPromptsEnhancementsFeature: BloggingPromptsEnhancementsFeature,
     private val analyticsTracker: AnalyticsTrackerWrapper,
 ) {
@@ -48,7 +48,7 @@ class BloggingPromptsSettingsHelper @Inject constructor(
 
     fun isPromptsFeatureAvailable(): Boolean {
         val selectedSite = selectedSiteRepository.getSelectedSite() ?: return false
-        return bloggingPromptsFeatureConfig.isEnabled() && selectedSite.isUsingWpComRestApi
+        return bloggingPromptsFeature.isEnabled() && selectedSite.isUsingWpComRestApi
     }
 
     suspend fun shouldShowPromptsFeature(): Boolean {

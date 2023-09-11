@@ -99,7 +99,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig;
+import org.wordpress.android.util.config.BloggingPromptsFeature;
 import org.wordpress.android.util.config.ManageCategoriesFeatureConfig;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
@@ -185,7 +185,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject Dispatcher mDispatcher;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
+    @Inject BloggingPromptsFeature bloggingPromptsFeature;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;

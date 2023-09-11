@@ -26,7 +26,7 @@ import org.wordpress.android.ui.notifications.DismissNotificationReceiver
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsFeature
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.workers.reminder.ReminderNotification
@@ -40,7 +40,7 @@ class PromptReminderNotifier @Inject constructor(
     val siteStore: SiteStore,
     val accountStore: AccountStore,
     val reminderNotificationManager: ReminderNotificationManager,
-    val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    val bloggingPromptsFeature: BloggingPromptsFeature,
     val bloggingPromptsStore: BloggingPromptsStore,
     val bloggingRemindersAnalyticsTracker: BloggingRemindersAnalyticsTracker,
     val htmlCompatWrapper: HtmlCompatWrapper,
@@ -165,7 +165,7 @@ class PromptReminderNotifier @Inject constructor(
 
     suspend fun shouldNotify(siteId: Int): Boolean {
         val hasAccessToken = accountStore.hasAccessToken()
-        val isBloggingPromptsEnabled = bloggingPromptsFeatureConfig.isEnabled()
+        val isBloggingPromptsEnabled = bloggingPromptsFeature.isEnabled()
         val siteModel = siteStore.getSiteByLocalId(siteId)
         val bloggingRemindersModel = bloggingRemindersStore.bloggingRemindersModel(siteId).first()
         val hasOptedInBloggingPromptsReminders = siteModel != null && bloggingRemindersModel.isPromptIncluded
