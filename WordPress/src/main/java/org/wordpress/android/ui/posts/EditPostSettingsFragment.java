@@ -561,8 +561,7 @@ public class EditPostSettingsFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO
-                              || requestCode == RequestCodes.TAKE_VIDEO))) {
+        if (data != null) {
             Bundle extras;
 
             switch (requestCode) {

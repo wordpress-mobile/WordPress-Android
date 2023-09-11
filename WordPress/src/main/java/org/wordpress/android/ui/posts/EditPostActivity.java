@@ -1481,10 +1481,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         mMenuView = null;
                     }
                     break;
-                case WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE:
-                    mEditorMedia.addNewMediaItemsToEditorAsync(mEditorMedia.getDroppedMediaUris(), false);
-                    mEditorMedia.getDroppedMediaUris().clear();
-                    break;
             }
         }
     }
@@ -2909,7 +2905,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     mEditorMedia.addNewMediaItemsToEditorAsync(WPMediaUtils.retrieveMediaUris(data), false);
                     break;
                 case RequestCodes.TAKE_VIDEO:
-                    mEditorMedia.addFreshlyTakenVideoToEditor();
+                    Uri videoUri = data.getData();
+                    mEditorMedia.addNewMediaToEditorAsync(videoUri, true);
                     break;
                 case RequestCodes.MEDIA_SETTINGS:
                     if (mEditorFragment instanceof AztecEditorFragment) {
@@ -2985,20 +2982,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private void addLastTakenPicture() {
         try {
-            // TODO why do we scan the file twice? Also how come it can result in OOM?
             WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
             File f = new File(mMediaCapturePath);
             Uri capturedImageUri = Uri.fromFile(f);
             if (capturedImageUri != null) {
                 mEditorMedia.addNewMediaToEditorAsync(capturedImageUri, true);
-                final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                scanIntent.setData(capturedImageUri);
-                sendBroadcast(scanIntent);
             } else {
                 ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
             }
         } catch (RuntimeException | OutOfMemoryError e) {
             AppLog.e(T.EDITOR, e);
+        } finally {
+            mMediaCapturePath = null;
         }
     }
 
@@ -3271,11 +3266,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onMediaDropped(final ArrayList<Uri> mediaUris) {
         mEditorMedia.setDroppedMediaUris(mediaUris);
-        if (PermissionUtils
-                .checkAndRequestStoragePermission(this, WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE)) {
-            mEditorMedia.addNewMediaItemsToEditorAsync(mEditorMedia.getDroppedMediaUris(), false);
-            mEditorMedia.getDroppedMediaUris().clear();
-        }
+        ArrayList<Uri> media = new ArrayList<>(mediaUris);
+        mEditorMedia.addNewMediaItemsToEditorAsync(media, false);
+        mEditorMedia.getDroppedMediaUris().clear();
     }
 
     @Override
