@@ -201,17 +201,14 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     }
 
     fun onTermUploadedComplete(event: OnTermUploaded) {
-        // Sometimes the API will return a success response with a null name which we will
-        // treat as an error because without a name, there is no category
-        val isError = event.isError || event.term?.name == null
-        val message = if (isError) {
+        val message = if (event.isError) {
             R.string.adding_cat_failed
         } else {
             R.string.adding_cat_success
         }
         _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(message))))
 
-        if (!isError) {
+        if (!event.isError) {
             val currentState = uiState.value as UiState
             val selectedIds = currentState.categoriesListItemUiState.toMutableList()
                 .filter { x -> x.checked }
