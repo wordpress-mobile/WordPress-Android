@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.avatars
 
 import android.annotation.SuppressLint
-import androidx.annotation.AttrRes
 import androidx.annotation.DimenRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.avatars.TrainOfAvatarsViewType.AVATAR
