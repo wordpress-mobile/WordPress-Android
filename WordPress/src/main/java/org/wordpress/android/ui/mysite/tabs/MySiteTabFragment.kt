@@ -377,8 +377,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
         is SiteNavigationAction.StartWPComLoginForJetpackStats ->
             ActivityLauncher.loginForJetpackStats(this@MySiteTabFragment)
-        is SiteNavigationAction.OpenJetpackSettings ->
-            ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
         is SiteNavigationAction.OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
         is SiteNavigationAction.AddNewStory ->
             ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)

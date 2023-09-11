@@ -115,8 +115,10 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
-import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
+import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
+import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
@@ -319,6 +321,12 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var activityLogCardViewModelSlice: ActivityLogCardViewModelSlice
+
+    @Mock
+    lateinit var siteItemsViewModelSlice: SiteItemsViewModelSlice
+
+    @Mock
+    lateinit var mySiteInfoItemBuilder: MySiteInfoItemBuilder
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
@@ -536,7 +544,9 @@ class MySiteViewModelTest : BaseUnitTest() {
             pagesCardViewModelSlice,
             todaysStatsViewModelSlice,
             postsCardViewModelSlice,
-            activityLogCardViewModelSlice
+            activityLogCardViewModelSlice,
+            siteItemsViewModelSlice,
+            mySiteInfoItemBuilder
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1770,180 +1780,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             .isNotEmpty
     }
 
-    /* ITEM CLICK */
-
-    @Test
-    fun `activity item click emits OpenActivity navigation event`() {
-        invokeItemClickAction(ListItemAction.ACTIVITY_LOG)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenActivityLog(site))
-    }
-
-    @Test
-    fun `scan item click emits OpenScan navigation event`() {
-        invokeItemClickAction(ListItemAction.SCAN)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenScan(site))
-    }
-
-    @Test
-    fun `plan item click emits OpenPlan navigation event`() {
-        invokeItemClickAction(ListItemAction.PLAN)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPlan(site))
-    }
-
-    @Test
-    fun `posts item click emits OpenPosts navigation event`() {
-        invokeItemClickAction(ListItemAction.POSTS)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPosts(site))
-    }
-
-    @Test
-    fun `pages item click emits OpenPages navigation event`() {
-        invokeItemClickAction(ListItemAction.PAGES)
-
-        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPages(site))
-    }
-
-    @Test
-    fun `admin item click emits OpenAdmin navigation event`() {
-        invokeItemClickAction(ListItemAction.ADMIN)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenAdmin(site))
-    }
-
-    @Test
-    fun `sharing item click emits OpenSharing navigation event`() {
-        invokeItemClickAction(ListItemAction.SHARING)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenSharing(site))
-    }
-
-    @Test
-    fun `site settings item click emits OpenSiteSettings navigation event`() {
-        invokeItemClickAction(ListItemAction.SITE_SETTINGS)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenSiteSettings(site))
-    }
-
-    @Test
-    fun `themes item click emits OpenThemes navigation event`() {
-        invokeItemClickAction(ListItemAction.THEMES)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenThemes(site))
-    }
-
-    @Test
-    fun `plugins item click emits OpenPlugins navigation event`() {
-        invokeItemClickAction(ListItemAction.PLUGINS)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPlugins(site))
-    }
-
-    @Test
-    fun `media item click emits OpenMedia navigation event`() {
-        invokeItemClickAction(ListItemAction.MEDIA)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenMedia(site))
-    }
-
-    @Test
-    fun `comments item click emits OpenUnifiedComments navigation event`() {
-        invokeItemClickAction(ListItemAction.COMMENTS)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenUnifiedComments(site))
-    }
-
-    @Test
-    fun `view site item click emits OpenSite navigation event`() {
-        invokeItemClickAction(ListItemAction.VIEW_SITE)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenSite(site))
-    }
-
-    @Test
-    fun `stats item click emits OpenStats navigation event if site is WPCom and has access token`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        site.setIsWPCom(true)
-
-        invokeItemClickAction(ListItemAction.STATS)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenStats(site))
-    }
-
-    @Test
-    fun `stats item click emits OpenStats navigation event if site is Jetpack and has access token`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        site.setIsJetpackConnected(true)
-        site.setIsJetpackInstalled(true)
-
-        invokeItemClickAction(ListItemAction.STATS)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenStats(site))
-    }
-
-    @Test
-    fun `given new site QS stats task, when stats item clicked, then CHECK_STATS task completed`() {
-        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-            .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
-
-        invokeItemClickAction(ListItemAction.STATS)
-
-        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.CHECK_STATS)
-    }
-
-    @Test
-    fun `given existing site QS stats task, when stats item clicked, then CHECK_STATS task completed`() {
-        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-            .thenReturn(QuickStartExistingSiteTask.CHECK_STATS)
-
-        invokeItemClickAction(ListItemAction.STATS)
-
-        verify(quickStartRepository).completeTask(QuickStartExistingSiteTask.CHECK_STATS)
-    }
-
-    @Test
-    fun `stats item click emits StartWPComLoginForJetpackStats if site is Jetpack and doesn't have access token`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
-        site.setIsJetpackConnected(true)
-
-        invokeItemClickAction(ListItemAction.STATS)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.StartWPComLoginForJetpackStats)
-    }
-
-    @Test
-    fun `stats item click emits ConnectJetpackForStats if neither Jetpack, nor WPCom and no access token`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
-        site.setIsJetpackConnected(false)
-        site.setIsWPCom(false)
-        site.origin = SiteModel.ORIGIN_XMLRPC
-
-        invokeItemClickAction(ListItemAction.STATS, isSiteUsingWpComRestApi = false)
-
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.ConnectJetpackForStats(site))
-    }
-
-    @Test
-    fun `when site item is clicked, then event is tracked`() = test {
-        invokeItemClickAction(ListItemAction.POSTS)
-
-        verify(analyticsTrackerWrapper).track(
-            Stat.MY_SITE_MENU_ITEM_TAPPED,
-            mapOf("type" to ListItemAction.POSTS.trackingLabel)
-        )
-    }
-
-    @Test
-    fun `when blaze item click, then event is tracked`() {
-        invokeItemClickAction(ListItemAction.BLAZE)
-
-        verify(blazeCardViewModelSlice).onBlazeMenuItemClick()
-    }
-
     /* ITEM VISIBILITY */
 
     @Test
@@ -1967,7 +1803,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `scan menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
-        setUpSiteItemBuilder()
+        setUpSiteItemBuilder(scanAvailable = true)
         initSelectedSite()
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = true, backupAvailable = false)
@@ -1977,7 +1813,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `backup menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
-        setUpSiteItemBuilder()
+        setUpSiteItemBuilder(backupAvailable = true)
         initSelectedSite()
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = true)
@@ -2308,7 +2144,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + site menu default tab variant, when dashboard cards items, then qs card not exists`() {
-        setUpSiteItemBuilder()
+        setUpSiteItemBuilder(shouldEnableFocusPoint = true)
 
         initSelectedSite(
             isMySiteTabsBuildConfigEnabled = true,
@@ -2356,12 +2192,11 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + site menu default tab variant, when site menu cards and items, then qs card exists`() {
-        setUpSiteItemBuilder()
-
         initSelectedSite(
             isMySiteTabsBuildConfigEnabled = true,
             initialScreen = MySiteTabType.SITE_MENU.label
         )
+        setUpSiteItemBuilder(shouldEnableFocusPoint = true, defaultTab = MySiteTabType.SITE_MENU)
 
         val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
@@ -2733,23 +2568,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         }
     }
 
-    private fun invokeItemClickAction(
-        action: ListItemAction,
-        isSiteUsingWpComRestApi: Boolean = true
-    ) {
-        var clickAction: ((ListItemAction) -> Unit)? = null
-        doAnswer {
-            val params = (it.arguments.filterIsInstance<SiteItemsBuilderParams>()).first()
-            clickAction = params.onClick
-            listOf<MySiteCardAndItem>()
-        }.whenever(siteItemsBuilder).build(any<SiteItemsBuilderParams>())
-
-        initSelectedSite(isSiteUsingWpComRestApi = isSiteUsingWpComRestApi)
-
-        assertThat(clickAction).isNotNull
-        clickAction!!.invoke(action)
-    }
-
     @Suppress("LongParameterList")
     private fun initSelectedSite(
         isMySiteTabsBuildConfigEnabled: Boolean = true,
@@ -2765,7 +2583,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         shouldShowJetpackBranding: Boolean = true
     ) {
         whenever(
-            siteItemsBuilder.build(InfoItemBuilderParams(isStaleMessagePresent = showStaleMessage))
+            mySiteInfoItemBuilder.build(InfoItemBuilderParams(isStaleMessagePresent = showStaleMessage))
         ).thenReturn(if (showStaleMessage) InfoItem(title = UiStringText("")) else null)
         quickStartUpdate.value = QuickStartUpdate(
             categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
@@ -2822,10 +2640,32 @@ class MySiteViewModelTest : BaseUnitTest() {
         }.whenever(siteInfoHeaderCardBuilder).buildSiteInfoCard(any())
     }
 
-    private fun setUpSiteItemBuilder() {
+    private fun setUpSiteItemBuilder(
+        backupAvailable: Boolean = false,
+        scanAvailable: Boolean = false,
+        shouldEnableFocusPoint: Boolean = false,
+        defaultTab: MySiteTabType = MySiteTabType.SITE_MENU,
+        activeTask: QuickStartTask? = null
+    ) {
+        val siteItemsBuilderParams = SiteItemsBuilderParams(
+            site = site,
+            activeTask = activeTask,
+            backupAvailable = backupAvailable,
+            scanAvailable = scanAvailable,
+            enableFocusPoints = shouldEnableFocusPoint,
+            onClick = mock(),
+            isBlazeEligible = true)
+        doAnswer { siteItemsBuilderParams}
+            .whenever(siteItemsViewModelSlice).buildItems(
+                defaultTab = defaultTab,
+                site = site,
+                activeTask = activeTask,
+                backupAvailable = backupAvailable,
+                scanAvailable = scanAvailable
+            )
         doAnswer {
             initSiteItems(it)
-        }.whenever(siteItemsBuilder).build(any<SiteItemsBuilderParams>())
+        }.whenever(siteItemsBuilder).build(siteItemsBuilderParams)
     }
 
     private fun initSiteInfoCard(mockInvocation: InvocationOnMock): SiteInfoHeaderCard {

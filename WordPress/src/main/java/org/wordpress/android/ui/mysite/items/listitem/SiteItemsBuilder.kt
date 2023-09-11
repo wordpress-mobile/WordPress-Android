@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.items
+package org.wordpress.android.ui.mysite.items.listitem
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.QuickStartStore
@@ -7,16 +7,12 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.COMMENTS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.MEDIA
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.POSTS
-import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -27,9 +23,6 @@ class SiteItemsBuilder @Inject constructor(
     private val quickStartRepository: QuickStartRepository,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 ) {
-    fun build(params: InfoItemBuilderParams) = params.isStaleMessagePresent.takeIf { it }
-            ?.let { InfoItem(title = UiStringRes(R.string.my_site_dashboard_stale_message)) }
-
     @Suppress("LongMethod")
     fun build(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
         val contentSiteItems = getContentSiteItems(params)
@@ -42,10 +35,10 @@ class SiteItemsBuilder @Inject constructor(
         params: SiteItemsBuilderParams
     ): List<MySiteCardAndItem> {
         val showPagesFocusPoint = params.activeTask == QuickStartNewSiteTask.REVIEW_PAGES &&
-                params.enablePagesFocusPoint
+                params.enableFocusPoints
         val uploadMediaTask = quickStartRepository.quickStartType
                 .getTaskFromString(QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL)
-        val showMediaFocusPoint = params.activeTask == uploadMediaTask && params.enableMediaFocusPoint
+        val showMediaFocusPoint = params.activeTask == uploadMediaTask && params.enableFocusPoints
 
         return listOfNotNull(
                 CategoryHeaderItem(UiStringRes(R.string.my_site_header_content)),
@@ -77,7 +70,7 @@ class SiteItemsBuilder @Inject constructor(
 
         val checkStatsTask = quickStartRepository.quickStartType
             .getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL)
-        val showStatsFocusPoint = params.activeTask == checkStatsTask && params.enableStatsFocusPoint
+        val showStatsFocusPoint = params.activeTask == checkStatsTask && params.enableFocusPoints
 
         return listOfNotNull(
             CategoryHeaderItem(UiStringRes(R.string.my_site_header_traffic)),

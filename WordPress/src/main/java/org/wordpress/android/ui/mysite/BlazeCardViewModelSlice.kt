@@ -28,8 +28,6 @@ class BlazeCardViewModelSlice @Inject constructor(
     private val _refresh = MutableLiveData<Event<Boolean>>()
     val refresh = _refresh
 
-    fun isSiteBlazeEligible() = blazeFeatureUtils.isSiteBlazeEligible(selectedSiteRepository.getSelectedSite()!!)
-
     fun getBlazeCardBuilderParams(blazeCardUpdate: BlazeCardUpdate?): BlazeCardBuilderParams? {
         return blazeCardUpdate?.let {
             if (it.blazeEligible) {
@@ -171,14 +169,6 @@ class BlazeCardViewModelSlice @Inject constructor(
         blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.DASHBOARD_CARD)
         _onNavigation.value =
             Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
-    }
-
-    fun onBlazeMenuItemClick(): SiteNavigationAction {
-        blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.MENU_ITEM)
-        if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {
-            return SiteNavigationAction.OpenCampaignListingPage(CampaignListingPageSource.MENU_ITEM)
-        }
-        return SiteNavigationAction.OpenPromoteWithBlazeOverlay(BlazeFlowSource.MENU_ITEM)
     }
 }
 

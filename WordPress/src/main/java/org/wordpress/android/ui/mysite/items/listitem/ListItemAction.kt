@@ -4,7 +4,6 @@ enum class ListItemAction (val trackingLabel: String) {
     ACTIVITY_LOG("activity_log"),
     BACKUP("backup"),
     SCAN("scan"),
-    JETPACK_SETTINGS("jetpack_settings"),
     PLAN("plan"),
     POSTS("posts"),
     PAGES("pages"),
@@ -18,7 +17,6 @@ enum class ListItemAction (val trackingLabel: String) {
     STATS("stats"),
     MEDIA("media"),
     COMMENTS("comments"),
-    VIEW_SITE("view_site"),
     BLAZE("blaze"),
     ME("me"),
 }

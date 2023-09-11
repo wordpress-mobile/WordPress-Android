@@ -136,9 +136,7 @@ sealed class MySiteCardAndItemBuilderParams {
         val activeTask: QuickStartTask? = null,
         val backupAvailable: Boolean = false,
         val scanAvailable: Boolean = false,
-        val enableStatsFocusPoint: Boolean = false,
-        val enablePagesFocusPoint: Boolean = false,
-        val enableMediaFocusPoint: Boolean = false,
+        val enableFocusPoints: Boolean = false,
         val onClick: (ListItemAction) -> Unit,
         val isBlazeEligible: Boolean = false
     ) : MySiteCardAndItemBuilderParams()
