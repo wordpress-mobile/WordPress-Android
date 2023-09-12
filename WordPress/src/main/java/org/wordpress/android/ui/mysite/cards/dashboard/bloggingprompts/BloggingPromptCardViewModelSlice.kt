@@ -41,7 +41,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     val onSnackbarMessage = _onSnackbarMessage as LiveData<Event<SnackbarMessageHolder>>
 
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
-    val onNavigation = _onNavigation
+    val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
 
     fun getBuilderParams(bloggingPromptUpdate: MySiteUiState.PartialState.BloggingPromptUpdate?):
             MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams {
