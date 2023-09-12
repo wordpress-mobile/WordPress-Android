@@ -681,7 +681,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public boolean onMenuItemActionCollapse(MenuItem item) {
+    public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
         mMediaGridFragment.showActionableEmptyViewButton(true);
         invalidateOptionsMenu();

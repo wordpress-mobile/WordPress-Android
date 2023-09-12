@@ -376,7 +376,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onMenuItemActionCollapse(MenuItem item) {
+    public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
         mIsSearching = false;
         showActionableEmptyViewForSearch(false);
         showFabWithConditions();

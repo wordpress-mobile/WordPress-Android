@@ -589,7 +589,7 @@ public class SitePickerActivity extends LocaleAwareActivity
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 disableSearchMode();
                 mSearchView.setOnQueryTextListener(null);
                 return true;

@@ -335,7 +335,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+    public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
         mSearchView.setOnQueryTextListener(null);
         hideListFragment();
         mViewModel.setSearchQuery("");
