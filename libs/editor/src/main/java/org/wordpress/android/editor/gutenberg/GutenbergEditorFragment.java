@@ -1067,11 +1067,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        if (menu != null) {
-            MenuItem debugMenuItem = menu.findItem(R.id.debugmenu);
-            debugMenuItem.setVisible(BuildConfig.DEBUG);
-        }
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        MenuItem debugMenuItem = menu.findItem(R.id.debugmenu);
+        debugMenuItem.setVisible(BuildConfig.DEBUG);
 
         super.onPrepareOptionsMenu(menu);
     }

@@ -461,23 +461,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         // TODO: disable undo/redo in media mode
         boolean canRedo = mContent.history.redoValid();
         boolean canUndo = mContent.history.undoValid();
 
-        if (menu != null) {
-            MenuItem redoItem = menu.findItem(R.id.redo);
-            if (redoItem != null) {
-                setUndoRedoAppearance(redoItem, canRedo);
-            }
-
-            MenuItem undoItem = menu.findItem(R.id.undo);
-            if (undoItem != null) {
-                setUndoRedoAppearance(undoItem, canUndo);
-            }
+        MenuItem redoItem = menu.findItem(R.id.redo);
+        if (redoItem != null) {
+            setUndoRedoAppearance(redoItem, canRedo);
         }
 
+        MenuItem undoItem = menu.findItem(R.id.undo);
+        if (undoItem != null) {
+            setUndoRedoAppearance(undoItem, canUndo);
+        }
 
         super.onPrepareOptionsMenu(menu);
     }

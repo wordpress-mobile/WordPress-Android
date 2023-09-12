@@ -139,7 +139,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.getItem(0).setEnabled(!mInviteOperationInProgress); // here pass the index of send menu item
         super.onPrepareOptionsMenu(menu);
     }
