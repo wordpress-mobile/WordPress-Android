@@ -138,7 +138,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         if (shouldShowActivateMenuItem()) {
             getMenuInflater().inflate(R.menu.theme_web, menu);
         }

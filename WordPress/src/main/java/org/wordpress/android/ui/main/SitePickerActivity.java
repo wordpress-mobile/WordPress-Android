@@ -241,7 +241,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.site_picker, menu);
         mMenuSearch = menu.findItem(R.id.menu_search);

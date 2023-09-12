@@ -526,7 +526,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.media_settings, menu);
         return super.onCreateOptionsMenu(menu);
     }

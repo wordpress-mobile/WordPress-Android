@@ -393,7 +393,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.plugin_detail, menu);
         return super.onCreateOptionsMenu(menu);
     }

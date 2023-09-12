@@ -595,7 +595,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         mMenu = menu;
         getMenuInflater().inflate(R.menu.media_browser, menu);
 

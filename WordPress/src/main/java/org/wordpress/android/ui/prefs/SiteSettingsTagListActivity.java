@@ -214,7 +214,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.tag_list, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);

@@ -468,57 +468,54 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.threaded_comments_menu, menu);
 
         mConversationViewModel.getUpdateFollowUiState().observe(this, uiState -> {
-                    if (menu != null) {
-                        MenuItem bellItem = menu.findItem(R.id.manage_notifications_item);
-                        MenuItem followItem = menu.findItem(R.id.follow_item);
+            MenuItem bellItem = menu.findItem(R.id.manage_notifications_item);
+            MenuItem followItem = menu.findItem(R.id.follow_item);
 
-                        if (bellItem != null && followItem != null) {
-                            ShimmerFrameLayout shimmerView =
-                                    followItem.getActionView().findViewById(R.id.shimmer_view_container);
-                            TextView followText = followItem.getActionView().findViewById(R.id.follow_button);
+            if (bellItem != null && followItem != null) {
+                ShimmerFrameLayout shimmerView =
+                        followItem.getActionView().findViewById(R.id.shimmer_view_container);
+                TextView followText = followItem.getActionView().findViewById(R.id.follow_button);
 
-                            followItem.getActionView().setOnClickListener(
-                                    uiState.getOnFollowTapped() != null
-                                            ? v -> uiState.getOnFollowTapped().invoke()
-                                            : null
-                            );
+                followItem.getActionView().setOnClickListener(
+                        uiState.getOnFollowTapped() != null
+                                ? v -> uiState.getOnFollowTapped().invoke()
+                                : null
+                );
 
-                            bellItem.setOnMenuItemClickListener(item -> {
-                                uiState.getOnManageNotificationsTapped().invoke();
-                                return true;
-                            });
+                bellItem.setOnMenuItemClickListener(item -> {
+                    uiState.getOnManageNotificationsTapped().invoke();
+                    return true;
+                });
 
-                            followItem.getActionView().setEnabled(uiState.getFlags().isMenuEnabled());
-                            followText.setEnabled(uiState.getFlags().isMenuEnabled());
-                            bellItem.setEnabled(uiState.getFlags().isMenuEnabled());
+                followItem.getActionView().setEnabled(uiState.getFlags().isMenuEnabled());
+                followText.setEnabled(uiState.getFlags().isMenuEnabled());
+                bellItem.setEnabled(uiState.getFlags().isMenuEnabled());
 
-                            if (uiState.getFlags().getShowMenuShimmer()) {
-                                if (!shimmerView.isShimmerVisible()) {
-                                    shimmerView.showShimmer(true);
-                                } else if (!shimmerView.isShimmerStarted()) {
-                                    shimmerView.startShimmer();
-                                }
-                            } else {
-                                shimmerView.hideShimmer();
-                            }
-
-                            followItem.setVisible(uiState.getFlags().isFollowMenuVisible());
-                            bellItem.setVisible(uiState.getFlags().isBellMenuVisible());
-
-                            setResult(RESULT_OK, new Intent().putExtra(
-                                    FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY,
-                                    uiState.getFlags()
-                            ));
-                        }
+                if (uiState.getFlags().getShowMenuShimmer()) {
+                    if (!shimmerView.isShimmerVisible()) {
+                        shimmerView.showShimmer(true);
+                    } else if (!shimmerView.isShimmerStarted()) {
+                        shimmerView.startShimmer();
                     }
+                } else {
+                    shimmerView.hideShimmer();
                 }
-        );
+
+                followItem.setVisible(uiState.getFlags().isFollowMenuVisible());
+                bellItem.setVisible(uiState.getFlags().isBellMenuVisible());
+
+                setResult(RESULT_OK, new Intent().putExtra(
+                        FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY,
+                        uiState.getFlags()
+                ));
+            }
+        });
         return true;
     }
 

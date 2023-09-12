@@ -205,7 +205,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
             getMenuInflater().inflate(R.menu.share, menu);
         }
