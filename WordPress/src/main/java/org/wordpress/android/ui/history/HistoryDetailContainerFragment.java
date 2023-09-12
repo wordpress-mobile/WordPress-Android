@@ -240,7 +240,7 @@ public class HistoryDetailContainerFragment extends Fragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.history_load) {
             Intent intent = new Intent();
             intent.putExtra(KEY_REVISION, mRevision);

@@ -500,7 +500,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.undo) {
             if (mContent.getVisibility() == View.VISIBLE) {
                 mContent.undo();

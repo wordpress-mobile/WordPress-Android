@@ -1075,7 +1075,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.debugmenu) {
             getGutenbergContainerFragment().showDevOptionsDialog();
             return true;
