@@ -56,12 +56,13 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
 
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
 
-    private val site: SiteModel = SiteModel()
-
-    private val siteLocalId = 1
-    private val siteUrl = "http://site.com"
-    private val siteIcon = "http://site.com/icon.jpg"
-    private val siteName = "Site"
+    private val site: SiteModel = SiteModel().apply {
+        id = 1
+        siteId = 1L
+        url = "http://site.com"
+        name = "Site"
+        iconUrl = "http://site.com/icon.jpg"
+    }
 
     @Before
     fun setup() {
@@ -74,11 +75,6 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
             bloggingPromptsSettingsHelper,
             bloggingPromptsCardTrackHelper
         )
-        site.id = siteLocalId
-        site.url = siteUrl
-        site.name = siteName
-        site.iconUrl = siteIcon
-        site.siteId = siteLocalId.toLong()
 
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
 
