@@ -2265,9 +2265,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            mActionMode = actionMode;
-            MenuInflater inflater = actionMode.getMenuInflater();
+        public boolean onCreateActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
+            mActionMode = mode;
+            MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.list_editor, menu);
 
             // we cant use support version of action mode, since we start it on view
