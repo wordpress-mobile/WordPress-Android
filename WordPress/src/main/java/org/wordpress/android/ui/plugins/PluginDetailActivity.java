@@ -406,7 +406,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             if (isPluginStateChangedSinceLastConfigurationDispatch()) {
                 // It looks like we have some unsaved changes, we need to force a configuration dispatch since the
