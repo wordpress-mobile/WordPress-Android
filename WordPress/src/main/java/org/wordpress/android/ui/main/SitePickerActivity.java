@@ -576,7 +576,7 @@ public class SitePickerActivity extends LocaleAwareActivity
 
         mMenuSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
                 if (!getAdapter().getIsInSearchMode()) {
                     enableSearchMode();
                     mMenuEdit.setVisible(false);

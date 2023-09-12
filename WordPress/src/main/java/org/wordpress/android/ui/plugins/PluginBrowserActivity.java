@@ -328,7 +328,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+    public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
         showListFragment(PluginListType.SEARCH);
         mSearchView.setOnQueryTextListener(this);
         return true;

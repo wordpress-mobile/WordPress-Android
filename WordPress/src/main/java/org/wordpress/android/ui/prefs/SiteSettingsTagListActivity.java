@@ -368,7 +368,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onMenuItemActionExpand(MenuItem item) {
+    public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
         mIsSearching = true;
         showActionableEmptyViewForSearch(true);
         hideFabIfShowing();
