@@ -20,7 +20,6 @@ import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggin
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Failure
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
-import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
 class BloggingPromptsListViewModelTest : BaseUnitTest() {
@@ -118,7 +117,7 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given list item is clicked and enhancements feature flag is ENABLED, then open editor screen`() = test {
+    fun `given list item is clicked, then open editor screen`() = test {
         val promptListItem = BloggingPromptsListFixtures.UI_MODEL
 
         val result = ArrayList<ActionEvent>()
@@ -133,24 +132,6 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
 
         job.cancel()
     }
-
-    @Test
-    fun `given list item is clicked and enhancements feature flag is DISABLED, should NOT open editor screen`() =
-        test {
-            val promptListItem = BloggingPromptsListFixtures.UI_MODEL
-
-            val result = ArrayList<ActionEvent>()
-            val job = launch {
-                viewModel.actionEvents.collectLatest {
-                    result.add(it)
-                }
-            }
-
-            viewModel.onPromptListItemClicked(promptListItem)
-            assertTrue(result.isEmpty())
-
-            job.cancel()
-        }
 
     private fun mockNetworkAvailability(isNetworkAvailable: Boolean) {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(isNetworkAvailable)

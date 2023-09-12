@@ -8,15 +8,10 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.INFORMATION
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.ONBOARDING
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
-import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.config.BloggingPromptsSocialFeature
 import javax.inject.Inject
-import com.google.android.material.R as MaterialR
 
-class BloggingPromptsOnboardingUiStateMapper @Inject constructor(
-    private val bloggingPromptsSocialFeature: BloggingPromptsSocialFeature
-) {
+class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
     @Suppress("MagicNumber")
     fun mapReady(
         dialogType: DialogType,
@@ -31,28 +26,14 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor(
             dummyRespondent
         )
 
-        val trailingLabel = if (bloggingPromptsSocialFeature.isEnabled()) {
-            UiStringRes(
+        val trailingLabel = UiStringRes(
                 R.string.my_site_blogging_prompt_card_view_answers
             )
-        } else {
-            UiStringPluralRes(
-                0,
-                R.string.my_site_blogging_prompt_card_number_of_answers_one,
-                R.string.my_site_blogging_prompt_card_number_of_answers_other,
-                dummyRespondents.size
-            )
-        }
 
         val avatarsTrain = dummyRespondents.take(3).map { respondent -> AvatarItem(respondent) }
             .toMutableList<TrainOfAvatarsItem>()
             .also { list ->
-                val labelColor = if (bloggingPromptsSocialFeature.isEnabled()) {
-                    R.color.primary_emphasis_medium_selector
-                } else {
-                    MaterialR.attr.colorOnSurface
-                }
-
+                val labelColor = R.color.primary_emphasis_medium_selector
                 list.add(TrailingLabelTextItem(trailingLabel, labelColor))
             }
 
