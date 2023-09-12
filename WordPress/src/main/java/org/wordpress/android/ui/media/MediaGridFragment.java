@@ -871,7 +871,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
             if (item.getItemId() == R.id.mnu_confirm_selection) {
                 setResultIdsAndFinish();
             }
