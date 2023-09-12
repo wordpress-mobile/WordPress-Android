@@ -175,7 +175,7 @@ public class ReaderBlogFragment extends Fragment
      * note this will only be called for followed blogs
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.reader_subs, menu);
 

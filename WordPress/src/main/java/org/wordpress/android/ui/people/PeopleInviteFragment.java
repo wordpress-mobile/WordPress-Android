@@ -133,7 +133,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.people_invite, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
