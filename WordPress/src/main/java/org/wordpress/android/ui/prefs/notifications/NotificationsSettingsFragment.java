@@ -319,7 +319,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 mSearchMenuItemCollapsed = true;
                 configureBlogsSettings(mBlogsCategory, false);
                 configureFollowedBlogsSettings(mFollowedBlogsCategory, false);
