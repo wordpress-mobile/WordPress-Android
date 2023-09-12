@@ -16,16 +16,16 @@ ext {
 
 ext {
     // libs
-    automatticAboutVersion = '51-9728b7d6d32021e429cff209e009ef8ad2d537b2'
+    automatticAboutVersion = 'trunk-35fb1df3a46706d1164f6ec613174bc08e1b7925'
     automatticRestVersion = '1.0.8'
-    automatticStoriesVersion = '740-b388ab59b9b232830719327b7871b124cb7dcaf2'
-    automatticTracksVersion = '191-b0fadb04690950e84cadbdd4d3d58957f8a970ab'
+    automatticStoriesVersion = 'trunk-c8e238b2d3e8fd3c08869823a27a83eea18a3261'
+    automatticTracksVersion = 'trunk-9b14afdadf548a3dfdb42385b7cb7b0347668198'
     gutenbergMobileVersion = 'v1.103.1'
-    wordPressAztecVersion = '1059-9911f0182da699c9f26fbaf6789aa7cc85e96a77'
-    wordPressFluxCVersion = '2825-6a6d9e0437b32c4d4a6dbe77dd97e6542e2c95de'
-    wordPressLoginVersion = '122-e2a28c0dc003429d8f71dd7b63ba0eb27de43469'
+    wordPressAztecVersion = 'trunk-531732934fd9393ad52e77ee45d05643088f2c01'
+    wordPressFluxCVersion = 'trunk-27d8055b67b3e7860981756aae998abe1bfcd79f'
+    wordPressLoginVersion = 'trunk-9c9785be0fb6db0ba0b02f1a910e3cf72b7164f6'
     wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressUtilsVersion = '135-aa5f7db8db8998ce9900195a037c913f13e0945f'
+    wordPressUtilsVersion = 'trunk-b9f9192d943f36d1fe888b195d9c001e037a7335'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 
     // debug
