@@ -12,7 +12,9 @@ import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingP
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MySiteSourceManager @Inject constructor(
     private val currentAvatarSource: CurrentAvatarSource,
     private val domainRegistrationSource: DomainRegistrationSource,
