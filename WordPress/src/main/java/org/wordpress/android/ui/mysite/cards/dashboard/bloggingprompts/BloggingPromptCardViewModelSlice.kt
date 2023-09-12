@@ -29,7 +29,6 @@ import javax.inject.Named
 class BloggingPromptCardViewModelSlice @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val mySiteSourceManager: MySiteSourceManager,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
@@ -42,9 +41,11 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
 
     private lateinit var scope: CoroutineScope
+    private lateinit var mySiteSourceManager: MySiteSourceManager
 
-    fun initialize(scope: CoroutineScope) {
+    fun initialize(scope: CoroutineScope, mySiteSourceManager: MySiteSourceManager) {
         this.scope = scope
+        this.mySiteSourceManager = mySiteSourceManager
     }
 
     fun getBuilderParams(bloggingPromptUpdate: MySiteUiState.PartialState.BloggingPromptUpdate?):
