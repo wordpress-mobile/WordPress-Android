@@ -109,6 +109,8 @@ import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHe
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
+import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
+import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -328,6 +330,12 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var mySiteInfoItemBuilder: MySiteInfoItemBuilder
 
+    @Mock
+    lateinit var personalizeCardBuilder: PersonalizeCardBuilder
+
+    @Mock
+    lateinit var personalizeCardViewModelSlice: PersonalizeCardViewModelSlice
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -487,6 +495,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(todaysStatsViewModelSlice.getTodaysStatsBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(postsCardViewModelSlice.getPostsCardBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(activityLogCardViewModelSlice.getActivityLogCardBuilderParams(anyOrNull())).thenReturn(mock())
+        whenever(personalizeCardViewModelSlice.getBuilderParams()).thenReturn(mock())
+        whenever(personalizeCardBuilder.build(any())).thenReturn(mock())
 
         viewModel = MySiteViewModel(
             networkUtilsWrapper,
@@ -546,7 +556,9 @@ class MySiteViewModelTest : BaseUnitTest() {
             postsCardViewModelSlice,
             activityLogCardViewModelSlice,
             siteItemsViewModelSlice,
-            mySiteInfoItemBuilder
+            mySiteInfoItemBuilder,
+            personalizeCardViewModelSlice,
+            personalizeCardBuilder
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
