@@ -108,7 +108,7 @@ public class SiteSettingsTagDetailFragment extends android.app.Fragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_trash && mListener != null) {
             mListener.onRequestDeleteTag(mTerm);
             return true;
