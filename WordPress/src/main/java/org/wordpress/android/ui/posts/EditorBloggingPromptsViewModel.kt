@@ -8,7 +8,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
-import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeature
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -18,7 +17,6 @@ class EditorBloggingPromptsViewModel
 @Inject constructor(
     private val bloggingPromptsStore: BloggingPromptsStore,
     private val bloggingPromptsEditorBlockMapper: BloggingPromptsEditorBlockMapper,
-    private val bloggingPromptsEnhancementsFeature: BloggingPromptsEnhancementsFeature,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private val _onBloggingPromptLoaded = MutableLiveData<Event<EditorLoadedPrompt>>()
@@ -40,11 +38,7 @@ class EditorBloggingPromptsViewModel
     private fun loadPrompt(site: SiteModel, promptId: Int) = launch {
         val prompt = bloggingPromptsStore.getPromptById(site, promptId).first().model
         prompt?.let {
-            val content = if (bloggingPromptsEnhancementsFeature.isEnabled()) {
-                bloggingPromptsEditorBlockMapper.map(it)
-            } else {
-                it.content
-            }
+            val content = bloggingPromptsEditorBlockMapper.map(it)
             _onBloggingPromptLoaded.postValue(
                 Event(
                     EditorLoadedPrompt(
@@ -59,9 +53,7 @@ class EditorBloggingPromptsViewModel
 
     private fun createPromptTags(promptId: Int): List<String> = mutableListOf<String>().apply {
         add(BloggingPromptsPostTagProvider.BLOGGING_PROMPT_TAG)
-        if (bloggingPromptsEnhancementsFeature.isEnabled()) {
-            add(BloggingPromptsPostTagProvider.promptIdTag(promptId))
-        }
+        add(BloggingPromptsPostTagProvider.promptIdTag(promptId))
     }
 
     data class EditorLoadedPrompt(val promptId: Int, val content: String, val tags: List<String>)

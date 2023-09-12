@@ -23,7 +23,6 @@ import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeature
 import org.wordpress.android.util.config.BloggingPromptsFeature
 import java.util.Date
 
@@ -42,9 +41,6 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     lateinit var bloggingPromptsFeature: BloggingPromptsFeature
 
     @Mock
-    lateinit var bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeature
-
-    @Mock
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     private lateinit var helper: BloggingPromptsSettingsHelper
@@ -56,7 +52,6 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
             selectedSiteRepository,
             appPrefsWrapper,
             bloggingPromptsFeature,
-            bloggingPromptsEnhancementsFeatureConfig,
             analyticsTracker
         )
     }
@@ -162,12 +157,10 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given enhancements FF on and prompts setting off, when isPromptsFeatureActive, then returns false`() = test {
+    fun `given prompts setting off, when isPromptsFeatureActive, then returns false`() = test {
         // prompts feature is available
         whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
-
-        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
 
         val model = createRemindersModel(isPromptsCardEnabled = false)
         whenever(bloggingRemindersStore.bloggingRemindersModel(any())).doAnswer {
@@ -181,13 +174,11 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
 
     @Suppress("MaxLineLength")
     @Test
-    fun `given enhancements FF on and prompts setting on and skipped for today, when isPromptsFeatureActive, then returns false`() =
+    fun `given prompts setting on and skipped for today, when isPromptsFeatureActive, then returns false`() =
         test {
             // prompts feature is available
             whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
             whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
-
-            whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
 
             val model = createRemindersModel(isPromptsCardEnabled = true)
             whenever(bloggingRemindersStore.bloggingRemindersModel(any())).doAnswer {
@@ -201,30 +192,14 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
             assertThat(result).isFalse
         }
 
-    @Test
-    fun `given enhancements FF off and skipped for today, when isPromptsFeatureActive, then returns false`() = test {
-        // prompts feature is available
-        whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
-
-        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(false)
-
-        whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(Date())
-
-        val result = helper.shouldShowPromptsFeature()
-
-        assertThat(result).isFalse
-    }
 
     @Suppress("MaxLineLength")
     @Test
-    fun `given enhancements FF on and prompts setting on and not skipped for today, when isPromptsFeatureActive, then returns false`() =
+    fun `given prompts setting on and not skipped for today, when isPromptsFeatureActive, then returns false`() =
         test {
             // prompts feature is available
             whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
             whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
-
-            whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
 
             val model = createRemindersModel(isPromptsCardEnabled = true)
             whenever(bloggingRemindersStore.bloggingRemindersModel(any())).doAnswer {
@@ -238,21 +213,6 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
             assertThat(result).isTrue
         }
 
-    @Test
-    fun `given enhancements FF off and not skipped for today, when isPromptsFeatureActive, then returns false`() =
-        test {
-            // prompts feature is available
-            whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
-            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
-
-            whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(false)
-
-            whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(null)
-
-            val result = helper.shouldShowPromptsFeature()
-
-            assertThat(result).isTrue
-        }
 
     @Test
     fun `when trackPromptsCardEnabledSettingTapped is called, then it tracks with correct properties`() {
@@ -284,26 +244,10 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
 
     @Suppress("MaxLineLength")
     @Test
-    fun `given prompts feature is available and enhancements FF is off, when shouldShowPromptsSetting, then returns false`() {
-        // prompts available
-        whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
-
-        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(false)
-
-        val result = helper.shouldShowPromptsSetting()
-
-        assertThat(result).isFalse
-    }
-
-    @Suppress("MaxLineLength")
-    @Test
     fun `given prompts feature is available and enhancements FF is on, when shouldShowPromptsSetting, then returns true`() {
         // prompts available
         whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
-
-        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
 
         val result = helper.shouldShowPromptsSetting()
 

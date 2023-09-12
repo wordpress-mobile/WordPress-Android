@@ -20,7 +20,6 @@ import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggin
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Failure
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeature
 import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
@@ -37,9 +36,6 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
-    @Mock
-    private lateinit var bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeature
-
     lateinit var viewModel: BloggingPromptsListViewModel
 
     @Before
@@ -52,8 +48,7 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
             itemMapper,
             tracker,
             networkUtilsWrapper,
-            bloggingPromptsEnhancementsFeatureConfig,
-            testDispatcher(),
+            testDispatcher()
         )
     }
 
@@ -125,7 +120,6 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
     @Test
     fun `given list item is clicked and enhancements feature flag is ENABLED, then open editor screen`() = test {
         val promptListItem = BloggingPromptsListFixtures.UI_MODEL
-        mockBloggingPromptsEnhancementsFeatureFlagEnabled(true)
 
         val result = ArrayList<ActionEvent>()
         val job = launch {
@@ -144,7 +138,6 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
     fun `given list item is clicked and enhancements feature flag is DISABLED, should NOT open editor screen`() =
         test {
             val promptListItem = BloggingPromptsListFixtures.UI_MODEL
-            mockBloggingPromptsEnhancementsFeatureFlagEnabled(false)
 
             val result = ArrayList<ActionEvent>()
             val job = launch {
@@ -161,9 +154,5 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
 
     private fun mockNetworkAvailability(isNetworkAvailable: Boolean) {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(isNetworkAvailable)
-    }
-
-    private fun mockBloggingPromptsEnhancementsFeatureFlagEnabled(isEnabled: Boolean) {
-        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(isEnabled)
     }
 }
