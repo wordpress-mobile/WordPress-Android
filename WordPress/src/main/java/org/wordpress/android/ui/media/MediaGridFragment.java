@@ -850,7 +850,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private final class ActionModeCallback implements ActionMode.Callback {
         @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        public boolean onCreateActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
             mActionMode = mode;
             int selectCount = getAdapter().getSelectedItemCount();
             MenuInflater inflater = mode.getMenuInflater();
