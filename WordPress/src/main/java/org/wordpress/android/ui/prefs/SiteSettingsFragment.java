@@ -2289,8 +2289,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            actionMode.setTitle(getString(
+        public boolean onPrepareActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
+            mode.setTitle(getString(
                     R.string.site_settings_list_editor_action_mode_title,
                     getAdapter().getItemsSelected().size())
             );
