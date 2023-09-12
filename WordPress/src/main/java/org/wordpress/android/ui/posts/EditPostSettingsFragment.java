@@ -487,7 +487,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
         SiteModel site = getSite();
         PostImmutableModel post = getEditPostRepository().getPost();
         if (site == null || post == null) {
