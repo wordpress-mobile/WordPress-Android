@@ -90,6 +90,8 @@ import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHe
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
+import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
+import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -205,7 +207,9 @@ class MySiteViewModel @Inject constructor(
     private val postsCardViewModelSlice: PostsCardViewModelSlice,
     private val activityLogCardViewModelSlice: ActivityLogCardViewModelSlice,
     private val siteItemsViewModelSlice: SiteItemsViewModelSlice,
-    private val mySiteInfoItemBuilder: MySiteInfoItemBuilder
+    private val mySiteInfoItemBuilder: MySiteInfoItemBuilder,
+    private val personalizeCardViewModelSlice: PersonalizeCardViewModelSlice,
+    private val personalizeCardBuilder: PersonalizeCardBuilder
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -631,6 +635,8 @@ class MySiteViewModel @Inject constructor(
 
         val jetpackBadge = buildJetpackBadgeIfEnabled()
 
+        val personalizeCard = personalizeCardBuilder.build(personalizeCardViewModelSlice.getBuilderParams())
+
         return mapOf(
             MySiteTabType.ALL to orderForDisplay(
                 infoItem = infoItem,
@@ -660,7 +666,8 @@ class MySiteViewModel @Inject constructor(
                 },
                 siteItems = listOf(),
                 jetpackBadge = jetpackBadge,
-                jetpackSwitchMenu = jetpackSwitchMenu
+                jetpackSwitchMenu = jetpackSwitchMenu,
+                personalizeCard = personalizeCard
             )
         )
     }
@@ -736,7 +743,8 @@ class MySiteViewModel @Inject constructor(
         siteItems: List<MySiteCardAndItem>,
         jetpackBadge: JetpackBadge? = null,
         jetpackFeatureCard: JetpackFeatureCard? = null,
-        jetpackSwitchMenu: MySiteCardAndItem.Card.JetpackSwitchMenu? = null
+        jetpackSwitchMenu: MySiteCardAndItem.Card.JetpackSwitchMenu? = null,
+        personalizeCard: MySiteCardAndItem.Card.PersonalizeCardModel? = null
     ): List<MySiteCardAndItem> {
         return mutableListOf<MySiteCardAndItem>().apply {
             infoItem?.let { add(infoItem) }
@@ -749,6 +757,7 @@ class MySiteViewModel @Inject constructor(
             if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
                 jetpackFeatureCard?.let { add(0, jetpackFeatureCard) }
             else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
+            personalizeCard?.let { add(personalizeCard) }
         }.toList()
     }
 
