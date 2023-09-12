@@ -311,7 +311,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
         mSearchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
                 mSearchMenuItemCollapsed = false;
                 configureBlogsSettings(mBlogsCategory, true);
                 configureFollowedBlogsSettings(mFollowedBlogsCategory, true);
