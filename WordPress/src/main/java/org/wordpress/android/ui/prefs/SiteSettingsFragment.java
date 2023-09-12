@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -2231,6 +2232,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private final class ActionModeCallback implements ActionMode.Callback {
         @Override
+        @SuppressLint("NonConstantResourceId")
         public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_delete:
