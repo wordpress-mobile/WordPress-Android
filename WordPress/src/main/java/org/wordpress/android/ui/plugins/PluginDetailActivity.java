@@ -399,7 +399,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         boolean showTrash = canPluginBeDisabledOrRemoved();
         menu.findItem(R.id.menu_trash).setVisible(showTrash);
         return super.onPrepareOptionsMenu(menu);

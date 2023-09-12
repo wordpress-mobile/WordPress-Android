@@ -251,7 +251,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         updateMenuItemVisibility();
         setupSearchView();

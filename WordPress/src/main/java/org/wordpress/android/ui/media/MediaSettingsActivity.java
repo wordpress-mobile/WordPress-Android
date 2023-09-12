@@ -532,7 +532,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         boolean showSaveMenu = mSite != null && !mSite.isPrivate() && !isMediaFromEditor();
         boolean showShareMenu = mSite != null && !mSite.isPrivate() && !isMediaFromEditor();
         boolean showTrashMenu = mSite != null && !isMediaFromEditor();
