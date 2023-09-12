@@ -251,7 +251,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
