@@ -751,13 +751,13 @@ class MySiteViewModel @Inject constructor(
             migrationSuccessCard?.let { add(migrationSuccessCard) }
             jetpackInstallFullPluginCard?.let { add(jetpackInstallFullPluginCard) }
             addAll(cards)
+            personalizeCard?.let { add(personalizeCard) }
             addAll(siteItems)
             jetpackBadge?.let { add(jetpackBadge) }
             jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
             if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
                 jetpackFeatureCard?.let { add(0, jetpackFeatureCard) }
             else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
-            personalizeCard?.let { add(personalizeCard) }
         }.toList()
     }
 
