@@ -191,7 +191,7 @@ public class ReaderBlogFragment extends Fragment
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 return true;
             }
         });
