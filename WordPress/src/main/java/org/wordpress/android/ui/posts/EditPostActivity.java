@@ -3865,7 +3865,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
+    public boolean onMenuOpened(int featureId, @NonNull Menu menu) {
         // This is a workaround for bag discovered on Chromebooks, where Enter key will not work in the toolbar menu
         // Editor fragments are messing with window focus, which causes keyboard events to get ignored
 
