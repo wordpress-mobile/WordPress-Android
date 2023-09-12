@@ -2231,8 +2231,8 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private final class ActionModeCallback implements ActionMode.Callback {
         @Override
-        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
+        public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
+            switch (item.getItemId()) {
                 case R.id.menu_delete:
                     SparseBooleanArray checkedItems = getAdapter().getItemsSelected();
 
