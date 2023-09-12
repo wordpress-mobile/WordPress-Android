@@ -470,7 +470,11 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(
+            @NonNull ContextMenu menu,
+            @NonNull View v,
+            @Nullable ContextMenu.ContextMenuInfo menuInfo
+    ) {
         if (mFeaturedImageRetryOverlay.getVisibility() == View.VISIBLE) {
             menu.add(0, RETRY_FEATURED_IMAGE_UPLOAD_MENU_ID, 0,
                     getString(R.string.post_settings_retry_featured_image));
