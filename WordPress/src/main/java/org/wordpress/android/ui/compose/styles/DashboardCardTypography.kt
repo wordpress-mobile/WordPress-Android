@@ -46,4 +46,11 @@ object DashboardCardTypography {
             fontWeight = FontWeight.Medium,
             color = colors.primary
         )
+
+    val standaloneText: TextStyle
+        @Composable
+        get() = MaterialTheme.typography.titleMedium.copy(
+            fontWeight = FontWeight.Medium,
+            color = colors.onSurface.copy(alpha = ContentAlpha.high)
+        )
 }
