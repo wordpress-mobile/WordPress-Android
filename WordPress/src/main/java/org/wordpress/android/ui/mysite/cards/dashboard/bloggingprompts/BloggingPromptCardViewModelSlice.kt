@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.BloggingPromptCardNavigationAction
@@ -21,27 +22,30 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Singleton
 
-@Singleton
 class BloggingPromptCardViewModelSlice @Inject constructor(
-    @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val mySiteSourceManager: MySiteSourceManager,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper
-) : ScopedViewModel(mainDispatcher) {
+) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage as LiveData<Event<SnackbarMessageHolder>>
 
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
+
+    private lateinit var scope: CoroutineScope
+
+    fun initialize(scope: CoroutineScope) {
+        this.scope = scope
+    }
 
     fun getBuilderParams(bloggingPromptUpdate: MySiteUiState.PartialState.BloggingPromptUpdate?):
             MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams {
@@ -99,10 +103,10 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     }
 
     private fun onBloggingPromptRemoveClick() {
-        launch {
+        scope.launch(bgDispatcher) {
             updatePromptsCardEnabled(isEnabled = false).join()
-            _onNavigation.value = Event(BloggingPromptCardNavigationAction
-                .CardRemoved(this@BloggingPromptCardViewModelSlice::onBloggingPromptUndoClick))
+            _onNavigation.postValue(Event(BloggingPromptCardNavigationAction
+                .CardRemoved(this@BloggingPromptCardViewModelSlice::onBloggingPromptUndoClick)))
         }
     }
 
@@ -111,7 +115,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         updatePromptsCardEnabled(true)
     }
 
-    private fun updatePromptsCardEnabled(isEnabled: Boolean) = launch {
+    private fun updatePromptsCardEnabled(isEnabled: Boolean) = scope.launch(bgDispatcher) {
         selectedSiteRepository.getSelectedSite()?.localId()?.value?.let { siteId ->
             bloggingPromptsSettingsHelper.updatePromptsCardEnabled(siteId, isEnabled)
             mySiteSourceManager.refreshBloggingPrompts(true)

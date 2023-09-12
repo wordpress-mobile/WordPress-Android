@@ -364,6 +364,7 @@ class MySiteViewModel @Inject constructor(
 
     init {
         dispatcher.register(this)
+        bloggingPromptCardViewModelSlice.initialize(viewModelScope)
     }
 
     @Suppress("LongParameterList")
