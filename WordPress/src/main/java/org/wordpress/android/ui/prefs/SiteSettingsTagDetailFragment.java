@@ -102,7 +102,7 @@ public class SiteSettingsTagDetailFragment extends android.app.Fragment {
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.menu_trash).setVisible(!mIsNewTerm);
     }
