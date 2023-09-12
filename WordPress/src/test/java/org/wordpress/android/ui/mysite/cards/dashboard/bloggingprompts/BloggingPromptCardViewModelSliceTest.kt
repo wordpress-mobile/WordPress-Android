@@ -191,6 +191,7 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
     @Test
     fun `given blogging prompt card, when remove button is clicked, prompt is removed and notifies card was removed`() =
         test {
+            viewModelSlice.initialize(testScope())
             val params = viewModelSlice.getBuilderParams(mock())
 
             params.onRemoveClick()
@@ -202,6 +203,7 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `given remove undo snackbar, when undo is clicked, then it tracks undo event`() = test {
+        viewModelSlice.initialize(testScope())
         val params = viewModelSlice.getBuilderParams(mock())
 
         params.onRemoveClick()
