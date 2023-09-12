@@ -43,6 +43,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         JETPACK_FEATURE_CARD,
         JETPACK_SWITCH_CARD,
         JETPACK_INSTALL_FULL_PLUGIN_CARD,
+        PERSONALIZE_CARD,
     }
 
     enum class DashboardCardType {
@@ -378,6 +379,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 ) : DashboardCard(dashboardCardType = DashboardCardType.DASHBOARD_PLANS_CARD)
             }
         }
+        data class PersonalizeCardModel(val onClick: () -> Unit)  : Card(Type.PERSONALIZE_CARD)
     }
 
     sealed class Item(
