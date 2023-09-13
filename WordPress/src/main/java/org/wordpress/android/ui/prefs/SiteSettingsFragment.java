@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -2231,8 +2232,9 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private final class ActionModeCallback implements ActionMode.Callback {
         @Override
-        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
+        @SuppressLint("NonConstantResourceId")
+        public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
+            switch (item.getItemId()) {
                 case R.id.menu_delete:
                     SparseBooleanArray checkedItems = getAdapter().getItemsSelected();
 
@@ -2265,9 +2267,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            mActionMode = actionMode;
-            MenuInflater inflater = actionMode.getMenuInflater();
+        public boolean onCreateActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
+            mActionMode = mode;
+            MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.list_editor, menu);
 
             // we cant use support version of action mode, since we start it on view
@@ -2289,8 +2291,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            actionMode.setTitle(getString(
+        public boolean onPrepareActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
+            mode.setTitle(getString(
                     R.string.site_settings_list_editor_action_mode_title,
                     getAdapter().getItemsSelected().size())
             );

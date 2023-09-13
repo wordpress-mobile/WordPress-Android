@@ -154,7 +154,7 @@ public class PluginListFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
         super.onCreateOptionsMenu(menu, inflater);
     }
