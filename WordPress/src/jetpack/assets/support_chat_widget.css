@@ -56,3 +56,7 @@ a.floating-button {
     transform: rotate(45deg);
     width: 26px;
 }
+
+.docsbot-chat-btn-send:disabled {
+    opacity: 0.3;
+}
