@@ -55,7 +55,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class HistoryDetailContainerFragment extends Fragment {
-    private ArrayList<Revision> mRevisions;
     private OnPageChangeListener mOnPageChangeListener;
     private Revision mRevision;
     private int mPosition;
@@ -100,19 +99,18 @@ public class HistoryDetailContainerFragment extends Fragment {
 
         mIsFragmentRecreated = savedInstanceState != null;
 
-        mapRevisions();
-
-        if (mRevisions != null) {
-            for (final Revision revision : mRevisions) {
+        ArrayList<Revision> revisions = mapRevisions();
+        if (revisions != null) {
+            for (final Revision revision : revisions) {
                 if (revision.getRevisionId() == mRevision.getRevisionId()) {
-                    mPosition = mRevisions.indexOf(revision);
+                    mPosition = revisions.indexOf(revision);
                 }
             }
         } else {
             throw new IllegalArgumentException("Revisions list extra is null in HistoryDetailContainerFragment");
         }
 
-        HistoryDetailFragmentAdapter adapter = new HistoryDetailFragmentAdapter(getChildFragmentManager(), mRevisions);
+        HistoryDetailFragmentAdapter adapter = new HistoryDetailFragmentAdapter(getChildFragmentManager(), revisions);
 
         if (mBinding != null) {
             mBinding.diffPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.SLIDE_OVER));
@@ -165,7 +163,8 @@ public class HistoryDetailContainerFragment extends Fragment {
         return mBinding.getRoot();
     }
 
-    private void mapRevisions() {
+    @Nullable
+    private ArrayList<Revision> mapRevisions() {
         if (getArguments() != null) {
             mRevision = getArguments().getParcelable(EXTRA_CURRENT_REVISION);
 
@@ -176,7 +175,9 @@ public class HistoryDetailContainerFragment extends Fragment {
             for (final long revisionId : previousRevisionsIds) {
                 revisionModels.add(mPostStore.getRevisionById(revisionId, postId, siteId));
             }
-            mRevisions = mapRevisionModelsToRevisions(revisionModels);
+            return mapRevisionModelsToRevisions(revisionModels);
+        } else {
+            return null;
         }
     }
 
