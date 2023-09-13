@@ -11,6 +11,7 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 import org.wordpress.android.ui.blaze.blazepromote.ARG_BLAZE_FLOW_SOURCE
 import org.wordpress.android.ui.blaze.blazepromote.ARG_BLAZE_SHOULD_SHOW_OVERLAY
 import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity
+import org.wordpress.android.ui.mysite.personalisation.PersonalisationActivity
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -58,5 +59,9 @@ class ActivityNavigator @Inject constructor() {
         url: String
     ) {
         WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url)
+    }
+
+    fun openDashboardPersonalization(context: Context) {
+        context.startActivity(Intent(context, PersonalisationActivity::class.java))
     }
 }
