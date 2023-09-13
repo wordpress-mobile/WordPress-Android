@@ -268,12 +268,9 @@ public class HistoryDetailContainerFragment extends Fragment {
         final View fadeInView = isInVisualPreview(binding) ? binding.diffPager : binding.visualPreviewContainer;
         final View fadeOutView = isInVisualPreview(binding) ? binding.visualPreviewContainer : binding.diffPager;
         binding.visualPreviewContainer.smoothScrollTo(0, 0);
-        binding.visualPreviewContainer.post(new Runnable() {
-            @Override
-            public void run() {
-                AniUtils.fadeIn(fadeInView, Duration.SHORT);
-                AniUtils.fadeOut(fadeOutView, Duration.SHORT);
-            }
+        binding.visualPreviewContainer.post(() -> {
+            AniUtils.fadeIn(fadeInView, Duration.SHORT);
+            AniUtils.fadeOut(fadeOutView, Duration.SHORT);
         });
     }
 
