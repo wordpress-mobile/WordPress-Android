@@ -56,7 +56,6 @@ import javax.inject.Inject;
 
 public class HistoryDetailContainerFragment extends Fragment {
     private ArrayList<Revision> mRevisions;
-    private HistoryDetailFragmentAdapter mAdapter;
     private OnPageChangeListener mOnPageChangeListener;
     private Revision mRevision;
     private int mPosition;
@@ -113,11 +112,11 @@ public class HistoryDetailContainerFragment extends Fragment {
             throw new IllegalArgumentException("Revisions list extra is null in HistoryDetailContainerFragment");
         }
 
-        mAdapter = new HistoryDetailFragmentAdapter(getChildFragmentManager(), mRevisions);
+        HistoryDetailFragmentAdapter adapter = new HistoryDetailFragmentAdapter(getChildFragmentManager(), mRevisions);
 
         if (mBinding != null) {
             mBinding.diffPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.SLIDE_OVER));
-            mBinding.diffPager.setAdapter(mAdapter);
+            mBinding.diffPager.setAdapter(adapter);
             mBinding.diffPager.setCurrentItem(mPosition);
 
             mBinding.next.setOnClickListener(view -> {
@@ -159,8 +158,8 @@ public class HistoryDetailContainerFragment extends Fragment {
             mBinding.previous.setVisibility(isInVisualPreview ? View.INVISIBLE : View.VISIBLE);
             mBinding.next.setVisibility(isInVisualPreview ? View.INVISIBLE : View.VISIBLE);
 
-            refreshHistoryDetail(mBinding);
-            resetOnPageChangeListener(mBinding);
+            refreshHistoryDetail(mBinding, adapter);
+            resetOnPageChangeListener(mBinding, adapter);
         }
 
         return mBinding.getRoot();
@@ -281,7 +280,10 @@ public class HistoryDetailContainerFragment extends Fragment {
         }
     }
 
-    private void refreshHistoryDetail(@NonNull HistoryDetailContainerFragmentBinding binding) {
+    private void refreshHistoryDetail(
+            @NonNull HistoryDetailContainerFragmentBinding binding,
+            @NonNull HistoryDetailFragmentAdapter adapter
+    ) {
         if (mRevision.getTotalAdditions() > 0) {
             binding.diffAdditions.setText(String.valueOf(mRevision.getTotalAdditions()));
             binding.diffAdditions.setVisibility(View.VISIBLE);
@@ -297,10 +299,13 @@ public class HistoryDetailContainerFragment extends Fragment {
         }
 
         binding.previous.setEnabled(mPosition != 0);
-        binding.next.setEnabled(mPosition != mAdapter.getCount() - 1);
+        binding.next.setEnabled(mPosition != adapter.getCount() - 1);
     }
 
-    private void resetOnPageChangeListener(@NonNull HistoryDetailContainerFragmentBinding binding) {
+    private void resetOnPageChangeListener(
+            @NonNull HistoryDetailContainerFragmentBinding binding,
+            @NonNull HistoryDetailFragmentAdapter adapter
+    ) {
         if (mOnPageChangeListener != null) {
             binding.diffPager.removeOnPageChangeListener(mOnPageChangeListener);
         } else {
@@ -327,8 +332,8 @@ public class HistoryDetailContainerFragment extends Fragment {
                     }
 
                     mPosition = position;
-                    mRevision = mAdapter.getRevisionAtPosition(mPosition);
-                    refreshHistoryDetail(binding);
+                    mRevision = adapter.getRevisionAtPosition(mPosition);
+                    refreshHistoryDetail(binding, adapter);
                     showHistoryTimeStampInToolbar();
                 }
             };
