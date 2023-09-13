@@ -75,31 +75,36 @@ fun PersonalisationContent(cardStateList: List<DashboardCardState>, modifier: Mo
             .padding(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            modifier = Modifier.padding(start = 16.dp),
-            text = stringResource(id = R.string.personalisation_screen_description),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color(0x99000000),
-        )
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
+            item {
+                Text(
+                    modifier = Modifier.padding(start = 16.dp),
+                    text = stringResource(id = R.string.personalisation_screen_description),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0x99000000),
+                )
+            }
             items(cardStateList.size) { index ->
                 val cardState = cardStateList[index]
                 DashboardCardStateRow(
                     cardState = cardState,
                 )
             }
+
+            item {
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                    text = stringResource(id = R.string.personalisation_screen_footer_cards),
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color(0xFF666666)
+                )
+            }
         }
-        Text(
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-            text = stringResource(id = R.string.personalisation_screen_footer_cards),
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Normal,
-            color = Color(0xFF666666)
-        )
     }
 }
 
@@ -112,8 +117,10 @@ fun DashboardCardStateRow(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp,
-                    end = 16.dp),
+                .padding(
+                    start = 16.dp,
+                    end = 16.dp
+                ),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
