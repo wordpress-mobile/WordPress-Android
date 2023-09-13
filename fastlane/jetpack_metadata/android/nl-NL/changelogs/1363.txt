@@ -1,5 +1,0 @@
-23.0:
-- In de berichteneditor kan delen op social media worden beheerd
-- Dashboardkaarten voor domeinoverzetting en Blaze Campaign toegevoegd
-- Een probleem bij het installeren van de plugin verholpen waardoor de app zou crashen
-- Ontwerp en bruikbaarheid van het galerijblok verbeterd

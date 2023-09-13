@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 
@@ -29,14 +30,6 @@ sealed class MySiteCardAndItemBuilderParams {
 
     data class InfoItemBuilderParams(
         val isStaleMessagePresent: Boolean
-    ) : MySiteCardAndItemBuilderParams()
-
-    data class QuickActionsCardBuilderParams(
-        val siteModel: SiteModel,
-        val onQuickActionStatsClick: () -> Unit,
-        val onQuickActionPagesClick: () -> Unit,
-        val onQuickActionPostsClick: () -> Unit,
-        val onQuickActionMediaClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
     data class QuickLinkRibbonBuilderParams(
@@ -56,9 +49,14 @@ sealed class MySiteCardAndItemBuilderParams {
 
     data class QuickStartCardBuilderParams(
         val quickStartCategories: List<QuickStartCategory>,
-        val onQuickStartBlockRemoveMenuItemClick: () -> Unit,
-        val onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit
-    ) : MySiteCardAndItemBuilderParams()
+        val onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit,
+        val moreMenuClickParams : MoreMenuParams
+    ) : MySiteCardAndItemBuilderParams() {
+        data class MoreMenuParams(
+            val onMoreMenuClick: (type: QuickStartCardType) -> Unit,
+            val onHideThisMenuItemClick: (type: QuickStartCardType) -> Unit,
+        )
+    }
 
     data class DashboardCardsBuilderParams(
         val showErrorCard: Boolean = false,
@@ -68,7 +66,6 @@ sealed class MySiteCardAndItemBuilderParams {
         val bloggingPromptCardBuilderParams: BloggingPromptCardBuilderParams,
         val domainTransferCardBuilderParams: DomainTransferCardBuilderParams? = null,
         val blazeCardBuilderParams: BlazeCardBuilderParams? = null,
-        val dashboardCardDomainBuilderParams: DashboardCardDomainBuilderParams,
         val dashboardCardPlansBuilderParams: DashboardCardPlansBuilderParams,
         val pagesCardBuilderParams: PagesCardBuilderParams,
         val activityCardBuilderParams: ActivityCardBuilderParams
@@ -78,35 +75,55 @@ sealed class MySiteCardAndItemBuilderParams {
         val todaysStatsCard: TodaysStatsCardModel?,
         val onTodaysStatsCardClick: () -> Unit,
         val onGetMoreViewsClick: () -> Unit,
-        val onFooterLinkClick: () -> Unit
-    ) : MySiteCardAndItemBuilderParams()
+        val moreMenuClickParams : MoreMenuParams
+    ) : MySiteCardAndItemBuilderParams() {
+        data class MoreMenuParams(
+            val onMoreMenuClick: () -> Unit,
+            val onHideThisMenuItemClick: () -> Unit,
+            val onViewStatsMenuItemClick: () -> Unit
+        )
+    }
 
     data class PostCardBuilderParams(
         val posts: PostsCardModel?,
         val onPostItemClick: (params: PostItemClickParams) -> Unit,
-        val onFooterLinkClick: (postCardType: PostCardType) -> Unit
+        val moreMenuClickParams : MoreMenuParams
     ) : MySiteCardAndItemBuilderParams() {
         data class PostItemClickParams(
             val postCardType: PostCardType,
             val postId: Int
+        )
+        data class MoreMenuParams(
+            val onMoreMenuClick: (postCardType: PostCardType) -> Unit,
+            val onHideThisMenuItemClick: (postCardType: PostCardType) -> Unit,
+            val onViewPostsMenuItemClick: (postCardType: PostCardType) -> Unit
         )
     }
 
     data class PagesCardBuilderParams(
         val pageCard: PagesCardModel?,
         val onPagesItemClick: (params: PagesItemClickParams) -> Unit,
-        val onFooterLinkClick: () -> Unit
+        val onFooterLinkClick: () -> Unit,
+        val moreMenuClickParams : MoreMenuParams
     ) : MySiteCardAndItemBuilderParams() {
         data class PagesItemClickParams(
             val pagesCardType: PagesCardContentType,
             val pageId: Int
+        )
+
+        data class MoreMenuParams(
+            val onMoreMenuClick: () -> Unit,
+            val onHideThisCardItemClick: () -> Unit,
+            val onAllPagesItemClick: () -> Unit
         )
     }
 
     data class ActivityCardBuilderParams(
         val activityCardModel: CardModel.ActivityCardModel?,
         val onActivityItemClick: (activityCardItemClickParams: ActivityCardItemClickParams) -> Unit,
-        val onFooterLinkClick: () -> Unit
+        val onAllActivityMenuItemClick: () -> Unit,
+        val onHideMenuItemClick: () -> Unit,
+        val onMoreMenuClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams() {
         data class ActivityCardItemClickParams(
             val activityId: String,
@@ -119,18 +136,13 @@ sealed class MySiteCardAndItemBuilderParams {
         val activeTask: QuickStartTask? = null,
         val backupAvailable: Boolean = false,
         val scanAvailable: Boolean = false,
-        val enableStatsFocusPoint: Boolean = false,
-        val enablePagesFocusPoint: Boolean = false,
-        val enableMediaFocusPoint: Boolean = false,
+        val enableFocusPoints: Boolean = false,
         val onClick: (ListItemAction) -> Unit,
         val isBlazeEligible: Boolean = false
     ) : MySiteCardAndItemBuilderParams()
 
     data class BloggingPromptCardBuilderParams(
         val bloggingPrompt: BloggingPromptModel?,
-        val showViewMoreAction: Boolean,
-        val showViewAnswersAction: Boolean,
-        val showRemoveAction: Boolean,
         val onShareClick: (message: String) -> Unit,
         val onAnswerClick: (promptId: Int) -> Unit,
         val onSkipClick: () -> Unit,
@@ -142,26 +154,32 @@ sealed class MySiteCardAndItemBuilderParams {
     sealed class BlazeCardBuilderParams : MySiteCardAndItemBuilderParams() {
         data class PromoteWithBlazeCardBuilderParams(
             val onClick: () -> Unit,
-            val onHideMenuItemClick: () -> Unit,
-            val onMoreMenuClick: () -> Unit
-        ) : BlazeCardBuilderParams()
+            val moreMenuParams : MoreMenuParams
+        ) : BlazeCardBuilderParams() {
+            data class MoreMenuParams(
+                val onMoreMenuClick: () -> Unit,
+                val onHideThisCardItemClick: () -> Unit,
+                val onLearnMoreClick: () -> Unit
+            )
+        }
 
         data class CampaignWithBlazeCardBuilderParams(
             val campaign: BlazeCampaignModel,
             val onCreateCampaignClick: () -> Unit,
             val onCampaignClick: (campaignId: Int) -> Unit,
-            val onCardClick: () -> Unit
-        ) : BlazeCardBuilderParams()
+            val onCardClick: () -> Unit,
+            val moreMenuParams: MoreMenuParams
+        ) : BlazeCardBuilderParams() {
+            data class MoreMenuParams(
+                val viewAllCampaignsItemClick: () -> Unit,
+                val onLearnMoreClick: () -> Unit,
+                val onHideThisCardItemClick: () -> Unit,
+                val onMoreMenuClick: () -> Unit
+            )
+        }
     }
 
     data class DomainTransferCardBuilderParams(
-        val isEligible: Boolean = false,
-        val onClick: () -> Unit,
-        val onHideMenuItemClick: () -> Unit,
-        val onMoreMenuClick: () -> Unit
-    ) : MySiteCardAndItemBuilderParams()
-
-    data class DashboardCardDomainBuilderParams(
         val isEligible: Boolean = false,
         val onClick: () -> Unit,
         val onHideMenuItemClick: () -> Unit,

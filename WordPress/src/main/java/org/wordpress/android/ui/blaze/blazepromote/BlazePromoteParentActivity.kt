@@ -15,6 +15,7 @@ import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
 const val ARG_EXTRA_BLAZE_UI_MODEL = "blaze_ui_model"
 const val ARG_BLAZE_FLOW_SOURCE = "blaze_flow_source"
+const val ARG_BLAZE_SHOULD_SHOW_OVERLAY = "blaze_flow_should_show_overlay"
 
 @AndroidEntryPoint
 class BlazePromoteParentActivity : AppCompatActivity() {
@@ -23,7 +24,7 @@ class BlazePromoteParentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_blaze_parent)
-        viewModel.start(getSource(), getBlazeUiModel())
+        viewModel.start(getSource(), getBlazeUiModel(), getShouldShowOverlay())
         observe()
     }
 
@@ -55,4 +56,6 @@ class BlazePromoteParentActivity : AppCompatActivity() {
     private fun getBlazeUiModel(): BlazeUIModel? {
         return intent.getParcelableExtraCompat(ARG_EXTRA_BLAZE_UI_MODEL)
     }
+
+    private fun getShouldShowOverlay(): Boolean = intent.getBooleanExtra(ARG_BLAZE_SHOULD_SHOW_OVERLAY, false)
 }

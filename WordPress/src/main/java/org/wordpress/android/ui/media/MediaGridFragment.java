@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
@@ -197,7 +198,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -849,7 +850,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private final class ActionModeCallback implements ActionMode.Callback {
         @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        public boolean onCreateActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
             mActionMode = mode;
             int selectCount = getAdapter().getSelectedItemCount();
             MenuInflater inflater = mode.getMenuInflater();
@@ -861,7 +862,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        public boolean onPrepareActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
             MenuItem mnuConfirm = menu.findItem(R.id.mnu_confirm_selection);
             mnuConfirm.setVisible(mBrowserType.isPicker());
 
@@ -870,7 +871,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
             if (item.getItemId() == R.id.mnu_confirm_selection) {
                 setResultIdsAndFinish();
             }

@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
@@ -79,7 +81,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     private boolean mCanLoadMoreComments = true;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mCommentsStoreAdapter.register(this);
         AppLog.i(AppLog.T.COMMENTS, "Creating CommentsDetailActivity");
@@ -152,7 +154,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;

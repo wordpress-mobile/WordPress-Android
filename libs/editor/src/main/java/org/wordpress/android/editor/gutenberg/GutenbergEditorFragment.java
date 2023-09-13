@@ -195,7 +195,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @SuppressWarnings("unchecked")
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getGutenbergContainerFragment() == null) {
@@ -561,7 +561,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnCustomerSupportOptionsListener() {
                     @Override
                     public void onContactCustomerSupport() {
-                        mEditorFragmentListener.onContactCustomerSupport();
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                mEditorFragmentListener.onContactCustomerSupport();
+                            });
+                        }
                     }
 
                     @Override
@@ -1058,22 +1062,20 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_gutenberg, menu);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        if (menu != null) {
-            MenuItem debugMenuItem = menu.findItem(R.id.debugmenu);
-            debugMenuItem.setVisible(BuildConfig.DEBUG);
-        }
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        MenuItem debugMenuItem = menu.findItem(R.id.debugmenu);
+        debugMenuItem.setVisible(BuildConfig.DEBUG);
 
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.debugmenu) {
             getGutenbergContainerFragment().showDevOptionsDialog();
             return true;

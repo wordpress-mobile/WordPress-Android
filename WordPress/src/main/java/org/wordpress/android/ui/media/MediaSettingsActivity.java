@@ -526,13 +526,13 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.media_settings, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         boolean showSaveMenu = mSite != null && !mSite.isPrivate() && !isMediaFromEditor();
         boolean showShareMenu = mSite != null && !mSite.isPrivate() && !isMediaFromEditor();
         boolean showTrashMenu = mSite != null && !isMediaFromEditor();
@@ -555,7 +555,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();
             return true;

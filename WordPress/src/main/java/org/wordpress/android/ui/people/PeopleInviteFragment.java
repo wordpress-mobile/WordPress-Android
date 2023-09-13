@@ -133,13 +133,13 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.people_invite, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.getItem(0).setEnabled(!mInviteOperationInProgress); // here pass the index of send menu item
         super.onPrepareOptionsMenu(menu);
     }
@@ -154,7 +154,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         updateSiteOrFinishActivity();

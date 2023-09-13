@@ -1,5 +1,0 @@
-23.0:
-- Vi har tagit bort det synliga mellanrummet mellan de valda galleriblocken och verktygsfältet
-- Vi har dolt knappen Bildtext för galleri på mobila enheter.
-- Vi har sett till att rätt galleriblock förblir valt medan du lägger till media
-- Vi har åtgärdat en tilläggsinstallationsbugg som gjorde att appen kraschade

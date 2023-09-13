@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/activity_card_menu_item_all_activity"
+        android:title="@string/dashboard_activity_card_menu_all_activity"
+        android:icon="@drawable/ic_history_white_24dp"/>
+
+    <item
+        android:id="@+id/activity_card_menu_item_hide_this"
+        android:title="@string/dashboard_activity_card_menu_hide_this"
+        android:icon="@drawable/ic_not_visible_white_24dp"/>
+</menu>

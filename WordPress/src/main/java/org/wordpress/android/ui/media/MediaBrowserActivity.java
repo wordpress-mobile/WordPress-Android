@@ -161,7 +161,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ((WordPress) getApplication()).component().inject(this);
@@ -482,9 +482,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         );
     }
 
-    private void checkRecordedVideoDurationBeforeUploadAndTrack() {
-        Uri uri = MediaUtils.getLastRecordedVideoUri(this);
-
+    private void checkRecordedVideoDurationBeforeUploadAndTrack(Uri uri) {
         if (mMediaUtilsWrapper.isProhibitedVideoDuration(this, mSite, uri)) {
             ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, LONG);
         } else {
@@ -524,7 +522,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 break;
             case RequestCodes.TAKE_VIDEO:
                 if (resultCode == Activity.RESULT_OK) {
-                    checkRecordedVideoDurationBeforeUploadAndTrack();
+                    Uri uri = data.getData();
+                    checkRecordedVideoDurationBeforeUploadAndTrack(uri);
                 }
                 break;
             case RequestCodes.MEDIA_SETTINGS:
@@ -598,7 +597,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         mMenu = menu;
         getMenuInflater().inflate(R.menu.media_browser, menu);
 
@@ -639,7 +638,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
     @Override
     @SuppressLint("NonConstantResourceId")
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 getOnBackPressedDispatcher().onBackPressed();
@@ -667,7 +666,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public boolean onMenuItemActionExpand(MenuItem item) {
+    public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(false);
         mMediaGridFragment.showActionableEmptyViewButton(false);
 
@@ -683,7 +682,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public boolean onMenuItemActionCollapse(MenuItem item) {
+    public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
         mMediaGridFragment.showActionableEmptyViewButton(true);
         invalidateOptionsMenu();

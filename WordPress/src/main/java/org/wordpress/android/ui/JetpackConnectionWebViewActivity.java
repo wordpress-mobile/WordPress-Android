@@ -8,6 +8,9 @@ import android.view.Menu;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -81,7 +84,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         mSource = (JetpackConnectionSource) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY);
         // We need to get the site before calling super since it'll create the web client
@@ -125,7 +128,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         return true;
     }
 
