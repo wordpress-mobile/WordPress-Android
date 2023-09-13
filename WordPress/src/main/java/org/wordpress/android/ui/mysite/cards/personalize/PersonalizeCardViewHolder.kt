@@ -14,16 +14,13 @@ import org.wordpress.android.util.extensions.viewBinding
 class PersonalizeCardViewHolder(parent: ViewGroup) :
     CardViewHolder<PersonalizeCardBinding>(parent.viewBinding(PersonalizeCardBinding::inflate)) {
     fun bind(cardModel: MySiteCardAndItem.Card.PersonalizeCardModel) = with(binding) {
-        this.personalizeCard.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool)
-            setContent {
-                AppTheme {
-                    PersonalizeCard(
-                        model = cardModel, modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                    )
-                }
+        personalizeCard.setContent {
+            AppTheme {
+                PersonalizeCard(
+                    model = cardModel, modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                )
             }
         }
     }
