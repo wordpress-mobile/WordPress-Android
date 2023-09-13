@@ -125,8 +125,6 @@ class BloggingPromptCardViewHolder(
                 return@setOnMenuItemClickListener true
             }
             inflate(R.menu.blogging_prompt_card_menu)
-            menu.findItem(R.id.view_more)?.isVisible = card.showViewMoreAction
-            menu.findItem(R.id.remove)?.isVisible = card.showRemoveAction
             MenuCompat.setGroupDividerEnabled(menu, true)
         }.also {
             it.show()

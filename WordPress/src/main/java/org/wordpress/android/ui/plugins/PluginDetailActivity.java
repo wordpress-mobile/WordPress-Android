@@ -393,20 +393,20 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.plugin_detail, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         boolean showTrash = canPluginBeDisabledOrRemoved();
         menu.findItem(R.id.menu_trash).setVisible(showTrash);
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             if (isPluginStateChangedSinceLastConfigurationDispatch()) {
                 // It looks like we have some unsaved changes, we need to force a configuration dispatch since the

@@ -1215,7 +1215,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         mSearchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
                 if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
                     mReaderTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED);
                 }
@@ -1231,7 +1231,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 requireActivity().finish();
                 return false;
             }

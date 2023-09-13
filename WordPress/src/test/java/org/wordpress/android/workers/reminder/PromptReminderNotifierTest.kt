@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.util.HtmlCompatWrapper
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsFeature
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.workers.reminder.prompt.PromptReminderNotifier
@@ -32,7 +32,7 @@ class PromptReminderNotifierTest : BaseUnitTest() {
     private val bloggingPromptsStore: BloggingPromptsStore = mock()
     private val accountStore: AccountStore = mock()
     private val reminderNotificationManager: ReminderNotificationManager = mock()
-    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig = mock()
+    private val bloggingPromptsFeature: BloggingPromptsFeature = mock()
     private val bloggingRemindersAnalyticsTracker: BloggingRemindersAnalyticsTracker = mock()
     private val bloggingRemindersStore: BloggingRemindersStore = mock()
     private val bloggingReminder: BloggingRemindersModel = mock()
@@ -46,7 +46,7 @@ class PromptReminderNotifierTest : BaseUnitTest() {
         siteStore = siteStore,
         accountStore = accountStore,
         reminderNotificationManager = reminderNotificationManager,
-        bloggingPromptsFeatureConfig = bloggingPromptsFeatureConfig,
+        bloggingPromptsFeature = bloggingPromptsFeature,
         bloggingPromptsStore = bloggingPromptsStore,
         bloggingRemindersAnalyticsTracker = bloggingRemindersAnalyticsTracker,
         htmlCompatWrapper = htmlCompatWrapper,
@@ -67,7 +67,7 @@ class PromptReminderNotifierTest : BaseUnitTest() {
 
     @Test
     fun `Should NOT notify if blogging prompts notification flag isEnabled returns FALSE`() = test {
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(bloggingPromptsFeature.isEnabled()).thenReturn(false)
         assertFalse(classToTest.shouldNotify(123))
     }
 
@@ -89,7 +89,7 @@ class PromptReminderNotifierTest : BaseUnitTest() {
         whenever(bloggingRemindersStore.bloggingRemindersModel(any())).thenReturn(
             flowOf(disabledPromptBloggingReminderModel)
         )
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(bloggingPromptsFeature.isEnabled()).thenReturn(false)
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(siteModel)
         assertFalse(classToTest.shouldNotify(123))
     }
@@ -105,7 +105,7 @@ class PromptReminderNotifierTest : BaseUnitTest() {
         whenever(bloggingRemindersStore.bloggingRemindersModel(any())).thenReturn(
             flowOf(enabledPromptBloggingReminderModel)
         )
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(false)
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(siteModel)
@@ -123,7 +123,7 @@ class PromptReminderNotifierTest : BaseUnitTest() {
         whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(
             flowOf(enabledPromptBloggingReminderModel)
         )
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(true)
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(siteModel)

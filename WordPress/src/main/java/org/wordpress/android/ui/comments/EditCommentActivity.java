@@ -199,7 +199,7 @@ public class EditCommentActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_comment, menu);
@@ -207,7 +207,7 @@ public class EditCommentActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();

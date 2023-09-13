@@ -216,7 +216,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
@@ -236,7 +236,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();
             return true;
@@ -328,14 +328,14 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+    public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
         showListFragment(PluginListType.SEARCH);
         mSearchView.setOnQueryTextListener(this);
         return true;
     }
 
     @Override
-    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+    public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
         mSearchView.setOnQueryTextListener(null);
         hideListFragment();
         mViewModel.setSearchQuery("");
