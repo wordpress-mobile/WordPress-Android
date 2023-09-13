@@ -16,16 +16,16 @@ ext {
 
 ext {
     // libs
-    automatticAboutVersion = 'trunk-35fb1df3a46706d1164f6ec613174bc08e1b7925'
+    automatticAboutVersion = '1.3.0'
     automatticRestVersion = '1.0.8'
-    automatticStoriesVersion = 'trunk-c8e238b2d3e8fd3c08869823a27a83eea18a3261'
-    automatticTracksVersion = 'trunk-9b14afdadf548a3dfdb42385b7cb7b0347668198'
+    automatticStoriesVersion = '2.4.0'
+    automatticTracksVersion = '3.3.0'
     gutenbergMobileVersion = 'v1.103.1'
-    wordPressAztecVersion = 'trunk-531732934fd9393ad52e77ee45d05643088f2c01'
+    wordPressAztecVersion = 'v1.8.0'
     wordPressFluxCVersion = 'trunk-27d8055b67b3e7860981756aae998abe1bfcd79f'
-    wordPressLoginVersion = 'trunk-9c9785be0fb6db0ba0b02f1a910e3cf72b7164f6'
+    wordPressLoginVersion = '1.6.0'
     wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressUtilsVersion = 'trunk-b9f9192d943f36d1fe888b195d9c001e037a7335'
+    wordPressUtilsVersion = '3.10.0'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 
     // debug
