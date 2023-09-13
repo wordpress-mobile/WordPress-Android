@@ -4,7 +4,6 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import org.wordpress.android.databinding.PersonalizeCardBinding
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
