@@ -3,9 +3,9 @@ package org.wordpress.android.ui.mysite.cards.personalize
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -17,6 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -40,13 +41,19 @@ fun PersonalizeCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                        text = stringResource(id = R.string.personalize_card_text),
-                        style = DashboardCardTypography.standaloneText,
-                        textAlign = TextAlign.Start,
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        content = {
+                            Text(
+                                modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                                text = stringResource(id = R.string.personalize_card_text),
+                                style = DashboardCardTypography.standaloneText,
+                                textAlign = TextAlign.Start,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
                     )
-                    Spacer(modifier = Modifier.weight(1f))
                     Image(
                         modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                         painter = painterResource(id = R.drawable.ic_settings_white_24dp),
