@@ -4698,6 +4698,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="partial_media_access_prompt_select_more">Select More</string>
     <string name="partial_media_access_prompt_change_settings">Change Settings</string>
 
+    <!-- Personalize card -->
+    <string name="personalize_card_text">Personalize your home tab</string>
+    <string name="personalize_card_content_description">Tap to personalize your home tab</string>
+
     <!-- Personalisation Screen -->
     <string name="personalisation_screen_title"> Personalise home tab</string>
     <string name="personalisation_screen_description"> Add or hide Cards</string>

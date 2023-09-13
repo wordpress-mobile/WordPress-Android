@@ -100,6 +100,8 @@ import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHe
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
+import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
+import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -295,6 +297,12 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var mySiteInfoItemBuilder: MySiteInfoItemBuilder
 
     @Mock
+    lateinit var personalizeCardBuilder: PersonalizeCardBuilder
+
+    @Mock
+    lateinit var personalizeCardViewModelSlice: PersonalizeCardViewModelSlice
+
+    @Mock
     lateinit var bloggingPromptCardViewModelSlice: BloggingPromptCardViewModelSlice
 
     private lateinit var viewModel: MySiteViewModel
@@ -444,6 +452,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(todaysStatsViewModelSlice.getTodaysStatsBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(postsCardViewModelSlice.getPostsCardBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(activityLogCardViewModelSlice.getActivityLogCardBuilderParams(anyOrNull())).thenReturn(mock())
+        whenever(personalizeCardViewModelSlice.getBuilderParams()).thenReturn(mock())
+        whenever(personalizeCardBuilder.build(any())).thenReturn(mock())
         whenever(bloggingPromptCardViewModelSlice.getBuilderParams(anyOrNull())).thenReturn(mock())
 
         viewModel = MySiteViewModel(
@@ -498,6 +508,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             activityLogCardViewModelSlice,
             siteItemsViewModelSlice,
             mySiteInfoItemBuilder,
+            personalizeCardViewModelSlice,
+            personalizeCardBuilder,
             bloggingPromptCardViewModelSlice
         )
         uiModels = mutableListOf()
