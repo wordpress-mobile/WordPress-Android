@@ -37,12 +37,9 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.models.JetpackPoweredScreen
-import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
-import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.FEATURE_CARD
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
@@ -58,7 +55,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
@@ -80,7 +76,7 @@ import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
@@ -125,10 +121,6 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
-import org.wordpress.android.util.config.BloggingPromptsListFeatureConfig
-import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.filter
@@ -142,7 +134,6 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.io.File
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -175,13 +166,8 @@ class MySiteViewModel @Inject constructor(
     private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
-    bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
-    bloggingPromptsListFeatureConfig: BloggingPromptsListFeatureConfig,
-    bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig,
-    bloggingPromptsSocialFeatureConfig: BloggingPromptsSocialFeatureConfig,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val quickStartTracker: QuickStartTracker,
     private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
     private val dispatcher: Dispatcher,
@@ -190,9 +176,7 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker,
     private val jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil,
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
-    private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
     private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
-    private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
     private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker,
     private val dashboardCardPlansUtils: PlansCardUtils,
@@ -205,7 +189,8 @@ class MySiteViewModel @Inject constructor(
     private val postsCardViewModelSlice: PostsCardViewModelSlice,
     private val activityLogCardViewModelSlice: ActivityLogCardViewModelSlice,
     private val siteItemsViewModelSlice: SiteItemsViewModelSlice,
-    private val mySiteInfoItemBuilder: MySiteInfoItemBuilder
+    private val mySiteInfoItemBuilder: MySiteInfoItemBuilder,
+    private val bloggingPromptCardViewModelSlice: BloggingPromptCardViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -216,12 +201,6 @@ class MySiteViewModel @Inject constructor(
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
-    private val _onShareBloggingPrompt = MutableLiveData<Event<String>>()
-    private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<SiteModel, PromptID>>>()
-    private val _onBloggingPromptsViewAnswers = SingleLiveEvent<Event<ReaderTag>>()
-    private val _onBloggingPromptsLearnMore = SingleLiveEvent<Event<Unit>>()
-    private val _onBloggingPromptsViewMore = SingleLiveEvent<Event<Unit>>()
-    private val _onBloggingPromptsRemoved = SingleLiveEvent<Event<Unit>>()
     private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
     private val _onShowJetpackIndividualPluginOverlay = SingleLiveEvent<Event<Unit>>()
 
@@ -242,10 +221,6 @@ class MySiteViewModel @Inject constructor(
     private var isSiteSelected = false
 
     private val isMySiteDashboardTabsEnabled by lazy { mySiteDashboardTabsFeatureConfig.isEnabled() }
-    private val isBloggingPromptsEnabled by lazy { bloggingPromptsFeatureConfig.isEnabled() }
-    private val isBloggingPromptsListEnabled by lazy { bloggingPromptsListFeatureConfig.isEnabled() }
-    private val isBloggingPromptsEnhancementsEnabled by lazy { bloggingPromptsEnhancementsFeatureConfig.isEnabled() }
-    private val isBloggingPromptsSocialEnabled by lazy { bloggingPromptsSocialFeatureConfig.isEnabled() }
 
     val isMySiteTabsEnabled: Boolean
         get() = isMySiteDashboardTabsEnabled &&
@@ -287,7 +262,8 @@ class MySiteViewModel @Inject constructor(
         _onSnackbarMessage,
         siteStoriesHandler.onSnackbar,
         quickStartRepository.onSnackbar,
-        siteItemsViewModelSlice.onSnackbarMessage
+        siteItemsViewModelSlice.onSnackbarMessage,
+        bloggingPromptCardViewModelSlice.onSnackbarMessage
     )
     val onQuickStartMySitePrompts = quickStartRepository.onQuickStartMySitePrompts
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
@@ -302,15 +278,10 @@ class MySiteViewModel @Inject constructor(
         postsCardViewModelSlice.onNavigation,
         activityLogCardViewModelSlice.onNavigation,
         siteItemsViewModelSlice.onNavigation,
+        bloggingPromptCardViewModelSlice.onNavigation
     )
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
-    val onShareBloggingPrompt = _onShareBloggingPrompt as LiveData<Event<String>>
-    val onAnswerBloggingPrompt = _onAnswerBloggingPrompt as LiveData<Event<Pair<SiteModel, Int>>>
-    val onBloggingPromptsViewAnswers = _onBloggingPromptsViewAnswers as LiveData<Event<ReaderTag>>
-    val onBloggingPromptsLearnMore = _onBloggingPromptsLearnMore as LiveData<Event<Unit>>
-    val onBloggingPromptsViewMore = _onBloggingPromptsViewMore as LiveData<Event<Unit>>
-    val onBloggingPromptsRemoved = _onBloggingPromptsRemoved as LiveData<Event<Unit>>
     val onOpenJetpackInstallFullPluginOnboarding = _onOpenJetpackInstallFullPluginOnboarding as LiveData<Event<Unit>>
     val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
@@ -364,7 +335,7 @@ class MySiteViewModel @Inject constructor(
                 selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
 
-                bloggingPromptsCardTrackHelper.onDashboardCardsUpdated(
+                bloggingPromptCardViewModelSlice.onDashboardCardsUpdated(
                     viewModelScope,
                     state.dashboardCardsAndItems.filterIsInstance<DashboardCards>().firstOrNull()
                 )
@@ -374,7 +345,7 @@ class MySiteViewModel @Inject constructor(
                 buildNoSiteState()
             }
 
-            bloggingPromptsCardTrackHelper.onSiteChanged(site?.id)
+            bloggingPromptCardViewModelSlice.onSiteChanged(site?.id)
 
             dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
 
@@ -393,6 +364,7 @@ class MySiteViewModel @Inject constructor(
 
     init {
         dispatcher.register(this)
+        bloggingPromptCardViewModelSlice.initialize(viewModelScope, mySiteSourceManager)
     }
 
     @Suppress("LongParameterList")
@@ -574,19 +546,8 @@ class MySiteViewModel @Inject constructor(
                 postCardBuilderParams = postsCardViewModelSlice.getPostsCardBuilderParams(
                     cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel
                 ),
-                bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
-                    bloggingPrompt = if (isBloggingPromptsEnabled) {
-                        bloggingPromptUpdate?.promptModel
-                    } else null,
-                    showViewMoreAction = isBloggingPromptsListEnabled,
-                    showViewAnswersAction = isBloggingPromptsSocialEnabled,
-                    showRemoveAction = isBloggingPromptsEnhancementsEnabled,
-                    onShareClick = this::onBloggingPromptShareClick,
-                    onAnswerClick = this::onBloggingPromptAnswerClick,
-                    onSkipClick = this::onBloggingPromptSkipClick,
-                    onViewMoreClick = this::onBloggingPromptViewMoreClick,
-                    onViewAnswersClick = this::onBloggingPromptViewAnswersClick,
-                    onRemoveClick = this::onBloggingPromptRemoveClick
+                bloggingPromptCardBuilderParams = bloggingPromptCardViewModelSlice.getBuilderParams(
+                    bloggingPromptUpdate
                 ),
                 domainTransferCardBuilderParams = domainTransferCardViewModel.buildDomainTransferCardParams(
                     site,
@@ -948,7 +909,7 @@ class MySiteViewModel @Inject constructor(
         isSiteSelected = false
         checkAndShowJetpackFullPluginInstallOnboarding()
         checkAndShowQuickStartNotice()
-        bloggingPromptsCardTrackHelper.onResume(currentTab)
+        bloggingPromptCardViewModelSlice.onResume(currentTab)
         dashboardCardPlansUtils.onResume(currentTab, uiModel.value?.state as? SiteSelected)
     }
 
@@ -1247,66 +1208,6 @@ class MySiteViewModel @Inject constructor(
         mySiteSourceManager.refresh()
     }
 
-    private fun onBloggingPromptShareClick(message: String) {
-        _onShareBloggingPrompt.value = Event(message)
-    }
-
-    private fun onBloggingPromptAnswerClick(promptId: Int) {
-        bloggingPromptsCardAnalyticsTracker.trackMySiteCardAnswerPromptClicked()
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        _onAnswerBloggingPrompt.value = Event(Pair(selectedSite, promptId))
-    }
-
-    private fun onBloggingPromptSkipClick() {
-        selectedSiteRepository.getSelectedSite()?.let { site ->
-            val siteId = site.localId().value
-
-            appPrefsWrapper.setSkippedPromptDay(Date(), siteId)
-            mySiteSourceManager.refreshBloggingPrompts(true)
-
-            val snackbar = SnackbarMessageHolder(
-                message = UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar),
-                buttonTitle = UiStringRes(R.string.undo),
-                buttonAction = {
-                    bloggingPromptsCardAnalyticsTracker.trackMySiteCardSkipThisPromptUndoClicked()
-                    appPrefsWrapper.setSkippedPromptDay(null, siteId)
-                    mySiteSourceManager.refreshBloggingPrompts(true)
-                },
-                isImportant = true
-            )
-
-            _onSnackbarMessage.value = Event(snackbar)
-        }
-    }
-
-    private fun onBloggingPromptViewAnswersClick(promptId: Int) {
-        bloggingPromptsCardAnalyticsTracker.trackMySiteCardViewAnswersClicked()
-        val tag = BloggingPromptsPostTagProvider.promptIdSearchReaderTag(promptId)
-        _onBloggingPromptsViewAnswers.value = Event(tag)
-    }
-
-    private fun onBloggingPromptViewMoreClick() {
-        _onBloggingPromptsViewMore.value = Event(Unit)
-    }
-
-    private fun onBloggingPromptRemoveClick() {
-        launch {
-            updatePromptsCardEnabled(isEnabled = false).join()
-            _onBloggingPromptsRemoved.postValue(Event(Unit))
-        }
-    }
-
-    fun onBloggingPromptUndoClick() {
-        bloggingPromptsCardAnalyticsTracker.trackMySiteCardRemoveFromDashboardUndoClicked()
-        updatePromptsCardEnabled(true)
-    }
-
-    private fun updatePromptsCardEnabled(isEnabled: Boolean) = launch {
-        selectedSiteRepository.getSelectedSite()?.localId()?.value?.let { siteId ->
-            bloggingPromptsSettingsHelper.updatePromptsCardEnabled(siteId, isEnabled)
-            mySiteSourceManager.refreshBloggingPrompts(true)
-        }
-    }
 
     private fun onJetpackFeatureCardClick() {
         jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_TAPPED)
@@ -1411,7 +1312,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onBloggingPromptsLearnMoreClicked() {
-        _onBloggingPromptsLearnMore.postValue(Event(Unit))
+        _onNavigation.postValue(Event(BloggingPromptCardNavigationAction.LearnMore))
     }
 
     private fun trackWithTabSourceIfNeeded(stat: Stat, properties: HashMap<String, *>? = null) {

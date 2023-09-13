@@ -24,7 +24,7 @@ import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsFeature
 import java.util.Date
 
 /* SITE */
@@ -58,7 +58,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     private lateinit var bloggingPromptsStore: BloggingPromptsStore
 
     @Mock
-    private lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    private lateinit var bloggingPromptsFeature: BloggingPromptsFeature
 
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
@@ -89,14 +89,14 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource = BloggingPromptCardSource(
             selectedSiteRepository,
             bloggingPromptsStore,
-            bloggingPromptsFeatureConfig,
+            bloggingPromptsFeature,
             bloggingPromptsSettingsHelper,
             testDispatcher()
         )
     }
 
     private fun setUpMocks(isBloggingPromptFeatureEnabled: Boolean) = runBlocking {
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptFeatureEnabled)
+        whenever(bloggingPromptsFeature.isEnabled()).thenReturn(isBloggingPromptFeatureEnabled)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(null)
         whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(isBloggingPromptFeatureEnabled)
