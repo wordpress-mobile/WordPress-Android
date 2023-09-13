@@ -351,7 +351,7 @@ public class HistoryDetailContainerFragment extends Fragment {
     }
 
     @SuppressWarnings("deprecation")
-    private class HistoryDetailFragmentAdapter extends FragmentStatePagerAdapter {
+    private static class HistoryDetailFragmentAdapter extends FragmentStatePagerAdapter {
         private final ArrayList<Revision> mRevisions;
 
         @SuppressWarnings({"unchecked", "deprecation"})
