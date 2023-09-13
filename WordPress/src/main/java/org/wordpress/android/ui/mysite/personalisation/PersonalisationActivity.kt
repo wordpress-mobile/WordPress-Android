@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,12 +14,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -86,13 +89,12 @@ fun PersonalisationContent(cardStateList: List<DashboardCardState>, modifier: Mo
             items(cardStateList.size) { index ->
                 val cardState = cardStateList[index]
                 DashboardCardStateRow(
-                    modifier = Modifier.padding(),
                     cardState = cardState,
                 )
             }
         }
         Text(
-            modifier = Modifier.padding(start = 16.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
             text = stringResource(id = R.string.personalisation_screen_footer_cards),
             fontSize = 13.sp,
             fontWeight = FontWeight.Normal,
@@ -110,9 +112,15 @@ fun DashboardCardStateRow(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp),
+                .padding(start = 16.dp,
+                    end = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier
+                    .padding(vertical = 12.dp)
+                    .fillMaxWidth(.9f)
+            ) {
                 Text(
                     text = stringResource(id = cardState.title),
                     fontSize = 16.sp
@@ -123,19 +131,20 @@ fun DashboardCardStateRow(
                     color = Color(0x99000000)
                 )
             }
+            Spacer(Modifier.width(8.dp))
+            Switch(
+                checked = cardState.enabled,
+                onCheckedChange = {},
+                modifier = Modifier
+                    .weight(.1f)
+            )
         }
-        Spacer(Modifier.width(16.dp))
-        Switch(
-            checked = cardState.enabled,
-            onCheckedChange = {},
-            modifier = Modifier.padding(end = 16.dp)
+        Divider(
+            thickness = 0.5.dp,
+            modifier = Modifier
+                .padding()
         )
     }
-    Divider(
-        thickness = 0.5.dp,
-        modifier = Modifier
-            .padding()
-    )
 }
 
 
