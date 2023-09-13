@@ -4697,4 +4697,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="partial_media_access_prompt_text">Only selected photos and videos you’ve given access to are available.</string>
     <string name="partial_media_access_prompt_select_more">Select More</string>
     <string name="partial_media_access_prompt_change_settings">Change Settings</string>
+
+    <!-- Personalisation Screen -->
+    <string name="personalisation_screen_title"> Personalise home tab</string>
+    <string name="personalisation_screen_description"> Add or hide Cards</string>
+    <string name="personalisation_screen_footer_cards"> Cards may show different content depending on what\'s happening with your site</string>
+
 </resources>
