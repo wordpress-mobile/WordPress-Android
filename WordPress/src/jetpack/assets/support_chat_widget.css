@@ -51,3 +51,7 @@ a.floating-button {
     height: 48px;
     font-size: 16px;
 }
+
+.docsbot-chat-btn-send-icon {
+    transform: rotate(45deg);
+}
