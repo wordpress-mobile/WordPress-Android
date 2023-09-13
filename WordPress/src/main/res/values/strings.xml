@@ -4708,7 +4708,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="personalisation_screen_draft_posts_card_description">Your recent draft posts.</string>
     <string name="personalisation_screen_scheduled_posts_card_title"> Scheduled posts</string>
     <string name="personalisation_screen_scheduled_posts_card_description">Your upcoming scheduled posts.</string>
-    <string name="personalisation_screen_blaze_card_title" translate="false"> @string/blaze_activity_title</string>
+    <string name="personalisation_screen_blaze_card_title" translatable="false"> @string/blaze_activity_title</string>
     <string name="personalisation_screen_blaze_card_description">Promote a post and see current campaigns.</string>
     <string name="personalisation_screen_blogging_prompts_card_title">Blogging prompts</string>
     <string name="personalisation_screen_blogging_prompts_card_description">Daily ideas for your blog posts.</string>
