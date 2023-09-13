@@ -202,6 +202,7 @@ public class HistoryDetailContainerFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) requireActivity().getApplication()).component().inject(this);
@@ -217,12 +218,14 @@ public class HistoryDetailContainerFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.history_detail, menu);
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         if (mBinding != null) {
@@ -234,6 +237,7 @@ public class HistoryDetailContainerFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.history_load) {
             Intent intent = new Intent();
@@ -346,10 +350,11 @@ public class HistoryDetailContainerFragment extends Fragment {
         mBinding = null;
     }
 
+    @SuppressWarnings("deprecation")
     private class HistoryDetailFragmentAdapter extends FragmentStatePagerAdapter {
         private final ArrayList<Revision> mRevisions;
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({"unchecked", "deprecation"})
         HistoryDetailFragmentAdapter(FragmentManager fragmentManager, ArrayList<Revision> revisions) {
             super(fragmentManager);
             mRevisions = (ArrayList<Revision>) revisions.clone();
