@@ -282,7 +282,8 @@ class MySiteViewModel @Inject constructor(
         postsCardViewModelSlice.onNavigation,
         activityLogCardViewModelSlice.onNavigation,
         siteItemsViewModelSlice.onNavigation,
-        bloggingPromptCardViewModelSlice.onNavigation
+        bloggingPromptCardViewModelSlice.onNavigation,
+        personalizeCardViewModelSlice.onNavigation
     )
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
