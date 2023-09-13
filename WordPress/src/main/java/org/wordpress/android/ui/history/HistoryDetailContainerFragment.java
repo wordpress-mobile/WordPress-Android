@@ -153,10 +153,10 @@ public class HistoryDetailContainerFragment extends Fragment {
             mBinding.diffPager.setVisibility(isInVisualPreview ? View.GONE : View.VISIBLE);
             mBinding.previous.setVisibility(isInVisualPreview ? View.INVISIBLE : View.VISIBLE);
             mBinding.next.setVisibility(isInVisualPreview ? View.INVISIBLE : View.VISIBLE);
-        }
 
-        refreshHistoryDetail();
-        resetOnPageChangeListener();
+            refreshHistoryDetail(mBinding);
+            resetOnPageChangeListener(mBinding);
+        }
 
         return mBinding.getRoot();
     }
@@ -206,7 +206,9 @@ public class HistoryDetailContainerFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_IS_IN_VISUAL_PREVIEW, isInVisualPreview());
+        if (mBinding != null) {
+            outState.putBoolean(KEY_IS_IN_VISUAL_PREVIEW, isInVisualPreview(mBinding));
+        }
     }
 
     @Override
@@ -218,8 +220,12 @@ public class HistoryDetailContainerFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        MenuItem viewMode = menu.findItem(R.id.history_toggle_view);
-        viewMode.setTitle(isInVisualPreview() ? R.string.history_preview_html : R.string.history_preview_visual);
+        if (mBinding != null) {
+            MenuItem viewMode = menu.findItem(R.id.history_toggle_view);
+            viewMode.setTitle(
+                    isInVisualPreview(mBinding) ? R.string.history_preview_html : R.string.history_preview_visual
+            );
+        }
     }
 
     @Override
@@ -232,7 +238,7 @@ public class HistoryDetailContainerFragment extends Fragment {
             requireActivity().finish();
         } else if (item.getItemId() == R.id.history_toggle_view) {
             if (mBinding != null) {
-                if (isInVisualPreview()) {
+                if (isInVisualPreview(mBinding)) {
                     AniUtils.fadeIn(mBinding.next, Duration.SHORT);
                     AniUtils.fadeIn(mBinding.previous, Duration.SHORT);
                 } else {
@@ -243,25 +249,23 @@ public class HistoryDetailContainerFragment extends Fragment {
                     AniUtils.fadeOut(mBinding.next, Duration.SHORT, View.INVISIBLE);
                     AniUtils.fadeOut(mBinding.previous, Duration.SHORT, View.INVISIBLE);
                 }
-                crossfadePreviewViews();
+                crossfadePreviewViews(mBinding);
             }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void crossfadePreviewViews() {
-        if (mBinding != null) {
-            final View fadeInView = isInVisualPreview() ? mBinding.diffPager : mBinding.visualPreviewContainer;
-            final View fadeOutView = isInVisualPreview() ? mBinding.visualPreviewContainer : mBinding.diffPager;
-            mBinding.visualPreviewContainer.smoothScrollTo(0, 0);
-            mBinding.visualPreviewContainer.post(new Runnable() {
-                @Override
-                public void run() {
-                    AniUtils.fadeIn(fadeInView, Duration.SHORT);
-                    AniUtils.fadeOut(fadeOutView, Duration.SHORT);
-                }
-            });
-        }
+    private void crossfadePreviewViews(@NonNull HistoryDetailContainerFragmentBinding binding) {
+        final View fadeInView = isInVisualPreview(binding) ? binding.diffPager : binding.visualPreviewContainer;
+        final View fadeOutView = isInVisualPreview(binding) ? binding.visualPreviewContainer : binding.diffPager;
+        binding.visualPreviewContainer.smoothScrollTo(0, 0);
+        binding.visualPreviewContainer.post(new Runnable() {
+            @Override
+            public void run() {
+                AniUtils.fadeIn(fadeInView, Duration.SHORT);
+                AniUtils.fadeOut(fadeOutView, Duration.SHORT);
+            }
+        });
     }
 
     private void showHistoryTimeStampInToolbar() {
@@ -271,72 +275,64 @@ public class HistoryDetailContainerFragment extends Fragment {
         }
     }
 
-    private void refreshHistoryDetail() {
-        if (mBinding != null) {
-            if (mRevision.getTotalAdditions() > 0) {
-                mBinding.diffAdditions.setText(String.valueOf(mRevision.getTotalAdditions()));
-                mBinding.diffAdditions.setVisibility(View.VISIBLE);
-            } else {
-                mBinding.diffAdditions.setVisibility(View.GONE);
-            }
-
-            if (mRevision.getTotalDeletions() > 0) {
-                mBinding.diffDeletions.setText(String.valueOf(mRevision.getTotalDeletions()));
-                mBinding.diffDeletions.setVisibility(View.VISIBLE);
-            } else {
-                mBinding.diffDeletions.setVisibility(View.GONE);
-            }
-
-            mBinding.previous.setEnabled(mPosition != 0);
-            mBinding.next.setEnabled(mPosition != mAdapter.getCount() - 1);
-        }
-    }
-
-    private void resetOnPageChangeListener() {
-        if (mBinding != null) {
-            if (mOnPageChangeListener != null) {
-                mBinding.diffPager.removeOnPageChangeListener(mOnPageChangeListener);
-            } else {
-                mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
-                    @Override
-                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    }
-
-                    @Override
-                    public void onPageScrollStateChanged(int state) {
-                    }
-
-                    @Override
-                    public void onPageSelected(int position) {
-                        if (mIsChevronClicked) {
-                            AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_CHEVRON);
-                            mIsChevronClicked = false;
-                        } else {
-                            if (!mIsFragmentRecreated) {
-                                AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_SWIPE);
-                            } else {
-                                mIsFragmentRecreated = false;
-                            }
-                        }
-
-                        mPosition = position;
-                        mRevision = mAdapter.getRevisionAtPosition(mPosition);
-                        refreshHistoryDetail();
-                        showHistoryTimeStampInToolbar();
-                    }
-                };
-            }
-
-            mBinding.diffPager.addOnPageChangeListener(mOnPageChangeListener);
-        }
-    }
-
-    private boolean isInVisualPreview() {
-        if (mBinding != null) {
-            return mBinding.visualPreviewContainer.getVisibility() == View.VISIBLE;
+    private void refreshHistoryDetail(@NonNull HistoryDetailContainerFragmentBinding binding) {
+        if (mRevision.getTotalAdditions() > 0) {
+            binding.diffAdditions.setText(String.valueOf(mRevision.getTotalAdditions()));
+            binding.diffAdditions.setVisibility(View.VISIBLE);
         } else {
-            return false;
+            binding.diffAdditions.setVisibility(View.GONE);
         }
+
+        if (mRevision.getTotalDeletions() > 0) {
+            binding.diffDeletions.setText(String.valueOf(mRevision.getTotalDeletions()));
+            binding.diffDeletions.setVisibility(View.VISIBLE);
+        } else {
+            binding.diffDeletions.setVisibility(View.GONE);
+        }
+
+        binding.previous.setEnabled(mPosition != 0);
+        binding.next.setEnabled(mPosition != mAdapter.getCount() - 1);
+    }
+
+    private void resetOnPageChangeListener(@NonNull HistoryDetailContainerFragmentBinding binding) {
+        if (mOnPageChangeListener != null) {
+            binding.diffPager.removeOnPageChangeListener(mOnPageChangeListener);
+        } else {
+            mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    if (mIsChevronClicked) {
+                        AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_CHEVRON);
+                        mIsChevronClicked = false;
+                    } else {
+                        if (!mIsFragmentRecreated) {
+                            AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_SWIPE);
+                        } else {
+                            mIsFragmentRecreated = false;
+                        }
+                    }
+
+                    mPosition = position;
+                    mRevision = mAdapter.getRevisionAtPosition(mPosition);
+                    refreshHistoryDetail(binding);
+                    showHistoryTimeStampInToolbar();
+                }
+            };
+        }
+
+        binding.diffPager.addOnPageChangeListener(mOnPageChangeListener);
+    }
+
+    private boolean isInVisualPreview(@NonNull HistoryDetailContainerFragmentBinding binding) {
+        return binding.visualPreviewContainer.getVisibility() == View.VISIBLE;
     }
 
     @Override
