@@ -53,6 +53,10 @@ a.floating-button {
 }
 
 .docsbot-chat-btn-send-icon {
+    fill: rgb(0, 135, 16);
+}
+
+.docsbot-chat-btn-send-icon {
     transform: rotate(45deg);
     width: 26px;
 }
