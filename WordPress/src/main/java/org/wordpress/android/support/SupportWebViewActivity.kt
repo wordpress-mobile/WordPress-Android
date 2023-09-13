@@ -197,7 +197,11 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
             .appendQueryParameter("id", BuildConfig.DOCSBOTAI_ID)
             .appendQueryParameter("chatId", chatId)
             .appendQueryParameter("inputPlaceholder", context.getString(R.string.contact_support_input_placeholder))
-            .appendQueryParameter("firstMessage", context.getString(R.string.contact_support_first_message))
+            .appendQueryParameter("firstMessage",
+                context.getString(R.string.contact_support_first_message_hi) + "\n\n" +
+                context.getString(R.string.contact_support_first_message) + "\n\n" +
+                context.getString(R.string.contact_support_first_message_hint)
+            )
             .appendQueryParameter("getSupport", context.getString(R.string.contact_support_get_support))
             .appendQueryParameter("suggestions", context.getString(R.string.contact_support_suggestions))
             .appendQueryParameter("questionOne", context.getString(R.string.contact_support_question_one))
