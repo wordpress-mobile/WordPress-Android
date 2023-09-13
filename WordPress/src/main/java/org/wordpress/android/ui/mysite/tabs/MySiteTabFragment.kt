@@ -437,6 +437,10 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         )
 
         is BloggingPromptCardNavigationAction -> handleNavigation(action)
+
+        is SiteNavigationAction.OpenDashboardPersonalization -> activityNavigator.openDashboardPersonalization(
+            requireActivity()
+        )
     }
 
     private fun handleNavigation(action: BloggingPromptCardNavigationAction) {
