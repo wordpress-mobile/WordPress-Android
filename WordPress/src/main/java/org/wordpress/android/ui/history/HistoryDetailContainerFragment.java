@@ -55,7 +55,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class HistoryDetailContainerFragment extends Fragment {
-    private OnPageChangeListener mOnPageChangeListener;
+    @Nullable private OnPageChangeListener mOnPageChangeListener;
     private Revision mRevision;
     private int mPosition;
     private boolean mIsChevronClicked = false;
