@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.personalize
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDashboardPersonalization
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PersonalizeCardBuilderParams
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -10,7 +11,8 @@ import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class PersonalizeCardViewModelSlice @Inject constructor(
-    private val cardsTracker: CardsTracker
+    private val cardsTracker: CardsTracker,
+    private val personalizeCardShownTracker: PersonalizeCardShownTracker
 )  {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
@@ -23,5 +25,13 @@ class PersonalizeCardViewModelSlice @Inject constructor(
             CardsTracker.Type.PERSONALIZE_CARD.label
         )
         _onNavigation.value = Event(OpenDashboardPersonalization)
+    }
+
+    fun trackShown(itemType: MySiteCardAndItem.Type) {
+        personalizeCardShownTracker.trackShown(itemType)
+    }
+
+    fun resetShown() {
+        personalizeCardShownTracker.resetShown()
     }
 }
