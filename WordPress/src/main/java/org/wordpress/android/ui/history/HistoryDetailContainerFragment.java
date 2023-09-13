@@ -56,7 +56,7 @@ import javax.inject.Inject;
 
 public class HistoryDetailContainerFragment extends Fragment {
     @Nullable private OnPageChangeListener mOnPageChangeListener;
-    private Revision mRevision;
+    @Nullable private Revision mRevision;
     private int mPosition;
     private boolean mIsChevronClicked = false;
     private boolean mIsFragmentRecreated = false;
@@ -100,7 +100,7 @@ public class HistoryDetailContainerFragment extends Fragment {
         mIsFragmentRecreated = savedInstanceState != null;
 
         ArrayList<Revision> revisions = mapRevisions();
-        if (revisions != null) {
+        if (revisions != null && mRevision != null) {
             for (final Revision revision : revisions) {
                 if (revision.getRevisionId() == mRevision.getRevisionId()) {
                     mPosition = revisions.indexOf(revision);
@@ -112,7 +112,7 @@ public class HistoryDetailContainerFragment extends Fragment {
 
         HistoryDetailFragmentAdapter adapter = new HistoryDetailFragmentAdapter(getChildFragmentManager(), revisions);
 
-        if (mBinding != null) {
+        if (mBinding != null && mRevision != null) {
             mBinding.diffPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.SLIDE_OVER));
             mBinding.diffPager.setAdapter(adapter);
             mBinding.diffPager.setCurrentItem(mPosition);
@@ -156,7 +156,7 @@ public class HistoryDetailContainerFragment extends Fragment {
             mBinding.previous.setVisibility(isInVisualPreview ? View.INVISIBLE : View.VISIBLE);
             mBinding.next.setVisibility(isInVisualPreview ? View.INVISIBLE : View.VISIBLE);
 
-            refreshHistoryDetail(mBinding, adapter);
+            refreshHistoryDetail(mBinding, adapter, mRevision);
             resetOnPageChangeListener(mBinding, adapter);
         }
 
@@ -198,7 +198,9 @@ public class HistoryDetailContainerFragment extends Fragment {
     @SuppressWarnings("deprecation")
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        showHistoryTimeStampInToolbar();
+        if (mRevision != null) {
+            showHistoryTimeStampInToolbar(mRevision);
+        }
     }
 
     @Override
@@ -246,7 +248,7 @@ public class HistoryDetailContainerFragment extends Fragment {
             requireActivity().setResult(Activity.RESULT_OK, intent);
             requireActivity().finish();
         } else if (item.getItemId() == R.id.history_toggle_view) {
-            if (mBinding != null) {
+            if (mBinding != null && mRevision != null) {
                 if (isInVisualPreview(mBinding)) {
                     AniUtils.fadeIn(mBinding.next, Duration.SHORT);
                     AniUtils.fadeIn(mBinding.previous, Duration.SHORT);
@@ -274,26 +276,27 @@ public class HistoryDetailContainerFragment extends Fragment {
         });
     }
 
-    private void showHistoryTimeStampInToolbar() {
+    private void showHistoryTimeStampInToolbar(@NonNull Revision revision) {
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setSubtitle(mRevision.getTimeSpan());
+            actionBar.setSubtitle(revision.getTimeSpan());
         }
     }
 
     private void refreshHistoryDetail(
             @NonNull HistoryDetailContainerFragmentBinding binding,
-            @NonNull HistoryDetailFragmentAdapter adapter
+            @NonNull HistoryDetailFragmentAdapter adapter,
+            @NonNull Revision revision
     ) {
-        if (mRevision.getTotalAdditions() > 0) {
-            binding.diffAdditions.setText(String.valueOf(mRevision.getTotalAdditions()));
+        if (revision.getTotalAdditions() > 0) {
+            binding.diffAdditions.setText(String.valueOf(revision.getTotalAdditions()));
             binding.diffAdditions.setVisibility(View.VISIBLE);
         } else {
             binding.diffAdditions.setVisibility(View.GONE);
         }
 
-        if (mRevision.getTotalDeletions() > 0) {
-            binding.diffDeletions.setText(String.valueOf(mRevision.getTotalDeletions()));
+        if (revision.getTotalDeletions() > 0) {
+            binding.diffDeletions.setText(String.valueOf(revision.getTotalDeletions()));
             binding.diffDeletions.setVisibility(View.VISIBLE);
         } else {
             binding.diffDeletions.setVisibility(View.GONE);
@@ -334,8 +337,10 @@ public class HistoryDetailContainerFragment extends Fragment {
 
                     mPosition = position;
                     mRevision = adapter.getRevisionAtPosition(mPosition);
-                    refreshHistoryDetail(binding, adapter);
-                    showHistoryTimeStampInToolbar();
+                    if (mRevision != null) {
+                        refreshHistoryDetail(binding, adapter, mRevision);
+                        showHistoryTimeStampInToolbar(mRevision);
+                    }
                 }
             };
         }
