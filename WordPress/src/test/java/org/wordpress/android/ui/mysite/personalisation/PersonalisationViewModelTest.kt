@@ -197,4 +197,14 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
         verify(appPrefsWrapper).setShouldHidePagesDashboardCard(site.siteId, false)
     }
+
+    @Test
+    fun `when activity log card state is toggled, then pref is updated`() {
+        val cardType = CardType.ACTIVITY_LOG
+
+        viewModel.start()
+        viewModel.onCardToggled(cardType, true)
+
+        verify(appPrefsWrapper).setShouldHideActivityDashboardCard(site.siteId, false)
+    }
 }
