@@ -207,4 +207,14 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
         verify(appPrefsWrapper).setShouldHideActivityDashboardCard(site.siteId, false)
     }
+
+    @Test
+    fun `when blaze card state is toggled, then pref is updated`() {
+        val cardType = CardType.BLAZE
+
+        viewModel.start()
+        viewModel.onCardToggled(cardType, true)
+
+        verify(appPrefsWrapper).setShouldHideBlazeCard(site.siteId, false)
+    }
 }
