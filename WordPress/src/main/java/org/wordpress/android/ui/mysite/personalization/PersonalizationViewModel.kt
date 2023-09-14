@@ -38,50 +38,50 @@ class PersonalizationViewModel @Inject constructor(
     private suspend fun getCardStates(siteId: Long): List<DashboardCardState> {
         return listOf(
             DashboardCardState(
-                title = R.string.personalisation_screen_stats_card_title,
-                description = R.string.personalisation_screen_stats_card_description,
+                title = R.string.personalization_screen_stats_card_title,
+                description = R.string.personalization_screen_stats_card_description,
                 enabled = isStatsCardShown(siteId),
                 cardType = CardType.STATS
             ),
             DashboardCardState(
-                title = R.string.personalisation_screen_draft_posts_card_title,
-                description = R.string.personalisation_screen_draft_posts_card_description,
+                title = R.string.personalization_screen_draft_posts_card_title,
+                description = R.string.personalization_screen_draft_posts_card_description,
                 enabled = isDraftPostsCardShown(siteId),
                 cardType = CardType.DRAFT_POSTS
             ),
             DashboardCardState(
-                title = R.string.personalisation_screen_scheduled_posts_card_title,
-                description = R.string.personalisation_screen_scheduled_posts_card_description,
+                title = R.string.personalization_screen_scheduled_posts_card_title,
+                description = R.string.personalization_screen_scheduled_posts_card_description,
                 enabled = isScheduledPostsCardShown(siteId),
                 cardType = CardType.SCHEDULED_POSTS
             ),
             DashboardCardState(
-                title = R.string.personalisation_screen_pages_card_title,
-                description = R.string.personalisation_screen_pages_card_description,
+                title = R.string.personalization_screen_pages_card_title,
+                description = R.string.personalization_screen_pages_card_description,
                 enabled = isPagesCardShown(siteId),
                 cardType = CardType.PAGES
             ),
             DashboardCardState(
-                title = R.string.personalisation_screen_activity_log_card_title,
-                description = R.string.personalisation_screen_activity_log_card_description,
+                title = R.string.personalization_screen_activity_log_card_title,
+                description = R.string.personalization_screen_activity_log_card_description,
                 enabled = isActivityLogCardShown(siteId),
                 cardType = CardType.ACTIVITY_LOG
             ),
             DashboardCardState(
-                title = R.string.personalisation_screen_blaze_card_title,
-                description = R.string.personalisation_screen_blaze_card_description,
+                title = R.string.personalization_screen_blaze_card_title,
+                description = R.string.personalization_screen_blaze_card_description,
                 enabled = isBlazeCardShown(siteId),
                 cardType = CardType.BLAZE
             ),
             DashboardCardState(
-                title = R.string.personalisation_screen_blogging_prompts_card_title,
-                description = R.string.personalisation_screen_blogging_prompts_card_description,
+                title = R.string.personalization_screen_blogging_prompts_card_title,
+                description = R.string.personalization_screen_blogging_prompts_card_description,
                 enabled = isPromptsSettingEnabled(selectedSiteRepository.getSelectedSiteLocalId()),
                 cardType = CardType.BLOGGING_PROMPTS
             ),
             DashboardCardState(
-                title = R.string.personalisation_screen_next_steps_card_title,
-                description = R.string.personalisation_screen_next_steps_card_description,
+                title = R.string.personalization_screen_next_steps_card_title,
+                description = R.string.personalization_screen_next_steps_card_description,
                 enabled = isNextStepCardShown(siteId),
                 cardType = CardType.NEXT_STEPS
             )

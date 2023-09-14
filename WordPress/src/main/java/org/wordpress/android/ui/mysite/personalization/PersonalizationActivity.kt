@@ -55,7 +55,7 @@ class PersonalizationActivity : ComponentActivity() {
         Scaffold(
             topBar = {
                 MainTopAppBar(
-                    title = stringResource(id = R.string.personalisation_screen_title),
+                    title = stringResource(id = R.string.personalization_screen_title),
                     navigationIcon = NavigationIcons.BackIcon,
                     onNavigationIconClick = onBackPressedDispatcher::onBackPressed,
                 )
@@ -82,7 +82,7 @@ class PersonalizationActivity : ComponentActivity() {
                 item {
                     Text(
                         modifier = Modifier.padding(start = 16.dp),
-                        text = stringResource(id = R.string.personalisation_screen_description),
+                        text = stringResource(id = R.string.personalization_screen_description),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
@@ -99,7 +99,7 @@ class PersonalizationActivity : ComponentActivity() {
                 item {
                     Text(
                         modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp),
-                        text = stringResource(id = R.string.personalisation_screen_footer_cards),
+                        text = stringResource(id = R.string.personalization_screen_footer_cards),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
