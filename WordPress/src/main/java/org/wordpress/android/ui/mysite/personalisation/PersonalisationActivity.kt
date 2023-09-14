@@ -19,6 +19,8 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LiveData
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
@@ -42,14 +43,14 @@ class PersonalisationActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                PersonalisationScreen(viewModel.uiState)
+                PersonalisationScreen(viewModel.uiState.observeAsState())
             }
         }
     }
 
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    fun PersonalisationScreen(uiState: LiveData<List<DashboardCardState>>) {
+    fun PersonalisationScreen(uiState: State<List<DashboardCardState>?>) {
         Scaffold(
             topBar = {
                 MainTopAppBar(
