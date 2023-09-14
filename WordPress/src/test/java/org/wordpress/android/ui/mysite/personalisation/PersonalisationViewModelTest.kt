@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.personalisation
 
+import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -118,5 +119,16 @@ class PersonalisationViewModelTest : BaseUnitTest() {
         val statsCardState = uiStateList.last().find { it.cardType == CardType.BLAZE }
 
         assertTrue(statsCardState!!.enabled)
+    }
+
+    @Test
+    fun `given blogging prompts card is hidden, when cards are fetched, then state is checked`() {
+        whenever(bloggingRemindersStore.bloggingRemindersModel(localSiteId))
+            .thenReturn(flowOf(userSetBloggingRemindersModel.copy(isPromptsCardEnabled = false)))
+
+        viewModel.start()
+        val statsCardState = uiStateList.last().find { it.cardType == CardType.BLOGGING_PROMPTS }
+
+        assertFalse(statsCardState!!.enabled)
     }
 }
