@@ -32,37 +32,37 @@ class PersonalisationViewModel @Inject constructor(
             DashboardCardState(
                 title = R.string.personalisation_screen_stats_card_title,
                 description = R.string.personalisation_screen_stats_card_description,
-                enabled = !appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(siteId),
+                enabled = isStatsCardShown(siteId),
                 cardType = CardType.STATS
             ),
             DashboardCardState(
                 title = R.string.personalisation_screen_draft_posts_card_title,
                 description = R.string.personalisation_screen_draft_posts_card_description,
-                enabled = !appPrefsWrapper.getShouldHidePostDashboardCard(siteId, PostCardType.DRAFT.name),
+                enabled = isDraftPostsCardShown(siteId),
                 cardType = CardType.DRAFT_POSTS
             ),
             DashboardCardState(
                 title = R.string.personalisation_screen_scheduled_posts_card_title,
                 description = R.string.personalisation_screen_scheduled_posts_card_description,
-                enabled = !appPrefsWrapper.getShouldHidePostDashboardCard(siteId, PostCardType.SCHEDULED.name),
+                enabled = isScheduledPostsCardShown(siteId),
                 cardType = CardType.SCHEDULED_POSTS
             ),
             DashboardCardState(
                 title = R.string.personalisation_screen_pages_card_title,
                 description = R.string.personalisation_screen_pages_card_description,
-                enabled = !appPrefsWrapper.getShouldHidePagesDashboardCard(siteId),
+                enabled = isPagesCardShown(siteId),
                 cardType = CardType.PAGES
             ),
             DashboardCardState(
                 title = R.string.personalisation_screen_activity_log_card_title,
                 description = R.string.personalisation_screen_activity_log_card_description,
-                enabled = !appPrefsWrapper.getShouldHideActivityDashboardCard(siteId),
+                enabled = isActivityLogCardShown(siteId),
                 cardType = CardType.ACTIVITY_LOG
             ),
             DashboardCardState(
                 title = R.string.personalisation_screen_blaze_card_title,
                 description = R.string.personalisation_screen_blaze_card_description,
-                enabled = !appPrefsWrapper.hideBlazeCard(siteId),
+                enabled = isBlazeCardShown(siteId),
                 cardType = CardType.BLAZE
             ),
             DashboardCardState(
@@ -74,9 +74,25 @@ class PersonalisationViewModel @Inject constructor(
             DashboardCardState(
                 title = R.string.personalisation_screen_next_steps_card_title,
                 description = R.string.personalisation_screen_next_steps_card_description,
-                enabled = !appPrefsWrapper.getShouldHideNextStepsDashboardCard(siteId),
+                enabled = isNextStepCardShown(siteId),
                 cardType = CardType.NEXT_STEPS
             )
         )
     }
+
+    private fun isStatsCardShown(siteId: Long) = !appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(siteId)
+
+    private fun isDraftPostsCardShown(siteId: Long) =
+        !appPrefsWrapper.getShouldHidePostDashboardCard(siteId, PostCardType.DRAFT.name)
+
+    private fun isScheduledPostsCardShown(siteId: Long) =
+        !appPrefsWrapper.getShouldHidePostDashboardCard(siteId, PostCardType.SCHEDULED.name)
+
+    private fun isPagesCardShown(siteId: Long) = !appPrefsWrapper.getShouldHidePagesDashboardCard(siteId)
+
+    private fun isActivityLogCardShown(siteId: Long) = !appPrefsWrapper.getShouldHideActivityDashboardCard(siteId)
+
+    private fun isBlazeCardShown(siteId: Long) = !appPrefsWrapper.hideBlazeCard(siteId)
+
+    private fun isNextStepCardShown(siteId: Long) = !appPrefsWrapper.getShouldHideNextStepsDashboardCard(siteId)
 }
