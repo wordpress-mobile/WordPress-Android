@@ -124,14 +124,14 @@ class PersonalizationViewModel @Inject constructor(
 
     private fun trackCardHidden(cardType: CardType){
         analyticsTrackerWrapper.track(
-            Stat.PERSONALISATION_SCREEN_CARD_HIDE_TAPPED,
+            Stat.PERSONALIZATION_SCREEN_CARD_HIDE_TAPPED,
             mapOf(CARD_TYPE_TRACK_PARAM to cardType.trackingName)
         )
     }
 
     private fun trackCardShown(cardType: CardType){
         analyticsTrackerWrapper.track(
-            Stat.PERSONALISATION_SCREEN_CARD_SHOW_TAPPED,
+            Stat.PERSONALIZATION_SCREEN_CARD_SHOW_TAPPED,
             mapOf(CARD_TYPE_TRACK_PARAM to cardType.trackingName)
         )
     }

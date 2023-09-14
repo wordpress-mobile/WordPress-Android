@@ -254,7 +254,7 @@ class PersonalizationViewModelTest : BaseUnitTest() {
         viewModel.onCardToggled(cardType, true)
 
         verify(analyticsTrackerWrapper).track(
-            AnalyticsTracker.Stat.PERSONALISATION_SCREEN_CARD_SHOW_TAPPED,
+            AnalyticsTracker.Stat.PERSONALIZATION_SCREEN_CARD_SHOW_TAPPED,
             mapOf(CARD_TYPE_TRACK_PARAM to cardType.trackingName)
         )
     }
@@ -268,7 +268,7 @@ class PersonalizationViewModelTest : BaseUnitTest() {
         viewModel.onCardToggled(cardType, false)
 
         verify(analyticsTrackerWrapper).track(
-            AnalyticsTracker.Stat.PERSONALISATION_SCREEN_CARD_HIDE_TAPPED,
+            AnalyticsTracker.Stat.PERSONALIZATION_SCREEN_CARD_HIDE_TAPPED,
             mapOf(CARD_TYPE_TRACK_PARAM to cardType.trackingName)
         )
     }
