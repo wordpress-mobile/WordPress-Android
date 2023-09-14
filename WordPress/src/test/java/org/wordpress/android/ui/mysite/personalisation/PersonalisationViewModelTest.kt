@@ -167,4 +167,14 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
         verify(appPrefsWrapper).setShouldHideTodaysStatsDashboardCard(site.siteId, false)
     }
+
+    @Test
+    fun `when draft posts card state is toggled, then pref is updated`() {
+        val cardType = CardType.DRAFT_POSTS
+
+        viewModel.start()
+        viewModel.onCardToggled(cardType, true)
+
+        verify(appPrefsWrapper).setShouldHidePostDashboardCard(site.siteId, PostCardType.DRAFT.name, false)
+    }
 }
