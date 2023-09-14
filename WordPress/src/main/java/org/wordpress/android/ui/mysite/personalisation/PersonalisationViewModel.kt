@@ -105,4 +105,36 @@ class PersonalisationViewModel @Inject constructor(
         .bloggingRemindersModel(siteId)
         .firstOrNull()
         ?.isPromptsCardEnabled == true
+
+    fun onCardToggled(cardType: CardType, enabled: Boolean) {
+        val siteId = selectedSiteRepository.getSelectedSite()!!.siteId
+        launch(bgDispatcher) {
+            when (cardType) {
+                CardType.STATS -> appPrefsWrapper.setShouldHideTodaysStatsDashboardCard(siteId, enabled)
+                CardType.DRAFT_POSTS -> appPrefsWrapper.setShouldHidePostDashboardCard(
+                    siteId,
+                    PostCardType.DRAFT.name,
+                    enabled
+                )
+
+                CardType.SCHEDULED_POSTS -> appPrefsWrapper.setShouldHidePostDashboardCard(
+                    siteId,
+                    PostCardType.SCHEDULED.name,
+                    enabled
+                )
+
+                CardType.PAGES -> appPrefsWrapper.setShouldHidePagesDashboardCard(siteId, enabled)
+                CardType.ACTIVITY_LOG -> appPrefsWrapper.setShouldHideActivityDashboardCard(siteId, enabled)
+                CardType.BLAZE -> appPrefsWrapper.setShouldHideBlazeCard(siteId, enabled)
+                CardType.BLOGGING_PROMPTS -> updatePromptsCardEnabled(enabled)
+                CardType.NEXT_STEPS -> appPrefsWrapper.setShouldHideNextStepsDashboardCard(siteId, enabled)
+            }
+        }
+    }
+
+    private suspend fun updatePromptsCardEnabled(isEnabled: Boolean) {
+        val siteId = selectedSiteRepository.getSelectedSiteLocalId()
+        val current = bloggingRemindersStore.bloggingRemindersModel(siteId).firstOrNull() ?: return
+        bloggingRemindersStore.updateBloggingReminders(current.copy(isPromptsCardEnabled = isEnabled))
+    }
 }
