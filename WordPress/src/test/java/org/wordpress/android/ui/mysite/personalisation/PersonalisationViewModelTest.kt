@@ -12,12 +12,14 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -30,6 +32,9 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var bloggingRemindersStore: BloggingRemindersStore
+
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private lateinit var viewModel: PersonalisationViewModel
 
@@ -53,7 +58,8 @@ class PersonalisationViewModelTest : BaseUnitTest() {
             bgDispatcher = testDispatcher(),
             appPrefsWrapper = appPrefsWrapper,
             selectedSiteRepository = selectedSiteRepository,
-            bloggingRemindersStore = bloggingRemindersStore
+            bloggingRemindersStore = bloggingRemindersStore,
+            analyticsTrackerWrapper = analyticsTrackerWrapper
         )
 
         viewModel.uiState.observeForever {
@@ -238,5 +244,18 @@ class PersonalisationViewModelTest : BaseUnitTest() {
         viewModel.onCardToggled(cardType, true)
 
         verify(appPrefsWrapper).setShouldHideNextStepsDashboardCard(site.siteId, false)
+    }
+
+    @Test
+    fun `given card disabled, when card state is toggled, then event is tracked`() {
+        val cardType = CardType.STATS
+
+        viewModel.start()
+        viewModel.onCardToggled(cardType, true)
+
+        verify(analyticsTrackerWrapper).track(
+            AnalyticsTracker.Stat.PERSONALISATION_SCREEN_CARD_SHOW_TAPPED,
+            mapOf(CARD_TYPE_TRACK_PARAM to cardType.trackingName)
+        )
     }
 }
