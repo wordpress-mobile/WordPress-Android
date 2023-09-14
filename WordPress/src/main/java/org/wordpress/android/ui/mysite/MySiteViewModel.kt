@@ -282,7 +282,8 @@ class MySiteViewModel @Inject constructor(
         postsCardViewModelSlice.onNavigation,
         activityLogCardViewModelSlice.onNavigation,
         siteItemsViewModelSlice.onNavigation,
-        bloggingPromptCardViewModelSlice.onNavigation
+        bloggingPromptCardViewModelSlice.onNavigation,
+        personalizeCardViewModelSlice.onNavigation
     )
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
@@ -1364,6 +1365,8 @@ class MySiteViewModel @Inject constructor(
         siteSelected.cardAndItems.filterIsInstance<JetpackInstallFullPluginCard>()
             .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type, quickStartRepository.currentTab) }
         dashboardCardPlansUtils.trackCardShown(viewModelScope, siteSelected)
+        siteSelected.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>()
+            .forEach { personalizeCardViewModelSlice.trackShown(it.type) }
     }
 
     private fun resetShownTrackers() {
@@ -1372,6 +1375,7 @@ class MySiteViewModel @Inject constructor(
         quickStartTracker.resetShown()
         jetpackFeatureCardShownTracker.resetShown()
         jetpackInstallFullPluginShownTracker.resetShown()
+        personalizeCardViewModelSlice.resetShown()
     }
 
     private fun trackTabChanged(isSiteMenu: Boolean) {
