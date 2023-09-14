@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.personalisation
+package org.wordpress.android.ui.mysite.personalization
 
 import android.annotation.SuppressLint
 import android.os.Bundle

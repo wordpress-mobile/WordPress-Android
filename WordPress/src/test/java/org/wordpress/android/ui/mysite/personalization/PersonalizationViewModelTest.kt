@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.personalisation
+package org.wordpress.android.ui.mysite.personalization
 
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue

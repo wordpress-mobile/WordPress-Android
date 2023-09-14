@@ -11,7 +11,7 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 import org.wordpress.android.ui.blaze.blazepromote.ARG_BLAZE_FLOW_SOURCE
 import org.wordpress.android.ui.blaze.blazepromote.ARG_BLAZE_SHOULD_SHOW_OVERLAY
 import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity
-import org.wordpress.android.ui.mysite.personalisation.PersonalizationActivity
+import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import javax.inject.Inject
 import javax.inject.Singleton
 
