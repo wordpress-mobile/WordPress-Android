@@ -33,7 +33,7 @@ class PersonalisationViewModelTest : BaseUnitTest() {
     private val site = SiteModel().apply { siteId = 123L }
     private val localSiteId = 456
 
-    private var isStatsCardShown = true
+    private var isStatsCardHidden = true
 
     private val uiStateList = mutableListOf<List<DashboardCardState>>()
 
@@ -62,8 +62,8 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when stats card is not hidden, then card state is checked`() {
-        isStatsCardShown = false
-        whenever(appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(site.siteId)).thenReturn(isStatsCardShown)
+        isStatsCardHidden = false
+        whenever(appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(site.siteId)).thenReturn(isStatsCardHidden)
 
         viewModel.start()
         val statsCardState = uiStateList.last().find { it.cardType == CardType.STATS }
