@@ -79,4 +79,14 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
         assertTrue(statsCardState!!.enabled)
     }
+
+    @Test
+    fun `given scheduled post card is not hidden, when cards are fetched, then state is checked`() {
+        whenever(appPrefsWrapper.getShouldHidePostDashboardCard(123L, PostCardType.SCHEDULED.name)).thenReturn(false)
+
+        viewModel.start()
+        val statsCardState = uiStateList.last().find { it.cardType == CardType.SCHEDULED_POSTS }
+
+        assertTrue(statsCardState!!.enabled)
+    }
 }
