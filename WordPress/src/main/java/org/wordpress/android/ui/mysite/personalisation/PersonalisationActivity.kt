@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
@@ -84,7 +86,7 @@ class PersonalisationActivity : ComponentActivity() {
                         text = stringResource(id = R.string.personalisation_screen_description),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Color(0x99000000),
+                        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
                     )
                 }
                 items(cardStateList.size) { index ->
@@ -101,7 +103,7 @@ class PersonalisationActivity : ComponentActivity() {
                         text = stringResource(id = R.string.personalisation_screen_footer_cards),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal,
-                        color = Color(0xFF666666)
+                        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
                     )
                 }
             }
@@ -137,7 +139,7 @@ fun DashboardCardStateRow(
                 Text(
                     text = stringResource(id = cardState.description),
                     fontSize = 13.sp,
-                    color = Color(0x99000000)
+                    color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
                 )
             }
             Spacer(Modifier.width(8.dp))
