@@ -187,4 +187,14 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
         verify(appPrefsWrapper).setShouldHidePostDashboardCard(site.siteId, PostCardType.SCHEDULED.name, false)
     }
+
+    @Test
+    fun `when pages card state is toggled, then pref is updated`() {
+        val cardType = CardType.PAGES
+
+        viewModel.start()
+        viewModel.onCardToggled(cardType, true)
+
+        verify(appPrefsWrapper).setShouldHidePagesDashboardCard(site.siteId, false)
+    }
 }
