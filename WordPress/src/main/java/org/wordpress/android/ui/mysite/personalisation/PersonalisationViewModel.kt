@@ -6,21 +6,26 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.firstOrNull
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
+
+const val CARD_TYPE_TRACK_PARAM = "type"
 
 @HiltViewModel
 class PersonalisationViewModel @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val bloggingRemindersStore: BloggingRemindersStore
+    private val bloggingRemindersStore: BloggingRemindersStore,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiState = MutableLiveData<List<DashboardCardState>>()
     val uiState: LiveData<List<DashboardCardState>> = _uiState
@@ -86,6 +91,7 @@ class PersonalisationViewModel @Inject constructor(
     fun onCardToggled(cardType: CardType, enabled: Boolean) {
         val siteId = selectedSiteRepository.getSelectedSite()!!.siteId
         launch(bgDispatcher) {
+            trackCardToggle(cardType, enabled)
             when (cardType) {
                 CardType.STATS -> appPrefsWrapper.setShouldHideTodaysStatsDashboardCard(siteId, !enabled)
                 CardType.DRAFT_POSTS -> appPrefsWrapper.setShouldHidePostDashboardCard(
@@ -109,6 +115,25 @@ class PersonalisationViewModel @Inject constructor(
             // update the ui state
             updateCardState(cardType, enabled)
         }
+    }
+
+    private fun trackCardToggle(cardType: CardType, enabled: Boolean){
+        if(enabled) trackCardShown(cardType)
+        else trackCardHidden(cardType)
+    }
+
+    private fun trackCardHidden(cardType: CardType){
+        analyticsTrackerWrapper.track(
+            Stat.PERSONALISATION_SCREEN_CARD_HIDE_TAPPED,
+            mapOf(CARD_TYPE_TRACK_PARAM to cardType.trackingName)
+        )
+    }
+
+    private fun trackCardShown(cardType: CardType){
+        analyticsTrackerWrapper.track(
+            Stat.PERSONALISATION_SCREEN_CARD_SHOW_TAPPED,
+            mapOf(CARD_TYPE_TRACK_PARAM to cardType.trackingName)
+        )
     }
 
     private fun updateCardState(cardType: CardType, enabled: Boolean) {
