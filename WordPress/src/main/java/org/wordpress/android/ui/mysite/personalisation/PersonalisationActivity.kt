@@ -64,46 +64,45 @@ class PersonalisationActivity : ComponentActivity() {
             }
         )
     }
-}
 
-
-@Composable
-fun PersonalisationContent(cardStateList: List<DashboardCardState>, modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .wrapContentSize()
-            .padding(vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        LazyColumn(
-            modifier = Modifier
+    @Composable
+    fun PersonalisationContent(cardStateList: List<DashboardCardState>, modifier: Modifier = Modifier) {
+        Column(
+            modifier = modifier
                 .fillMaxWidth()
+                .wrapContentSize()
+                .padding(vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            item {
-                Text(
-                    modifier = Modifier.padding(start = 16.dp),
-                    text = stringResource(id = R.string.personalisation_screen_description),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0x99000000),
-                )
-            }
-            items(cardStateList.size) { index ->
-                val cardState = cardStateList[index]
-                DashboardCardStateRow(
-                    cardState = cardState,
-                )
-            }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                item {
+                    Text(
+                        modifier = Modifier.padding(start = 16.dp),
+                        text = stringResource(id = R.string.personalisation_screen_description),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0x99000000),
+                    )
+                }
+                items(cardStateList.size) { index ->
+                    val cardState = cardStateList[index]
+                    DashboardCardStateRow(
+                        cardState = cardState,
+                    )
+                }
 
-            item {
-                Text(
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                    text = stringResource(id = R.string.personalisation_screen_footer_cards),
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = Color(0xFF666666)
-                )
+                item {
+                    Text(
+                        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                        text = stringResource(id = R.string.personalisation_screen_footer_cards),
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color(0xFF666666)
+                    )
+                }
             }
         }
     }
@@ -155,62 +154,3 @@ fun DashboardCardStateRow(
     }
 }
 
-
-@Preview
-@Composable
-fun PreviewPersonalizeScreen() {
-    AppTheme {
-        PersonalisationContent(
-            cardStateList = listOf(
-                DashboardCardState(
-                    title = R.string.personalisation_screen_stats_card_title,
-                    description = R.string.personalisation_screen_stats_card_description,
-                    enabled = true,
-                    cardType = CardType.STATS
-                ),
-                DashboardCardState(
-                    title = R.string.personalisation_screen_draft_posts_card_title,
-                    description = R.string.personalisation_screen_draft_posts_card_description,
-                    enabled = true,
-                    cardType = CardType.DRAFT_POSTS
-                ),
-                DashboardCardState(
-                    title = R.string.personalisation_screen_scheduled_posts_card_title,
-                    description = R.string.personalisation_screen_scheduled_posts_card_description,
-                    enabled = true,
-                    cardType = CardType.SCHEDULED_POSTS
-                ),
-                DashboardCardState(
-                    title = R.string.personalisation_screen_pages_card_title,
-                    description = R.string.personalisation_screen_pages_card_description,
-                    enabled = true,
-                    cardType = CardType.PAGES
-                ),
-                DashboardCardState(
-                    title = R.string.personalisation_screen_activity_log_card_title,
-                    description = R.string.personalisation_screen_activity_log_card_description,
-                    enabled = true,
-                    cardType = CardType.ACTIVITY_LOG
-                ),
-                DashboardCardState(
-                    title = R.string.personalisation_screen_blaze_card_title,
-                    description = R.string.personalisation_screen_blaze_card_description,
-                    enabled = true,
-                    cardType = CardType.BLAZE
-                ),
-                DashboardCardState(
-                    title = R.string.personalisation_screen_blogging_prompts_card_title,
-                    description = R.string.personalisation_screen_blogging_prompts_card_description,
-                    enabled = true,
-                    cardType = CardType.BLOGGING_PROMPTS
-                ),
-                DashboardCardState(
-                    title = R.string.personalisation_screen_next_steps_card_title,
-                    description = R.string.personalisation_screen_next_steps_card_description,
-                    enabled = true,
-                    cardType = CardType.NEXT_STEPS
-                ),
-            )
-        )
-    }
-}
