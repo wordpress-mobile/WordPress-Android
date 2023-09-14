@@ -44,14 +44,14 @@ class PersonalizationActivity : ComponentActivity() {
         setContent {
             AppTheme {
                 viewModel.start()
-                PersonalisationScreen(viewModel.uiState.observeAsState())
+                PersonalizationScreen(viewModel.uiState.observeAsState())
             }
         }
     }
 
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    fun PersonalisationScreen(uiState: State<List<DashboardCardState>?>) {
+    fun PersonalizationScreen(uiState: State<List<DashboardCardState>?>) {
         Scaffold(
             topBar = {
                 MainTopAppBar(
@@ -61,13 +61,13 @@ class PersonalizationActivity : ComponentActivity() {
                 )
             },
             content = {
-                PersonalisationContent(uiState.value ?: emptyList())
+                PersonalizationContent(uiState.value ?: emptyList())
             }
         )
     }
 
     @Composable
-    fun PersonalisationContent(cardStateList: List<DashboardCardState>, modifier: Modifier = Modifier) {
+    fun PersonalizationContent(cardStateList: List<DashboardCardState>, modifier: Modifier = Modifier) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
