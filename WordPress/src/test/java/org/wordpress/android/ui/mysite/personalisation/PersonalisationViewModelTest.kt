@@ -89,4 +89,14 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
         assertTrue(statsCardState!!.enabled)
     }
+
+    @Test
+    fun `given pages card is not hidden, when cards are fetched, then state is checked`() {
+        whenever(appPrefsWrapper.getShouldHidePagesDashboardCard(123L)).thenReturn(false)
+
+        viewModel.start()
+        val statsCardState = uiStateList.last().find { it.cardType == CardType.PAGES }
+
+        assertTrue(statsCardState!!.enabled)
+    }
 }
