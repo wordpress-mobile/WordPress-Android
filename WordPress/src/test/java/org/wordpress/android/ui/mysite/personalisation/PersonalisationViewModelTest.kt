@@ -59,7 +59,7 @@ class PersonalisationViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when stats card is not hidden, then card state is checked`() {
+    fun `given stats card is not hidden, when cards are fetched, then state is checked`() {
         val isStatsCardHidden = false
         whenever(appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(site.siteId)).thenReturn(isStatsCardHidden)
 
