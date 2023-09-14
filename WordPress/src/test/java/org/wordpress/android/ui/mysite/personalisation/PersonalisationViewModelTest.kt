@@ -229,4 +229,14 @@ class PersonalisationViewModelTest : BaseUnitTest() {
             userSetBloggingRemindersModel.copy(isPromptsCardEnabled = true)
         )
     }
+
+    @Test
+    fun `when next steps card state is toggled, then pref is updated`() {
+        val cardType = CardType.NEXT_STEPS
+
+        viewModel.start()
+        viewModel.onCardToggled(cardType, true)
+
+        verify(appPrefsWrapper).setShouldHideNextStepsDashboardCard(site.siteId, false)
+    }
 }
