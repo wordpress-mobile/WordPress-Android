@@ -9,6 +9,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
@@ -155,5 +156,15 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
         assertFalse(statsCardStateBefore!!.enabled)
         assertTrue(statsCardState!!.enabled)
+    }
+
+    @Test
+    fun `when stats card state is toggled, then pref is updated`() {
+        val cardType = CardType.STATS
+
+        viewModel.start()
+        viewModel.onCardToggled(cardType, true)
+
+        verify(appPrefsWrapper).setShouldHideTodaysStatsDashboardCard(site.siteId, false)
     }
 }
