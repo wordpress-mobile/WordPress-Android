@@ -36,7 +36,7 @@ import org.wordpress.android.ui.compose.components.buttons.WPSwitch
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @AndroidEntryPoint
-class PersonalisationActivity : ComponentActivity() {
+class PersonalizationActivity : ComponentActivity() {
     private val viewModel: PersonalizationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

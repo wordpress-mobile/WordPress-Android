@@ -1091,7 +1091,7 @@
             android:label="@string/stats"
             android:theme="@style/WordPress.NoActionBar"/>
 
-        <activity android:name=".ui.mysite.personalisation.PersonalisationActivity"
+        <activity android:name=".ui.mysite.personalisation.PersonalizationActivity"
             android:exported="false"
             android:label="@string/stats"
             android:theme="@style/WordPress.NoActionBar"/>
