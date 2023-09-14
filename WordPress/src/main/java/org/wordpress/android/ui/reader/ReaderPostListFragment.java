@@ -378,7 +378,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -1208,14 +1208,14 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         // this is hacky, but we want to change the SearchView's autocomplete to show suggestions
         // after a single character is typed, and there's no less hacky way to do this...
-        View view = mSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        View view = mSearchView.findViewById(com.google.android.material.R.id.search_src_text);
         if (view instanceof AutoCompleteTextView) {
             ((AutoCompleteTextView) view).setThreshold(1);
         }
 
         mSearchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
                 if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
                     mReaderTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED);
                 }
@@ -1231,7 +1231,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 requireActivity().finish();
                 return false;
             }

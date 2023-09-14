@@ -13,11 +13,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_AUTHOR_FILTER_CHANGED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANGED
@@ -32,10 +30,8 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
-import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
@@ -69,7 +65,7 @@ import kotlin.coroutines.CoroutineContext
 
 private const val SCROLL_TO_DELAY = 50L
 private const val SEARCH_COLLAPSE_DELAY = 500L
-private val FAB_VISIBLE_POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS)
+private val FAB_VISIBLE_POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
 val POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
 private const val TRACKS_SELECTED_TAB = "selected_tab"
 private const val TRACKS_SELECTED_AUTHOR_FILTER = "author_filter_selection"
@@ -91,15 +87,12 @@ class PostListMainViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val blazeStore: BlazeStore,
     private val siteUtilsWrapper: SiteUtilsWrapper
 ) : ViewModel(), CoroutineScope {
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
         override val lifecycle: Lifecycle = lifecycleRegistry
     }
-    private var isSiteBlazeEligible = false
 
     private val scrollToTargetPostJob: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -272,8 +265,6 @@ class PostListMainViewModel @Inject constructor(
             AuthorFilterSelection.EVERYONE
         }
 
-        checkBlazeEligibility()
-
         postListEventListenerFactory.createAndStartListening(
             lifecycle = lifecycleOwner.lifecycle,
             dispatcher = dispatcher,
@@ -326,18 +317,6 @@ class PostListMainViewModel @Inject constructor(
         }
     }
 
-    private fun checkBlazeEligibility() {
-        // If the user is not an admin, we don't need to check for Blaze eligibility
-        if (!blazeFeatureUtils.isBlazeEligibleForUser(site)) return
-        launch {
-            blazeStore.getBlazeStatus(site.siteId)
-                .map { it.model?.firstOrNull() }
-                .collect {
-                    isSiteBlazeEligible = it?.isEligible ?: false
-                }
-        }
-    }
-
     override fun onCleared() {
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
         scrollToTargetPostJob.cancel() // cancels all coroutines with the default coroutineContext
@@ -359,8 +338,7 @@ class PostListMainViewModel @Inject constructor(
             doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
             hasAutoSave = postConflictResolver::hasUnhandledAutoSave,
             postFetcher = postFetcher,
-            getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl,
-            isSiteBlazeEligible = isSiteBlazeEligible,
+            getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
         )
     }
 
@@ -441,7 +419,7 @@ class PostListMainViewModel @Inject constructor(
     fun showTargetPost(targetPostId: Int) {
         val postModel = postStore.getPostByLocalPostId(targetPostId)
         if (postModel == null) {
-            _snackBarMessage.value = SnackbarMessageHolder(UiStringRes(string.error_post_does_not_exist))
+            _snackBarMessage.value = SnackbarMessageHolder(UiStringRes(R.string.error_post_does_not_exist))
         } else {
             launch(mainDispatcher) {
                 val targetTab = PostListType.fromPostStatus(PostStatus.fromPost(postModel))

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpackoverlay
 
+import android.annotation.SuppressLint
 import org.wordpress.android.R
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -12,13 +13,17 @@ sealed class JetpackBrandingUiState {
         val otherRes: Int
 
         companion object {
+            @SuppressLint("NonConstantResourceId")
             const val RES_ARE_MOVING_IN = R.string.wp_jetpack_powered_phase_3_feature_are_moving_in
+            @SuppressLint("NonConstantResourceId")
             const val RES_IS_MOVING_IN = R.string.wp_jetpack_powered_phase_3_feature_is_moving_in
         }
     }
 
     object Soon : JetpackBrandingUiState(), Indeterminate {
+        @SuppressLint("NonConstantResourceId")
         const val RES_ARE_MOVING_SOON = R.string.wp_jetpack_powered_phase_3_feature_are_moving_soon
+        @SuppressLint("NonConstantResourceId")
         const val RES_IS_MOVING_SOON = R.string.wp_jetpack_powered_phase_3_feature_is_moving_soon
     }
 
@@ -36,6 +41,7 @@ sealed class JetpackBrandingUiState {
     object Passed : JetpackBrandingUiState()
 
     companion object {
+        @SuppressLint("NonConstantResourceId")
         const val RES_JP_POWERED = R.string.wp_jetpack_powered
 
         fun between(startDate: LocalDate, endDate: LocalDate): JetpackBrandingUiState {

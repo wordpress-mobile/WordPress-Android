@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -7,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
@@ -15,7 +17,6 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -38,6 +39,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.SparseArrayCompat;
@@ -53,7 +56,6 @@ import com.google.android.material.snackbar.Snackbar;
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,8 +100,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig;
-import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
+import org.wordpress.android.util.config.BloggingPromptsFeature;
 import org.wordpress.android.util.config.ManageCategoriesFeatureConfig;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
@@ -185,8 +186,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject Dispatcher mDispatcher;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
-    @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
+    @Inject BloggingPromptsFeature mBloggingPromptsFeature;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
@@ -263,6 +263,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     // Advanced settings
     private Preference mStartOverPref;
+    private PreferenceScreen mStartOverSettingsScreen;
     private Preference mExportSitePref;
     private Preference mDeleteSitePref;
 
@@ -313,7 +314,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private ProgressDialog mDeleteSiteProgressDialog;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Activity activity = getActivity();
         ((WordPress) activity.getApplication()).component().inject(this);
@@ -345,7 +346,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         // initialize the appropriate settings interface (WP.com or WP.org)
         mSiteSettings = SiteSettingsInterface.getInterface(activity, mSite, this);
 
-        setRetainInstance(true);
         addPreferencesFromResource();
 
         // toggle which preferences are shown and set references
@@ -402,7 +402,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onDestroyView() {
-        removeJetpackSecurityScreenToolbar();
         mDispatcher.unregister(this);
         super.onDestroyView();
     }
@@ -411,6 +410,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onDestroy() {
         if (mSiteSettings != null) {
             mSiteSettings.clear();
+        }
+        if (mDialog != null) {
+            mDialog.dismiss();
         }
         super.onDestroy();
     }
@@ -501,26 +503,31 @@ public class SiteSettingsFragment extends PreferenceFragment
         return view;
     }
 
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        addToolbarToSiteAcceleratorSettings();
+        addToolbarToJpSecuritySettings();
+        addToolbarToStartOverSettings();
+        addToolbarToJetpackMoreSettings();
+        addToolbarToSiteAcceleratorSettingsNested();
+        addToolbarToMorePreference();
+    }
+
     private AppCompatActivity getAppCompatActivity() {
         return (AppCompatActivity) getActivity();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        removeJetpackSecurityScreenToolbar();
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
-        setupMorePreferenceScreen();
-        setupJetpackSecurityScreen();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
-            setupMorePreferenceScreen();
-            setupJetpackSecurityScreen();
-
             SiteSettingsTimezoneBottomSheet bottomSheet =
                     (SiteSettingsTimezoneBottomSheet) (getAppCompatActivity())
                             .getSupportFragmentManager().findFragmentByTag(TIMEZONE_BOTTOM_SHEET_TAG);
@@ -564,8 +571,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(getActivity(), WORDPRESS_EMPTY_SITE_SUPPORT_URL);
             } else {
                 setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-                String title = getString(R.string.start_over);
-                WPActivityUtils.addToolbarToDialog(this, dialog, title);
+                addToolbarToStartOverSettings();
             }
         } else if (preference == mDateFormatPref) {
             showDateOrTimeFormatDialog(FormatType.DATE_FORMAT);
@@ -582,6 +588,40 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         return false;
+    }
+
+    private void addToolbarToNestedPreference(PreferenceScreen preferenceScreen, int titleRes) {
+        if (preferenceScreen != null && isAdded()) {
+            Dialog dialog = preferenceScreen.getDialog();
+            if (dialog != null) {
+                String title = getString(titleRes);
+                WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            }
+        }
+    }
+
+    private void addToolbarToSiteAcceleratorSettings() {
+        addToolbarToNestedPreference(mSiteAcceleratorSettings, R.string.site_settings_site_accelerator);
+    }
+
+    private void addToolbarToJpSecuritySettings() {
+        addToolbarToNestedPreference(mJpSecuritySettings, R.string.jetpack_security_setting_title);
+    }
+
+    private void addToolbarToStartOverSettings() {
+        addToolbarToNestedPreference(mStartOverSettingsScreen, R.string.start_over);
+    }
+
+    private void addToolbarToJetpackMoreSettings() {
+        addToolbarToNestedPreference(mJetpackPerformanceMoreSettings, R.string.site_settings_performance);
+    }
+
+    private void addToolbarToSiteAcceleratorSettingsNested() {
+        addToolbarToNestedPreference(mSiteAcceleratorSettingsNested, R.string.site_settings_site_accelerator);
+    }
+
+    private void addToolbarToMorePreference() {
+        addToolbarToNestedPreference(mMorePreference, R.string.site_settings_discussion_title);
     }
 
     @Override
@@ -962,6 +1002,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mModerationHoldPref = getClickPref(R.string.pref_key_site_moderation_hold);
         mDenylistPref = getClickPref(R.string.pref_key_site_denylist);
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
+        mStartOverSettingsScreen = (PreferenceScreen) getClickPref(R.string.pref_key_site_start_over_screen);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
         mJpSecuritySettings = (PreferenceScreen) getClickPref(R.string.pref_key_jetpack_security_screen);
@@ -1074,6 +1115,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         initBloggingSection();
+        removeEmptyCategories();
     }
 
     private void updateHomepageSummary() {
@@ -1236,7 +1278,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        if (!mBloggingRemindersFeatureConfig.isEnabled()) {
+        if (!BuildConfig.IS_JETPACK_APP) {
             removeBloggingRemindersSettings();
         } else {
             mBloggingRemindersViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
@@ -1736,8 +1778,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mSite == null || mSite.getHasFreePlan()) {
             return;
         }
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType(ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE);
+        final Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"help@wordpress.com"});
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.start_over_email_subject,
                 SiteUtils.getHomeURLOrHostName(mSite)));
@@ -1892,11 +1934,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mJpSecuritySettings == null || !isAdded()) {
             return;
         }
-        String title = getString(R.string.jetpack_security_setting_title);
         Dialog dialog = mJpSecuritySettings.getDialog();
         if (dialog != null) {
             setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            addToolbarToJpSecuritySettings();
         }
     }
 
@@ -1904,11 +1945,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mSiteAcceleratorSettings == null || !isAdded()) {
             return;
         }
-        String title = getString(R.string.site_settings_site_accelerator);
         Dialog dialog = mSiteAcceleratorSettings.getDialog();
         if (dialog != null) {
             setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            addToolbarToSiteAcceleratorSettings();
         }
     }
 
@@ -1916,11 +1956,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mJetpackPerformanceMoreSettings == null || !isAdded()) {
             return;
         }
-        String title = getString(R.string.site_settings_performance);
         Dialog dialog = mJetpackPerformanceMoreSettings.getDialog();
         if (dialog != null) {
             setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            addToolbarToJetpackMoreSettings();
         }
     }
 
@@ -1928,11 +1967,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mSiteAcceleratorSettingsNested == null || !isAdded()) {
             return;
         }
-        String title = getString(R.string.site_settings_site_accelerator);
         Dialog dialog = mSiteAcceleratorSettingsNested.getDialog();
         if (dialog != null) {
             setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            addToolbarToSiteAcceleratorSettingsNested();
         }
     }
 
@@ -1940,23 +1978,13 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mMorePreference == null || !isAdded()) {
             return false;
         }
-        String title = getString(R.string.site_settings_discussion_title);
         Dialog dialog = mMorePreference.getDialog();
         if (dialog != null) {
-            dialog.setTitle(title);
             setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            addToolbarToMorePreference();
             return true;
         }
         return false;
-    }
-
-    private void removeJetpackSecurityScreenToolbar() {
-        if (mJpSecuritySettings == null || !isAdded()) {
-            return;
-        }
-        Dialog securityDialog = mJpSecuritySettings.getDialog();
-        WPActivityUtils.removeToolbarFromDialog(this, securityDialog);
     }
 
     private void hideAdminRequiredPreferences() {
@@ -1967,10 +1995,60 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
     }
 
+    private boolean isEmptyCategory(@StringRes int section) {
+        PreferenceCategory pref = (PreferenceCategory) findPreference(getString(section));
+        return (pref != null && pref.getPreferenceCount() == 0);
+    }
+
+    private void removeEmptyCategories() {
+        if (isEmptyCategory(R.string.pref_key_site_general)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_general);
+        }
+        if (isEmptyCategory(R.string.pref_key_blogging)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_blogging);
+        }
+        if (isEmptyCategory(R.string.pref_key_homepage)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_homepage);
+        }
+        if (isEmptyCategory(R.string.pref_key_site_account)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
+        }
+        if (isEmptyCategory(R.string.pref_key_site_editor)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_editor);
+        }
+        if (isEmptyCategory(R.string.pref_key_site_writing)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
+        }
+        if (isEmptyCategory(R.string.pref_key_site_quota)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_quota);
+        }
+        if (isEmptyCategory(R.string.pref_key_site_traffic)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_traffic);
+        }
+        if (isEmptyCategory(R.string.pref_key_jetpack_performance_settings)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                    R.string.pref_key_jetpack_performance_settings);
+        }
+        if (isEmptyCategory(R.string.pref_key_site_discussion)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                    R.string.pref_key_site_discussion);
+        }
+        if (isEmptyCategory(R.string.pref_key_jetpack_settings)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                    R.string.pref_key_jetpack_settings);
+        }
+        if (isEmptyCategory(R.string.pref_key_site_advanced)) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
+        }
+    }
+
     private void removeNonSelfHostedPreferences() {
         mUsernamePref.setEnabled(true);
         mPasswordPref.setEnabled(true);
-        removeGeneralSettingsExceptBloggingReminders();
+        PreferenceGroup group = (PreferenceGroup) findPreference(getString(R.string.pref_key_site_general));
+        if (group != null) {
+            group.removeAll();
+        }
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
@@ -1978,21 +2056,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_jetpack_settings);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
                 R.string.pref_key_jetpack_performance_settings);
-    }
-
-    /**
-     * This removes all preferences from the General preference group, except for Blogging Reminders – in practice it
-     * is removed as well, but then added back.
-     * <p>
-     * In the future, we should consider either moving the Blogging Reminders preference to its own group or
-     * replace this approach with something more scalable and efficient.
-     */
-    private void removeGeneralSettingsExceptBloggingReminders() {
-        PreferenceGroup group = (PreferenceGroup) findPreference(getString(R.string.pref_key_site_general));
-        if (group != null && mBloggingRemindersPref != null) {
-            group.removeAll();
-            group.addPreference(mBloggingRemindersPref);
-        }
     }
 
     private void removeNonJetpackPreferences() {
@@ -2162,15 +2225,16 @@ public class SiteSettingsFragment extends PreferenceFragment
     // Using an interface callback, cause this SiteSettingsFragment is a extending deprecated PreferenceFragment.  So,
     // can't use neither setTargetFragment nor onActivityResult before re-writing this!
     @Override
-    public void onSelectTimezone(@NotNull String timezone) {
+    public void onSelectTimezone(@NonNull String timezone) {
         mSiteSettings.setTimezone(timezone);
         onPreferenceChange(mTimezonePref, timezone);
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
         @Override
-        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
+        @SuppressLint("NonConstantResourceId")
+        public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
+            switch (item.getItemId()) {
                 case R.id.menu_delete:
                     SparseBooleanArray checkedItems = getAdapter().getItemsSelected();
 
@@ -2203,9 +2267,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            mActionMode = actionMode;
-            MenuInflater inflater = actionMode.getMenuInflater();
+        public boolean onCreateActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
+            mActionMode = mode;
+            MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.list_editor, menu);
 
             // we cant use support version of action mode, since we start it on view
@@ -2227,8 +2291,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            actionMode.setTitle(getString(
+        public boolean onPrepareActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
+            mode.setTitle(getString(
                     R.string.site_settings_list_editor_action_mode_title,
                     getAdapter().getItemsSelected().size())
             );

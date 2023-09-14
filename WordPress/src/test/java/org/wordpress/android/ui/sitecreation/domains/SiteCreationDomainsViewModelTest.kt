@@ -382,7 +382,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     private val uiDomains get() = assertIs<List<New.DomainUiState>>(viewModel.uiState.value?.contentState?.items)
 
     @Test
-    fun verifyFetchFreeAndPaidDomainsWhenPurchasingFeatureConfigIsEnabled() = testNewUi {
+    fun verifyFetchFreeAndPaidDomainsWhenPurchasingFeatureConfigIsEnabled() = testWithSuccessResultNewUi {
         val (query, size) = MULTI_RESULT_DOMAIN_FETCH_QUERY
         viewModel.start()
 

@@ -17,6 +17,7 @@ import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseThreeConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseTwoConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalSelfHostedUsersConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalStaticPostersConfig
+import org.wordpress.android.util.config.PhaseFourOverlayFrequencyConfig
 import javax.inject.Inject
 
 private const val PHASE_ONE_GLOBAL_OVERLAY_FREQUENCY_IN_DAYS = 2
@@ -38,14 +39,15 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
     private val jetpackFeatureRemovalPhaseFourConfig: JetpackFeatureRemovalPhaseFourConfig,
     private val jetpackFeatureRemovalNewUsersConfig: JetpackFeatureRemovalNewUsersConfig,
     private val jetpackFeatureRemovalSelfHostedUsersConfig: JetpackFeatureRemovalSelfHostedUsersConfig,
-    private val jetpackFeatureRemovalStaticPostersConfig: JetpackFeatureRemovalStaticPostersConfig
+    private val jetpackFeatureRemovalStaticPostersConfig: JetpackFeatureRemovalStaticPostersConfig,
+    private val jetpackPhaseFourOverlayFrequencyConfig: PhaseFourOverlayFrequencyConfig
 ) {
     fun getCurrentPhase(): JetpackFeatureRemovalPhase? {
         return if (buildConfigWrapper.isJetpackApp) null
         else if (jetpackFeatureRemovalSelfHostedUsersConfig.isEnabled()) PhaseSelfHostedUsers
         else if (jetpackFeatureRemovalNewUsersConfig.isEnabled()) PhaseNewUsers
-        else if (jetpackFeatureRemovalStaticPostersConfig.isEnabled()) PhaseStaticPosters
         else if (jetpackFeatureRemovalPhaseFourConfig.isEnabled()) PhaseFour
+        else if (jetpackFeatureRemovalStaticPostersConfig.isEnabled()) PhaseStaticPosters
         else if (jetpackFeatureRemovalPhaseThreeConfig.isEnabled()) PhaseThree
         else if (jetpackFeatureRemovalPhaseTwoConfig.isEnabled()) PhaseTwo
         else if (jetpackFeatureRemovalPhaseOneConfig.isEnabled()) PhaseOne
@@ -154,6 +156,10 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
             is PhaseStaticPosters, PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> false
             else -> true
         }
+    }
+
+    fun getPhaseFourOverlayFrequency(): Int {
+        return jetpackPhaseFourOverlayFrequencyConfig.getValue()
     }
 }
 // Global overlay frequency is the frequency at which the overlay is shown across the features

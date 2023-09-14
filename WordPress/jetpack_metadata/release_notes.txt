@@ -1,6 +1,5 @@
-
-* [*] [internal] Block editor: Upgrade Android 13 [https://github.com/wordpress-mobile/WordPress-Android/pull/18477]
-* [***] [Jetpack-only] Plans: Bringing WPCOM plans to Jetpack app [https://github.com/wordpress-mobile/WordPress-Android/issues/18417]
-* [*] Block editor: Display lock icon in disabled state of `Cell` component [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5798]
-* [*] Block editor: Show "No title"/"No description" placeholder for not belonged videos in VideoPress block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5840]
-
+- New chat-based support channel with service bot
+- View, locate, and remove Jetpack Paywall block
+- Outlined selected Social Link block
+- Fixed crashes in the block editor and block inserter
+- Create support tickets for errors during account closure

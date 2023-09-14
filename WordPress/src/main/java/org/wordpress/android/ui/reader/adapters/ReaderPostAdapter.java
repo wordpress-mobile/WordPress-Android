@@ -17,7 +17,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -57,12 +56,12 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -314,7 +313,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void toggleFollowButton(
             Context context,
-            @NotNull ReaderTag currentTag,
+            @NonNull ReaderTag currentTag,
             TagHeaderViewHolder tagHolder
     ) {
         if (!NetworkUtils.checkConnection(context)) {
@@ -385,9 +384,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ReaderPost post = getItem(position);
         final Context context = holder.mRemovedPostContainer.getContext();
         holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
-        Drawable drawable =
-                ColorUtils.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp,
-                        ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorPrimary));
+        Drawable drawable = ColorUtils.applyTintToDrawable(
+                context,
+                R.drawable.ic_undo_white_24dp,
+                ContextExtensionsKt.getColorResIdFromAttribute(
+                        context,
+                        com.google.android.material.R.attr.colorPrimary
+                )
+        );
         holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         holder.mPostContainer.setOnClickListener(v -> undoPostUnbookmarked(post));
     }

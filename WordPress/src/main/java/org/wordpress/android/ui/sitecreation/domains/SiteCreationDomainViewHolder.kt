@@ -16,6 +16,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.compose.DomainItem
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
+import org.wordpress.android.editor.R as EditorR
 
 sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding: T) :
     RecyclerView.ViewHolder(binding.root) {
@@ -48,7 +49,7 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
             errorText.text = root.context.getText(uiState.messageResId)
             retry.apply {
                 text = context.getText(uiState.retryButtonResId)
-                val drawable = ContextCompat.getDrawable(context, R.drawable.retry_icon)?.apply {
+                val drawable = ContextCompat.getDrawable(context, EditorR.drawable.retry_icon)?.apply {
                     setTint(ContextCompat.getColor(context, R.color.primary))
                 }
                 setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)

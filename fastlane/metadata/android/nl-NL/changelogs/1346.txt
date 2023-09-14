@@ -1,6 +1,0 @@
-22.5:
-- Startpagina kan via de lijst Pagina's worden bewerkt op sites met thema's op blokbasis
-- Tekst na een link ongedaan maken/herstellen voor links die openen in een nieuw tabblad
-- Tik om te bewerken beschikbaar voor alle geneste bloktypen
-- Accounts kunnen worden gesloten vanuit het scherm accountinstellingen
-- Bugs in de blokeditor en het plugin-scherm verholpen

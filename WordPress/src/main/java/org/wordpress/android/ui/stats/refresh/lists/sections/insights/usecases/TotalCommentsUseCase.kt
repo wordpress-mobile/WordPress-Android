@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_TOTAL_COMMENTS_ERROR
 import org.wordpress.android.fluxc.model.SiteModel
@@ -50,7 +50,7 @@ class TotalCommentsUseCase @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val useCaseMode: UseCaseMode
 ) : StatelessUseCase<VisitsAndViewsModel>(TOTAL_COMMENTS, mainDispatcher, bgDispatcher) {
-    override fun buildLoadingItem() = listOf(TitleWithMore(string.stats_view_total_comments))
+    override fun buildLoadingItem() = listOf(TitleWithMore(R.string.stats_view_total_comments))
 
     override fun buildEmptyItem() = listOf(buildTitle(), Empty())
 
@@ -126,7 +126,7 @@ class TotalCommentsUseCase @Inject constructor(
             items.add(totalStatsMapper.buildTotalCommentsValue(domainModel.dates))
             totalStatsMapper.buildTotalCommentsInformation(domainModel.dates)?.let { items.add(it) }
             if (useCaseMode == BLOCK && totalStatsMapper.shouldShowCommentsGuideCard(domainModel.dates)) {
-                items.add(ListItemGuideCard(resourceProvider.getString(string.stats_insights_comments_guide_card)))
+                items.add(ListItemGuideCard(resourceProvider.getString(R.string.stats_insights_comments_guide_card)))
             }
         } else {
             AppLog.e(T.STATS, "There is no data to be shown in the total comments block")
@@ -135,7 +135,7 @@ class TotalCommentsUseCase @Inject constructor(
     }
 
     private fun buildTitle() = TitleWithMore(
-        string.stats_view_total_comments,
+        R.string.stats_view_total_comments,
         navigationAction = if (useCaseMode == BLOCK) ListItemInteraction.create(this::onViewMoreClick) else null
     )
 

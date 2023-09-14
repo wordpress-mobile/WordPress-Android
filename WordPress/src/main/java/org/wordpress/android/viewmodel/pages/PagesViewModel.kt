@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -33,7 +32,6 @@ import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteOptionsStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -126,7 +124,6 @@ class PagesViewModel
     private val accountStore: AccountStore,
     private val prefs: AppPrefsWrapper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val blazeStore: BlazeStore,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -239,9 +236,6 @@ class PagesViewModel
     private val _authorUIState = MutableLiveData<PagesAuthorFilterUIState>()
     val authorUIState: LiveData<PagesAuthorFilterUIState> = _authorUIState
 
-    private val _blazeSiteEligibility = MutableLiveData(false)
-    val blazeSiteEligibility: LiveData<Boolean> = _blazeSiteEligibility
-
     data class BrowsePreview(
         val post: PostModel,
         val previewType: RemotePreviewType
@@ -257,7 +251,6 @@ class PagesViewModel
         if (_site == null) {
             _site = site
 
-            checkBlazeEligibility()
             loadPagesAsync()
             uploadStarter.queueUploadFromSite(site)
         }
@@ -292,20 +285,6 @@ class PagesViewModel
     override fun onCleared() {
         actionPerformer.onCleanup()
         pageListEventListener.onDestroy()
-    }
-
-    private fun checkBlazeEligibility() {
-        // If the user is not an admin, we don't need to check for Blaze eligibility
-        if (!blazeFeatureUtils.isBlazeEligibleForUser(site)) return
-        launch {
-            blazeStore.getBlazeStatus(site.siteId)
-                .map { status -> status.model?.firstOrNull() }
-                .collect {
-                    it?.let {
-                        _blazeSiteEligibility.postValue(it.isEligible)
-                    }
-                }
-        }
     }
 
     private fun loadPagesAsync() = launch(defaultDispatcher) {
@@ -386,10 +365,7 @@ class PagesViewModel
     }
 
     fun checkIfNewPageButtonShouldBeVisible() {
-        val isNotEmpty = pageMap.values.any { currentPageType.pageStatuses.contains(it.status) }
-        val hasNoExceptions = !currentPageType.pageStatuses.contains(PageStatus.TRASHED) &&
-                _isSearchExpanded.value != true
-        _isNewPageButtonVisible.postOnUi(isNotEmpty && hasNoExceptions)
+        _isNewPageButtonVisible.postOnUi(_isSearchExpanded.value != true)
     }
 
     fun onSearch(searchQuery: String, delay: Long = SEARCH_DELAY) {

@@ -7,8 +7,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
-import org.wordpress.android.R.drawable
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
@@ -85,7 +84,7 @@ class EpilogueBuilderTest {
         val message = "You'll get reminders to blog <b>$dayLabel</b> a week on $selectedDays at <b>$selectedTime</b>."
         whenever(
             htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                string.blogging_reminders_epilogue_body_days_with_time,
+                R.string.blogging_reminders_epilogue_body_days_with_time,
                 "<b>$dayLabel</b>",
                 selectedDays,
                 "<b>$selectedTime</b>"
@@ -111,7 +110,7 @@ class EpilogueBuilderTest {
         val message = "You'll get reminders to blog <b>everyday</b> at <b>10:00 am</b>."
         whenever(
             htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                string.blogging_reminders_epilogue_body_everyday_with_time,
+                R.string.blogging_reminders_epilogue_body_everyday_with_time,
                 bloggingRemindersModel.getNotificationTime()
             )
         ).thenReturn(
@@ -128,7 +127,7 @@ class EpilogueBuilderTest {
 
         assertThat(primaryButton).isEqualTo(
             PrimaryButton(
-                UiStringRes(string.blogging_reminders_done),
+                UiStringRes(R.string.blogging_reminders_done),
                 true,
                 ListItemInteraction.create(onDone)
             )
@@ -147,13 +146,13 @@ class EpilogueBuilderTest {
     private fun assertModelWithNoSelection(
         uiModel: List<BloggingRemindersItem>
     ) {
-        assertThat(uiModel[0]).isEqualTo(Illustration(drawable.img_illustration_bell_yellow_96dp))
-        assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(string.blogging_reminders_epilogue_not_set_title)))
+        assertThat(uiModel[0]).isEqualTo(Illustration(R.drawable.img_illustration_bell_yellow_96dp))
+        assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(R.string.blogging_reminders_epilogue_not_set_title)))
         assertThat(uiModel[2])
             .isEqualTo(
                 HighEmphasisText(
                     EmphasizedText(
-                        UiStringRes(string.blogging_reminders_epilogue_body_no_reminders),
+                        UiStringRes(R.string.blogging_reminders_epilogue_body_no_reminders),
                         false
                     )
                 )
@@ -164,8 +163,8 @@ class EpilogueBuilderTest {
         uiModel: List<BloggingRemindersItem>,
         message: String
     ) {
-        assertThat(uiModel[0]).isEqualTo(Illustration(drawable.img_illustration_bell_yellow_96dp))
-        assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(string.blogging_reminders_epilogue_title)))
+        assertThat(uiModel[0]).isEqualTo(Illustration(R.drawable.img_illustration_bell_yellow_96dp))
+        assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(R.string.blogging_reminders_epilogue_title)))
         assertThat(uiModel[2])
             .isEqualTo(
                 HighEmphasisText(
@@ -178,8 +177,8 @@ class EpilogueBuilderTest {
         uiModel: List<BloggingRemindersItem>,
         message: String
     ) {
-        assertThat(uiModel[0]).isEqualTo(Illustration(drawable.img_illustration_bell_yellow_96dp))
-        assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(string.blogging_reminders_epilogue_title)))
+        assertThat(uiModel[0]).isEqualTo(Illustration(R.drawable.img_illustration_bell_yellow_96dp))
+        assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(R.string.blogging_reminders_epilogue_title)))
         assertThat(uiModel[2]).isEqualTo(
             HighEmphasisText(
                 EmphasizedText(UiStringText(message), false)

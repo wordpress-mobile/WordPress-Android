@@ -1,6 +1,0 @@
-22.5:
-- Blok tabanlı temalara sahip sitelerde ana sayfa, Sayfa listesinden düzenlenebilir
-- Bağlantıları yeni sekmede açılacak şekilde ayarlarken bağlantı sonrası metni geri alma/yineleme
-- Tüm iç içe blok türleri için düzenlemek için dokunma seçeneği kullanılabilir
-- Hesaplar hesap ayarları ekranından kapatılabilir
-- Blok düzenleyici ve eklenti ekranında hata düzeltmeleri

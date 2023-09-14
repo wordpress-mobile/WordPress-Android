@@ -22,6 +22,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -155,7 +156,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private WPWebChromeClientWithFileChooser mWPWebChromeClientWithFileChooser;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
 
@@ -638,7 +639,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mWPWebChromeClientWithFileChooser = new WPWebChromeClientWithFileChooser(
                 this,
                 mWebView,
-                R.drawable.media_movieclip,
+                org.wordpress.android.editor.R.drawable.media_movieclip,
                 (ProgressBar) findViewById(R.id.progress_bar),
                 this
         );
@@ -853,7 +854,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         super.onCreateOptionsMenu(menu);
 
         MenuInflater inflater = getMenuInflater();
@@ -862,7 +863,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (mWebView == null) {
             return false;
         }

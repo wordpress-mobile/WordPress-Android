@@ -17,10 +17,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteT
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem
@@ -38,6 +36,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.privacy.banner.domain.ShouldAskPrivacyConsent
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
@@ -73,9 +72,8 @@ class WPMainActivityViewModel @Inject constructor(
     private val bloggingPromptsStore: BloggingPromptsStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val blazeStore: BlazeStore,
-    private val siteUtilsWrapper: SiteUtilsWrapper
+    private val siteUtilsWrapper: SiteUtilsWrapper,
+    private val shouldAskPrivacyConsent: ShouldAskPrivacyConsent,
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -130,6 +128,15 @@ class WPMainActivityViewModel @Inject constructor(
     private val _openBloggingPromptsOnboarding = SingleLiveEvent<Unit?>()
     val openBloggingPromptsOnboarding: LiveData<Unit?> = _openBloggingPromptsOnboarding
 
+    private val _askForPrivacyConsent = SingleLiveEvent<Unit>()
+    val askForPrivacyConsent: LiveData<Unit> = _askForPrivacyConsent
+
+    private val _showPrivacySettings = SingleLiveEvent<Unit>()
+    val showPrivacySettings: LiveData<Unit> = _showPrivacySettings
+
+    private val _showPrivacySettingsWithError = SingleLiveEvent<Boolean?>()
+    val showPrivacySettingsWithError: LiveData<Boolean?> = _showPrivacySettingsWithError
+
     val onFocusPointVisibilityChange = quickStartRepository.activeTask
         .mapNullable { getExternalFocusPointInfo(it) }
         .distinctUntilChanged()
@@ -149,6 +156,12 @@ class WPMainActivityViewModel @Inject constructor(
     fun start(site: SiteModel?) {
         if (isStarted) return
         isStarted = true
+
+        launch {
+            if (shouldAskPrivacyConsent()) {
+                _askForPrivacyConsent.call()
+            }
+        }
 
         setMainFabUiState(false, site)
 
@@ -246,19 +259,6 @@ class WPMainActivityViewModel @Inject constructor(
         _openBloggingPromptsOnboarding.call()
     }
 
-    private fun disableTooltip(site: SiteModel?) {
-        appPrefsWrapper.setMainFabTooltipDisabled(true)
-
-        val oldState = _fabUiState.value
-        oldState?.let {
-            _fabUiState.value = MainFabUiState(
-                isFabVisible = it.isFabVisible,
-                isFabTooltipVisible = false,
-                CreateContentMessageId = getCreateContentMessageId(site)
-            )
-        }
-    }
-
     private fun trackCreateActionsSheetCard(actions: List<MainActionListItem>) {
         if (actions.any { it is AnswerBloggingPromptAction }) {
             analyticsTracker.track(Stat.BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED)
@@ -299,14 +299,6 @@ class WPMainActivityViewModel @Inject constructor(
         setMainFabUiState(showFab, site)
     }
 
-    fun onTooltipTapped(site: SiteModel?) {
-        disableTooltip(site)
-    }
-
-    fun onFabLongPressed(site: SiteModel?) {
-        disableTooltip(site)
-    }
-
     fun onOpenLoginPage(mySitePosition: Int) = launch {
         _startLoginFlow.value = Event(Unit)
         appPrefsWrapper.setMainPageIndex(mySitePosition)
@@ -319,8 +311,6 @@ class WPMainActivityViewModel @Inject constructor(
         setMainFabUiState(showFab, site)
 
         checkAndShowFeatureAnnouncement()
-
-        fetchBlazeStatusIfNeeded(site)
     }
 
     private fun checkAndShowFeatureAnnouncement() {
@@ -338,14 +328,6 @@ class WPMainActivityViewModel @Inject constructor(
                 } else {
                     appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
                 }
-            }
-        }
-    }
-
-    private fun fetchBlazeStatusIfNeeded(site: SiteModel?) {
-        if (site != null && blazeFeatureUtils.isBlazeEligibleForUser(site)) {
-            launch {
-               blazeStore.fetchBlazeStatus(site)
             }
         }
     }
@@ -393,7 +375,6 @@ class WPMainActivityViewModel @Inject constructor(
 
     private suspend fun canShowFeatureAnnouncement(): Boolean {
         val cachedAnnouncement = featureAnnouncementProvider.getLatestFeatureAnnouncement(true)
-
         return cachedAnnouncement != null &&
                 cachedAnnouncement.canBeDisplayedOnAppUpgrade(buildConfigWrapper.getAppVersionName()) &&
                 appPrefsWrapper.featureAnnouncementShownVersion < cachedAnnouncement.announcementVersion
@@ -418,12 +399,20 @@ class WPMainActivityViewModel @Inject constructor(
         _createAction.postValue(CREATE_NEW_PAGE_FROM_PAGES_CARD)
     }
 
+    fun onPrivacySettingsTapped() = launch {
+        _showPrivacySettings.call()
+    }
+
+    fun onSettingsPrivacyPreferenceUpdateFailed(requestedAnalyticsPreference: Boolean?) {
+        _showPrivacySettingsWithError.value = requestedAnalyticsPreference
+    }
+
     data class FocusPointInfo(
         val task: QuickStartTask,
         val isVisible: Boolean
     ) : Serializable {
         companion object {
-            const val serialVersionUID = 1L
+            private const val serialVersionUID: Long = 1L
         }
     }
 }

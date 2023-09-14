@@ -8,20 +8,15 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexWrap
-import com.google.android.flexbox.FlexboxLayoutManager
-import com.google.android.flexbox.JustifyContent
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.BloggingPromptsOnboardingDialogContentViewBinding
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
-import org.wordpress.android.ui.avatars.AvatarItemDecorator
-import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.DismissDialog
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.DoNothing
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
@@ -35,12 +30,12 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode.BLOGGING_P
 import org.wordpress.android.ui.main.UpdateSelectedSiteListener
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint.BLOGGING_PROMPTS_INTRODUCTION
-import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.extensions.exhaustive
+import org.wordpress.android.util.extensions.getColorStateListFromAttributeOrRes
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
@@ -122,22 +117,26 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
             cardCoverView.setOnClickListener { /*do nothing*/ }
             promptCard.promptContent.text = getString(readyState.promptRes)
 
-            val layoutManager = FlexboxLayoutManager(
-                context,
-                FlexDirection.ROW,
-                FlexWrap.NOWRAP
-            ).apply { justifyContent = JustifyContent.CENTER }
-            promptCard.answeredUsersRecycler.addItemDecoration(
-                AvatarItemDecorator(RtlUtils.isRtl(context), requireContext(), AVATAR_LEFT_OFFSET_DIMEN)
-            )
-            promptCard.answeredUsersRecycler.layoutManager = layoutManager
+            promptCard.answeredUsersAvatars.apply {
+                avatars = readyState.respondents
+                    .filterIsInstance(TrainOfAvatarsItem.AvatarItem::class.java)
+            }
 
-            val adapter = TrainOfAvatarsAdapter(
-                imageManager,
-                uiHelpers
-            )
-            promptCard.answeredUsersRecycler.adapter = adapter
-            adapter.loadData(readyState.respondents)
+            promptCard.answeredUsersLabel.apply {
+                readyState.respondents
+                    .filterIsInstance(TrainOfAvatarsItem.TrailingLabelTextItem::class.java)
+                    .firstOrNull()
+                    ?.let {
+                        isVisible = true
+                        text = uiHelpers.getTextOfUiString(
+                            context,
+                            it.text
+                        )
+                        setTextColor(
+                            context.getColorStateListFromAttributeOrRes(it.labelColor)
+                        )
+                    }
+            }
 
             setPrimaryButtonText(readyState.primaryButtonLabel)
             togglePrimaryButtonVisibility(readyState.isPrimaryButtonVisible)
@@ -179,6 +178,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                         )
                     }
                 }
+
                 is OpenSitePicker -> {
                     val intent = Intent(context, SitePickerActivity::class.java).apply {
                         putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, action.selectedSite)
@@ -186,6 +186,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                     }
                     sitePickerLauncher.launch(intent)
                 }
+
                 is OpenRemindersIntro -> {
                     activity?.let {
                         dismiss()
@@ -193,9 +194,11 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                             .onSetPromptReminderClick(action.selectedSiteLocalId)
                     }
                 }
+
                 is DismissDialog -> {
                     dismiss()
                 }
+
                 DoNothing -> {} // noop
             }.exhaustive
         }

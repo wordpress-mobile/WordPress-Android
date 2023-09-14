@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 68;
+    private static final int DATABASE_VERSION = 69;
 
 
     // Warning renaming DATABASE_NAME could break previous App backups (see: xml/backup_scheme.xml)
@@ -49,6 +49,7 @@ public class WordPressDB {
         SiteSettingsTable.createTable(mDb);
         UserSuggestionTable.createTables(mDb);
         NotificationsTable.createTables(mDb);
+        PublicizeTable.createTables(mDb);
 
         // Update tables for new installs and app updates
         int currentVersion = mDb.getVersion();
@@ -178,6 +179,11 @@ public class WordPressDB {
             case 67:
                 // drop services table so it reflects the integration with external-services v2 endpoint
                 PublicizeTable.resetServicesTable(mDb);
+            case 68:
+                // Previously PublicizeTable was only needed in the context of PublicizeListActivity,
+                // so the table creation depended on that screen being opened. Now that we need this table in other
+                // places, we have to be sure the table exists even if PublicizeListActivity was never opened.
+                PublicizeTable.createTables(mDb);
         }
         mDb.setVersion(DATABASE_VERSION);
     }

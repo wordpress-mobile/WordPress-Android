@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/todays_stats_card_menu_item_view_stats"
+        android:title="@string/my_site_todays_stats_menu_view_stats"
+        android:icon="@drawable/ic_stats_white_24dp"/>
+
+    <item
+        android:id="@+id/todays_stats_card_menu_item_hide_this"
+        android:title="@string/my_site_todays_stats_card_menu_hide_this"
+        android:icon="@drawable/ic_not_visible_white_24dp"/>
+</menu>

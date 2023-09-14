@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-05 11:54:03+0000
+Translation-Revision-Date: 2023-08-09 12:54:03+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="missing_splits_dialog_message">يفتقد التطبيق Jetpack إلى المكوّنات المطلوبة ولا بد من إعادة تثبيته من متجر Google Play.</string>
     <string name="me_btn_share">مشاركة Jetpack مع صديق</string>
     <string name="login_prologue_revamped_jetpack_feature_text_12">إضافة مؤلف</string>
     <string name="login_prologue_revamped_jetpack_feature_text_11">نشر صورة</string>

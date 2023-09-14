@@ -29,28 +29,28 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.support.SupportHelper
+import org.wordpress.android.support.SupportWebViewActivity
 import org.wordpress.android.support.ZendeskExtraTags
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.AppLogViewerActivity
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.debug.DebugSettingsActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.config.WordPressSupportForumFeatureConfig
+import org.wordpress.android.util.config.ContactSupportFeatureConfig
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class HelpActivity : LocaleAwareActivity() {
-    @Inject
-    lateinit var wpSupportForumFeatureConfig: WordPressSupportForumFeatureConfig
-
     @Inject
     lateinit var accountStore: AccountStore
 
@@ -71,6 +71,9 @@ class HelpActivity : LocaleAwareActivity() {
 
     @Inject
     lateinit var mDispatcher: Dispatcher
+
+    @Inject
+    lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
 
     private lateinit var binding: HelpActivityBinding
 
@@ -103,10 +106,14 @@ class HelpActivity : LocaleAwareActivity() {
                 actionBar.elevation = 0f // remove shadow
             }
 
-            if (wpSupportForumFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+            if (!BuildConfig.IS_JETPACK_APP) {
                 showSupportForum()
             } else {
                 showContactUs()
+            }
+
+            if(BuildConfig.DEBUG) {
+                enableDebugSettings()
             }
 
             faqButton.setOnClickListener { showFaq() }
@@ -130,6 +137,13 @@ class HelpActivity : LocaleAwareActivity() {
         }
     }
 
+    private fun enableDebugSettings() {
+        binding.debugSettingsButton.isVisible = true
+        binding.debugSettingsButton.setOnClickListener {
+            startActivity(Intent(this, DebugSettingsActivity::class.java))
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.HELP_SCREEN)
@@ -147,11 +161,21 @@ class HelpActivity : LocaleAwareActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == AndroidR.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun launchSupportWidget() {
+        val intent = SupportWebViewActivity.createIntent(
+            this,
+            originFromExtras,
+            selectedSiteFromExtras,
+            extraTagsFromExtras
+        )
+        startActivity(intent)
     }
 
     private fun createNewZendeskTicket() {
@@ -196,7 +220,13 @@ class HelpActivity : LocaleAwareActivity() {
             AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_VIEWED)
             JpFaqContainer.setOnClickListener { showMigrationFaq() }
         }
-        contactUsButton.setOnClickListener { createNewZendeskTicket() }
+        contactUsButton.setOnClickListener {
+            if (contactSupportFeatureConfig.isEnabled()) {
+                launchSupportWidget()
+            } else {
+                createNewZendeskTicket()
+            }
+        }
         ticketsButton.setOnClickListener { showZendeskTickets() }
 
         contactEmailContainer.setOnClickListener {

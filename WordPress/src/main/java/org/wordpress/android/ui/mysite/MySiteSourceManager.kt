@@ -2,39 +2,28 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineScope
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
-import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardSource
+import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
-import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainSource
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Hide
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
-import org.wordpress.android.ui.quickstart.QuickStartTracker
 import javax.inject.Inject
 
 class MySiteSourceManager @Inject constructor(
-    private val quickStartTracker: QuickStartTracker,
     private val currentAvatarSource: CurrentAvatarSource,
     private val domainRegistrationSource: DomainRegistrationSource,
-    private val dynamicCardsSource: DynamicCardsSource,
     private val quickStartCardSource: QuickStartCardSource,
     private val scanAndBackupSource: ScanAndBackupSource,
     private val selectedSiteSource: SelectedSiteSource,
     cardsSource: CardsSource,
     siteIconProgressSource: SiteIconProgressSource,
     private val bloggingPromptCardSource: BloggingPromptCardSource,
-    promoteWithBlazeCardSource: PromoteWithBlazeCardSource,
+    blazeCardSource: BlazeCardSource,
     private val selectedSiteRepository: SelectedSiteRepository,
-    dashboardCardDomainSource: DashboardCardDomainSource,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
@@ -44,11 +33,9 @@ class MySiteSourceManager @Inject constructor(
         currentAvatarSource,
         domainRegistrationSource,
         scanAndBackupSource,
-        dynamicCardsSource,
         cardsSource,
         bloggingPromptCardSource,
-        promoteWithBlazeCardSource,
-        dashboardCardDomainSource,
+        blazeCardSource,
     )
 
     private val showDashboardCards: Boolean
@@ -124,22 +111,5 @@ class MySiteSourceManager @Inject constructor(
 
     fun refreshQuickStart() {
         quickStartCardSource.refresh()
-    }
-
-    suspend fun onQuickStartMenuInteraction(interaction: DynamicCardMenuInteraction) {
-        when (interaction) {
-            is DynamicCardMenuInteraction.Remove -> {
-                quickStartTracker.track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
-                dynamicCardsSource.removeItem(interaction.cardType)
-                quickStartCardSource.refresh()
-            }
-            is Pin -> dynamicCardsSource.pinItem(interaction.cardType)
-            is Unpin -> dynamicCardsSource.unpinItem()
-            is Hide -> {
-                quickStartTracker.track(Stat.QUICK_START_HIDE_CARD_TAPPED)
-                dynamicCardsSource.hideItem(interaction.cardType)
-                quickStartCardSource.refresh()
-            }
-        }
     }
 }

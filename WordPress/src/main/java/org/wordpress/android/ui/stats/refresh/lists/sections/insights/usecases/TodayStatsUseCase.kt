@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
@@ -89,5 +88,5 @@ class TodayStatsUseCase
         popupMenuHandler.onMenuClick(view, type)
     }
 
-    private fun buildTitle() = Title(string.stats_insights_today_stats, menuAction = this::onMenuClick)
+    private fun buildTitle() = Title(R.string.stats_insights_today_stats, menuAction = this::onMenuClick)
 }

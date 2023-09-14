@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-06-04 17:26:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: en_GB
 -->
 <resources>
@@ -224,7 +224,6 @@ Language: en_GB
     <string name="blogging_prompts_list_answered_prompt">✓ Answered</string>
     <string name="close_desc">close</string>
     <string name="blogging_prompts_list_title">Prompts</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternatively, you can detach and edit this block separately by tapping “Convert to regular block”.</string>
     <string name="deleting_cat_success">Category deleted successfully</string>
     <string name="deleting_cat_failed">Deleting category failed</string>
     <string name="dlg_confirm_delete_category">Permanently delete \'%s\' Category?</string>
@@ -772,7 +771,6 @@ Language: en_GB
     <string name="blogging_reminders_notification_title">It\'s time to blog on %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Editing reusable blocks is not yet supported on WordPress for iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Editing reusable blocks is not yet supported on WordPress for Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternatively, you can detach and edit these blocks separately by tapping “Convert to regular blocks”.</string>
     <string name="blogging_reminders_notify_me">Notify me</string>
     <string name="blogging_reminders_done">Done</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to enable one-click site restores from backups.</string>
@@ -914,7 +912,6 @@ Language: en_GB
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;All tasks completed&lt;/b&gt;&lt;br/&gt;You’ve customised your site. Well done!</string>
     <string name="invite_links_disable_dialog_message">Once this invite link is disabled, nobody will be able to use it to join your team. Are you sure?</string>
     <string name="magic_link_not_meaning_to_create_account">Didn\'t mean to create a new account? Go back to re-enter your email address.</string>
-    <string name="quick_start_card_menu_hide">Hide for now</string>
     <string name="invite_links_helper_text">Use this link to onboard your team members without having to invite them one by one. Anybody visiting this URL will be able to sign up to your organisation, even if they received the link from somebody else, so make sure that you share it with trusted people.</string>
     <string name="invite_links_generic_get_data_error">Unknown error fetching invite links data</string>
     <string name="invite_links_cannot_get_roles_error">There was an error getting roles</string>
@@ -936,7 +933,6 @@ Language: en_GB
     <string name="disable">Disable</string>
     <string name="scan_fixing_threats_title_singular">Fixing Threat</string>
     <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
-    <string name="quick_start_card_menu_unpin">Unpin this</string>
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic.</string>
     <string name="quick_start_list_enable_sharing_subtitle">Automatically share new posts to your social media.</string>
     <string name="quick_start_list_follow_site_subtitle">Discover and follow sites that inspire you.</string>
@@ -1032,11 +1028,9 @@ Language: en_GB
     <string name="quick_start_dialog_review_pages_title">Review site pages</string>
     <string name="quick_start_dialog_review_pages_message">Change, add, or remove your site\'s pages.</string>
     <string name="quick_start_dialog_review_pages_message_short">Select %1$s Pages %2$s to see your page list.</string>
-    <string name="quick_start_card_menu_remove">Don\'t show again</string>
     <string name="web_preview_mobile">Mobile</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="backup_download_complete_failed_title">Download failed</string>
-    <string name="quick_start_card_menu_pin">Pin this</string>
     <string name="reader_marked_post_as_seen">Marked post as seen</string>
     <string name="reader_marked_post_as_unseen">Marked post as unseen</string>
     <string name="reader_error_changing_seen_status_of_unsupported_post">Can\'t toggle seen status of this post</string>
@@ -2822,11 +2816,9 @@ Language: en_GB
     <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
     <string name="connected_accounts_label">Connected accounts</string>
     <string name="connections_description">Connect your favourite social media services to automatically share new posts with friends.</string>
-    <string name="sharing">Sharing</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
-    <string name="my_site_btn_sharing">Sharing</string>
     <string name="button_not_now">Not now</string>
     <string name="media_error_internal_server_error">Upload error. Try changing Optimise Images in your app\'s settings</string>
     <string name="media_downloading">Saving media to this device</string>

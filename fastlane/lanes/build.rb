@@ -135,6 +135,41 @@ platform :android do
   end
 
   #####################################################################################
+  # download_signed_apks_from_google_play
+  # -----------------------------------------------------------------------------------
+  # This lane downloads the signed apks from Play Store for the given app and version
+  #
+  # If no argument is provided, it'll download both WordPress & Jetpack apks using the version from version.properties
+  # If only 'app' argument is provided, it'll download the apk for the given app using the version from version.properties
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane download_signed_apks_from_google_play # Download WordPress & Jetpack apks using the version from version.properties
+  # bundle exec fastlane download_signed_apks_from_google_play app:<wordpress|jetpack> # Download given app's apk using the version from version.properties
+  # bundle exec fastlane download_signed_apks_from_google_play app:<wordpress|jetpack> version:<versionName,versionCode>
+  #####################################################################################
+  lane :download_signed_apks_from_google_play do |options|
+    # If no `app:` is specified, call this for both WordPress and Jetpack
+    apps = options[:app].nil? ? %i[wordpress jetpack] : Array(options[:app]&.downcase&.to_sym)
+    version = options[:version] || android_get_release_version() # default to current release version
+    if version.is_a?(String) # for when calling from command line
+      (version_name, version_code) = version.split(',')
+      UI.user_error!('Please pass the `version` option as a comma-separated `name,code` value') if version_code.nil?
+      version = { 'name' => version_name, 'code' => version_code }
+    end
+
+    apps.each do |app|
+      package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
+
+      download_universal_apk_from_google_play(
+          package_name: package_name,
+          version_code: version['code'],
+          destination: signed_apk_path(app, version),
+          json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
+      )
+    end
+  end
+
+  #####################################################################################
   # build_and_upload_wordpress_prototype_build
   # -----------------------------------------------------------------------------------
   # Build a WordPress Prototype Build and make it available for download
@@ -255,7 +290,7 @@ platform :android do
       bucket: 'a8c-apps-public-artifacts',
       key: filename,
       file: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-      skip_if_exists: true
+      if_exists: :skip
     )
 
     return if ENV['BUILDKITE_PULL_REQUEST'].nil?

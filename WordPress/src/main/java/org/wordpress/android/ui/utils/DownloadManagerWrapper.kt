@@ -30,7 +30,7 @@ class DownloadManagerWrapper
 
     fun buildQuery() = Query()
 
-    fun guessUrl(fileUrl: String): String = URLUtil.guessUrl(fileUrl)
+    fun guessFileName(fileUrl: String): String = URLUtil.guessFileName(fileUrl, null, null)
 
     fun getMimeType(url: String): String? {
         var type: String? = null

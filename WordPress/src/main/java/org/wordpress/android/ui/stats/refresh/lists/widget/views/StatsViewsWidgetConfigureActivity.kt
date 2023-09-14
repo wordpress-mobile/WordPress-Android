@@ -5,6 +5,7 @@ import android.view.MenuItem
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.StatsViewsWidgetConfigureActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class StatsViewsWidgetConfigureActivity : LocaleAwareActivity() {
@@ -22,7 +23,7 @@ class StatsViewsWidgetConfigureActivity : LocaleAwareActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == AndroidR.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
         }

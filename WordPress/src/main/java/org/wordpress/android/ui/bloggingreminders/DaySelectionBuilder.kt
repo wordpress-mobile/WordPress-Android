@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
@@ -75,7 +74,7 @@ class DaySelectionBuilder
         }
 
         selectionList.add(
-            Tip(UiStringRes(string.blogging_reminders_tip), UiStringRes(string.blogging_reminders_tip_message))
+            Tip(UiStringRes(R.string.blogging_reminders_tip), UiStringRes(R.string.blogging_reminders_tip_message))
         )
 
         return selectionList
@@ -93,9 +92,9 @@ class DaySelectionBuilder
         }
         val buttonText = if (isFirstTimeFlow) {
             if (bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()) {
-                string.blogging_prompt_set_reminders
+                R.string.blogging_prompt_set_reminders
             } else {
-                string.blogging_reminders_notify_me
+                R.string.blogging_reminders_notify_me
             }
         } else {
             R.string.blogging_reminders_update

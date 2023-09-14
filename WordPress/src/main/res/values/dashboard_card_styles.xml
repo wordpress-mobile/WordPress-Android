@@ -70,12 +70,6 @@
     </style>
 
     <!--My Site Card - Today's Stats Item-->
-    <style name="MySiteTodaysStatsCardTitle" parent="DashboardCardSmallTitle">
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:layout_marginStart">@dimen/margin_medium</item>
-        <item name="android:lineSpacingExtra">@dimen/my_site_todays_stats_card_title_line_spacing_extra</item>
-    </style>
-
     <style name="MySiteTodaysStatsCardStatTitle" parent="DashboardCardDetail" >
         <item name="android:textAlignment">viewStart</item>
         <item name="android:lineSpacingExtra">@dimen/my_site_todays_stats_card_stat_title_line_spacing_extra</item>
@@ -148,11 +142,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_small</item>
-    </style>
-
-    <style name="ShapeAppearance.QuickStartTaskCardIllustration" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">@dimen/quick_start_task_card_corner_radius</item>
     </style>
 
     <!--My Site Card - Domain Registration-->

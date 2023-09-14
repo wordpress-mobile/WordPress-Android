@@ -25,21 +25,21 @@ import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel;
 import org.wordpress.android.ui.people.PeopleInviteViewModel;
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.BasicDialogViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel;
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
-import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel;
-import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel;
-import org.wordpress.android.ui.posts.PrepublishingHomeViewModel;
-import org.wordpress.android.ui.posts.PrepublishingTagsViewModel;
-import org.wordpress.android.ui.posts.PrepublishingViewModel;
+import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryViewModel;
+import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesViewModel;
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewModel;
+import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsViewModel;
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
+import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsViewModel;
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
 import org.wordpress.android.ui.prefs.language.LocalePickerViewModel;
@@ -430,11 +430,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(DynamicCardMenuViewModel.class)
-    abstract ViewModel dynamicCardMenuViewModel(DynamicCardMenuViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(PeopleInviteViewModel.class)
     abstract ViewModel peopleInviteViewModel(PeopleInviteViewModel viewModel);
 
@@ -545,4 +540,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PublicizeListViewModel.class)
     abstract ViewModel publicizeListViewModel(PublicizeListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EditorJetpackSocialViewModel.class)
+    abstract ViewModel editorJetpackSocialViewModel(EditorJetpackSocialViewModel viewModel);
 }

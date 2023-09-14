@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.SearchView;
@@ -141,7 +142,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Inject WPIndividualPluginOverlayFeatureConfig mWPIndividualPluginOverlayFeatureConfig;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(SitePickerViewModel.class);
@@ -240,7 +241,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.site_picker, menu);
         mMenuSearch = menu.findItem(R.id.menu_search);
@@ -250,7 +251,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         updateMenuItemVisibility();
         setupSearchView();
@@ -278,7 +279,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_DISMISSED);
@@ -575,7 +576,7 @@ public class SitePickerActivity extends LocaleAwareActivity
 
         mMenuSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
                 if (!getAdapter().getIsInSearchMode()) {
                     enableSearchMode();
                     mMenuEdit.setVisible(false);
@@ -588,7 +589,7 @@ public class SitePickerActivity extends LocaleAwareActivity
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 disableSearchMode();
                 mSearchView.setOnQueryTextListener(null);
                 return true;
@@ -696,19 +697,19 @@ public class SitePickerActivity extends LocaleAwareActivity
 
     private final class ReblogActionModeCallback implements ActionMode.Callback {
         @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        public boolean onCreateActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
             mReblogActionMode = mode;
             mode.getMenuInflater().inflate(R.menu.site_picker_reblog_action_mode, menu);
             return true;
         }
 
         @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        public boolean onPrepareActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
             return true;
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
             int itemId = item.getItemId();
 
             if (itemId == R.id.continue_flow) {
@@ -730,17 +731,17 @@ public class SitePickerActivity extends LocaleAwareActivity
         private Set<SiteRecord> mChangeSet;
 
         @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            mActionMode = actionMode;
+        public boolean onCreateActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
+            mActionMode = mode;
             mHasChanges = false;
             mChangeSet = new HashSet<>();
             updateActionModeTitle();
-            actionMode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
+            mode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
             return true;
         }
 
         @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+        public boolean onPrepareActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
             MenuItem mnuShow = menu.findItem(R.id.menu_show);
             mnuShow.setEnabled(mShowMenuEnabled);
 
@@ -757,8 +758,8 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            int itemId = menuItem.getItemId();
+        public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
+            int itemId = item.getItemId();
             if (itemId == R.id.menu_show) {
                 Set<SiteRecord> changeSet = getAdapter().setVisibilityForSelectedSites(true);
                 mChangeSet.addAll(changeSet);

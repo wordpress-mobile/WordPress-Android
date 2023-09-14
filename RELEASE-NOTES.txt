@@ -1,8 +1,54 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-22.7
+23.3
 -----
 
+
+23.2
+-----
+* [*] The Zendesk ticket screen will be displayed for error dialogs resulting from account closure. [https://github.com/wordpress-mobile/WordPress-Android/pull/19023]
+* [*] Block Editor: Fix crash when using the Search block TextInput in the block inserter [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6090]
+* [**] [Jetpack-only] Block Editor: Add basic support to view, relocate, and remove the Jetpack Paywall block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6076]
+* [*] Block Editor: Columns block - Fix transforming into a Group block crash [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6129]
+* [**] Block Editor: Add block outline to all Social Link blocks when selected [https://github.com/WordPress/gutenberg/pull/54011]
+* [***] [Jetpack-only] Contact Support: Add a new chat-based support channel where users can get answers from a bot trained to help app users. Users can still create a support ticket to talk to a Happiness Engineer if they don't find the answer they're looking for  [https://github.com/wordpress-mobile/WordPress-Android/pull/18879]
+* [*] [Jetpack-only] Block editor: Fix crash when contacting customer support within the editor [https://github.com/wordpress-mobile/WordPress-Android/pull/19102]
+
+23.1
+-----
+* [*] Block editor: Hide undo/redo buttons when using the HTML editor [https://github.com/wordpress-mobile/WordPress-Android/pull/18889]
+* [*] Block editor: Display custom color value in mobile Cover Block color picker [https://github.com/WordPress/gutenberg/pull/51414]
+* [**] Block editor: Display outline around selected Social Link block [https://github.com/WordPress/gutenberg/pull/53377]
+
+23.0
+-----
+* [**] [Jetpack-only] Blaze Manage Campaigns: Added a dashboard card that displays the most recent campaign, a campaigns list screen, and a campaign details screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/18783]
+* [**] [internal] Upgrade React Native to 0.71.11 [https://github.com/wordpress-mobile/WordPress-Android/pull/18613]
+* [**] [Jetpack-only] Adds a dashboard card for domain transfers campaign [https://github.com/wordpress-mobile/WordPress-Android/pull/18852]
+
+* [*] Block editor: Remove visual gap in mobile toolbar when a Gallery block is selected [https://github.com/WordPress/gutenberg/pull/52966]
+* [*] Block editor: Remove Gallery caption button on mobile [https://github.com/WordPress/gutenberg/pull/53010]
+* [*] Block editor: Fix Gallery block selection when adding media [https://github.com/WordPress/gutenberg/pull/53127]
+* [**] Fixed occasional crashes on plugin installs [https://github.com/wordpress-mobile/WordPress-Android/pull/18890]
+* [***] [Jetpack-only] Jetpack Social: Control your post's social sharing settings from the post editor [https://github.com/wordpress-mobile/WordPress-Android/pull/18897]
+
+22.9
+-----
+* [**] Block editor: Move undo/redo buttons to the navigation bar [https://github.com/wordpress-mobile/WordPress-Android/pull/18705]
+* [***] Block editor: Editor UX improvements with new icons, colors and additional design enhancements. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5985]
+
+22.8
+-----
+* [*] Fixes the crash that occurs after deleting the site [https://github.com/wordpress-mobile/WordPress-Android/pull/18736]
+* [*] [Jetpack-only] Block editor: Rename "Reusable blocks" to "Synced patterns", aligning with the web editor. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5885]
+* [**] [internal] Block editor: Fix a crash related to Reanimated when closing the editor [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5938]
+
+22.7
+-----
+* [*] Updates Floating Action Button(FAB) color to black, shape to squircle, and icon to plus [https://github.com/wordpress-mobile/WordPress-Android/pull/18599]
+* [*] Block editor: Image block - Fix issue where in some cases the image doesn't display the right aspect ratio [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5869]
+* [*] Me, and gravatar is moved to bottom navigation as fourth tab [https://github.com/wordpress-mobile/WordPress-Android/pull/18606]
+* [*] [internal] We now display a privacy popup requiring consent from users residing in GDPR jurisdictions after login. [https://github.com/wordpress-mobile/WordPress-Android/pull/18696]
 
 22.6
 -----

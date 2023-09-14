@@ -20,6 +20,7 @@ import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.NO_PLACEHOLDER
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
     @Inject
@@ -148,7 +149,7 @@ class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
 
             val selectedColor = ColorUtils
                 .setAlphaComponent(
-                    context.getColorFromAttribute(R.attr.colorOnSurface),
+                    context.getColorFromAttribute(MaterialR.attr.colorOnSurface),
                     context.resources.getInteger(R.integer.custom_popup_selected_list_item_opacity_dec)
                 )
 

@@ -6,6 +6,8 @@ plugins {
 }
 
 android {
+    namespace "org.wordpress.android.imageeditor"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
@@ -25,6 +27,10 @@ android {
         unitTests {
             returnDefaultValues = true
         }
+    }
+
+    lint {
+        enable += 'UnknownNullness'
     }
 
     buildFeatures {

@@ -35,21 +35,17 @@
                 android:id="@+id/card_avatar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/content_margin"
-                android:layout_marginTop="@dimen/margin_large"
-                android:layout_marginEnd="@dimen/content_margin"
-                android:layout_marginBottom="@dimen/margin_large">
+                app:cardElevation="0dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/margin_extra_medium_large">
+                    android:padding="@dimen/margin_large">
 
                     <FrameLayout
                         android:id="@+id/frame_avatar"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true">
+                        android:layout_height="wrap_content">
 
                         <FrameLayout
                             android:id="@+id/avatar_container"
@@ -81,40 +77,27 @@
                     </FrameLayout>
 
                     <org.wordpress.android.widgets.WPTextView
-                        android:id="@+id/change_photo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/frame_avatar"
-                        android:layout_centerHorizontal="true"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:padding="8dp"
-                        android:text="@string/change_photo"
-                        android:textAllCaps="true"
-                        android:textAppearance="?attr/textAppearanceCaption"
-                        android:textColor="?attr/colorPrimary"
-                        tools:ignore="SmallSp"
-                        tools:text="Change photo" />
-
-                    <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/me_display_name"
+                        style="@style/MySiteTitleLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/change_photo"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginStart="@dimen/margin_extra_large"
+                        android:layout_toEndOf="@+id/frame_avatar"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        app:autoSizeMaxTextSize="@dimen/my_site_name_label_single_line_text_size"
+                        app:autoSizeMinTextSize="@dimen/my_site_name_label_double_line_text_size"
+                        app:autoSizeTextType="uniform"
                         tools:text="Full Name" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/me_username"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_extra_large"
+                        android:layout_marginBottom="@dimen/margin_extra_large"
                         android:layout_below="@id/me_display_name"
-                        android:layout_centerHorizontal="true"
+                        android:layout_toEndOf="@id/frame_avatar"
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textAppearance="?attr/textAppearanceBody2"
@@ -141,7 +124,11 @@
 
             </LinearLayout>
 
-            <View style="@style/MeListSectionDividerView" />
+            <View
+                android:id="@+id/my_profile_divider"
+                android:visibility="gone"
+                style="@style/MeListSectionDividerView"
+                tools:visibility="visible"/>
 
             <LinearLayout
                 android:id="@+id/row_account_settings"
@@ -160,7 +147,11 @@
 
             </LinearLayout>
 
-            <View style="@style/MeListSectionDividerView" />
+            <View
+                android:id="@+id/account_settings_divider"
+                android:visibility="gone"
+                style="@style/MeListSectionDividerView"
+                tools:visibility="visible"/>
 
             <LinearLayout
                 android:id="@+id/row_scan_login_code"
@@ -181,7 +172,11 @@
 
             </LinearLayout>
 
-            <View style="@style/MeListSectionDividerView" />
+            <View
+                android:id="@+id/scan_login_code_divider"
+                android:visibility="gone"
+                style="@style/MeListSectionDividerView"
+                tools:visibility="visible"/>
 
             <LinearLayout
                 android:id="@+id/row_app_settings"
@@ -201,6 +196,31 @@
             </LinearLayout>
 
             <View style="@style/MeListSectionDividerView" />
+
+            <LinearLayout
+                android:id="@+id/row_debug_settings"
+                android:visibility="gone"
+                style="@style/MeListRowLayout"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/me_debug_settings_icon"
+                    style="@style/MeListRowIcon"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_cog_white_24dp" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/me_open_debug_settings"
+                    style="@style/MeListRowTextView"
+                    android:text="@string/preference_open_debug_settings" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/debug_settings_divider"
+                android:visibility="gone"
+                style="@style/MeListSectionDividerView"
+                tools:visibility="visible"/>
 
             <LinearLayout
                 android:id="@+id/row_support"

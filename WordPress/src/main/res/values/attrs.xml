@@ -277,4 +277,11 @@
     <attr name="widgetContentPositive" format="string" />
     <attr name="widgetContentNegative" format="string" />
 
+    <!-- TrainOfAvatarsView attributes -->
+    <declare-styleable name="TrainOfAvatarsView">
+        <attr name="iconSize" format="dimension|reference" />
+        <attr name="iconBorderWidth" format="dimension|reference" />
+        <attr name="placeholder" format="color|reference" />
+    </declare-styleable>
+
 </resources>

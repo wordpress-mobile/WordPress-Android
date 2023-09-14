@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-30 10:54:58+0000
+Translation-Revision-Date: 2023-08-03 09:59:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: sq_AL
 -->
 <resources>
+    <string name="social_item_message_title">Mesazh</string>
     <string name="gutenberg_native_block_ungrouped">Blloku u hoq nga grupi</string>
     <string name="gutenberg_native_block_grouped">Blloku u grupua</string>
     <string name="dashboard_card_plans_checkout_success_info">Mund të duhen deri në 30 minuta që përkatësia juaj vetjake të fillojë të funksionojë.</string>
@@ -223,7 +224,7 @@ Language: sq_AL
     <string name="blogging_prompts_list_answered_prompt">✓ Me Përgjigje</string>
     <string name="blogging_prompts_list_title">Cytje</string>
     <string name="close_desc">mbylle</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Ndryshe, mund ta shkëputni dhe përpunoni ndarazi këtë bllok, duke prekur “Shndërroje në bllok të rregullt”.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Ndryshe, mund ta shkëputni dhe përpunoni ndarazi këtë bllok, duke prekur “Shkëpute modelin”.</string>
     <string name="dlg_confirm_delete_category">Të fshihet përgjithmonë Kategoria \'%s\'?</string>
     <string name="deleting_cat_success">Kategoria u fshi me sukses</string>
     <string name="deleting_cat_failed">Fshirja e kategorisëdështoi</string>
@@ -767,7 +768,7 @@ Language: sq_AL
     <string name="blogging_reminders_notification_title">Është koha të blogoni te %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në WordPress për iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në WordPress për Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Ndryshe, mund t’i shkëputni dhe përpunoni ndarazi këto blloqe, duke prekur “Shndërroji në blloqe të rregullt”.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Ndryshe, mund t’i shkëputni dhe përpunoni ndarazi këto blloqe, duke prekur “Shkëputi modelet”.</string>
     <string name="blogging_reminders_done">U bë</string>
     <string name="blogging_reminders_notify_me">Njoftomë</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;, që të aktivizoni rikthime sajti me një klikim, prej kopjeruajtjesh.</string>
@@ -822,12 +823,14 @@ Language: sq_AL
     <string name="gutenberg_native_width_settings">Rregullime Gjerësie</string>
     <string name="gutenberg_native_link_rel">Atribut “Rel” Lidhjeje</string>
     <string name="gutenberg_native_column_settings">Rregullime Shtylle</string>
+    <string name="gutenberg_native_no_description">Pa përshkrim</string>
     <string name="user_profile_untitled_site">(I patitull)</string>
     <string name="user_profile_site_section_header">Sajt</string>
     <string name="user_profile_bottom_sheet_description">Hollësi profili përdoruesi në fund të fletës</string>
     <string name="likes_list_screen_title">Listë %s Pëlqimesh</string>
     <string name="gutenberg_native_two">Dy</string>
     <string name="gutenberg_native_three">Tre</string>
+    <string name="gutenberg_native_no_title">Pa titull</string>
     <string name="gutenberg_native_s_social_icon">Ikonë shoqërorësh %s</string>
     <string name="gutenberg_native_mention">Përmendje</string>
     <string name="gutenberg_native_new">I RI</string>
@@ -905,7 +908,6 @@ Language: sq_AL
     <string name="new_site_creation_search_domain_input_hint">Shtypni një emër për sajtin tuaj</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Krejt punët të mbaruara&lt;/b&gt;&lt;br/&gt;Do të mbërrini në më shumë njerëz. Punë e paqme!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Krejt punët të mbaruara&lt;/b&gt;&lt;br/&gt;E keni përshtatur sajtin tuaj. Ju lumtë!</string>
-    <string name="quick_start_card_menu_hide">Fshihe hëpërhë</string>
     <string name="magic_link_not_meaning_to_create_account">S’e kishit fjalën të krijonit një llogari të re? Kthehuni mbrapsht, që të jepni adresën tuaj email.</string>
     <string name="invite_links_disable_dialog_message">Pasi të jetë çaktivizuar kjo lidhje ftese, askush s’do të jetë në gjendje të bëhet pjesë e ekipit tuaj. Jeni i sigurt?</string>
     <string name="invite_links_disable_dialog_title">Çaktivizo lidhje ftese</string>
@@ -928,7 +930,6 @@ Language: sq_AL
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Kontrolli Përfundoi&lt;/b&gt; &lt;br&gt; S’u gjetën kërcënime</string>
     <string name="scan_fixing_threats_title_singular">Po zgjidhet Kërcënimi</string>
     <string name="disable">Çaktivizoje</string>
-    <string name="quick_start_card_menu_unpin">Shfiksoje këtë</string>
     <string name="quick_start_list_review_pages_subtitle">Shihni faqe dhe bëni ndryshime, ose shtoni dhe hiqni faqe.</string>
     <string name="quick_start_list_view_site_title">Shihni sajtin tuaj</string>
     <string name="quick_start_list_follow_site_subtitle">Zbuloni dhe ndiqni sajte që ju frymëzojnë.</string>
@@ -1024,8 +1025,6 @@ Language: sq_AL
     <string name="backup_download_complete_failed_title">Shkarkimi dështoi</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Celular</string>
-    <string name="quick_start_card_menu_remove">Mos e shfaq sërish</string>
-    <string name="quick_start_card_menu_pin">Fiksoje këtë</string>
     <string name="quick_start_dialog_review_pages_message_short">Që të shihni listën e faqeve tuaja, përzgjidhni %1$s Faqe %2$s.</string>
     <string name="quick_start_dialog_review_pages_message">Ndryshoni, shtoni ose hiqni faqe të sajtit tuaj.</string>
     <string name="quick_start_dialog_review_pages_title">Shqyrtoni faqe sajti</string>
@@ -2814,11 +2813,9 @@ Language: sq_AL
     <string name="connection_service_description">Lidheni, që postimet e blogut tuaj të ndahen vetvetiu në %s.</string>
     <string name="connected_accounts_label">Llogari të lidhura</string>
     <string name="connections_description">Lidhni shërbimet tuaja të parapëlqyera shoqërore për media, që postimet e reja të ndahen vetvetiu me miqtë tuaj.</string>
-    <string name="sharing">Ndarje Me të Tjerët</string>
     <string name="tabbar_accessibility_label_notifications">Njoftime. Administroni njoftimet tuaja.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Ndiqni lëndë nga sajte të tjerë.</string>
     <string name="tabbar_accessibility_label_my_site">Sajti Im. Shiheni sajtin tuaj dhe administrojeni, përfshi statistika.</string>
-    <string name="my_site_btn_sharing">Ndarje Me të Tjerët</string>
     <string name="button_not_now">Jo tani</string>
     <string name="media_error_internal_server_error">Gabim ngarkimi. Provoni të ndryshoni Optimizoni Figura te rregullimet e aplikacionit tuaj</string>
     <string name="media_downloading">Po ruhet media në këtë pajisje</string>

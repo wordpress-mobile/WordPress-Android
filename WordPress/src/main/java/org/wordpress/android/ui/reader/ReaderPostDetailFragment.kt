@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
@@ -38,6 +39,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -65,6 +67,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
@@ -121,7 +124,6 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.RtlUtils
@@ -150,6 +152,7 @@ import org.wordpress.android.widgets.WPTextView
 import java.net.HttpURLConnection
 import java.util.EnumSet
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 @AndroidEntryPoint
 @Suppress("LargeClass")
@@ -178,6 +181,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var scrollView: WPScrollView
     private lateinit var layoutFooter: ViewGroup
     private lateinit var readerWebView: ReaderWebView
+    private lateinit var readerProgressBar: ProgressBar
 
     private lateinit var likeFacesTrain: View
     private lateinit var likeProgressBar: ProgressBar
@@ -290,9 +294,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 val isDarkTheme = context.resources.configuration.isDarkTheme()
 
                 val colorAttr = if (isCollapsed || isDarkTheme) {
-                    R.attr.colorOnSurface
+                    MaterialR.attr.colorOnSurface
                 } else {
-                    R.attr.colorSurface
+                    MaterialR.attr.colorSurface
                 }
                 val color = context.getColorFromAttribute(colorAttr)
                 val colorFilter = BlendModeColorFilterCompat
@@ -404,7 +408,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             toolBar.setNavigationOnClickListener { requireActivity().finish() }
             toolBar.setTitle(R.string.reader_title_related_post_detail)
         } else {
-            toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            toolBar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp)
             toolBar.setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         }
     }
@@ -421,6 +425,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         readerWebView.setCustomViewListener(this)
         readerWebView.setUrlClickListener(this)
         readerWebView.setPageFinishedListener(this)
+
+        readerProgressBar = view.findViewById(R.id.reader_progress_bar)
     }
 
     private fun initLikeFacesTrain(view: View) {
@@ -490,7 +496,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().addMenuProvider(this, viewLifecycleOwner)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
         val binding = ReaderFragmentPostDetailBinding.bind(view)
 
         initLikeFacesRecycler(savedInstanceState)
@@ -1104,6 +1110,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onStart() {
         super.onStart()
         dispatcher.register(this)
@@ -1486,6 +1493,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         renderer?.beginRender()
     }
 
+    // overridePendingTransition is deprecated in SDK 34 in favor of overrideActivityTransition, but the latter requires
+    // SDK 34. overridePendingTransition still works on Android 14 so using it should be safe for now.
+    @Suppress("DEPRECATION")
     private fun handleDirectOperation() = when (directOperation) {
         DirectOperation.COMMENT_JUMP, DirectOperation.COMMENT_REPLY, DirectOperation.COMMENT_LIKE -> {
             viewModel.post?.let {
@@ -1509,6 +1519,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun showPostInWebView(post: ReaderPost, fragment: Fragment) {
         readerWebView.setIsPrivatePost(post.isPrivate)
         readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))
+        readerProgressBar.visibility = View.VISIBLE
         renderer = ReaderPostRenderer(readerWebView, viewModel.post, readerCssProvider)
 
         // if the post is from private atomic site postpone render until we have a special access cookie
@@ -1542,6 +1553,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (!isAdded) {
             return
         }
+
+        readerProgressBar.visibility = View.GONE
 
         if (url != null && url == "about:blank") {
             // brief delay before showing related posts to give page time to render
@@ -1697,7 +1710,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_FILE_DOWNLOAD_TAPPED)
         return if (activity != null &&
             fileUrl != null &&
-            PermissionUtils.checkAndRequestStoragePermission(
+            PermissionUtils.checkAndRequestFileDownloadPermission(
                 this,
                 READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
             )

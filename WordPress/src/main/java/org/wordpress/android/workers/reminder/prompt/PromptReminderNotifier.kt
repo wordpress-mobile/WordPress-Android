@@ -10,8 +10,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_NOTIFICATION_PROMPT_ANSWER_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_NOTIFICATION_PROMPT_TAPPED
@@ -28,7 +26,7 @@ import org.wordpress.android.ui.notifications.DismissNotificationReceiver
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsFeature
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.workers.reminder.ReminderNotification
@@ -42,7 +40,7 @@ class PromptReminderNotifier @Inject constructor(
     val siteStore: SiteStore,
     val accountStore: AccountStore,
     val reminderNotificationManager: ReminderNotificationManager,
-    val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    val bloggingPromptsFeature: BloggingPromptsFeature,
     val bloggingPromptsStore: BloggingPromptsStore,
     val bloggingRemindersAnalyticsTracker: BloggingRemindersAnalyticsTracker,
     val htmlCompatWrapper: HtmlCompatWrapper,
@@ -75,11 +73,11 @@ class PromptReminderNotifier @Inject constructor(
             )
         )
         val answerPromptReminderNotification = ReminderNotification(
-            channel = resourceProvider.getString(string.notification_channel_reminder_id),
+            channel = resourceProvider.getString(R.string.notification_channel_reminder_id),
             contentIntentBuilder = { contentPendingIntent },
             deleteIntentBuilder = { dismissNotificationSwipePendingIntent },
             contentTitle = resourceProvider.getString(
-                string.blogging_prompts_answer_prompt_notification_title, SiteUtils.getSiteNameOrHomeURL(site)
+                R.string.blogging_prompts_answer_prompt_notification_title, SiteUtils.getSiteNameOrHomeURL(site)
             ),
             contentText = htmlCompatWrapper.fromHtml(prompt?.text.orEmpty()).toString(),
             priority = PRIORITY_DEFAULT,
@@ -91,15 +89,15 @@ class PromptReminderNotifier @Inject constructor(
             } else {
                 resourceProvider.getColor(R.color.blue_50)
             },
-            smallIcon = drawable.ic_app_white_24dp,
+            smallIcon = R.drawable.ic_app_white_24dp,
             firstAction = Builder(
                 0,
-                resourceProvider.getString(string.blogging_prompts_answer_prompt_notification_answer_action),
+                resourceProvider.getString(R.string.blogging_prompts_answer_prompt_notification_answer_action),
                 openEditorPendingIntent
             ).build(),
             secondAction = Builder(
                 0,
-                resourceProvider.getString(string.blogging_prompts_notification_dismiss),
+                resourceProvider.getString(R.string.blogging_prompts_notification_dismiss),
                 dismissNotificationButtonPendingIntent
             ).build()
         )
@@ -167,7 +165,7 @@ class PromptReminderNotifier @Inject constructor(
 
     suspend fun shouldNotify(siteId: Int): Boolean {
         val hasAccessToken = accountStore.hasAccessToken()
-        val isBloggingPromptsEnabled = bloggingPromptsFeatureConfig.isEnabled()
+        val isBloggingPromptsEnabled = bloggingPromptsFeature.isEnabled()
         val siteModel = siteStore.getSiteByLocalId(siteId)
         val bloggingRemindersModel = bloggingRemindersStore.bloggingRemindersModel(siteId).first()
         val hasOptedInBloggingPromptsReminders = siteModel != null && bloggingRemindersModel.isPromptIncluded

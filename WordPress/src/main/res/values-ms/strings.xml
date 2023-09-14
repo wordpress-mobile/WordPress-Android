@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-12-20 12:00:16+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: ms
 -->
 <resources>
@@ -228,11 +228,9 @@ Language: ms
     <string name="connections_description">Sambung perkhidmatan media sosial kegemaran anda untuk berkongsi kiriman dengan rakan-rakan secara automatik.</string>
     <string name="connected_accounts_label">Akaun yang telah disambung</string>
     <string name="tabbar_accessibility_label_notifications">Pemberitahuan. Urus pemberitahuan anda.</string>
-    <string name="sharing">Berkongsi</string>
     <string name="tabbar_accessibility_label_reader">Pembaca. Ikut kandungan dari laman lain.</string>
     <string name="tabbar_accessibility_label_my_site">Laman Saya. Lihat laman anda dan uruskannya, termasuk statistik.</string>
     <string name="button_not_now">Bikan sekarang</string>
-    <string name="my_site_btn_sharing">Berkongsi</string>
     <string name="media_error_internal_server_error">Ralat muat naik. Cuba ubah Optimumkan Imej dalam tetapan aplikasi anda</string>
     <string name="media_downloading">Menyimpan media ke peranti ini</string>
     <string name="error_media_save">Tidak dapat menyimpan media</string>

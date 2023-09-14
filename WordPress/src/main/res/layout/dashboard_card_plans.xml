@@ -40,6 +40,7 @@
                 android:paddingTop="@dimen/margin_extra_small_large"
                 android:importantForAccessibility="no"
                 android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
                 android:src="@drawable/browser_address_bar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

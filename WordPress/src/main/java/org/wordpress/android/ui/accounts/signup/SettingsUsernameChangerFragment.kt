@@ -30,6 +30,7 @@ import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogControl
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.widgets.WPDialogSnackbar
+import android.R as AndroidR
 
 /**
  * Allows the user to change their username from the Account Settings screen.
@@ -103,7 +104,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
             setPositiveButton(
                 R.string.settings_username_changer_confirm_dialog_positive_action
             ) { _, _ -> saveUsername(username) }
-            setNegativeButton(android.R.string.cancel, null)
+            setNegativeButton(AndroidR.string.cancel, null)
             create()
         }.show().also { alertDialog ->
             // The change username button is disabled at start.

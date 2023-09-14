@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.google.android.material.appbar.AppBarLayout;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -77,7 +76,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     private SearchView mSearchView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.plugin_browser_activity);
@@ -151,7 +150,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    protected void onSaveInstanceState(@NotNull Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mViewModel.writeToBundle(outState);
     }
@@ -217,7 +216,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
@@ -237,7 +236,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();
             return true;
@@ -329,14 +328,14 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+    public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
         showListFragment(PluginListType.SEARCH);
         mSearchView.setOnQueryTextListener(this);
         return true;
     }
 
     @Override
-    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+    public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
         mSearchView.setOnQueryTextListener(null);
         hideListFragment();
         mViewModel.setSearchQuery("");
@@ -373,15 +372,15 @@ public class PluginBrowserActivity extends LocaleAwareActivity
             return mItems.getItemId(position);
         }
 
-        @NotNull
+        @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = mLayoutInflater.inflate(R.layout.plugin_browser_row, parent, false);
             return new PluginBrowserViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NotNull ViewHolder viewHolder, int position) {
+        public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
             PluginBrowserViewHolder holder = (PluginBrowserViewHolder) viewHolder;
             ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
             if (plugin == null) {

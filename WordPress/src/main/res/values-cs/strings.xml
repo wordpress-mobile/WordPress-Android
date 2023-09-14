@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-31 19:10:57+0000
+Translation-Revision-Date: 2023-08-09 06:23:32+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: cs_CZ
 -->
 <resources>
+    <string name="social_item_message_title">Zpráva</string>
+    <string name="dashboard_card_plans_menu_hide_this">Toto skrýt</string>
+    <string name="virtual_homepage_title">Úvodní stránka</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; používá %2$s jednotlivé pluginy Jetpack</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_single_plugin">&lt;b&gt;%1$s&lt;/b&gt; používá plugin &lt;b&gt;%2$s&lt;/b&gt;</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_1">Aplikace WordPress nepodporuje weby s jednotlivými pluginy Jetpack.</string>
@@ -830,7 +833,6 @@ Language: cs_CZ
     <string name="new_site_creation_search_domain_input_hint">Zadejte název svého webu</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Všechny úkoly dokončeny&lt;/b&gt;&lt;br/&gt;Oslovíte více lidí. Dobrá práce!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Všechny úkoly dokončeny&lt;/b&gt;&lt;br/&gt;Svůj web jste si přizpůsobili. Výborně!</string>
-    <string name="quick_start_card_menu_hide">Prozatím skrýt</string>
     <string name="magic_link_not_meaning_to_create_account">Nechtěli jste vytvořit nový účet? Vraťte se zpět a znovu zadejte svou emailovou adresu.</string>
     <string name="invite_links_disable_dialog_message">Jakmile je tento odkaz s pozvánkou deaktivován, nikdo ho nebude moci použít k připojení k vašemu týmu. Jsi si jistý?</string>
     <string name="invite_links_disable_dialog_title">Zakázat zvací odkaz</string>
@@ -853,7 +855,6 @@ Language: cs_CZ
     <string name="scan_finished_potential_threats_found_message_singular">&lt;b&gt;Skenování dokončeno&lt;/b&gt;&lt;br&gt;Nalezena 1 potenciální hrozba</string>
     <string name="disable">Zakázat</string>
     <string name="scan_fixing_threats_title_singular">Oprava hrozby</string>
-    <string name="quick_start_card_menu_unpin">Uvolněte to</string>
     <string name="quick_start_list_review_pages_subtitle">Zkontrolujte své stránky a proveďte změny nebo je přidejte nebo odeberte.</string>
     <string name="quick_start_list_view_site_title">Navštívit váš web</string>
     <string name="quick_start_list_follow_site_subtitle">Objevujte a sledujte weby, které vás inspirují.</string>
@@ -950,8 +951,6 @@ Language: cs_CZ
     <string name="quick_start_dialog_review_pages_title">Zkontrolujte stránky webu</string>
     <string name="quick_start_dialog_review_pages_message">Změňte, přidejte nebo odeberte stránky svého webu.</string>
     <string name="quick_start_dialog_review_pages_message_short">Chcete-li zobrazit seznam stránek, vyberte %1$s stránky %2$s.</string>
-    <string name="quick_start_card_menu_pin">Připnout to</string>
-    <string name="quick_start_card_menu_remove">Příště nezobrazovat</string>
     <string name="web_preview_mobile">Mobil</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="backup_download_complete_failed_title">Stažení se nezdařilo</string>
@@ -2740,12 +2739,11 @@ Language: cs_CZ
     <string name="connection_service_description">Připojte se k automatickému sdílení příspěvků blogu na %s.</string>
     <string name="connected_accounts_label">Připojené účty</string>
     <string name="connections_description">Připojte své oblíbené sociální sítě k automatickému sdílení nových příspěvků s přáteli.</string>
-    <string name="sharing">Sdílení</string>
     <string name="tabbar_accessibility_label_notifications">Notifikace. Spravovat notifikace.</string>
     <string name="tabbar_accessibility_label_reader">Čtenář. Sledujte obsah z jiných stránek.</string>
     <string name="tabbar_accessibility_label_my_site">Moje stránka. Zobrazte své stránky a spravujte je, včetně statistik.</string>
-    <string name="my_site_btn_sharing">Sdílení</string>
     <string name="button_not_now">Teď ne</string>
+    <string name="my_site_btn_sharing">Sociální média</string>
     <string name="media_error_internal_server_error">Chyba při nahrávání. Zkuste změnit optimalizaci obrázků v nastavení aplikace</string>
     <string name="media_downloading">Uložení média do tohoto zařízení</string>
     <string name="error_media_save">Nelze uložit médium</string>

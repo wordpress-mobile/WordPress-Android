@@ -4,18 +4,17 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardDomainCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DomainTransferCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.StatsSubtype
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.BlazeSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -62,12 +61,6 @@ class CardsShownTracker @Inject constructor(
                 Type.POST.label
             )
         )
-        is PostCardWithoutPostItems -> trackCardShown(
-            Pair(
-                card.dashboardCardType.toTypeValue().label,
-                card.postCardType.toSubtypeValue().label
-            )
-        )
         is PostCardWithPostItems -> trackCardShown(
             Pair(
                 card.dashboardCardType.toTypeValue().label,
@@ -80,16 +73,22 @@ class CardsShownTracker @Inject constructor(
                 Type.BLOGGING_PROMPT.label
             )
         )
-        is PromoteWithBlazeCard -> trackCardShown(
+        is DashboardCard.BlazeCard.PromoteWithBlazeCard -> trackCardShown(
             Pair(
                 card.dashboardCardType.toTypeValue().label,
-                Type.PROMOTE_WITH_BLAZE.label
+                BlazeSubtype.NO_CAMPAIGNS.label
             )
         )
-        is DashboardDomainCard -> trackCardShown(
+        is DomainTransferCardModel -> trackCardShown(
             Pair(
                 card.dashboardCardType.toTypeValue().label,
-                Type.DASHBOARD_CARD_DOMAIN.label
+                Type.DASHBOARD_CARD_DOMAIN_TRANSFER.label
+            )
+        )
+        is DashboardCard.BlazeCard.BlazeCampaignsCardModel -> trackCardShown(
+            Pair(
+                card.dashboardCardType.toTypeValue().label,
+                BlazeSubtype.CAMPAIGNS.label
             )
         )
         is DashboardPlansCard -> trackCardShown(

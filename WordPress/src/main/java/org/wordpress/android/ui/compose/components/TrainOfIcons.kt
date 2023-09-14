@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -29,6 +30,12 @@ private const val DEFAULT_ICON_BORDER_WIDTH = 2
 // this proportion is calculated based on the Figma design for Jetpack Social (Th1ahHKq53k5JT1PNDMavY-fi-865_13166)
 private const val ICON_OFFSET_PROPORTION = 29f / 36f
 
+
+data class TrainOfIconsModel(
+    val data: Any?,
+    val alpha: Float = 1f,
+)
+
 /**
  * This component uses coil's [AsyncImage] internally so it supports any model the regular [AsyncImage] composable can
  * use. The icons are laid out horizontally, with the first icon being the first element in the list and the last icon
@@ -41,38 +48,43 @@ private const val ICON_OFFSET_PROPORTION = 29f / 36f
  * @param contentDescription the content description of the container.
  * @param iconSize the size of an individual icon.
  * @param iconBorderWidth the width of the icon border.
- * @param placeholder the placeholder to be used while the icons are loading.
+ * @param placeholderPainter the placeholder [Painter] to be used while the icons are loading.
  */
 @Composable
 fun TrainOfIcons(
-    iconModels: List<Any>,
+    iconModels: List<TrainOfIconsModel>,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     iconSize: Dp = DEFAULT_ICON_SIZE.dp,
     iconBorderWidth: Dp = DEFAULT_ICON_BORDER_WIDTH.dp,
-    placeholder: Painter = ColorPainter(colorResource(R.color.placeholder)),
+    iconBorderColor: Color = MaterialTheme.colors.surface,
+    placeholderPainter: Painter = ColorPainter(colorResource(R.color.placeholder)),
 ) {
-    require(iconModels.isNotEmpty()) { "TrainOfIcons must have at least 1 icon" }
+    if (iconModels.isEmpty()) {
+        return
+    }
 
     val iconSizeWithBorder = (iconSize.value + 2 * iconBorderWidth.value).toInt()
+    val semanticsModifier = contentDescription?.let {
+        modifier.semantics(mergeDescendants = true) { this.contentDescription = it }
+    }
 
     Layout(
-        modifier = modifier.then(Modifier.semantics(mergeDescendants = true) {
-            contentDescription?.let {
-                this.contentDescription = it
-            }
-        }),
+        modifier = semanticsModifier ?: modifier,
         content = {
             iconModels.forEach { iconModel ->
                 AsyncImage(
-                    model = iconModel,
+                    model = iconModel.data,
+                    alpha = iconModel.alpha,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    placeholder = placeholder,
+                    placeholder = placeholderPainter,
+                    fallback = placeholderPainter,
+                    error = placeholderPainter,
                     modifier = Modifier
                         .size(iconSizeWithBorder.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colors.surface)
+                        .background(iconBorderColor)
                         .padding(iconBorderWidth)
                         .clip(CircleShape)
                 )
@@ -109,7 +121,7 @@ fun TrainOfIconsPreview() {
                 R.drawable.login_prologue_second_asset_two,
                 R.drawable.login_prologue_third_asset_one,
                 R.mipmap.app_icon
-            ),
+            ).map { TrainOfIconsModel(it) },
             contentDescription = "Train of icons",
         )
     }

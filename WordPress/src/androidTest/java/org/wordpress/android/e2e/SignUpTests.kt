@@ -6,11 +6,13 @@ import org.junit.Test
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.e2e.flows.SignupFlow
 import org.wordpress.android.support.BaseTest
+import org.wordpress.android.support.ComposeEspressoLink
 
 @HiltAndroidTest
 class SignUpTests : BaseTest() {
     @Before
     fun setUp() {
+        ComposeEspressoLink().unregister()
         logoutIfNecessary()
     }
 

@@ -75,7 +75,7 @@
     <dimen name="postlist_featured_image_height">98dp</dimen>
 
     <!-- left/right margin for content such as Me fragment, My Site fragment -->
-    <dimen name="content_margin_normal">@dimen/margin_medium</dimen>
+    <dimen name="content_margin_normal">@dimen/margin_extra_large</dimen>
     <dimen name="content_margin_tablet">48dp</dimen>
     <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
@@ -119,7 +119,6 @@
     <dimen name="margin_filter_spinner">16dp</dimen>
     <dimen name="margin_theme_browser_top">160dp</dimen>
     <dimen name="negative_margin_medium">-8dp</dimen>
-    <dimen name="margin_my_site_quick_actions_bottom">24dp</dimen>
 
     <!-- left/right margin for reader interests content -->
     <dimen name="interests_content_margin">@dimen/margin_medium_large</dimen>
@@ -184,14 +183,14 @@
     <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">40dp</dimen>
-    <dimen name="avatar_sz_inner_circle">60dp</dimen>
+    <dimen name="avatar_sz_inner_circle">48dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="avatar_sz_extra_large">72dp</dimen>
     <dimen name="avatar_sz_login_epilogue">72dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
     <dimen name="blavatar_sz_extra_large">72dp</dimen>
-    <dimen name="my_site_blavatar_sz">64dp</dimen>
+    <dimen name="my_site_blavatar_sz">56dp</dimen>
 
     <dimen name="reader_post_header_height">40dp</dimen>
     <dimen name="reader_button_icon">24dp</dimen>
@@ -251,6 +250,9 @@
     <!-- editor -->
     <dimen name="post_settings_featured_image_height_min">150dp</dimen>
     <dimen name="post_settings_featured_image_height_max">300dp</dimen>
+    <dimen name="edit_post_header_chevron_size">24dp</dimen>
+    <dimen name="edit_post_header_image_size">32dp</dimen>
+    <dimen name="edit_post_header_image_corner_radius">2dp</dimen>
 
     <!-- comments -->
     <dimen name="comment_avatar_sz">40dp</dimen>
@@ -310,14 +312,12 @@
     <dimen name="my_site_name_label_single_line_text_size">20sp</dimen>
     <dimen name="my_site_name_label_double_line_text_size">16sp</dimen>
     <dimen name="my_site_content_area">500dp</dimen>
-    <dimen name="my_site_quick_action_button_text_max_width">84dp</dimen>
     <dimen name="my_site_card_row_padding">16dp</dimen>
     <dimen name="my_site_card_row_top_padding">12dp</dimen>
     <dimen name="my_site_card_footer_link_padding">16dp</dimen>
     <dimen name="my_site_card_footer_link_padding_top">8dp</dimen>
 
     <!-- my site today's stats card item -->
-    <dimen name="my_site_todays_stats_card_title_line_spacing_extra">10sp</dimen>
     <dimen name="my_site_todays_stats_card_stat_title_line_spacing_extra">8sp</dimen>
     <dimen name="my_site_today_stats_card_stat_title_min_width">80dp</dimen>
 
@@ -446,10 +446,6 @@
     <dimen name="quick_start_focus_point_elevation">100dp</dimen>
 
     <dimen name="quick_start_card_progress_indicator_size">24dp</dimen>
-    <dimen name="quick_start_task_card_width">168dp</dimen>
-    <dimen name="quick_start_task_card_elevation">0dp</dimen>
-    <dimen name="quick_start_task_card_corner_radius">8dp</dimen>
-    <dimen name="quick_start_task_card_overlay_alpha" format="float" type="dimen">0.8</dimen>
 
     <dimen name="new_quick_start_card_illustration_image_width">54dp</dimen>
     <dimen name="new_quick_start_card_task_completed_icon_size">16dp</dimen>
@@ -594,7 +590,6 @@
     <!--Main bottom sheet icon size -->
     <dimen name="main_bottom_sheet_list_row_icon_size">32dp</dimen>
     <dimen name="main_bottom_sheet_list_row_min_height">48dp</dimen>
-    <dimen name="main_fab_tooltip_offset_end">20dp</dimen>
     <dimen name="main_fab_tooltip_elevation">6dp</dimen>
     <dimen name="main_fab_tooltip_arrow_size">16dp</dimen>
 
@@ -714,9 +709,9 @@
     <dimen name="blogging_reminders_prompt_help_buttons_size">16dp</dimen>
     <dimen name="blogging_prompt_card_compact_help_button_size">16dp</dimen>
 
-    <dimen name="app_bar_with_site_info_height">146dp</dimen>
+    <dimen name="app_bar_with_site_info_height">90dp</dimen>
     <dimen name="app_bar_with_no_site_info_height">62dp</dimen>
-    <dimen name="app_bar_with_site_info_tabs_height">200dp</dimen>
+    <dimen name="app_bar_with_site_info_tabs_height">144dp</dimen>
     <dimen name="toolbar_bottom_margin_with_no_tabs">0dp</dimen>
     <dimen name="toolbar_bottom_margin_with_tabs">168dp</dimen>
 
@@ -773,4 +768,10 @@
     <dimen name="dashboard_card_plans_layout_padding">16dp</dimen>
     <dimen name="dashboard_card_plans_top_margin">48dp</dimen>
     <dimen name="dashboard_card_plans_done_button_bottom_margin">16dp</dimen>
+
+    <!-- WPSwitchCompat min width to closely match the Switch composable -->
+    <dimen name="switch_min_width">48dp</dimen>
+    <dimen name="switch_thumb_size">20dp</dimen>
+    <dimen name="switch_horizontal_padding">7dp</dimen>
+    <dimen name="switch_vertical_padding">4dp</dimen>
 </resources>

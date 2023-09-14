@@ -266,7 +266,10 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             return;
         }
 
-        mNormalBackgroundColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorSurface);
+        mNormalBackgroundColor = ContextExtensionsKt.getColorFromAttribute(
+                context,
+                com.google.android.material.R.attr.colorSurface
+        );
         // Double margin_extra_large for increased indent in comment replies
         mIndentedLeftPadding = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_large) * 2;
     }

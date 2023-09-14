@@ -20,6 +20,7 @@ import org.wordpress.android.R
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
+import com.google.android.material.R as MaterialR
 
 /**
  * Custom view for main switch in toolbar for preferences.
@@ -41,13 +42,13 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
     ) {
         HIGHLIGHTED(
             0,
-            R.attr.colorOnPrimary,
-            R.attr.colorPrimary
+            MaterialR.attr.colorOnPrimary,
+            MaterialR.attr.colorPrimary
         ),
         NORMAL(
             1,
-            R.attr.colorOnSurface,
-            R.attr.colorSurface
+            MaterialR.attr.colorOnSurface,
+            MaterialR.attr.colorSurface
         );
 
         companion object {

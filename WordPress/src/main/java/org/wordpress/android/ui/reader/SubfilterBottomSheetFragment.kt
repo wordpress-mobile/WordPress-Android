@@ -26,6 +26,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.SubfilterPagerAdapter
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject
@@ -120,7 +121,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             val sheetDialog = dialogInterface as? BottomSheetDialog
 
             val bottomSheet = sheetDialog?.findViewById<View>(
-                com.google.android.material.R.id.design_bottom_sheet
+                MaterialR.id.design_bottom_sheet
             ) as? FrameLayout
 
             bottomSheet?.let {

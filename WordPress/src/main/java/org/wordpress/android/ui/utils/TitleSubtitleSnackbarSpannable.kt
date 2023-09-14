@@ -8,8 +8,8 @@ import android.text.style.ForegroundColorSpan
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
-import org.wordpress.android.R
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import com.google.android.material.R as MaterialR
 
 object TitleSubtitleSnackbarSpannable {
     private const val SUBTITLE_ALPHA: Int = (0.6 * 0xFF).toInt()
@@ -23,7 +23,8 @@ object TitleSubtitleSnackbarSpannable {
      * @param subtitle the [CharSequence] that will be slightly more transparent text style, used as subtitle
      */
     fun create(context: Context, title: CharSequence, subtitle: CharSequence): Spannable {
-        val color = context.getColorFromAttribute(R.attr.colorSurface) // color used for Snackbar text
+        // color used for Snackbar text
+        val color = context.getColorFromAttribute(MaterialR.attr.colorSurface)
         val subtitleColor = Color.argb(SUBTITLE_ALPHA, color.red, color.green, color.blue)
         val spannable = SpannableStringBuilder()
 

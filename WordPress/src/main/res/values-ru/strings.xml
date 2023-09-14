@@ -1,11 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-30 09:54:26+0000
+Translation-Revision-Date: 2023-08-21 16:09:24+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: ru
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">Ответ:</string>
+    <string name="contact_support_bot_ticket_comment_question">Вопрос:</string>
+    <string name="contact_support_bot_ticket_comment_start">Расшифровка мобильного бота Jetpack:</string>
+    <string name="contact_support_bot_ticket_error">Ошибка отправки запроса в поддержку</string>
+    <string name="contact_support_bot_ticket_message">Обращение создано</string>
+    <string name="contact_support_bot_ticket_loading">Создать запрос в поддержку…</string>
+    <string name="contact_support_question_six">Как можно использовать свой пользовательский домен в приложении?</string>
+    <string name="contact_support_question_five">Я не помню свои учётные данные</string>
+    <string name="contact_support_question_four">Почему я не могу войти?</string>
+    <string name="contact_support_question_three">Невозможно загрузить фото/видео</string>
+    <string name="contact_support_question_two">Помогите, сайт не работает!</string>
+    <string name="contact_support_question_one">Какой адрес у моего сайта?</string>
+    <string name="contact_support_suggestions">Не знаете, что спросить?</string>
+    <string name="contact_support_get_support">Обратиться в поддержку</string>
+    <string name="contact_support_first_message">Чем мы можем вам помочь?</string>
+    <string name="contact_support_input_placeholder">Отправить сообщение…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">Очистить</string>
+    <string name="jetpack_social_social_shares_remaining">Осталось %1$d возможностей поделиться</string>
+    <string name="missing_splits_dialog_button">ЗАКРЫТЬ</string>
+    <string name="missing_splits_dialog_message">В приложении WordPress отсутствуют необходимые компоненты, и его необходимо переустановить из магазина Google Play.</string>
+    <string name="missing_splits_dialog_title">Установка не удалась</string>
+    <string name="campaign_detail_error_title">Что-то пошло не так</string>
+    <string name="campaign_listing_page_error_title">Что-то пошло не так</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Что-то пошло не так, не удалось загрузить кампании</string>
+    <string name="domain_transfer_card_menu_hide_this">Скрыть это</string>
+    <string name="domain_transfer_card_cta">Перенести домены</string>
+    <string name="domain_transfer_card_caption">Как вы, возможно, знаете, домены Google были проданы компании Squarespace. Перенесите свои домены на WordPress.com сейчас, и мы оплатим все сборы за перенос плюс дополнительный год регистрации вашего домена.</string>
+    <string name="domain_transfer_card_sub_title">Заберите ваши домены Google</string>
+    <string name="domain_transfer_card_title">Новости</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Подключить учётные записи</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Поделиться в социальных сетях</string>
+    <string name="prepublishing_nudges_social_action">Поделиться в социальных сетях</string>
+    <string name="sharing">Соц.сети</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Делимся с %1$d учётными записями</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Делимся с %1$d из %2$d учётных записей</string>
+    <string name="jetpack_social_social_shares_title_single_account">Делимся с %1$s</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Не делимся в соцсетях</string>
+    <string name="post_settings_jetpack_social_share_message_description">Настройте сообщение, которым вы хотите поделиться. Если вы не добавите свой текст, то мы используем название записи.</string>
+    <string name="post_settings_jetpack_social_share_message_title">Настроить сообщение</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Не сейчас</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Подключение учетных записей</string>
+    <string name="gutenberg_native_insert_video_block">Вставить блок видео</string>
+    <string name="gutenberg_native_insert_image_block">Вставить блок изображения</string>
+    <string name="gutenberg_native_insert_gallery_block">Вставить блок галереи</string>
+    <string name="gutenberg_native_insert_audio_block">Вставить блок звукозаписи</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Создать</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">Вы еще не создали кампании. Нажмите «создать», чтобы начать.</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">У вас ещё нет кампаний</string>
+    <string name="blaze_campaign_details_page_title">Детали кампании</string>
+    <string name="blaze_campaigns_page_title">Кампании Blaze</string>
+    <string name="budget_campaign_stats">Бюджет</string>
+    <string name="clicks_campaign_stats">Переходы</string>
+    <string name="impressions_campaign_stats">Впечатления</string>
+    <string name="campaign_status_scheduled">ЗАПЛАНИРОВАНА</string>
+    <string name="campaign_status_in_moderation">НА РАССМОТРЕНИИ</string>
+    <string name="campaign_status_canceled">ОТМЕНЕНА</string>
+    <string name="campaign_status_rejected">ОТКЛОНЕНА</string>
+    <string name="campaign_status_completed">ЗАВЕРШЕНА</string>
+    <string name="campaign_status_active">АКТИВНА</string>
+    <string name="blaze_campaigns_card_footer_label">Создать кампанию</string>
+    <string name="blaze_campaigns_card_title">Кампания Blaze</string>
+    <string name="promote_blaze_flow_error">Не удалось загрузить рекламный поток Blaze</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Увеличьте посещаемость сайта, автоматически делясь записями с друзьями в социальных сетях.</string>
+    <string name="menu_close_editor">Закрыть редактор</string>
+    <string name="menu_redo_context">Повторить последнее изменение</string>
+    <string name="menu_undo_context">Отменить последнее изменение</string>
+    <string name="jetpack_social_social_shares_remaining_one">Осталась одна возможность поделиться</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Подпишитесь, чтобы делиться больше</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Увеличьте посещаемость сайта, автоматически делясь записями с друзьями в социальных сетях.</string>
+    <string name="post_settings_jetpack_social_header">Социальный обмен</string>
+    <string name="gutenberg_native_s_detached">%s отсоединен</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Редактирование синхронизируемых паттернов пока не поддерживается в %s для iOS</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Редактирование синхронизируемых паттернов пока не поддерживается в %s для Android</string>
+    <string name="gutenberg_native_reusable">Мои блоки</string>
+    <string name="privacy_banner_error_save">При сохранении параметров конфиденциальности произошла ошибка.</string>
+    <string name="privacy_banner_save">Сохранить</string>
+    <string name="privacy_banner_settings">Настройки</string>
+    <string name="privacy_banner_analytics_description">Позвольте нам оптимизировать производительность, собирая информацию о том, как пользователи взаимодействуют с нашими мобильными приложениями.</string>
+    <string name="privacy_banner_analytics">Аналитика</string>
+    <string name="privacy_banner_title">Управление конфиденциальностью</string>
+    <string name="privacy_banner_description">Ваша конфиденциальность критически важна для нас и всегда была. Мы используем, храним и обрабатываем ваши личные данные для оптимизации нашего приложения (и вашего опыта) различными способами. Некоторые способы использования ваших данных нам абсолютно необходимы, чтобы все работало, а другие вы можете настроить.</string>
+    <string name="tabbar_accessibility_label_me">Мой профиль. Управление подробностями.</string>
+    <string name="social_item_message_title">Сообщение</string>
     <string name="gutenberg_native_block_ungrouped">Блок расгруппирован</string>
     <string name="gutenberg_native_block_grouped">Блок сгруппирован</string>
     <string name="dashboard_card_plans_checkout_success_info">Прежде чем ваш домен начнёт работать, может пройти до 30 минут.</string>
@@ -224,7 +307,7 @@ Language: ru
     <string name="blogging_prompts_list_answered_prompt">✓ Ответ дан</string>
     <string name="blogging_prompts_list_title">Подсказки</string>
     <string name="close_desc">закрыть</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Альтернативным вариантом вы можете рассоединить и отредактировать эти блоки по отдельности, нажав на \"преобразовать в обычные блоки\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Кроме того, вы можете отсоединить и отредактировать этот блок отдельно, нажав «Отсоединить паттерн».</string>
     <string name="dlg_confirm_delete_category">Навсегда удалить рубрику \'%s\'?</string>
     <string name="deleting_cat_success">Рубрика удалена</string>
     <string name="deleting_cat_failed">Не удалось удалить рубрику</string>
@@ -772,7 +855,7 @@ Language: ru
     <string name="blogging_reminders_notification_title">Самое время написать в блог на %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Редактирование \"моих блоков\" пока не доступно в WordPress для iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Редактирование \"моих блоков\" пока не доступно в WordPress для Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Альтернативным вариантом вы можете рассоединить и отредактировать эти блоки по отдельности, нажав на \"преобразовать в обычные блоки\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Кроме того, вы можете отсоединить и отредактировать эти блоки отдельно, нажав «Отсоединить паттерны».</string>
     <string name="blogging_reminders_done">Готово</string>
     <string name="blogging_reminders_notify_me">Уведомить меня</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Введите учетные данные сервера&lt;/a&gt;, чтобы включить восстановление из резервных копий в одно нажатие.</string>
@@ -829,12 +912,14 @@ Language: ru
     <string name="gutenberg_native_width_settings">Настройки ширины</string>
     <string name="gutenberg_native_link_rel">Link rel</string>
     <string name="gutenberg_native_column_settings">Настройки столбцов</string>
+    <string name="gutenberg_native_no_description">Нет описания</string>
     <string name="user_profile_untitled_site">(Без названия)</string>
     <string name="user_profile_site_section_header">Сайт</string>
     <string name="user_profile_bottom_sheet_description">Нижняя часть информации профиля пользователя</string>
     <string name="likes_list_screen_title">Отметки \"нравится\" %s</string>
     <string name="gutenberg_native_two">Два</string>
     <string name="gutenberg_native_three">Три</string>
+    <string name="gutenberg_native_no_title">Нет заголовка</string>
     <string name="gutenberg_native_s_social_icon">Значок соцсети %s</string>
     <string name="gutenberg_native_mention">Упоминание</string>
     <string name="gutenberg_native_new">НОВОЕ</string>
@@ -912,7 +997,6 @@ Language: ru
     <string name="new_site_creation_search_domain_input_hint">Выберите название для вашего сайта.</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Все задачи выполнены&lt;/b&gt;&lt;br/&gt; Вы привлечёте больше посетителей. Хорошая работа!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Все задачи выполнены&lt;/b&gt;&lt;br/&gt;Вы персонализировали ваш сайт. Отлично!</string>
-    <string name="quick_start_card_menu_hide">Временно скрыть</string>
     <string name="magic_link_not_meaning_to_create_account">Не планировали создание новой учётной записи? Перейдите назад и введите ваш адрес email.</string>
     <string name="invite_links_disable_dialog_message">Если эта ссылка для приглашения будет отключена, никто не сможет использовать её для присоединения к вашей команде. Вы уверены в этом?</string>
     <string name="invite_links_disable_dialog_title">Отключить пригласительную ссылку</string>
@@ -935,7 +1019,6 @@ Language: ru
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Проверка завершена&lt;/b&gt; &lt;br&gt;&lt;/br&gt; Угроз не найдено</string>
     <string name="scan_fixing_threats_title_singular">Устранение угрозы</string>
     <string name="disable">Отключить</string>
-    <string name="quick_start_card_menu_unpin">Открепить</string>
     <string name="quick_start_list_review_pages_subtitle">Просмотрите ваши страницы, внесите изменение или добавьте/удалите страницы.</string>
     <string name="quick_start_list_view_site_title">Просмотрите свой сайт</string>
     <string name="quick_start_list_follow_site_subtitle">Находите и подписывайтесь на сайты вдохновляющие вас.</string>
@@ -1031,8 +1114,6 @@ Language: ru
     <string name="backup_download_complete_failed_title">Загрузка не удалась.</string>
     <string name="web_preview_tablet">Планшет</string>
     <string name="web_preview_mobile">Мобильное устройство</string>
-    <string name="quick_start_card_menu_remove">Не показывать снова</string>
-    <string name="quick_start_card_menu_pin">Прикрепить</string>
     <string name="quick_start_dialog_review_pages_message_short">Выберите %1$s страницы %2$s для просмотра списка страниц.</string>
     <string name="quick_start_dialog_review_pages_message">Изменить, добавить или удалить страницы вашего сайта.</string>
     <string name="quick_start_dialog_review_pages_title">Обзор страниц сайта</string>
@@ -2822,11 +2903,10 @@ Language: ru
     <string name="connection_service_description">Подключиться, чтобы автоматически публиковать записи блога в %s.</string>
     <string name="connected_accounts_label">Подключённые учётные записи</string>
     <string name="connections_description">Подключите свои любимые службы социальных сетей, чтобы автоматически делиться новыми записями с друзьями.</string>
-    <string name="sharing">Поделиться</string>
     <string name="tabbar_accessibility_label_notifications">Уведомления. Управление уведомлениями.</string>
     <string name="tabbar_accessibility_label_reader">Чтиво. Подписка на материалы других сайтов.</string>
     <string name="tabbar_accessibility_label_my_site">Мой сайт. Просмотр сайта и управление параметрами, включая статистику.</string>
-    <string name="my_site_btn_sharing">Поделиться</string>
+    <string name="my_site_btn_sharing">Соц.сети</string>
     <string name="button_not_now">Не сейчас</string>
     <string name="media_error_internal_server_error">Ошибка загрузки. Попробуйте включить функцию «Оптимизировать изображения» в разделе «Сайт -&gt; Настройки»</string>
     <string name="media_downloading">Сохранение медиафайлов на этом устройстве</string>

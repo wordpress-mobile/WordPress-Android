@@ -19,6 +19,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTrac
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.merge
 import org.wordpress.android.util.perform
@@ -43,7 +44,8 @@ class BloggingRemindersViewModel @Inject constructor(
     private val reminderScheduler: ReminderScheduler,
     private val mapper: BloggingRemindersModelMapper,
     private val siteStore: SiteStore,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val buildConfigWrapper: BuildConfigWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing = _isBottomSheetShowing as LiveData<Event<Boolean>>
@@ -294,7 +296,10 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     fun onPublishingPost(siteId: Int, isFirstTimePublishing: Boolean?) {
-        if (isFirstTimePublishing == true && bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)) {
+        if (buildConfigWrapper.isJetpackApp &&
+            isFirstTimePublishing == true &&
+            bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)
+        ) {
             showBottomSheet(siteId, Screen.PROLOGUE, PUBLISH_FLOW)
         }
     }

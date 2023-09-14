@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
+
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -296,7 +297,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackConnectedSiteInfoSucceeded(@NotNull Map<String, ?> properties) {
+    public void trackConnectedSiteInfoSucceeded(@NonNull Map<String, ?> properties) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_CONNECTED_SITE_INFO_SUCCEEDED, properties);
     }
 

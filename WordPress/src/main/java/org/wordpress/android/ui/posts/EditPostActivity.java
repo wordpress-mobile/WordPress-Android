@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -16,9 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -26,6 +30,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
+import androidx.core.content.ContextCompat;
 import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
@@ -46,7 +51,6 @@ import com.google.android.material.snackbar.Snackbar;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -125,6 +129,7 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -139,6 +144,10 @@ import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent;
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenEditShareMessage;
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSocialConnectionsList;
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSubscribeJetpackSocial;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
@@ -163,11 +172,13 @@ import org.wordpress.android.ui.posts.editor.XPostsCapabilityChecker;
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener;
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment;
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.PublishPostImmediatelyUseCase;
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener;
 import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
+import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
@@ -212,11 +223,14 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.ContactSupportFeatureConfig;
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig;
 import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
+import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder;
 import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -304,6 +318,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private static final String STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData";
     private static final String STATE_KEY_GUTENBERG_IS_SHOWN = "stateKeyGutenbergIsShown";
     private static final String STATE_KEY_MEDIA_CAPTURE_PATH = "stateKeyMediaCapturePath";
+    private static final String STATE_KEY_UNDO = "stateKeyUndo";
+    private static final String STATE_KEY_REDO = "stateKeyRedo";
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
@@ -368,6 +384,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private AppBarLayout mAppBarLayout;
     private Toolbar mToolbar;
+    private boolean mMenuHasUndo = false;
+    private boolean mMenuHasRedo = false;
 
     private Handler mShowPrepublishingBottomSheetHandler;
     private Runnable mShowPrepublishingBottomSheetRunnable;
@@ -418,10 +436,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ZendeskHelper mZendeskHelper;
     @Inject BloggingPromptsStore mBloggingPromptsStore;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject ContactSupportFeatureConfig mContactSupportFeatureConfig;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
     private EditorBloggingPromptsViewModel mEditorBloggingPromptsViewModel;
+    private EditorJetpackSocialViewModel mEditorJetpackSocialViewModel;
 
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
@@ -429,6 +449,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private boolean mStoryEditingCancelled = false;
 
     private boolean mNetworkErrorOnLastMediaFetchAttempt = false;
+
+    private ActivityResultLauncher<Intent> mEditShareMessageActivityResultLauncher;
 
     public static boolean checkToRestart(@NonNull Intent data) {
         return data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR)
@@ -521,8 +543,24 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    private void createEditShareMessageActivityResultLauncher() {
+        mEditShareMessageActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        final Intent data = result.getData();
+                        if (data != null) {
+                            final String shareMessage = result.getData().getStringExtra(
+                                    EditJetpackSocialShareMessageActivity.RESULT_UPDATED_SHARE_MESSAGE
+                            );
+                            mEditorJetpackSocialViewModel.onJetpackSocialShareMessageChanged(shareMessage);
+                        }
+                    }
+                });
+    }
+
     @Override @SuppressWarnings("checkstyle:MethodLength")
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
@@ -537,9 +575,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mDispatcher.register(this);
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorePostViewModel.class);
         mStorageUtilsViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorageUtilsViewModel.class);
-        mEditorBloggingPromptsViewModel =
-                new ViewModelProvider(this, mViewModelFactory).get(EditorBloggingPromptsViewModel.class);
+        mEditorBloggingPromptsViewModel = new ViewModelProvider(this, mViewModelFactory)
+                .get(EditorBloggingPromptsViewModel.class);
+        mEditorJetpackSocialViewModel = new ViewModelProvider(this, mViewModelFactory)
+                .get(EditorJetpackSocialViewModel.class);
         setContentView(R.layout.new_edit_post_activity);
+
+        createEditShareMessageActivityResultLauncher();
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -578,16 +620,22 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mShowAztecEditor) {
             View overlay = findViewById(R.id.view_overlay);
             ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) overlay.getLayoutParams();
-            layoutParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.aztec_format_bar_height);
+            layoutParams.bottomMargin = getResources().getDimensionPixelOffset(
+                    org.wordpress.aztec.R.dimen.aztec_format_bar_height
+            );
             overlay.setLayoutParams(layoutParams);
         }
 
         // Set up the action bar.
         mToolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(mToolbar);
+
+        customizeToolbar();
+
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(false);
         }
 
         mAppBarLayout = findViewById(R.id.appbar_main);
@@ -751,8 +799,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
             resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued();
         }
 
-        setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
-
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
         // we need to make sure AT cookie is available when trying to edit post on private AT site
@@ -772,6 +818,31 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // The check on savedInstanceState should allow to show the dialog only on first start
         // (even in cases when the VM could be re-created like when activity is destroyed in the background)
         mStorageUtilsViewModel.start(savedInstanceState == null);
+
+        mEditorJetpackSocialViewModel.start(mSite, mEditPostRepository);
+    }
+
+    private void customizeToolbar() {
+        // Custom overflow icon
+        Drawable overflowIcon = ContextCompat.getDrawable(this, R.drawable.more_vertical);
+        mToolbar.setOverflowIcon(overflowIcon);
+
+        // Custom close button
+        View closeHeader = mToolbar.findViewById(R.id.edit_post_header);
+        closeHeader.setOnClickListener(v -> handleBackPressed());
+
+        if (mSite != null) {
+            // Update site icon if mSite is available, if not it will use the placeholder.
+            String siteIconUrl = SiteUtils.getSiteIconUrl(
+                    mSite,
+                    getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small)
+            );
+            ImageView siteIcon = mToolbar.findViewById(R.id.close_editor_site_icon);
+            ImageType blavatarType = SiteUtils.getSiteImageType(
+                    mSite.isWpForTeamsSite(), BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES);
+            mImageManager.loadImageWithCorners(siteIcon, blavatarType, siteIconUrl,
+                    getResources().getDimensionPixelSize(R.dimen.edit_post_header_image_corner_radius));
+        }
     }
 
     private void presentNewPageNoticeIfNeeded() {
@@ -948,6 +1019,23 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 return null;
             });
         });
+        mEditorJetpackSocialViewModel.getActionEvents().observe(this, actionEvent -> {
+            if (actionEvent instanceof ActionEvent.OpenEditShareMessage) {
+                final OpenEditShareMessage action = (OpenEditShareMessage) actionEvent;
+                final Intent intent = EditJetpackSocialShareMessageActivity.createIntent(
+                        this, action.getShareMessage()
+                );
+                mEditShareMessageActivityResultLauncher.launch(intent);
+            } else if (actionEvent instanceof ActionEvent.OpenSocialConnectionsList) {
+                final OpenSocialConnectionsList action = (OpenSocialConnectionsList) actionEvent;
+                ActivityLauncher.viewBlogSharing(this, action.getSiteModel());
+            } else if (actionEvent instanceof ActionEvent.OpenSubscribeJetpackSocial) {
+                final OpenSubscribeJetpackSocial action = (OpenSubscribeJetpackSocial) actionEvent;
+                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
+                        this, action.getUrl()
+                );
+            }
+        });
     }
 
     private void initializePostObject() {
@@ -1075,6 +1163,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, mEditorPhotoPicker.isPhotoPickerShowing());
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
+        outState.putBoolean(STATE_KEY_UNDO, mMenuHasUndo);
+        outState.putBoolean(STATE_KEY_REDO, mMenuHasRedo);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putParcelable(STATE_KEY_REVISION, mRevision);
 
@@ -1099,6 +1189,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         super.onRestoreInstanceState(savedInstanceState);
 
         mHtmlModeMenuStateOn = savedInstanceState.getBoolean(STATE_KEY_HTML_MODE_ON);
+        mMenuHasUndo = savedInstanceState.getBoolean(STATE_KEY_UNDO);
+        mMenuHasRedo = savedInstanceState.getBoolean(STATE_KEY_REDO);
         if (savedInstanceState.getBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, false)) {
             mEditorPhotoPicker.showPhotoPicker(mSite);
         }
@@ -1206,7 +1298,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
      * called by PhotoPickerFragment when media is selected - may be a single item or a list of items
      */
     @Override
-    public void onPhotoPickerMediaChosen(@NotNull final List<? extends Uri> uriList) {
+    public void onPhotoPickerMediaChosen(@NonNull final List<? extends Uri> uriList) {
         mEditorPhotoPicker.hidePhotoPicker();
         mEditorMedia.onPhotoPickerMediaChosen(uriList);
     }
@@ -1261,7 +1353,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_post, menu);
@@ -1269,18 +1361,30 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         boolean showMenuItems = true;
         if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
             showMenuItems = false;
         }
 
+        MenuItem undoItem = menu.findItem(R.id.menu_undo_action);
+        MenuItem redoItem = menu.findItem(R.id.menu_redo_action);
         MenuItem secondaryAction = menu.findItem(R.id.menu_secondary_action);
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
         MenuItem historyMenuItem = menu.findItem(R.id.menu_history);
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
         MenuItem helpMenuItem = menu.findItem(R.id.menu_editor_help);
+
+        if (undoItem != null) {
+            undoItem.setEnabled(mMenuHasUndo);
+            undoItem.setVisible(!mHtmlModeMenuStateOn);
+        }
+
+        if (redoItem != null) {
+            redoItem.setEnabled(mMenuHasRedo);
+            redoItem.setVisible(!mHtmlModeMenuStateOn);
+        }
 
         if (secondaryAction != null && mEditPostRepository.hasPost()) {
             secondaryAction.setVisible(showMenuItems && getSecondaryAction().isVisible());
@@ -1377,10 +1481,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         mMenuView = null;
                     }
                     break;
-                case WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE:
-                    mEditorMedia.addNewMediaItemsToEditorAsync(mEditorMedia.getDroppedMediaUris(), false);
-                    mEditorMedia.getDroppedMediaUris().clear();
-                    break;
             }
         }
     }
@@ -1437,7 +1537,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private RemotePreviewLogicHelper.RemotePreviewHelperFunctions getEditPostActivityStrategyFunctions() {
         return new RemotePreviewLogicHelper.RemotePreviewHelperFunctions() {
             @Override
-            public boolean notifyUploadInProgress(@NotNull PostImmutableModel post) {
+            public boolean notifyUploadInProgress(@NonNull PostImmutableModel post) {
                 if (UploadService.hasInProgressMediaUploadsForPost(post)) {
                     ToastUtils.showToast(EditPostActivity.this,
                             getString(R.string.editor_toast_uploading_please_wait), Duration.SHORT);
@@ -1475,7 +1575,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     // Menu actions
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
 
         if (itemId == android.R.id.home) {
@@ -1536,6 +1636,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 if (mEditorFragment instanceof GutenbergEditorFragment) {
                     mAnalyticsTrackerWrapper.track(Stat.EDITOR_HELP_SHOWN, mSite);
                     ((GutenbergEditorFragment) mEditorFragment).showEditorHelp();
+                }
+            } else if (itemId == R.id.menu_undo_action) {
+                if (mEditorFragment instanceof GutenbergEditorFragment) {
+                    ((GutenbergEditorFragment) mEditorFragment).onUndoPressed();
+                }
+            } else if (itemId == R.id.menu_redo_action) {
+                if (mEditorFragment instanceof GutenbergEditorFragment) {
+                    ((GutenbergEditorFragment) mEditorFragment).onRedoPressed();
                 }
             }
         }
@@ -1888,7 +1996,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 // This method handles the custom Exception thrown by Aztec to notify the parent app of the error #8828
                 // We don't need to log the error, since it was already logged by Aztec, instead we need to write the
                 // prefs to disable HW acceleration for it.
-                private boolean isError8828(@NotNull Throwable throwable) {
+                private boolean isError8828(@NonNull Throwable throwable) {
                     if (!(throwable instanceof DynamicLayoutGetBlockIndexOutOfBoundsException)) {
                         return false;
                     }
@@ -1901,12 +2009,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
 
                 @Override
-                public void log(@NotNull String s) {
+                public void log(@NonNull String s) {
                     AppLog.e(T.EDITOR, s);
                 }
 
                 @Override
-                public void logException(@NotNull Throwable throwable) {
+                public void logException(@NonNull Throwable throwable) {
                     if (isError8828(throwable)) {
                         return;
                     }
@@ -1914,7 +2022,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
 
                 @Override
-                public void logException(@NotNull Throwable throwable, String s) {
+                public void logException(@NonNull Throwable throwable, String s) {
                     if (isError8828(throwable)) {
                         return;
                     }
@@ -1943,7 +2051,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         int displayWidth = Math.max(DisplayUtils.getWindowPixelWidth(getBaseContext()),
                 DisplayUtils.getWindowPixelHeight(getBaseContext()));
 
-        int margin = getResources().getDimensionPixelSize(R.dimen.preview_image_view_margin);
+        int margin = getResources().getDimensionPixelSize(
+                org.wordpress.android.imageeditor.R.dimen.preview_image_view_margin
+        );
         int maxWidth = displayWidth - (margin * 2);
 
         int reducedSizeWidth = (int) (maxWidth * PREVIEW_IMAGE_REDUCED_SIZE_FACTOR);
@@ -2298,7 +2408,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         @Override
-        public @NotNull Object instantiateItem(@NotNull ViewGroup container, int position) {
+        public @NonNull Object instantiateItem(@NonNull ViewGroup container, int position) {
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
             switch (position) {
                 case PAGE_CONTENT:
@@ -2795,7 +2905,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     mEditorMedia.addNewMediaItemsToEditorAsync(WPMediaUtils.retrieveMediaUris(data), false);
                     break;
                 case RequestCodes.TAKE_VIDEO:
-                    mEditorMedia.addFreshlyTakenVideoToEditor();
+                    Uri videoUri = data.getData();
+                    mEditorMedia.addNewMediaToEditorAsync(videoUri, true);
                     break;
                 case RequestCodes.MEDIA_SETTINGS:
                     if (mEditorFragment instanceof AztecEditorFragment) {
@@ -2871,20 +2982,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private void addLastTakenPicture() {
         try {
-            // TODO why do we scan the file twice? Also how come it can result in OOM?
             WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
             File f = new File(mMediaCapturePath);
             Uri capturedImageUri = Uri.fromFile(f);
             if (capturedImageUri != null) {
                 mEditorMedia.addNewMediaToEditorAsync(capturedImageUri, true);
-                final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                scanIntent.setData(capturedImageUri);
-                sendBroadcast(scanIntent);
             } else {
                 ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
             }
         } catch (RuntimeException | OutOfMemoryError e) {
             AppLog.e(T.EDITOR, e);
+        } finally {
+            mMediaCapturePath = null;
         }
     }
 
@@ -3157,11 +3266,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onMediaDropped(final ArrayList<Uri> mediaUris) {
         mEditorMedia.setDroppedMediaUris(mediaUris);
-        if (PermissionUtils
-                .checkAndRequestStoragePermission(this, WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE)) {
-            mEditorMedia.addNewMediaItemsToEditorAsync(mEditorMedia.getDroppedMediaUris(), false);
-            mEditorMedia.getDroppedMediaUris().clear();
-        }
+        ArrayList<Uri> media = new ArrayList<>(mediaUris);
+        mEditorMedia.addNewMediaItemsToEditorAsync(media, false);
+        mEditorMedia.getDroppedMediaUris().clear();
     }
 
     @Override
@@ -3507,7 +3614,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onContactCustomerSupport() {
-        EditPostCustomerSupportHelper.INSTANCE.onContactCustomerSupport(mZendeskHelper, this, getSite());
+        EditPostCustomerSupportHelper.INSTANCE.onContactCustomerSupport(
+                mZendeskHelper,
+                this,
+                getSite(),
+                mContactSupportFeatureConfig.isEnabled()
+        );
     }
 
     @Override public void onGotoCustomerSupportOptions() {
@@ -3516,6 +3628,20 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override public void onSendEventToHost(String eventName, Map<String, Object> properties) {
         AnalyticsUtils.trackBlockEditorEvent(eventName, mSite, properties);
+    }
+
+    @Override public void onToggleUndo(boolean isDisabled) {
+        if (mMenuHasUndo == !isDisabled) return;
+
+        mMenuHasUndo = !isDisabled;
+        new Handler(Looper.getMainLooper()).post(this::invalidateOptionsMenu);
+    }
+
+    @Override public void onToggleRedo(boolean isDisabled) {
+        if (mMenuHasRedo == !isDisabled) return;
+
+        mMenuHasRedo = !isDisabled;
+        new Handler(Looper.getMainLooper()).post(this::invalidateOptionsMenu);
     }
 
     // FluxC events
@@ -3739,7 +3865,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
+    public boolean onMenuOpened(int featureId, @NonNull Menu menu) {
         // This is a workaround for bag discovered on Chromebooks, where Enter key will not work in the toolbar menu
         // Editor fragments are messing with window focus, which causes keyboard events to get ignored
 
@@ -3758,11 +3884,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     // EditorMediaListener
     @Override
-    public void appendMediaFiles(@NotNull Map<String, ? extends MediaFile> mediaFiles) {
+    public void appendMediaFiles(@NonNull Map<String, ? extends MediaFile> mediaFiles) {
         mEditorFragment.appendMediaFiles((Map<String, MediaFile>) mediaFiles);
     }
 
-    @NotNull @Override
+    @NonNull @Override
     public PostImmutableModel getImmutablePost() {
         return Objects.requireNonNull(mEditPostRepository.getPost());
     }
@@ -3772,12 +3898,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         updateAndSavePostAsync(listener);
     }
 
-    @Override public void advertiseImageOptimization(@NotNull Function0<Unit> listener) {
+    @Override public void advertiseImageOptimization(@NonNull Function0<Unit> listener) {
         WPMediaUtils.advertiseImageOptimization(this, listener::invoke);
     }
 
     @Override
-    public void onMediaModelsCreatedFromOptimizedUris(@NotNull Map<Uri, ? extends MediaModel> oldUriToMediaModels) {
+    public void onMediaModelsCreatedFromOptimizedUris(@NonNull Map<Uri, ? extends MediaModel> oldUriToMediaModels) {
         // no op - we're not doing any special handling on MediaModels in EditPostActivity
     }
 

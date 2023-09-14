@@ -18,6 +18,7 @@ import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.JetpackBrandingUtils
 import javax.inject.Inject
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class StatsActivity : LocaleAwareActivity() {
@@ -42,7 +43,7 @@ class StatsActivity : LocaleAwareActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == AndroidR.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
         }

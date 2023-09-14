@@ -9,13 +9,10 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard.ActivityCardWithItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.ActivityLogSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
@@ -40,20 +37,6 @@ class CardsShownTrackerTest {
         cardsShownTracker.trackQuickStartCardShown(NewSiteQuickStartType)
 
         verifyQuickStartCardShownTracked(Type.QUICK_START.label, "quick_start_${NewSiteQuickStartType.trackingLabel}")
-    }
-
-    @Test
-    fun `when post card create first card is shown, then create first shown event is tracked`() {
-        cardsShownTracker.track(buildDashboardCards(PostCardType.CREATE_FIRST))
-
-        verifyCardShownTracked(Type.POST.label, PostSubtype.CREATE_FIRST.label)
-    }
-
-    @Test
-    fun `when post card create next card is shown, then create next shown event is tracked`() {
-        cardsShownTracker.track(buildDashboardCards(PostCardType.CREATE_NEXT))
-
-        verifyCardShownTracked(Type.POST.label, PostSubtype.CREATE_NEXT.label)
     }
 
     @Test
@@ -105,33 +88,17 @@ class CardsShownTrackerTest {
         cards = mutableListOf<DashboardCard>().apply {
             when (postCardType) {
                 PostCardType.SCHEDULED, PostCardType.DRAFT -> addAll(buildPostCardsWithItems(postCardType))
-                PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> addAll(
-                    buildPostCardsWithoutItems(
-                        postCardType
-                    )
-                )
             }
         }
     )
-
-    private fun buildPostCardsWithoutItems(postCardType: PostCardType) =
-        listOf(
-            PostCardWithoutPostItems(
-                postCardType = postCardType,
-                title = UiStringText(""),
-                footerLink = FooterLink(UiStringText(""), onClick = mock()),
-                excerpt = UiStringText(""),
-                imageRes = 0,
-                onClick = mock()
-            )
-        )
 
     private fun buildPostCardsWithItems(postCardType: PostCardType) = listOf(
         PostCardWithPostItems(
             postCardType = postCardType,
             title = UiStringText(""),
             postItems = emptyList(),
-            footerLink = FooterLink(UiStringText(""), onClick = mock())
+            moreMenuResId = 0,
+            moreMenuOptions = mock()
         )
     )
 
@@ -145,7 +112,9 @@ class CardsShownTrackerTest {
         listOf(
             ActivityCardWithItems(
                 title = UiStringText("title"),
-                footerLink = ActivityCard.FooterLink(UiStringText("footer"), onClick = mock()),
+                onAllActivityMenuItemClick = mock(),
+                onHideMenuItemClick = mock(),
+                onMoreMenuClick = mock(),
                 activityItems = emptyList()
             )
         )

@@ -22,7 +22,9 @@ updates:
       # React Native upgrade. For more details, see
       # https://github.com/wordpress-mobile/WordPress-Android/pull/18494#issuecomment-1566922244
       - dependency-name: "com.facebook.react:react-native"
+      - dependency-name: "com.facebook.react:react-android"
       - dependency-name: "com.facebook.react:hermes-engine"
+      - dependency-name: "com.facebook.react:hermes-android"
       - dependency-name: "com.facebook.fresco:fresco"
       - dependency-name: "com.facebook.fresco:imagepipeline-okhttp3"
       - dependency-name: "com.facebook.fbjni:fbjni"

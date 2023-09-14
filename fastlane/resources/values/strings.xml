@@ -1712,6 +1712,20 @@
     <string name="post_settings_time_and_date">Date and Time</string>
     <string name="post_settings_notification">Notification</string>
     <string name="post_settings_add_to_calendar">Add to calendar</string>
+    <string name="post_settings_jetpack_social_header">Social Sharing</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Increase your traffic by auto-sharing your posts with your friends on social media.</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Connect accounts</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Not now</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Subscribe to share more</string>
+    <string name="post_settings_jetpack_social_share_message_title">Customize the message</string>
+    <string name="post_settings_jetpack_social_share_message_description">Customize the message you want to share. If you don\'t add your own text here, we\'ll use the post\'s title as the message.</string>
+    <string name="post_settings_jetpack_social_share_message_clear">Clear</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d social shares remaining</string>
+    <string name="jetpack_social_social_shares_remaining_one">1 social share remaining</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Not sharing to social</string>
+    <string name="jetpack_social_social_shares_title_single_account">Sharing to %1$s</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Sharing to %1$d of %2$d accounts</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Sharing to %1$d accounts</string>
 
     <string name="post_notification_off">Off</string>
     <string name="post_notification_one_hour_before">1 hour before</string>
@@ -1782,6 +1796,10 @@
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
+    <string name="menu_undo_context">Undo last change</string>
+    <string name="menu_redo_context">Redo last change</string>
+
+    <string name="menu_close_editor">Close editor</string>
     <string name="menu_debug">Debug Menu</string>
     <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
     <string name="menu_content_info">Content structure</string>
@@ -2262,6 +2280,23 @@
     <!-- Contact us -->
     <string name="support_ticket_subject">WordPress for Android Support</string>
 
+    <string name="contact_support_input_placeholder">Send a message…</string>
+    <string name="contact_support_first_message">What can I help you with?</string>
+    <string name="contact_support_get_support">Contact support</string>
+    <string name="contact_support_suggestions">Not sure what to ask?</string>
+    <string name="contact_support_question_one">What is my site address?</string>
+    <string name="contact_support_question_two">Help, my site is down!</string>
+    <string name="contact_support_question_three">I can\'t upload photos/videos</string>
+    <string name="contact_support_question_four">Why can\'t I login?</string>
+    <string name="contact_support_question_five">I forgot my login information</string>
+    <string name="contact_support_question_six">How can I use my custom domain in the app?</string>
+    <string name="contact_support_bot_ticket_loading">Creating support ticket…</string>
+    <string name="contact_support_bot_ticket_message">Ticket created</string>
+    <string name="contact_support_bot_ticket_error">Error submitting support ticket</string>
+    <string name="contact_support_bot_ticket_comment_start">Jetpack Mobile Bot transcript:</string>
+    <string name="contact_support_bot_ticket_comment_question">Question:</string>
+    <string name="contact_support_bot_ticket_comment_answer">Answer:</string>
+
     <!--My Site-->
     <string name="my_site_header_content">Content</string>
     <string name="my_site_header_traffic">Traffic</string>
@@ -2276,7 +2311,7 @@
     <string name="my_site_btn_jetpack_settings">Jetpack Settings</string>
     <string name="my_site_btn_site_pages">Pages</string>
     <string name="my_site_btn_blog_posts">Posts</string>
-    <string name="my_site_btn_sharing">Sharing</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="my_site_btn_domains">Domains</string>
     <string name="my_site_btn_site_settings">Site Settings</string>
     <string name="my_site_btn_comments" translatable="false">@string/comments</string>
@@ -2402,6 +2437,7 @@
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
+    <string name="tabbar_accessibility_label_me">Me. Manage your profile details.</string>
 
     <!-- Special characters -->
     <string name="bullet" translatable="false">\u2022</string>
@@ -2409,7 +2445,7 @@
     <string name="next_button" translatable="false">&gt;</string>
 
     <!-- Jetpack Social and sharing -->
-    <string name="sharing">Sharing</string>
+    <string name="sharing">Social</string>
     <string name="sharing_disabled">Sharing module disabled</string>
     <string name="sharing_disabled_description">You cannot access your sharing settings because your Sharing Jetpack module is disabled.</string>
     <string name="connections_label">Jetpack Social Connections</string>
@@ -2760,7 +2796,7 @@
     <string name="close_account">Close Account</string>
     <string name="account_closure_dialog_message">To confirm, please re-enter your username before closing.</string>
     <string name="account_closure_dialog_title">Confirm Close Account…</string>
-    <string name="account_closure_dialog_error_title">Couldn\'t close account automatically"</string>
+    <string name="account_closure_dialog_error_title">Couldn\'t close account automatically!</string>
     <string name="account_closure_dialog_error_unauthorized">You\'re not authorized to close the account.</string>
     <string name="account_closure_dialog_error_atomic_site">This user account cannot be closed immediately because it has active purchases. Please contact our support team to finish deleting the account.</string>
     <string name="account_closure_dialog_error_chargebacked_site">This user account cannot be closed if there are unresolved chargebacks.</string>
@@ -3233,11 +3269,6 @@
     <string name="quick_start_completed_tour_title">Congrats! You know your way around&lt;br/&gt;</string>
     <string name="quick_start_completed_tour_subtitle">Doesn\'t it feel good to cross things off a list?</string>
 
-    <string name="quick_start_card_menu_pin">Pin this</string>
-    <string name="quick_start_card_menu_unpin">Unpin this</string>
-    <string name="quick_start_card_menu_hide">Hide for now</string>
-    <string name="quick_start_card_menu_remove">Don\'t show again</string>
-
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;All tasks completed&lt;/b&gt;&lt;br/&gt;You’ve customized your site. Well done!</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;All tasks completed&lt;/b&gt;&lt;br/&gt;You’ll reach more people. Nice job!</string>
 
@@ -3465,6 +3496,7 @@
     <string name="prepublishing_nudges_publish_action">Publish Date</string>
     <string name="prepublishing_nudges_tags_action">Tags</string>
     <string name="prepublishing_nudges_categories_action">Categories</string>
+    <string name="prepublishing_nudges_social_action">Social sharing</string>
     <string name="prepublishing_nudges_home_header_publishing_to">Publishing to</string>
     <string name="prepublishing_nudges_home_publish_button" translatable="false">@string/publish_now</string>
     <string name="prepublishing_nudges_home_schedule_button">Schedule Now</string>
@@ -3481,6 +3513,9 @@
     <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Add New Category</string>
     <string name="prepublishing_nudges_add_category_button">Add Category</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Social sharing</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Increase your traffic by auto-sharing your posts with your friends on social media.</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Connect accounts</string>
 
     <!-- Modal Layout Picker -->
     <string name="mlp_choose_layout_title">Choose a layout</string>
@@ -3623,7 +3658,7 @@
     <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">ADD VIDEO</string>
     <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources">Address Settings</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit these blocks separately by tapping “Convert to regular blocks”.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit these blocks separately by tapping “Detach patterns”.</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
     <string name="gutenberg_native_applies_the_setting" tools:ignore="UnusedResources">Applies the setting</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources">Arrange your content into columns, add Call to Action buttons, and overlay images with text.</string>
@@ -4440,7 +4475,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_deep_link_overlay_description">It looks like you have the Jetpack app installed.\n\nWould you like to open links in the Jetpack app in the future?\n\nYou can always change this in App Settings &gt; Open links in Jetpack</string>
     <string name="wp_jetpack_deep_link_open_in_jetpack" translatable="false">@string/preference_open_links_in_jetpack</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">Open links in WordPress</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit this block separately by tapping “Convert to regular block”.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit this block separately by tapping “Detach pattern”.</string>
     <string name="gutenberg_native_s_converted_to_regular_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s converted to regular block</string>
 
     <!-- Jetpack Feature Card -->
@@ -4490,6 +4525,13 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="dashboard_card_domain_sub_title">Stake your claim on your corner of the web with a site address that\'s easy to find, share, and follow.</string>
     <string name="dashboard_card_domain_menu_hide_this">Hide this</string>
 
+    <!-- Dashboard Card Domain Transfer-->
+    <string name="domain_transfer_card_title">News</string>
+    <string name="domain_transfer_card_sub_title">Reclaim Your Google Domains</string>
+    <string name="domain_transfer_card_caption">As you may know, Google Domains has been sold to Squarespace. Transfer your domains to WordPress.com now, and we\'ll pay all transfer fees plus an extra year of your domain registration.</string>
+    <string name="domain_transfer_card_cta">Transfer your domains</string>
+    <string name="domain_transfer_card_menu_hide_this">Hide this</string>
+
     <!-- Dashboard Card Plans-->
     <string name="dashboard_card_plans_title">Free domain with annual plan</string>
     <string name="dashboard_card_plans_sub_title">Get a free domain for the first year, remove ads on your site, and increase your storage.</string>
@@ -4503,6 +4545,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="promote_blaze_card_title">Promote your content with Blaze</string>
     <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
     <string name="promote_blaze_card_menu_hide_this">Hide this</string>
+    <string name="promote_blaze_flow_error">The blaze promote flow couldn\'t be loaded</string>
 
     <string name="gutenberg_native_blocks_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks menu</string>
 
@@ -4577,4 +4620,75 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_s_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s link</string>
     <string name="gutenberg_native_no_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">No description</string>
     <string name="gutenberg_native_no_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">No title</string>
+
+    <!-- Privacy Banner -->
+    <string name="privacy_banner_description">Your privacy is critically important to us and always has been. We use, store, and process your personal data to optimize our app (and your experience) in various ways. Some uses of your data we absolutely need in order to make things work, and others you can customize from your Settings.</string>
+    <string name="privacy_banner_title">Manage privacy</string>
+    <string name="privacy_banner_analytics">Analytics</string>
+    <string name="privacy_banner_analytics_description">Allow us to optimize performance by collecting information on how users interact with our mobile apps.</string>
+    <string name="privacy_banner_settings">Settings</string>
+    <string name="privacy_banner_save">Save</string>
+    <string name="privacy_banner_error_save">There was an error saving your privacy choices.</string>
+    <string name="gutenberg_native_reusable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Reusable</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editing synced patterns is not yet supported on %s for Android</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editing synced patterns is not yet supported on %s for iOS</string>
+    <string name="gutenberg_native_s_detached" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s detached</string>
+
+    <!-- Jetpack - Blaze campaigns card -->
+    <string name="blaze_campaigns_card_title">Blaze Campaign</string>
+    <string name="blaze_campaigns_card_footer_label">Create Campaign</string>
+    <string name="campaign_status_active">ACTIVE</string>
+    <string name="campaign_status_completed">COMPLETED</string>
+    <string name="campaign_status_rejected">REJECTED</string>
+    <string name="campaign_status_canceled">CANCELED</string>
+    <string name="campaign_status_in_moderation">IN MODERATION</string>
+    <string name="campaign_status_scheduled">SCHEDULED</string>
+
+    <string name="impressions_campaign_stats">Impressions</string>
+    <string name="clicks_campaign_stats">Clicks</string>
+    <string name="budget_campaign_stats">Budget</string>
+
+    <!-- Jetpack - Blaze campaigns page -->
+    <string name="blaze_campaigns_page_title">Blaze Campaigns</string>
+    <string name="blaze_campaign_details_page_title">Campaign Details</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">You have no campaigns</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">You have not created any campaigns yet. Click create to get started.</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Create</string>
+    <string name="campaign_listing_page_create_campaign_fab_description" translatable="false"> @string/blaze_campaigns_card_footer_label</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Something went wrong, could not fetch campaigns</string>
+    <string name="campaign_listing_page_error_refresh_no_network_available" translatable="false">@string/no_network_message</string>
+
+    <string name="campaign_listing_page_no_network_error_title" translatable="false">@string/no_network_title</string>
+    <string name="campaign_listing_page_no_network_error_description" translatable="false">@string/no_network_message</string>
+    <string name="campaign_listing_page_no_network_error_button_text" translatable="false">@string/retry</string>
+
+    <string name="campaign_listing_page_error_title">Something went wrong</string>
+    <string name="campaign_listing_page_error_description" translatable="false">@string/request_failed_message</string>
+    <string name="campaign_listing_page_error_button_text" translatable="false">@string/retry</string>
+
+
+    <string name="gutenberg_native_insert_audio_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Audio Block</string>
+    <string name="gutenberg_native_insert_gallery_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Gallery Block</string>
+    <string name="gutenberg_native_insert_image_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Image Block</string>
+    <string name="gutenberg_native_insert_video_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Insert Video Block</string>
+
+    <!-- Jetpack - Blaze campaign detail page -->
+    <string name="campaign_detail_no_network_error_title" translatable="false">@string/no_network_title</string>
+    <string name="campaign_detail_no_network_error_description" translatable="false">@string/no_network_message</string>
+    <string name="campaign_detail_no_network_error_button_text" translatable="false">@string/retry</string>
+    <string name="campaign_detail_error_title">Something went wrong</string>
+    <string name="campaign_detail_error_description" translatable="false">@string/request_failed_message</string>
+    <string name="campaign_detail_error_button_text" translatable="false">@string/retry</string>
+
+    <string name="blaze_promote_no_network_error_title" translatable="false">@string/no_network_title</string>
+    <string name="blaze_promote_no_network_error_description" translatable="false">@string/no_network_message</string>
+    <string name="blaze_promote_no_network_error_button_text" translatable="false">@string/retry</string>
+    <string name="blaze_promote_error_title" translatable="false">@string/campaign_detail_error_title</string>
+    <string name="blaze_promote_error_description" translatable="false">@string/request_failed_message</string>
+    <string name="blaze_promote_error_button_text" translatable="false">@string/retry</string>
+
+    <string name="missing_splits_dialog_title">Installation failed</string>
+    <string name="missing_splits_dialog_message">The app WordPress is missing required components and must be reinstalled from the Google Play Store.</string>
+    <string name="missing_splits_dialog_button">CLOSE</string>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Access this Paywall block on your web browser for advanced settings.</string>
 </resources>

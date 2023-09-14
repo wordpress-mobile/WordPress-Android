@@ -229,11 +229,20 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
 
         TypedValue disabledAlpha = new TypedValue();
-        context.getResources().getValue(R.dimen.material_emphasis_disabled, disabledAlpha, true);
+        context.getResources().getValue(
+                com.google.android.material.R.dimen.material_emphasis_disabled,
+                disabledAlpha,
+                true
+        );
         mDisabledSiteOpacity = disabledAlpha.getFloat();
         mSelectedItemBackground = ColorUtils
-                .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface),
-                        context.getResources().getInteger(R.integer.selected_list_item_opacity));
+                .setAlphaComponent(
+                        ContextExtensionsKt.getColorFromAttribute(
+                                context,
+                                com.google.android.material.R.attr.colorOnSurface
+                        ),
+                        context.getResources().getInteger(R.integer.selected_list_item_opacity)
+                );
 
         mHeaderHandler = headerHandler;
         mFooterHandler = footerHandler;

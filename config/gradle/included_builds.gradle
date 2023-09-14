@@ -32,7 +32,7 @@ if (localBuilds.exists()) {
         includeBuild(ext.localFluxCPath) {
             dependencySubstitution {
                 println "Substituting fluxc with the local build"
-                substitute module("$gradle.ext.fluxCBinaryPath") with project(':fluxc')
+                substitute module("$gradle.ext.fluxCBinaryPath") using project(':fluxc')
             }
         }
     }
@@ -41,7 +41,7 @@ if (localBuilds.exists()) {
         includeBuild(ext.localWPUtilsPath) {
             dependencySubstitution {
                 println "Substituting wputils with the local build"
-                substitute module("$gradle.ext.wputilsBinaryPath") with project(':WordPressUtils')
+                substitute module("$gradle.ext.wputilsBinaryPath") using project(':WordPressUtils')
             }
         }
     }
@@ -51,7 +51,7 @@ if (localBuilds.exists()) {
         includeBuild("$ext.localGutenbergMobilePath/gutenberg/packages/react-native-bridge/android") {
             dependencySubstitution {
                 println "Substituting gutenberg-mobile with the local build"
-                substitute module("$gradle.ext.gutenbergMobileBinaryPath") with project(':react-native-bridge')
+                substitute module("$gradle.ext.gutenbergMobileBinaryPath") using project(':react-native-bridge')
             }
         }
     }
@@ -60,7 +60,7 @@ if (localBuilds.exists()) {
         includeBuild(ext.localLoginFlowPath) {
             dependencySubstitution {
                 println "Substituting login-flow with the local build"
-                substitute module("$gradle.ext.loginFlowBinaryPath") with project(':WordPressLoginFlow')
+                substitute module("$gradle.ext.loginFlowBinaryPath") using project(':WordPressLoginFlow')
             }
         }
     }
@@ -69,9 +69,9 @@ if (localBuilds.exists()) {
         includeBuild(ext.localStoriesAndroidPath) {
             dependencySubstitution {
                 println "Substituting stories-android with the local build"
-                substitute module("$gradle.ext.storiesAndroidPath") with project(':stories')
-                substitute module("$gradle.ext.storiesAndroidMp4ComposePath") with project(':mp4compose')
-                substitute module("$gradle.ext.storiesAndroidPhotoEditorPath") with project(':photoeditor')
+                substitute module("$gradle.ext.storiesAndroidPath") using project(':stories')
+                substitute module("$gradle.ext.storiesAndroidMp4ComposePath") using project(':mp4compose')
+                substitute module("$gradle.ext.storiesAndroidPhotoEditorPath") using project(':photoeditor')
             }
         }
     }
@@ -80,11 +80,11 @@ if (localBuilds.exists()) {
         includeBuild(ext.localAztecAndroidPath) {
             dependencySubstitution {
                 println "Substituting AztecEditor-Android with the local build"
-                substitute module("$gradle.ext.aztecAndroidAztecPath") with project(':aztec')
-                substitute module("$gradle.ext.aztecAndroidWordPressShortcodesPath") with project(':wordpress-shortcodes')
-                substitute module("$gradle.ext.aztecAndroidWordPressCommentsPath") with project(':wordpress-comments')
-                substitute module("$gradle.ext.aztecAndroidGlideLoaderPath") with project(':glide-loader')
-                substitute module("$gradle.ext.aztecAndroidPicassoLoaderPath") with project(':picasso-loader')
+                substitute module("$gradle.ext.aztecAndroidAztecPath") using project(':aztec')
+                substitute module("$gradle.ext.aztecAndroidWordPressShortcodesPath") using project(':wordpress-shortcodes')
+                substitute module("$gradle.ext.aztecAndroidWordPressCommentsPath") using project(':wordpress-comments')
+                substitute module("$gradle.ext.aztecAndroidGlideLoaderPath") using project(':glide-loader')
+                substitute module("$gradle.ext.aztecAndroidPicassoLoaderPath") using project(':picasso-loader')
             }
         }
     }

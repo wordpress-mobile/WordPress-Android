@@ -7,12 +7,14 @@ import org.junit.Test
 import org.wordpress.android.e2e.pages.BlockEditorPage
 import org.wordpress.android.e2e.pages.MySitesPage
 import org.wordpress.android.support.BaseTest
+import org.wordpress.android.support.ComposeEspressoLink
 import java.time.Instant
 
 @HiltAndroidTest
 class BlockEditorTests : BaseTest() {
     @Before
     fun setUp() {
+        ComposeEspressoLink().unregister()
         logoutIfNecessary()
         wpLogin()
     }
@@ -71,5 +73,29 @@ class BlockEditorTests : BaseTest() {
             .enterParagraphText(mHtmlPost)
             .switchToVisualMode()
             .verifyPostElementText(mPostText)
+    }
+
+    @Test
+    fun e2eBlockEditorCanUndoRedoChanges() {
+        val title = "blockEditorCanRedoChanges"
+        MySitesPage()
+            .startNewPost()
+        BlockEditorPage()
+            .waitForTitleDisplayed()
+            .enterTitle(title)
+            .enterParagraphText(mPostText)
+            .verifyContentStructure(1, mPostText.split(" ").count(), mPostText.length)
+            .undo()
+            .undo()
+            .verifyContentStructure(0, 0, 0)
+            .redo()
+            .redo()
+            .verifyContentStructure(1, mPostText.split(" ").count(), mPostText.length)
+            .switchToHtmlMode()
+            .verifyUndoIsHidden()
+            .verifyRedoIsHidden()
+            .switchToVisualMode()
+            .verifyUndoIsVisible()
+            .verifyRedoIsVisible()
     }
 }

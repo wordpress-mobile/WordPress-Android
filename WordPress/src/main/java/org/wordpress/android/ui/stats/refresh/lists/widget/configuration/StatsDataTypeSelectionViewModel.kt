@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -53,9 +52,9 @@ class StatsDataTypeSelectionViewModel
             mutableDialogOpened.postValue(Event(Unit))
         } else {
             val message = if (BuildConfig.IS_JETPACK_APP) {
-                string.stats_widget_log_in_to_add_message
+                R.string.stats_widget_log_in_to_add_message
             } else {
-                string.stats_widget_log_in_message
+                R.string.stats_widget_log_in_message
             }
             mutableNotification.postValue(Event(message))
         }

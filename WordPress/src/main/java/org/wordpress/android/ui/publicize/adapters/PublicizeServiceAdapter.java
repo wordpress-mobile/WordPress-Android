@@ -22,9 +22,8 @@ import org.wordpress.android.models.PublicizeConnectionList;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.models.PublicizeServiceList;
 import org.wordpress.android.ui.publicize.PublicizeConstants;
-import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.ui.publicize.PublicizeServiceIcon;
 import org.wordpress.android.util.image.ImageManager;
-import org.wordpress.android.util.image.ImageType;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -79,17 +78,6 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         }
     }
 
-    public void reload() {
-        clear();
-        refresh();
-    }
-
-    private void clear() {
-        mServices.clear();
-        mConnections.clear();
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getItemCount() {
         return mServices.size();
@@ -118,9 +106,13 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
                 mConnections.getServiceConnectionsForUser(mCurrentUserId, service.getId());
 
         holder.mTxtService.setText(service.getLabel());
-        String iconUrl = PhotonUtils.getPhotonImageUrl(service.getIconUrl(), mBlavatarSz, mBlavatarSz);
-        mImageManager.load(holder.mImgIcon, ImageType.BLAVATAR, iconUrl);
-
+        final PublicizeServiceIcon icon = PublicizeServiceIcon.fromServiceId(service.getId());
+        if (icon != null) {
+            holder.mImgIcon.setVisibility(View.VISIBLE);
+            mImageManager.load(holder.mImgIcon, icon.getIconResId());
+        } else {
+            holder.mImgIcon.setVisibility(View.INVISIBLE);
+        }
         if (connections.size() > 0) {
             holder.mTxtUser.setText(connections.getUserDisplayNames());
             holder.mTxtUser.setVisibility(View.VISIBLE);

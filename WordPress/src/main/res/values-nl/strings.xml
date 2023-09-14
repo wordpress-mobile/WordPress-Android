@@ -1,11 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-08 07:56:32+0000
+Translation-Revision-Date: 2023-08-23 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: nl
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_start">Transcriptie Jetpack Mobile Bot:</string>
+    <string name="contact_support_bot_ticket_error">Fout bij het indienen van het ondersteuningsticket</string>
+    <string name="contact_support_bot_ticket_message">Ticket aangemaakt</string>
+    <string name="contact_support_bot_ticket_loading">Een ondersteuningsticket aanmaken …</string>
+    <string name="contact_support_question_six">Hoe kan ik mijn aangepaste domein gebruiken in de app?</string>
+    <string name="contact_support_question_five">Ik ben mijn inloggegevens vergeten</string>
+    <string name="contact_support_question_two">Help, mijn site is onbereikbaar!</string>
+    <string name="contact_support_question_one">Wat is mijn siteadres?</string>
+    <string name="contact_support_suggestions">Weet je niet wat je moet vragen?</string>
+    <string name="contact_support_get_support">Neem contact op met support</string>
+    <string name="contact_support_first_message">Waarmee kunnen we je helpen?</string>
+    <string name="contact_support_input_placeholder">Verstuur een bericht …</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d keer delen op social media resterend</string>
+    <string name="missing_splits_dialog_message">Er ontbreken vereiste onderdelen in de WordPress-app en deze moeten opnieuw worden geïnstalleerd vanuit de Google Play Store.</string>
+    <string name="campaign_detail_error_title">Er is iets fout gegaan</string>
+    <string name="campaign_listing_page_error_title">Er is iets fout gegaan</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Er is iets fout gegaan, er kunnen geen campagnes worden opgehaald</string>
+    <string name="domain_transfer_card_menu_hide_this">Dit verbergen</string>
+    <string name="domain_transfer_card_cta">Je domeinen overdragen</string>
+    <string name="domain_transfer_card_caption">Zoals je misschien weet is Google Domains verkocht aan Squarespace. Draag nu je domeinen over aan WordPress.com, en we betalen alle overdrachtskosten plus een extra jaar van je domeinregistratie.</string>
+    <string name="domain_transfer_card_sub_title">Je Google-domeinen opnieuw opeisen</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Accounts koppelen</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Delen op social media</string>
+    <string name="prepublishing_nudges_social_action">Delen op social media</string>
+    <string name="sharing">Social</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Niet delen naar social media</string>
+    <string name="post_settings_jetpack_social_share_message_description">Pas het bericht dat je wilt delen aan. Als je hier geen eigen tekst toevoegt, gebruiken we de titel als het bericht.</string>
+    <string name="post_settings_jetpack_social_share_message_title">Het bericht aanpassen</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Accounts koppelen</string>
+    <string name="gutenberg_native_insert_image_block">Afbeeldingblok invoegen</string>
+    <string name="gutenberg_native_insert_audio_block">Audioblok invoegen</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Aanmaken</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">Je hebt nog geen campagnes aangemaakt. Klik op Aanmaken om te beginnen.</string>
+    <string name="blaze_campaigns_page_title">Blaze-campagnes</string>
+    <string name="campaign_status_in_moderation">WORDT BEHEERD</string>
+    <string name="campaign_status_rejected">AFGEWEZEN</string>
+    <string name="campaign_status_completed">VOLTOOID</string>
+    <string name="blaze_campaigns_card_footer_label">Campagne aanmaken</string>
+    <string name="blaze_campaigns_card_title">Blaze-campagne</string>
+    <string name="promote_blaze_flow_error">De blaze-promotieflow kan niet worden geladen</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Krijg meer bezoekers door je berichten automatisch te delen met je vrienden op social media.</string>
+    <string name="menu_redo_context">Laatste wijziging opnieuw uitvoeren</string>
+    <string name="menu_undo_context">Laatste wijziging ongedaan maken</string>
+    <string name="jetpack_social_social_shares_remaining_one">1 keer delen op social media resterend</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Neem een abonnement om meer te delen</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Krijg meer bezoekers door je berichten automatisch te delen met je vrienden op social media.</string>
+    <string name="post_settings_jetpack_social_header">Delen via social media</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Bewerken van gesynchroniseerde patronen wordt momenteel niet ondersteund door %s voor iOS</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Bewerken van gesynchroniseerde patronen wordt momenteel niet ondersteund door %s voor Android</string>
+    <string name="gutenberg_native_reusable">Herbruikbaar</string>
+    <string name="privacy_banner_error_save">Er is een fout opgetreden bij het opslaan van je privacykeuzes.</string>
+    <string name="privacy_banner_save">Opslaan</string>
+    <string name="privacy_banner_settings">Instellingen</string>
+    <string name="privacy_banner_analytics_description">Sta ons toe prestaties te optimaliseren door informatie te verzamelen over hoe gebruikers zich gedragen op onze mobiele apps.</string>
+    <string name="privacy_banner_analytics">Analytische gegevens</string>
+    <string name="privacy_banner_title">Privacy beheren</string>
+    <string name="privacy_banner_description">Wij vinden je privacy erg belangrijk en dat is altijd al zo geweest. Wij gebruiken, verwerken en slaan je persoonlijke gegevens op om onze app (en jouw ervaring) op allerlei manieren te optimaliseren. Bepaalde manieren waarop we je gegevens gebruiken, zijn essentieel om alles goed te laten werken, andere manieren kan je zelf aanpassen bij instellingen.</string>
+    <string name="tabbar_accessibility_label_me">Ik. Beheer je profielgegevens.</string>
+    <string name="social_item_message_title">Bericht</string>
     <string name="gutenberg_native_block_ungrouped">Blokgroepering ongedaan gemaakt</string>
     <string name="gutenberg_native_block_grouped">Blok gegroepeerd</string>
     <string name="dashboard_card_plans_checkout_success_info">Het kan tot 30 minuten duren voor je domein correct werkt.</string>
@@ -224,7 +283,7 @@ Language: nl
     <string name="blogging_prompts_list_answered_prompt">✓ Beantwoord</string>
     <string name="blogging_prompts_list_title">Prompts</string>
     <string name="close_desc">sluiten</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Als alternatief, kun je dit blok ook losmaken en afzonderlijk bewerken door op \'Converteren naar normaal blok\' te tikken.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Als alternatief, kan je dit blok ook losmaken en afzonderlijk bewerken door op \'Patroon losmaken\' te tikken.</string>
     <string name="dlg_confirm_delete_category">Categorie \'%s\' permanent verwijderen?</string>
     <string name="deleting_cat_success">Categorie is verwijderd</string>
     <string name="deleting_cat_failed">Verwijderen van categorie mislukt</string>
@@ -772,7 +831,7 @@ Language: nl
     <string name="blogging_reminders_notification_title">Het is tijd om te bloggen op %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Bewerken van herbruikbare blokken wordt momenteel niet ondersteund door WordPress voor iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Bewerken van herbruikbare blokken wordt momenteel niet ondersteund door WordPress voor Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Als alternatief, kun je deze blokken ook losmaken en afzonderlijk bewerken door op \'Converteren naar normale blokken\' te tikken.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Als alternatief, kan je deze blokken ook losmaken en afzonderlijk bewerken door op \'Patronen losmaken\' te tikken.</string>
     <string name="blogging_reminders_done">Klaar</string>
     <string name="blogging_reminders_notify_me">Breng me op de hoogte</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Voer je inloggegevens voor je server in&lt;/a&gt; om terugzetten in één klik van back-ups in te schakelen.</string>
@@ -829,12 +888,14 @@ Language: nl
     <string name="gutenberg_native_width_settings">Breedte instellingen</string>
     <string name="gutenberg_native_link_rel">Linkrelatie</string>
     <string name="gutenberg_native_column_settings">Kolominstellingen</string>
+    <string name="gutenberg_native_no_description">Geen omschrijving</string>
     <string name="user_profile_untitled_site">(Zonder titel)</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Gebruikersprofiel onderste blad informatie</string>
     <string name="likes_list_screen_title">Vind-ik-leuks lijst %s</string>
     <string name="gutenberg_native_two">Twee</string>
     <string name="gutenberg_native_three">Drie</string>
+    <string name="gutenberg_native_no_title">Geen titel</string>
     <string name="gutenberg_native_s_social_icon">%s social pictogram</string>
     <string name="gutenberg_native_mention">Vermelding</string>
     <string name="gutenberg_native_new">Nieuw</string>
@@ -912,7 +973,6 @@ Language: nl
     <string name="new_site_creation_search_domain_input_hint">Typ een naam voor je site</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Alle taken zijn afgerond&lt;/b&gt;&lt;br/&gt; Je bereikt meer mensen. Goed werk!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Alle taken zijn afgerond&lt;/b&gt;&lt;br/&gt; Je hebt je site aangepast. Goed gedaan!</string>
-    <string name="quick_start_card_menu_hide">Verberg voor nu</string>
     <string name="magic_link_not_meaning_to_create_account">Wilde je geen nieuw account aanmaken? Ga terug om je e-mailadres opnieuw in te voeren.</string>
     <string name="invite_links_disable_dialog_message">Zodra deze uitnodigingslink is uitgeschakeld, kan niemand deze gebruiken om lid te worden van je team. Weet je het zeker?</string>
     <string name="invite_links_disable_dialog_title">Schakel uitnodigingslink uit</string>
@@ -935,7 +995,6 @@ Language: nl
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan afgerond&lt;/b&gt;&lt;br&gt;Geen bedreigingen gevonden</string>
     <string name="scan_fixing_threats_title_singular">Bedreiging oplossen</string>
     <string name="disable">Uitschakelen</string>
-    <string name="quick_start_card_menu_unpin">Losmaken</string>
     <string name="quick_start_list_review_pages_subtitle">Controleer je pagina\'s en maak wijzigingen, of voeg pagina\'s toe of verwijder ze.</string>
     <string name="quick_start_list_view_site_title">Je site bekijken</string>
     <string name="quick_start_list_follow_site_subtitle">Ontdek en volg sites die je inspireren.</string>
@@ -1031,8 +1090,6 @@ Language: nl
     <string name="backup_download_complete_failed_title">Download mislukt</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Mobiel</string>
-    <string name="quick_start_card_menu_remove">Niet opnieuw tonen</string>
-    <string name="quick_start_card_menu_pin">Pin dit</string>
     <string name="quick_start_dialog_review_pages_message_short">Selecteer %1$s Pagina\'s %2$s om je paginalijst te zien.</string>
     <string name="quick_start_dialog_review_pages_message">Verander, voeg toe, of verwijder pagina\'s van je site.</string>
     <string name="quick_start_dialog_review_pages_title">Beoordeel site pagina\'s</string>
@@ -2822,11 +2879,10 @@ Language: nl
     <string name="connection_service_description">Maak verbinding om je blogberichten automatisch te delen met %s.</string>
     <string name="connected_accounts_label">Verbonden accounts</string>
     <string name="connections_description">Koppel je favoriete social media-services om nieuwe berichten automatisch met vrienden te delen.</string>
-    <string name="sharing">Delen</string>
     <string name="tabbar_accessibility_label_notifications">Meldingen. Beheer je meldingen.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Inhoud van andere sites volgen.</string>
     <string name="tabbar_accessibility_label_my_site">Mijn site. Je site bekijken en beheren, inclusief statistieken.</string>
-    <string name="my_site_btn_sharing">Delen</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="button_not_now">Niet nu</string>
     <string name="media_error_internal_server_error">Uploadfout. Probeer \"Afbeeldingen optimaliseren\" in te schakelen via de instellingen van je app</string>
     <string name="media_downloading">Media op dit apparaat opslaan</string>

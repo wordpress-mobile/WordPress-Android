@@ -10,37 +10,33 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Jetpack - Apps - Android - Release Notes\n"
 
-msgctxt "release_note_225"
+msgctxt "release_note_232"
 msgid ""
-"22.5:\n"
-"- Home page editable from Pages list on block-based sites\n"
-"- VideoPress blocks enabled\n"
-"- Detail settings disabled for videos not owned by site\n"
-"- Undo/redo text when setting links to open in new tab\n"
-"- Tap-to-edit for all nested block types\n"
-"- Accounts closable from account settings\n"
+"23.2:\n"
+"- New chat-based support channel with service bot\n"
+"- View, locate, and remove Jetpack Paywall block\n"
+"- Outlined selected Social Link block\n"
+"- Fixed crashes in the block editor and block inserter\n"
+"- Create support tickets for errors during account closure\n"
 msgstr ""
 
-msgctxt "release_note_224"
+msgctxt "release_note_231"
 msgid ""
-"22.4:\n"
-"- Added dashboard cards for Activity Log and Pages\n"
-"- Removed ability to convert deleted/undefined reusable blocks to regular blocks\n"
-"- Updated nested text blocks for faster editing without tapping through nested levels\n"
-"- Corrected “editing not supported” message in reusable blocks\n"
+"23.1:\n"
+"- The Social Link block now includes an outline so you can see when it’s selected.\n"
+"- The undo and redo buttons are no longer visible in the HTML editor.\n"
+"- You’ll now see hex codes for the selected color when you’re using the Cover Block color picker.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 #. translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!
 msgctxt "play_store_app_title"
-msgid "Jetpack – Website Builder
-"
+msgid "Jetpack – Website Builder"
 msgstr ""
 
 #. translators: Short description of the Jetpack app to be displayed in the Play Store. Limit to 80 characters including spaces and commas!
 msgctxt "play_store_promo"
-msgid "Build your WordPress website & blog; create posts, add photos & track analytics!
-"
+msgid "Build your WordPress website & blog; create posts, add photos & track analytics!"
 msgstr ""
 
 #. translators: Multi-paragraph text used to display in the Play Store. Limit to 4000 characters including spaces and commas!
@@ -92,7 +88,7 @@ msgid ""
 "\n"
 "Learn more at https://jetpack.com/mobile\n"
 "\n"
-"California users privacy notice: https://automattic.com/privacy/#california-consumer-privacy-act-ccpa"
+"California users privacy notice: https://automattic.com/privacy/#california-consumer-privacy-act-ccpa\n"
 msgstr ""
 
 #. Description for the first app store image

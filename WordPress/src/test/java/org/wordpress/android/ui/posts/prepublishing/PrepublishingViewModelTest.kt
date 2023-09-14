@@ -6,12 +6,15 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
-import org.wordpress.android.ui.posts.PrepublishingNavigationTarget
-import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
-import org.wordpress.android.ui.posts.PrepublishingScreen.PUBLISH
-import org.wordpress.android.ui.posts.PrepublishingScreen.TAGS
-import org.wordpress.android.ui.posts.PrepublishingViewModel
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.ADD_CATEGORY
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.CATEGORIES
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.HOME
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.PUBLISH
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.SOCIAL
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.TAGS
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.Action
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation
 import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
@@ -92,7 +95,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when onActionClicked is called with TAGS, navigate to TAGS screen`() {
+    fun `when onActionClicked is called with Tags, navigate to TAGS screen`() {
         val expectedScreen = TAGS
 
         var event: Event<PrepublishingNavigationTarget>? = null
@@ -101,13 +104,13 @@ class PrepublishingViewModelTest : BaseUnitTest() {
         }
 
         viewModel.start(mock(), mock())
-        viewModel.onActionClicked(ActionType.TAGS)
+        viewModel.onActionClicked(PrepublishingScreenNavigation.Tags)
 
         assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
     }
 
     @Test
-    fun `when onActionClicked is called with PUBLISH, navigate to PUBLISH screen`() {
+    fun `when onActionClicked is called with Publish, navigate to PUBLISH screen`() {
         val expectedScreen = PUBLISH
 
         var event: Event<PrepublishingNavigationTarget>? = null
@@ -116,9 +119,68 @@ class PrepublishingViewModelTest : BaseUnitTest() {
         }
 
         viewModel.start(mock(), mock())
-        viewModel.onActionClicked(ActionType.PUBLISH)
+        viewModel.onActionClicked(PrepublishingScreenNavigation.Publish)
 
         assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
+    }
+
+    @Test
+    fun `when onActionClicked is called with Categories, navigate to CATEGORIES screen`() {
+        val expectedScreen = CATEGORIES
+
+        var event: Event<PrepublishingNavigationTarget>? = null
+        viewModel.navigationTarget.observeForever {
+            event = it
+        }
+
+        viewModel.start(mock(), mock())
+        viewModel.onActionClicked(PrepublishingScreenNavigation.Categories)
+
+        assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
+    }
+
+    @Test
+    fun `when onActionClicked is called with AddCategory, navigate to ADD_CATEGORY screen`() {
+        val expectedScreen = ADD_CATEGORY
+
+        var event: Event<PrepublishingNavigationTarget>? = null
+        viewModel.navigationTarget.observeForever {
+            event = it
+        }
+
+        viewModel.start(mock(), mock())
+        viewModel.onActionClicked(PrepublishingScreenNavigation.AddCategory)
+
+        assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
+    }
+
+    @Test
+    fun `when onActionClicked is called with Social, navigate to SOCIAL screen`() {
+        val expectedScreen = SOCIAL
+
+        var event: Event<PrepublishingNavigationTarget>? = null
+        viewModel.navigationTarget.observeForever {
+            event = it
+        }
+
+        viewModel.start(mock(), mock())
+        viewModel.onActionClicked(PrepublishingScreenNavigation.Social)
+
+        assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
+    }
+
+    @Test
+    fun `when onActionClicked is called with NavigateToSharingSettings, navigateToSharingSettings is emitted`() {
+        val mockSite = mock<SiteModel>()
+        var event: Event<SiteModel>? = null
+        viewModel.navigateToSharingSettings.observeForever {
+            event = it
+        }
+
+        viewModel.start(mockSite, mock())
+        viewModel.onActionClicked(Action.NavigateToSharingSettings)
+
+        assertThat(event?.peekContent()).isEqualTo(mockSite)
     }
 
     @Test

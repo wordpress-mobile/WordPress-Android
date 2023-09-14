@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
@@ -94,7 +94,7 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
         return mConnections.get(position).connectionId;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public ConnectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view =

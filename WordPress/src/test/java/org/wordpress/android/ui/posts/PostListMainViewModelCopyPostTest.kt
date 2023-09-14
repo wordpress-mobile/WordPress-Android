@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
@@ -74,8 +75,6 @@ class PostListMainViewModelCopyPostTest : BaseUnitTest() {
             uploadActionUseCase = mock(),
             savePostToDbUseCase = mock(),
             jetpackFeatureRemovalPhaseHelper = mock(),
-            blazeFeatureUtils = mock(),
-            blazeStore = mock(),
             siteUtilsWrapper = mock()
         )
         viewModel.postListAction.observeForever(onPostListActionObserver)
@@ -90,7 +89,7 @@ class PostListMainViewModelCopyPostTest : BaseUnitTest() {
         viewModel.copyPost(site, mockedPost)
         val captor = ArgumentCaptor.forClass(PostListAction::class.java)
         verify(onPostListActionObserver).onChanged(captor.capture())
-        assertThat(requireNotNull(captor.value is EditPost))
+        assertTrue(requireNotNull(captor.value is EditPost))
     }
 
     @Test
@@ -120,7 +119,7 @@ class PostListMainViewModelCopyPostTest : BaseUnitTest() {
         viewModel.copyPost(site, mockedPost.apply { setStatus(PostStatus.PUBLISHED.toString()) })
         val captor = ArgumentCaptor.forClass(PostListAction::class.java)
         verify(onPostListActionObserver).onChanged(captor.capture())
-        assertThat(requireNotNull(captor.value is EditPost))
+        assertTrue(requireNotNull(captor.value is EditPost))
         assertThat((captor.value as EditPost).post.status).isEqualTo(PostStatus.DRAFT.toString())
     }
 }

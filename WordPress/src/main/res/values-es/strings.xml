@@ -1,11 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-06-01 10:21:09+0000
+Translation-Revision-Date: 2023-08-23 11:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: es
 -->
 <resources>
+    <string name="contact_support_bot_ticket_comment_answer">Respuesta:</string>
+    <string name="contact_support_bot_ticket_comment_question">Pregunta:</string>
+    <string name="contact_support_bot_ticket_comment_start">Transcripción del bot móvil de Jetpack:</string>
+    <string name="contact_support_bot_ticket_error">Error al enviar la petición de asistencia</string>
+    <string name="contact_support_bot_ticket_message">Petición creada</string>
+    <string name="contact_support_bot_ticket_loading">Creando petición de asistencia…</string>
+    <string name="contact_support_question_six">¿Cómo puedo utilizar mi dominio personalizado en la aplicación?</string>
+    <string name="contact_support_question_five">No me acuerdo de mis datos de acceso</string>
+    <string name="contact_support_question_four">¿Por qué no puedo acceder?</string>
+    <string name="contact_support_question_three">No puedo subir fotos/vídeos</string>
+    <string name="contact_support_question_two">Ayuda, mi sitio no funciona.</string>
+    <string name="contact_support_question_one">¿Cuál es la dirección de mi sitio?</string>
+    <string name="contact_support_suggestions">¿No estás seguro/a de qué preguntar?</string>
+    <string name="contact_support_get_support">Contactar con el soporte técnico</string>
+    <string name="contact_support_first_message">¿En qué podemos ayudarte?</string>
+    <string name="contact_support_input_placeholder">Enviar un mensaje…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">Borrar</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d compartidas en redes sociales restantes</string>
+    <string name="missing_splits_dialog_button">CERRAR</string>
+    <string name="missing_splits_dialog_message">A la app de WordPress le faltan componentes obligatorios y debe ser reinstalada de la Google Play Store.</string>
+    <string name="missing_splits_dialog_title">Instalación fallida</string>
+    <string name="campaign_detail_error_title">Algo ha salido mal</string>
+    <string name="campaign_listing_page_error_title">Algo ha salido mal</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Algo ha salido mal, no se han podido recoger las campañas</string>
+    <string name="domain_transfer_card_menu_hide_this">Ocultar esto</string>
+    <string name="domain_transfer_card_cta">Transfiere tus dominios</string>
+    <string name="domain_transfer_card_caption">Como probablemente sabes, Google Domains ha sido transferido a Squarespace. Transfiere tus dominios a WordPress.com y nosotros pagaremos todas las tasas de transferencia además de un año extra en el registro de tu domino.</string>
+    <string name="domain_transfer_card_sub_title">Reclama tus dominios de Google</string>
+    <string name="domain_transfer_card_title">Noticias</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Conectar cuentas</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Compartir social</string>
+    <string name="prepublishing_nudges_social_action">Compartir social</string>
+    <string name="sharing">Social</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Se compartirá en %1$d cuentas</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Se compartirá en %1$d de %2$d cuentas</string>
+    <string name="jetpack_social_social_shares_title_single_account">Se compartirá en %1$s</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">No se compartirá en ninguna red social</string>
+    <string name="post_settings_jetpack_social_share_message_description">Personaliza el mensaje que quieres compartir. Si no añades tu propio texto aquí, usaremos el título de la entrada como mensaje.</string>
+    <string name="post_settings_jetpack_social_share_message_title">Personalizar el mensaje</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Ahora no</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Conectar cuentas</string>
+    <string name="gutenberg_native_insert_video_block">Insertar bloque de video</string>
+    <string name="gutenberg_native_insert_image_block">Insertar bloque de imagen</string>
+    <string name="gutenberg_native_insert_gallery_block">Insertar bloque de galería</string>
+    <string name="gutenberg_native_insert_audio_block">Insertar bloque de audio</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Crear</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">No has creado ninguna campaña todavía. Haz clic en Crear para empezar.</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">No tienes campañas</string>
+    <string name="blaze_campaign_details_page_title">Detalles de la campaña</string>
+    <string name="blaze_campaigns_page_title">Campañas de Blaze</string>
+    <string name="budget_campaign_stats">Presupuesto</string>
+    <string name="clicks_campaign_stats">Clics</string>
+    <string name="impressions_campaign_stats">Impresiones</string>
+    <string name="campaign_status_scheduled">PROGRAMADA</string>
+    <string name="campaign_status_in_moderation">EN MODERACIÓN</string>
+    <string name="campaign_status_canceled">CANCELADA</string>
+    <string name="campaign_status_rejected">RECHAZADA</string>
+    <string name="campaign_status_completed">COMPLETADA</string>
+    <string name="campaign_status_active">ACTIVA</string>
+    <string name="blaze_campaigns_card_footer_label">Crear campaña</string>
+    <string name="blaze_campaigns_card_title">Campaña de Blaze</string>
+    <string name="promote_blaze_flow_error">No se ha podido cargar el flujo de promoción de Blaze</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Aumenta el tráfico compartiendo automáticamente las entradas con tus amigos a través de las redes sociales.</string>
+    <string name="menu_close_editor">Cerrar editor</string>
+    <string name="menu_redo_context">Rehacer el último cambio</string>
+    <string name="menu_undo_context">Deshacer el último cambio</string>
+    <string name="jetpack_social_social_shares_remaining_one">1 entrada compartidas en redes sociales restante</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Suscríbete ahora para compartir más</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Aumenta el tráfico compartiendo automáticamente las entradas con tus amigos a través de las redes sociales.</string>
+    <string name="post_settings_jetpack_social_header">Compartir en redes sociales</string>
+    <string name="gutenberg_native_s_detached">%s separado</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">La edición de patrones sincronizados todavía no está incluida en %s para iOS</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">La edición de patrones sincronizados todavía no está incluida en %s para Android</string>
+    <string name="gutenberg_native_reusable">Reutilizable</string>
+    <string name="privacy_banner_error_save">Se ha producido un error al guardar tus opciones de privacidad.</string>
+    <string name="privacy_banner_save">Guardar</string>
+    <string name="privacy_banner_settings">Ajustes</string>
+    <string name="privacy_banner_analytics_description">Nos permiten optimizar el rendimiento mediante la recopilación de información sobre la forma en que los usuarios interactúan con nuestras aplicaciones para móviles.</string>
+    <string name="privacy_banner_analytics">Analítica</string>
+    <string name="privacy_banner_title">Gestión de la privacidad</string>
+    <string name="privacy_banner_description">Tu privacidad es extremamente importante para nosotros y siempre lo ha sido. Utilizamos, almacenamos y procesamos tus datos personales para optimizar nuestra aplicación (y tu experiencia) de diversas maneras. Algunos usos de tus datos son absolutamente necesarios para que las cosas funcionen, y otros puedes personalizarlos en los Ajustes.</string>
+    <string name="tabbar_accessibility_label_me">Yo. Gestionar los detalles de tu perfil.</string>
+    <string name="social_item_message_title">Mensaje</string>
     <string name="gutenberg_native_block_ungrouped">Bloque desagrupado</string>
     <string name="gutenberg_native_block_grouped">Bloque agrupado</string>
     <string name="dashboard_card_plans_checkout_success_info">El dominio puede tardar hasta 30 minutos en empezar a funcionar correctamente.</string>
@@ -224,7 +307,7 @@ Language: es
     <string name="blogging_prompts_list_answered_prompt">✓ Respondido</string>
     <string name="blogging_prompts_list_title">Peticiones</string>
     <string name="close_desc">cerrar</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativamente, puedes separar y editar este bloque por separado tocando en «Convertir en bloque normal».</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativamente, puedes separar y editar este bloque por separado tocando en «Separar patrón».</string>
     <string name="dlg_confirm_delete_category">¿Borrar permanentemente la categoría \'%s\'?</string>
     <string name="deleting_cat_success">Categoría borrada correctamente</string>
     <string name="deleting_cat_failed">Borrando la categoría que ha fallado</string>
@@ -772,7 +855,7 @@ Language: es
     <string name="blogging_reminders_notification_title">Es hora de bloguear en %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">WordPress para iOS aún no es compatible con editar bloques reutilizables</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">WordPress para Android aún no es compatible con editar bloques reutilizables</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativamente, puedes separar y editar estos bloques por separado tocando en «Convertir en bloques normales».</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativamente, puedes separar y editar estos bloques por separado tocando en «Separar patrones».</string>
     <string name="blogging_reminders_done">Hecho</string>
     <string name="blogging_reminders_notify_me">Avísame</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Introduce las credenciales de tu servidor&lt;/a&gt; para activar las restauraciones del sitio con un clic de las copias de seguridad.</string>
@@ -829,12 +912,14 @@ Language: es
     <string name="gutenberg_native_width_settings">Ajustes de anchura</string>
     <string name="gutenberg_native_link_rel">«rel» del enlace</string>
     <string name="gutenberg_native_column_settings">Ajustes de columna</string>
+    <string name="gutenberg_native_no_description">Sin descripción</string>
     <string name="user_profile_untitled_site">(Sin título)</string>
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_bottom_sheet_description">Información de hoja inferior del perfil de usuario</string>
     <string name="likes_list_screen_title">Lista de Me gusta %s</string>
     <string name="gutenberg_native_two">Dos</string>
     <string name="gutenberg_native_three">Tres</string>
+    <string name="gutenberg_native_no_title">Sin título</string>
     <string name="gutenberg_native_s_social_icon">Icono social %s</string>
     <string name="gutenberg_native_mention">Mención</string>
     <string name="gutenberg_native_new">NUEVO</string>
@@ -912,7 +997,6 @@ Language: es
     <string name="new_site_creation_search_domain_input_hint">Teclea un nombre para tu sitio</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Se han completado todas las tareas&lt;/b&gt;&lt;br/&gt;Has llegado a más gente. ¡Buen trabajo!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Se han completado todas las tareas&lt;/b&gt;&lt;br/&gt;Has personalizado tu sitio. ¡Bien hecho!</string>
-    <string name="quick_start_card_menu_hide">Ocultar por ahora</string>
     <string name="magic_link_not_meaning_to_create_account">¿No querías crear una nueva cuenta? Vuelve atrás y vuelve a introducir tu dirección de correo electrónico.</string>
     <string name="invite_links_disable_dialog_message">Una vez desactivado el enlace de invitación, nadie podrá usarlo para unirse a tu equipo. ¿Seguro que deseas continuar?</string>
     <string name="invite_links_disable_dialog_title">Desactivar enlace de invitación</string>
@@ -935,7 +1019,6 @@ Language: es
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Exploración finalizada&lt;/b&gt;&lt;br&gt;No se han encontrado amenazas potenciales</string>
     <string name="scan_fixing_threats_title_singular">Corrigiendo la amenaza</string>
     <string name="disable">Desactivar</string>
-    <string name="quick_start_card_menu_unpin">Desanclar</string>
     <string name="quick_start_list_review_pages_subtitle">Revisa tus páginas y haz cambios, o añade o elimina páginas.</string>
     <string name="quick_start_list_view_site_title">Ve tu sitio</string>
     <string name="quick_start_list_follow_site_subtitle">Descubre y sigue sitios que te inspiren.</string>
@@ -1031,8 +1114,6 @@ Language: es
     <string name="backup_download_complete_failed_title">La descarga ha fallado</string>
     <string name="web_preview_tablet">Tableta</string>
     <string name="web_preview_mobile">Dispositivos móviles</string>
-    <string name="quick_start_card_menu_remove">No mostrar de nuevo</string>
-    <string name="quick_start_card_menu_pin">Anclar</string>
     <string name="quick_start_dialog_review_pages_message_short">Selecciona %1$s Páginas %2$s para ver tu lista de páginas.</string>
     <string name="quick_start_dialog_review_pages_message">Cambia, añade o elimina páginas en tu sitio.</string>
     <string name="quick_start_dialog_review_pages_title">Revisar las páginas del sitio</string>
@@ -2822,11 +2903,10 @@ Language: es
     <string name="connection_service_description">Conéctate para compartir automáticamente las entradas de tu blog en %s</string>
     <string name="connected_accounts_label">Cuentas conectadas</string>
     <string name="connections_description">Conecta con tus servicios de medios sociales favoritos para compartir automáticamente las nuevas entradas con tus amigos.</string>
-    <string name="sharing">Compartir</string>
     <string name="tabbar_accessibility_label_notifications">Avisos. Gestiona tus avisos.</string>
     <string name="tabbar_accessibility_label_reader">Lector. Sigue contenido de otros sitios.</string>
     <string name="tabbar_accessibility_label_my_site">Mi sitio. Ve tu sitio y gestiónalo, estadísticas incluidas.</string>
-    <string name="my_site_btn_sharing">Compartir</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="button_not_now">Ahora no</string>
     <string name="media_error_internal_server_error">Error en la subida. Trata de cambiar la optimización de imágenes en los ajustes de tu aplicación</string>
     <string name="media_downloading">Guardando medios en este dispositivo</string>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-22 11:01:09+0000
+Translation-Revision-Date: 2023-06-13 08:27:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: el_GR
 -->
 <resources>
@@ -35,6 +35,7 @@ Language: el_GR
     <string name="gutenberg_native_width_settings">Ρυθμίσεις πλάτους</string>
     <string name="gutenberg_native_column_settings">Ρυθμίσεις Στήλης</string>
     <string name="gutenberg_native_link_rel">Σχέση συνδέσμου (Rel)</string>
+    <string name="gutenberg_native_no_description">Χωρίς περιγραφή</string>
     <string name="user_profile_untitled_site">(Χωρίς τίτλο)</string>
     <string name="user_profile_site_section_header">Ιστότοπος</string>
     <string name="gutenberg_native_mention">Αναφορά</string>
@@ -522,8 +523,6 @@ Language: el_GR
     <string name="share_btn_disconnect">Αποσύνδεση</string>
     <string name="share_btn_connect">Σύνδεση</string>
     <string name="connected_accounts_label">Συνδεδεμένοι λογαριασμοί</string>
-    <string name="sharing">Κοινοποίηση</string>
-    <string name="my_site_btn_sharing">Κοινοποίηση</string>
     <string name="button_not_now">Όχι τώρα</string>
     <string name="media_downloading">Αποθήκευση πολυμέσων σε αυτήν τη συσκευή</string>
     <string name="error_media_save">Αδυναμία αποθήκευσης πολυμέσων</string>

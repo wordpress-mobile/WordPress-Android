@@ -55,6 +55,7 @@ import org.wordpress.android.util.image.BlavatarShape.CIRCULAR
 import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
 import javax.inject.Named
+import android.R as AndroidR
 
 private const val READER_INTEREST_LIST_SIZE_LIMIT = 5
 private const val READER_RECOMMENDED_BLOGS_LIST_SIZE_LIMIT = 3
@@ -260,7 +261,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         postListType: ReaderPostListType?
     ): ReaderBlogSectionClickData? {
         return if (postListType != ReaderPostListType.BLOG_PREVIEW) {
-            ReaderBlogSectionClickData(onBlogSectionClicked, android.R.attr.selectableItemBackground)
+            ReaderBlogSectionClickData(onBlogSectionClicked, AndroidR.attr.selectableItemBackground)
         } else {
             null
         }

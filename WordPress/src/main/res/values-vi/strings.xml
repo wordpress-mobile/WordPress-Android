@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-11-08 05:57:29+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: vi_VN
 -->
 <resources>
@@ -572,7 +572,6 @@ Language: vi_VN
     <string name="new_site_creation_search_domain_input_hint">Nhận tên blog của bạn</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Đã xong tất cả bước&lt;/b&gt;&lt;br/&gt;Bạn sẽ tiếp cận nhiều người hơn. Làm tốt lắm!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Đã xong tất cả các bước&lt;/b&gt;&lt;br/&gt;Bạn đã tùy biến blog của bạn xong. Giỏi lắm!</string>
-    <string name="quick_start_card_menu_hide">Tạm ẩn</string>
     <string name="magic_link_not_meaning_to_create_account">Không muốn tạo tài khoản mới? Quay lại và nhập địa chỉ email khác.</string>
     <string name="invite_links_disable_dialog_message">Nếu thư mời này bị vô hiệu hóa, mọi người sẽ không thể dùng để tham gia nhóm của bạn nữa. Bạn chắc chứ?</string>
     <string name="invite_links_disable_dialog_title">Vô hiệu hóa thư mời</string>
@@ -595,7 +594,6 @@ Language: vi_VN
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Quét Xong&lt;/b&gt; &lt;br&gt; Không tìm thấy mối đe dọa</string>
     <string name="scan_fixing_threats_title_singular">Sửa mối đe dọa</string>
     <string name="disable">Tắt</string>
-    <string name="quick_start_card_menu_unpin">Bỏ ghim</string>
     <string name="quick_start_list_review_pages_subtitle">Kiểm tra và cập nhật các trang, thêm hoặc xóa chúng.</string>
     <string name="quick_start_list_view_site_title">Ghé thăm blog</string>
     <string name="quick_start_list_follow_site_subtitle">Khám phá và theo dõi những blog mà bạn thích.</string>
@@ -691,8 +689,6 @@ Language: vi_VN
     <string name="backup_download_complete_failed_title">Tải về thất bại</string>
     <string name="web_preview_tablet">Máy tính bảng</string>
     <string name="web_preview_mobile">Điện thoại</string>
-    <string name="quick_start_card_menu_remove">Không hiện lại</string>
-    <string name="quick_start_card_menu_pin">Ghim lại</string>
     <string name="quick_start_dialog_review_pages_message_short">Chọn %1$s Trang %2$s để xem danh sách trang.</string>
     <string name="quick_start_dialog_review_pages_message">Cập nhật, tạo hoặc xóa trang.</string>
     <string name="quick_start_dialog_review_pages_title">Xem lại trang</string>
@@ -2472,11 +2468,9 @@ Language: vi_VN
     <string name="connection_service_description">Kết nối để tự động chia sẻ bài viết của bạn với %s.</string>
     <string name="connected_accounts_label">Tài khoản đã kết nối</string>
     <string name="connections_description">Kết nối tài khoản mạng xã hội của bạn để tự động chia sẻ bài viết mới với bạn bè trên đó.</string>
-    <string name="sharing">Chia sẻ</string>
     <string name="tabbar_accessibility_label_notifications">Thông báo. Quản lý thông báo.</string>
     <string name="tabbar_accessibility_label_reader">Đọc. Theo dõi nội dung các blog khác.</string>
     <string name="tabbar_accessibility_label_my_site">Viết. Xem blog của bạn và quản lý, thống kê.</string>
-    <string name="my_site_btn_sharing">Chia sẻ</string>
     <string name="button_not_now">Để sau</string>
     <string name="media_error_internal_server_error">Lỗi tải lên. Thử Tối Ưu Hóa Ảnh trong thiết lập ứng dụng</string>
     <string name="media_downloading">Đang lưu media vào thiết bị</string>

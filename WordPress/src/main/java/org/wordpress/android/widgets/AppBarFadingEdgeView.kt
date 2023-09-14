@@ -1,6 +1,5 @@
 package org.wordpress.android.widgets
 
-import android.R.color
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
@@ -13,9 +12,10 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.google.android.material.elevation.ElevationOverlayProvider
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import android.R as AndroidR
+import com.google.android.material.R as MaterialR
 
 class AppBarFadingEdgeView @JvmOverloads constructor(
     context: Context,
@@ -45,7 +45,7 @@ class AppBarFadingEdgeView @JvmOverloads constructor(
             } else {
                 RIGHT_LEFT
             },
-            intArrayOf(ContextCompat.getColor(context, color.transparent), appBarColor)
+            intArrayOf(ContextCompat.getColor(context, AndroidR.color.transparent), appBarColor)
         )
 
         val fadingEdgeDrawableFlush = GradientDrawable(
@@ -55,17 +55,17 @@ class AppBarFadingEdgeView @JvmOverloads constructor(
                 RIGHT_LEFT
             },
             intArrayOf(
-                ContextCompat.getColor(context, color.transparent),
-                context.getColorFromAttribute(attr.wpColorAppBar)
+                ContextCompat.getColor(context, AndroidR.color.transparent),
+                context.getColorFromAttribute(R.attr.wpColorAppBar)
             )
         )
 
         val fadingAgeStateListDrawable = StateListDrawable()
         fadingAgeStateListDrawable.addState(
             intArrayOf(
-                -com.google.android.material.R.attr.state_lifted,
-                com.google.android.material.R.attr.state_liftable,
-                android.R.attr.state_enabled
+                -MaterialR.attr.state_lifted,
+                MaterialR.attr.state_liftable,
+                AndroidR.attr.state_enabled
             ), fadingEdgeDrawableFlush
         )
         fadingAgeStateListDrawable.addState(StateSet.WILD_CARD, fadingEdgeDrawableElevated)

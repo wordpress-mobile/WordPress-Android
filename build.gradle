@@ -10,22 +10,22 @@ plugins {
 
 ext {
     minSdkVersion = 24
-    compileSdkVersion = 33
+    compileSdkVersion = 34
     targetSdkVersion = 33
 }
 
 ext {
     // libs
-    automatticAboutVersion = '1.1.0'
+    automatticAboutVersion = '1.2.0'
     automatticRestVersion = '1.0.8'
-    automatticStoriesVersion = '2.1.0'
-    automatticTracksVersion = '3.0.0'
-    gutenbergMobileVersion = 'v1.97.0'
-    wordPressAztecVersion = 'v1.6.4'
-    wordPressFluxCVersion = '2.30.0'
-    wordPressLoginVersion = '1.3.0'
+    automatticStoriesVersion = '2.3.0'
+    automatticTracksVersion = '3.2.0'
+    gutenbergMobileVersion = 'v1.103.1'
+    wordPressAztecVersion = 'v1.7.0'
+    wordPressFluxCVersion = 'trunk-f8fa03d500abff98dbf766816fc0fdfa72dc00ec'
+    wordPressLoginVersion = '1.5.0'
     wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressUtilsVersion = '3.6.1'
+    wordPressUtilsVersion = '3.9.0'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 
     // debug
@@ -34,6 +34,7 @@ ext {
     // main
     androidInstallReferrerVersion = '2.2'
     androidVolleyVersion = '1.2.1'
+    androidxAnnotationVersion = '1.6.0'
     androidxAppcompatVersion = '1.6.1'
     androidxArchCoreVersion = '2.2.0'
     androidxComposeBomVersion = '2023.05.01'
@@ -52,6 +53,8 @@ ext {
     androidxSwipeToRefreshVersion = '1.1.0'
     androidxViewpager2Version = '1.0.0'
     androidxWorkManagerVersion = "2.8.1"
+    androidxWebkitVersion =  '1.7.0'
+    androidxComposeMaterial3Version = '1.1.1'
     apacheCommonsTextVersion = '1.10.0'
     coilComposeVersion = '2.3.0'
     chrisbanesPhotoviewVersion = '2.3.0'
@@ -59,18 +62,18 @@ ext {
     facebookShimmerVersion = '0.5.0'
     firebaseBomVersion = '32.1.0'
     firebaseIidVersion = '21.1.0'
-    glideVersion = '4.10.0'
-    glideVolleyVersion = '4.6.1@aar'
+    glideVersion = '4.15.1'
     googleAutoServiceVersion = '1.0.1'
     googleExoPlayerVersion = '2.13.3'
     googleFlexboxlayoutVersion = '3.0.0'
     googleGsonVersion = '2.10.1'
     googleMaterialVersion = '1.9.0'
+
     googleMLKitBarcodeScanningVersion = '17.0.0'
     googlePlayServicesAuthVersion = '20.4.1'
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
     jsoupVersion = '1.15.4'
-    kotlinxCoroutinesVersion = '1.6.4'
+    kotlinxCoroutinesVersion = '1.7.1'
     lottieVersion = '6.0.0'
     philjayMpAndroidChartVersion = 'v3.1.0'
     squareupKotlinPoetVersion = '1.6.0'
@@ -80,10 +83,7 @@ ext {
     zendeskVersion = '5.1.2'
 
     // react native
-    facebookReactVersion = '0.69.4:release@aar'
-    facebookSoloaderVersion = '0.10.4'
-    facebookFrescoVersion = '2.5.0'
-    facebookFbjniVersion = '0.2.2'
+    facebookReactVersion = '0.71.11'
 
     // test
     assertjVersion = '3.23.1'
@@ -161,7 +161,7 @@ allprojects {
             jvmTarget = JavaVersion.VERSION_1_8
             allWarningsAsErrors = true
             freeCompilerArgs += [
-                    "-Xopt-in=kotlin.RequiresOptIn",
+                    "-opt-in=kotlin.RequiresOptIn",
                     "-Xjvm-default=all"
             ]
         }

@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -619,7 +618,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
     }
 
     @Override
-    public void handleAutoSavePostIfNotDraftResult(@NotNull AutoSavePostIfNotDraftResult result) {
+    public void handleAutoSavePostIfNotDraftResult(@NonNull AutoSavePostIfNotDraftResult result) {
         PostModel post = result.getPost();
         if (result instanceof FetchPostStatusFailed
             || result instanceof PostAutoSaveFailed

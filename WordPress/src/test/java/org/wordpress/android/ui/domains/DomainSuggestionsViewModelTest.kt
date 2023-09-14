@@ -8,9 +8,10 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
@@ -50,9 +51,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var createCartUseCase: CreateCartUseCase
 
-    @Mock
-    lateinit var productsStore: ProductsStore
-
+    private val productsStore = mock<ProductsStore> { onBlocking { fetchProducts(any()) } doReturn mock() }
     private lateinit var site: SiteModel
     private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
     private lateinit var viewModel: DomainSuggestionsViewModel
@@ -71,7 +70,6 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
             createCartUseCase,
             testDispatcher()
         )
-
         whenever(debouncer.debounce(any(), any(), any(), any())).thenAnswer { invocation ->
             val delayedRunnable = invocation.arguments[1] as Runnable
             delayedRunnable.run()
@@ -125,8 +123,6 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `domain products are fetched only at first start`() = test {
-        whenever(productsStore.fetchProducts(any())).thenReturn(mock())
-
         viewModel.start(site, domainRegistrationPurpose)
         viewModel.start(site, domainRegistrationPurpose)
         advanceUntilIdle()
@@ -137,12 +133,11 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Test
     fun `site on blogger plan is requesting only dot blog domain suggestions`() = test {
         site.planId = PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
-
         viewModel.start(site, domainRegistrationPurpose)
         viewModel.updateSearchQuery("test")
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(1)).dispatch(captor.capture())
+        verify(dispatcher, times(2)).dispatch(captor.capture())
 
         val lastAction = captor.value
 
@@ -166,7 +161,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         viewModel.updateSearchQuery("test")
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(1)).dispatch(captor.capture())
+        verify(dispatcher, times(2)).dispatch(captor.capture())
 
         val lastAction = captor.value
 

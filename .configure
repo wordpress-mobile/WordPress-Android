@@ -1,7 +1,7 @@
 {
   "project_name": "WordPress-Android",
   "branch": "trunk",
-  "pinned_hash": "4deedf776b2e282f9fb8e49774ca474012969b52",
+  "pinned_hash": "91e71c2268b4df54591ff9cedbfd03ac93ba865d",
   "files_to_copy": [
     {
       "file": "android/WPAndroid/gradle.properties",

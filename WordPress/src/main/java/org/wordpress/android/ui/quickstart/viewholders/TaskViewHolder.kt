@@ -17,6 +17,8 @@ import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.extensions.viewBinding
+import android.R as AndroidR
+import org.wordpress.android.login.R as LoginR
 
 class TaskViewHolder(
     parent: ViewGroup,
@@ -45,7 +47,7 @@ class TaskViewHolder(
         with(icon) {
             val context = itemView.context
             setImageResource(iconResId)
-            val tintResId = if (isEnabled) iconBackgroundColorResId else R.color.material_on_surface_emphasis_low
+            val tintResId = if (isEnabled) iconBackgroundColorResId else LoginR.color.material_on_surface_emphasis_low
             background.setTint(ContextCompat.getColor(context, tintResId))
         }
     }
@@ -77,8 +79,8 @@ class TaskViewHolder(
                 setCardBackgroundColor(ContextCompat.getColor(context, R.color.quick_start_task_card_background))
                 strokeWidth = 0
             } else {
-                setCardBackgroundColor(ContextCompat.getColor(context, R.color.transparent))
-                strokeColor = ContextCompat.getColor(context, R.color.material_on_surface_emphasis_low)
+                setCardBackgroundColor(ContextCompat.getColor(context, AndroidR.color.transparent))
+                strokeColor = ContextCompat.getColor(context, LoginR.color.material_on_surface_emphasis_low)
                 strokeWidth = context.resources.getDimensionPixelSize(R.dimen.unelevated_card_stroke_width)
             }
         }

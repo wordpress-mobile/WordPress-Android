@@ -4,6 +4,7 @@ import android.text.TextUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteViewModel
@@ -12,7 +13,6 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.BACKUP
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.BLAZE
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.DOMAINS
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.JETPACK_SETTINGS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PAGES
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PEOPLE
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLAN
@@ -40,7 +40,8 @@ class SiteListItemBuilder @Inject constructor(
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val themeBrowserUtils: ThemeBrowserUtils,
-    private val siteDomainsFeatureConfig: SiteDomainsFeatureConfig
+    private val siteDomainsFeatureConfig: SiteDomainsFeatureConfig,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
@@ -71,20 +72,6 @@ class SiteListItemBuilder @Inject constructor(
                 R.drawable.ic_baseline_security_white_24dp,
                 UiStringRes(R.string.scan),
                 onClick = ListItemInteraction.create(SCAN, onClick)
-            )
-        } else null
-    }
-
-    fun buildJetpackItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        val jetpackSettingsVisible = site.isJetpackConnected && // jetpack is installed and connected
-                !site.isWPComAtomic &&
-                siteUtilsWrapper.isAccessedViaWPComRest(site) && // is using .com login
-                site.hasCapabilityManageOptions // has permissions to manage the site
-        return if (jetpackSettingsVisible) {
-            ListItem(
-                R.drawable.ic_cog_white_24dp,
-                UiStringRes(R.string.my_site_btn_jetpack_settings),
-                onClick = ListItemInteraction.create(JETPACK_SETTINGS, onClick)
             )
         } else null
     }
@@ -192,6 +179,23 @@ class SiteListItemBuilder @Inject constructor(
                 R.drawable.ic_cog_white_24dp,
                 UiStringRes(R.string.my_site_btn_site_settings),
                 onClick = ListItemInteraction.create(SITE_SETTINGS, onClick)
+            )
+        } else null
+    }
+
+    @Suppress("ComplexCondition")
+    fun buildMeItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+        return if ((!buildConfigWrapper.isJetpackApp &&
+                    jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() &&
+                    site.hasCapabilityManageOptions) ||
+            (!buildConfigWrapper.isJetpackApp &&
+                    site.isSelfHostedAdmin)
+        ) {
+            ListItem(
+                R.drawable.ic_user_primary_white_24,
+                UiStringRes(R.string.me),
+                onClick = ListItemInteraction.create(ListItemAction.ME, onClick),
+                disablePrimaryIconTint = true
             )
         } else null
     }

@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.switchMap
-import org.wordpress.android.R.array
+import org.wordpress.android.R
 import org.wordpress.android.ui.prefs.language.LocalePickerListItem.ClickAction
 import org.wordpress.android.ui.prefs.language.LocalePickerListItem.LocaleRow
 import org.wordpress.android.util.LocaleProvider
@@ -144,7 +144,7 @@ class LocalePickerViewModel @Inject constructor(
         val displayLabel = localeProvider.getAppLanguageDisplayString()
         _suggestedLocale.postValue(CurrentLocale(displayLabel, appLocale.toString()))
 
-        val availableLocales = resourceProvider.getStringArray(array.available_languages).distinct()
+        val availableLocales = resourceProvider.getStringArray(R.array.available_languages).distinct()
 
         val availableLocalesData = localeProvider.createSortedLocalizedLanguageDisplayStrings(
             availableLocales.toTypedArray(),

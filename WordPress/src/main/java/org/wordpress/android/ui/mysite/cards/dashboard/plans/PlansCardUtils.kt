@@ -14,9 +14,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.DashboardCardFreeToPaidPlansFeatureConfig
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -24,7 +22,6 @@ import javax.inject.Named
 
 class PlansCardUtils @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val plansFreeToPaidFeatureConfig: DashboardCardFreeToPaidPlansFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -39,11 +36,9 @@ class PlansCardUtils @Inject constructor(
         siteModel: SiteModel,
     ): Boolean {
         return buildConfigWrapper.isJetpackApp &&
-                plansFreeToPaidFeatureConfig.isEnabled() &&
                 !isCardHiddenByUser(siteModel.siteId) &&
                 siteModel.hasFreePlan &&
                 siteModel.isAdmin &&
-                !SiteUtils.hasMappedDomains(siteModel) &&
                 !siteModel.isWpForTeamsSite
     }
 

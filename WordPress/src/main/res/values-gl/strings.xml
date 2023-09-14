@@ -1,11 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-30 08:26:07+0000
+Translation-Revision-Date: 2023-08-13 11:56:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: gl_ES
 -->
 <resources>
+    <string name="missing_splits_dialog_button">PECHAR</string>
+    <string name="domain_transfer_card_menu_hide_this">Ocultar isto</string>
+    <string name="domain_transfer_card_title">Novas</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Contas conectadas</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Compartir en redes sociais</string>
+    <string name="prepublishing_nudges_social_action">Compartir en redes sociais</string>
+    <string name="sharing">Redes sociais</string>
+    <string name="post_settings_jetpack_social_share_message_title">Personalizar a mensaxe</string>
+    <string name="post_settings_jetpack_social_connect_not_now_button">Agora non</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_button">Contas conectadas</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Crear</string>
+    <string name="clicks_campaign_stats">Clics</string>
+    <string name="impressions_campaign_stats">Impresións</string>
+    <string name="menu_close_editor">Pechar o editor</string>
+    <string name="gutenberg_native_s_detached">%s separado</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">A edición de padróns sincronizados aínda non está incluída en %s para iOS</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">A edición de padróns sincronizados aínda non está incluída en %s para Android</string>
+    <string name="gutenberg_native_reusable">Reutilizable</string>
+    <string name="privacy_banner_error_save">Produciuse un erro ao gardar as túas opcións de privacidade.</string>
+    <string name="privacy_banner_save">Gardar</string>
+    <string name="privacy_banner_settings">Axustes</string>
+    <string name="privacy_banner_analytics_description">Permítenos optimizar o rendemento mediante a recompilación de información sobre a forma na que os usuarios interactúan coas nosas aplicacións para móbiles.</string>
+    <string name="privacy_banner_analytics">Analítica</string>
+    <string name="privacy_banner_title">Xestión da privacidade</string>
+    <string name="privacy_banner_description">A túa privacidade é extremamente importante para nós e sempre o foi. Utilizamos, almacenamos e procesamos os teus datos persoais para optimizar a nosa aplicación (e a túa experiencia) de diversas maneiras. Algúns usos dos teus datos son absolutamente necesarios para que as cousas funcionen, e outros podes personalizalos nos Axustes.</string>
+    <string name="tabbar_accessibility_label_me">Eu. Xestionar os detalles do teu perfil.</string>
+    <string name="social_item_message_title">Mensaxe</string>
+    <string name="gutenberg_native_block_ungrouped">Bloque desagrupado</string>
+    <string name="gutenberg_native_block_grouped">Bloque agrupado</string>
+    <string name="dashboard_card_plans_checkout_success_info">O dominio pode tardar ata 30 minutos en empezar a funcionar correctamente.</string>
+    <string name="dashboard_card_plans_checkout_success_subtitle">O teu novo dominio &lt;b&gt;%s&lt;/b&gt; estase configurando.</string>
+    <string name="dashboard_card_plans_checkout_success_title">Todo listo!</string>
+    <string name="dashboard_card_plans_menu_hide_this">Ocultar isto</string>
+    <string name="dashboard_card_plans_sub_title">Obtén un dominio gratuíto durante o primeiro ano, elimina os anuncios do teu sitio e aumenta o teu espazo de almacenamento.</string>
+    <string name="dashboard_card_plans_title">Consigue un dominio gratis cun plan anual</string>
+    <string name="virtual_homepage_learn_more">Aprende máis sobre os modelos</string>
+    <string name="virtual_homepage_subtitle">A túa páxina de inicio usa un modelo de tema, polo que se abrirá no editor web.</string>
+    <string name="virtual_homepage_title">Páxina de inicio</string>
+    <string name="account_closure_dialog_success_message">Pechouse a conta.</string>
+    <string name="account_closure_dialog_error_unknown">Ocorreu un erro ao pechar a conta.</string>
+    <string name="account_closure_dialog_error_active_memberships">Non é posible pechar a conta deste usuario porque ten compras activas.</string>
+    <string name="account_closure_dialog_error_active_subscriptions">Non é posible pechar a conta deste usuario porque ten subscricións activas.</string>
+    <string name="account_closure_dialog_error_chargebacked_site">Non é posible pechar a conta deste usuario se ten cargos rexeitados sen resolver.</string>
+    <string name="account_closure_dialog_error_atomic_site">Non é posible pechar a conta deste usuario de inmediato porque ten compras activas. Contacta co noso equipo de soporte para eliminar a conta definitivamente.</string>
+    <string name="account_closure_dialog_error_unauthorized">Non tes autorización para pechar a conta.</string>
+    <string name="account_closure_dialog_error_title">Non se puido pechar a conta automaticamente</string>
+    <string name="account_closure_dialog_title">Confirmar o peche da conta…</string>
+    <string name="account_closure_dialog_message">Para confirmar, volve a introducir o teu nome de usuario antes de cerrala.</string>
+    <string name="close_account">Pechar conta</string>
+    <string name="sharing_twitter_deprecation_notice_find_out_more">Saber máis</string>
+    <string name="sharing_twitter_deprecation_notice_description">O uso compartido automático de Twitter xa non está disponible debido aos cambios de Twitter nos termos e prezos.</string>
+    <string name="sharing_twitter_deprecation_notice_title">A opción de compartir automaticamente en Twitter xa non está dispoñible</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios">A edición de bloques reutilizables aínda non é compatible con %s para iOS.</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android">A edición de bloques reutilizables aínda non é compatible con %s para Android.</string>
     <string name="jp_migration_notifications_allow_title">Permitir avisos para estar ao día co teu sitio</string>
@@ -198,8 +250,8 @@ Language: gl_ES
     <string name="blogging_prompts_list_number_of_answers_zero">0 respostas</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Respondido</string>
     <string name="blogging_prompts_list_title">Peticións</string>
-    <string name="close_desc">cerrar</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativamente, podes separar e editar este bloque por separado tocando en «Converter en bloque normal».</string>
+    <string name="close_desc">pechar</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativamente, podes separar e editar este bloque por separado tocando en «Separar padrón».</string>
     <string name="dlg_confirm_delete_category">Borrar permanentemente a categoría «%s»?</string>
     <string name="deleting_cat_success">Categoría borrada correctamente</string>
     <string name="deleting_cat_failed">Borrando a categoría que fallou</string>
@@ -747,7 +799,7 @@ Language: gl_ES
     <string name="blogging_reminders_notification_title">É hora de bloguear en %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">WordPress para iOS aínda non é compatible con editar bloques reutilizables</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">WordPress para Android aínda non é compatible con editar bloques reutilizables</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativamente, podes separar e editar estes bloques por separado tocando en «Converter en bloques normais».</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativamente, podes separar e editar estes bloques por separado tocando en «Separar padróns».</string>
     <string name="blogging_reminders_done">Feito</string>
     <string name="blogging_reminders_notify_me">Avísame</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Introduce as credenciais do teu servidor&lt;/a&gt; para activar as restauracións do sitio cun clic das copias de seguridade.</string>
@@ -804,12 +856,14 @@ Language: gl_ES
     <string name="gutenberg_native_width_settings">Axustes de anchura</string>
     <string name="gutenberg_native_link_rel">«rel» da ligazón</string>
     <string name="gutenberg_native_column_settings">Axustes de columna</string>
+    <string name="gutenberg_native_no_description">Sen descrición</string>
     <string name="user_profile_untitled_site">(Sen título)</string>
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_bottom_sheet_description">Información de folla inferior do perfil de usuario</string>
     <string name="likes_list_screen_title">Lista de Gústame %s</string>
     <string name="gutenberg_native_two">Dous</string>
     <string name="gutenberg_native_three">Tres</string>
+    <string name="gutenberg_native_no_title">Sen título</string>
     <string name="gutenberg_native_s_social_icon">Icona social %s</string>
     <string name="gutenberg_native_mention">Mención</string>
     <string name="gutenberg_native_new">NOVO</string>
@@ -887,7 +941,6 @@ Language: gl_ES
     <string name="new_site_creation_search_domain_input_hint">Escribe un nome para o teu sitio</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Completáronse todas as tarefas&lt;/b&gt;&lt;br/&gt;Chegaches a máis xente. Bo traballo!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Completáronse todas as tarefas&lt;/b&gt;&lt;br/&gt;Personalizaches o teu sitio. Ben feito!</string>
-    <string name="quick_start_card_menu_hide">Ocultar por agora</string>
     <string name="magic_link_not_meaning_to_create_account">Non querías crear unha nova conta? Volve atrás e volve a introducir o teu enderezo de correo electrónico.</string>
     <string name="invite_links_disable_dialog_message">Unha vez desactivado o enlace de invitación, ninguén poderá usalo para unirse ao teu equipo. Seguro que desexas continuar?</string>
     <string name="invite_links_disable_dialog_title">Desactivar enlace de invitación</string>
@@ -910,7 +963,6 @@ Language: gl_ES
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Exploración finalizada&lt;/b&gt;&lt;br&gt;Non se encontraron ameazas potenciais</string>
     <string name="scan_fixing_threats_title_singular">Corrixindo a ameaza</string>
     <string name="disable">Desactivar</string>
-    <string name="quick_start_card_menu_unpin">Desanclar</string>
     <string name="quick_start_list_review_pages_subtitle">Revisa as túas páxinas e fai cambios, ou engade ou elimina páxinas.</string>
     <string name="quick_start_list_view_site_title">Visita o teu sitio</string>
     <string name="quick_start_list_follow_site_subtitle">Descobre e segue sitios que te inspiren.</string>
@@ -1006,8 +1058,6 @@ Language: gl_ES
     <string name="backup_download_complete_failed_title">A descarga fallou</string>
     <string name="web_preview_tablet">Tableta</string>
     <string name="web_preview_mobile">Dispositivos móbiles</string>
-    <string name="quick_start_card_menu_remove">Non amosar de novo</string>
-    <string name="quick_start_card_menu_pin">Ancorar</string>
     <string name="quick_start_dialog_review_pages_message_short">Selecciona %1$s Páxinas %2$s para ver a túa lista de páxinas.</string>
     <string name="quick_start_dialog_review_pages_message">Cambia, engade ou elimina páxinas no teu sitio.</string>
     <string name="quick_start_dialog_review_pages_title">Revisar as páxinas do sitio</string>
@@ -1335,7 +1385,7 @@ Language: gl_ES
     <string name="label_frame_image">Diapositiva</string>
     <string name="label_retry_icon">Reintentar</string>
     <string name="label_saved_icon">Gardado</string>
-    <string name="label_close_button">Cerrar</string>
+    <string name="label_close_button">Pechar</string>
     <string name="label_share_to">Compartir con</string>
     <string name="label_snackbar_share">COMPARTIR</string>
     <string name="label_snackbar_loop_frame_saved">Gardado en fotos</string>
@@ -1808,7 +1858,7 @@ Language: gl_ES
     <string name="stats_site_neutral_utc">Zona horaria do sitio (UTC)</string>
     <string name="web_preview_desktop">Escritorio</string>
     <string name="web_preview_default">Por defecto</string>
-    <string name="close_dialog_button_desc">Cerrar o diálogo</string>
+    <string name="close_dialog_button_desc">Pechar o diálogo</string>
     <string name="preview_type_desc">Seleccionar o tipo de vista previa</string>
     <string name="share_desc">Compartir</string>
     <string name="navigate_back_desc">Volver</string>
@@ -2459,7 +2509,7 @@ Language: gl_ES
     <string name="signup_updating_account">Actualizando conta…</string>
     <string name="signup_magic_link_progress">Enviando correo</string>
     <string name="signup_magic_link_error_button_positive">Reintentar</string>
-    <string name="signup_magic_link_error_button_negative">Cerrar</string>
+    <string name="signup_magic_link_error_button_negative">Pechar</string>
     <string name="signup_magic_link_error">Houbo algún problema ao enviar o correo electrónico. Podes reintentalo agora ou pechar e intentalo máis tarde.</string>
     <string name="signup_epilogue_hint_username">Nome do usuario</string>
     <string name="signup_epilogue_hint_password_detail">Sempre podes acceder cunha ligazón máxica coma a que acabas de usar, pero tamén podes configurar un contrasinal se o prefires.</string>
@@ -2588,7 +2638,7 @@ Language: gl_ES
     <string name="media_edit_file_details_card_caption">Detalles do arquivo</string>
     <string name="login_error_suffix">\nQuizais probando con outra conta?</string>
     <string name="login_error_generic">Houbo algún problema ao conectar coa conta de Google.</string>
-    <string name="login_error_button">Cerrar</string>
+    <string name="login_error_button">Pechar</string>
     <string name="enter_wpcom_password_google">Para seguir con esta conta de Google, por favor, facilita o contrasinal correspondente de WordPress.com. Só se che pedirá unha vez.</string>
     <string name="error_generic_network">Ocorreu un erro na rede. Por favor, revisa a túa conexión e inténtao de novo.</string>
     <string name="post_settings_remove_featured_image">Quitar imaxe destacada</string>
@@ -2797,11 +2847,10 @@ Language: gl_ES
     <string name="connection_service_description">Conéctate para compartir automaticamente as entradas do teu blog en %s</string>
     <string name="connected_accounts_label">Contas conectadas</string>
     <string name="connections_description">Conecta cos teus servizos de medios sociais favoritos para compartir automaticamente as novas entradas cos teus amigos.</string>
-    <string name="sharing">Compartir</string>
     <string name="tabbar_accessibility_label_notifications">Avisos. Xestiona os teus avisos.</string>
     <string name="tabbar_accessibility_label_reader">Lector. Segue contido doutros sitios.</string>
     <string name="tabbar_accessibility_label_my_site">O meu sitio. Ve o teu sitio e xestiónao, estatísticas incluídas.</string>
-    <string name="my_site_btn_sharing">Compartir</string>
+    <string name="my_site_btn_sharing">Social</string>
     <string name="button_not_now">Agora non</string>
     <string name="media_error_internal_server_error">Erro na subida. Trata de cambiar a optimización de imaxes nos axustes da túa aplicación</string>
     <string name="media_downloading">Gardando medios neste dispositivo</string>

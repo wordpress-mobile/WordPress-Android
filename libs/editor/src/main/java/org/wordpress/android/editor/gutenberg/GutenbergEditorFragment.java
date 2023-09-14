@@ -38,7 +38,6 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.EditorEditMediaListener;
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -49,8 +48,8 @@ import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.LiveTextWatcher;
 import org.wordpress.android.editor.R;
 import org.wordpress.android.editor.WPGutenbergWebViewActivity;
-import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface;
 import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogNegativeClickInterface;
+import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -194,8 +193,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return mRetainedGutenbergContainerFragment;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getGutenbergContainerFragment() == null) {
@@ -561,7 +561,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnCustomerSupportOptionsListener() {
                     @Override
                     public void onContactCustomerSupport() {
-                        mEditorFragmentListener.onContactCustomerSupport();
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                mEditorFragmentListener.onContactCustomerSupport();
+                            });
+                        }
                     }
 
                     @Override
@@ -571,6 +575,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
 
                 mEditorFragmentListener::onSendEventToHost,
+
+                mEditorFragmentListener::onToggleUndo,
+
+                mEditorFragmentListener::onToggleRedo,
 
                 GutenbergUtils.isDarkMode(getActivity()));
 
@@ -610,6 +618,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return StringUtils.getMd5Hash(gson.toJson(mediaFiles));
     }
 
+    @SuppressWarnings("unchecked")
     private void normalizeMediaFilesIds(ArrayList<Object> mediaFiles) {
         // iterate through all of mediaFiles objects    and convert ids to String
         for (Object mediaFile : mediaFiles) {
@@ -948,6 +957,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         builder.setTitle(getString(R.string.stop_upload_dialog_title));
         builder.setPositiveButton(R.string.stop_upload_dialog_button_yes,
                 new DialogInterface.OnClickListener() {
+                    @SuppressWarnings("unchecked")
                     public void onClick(DialogInterface dialog, int id) {
                         mEditorFragmentListener.onCancelUploadForMediaCollection(mediaFiles);
                         // now signal Gutenberg upload failed, and remove the mediaIds from our tracking map
@@ -1052,22 +1062,20 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_gutenberg, menu);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        if (menu != null) {
-            MenuItem debugMenuItem = menu.findItem(R.id.debugmenu);
-            debugMenuItem.setVisible(BuildConfig.DEBUG);
-        }
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        MenuItem debugMenuItem = menu.findItem(R.id.debugmenu);
+        debugMenuItem.setVisible(BuildConfig.DEBUG);
 
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.debugmenu) {
             getGutenbergContainerFragment().showDevOptionsDialog();
             return true;
@@ -1523,8 +1531,16 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         getGutenbergContainerFragment().showEditorHelp();
     }
 
+    @Override public void onUndoPressed() {
+        getGutenbergContainerFragment().onUndoPressed();
+    }
+
+    @Override public void onRedoPressed() {
+        getGutenbergContainerFragment().onRedoPressed();
+    }
+
     @Override
-    public void onGutenbergDialogPositiveClicked(@NotNull String instanceTag, int mediaId) {
+    public void onGutenbergDialogPositiveClicked(@NonNull String instanceTag, int mediaId) {
         switch (instanceTag) {
             case TAG_REPLACE_FEATURED_DIALOG:
                 setFeaturedImage(mediaId);
@@ -1533,7 +1549,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onGutenbergDialogNegativeClicked(@NotNull String instanceTag) {
+    public void onGutenbergDialogNegativeClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case TAG_REPLACE_FEATURED_DIALOG:
                 // Dismiss dialog with no action.

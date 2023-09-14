@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -204,6 +205,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
                     isShowingActionMode = false
                 }
                 setupFab(uiState.fabUiModel)
+                setupPartialAccessPrompt(uiState.isPartialMediaAccessPromptVisible)
             }
         }
     }
@@ -238,6 +240,8 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
     @Suppress("DEPRECATION")
     private fun PhotoPickerFragmentBinding.setupPhotoList(uiModel: PhotoPickerViewModel.PhotoListUiModel) {
+        actionableEmptyView.isVisible = uiModel is PhotoPickerViewModel.PhotoListUiModel.Empty
+        recycler.isVisible = uiModel is PhotoPickerViewModel.PhotoListUiModel.Data
         if (uiModel is PhotoPickerViewModel.PhotoListUiModel.Data) {
             if (recycler.adapter == null) {
                 recycler.adapter = PhotoPickerAdapter(
@@ -261,6 +265,16 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
             }
         } else {
             wpStoriesTakePicture.visibility = View.GONE
+        }
+    }
+
+    private fun PhotoPickerFragmentBinding.setupPartialAccessPrompt(isVisible: Boolean) {
+        partialMediaAccessPrompt.root.isVisible = isVisible
+        partialMediaAccessPrompt.partialAccessPromptSelectMoreButton.setOnClickListener {
+            requestMediaPermission()
+        }
+        partialMediaAccessPrompt.partialAccessPromptChangeSettingsButton.setOnClickListener {
+            WPPermissionUtils.showAppSettings(requireActivity())
         }
     }
 
@@ -422,7 +436,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
      * load the photos if we have the necessary permission, otherwise show the "soft ask" view
      * which asks the user to allow the permission
      */
-    private fun checkMediaPermission() {
+    private fun checkMediaPermission(didJustRequestPermissions: Boolean = false) {
         if (!isAdded) {
             return
         }
@@ -449,7 +463,12 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
             // For devices lower than API 33, storage permission is the equivalent of Music and Audio permission
             isStoragePermissionAlwaysDenied
         }
-        viewModel.checkMediaPermissions(isPhotosVideosPermissionAlwaysDenied, isMusicAudioPermissionAlwaysDenied)
+
+        viewModel.checkMediaPermissions(
+            isPhotosVideosPermissionAlwaysDenied,
+            isMusicAudioPermissionAlwaysDenied,
+            didJustRequestPermissions,
+        )
     }
 
     @Suppress("DEPRECATION")
@@ -459,6 +478,9 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
             if (browserType.isImagePicker || browserType.isVideoPicker) {
                 permissions.add(permission.READ_MEDIA_IMAGES)
                 permissions.add(permission.READ_MEDIA_VIDEO)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    permissions.add(permission.READ_MEDIA_VISUAL_USER_SELECTED)
+                }
             }
             if (browserType.isAudioPicker) {
                 permissions.add(permission.READ_MEDIA_AUDIO)
@@ -488,7 +510,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
             requireActivity(), requestCode, permissions, grantResults, checkForAlwaysDenied
         )
         when (requestCode) {
-            WPPermissionUtils.PHOTO_PICKER_MEDIA_PERMISSION_REQUEST_CODE -> checkMediaPermission()
+            WPPermissionUtils.PHOTO_PICKER_MEDIA_PERMISSION_REQUEST_CODE -> checkMediaPermission(true)
             WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE -> if (allGranted) {
                 viewModel.clickOnLastTappedIcon()
             }

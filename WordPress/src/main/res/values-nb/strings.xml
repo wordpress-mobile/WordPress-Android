@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-06-10 14:21:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.7
 Language: nb_NO
 -->
 <resources>
@@ -229,7 +229,6 @@ Language: nb_NO
     <string name="reader_title_interests">Følg emner</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Avvis</string>
     <string name="activity_log_backup_download_notice_download_action">Last ned</string>
-    <string name="quick_start_card_menu_hide">Skjul for nå</string>
     <string name="invite_links_expire_date">Utløper %1$s</string>
     <string name="invite_links_disable_invite_link">Slå av invitasjonslenke</string>
     <string name="invite_links_share_invite_link">Del invitasjonslenke</string>
@@ -271,8 +270,6 @@ Language: nb_NO
     <string name="backup_download_complete_failed_action_button">Utført</string>
     <string name="web_preview_tablet">Nettbrett</string>
     <string name="web_preview_mobile">Mobil</string>
-    <string name="quick_start_card_menu_remove">Ikke vis igjen</string>
-    <string name="quick_start_card_menu_pin">Fest dette</string>
     <string name="reader_menu_mark_as_unseen">Merk som usett</string>
     <string name="reader_menu_mark_as_seen">Merk som sett</string>
     <string name="threat_fix_all_warning_title">Fjern alle trusler</string>
@@ -1811,11 +1808,9 @@ Language: nb_NO
     <string name="connection_service_description">Koble til for å automatisk dele dine blogginnlegg til %s.</string>
     <string name="connected_accounts_label">Tilkoblede kontoer</string>
     <string name="connections_description">Koble til dine sosiale favorittmedietjenester for å automatisk dele nye innlegg med vennene dine.</string>
-    <string name="sharing">Deling</string>
     <string name="tabbar_accessibility_label_notifications">Notifikasjoner. Håndter dine notifikasjoner.</string>
     <string name="tabbar_accessibility_label_reader">Leseren. Følg innhold fra andre nettsteder.</string>
     <string name="tabbar_accessibility_label_my_site">Min side. Vis siden din og behandle den, inkludert statistikker.</string>
-    <string name="my_site_btn_sharing">Deling</string>
     <string name="button_not_now">Ikke nå</string>
     <string name="media_error_internal_server_error">Opplastningsfeil. Prøv å endre på «Optimaliser bilder» i appinnstillingene dine.</string>
     <string name="media_downloading">Lagrer medie på denne enheten</string>

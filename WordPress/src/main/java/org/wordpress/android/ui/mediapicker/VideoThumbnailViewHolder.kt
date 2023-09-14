@@ -6,7 +6,6 @@ import android.widget.ImageView.ScaleType.FIT_CENTER
 import android.widget.TextView
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.R
-import org.wordpress.android.R.id
 import org.wordpress.android.util.image.ImageManager
 
 /*
@@ -21,9 +20,9 @@ class VideoThumbnailViewHolder(
     parent,
     R.layout.media_picker_thumbnail_item
 ) {
-    private val imgThumbnail: ImageView = itemView.findViewById(id.image_thumbnail)
-    private val txtSelectionCount: TextView = itemView.findViewById(id.text_selection_count)
-    private val videoOverlay: ImageView = itemView.findViewById(id.image_video_overlay)
+    private val imgThumbnail: ImageView = itemView.findViewById(R.id.image_thumbnail)
+    private val txtSelectionCount: TextView = itemView.findViewById(R.id.text_selection_count)
+    private val videoOverlay: ImageView = itemView.findViewById(R.id.image_video_overlay)
 
     fun bind(item: MediaPickerUiItem.VideoItem, animateSelection: Boolean, updateCount: Boolean) {
         val isSelected = item.isSelected

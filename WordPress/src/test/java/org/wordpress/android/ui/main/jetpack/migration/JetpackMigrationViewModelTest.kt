@@ -73,6 +73,8 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(any(), any())).thenReturn("")
         whenever(localeManagerWrapper.getLanguage()).thenReturn("")
         classToTest = JetpackMigrationViewModel(
+            mainDispatcher = testDispatcher(),
+            dispatcher = dispatcher,
             siteUtilsWrapper = siteUtilsWrapper,
             gravatarUtilsWrapper = gravatarUtilsWrapper,
             contextProvider = contextProvider,
@@ -85,7 +87,6 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
             siteStore = siteStore,
             localeManagerWrapper = localeManagerWrapper,
             jetpackMigrationLanguageUtil = jetpackMigrationLanguageUtil,
-            dispatcher = dispatcher,
         )
         classToTest.refreshAppTheme.observeForever(refreshAppThemeObserver)
         classToTest.refreshAppLanguage.observeForever(refreshAppLanguageObserver)
@@ -176,6 +177,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         verifyNoInteractions(dispatcher)
     }
 
+    @Test
     fun `Should dispatch fetch account action when finish button is tapped on success screen if needed`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.account).thenReturn(mock())

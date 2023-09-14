@@ -12,6 +12,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
@@ -71,7 +72,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -193,7 +194,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
 
     private class PublicizeWebChromeClient extends WebChromeClientWithVideoPoster {
         PublicizeWebChromeClient() {
-            super(mWebView, R.drawable.media_movieclip);
+            super(mWebView, org.wordpress.android.editor.R.drawable.media_movieclip);
         }
 
         @Override

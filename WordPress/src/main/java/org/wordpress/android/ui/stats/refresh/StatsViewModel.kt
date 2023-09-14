@@ -52,7 +52,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
@@ -77,7 +76,6 @@ class StatsViewModel
     newsCardHandler: NewsCardHandler,
     private val statsModuleActivateUseCase: StatsModuleActivateUseCase,
     private val notificationsTracker: SystemNotificationsTracker,
-    private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 ) : ScopedViewModel(mainDispatcher) {
@@ -162,12 +160,7 @@ class StatsViewModel
         if (!isInitialized || restart) {
             isInitialized = true
 
-            // Added today's stats feature config to check whether that card is enabled when stats screen is accessed
-            analyticsTracker.track(
-                stat = AnalyticsTracker.Stat.STATS_ACCESSED,
-                site = statsSiteProvider.siteModel,
-                feature = todaysStatsCardFeatureConfig
-            )
+            analyticsTracker.track(stat = AnalyticsTracker.Stat.STATS_ACCESSED, site = statsSiteProvider.siteModel)
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
             trackSectionSelected(initialSection ?: StatsSection.INSIGHTS)

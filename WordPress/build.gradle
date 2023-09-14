@@ -77,6 +77,8 @@ android {
         dexInProcess = true
     }
 
+    namespace "org.wordpress.android"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     def versionProperties = loadPropertiesFromFile(file("${rootDir}/version.properties"))
@@ -103,14 +105,12 @@ android {
         buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
         buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
-        buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
         buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "true"
         buildConfigField "boolean", "QUICK_START_DYNAMIC_CARDS", "false"
         buildConfigField "boolean", "SITE_DOMAINS", "false"
         buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
         buildConfigField "boolean", "UNIFIED_COMMENTS_COMMENT_EDIT", "false"
-        buildConfigField "boolean", "MY_SITE_DASHBOARD_TODAYS_STATS_CARD", "false"
         buildConfigField "boolean", "MY_SITE_DASHBOARD_TABS", "false"
         buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
@@ -119,10 +119,6 @@ android {
         buildConfigField "boolean", "SITE_NAME", "false"
         buildConfigField "boolean", "LANDING_SCREEN_REVAMP", "true"
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
-        buildConfigField "boolean", "BLOGGING_PROMPTS", "false"
-        buildConfigField "boolean", "BLOGGING_PROMPTS_LIST", "false"
-        buildConfigField "boolean", "BLOGGING_PROMPTS_ENHANCEMENTS", "false"
-        buildConfigField "boolean", "BLOGGING_PROMPTS_SOCIAL", "false"
         buildConfigField "boolean", "QUICK_START_EXISTING_USERS_V2", "false"
         buildConfigField "boolean", "QRCODE_AUTH_FLOW", "false"
         buildConfigField "boolean", "BETA_SITE_DESIGNS", "false"
@@ -143,16 +139,12 @@ android {
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_SELF_HOSTED_USERS", "false"
         buildConfigField "boolean", "PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD", "false"
         buildConfigField "boolean", "OPEN_WEB_LINKS_WITH_JETPACK_FLOW", "false"
-        buildConfigField "boolean", "ENABLE_WORDPRESS_SUPPORT_FORUM", "false"
         buildConfigField "boolean", "JETPACK_INSTALL_FULL_PLUGIN", "false"
         buildConfigField "boolean", "ENABLE_BLAZE_FEATURE", "false"
         buildConfigField "boolean", "WP_INDIVIDUAL_PLUGIN_OVERLAY", "false"
-        buildConfigField "boolean", "DASHBOARD_CARD_PAGES", "false"
-        buildConfigField "boolean", "DASHBOARD_CARD_ACTIVITY_LOG", "false"
-        buildConfigField "boolean", "DASHBOARD_CARD_DOMAIN", "false"
-        buildConfigField "boolean", "DASHBOARD_CARD_FREE_TO_PAID_PLANS", "false"
         buildConfigField "boolean", "SITE_EDITOR_MVP", "false"
         buildConfigField "boolean", "JETPACK_SOCIAL", "false"
+        buildConfigField "boolean", "CONTACT_SUPPORT_CHATBOT", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -160,7 +152,6 @@ android {
         buildConfigField "boolean", "ENABLE_SIGNUP", "true"
         buildConfigField "boolean", "ENABLE_READER", "true"
         buildConfigField "boolean", "ENABLE_CREATE_FAB", "true"
-        buildConfigField "boolean", "ENABLE_QUICK_ACTION", "true"
         buildConfigField "boolean", "ENABLE_FOLLOWED_SITES_SETTINGS", "true"
         buildConfigField "boolean", "ENABLE_WHATS_NEW_FEATURE", "true"
         buildConfigField "boolean", "ENABLE_MY_SITE_DASHBOARD_TABS", "true"
@@ -168,6 +159,7 @@ android {
         buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
         buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
         buildConfigField "boolean", "BLAZE_MANAGE_CAMPAIGNS", "false"
+        buildConfigField "boolean", "DASHBOARD_PERSONALIZATION", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -209,7 +201,6 @@ android {
             buildConfigField "boolean", "ENABLE_SIGNUP", "true"
             buildConfigField "boolean", "ENABLE_READER", "true"
             buildConfigField "boolean", "ENABLE_CREATE_FAB", "true"
-            buildConfigField "boolean", "ENABLE_QUICK_ACTION", "true"
             buildConfigField "boolean", "ENABLE_FOLLOWED_SITES_SETTINGS", "true"
             buildConfigField "boolean", "ENABLE_WHATS_NEW_FEATURE", "true"
             buildConfigField "boolean", "ENABLE_MY_SITE_DASHBOARD_TABS", "true"
@@ -217,7 +208,7 @@ android {
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
             buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "false"
-            buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "true"
+            buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
 
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
 
@@ -283,12 +274,13 @@ android {
         }
     }
 
-    lintOptions{
+    lint {
         warningsAsErrors = true
         checkDependencies = true
         checkGeneratedSources = true
         lintConfig file("${project.rootDir}/config/lint/lint.xml")
         baseline file("${project.rootDir}/config/lint/baseline.xml")
+        enable += 'UnknownNullness'
     }
 
     packagingOptions {
@@ -316,6 +308,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig true
         viewBinding true
         compose true
 
@@ -347,8 +340,13 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
         variant.buildConfigField "String", it.key.toUpperCase(), "\"${it.value}\""
     }
 }
+kapt {
+    // Enable to infer error types in stubs (see: https://kotlinlang.org/docs/kapt.html#non-existent-type-correction)
+    correctErrorTypes true
+}
 
 dependencies {
+    implementation 'androidx.webkit:webkit:1.7.0'
     compileOnly project(path: ':libs:annotations')
     kapt project(':libs:processors')
     implementation (project(path:':libs:networking')) {
@@ -406,6 +404,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidxLifecycleVersion"
     implementation "androidx.activity:activity:$androidxActivityVersion"
     implementation "androidx.activity:activity-ktx:$androidxActivityVersion"
+    implementation "androidx.activity:activity-compose:$androidxActivityVersion"
     implementation "androidx.fragment:fragment:$androidxFragmentVersion"
     implementation "androidx.fragment:fragment-ktx:$androidxFragmentVersion"
     implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
@@ -419,6 +418,7 @@ dependencies {
     implementation "androidx.preference:preference:$androidxPreferenceVersion"
     implementation "androidx.work:work-runtime:$androidxWorkManagerVersion"
     implementation "androidx.work:work-runtime-ktx:$androidxWorkManagerVersion"
+    implementation "androidx.webkit:webkit:$androidxWebkitVersion"
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidxLifecycleVersion"
@@ -446,7 +446,7 @@ dependencies {
     }
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
-    implementation "com.github.bumptech.glide:volley-integration:$glideVolleyVersion"
+    implementation "com.github.bumptech.glide:volley-integration:$glideVersion"
     implementation "com.github.indexos.media-for-mobile:domain:$indexosMediaForMobileVersion"
     implementation "com.github.indexos.media-for-mobile:android:$indexosMediaForMobileVersion"
     implementation "com.zendesk:support:$zendeskVersion"
@@ -557,6 +557,7 @@ dependencies {
     implementation "com.airbnb.android:lottie-compose:$lottieVersion"
     // - Jetpack Compose - UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test-junit4"
+    implementation "androidx.compose.material3:material3:$androidxComposeMaterial3Version"
 }
 
 configurations.all {

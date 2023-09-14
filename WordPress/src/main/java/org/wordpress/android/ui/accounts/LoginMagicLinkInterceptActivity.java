@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -29,7 +31,7 @@ public class LoginMagicLinkInterceptActivity extends LocaleAwareActivity {
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mAction = getIntent().getAction();

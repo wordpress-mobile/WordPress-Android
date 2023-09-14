@@ -4,7 +4,6 @@ import android.os.Parcelable
 import androidx.annotation.StringRes
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 
 sealed class BlazeUiState {
     sealed class PromoteScreen : BlazeUiState() {
@@ -21,7 +20,8 @@ enum class BlazeFlowSource(val trackingName: String) {
     MENU_ITEM("menu_item"),
     POSTS_LIST("posts_list"),
     STATS_POST("stats_post"),
-    PAGES_LIST("pages_list")
+    PAGES_LIST("pages_list"),
+    CAMPAIGN_LISTING_PAGE("campaign_listing_page")
 }
 sealed interface BlazeUIModel: Parcelable {
     val title: String
@@ -68,15 +68,6 @@ sealed class BlazeWebViewHeaderUiState(
         override val headerActionEnabled: Boolean = true
     ): BlazeWebViewHeaderUiState(headerActionText, headerActionEnabled)
 }
-
-data class BlazeWebViewContentUiState(
-    val enableJavascript: Boolean = true,
-    val enableDomStorage: Boolean = true,
-    val userAgent: String = WordPress.getUserAgent(),
-    val enableChromeClient: Boolean = true,
-    val addressToLoad: String = "",
-    val url: String = ""
-)
 
 enum class BlazeFlowStep(val label: String, val trackingName: String) {
     CAMPAIGNS_LIST("campaigns_list", "campaigns_list"),

@@ -1,6 +1,0 @@
-22.5 :
-- Page d’accueil modifiable depuis la liste Pages sur les sites dont les thèmes reposent sur des blocs
-- Annuler/Rétablir le texte du lien de l’article lors de la configuration des liens à ouvrir dans un nouvel onglet
-- La fonction Appuyer pour modifier est disponible pour tous les types de blocs imbriqués
-- Fermeture des comptes possible à partir de l’écran des paramètres du compte
-- Résolution des bugs dans l’écran de l’éditeur de blocs et de l’extension

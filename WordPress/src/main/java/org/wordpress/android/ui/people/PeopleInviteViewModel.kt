@@ -5,7 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.InvitePeopleUtils
@@ -130,7 +130,7 @@ class PeopleInviteViewModel @Inject constructor(
                 SnackbarMessageHolder(
                     UiStringText(
                         contextProvider.getContext()
-                            .getString(string.invite_links_cannot_get_roles_error)
+                            .getString(R.string.invite_links_cannot_get_roles_error)
                     )
                 )
             )
@@ -156,7 +156,7 @@ class PeopleInviteViewModel @Inject constructor(
                 SnackbarMessageHolder(
                     UiStringText(
                         contextProvider.getContext()
-                            .getString(string.invite_links_cannot_get_role_data_error, roleDisplayName)
+                            .getString(R.string.invite_links_cannot_get_role_data_error, roleDisplayName)
                     )
                 )
             )
@@ -186,7 +186,7 @@ class PeopleInviteViewModel @Inject constructor(
                 SnackbarMessageHolder(
                     UiStringText(
                         contextProvider.getContext()
-                            .getString(string.invite_links_cannot_get_role_data_error, roleDisplayName)
+                            .getString(R.string.invite_links_cannot_get_role_data_error, roleDisplayName)
                     )
                 )
             )

@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
+import com.google.android.material.R as MaterialR
 
 @Composable
 fun PluginDescription(
@@ -27,7 +28,7 @@ fun PluginDescription(
         modifier = modifier,
         text = buildPluginDescriptionText(pluginNames, siteString, useConciseText),
         style = dashboardCardDetail,
-        color = colorResource(R.color.material_on_surface_emphasis_medium)
+        color = colorResource(MaterialR.color.material_on_surface_emphasis_medium)
     )
 }
 

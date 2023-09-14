@@ -19,6 +19,7 @@ import org.wordpress.android.databinding.JetpackPoweredExpandedBottomSheetBindin
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType.ME
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
@@ -27,6 +28,7 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogAction.O
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.getSerializableCompat
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 @AndroidEntryPoint
 class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
@@ -69,7 +71,7 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
         (dialog as? BottomSheetDialog)?.apply {
             setOnShowListener {
                 val bottomSheet: FrameLayout = dialog?.findViewById(
-                    com.google.android.material.R.id.design_bottom_sheet
+                    MaterialR.id.design_bottom_sheet
                 ) ?: return@setOnShowListener
                 val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
                 if (fullScreen && bottomSheet.layoutParams != null) {
@@ -105,6 +107,9 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
                     title.text = getString(R.string.wp_jetpack_powered_notifications_powered_by_jetpack)
                     caption.text = getString(R.string.wp_jetpack_powered_notifications_powered_by_jetpack_caption)
                     secondaryButton.text = getString(R.string.wp_jetpack_continue_to_notifications)
+                }
+                ME -> {
+                    // do nothing
                 }
             }
             primaryButton.setOnClickListener { viewModel.openJetpackAppDownloadLink() }
