@@ -217,4 +217,16 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
         verify(appPrefsWrapper).setShouldHideBlazeCard(site.siteId, false)
     }
+
+    @Test
+    fun `when blogging prompts card state is toggled, then pref is updated`() = test {
+        val cardType = CardType.BLOGGING_PROMPTS
+
+        viewModel.start()
+        viewModel.onCardToggled(cardType, true)
+
+        verify(bloggingRemindersStore).updateBloggingReminders(
+            userSetBloggingRemindersModel.copy(isPromptsCardEnabled = true)
+        )
+    }
 }
