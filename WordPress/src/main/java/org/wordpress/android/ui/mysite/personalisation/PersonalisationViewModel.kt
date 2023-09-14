@@ -130,8 +130,15 @@ class PersonalisationViewModel @Inject constructor(
                 CardType.NEXT_STEPS -> appPrefsWrapper.setShouldHideNextStepsDashboardCard(siteId, !enabled)
             }
             // update the ui state
-            _uiState.postValue(getCardStates(siteId))
+            updateCardState(cardType, enabled)
         }
+    }
+
+    private fun updateCardState(cardType: CardType, enabled: Boolean) {
+        val currentCards: MutableList<DashboardCardState> = _uiState.value!!.toMutableList()
+        val updated = currentCards.find { it.cardType == cardType }!!.copy(enabled = enabled)
+        currentCards[cardType.order] = updated
+        _uiState.postValue(currentCards)
     }
 
     private suspend fun updatePromptsCardEnabled(isEnabled: Boolean) {
