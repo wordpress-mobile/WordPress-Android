@@ -43,6 +43,7 @@ class PersonalisationActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
+                viewModel.start()
                 PersonalisationScreen(viewModel.uiState.observeAsState())
             }
         }

@@ -25,7 +25,7 @@ class PersonalisationViewModel @Inject constructor(
     private val _uiState = MutableLiveData<List<DashboardCardState>>()
     val uiState: LiveData<List<DashboardCardState>> = _uiState
 
-    init {
+    fun start() {
         val siteId = selectedSiteRepository.getSelectedSite()!!.siteId
         launch(bgDispatcher) { _uiState.postValue(getCardStates(siteId)) }
     }
