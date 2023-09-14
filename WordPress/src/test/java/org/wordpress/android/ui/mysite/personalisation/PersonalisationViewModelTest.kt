@@ -131,4 +131,14 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
         assertFalse(statsCardState!!.enabled)
     }
+
+    @Test
+    fun `given next steps card is not hidden, when cards are fetched, then state is checked`() {
+        whenever(appPrefsWrapper.getShouldHideNextStepsDashboardCard(123L)).thenReturn(false)
+
+        viewModel.start()
+        val statsCardState = uiStateList.last().find { it.cardType == CardType.NEXT_STEPS }
+
+        assertTrue(statsCardState!!.enabled)
+    }
 }
