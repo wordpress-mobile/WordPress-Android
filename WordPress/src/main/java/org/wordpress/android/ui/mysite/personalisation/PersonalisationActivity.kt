@@ -97,7 +97,7 @@ class PersonalisationActivity : ComponentActivity() {
 
                 item {
                     Text(
-                        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                        modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp),
                         text = stringResource(id = R.string.personalisation_screen_footer_cards),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal,
