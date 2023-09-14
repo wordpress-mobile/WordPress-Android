@@ -83,29 +83,6 @@ class PersonalisationViewModel @Inject constructor(
         )
     }
 
-    private fun isStatsCardShown(siteId: Long) = !appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(siteId)
-
-    private fun isDraftPostsCardShown(siteId: Long) =
-        !appPrefsWrapper.getShouldHidePostDashboardCard(siteId, PostCardType.DRAFT.name)
-
-    private fun isScheduledPostsCardShown(siteId: Long) =
-        !appPrefsWrapper.getShouldHidePostDashboardCard(siteId, PostCardType.SCHEDULED.name)
-
-    private fun isPagesCardShown(siteId: Long) = !appPrefsWrapper.getShouldHidePagesDashboardCard(siteId)
-
-    private fun isActivityLogCardShown(siteId: Long) = !appPrefsWrapper.getShouldHideActivityDashboardCard(siteId)
-
-    private fun isBlazeCardShown(siteId: Long) = !appPrefsWrapper.hideBlazeCard(siteId)
-
-    private fun isNextStepCardShown(siteId: Long) = !appPrefsWrapper.getShouldHideNextStepsDashboardCard(siteId)
-
-    private suspend fun isPromptsSettingEnabled(
-        siteId: Int
-    ): Boolean = bloggingRemindersStore
-        .bloggingRemindersModel(siteId)
-        .firstOrNull()
-        ?.isPromptsCardEnabled == true
-
     fun onCardToggled(cardType: CardType, enabled: Boolean) {
         val siteId = selectedSiteRepository.getSelectedSite()!!.siteId
         launch(bgDispatcher) {
@@ -140,6 +117,29 @@ class PersonalisationViewModel @Inject constructor(
         currentCards[cardType.order] = updated
         _uiState.postValue(currentCards)
     }
+
+    private fun isStatsCardShown(siteId: Long) = !appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(siteId)
+
+    private fun isDraftPostsCardShown(siteId: Long) =
+        !appPrefsWrapper.getShouldHidePostDashboardCard(siteId, PostCardType.DRAFT.name)
+
+    private fun isScheduledPostsCardShown(siteId: Long) =
+        !appPrefsWrapper.getShouldHidePostDashboardCard(siteId, PostCardType.SCHEDULED.name)
+
+    private fun isPagesCardShown(siteId: Long) = !appPrefsWrapper.getShouldHidePagesDashboardCard(siteId)
+
+    private fun isActivityLogCardShown(siteId: Long) = !appPrefsWrapper.getShouldHideActivityDashboardCard(siteId)
+
+    private fun isBlazeCardShown(siteId: Long) = !appPrefsWrapper.hideBlazeCard(siteId)
+
+    private fun isNextStepCardShown(siteId: Long) = !appPrefsWrapper.getShouldHideNextStepsDashboardCard(siteId)
+
+    private suspend fun isPromptsSettingEnabled(
+        siteId: Int
+    ): Boolean = bloggingRemindersStore
+        .bloggingRemindersModel(siteId)
+        .firstOrNull()
+        ?.isPromptsCardEnabled == true
 
     private suspend fun updatePromptsCardEnabled(isEnabled: Boolean) {
         val siteId = selectedSiteRepository.getSelectedSiteLocalId()
