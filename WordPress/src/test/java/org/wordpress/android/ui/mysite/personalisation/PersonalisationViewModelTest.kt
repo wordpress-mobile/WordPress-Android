@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.mysite.personalisation
 
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 @ExperimentalCoroutinesApi
@@ -66,6 +67,16 @@ class PersonalisationViewModelTest : BaseUnitTest() {
         viewModel.start()
         val statsCardState = uiStateList.last().find { it.cardType == CardType.STATS }
 
-        assertThat(statsCardState?.enabled).isTrue
+        assertTrue(statsCardState!!.enabled)
+    }
+
+    @Test
+    fun `given draft post card is not hidden, when cards are fetched, then state is checked`() {
+        whenever(appPrefsWrapper.getShouldHidePostDashboardCard(123L, PostCardType.DRAFT.name)).thenReturn(false)
+
+        viewModel.start()
+        val statsCardState = uiStateList.last().find { it.cardType == CardType.DRAFT_POSTS }
+
+        assertTrue(statsCardState!!.enabled)
     }
 }
