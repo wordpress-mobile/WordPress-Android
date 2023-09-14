@@ -177,4 +177,14 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
         verify(appPrefsWrapper).setShouldHidePostDashboardCard(site.siteId, PostCardType.DRAFT.name, false)
     }
+
+    @Test
+    fun `when scheduled posts card state is toggled, then pref is updated`() {
+        val cardType = CardType.SCHEDULED_POSTS
+
+        viewModel.start()
+        viewModel.onCardToggled(cardType, true)
+
+        verify(appPrefsWrapper).setShouldHidePostDashboardCard(site.siteId, PostCardType.SCHEDULED.name, false)
+    }
 }
