@@ -110,25 +110,27 @@ class PersonalisationViewModel @Inject constructor(
         val siteId = selectedSiteRepository.getSelectedSite()!!.siteId
         launch(bgDispatcher) {
             when (cardType) {
-                CardType.STATS -> appPrefsWrapper.setShouldHideTodaysStatsDashboardCard(siteId, enabled)
+                CardType.STATS -> appPrefsWrapper.setShouldHideTodaysStatsDashboardCard(siteId, !enabled)
                 CardType.DRAFT_POSTS -> appPrefsWrapper.setShouldHidePostDashboardCard(
                     siteId,
                     PostCardType.DRAFT.name,
-                    enabled
+                    !enabled
                 )
 
                 CardType.SCHEDULED_POSTS -> appPrefsWrapper.setShouldHidePostDashboardCard(
                     siteId,
                     PostCardType.SCHEDULED.name,
-                    enabled
+                    !enabled
                 )
 
-                CardType.PAGES -> appPrefsWrapper.setShouldHidePagesDashboardCard(siteId, enabled)
-                CardType.ACTIVITY_LOG -> appPrefsWrapper.setShouldHideActivityDashboardCard(siteId, enabled)
-                CardType.BLAZE -> appPrefsWrapper.setShouldHideBlazeCard(siteId, enabled)
+                CardType.PAGES -> appPrefsWrapper.setShouldHidePagesDashboardCard(siteId, !enabled)
+                CardType.ACTIVITY_LOG -> appPrefsWrapper.setShouldHideActivityDashboardCard(siteId, !enabled)
+                CardType.BLAZE -> appPrefsWrapper.setShouldHideBlazeCard(siteId, !enabled)
                 CardType.BLOGGING_PROMPTS -> updatePromptsCardEnabled(enabled)
-                CardType.NEXT_STEPS -> appPrefsWrapper.setShouldHideNextStepsDashboardCard(siteId, enabled)
+                CardType.NEXT_STEPS -> appPrefsWrapper.setShouldHideNextStepsDashboardCard(siteId, !enabled)
             }
+            // update the ui state
+            _uiState.postValue(getCardStates(siteId))
         }
     }
 

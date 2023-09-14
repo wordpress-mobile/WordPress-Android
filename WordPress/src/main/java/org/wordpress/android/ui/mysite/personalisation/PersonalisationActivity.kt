@@ -91,6 +91,7 @@ class PersonalisationActivity : ComponentActivity() {
                     val cardState = cardStateList[index]
                     DashboardCardStateRow(
                         cardState = cardState,
+                        viewModel::onCardToggled
                     )
                 }
 
@@ -111,6 +112,7 @@ class PersonalisationActivity : ComponentActivity() {
 @Composable
 fun DashboardCardStateRow(
     cardState: DashboardCardState,
+    onCardToggled: (cardType: CardType, enabled: Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -141,7 +143,9 @@ fun DashboardCardStateRow(
             Spacer(Modifier.width(8.dp))
             Switch(
                 checked = cardState.enabled,
-                onCheckedChange = {},
+                onCheckedChange = {
+                    onCardToggled(cardState.cardType, it)
+                },
                 modifier = Modifier
                     .weight(.1f)
             )
