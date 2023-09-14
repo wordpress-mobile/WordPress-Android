@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.firstOrNull
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
@@ -17,7 +19,8 @@ import javax.inject.Named
 class PersonalisationViewModel @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val selectedSiteRepository: SelectedSiteRepository
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val bloggingRemindersStore: BloggingRemindersStore
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiState = MutableLiveData<List<DashboardCardState>>()
     val uiState: LiveData<List<DashboardCardState>> = _uiState
@@ -27,7 +30,7 @@ class PersonalisationViewModel @Inject constructor(
         launch(bgDispatcher) { _uiState.postValue(getCardStates(siteId)) }
     }
 
-    private fun getCardStates(siteId: Long): List<DashboardCardState> {
+    private suspend fun getCardStates(siteId: Long): List<DashboardCardState> {
         return listOf(
             DashboardCardState(
                 title = R.string.personalisation_screen_stats_card_title,
@@ -68,7 +71,7 @@ class PersonalisationViewModel @Inject constructor(
             DashboardCardState(
                 title = R.string.personalisation_screen_blogging_prompts_card_title,
                 description = R.string.personalisation_screen_blogging_prompts_card_description,
-                enabled = true,
+                enabled = isPromptsSettingEnabled(selectedSiteRepository.getSelectedSiteLocalId()),
                 cardType = CardType.BLOGGING_PROMPTS
             ),
             DashboardCardState(
@@ -95,4 +98,11 @@ class PersonalisationViewModel @Inject constructor(
     private fun isBlazeCardShown(siteId: Long) = !appPrefsWrapper.hideBlazeCard(siteId)
 
     private fun isNextStepCardShown(siteId: Long) = !appPrefsWrapper.getShouldHideNextStepsDashboardCard(siteId)
+
+    private suspend fun isPromptsSettingEnabled(
+        siteId: Int
+    ): Boolean = bloggingRemindersStore
+        .bloggingRemindersModel(siteId)
+        .firstOrNull()
+        ?.isPromptsCardEnabled == true
 }
