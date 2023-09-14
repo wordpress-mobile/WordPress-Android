@@ -33,8 +33,6 @@ class PersonalisationViewModelTest : BaseUnitTest() {
     private val site = SiteModel().apply { siteId = 123L }
     private val localSiteId = 456
 
-    private var isStatsCardHidden = true
-
     private val uiStateList = mutableListOf<List<DashboardCardState>>()
 
     private val userSetBloggingRemindersModel =
@@ -62,7 +60,7 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when stats card is not hidden, then card state is checked`() {
-        isStatsCardHidden = false
+        val isStatsCardHidden = false
         whenever(appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(site.siteId)).thenReturn(isStatsCardHidden)
 
         viewModel.start()
