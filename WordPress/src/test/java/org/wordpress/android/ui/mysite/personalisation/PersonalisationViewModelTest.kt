@@ -99,4 +99,14 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
         assertTrue(statsCardState!!.enabled)
     }
+
+    @Test
+    fun `given activity log card is not hidden, when cards are fetched, then state is checked`() {
+        whenever(appPrefsWrapper.getShouldHideActivityDashboardCard(123L)).thenReturn(false)
+
+        viewModel.start()
+        val statsCardState = uiStateList.last().find { it.cardType == CardType.ACTIVITY_LOG }
+
+        assertTrue(statsCardState!!.enabled)
+    }
 }
