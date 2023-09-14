@@ -258,4 +258,18 @@ class PersonalisationViewModelTest : BaseUnitTest() {
             mapOf(CARD_TYPE_TRACK_PARAM to cardType.trackingName)
         )
     }
+
+    @Test
+    fun `given card enabled, when card state is toggled, then event is tracked`() {
+        val cardType = CardType.STATS
+        whenever(appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(site.siteId)).thenReturn(false)
+
+        viewModel.start()
+        viewModel.onCardToggled(cardType, false)
+
+        verify(analyticsTrackerWrapper).track(
+            AnalyticsTracker.Stat.PERSONALISATION_SCREEN_CARD_HIDE_TAPPED,
+            mapOf(CARD_TYPE_TRACK_PARAM to cardType.trackingName)
+        )
+    }
 }
