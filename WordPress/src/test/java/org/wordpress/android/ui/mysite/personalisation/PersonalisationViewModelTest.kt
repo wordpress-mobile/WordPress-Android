@@ -141,4 +141,19 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
         assertTrue(statsCardState!!.enabled)
     }
+
+    @Test
+    fun `given card is disabled, when card is toggled, then card is enabled`() {
+        val cardType = CardType.STATS
+        whenever(appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(site.siteId)).thenReturn(true)
+
+
+        viewModel.start()
+        val statsCardStateBefore = uiStateList.last().find { it.cardType == cardType }
+        viewModel.onCardToggled(cardType, true)
+        val statsCardState = uiStateList.last().find { it.cardType == cardType }
+
+        assertFalse(statsCardStateBefore!!.enabled)
+        assertTrue(statsCardState!!.enabled)
+    }
 }
