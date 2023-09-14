@@ -20,7 +20,7 @@ import javax.inject.Named
 const val CARD_TYPE_TRACK_PARAM = "type"
 
 @HiltViewModel
-class PersonalisationViewModel @Inject constructor(
+class PersonalizationViewModel @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,

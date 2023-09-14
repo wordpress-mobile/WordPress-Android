@@ -37,7 +37,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 
 @AndroidEntryPoint
 class PersonalisationActivity : ComponentActivity() {
-    private val viewModel: PersonalisationViewModel by viewModels()
+    private val viewModel: PersonalizationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -23,7 +23,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class PersonalisationViewModelTest : BaseUnitTest() {
+class PersonalizationViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
@@ -36,7 +36,7 @@ class PersonalisationViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
-    private lateinit var viewModel: PersonalisationViewModel
+    private lateinit var viewModel: PersonalizationViewModel
 
     private val site = SiteModel().apply { siteId = 123L }
     private val localSiteId = 456
@@ -54,7 +54,7 @@ class PersonalisationViewModelTest : BaseUnitTest() {
         whenever(bloggingRemindersStore.bloggingRemindersModel(localSiteId))
             .thenReturn(flowOf(userSetBloggingRemindersModel))
 
-        viewModel = PersonalisationViewModel(
+        viewModel = PersonalizationViewModel(
             bgDispatcher = testDispatcher(),
             appPrefsWrapper = appPrefsWrapper,
             selectedSiteRepository = selectedSiteRepository,
