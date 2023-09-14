@@ -109,4 +109,14 @@ class PersonalisationViewModelTest : BaseUnitTest() {
 
         assertTrue(statsCardState!!.enabled)
     }
+
+    @Test
+    fun `given blaze card is not hidden, when cards are fetched, then state is checked`() {
+        whenever(appPrefsWrapper.hideBlazeCard(123L)).thenReturn(false)
+
+        viewModel.start()
+        val statsCardState = uiStateList.last().find { it.cardType == CardType.BLAZE }
+
+        assertTrue(statsCardState!!.enabled)
+    }
 }
