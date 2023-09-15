@@ -37,12 +37,30 @@ val campaign = BlazeCampaignModel(
 
 val onCreateCampaignClick = { }
 val onCardClick = { }
+
+val onHideCardMenuItemClick = { }
+val onMoreMenuClick = { }
+val onLearnMoreItemClick = { }
+val viewAllCampaignsClick = { }
+
 private var onCampaignClick: ((campaignId: Int) -> Unit) = { }
 val campaignWithBlazeBuilderParams = CampaignWithBlazeCardBuilderParams(
     campaign = campaign,
     onCardClick = onCardClick,
     onCampaignClick = onCampaignClick,
-    onCreateCampaignClick = onCreateCampaignClick
+    onCreateCampaignClick = onCreateCampaignClick,
+    moreMenuParams = CampaignWithBlazeCardBuilderParams.MoreMenuParams(
+        viewAllCampaignsItemClick = viewAllCampaignsClick,
+        onLearnMoreClick = onLearnMoreItemClick,
+        onHideThisCardItemClick = onHideCardMenuItemClick,
+        onMoreMenuClick = onMoreMenuClick
+    )
+)
+
+val moreMenuParams = PromoteWithBlazeCardBuilderParams.MoreMenuParams(
+    onLearnMoreClick = onLearnMoreItemClick,
+    onHideThisCardItemClick = onHideCardMenuItemClick,
+    onMoreMenuClick = onMoreMenuClick
 )
 
 val campaignCardItem = BlazeCampaignsCardItem(
@@ -54,7 +72,7 @@ val campaignCardItem = BlazeCampaignsCardItem(
         impressions = UiString.UiStringText(campaign.impressions.toString()),
         clicks = UiString.UiStringText(campaign.clicks.toString())
     ),
-    onClick = onCampaignClick,
+    onClick = onCampaignClick
 )
 
 val blazeCampaignsCardModel = BlazeCampaignsCardModel(
@@ -65,6 +83,12 @@ val blazeCampaignsCardModel = BlazeCampaignsCardModel(
         onClick = ListItemInteraction.create(onCreateCampaignClick)
     ),
     onClick = ListItemInteraction.create(onCardClick),
+    moreMenuOptions = BlazeCampaignsCardModel.MoreMenuOptions(
+        viewAllCampaignsItemClick = ListItemInteraction.create(viewAllCampaignsClick),
+        learnMoreClick = ListItemInteraction.create(onLearnMoreItemClick),
+        hideThisMenuItemClick = ListItemInteraction.create(onHideCardMenuItemClick),
+        onMoreClick = ListItemInteraction.create(onMoreMenuClick)
+    )
 )
 
 
@@ -84,8 +108,7 @@ class BlazeCardBuilderTest {
         // Arrange
         val params = PromoteWithBlazeCardBuilderParams(
             onClick = { },
-            onHideMenuItemClick = { },
-            onMoreMenuClick = { }
+            moreMenuParams = moreMenuParams
         )
 
         // Act
@@ -102,8 +125,7 @@ class BlazeCardBuilderTest {
             (result.subtitle as UiString.UiStringRes).stringRes
         )
         assertNotNull(result.onClick)
-        assertNotNull(result.onHideMenuItemClick)
-        assertNotNull(result.onMoreMenuClick)
+        assertNotNull(result.moreMenuOptions)
     }
 
     @Test

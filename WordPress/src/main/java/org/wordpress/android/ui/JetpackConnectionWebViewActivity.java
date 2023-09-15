@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.WordPress;
@@ -127,7 +128,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         return true;
     }
 

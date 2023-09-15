@@ -141,7 +141,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();

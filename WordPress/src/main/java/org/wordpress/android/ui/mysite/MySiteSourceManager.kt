@@ -9,7 +9,6 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
-import org.wordpress.android.ui.mysite.cards.dashboard.domain.DashboardCardDomainSource
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import javax.inject.Inject
@@ -25,7 +24,6 @@ class MySiteSourceManager @Inject constructor(
     private val bloggingPromptCardSource: BloggingPromptCardSource,
     blazeCardSource: BlazeCardSource,
     private val selectedSiteRepository: SelectedSiteRepository,
-    dashboardCardDomainSource: DashboardCardDomainSource,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
@@ -38,7 +36,6 @@ class MySiteSourceManager @Inject constructor(
         cardsSource,
         bloggingPromptCardSource,
         blazeCardSource,
-        dashboardCardDomainSource,
     )
 
     private val showDashboardCards: Boolean

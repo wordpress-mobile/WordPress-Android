@@ -368,7 +368,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     }
 
     void reload() {
-        getAdapter().reload();
+        getAdapter().refresh();
     }
 
     @Override public void onStart() {

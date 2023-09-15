@@ -43,9 +43,24 @@ a.floating-button {
 .docsbot-chat-input {
     height: 48px !important;
     font-size: 16px !important;
+    padding-top: 16px;
+    padding-bottom: 16px;
 }
 
 .docsbot-chat-bot-message-support a {
     height: 48px;
     font-size: 16px;
+}
+
+.docsbot-chat-btn-send-icon {
+    fill: rgb(0, 135, 16);
+}
+
+.docsbot-chat-btn-send-icon {
+    transform: rotate(45deg);
+    width: 26px;
+}
+
+.docsbot-chat-btn-send:disabled {
+    opacity: 0.3;
 }

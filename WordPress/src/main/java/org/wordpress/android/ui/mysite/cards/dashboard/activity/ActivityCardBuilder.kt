@@ -30,10 +30,9 @@ class ActivityCardBuilder @Inject constructor(
         return ActivityCardWithItems(
             title = UiStringRes(R.string.dashboard_activity_card_title),
             activityItems = content,
-            footerLink = ActivityCard.FooterLink(
-                label = UiStringRes(R.string.dashboard_activity_card_footer_link),
-                onClick = params.onFooterLinkClick
-            )
+            onHideMenuItemClick = ListItemInteraction.create(params.onHideMenuItemClick),
+            onAllActivityMenuItemClick = ListItemInteraction.create(params.onAllActivityMenuItemClick),
+            onMoreMenuClick = ListItemInteraction.create(params.onMoreMenuClick)
         )
     }
 

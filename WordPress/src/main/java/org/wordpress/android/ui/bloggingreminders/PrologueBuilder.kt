@@ -7,13 +7,13 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.UiState.PrimaryButton
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsFeature
 import javax.inject.Inject
 
 class PrologueBuilder
-@Inject constructor(private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig) {
+@Inject constructor(private val bloggingPromptsFeature: BloggingPromptsFeature) {
     fun buildUiItems(): List<BloggingRemindersItem> {
-        return if (bloggingPromptsFeatureConfig.isEnabled()) {
+        return if (bloggingPromptsFeature.isEnabled()) {
             listOf(
                 Illustration(R.drawable.img_illustration_celebration_150dp),
                 Title(UiStringRes(R.string.set_your_blogging_prompts_title)),
@@ -29,7 +29,7 @@ class PrologueBuilder
     }
 
     fun buildUiItemsForSettings(): List<BloggingRemindersItem> {
-        return if (bloggingPromptsFeatureConfig.isEnabled()) {
+        return if (bloggingPromptsFeature.isEnabled()) {
             listOf(
                 Illustration(R.drawable.img_illustration_celebration_150dp),
                 Title(UiStringRes(R.string.set_your_blogging_prompts_title)),

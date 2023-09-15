@@ -82,7 +82,7 @@ class CommentListActionModeCallback(
         }
     }
 
-    override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         return false
     }
 

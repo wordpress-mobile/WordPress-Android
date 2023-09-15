@@ -337,17 +337,11 @@ class AppPrefsWrapper @Inject constructor() {
     fun setShouldHideDashboardDomainTransferCard(siteId: Long, isHidden: Boolean) =
         AppPrefs.setShouldHideDashboardDomainTransferCard(siteId, isHidden)
 
-    fun getShouldHidePromoteWithBlazeCard(siteId: Long): Boolean =
+    fun hideBlazeCard(siteId: Long): Boolean =
         AppPrefs.getShouldHidePromoteWithBlazeCard(siteId)
 
-    fun setShouldHidePromoteWithBlazeCard(siteId: Long, isHidden: Boolean) =
+    fun setShouldHideBlazeCard(siteId: Long, isHidden: Boolean) =
         AppPrefs.setShouldHidePromoteWithBlazeCard(siteId, isHidden)
-
-    fun getShouldHideDashboardDomainCard(siteId: Long): Boolean =
-        AppPrefs.getShouldHideDashboardDomainCard(siteId)
-
-    fun setShouldHideDashboardDomainCard(siteId: Long, isHidden: Boolean) =
-        AppPrefs.setShouldHideDashboardDomainCard(siteId, isHidden)
 
     fun getShouldHideDashboardPlansCard(siteId: Long): Boolean =
         AppPrefs.getShouldHideDashboardPlansCard(siteId)
@@ -369,6 +363,51 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setShouldShowJetpackSocialNoConnections(show: Boolean, remoteSiteId: Long, flow: JetpackSocialFlow) =
         AppPrefs.setShouldShowJetpackSocialNoConnections(show, remoteSiteId, flow)
+
+    fun setShouldHideActivityDashboardCard(
+        siteId: Long,
+        isHidden: Boolean
+    ) = AppPrefs.setShouldHideActivityDashboardCard(siteId, isHidden)
+
+    fun getShouldHideActivityDashboardCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideActivityDashboardCard(siteId)
+
+    fun setShouldHidePagesDashboardCard(
+        siteId: Long,
+        isHidden: Boolean
+    ) = AppPrefs.setShouldHidePagesDashboardCard(siteId, isHidden)
+
+    fun getShouldHidePagesDashboardCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHidePagesDashboardCard(siteId)
+
+    fun setShouldHideTodaysStatsDashboardCard(
+        siteId: Long,
+        isHidden: Boolean
+    ) = AppPrefs.setShouldHideTodaysStatsDashboardCard(siteId, isHidden)
+
+    fun getShouldHideTodaysStatsDashboardCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideTodaysStatsDashboardCard(siteId)
+
+    fun setShouldHidePostDashboardCard(
+        siteId: Long,
+        postCardType: String,
+        isHidden: Boolean
+    ) = AppPrefs.setShouldHidePostDashboardCard(siteId, postCardType, isHidden)
+
+    fun getShouldHidePostDashboardCard(siteId: Long, postCardType: String,): Boolean =
+        AppPrefs.getShouldHidePostDashboardCard(siteId, postCardType)
+
+    fun setShouldHideNextStepsDashboardCard(siteId: Long, isHidden: Boolean) =
+        AppPrefs.setShouldHideNextStepsDashboardCard(siteId, isHidden)
+
+    fun getShouldHideNextStepsDashboardCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideNextStepsDashboardCard(siteId)
+
+    fun setShouldHideGetToKnowTheAppDashboardCard(siteId: Long, isHidden: Boolean) =
+        AppPrefs.setShouldHideGetToKnowTheAppDashboardCard(siteId, isHidden)
+
+    fun getShouldHideGetToKnowTheAppDashboardCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideGetToKnowTheAppDashboardCard(siteId)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 

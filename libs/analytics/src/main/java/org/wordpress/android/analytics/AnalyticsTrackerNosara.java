@@ -419,18 +419,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST:
                 predefinedEventProperties.put("source", "opening_reader_post");
                 break;
-            case QUICK_ACTION_STATS_TAPPED:
-                predefinedEventProperties.put("button", "stats");
-                break;
-            case QUICK_ACTION_PAGES_TAPPED:
-                predefinedEventProperties.put("button", "pages");
-                break;
-            case QUICK_ACTION_POSTS_TAPPED:
-                predefinedEventProperties.put("button", "posts");
-                break;
-            case QUICK_ACTION_MEDIA_TAPPED:
-                predefinedEventProperties.put("button", "media");
-                break;
             case QUICK_LINK_RIBBON_PAGES_TAPPED:
                 predefinedEventProperties.put("button", "pages");
                 break;
@@ -1953,11 +1941,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domains_purchase_webview_viewed";
             case DOMAINS_PURCHASE_DOMAIN_SUCCESS:
                 return "domains_purchase_domain_success";
-            case QUICK_ACTION_STATS_TAPPED:
-            case QUICK_ACTION_PAGES_TAPPED:
-            case QUICK_ACTION_POSTS_TAPPED:
-            case QUICK_ACTION_MEDIA_TAPPED:
-                return "quick_action_tapped";
             case QUICK_LINK_RIBBON_PAGES_TAPPED:
             case QUICK_LINK_RIBBON_POSTS_TAPPED:
             case QUICK_LINK_RIBBON_MEDIA_TAPPED:
@@ -2567,6 +2550,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blaze_entry_point_tapped";
             case BLAZE_ENTRY_POINT_MENU_ACCESSED:
                 return "blaze_entry_point_menu_accessed";
+            case BLAZE_ENTRY_POINT_LEARN_MORE_TAPPED:
+                return "blaze_entry_point_learn_more_tapped";
             case BLAZE_ENTRY_POINT_HIDE_TAPPED:
                 return "blaze_entry_point_hide_tapped";
             case BLAZE_FEATURE_OVERLAY_DISPLAYED:
@@ -2593,14 +2578,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "wp_individual_site_overlay_dismissed";
             case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_PRIMARY_TAPPED:
                 return "wp_individual_site_overlay_primary_tapped";
-            case DASHBOARD_CARD_DOMAIN_SHOWN:
-                return "direct_domains_purchase_dashboard_card_shown";
-            case DASHBOARD_CARD_DOMAIN_TAPPED:
-                return "direct_domains_purchase_dashboard_card_tapped";
-            case DASHBOARD_CARD_DOMAIN_MORE_MENU_TAPPED:
-                return "direct_domains_purchase_dashboard_card_menu_tapped";
-            case DASHBOARD_CARD_DOMAIN_HIDDEN:
-                return "direct_domains_purchase_dashboard_card_hidden";
             case DASHBOARD_CARD_PLANS_SHOWN:
                 return "free_to_paid_plan_dashboard_card_shown";
             case DASHBOARD_CARD_PLANS_TAPPED:
@@ -2631,6 +2608,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_social_add_connection_tapped";
             case JETPACK_SOCIAL_ADD_CONNECTION_DISMISSED:
                 return "jetpack_social_add_connection_dismissed";
+            case MY_SITE_DASHBOARD_CARD_MENU_ITEM_TAPPED:
+                return "my_site_dashboard_card_menu_item_tapped";
+            case MY_SITE_DASHBOARD_CONTEXTUAL_MENU_ACCESSED:
+                return "my_site_dashboard_contextual_menu_accessed";
         }
         return null;
     }
