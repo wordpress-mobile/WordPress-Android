@@ -491,14 +491,7 @@ class MySiteViewModel @Inject constructor(
         )
         val jetpackFeatureCard = getJetpackFeatureCard()
 
-        val jetpackSwitchMenu = MySiteCardAndItem.Card.JetpackSwitchMenu(
-            onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
-            onRemindMeLaterItemClick = ListItemInteraction.create(this::onSwitchToJetpackMenuCardRemindMeLaterClick),
-            onHideMenuItemClick = ListItemInteraction.create(this::onSwitchToJetpackMenuCardHideMenuItemClick),
-            onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick)
-        ).takeIf {
-            jetpackFeatureCardHelper.shouldShowSwitchToJetpackMenuCard()
-        }
+        val jetpackSwitchMenu = getJetpackSwitchMenu()
 
         val migrationSuccessCard = SingleActionCard(
             textResource = R.string.jp_migration_success_card_message,
@@ -624,8 +617,18 @@ class MySiteViewModel @Inject constructor(
         )
     }
 
+    private fun getJetpackSwitchMenu(): MySiteCardAndItem.Card.JetpackSwitchMenu? {
+        if (!jetpackFeatureCardHelper.shouldShowSwitchToJetpackMenuCard()) return null
+        return MySiteCardAndItem.Card.JetpackSwitchMenu(
+            onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
+            onRemindMeLaterItemClick = ListItemInteraction.create(this::onSwitchToJetpackMenuCardRemindMeLaterClick),
+            onHideMenuItemClick = ListItemInteraction.create(this::onSwitchToJetpackMenuCardHideMenuItemClick),
+            onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick)
+        )
+    }
+
     private fun getJetpackFeatureCard(): JetpackFeatureCard? {
-        if(!jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()) return null
+        if (!jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()) return null
         return JetpackFeatureCard(
             content = jetpackFeatureCardHelper.getCardContent(),
             onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
