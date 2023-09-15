@@ -1,4 +1,0 @@
-23.1:
-- El bloque de enlace social ahora incluye un contorno para que puedas verlo cuando esté seleccionado.
-- Los botones de deshacer y rehacer ya no están visibles en el editor HTML.
-- Ahora verás códigos hexadecimales del color seleccionado cuando estés usando el selector de color del bloque de fondo.

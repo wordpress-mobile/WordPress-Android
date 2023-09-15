@@ -1,0 +1,4 @@
+23.2:
+- Il blocco Link social include uno schema che ti permette di vedere quando è selezionato.
+- Nell'editor a blocchi, l'app non dovrebbe più arrestarsi quando trasformi un blocco Colonne nidificato in un blocco Gruppo.
+- Nell'inseritore di blocchi, ora puoi cercare una tipologia di blocco senza provocare l'arresto dell'app.
