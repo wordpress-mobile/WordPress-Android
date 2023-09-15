@@ -45,7 +45,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFullPluginInstallOnboardingUseCase
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
@@ -342,7 +341,7 @@ class MySiteViewModel @Inject constructor(
 
                 bloggingPromptCardViewModelSlice.onDashboardCardsUpdated(
                     viewModelScope,
-                    state.dashboardCardsAndItems.filterIsInstance<DashboardCards>().firstOrNull()
+                    state.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card.BloggingPromptCard>()
                 )
 
                 state
@@ -612,7 +611,7 @@ class MySiteViewModel @Inject constructor(
         val isJetpackApp = buildConfigWrapper.isJetpackApp
         val isMigrationCompleted = appPrefsWrapper.isJetpackMigrationCompleted()
         val isWordPressInstalled = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
-        if (!isJetpackApp && !isMigrationCompleted && !isWordPressInstalled)  return null
+        if (!isJetpackApp && !isMigrationCompleted && !isWordPressInstalled) return null
         return SingleActionCard(
             textResource = R.string.jp_migration_success_card_message,
             imageResource = R.drawable.ic_wordpress_jetpack_appicon,
@@ -671,7 +670,19 @@ class MySiteViewModel @Inject constructor(
 
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
-            add(Type.DASHBOARD_CARDS)
+            add(Type.ERROR_CARD)
+            add(Type.TODAYS_STATS_CARD_ERROR)
+            add(Type.TODAYS_STATS_CARD)
+            add(Type.POST_CARD_ERROR)
+            add(Type.POST_CARD_WITH_POST_ITEMS)
+            add(Type.BLOGGING_PROMPT_CARD)
+            add(Type.PROMOTE_WITH_BLAZE_CARD)
+            add(Type.DASHBOARD_DOMAIN_TRANSFER_CARD)
+            add(Type.BLAZE_CAMPAIGNS_CARD)
+            add(Type.DASHBOARD_PLANS_CARD)
+            add(Type.PAGES_CARD_ERROR)
+            add(Type.PAGES_CARD)
+            add(Type.ACTIVITY_CARD)
             if (defaultTab == MySiteTabType.DASHBOARD) {
                 add(Type.QUICK_START_CARD)
             }
@@ -1364,7 +1375,8 @@ class MySiteViewModel @Inject constructor(
     private fun trackCardsAndItemsShownIfNeeded(siteSelected: SiteSelected) {
         siteSelected.cardAndItems.filterIsInstance<DomainRegistrationCard>()
             .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
-        siteSelected.cardAndItems.filterIsInstance<DashboardCards>().forEach { cardsTracker.trackShown(it) }
+        siteSelected.cardAndItems.filterIsInstance<MySiteCardAndItem.Card>()
+            .let { cardsTracker.trackShown(it) }
         siteSelected.cardAndItems.filterIsInstance<QuickStartCard>()
             .firstOrNull()?.let { quickStartTracker.trackShown(it.type, defaultTab) }
         siteSelected.dashboardCardsAndItems.filterIsInstance<QuickStartCard>()
