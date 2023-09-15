@@ -257,6 +257,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
+        setTitle("");
     }
 
     /*
