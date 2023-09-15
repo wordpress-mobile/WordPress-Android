@@ -15,7 +15,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_tag"
-            style="@style/ReaderTextView.Site.Header.NewTitle"
+            style="@style/ReaderTextView.Tag.Header.NewTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/follow_container"
