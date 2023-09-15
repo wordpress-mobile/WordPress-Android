@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
@@ -70,8 +71,8 @@ public class EditCommentActivity extends LocaleAwareActivity {
     @Inject SiteStore mSiteStore;
 
     @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.comment_edit_activity);
@@ -98,8 +99,8 @@ public class EditCommentActivity extends LocaleAwareActivity {
 
         loadComment(getIntent());
 
-        if (icicle != null) {
-            if (icicle.getBoolean(ARG_CANCEL_EDITING_COMMENT_DIALOG_VISIBLE, false)) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getBoolean(ARG_CANCEL_EDITING_COMMENT_DIALOG_VISIBLE, false)) {
                 cancelEditCommentConfirmation();
             }
         }
@@ -198,7 +199,7 @@ public class EditCommentActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_comment, menu);
@@ -206,7 +207,7 @@ public class EditCommentActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -66,7 +68,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.reader_activity_post_list);
@@ -194,7 +196,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
             getMenuInflater().inflate(R.menu.share, menu);
         }
@@ -203,14 +205,15 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == android.R.id.home) {
-            getOnBackPressedDispatcher().onBackPressed();
-            return true;
-        } else if (itemId == R.id.menu_share) {
-            shareSite();
-            return true;
+    @SuppressLint("NonConstantResourceId")
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getOnBackPressedDispatcher().onBackPressed();
+                return true;
+            case R.id.menu_share:
+                shareSite();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

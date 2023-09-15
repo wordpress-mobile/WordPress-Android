@@ -941,7 +941,6 @@ Language: gl_ES
     <string name="new_site_creation_search_domain_input_hint">Escribe un nome para o teu sitio</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Completáronse todas as tarefas&lt;/b&gt;&lt;br/&gt;Chegaches a máis xente. Bo traballo!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Completáronse todas as tarefas&lt;/b&gt;&lt;br/&gt;Personalizaches o teu sitio. Ben feito!</string>
-    <string name="quick_start_card_menu_hide">Ocultar por agora</string>
     <string name="magic_link_not_meaning_to_create_account">Non querías crear unha nova conta? Volve atrás e volve a introducir o teu enderezo de correo electrónico.</string>
     <string name="invite_links_disable_dialog_message">Unha vez desactivado o enlace de invitación, ninguén poderá usalo para unirse ao teu equipo. Seguro que desexas continuar?</string>
     <string name="invite_links_disable_dialog_title">Desactivar enlace de invitación</string>
@@ -964,7 +963,6 @@ Language: gl_ES
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Exploración finalizada&lt;/b&gt;&lt;br&gt;Non se encontraron ameazas potenciais</string>
     <string name="scan_fixing_threats_title_singular">Corrixindo a ameaza</string>
     <string name="disable">Desactivar</string>
-    <string name="quick_start_card_menu_unpin">Desanclar</string>
     <string name="quick_start_list_review_pages_subtitle">Revisa as túas páxinas e fai cambios, ou engade ou elimina páxinas.</string>
     <string name="quick_start_list_view_site_title">Visita o teu sitio</string>
     <string name="quick_start_list_follow_site_subtitle">Descobre e segue sitios que te inspiren.</string>
@@ -1060,8 +1058,6 @@ Language: gl_ES
     <string name="backup_download_complete_failed_title">A descarga fallou</string>
     <string name="web_preview_tablet">Tableta</string>
     <string name="web_preview_mobile">Dispositivos móbiles</string>
-    <string name="quick_start_card_menu_remove">Non amosar de novo</string>
-    <string name="quick_start_card_menu_pin">Ancorar</string>
     <string name="quick_start_dialog_review_pages_message_short">Selecciona %1$s Páxinas %2$s para ver a túa lista de páxinas.</string>
     <string name="quick_start_dialog_review_pages_message">Cambia, engade ou elimina páxinas no teu sitio.</string>
     <string name="quick_start_dialog_review_pages_title">Revisar as páxinas do sitio</string>

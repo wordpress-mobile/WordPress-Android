@@ -613,7 +613,6 @@ Language: es_VE
     <string name="new_site_creation_search_domain_input_hint">Teclea un nombre para tu sitio</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Se han completado todas las tareas&lt;/b&gt;&lt;br/&gt;Has llegado a más gente. ¡Buen trabajo!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Se han completado todas las tareas&lt;/b&gt;&lt;br/&gt;Has personalizado tu sitio. ¡Bien hecho!</string>
-    <string name="quick_start_card_menu_hide">Ocultar por ahora</string>
     <string name="magic_link_not_meaning_to_create_account">¿No querías crear una nueva cuenta? Vuelve atrás y vuelve a introducir tu dirección de correo electrónico.</string>
     <string name="invite_links_disable_dialog_message">Una vez desactivado el enlace de invitación, nadie podrá usarlo para unirse a tu equipo. ¿Seguro que deseas continuar?</string>
     <string name="invite_links_disable_dialog_title">Desactivar enlace de invitación</string>
@@ -636,7 +635,6 @@ Language: es_VE
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Exploración finalizada&lt;/b&gt;&lt;br&gt;No se han encontrado amenazas potenciales</string>
     <string name="scan_fixing_threats_title_singular">Corrigiendo la amenaza</string>
     <string name="disable">Desactivar</string>
-    <string name="quick_start_card_menu_unpin">Desanclar</string>
     <string name="quick_start_list_review_pages_subtitle">Revisa tus páginas y haz cambios, o añade o elimina páginas.</string>
     <string name="quick_start_list_view_site_title">Ve tu sitio</string>
     <string name="quick_start_list_follow_site_subtitle">Descubre y sigue sitios que te inspiren.</string>
@@ -732,8 +730,6 @@ Language: es_VE
     <string name="backup_download_complete_failed_title">La descarga ha fallado</string>
     <string name="web_preview_tablet">Tableta</string>
     <string name="web_preview_mobile">Dispositivos móviles</string>
-    <string name="quick_start_card_menu_remove">No mostrar de nuevo</string>
-    <string name="quick_start_card_menu_pin">Anclar</string>
     <string name="quick_start_dialog_review_pages_message_short">Selecciona %1$s Páginas %2$s para ver tu lista de páginas.</string>
     <string name="quick_start_dialog_review_pages_message">Cambia, añade o elimina páginas en tu sitio.</string>
     <string name="quick_start_dialog_review_pages_title">Revisar las páginas del sitio</string>

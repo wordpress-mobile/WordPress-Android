@@ -1,5 +1,0 @@
-23.0:
-- Rimosso il gap visivo che appare tra i blocchi galleria selezionati e la barra degli strumenti.
-- Nascosto il pulsante della didascalia della galleria sui dispositivi mobili.
-- Impostato che il blocco galleria corretto rimanga selezionato durante l'aggiunta di contenuti multimediali.
-- Risolto un bug di installazione dei plugin che causava il blocco dell'app

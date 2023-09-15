@@ -3,9 +3,12 @@
 package org.wordpress.android
 
 import android.annotation.SuppressLint
+import android.app.AppOpsManager
 import android.app.Application
+import android.app.AsyncNotedAppOp
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.SyncNotedAppOp
 import android.content.ComponentCallbacks2
 import android.content.Context
 import android.content.Intent
@@ -24,6 +27,7 @@ import android.util.AndroidRuntimeException
 import android.util.Log
 import android.webkit.WebSettings
 import android.webkit.WebView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -267,6 +271,29 @@ class AppInitializer @Inject constructor(
         }
     }
 
+    /**
+     * Data access auditing
+     * @link https://developer.android.com/guide/topics/data/audit-access
+     */
+    @RequiresApi(VERSION_CODES.R)
+    val appOpsCallback = object : AppOpsManager.OnOpNotedCallback() {
+        private fun logPrivateDataAccess(opCode: String, trace: String) {
+            AppLog.i(T.MAIN, "Private data accessed. Operation: $opCode\nStack Trace:\n$trace")
+        }
+
+        override fun onNoted(syncNotedAppOp: SyncNotedAppOp) {
+            logPrivateDataAccess(syncNotedAppOp.op, Throwable("Stack Trace: ").stackTrace.toString())
+        }
+
+        override fun onSelfNoted(syncNotedAppOp: SyncNotedAppOp) {
+            logPrivateDataAccess(syncNotedAppOp.op, Throwable("Stack Trace: ").stackTrace.toString())
+        }
+
+        override fun onAsyncNoted(asyncNotedAppOp: AsyncNotedAppOp) {
+            logPrivateDataAccess(asyncNotedAppOp.op, asyncNotedAppOp.message)
+        }
+    }
+
     init {
         context = application
         startDate = SystemClock.elapsedRealtime()
@@ -370,7 +397,17 @@ class AppInitializer @Inject constructor(
 
         debugCookieManager.sync()
 
+        if (!initialized && BuildConfig.DEBUG && Build.VERSION.SDK_INT >= VERSION_CODES.R) {
+            initAppOpsManager()
+        }
+
         initialized = true
+    }
+
+    @RequiresApi(VERSION_CODES.R)
+    private fun initAppOpsManager() {
+        val appOpsManager = context?.getSystemService(AppOpsManager::class.java) as AppOpsManager
+        appOpsManager.setOnOpNotedCallback(context?.mainExecutor, appOpsCallback)
     }
 
     private fun initWorkManager() {

@@ -14,12 +14,12 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.UiState.PrimaryButton
 import org.wordpress.android.ui.utils.ListItemInteraction.Companion
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsFeature
 
 @RunWith(MockitoJUnitRunner::class)
 class PrologueBuilderTest {
     @Mock
-    lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    lateinit var bloggingPromptsFeature: BloggingPromptsFeature
     private lateinit var prologueBuilder: PrologueBuilder
     private var confirmed = false
 
@@ -29,8 +29,8 @@ class PrologueBuilderTest {
 
     @Before
     fun setUp() {
-        prologueBuilder = PrologueBuilder(bloggingPromptsFeatureConfig)
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
+        prologueBuilder = PrologueBuilder(bloggingPromptsFeature)
+        whenever(bloggingPromptsFeature.isEnabled()).thenReturn(false)
         confirmed = false
     }
 
@@ -50,7 +50,7 @@ class PrologueBuilderTest {
 
     @Test
     fun `builds correct UI model when prompts feature is on`() {
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
 
         val uiModel = prologueBuilder.buildUiItems()
 
@@ -59,7 +59,7 @@ class PrologueBuilderTest {
 
     @Test
     fun `builds correct UI model for settings when prompts feature is on`() {
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
 
         val uiModel = prologueBuilder.buildUiItemsForSettings()
 

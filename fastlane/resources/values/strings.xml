@@ -2281,7 +2281,7 @@
     <string name="support_ticket_subject">WordPress for Android Support</string>
 
     <string name="contact_support_input_placeholder">Send a message…</string>
-    <string name="contact_support_first_message">What can we help you with?</string>
+    <string name="contact_support_first_message">What can I help you with?</string>
     <string name="contact_support_get_support">Contact support</string>
     <string name="contact_support_suggestions">Not sure what to ask?</string>
     <string name="contact_support_question_one">What is my site address?</string>
@@ -2796,7 +2796,7 @@
     <string name="close_account">Close Account</string>
     <string name="account_closure_dialog_message">To confirm, please re-enter your username before closing.</string>
     <string name="account_closure_dialog_title">Confirm Close Account…</string>
-    <string name="account_closure_dialog_error_title">Couldn\'t close account automatically"</string>
+    <string name="account_closure_dialog_error_title">Couldn\'t close account automatically!</string>
     <string name="account_closure_dialog_error_unauthorized">You\'re not authorized to close the account.</string>
     <string name="account_closure_dialog_error_atomic_site">This user account cannot be closed immediately because it has active purchases. Please contact our support team to finish deleting the account.</string>
     <string name="account_closure_dialog_error_chargebacked_site">This user account cannot be closed if there are unresolved chargebacks.</string>
@@ -4690,4 +4690,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="missing_splits_dialog_title">Installation failed</string>
     <string name="missing_splits_dialog_message">The app WordPress is missing required components and must be reinstalled from the Google Play Store.</string>
     <string name="missing_splits_dialog_button">CLOSE</string>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Access this Paywall block on your web browser for advanced settings.</string>
 </resources>

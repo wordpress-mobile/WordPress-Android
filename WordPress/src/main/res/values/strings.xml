@@ -157,7 +157,6 @@
     <string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site</string>
     <string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your app\'s settings</string>
     <string name="media_error_timeout">Server took too long to respond</string>
-    <string name="share_media_permission_required">Permissions required in order to share images or videos</string>
     <string name="media_fetching">Fetching media…</string>
     <string name="media_upload_error">Media upload error occurred</string>
     <string name="media_generic_error">Media error occurred</string>
@@ -2283,7 +2282,9 @@
     <string name="support_ticket_subject">WordPress for Android Support</string>
 
     <string name="contact_support_input_placeholder">Send a message…</string>
-    <string name="contact_support_first_message">What can we help you with?</string>
+    <string name="contact_support_first_message_hi">Hi there, I\'m the Jetpack AI Assistant.</string>
+    <string name="contact_support_first_message">What can I help you with?</string>
+    <string name="contact_support_first_message_hint">If I can\'t answer your question, I\'ll help you open a support ticket with our team!</string>
     <string name="contact_support_get_support">Contact support</string>
     <string name="contact_support_suggestions">Not sure what to ask?</string>
     <string name="contact_support_question_one">What is my site address?</string>
@@ -2310,7 +2311,6 @@
     <string name="my_site_header_look_and_feel">Look and Feel</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="my_site_header_publish">Publish</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack Settings</string>
     <string name="my_site_btn_site_pages">Pages</string>
     <string name="my_site_btn_blog_posts">Posts</string>
     <string name="my_site_btn_sharing">Social</string>
@@ -2347,9 +2347,11 @@
     <string name="my_site_bottom_sheet_add_story">Story post</string>
     <string name="my_site_quick_actions_title">Quick Links</string>
 
-    <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
+    <string name="jetpack_feature_card_more_menu_item_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
 
     <!-- My Site - Dashboard -->
+    <string name="my_site_dashboard_card_more_menu_hide_card">Hide this</string>
+
     <string name="my_site_dashboard_tab_title">Home</string>
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="my_site_all_tab_title">All</string>
@@ -2362,8 +2364,8 @@
     <string name="my_site_todays_stat_card_views" translatable="false">@string/stats_views</string>
     <string name="my_site_todays_stat_card_visitors" translatable="false">@string/stats_visitors</string>
     <string name="my_site_todays_stats_get_more_views_message">Interested in building your audience? Check out our &lt;a href="%1$s"&gt;top tips&lt;/a&gt;.</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Go to stats</string>
-
+    <string name="my_site_todays_stats_card_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
+    <string name="my_site_todays_stats_menu_view_stats">View stats</string>
 
     <!-- My Site - Post Card -->
     <string name="my_site_post_card_draft_title">Work on a draft post</string>
@@ -2374,8 +2376,9 @@
     <string name="my_site_create_next_post_title">Create your next post</string>
     <string name="my_site_create_next_post_excerpt">Posting regularly helps build your audience!</string>
     <string name="my_site_post_card_link_create_post">Create a post</string>
-    <string name="my_site_post_card_link_go_to_drafts">Go to drafts</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Go to scheduled posts</string>
+    <string name="my_site_post_card_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
+    <string name="my_site_post_card_menu_view_all_drafts">View all drafts</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">View all scheduled posts</string>
 
     <!-- My Site - Error Card -->
     <string name="my_site_error_card_title">Some data hasn\'t loaded</string>
@@ -3196,9 +3199,7 @@
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
     <string name="quick_start_button_positive" tools:ignore="UnusedResources">Go</string>
     <string name="quick_start_task_skip_menu_title">Skip task</string>
-    <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
+    <string name="quick_start_hide_next_steps_menu_title" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
     <string name="quick_start_dialog_check_stats_message">Keep up to date with your site\'s performance.</string>
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
     <string name="quick_start_dialog_enable_sharing_message" tools:ignore="UnusedResources">Automatically share new posts to your social media accounts.</string>
@@ -4522,22 +4523,17 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contact support</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Close</string>
 
-    <!-- Dashboard Card Domain-->
-    <string name="dashboard_card_domain_title">Find a custom domain</string>
-    <string name="dashboard_card_domain_sub_title">Stake your claim on your corner of the web with a site address that\'s easy to find, share, and follow.</string>
-    <string name="dashboard_card_domain_menu_hide_this">Hide this</string>
-
     <!-- Dashboard Card Domain Transfer-->
     <string name="domain_transfer_card_title">News</string>
     <string name="domain_transfer_card_sub_title">Reclaim Your Google Domains</string>
     <string name="domain_transfer_card_caption">As you may know, Google Domains has been sold to Squarespace. Transfer your domains to WordPress.com now, and we\'ll pay all transfer fees plus an extra year of your domain registration.</string>
     <string name="domain_transfer_card_cta">Transfer your domains</string>
-    <string name="domain_transfer_card_menu_hide_this">Hide this</string>
+    <string name="domain_transfer_card_more_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
 
     <!-- Dashboard Card Plans-->
     <string name="dashboard_card_plans_title">Free domain with annual plan</string>
     <string name="dashboard_card_plans_sub_title">Get a free domain for the first year, remove ads on your site, and increase your storage.</string>
-    <string name="dashboard_card_plans_menu_hide_this">Hide this</string>
+    <string name="dashboard_card_plans_more_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
     <string name="dashboard_card_plans_checkout_success_title">All ready to go!</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Your new domain &lt;b&gt;%s&lt;/b&gt; is being set up.</string>
     <string name="dashboard_card_plans_checkout_success_info">It may take up to 30 minutes for your domain to start working properly.</string>
@@ -4546,7 +4542,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Promote Blaze Card-->
     <string name="promote_blaze_card_title">Promote your content with Blaze</string>
     <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
-    <string name="promote_blaze_card_menu_hide_this">Hide this</string>
+    <string name="promote_blaze_card_more_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
+    <string name="promote_blaze_card_more_menu_learn_more" translatable="false">@string/learn_more</string>
     <string name="promote_blaze_flow_error">The blaze promote flow couldn\'t be loaded</string>
 
     <string name="gutenberg_native_blocks_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks menu</string>
@@ -4592,6 +4589,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Jetpack - Dashboard cards pages -->
     <string name="dashboard_pages_card_title" translatable="false">@string/pages</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Add Pages to your site</string>
+    <string name="dashboard_pages_card_more_menu_all_pages">All pages</string>
+    <string name="dashboard_pages_card_more_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
     <string name="dashboard_pages_card_create_another_page_button">Create Another Page</string>
     <string name="dashboard_pages_card_create_another_page_description">Start with bespoke, mobile friendly layouts</string>
     <string name="dashboard_card_page_item_status_draft" translatable="false">@string/pages_drafts</string>
@@ -4600,7 +4599,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Jetpack - Dashboard cards - Activity Card -->
     <string name="dashboard_activity_card_title">Recent activity</string>
-    <string name="dashboard_activity_card_footer_link">View all activity</string>
+    <string name="dashboard_activity_card_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
+    <string name="dashboard_activity_card_menu_all_activity">All activity</string>
     <string name="dashboard_activity_card_dot_separator" translatable="false">@string/reader_dot_separator</string>
 
     <string name="gutenberg_native_add_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Add description</string>
@@ -4639,6 +4639,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Jetpack - Blaze campaigns card -->
     <string name="blaze_campaigns_card_title">Blaze Campaign</string>
     <string name="blaze_campaigns_card_footer_label">Create Campaign</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">View all campaigns</string>
+    <string name="blaze_campaigns_card_more_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
+    <string name="blaze_campaigns_card_more_menu_learn_more" translatable="false">@string/learn_more</string>
+
     <string name="campaign_status_active">ACTIVE</string>
     <string name="campaign_status_completed">COMPLETED</string>
     <string name="campaign_status_rejected">REJECTED</string>
@@ -4692,4 +4696,35 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="missing_splits_dialog_title">Installation failed</string>
     <string name="missing_splits_dialog_message">The app WordPress is missing required components and must be reinstalled from the Google Play Store.</string>
     <string name="missing_splits_dialog_button">CLOSE</string>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Access this Paywall block on your web browser for advanced settings.</string>
+
+    <string name="partial_media_access_prompt_text">Only selected photos and videos you’ve given access to are available.</string>
+    <string name="partial_media_access_prompt_select_more">Select More</string>
+    <string name="partial_media_access_prompt_change_settings">Change Settings</string>
+
+    <!-- Personalize card -->
+    <string name="personalize_card_text">Personalize your home tab</string>
+    <string name="personalize_card_content_description">Tap to personalize your home tab</string>
+
+    <!-- Personalisation Screen -->
+    <string name="personalisation_screen_title"> Personalise home tab</string>
+    <string name="personalisation_screen_description"> Add or hide Cards</string>
+    <string name="personalisation_screen_footer_cards"> Cards may show different content depending on what\'s happening with your site</string>
+    <string name="personalisation_screen_stats_card_title" translatable="false">@string/my_site_todays_stat_card_title</string>
+    <string name="personalisation_screen_stats_card_description">Views, Visitors and likes</string>
+    <string name="personalisation_screen_draft_posts_card_title"> Draft posts</string>
+    <string name="personalisation_screen_draft_posts_card_description">Your recent draft posts.</string>
+    <string name="personalisation_screen_scheduled_posts_card_title"> Scheduled posts</string>
+    <string name="personalisation_screen_scheduled_posts_card_description">Your upcoming scheduled posts.</string>
+    <string name="personalisation_screen_blaze_card_title" translatable="false"> @string/blaze_activity_title</string>
+    <string name="personalisation_screen_blaze_card_description">Promote a post and see current campaigns.</string>
+    <string name="personalisation_screen_blogging_prompts_card_title">Blogging prompts</string>
+    <string name="personalisation_screen_blogging_prompts_card_description">Daily ideas for your blog posts.</string>
+    <string name="personalisation_screen_pages_card_title" translatable="false">@string/pages</string>
+    <string name="personalisation_screen_pages_card_description">Overview of your site pages.</string>
+    <string name="personalisation_screen_activity_log_card_title" translatable="false">@string/activity_log</string>
+    <string name="personalisation_screen_activity_log_card_description">Recent actions taken on your site.</string>
+    <string name="personalisation_screen_next_steps_card_title" translatable="false">@string/quick_start_sites</string>
+    <string name="personalisation_screen_next_steps_card_description">Learn how to make the most of your site with the app.</string>
+
 </resources>

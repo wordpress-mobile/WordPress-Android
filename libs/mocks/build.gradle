@@ -11,6 +11,10 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
     }
+
+    lint {
+        enable += 'UnknownNullness'
+    }
 }
 
 dependencies {

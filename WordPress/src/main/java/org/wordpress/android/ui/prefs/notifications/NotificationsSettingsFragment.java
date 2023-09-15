@@ -147,7 +147,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     private static final String BLOGGING_REMINDERS_BOTTOM_SHEET_TAG = "blogging-reminders-dialog-tag";
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -279,7 +279,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.notifications_settings, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_notifications_settings_search);
@@ -311,7 +311,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
         mSearchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
                 mSearchMenuItemCollapsed = false;
                 configureBlogsSettings(mBlogsCategory, true);
                 configureFollowedBlogsSettings(mFollowedBlogsCategory, true);
@@ -319,7 +319,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 mSearchMenuItemCollapsed = true;
                 configureBlogsSettings(mBlogsCategory, false);
                 configureFollowedBlogsSettings(mFollowedBlogsCategory, false);

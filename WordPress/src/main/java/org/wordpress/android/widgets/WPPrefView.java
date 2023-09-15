@@ -480,7 +480,7 @@ public class WPPrefView extends LinearLayout implements
         }
 
         @Override
-        public void onCreate(Bundle savedInstanceState) {
+        public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             mPrefViewId = getArguments().getInt(ARG_PREF_VIEW_ID);
         }

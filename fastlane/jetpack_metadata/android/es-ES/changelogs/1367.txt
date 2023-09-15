@@ -1,0 +1,4 @@
+23.1:
+- El bloque de enlaces a redes sociales ahora incluye un esquema para que puedas ver si está seleccionado.
+- Los botones de deshacer y rehacer ya no están visibles en el editor de HTML.
+- Ahora se puede ver el código hexadecimal del color seleccionado cuando se utilice el selector de colores con el bloque de fondo.

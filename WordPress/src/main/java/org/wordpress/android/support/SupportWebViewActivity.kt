@@ -7,14 +7,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.viewModels
+import androidx.appcompat.widget.Toolbar
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewAssetLoader.AssetsPathHandler
 import androidx.webkit.WebViewAssetLoader.DEFAULT_DOMAIN
 import androidx.webkit.WebViewAssetLoader.ResourcesPathHandler
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.BuildConfig
@@ -52,14 +52,14 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         viewModel.start(chatIdProperty)
         toggleNavbarVisibility(false)
 
-        // set send message box to appear above system navigation bar
-        val previewContainer = findViewById<View>(R.id.preview_container)
-        val params = previewContainer.layoutParams as ViewGroup.MarginLayoutParams
-        params.bottomMargin = resources.getDimensionPixelSize(R.dimen.margin_64dp)
-        previewContainer.layoutParams = params
-
         supportActionBar?.title = getString(R.string.help)
         supportActionBar?.subtitle = ""
+        window.navigationBarColor = getColor(R.color.docsbot_chat_container)
+
+        // Prevent AppBar scrolling away
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val toolbarLayoutParams = toolbar.layoutParams as AppBarLayout.LayoutParams
+        toolbarLayoutParams.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
 
         setupWebView()
         setupJsInterfaceForWebView()
@@ -197,15 +197,19 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
             .appendQueryParameter("id", BuildConfig.DOCSBOTAI_ID)
             .appendQueryParameter("chatId", chatId)
             .appendQueryParameter("inputPlaceholder", context.getString(R.string.contact_support_input_placeholder))
-            .appendQueryParameter("firstMessage", context.getString(R.string.contact_support_first_message))
+            .appendQueryParameter("firstMessage",
+                context.getString(R.string.contact_support_first_message_hi) + "\n\n" +
+                context.getString(R.string.contact_support_first_message) + "\n\n" +
+                context.getString(R.string.contact_support_first_message_hint)
+            )
             .appendQueryParameter("getSupport", context.getString(R.string.contact_support_get_support))
             .appendQueryParameter("suggestions", context.getString(R.string.contact_support_suggestions))
             .appendQueryParameter("questionOne", context.getString(R.string.contact_support_question_one))
-            .appendQueryParameter("questionTwo", context.getString(R.string.contact_support_question_two))
+//            .appendQueryParameter("questionTwo", context.getString(R.string.contact_support_question_two))
             .appendQueryParameter("questionThree", context.getString(R.string.contact_support_question_three))
-            .appendQueryParameter("questionFour", context.getString(R.string.contact_support_question_four))
+//            .appendQueryParameter("questionFour", context.getString(R.string.contact_support_question_four))
             .appendQueryParameter("questionFive", context.getString(R.string.contact_support_question_five))
-            .appendQueryParameter("questionSix", context.getString(R.string.contact_support_question_six))
+//            .appendQueryParameter("questionSix", context.getString(R.string.contact_support_question_six))
             .build()
             .toString()
     }

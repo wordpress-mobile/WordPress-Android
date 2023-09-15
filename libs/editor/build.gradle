@@ -36,6 +36,10 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
     }
 
+    lint {
+        enable += 'UnknownNullness'
+    }
+
     // Avoid 'duplicate files during packaging of APK' errors
     packagingOptions {
         exclude 'LICENSE.txt'

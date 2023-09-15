@@ -5,10 +5,10 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackSwitchMenu
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PersonalizeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
@@ -20,7 +20,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
     override fun areItemsTheSame(oldItem: MySiteCardAndItem, updatedItem: MySiteCardAndItem): Boolean {
         return oldItem.type == updatedItem.type && when {
-            oldItem is QuickActionsCard && updatedItem is QuickActionsCard -> true
             oldItem is QuickLinkRibbon && updatedItem is QuickLinkRibbon -> true
             oldItem is DomainRegistrationCard && updatedItem is DomainRegistrationCard -> true
             oldItem is QuickStartCard && updatedItem is QuickStartCard -> true
@@ -38,6 +37,7 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
             oldItem is JetpackFeatureCard && updatedItem is JetpackFeatureCard -> true
             oldItem is JetpackSwitchMenu && updatedItem is JetpackSwitchMenu -> true
             oldItem is JetpackInstallFullPluginCard && updatedItem is JetpackInstallFullPluginCard -> true
+            oldItem is PersonalizeCardModel && updatedItem is PersonalizeCardModel -> true
             else -> throw UnsupportedOperationException("Diff not implemented yet")
         }
     }

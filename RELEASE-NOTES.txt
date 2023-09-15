@@ -1,8 +1,19 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+23.3
+-----
+* [*] Block editor: Fix the obscurred "Insert from URL" input for media blocks when using a device in landscape orientation. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6143]
+* [**] Block editor: Updated placeholder text colors for block-based themes [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6182]
+
 23.2
 -----
 * [*] The Zendesk ticket screen will be displayed for error dialogs resulting from account closure. [https://github.com/wordpress-mobile/WordPress-Android/pull/19023]
+* [*] Block Editor: Fix crash when using the Search block TextInput in the block inserter [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6090]
+* [**] [Jetpack-only] Block Editor: Add basic support to view, relocate, and remove the Jetpack Paywall block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6076]
+* [*] Block Editor: Columns block - Fix transforming into a Group block crash [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6129]
+* [**] Block Editor: Add block outline to all Social Link blocks when selected [https://github.com/WordPress/gutenberg/pull/54011]
+* [***] [Jetpack-only] Contact Support: Add a new chat-based support channel where users can get answers from a bot trained to help app users. Users can still create a support ticket to talk to a Happiness Engineer if they don't find the answer they're looking for  [https://github.com/wordpress-mobile/WordPress-Android/pull/18879]
+* [*] [Jetpack-only] Block editor: Fix crash when contacting customer support within the editor [https://github.com/wordpress-mobile/WordPress-Android/pull/19102]
 
 23.1
 -----

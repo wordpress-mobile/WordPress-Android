@@ -16,12 +16,34 @@ class PermissionsHandler
     }
 
     fun hasPhotosVideosPermission(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            (hasReadMediaImagesPermission() && hasReadMediaVideoPermission()) ||
+                    hasReadMediaVisualUserSelectedPermission()
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            hasReadMediaImagesPermission() && hasReadMediaVideoPermission()
+        } else {
+            // For devices lower than API 33, storage permission is the equivalent of Photos and Videos permission
+            hasReadStoragePermission()
+        }
+    }
+
+    fun hasFullAccessPhotosVideosPermission(): Boolean {
+        // UPSIDE_DOWN_CAKE and above the user can give partial access (READ_MEDIA_VISUAL_USER_SELECTED) but FULL access
+        // follows the same rules as TIRAMISU, so no extra checks are needed
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             hasReadMediaImagesPermission() && hasReadMediaVideoPermission()
         } else {
             // For devices lower than API 33, storage permission is the equivalent of Photos and Videos permission
             hasReadStoragePermission()
         }
+    }
+
+    fun hasOnlyPartialAccessPhotosVideosPermission(): Boolean {
+        // UPSIDE_DOWN_CAKE and above the user can give partial access (READ_MEDIA_VISUAL_USER_SELECTED) and PARTIAL
+        // access rules are: does NOT have full access permissions BUT has READ_MEDIA_VISUAL_USER_SELECTED permission
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            !hasFullAccessPhotosVideosPermission() && hasReadMediaVisualUserSelectedPermission()
+        } else false
     }
 
     fun hasMusicAudioPermission(): Boolean {
@@ -31,6 +53,13 @@ class PermissionsHandler
             // For devices lower than API 33, storage permission is the equivalent of Music and Audio permission
             hasReadStoragePermission()
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    fun hasReadMediaVisualUserSelectedPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context, permission.READ_MEDIA_VISUAL_USER_SELECTED
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)

@@ -1,4 +1,5 @@
-* [*] Block editor: Hide undo/redo buttons when using the HTML editor [https://github.com/wordpress-mobile/WordPress-Android/pull/18889]
-* [*] Block editor: Display custom color value in mobile Cover Block color picker [https://github.com/WordPress/gutenberg/pull/51414]
-* [**] Block editor: Display outline around selected Social Link block [https://github.com/WordPress/gutenberg/pull/53377]
-
+- New chat-based support channel with service bot
+- View, locate, and remove Jetpack Paywall block
+- Outlined selected Social Link block
+- Fixed crashes in the block editor and block inserter
+- Create support tickets for errors during account closure

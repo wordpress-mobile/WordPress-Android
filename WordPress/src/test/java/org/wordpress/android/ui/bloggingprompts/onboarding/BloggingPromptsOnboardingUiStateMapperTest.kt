@@ -4,8 +4,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
@@ -13,32 +11,11 @@ import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.INFORMATION
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.ONBOARDING
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
-import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
-import com.google.android.material.R as MaterialR
 
 @ExperimentalCoroutinesApi
 class BloggingPromptsOnboardingUiStateMapperTest : BaseUnitTest() {
-    @Mock
-    lateinit var bloggingPromptsSocialFeatureConfig: BloggingPromptsSocialFeatureConfig
-
     private lateinit var classToTest: BloggingPromptsOnboardingUiStateMapper
-
-    private val expectedRespondents = listOf(
-        AvatarItem(""),
-        AvatarItem(""),
-        AvatarItem(""),
-        TrailingLabelTextItem(
-            UiStringPluralRes(
-                0,
-                R.string.my_site_blogging_prompt_card_number_of_answers_one,
-                R.string.my_site_blogging_prompt_card_number_of_answers_other,
-                3
-            ),
-            MaterialR.attr.colorOnSurface
-        )
-    )
 
     private val expectedRespondentsEnhancements = listOf(
         AvatarItem(""),
@@ -55,9 +32,9 @@ class BloggingPromptsOnboardingUiStateMapperTest : BaseUnitTest() {
     private val primaryButtonListener: () -> Unit = {}
     private val secondaryButtonListener: () -> Unit = {}
 
-    private fun expectedOnboardingDialogReadyState(enhancementsEnabled: Boolean) = Ready(
+    private fun expectedOnboardingDialogReadyState() = Ready(
         promptRes = R.string.blogging_prompts_onboarding_card_prompt,
-        respondents = if (enhancementsEnabled) expectedRespondentsEnhancements else expectedRespondents,
+        respondents =  expectedRespondentsEnhancements,
         contentTopRes = R.string.blogging_prompts_onboarding_content_top,
         contentBottomRes = R.string.blogging_prompts_onboarding_content_bottom,
         contentNoteTitle = R.string.blogging_prompts_onboarding_content_note_title,
@@ -70,9 +47,9 @@ class BloggingPromptsOnboardingUiStateMapperTest : BaseUnitTest() {
         onSecondaryButtonClick = secondaryButtonListener
     )
 
-    private fun expectedInformationDialogReadyState(enhancementsEnabled: Boolean) = Ready(
+    private fun expectedInformationDialogReadyState() = Ready(
         promptRes = R.string.blogging_prompts_onboarding_card_prompt,
-        respondents = if (enhancementsEnabled) expectedRespondentsEnhancements else expectedRespondents,
+        respondents = expectedRespondentsEnhancements,
         contentTopRes = R.string.blogging_prompts_onboarding_content_top,
         contentBottomRes = R.string.blogging_prompts_onboarding_content_bottom,
         contentNoteTitle = R.string.blogging_prompts_onboarding_content_note_title,
@@ -87,46 +64,21 @@ class BloggingPromptsOnboardingUiStateMapperTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        classToTest = BloggingPromptsOnboardingUiStateMapper(bloggingPromptsSocialFeatureConfig)
+        classToTest = BloggingPromptsOnboardingUiStateMapper()
     }
 
-    @Test
-    fun `Should return correct Ready state for ONBOARDING type dialog when enhancements are turned off`() {
-        val socialEnabled = false
-        whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(socialEnabled)
 
+    @Test
+    fun `Should return correct Ready state for ONBOARDING type dialog`() {
         val actual = classToTest.mapReady(ONBOARDING, primaryButtonListener, secondaryButtonListener)
-        val expected = expectedOnboardingDialogReadyState(socialEnabled)
+        val expected = expectedOnboardingDialogReadyState()
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
-    fun `Should return correct Ready state for INFORMATION type dialog when enhancements are turned off`() {
-        val socialEnabled = false
-        whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(socialEnabled)
-
+    fun `Should return correct Ready state for INFORMATION type dialog`() {
         val actual = classToTest.mapReady(INFORMATION, primaryButtonListener, secondaryButtonListener)
-        val expected = expectedInformationDialogReadyState(socialEnabled)
-        assertThat(actual).isEqualTo(expected)
-    }
-
-    @Test
-    fun `Should return correct Ready state for ONBOARDING type dialog when enhancements are turned on`() {
-        val socialEnabled = true
-        whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(socialEnabled)
-
-        val actual = classToTest.mapReady(ONBOARDING, primaryButtonListener, secondaryButtonListener)
-        val expected = expectedOnboardingDialogReadyState(socialEnabled)
-        assertThat(actual).isEqualTo(expected)
-    }
-
-    @Test
-    fun `Should return correct Ready state for INFORMATION type dialog when enhancements are turned on`() {
-        val socialEnabled = true
-        whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(socialEnabled)
-
-        val actual = classToTest.mapReady(INFORMATION, primaryButtonListener, secondaryButtonListener)
-        val expected = expectedInformationDialogReadyState(socialEnabled)
+        val expected = expectedInformationDialogReadyState()
         assertThat(actual).isEqualTo(expected)
     }
 }

@@ -76,7 +76,7 @@ fun DomainTransferCard(
                             expanded = isExpanded,
                             onDismissRequest = { isExpanded = false }) {
                             DropdownMenuItem(
-                                text = { Text(stringResource(id = R.string.domain_transfer_card_menu_hide_this)) },
+                                text = { Text(stringResource(id = R.string.domain_transfer_card_more_menu_hide_this)) },
                                 onClick = { domainTransferCardModel.onHideMenuItemClick.click() }
                             )
                         }

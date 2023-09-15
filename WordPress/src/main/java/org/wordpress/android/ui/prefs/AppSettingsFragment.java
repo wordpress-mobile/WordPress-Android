@@ -120,7 +120,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private static final String TRACK_ENABLED = "enabled";
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
         mDispatcher.register(this);
@@ -524,7 +524,7 @@ public class AppSettingsFragment extends PreferenceFragment
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 getActivity().finish();

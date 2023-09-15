@@ -39,6 +39,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -495,7 +496,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().addMenuProvider(this, viewLifecycleOwner)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
         val binding = ReaderFragmentPostDetailBinding.bind(view)
 
         initLikeFacesRecycler(savedInstanceState)
@@ -1709,7 +1710,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_FILE_DOWNLOAD_TAPPED)
         return if (activity != null &&
             fileUrl != null &&
-            PermissionUtils.checkAndRequestStoragePermission(
+            PermissionUtils.checkAndRequestFileDownloadPermission(
                 this,
                 READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
             )

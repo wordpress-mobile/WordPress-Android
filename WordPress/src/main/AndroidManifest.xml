@@ -15,7 +15,6 @@
 
     <!-- Dangerous permissions, access must be requested at runtime -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- Required for storing and retrieving screenshots, taking photos, accessing media files -->
@@ -25,6 +24,7 @@
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
@@ -1087,6 +1087,11 @@
             android:theme="@style/WordPress.NoActionBar"/>
 
         <activity android:name=".ui.jetpackoverlay.JetpackStaticPosterActivity"
+            android:exported="false"
+            android:label="@string/stats"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <activity android:name=".ui.mysite.personalisation.PersonalisationActivity"
             android:exported="false"
             android:label="@string/stats"
             android:theme="@style/WordPress.NoActionBar"/>
