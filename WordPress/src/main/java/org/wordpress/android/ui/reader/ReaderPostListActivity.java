@@ -204,13 +204,13 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getOnBackPressedDispatcher().onBackPressed();
-                return true;
-            case R.id.menu_share:
-                shareSite();
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            getOnBackPressedDispatcher().onBackPressed();
+            return true;
+        } else if (itemId == R.id.menu_share) {
+            shareSite();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
