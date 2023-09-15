@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
+import androidx.core.view.isGone
 import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ReaderTagHeaderViewBinding
@@ -12,7 +13,6 @@ import org.wordpress.android.ui.reader.views.ReaderTagHeaderViewUiState.ReaderTa
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.LocaleProvider
 import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
-import org.wordpress.android.util.extensions.gone
 import javax.inject.Inject
 
 /**
@@ -74,7 +74,7 @@ class ReaderTagHeaderView @JvmOverloads constructor(
     }
 
     fun updateUi(uiState: ReaderTagHeaderUiState) = with(binding) {
-        (binding as? ReaderTagBinding.ImprovementsEnabled)?.textTagFollowCount?.gone()
+        (binding as? ReaderTagBinding.ImprovementsEnabled)?.textTagFollowCount?.isGone = true
         // creative-writing -> Creative Writing
         textTag.text = uiState.title
             .split("-")
