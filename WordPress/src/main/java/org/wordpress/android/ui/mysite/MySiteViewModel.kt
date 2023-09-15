@@ -493,16 +493,7 @@ class MySiteViewModel @Inject constructor(
 
         val jetpackSwitchMenu = getJetpackSwitchMenu()
 
-        val migrationSuccessCard = SingleActionCard(
-            textResource = R.string.jp_migration_success_card_message,
-            imageResource = R.drawable.ic_wordpress_jetpack_appicon,
-            onActionClick = ::onPleaseDeleteWordPressAppCardClick
-        ).takeIf {
-            val isJetpackApp = buildConfigWrapper.isJetpackApp
-            val isMigrationCompleted = appPrefsWrapper.isJetpackMigrationCompleted()
-            val isWordPressInstalled = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
-            isJetpackApp && isMigrationCompleted && isWordPressInstalled
-        }
+        val migrationSuccessCard = getJetpackMigrationSuccessCard()
 
         val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderParams(
             site = site,
@@ -614,6 +605,18 @@ class MySiteViewModel @Inject constructor(
                 jetpackSwitchMenu = jetpackSwitchMenu,
                 personalizeCard = personalizeCard
             )
+        )
+    }
+
+    private fun getJetpackMigrationSuccessCard(): SingleActionCard? {
+        val isJetpackApp = buildConfigWrapper.isJetpackApp
+        val isMigrationCompleted = appPrefsWrapper.isJetpackMigrationCompleted()
+        val isWordPressInstalled = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
+        if (!isJetpackApp && !isMigrationCompleted && !isWordPressInstalled)  return null
+        return SingleActionCard(
+            textResource = R.string.jp_migration_success_card_message,
+            imageResource = R.drawable.ic_wordpress_jetpack_appicon,
+            onActionClick = ::onPleaseDeleteWordPressAppCardClick
         )
     }
 
