@@ -99,17 +99,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
 
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW
             || getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            // show an X in the toolbar which closes the activity - if this is blog preview
-            boolean showCrossButton = getPostListType() == ReaderPostListType.BLOG_PREVIEW;
-            if (showCrossButton) {
-                toolbar.setNavigationIcon(R.drawable.ic_cross_white_24dp);
-            }
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    finish();
-                }
-            });
+            toolbar.setNavigationOnClickListener(view -> finish());
 
             if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 setTitle(R.string.reader_title_blog_preview);
@@ -214,13 +204,13 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getOnBackPressedDispatcher().onBackPressed();
-                return true;
-            case R.id.menu_share:
-                shareSite();
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            getOnBackPressedDispatcher().onBackPressed();
+            return true;
+        } else if (itemId == R.id.menu_share) {
+            shareSite();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -281,12 +271,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
-
-        String title = ReaderBlogTable.getBlogName(blogId);
-        if (title.isEmpty()) {
-            title = getString(R.string.reader_title_blog_preview);
-        }
-        setTitle(title);
+        setTitle("");
     }
 
     private void showListFragmentForFeed(long feedId) {
