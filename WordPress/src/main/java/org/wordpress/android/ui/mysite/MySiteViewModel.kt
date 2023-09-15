@@ -489,17 +489,7 @@ class MySiteViewModel @Inject constructor(
                 isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
             )
         )
-        val jetpackFeatureCard = JetpackFeatureCard(
-            content = jetpackFeatureCardHelper.getCardContent(),
-            onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
-            onHideMenuItemClick = ListItemInteraction.create(this::onJetpackFeatureCardHideMenuItemClick),
-            onLearnMoreClick = ListItemInteraction.create(this::onJetpackFeatureCardLearnMoreClick),
-            onRemindMeLaterItemClick = ListItemInteraction.create(this::onJetpackFeatureCardRemindMeLaterClick),
-            onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick),
-            learnMoreUrl = jetpackFeatureCardHelper.getLearnMoreUrl()
-        ).takeIf {
-            jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()
-        }
+        val jetpackFeatureCard = getJetpackFeatureCard()
 
         val jetpackSwitchMenu = MySiteCardAndItem.Card.JetpackSwitchMenu(
             onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
@@ -631,6 +621,19 @@ class MySiteViewModel @Inject constructor(
                 jetpackSwitchMenu = jetpackSwitchMenu,
                 personalizeCard = personalizeCard
             )
+        )
+    }
+
+    private fun getJetpackFeatureCard(): JetpackFeatureCard? {
+        if(!jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()) return null
+        return JetpackFeatureCard(
+            content = jetpackFeatureCardHelper.getCardContent(),
+            onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
+            onHideMenuItemClick = ListItemInteraction.create(this::onJetpackFeatureCardHideMenuItemClick),
+            onLearnMoreClick = ListItemInteraction.create(this::onJetpackFeatureCardLearnMoreClick),
+            onRemindMeLaterItemClick = ListItemInteraction.create(this::onJetpackFeatureCardRemindMeLaterClick),
+            onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick),
+            learnMoreUrl = jetpackFeatureCardHelper.getLearnMoreUrl()
         )
     }
 
