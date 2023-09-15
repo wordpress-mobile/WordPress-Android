@@ -123,8 +123,9 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         }
     }
 
-    fun onDashboardCardsUpdated(scope: CoroutineScope, dashboard: MySiteCardAndItem.Card.DashboardCards?) {
-        bloggingPromptsCardTrackHelper.onDashboardCardsUpdated(scope, dashboard)
+    fun onDashboardCardsUpdated(scope: CoroutineScope,
+                                bloggingPromptCard: List<MySiteCardAndItem.Card.BloggingPromptCard>) {
+        bloggingPromptsCardTrackHelper.onDashboardCardsUpdated(scope, bloggingPromptCard)
     }
 
     fun onSiteChanged(siteId: Int?) {

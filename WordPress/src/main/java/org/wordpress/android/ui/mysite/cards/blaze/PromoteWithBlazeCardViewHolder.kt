@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import org.wordpress.android.R
 import org.wordpress.android.databinding.PromoteWithBlazeCardBinding
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.PromoteWithBlazeCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiHelpers

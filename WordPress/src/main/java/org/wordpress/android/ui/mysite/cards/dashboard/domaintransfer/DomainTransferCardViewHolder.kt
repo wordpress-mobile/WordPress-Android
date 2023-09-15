@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool
 import org.wordpress.android.databinding.DomainTransferCardBinding
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DomainTransferCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainTransferCardModel
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.util.extensions.viewBinding
 

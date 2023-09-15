@@ -16,8 +16,8 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.databinding.MySiteTodaysStatsCardBinding
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TextWithLinks.Clickable
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TextWithLinks.Clickable
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.getColorFromAttribute

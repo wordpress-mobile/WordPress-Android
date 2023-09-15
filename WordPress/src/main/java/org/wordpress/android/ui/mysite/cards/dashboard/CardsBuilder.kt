@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityCardBuilder
@@ -27,43 +25,37 @@ class CardsBuilder @Inject constructor(
 ) {
     fun build(
         dashboardCardsBuilderParams: DashboardCardsBuilderParams
-    ): DashboardCards = DashboardCards(
-        cards = mutableListOf<DashboardCard>().apply {
-            if (dashboardCardsBuilderParams.showErrorCard) {
-                add(createErrorCard(dashboardCardsBuilderParams.onErrorRetryClick))
-            } else {
-                bloggingPromptCardBuilder.build(dashboardCardsBuilderParams.bloggingPromptCardBuilderParams)
-                    ?.let {
-                        add(it)
-                    }
+    ) = mutableListOf<MySiteCardAndItem.Card>().apply {
+        if (dashboardCardsBuilderParams.showErrorCard) {
+            add(createErrorCard(dashboardCardsBuilderParams.onErrorRetryClick))
+        } else {
+            bloggingPromptCardBuilder.build(dashboardCardsBuilderParams.bloggingPromptCardBuilderParams)
+                ?.let { add(it) }
 
-                domainTransferCardBuilder
-                    .build(dashboardCardsBuilderParams.domainTransferCardBuilderParams)
-                    ?.let {
-                        add(it)
-                    }
+            domainTransferCardBuilder
+                .build(dashboardCardsBuilderParams.domainTransferCardBuilderParams)
+                ?.let { add(it) }
 
-                if(dashboardCardsBuilderParams.blazeCardBuilderParams != null){
-                    add(blazeCardBuilder.build(dashboardCardsBuilderParams.blazeCardBuilderParams))
-                }
-
-                plansCardBuilder.build(dashboardCardsBuilderParams.dashboardCardPlansBuilderParams)?.let {
-                    add(it)
-                }
-
-                todaysStatsCardBuilder.build(dashboardCardsBuilderParams.todaysStatsCardBuilderParams)
-                    ?.let { add(it) }
-
-                addAll(postCardBuilder.build(dashboardCardsBuilderParams.postCardBuilderParams))
-
-                pagesCardBuilder.build(dashboardCardsBuilderParams.pagesCardBuilderParams)?.let { add(it) }
-
-                activityCardBuilder.build(dashboardCardsBuilderParams.activityCardBuilderParams)?.let { add(it) }
+            if (dashboardCardsBuilderParams.blazeCardBuilderParams != null) {
+                add(blazeCardBuilder.build(dashboardCardsBuilderParams.blazeCardBuilderParams))
             }
-        }.toList()
-    )
 
-    private fun createErrorCard(onErrorRetryClick: () -> Unit) = ErrorCard(
+            plansCardBuilder.build(dashboardCardsBuilderParams.dashboardCardPlansBuilderParams)?.let {
+                add(it)
+            }
+
+            todaysStatsCardBuilder.build(dashboardCardsBuilderParams.todaysStatsCardBuilderParams)
+                ?.let { add(it) }
+
+            addAll(postCardBuilder.build(dashboardCardsBuilderParams.postCardBuilderParams))
+
+            pagesCardBuilder.build(dashboardCardsBuilderParams.pagesCardBuilderParams)?.let { add(it) }
+
+            activityCardBuilder.build(dashboardCardsBuilderParams.activityCardBuilderParams)?.let { add(it) }
+        }
+    }.toList()
+
+    private fun createErrorCard(onErrorRetryClick: () -> Unit) = MySiteCardAndItem.Card.ErrorCard(
         onRetryClick = ListItemInteraction.create(onErrorRetryClick)
     )
 }

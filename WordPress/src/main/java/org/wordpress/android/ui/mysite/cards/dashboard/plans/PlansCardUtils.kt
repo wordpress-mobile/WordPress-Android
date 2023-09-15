@@ -8,8 +8,8 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardPlansCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -53,9 +53,6 @@ class PlansCardUtils @Inject constructor(
         dashboardUpdateDebounceJob = scope.launch(bgDispatcher) {
             val isVisible = siteSelected
                 ?.dashboardCardsAndItems
-                ?.filterIsInstance<DashboardCards>()
-                ?.firstOrNull()
-                ?.cards
                 ?.any {
                         card -> card is DashboardPlansCard
                 } ?: false
@@ -125,9 +122,6 @@ class PlansCardUtils @Inject constructor(
     private fun positionIndex(siteSelected: SiteSelected?): Int {
         return siteSelected
             ?.dashboardCardsAndItems
-            ?.filterIsInstance<DashboardCards>()
-            ?.firstOrNull()
-            ?.cards
             ?.indexOfFirst {
                 it is DashboardPlansCard
             } ?: -1

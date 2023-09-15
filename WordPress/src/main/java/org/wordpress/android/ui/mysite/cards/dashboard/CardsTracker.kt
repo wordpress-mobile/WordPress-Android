@@ -2,8 +2,7 @@ package org.wordpress.android.ui.mysite.cards.dashboard
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.QuickStartSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
@@ -107,7 +106,7 @@ class CardsTracker @Inject constructor(
         cardsShownTracker.reset()
     }
 
-    fun trackShown(dashboardCards: DashboardCards) {
+    fun trackShown(dashboardCards: List<MySiteCardAndItem.Card>) {
         cardsShownTracker.track(dashboardCards)
     }
 
@@ -125,22 +124,25 @@ class CardsTracker @Inject constructor(
 }
 
 @Suppress("ComplexMethod")
-fun DashboardCardType.toTypeValue(): Type {
+fun MySiteCardAndItem.Type.toTypeValue(): Type {
     return when (this) {
-        DashboardCardType.ERROR_CARD -> Type.ERROR
-        DashboardCardType.QUICK_START_CARD -> Type.QUICK_START
-        DashboardCardType.TODAYS_STATS_CARD_ERROR -> Type.ERROR
-        DashboardCardType.TODAYS_STATS_CARD -> Type.STATS
-        DashboardCardType.POST_CARD_ERROR -> Type.ERROR
-        DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST
-        DashboardCardType.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
-        DashboardCardType.PROMOTE_WITH_BLAZE_CARD -> Type.PROMOTE_WITH_BLAZE
-        DashboardCardType.DASHBOARD_DOMAIN_TRANSFER_CARD -> Type.DASHBOARD_CARD_DOMAIN_TRANSFER
-        DashboardCardType.BLAZE_CAMPAIGNS_CARD -> Type.BLAZE_CAMPAIGNS
-        DashboardCardType.DASHBOARD_PLANS_CARD -> Type.DASHBOARD_CARD_PLANS
-        DashboardCardType.PAGES_CARD -> Type.PAGES
-        DashboardCardType.PAGES_CARD_ERROR -> Type.ERROR
-        DashboardCardType.ACTIVITY_CARD -> Type.ACTIVITY
+        MySiteCardAndItem.Type.ERROR_CARD -> Type.ERROR
+        MySiteCardAndItem.Type.QUICK_START_CARD -> Type.QUICK_START
+        MySiteCardAndItem.Type.TODAYS_STATS_CARD_ERROR -> Type.ERROR
+        MySiteCardAndItem.Type.TODAYS_STATS_CARD -> Type.STATS
+        MySiteCardAndItem.Type.POST_CARD_ERROR -> Type.ERROR
+        MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS -> Type.POST
+        MySiteCardAndItem.Type.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
+        MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE_CARD -> Type.PROMOTE_WITH_BLAZE
+        MySiteCardAndItem.Type.DASHBOARD_DOMAIN_TRANSFER_CARD -> Type.DASHBOARD_CARD_DOMAIN_TRANSFER
+        MySiteCardAndItem.Type.BLAZE_CAMPAIGNS_CARD -> Type.BLAZE_CAMPAIGNS
+        MySiteCardAndItem.Type.DASHBOARD_PLANS_CARD -> Type.DASHBOARD_CARD_PLANS
+        MySiteCardAndItem.Type.PAGES_CARD -> Type.PAGES
+        MySiteCardAndItem.Type.PAGES_CARD_ERROR -> Type.ERROR
+        MySiteCardAndItem.Type.ACTIVITY_CARD -> Type.ACTIVITY
+        else -> {
+            Type.ERROR
+        }
     }
 }
 

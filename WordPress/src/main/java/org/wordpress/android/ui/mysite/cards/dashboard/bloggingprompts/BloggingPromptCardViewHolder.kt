@@ -7,7 +7,7 @@ import androidx.core.view.isVisible
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteBloggingPromptCardBinding
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution.DAY_ONE
 import org.wordpress.android.ui.utils.UiHelpers

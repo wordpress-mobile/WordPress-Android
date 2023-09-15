@@ -8,7 +8,7 @@ import org.wordpress.android.databinding.MySiteActivityCardWithActivityItemsBind
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 
