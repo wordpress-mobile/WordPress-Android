@@ -1,8 +1,11 @@
 package org.wordpress.android.util;
 
+import androidx.annotation.Nullable;
+
 import java.util.Date;
 
 public abstract class RateLimitedTask {
+    @Nullable
     private Date mLastUpdate;
     private int mMinRateInSeconds;
 
