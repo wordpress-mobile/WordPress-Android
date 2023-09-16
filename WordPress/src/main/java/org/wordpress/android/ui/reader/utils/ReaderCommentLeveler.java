@@ -11,6 +11,7 @@ import org.wordpress.android.models.ReaderCommentList;
  */
 
 public class ReaderCommentLeveler {
+    @NonNull
     private final ReaderCommentList mComments;
 
     public ReaderCommentLeveler(@NonNull ReaderCommentList comments) {
