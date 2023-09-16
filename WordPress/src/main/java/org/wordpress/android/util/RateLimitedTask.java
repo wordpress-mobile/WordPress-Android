@@ -19,6 +19,7 @@ public abstract class RateLimitedTask {
         mLastUpdate = new Date();
     }
 
+    @NonNull
     public synchronized boolean forceRun() {
         if (run()) {
             mLastUpdate = new Date();
@@ -27,6 +28,7 @@ public abstract class RateLimitedTask {
         return false;
     }
 
+    @NonNull
     public synchronized boolean runIfNotLimited() {
         Date now = new Date();
         if (mLastUpdate == null || DateTimeUtils.secondsBetween(now, mLastUpdate) >= mMinRateInSeconds) {
@@ -38,5 +40,6 @@ public abstract class RateLimitedTask {
         return false;
     }
 
+    @NonNull
     protected abstract boolean run();
 }
