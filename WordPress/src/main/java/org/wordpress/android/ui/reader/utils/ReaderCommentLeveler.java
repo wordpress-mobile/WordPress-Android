@@ -18,6 +18,7 @@ public class ReaderCommentLeveler {
         mComments = comments;
     }
 
+    @NonNull
     public ReaderCommentList createLevelList() {
         ReaderCommentList result = new ReaderCommentList();
 
@@ -42,7 +43,8 @@ public class ReaderCommentLeveler {
      * walk comments in the passed list that have the passed level and add their children
      * beneath them
      */
-    private boolean walkCommentsAtLevel(@NonNull ReaderCommentList comments, int level) {
+    @NonNull
+    private boolean walkCommentsAtLevel(@NonNull ReaderCommentList comments, @NonNull int level) {
         boolean hasChanges = false;
         for (int index = 0; index < comments.size(); index++) {
             ReaderComment parent = comments.get(index);
@@ -59,7 +61,8 @@ public class ReaderCommentLeveler {
         return hasChanges;
     }
 
-    private boolean hasChildren(long commentId) {
+    @NonNull
+    private boolean hasChildren(@NonNull long commentId) {
         for (ReaderComment comment : mComments) {
             if (comment.parentId == commentId) {
                 return true;
@@ -68,7 +71,8 @@ public class ReaderCommentLeveler {
         return false;
     }
 
-    private ReaderCommentList getChildren(long commentId) {
+    @NonNull
+    private ReaderCommentList getChildren(@NonNull long commentId) {
         ReaderCommentList children = new ReaderCommentList();
         for (ReaderComment comment : mComments) {
             if (comment.parentId == commentId) {
@@ -78,7 +82,7 @@ public class ReaderCommentLeveler {
         return children;
     }
 
-    private void setLevel(@NonNull ReaderCommentList comments, int level) {
+    private void setLevel(@NonNull ReaderCommentList comments,@NonNull int level) {
         for (ReaderComment comment : comments) {
             comment.level = level;
         }
