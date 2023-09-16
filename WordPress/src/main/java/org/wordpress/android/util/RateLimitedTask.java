@@ -1,5 +1,6 @@
 package org.wordpress.android.util;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.Date;
@@ -7,9 +8,10 @@ import java.util.Date;
 public abstract class RateLimitedTask {
     @Nullable
     private Date mLastUpdate;
+    @NonNull
     private int mMinRateInSeconds;
 
-    public RateLimitedTask(int minRateInSeconds) {
+    public RateLimitedTask(@NonNull int minRateInSeconds) {
         mMinRateInSeconds = minRateInSeconds;
     }
 
