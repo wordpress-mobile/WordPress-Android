@@ -1,0 +1,4 @@
+23.2:
+- Het blok Social Link heeft nu een omranding, zodat je kan zien wanneer het is geselecteerd.
+- In de blokeditor crasht de app niet langer als je een genest kolommenblok omzet in een groepenblok.
+- In de blokinvoeger kan je nu zoeken op type blok zonder dat de app crasht.

@@ -1,4 +1,0 @@
-23.1:
-- Il blocco Link social ora include uno schema che ti permette di vedere quando è selezionato.
-- I pulsanti Annulla e Ripeti non sono più visibili nell'editor HTML.
-- Ora vedrai i codici esadecimali per il colore selezionato quando usi il selettore dei colori del blocco Copertina.

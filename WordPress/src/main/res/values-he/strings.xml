@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-24 09:54:08+0000
+Translation-Revision-Date: 2023-09-06 15:54:26+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.7
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">יש לגשת לבלוק \'חומת תשלום\' בדפדפן להגדרות מתקדמות.</string>
     <string name="contact_support_bot_ticket_comment_answer">תשובה:</string>
     <string name="contact_support_bot_ticket_comment_question">שאלה:</string>
     <string name="contact_support_bot_ticket_comment_start">תסריט לבוט האפליקציה של Jetpack לנייד:</string>
@@ -20,7 +21,6 @@ Language: he_IL
     <string name="contact_support_question_one">מהי כתובת האתר שלי?</string>
     <string name="contact_support_suggestions">לא הצלחת להבין לך מה צריך לשאול?</string>
     <string name="contact_support_get_support">לפנות לתמיכה</string>
-    <string name="contact_support_first_message">איך אוכל לעזור?</string>
     <string name="contact_support_input_placeholder">לשלוח הודעה…</string>
     <string name="post_settings_jetpack_social_share_message_clear">למחוק</string>
     <string name="jetpack_social_social_shares_remaining">נותרו ⁦%1$d⁩ שיתופים ברשתות החברתיות</string>
@@ -106,7 +106,7 @@ Language: he_IL
     <string name="account_closure_dialog_error_chargebacked_site">לא ניתן לסגור את חשבון המשתמש כל עוד יש לו חיובים שלא שולמו.</string>
     <string name="account_closure_dialog_error_atomic_site">לא ניתן לסגור את חשבון המשתמש מייד מאחר שיש לו רכישות פעילות. יש לפנות לצוות התמיכה שלנו כדי להשלים את מחיקת החשבון.</string>
     <string name="account_closure_dialog_error_unauthorized">אין לך הרשאה לסגור את החשבון הזה.</string>
-    <string name="account_closure_dialog_error_title">לא ניתן לסגור את החשבון באופן אוטומטי</string>
+    <string name="account_closure_dialog_error_title">לא הצלחתי לסגור את החשבון באופן אוטומטי!</string>
     <string name="account_closure_dialog_title">יש לאשר את סגירת החשבון…</string>
     <string name="account_closure_dialog_message">לאישור, עליך להזין שוב את שם המשתמש שלך לפני הסגירה.</string>
     <string name="close_account">לסגור את החשבון</string>
