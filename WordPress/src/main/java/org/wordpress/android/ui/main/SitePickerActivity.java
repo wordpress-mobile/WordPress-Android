@@ -118,7 +118,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Nullable private MenuItem mMenuSearch;
     @Nullable private SearchView mSearchView;
     private int mCurrentLocalId;
-    private SitePickerMode mSitePickerMode;
+    @Nullable private SitePickerMode mSitePickerMode;
     private final Debouncer mDebouncer = new Debouncer();
     private SitePickerViewModel mViewModel;
 
@@ -162,7 +162,7 @@ public class SitePickerActivity extends LocaleAwareActivity
                 unitEvent -> unitEvent.applyIfNotHandled(action -> {
                     switch (action.getActionType()) {
                         case NAVIGATE_TO_STATE:
-                            if (!mSitePickerMode.isReblogMode()) break;
+                            if (!(mSitePickerMode != null && mSitePickerMode.isReblogMode())) break;
                             switch (((NavigateToState) action).getNavigateState()) {
                                 case TO_SITE_SELECTED:
                                     mSitePickerMode = SitePickerMode.REBLOG_CONTINUE_MODE;
@@ -186,12 +186,12 @@ public class SitePickerActivity extends LocaleAwareActivity
                             }
                             break;
                         case CONTINUE_REBLOG_TO:
-                            if (!mSitePickerMode.isReblogMode()) break;
+                            if (!(mSitePickerMode != null && mSitePickerMode.isReblogMode())) break;
                             SiteRecord siteToReblog = ((ContinueReblogTo) action).getSiteForReblog();
                             if (siteToReblog != null) selectSiteAndFinish(siteToReblog);
                             break;
                         case ASK_FOR_SITE_SELECTION:
-                            if (!mSitePickerMode.isReblogMode()) break;
+                            if (!(mSitePickerMode != null && mSitePickerMode.isReblogMode())) break;
                             if (BuildConfig.DEBUG) {
                                 throw new IllegalStateException(
                                         "SitePickerActivity > Selected site was null while attempting to reblog"
@@ -271,6 +271,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         if (getAdapter().getIsInSearchMode()
+            || mSitePickerMode == null
             || mSitePickerMode.isReblogMode()
             || mSitePickerMode.isBloggingPromptsMode()) {
             mMenuEdit.setVisible(false);
@@ -409,7 +410,9 @@ public class SitePickerActivity extends LocaleAwareActivity
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
 
-        binding.recyclerView.setItemAnimator(mSitePickerMode.isReblogMode() ? new DefaultItemAnimator() : null);
+        binding.recyclerView.setItemAnimator(
+                (mSitePickerMode != null && mSitePickerMode.isReblogMode()) ? new DefaultItemAnimator() : null
+        );
 
         binding.recyclerView.setAdapter(getAdapter());
 
@@ -678,7 +681,7 @@ public class SitePickerActivity extends LocaleAwareActivity
 
     @Override
     public void onSiteClick(SiteRecord siteRecord) {
-        if (mSitePickerMode.isReblogMode()) {
+        if (mSitePickerMode != null && mSitePickerMode.isReblogMode()) {
             mCurrentLocalId = siteRecord.getLocalId();
             mViewModel.onSiteForReblogSelected(siteRecord);
         } else if (mActionMode == null) {
