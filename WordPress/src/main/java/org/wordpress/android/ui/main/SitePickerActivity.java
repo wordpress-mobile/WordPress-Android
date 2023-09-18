@@ -112,7 +112,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Nullable private SitePickerAdapter mAdapter;
     @Nullable private SwipeToRefreshHelper mSwipeToRefreshHelper;
     @Nullable private ActionMode mActionMode;
-    private ActionMode mReblogActionMode;
+    @Nullable private ActionMode mReblogActionMode;
     private MenuItem mMenuEdit;
     private MenuItem mMenuAdd;
     private MenuItem mMenuSearch;
@@ -175,7 +175,7 @@ public class SitePickerActivity extends LocaleAwareActivity
                                     }
 
                                     SiteRecord site = ((NavigateToState) action).getSiteForReblog();
-                                    if (site != null) {
+                                    if (site != null && mReblogActionMode != null) {
                                         mReblogActionMode.setTitle(site.getBlogNameOrHomeURL());
                                     }
                                     break;
