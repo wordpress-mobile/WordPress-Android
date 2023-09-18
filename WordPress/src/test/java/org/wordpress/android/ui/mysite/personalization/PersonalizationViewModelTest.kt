@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.personalisation
+package org.wordpress.android.ui.mysite.personalization
 
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
@@ -12,16 +12,18 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class PersonalisationViewModelTest : BaseUnitTest() {
+class PersonalizationViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
@@ -31,7 +33,10 @@ class PersonalisationViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var bloggingRemindersStore: BloggingRemindersStore
 
-    private lateinit var viewModel: PersonalisationViewModel
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
+    private lateinit var viewModel: PersonalizationViewModel
 
     private val site = SiteModel().apply { siteId = 123L }
     private val localSiteId = 456
@@ -49,11 +54,12 @@ class PersonalisationViewModelTest : BaseUnitTest() {
         whenever(bloggingRemindersStore.bloggingRemindersModel(localSiteId))
             .thenReturn(flowOf(userSetBloggingRemindersModel))
 
-        viewModel = PersonalisationViewModel(
+        viewModel = PersonalizationViewModel(
             bgDispatcher = testDispatcher(),
             appPrefsWrapper = appPrefsWrapper,
             selectedSiteRepository = selectedSiteRepository,
-            bloggingRemindersStore = bloggingRemindersStore
+            bloggingRemindersStore = bloggingRemindersStore,
+            analyticsTrackerWrapper = analyticsTrackerWrapper
         )
 
         viewModel.uiState.observeForever {
@@ -238,5 +244,32 @@ class PersonalisationViewModelTest : BaseUnitTest() {
         viewModel.onCardToggled(cardType, true)
 
         verify(appPrefsWrapper).setShouldHideNextStepsDashboardCard(site.siteId, false)
+    }
+
+    @Test
+    fun `given card disabled, when card state is toggled, then event is tracked`() {
+        val cardType = CardType.STATS
+
+        viewModel.start()
+        viewModel.onCardToggled(cardType, true)
+
+        verify(analyticsTrackerWrapper).track(
+            AnalyticsTracker.Stat.PERSONALIZATION_SCREEN_CARD_SHOW_TAPPED,
+            mapOf(CARD_TYPE_TRACK_PARAM to cardType.trackingName)
+        )
+    }
+
+    @Test
+    fun `given card enabled, when card state is toggled, then event is tracked`() {
+        val cardType = CardType.STATS
+        whenever(appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(site.siteId)).thenReturn(false)
+
+        viewModel.start()
+        viewModel.onCardToggled(cardType, false)
+
+        verify(analyticsTrackerWrapper).track(
+            AnalyticsTracker.Stat.PERSONALIZATION_SCREEN_CARD_HIDE_TAPPED,
+            mapOf(CARD_TYPE_TRACK_PARAM to cardType.trackingName)
+        )
     }
 }

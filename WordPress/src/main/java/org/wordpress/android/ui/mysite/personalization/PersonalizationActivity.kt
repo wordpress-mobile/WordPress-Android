@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.personalisation
+package org.wordpress.android.ui.mysite.personalization
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -36,38 +36,38 @@ import org.wordpress.android.ui.compose.components.buttons.WPSwitch
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @AndroidEntryPoint
-class PersonalisationActivity : ComponentActivity() {
-    private val viewModel: PersonalisationViewModel by viewModels()
+class PersonalizationActivity : ComponentActivity() {
+    private val viewModel: PersonalizationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
                 viewModel.start()
-                PersonalisationScreen(viewModel.uiState.observeAsState())
+                PersonalizationScreen(viewModel.uiState.observeAsState())
             }
         }
     }
 
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    fun PersonalisationScreen(uiState: State<List<DashboardCardState>?>) {
+    fun PersonalizationScreen(uiState: State<List<DashboardCardState>?>) {
         Scaffold(
             topBar = {
                 MainTopAppBar(
-                    title = stringResource(id = R.string.personalisation_screen_title),
+                    title = stringResource(id = R.string.personalization_screen_title),
                     navigationIcon = NavigationIcons.BackIcon,
                     onNavigationIconClick = onBackPressedDispatcher::onBackPressed,
                 )
             },
             content = {
-                PersonalisationContent(uiState.value ?: emptyList())
+                PersonalizationContent(uiState.value ?: emptyList())
             }
         )
     }
 
     @Composable
-    fun PersonalisationContent(cardStateList: List<DashboardCardState>, modifier: Modifier = Modifier) {
+    fun PersonalizationContent(cardStateList: List<DashboardCardState>, modifier: Modifier = Modifier) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -82,7 +82,7 @@ class PersonalisationActivity : ComponentActivity() {
                 item {
                     Text(
                         modifier = Modifier.padding(start = 16.dp),
-                        text = stringResource(id = R.string.personalisation_screen_description),
+                        text = stringResource(id = R.string.personalization_screen_description),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
@@ -99,7 +99,7 @@ class PersonalisationActivity : ComponentActivity() {
                 item {
                     Text(
                         modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp),
-                        text = stringResource(id = R.string.personalisation_screen_footer_cards),
+                        text = stringResource(id = R.string.personalization_screen_footer_cards),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
