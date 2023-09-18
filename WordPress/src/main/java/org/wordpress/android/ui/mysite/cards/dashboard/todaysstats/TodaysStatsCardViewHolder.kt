@@ -18,7 +18,7 @@ import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.databinding.MySiteTodaysStatsCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TextWithLinks.Clickable
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
-import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
+import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.viewBinding
@@ -27,7 +27,7 @@ import com.google.android.material.R as MaterialR
 class TodaysStatsCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
-) : CardViewHolder<MySiteTodaysStatsCardBinding>(
+) : MySiteCardAndItemViewHolder<MySiteTodaysStatsCardBinding>(
     parent.viewBinding(MySiteTodaysStatsCardBinding::inflate)
 ) {
     private val linkColor = itemView.context.getColorFromAttribute(MaterialR.attr.colorPrimary)

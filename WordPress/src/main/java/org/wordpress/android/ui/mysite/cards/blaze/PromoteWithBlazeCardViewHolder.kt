@@ -6,7 +6,7 @@ import androidx.appcompat.widget.PopupMenu
 import org.wordpress.android.R
 import org.wordpress.android.databinding.PromoteWithBlazeCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.PromoteWithBlazeCard
-import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
+import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
@@ -14,7 +14,7 @@ import org.wordpress.android.util.extensions.viewBinding
 class PromoteWithBlazeCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
-) : CardViewHolder<PromoteWithBlazeCardBinding>(
+) : MySiteCardAndItemViewHolder<PromoteWithBlazeCardBinding>(
     parent.viewBinding(PromoteWithBlazeCardBinding::inflate)
 ) {
     fun bind(card: PromoteWithBlazeCard) = with(binding) {

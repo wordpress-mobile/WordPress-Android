@@ -8,7 +8,7 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteBloggingPromptCardBinding
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
-import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
+import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution.DAY_ONE
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.HtmlCompatWrapper
@@ -21,7 +21,7 @@ class BloggingPromptCardViewHolder(
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val htmlCompatWrapper: HtmlCompatWrapper,
     private val learnMoreClicked: () -> Unit
-) : CardViewHolder<MySiteBloggingPromptCardBinding>(
+) : MySiteCardAndItemViewHolder<MySiteBloggingPromptCardBinding>(
     parent.viewBinding(MySiteBloggingPromptCardBinding::inflate)
 ) {
     fun bind(card: BloggingPromptCardWithData) = with(binding) {
