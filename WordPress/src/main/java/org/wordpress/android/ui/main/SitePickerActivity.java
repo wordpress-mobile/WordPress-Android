@@ -111,7 +111,7 @@ public class SitePickerActivity extends LocaleAwareActivity
 
     @Nullable private SitePickerAdapter mAdapter;
     @Nullable private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private ActionMode mActionMode;
+    @Nullable private ActionMode mActionMode;
     private ActionMode mReblogActionMode;
     private MenuItem mMenuEdit;
     private MenuItem mMenuAdd;
@@ -775,12 +775,12 @@ public class SitePickerActivity extends LocaleAwareActivity
                 Set<SiteRecord> changeSet = getAdapter().setVisibilityForSelectedSites(true);
                 mChangeSet.addAll(changeSet);
                 mHasChanges = true;
-                mActionMode.finish();
+                if (mActionMode != null) mActionMode.finish();
             } else if (itemId == R.id.menu_hide) {
                 Set<SiteRecord> changeSet = getAdapter().setVisibilityForSelectedSites(false);
                 mChangeSet.addAll(changeSet);
                 mHasChanges = true;
-                mActionMode.finish();
+                if (mActionMode != null) mActionMode.finish();
             } else if (itemId == R.id.menu_select_all) {
                 getAdapter().selectAll();
             } else if (itemId == R.id.menu_deselect_all) {
