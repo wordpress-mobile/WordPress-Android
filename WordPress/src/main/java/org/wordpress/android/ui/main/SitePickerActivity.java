@@ -421,7 +421,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @SuppressWarnings("unchecked")
-    private void restoreSavedInstanceState(Bundle savedInstanceState) {
+    private void restoreSavedInstanceState(@Nullable Bundle savedInstanceState) {
         boolean isInSearchMode = false;
         String lastSearch = "";
 
