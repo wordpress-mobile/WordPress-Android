@@ -1,0 +1,6 @@
+23.2:
+- Neuer Chat-basierter Support-Kanal mit Service-Bot
+- Jetpack Paywall-Block anzeigen, suchen und entfernen
+- Ausgewählter Block für Links zu sozialen Netzwerken mit Überblick
+- Fehler im Block-Editor und Block-Inserter behoben
+- Support-Ticket für Fehler während Kontoschließung erstellen

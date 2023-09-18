@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-23 11:54:09+0000
+Translation-Revision-Date: 2023-09-05 06:06:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.7
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">Accede a este bloque de Paywall en tu navegador web para realizar ajustes avanzados.</string>
     <string name="contact_support_bot_ticket_comment_answer">Respuesta:</string>
     <string name="contact_support_bot_ticket_comment_question">Pregunta:</string>
     <string name="contact_support_bot_ticket_comment_start">Transcripción del bot móvil de Jetpack:</string>
@@ -107,7 +108,7 @@ Language: es
     <string name="account_closure_dialog_error_chargebacked_site">No es posible cerrar la cuenta de este usuario si tiene cargos rechazados sin resolver.</string>
     <string name="account_closure_dialog_error_atomic_site">No es posible cerrar la cuenta de este usuario de inmediato porque tiene compras activas. Contacta con nuestros Happiness Engineers para eliminar la cuenta definitivamente.</string>
     <string name="account_closure_dialog_error_unauthorized">No tienes autorización para cerrar la cuenta.</string>
-    <string name="account_closure_dialog_error_title">No se ha podido cerrar la cuenta automáticamente</string>
+    <string name="account_closure_dialog_error_title">No se ha podido cerrar la cuenta automáticamente.</string>
     <string name="account_closure_dialog_title">Confirmar el cierre de la cuenta…</string>
     <string name="account_closure_dialog_message">Para confirmar, vuelve a introducir tu nombre de usuario antes de cerrarla.</string>
     <string name="close_account">Cerrar cuenta</string>

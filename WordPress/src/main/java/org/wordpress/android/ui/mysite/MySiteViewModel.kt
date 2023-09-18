@@ -85,6 +85,7 @@ import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHe
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
+import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlice
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -193,7 +194,8 @@ class MySiteViewModel @Inject constructor(
     private val mySiteInfoItemBuilder: MySiteInfoItemBuilder,
     private val personalizeCardViewModelSlice: PersonalizeCardViewModelSlice,
     private val personalizeCardBuilder: PersonalizeCardBuilder,
-    private val bloggingPromptCardViewModelSlice: BloggingPromptCardViewModelSlice
+    private val bloggingPromptCardViewModelSlice: BloggingPromptCardViewModelSlice,
+    private val noCardsMessageViewModelSlice: NoCardsMessageViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -572,6 +574,8 @@ class MySiteViewModel @Inject constructor(
 
         val personalizeCard = personalizeCardBuilder.build(personalizeCardViewModelSlice.getBuilderParams())
 
+        val noCardsMessage = noCardsMessageViewModelSlice.buildNoCardsMessage(cardsResult)
+
         return mapOf(
             MySiteTabType.ALL to orderForDisplay(
                 infoItem = infoItem,
@@ -602,6 +606,7 @@ class MySiteViewModel @Inject constructor(
                 siteItems = listOf(),
                 jetpackBadge = jetpackBadge,
                 jetpackSwitchMenu = jetpackSwitchMenu,
+                noCardsMessage = noCardsMessage,
                 personalizeCard = personalizeCard
             )
         )
@@ -726,6 +731,7 @@ class MySiteViewModel @Inject constructor(
         jetpackBadge: JetpackBadge? = null,
         jetpackFeatureCard: JetpackFeatureCard? = null,
         jetpackSwitchMenu: MySiteCardAndItem.Card.JetpackSwitchMenu? = null,
+        noCardsMessage : MySiteCardAndItem.Card.NoCardsMessage? = null,
         personalizeCard: MySiteCardAndItem.Card.PersonalizeCardModel? = null
     ): List<MySiteCardAndItem> {
         return mutableListOf<MySiteCardAndItem>().apply {
@@ -733,6 +739,7 @@ class MySiteViewModel @Inject constructor(
             migrationSuccessCard?.let { add(migrationSuccessCard) }
             jetpackInstallFullPluginCard?.let { add(jetpackInstallFullPluginCard) }
             addAll(cards)
+            noCardsMessage?.let { add(noCardsMessage) }
             personalizeCard?.let { add(personalizeCard) }
             addAll(siteItems)
             jetpackBadge?.let { add(jetpackBadge) }
@@ -1388,6 +1395,8 @@ class MySiteViewModel @Inject constructor(
         dashboardCardPlansUtils.trackCardShown(viewModelScope, siteSelected)
         siteSelected.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>()
             .forEach { personalizeCardViewModelSlice.trackShown(it.type) }
+        siteSelected.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>()
+            .forEach { noCardsMessageViewModelSlice.trackShown(it.type) }
     }
 
     private fun resetShownTrackers() {

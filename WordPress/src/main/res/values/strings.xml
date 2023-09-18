@@ -2280,7 +2280,9 @@
     <string name="support_ticket_subject">WordPress for Android Support</string>
 
     <string name="contact_support_input_placeholder">Send a message…</string>
+    <string name="contact_support_first_message_hi">Hi there, I\'m the Jetpack AI Assistant.</string>
     <string name="contact_support_first_message">What can I help you with?</string>
+    <string name="contact_support_first_message_hint">If I can\'t answer your question, I\'ll help you open a support ticket with our team!</string>
     <string name="contact_support_get_support">Contact support</string>
     <string name="contact_support_suggestions">Not sure what to ask?</string>
     <string name="contact_support_question_one">What is my site address?</string>
@@ -4722,5 +4724,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="personalization_screen_activity_log_card_description">Recent actions taken on your site.</string>
     <string name="personalization_screen_next_steps_card_title" translatable="false">@string/quick_start_sites</string>
     <string name="personalization_screen_next_steps_card_description">Learn how to make the most of your site with the app.</string>
+
+    <string name="my_site_dashboard_no_cards_message_title">All cards are hidden</string>
+    <string name="my_site_dashboard_no_cards_message_description">Tap the personalise button to show more cards.</string>
 
 </resources>

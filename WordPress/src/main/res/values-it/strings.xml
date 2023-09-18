@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-23 11:54:08+0000
+Translation-Revision-Date: 2023-09-06 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.7
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">Accedi a questo blocco Paywall sul tuo browser web per impostazioni avanzate.</string>
     <string name="contact_support_bot_ticket_comment_answer">Risposta:</string>
     <string name="contact_support_bot_ticket_comment_question">Domanda:</string>
     <string name="contact_support_bot_ticket_comment_start">Trascrizione di bot di Jetpack per dispositivi mobili:</string>
@@ -20,7 +21,7 @@ Language: it
     <string name="contact_support_question_one">Qual è il mio indirizzo del sito?</string>
     <string name="contact_support_suggestions">Non sei sicuro di cosa chiedere?</string>
     <string name="contact_support_get_support">Contatta il supporto</string>
-    <string name="contact_support_first_message">Con cosa possiamo aiutarti?</string>
+    <string name="contact_support_first_message">Come posso aiutarti?</string>
     <string name="contact_support_input_placeholder">Invia un messaggio…</string>
     <string name="post_settings_jetpack_social_share_message_clear">Chiaro</string>
     <string name="jetpack_social_social_shares_remaining">%1$d condivisioni sui social rimanenti</string>
@@ -106,7 +107,7 @@ Language: it
     <string name="account_closure_dialog_error_chargebacked_site">Questo account utente non può essere chiuso se sono presenti revoche non risolte.</string>
     <string name="account_closure_dialog_error_atomic_site">Questo account utente non può essere chiuso immediatamente perché ha acquisti attivi. Contatta il nostro team di supporto per completare l\'eliminazione dell\'account.</string>
     <string name="account_closure_dialog_error_unauthorized">Non possiedi l\'autorizzazione necessaria per chiudere l\'account.</string>
-    <string name="account_closure_dialog_error_title">Impossibile chiudere l\'account automaticamente\"</string>
+    <string name="account_closure_dialog_error_title">Impossibile chiudere l\'account automaticamente.</string>
     <string name="account_closure_dialog_title">Conferma chiusura dell\'account…</string>
     <string name="account_closure_dialog_message">Per confermare, inserisci nuovamente il nome utente prima di chiudere.</string>
     <string name="close_account">Chiudi account</string>

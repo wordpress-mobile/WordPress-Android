@@ -2615,7 +2615,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case PERSONALIZATION_SCREEN_CARD_HIDE_TAPPED:
                 return "personalization_screen_card_hide_tapped";
             case PERSONALIZATION_SCREEN_CARD_SHOW_TAPPED:
-                return "personalization_screen_card_show_tapped\t";
+                return "personalization_screen_card_show_tapped";
         }
         return null;
     }

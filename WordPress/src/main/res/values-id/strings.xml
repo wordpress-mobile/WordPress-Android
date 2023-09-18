@@ -20,7 +20,6 @@ Language: id
     <string name="contact_support_question_one">Apa alamat situs saya?</string>
     <string name="contact_support_suggestions">Tidak yakin ingin menanyakan apa?</string>
     <string name="contact_support_get_support">Hubungi dukungan</string>
-    <string name="contact_support_first_message">Apa yang bisa kami bantu?</string>
     <string name="contact_support_input_placeholder">Mengirimkan pesan…</string>
     <string name="post_settings_jetpack_social_share_message_clear">Hapus</string>
     <string name="jetpack_social_social_shares_remaining">Tersisa %1$d kesempatan berbagi pos ke media sosial</string>
@@ -107,7 +106,6 @@ Language: id
     <string name="account_closure_dialog_error_chargebacked_site">Akun pengguna ini tidak dapat ditutup jika ada proses penagihan balik yang belum terselesaikan.</string>
     <string name="account_closure_dialog_error_atomic_site">Akun pengguna ini tidak dapat segera ditutup karena memiliki pembelian aktif. Hubungi tim dukungan kami untuk menyelesaikan penghapusan akun.</string>
     <string name="account_closure_dialog_error_unauthorized">Anda tidak berwenang untuk menutup akun.</string>
-    <string name="account_closure_dialog_error_title">Tidak dapat menutup akun secara otomatis\"</string>
     <string name="account_closure_dialog_title">Konfirmasi Penutupan Akun …</string>
     <string name="account_closure_dialog_message">Untuk mengonfirmasi, silakan masukkan lagi nama pengguna Anda sebelum menutup.</string>
     <string name="close_account">Tutup Akun</string>

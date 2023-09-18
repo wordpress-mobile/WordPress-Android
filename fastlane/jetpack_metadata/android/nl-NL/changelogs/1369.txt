@@ -1,0 +1,6 @@
+23.2:
+- Nieuw op chat gebaseerd ondersteuningskanaal met servicebot
+- Jetpack Paywall-blok bekijken, zoeken en verwijderen
+- Omranding geselecteerd sociale link-blok
+- Crashes opgelost in de blokeditor en blokinvoeger
+- Tickets aanmaken voor fouten tijdens het verwijderen van accounts
