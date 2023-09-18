@@ -116,7 +116,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Nullable private MenuItem mMenuEdit;
     @Nullable private MenuItem mMenuAdd;
     @Nullable private MenuItem mMenuSearch;
-    private SearchView mSearchView;
+    @Nullable private SearchView mSearchView;
     private int mCurrentLocalId;
     private SitePickerMode mSitePickerMode;
     private final Debouncer mDebouncer = new Debouncer();
