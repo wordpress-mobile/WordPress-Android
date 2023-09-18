@@ -4723,4 +4723,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="personalization_screen_next_steps_card_title" translatable="false">@string/quick_start_sites</string>
     <string name="personalization_screen_next_steps_card_description">Learn how to make the most of your site with the app.</string>
 
+    <string name="my_site_dashboard_no_cards_message_title">No cards to display</string>
+    <string name="my_site_dashboard_no_cards_message_description">Add cards that fit your needs to see information about your site.</string>
+
 </resources>
