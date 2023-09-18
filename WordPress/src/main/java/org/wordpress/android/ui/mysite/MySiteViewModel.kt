@@ -599,6 +599,8 @@ class MySiteViewModel @Inject constructor(
 
         val personalizeCard = personalizeCardBuilder.build(personalizeCardViewModelSlice.getBuilderParams())
 
+        val noCardsMessage = buildNoCardsMessage(cardsResult)
+
         return mapOf(
             MySiteTabType.ALL to orderForDisplay(
                 infoItem = infoItem,
@@ -629,8 +631,31 @@ class MySiteViewModel @Inject constructor(
                 siteItems = listOf(),
                 jetpackBadge = jetpackBadge,
                 jetpackSwitchMenu = jetpackSwitchMenu,
+                noCardsMessage = noCardsMessage,
                 personalizeCard = personalizeCard
             )
+        )
+    }
+
+    private fun buildNoCardsMessage(cardsResult: List<MySiteCardAndItem>): MySiteCardAndItem.Card.NoCardsMessage? {
+        val cards = cardsResult.filter {
+            it.type == Type.QUICK_START_CARD || it.type == Type.DOMAIN_REGISTRATION_CARD
+        }
+
+        val dashboardCards = cardsResult.find {
+            it.type == Type.DASHBOARD_CARDS
+        } as DashboardCards
+
+        if(cards.isEmpty() && dashboardCards.cards.isEmpty())
+            return buildNoCardsMessage()
+
+        return null
+    }
+
+    private fun buildNoCardsMessage(): MySiteCardAndItem.Card.NoCardsMessage {
+        return MySiteCardAndItem.Card.NoCardsMessage(
+            title = UiStringRes(R.string.my_site_dashboard_no_cards_message_title),
+            message = UiStringRes(R.string.my_site_dashboard_no_cards_message_description),
         )
     }
 
@@ -706,6 +731,7 @@ class MySiteViewModel @Inject constructor(
         jetpackBadge: JetpackBadge? = null,
         jetpackFeatureCard: JetpackFeatureCard? = null,
         jetpackSwitchMenu: MySiteCardAndItem.Card.JetpackSwitchMenu? = null,
+        noCardsMessage : MySiteCardAndItem.Card.NoCardsMessage? = null,
         personalizeCard: MySiteCardAndItem.Card.PersonalizeCardModel? = null
     ): List<MySiteCardAndItem> {
         return mutableListOf<MySiteCardAndItem>().apply {
@@ -713,6 +739,7 @@ class MySiteViewModel @Inject constructor(
             migrationSuccessCard?.let { add(migrationSuccessCard) }
             jetpackInstallFullPluginCard?.let { add(jetpackInstallFullPluginCard) }
             addAll(cards)
+            noCardsMessage?.let { add(noCardsMessage) }
             personalizeCard?.let { add(personalizeCard) }
             addAll(siteItems)
             jetpackBadge?.let { add(jetpackBadge) }
