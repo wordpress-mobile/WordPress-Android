@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,6 +30,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.databinding.SitePickerActivityBinding;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -39,7 +39,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.fluxc.store.StatsStore;
-import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -50,7 +49,6 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
@@ -113,7 +111,6 @@ public class SitePickerActivity extends LocaleAwareActivity
     private static final String TRACK_PROPERTY_VISIBLE = "visible";
 
     private SitePickerAdapter mAdapter;
-    private EmptyViewRecyclerView mRecycleView;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ActionMode mActionMode;
     private ActionMode mReblogActionMode;
@@ -141,18 +138,21 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject WPIndividualPluginOverlayFeatureConfig mWPIndividualPluginOverlayFeatureConfig;
 
+    @Nullable private SitePickerActivityBinding mBinding = null;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(SitePickerViewModel.class);
 
-        setContentView(R.layout.site_picker_activity);
+        mBinding = SitePickerActivityBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
         restoreSavedInstanceState(savedInstanceState);
         setupActionBar();
         setupRecycleView();
 
-        initSwipeToRefreshHelper(findViewById(android.R.id.content));
+        initSwipeToRefreshHelper(mBinding);
         if (savedInstanceState != null) {
             mSwipeToRefreshHelper.setRefreshing(savedInstanceState.getBoolean(KEY_REFRESHING, false));
         } else {
@@ -379,12 +379,9 @@ public class SitePickerActivity extends LocaleAwareActivity
         }, 200, TimeUnit.MILLISECONDS);
     }
 
-    private void initSwipeToRefreshHelper(View view) {
-        if (view == null) {
-            return;
-        }
+    private void initSwipeToRefreshHelper(@NonNull SitePickerActivityBinding binding) {
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-                view.findViewById(R.id.ptr_layout),
+                binding.ptrLayout,
                 () -> {
                     if (isFinishing()) {
                         return;
@@ -399,17 +396,17 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     private void setupRecycleView() {
-        mRecycleView = findViewById(R.id.recycler_view);
-        mRecycleView.setLayoutManager(new LinearLayoutManager(this));
-        mRecycleView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        if (mBinding != null) {
+            mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            mBinding.recyclerView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
 
-        mRecycleView.setItemAnimator(mSitePickerMode.isReblogMode() ? new DefaultItemAnimator() : null);
+            mBinding.recyclerView.setItemAnimator(mSitePickerMode.isReblogMode() ? new DefaultItemAnimator() : null);
 
-        mRecycleView.setAdapter(getAdapter());
+            mBinding.recyclerView.setAdapter(getAdapter());
 
-        ActionableEmptyView actionableEmptyView = findViewById(R.id.actionable_empty_view);
-        actionableEmptyView.updateLayoutForSearch(true, 0);
-        mRecycleView.setEmptyView(actionableEmptyView);
+            mBinding.actionableEmptyView.updateLayoutForSearch(true, 0);
+            mBinding.recyclerView.setEmptyView(mBinding.actionableEmptyView);
+        }
     }
 
     private void restoreSavedInstanceState(Bundle savedInstanceState) {
@@ -435,16 +432,17 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     private void setupActionBar() {
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.site_picker_title);
+        if (mBinding != null) {
+            setSupportActionBar(mBinding.toolbarMain);
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setHomeButtonEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setTitle(R.string.site_picker_title);
 
-            if (mSitePickerMode == SitePickerMode.REBLOG_CONTINUE_MODE && mReblogActionMode == null) {
-                mViewModel.onRefreshReblogActionMode();
+                if (mSitePickerMode == SitePickerMode.REBLOG_CONTINUE_MODE && mReblogActionMode == null) {
+                    mViewModel.onRefreshReblogActionMode();
+                }
             }
         }
     }
@@ -482,8 +480,8 @@ public class SitePickerActivity extends LocaleAwareActivity
                         if (mSitePickerMode == SitePickerMode.REBLOG_CONTINUE_MODE && !isInSearchMode) {
                             mAdapter.findAndSelect(mCurrentLocalId);
                             int scrollPos = mAdapter.getItemPosByLocalId(mCurrentLocalId);
-                            if (scrollPos > -1 && mRecycleView != null) {
-                                mRecycleView.scrollToPosition(scrollPos);
+                            if (scrollPos > -1 && mBinding != null) {
+                                mBinding.recyclerView.scrollToPosition(scrollPos);
                             }
                         }
                         mViewModel.onSiteListLoaded();
@@ -608,14 +606,18 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     private void enableSearchMode() {
-        setIsInSearchModeAndSetNewAdapter(true);
-        mRecycleView.swapAdapter(getAdapter(), true);
+        if (mBinding != null) {
+            setIsInSearchModeAndSetNewAdapter(true);
+            mBinding.recyclerView.swapAdapter(getAdapter(), true);
+        }
     }
 
     private void disableSearchMode() {
         hideSoftKeyboard();
-        setIsInSearchModeAndSetNewAdapter(false);
-        mRecycleView.swapAdapter(getAdapter(), true);
+        if (mBinding != null) {
+            setIsInSearchModeAndSetNewAdapter(false);
+            mBinding.recyclerView.swapAdapter(getAdapter(), true);
+        }
         invalidateOptionsMenu();
     }
 
@@ -680,7 +682,9 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     public void showProgress(boolean show) {
-        findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
+        if (mBinding != null) {
+            mBinding.progress.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void selectSiteAndFinish(SiteRecord siteRecord) {
@@ -848,7 +852,9 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     private void startEditingVisibility() {
-        mRecycleView.setItemAnimator(new DefaultItemAnimator());
+        if (mBinding != null) {
+            mBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
+        }
         getAdapter().setEnableEditMode(true, mSelectedPositions);
         startSupportActionMode(new ActionModeCallback());
         mIsInEditMode = true;
@@ -866,10 +872,12 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     private void showSiteCreatedButNotFetchedSnackbar() {
-        int duration = AccessibilityUtils
-                .getSnackbarDuration(this, getResources().getInteger(R.integer.site_creation_snackbar_duration));
-        String message = getString(R.string.site_created_but_not_fetched_snackbar_message);
-        WPDialogSnackbar.make(findViewById(R.id.coordinatorLayout), message, duration).show();
+        if (mBinding != null) {
+            int duration = AccessibilityUtils
+                    .getSnackbarDuration(this, getResources().getInteger(R.integer.site_creation_snackbar_duration));
+            String message = getString(R.string.site_created_but_not_fetched_snackbar_message);
+            WPDialogSnackbar.make(mBinding.coordinatorLayout, message, duration).show();
+        }
     }
 
     private void trackVisibility(String blogId, boolean isVisible) {
