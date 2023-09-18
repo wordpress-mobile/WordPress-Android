@@ -58,7 +58,6 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.config.WPIndividualPluginOverlayFeatureConfig;
 import org.wordpress.android.util.helpers.Debouncer;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.viewmodel.main.SitePickerViewModel;
@@ -110,7 +109,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     private static final String TRACK_PROPERTY_BLOG_ID = "blog_id";
     private static final String TRACK_PROPERTY_VISIBLE = "visible";
 
-    private SitePickerAdapter mAdapter;
+    @Nullable private SitePickerAdapter mAdapter;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ActionMode mActionMode;
     private ActionMode mReblogActionMode;
@@ -432,7 +431,7 @@ public class SitePickerActivity extends LocaleAwareActivity
             mSitePickerMode = (SitePickerMode) getIntent().getSerializableExtra(KEY_SITE_PICKER_MODE);
         }
 
-        setNewAdapter(lastSearch, isInSearchMode);
+        mAdapter = createNewAdapter(lastSearch, isInSearchMode);
     }
 
     private void setupActionBar(@NonNull SitePickerActivityBinding binding) {
@@ -451,18 +450,20 @@ public class SitePickerActivity extends LocaleAwareActivity
 
     private void setIsInSearchModeAndSetNewAdapter(boolean isInSearchMode) {
         String lastSearch = getAdapter().getLastSearch();
-        setNewAdapter(lastSearch, isInSearchMode);
+        mAdapter = createNewAdapter(lastSearch, isInSearchMode);
     }
 
+    @NonNull
     private SitePickerAdapter getAdapter() {
         if (mAdapter == null) {
-            setNewAdapter("", false);
+            mAdapter = createNewAdapter("", false);
         }
         return mAdapter;
     }
 
-    private void setNewAdapter(String lastSearch, boolean isInSearchMode) {
-        mAdapter = new SitePickerAdapter(
+    @NonNull
+    private SitePickerAdapter createNewAdapter(String lastSearch, boolean isInSearchMode) {
+        SitePickerAdapter adapter = new SitePickerAdapter(
                 this,
                 R.layout.site_picker_listitem,
                 mCurrentLocalId,
@@ -481,8 +482,8 @@ public class SitePickerActivity extends LocaleAwareActivity
                         if (mBinding != null) {
                             showProgress(mBinding, false);
                             if (mSitePickerMode == SitePickerMode.REBLOG_CONTINUE_MODE && !isInSearchMode) {
-                                mAdapter.findAndSelect(mCurrentLocalId);
-                                int scrollPos = mAdapter.getItemPosByLocalId(mCurrentLocalId);
+                                getAdapter().findAndSelect(mCurrentLocalId);
+                                int scrollPos = getAdapter().getItemPosByLocalId(mCurrentLocalId);
                                 if (scrollPos > -1) {
                                     mBinding.recyclerView.scrollToPosition(scrollPos);
                                 }
@@ -493,8 +494,9 @@ public class SitePickerActivity extends LocaleAwareActivity
                 },
                 mSitePickerMode,
                 mIsInEditMode);
-        mAdapter.setOnSiteClickListener(this);
-        mAdapter.setOnSelectedCountChangedListener(this);
+        adapter.setOnSiteClickListener(this);
+        adapter.setOnSelectedCountChangedListener(this);
+        return adapter;
     }
 
     private void saveSiteVisibility(SiteRecord siteRecord) {
