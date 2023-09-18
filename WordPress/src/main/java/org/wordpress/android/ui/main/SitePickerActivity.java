@@ -115,7 +115,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Nullable private ActionMode mReblogActionMode;
     @Nullable private MenuItem mMenuEdit;
     @Nullable private MenuItem mMenuAdd;
-    private MenuItem mMenuSearch;
+    @Nullable private MenuItem mMenuSearch;
     private SearchView mSearchView;
     private int mCurrentLocalId;
     private SitePickerMode mSitePickerMode;
@@ -255,9 +255,10 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Override
     public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (mBinding != null) {
+        if (mBinding != null && mMenuSearch != null) {
             updateMenuItemVisibility();
-            setupSearchView(mBinding);
+            mSearchView = getSearchView(mMenuSearch);
+            setupSearchView(mBinding, mMenuSearch, mSearchView);
             return true;
         } else {
             return false;
@@ -581,11 +582,19 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
     }
 
-    private void setupSearchView(@NonNull SitePickerActivityBinding binding) {
-        mSearchView = (SearchView) mMenuSearch.getActionView();
-        mSearchView.setMaxWidth(Integer.MAX_VALUE);
+    @NonNull
+    private SearchView getSearchView(@NonNull MenuItem menuSearch) {
+        SearchView searchView = (SearchView) menuSearch.getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        return searchView;
+    }
 
-        mMenuSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+    private void setupSearchView(
+            @NonNull SitePickerActivityBinding binding,
+            @NonNull MenuItem menuSearch,
+            @NonNull SearchView searchView
+    ) {
+        menuSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
                 if (!getAdapter().getIsInSearchMode() && mMenuEdit != null && mMenuAdd != null) {
@@ -593,7 +602,7 @@ public class SitePickerActivity extends LocaleAwareActivity
                     mMenuEdit.setVisible(false);
                     mMenuAdd.setVisible(false);
 
-                    mSearchView.setOnQueryTextListener(SitePickerActivity.this);
+                    searchView.setOnQueryTextListener(SitePickerActivity.this);
                 }
 
                 return true;
@@ -602,19 +611,22 @@ public class SitePickerActivity extends LocaleAwareActivity
             @Override
             public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 disableSearchMode(binding);
-                mSearchView.setOnQueryTextListener(null);
+                searchView.setOnQueryTextListener(null);
                 return true;
             }
         });
 
-        setQueryIfInSearch();
+        setQueryIfInSearch(menuSearch, searchView);
     }
 
-    private void setQueryIfInSearch() {
+    private void setQueryIfInSearch(
+            @NonNull MenuItem menuSearch,
+            @NonNull SearchView searchView
+    ) {
         if (getAdapter().getIsInSearchMode()) {
-            mMenuSearch.expandActionView();
-            mSearchView.setOnQueryTextListener(SitePickerActivity.this);
-            mSearchView.setQuery(getAdapter().getLastSearch(), true);
+            menuSearch.expandActionView();
+            searchView.setOnQueryTextListener(SitePickerActivity.this);
+            searchView.setQuery(getAdapter().getLastSearch(), true);
         }
     }
 
