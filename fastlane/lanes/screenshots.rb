@@ -20,7 +20,7 @@ SCREENSHOT_LOCALES = ALL_LOCALES
 
 platform :android do
   # Takes screenshots for the WordPress or Jetpack app across multiple device and locales.
-  # 
+  #
   # @option [String|Symbol] app The app to take screenshots for. Must be `wordpress` or `jetpack`
   # @option [String] device The device type to limit the build of screenshots for (e.g. `phone` or `tenInch`). Defaults to building all device types defined in `SCREENSHOT_DEVICES`.
   # @option [Array<String>] locale The Google Play locale code(s) to build the screenshots. Default to all the ones in `SCREENSHOT_LOCALES`.
@@ -37,11 +37,11 @@ platform :android do
     # Allow creating screenshots for just one device type
     screenshot_devices = SCREENSHOT_DEVICES
     screenshot_devices = screenshot_devices.select { |device| device[:device_type].casecmp(options[:device]) == 0 } unless options[:device].nil?
-    
+
     # Allow creating screenshots for just one locale
     locales = SCREENSHOT_LOCALES
     locales = options[:locale].split(',') unless options[:locale].nil?
-    
+
     UI.message("Will run screenshot for devices: #{screenshot_devices.map { |d| "#{d[:device]} API #{d[:api]}" }.inspect } and locales: #{locales.inspect}")
 
     apk_dir = File.join('WordPress', 'build', 'outputs', 'apk')
@@ -237,6 +237,7 @@ platform :android do
       skip_upload_changelogs: true,
       skip_upload_images: true,
       skip_upload_screenshots: false,
+      sync_image_upload: true,
       json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
     )
   end
@@ -252,7 +253,7 @@ platform :android do
   # Cleans up the raw screenshots filenames, to remove any extra clutter like dates or test class name from them,
   # converting them from JPG to PNG if necessary.
   #
-  # @param [String|Symbol] app 
+  # @param [String|Symbol] app
   # @param [String] dir The directory where the raw screenshots to clean up are located
   #
   def clean_raw_screenshot_filenames(app:, dir:)
