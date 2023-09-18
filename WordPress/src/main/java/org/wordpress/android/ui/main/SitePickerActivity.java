@@ -225,7 +225,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(KEY_SITE_LOCAL_ID, mCurrentLocalId);
         outState.putBoolean(KEY_IS_IN_SEARCH_MODE, getAdapter().getIsInSearchMode());
         outState.putString(KEY_LAST_SEARCH, getAdapter().getLastSearch());
@@ -307,7 +307,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
@@ -668,13 +668,13 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onQueryTextSubmit(String s) {
+    public boolean onQueryTextSubmit(@NonNull String s) {
         hideSoftKeyboard();
         return true;
     }
 
     @Override
-    public boolean onQueryTextChange(String s) {
+    public boolean onQueryTextChange(@NonNull String s) {
         if (getAdapter().getIsInSearchMode()) {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_SEARCH_PERFORMED);
             getAdapter().setLastSearch(s);
@@ -724,7 +724,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         @Override
-        public void onDestroyActionMode(ActionMode mode) {
+        public void onDestroyActionMode(@NonNull ActionMode mode) {
             mViewModel.onReblogActionBackSelected();
             mReblogActionMode = null;
         }
@@ -783,7 +783,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
+        public void onDestroyActionMode(@NonNull ActionMode actionMode) {
             if (mHasChanges) {
                 saveSitesVisibility(mChangeSet);
             }
@@ -828,7 +828,7 @@ public class SitePickerActivity extends LocaleAwareActivity
 
         @NonNull
         @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
+        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
             SiteCreationSource source =
                     SiteCreationSource.fromString(getArguments().getString(ARG_SITE_CREATION_SOURCE));
             CharSequence[] items =
