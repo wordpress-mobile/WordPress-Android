@@ -812,6 +812,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
     }
 
+    @SuppressWarnings("deprecation")
     private static void showAddSiteDialog(Activity activity, SiteCreationSource source) {
         DialogFragment dialog = new AddSiteDialog();
         Bundle args = new Bundle();
@@ -824,11 +825,13 @@ public class SitePickerActivity extends LocaleAwareActivity
      * dialog which appears after user taps "Add site" - enables choosing whether to create
      * a new wp.com blog or add an existing self-hosted one
      */
+    @SuppressWarnings("deprecation")
     public static class AddSiteDialog extends DialogFragment {
         static final String ADD_SITE_DIALOG_TAG = "add_site_dialog";
 
         @NonNull
         @Override
+        @SuppressWarnings("deprecation")
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
             SiteCreationSource source =
                     SiteCreationSource.fromString(getArguments().getString(ARG_SITE_CREATION_SOURCE));
