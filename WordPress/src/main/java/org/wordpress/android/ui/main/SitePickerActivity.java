@@ -190,7 +190,7 @@ public class SitePickerActivity extends LocaleAwareActivity
                         case CONTINUE_REBLOG_TO:
                             if (!mSitePickerMode.isReblogMode()) break;
                             SiteRecord siteToReblog = ((ContinueReblogTo) action).getSiteForReblog();
-                            selectSiteAndFinish(siteToReblog);
+                            if (siteToReblog != null) selectSiteAndFinish(siteToReblog);
                             break;
                         case ASK_FOR_SITE_SELECTION:
                             if (!mSitePickerMode.isReblogMode()) break;
@@ -687,7 +687,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         binding.progress.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
-    private void selectSiteAndFinish(SiteRecord siteRecord) {
+    private void selectSiteAndFinish(@NonNull SiteRecord siteRecord) {
         hideSoftKeyboard();
         AppPrefs.addRecentlyPickedSiteId(siteRecord.getLocalId());
         setResult(RESULT_OK, new Intent().putExtra(KEY_SITE_LOCAL_ID, siteRecord.getLocalId()));
