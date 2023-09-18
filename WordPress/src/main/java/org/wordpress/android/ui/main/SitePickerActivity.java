@@ -120,7 +120,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     private int mCurrentLocalId;
     @Nullable private SitePickerMode mSitePickerMode;
     @NonNull private final Debouncer mDebouncer = new Debouncer();
-    private SitePickerViewModel mViewModel;
+    @Nullable private SitePickerViewModel mViewModel;
 
     private HashSet<Integer> mSelectedPositions = new HashSet<>();
     private boolean mIsInEditMode;
@@ -305,7 +305,7 @@ public class SitePickerActivity extends LocaleAwareActivity
             addSite(this, mAccountStore.hasAccessToken(), SiteCreationSource.MY_SITE);
             return true;
         } else if (itemId == R.id.continue_flow) {
-            mViewModel.onContinueFlowSelected();
+            if (mViewModel != null) mViewModel.onContinueFlowSelected();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -452,7 +452,7 @@ public class SitePickerActivity extends LocaleAwareActivity
             actionBar.setTitle(R.string.site_picker_title);
 
             if (mSitePickerMode == SitePickerMode.REBLOG_CONTINUE_MODE && mReblogActionMode == null) {
-                mViewModel.onRefreshReblogActionMode();
+                if (mViewModel != null) mViewModel.onRefreshReblogActionMode();
             }
         }
     }
@@ -488,7 +488,7 @@ public class SitePickerActivity extends LocaleAwareActivity
 
                     @Override
                     public void onAfterLoad() {
-                        if (mBinding != null) {
+                        if (mBinding != null && mViewModel != null) {
                             showProgress(mBinding, false);
                             if (mSitePickerMode == SitePickerMode.REBLOG_CONTINUE_MODE && !isInSearchMode) {
                                 getAdapter().findAndSelect(mCurrentLocalId);
@@ -681,7 +681,7 @@ public class SitePickerActivity extends LocaleAwareActivity
 
     @Override
     public void onSiteClick(SiteRecord siteRecord) {
-        if (mSitePickerMode != null && mSitePickerMode.isReblogMode()) {
+        if (mSitePickerMode != null && mSitePickerMode.isReblogMode() && mViewModel != null) {
             mCurrentLocalId = siteRecord.getLocalId();
             mViewModel.onSiteForReblogSelected(siteRecord);
         } else if (mActionMode == null) {
@@ -738,7 +738,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
             int itemId = item.getItemId();
 
-            if (itemId == R.id.continue_flow) {
+            if (itemId == R.id.continue_flow && mViewModel != null) {
                 mViewModel.onContinueFlowSelected();
             }
 
@@ -747,7 +747,7 @@ public class SitePickerActivity extends LocaleAwareActivity
 
         @Override
         public void onDestroyActionMode(@NonNull ActionMode mode) {
-            mViewModel.onReblogActionBackSelected();
+            if (mViewModel != null) mViewModel.onReblogActionBackSelected();
             mReblogActionMode = null;
         }
     }
