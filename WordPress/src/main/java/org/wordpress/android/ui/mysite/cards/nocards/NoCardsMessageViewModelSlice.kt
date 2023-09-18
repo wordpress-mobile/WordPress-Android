@@ -14,6 +14,8 @@ class NoCardsMessageViewModelSlice @Inject constructor(
     private val cardsShownTracked = mutableListOf<MySiteCardAndItem.Type>()
 
     fun buildNoCardsMessage(cardsResult: List<MySiteCardAndItem>): MySiteCardAndItem.Card.NoCardsMessage? {
+        if(cardsResult.isEmpty()) return buildNoCardsMessage()
+
         val cards = cardsResult.filter {
             it.type == MySiteCardAndItem.Type.QUICK_START_CARD ||
                     it.type == MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
@@ -21,9 +23,9 @@ class NoCardsMessageViewModelSlice @Inject constructor(
 
         val dashboardCards = cardsResult.find {
             it.type == MySiteCardAndItem.Type.DASHBOARD_CARDS
-        } as MySiteCardAndItem.Card.DashboardCards
+        } as MySiteCardAndItem.Card.DashboardCards?
 
-        if(cards.isEmpty() && dashboardCards.cards.isEmpty())
+        if(cards.isEmpty() && (dashboardCards == null || dashboardCards.cards.isEmpty()))
             return buildNoCardsMessage()
 
         return null
