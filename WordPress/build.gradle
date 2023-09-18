@@ -145,6 +145,7 @@ android {
         buildConfigField "boolean", "SITE_EDITOR_MVP", "false"
         buildConfigField "boolean", "JETPACK_SOCIAL", "false"
         buildConfigField "boolean", "CONTACT_SUPPORT_CHATBOT", "false"
+        buildConfigField "boolean", "ENABLE_DOMAIN_MANAGEMENT_FEATURE", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
