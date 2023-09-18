@@ -119,7 +119,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Nullable private SearchView mSearchView;
     private int mCurrentLocalId;
     @Nullable private SitePickerMode mSitePickerMode;
-    private final Debouncer mDebouncer = new Debouncer();
+    @NonNull private final Debouncer mDebouncer = new Debouncer();
     private SitePickerViewModel mViewModel;
 
     private HashSet<Integer> mSelectedPositions = new HashSet<>();
