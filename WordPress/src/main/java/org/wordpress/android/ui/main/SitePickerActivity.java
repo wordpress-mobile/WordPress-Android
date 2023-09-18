@@ -114,7 +114,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Nullable private ActionMode mActionMode;
     @Nullable private ActionMode mReblogActionMode;
     @Nullable private MenuItem mMenuEdit;
-    private MenuItem mMenuAdd;
+    @Nullable private MenuItem mMenuAdd;
     private MenuItem mMenuSearch;
     private SearchView mSearchView;
     private int mCurrentLocalId;
@@ -588,7 +588,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         mMenuSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
-                if (!getAdapter().getIsInSearchMode() && mMenuEdit != null) {
+                if (!getAdapter().getIsInSearchMode() && mMenuEdit != null && mMenuAdd != null) {
                     enableSearchMode(binding);
                     mMenuEdit.setVisible(false);
                     mMenuAdd.setVisible(false);
