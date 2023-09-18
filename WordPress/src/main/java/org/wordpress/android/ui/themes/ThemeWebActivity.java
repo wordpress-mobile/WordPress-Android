@@ -138,7 +138,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         if (shouldShowActivateMenuItem()) {
             getMenuInflater().inflate(R.menu.theme_web, menu);
         }
@@ -146,7 +146,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_activate) {
             Intent returnIntent = new Intent();
             setResult(RESULT_OK, returnIntent);

@@ -1,0 +1,4 @@
+23.2:
+- Sosyal Bağlantı bloku seçili olduğunu görebilmeniz için bir taslak içeriyor.
+- Blok düzenleyicisinde, iç içe Sütunlar blokunu Grup blokuna dönüştürdüğünüzde uygulamanın artık çökmemesi gerekiyor.
+- Blok ekleyicide artık blok türü için arama yaptığınızda uygulama çökmeyecek.

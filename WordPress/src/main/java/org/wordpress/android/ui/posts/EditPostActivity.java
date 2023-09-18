@@ -1353,7 +1353,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_post, menu);
@@ -1361,7 +1361,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         boolean showMenuItems = true;
         if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
             showMenuItems = false;
@@ -1575,7 +1575,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     // Menu actions
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
 
         if (itemId == android.R.id.home) {
@@ -3865,7 +3865,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
+    public boolean onMenuOpened(int featureId, @NonNull Menu menu) {
         // This is a workaround for bag discovered on Chromebooks, where Enter key will not work in the toolbar menu
         // Editor fragments are messing with window focus, which causes keyboard events to get ignored
 

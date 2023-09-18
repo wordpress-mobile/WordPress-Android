@@ -12,6 +12,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFull
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackSwitchMenu
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PersonalizeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
@@ -24,6 +25,8 @@ import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrati
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardViewHolder
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.SwitchToJetpackMenuCardViewHolder
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardViewHolder
+import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewHolder
+import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewHolder
 import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonViewHolder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
 import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemEmptyViewHolder
@@ -80,6 +83,8 @@ class MySiteAdapter(
             MySiteCardAndItem.Type.JETPACK_INSTALL_FULL_PLUGIN_CARD.ordinal -> JetpackInstallFullPluginCardViewHolder(
                 parent
             )
+            MySiteCardAndItem.Type.NO_CARDS_MESSAGE.ordinal -> NoCardsMessageViewHolder(parent)
+            MySiteCardAndItem.Type.PERSONALIZE_CARD.ordinal -> PersonalizeCardViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -100,6 +105,8 @@ class MySiteAdapter(
             is JetpackFeatureCardViewHolder -> holder.bind(getItem(position) as JetpackFeatureCard)
             is SwitchToJetpackMenuCardViewHolder -> holder.bind(getItem(position) as JetpackSwitchMenu)
             is JetpackInstallFullPluginCardViewHolder -> holder.bind(getItem(position) as JetpackInstallFullPluginCard)
+            is NoCardsMessageViewHolder -> holder.bind(getItem(position) as MySiteCardAndItem.Card.NoCardsMessage)
+            is PersonalizeCardViewHolder -> holder.bind(getItem(position) as PersonalizeCardModel)
         }
     }
 

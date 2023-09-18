@@ -1,0 +1,6 @@
+23.2:
+- Nuovo canale di supporto basato su chat con bot di servizio
+- Visualizza, individua e rimuovi il blocco Jetpack Paywall
+- Strutturato il blocco Link social selezionato
+- Risolti arresti anomali nell'editor a blocchi e nell'inseritore di blocchi
+- Creazione di ticket di supporto per gli errori che si verificano durante la chiusura dell'account

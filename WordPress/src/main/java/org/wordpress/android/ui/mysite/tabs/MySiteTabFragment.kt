@@ -45,6 +45,7 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.mysite.BloggingPromptCardNavigationAction
 import org.wordpress.android.ui.mysite.MySiteAdapter
 import org.wordpress.android.ui.mysite.MySiteCardAndItemDecoration
 import org.wordpress.android.ui.mysite.MySiteViewModel
@@ -291,51 +292,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         viewModel.onMediaUpload.observeEvent(viewLifecycleOwner, { UploadService.uploadMedia(requireActivity(), it) })
         dialogViewModel.onInteraction.observeEvent(viewLifecycleOwner, { viewModel.onDialogInteraction(it) })
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
-        viewModel.onShareBloggingPrompt.observeEvent(viewLifecycleOwner) { shareMessage(it) }
-        viewModel.onAnswerBloggingPrompt.observeEvent(viewLifecycleOwner) {
-            val site = it.first
-            val bloggingPromptId = it.second
-            ActivityLauncher.addNewPostForResult(
-                activity,
-                site,
-                false,
-                PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
-                bloggingPromptId,
-                EntryPoint.MY_SITE_CARD_ANSWER_PROMPT
-            )
-        }
-        viewModel.onBloggingPromptsViewAnswers.observeEvent(viewLifecycleOwner) { tag ->
-            ReaderActivityLauncher.showReaderTagPreview(
-                activity,
-                tag,
-                ReaderTracker.SOURCE_BLOGGING_PROMPTS_VIEW_ANSWERS,
-                readerTracker,
-            )
-        }
-        viewModel.onBloggingPromptsLearnMore.observeEvent(viewLifecycleOwner) {
-            (activity as? BloggingPromptsOnboardingListener)?.onShowBloggingPromptsOnboarding()
-        }
-        viewModel.onBloggingPromptsViewMore.observeEvent(viewLifecycleOwner) {
-            ActivityLauncher.showBloggingPromptsListActivity(activity)
-        }
-        viewModel.onBloggingPromptsRemoved.observeEvent(viewLifecycleOwner) {
-            context?.run {
-                val title = getString(R.string.my_site_blogging_prompt_card_removed_snackbar_title)
-                val subtitle = HtmlCompat.fromHtml(
-                    getString(R.string.my_site_blogging_prompt_card_removed_snackbar_subtitle),
-                    HtmlCompat.FROM_HTML_MODE_COMPACT
-                )
-                val message = TitleSubtitleSnackbarSpannable.create(this, title, subtitle)
-
-                val snackbarContent = SnackbarMessageHolder(
-                    message = UiStringText(message),
-                    buttonTitle = UiString.UiStringRes(R.string.undo),
-                    buttonAction = { viewModel.onBloggingPromptUndoClick() },
-                    isImportant = true
-                )
-                showSnackbar(snackbarContent)
-            }
-        }
         viewModel.onOpenJetpackInstallFullPluginOnboarding.observeEvent(viewLifecycleOwner) {
             JetpackFullPluginInstallOnboardingDialogFragment.newInstance().show(
                 requireActivity().supportFragmentManager,
@@ -479,6 +435,61 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         is SiteNavigationAction.OpenDomainTransferPage -> activityNavigator.openDomainTransfer(
             requireActivity(), action.url
         )
+
+        is BloggingPromptCardNavigationAction -> handleNavigation(action)
+
+        is SiteNavigationAction.OpenDashboardPersonalization -> activityNavigator.openDashboardPersonalization(
+            requireActivity()
+        )
+    }
+
+    private fun handleNavigation(action: BloggingPromptCardNavigationAction) {
+        when (action) {
+            is BloggingPromptCardNavigationAction.SharePrompt -> shareMessage(action.message)
+            is BloggingPromptCardNavigationAction.AnswerPrompt -> {
+                ActivityLauncher.addNewPostForResult(
+                    activity,
+                    action.selectedSite,
+                    false,
+                    PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
+                    action.promptId,
+                    EntryPoint.MY_SITE_CARD_ANSWER_PROMPT
+                )
+            }
+            is BloggingPromptCardNavigationAction.ViewAnswers -> {
+                ReaderActivityLauncher.showReaderTagPreview(
+                    activity,
+                    action.readerTag,
+                    ReaderTracker.SOURCE_BLOGGING_PROMPTS_VIEW_ANSWERS,
+                    readerTracker,
+                )
+            }
+            BloggingPromptCardNavigationAction.LearnMore ->
+                (activity as? BloggingPromptsOnboardingListener)?.onShowBloggingPromptsOnboarding()
+            is BloggingPromptCardNavigationAction.CardRemoved ->
+                showBloggingPromptCardRemoveConfirmation(action.undoClick)
+            BloggingPromptCardNavigationAction.ViewMore ->
+                ActivityLauncher.showBloggingPromptsListActivity(activity)
+        }
+    }
+
+    private fun showBloggingPromptCardRemoveConfirmation(undoClick: () -> Unit) {
+        context?.run {
+            val title = getString(R.string.my_site_blogging_prompt_card_removed_snackbar_title)
+            val subtitle = HtmlCompat.fromHtml(
+                getString(R.string.my_site_blogging_prompt_card_removed_snackbar_subtitle),
+                HtmlCompat.FROM_HTML_MODE_COMPACT
+            )
+            val message = TitleSubtitleSnackbarSpannable.create(this, title, subtitle)
+
+            val snackbarContent = SnackbarMessageHolder(
+                message = UiStringText(message),
+                buttonTitle = UiString.UiStringRes(R.string.undo),
+                buttonAction = { undoClick() },
+                isImportant = true
+            )
+            showSnackbar(snackbarContent)
+        }
     }
 
     private fun showJetpackPoweredBottomSheet() {

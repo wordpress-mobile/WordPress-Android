@@ -1091,6 +1091,11 @@
             android:label="@string/stats"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <activity android:name=".ui.mysite.personalization.PersonalizationActivity"
+            android:exported="false"
+            android:label="@string/stats"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <meta-data android:name="io.sentry.traces.activity.enable" android:value="false" />
 
     </application>

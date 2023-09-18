@@ -30,6 +30,8 @@ class CardsTracker @Inject constructor(
         ACTIVITY("activity_log"),
         DASHBOARD_CARD_PLANS("dashboard_card_plans"),
         DASHBOARD_CARD_DOMAIN_TRANSFER("dashboard_card_domain_transfer"),
+        PERSONALIZE_CARD("personalize"),
+        NO_CARDS("no_cards")
     }
 
     enum class QuickStartSubtype(val label: String) {

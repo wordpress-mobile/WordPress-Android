@@ -59,7 +59,6 @@ Language: pl
     <string name="account_closure_dialog_error_chargebacked_site">Konto użytkownika nie może zostać zamknięte, jeśli istnieją nierozwiązane zwroty.</string>
     <string name="account_closure_dialog_error_atomic_site">Konto użytkownika nie może zostać natychmiast zamknięte, ponieważ ma aktywne zakupy. Skontaktuj się z naszym zespołem pomocy technicznej, aby dokończyć jego usuwanie.</string>
     <string name="account_closure_dialog_error_unauthorized">Brak uprawnień do zamknięcia konta.</string>
-    <string name="account_closure_dialog_error_title">Nie udało się automatycznie zamknąć konta\"</string>
     <string name="account_closure_dialog_title">Potwierdź zamknięcie konta…</string>
     <string name="account_closure_dialog_message">Aby potwierdzić, wprowadź ponownie swoją nazwę użytkownika przed zamknięciem konta.</string>
     <string name="close_account">Zamknij konto</string>

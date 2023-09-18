@@ -143,9 +143,6 @@ sealed class MySiteCardAndItemBuilderParams {
 
     data class BloggingPromptCardBuilderParams(
         val bloggingPrompt: BloggingPromptModel?,
-        val showViewMoreAction: Boolean,
-        val showViewAnswersAction: Boolean,
-        val showRemoveAction: Boolean,
         val onShareClick: (message: String) -> Unit,
         val onAnswerClick: (promptId: Int) -> Unit,
         val onSkipClick: () -> Unit,
@@ -206,5 +203,9 @@ sealed class MySiteCardAndItemBuilderParams {
         val site: SiteModel,
         val onLearnMoreClick: () -> Unit,
         val onHideMenuItemClick: () -> Unit,
+    )
+
+    data class PersonalizeCardBuilderParams(
+        val onClick: () -> Unit
     )
 }
