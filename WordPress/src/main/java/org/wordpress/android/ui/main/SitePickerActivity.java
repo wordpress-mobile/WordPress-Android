@@ -511,22 +511,24 @@ public class SitePickerActivity extends LocaleAwareActivity
         List<SiteModel> siteList = new ArrayList<>();
         for (SiteRecord siteRecord : changeSet) {
             SiteModel siteModel = mSiteStore.getSiteByLocalId(siteRecord.getLocalId());
-            if (hiddenSites.contains(siteRecord)) {
-                if (siteRecord.getLocalId() == mCurrentLocalId) {
-                    skippedCurrentSite = true;
-                    currentSiteName = siteRecord.getBlogNameOrHomeURL();
-                    continue;
+            if (siteModel != null) {
+                if (hiddenSites.contains(siteRecord)) {
+                    if (siteRecord.getLocalId() == mCurrentLocalId) {
+                        skippedCurrentSite = true;
+                        currentSiteName = siteRecord.getBlogNameOrHomeURL();
+                        continue;
+                    }
+                    siteModel.setIsVisible(false);
+                    // Remove stats data for hidden sites
+                    mStatsStore.deleteSiteData(siteModel);
+                } else {
+                    siteModel.setIsVisible(true);
                 }
-                siteModel.setIsVisible(false);
-                // Remove stats data for hidden sites
-                mStatsStore.deleteSiteData(siteModel);
-            } else {
-                siteModel.setIsVisible(true);
+                // Save the site
+                mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
+                siteList.add(siteModel);
+                trackVisibility(Long.toString(siteModel.getSiteId()), siteModel.isVisible());
             }
-            // Save the site
-            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
-            siteList.add(siteModel);
-            trackVisibility(Long.toString(siteModel.getSiteId()), siteModel.isVisible());
         }
 
         updateVisibilityOfSitesOnRemote(siteList);
