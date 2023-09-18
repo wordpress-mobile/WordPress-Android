@@ -110,7 +110,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     private static final String TRACK_PROPERTY_VISIBLE = "visible";
 
     @Nullable private SitePickerAdapter mAdapter;
-    private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    @Nullable private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ActionMode mActionMode;
     private ActionMode mReblogActionMode;
     private MenuItem mMenuEdit;
@@ -150,7 +150,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         setupActionBar(mBinding);
         setupRecycleView(mBinding);
 
-        initSwipeToRefreshHelper(mBinding);
+        mSwipeToRefreshHelper = initSwipeToRefreshHelper(mBinding);
         if (savedInstanceState != null) {
             mSwipeToRefreshHelper.setRefreshing(savedInstanceState.getBoolean(KEY_REFRESHING, false));
         } else {
@@ -227,7 +227,11 @@ public class SitePickerActivity extends LocaleAwareActivity
         outState.putInt(KEY_SITE_LOCAL_ID, mCurrentLocalId);
         outState.putBoolean(KEY_IS_IN_SEARCH_MODE, getAdapter().getIsInSearchMode());
         outState.putString(KEY_LAST_SEARCH, getAdapter().getLastSearch());
-        outState.putBoolean(KEY_REFRESHING, mSwipeToRefreshHelper.isRefreshing());
+        if (mSwipeToRefreshHelper != null) {
+            outState.putBoolean(KEY_REFRESHING, mSwipeToRefreshHelper.isRefreshing());
+        } else {
+            outState.putBoolean(KEY_REFRESHING, false);
+        }
         outState.putSerializable(KEY_SITE_PICKER_MODE, mSitePickerMode);
 
         outState.putSerializable(KEY_SELECTED_POSITIONS, getAdapter().getSelectedPositions());
@@ -369,7 +373,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        if (mSwipeToRefreshHelper.isRefreshing()) {
+        if (mSwipeToRefreshHelper != null && mSwipeToRefreshHelper.isRefreshing()) {
             mSwipeToRefreshHelper.setRefreshing(false);
         }
         debounceLoadSites();
@@ -383,15 +387,16 @@ public class SitePickerActivity extends LocaleAwareActivity
         }, 200, TimeUnit.MILLISECONDS);
     }
 
-    private void initSwipeToRefreshHelper(@NonNull SitePickerActivityBinding binding) {
-        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
+    @NonNull
+    private SwipeToRefreshHelper initSwipeToRefreshHelper(@NonNull SitePickerActivityBinding binding) {
+        return buildSwipeToRefreshHelper(
                 binding.ptrLayout,
                 () -> {
                     if (isFinishing()) {
                         return;
                     }
-                    if (!NetworkUtils.checkConnection(SitePickerActivity.this) || !mAccountStore.hasAccessToken()) {
-                        mSwipeToRefreshHelper.setRefreshing(false);
+                    if (!NetworkUtils.checkConnection(this) || !mAccountStore.hasAccessToken()) {
+                        if (mSwipeToRefreshHelper != null) mSwipeToRefreshHelper.setRefreshing(false);
                         return;
                     }
                     mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
