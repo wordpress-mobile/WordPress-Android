@@ -64,7 +64,7 @@ ext {
     firebaseIidVersion = '21.1.0'
     glideVersion = '4.15.1'
     googleAutoServiceVersion = '1.0.1'
-    googleExoPlayerVersion = '2.13.3'
+    googleExoPlayerVersion = '2.19.1'
     googleFlexboxlayoutVersion = '3.0.0'
     googleGsonVersion = '2.10.1'
     googleMaterialVersion = '1.9.0'
