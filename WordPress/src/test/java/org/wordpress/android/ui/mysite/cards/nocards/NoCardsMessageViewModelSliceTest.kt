@@ -9,8 +9,11 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
@@ -65,5 +68,18 @@ class NoCardsMessageViewModelSliceTest : BaseUnitTest() {
                 )
             )
             assertNull(result)
+        }
+
+    @Test
+    fun `given personalize card, when card shown track requested, then track card shown`() =
+        test {
+            viewModelSlice.trackShown(MySiteCardAndItem.Type.NO_CARDS_MESSAGE)
+
+            verify(analyticsTrackerWrapper).track(
+                AnalyticsTracker.Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
+                mapOf(
+                    CardsTracker.TYPE to CardsTracker.Type.NO_CARDS.label,
+                )
+            )
         }
 }
