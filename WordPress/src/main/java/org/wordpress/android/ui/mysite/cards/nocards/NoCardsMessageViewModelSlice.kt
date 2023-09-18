@@ -12,13 +12,14 @@ import javax.inject.Inject
 class NoCardsMessageViewModelSlice @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val dashboardPersonalizationFeatureConfig: DashboardPersonalizationFeatureConfig
-)  {
+) {
     private val cardsShownTracked = mutableListOf<MySiteCardAndItem.Type>()
 
+    @Suppress("ReturnCount")
     fun buildNoCardsMessage(cardsResult: List<MySiteCardAndItem>): MySiteCardAndItem.Card.NoCardsMessage? {
-        if(!dashboardPersonalizationFeatureConfig.isEnabled()) return null
+        if (!dashboardPersonalizationFeatureConfig.isEnabled()) return null
 
-        if(cardsResult.isEmpty()) return buildNoCardsMessage()
+        if (cardsResult.isEmpty()) return buildNoCardsMessage()
 
         val cards = cardsResult.filter {
             it.type == MySiteCardAndItem.Type.QUICK_START_CARD ||
@@ -29,7 +30,7 @@ class NoCardsMessageViewModelSlice @Inject constructor(
             it.type == MySiteCardAndItem.Type.DASHBOARD_CARDS
         } as MySiteCardAndItem.Card.DashboardCards?
 
-        if(cards.isEmpty() && (dashboardCards == null || dashboardCards.cards.isEmpty()))
+        if (cards.isEmpty() && (dashboardCards == null || dashboardCards.cards.isEmpty()))
             return buildNoCardsMessage()
 
         return null
