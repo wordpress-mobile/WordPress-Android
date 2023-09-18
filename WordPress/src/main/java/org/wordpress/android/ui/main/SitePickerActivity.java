@@ -332,16 +332,14 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         // Enable the block editor on sites created on mobile
-        switch (requestCode) {
-            case RequestCodes.CREATE_SITE:
-                if (data != null) {
-                    int newSiteLocalID = data.getIntExtra(
-                            SitePickerActivity.KEY_SITE_LOCAL_ID,
-                            SelectedSiteRepository.UNAVAILABLE
-                    );
-                    SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
-                }
-                break;
+        if (requestCode == RequestCodes.CREATE_SITE) {
+            if (data != null) {
+                int newSiteLocalID = data.getIntExtra(
+                        SitePickerActivity.KEY_SITE_LOCAL_ID,
+                        SelectedSiteRepository.UNAVAILABLE
+                );
+                SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
+            }
         }
     }
 
