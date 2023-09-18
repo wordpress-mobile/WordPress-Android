@@ -21,15 +21,13 @@
             android:src="@drawable/bg_oval_placeholder_image_32dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        
+
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_domain"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="@dimen/text_sz_medium"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_blog_name"
@@ -40,10 +38,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            android:alpha="@dimen/material_emphasis_medium"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:ellipsize="end"
             android:gravity="start"
             android:maxLines="3"
+            android:alpha="@dimen/material_emphasis_medium"
             android:textColor="?attr/colorOnSurface"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
