@@ -413,6 +413,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         binding.recyclerView.setEmptyView(binding.actionableEmptyView);
     }
 
+    @SuppressWarnings("unchecked")
     private void restoreSavedInstanceState(Bundle savedInstanceState) {
         boolean isInSearchMode = false;
         String lastSearch = "";
