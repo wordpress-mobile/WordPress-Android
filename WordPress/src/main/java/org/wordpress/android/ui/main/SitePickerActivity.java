@@ -136,7 +136,6 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Inject StatsStore mStatsStore;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
-    @Inject WPIndividualPluginOverlayFeatureConfig mWPIndividualPluginOverlayFeatureConfig;
 
     @Nullable private SitePickerActivityBinding mBinding = null;
 
