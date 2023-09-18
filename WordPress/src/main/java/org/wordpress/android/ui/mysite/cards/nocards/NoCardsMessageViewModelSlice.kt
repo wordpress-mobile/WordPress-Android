@@ -6,14 +6,18 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.DashboardPersonalizationFeatureConfig
 import javax.inject.Inject
 
 class NoCardsMessageViewModelSlice @Inject constructor(
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val dashboardPersonalizationFeatureConfig: DashboardPersonalizationFeatureConfig
 )  {
     private val cardsShownTracked = mutableListOf<MySiteCardAndItem.Type>()
 
     fun buildNoCardsMessage(cardsResult: List<MySiteCardAndItem>): MySiteCardAndItem.Card.NoCardsMessage? {
+        if(!dashboardPersonalizationFeatureConfig.isEnabled()) return null
+
         if(cardsResult.isEmpty()) return buildNoCardsMessage()
 
         val cards = cardsResult.filter {

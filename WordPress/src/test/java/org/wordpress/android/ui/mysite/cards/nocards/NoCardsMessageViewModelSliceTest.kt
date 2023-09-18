@@ -10,11 +10,13 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.DashboardPersonalizationFeatureConfig
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -22,18 +24,34 @@ class NoCardsMessageViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
+    @Mock
+    lateinit var dashboardPersonalizationFeatureConfig: DashboardPersonalizationFeatureConfig
+
     private lateinit var viewModelSlice: NoCardsMessageViewModelSlice
 
     @Before
     fun setUp() {
         viewModelSlice = NoCardsMessageViewModelSlice(
-            analyticsTrackerWrapper
+            analyticsTrackerWrapper,
+            dashboardPersonalizationFeatureConfig
         )
     }
 
     @Test
-    fun `given no cards, when build no cards message requested, then no cards message is built`() =
+    fun `given no cards + FF off, when build no cards message requested, then no cards message is built`() =
         test {
+            whenever(dashboardPersonalizationFeatureConfig.isEnabled()).thenReturn(false)
+
+            val result = viewModelSlice.buildNoCardsMessage(emptyList())
+
+            assertNull(result)
+        }
+
+    @Test
+    fun `given no cards + FF on, when build no cards message requested, then no cards message is built`() =
+        test {
+            whenever(dashboardPersonalizationFeatureConfig.isEnabled()).thenReturn(true)
+
             val result = viewModelSlice.buildNoCardsMessage(emptyList())
 
             assertNotNull(result)
@@ -42,6 +60,8 @@ class NoCardsMessageViewModelSliceTest : BaseUnitTest() {
     @Test
     fun `given dashboard card is empty, when build no cards message requested, then no cards message is built`() =
         test {
+            whenever(dashboardPersonalizationFeatureConfig.isEnabled()).thenReturn(true)
+
             val result = viewModelSlice.buildNoCardsMessage(
                 listOf(
                     MySiteCardAndItem.Card.DashboardCards(
@@ -56,6 +76,8 @@ class NoCardsMessageViewModelSliceTest : BaseUnitTest() {
     @Test
     fun `given cards, when build no cards message requested, then no cards message is not built`() =
         test {
+            whenever(dashboardPersonalizationFeatureConfig.isEnabled()).thenReturn(true)
+
             val result = viewModelSlice.buildNoCardsMessage(
                 listOf(
                     mock<MySiteCardAndItem.Card.QuickStartCard>(),
