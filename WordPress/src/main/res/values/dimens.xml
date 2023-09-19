@@ -168,6 +168,7 @@
     <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
         @dimen/emphasis_extra_extra_low
     </item>
+    <item name="expandable_chips_chip_stroke_alpha" format="float" type="dimen">0.225</item>
 
     <dimen name="text_sz_extra_extra_small">7sp</dimen>
     <dimen name="text_sz_extra_small">10sp</dimen>
@@ -238,8 +239,13 @@
     <dimen name="reader_chip_height">44dp</dimen>
     <dimen name="reader_site_header_avatar_padding">2dp</dimen>
     <dimen name="reader_site_header_avatar_padding_new">1dp</dimen>
+
     <dimen name="reader_expandable_tags_view_chip_radius">4dp</dimen>
     <dimen name="reader_expandable_tags_view_chip_height">24dp</dimen>
+
+    <dimen name="reader_expandable_tags_view_chip_new_radius">5dp</dimen>
+    <dimen name="reader_expandable_tags_view_chip_new_border">1dp</dimen>
+    <dimen name="reader_expandable_tags_view_chip_new_height">36dp</dimen>
 
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 
