@@ -407,8 +407,20 @@
         <item name="chipStrokeWidth">@dimen/reader_expandable_tags_view_chip_new_border</item>
     </style>
 
-    <!-- Post Details Blog Section -->
+    <!-- Post Details Header -->
     <style name="ReaderTextView.PostDetail" />
+
+    <style name="ReaderTextView.PostDetail.Header" />
+    <style name="ReaderTextView.PostDetail.Header.Title">
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:maxLines">5</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
     <style name="ReaderTextView.PostDetail.BlogSection">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:ellipsize">end</item>
