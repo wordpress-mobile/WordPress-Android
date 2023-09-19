@@ -6,22 +6,19 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
-
-import com.google.android.material.appbar.AppBarLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.databinding.CommentsDetailActivityBinding;
 import org.wordpress.android.fluxc.action.CommentAction;
 import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
@@ -42,7 +39,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
-import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 
 import javax.inject.Inject;
@@ -66,10 +62,6 @@ public class CommentsDetailActivity extends LocaleAwareActivity
 
     @Inject CommentsStoreAdapter mCommentsStoreAdapter;
 
-    private WPViewPager mViewPager;
-    private AppBarLayout mAppBarLayout;
-    private ProgressBar mProgressBar;
-
     private long mCommentId;
     private CommentStatus mStatusFilter;
     private SiteModel mSite;
@@ -80,13 +72,16 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     private boolean mIsUpdatingComments;
     private boolean mCanLoadMoreComments = true;
 
+    @Nullable private CommentsDetailActivityBinding mBinding = null;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mCommentsStoreAdapter.register(this);
         AppLog.i(AppLog.T.COMMENTS, "Creating CommentsDetailActivity");
 
-        setContentView(R.layout.comments_detail_activity);
+        mBinding = CommentsDetailActivityBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -103,12 +98,13 @@ public class CommentsDetailActivity extends LocaleAwareActivity
         };
         getOnBackPressedDispatcher().addCallback(this, callback);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+        if (mBinding != null) {
+            setSupportActionBar(mBinding.toolbarMain);
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
         }
 
         if (savedInstanceState == null) {
@@ -121,13 +117,11 @@ public class CommentsDetailActivity extends LocaleAwareActivity
             mStatusFilter = (CommentStatus) savedInstanceState.getSerializable(COMMENT_STATUS_FILTER_EXTRA);
         }
 
-        // set up the viewpager and adapter for lateral navigation
-        mViewPager = findViewById(R.id.viewpager);
-        mViewPager.setPageTransformer(false,
-                new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
-
-        mProgressBar = findViewById(R.id.progress_loading);
-        mAppBarLayout = findViewById(R.id.appbar_main);
+        if (mBinding != null) {
+            // set up the viewpager and adapter for lateral navigation
+            mBinding.viewpager.setPageTransformer(false,
+                    new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+        }
 
         // Asynchronously loads comments and build the adapter
         loadDataInViewPager();
@@ -230,10 +224,10 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     }
 
     private void showCommentList(CommentList commentList) {
-        if (isFinishing()) {
+        if (mBinding == null || isFinishing()) {
             return;
         }
-        final int previousItem = mViewPager.getCurrentItem();
+        final int previousItem = mBinding.viewpager.getCurrentItem();
 
         // Only notify adapter when loading new page
         if (mAdapter != null && mAdapter.isAddingNewComments(commentList)) {
@@ -242,7 +236,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
             // If current items change, rebuild the adapter
             mAdapter = new CommentDetailFragmentAdapter(getSupportFragmentManager(), commentList, mSite,
                     CommentsDetailActivity.this);
-            mViewPager.setAdapter(mAdapter);
+            mBinding.viewpager.setAdapter(mAdapter);
         }
 
         final int commentIndex = mAdapter.commentIndex(mCommentId);
@@ -250,7 +244,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
             showErrorToastAndFinish();
         }
         if (mOnPageChangeListener != null) {
-            mViewPager.removeOnPageChangeListener(mOnPageChangeListener);
+            mBinding.viewpager.removeOnPageChangeListener(mOnPageChangeListener);
         } else {
             mOnPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
                 @Override
@@ -267,10 +261,10 @@ public class CommentsDetailActivity extends LocaleAwareActivity
             };
         }
         if (commentIndex != previousItem) {
-            mViewPager.setCurrentItem(commentIndex);
+            mBinding.viewpager.setCurrentItem(commentIndex);
         }
 
-        mViewPager.addOnPageChangeListener(mOnPageChangeListener);
+        mBinding.viewpager.addOnPageChangeListener(mOnPageChangeListener);
     }
 
     private void showErrorToastAndFinish() {
@@ -280,8 +274,8 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     }
 
     private void setLoadingState(boolean visible) {
-        if (mProgressBar != null) {
-            mProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if (mBinding != null) {
+            mBinding.progressLoading.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -299,6 +293,8 @@ public class CommentsDetailActivity extends LocaleAwareActivity
 
     @Override
     public void onScrollableViewInitialized(int containerId) {
-        mAppBarLayout.setLiftOnScrollTargetViewId(containerId);
+        if (mBinding != null) {
+            mBinding.appbarMain.setLiftOnScrollTargetViewId(containerId);
+        }
     }
 }
