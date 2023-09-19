@@ -66,7 +66,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
 
     private long mCommentId;
     @Nullable private CommentStatus mStatusFilter;
-    private SiteModel mSite;
+    @Nullable private SiteModel mSite;
     @SuppressWarnings("deprecation")
     private CommentDetailFragmentAdapter mAdapter;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
@@ -178,7 +178,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
             return;
         }
 
-        if (mStatusFilter != null) {
+        if (mSite != null && mStatusFilter != null) {
             final int offset = mAdapter.getCount();
             mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentsAction(
                     new FetchCommentsPayload(mSite, mStatusFilter, COMMENTS_PER_PAGE, offset)));
@@ -246,10 +246,14 @@ public class CommentsDetailActivity extends LocaleAwareActivity
         if (mAdapter != null && mAdapter.isAddingNewComments(commentList)) {
             mAdapter.onNewItems(commentList);
         } else {
-            // If current items change, rebuild the adapter
-            mAdapter = new CommentDetailFragmentAdapter(getSupportFragmentManager(), commentList, mSite,
-                    CommentsDetailActivity.this);
-            binding.viewpager.setAdapter(mAdapter);
+            if (mSite != null) {
+                // If current items change, rebuild the adapter
+                mAdapter = new CommentDetailFragmentAdapter(getSupportFragmentManager(), commentList, mSite,
+                        CommentsDetailActivity.this);
+                binding.viewpager.setAdapter(mAdapter);
+            } else {
+                throw new IllegalStateException("mAdapter cannot be constructed; mSite is null");
+            }
         }
 
         final int commentIndex = mAdapter.commentIndex(mCommentId);

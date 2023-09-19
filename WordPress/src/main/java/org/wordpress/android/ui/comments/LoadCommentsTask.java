@@ -27,12 +27,12 @@ class LoadCommentsTask extends AsyncTask<Void, Void, CommentList> {
 
     private final CommentsStoreAdapter mCommentsStoreAdapter;
     @Nullable private final CommentStatus mStatusFilter;
-    private final SiteModel mSite;
+    @Nullable private final SiteModel mSite;
     private final LoadingCallback mLoadingCallback;
 
     LoadCommentsTask(CommentsStoreAdapter commentsStoreAdapter,
                      @Nullable CommentStatus statusFilter,
-                     SiteModel site,
+                     @Nullable SiteModel site,
                      LoadingCallback loadingCallback) {
         this.mCommentsStoreAdapter = commentsStoreAdapter;
         this.mStatusFilter = statusFilter;
