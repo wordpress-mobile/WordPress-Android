@@ -112,7 +112,40 @@ class SiteRestClientTest {
     }
 
     @Test
-    fun `returns fetched sites`() = test {
+    fun `returns fetched sites using filter`() = test {
+        val response = SiteWPComRestResponse()
+        response.ID = siteId
+        val name = "Updated name"
+        response.name = name
+        response.URL = "site.com"
+
+        val sitesResponse = SitesResponse()
+        sitesResponse.sites = listOf(response)
+
+        initSitesResponse(data = sitesResponse)
+        initSitesFeaturesResponse(data = SitesFeaturesRestResponse(emptyMap()))
+
+        val responseModel = restClient.fetchSites(listOf(WPCOM), false)
+        assertThat(responseModel.sites).hasSize(1)
+        assertThat(responseModel.sites[0].name).isEqualTo(name)
+        assertThat(responseModel.sites[0].siteId).isEqualTo(siteId)
+
+        assertThat(urlCaptor.firstValue)
+                .isEqualTo("https://public-api.wordpress.com/rest/v1.2/me/sites/")
+        assertThat(urlCaptor.lastValue)
+                .isEqualTo("https://public-api.wordpress.com/rest/v1.1/me/sites/features/")
+        assertThat(paramsCaptor.firstValue).isEqualTo(
+                mapOf(
+                        "filters" to "wpcom",
+                        "fields" to "ID,URL,name,description,jetpack,jetpack_connection," +
+                                "visible,is_private,options,plan,capabilities,quota,icon,meta,zendesk_site_meta," +
+                                "organization_id,was_ecommerce_trial"
+                )
+        )
+    }
+
+    @Test
+    fun `returns fetched sites when not filtering`() = test {
         val response = SiteWPComRestResponse()
         response.ID = siteId
         val name = "Updated name"
@@ -124,20 +157,19 @@ class SiteRestClientTest {
 
         initSitesResponse(data = sitesResponse)
 
-        val responseModel = restClient.fetchSites(listOf(WPCOM), false)
+        val responseModel = restClient.fetchSites(emptyList(), false)
         assertThat(responseModel.sites).hasSize(1)
         assertThat(responseModel.sites[0].name).isEqualTo(name)
         assertThat(responseModel.sites[0].siteId).isEqualTo(siteId)
 
-        assertThat(urlCaptor.lastValue)
-                .isEqualTo("https://public-api.wordpress.com/rest/v1.2/me/sites/")
-        assertThat(paramsCaptor.lastValue).isEqualTo(
-                mapOf(
-                        "filters" to "wpcom",
-                        "fields" to "ID,URL,name,description,jetpack,jetpack_connection," +
-                                "visible,is_private,options,plan,capabilities,quota,icon,meta,zendesk_site_meta," +
-                                "organization_id,was_ecommerce_trial"
-                )
+        assertThat(urlCaptor.firstValue)
+            .isEqualTo("https://public-api.wordpress.com/rest/v1.1/me/sites/")
+        assertThat(paramsCaptor.firstValue).isEqualTo(
+            mapOf(
+                "fields" to "ID,URL,name,description,jetpack,jetpack_connection," +
+                    "visible,is_private,options,plan,capabilities,quota,icon,meta,zendesk_site_meta," +
+                    "organization_id,was_ecommerce_trial"
+            )
         )
     }
 
@@ -155,6 +187,7 @@ class SiteRestClientTest {
         sitesResponse.sites = listOf(response)
 
         initSitesResponse(data = sitesResponse)
+        initSitesFeaturesResponse(data = SitesFeaturesRestResponse(features = emptyMap()))
 
         val responseModel = restClient.fetchSites(listOf(WPCOM), true)
 
@@ -519,6 +552,13 @@ class SiteRestClientTest {
         error: WPComGsonNetworkError? = null
     ): Response<PostFormatsResponse> {
         return initGetResponse(PostFormatsResponse::class.java, data ?: mock(), error)
+    }
+
+    private suspend fun initSitesFeaturesResponse(
+        data: SitesFeaturesRestResponse? = null,
+        error: WPComGsonNetworkError? = null
+    ): Response<SitesFeaturesRestResponse> {
+        return initGetResponse(SitesFeaturesRestResponse::class.java, data ?: mock(), error)
     }
 
     private suspend fun <T> initGetResponse(
