@@ -69,7 +69,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     @Nullable private SiteModel mSite;
     @SuppressWarnings("deprecation")
     @Nullable private CommentDetailFragmentAdapter mAdapter;
-    private ViewPager.OnPageChangeListener mOnPageChangeListener;
+    @Nullable private ViewPager.OnPageChangeListener mOnPageChangeListener;
 
     private boolean mIsLoadingComments;
     private boolean mIsUpdatingComments;
