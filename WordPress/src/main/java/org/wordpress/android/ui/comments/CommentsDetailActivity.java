@@ -68,7 +68,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     @Nullable private CommentStatus mStatusFilter;
     @Nullable private SiteModel mSite;
     @SuppressWarnings("deprecation")
-    private CommentDetailFragmentAdapter mAdapter;
+    @Nullable private CommentDetailFragmentAdapter mAdapter;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
 
     private boolean mIsLoadingComments;
@@ -178,10 +178,10 @@ public class CommentsDetailActivity extends LocaleAwareActivity
             return;
         }
 
-        if (mSite != null && mStatusFilter != null) {
-            final int offset = mAdapter.getCount();
+        if (mSite != null && mStatusFilter != null && mAdapter != null) {
             mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentsAction(
-                    new FetchCommentsPayload(mSite, mStatusFilter, COMMENTS_PER_PAGE, offset)));
+                    new FetchCommentsPayload(mSite, mStatusFilter, COMMENTS_PER_PAGE, mAdapter.getCount()))
+            );
             mIsUpdatingComments = true;
             setLoadingState(binding, true);
         }
@@ -267,12 +267,14 @@ public class CommentsDetailActivity extends LocaleAwareActivity
                 @Override
                 public void onPageSelected(int position) {
                     super.onPageSelected(position);
-                    final CommentModel comment = mAdapter.getCommentAtPosition(position);
-                    if (comment != null) {
-                        mCommentId = comment.getRemoteCommentId();
-                        // track subsequent comment views
-                        AnalyticsUtils.trackCommentActionWithSiteDetails(
-                                Stat.COMMENT_VIEWED, AnalyticsCommentActionSource.SITE_COMMENTS, mSite);
+                    if (mAdapter != null) {
+                        final CommentModel comment = mAdapter.getCommentAtPosition(position);
+                        if (comment != null) {
+                            mCommentId = comment.getRemoteCommentId();
+                            // track subsequent comment views
+                            AnalyticsUtils.trackCommentActionWithSiteDetails(
+                                    Stat.COMMENT_VIEWED, AnalyticsCommentActionSource.SITE_COMMENTS, mSite);
+                        }
                     }
                 }
             };
