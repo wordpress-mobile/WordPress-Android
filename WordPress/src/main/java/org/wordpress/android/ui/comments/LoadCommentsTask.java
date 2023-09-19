@@ -2,6 +2,8 @@ package org.wordpress.android.ui.comments;
 
 import android.os.AsyncTask;
 
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -24,12 +26,12 @@ class LoadCommentsTask extends AsyncTask<Void, Void, CommentList> {
     }
 
     private final CommentsStoreAdapter mCommentsStoreAdapter;
-    private final CommentStatus mStatusFilter;
+    @Nullable private final CommentStatus mStatusFilter;
     private final SiteModel mSite;
     private final LoadingCallback mLoadingCallback;
 
     LoadCommentsTask(CommentsStoreAdapter commentsStoreAdapter,
-                     CommentStatus statusFilter,
+                     @Nullable CommentStatus statusFilter,
                      SiteModel site,
                      LoadingCallback loadingCallback) {
         this.mCommentsStoreAdapter = commentsStoreAdapter;

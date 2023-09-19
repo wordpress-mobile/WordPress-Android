@@ -65,7 +65,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     @Inject CommentsStoreAdapter mCommentsStoreAdapter;
 
     private long mCommentId;
-    private CommentStatus mStatusFilter;
+    @Nullable private CommentStatus mStatusFilter;
     private SiteModel mSite;
     @SuppressWarnings("deprecation")
     private CommentDetailFragmentAdapter mAdapter;
@@ -178,11 +178,13 @@ public class CommentsDetailActivity extends LocaleAwareActivity
             return;
         }
 
-        final int offset = mAdapter.getCount();
-        mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentsAction(
-                new FetchCommentsPayload(mSite, mStatusFilter, COMMENTS_PER_PAGE, offset)));
-        mIsUpdatingComments = true;
-        setLoadingState(binding, true);
+        if (mStatusFilter != null) {
+            final int offset = mAdapter.getCount();
+            mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentsAction(
+                    new FetchCommentsPayload(mSite, mStatusFilter, COMMENTS_PER_PAGE, offset)));
+            mIsUpdatingComments = true;
+            setLoadingState(binding, true);
+        }
     }
 
     @SuppressWarnings("unused")
