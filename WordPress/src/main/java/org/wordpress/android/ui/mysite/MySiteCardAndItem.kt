@@ -43,6 +43,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         JETPACK_FEATURE_CARD,
         JETPACK_SWITCH_CARD,
         JETPACK_INSTALL_FULL_PLUGIN_CARD,
+        NO_CARDS_MESSAGE,
+        PERSONALIZE_CARD,
     }
 
     enum class DashboardCardType {
@@ -299,8 +301,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val isAnswered: Boolean,
                         val promptId: Int,
                         val attribution: BloggingPromptAttribution,
-                        val showViewMoreAction: Boolean,
-                        val showRemoveAction: Boolean,
                         val onShareClick: (String) -> Unit,
                         val onAnswerClick: (PromptID) -> Unit,
                         val onSkipClick: () -> Unit,
@@ -378,6 +378,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 ) : DashboardCard(dashboardCardType = DashboardCardType.DASHBOARD_PLANS_CARD)
             }
         }
+        data class NoCardsMessage(val title: UiString, val message: UiString)  : Card(Type.NO_CARDS_MESSAGE)
+        data class PersonalizeCardModel(val onClick: () -> Unit)  : Card(Type.PERSONALIZE_CARD)
     }
 
     sealed class Item(

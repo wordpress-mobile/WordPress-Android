@@ -57,7 +57,7 @@ class DebugSettingsActivity : LocaleAwareActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.debug_settings_menu, menu)
         return true
     }

@@ -15,7 +15,7 @@ import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsFeature
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
@@ -27,7 +27,7 @@ const val REFRESH_DELAY = 500L
 class BloggingPromptCardSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val promptsStore: BloggingPromptsStore,
-    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    private val bloggingPromptsFeature: BloggingPromptsFeature,
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MySiteRefreshSource<BloggingPromptUpdate> {
@@ -58,7 +58,7 @@ class BloggingPromptCardSource @Inject constructor(
         siteLocalId: Int
     ) {
         val selectedSite = selectedSiteRepository.getSelectedSite()
-        if (selectedSite != null && selectedSite.id == siteLocalId && bloggingPromptsFeatureConfig.isEnabled()) {
+        if (selectedSite != null && selectedSite.id == siteLocalId && bloggingPromptsFeature.isEnabled()) {
             coroutineScope.launch(bgDispatcher) {
                 if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
                     promptsStore.getPrompts(selectedSite)
@@ -94,7 +94,7 @@ class BloggingPromptCardSource @Inject constructor(
     ) {
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
-            if (bloggingPromptsFeatureConfig.isEnabled()) {
+            if (bloggingPromptsFeature.isEnabled()) {
                 coroutineScope.launch(bgDispatcher) {
                     if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
                         fetchPromptsAndPostErrorIfAvailable(coroutineScope, selectedSite, isSinglePromptRefresh)

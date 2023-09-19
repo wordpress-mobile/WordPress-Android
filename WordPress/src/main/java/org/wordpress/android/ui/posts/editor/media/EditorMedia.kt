@@ -10,8 +10,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.EDITOR_UPLOAD_MEDIA_FAILED
 import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.fluxc.Dispatcher
@@ -144,11 +142,6 @@ class EditorMedia @Inject constructor(
                 editorMediaListener
             )
         }
-    }
-
-    fun addFreshlyTakenVideoToEditor() {
-        addNewMediaItemsToEditorAsync(listOf(mediaUtilsWrapper.getLastRecordedVideoUri()), true)
-            .also { AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW) }
     }
 
     fun onPhotoPickerMediaChosen(uriList: List<Uri>) {

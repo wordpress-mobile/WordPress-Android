@@ -8,6 +8,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFull
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackSwitchMenu
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PersonalizeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
@@ -36,6 +37,9 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
             oldItem is JetpackFeatureCard && updatedItem is JetpackFeatureCard -> true
             oldItem is JetpackSwitchMenu && updatedItem is JetpackSwitchMenu -> true
             oldItem is JetpackInstallFullPluginCard && updatedItem is JetpackInstallFullPluginCard -> true
+            oldItem is MySiteCardAndItem.Card.NoCardsMessage && updatedItem is
+                    MySiteCardAndItem.Card.NoCardsMessage -> true
+            oldItem is PersonalizeCardModel && updatedItem is PersonalizeCardModel -> true
             else -> throw UnsupportedOperationException("Diff not implemented yet")
         }
     }

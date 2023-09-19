@@ -149,6 +149,43 @@ class LiveDataUtilsTest : BaseUnitTest() {
     }
 
     @Test
+    fun `merge merges 6 sources with function`() = test {
+        val sourceA = MutableLiveData<Int>()
+        val sourceB = MutableLiveData<String>()
+        val sourceC = MutableLiveData<Boolean>()
+        val sourceD = MutableLiveData<Double>()
+        val sourceE = MutableLiveData<Float>()
+        val sourceF = MutableLiveData<List<Unit>>()
+
+        val mergedSources = merge(sourceA, sourceB, sourceC, sourceD, sourceE, sourceF) { i, s, b, d, f, l ->
+            "$s: $i: $b: $d: $f: ${l?.size}"
+        }
+        mergedSources.observeForever { }
+
+        assertThat(mergedSources.value).isEqualTo("null: null: null: null: null: null")
+        val firstValue = 1
+        val secondValue = "value"
+        val thirdValue = true
+        val fourthValue = 2.4
+        val fifthValue = 2F
+        val sixthValue = 3
+        sourceA.value = firstValue
+        assertThat(mergedSources.value).isEqualTo("null: $firstValue: null: null: null: null")
+        sourceB.value = secondValue
+        assertThat(mergedSources.value).isEqualTo("$secondValue: $firstValue: null: null: null: null")
+        sourceC.value = thirdValue
+        assertThat(mergedSources.value).isEqualTo("$secondValue: $firstValue: $thirdValue: null: null: null")
+        sourceD.value = fourthValue
+        assertThat(mergedSources.value).isEqualTo("$secondValue: $firstValue: $thirdValue: $fourthValue: null: null")
+        sourceE.value = fifthValue
+        assertThat(mergedSources.value).isEqualTo("$secondValue: $firstValue: $thirdValue: $fourthValue: " +
+                "$fifthValue: null")
+        sourceF.value = List(sixthValue) {}
+        assertThat(mergedSources.value).isEqualTo("$secondValue: $firstValue: $thirdValue: $fourthValue: " +
+                "$fifthValue: $sixthValue")
+    }
+
+    @Test
     fun `combineMap combines sources in a map`() {
         val sourceA = MutableLiveData<Int>()
         val sourceB = MutableLiveData<Int>()

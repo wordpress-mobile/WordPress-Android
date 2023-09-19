@@ -262,7 +262,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             setResult(RESULT_CANCELED);
             finish();

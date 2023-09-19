@@ -157,7 +157,6 @@
     <string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site</string>
     <string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your app\'s settings</string>
     <string name="media_error_timeout">Server took too long to respond</string>
-    <string name="share_media_permission_required">Permissions required in order to share images or videos</string>
     <string name="media_fetching">Fetching media…</string>
     <string name="media_upload_error">Media upload error occurred</string>
     <string name="media_generic_error">Media error occurred</string>
@@ -2281,7 +2280,9 @@
     <string name="support_ticket_subject">WordPress for Android Support</string>
 
     <string name="contact_support_input_placeholder">Send a message…</string>
+    <string name="contact_support_first_message_hi">Hi there, I\'m the Jetpack AI Assistant.</string>
     <string name="contact_support_first_message">What can I help you with?</string>
+    <string name="contact_support_first_message_hint">If I can\'t answer your question, I\'ll help you open a support ticket with our team!</string>
     <string name="contact_support_get_support">Contact support</string>
     <string name="contact_support_suggestions">Not sure what to ask?</string>
     <string name="contact_support_question_one">What is my site address?</string>
@@ -2308,7 +2309,6 @@
     <string name="my_site_header_look_and_feel">Look and Feel</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="my_site_header_publish">Publish</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack Settings</string>
     <string name="my_site_btn_site_pages">Pages</string>
     <string name="my_site_btn_blog_posts">Posts</string>
     <string name="my_site_btn_sharing">Social</string>
@@ -4695,4 +4695,37 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="missing_splits_dialog_message">The app WordPress is missing required components and must be reinstalled from the Google Play Store.</string>
     <string name="missing_splits_dialog_button">CLOSE</string>
     <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Access this Paywall block on your web browser for advanced settings.</string>
+
+    <string name="partial_media_access_prompt_text">Only selected photos and videos you’ve given access to are available.</string>
+    <string name="partial_media_access_prompt_select_more">Select More</string>
+    <string name="partial_media_access_prompt_change_settings">Change Settings</string>
+
+    <!-- Personalize card -->
+    <string name="personalize_card_text">Personalize your home tab</string>
+    <string name="personalize_card_content_description">Tap to personalize your home tab</string>
+
+    <!-- Personalization Screen -->
+    <string name="personalization_screen_title"> Personalize home tab</string>
+    <string name="personalization_screen_description"> Add or hide Cards</string>
+    <string name="personalization_screen_footer_cards"> Cards may show different content depending on what\'s happening with your site</string>
+    <string name="personalization_screen_stats_card_title" translatable="false">@string/my_site_todays_stat_card_title</string>
+    <string name="personalization_screen_stats_card_description">Views, Visitors and likes</string>
+    <string name="personalization_screen_draft_posts_card_title"> Draft posts</string>
+    <string name="personalization_screen_draft_posts_card_description">Your recent draft posts.</string>
+    <string name="personalization_screen_scheduled_posts_card_title"> Scheduled posts</string>
+    <string name="personalization_screen_scheduled_posts_card_description">Your upcoming scheduled posts.</string>
+    <string name="personalization_screen_blaze_card_title" translatable="false"> @string/blaze_activity_title</string>
+    <string name="personalization_screen_blaze_card_description">Promote a post and see current campaigns.</string>
+    <string name="personalization_screen_blogging_prompts_card_title">Blogging prompts</string>
+    <string name="personalization_screen_blogging_prompts_card_description">Daily ideas for your blog posts.</string>
+    <string name="personalization_screen_pages_card_title" translatable="false">@string/pages</string>
+    <string name="personalization_screen_pages_card_description">Overview of your site pages.</string>
+    <string name="personalization_screen_activity_log_card_title" translatable="false">@string/activity_log</string>
+    <string name="personalization_screen_activity_log_card_description">Recent actions taken on your site.</string>
+    <string name="personalization_screen_next_steps_card_title" translatable="false">@string/quick_start_sites</string>
+    <string name="personalization_screen_next_steps_card_description">Learn how to make the most of your site with the app.</string>
+
+    <string name="my_site_dashboard_no_cards_message_title">All cards are hidden</string>
+    <string name="my_site_dashboard_no_cards_message_description">Tap the personalise button to show more cards.</string>
+
 </resources>

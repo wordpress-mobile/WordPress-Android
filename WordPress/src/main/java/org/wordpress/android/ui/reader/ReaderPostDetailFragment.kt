@@ -479,9 +479,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onResume() {
         super.onResume()
-        if (isVisible) {
-            replaceActivityToolbarWithCollapsingToolbar()
-        }
+        replaceActivityToolbarWithCollapsingToolbar()
     }
 
     private fun replaceActivityToolbarWithCollapsingToolbar() {
@@ -1710,7 +1708,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_FILE_DOWNLOAD_TAPPED)
         return if (activity != null &&
             fileUrl != null &&
-            PermissionUtils.checkAndRequestStoragePermission(
+            PermissionUtils.checkAndRequestFileDownloadPermission(
                 this,
                 READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
             )

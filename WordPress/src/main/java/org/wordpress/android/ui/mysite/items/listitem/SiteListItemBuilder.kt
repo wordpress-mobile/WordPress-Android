@@ -13,7 +13,6 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.BACKUP
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.BLAZE
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.DOMAINS
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.JETPACK_SETTINGS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PAGES
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PEOPLE
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLAN
@@ -73,20 +72,6 @@ class SiteListItemBuilder @Inject constructor(
                 R.drawable.ic_baseline_security_white_24dp,
                 UiStringRes(R.string.scan),
                 onClick = ListItemInteraction.create(SCAN, onClick)
-            )
-        } else null
-    }
-
-    fun buildJetpackItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        val jetpackSettingsVisible = site.isJetpackConnected && // jetpack is installed and connected
-                !site.isWPComAtomic &&
-                siteUtilsWrapper.isAccessedViaWPComRest(site) && // is using .com login
-                site.hasCapabilityManageOptions // has permissions to manage the site
-        return if (jetpackSettingsVisible) {
-            ListItem(
-                R.drawable.ic_cog_white_24dp,
-                UiStringRes(R.string.my_site_btn_jetpack_settings),
-                onClick = ListItemInteraction.create(JETPACK_SETTINGS, onClick)
             )
         } else null
     }
