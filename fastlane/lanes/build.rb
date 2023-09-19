@@ -24,9 +24,7 @@ platform :android do
 
       UI.important("Building version #{current_release_version} (#{current_build_code}) for upload to Release Channel")
 
-      unless options[:skip_confirm]
-        UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
-      end
+      UI.user_error!('Aborted by user request') if !options[:skip_confirm] && !UI.confirm('Do you want to continue?')
 
       android_build_preflight
     end
@@ -63,15 +61,13 @@ platform :android do
 
       UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
 
-      unless options[:skip_confirm]
-        UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
-      end
+      UI.user_error!('Aborted by user request') if !options[:skip_confirm] && !UI.confirm('Do you want to continue?')
 
       android_build_preflight
     end
 
     app = get_app_name_option!(options)
-    build_beta(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
+    build_beta(app:, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
   end
 
   #####################################################################################
@@ -96,9 +92,7 @@ platform :android do
 
       UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
 
-      unless options[:skip_confirm]
-        UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
-      end
+      UI.user_error!('Aborted by user request') if !options[:skip_confirm] && !UI.confirm('Do you want to continue?')
 
       android_build_preflight
     end
@@ -144,7 +138,7 @@ platform :android do
       retry_count = 2
       begin
         upload_to_play_store(
-          package_name: package_name,
+          package_name:,
           aab: aab_file_path,
           track: options[:track],
           release_status: 'draft',
@@ -220,7 +214,7 @@ platform :android do
       properties: { prototypeBuildVersionName: versionName }
     )
 
-    upload_prototype_build(product: 'WordPress', versionName: versionName)
+    upload_prototype_build(product: 'WordPress', versionName:)
   end
 
   #####################################################################################
@@ -243,7 +237,7 @@ platform :android do
       properties: { prototypeBuildVersionName: versionName }
     )
 
-    upload_prototype_build(product: 'Jetpack', versionName: versionName)
+    upload_prototype_build(product: 'Jetpack', versionName:)
   end
 
   #####################################################################################
@@ -328,31 +322,31 @@ platform :android do
       app_display_name: product,
       app_icon: ":#{product.downcase}:", # Use Buildkite emoji based on product name
       download_url: install_url,
-      metadata: { Flavor: PROTOTYPE_BUILD_FLAVOR, 'Build Type': PROTOTYPE_BUILD_TYPE, 'Version': versionName },
+      metadata: { Flavor: PROTOTYPE_BUILD_FLAVOR, 'Build Type': PROTOTYPE_BUILD_TYPE, Version: versionName },
       footnote: '<em>Note: Google Login is not supported on these builds.</em>',
       fold: true
     )
 
     comment_on_pr(
       project: GHHELPER_REPO,
-      pr_number: Integer(ENV['BUILDKITE_PULL_REQUEST']),
+      pr_number: Integer(ENV.fetch('BUILDKITE_PULL_REQUEST', nil)),
       reuse_identifier: "#{product.downcase}-prototype-build-link",
       body: comment_body
     )
 
-    if ENV['BUILDKITE']
-      message = "#{product} Prototype Build: [#{filename}](#{install_url})"
-      buildkite_annotate(style: 'info', context: "prototype-build-#{product}", message: message)
-      buildkite_metadata(set: { versionName: versionName, 'build:flavor': PROTOTYPE_BUILD_FLAVOR, 'build:type': PROTOTYPE_BUILD_TYPE })
-    end
+    return unless ENV['BUILDKITE']
+
+    message = "#{product} Prototype Build: [#{filename}](#{install_url})"
+    buildkite_annotate(style: 'info', context: "prototype-build-#{product}", message:)
+    buildkite_metadata(set: { versionName:, 'build:flavor': PROTOTYPE_BUILD_FLAVOR, 'build:type': PROTOTYPE_BUILD_TYPE })
   end
 
   # This function is Buildkite-specific
   def generate_prototype_build_number
     if ENV['BUILDKITE']
-      commit = ENV['BUILDKITE_COMMIT'][0, 7]
+      commit = ENV.fetch('BUILDKITE_COMMIT', nil)[0, 7]
       branch = ENV['BUILDKITE_BRANCH'].parameterize
-      pr_num = ENV['BUILDKITE_PULL_REQUEST']
+      pr_num = ENV.fetch('BUILDKITE_PULL_REQUEST', nil)
 
       pr_num == 'false' ? "#{branch}-#{commit}" : "pr#{pr_num}-#{commit}"
     else

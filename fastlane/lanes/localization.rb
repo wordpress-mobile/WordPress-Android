@@ -62,21 +62,21 @@ ALL_LOCALES = [
   { glotpress: 'sk', android: 'sk', promo_config: false },
   { glotpress: 'sq', android: 'sq', promo_config: false },
   { glotpress: 'uz', android: 'uz', promo_config: false },
-  { glotpress: 'zh-tw', android: 'zh-rHK', promo_config: false },
+  { glotpress: 'zh-tw', android: 'zh-rHK', promo_config: false }
 ].freeze
 
 WP_APP_LOCALES = ALL_LOCALES
 JP_APP_LOCALES = ALL_LOCALES
-  .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
+                 .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
 
 WP_RELEASE_NOTES_LOCALES = ALL_LOCALES
-  .reject { |h| h[:google_play].nil? }
-  .map { |h| [h[:glotpress], h[:google_play]] }
+                           .reject { |h| h[:google_play].nil? }
+                           .map { |h| [h[:glotpress], h[:google_play]] }
 
 JP_RELEASE_NOTES_LOCALES = ALL_LOCALES
-  .reject { |h| h[:google_play].nil? }
-  .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
-  .map { |h| [h[:glotpress], h[:google_play]] }
+                           .reject { |h| h[:google_play].nil? }
+                           .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
+                           .map { |h| [h[:glotpress], h[:google_play]] }
 
 platform :android do
   ########################################################################
@@ -146,7 +146,7 @@ platform :android do
     metadata_dir = File.join(FASTLANE_FOLDER, APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
 
     upload_to_play_store(
-      package_name: package_name,
+      package_name:,
       track: 'production',
       version_code: current_build_code, # Apparently required by fastlane… even if the "Main Store Listing" isn't be attached to a specific build ¯\_(ツ)_/¯
       metadata_path: metadata_dir,
@@ -193,7 +193,7 @@ platform :android do
         play_store_desc: { desc: 'full_description.txt', max_size: 4000 }
       }
       unless skip_release_notes
-        delete_old_changelogs(app: app, build: build_number)
+        delete_old_changelogs(app:, build: build_number)
         version_suffix = version.split('.').join
         files["release_note_#{version_suffix}"] = { desc: "changelogs/#{build_number}.txt", max_size: 500, alternate_key: "release_note_short_#{version_suffix}" }
       end
@@ -209,8 +209,8 @@ platform :android do
       gp_downloadmetadata(
         project_url: app_values[:glotpress_metadata_project],
         target_files: files,
-        locales: locales,
-        download_path: download_path
+        locales:,
+        download_path:
       )
 
       # Copy the source `.txt` files (used as source of truth when we generated the `.po`) to the `fastlane/*metadata/android/en-US` dir,
@@ -220,12 +220,12 @@ platform :android do
         FileUtils.cp(File.join(metadata_source_dir, source_file), File.join(download_path, 'en-US', h[:desc]))
       end
 
-      unless skip_commit
-        git_add(path: download_path)
-        message = "Update #{app_values[:display_name]} metadata translations"
-        message += " for #{version}" unless version.nil?
-        git_commit(path: download_path, message: message, allow_nothing_to_commit: true)
-      end
+      next if skip_commit
+
+      git_add(path: download_path)
+      message = "Update #{app_values[:display_name]} metadata translations"
+      message += " for #{version}" unless version.nil?
+      git_commit(path: download_path, message:, allow_nothing_to_commit: true)
     end
     push_to_git_remote unless skip_commit || skip_git_push
   end
@@ -241,10 +241,10 @@ platform :android do
   JETPACK_MAIN_STRINGS_PATH = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', 'jetpack', 'res', 'values', 'strings.xml').freeze
   JETPACK_FROZEN_STRINGS_DIR_PATH = File.join(FASTLANE_FOLDER, 'jetpack_resources', 'values').freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
-    # Note: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
+    # NOTE: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
     # Which will correctly detect strings from the app's `strings.xml` being used by one of the module.
-    { library: "Image Editor", strings_path: "./libs/image-editor/src/main/res/values/strings.xml", source_id: 'module:image-editor' },
-    { library: "Editor", strings_path: "./libs/editor/src/main/res/values/strings.xml", source_id: 'module:editor' }
+    { library: 'Image Editor', strings_path: './libs/image-editor/src/main/res/values/strings.xml', source_id: 'module:image-editor' },
+    { library: 'Editor', strings_path: './libs/editor/src/main/res/values/strings.xml', source_id: 'module:editor' }
   ].freeze
   REMOTE_LIBRARIES_STRINGS_PATHS = [
     {
@@ -263,19 +263,19 @@ platform :android do
       source_id: 'login'
     },
     {
-      name: "Stories Library",
-      import_key: "automatticStoriesVersion",
-      repository: "Automattic/stories-android",
-      strings_file_path: "stories/src/main/res/values/strings.xml",
+      name: 'Stories Library',
+      import_key: 'automatticStoriesVersion',
+      repository: 'Automattic/stories-android',
+      strings_file_path: 'stories/src/main/res/values/strings.xml',
       source_id: 'stories'
     },
     {
-      name: "About Library",
-      import_key: "automatticAboutVersion",
-      repository: "Automattic/about-automattic-android",
-      strings_file_path: "library/src/main/res/values/strings.xml",
+      name: 'About Library',
+      import_key: 'automatticAboutVersion',
+      repository: 'Automattic/about-automattic-android',
+      strings_file_path: 'library/src/main/res/values/strings.xml',
       source_id: 'about'
-    },
+    }
   ].freeze
 
   lane :update_frozen_strings_for_translation do
@@ -366,7 +366,7 @@ platform :android do
     an_update_metadata_source(
       po_file_path: po_path,
       source_files: sources,
-      release_version: release_version
+      release_version:
     )
 
     git_add(path: po_path)
@@ -381,7 +381,7 @@ platform :android do
   #        Typically one of the `WP_APP_LOCALES` or `JP_APP_LOCALES` constants
   def check_declared_locales_consistency(app_flavor:, locales_list:)
     output = gradle(task: 'printResourceConfigurations', flags: '--quiet')
-    resource_configs = output.match(/^#{app_flavor}: \[(.*)\]$/)&.captures&.first&.gsub(' ','')&.split(',')&.sort
+    resource_configs = output.match(/^#{app_flavor}: \[(.*)\]$/)&.captures&.first&.gsub(' ', '')&.split(',')&.sort
     if resource_configs.nil? || resource_configs.empty?
       UI.message("No `resourceConfigurations` field set in `build.gradle` for the `#{app_flavor}` flavor. Nothing to check.")
       return

@@ -11,8 +11,8 @@ platform :android do
   # bundle exec fastlane build_and_run_instrumented_test app:jetpack
   #
   #####################################################################################
-  desc "Build the application and instrumented tests, then run the tests in Firebase Test Lab"
-  lane :build_and_run_instrumented_test do | options |
+  desc 'Build the application and instrumented tests, then run the tests in Firebase Test Lab'
+  lane :build_and_run_instrumented_test do |options|
     app = get_app_name_option!(options)
 
     gradle(tasks: ["WordPress:assemble#{app.to_s.capitalize}VanillaDebug", "WordPress:assemble#{app.to_s.capitalize}VanillaDebugAndroidTest"])

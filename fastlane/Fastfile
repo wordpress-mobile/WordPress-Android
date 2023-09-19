@@ -159,7 +159,7 @@ import 'lanes/release_management_in_ci.rb'
 
 default_platform(:android)
 
-before_all do |lane|
+before_all do |_lane|
   # Check that the env file exists
   unless is_ci || File.file?(USER_ENV_FILE_PATH)
     UI.user_error!("#{USER_ENV_FILE_PATH} not found: Please copy fastlane/env/user.env-example to #{USER_ENV_FILE_PATH} and fill in the values")
