@@ -158,9 +158,11 @@ public class HistoryDetailContainerFragment extends Fragment {
 
             refreshHistoryDetail(mBinding, adapter, mRevision);
             resetOnPageChangeListener(mBinding, adapter);
-        }
 
-        return mBinding.getRoot();
+            return mBinding.getRoot();
+        } else {
+            throw new IllegalStateException("mBinding or mRevision is null");
+        }
     }
 
     @Nullable
