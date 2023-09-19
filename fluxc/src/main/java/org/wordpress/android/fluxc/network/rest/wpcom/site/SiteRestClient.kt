@@ -132,6 +132,14 @@ class SiteRestClient @Inject constructor(
         val site: SiteModel? = null
     ) : Payload<SiteError>()
 
+    /**
+     *  Fetches the user's sites from WPCom.
+     *  Since the V1.2 endpoint doesn't return the plan features, we will handle the fetch by following two
+     *  different approaches:
+     *  1. If we don't need any filtering, then we'll simply use the v1.1 endpoint which includes the features.
+     *  2. If we have some filters, then we'll send two requests: the first one to the v1.2 endpoint to fetch sites
+     *     And the second one to the /me/sites/features to fetch the features separately, the combine the results.
+     */
     @Suppress("ComplexMethod")
     suspend fun fetchSites(filters: List<SiteFilter?>, filterJetpackConnectedPackageSite: Boolean): SitesModel {
         val useV2Endpoint = filters.isNotEmpty()
@@ -140,7 +148,6 @@ class SiteRestClient @Inject constructor(
         val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, SitesResponse::class.java)
 
         val siteFeatures = if (useV2Endpoint) {
-            // The v1.2 version doesn't include the plan features, so use the specific endpoint to fetch them separately
             fetchSitesFeatures().let {
                 if (it is Error) {
                     val result = SitesModel()
