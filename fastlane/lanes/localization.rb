@@ -32,7 +32,8 @@ ALL_LOCALES = [
   { glotpress: 'vi', android: 'vi',    google_play: 'vi',     promo_config: {} },
   { glotpress: 'zh-cn', android: 'zh-rCN', google_play: 'zh-CN',  promo_config: {} },
   { glotpress: 'zh-tw', android: 'zh-rTW', google_play: 'zh-TW',  promo_config: {} },
-  # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key. See `WP_RELEASE_NOTES_LOCALES` below.
+  # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key.
+  # See `WP_RELEASE_NOTES_LOCALES` below.
   { glotpress: 'az', android: 'az', promo_config: false },
   { glotpress: 'bg', android: 'bg', promo_config: false },
   { glotpress: 'cs', android: 'cs', promo_config: false },

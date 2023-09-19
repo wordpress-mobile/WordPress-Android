@@ -24,7 +24,8 @@ platform :android do
   # Takes screenshots for the WordPress or Jetpack app across multiple device and locales.
   #
   # @option [String|Symbol] app The app to take screenshots for. Must be `wordpress` or `jetpack`
-  # @option [String] device The device type to limit the build of screenshots for (e.g. `phone` or `tenInch`). Defaults to building all device types defined in `SCREENSHOT_DEVICES`.
+  # @option [String] device The device type to limit the build of screenshots for (e.g. `phone` or `tenInch`).
+  #         Defaults to building all device types defined in `SCREENSHOT_DEVICES`.
   # @option [Array<String>] locale The Google Play locale code(s) to build the screenshots. Default to all the ones in `SCREENSHOT_LOCALES`.
   #
   desc 'Build and capture raw screenshots'

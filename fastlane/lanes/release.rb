@@ -71,7 +71,8 @@ platform :android do
       release_notes_file_path: RELEASE_NOTES_SOURCE_PATH
     )
 
-    UI.message("Jetpack release notes were based on the same ones as WordPress. Don't forget to check #{release_notes_path('jetpack')} and amend them as necessary if any item does not apply for Jetpack before sending them to Editorial.")
+    UI.message("Jetpack release notes were based on the same ones as WordPress. Don't forget to check #{release_notes_path('jetpack')} and amend them" \
+               'as necessary if any item does not apply for Jetpack before sending them to Editorial.')
 
     push_to_git_remote(tags: false)
 

@@ -208,15 +208,15 @@ platform :android do
   lane :build_and_upload_wordpress_prototype_build do
     UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
 
-    versionName = generate_prototype_build_number
+    version_name = generate_prototype_build_number
     gradle(
       task: 'assemble',
       flavor: "WordPress#{PROTOTYPE_BUILD_FLAVOR}",
       build_type: PROTOTYPE_BUILD_TYPE,
-      properties: { prototypeBuildVersionName: versionName }
+      properties: { prototypeBuildVersionName: version_name }
     )
 
-    upload_prototype_build(product: 'WordPress', versionName:)
+    upload_prototype_build(product: 'WordPress', version_name:)
   end
 
   #####################################################################################
@@ -231,15 +231,15 @@ platform :android do
   lane :build_and_upload_jetpack_prototype_build do
     UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
 
-    versionName = generate_prototype_build_number
+    version_name = generate_prototype_build_number
     gradle(
       task: 'assemble',
       flavor: "Jetpack#{PROTOTYPE_BUILD_FLAVOR}",
       build_type: PROTOTYPE_BUILD_TYPE,
-      properties: { prototypeBuildVersionName: versionName }
+      properties: { prototypeBuildVersionName: version_name }
     )
 
-    upload_prototype_build(product: 'Jetpack', versionName:)
+    upload_prototype_build(product: 'Jetpack', version_name:)
   end
 
   #####################################################################################
@@ -307,8 +307,8 @@ platform :android do
   #
   # @param [String] product the display name of the app to upload to S3. 'WordPress' or 'Jetpack'
   #
-  def upload_prototype_build(product:, versionName:)
-    filename = "#{product.downcase}-prototype-build-#{versionName}.apk"
+  def upload_prototype_build(product:, version_name:)
+    filename = "#{product.downcase}-prototype-build-#{version_name}.apk"
 
     upload_path = upload_to_s3(
       bucket: 'a8c-apps-public-artifacts',
@@ -324,7 +324,7 @@ platform :android do
       app_display_name: product,
       app_icon: ":#{product.downcase}:", # Use Buildkite emoji based on product name
       download_url: install_url,
-      metadata: { Flavor: PROTOTYPE_BUILD_FLAVOR, 'Build Type': PROTOTYPE_BUILD_TYPE, Version: versionName },
+      metadata: { Flavor: PROTOTYPE_BUILD_FLAVOR, 'Build Type': PROTOTYPE_BUILD_TYPE, Version: version_name },
       footnote: '<em>Note: Google Login is not supported on these builds.</em>',
       fold: true
     )
@@ -340,7 +340,7 @@ platform :android do
 
     message = "#{product} Prototype Build: [#{filename}](#{install_url})"
     buildkite_annotate(style: 'info', context: "prototype-build-#{product}", message:)
-    buildkite_metadata(set: { versionName:, 'build:flavor': PROTOTYPE_BUILD_FLAVOR, 'build:type': PROTOTYPE_BUILD_TYPE })
+    buildkite_metadata(set: { versionName: version_name, 'build:flavor': PROTOTYPE_BUILD_FLAVOR, 'build:type': PROTOTYPE_BUILD_TYPE })
   end
 
   # This function is Buildkite-specific
