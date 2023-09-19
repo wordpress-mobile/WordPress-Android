@@ -167,7 +167,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         })
     }
 
-    sealed class ChipStyle(val name: String) {
+    private sealed class ChipStyle(val name: String) {
         abstract val chipLayoutRes: Int
         abstract val overflowChipLayoutRes: Int
 
