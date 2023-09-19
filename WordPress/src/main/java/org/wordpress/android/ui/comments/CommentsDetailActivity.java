@@ -134,7 +134,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putLong(COMMENT_ID_EXTRA, mCommentId);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(COMMENT_STATUS_FILTER_EXTRA, mStatusFilter);
