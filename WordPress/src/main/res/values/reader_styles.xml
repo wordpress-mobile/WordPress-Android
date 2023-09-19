@@ -338,6 +338,11 @@
         <item name="android:layout_height">@dimen/avatar_sz_extra_small</item>
     </style>
 
+    <style name="ReaderImageView.Avatar.ExtraExtraSmall" parent="ReaderImageView">
+        <item name="android:layout_width">@dimen/avatar_sz_extra_extra_small</item>
+        <item name="android:layout_height">@dimen/avatar_sz_extra_extra_small</item>
+    </style>
+
     <style name="ReaderImageView.Avatar.ExtraLarge" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/blavatar_sz_extra_large</item>
         <item name="android:layout_height">@dimen/blavatar_sz_extra_large</item>
@@ -400,6 +405,27 @@
         <item name="chipBackgroundColor">@color/transparent</item>
         <item name="chipStrokeColor">@color/reader_chip_stroke_color</item>
         <item name="chipStrokeWidth">@dimen/reader_expandable_tags_view_chip_new_border</item>
+    </style>
+
+    <!-- Post Details Blog Section -->
+    <style name="ReaderTextView.PostDetail" />
+    <style name="ReaderTextView.PostDetail.BlogSection">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
+    <style name="ReaderTextView.PostDetail.BlogSection.Title">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.LabelLarge</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+    </style>
+    <style name="ReaderTextView.PostDetail.BlogSection.Subtitle">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>
+    </style>
+    <style name="ReaderTextView.PostDetail.BlogSection.Subtitle.Primary">
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+    <style name="ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis">
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
     </style>
 
 </resources>
