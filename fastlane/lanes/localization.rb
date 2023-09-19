@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # NOTE: When updating this list, ensure the locales having `promo_config: {…}` matches the list of locales
 # used in the `raw-screenshots` CI job for Firebase Test Lab
 #
@@ -323,7 +325,7 @@ platform :android do
           add_ignore_attr: true # The linter is not be able to detect if a merged string is actually used by a binary dependency
         }]
         an_localize_libs(app_strings_path: WORDPRESS_MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
-        File.delete(download_path) if File.exist?(download_path)
+        FileUtils.rm_f(download_path)
       end
     end
 

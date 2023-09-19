@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Possible values for `device` parameter can be found using `avdmanager list devices`
 SCREENSHOT_DEVICES = [
   {
@@ -13,7 +15,7 @@ SCREENSHOT_DEVICES = [
 ].freeze
 
 SCREENSHOT_LOCALES = ALL_LOCALES
-                     .select { |hsh| hsh[:promo_config] != false }
+                     .reject { |hsh| hsh[:promo_config] == false }
                      .map { |h| h[:google_play] }
                      .compact
                      .freeze
@@ -36,7 +38,7 @@ platform :android do
 
     # Allow creating screenshots for just one device type
     screenshot_devices = SCREENSHOT_DEVICES
-    screenshot_devices = screenshot_devices.select { |device| device[:device_type].casecmp(options[:device]) == 0 } unless options[:device].nil?
+    screenshot_devices = screenshot_devices.select { |device| device[:device_type].casecmp(options[:device]).zero? } unless options[:device].nil?
 
     # Allow creating screenshots for just one locale
     locales = SCREENSHOT_LOCALES
@@ -133,7 +135,7 @@ platform :android do
   lane :create_promo_screenshots do |options|
     begin
       require 'rmagick'
-    rescue LoadError => e
+    rescue LoadError
       UI.user_error!("The rmagick gem doesn't seem to be installed. Be sure to use `bundle install --with screenshots`.")
     end
     app = get_app_name_option!(options)
@@ -163,7 +165,7 @@ platform :android do
     # Allow creating promo screenshots for just one locale
     unless options[:locale].nil?
       locales.keep_if do |locale|
-        locale.casecmp(options[:locale]) == 0
+        locale.casecmp(options[:locale]).zero?
       end
     end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def create_release_management_pull_request(base_branch, title)
   create_pull_request(
     api_token: ENV.fetch('GITHUB_TOKEN', nil),

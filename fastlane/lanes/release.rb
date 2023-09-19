@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 platform :android do
   #####################################################################################
   # code_freeze

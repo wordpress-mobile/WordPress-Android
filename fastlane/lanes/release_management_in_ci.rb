@@ -1,5 +1,7 @@
-BUILDKITE_ORGANIZATION = 'automattic'.freeze
-BUILDKITE_PIPELINE = 'wordpress-android'.freeze
+# frozen_string_literal: true
+
+BUILDKITE_ORGANIZATION = 'automattic'
+BUILDKITE_PIPELINE = 'wordpress-android'
 platform :android do
   #####################################################################################
   # Triggers for Buildkite
@@ -56,7 +58,7 @@ platform :android do
     buildkite_trigger_build(
       buildkite_organization: BUILDKITE_ORGANIZATION,
       buildkite_pipeline: BUILDKITE_PIPELINE,
-      branch: "#{editorial_branch}",
+      branch: editorial_branch.to_s,
       pipeline_file: 'update-release-notes.yml',
       message: 'Update Release Notes',
       environment: { RELEASE_VERSION: release_version, EDITORIAL_BRANCH: editorial_branch }

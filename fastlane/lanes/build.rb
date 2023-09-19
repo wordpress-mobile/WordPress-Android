@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 platform :android do
   #####################################################################################
   # build_and_upload_release
@@ -152,7 +154,7 @@ platform :android do
       rescue FastlaneCore::Interface::FastlaneError => e
         # Sometimes the upload fails randomly with a "Google Api Error: Invalid request - This Edit has been deleted.".
         # It seems one reason might be a race condition when we do multiple edits at the exact same time (WP beta, JP beta). Retrying usually fixes it
-        if e.message.start_with?('Google Api Error') && (retry_count -= 1) > 0
+        if e.message.start_with?('Google Api Error') && (retry_count -= 1).positive?
           UI.error 'Upload failed with Google API error. Retrying in 2mn...'
           sleep(120)
           retry

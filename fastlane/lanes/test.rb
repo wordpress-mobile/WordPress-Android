@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 GOOGLE_FIREBASE_SECRETS_PATH = File.join(Dir.home, '.configure', 'wordpress-android', 'secrets', 'firebase.secrets.json')
 
 platform :android do
