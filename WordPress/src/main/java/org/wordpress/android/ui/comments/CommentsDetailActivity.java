@@ -121,10 +121,10 @@ public class CommentsDetailActivity extends LocaleAwareActivity
             // set up the viewpager and adapter for lateral navigation
             mBinding.viewpager.setPageTransformer(false,
                     new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
-        }
 
-        // Asynchronously loads comments and build the adapter
-        loadDataInViewPager();
+            // Asynchronously loads comments and build the adapter
+            loadDataInViewPager(mBinding);
+        }
 
         if (savedInstanceState == null) {
             // track initial comment view
@@ -158,10 +158,12 @@ public class CommentsDetailActivity extends LocaleAwareActivity
 
     @Override
     public void onLoadMore() {
-        updateComments();
+        if (mBinding != null) {
+            updateComments(mBinding);
+        }
     }
 
-    private void updateComments() {
+    private void updateComments(@NonNull CommentsDetailActivityBinding binding) {
         if (mIsUpdatingComments) {
             AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
             return;
@@ -177,57 +179,62 @@ public class CommentsDetailActivity extends LocaleAwareActivity
         mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentsAction(
                 new FetchCommentsPayload(mSite, mStatusFilter, COMMENTS_PER_PAGE, offset)));
         mIsUpdatingComments = true;
-        setLoadingState(true);
+        setLoadingState(binding, true);
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCommentChanged(OnCommentChanged event) {
-        mIsUpdatingComments = false;
-        setLoadingState(false);
-        // Don't refresh the list on push, we already updated comments
-        if (event.causeOfChange != CommentAction.PUSH_COMMENT) {
-            if (event.changedCommentsLocalIds.size() > 0) {
-                loadDataInViewPager();
-            } else if (!event.isError()) {
-                // There are no more comments to load
-                mCanLoadMoreComments = false;
+        if (mBinding != null) {
+            mIsUpdatingComments = false;
+            setLoadingState(mBinding, false);
+            // Don't refresh the list on push, we already updated comments
+            if (event.causeOfChange != CommentAction.PUSH_COMMENT) {
+                if (event.changedCommentsLocalIds.size() > 0) {
+                    loadDataInViewPager(mBinding);
+                } else if (!event.isError()) {
+                    // There are no more comments to load
+                    mCanLoadMoreComments = false;
+                }
             }
-        }
-        if (event.isError()) {
-            if (!TextUtils.isEmpty(event.error.message)) {
-                ToastUtils.showToast(this, event.error.message);
+            if (event.isError()) {
+                if (!TextUtils.isEmpty(event.error.message)) {
+                    ToastUtils.showToast(this, event.error.message);
+                }
             }
         }
     }
 
     @SuppressWarnings("deprecation")
-    private void loadDataInViewPager() {
+    private void loadDataInViewPager(@NonNull CommentsDetailActivityBinding binding) {
         if (mIsLoadingComments) {
             AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
         } else {
             new LoadCommentsTask(mCommentsStoreAdapter, mStatusFilter, mSite, new LoadCommentsTask.LoadingCallback() {
                 @Override
                 public void isLoading(boolean loading) {
-                    setLoadingState(loading);
+                    setLoadingState(binding, loading);
                     mIsLoadingComments = loading;
                 }
 
                 @Override
                 public void loadingFinished(CommentList commentList) {
                     if (!commentList.isEmpty()) {
-                        showCommentList(commentList);
+                        showCommentList(binding, commentList);
                     }
                 }
             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
-    private void showCommentList(CommentList commentList) {
-        if (mBinding == null || isFinishing()) {
+    private void showCommentList(
+            @NonNull CommentsDetailActivityBinding binding,
+            CommentList commentList
+    ) {
+        if (isFinishing()) {
             return;
         }
-        final int previousItem = mBinding.viewpager.getCurrentItem();
+        final int previousItem = binding.viewpager.getCurrentItem();
 
         // Only notify adapter when loading new page
         if (mAdapter != null && mAdapter.isAddingNewComments(commentList)) {
@@ -236,7 +243,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
             // If current items change, rebuild the adapter
             mAdapter = new CommentDetailFragmentAdapter(getSupportFragmentManager(), commentList, mSite,
                     CommentsDetailActivity.this);
-            mBinding.viewpager.setAdapter(mAdapter);
+            binding.viewpager.setAdapter(mAdapter);
         }
 
         final int commentIndex = mAdapter.commentIndex(mCommentId);
@@ -244,7 +251,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
             showErrorToastAndFinish();
         }
         if (mOnPageChangeListener != null) {
-            mBinding.viewpager.removeOnPageChangeListener(mOnPageChangeListener);
+            binding.viewpager.removeOnPageChangeListener(mOnPageChangeListener);
         } else {
             mOnPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
                 @Override
@@ -261,10 +268,10 @@ public class CommentsDetailActivity extends LocaleAwareActivity
             };
         }
         if (commentIndex != previousItem) {
-            mBinding.viewpager.setCurrentItem(commentIndex);
+            binding.viewpager.setCurrentItem(commentIndex);
         }
 
-        mBinding.viewpager.addOnPageChangeListener(mOnPageChangeListener);
+        binding.viewpager.addOnPageChangeListener(mOnPageChangeListener);
     }
 
     private void showErrorToastAndFinish() {
@@ -273,10 +280,11 @@ public class CommentsDetailActivity extends LocaleAwareActivity
         finish();
     }
 
-    private void setLoadingState(boolean visible) {
-        if (mBinding != null) {
-            mBinding.progressLoading.setVisibility(visible ? View.VISIBLE : View.GONE);
-        }
+    private void setLoadingState(
+            @NonNull CommentsDetailActivityBinding binding,
+            boolean visible
+    ) {
+        binding.progressLoading.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
 
