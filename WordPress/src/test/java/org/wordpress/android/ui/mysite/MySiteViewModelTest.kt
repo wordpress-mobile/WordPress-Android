@@ -100,6 +100,7 @@ import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHe
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
+import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlice
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -304,6 +305,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var bloggingPromptCardViewModelSlice: BloggingPromptCardViewModelSlice
+
+    @Mock
+    lateinit var noCardsMessageViewModelSlice: NoCardsMessageViewModelSlice
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
@@ -510,7 +514,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             mySiteInfoItemBuilder,
             personalizeCardViewModelSlice,
             personalizeCardBuilder,
-            bloggingPromptCardViewModelSlice
+            bloggingPromptCardViewModelSlice,
+            noCardsMessageViewModelSlice
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
