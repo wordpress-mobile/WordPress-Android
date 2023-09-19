@@ -54,17 +54,20 @@ import dagger.hilt.android.AndroidEntryPoint;
  */
 @Deprecated
 @AndroidEntryPoint
+@SuppressWarnings({"deprecation", "DeprecatedIsStillUsed"})
 public class CommentsDetailActivity extends LocaleAwareActivity
         implements OnLoadMoreListener,
         CommentActions.OnCommentActionListener, ScrollableViewInitializedListener {
     public static final String COMMENT_ID_EXTRA = "commentId";
     public static final String COMMENT_STATUS_FILTER_EXTRA = "commentStatusFilter";
 
+    @SuppressWarnings("deprecation")
     @Inject CommentsStoreAdapter mCommentsStoreAdapter;
 
     private long mCommentId;
     private CommentStatus mStatusFilter;
     private SiteModel mSite;
+    @SuppressWarnings("deprecation")
     private CommentDetailFragmentAdapter mAdapter;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
 
@@ -227,6 +230,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void showCommentList(
             @NonNull CommentsDetailActivityBinding binding,
             CommentList commentList
