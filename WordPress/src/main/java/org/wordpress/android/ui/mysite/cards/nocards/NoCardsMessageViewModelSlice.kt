@@ -22,8 +22,8 @@ class NoCardsMessageViewModelSlice @Inject constructor(
         if (cardsResult.isEmpty()) return buildNoCardsMessage()
 
         val cards = cardsResult.filter {
-            it.type == MySiteCardAndItem.Type.QUICK_START_CARD ||
-                    it.type == MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
+            // if there is any card of these types then we don't show the no cards message
+            it.type in listOfDashboardCardShownType()
         }
 
         if (cards.isEmpty())
@@ -55,5 +55,24 @@ class NoCardsMessageViewModelSlice @Inject constructor(
 
     fun resetShown() {
         cardsShownTracked.clear()
+    }
+
+    private fun listOfDashboardCardShownType(): List<MySiteCardAndItem.Type> {
+        return listOf(
+            MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD,
+            MySiteCardAndItem.Type.ERROR_CARD,
+            MySiteCardAndItem.Type.TODAYS_STATS_CARD_ERROR,
+            MySiteCardAndItem.Type.TODAYS_STATS_CARD,
+            MySiteCardAndItem.Type.POST_CARD_ERROR,
+            MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS,
+            MySiteCardAndItem.Type.BLOGGING_PROMPT_CARD,
+            MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE_CARD,
+            MySiteCardAndItem.Type.DASHBOARD_DOMAIN_TRANSFER_CARD,
+            MySiteCardAndItem.Type.BLAZE_CAMPAIGNS_CARD,
+            MySiteCardAndItem.Type.DASHBOARD_PLANS_CARD,
+            MySiteCardAndItem.Type.PAGES_CARD_ERROR,
+            MySiteCardAndItem.Type.PAGES_CARD,
+            MySiteCardAndItem.Type.ACTIVITY_CARD,
+        )
     }
 }
