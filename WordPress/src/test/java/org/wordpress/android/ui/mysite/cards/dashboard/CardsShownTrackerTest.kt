@@ -8,11 +8,10 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard.ActivityCardWithItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard.ActivityCardWithItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.ActivityLogSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
@@ -84,13 +83,12 @@ class CardsShownTrackerTest {
         )
     }
 
-    private fun buildDashboardCards(postCardType: PostCardType) = DashboardCards(
-        cards = mutableListOf<DashboardCard>().apply {
+    private fun buildDashboardCards(postCardType: PostCardType) =
+        mutableListOf<Card>().apply {
             when (postCardType) {
                 PostCardType.SCHEDULED, PostCardType.DRAFT -> addAll(buildPostCardsWithItems(postCardType))
             }
         }
-    )
 
     private fun buildPostCardsWithItems(postCardType: PostCardType) = listOf(
         PostCardWithPostItems(
@@ -102,11 +100,7 @@ class CardsShownTrackerTest {
         )
     )
 
-    private fun buildActivityDashboardCards() = DashboardCards(
-        cards = mutableListOf<DashboardCard>().apply {
-            addAll(buildActivityCard())
-        }
-    )
+    private fun buildActivityDashboardCards() = mutableListOf<Card>().apply { addAll(buildActivityCard()) }
 
     private fun buildActivityCard() =
         listOf(
@@ -119,10 +113,5 @@ class CardsShownTrackerTest {
             )
         )
 
-    private fun buildErrorCard(): DashboardCards {
-        val cards = listOf(ErrorCard(onRetryClick = mock()))
-        val dashboardCard = mutableListOf<DashboardCard>()
-        dashboardCard.addAll(cards)
-        return DashboardCards(cards = cards)
-    }
+    private fun buildErrorCard() = listOf(ErrorCard(onRetryClick = mock()))
 }

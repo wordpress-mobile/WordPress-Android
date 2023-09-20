@@ -26,11 +26,7 @@ class NoCardsMessageViewModelSlice @Inject constructor(
                     it.type == MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
         }
 
-        val dashboardCards = cardsResult.find {
-            it.type == MySiteCardAndItem.Type.DASHBOARD_CARDS
-        } as MySiteCardAndItem.Card.DashboardCards?
-
-        if (cards.isEmpty() && (dashboardCards == null || dashboardCards.cards.isEmpty()))
+        if (cards.isEmpty())
             return buildNoCardsMessage()
 
         return null
