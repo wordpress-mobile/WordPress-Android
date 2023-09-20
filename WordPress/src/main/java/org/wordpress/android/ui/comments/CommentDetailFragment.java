@@ -629,7 +629,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (updatedComment != null) {
             setComment(updatedComment, mSite);
         }
-        if (mNotificationsDetailListFragment != null) {
+        if (mNotificationsDetailListFragment != null && mNote != null) {
             mNotificationsDetailListFragment.refreshBlocksForEditedComment(mNote.getId());
         }
     }
@@ -670,7 +670,11 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             case SITE_COMMENTS:
                 return new SiteCommentIdentifier(mComment.getId(), mComment.getRemoteCommentId());
             case NOTIFICATION:
-                return new NotificationCommentIdentifier(mNote.getId(), mNote.getCommentId());
+                if (mNote != null) {
+                    return new NotificationCommentIdentifier(mNote.getId(), mNote.getCommentId());
+                } else {
+                    return null;
+                }
             default:
                 return null;
         }
@@ -1284,7 +1288,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         mEnabledActions = note.getEnabledActions();
 
         // Set 'Reply to (Name)' in comment reply EditText if it's a reasonable size
-        if (!TextUtils.isEmpty(mNote.getCommentAuthorName())
+        if (mNote != null
+            && !TextUtils.isEmpty(mNote.getCommentAuthorName())
             && mNote.getCommentAuthorName().length() < 28) {
             replyBinding.editComment.setHint(
                     String.format(getString(R.string.comment_reply_to_user), mNote.getCommentAuthorName())
