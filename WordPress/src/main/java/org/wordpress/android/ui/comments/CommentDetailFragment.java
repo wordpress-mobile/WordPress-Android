@@ -257,14 +257,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
-    @Override
-    public void onDestroy() {
-        if (mSuggestionServiceConnectionManager != null) {
-            mSuggestionServiceConnectionManager.unbindFromService();
-        }
-        super.onDestroy();
-    }
-
     // touching the file resulted in the MethodLength, it's suppressed until we get time to refactor this method
     @SuppressWarnings("checkstyle:MethodLength")
     @Override
@@ -1696,5 +1688,13 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         mBinding = null;
         mReplyBinding = null;
         mActionBinding = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mSuggestionServiceConnectionManager != null) {
+            mSuggestionServiceConnectionManager.unbindFromService();
+        }
+        super.onDestroy();
     }
 }
