@@ -222,15 +222,15 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         super.onCreate(savedInstanceState);
         ((WordPress) requireActivity().getApplication()).component().inject(this);
 
-        mCommentSource = (CommentSource) getArguments().getSerializable(KEY_MODE);
+        mCommentSource = (CommentSource) requireArguments().getSerializable(KEY_MODE);
 
         switch (mCommentSource) {
             case SITE_COMMENTS:
-                setComment(getArguments().getLong(KEY_COMMENT_ID), getArguments().getInt(KEY_SITE_LOCAL_ID));
+                setComment(requireArguments().getLong(KEY_COMMENT_ID), requireArguments().getInt(KEY_SITE_LOCAL_ID));
                 break;
             case NOTIFICATION:
-                setNote(getArguments().getString(KEY_NOTE_ID));
-                setReplyText(getArguments().getString(KEY_REPLY_TEXT));
+                setNote(requireArguments().getString(KEY_NOTE_ID));
+                setReplyText(requireArguments().getString(KEY_REPLY_TEXT));
                 break;
         }
 
