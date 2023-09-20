@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -377,17 +376,17 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             }
 
             if (CommentStatus.fromString(mComment.getStatus()) == CommentStatus.SPAM) {
-                moderateComment(CommentStatus.APPROVED);
+                moderateComment(mBinding, CommentStatus.APPROVED);
                 announceCommentStatusChangeForAccessibility(CommentStatus.UNSPAM);
             } else {
-                moderateComment(CommentStatus.SPAM);
+                moderateComment(mBinding, CommentStatus.SPAM);
                 announceCommentStatusChangeForAccessibility(CommentStatus.SPAM);
             }
         });
 
         mActionBinding.btnLike.setOnClickListener(v -> likeComment(false));
 
-        mActionBinding.btnMore.setOnClickListener(v -> showMoreMenu(v));
+        mActionBinding.btnMore.setOnClickListener(v -> showMoreMenu(mBinding, v));
         // hide more button until we know it can be enabled
         mActionBinding.btnMore.setVisibility(View.GONE);
 
@@ -482,8 +481,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         // notification about a reply to a comment this user posted on someone else's blog
         mIsUsersBlog = (comment != null && site != null);
 
-        if (isAdded()) {
-            showComment();
+        if (mBinding != null && isAdded()) {
+            showComment(mBinding);
         }
 
         // Reset the reply unique id since mComment just changed.
@@ -518,8 +517,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             // This should not exist, we should clean that screen so a note without a site/comment can be displayed
             mSite = createDummyWordPressComSite(mNote.getSiteId());
         }
-        if (isAdded() && mNote != null) {
-            showComment();
+        if (mBinding != null && isAdded() && mNote != null) {
+            showComment(mBinding);
         }
     }
 
@@ -572,7 +571,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         super.onStart();
         EventBus.getDefault().register(this);
         mCommentsStoreAdapter.register(this);
-        showComment();
+        if (mBinding != null) showComment(mBinding);
     }
 
     @Override
@@ -671,16 +670,16 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     /*
      * display the current comment
      */
-    private void showComment() {
-        if (mBinding == null || !isAdded() || getView() == null) {
+    private void showComment(@NonNull CommentDetailFragmentBinding binding) {
+        if (!isAdded() || getView() == null) {
             return;
         }
 
         // these two views contain all the other views except the progress bar
         // hide container views when comment is null (will happen when opened from a notification)
         if (mComment == null) {
-            mBinding.nestedScrollView.setVisibility(View.GONE);
-            mBinding.layoutBottom.setVisibility(View.GONE);
+            binding.nestedScrollView.setVisibility(View.GONE);
+            binding.layoutBottom.setVisibility(View.GONE);
 
             if (mNote != null) {
                 SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
@@ -694,44 +693,44 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 CommentModel comment = mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, mNote.getCommentId());
                 if (comment != null) {
                     // It exists, then show it as a "Notification"
-                    showCommentAsNotification(mNote, site, comment);
+                    showCommentAsNotification(binding, mNote, site, comment);
                 } else {
                     // It's not in our store yet, request it.
                     RemoteCommentPayload payload = new RemoteCommentPayload(site, mNote.getCommentId());
                     mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
-                    setProgressVisible(true);
+                    setProgressVisible(binding, true);
 
                     // Show a "temporary" comment built from the note data, the view will be refreshed once the
                     // comment has been fetched.
-                    showCommentAsNotification(mNote, site, null);
+                    showCommentAsNotification(binding, mNote, site, null);
                 }
             }
             return;
         }
 
-        mBinding.nestedScrollView.setVisibility(View.VISIBLE);
-        mBinding.layoutBottom.setVisibility(View.VISIBLE);
+        binding.nestedScrollView.setVisibility(View.VISIBLE);
+        binding.layoutBottom.setVisibility(View.VISIBLE);
 
         // Add action buttons footer
         if (mNote == null && mActionBinding != null && mActionBinding.layoutButtons.getParent() == null) {
-            mBinding.commentContentContainer.addView(mActionBinding.layoutButtons);
+            binding.commentContentContainer.addView(mActionBinding.layoutButtons);
         }
 
-        mBinding.textName.setText(
+        binding.textName.setText(
                 mComment.getAuthorName() == null ? getString(R.string.anonymous) : mComment.getAuthorName()
         );
-        mBinding.textDate.setText(
+        binding.textDate.setText(
                 DateTimeUtils.javaDateToTimeSpan(
                         DateTimeUtils.dateFromIso8601(mComment.getDatePublished()), WordPress.getContext()
                 )
         );
 
         String renderingError = getString(R.string.comment_unable_to_show_error);
-        mBinding.textContent.post(() -> CommentUtils.displayHtmlComment(
-                mBinding.textContent,
+        binding.textContent.post(() -> CommentUtils.displayHtmlComment(
+                binding.textContent,
                 mComment.getContent(),
-                mBinding.textContent.getWidth(),
-                mBinding.textContent.getLineHeight(),
+                binding.textContent.getWidth(),
+                binding.textContent.getLineHeight(),
                 renderingError
         ));
 
@@ -742,28 +741,28 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         } else if (mComment.getAuthorEmail() != null) {
             avatarUrl = GravatarUtils.gravatarFromEmail(mComment.getAuthorEmail(), avatarSz);
         }
-        mImageManager.loadIntoCircle(mBinding.imageAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
+        mImageManager.loadIntoCircle(binding.imageAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
 
-        updateStatusViews();
+        updateStatusViews(binding);
 
         // navigate to author's blog when avatar or name clicked
         if (mComment.getAuthorUrl() != null) {
             View.OnClickListener authorListener =
                     v -> ReaderActivityLauncher.openUrl(getActivity(), mComment.getAuthorUrl());
-            mBinding.imageAvatar.setOnClickListener(authorListener);
-            mBinding.textName.setOnClickListener(authorListener);
-            mBinding.textName.setTextColor(ContextExtensionsKt.getColorFromAttribute(
-                    mBinding.textName.getContext(),
+            binding.imageAvatar.setOnClickListener(authorListener);
+            binding.textName.setOnClickListener(authorListener);
+            binding.textName.setTextColor(ContextExtensionsKt.getColorFromAttribute(
+                    binding.textName.getContext(),
                     com.google.android.material.R.attr.colorPrimary)
             );
         } else {
-            mBinding.textName.setTextColor(ContextExtensionsKt.getColorFromAttribute(
-                    mBinding.textName.getContext(),
+            binding.textName.setTextColor(ContextExtensionsKt.getColorFromAttribute(
+                    binding.textName.getContext(),
                     com.google.android.material.R.attr.colorOnSurface)
             );
         }
 
-        showPostTitle(mSite, mComment.getRemotePostId());
+        showPostTitle(binding, mSite, mComment.getRemotePostId());
 
         // make sure reply box is showing
         if (mReplyBinding != null && mReplyBinding.layoutContainer.getVisibility() != View.VISIBLE && canReply()) {
@@ -817,8 +816,12 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
      * ensure the post associated with this comment is available to the reader and show its
      * title above the comment
      */
-    private void showPostTitle(final SiteModel site, final long postId) {
-        if (mBinding == null || !isAdded()) {
+    private void showPostTitle(
+            @NonNull CommentDetailFragmentBinding binding,
+            final SiteModel site,
+            final long postId
+    ) {
+        if (!isAdded()) {
             return;
         }
 
@@ -843,9 +846,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             hasTitle = false;
         }
         if (hasTitle) {
-            setPostTitle(mBinding.textPostTitle, title, canRequestPost);
+            setPostTitle(binding.textPostTitle, title, canRequestPost);
         } else if (canRequestPost) {
-            mBinding.textPostTitle.setText(postExists ? R.string.untitled : R.string.loading);
+            binding.textPostTitle.setText(postExists ? R.string.untitled : R.string.loading);
         }
 
         // if this is a .com or jetpack blog, tapping the title shows the associated post
@@ -867,9 +870,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                                 if (!hasTitle) {
                                     String postTitle = ReaderPostTable.getPostTitle(site.getSiteId(), postId);
                                     if (!TextUtils.isEmpty(postTitle)) {
-                                        setPostTitle(mBinding.textPostTitle, postTitle, true);
+                                        setPostTitle(binding.textPostTitle, postTitle, true);
                                     } else {
-                                        mBinding.textPostTitle.setText(R.string.untitled);
+                                        binding.textPostTitle.setText(R.string.untitled);
                                     }
                                 }
                             }
@@ -880,7 +883,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                         });
             }
 
-            mBinding.textPostTitle.setOnClickListener(v -> {
+            binding.textPostTitle.setOnClickListener(v -> {
                 if (mOnPostClickListener != null) {
                     mOnPostClickListener.onPostClicked(getNote(), site.getSiteId(),
                             (int) mComment.getRemotePostId());
@@ -945,7 +948,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     /*
      * approve, disapprove, spam, or trash the current comment
      */
-    private void moderateComment(@NonNull CommentStatus newStatus) {
+    private void moderateComment(
+            @NonNull CommentDetailFragmentBinding binding,
+            @NonNull CommentStatus newStatus) {
         if (!isAdded() || mComment == null) {
             return;
         }
@@ -979,7 +984,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             // That's why we don't call dispatchModerationAction() here.
         }
 
-        updateStatusViews();
+        updateStatusViews(binding);
     }
 
     private void dispatchModerationAction(CommentStatus newStatus) {
@@ -1038,7 +1043,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
      * the current status of the comment, show mBtnSpam if the comment isn't
      * already marked as spam, and show the current status of the comment
      */
-    private void updateStatusViews() {
+    private void updateStatusViews(@NonNull CommentDetailFragmentBinding binding) {
         if (!isAdded() || mComment == null) {
             return;
         }
@@ -1082,25 +1087,23 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             }
         }
 
-        if (mBinding != null) {
-            // comment status is only shown if this comment is from one of this user's blogs and the
-            // comment hasn't been CommentStatus.APPROVED
-            if (mIsUsersBlog && commentStatus != CommentStatus.APPROVED) {
-                mBinding.textStatus.setText(getString(statusTextResId).toUpperCase(Locale.getDefault()));
-                mBinding.textStatus.setTextColor(statusColor);
-                if (mBinding.textStatus.getVisibility() != View.VISIBLE) {
-                    mBinding.textStatus.clearAnimation();
-                    AniUtils.fadeIn(mBinding.textStatus, AniUtils.Duration.LONG);
-                }
-            } else {
-                mBinding.textStatus.setVisibility(View.GONE);
+        // comment status is only shown if this comment is from one of this user's blogs and the
+        // comment hasn't been CommentStatus.APPROVED
+        if (mIsUsersBlog && commentStatus != CommentStatus.APPROVED) {
+            binding.textStatus.setText(getString(statusTextResId).toUpperCase(Locale.getDefault()));
+            binding.textStatus.setTextColor(statusColor);
+            if (binding.textStatus.getVisibility() != View.VISIBLE) {
+                binding.textStatus.clearAnimation();
+                AniUtils.fadeIn(binding.textStatus, AniUtils.Duration.LONG);
             }
+        } else {
+            binding.textStatus.setVisibility(View.GONE);
         }
 
         if (mActionBinding != null) {
             if (canModerate()) {
                 setModerateButtonForStatus(commentStatus);
-                mActionBinding.btnModerate.setOnClickListener(v -> performModerateAction());
+                mActionBinding.btnModerate.setOnClickListener(v -> performModerateAction(binding));
                 mActionBinding.btnModerate.setVisibility(View.VISIBLE);
             } else {
                 mActionBinding.btnModerate.setVisibility(View.GONE);
@@ -1147,7 +1150,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
-    private void performModerateAction() {
+    private void performModerateAction(@NonNull CommentDetailFragmentBinding binding) {
         if (mComment == null || !isAdded() || !NetworkUtils.checkConnection(getActivity())) {
             return;
         }
@@ -1162,7 +1165,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         setModerateButtonForStatus(newStatus);
         AniUtils.startAnimation(mActionBinding.btnModerateIcon, R.anim.notifications_button_scale);
-        moderateComment(newStatus);
+        moderateComment(binding, newStatus);
     }
 
     private void setModerateButtonForStatus(CommentStatus status) {
@@ -1234,15 +1237,16 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     /*
      * display the comment associated with the passed notification
      */
-    private void showCommentAsNotification(Note note, @NonNull SiteModel site, @Nullable CommentModel comment) {
-        if (mBinding == null) {
-            return;
-        }
-
+    private void showCommentAsNotification(
+            @NonNull CommentDetailFragmentBinding binding,
+            Note note,
+            @NonNull SiteModel site,
+            @Nullable CommentModel comment
+    ) {
         // hide standard comment views, since we'll be adding note blocks instead
-        mBinding.commentContent.setVisibility(View.GONE);
+        binding.commentContent.setVisibility(View.GONE);
 
-        mBinding.textContent.setVisibility(View.GONE);
+        binding.textContent.setVisibility(View.GONE);
 
         /*
          * determine which actions to enable for this comment - if the comment is from this user's
@@ -1265,7 +1269,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             setComment(note.buildComment(), site);
         }
 
-        addDetailFragment(note.getId());
+        addDetailFragment(binding, note.getId());
 
         getActivity().invalidateOptionsMenu();
     }
@@ -1282,14 +1286,17 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
      * FYI: The above comment is slightly outdated as the Comment Container layout is now a binding, there is no live
      * reference the Comment Container layout anymore.
      */
-    private void addDetailFragment(String noteId) {
-        if (mBinding != null && mActionBinding != null) {
+    private void addDetailFragment(
+            @NonNull CommentDetailFragmentBinding binding,
+            String noteId
+    ) {
+        if (mActionBinding != null) {
             // Now we'll add a detail fragment list
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(noteId);
             mNotificationsDetailListFragment.setFooterView(mActionBinding.layoutButtons);
-            fragmentTransaction.replace(mBinding.commentContentContainer.getId(), mNotificationsDetailListFragment);
+            fragmentTransaction.replace(binding.commentContentContainer.getId(), mNotificationsDetailListFragment);
             fragmentTransaction.commitAllowingStateLoss();
         }
     }
@@ -1369,14 +1376,19 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
-    private void setProgressVisible(boolean visible) {
-        final ProgressBar progress = (isAdded() && mBinding != null ? (ProgressBar) mBinding.progressLoading : null);
-        if (progress != null) {
-            progress.setVisibility(visible ? View.VISIBLE : View.GONE);
+    private void setProgressVisible(
+            @NonNull CommentDetailFragmentBinding binding,
+            boolean visible
+    ) {
+        if (isAdded()) {
+            binding.progressLoading.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
     }
 
-    private void onCommentModerated(OnCommentChanged event) {
+    private void onCommentModerated(
+            @NonNull CommentDetailFragmentBinding binding,
+            OnCommentChanged event
+    ) {
         // send signal for listeners to perform any needed updates
         if (mNote != null) {
             EventBus.getDefault().postSticky(new NotificationEvents.NoteLikeOrModerationStatusChanged(mNote.getId()));
@@ -1388,20 +1400,23 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         if (event.isError()) {
             mComment.setStatus(mPreviousStatus);
-            updateStatusViews();
+            updateStatusViews(binding);
             ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
         } else {
             reloadComment();
         }
     }
 
-    private void onCommentCreated(OnCommentChanged event) {
+    private void onCommentCreated(
+            @NonNull CommentDetailFragmentBinding binding,
+            OnCommentChanged event
+    ) {
         if (mReplyBinding != null) {
             mIsSubmittingReply = false;
             mReplyBinding.editComment.setEnabled(true);
             mReplyBinding.btnSubmitReply.setVisibility(View.VISIBLE);
             mReplyBinding.progressSubmitComment.setVisibility(View.GONE);
-            updateStatusViews();
+            updateStatusViews(binding);
 
             if (event.isError()) {
                 if (isAdded()) {
@@ -1434,7 +1449,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
             // approve the comment
             if (mComment != null && !(CommentStatus.fromString(mComment.getStatus()) == CommentStatus.APPROVED)) {
-                moderateComment(CommentStatus.APPROVED);
+                moderateComment(binding, CommentStatus.APPROVED);
             }
         }
     }
@@ -1457,39 +1472,42 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Subscribe(threadMode = ThreadMode.MAIN)
     @OptIn(markerClass = DelicateCoroutinesApi.class)
     public void onCommentChanged(OnCommentChanged event) {
-        setProgressVisible(false);
-        // requesting local comment cache refresh
-        BuildersKt.launch(GlobalScope.INSTANCE,
-                Dispatchers.getMain(),
-                CoroutineStart.DEFAULT,
-                (coroutineScope, continuation) -> mLocalCommentCacheUpdateHandler.requestCommentsUpdate(continuation)
-
-        );
-        // Moderating comment
-        if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
-            onCommentModerated(event);
-            mPreviousStatus = null;
-            return;
-        }
-
-        // New comment (reply)
-        if (event.causeOfChange == CommentAction.CREATE_NEW_COMMENT) {
-            onCommentCreated(event);
-            return;
-        }
-
-        // Like/Unlike
-        if (event.causeOfChange == CommentAction.LIKE_COMMENT) {
-            onCommentLiked(event);
-            return;
-        }
-
-        if (event.isError()) {
-            AppLog.i(T.TESTS, "event error type: " + event.error.type + " - message: " + event.error.message);
-            if (isAdded() && !TextUtils.isEmpty(event.error.message)) {
-                ToastUtils.showToast(getActivity(), event.error.message);
+        if (mBinding != null) {
+            setProgressVisible(mBinding, false);
+            // requesting local comment cache refresh
+            BuildersKt.launch(GlobalScope.INSTANCE,
+                    Dispatchers.getMain(),
+                    CoroutineStart.DEFAULT,
+                    (coroutineScope, continuation) -> mLocalCommentCacheUpdateHandler.requestCommentsUpdate(
+                            continuation
+                    )
+            );
+            // Moderating comment
+            if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
+                onCommentModerated(mBinding, event);
+                mPreviousStatus = null;
+                return;
             }
-            return;
+
+            // New comment (reply)
+            if (event.causeOfChange == CommentAction.CREATE_NEW_COMMENT) {
+                onCommentCreated(mBinding, event);
+                return;
+            }
+
+            // Like/Unlike
+            if (event.causeOfChange == CommentAction.LIKE_COMMENT) {
+                onCommentLiked(event);
+                return;
+            }
+
+            if (event.isError()) {
+                AppLog.i(T.TESTS, "event error type: " + event.error.type + " - message: " + event.error.message);
+                if (isAdded() && !TextUtils.isEmpty(event.error.message)) {
+                    ToastUtils.showToast(getActivity(), event.error.message);
+                }
+                return;
+            }
         }
     }
 
@@ -1531,7 +1549,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     // Handle More Menu
-    private void showMoreMenu(View view) {
+    private void showMoreMenu(
+            @NonNull CommentDetailFragmentBinding binding,
+            View view
+    ) {
         androidx.appcompat.widget.PopupMenu morePopupMenu =
                 new androidx.appcompat.widget.PopupMenu(requireContext(), view);
         morePopupMenu.setOnMenuItemClickListener(item -> {
@@ -1540,11 +1561,11 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 return true;
             }
             if (item.getItemId() == R.id.action_trash) {
-                trashComment();
+                trashComment(binding);
                 return true;
             }
             if (item.getItemId() == R.id.action_copy_link_address) {
-                copyCommentLinkAddress();
+                copyCommentLinkAddress(binding);
                 return true;
             }
             return false;
@@ -1580,7 +1601,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         morePopupMenu.show();
     }
 
-    private void trashComment() {
+    private void trashComment(@NonNull CommentDetailFragmentBinding binding) {
         if (!isAdded() || mComment == null) {
             return;
         }
@@ -1593,7 +1614,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
                     (dialog, whichButton) -> {
-                        moderateComment(CommentStatus.DELETED);
+                        moderateComment(binding, CommentStatus.DELETED);
                         announceCommentStatusChangeForAccessibility(CommentStatus.DELETED);
                     });
             dialogBuilder.setNegativeButton(
@@ -1602,41 +1623,42 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             dialogBuilder.setCancelable(true);
             dialogBuilder.create().show();
         } else {
-            moderateComment(CommentStatus.TRASH);
+            moderateComment(binding, CommentStatus.TRASH);
             announceCommentStatusChangeForAccessibility(CommentStatus.TRASH);
         }
     }
 
-    private void copyCommentLinkAddress() {
+    private void copyCommentLinkAddress(@NonNull CommentDetailFragmentBinding binding) {
         try {
             ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
             clipboard.setPrimaryClip(ClipData.newPlainText("CommentLinkAddress", mComment.getUrl()));
-            showSnackBar(getString(R.string.comment_q_action_copied_url));
+            showSnackBar(binding, getString(R.string.comment_q_action_copied_url));
         } catch (Exception e) {
             AppLog.e(T.UTILS, e);
-            showSnackBar(getString(R.string.error_copy_to_clipboard));
+            showSnackBar(binding, getString(R.string.error_copy_to_clipboard));
         }
     }
 
-    private void showSnackBar(String message) {
-        if (mBinding != null) {
-            Snackbar snackBar = WPSnackbar.make(mBinding.getRoot(), message, Snackbar.LENGTH_LONG)
-                                          .setAction(getString(R.string.share_action),
-                                                  v -> {
-                                                      try {
-                                                          Intent intent = new Intent(Intent.ACTION_SEND);
-                                                          intent.setType("text/plain");
-                                                          intent.putExtra(Intent.EXTRA_TEXT, mComment.getUrl());
-                                                          startActivity(Intent.createChooser(intent,
-                                                                  getString(R.string.comment_share_link_via)));
-                                                      } catch (ActivityNotFoundException exception) {
-                                                          ToastUtils.showToast(mBinding.getRoot().getContext(),
-                                                                  R.string.comment_toast_err_share_intent);
-                                                      }
-                                                  })
-                                          .setAnchorView(mBinding.layoutBottom);
-            snackBar.show();
-        }
+    private void showSnackBar(
+            @NonNull CommentDetailFragmentBinding binding,
+            String message
+    ) {
+        Snackbar snackBar = WPSnackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG)
+                                      .setAction(getString(R.string.share_action),
+                                              v -> {
+                                                  try {
+                                                      Intent intent = new Intent(Intent.ACTION_SEND);
+                                                      intent.setType("text/plain");
+                                                      intent.putExtra(Intent.EXTRA_TEXT, mComment.getUrl());
+                                                      startActivity(Intent.createChooser(intent,
+                                                              getString(R.string.comment_share_link_via)));
+                                                  } catch (ActivityNotFoundException exception) {
+                                                      ToastUtils.showToast(binding.getRoot().getContext(),
+                                                              R.string.comment_toast_err_share_intent);
+                                                  }
+                                              })
+                                      .setAnchorView(binding.layoutBottom);
+        snackBar.show();
     }
 
     @Nullable
