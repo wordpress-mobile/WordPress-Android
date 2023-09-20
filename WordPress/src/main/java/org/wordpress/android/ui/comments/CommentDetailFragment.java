@@ -1373,9 +1373,11 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 setModerateButtonForStatus(actionBinding, CommentStatus.APPROVED);
             }
         }
-        mCommentsStoreAdapter.dispatch(CommentActionBuilder.newLikeCommentAction(
-                new RemoteLikeCommentPayload(mSite, mComment, actionBinding.btnLike.isActivated()))
-        );
+        if (mComment != null) {
+            mCommentsStoreAdapter.dispatch(CommentActionBuilder.newLikeCommentAction(
+                    new RemoteLikeCommentPayload(mSite, mComment, actionBinding.btnLike.isActivated()))
+            );
+        }
         actionBinding.btnLike.announceForAccessibility(
                 getText(actionBinding.btnLike.isActivated() ? R.string.comment_liked_talkback
                         : R.string.comment_unliked_talkback)
