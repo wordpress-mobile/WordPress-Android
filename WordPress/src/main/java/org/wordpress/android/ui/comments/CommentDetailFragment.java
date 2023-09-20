@@ -1553,6 +1553,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             case UNTRASH:
                 resId = R.string.comment_untrash_talkback;
                 break;
+            case UNREPLIED:
             case ALL:
                 // ignore
                 break;
