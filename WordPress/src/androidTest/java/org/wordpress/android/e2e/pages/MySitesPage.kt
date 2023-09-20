@@ -231,13 +231,6 @@ class MySitesPage {
             )
         )
 
-        fun goToHomeTab() {
-            WPSupportUtils.selectItemWithTitleInTabLayout(
-                WPSupportUtils.getTranslatedString(R.string.my_site_dashboard_tab_title),
-                R.id.tab_layout
-            )
-        }
-
         fun goToMenuTab() {
             WPSupportUtils.selectItemWithTitleInTabLayout(
                 WPSupportUtils.getTranslatedString(R.string.my_site_menu_tab_title),
@@ -301,7 +294,6 @@ class MySitesPage {
         Espresso.onView(
             Matchers.allOf(
                 ViewMatchers.withId(R.id.dashboard_card_pages),
-                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.dashboard_cards)),
 
                 ViewMatchers.hasDescendant(
                     Matchers.allOf(
@@ -365,7 +357,6 @@ class MySitesPage {
         Espresso.onView(
             Matchers.allOf(
                 ViewMatchers.withId(R.id.dashboard_card_activity_log),
-                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.dashboard_cards)),
 
                 ViewMatchers.hasDescendant(
                     Matchers.allOf(
