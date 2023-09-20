@@ -1337,10 +1337,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         fragmentTransaction.commitAllowingStateLoss();
     }
 
-    // Like or unlike a comment via the REST API
     private void likeComment(
             @NonNull CommentActionFooterBinding actionBinding,
-            boolean forceLike
+            @SuppressWarnings("SameParameterValue") boolean forceLike
     ) {
         if (!isAdded()) {
             return;
