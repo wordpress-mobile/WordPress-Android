@@ -248,19 +248,19 @@ class PostCardBuilderTest : BaseUnitTest() {
         assertThat((postsCard.filterScheduledPostCard())?.postItems?.first()?.isTimeIconVisible).isTrue
     }
 
-    private fun List<PostCard>.filterPostErrorCard() = firstOrNull { it.dashboardCardType == POST_CARD_ERROR }
+    private fun List<PostCard>.filterPostErrorCard() = firstOrNull { it.type == POST_CARD_ERROR }
 
     @Suppress("UNCHECKED_CAST")
     private fun List<PostCard>.filterDraftPostCard() = (
             filter {
-                it.dashboardCardType == MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS
+                it.type == MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS
             } as? List<PostCardWithPostItems>
             )?.firstOrNull { it.postCardType == PostCardType.DRAFT }
 
     @Suppress("UNCHECKED_CAST")
     private fun List<PostCard>.filterScheduledPostCard() = (
             filter {
-                it.dashboardCardType == MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS
+                it.type == MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS
             } as? List<PostCardWithPostItems>
             )?.firstOrNull { it.postCardType == PostCardType.SCHEDULED }
 
