@@ -131,6 +131,7 @@ import kotlinx.coroutines.GlobalScope;
  * features or modifying this class, please ping develric or klymyam
  */
 @Deprecated
+@SuppressWarnings("DeprecatedIsStillUsed")
 public class CommentDetailFragment extends ViewPagerFragment implements NotificationFragment, OnConfirmListener,
         OnCollapseListener {
     private static final String KEY_MODE = "KEY_MODE";
@@ -156,6 +157,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private float mMediumOpacity;
 
     @Inject AccountStore mAccountStore;
+    @SuppressWarnings("deprecation")
     @Inject CommentsStoreAdapter mCommentsStoreAdapter;
     @Inject SiteStore mSiteStore;
     @Inject FluxCImageLoader mImageLoader;
@@ -186,6 +188,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     /*
      * used when called from comment list
      */
+    @SuppressWarnings("deprecation")
     static CommentDetailFragment newInstance(
             @NonNull SiteModel site,
             CommentModel commentModel
@@ -202,6 +205,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     /*
      * used when called from notification list for a comment notification
      */
+    @SuppressWarnings("deprecation")
     public static CommentDetailFragment newInstance(final String noteId, final String replyText) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         Bundle args = new Bundle();
@@ -213,6 +217,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
@@ -628,6 +633,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     /**
      * open the comment for editing
      */
+    @SuppressWarnings("deprecation")
     private void editComment() {
         if (!isAdded() || mComment == null) {
             return;
@@ -1008,6 +1014,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     /*
      * post comment box text as a reply to the current comment
      */
+    @SuppressWarnings("deprecation")
     private void submitReply(@NonNull ReaderIncludeCommentBoxBinding replyBinding) {
         if (mComment == null || !isAdded() || mIsSubmittingReply) {
             return;
@@ -1422,6 +1429,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void onCommentCreated(
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
