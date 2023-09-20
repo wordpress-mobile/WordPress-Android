@@ -448,11 +448,12 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             return;
         }
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), mSite.getSiteId());
-        mSuggestionAdapter = SuggestionUtils.setupUserSuggestions(mSite, requireActivity(),
-                mSuggestionServiceConnectionManager);
-        if (mSuggestionAdapter != null) {
-            replyBinding.editComment.setAdapter(mSuggestionAdapter);
-        }
+        mSuggestionAdapter = SuggestionUtils.setupUserSuggestions(
+                mSite,
+                requireActivity(),
+                mSuggestionServiceConnectionManager
+        );
+        replyBinding.editComment.setAdapter(mSuggestionAdapter);
     }
 
     private void setReplyUniqueId(@NonNull ReaderIncludeCommentBoxBinding replyBinding) {
