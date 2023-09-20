@@ -67,7 +67,7 @@
         android:ellipsize="end"
         android:textAlignment="viewStart"
         app:layout_constraintStart_toStartOf="@id/blog_section_text_blog_name"
-        app:layout_constraintEnd_toStartOf="@id/dot_separator"
+        app:layout_constraintEnd_toStartOf="@id/blog_section_dot_separator"
         app:layout_constraintTop_toBottomOf="@id/blog_section_text_blog_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constrainedWidth="true"
@@ -76,7 +76,7 @@
         tools:text="Author Name" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/dot_separator"
+        android:id="@+id/blog_section_dot_separator"
         style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
         android:layout_marginEnd="@dimen/margin_medium"
         android:includeFontPadding="false"
         android:maxLines="1"
-        app:layout_constraintStart_toEndOf="@id/dot_separator"
+        app:layout_constraintStart_toEndOf="@id/blog_section_dot_separator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/blog_section_text_author"
         app:layout_constraintBottom_toBottomOf="@id/blog_section_text_author"
