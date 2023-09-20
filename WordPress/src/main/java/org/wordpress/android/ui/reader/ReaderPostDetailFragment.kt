@@ -134,6 +134,7 @@ import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISS
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
+import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
@@ -267,6 +268,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
+    @Inject
+    lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -1007,33 +1011,34 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onPrepareMenu(menu: Menu) {
-        // browse & share require the post to have a URL (some feed-based posts don't have one)
+        val isReaderImprovementsEnabled = readerImprovementsFeatureConfig.isEnabled()
+
         val postHasUrl = viewModel.post?.hasUrl() == true
-        val mnuBrowse = menu.findItem(R.id.menu_browse)
-        if (mnuBrowse != null) {
-            mnuBrowse.isVisible = postHasUrl || viewModel.interceptedUri != null
+        val menuBrowse = menu.findItem(R.id.menu_browse)
+        menuBrowse?.isVisible = if (!isReaderImprovementsEnabled) {
+            // browse require the post to have a URL (some feed-based posts don't have one) or an intercepted URI
+            postHasUrl || viewModel.interceptedUri != null
+        } else {
+            // in the Reader improvements we are only showing this as a fallback for posts with intercepted URI only
+            !postHasUrl && viewModel.interceptedUri != null
         }
-        val mnuShare = menu.findItem(R.id.menu_share)
-        if (mnuShare != null) {
-            mnuShare.isVisible = postHasUrl
-        }
+
+        val menuShare = menu.findItem(R.id.menu_share)
+        // share should not be shown as a TopBar item after Reader improvements (only in the "more" menu)
+        menuShare?.isVisible = postHasUrl && !isReaderImprovementsEnabled
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
         R.id.menu_browse -> {
+            val interceptedUri = viewModel.interceptedUri
             if (viewModel.hasPost) {
                 readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
                 ReaderActivityLauncher.openPost(context, viewModel.post)
-            } else if (viewModel.interceptedUri != null) {
-                readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, viewModel.interceptedUri!!)
-                ReaderActivityLauncher.openUrl(activity, viewModel.interceptedUri, OpenUrlType.EXTERNAL)
+            } else if (interceptedUri != null) {
+                readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, interceptedUri)
+                ReaderActivityLauncher.openUrl(activity, interceptedUri, OpenUrlType.EXTERNAL)
                 requireActivity().finish()
             }
-            true
-        }
-        R.id.menu_share -> {
-            readerTracker.track(AnalyticsTracker.Stat.SHARED_ITEM)
-            ReaderActivityLauncher.sharePost(context, viewModel.post)
             true
         }
         R.id.menu_more -> {
