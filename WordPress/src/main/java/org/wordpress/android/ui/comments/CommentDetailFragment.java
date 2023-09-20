@@ -502,6 +502,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         mShouldFocusReplyField = true;
     }
 
+    @Nullable
     @Override
     public Note getNote() {
         return mNote;
