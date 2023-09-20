@@ -1159,7 +1159,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         if (canTrash()) {
             if (commentStatus == CommentStatus.TRASH) {
-                ColorUtils.INSTANCE.setImageResourceWithTint(
+                ColorUtils.setImageResourceWithTint(
                         actionBinding.btnModerateIcon,
                         R.drawable.ic_undo_white_24dp,
                         ContextExtensionsKt.getColorResIdFromAttribute(
@@ -1225,7 +1225,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             actionBinding.btnModerateIcon.setAlpha(mMediumOpacity);
         }
 
-        ColorUtils.INSTANCE.setImageResourceWithTint(
+        ColorUtils.setImageResourceWithTint(
                 actionBinding.btnModerateIcon,
                 R.drawable.ic_checkmark_white_24dp, color
         );
@@ -1412,7 +1412,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             actionBinding.btnLikeIcon.setAlpha(mMediumOpacity);
         }
 
-        ColorUtils.INSTANCE.setImageResourceWithTint(actionBinding.btnLikeIcon, drawable, color);
+        ColorUtils.setImageResourceWithTint(actionBinding.btnLikeIcon, drawable, color);
         actionBinding.btnLikeText.setTextColor(ContextCompat.getColor(requireContext(), color));
     }
 
