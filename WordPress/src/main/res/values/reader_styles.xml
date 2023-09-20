@@ -357,6 +357,14 @@
         <item name="chipCornerRadius">@dimen/reader_chip_radius</item>
     </style>
 
+    <style name="ReaderChipNew" parent="@style/Widget.MaterialComponents.Chip.Filter">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipCornerRadius">@dimen/reader_chip_radius</item>
+    </style>
+
     <style name="ReaderInterestFilterChip" parent="@style/ReaderChip">
         <item name="chipMinHeight">@dimen/reader_chip_height</item>
         <item name="chipStartPadding">@dimen/margin_medium_large</item>
@@ -377,6 +385,21 @@
         <item name="ensureMinTouchTargetSize">false</item>
         <item name="chipCornerRadius">@dimen/reader_expandable_tags_view_chip_radius</item>
         <item name="chipBackgroundColor">@color/on_surface_chip</item>
+    </style>
+
+    <style name="ReaderExpandableTagsViewChipNew" parent="@style/ReaderChipNew">
+        <item name="android:checkable">false</item>
+        <item name="chipMinHeight">@dimen/reader_expandable_tags_view_chip_new_height</item>
+        <item name="chipStartPadding">@dimen/margin_extra_large</item>
+        <item name="chipEndPadding">@dimen/margin_extra_large</item>
+        <item name="textStartPadding">0dp</item>
+        <item name="textEndPadding">0dp</item>
+        <item name="android:textColor">@color/material_on_surface_emphasis_medium</item>
+        <item name="ensureMinTouchTargetSize">false</item>
+        <item name="chipCornerRadius">@dimen/reader_expandable_tags_view_chip_new_radius</item>
+        <item name="chipBackgroundColor">@color/transparent</item>
+        <item name="chipStrokeColor">@color/reader_chip_stroke_color</item>
+        <item name="chipStrokeWidth">@dimen/reader_expandable_tags_view_chip_new_border</item>
     </style>
 
 </resources>
