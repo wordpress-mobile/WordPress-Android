@@ -650,9 +650,13 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         // https://code.google.com/p/android/issues/detail?id=15394#c45
         if (mUnifiedCommentsCommentEditFeatureConfig.isEnabled()) {
             final CommentIdentifier commentIdentifier = mapCommentIdentifier();
-            final Intent intent =
-                    UnifiedCommentsEditActivity.createIntent(requireActivity(), commentIdentifier, mSite);
-            startActivityForResult(intent, INTENT_COMMENT_EDITOR);
+            if (commentIdentifier != null) {
+                final Intent intent =
+                        UnifiedCommentsEditActivity.createIntent(requireActivity(), commentIdentifier, mSite);
+                startActivityForResult(intent, INTENT_COMMENT_EDITOR);
+            } else {
+                throw new IllegalArgumentException("CommentIdentifier cannot be null");
+            }
         } else {
             Intent intent = new Intent(getActivity(), EditCommentActivity.class);
             intent.putExtra(WordPress.SITE, mSite);
