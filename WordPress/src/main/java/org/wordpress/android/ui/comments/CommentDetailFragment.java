@@ -481,9 +481,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         // notification about a reply to a comment this user posted on someone else's blog
         mIsUsersBlog = (comment != null && site != null);
 
-        if (mBinding != null && isAdded()) {
-            showComment(mBinding);
-        }
+        if (mBinding != null) showComment(mBinding);
 
         // Reset the reply unique id since mComment just changed.
         setReplyUniqueId();
@@ -517,7 +515,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             // This should not exist, we should clean that screen so a note without a site/comment can be displayed
             mSite = createDummyWordPressComSite(mNote.getSiteId());
         }
-        if (mBinding != null && isAdded() && mNote != null) {
+        if (mBinding != null && mNote != null) {
             showComment(mBinding);
         }
     }
