@@ -44,7 +44,7 @@ class CardsShownTracker @Inject constructor(
         )
         is TodaysStatsCard.Error -> trackCardShown(
             Pair(
-                card.cardType.toTypeValue().label,
+                card.type.toTypeValue().label,
                 StatsSubtype.TODAYS_STATS.label
             )
         )
@@ -56,25 +56,25 @@ class CardsShownTracker @Inject constructor(
         )
         is PostCard.Error -> trackCardShown(
             Pair(
-                card.dashboardCardType.toTypeValue().label,
+                card.type.toTypeValue().label,
                 Type.POST.label
             )
         )
         is PostCardWithPostItems -> trackCardShown(
             Pair(
-                card.dashboardCardType.toTypeValue().label,
+                card.type.toTypeValue().label,
                 card.postCardType.toSubtypeValue().label
             )
         )
         is BloggingPromptCardWithData -> trackCardShown(
             Pair(
-                card.dashboardCardType.toTypeValue().label,
+                card.type.toTypeValue().label,
                 Type.BLOGGING_PROMPT.label
             )
         )
         is Card.BlazeCard.PromoteWithBlazeCard -> trackCardShown(
             Pair(
-                card.dashboardCardType.toTypeValue().label,
+                card.type.toTypeValue().label,
                 BlazeSubtype.NO_CAMPAIGNS.label
             )
         )
@@ -86,7 +86,7 @@ class CardsShownTracker @Inject constructor(
         )
         is Card.BlazeCard.BlazeCampaignsCardModel -> trackCardShown(
             Pair(
-                card.dashboardCardType.toTypeValue().label,
+                card.type.toTypeValue().label,
                 BlazeSubtype.CAMPAIGNS.label
             )
         )
@@ -98,13 +98,13 @@ class CardsShownTracker @Inject constructor(
         )
         is Card.PagesCard -> trackCardShown(
             Pair(
-                card.dashboardCardType.toTypeValue().label,
+                card.type.toTypeValue().label,
                 Type.PAGES.label
             )
         )
         is Card.ActivityCard.ActivityCardWithItems -> trackCardShown(
             Pair(
-                card.dashboardCardType.toTypeValue().label,
+                card.type.toTypeValue().label,
                 Type.ACTIVITY.label
             )
         )

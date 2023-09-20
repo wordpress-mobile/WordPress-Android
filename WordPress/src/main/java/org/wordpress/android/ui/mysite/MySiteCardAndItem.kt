@@ -160,11 +160,11 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         }
 
         sealed class TodaysStatsCard(
-             val cardType: Type
-        ) : Card(cardType) {
+             override val type: Type
+        ) : Card(type) {
             data class Error(
                 override val title: UiString
-            ) : TodaysStatsCard(cardType = Type.TODAYS_STATS_CARD_ERROR), ErrorWithinCard
+            ) : TodaysStatsCard(type = Type.TODAYS_STATS_CARD_ERROR), ErrorWithinCard
 
             data class TodaysStatsCardWithData(
                 val title: UiString,
@@ -174,7 +174,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 val onCardClick: () -> Unit,
                 val message: TextWithLinks? = null,
                 val moreMenuOptions: MoreMenuOptions
-            ) : TodaysStatsCard(cardType = Type.TODAYS_STATS_CARD)
+            ) : TodaysStatsCard(type = Type.TODAYS_STATS_CARD)
 
             data class TextWithLinks(
                 val text: UiString,
@@ -191,18 +191,18 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         }
 
         sealed class PagesCard(
-             val dashboardCardType: Type,
-        ) : Card(dashboardCardType) {
+             override val type: Type,
+        ) : Card(type) {
             data class Error(
                 override val title: UiString
-            ) : PagesCard(dashboardCardType = Type.PAGES_CARD_ERROR), ErrorWithinCard
+            ) : PagesCard(type = Type.PAGES_CARD_ERROR), ErrorWithinCard
 
             data class PagesCardWithData(
                 val title: UiString,
                 val pages: List<PageContentItem>,
                 val footerLink: CreateNewPageItem,
                 val moreMenuOptionsLink: MoreMenuOptions
-            ) : PagesCard(dashboardCardType = Type.PAGES_CARD) {
+            ) : PagesCard(type = Type.PAGES_CARD) {
                 data class PageContentItem(
                     val title: UiString,
                     @DrawableRes val statusIcon: Int?,
@@ -227,11 +227,11 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         }
 
         sealed class PostCard(
-            val dashboardCardType: Type
-        ) : Card(dashboardCardType) {
+            override val type: Type,
+        ) : Card(type) {
             data class Error(
                 override val title: UiString
-            ) : PostCard(dashboardCardType = Type.POST_CARD_ERROR), ErrorWithinCard
+            ) : PostCard(type = Type.POST_CARD_ERROR), ErrorWithinCard
 
             data class PostCardWithPostItems(
                 val postCardType: PostCardType,
@@ -240,7 +240,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 @MenuRes val moreMenuResId: Int,
                 val moreMenuOptions: MoreMenuOptions
             ) : PostCard(
-                dashboardCardType = Type.POST_CARD_WITH_POST_ITEMS
+                type = Type.POST_CARD_WITH_POST_ITEMS
             ) {
                 data class PostItem(
                     val title: UiString,
@@ -259,8 +259,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         }
 
         sealed class ActivityCard(
-            val dashboardCardType: Type
-        ) : Card(dashboardCardType) {
+            override val type: Type,
+        ) : Card(type) {
             data class ActivityCardWithItems(
                 val title: UiString,
                 val activityItems: List<ActivityItem>,
@@ -268,7 +268,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 val onHideMenuItemClick: ListItemInteraction,
                 val onMoreMenuClick: ListItemInteraction
             ) : ActivityCard(
-                dashboardCardType = Type.ACTIVITY_CARD
+                type = Type.ACTIVITY_CARD
             ) {
                 data class ActivityItem(
                     val label: UiString,
@@ -282,8 +282,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         }
 
         sealed class BloggingPromptCard(
-            val dashboardCardType: Type
-        ) : Card(dashboardCardType) {
+            override val type: Type,
+        ) : Card(type) {
             data class BloggingPromptCardWithData(
                 val prompt: UiString,
                 val respondents: List<TrainOfAvatarsItem>,
@@ -297,7 +297,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 val onViewMoreClick: () -> Unit,
                 val onViewAnswersClick: ((PromptID) -> Unit)?,
                 val onRemoveClick: () -> Unit,
-            ) : BloggingPromptCard(dashboardCardType = Type.BLOGGING_PROMPT_CARD)
+            ) : BloggingPromptCard(type = Type.BLOGGING_PROMPT_CARD)
         }
 
         data class DomainTransferCardModel(
@@ -311,15 +311,15 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         ) : Card(type = Type.DASHBOARD_DOMAIN_TRANSFER_CARD)
 
         sealed class BlazeCard(
-            val dashboardCardType: Type
-        ) : Card(dashboardCardType) {
+            override val type: Type,
+        ) : Card(type) {
             data class BlazeCampaignsCardModel(
                 val title: UiString,
                 val campaign: BlazeCampaignsCardItem,
                 val footer: BlazeCampaignsCardFooter,
                 val onClick: ListItemInteraction,
                 val moreMenuOptions: MoreMenuOptions
-            ) : BlazeCard(dashboardCardType = Type.BLAZE_CAMPAIGNS_CARD) {
+            ) : BlazeCard(type = Type.BLAZE_CAMPAIGNS_CARD) {
                 data class BlazeCampaignsCardItem(
                     val id: Int,
                     val title: UiString,
@@ -352,7 +352,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 val subtitle: UiString?,
                 val onClick: ListItemInteraction,
                 val moreMenuOptions: MoreMenuOptions
-            ) : BlazeCard(dashboardCardType = Type.PROMOTE_WITH_BLAZE_CARD) {
+            ) : BlazeCard(type = Type.PROMOTE_WITH_BLAZE_CARD) {
                 data class MoreMenuOptions(
                     val onMoreClick: ListItemInteraction,
                     val hideThisMenuItemClick: ListItemInteraction,
