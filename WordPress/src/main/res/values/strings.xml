@@ -4705,16 +4705,16 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="personalize_card_content_description">Tap to personalize your home tab</string>
 
     <!-- Personalization Screen -->
-    <string name="personalization_screen_title"> Personalize home tab</string>
-    <string name="personalization_screen_description"> Add or hide Cards</string>
-    <string name="personalization_screen_footer_cards"> Cards may show different content depending on what\'s happening with your site</string>
+    <string name="personalization_screen_title">Personalize home tab</string>
+    <string name="personalization_screen_description">Add or hide Cards</string>
+    <string name="personalization_screen_footer_cards">Cards may show different content depending on what\'s happening with your site</string>
     <string name="personalization_screen_stats_card_title" translatable="false">@string/my_site_todays_stat_card_title</string>
     <string name="personalization_screen_stats_card_description">Views, Visitors and likes</string>
-    <string name="personalization_screen_draft_posts_card_title"> Draft posts</string>
+    <string name="personalization_screen_draft_posts_card_title">Draft posts</string>
     <string name="personalization_screen_draft_posts_card_description">Your recent draft posts.</string>
-    <string name="personalization_screen_scheduled_posts_card_title"> Scheduled posts</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Scheduled posts</string>
     <string name="personalization_screen_scheduled_posts_card_description">Your upcoming scheduled posts.</string>
-    <string name="personalization_screen_blaze_card_title" translatable="false"> @string/blaze_activity_title</string>
+    <string name="personalization_screen_blaze_card_title" translatable="false">@string/blaze_activity_title</string>
     <string name="personalization_screen_blaze_card_description">Promote a post and see current campaigns.</string>
     <string name="personalization_screen_blogging_prompts_card_title">Blogging prompts</string>
     <string name="personalization_screen_blogging_prompts_card_description">Daily ideas for your blog posts.</string>
