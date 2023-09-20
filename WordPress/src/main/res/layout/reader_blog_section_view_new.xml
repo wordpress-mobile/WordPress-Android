@@ -6,42 +6,35 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ImageView
+        android:id="@+id/blog_section_image_blog_avatar"
+        style="@style/ReaderImageView.Avatar"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:id="@+id/author_and_site_imagery_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@id/blog_section_text_blog_name"
+        android:background="@drawable/bg_oval_placeholder"
+        android:importantForAccessibility="no"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toStartOf="@id/blog_section_text_blog_name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="RtlSymmetry" />
 
-        <ImageView
-            android:id="@+id/blog_section_image_blog_avatar"
-            style="@style/ReaderImageView.Avatar"
-            android:background="@drawable/bg_oval_placeholder"
-            android:importantForAccessibility="no"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="RtlSymmetry" />
+    <ViewStub
+        android:id="@+id/dynamic_center_point"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/blog_section_image_blog_avatar"
+        app:layout_constraintLeft_toLeftOf="@+id/blog_section_image_blog_avatar"
+        app:layout_constraintRight_toRightOf="@+id/blog_section_image_blog_avatar"
+        app:layout_constraintTop_toTopOf="@+id/blog_section_image_blog_avatar" />
 
-        <ViewStub
-            android:id="@+id/dynamic_center_point"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/blog_section_image_blog_avatar"
-            app:layout_constraintLeft_toLeftOf="@+id/blog_section_image_blog_avatar"
-            app:layout_constraintRight_toRightOf="@+id/blog_section_image_blog_avatar"
-            app:layout_constraintTop_toTopOf="@+id/blog_section_image_blog_avatar" />
-
-        <ImageView
-            android:id="@+id/blog_section_image_author_avatar"
-            style="@style/ReaderImageView.Avatar.ExtraExtraSmall"
-            android:importantForAccessibility="no"
-            app:layout_constraintStart_toEndOf="@+id/dynamic_center_point"
-            app:layout_constraintTop_toTopOf="@+id/dynamic_center_point"
-            tools:ignore="RtlSymmetry"
-            tools:src="@drawable/login_prologue_third_asset_three" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:id="@+id/blog_section_image_author_avatar"
+        style="@style/ReaderImageView.Avatar.ExtraExtraSmall"
+        android:importantForAccessibility="no"
+        app:layout_constraintStart_toEndOf="@+id/dynamic_center_point"
+        app:layout_constraintTop_toTopOf="@+id/dynamic_center_point"
+        tools:ignore="RtlSymmetry"
+        tools:src="@drawable/login_prologue_third_asset_three" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/blog_section_text_blog_name"
@@ -50,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_medium"
         android:includeFontPadding="false"
-        app:layout_constraintStart_toEndOf="@id/author_and_site_imagery_container"
+        app:layout_constraintStart_toEndOf="@id/blog_section_image_blog_avatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/blog_section_text_author"
