@@ -943,6 +943,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_DELETED,
                         mCommentSource.toAnalyticsCommentActionSource(), mSite);
                 break;
+            case UNREPLIED:
             case ALL:
                 break;
         }
