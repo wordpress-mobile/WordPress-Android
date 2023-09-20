@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewTreeObserver.OnPreDrawListener
 import androidx.annotation.ColorRes
+import androidx.annotation.LayoutRes
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import org.wordpress.android.R
@@ -167,19 +168,21 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         })
     }
 
-    private sealed class ChipStyle(val name: String) {
-        abstract val chipLayoutRes: Int
-        abstract val overflowChipLayoutRes: Int
+    private sealed interface ChipStyle {
+        @get:LayoutRes
+        val chipLayoutRes: Int
+        @get:LayoutRes
+        val overflowChipLayoutRes: Int
 
-        abstract fun overflowChipText(resources: Resources, hiddenChipsCount: Int): String
+        fun overflowChipText(resources: Resources, hiddenChipsCount: Int): String
 
         @ColorRes
-        open fun overflowBackgroundColorRes(isCollapsed: Boolean): Int? = null
+        fun overflowBackgroundColorRes(isCollapsed: Boolean): Int? = null
 
         @ColorRes
-        open fun overflowStrokeColorRes(isCollapsed: Boolean): Int? = null
+        fun overflowStrokeColorRes(isCollapsed: Boolean): Int? = null
 
-        object Legacy : ChipStyle("legacy") {
+        object Legacy : ChipStyle {
             override val chipLayoutRes: Int
                 get() = R.layout.reader_expandable_tags_view_chip
             override val overflowChipLayoutRes: Int
@@ -201,7 +204,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
             }
         }
 
-        object New : ChipStyle("new") {
+        object New : ChipStyle {
             override val chipLayoutRes: Int
                 get() = R.layout.reader_expandable_tags_view_chip_new
             override val overflowChipLayoutRes: Int
