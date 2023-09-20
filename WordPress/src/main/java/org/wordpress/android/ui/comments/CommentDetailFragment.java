@@ -1076,6 +1076,11 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                         com.google.android.material.R.attr.colorError
                 );
                 break;
+            case DELETED:
+            case ALL:
+            case UNREPLIED:
+            case UNSPAM:
+            case UNTRASH:
             case TRASH:
             default:
                 statusTextResId = R.string.comment_status_trash;
