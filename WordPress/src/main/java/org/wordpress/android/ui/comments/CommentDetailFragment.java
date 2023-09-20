@@ -258,9 +258,14 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     // touching the file resulted in the MethodLength, it's suppressed until we get time to refactor this method
-    @SuppressWarnings("checkstyle:MethodLength")
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @SuppressWarnings("checkstyle:MethodLength")
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
         mBinding = CommentDetailFragmentBinding.inflate(inflater, container, false);
         mReplyBinding = mBinding.layoutCommentBox;
         mActionBinding = CommentActionFooterBinding.inflate(inflater, null, false);
@@ -292,15 +297,15 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         mReplyBinding.editComment.initializeWithPrefix('@');
         mReplyBinding.editComment.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(@NonNull CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(@NonNull Editable s) {
                 mReplyBinding.btnSubmitReply.setEnabled(!TextUtils.isEmpty(s.toString().trim()));
             }
         });
@@ -597,7 +602,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
             reloadComment();
