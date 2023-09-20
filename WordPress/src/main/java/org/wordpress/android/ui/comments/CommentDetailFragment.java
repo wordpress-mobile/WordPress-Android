@@ -473,7 +473,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
     private void setComment(final long commentRemoteId, final int siteLocalId) {
         final SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
-        setComment(mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, commentRemoteId), site);
+        if (site != null) {
+            setComment(mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, commentRemoteId), site);
+        }
     }
 
     private void setComment(@Nullable final CommentModel comment, @Nullable final SiteModel site) {
