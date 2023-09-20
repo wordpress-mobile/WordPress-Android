@@ -141,6 +141,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
 
     private static final int INTENT_COMMENT_EDITOR = 1010;
+    private static final float NORMAL_OPACITY = 1f;
 
     private CommentModel mComment;
     private SiteModel mSite;
@@ -153,7 +154,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
     private String mPreviousStatus;
-    private float mNormalOpacity = 1f;
     private float mMediumOpacity;
 
     @Inject AccountStore mAccountStore;
@@ -1201,8 +1201,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                     com.google.android.material.R.attr.colorSecondary
             );
             actionBinding.btnModerateText.setText(R.string.comment_status_approved);
-            actionBinding.btnModerateText.setAlpha(mNormalOpacity);
-            actionBinding.btnModerateIcon.setAlpha(mNormalOpacity);
+            actionBinding.btnModerateText.setAlpha(NORMAL_OPACITY);
+            actionBinding.btnModerateIcon.setAlpha(NORMAL_OPACITY);
         } else {
             color = ContextExtensionsKt.getColorResIdFromAttribute(
                     actionBinding.btnModerateText.getContext(),
@@ -1385,8 +1385,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             drawable = R.drawable.ic_star_white_24dp;
             actionBinding.btnLikeText.setText(getResources().getString(R.string.mnu_comment_liked));
             actionBinding.btnLike.setActivated(true);
-            actionBinding.btnLikeText.setAlpha(mNormalOpacity);
-            actionBinding.btnLikeIcon.setAlpha(mNormalOpacity);
+            actionBinding.btnLikeText.setAlpha(NORMAL_OPACITY);
+            actionBinding.btnLikeIcon.setAlpha(NORMAL_OPACITY);
         } else {
             color = ContextExtensionsKt.getColorResIdFromAttribute(
                     actionBinding.btnLikeIcon.getContext(),
