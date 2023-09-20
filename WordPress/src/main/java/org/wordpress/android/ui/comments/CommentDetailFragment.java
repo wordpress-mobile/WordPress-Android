@@ -1552,7 +1552,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 if (isAdded() && !TextUtils.isEmpty(event.error.message)) {
                     ToastUtils.showToast(getActivity(), event.error.message);
                 }
-                return;
             }
         }
     }
