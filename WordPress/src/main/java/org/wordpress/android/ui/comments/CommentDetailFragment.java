@@ -220,7 +220,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @SuppressWarnings("deprecation")
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        ((WordPress) requireActivity().getApplication()).component().inject(this);
 
         mCommentSource = (CommentSource) getArguments().getSerializable(KEY_MODE);
 
@@ -448,7 +448,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             return;
         }
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), mSite.getSiteId());
-        mSuggestionAdapter = SuggestionUtils.setupUserSuggestions(mSite, getActivity(),
+        mSuggestionAdapter = SuggestionUtils.setupUserSuggestions(mSite, requireActivity(),
                 mSuggestionServiceConnectionManager);
         if (mSuggestionAdapter != null) {
             replyBinding.editComment.setAdapter(mSuggestionAdapter);
@@ -782,7 +782,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             }
         }
 
-        getActivity().invalidateOptionsMenu();
+        requireActivity().invalidateOptionsMenu();
     }
 
     /*
@@ -808,7 +808,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             String html = getString(R.string.on)
                           + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(),
                     ContextExtensionsKt.getColorResIdFromAttribute(
-                            getActivity(),
+                            requireActivity(),
                             com.google.android.material.R.attr.colorPrimary
                     ))
                           + ">"
@@ -1070,16 +1070,22 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         switch (commentStatus) {
             case APPROVED:
                 statusTextResId = R.string.comment_status_approved;
-                statusColor = ContextExtensionsKt.getColorFromAttribute(getActivity(), R.attr.wpColorWarningDark);
+                statusColor = ContextExtensionsKt.getColorFromAttribute(
+                        requireActivity(),
+                        R.attr.wpColorWarningDark
+                );
                 break;
             case UNAPPROVED:
                 statusTextResId = R.string.comment_status_unapproved;
-                statusColor = ContextExtensionsKt.getColorFromAttribute(getActivity(), R.attr.wpColorWarningDark);
+                statusColor = ContextExtensionsKt.getColorFromAttribute(
+                        requireActivity(),
+                        R.attr.wpColorWarningDark
+                );
                 break;
             case SPAM:
                 statusTextResId = R.string.comment_status_spam;
                 statusColor = ContextExtensionsKt.getColorFromAttribute(
-                        getActivity(),
+                        requireActivity(),
                         com.google.android.material.R.attr.colorError
                 );
                 break;
@@ -1092,7 +1098,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             default:
                 statusTextResId = R.string.comment_status_trash;
                 statusColor = ContextExtensionsKt.getColorFromAttribute(
-                        getActivity(),
+                        requireActivity(),
                         com.google.android.material.R.attr.colorError
                 );
                 break;
@@ -1289,7 +1295,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         addDetailFragment(binding, actionBinding, note.getId());
 
-        getActivity().invalidateOptionsMenu();
+        requireActivity().invalidateOptionsMenu();
     }
 
     /**
@@ -1423,7 +1429,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (event.isError()) {
             mComment.setStatus(mPreviousStatus);
             updateStatusViews(binding, actionBinding);
-            ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
+            ToastUtils.showToast(requireActivity(), R.string.error_moderate_comment);
         } else {
             reloadComment();
         }
@@ -1640,7 +1646,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         CommentStatus status = CommentStatus.fromString(mComment.getStatus());
         // If the comment status is trash or spam, next deletion is a permanent deletion.
         if (status == CommentStatus.TRASH || status == CommentStatus.SPAM) {
-            AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(getActivity());
+            AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
             dialogBuilder.setTitle(getResources().getText(R.string.delete));
             dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
@@ -1661,7 +1667,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
     private void copyCommentLinkAddress(@NonNull CommentDetailFragmentBinding binding) {
         try {
-            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipboardManager clipboard =
+                    (ClipboardManager) requireActivity().getSystemService(Context.CLIPBOARD_SERVICE);
             clipboard.setPrimaryClip(ClipData.newPlainText("CommentLinkAddress", mComment.getUrl()));
             showSnackBar(binding, getString(R.string.comment_q_action_copied_url));
         } catch (Exception e) {
