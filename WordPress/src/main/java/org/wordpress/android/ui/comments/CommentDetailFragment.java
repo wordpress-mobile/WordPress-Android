@@ -1629,11 +1629,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 trashMenuItem.setTitle(R.string.mnu_comment_delete_permanently);
             } else {
                 trashMenuItem.setTitle(R.string.mnu_comment_trash);
-                if (commentStatus == CommentStatus.SPAM) {
-                    copyLinkAddress.setVisible(false);
-                } else {
-                    copyLinkAddress.setVisible(true);
-                }
+                copyLinkAddress.setVisible(commentStatus != CommentStatus.SPAM);
             }
         } else {
             trashMenuItem.setVisible(false);
