@@ -44,7 +44,7 @@ ext {
     androidxConstraintlayoutComposeVersion = '1.0.1'
     androidxCoreVersion = '1.10.0'
     androidxActivityVersion = '1.7.2'
-    androidxFragmentVersion = '1.5.7'
+    androidxFragmentVersion = '1.6.1'
     androidxGridlayoutVersion = '1.0.0'
     androidxLifecycleVersion = '2.6.2'
     androidxPercentlayoutVersion = '1.0.0'
