@@ -167,9 +167,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     fun mapPostToBlogSectionUiState(
         post: ReaderPost,
+        isReaderImprovementsEnabled: Boolean,
         onBlogSectionClicked: (Long, Long) -> Unit
     ): ReaderBlogSectionUiState {
-        return buildBlogSection(post, onBlogSectionClicked)
+        return buildBlogSection(post, onBlogSectionClicked, isReaderImprovementsEnabled = isReaderImprovementsEnabled)
     }
 
     fun mapPostToActions(
@@ -230,14 +231,16 @@ class ReaderPostUiStateBuilder @Inject constructor(
         post: ReaderPost,
         onBlogSectionClicked: (Long, Long) -> Unit,
         postListType: ReaderPostListType? = null,
-        isP2Post: Boolean = false
-    ) = buildBlogSectionUiState(post, onBlogSectionClicked, postListType, isP2Post)
+        isP2Post: Boolean = false,
+        isReaderImprovementsEnabled: Boolean = false
+    ) = buildBlogSectionUiState(post, onBlogSectionClicked, postListType, isP2Post, isReaderImprovementsEnabled)
 
     private fun buildBlogSectionUiState(
         post: ReaderPost,
         onBlogSectionClicked: (Long, Long) -> Unit,
         postListType: ReaderPostListType?,
-        isP2Post: Boolean = false
+        isP2Post: Boolean = false,
+        isReaderImprovementsEnabled: Boolean = false
     ): ReaderBlogSectionUiState {
         return ReaderBlogSectionUiState(
             postId = post.postId,
@@ -246,7 +249,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             blogUrl = buildBlogUrl(post),
             dateLine = buildDateLine(post),
             avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
-            isAuthorAvatarVisible = isP2Post,
+            isAuthorAvatarVisible = isP2Post || (isReaderImprovementsEnabled && post.hasBlogImageUrl()),
             blavatarType = SiteUtils.getSiteImageType(isP2Post, CIRCULAR),
             authorAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
                 post.postAvatar,

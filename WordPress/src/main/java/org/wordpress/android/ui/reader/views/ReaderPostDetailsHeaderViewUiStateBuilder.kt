@@ -12,6 +12,7 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderVie
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import javax.inject.Inject
 
 @Reusable
@@ -19,7 +20,8 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     private val accountStore: AccountStore,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
     private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig,
 ) {
     fun mapPostToUiState(
         post: ReaderPost,
@@ -49,6 +51,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     ): ReaderBlogSectionUiState {
         return postUiStateBuilder.mapPostToBlogSectionUiState(
             post,
+            readerImprovementsFeatureConfig.isEnabled(),
             onBlogSectionClicked
         )
     }
