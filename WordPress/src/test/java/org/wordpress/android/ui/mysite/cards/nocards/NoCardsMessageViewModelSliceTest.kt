@@ -78,9 +78,12 @@ class NoCardsMessageViewModelSliceTest : BaseUnitTest() {
 
             val result = viewModelSlice.buildNoCardsMessage(
                 listOf(
-                    mock<MySiteCardAndItem.Card.QuickStartCard>(),
-                    mock<MySiteCardAndItem.Card.DomainRegistrationCard>(),
-                    mock<MySiteCardAndItem.Card.ActivityCard.ActivityCardWithItems>()
+                    mock<MySiteCardAndItem.Card.QuickStartCard>().apply {
+                        whenever(type).thenReturn(MySiteCardAndItem.Type.QUICK_START_CARD) },
+                    mock<MySiteCardAndItem.Card.DomainRegistrationCard>().apply {
+                        whenever(type).thenReturn(MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD) },
+                    mock<MySiteCardAndItem.Card.ActivityCard.ActivityCardWithItems>().apply {
+                        whenever(type).thenReturn(MySiteCardAndItem.Type.ACTIVITY_CARD) }
                 )
             )
             assertNull(result)
