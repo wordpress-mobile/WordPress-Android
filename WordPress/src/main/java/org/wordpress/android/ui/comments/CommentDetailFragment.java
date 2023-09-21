@@ -821,7 +821,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             );
         }
 
-        showPostTitle(binding, mSite, comment.getRemotePostId());
+        showPostTitle(binding, comment, mSite);
 
         // make sure reply box is showing
         if (replyBinding.layoutContainer.getVisibility() != View.VISIBLE && canReply()) {
@@ -838,7 +838,12 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     /*
      * displays the passed post title for the current comment, updates stored title if one doesn't exist
      */
-    private void setPostTitle(TextView txtTitle, String postTitle, boolean isHyperlink) {
+    private void setPostTitle(
+            TextView txtTitle,
+            @NonNull CommentModel comment,
+            String postTitle,
+            boolean isHyperlink
+    ) {
         if (txtTitle == null || !isAdded()) {
             return;
         }
@@ -848,9 +853,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
 
         // if comment doesn't have a post title, set it to the passed one and save to comment table
-        if (mComment != null && mComment.getPostTitle() == null) {
-            mComment.setPostTitle(postTitle);
-            mCommentsStoreAdapter.dispatch(CommentActionBuilder.newUpdateCommentAction(mComment));
+        if (comment.getPostTitle() == null) {
+            comment.setPostTitle(postTitle);
+            mCommentsStoreAdapter.dispatch(CommentActionBuilder.newUpdateCommentAction(comment));
         }
 
         // display "on [Post Title]..."
@@ -877,14 +882,14 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
      */
     private void showPostTitle(
             @NonNull CommentDetailFragmentBinding binding,
-            final SiteModel site,
-            final long postId
+            @NonNull CommentModel comment,
+            final SiteModel site
     ) {
         if (!isAdded()) {
             return;
         }
 
-        boolean postExists = ReaderPostTable.postExists(site.getSiteId(), postId);
+        boolean postExists = ReaderPostTable.postExists(site.getSiteId(), comment.getRemotePostId());
 
         // the post this comment is on can only be requested if this is a .com blog or a
         // jetpack-enabled self-hosted blog, and we have valid .com credentials
@@ -892,20 +897,20 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         final String title;
         final boolean hasTitle;
-        if (mComment != null && mComment.getPostTitle() != null) {
+        if (comment.getPostTitle() != null) {
             // use comment's stored post title if available
-            title = mComment.getPostTitle();
+            title = comment.getPostTitle();
             hasTitle = true;
         } else if (postExists) {
             // use title from post if available
-            title = ReaderPostTable.getPostTitle(site.getSiteId(), postId);
+            title = ReaderPostTable.getPostTitle(site.getSiteId(), comment.getRemotePostId());
             hasTitle = !TextUtils.isEmpty(title);
         } else {
             title = null;
             hasTitle = false;
         }
         if (hasTitle) {
-            setPostTitle(binding.textPostTitle, title, canRequestPost);
+            setPostTitle(binding.textPostTitle, comment, title, canRequestPost);
         } else if (canRequestPost) {
             binding.textPostTitle.setText(postExists ? R.string.untitled : R.string.loading);
         }
@@ -918,47 +923,51 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             if (!postExists) {
                 AppLog.d(T.COMMENTS, "comment detail > retrieving post");
                 ReaderPostActions
-                        .requestBlogPost(site.getSiteId(), postId, new ReaderActions.OnRequestListener<String>() {
-                            @Override
-                            public void onSuccess(String blogUrl) {
-                                if (!isAdded()) {
-                                    return;
-                                }
+                        .requestBlogPost(
+                                site.getSiteId(),
+                                comment.getRemotePostId(),
+                                new ReaderActions.OnRequestListener<String>() {
+                                    @Override
+                                    public void onSuccess(String blogUrl) {
+                                        if (!isAdded()) {
+                                            return;
+                                        }
 
-                                // update title if it wasn't set above
-                                if (!hasTitle) {
-                                    String postTitle = ReaderPostTable.getPostTitle(site.getSiteId(), postId);
-                                    if (!TextUtils.isEmpty(postTitle)) {
-                                        setPostTitle(binding.textPostTitle, postTitle, true);
-                                    } else {
-                                        binding.textPostTitle.setText(R.string.untitled);
+                                        // update title if it wasn't set above
+                                        if (!hasTitle) {
+                                            String postTitle = ReaderPostTable.getPostTitle(
+                                                    site.getSiteId(),
+                                                    comment.getRemotePostId()
+                                            );
+                                            if (!TextUtils.isEmpty(postTitle)) {
+                                                setPostTitle(binding.textPostTitle, comment, postTitle, true);
+                                            } else {
+                                                binding.textPostTitle.setText(R.string.untitled);
+                                            }
+                                        }
                                     }
-                                }
-                            }
 
-                            @Override
-                            public void onFailure(int statusCode) {
-                            }
-                        });
+                                    @Override
+                                    public void onFailure(int statusCode) {
+                                    }
+                                });
             }
 
             binding.textPostTitle.setOnClickListener(v -> {
-                if (mComment != null) {
-                    if (mOnPostClickListener != null) {
-                        mOnPostClickListener.onPostClicked(
-                                getNote(),
-                                site.getSiteId(),
-                                (int) mComment.getRemotePostId()
-                        );
-                    } else {
-                        // right now this will happen from notifications
-                        AppLog.i(T.COMMENTS, "comment detail > no post click listener");
-                        ReaderActivityLauncher.showReaderPostDetail(
-                                getActivity(),
-                                site.getSiteId(),
-                                mComment.getRemotePostId()
-                        );
-                    }
+                if (mOnPostClickListener != null) {
+                    mOnPostClickListener.onPostClicked(
+                            getNote(),
+                            site.getSiteId(),
+                            (int) comment.getRemotePostId()
+                    );
+                } else {
+                    // right now this will happen from notifications
+                    AppLog.i(T.COMMENTS, "comment detail > no post click listener");
+                    ReaderActivityLauncher.showReaderPostDetail(
+                            getActivity(),
+                            site.getSiteId(),
+                            comment.getRemotePostId()
+                    );
                 }
             });
         }
