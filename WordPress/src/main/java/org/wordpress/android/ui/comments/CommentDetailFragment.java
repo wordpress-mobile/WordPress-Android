@@ -168,7 +168,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private boolean mIsSubmittingReply = false;
     @Nullable private NotificationsDetailListFragment mNotificationsDetailListFragment;
     @Nullable private OnPostClickListener mOnPostClickListener;
-    private OnCommentActionListener mOnCommentActionListener;
+    @Nullable private OnCommentActionListener mOnCommentActionListener;
     private OnNoteCommentActionListener mOnNoteCommentActionListener;
 
     private CommentSource mCommentSource;
