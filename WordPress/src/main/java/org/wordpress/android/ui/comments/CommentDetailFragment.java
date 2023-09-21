@@ -171,7 +171,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Nullable private OnCommentActionListener mOnCommentActionListener;
     @Nullable private OnNoteCommentActionListener mOnNoteCommentActionListener;
 
-    private CommentSource mCommentSource;
+    @Nullable private CommentSource mCommentSource;
 
     /*
      * these determine which actions (moderation, replying, marking as spam) to enable
@@ -678,11 +678,13 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (!isAdded()) {
             return;
         }
-        AnalyticsUtils.trackCommentActionWithSiteDetails(
-                Stat.COMMENT_EDITOR_OPENED,
-                mCommentSource.toAnalyticsCommentActionSource(),
-                site
-        );
+        if (mCommentSource != null) {
+            AnalyticsUtils.trackCommentActionWithSiteDetails(
+                    Stat.COMMENT_EDITOR_OPENED,
+                    mCommentSource.toAnalyticsCommentActionSource(),
+                    site
+            );
+        }
 
         // IMPORTANT: don't use getActivity().startActivityForResult() or else onActivityResult()
         // won't be called in this fragment
@@ -712,6 +714,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
     @Nullable
     private CommentIdentifier mapCommentIdentifier() {
+        if (mCommentSource == null) return null;
         switch (mCommentSource) {
             case SITE_COMMENTS:
                 if (mComment != null) {
@@ -1007,6 +1010,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
     // TODO klymyam remove legacy comment tracking after new comments are shipped and new funnels are made
     private void trackModerationEvent(final CommentStatus newStatus) {
+        if (mCommentSource == null) return;
         switch (newStatus) {
             case APPROVED:
                 if (mCommentSource == CommentSource.NOTIFICATION) {
@@ -1150,12 +1154,14 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         mIsSubmittingReply = true;
 
-        AnalyticsUtils.trackCommentReplyWithDetails(
-                false,
-                site,
-                comment,
-                mCommentSource.toAnalyticsCommentActionSource()
-        );
+        if (mCommentSource != null) {
+            AnalyticsUtils.trackCommentReplyWithDetails(
+                    false,
+                    site,
+                    comment,
+                    mCommentSource.toAnalyticsCommentActionSource()
+            );
+        }
 
         // Pseudo comment reply
         CommentModel reply = new CommentModel();
@@ -1473,11 +1479,13 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                     actionBinding.btnLike.isActivated() ? Stat.NOTIFICATION_LIKED : Stat.NOTIFICATION_UNLIKED
             );
         }
-        AnalyticsUtils.trackCommentActionWithSiteDetails(
-                actionBinding.btnLike.isActivated() ? Stat.COMMENT_LIKED : Stat.COMMENT_UNLIKED,
-                mCommentSource.toAnalyticsCommentActionSource(),
-                site
-        );
+        if (mCommentSource != null) {
+            AnalyticsUtils.trackCommentActionWithSiteDetails(
+                    actionBinding.btnLike.isActivated() ? Stat.COMMENT_LIKED : Stat.COMMENT_UNLIKED,
+                    mCommentSource.toAnalyticsCommentActionSource(),
+                    site
+            );
+        }
 
         if (mNotificationsDetailListFragment != null) {
             // Optimistically set comment to approved when liking an unapproved comment
