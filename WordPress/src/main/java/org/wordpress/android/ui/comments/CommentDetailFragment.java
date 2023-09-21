@@ -152,7 +152,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Nullable private String mRestoredNoteId;
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
-    private String mPreviousStatus;
+    @Nullable private String mPreviousStatus;
     private float mMediumOpacity;
 
     @Inject AccountStore mAccountStore;
