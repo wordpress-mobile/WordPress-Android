@@ -346,7 +346,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             return true;
         });
         ViewExtensionsKt.redirectContextClickToLongPressListener(mReplyBinding.buttonExpand);
-        setReplyUniqueId(mReplyBinding);
+        setReplyUniqueId(mReplyBinding, mComment);
 
         // hide comment like button until we know it can be enabled in showCommentAsNotification()
         mActionBinding.btnLike.setVisibility(View.GONE);
@@ -473,11 +473,14 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         replyBinding.editComment.setAdapter(mSuggestionAdapter);
     }
 
-    private void setReplyUniqueId(@NonNull ReaderIncludeCommentBoxBinding replyBinding) {
+    private void setReplyUniqueId(
+            @NonNull ReaderIncludeCommentBoxBinding replyBinding,
+            @Nullable CommentModel comment
+    ) {
         if (isAdded()) {
             String sId = null;
-            if (mSite != null && mComment != null) {
-                sId = String.format(Locale.US, "%d-%d", mSite.getSiteId(), mComment.getRemoteCommentId());
+            if (mSite != null && comment != null) {
+                sId = String.format(Locale.US, "%d-%d", mSite.getSiteId(), comment.getRemoteCommentId());
             } else if (mNote != null) {
                 sId = String.format(Locale.US, "%d-%d", mNote.getSiteId(), mNote.getCommentId());
             }
@@ -508,7 +511,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
 
         // Reset the reply unique id since mComment just changed.
-        if (mReplyBinding != null) setReplyUniqueId(mReplyBinding);
+        if (mReplyBinding != null) setReplyUniqueId(mReplyBinding, mComment);
     }
 
     private void disableShouldFocusReplyField() {
