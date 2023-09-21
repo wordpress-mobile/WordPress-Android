@@ -1523,7 +1523,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         readerWebView.setIsPrivatePost(post.isPrivate)
         readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))
         readerProgressBar.visibility = View.VISIBLE
-        renderer = ReaderPostRenderer(readerWebView, viewModel.post, readerCssProvider)
+        renderer = ReaderPostRenderer(
+            readerWebView,
+            viewModel.post,
+            readerCssProvider,
+            readerImprovementsFeatureConfig.isEnabled()
+        )
 
         // if the post is from private atomic site postpone render until we have a special access cookie
         if (post.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
