@@ -269,8 +269,14 @@ class MySitesPage {
     }
 
     private fun scrollToCard(elementID: Int): MySitesPage {
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_view))
+            .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>
+                (ViewMatchers.withId(elementID)))
+
         Espresso.onView(ViewMatchers.withId(elementID))
             .perform(scrollTo())
+
+        WPSupportUtils.idleFor(2000)
 
         return this
     }
