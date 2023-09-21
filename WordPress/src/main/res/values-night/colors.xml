@@ -93,4 +93,7 @@
     <color name="dashboard_card_plans_info_background">@color/gray_80</color>
     <color name="dashboard_card_plans_info_text_color">@color/gray_20</color>
 
+    <!-- Partial Media Access -->
+    <color name="partial_media_access_prompt_background">#444444</color>
+
 </resources>

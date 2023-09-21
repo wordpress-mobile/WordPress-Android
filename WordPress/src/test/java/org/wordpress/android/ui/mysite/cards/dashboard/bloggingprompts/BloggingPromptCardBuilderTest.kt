@@ -11,30 +11,14 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
-import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import java.util.Date
 
 private const val PROMPT_TITLE = "Test Prompt"
 private const val NUMBER_OF_RESPONDENTS = 5
-
-private val RESPONDENTS_IN_CARD = listOf(
-    AvatarItem("http://avatar1.url"),
-    AvatarItem("http://avatar2.url"),
-    AvatarItem("http://avatar3.url"),
-    TrailingLabelTextItem(
-        UiString.UiStringPluralRes(
-            0,
-            R.string.my_site_blogging_prompt_card_number_of_answers_one,
-            R.string.my_site_blogging_prompt_card_number_of_answers_other,
-            NUMBER_OF_RESPONDENTS
-        ),
-        R.attr.wpColorOnSurfaceMedium
-    )
-)
 
 private val RESPONDENTS_IN_CARD_VIEW_ANSWERS = listOf(
     AvatarItem("http://avatar1.url"),
@@ -87,45 +71,10 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given blogging prompt, when card is built showing view more action, then return matching card`() {
-        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, showViewMoreAction = true)
-
-        assertThat(statCard).isEqualTo(bloggingPromptCard(showViewMoreAction = true))
-    }
-
-    @Test
-    fun `given blogging prompt, when card is built not showing view more action, then return matching card`() {
-        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, showViewMoreAction = false)
-
-        assertThat(statCard).isEqualTo(bloggingPromptCard(showViewMoreAction = false))
-    }
-
-    @Test
-    fun `given blogging prompt, when card is built showing view answers action, then return matching card`() {
-        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, showViewAnswersAction = true)
-
-        assertThat(statCard).isEqualTo(bloggingPromptCard(showViewAnswersAction = true))
-    }
-
-    @Test
     fun `given blogging prompt, when card is built without showing view answers action, then return matching card`() {
-        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, showViewAnswersAction = false)
+        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt)
 
-        assertThat(statCard).isEqualTo(bloggingPromptCard(showViewAnswersAction = false))
-    }
-
-    @Test
-    fun `given blogging prompt, when card is built showing remove action, then return matching card`() {
-        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, showRemoveAction = true)
-
-        assertThat(statCard).isEqualTo(bloggingPromptCard(showRemoveAction = true))
-    }
-
-    @Test
-    fun `given blogging prompt, when card is built without remove answers action, then return matching card`() {
-        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, showRemoveAction = false)
-
-        assertThat(statCard).isEqualTo(bloggingPromptCard(showRemoveAction = false))
+        assertThat(statCard).isEqualTo(bloggingPromptCard())
     }
 
     @Test
@@ -136,16 +85,10 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
     }
 
     private fun buildBloggingPromptCardBuilderParams(
-        bloggingPrompt: BloggingPromptModel?,
-        showViewMoreAction: Boolean = false,
-        showViewAnswersAction: Boolean = false,
-        showRemoveAction: Boolean = false,
+        bloggingPrompt: BloggingPromptModel?
     ) = builder.build(
         BloggingPromptCardBuilderParams(
             bloggingPrompt,
-            showViewMoreAction,
-            showViewAnswersAction,
-            showRemoveAction,
             onShareClick,
             onAnswerClick,
             onSkipClick,
@@ -163,23 +106,18 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private val onRemoveClick: () -> Unit = { }
 
     private fun bloggingPromptCard(
-        showViewMoreAction: Boolean = false,
-        showViewAnswersAction: Boolean = false,
-        showRemoveAction: Boolean = false,
     ) = BloggingPromptCardWithData(
         prompt = UiStringText(PROMPT_TITLE),
-        respondents = if (showViewAnswersAction) RESPONDENTS_IN_CARD_VIEW_ANSWERS else RESPONDENTS_IN_CARD,
+        respondents = RESPONDENTS_IN_CARD_VIEW_ANSWERS,
         numberOfAnswers = NUMBER_OF_RESPONDENTS,
         false,
         promptId = 123,
         attribution = BloggingPromptAttribution.DAY_ONE,
-        showViewMoreAction = showViewMoreAction,
-        showRemoveAction = showRemoveAction,
         onShareClick = onShareClick,
         onAnswerClick = onAnswerClick,
         onSkipClick = onSkipClick,
         onViewMoreClick = onViewMoreClick,
-        onViewAnswersClick = if (showViewAnswersAction) onViewAnswersClick else null,
+        onViewAnswersClick = onViewAnswersClick,
         onRemoveClick = onRemoveClick,
     )
 }

@@ -470,7 +470,11 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(
+            @NonNull ContextMenu menu,
+            @NonNull View v,
+            @Nullable ContextMenu.ContextMenuInfo menuInfo
+    ) {
         if (mFeaturedImageRetryOverlay.getVisibility() == View.VISIBLE) {
             menu.add(0, RETRY_FEATURED_IMAGE_UPLOAD_MENU_ID, 0,
                     getString(R.string.post_settings_retry_featured_image));
@@ -483,7 +487,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
         SiteModel site = getSite();
         PostImmutableModel post = getEditPostRepository().getPost();
         if (site == null || post == null) {
@@ -561,8 +565,7 @@ public class EditPostSettingsFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO
-                              || requestCode == RequestCodes.TAKE_VIDEO))) {
+        if (data != null) {
             Bundle extras;
 
             switch (requestCode) {

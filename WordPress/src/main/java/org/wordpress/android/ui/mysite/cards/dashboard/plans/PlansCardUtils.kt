@@ -8,14 +8,12 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardPlansCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.DashboardCardFreeToPaidPlansFeatureConfig
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -23,7 +21,6 @@ import javax.inject.Named
 
 class PlansCardUtils @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val plansFreeToPaidFeatureConfig: DashboardCardFreeToPaidPlansFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -38,7 +35,6 @@ class PlansCardUtils @Inject constructor(
         siteModel: SiteModel,
     ): Boolean {
         return buildConfigWrapper.isJetpackApp &&
-                plansFreeToPaidFeatureConfig.isEnabled() &&
                 !isCardHiddenByUser(siteModel.siteId) &&
                 siteModel.hasFreePlan &&
                 siteModel.isAdmin &&
@@ -56,9 +52,6 @@ class PlansCardUtils @Inject constructor(
         dashboardUpdateDebounceJob = scope.launch(bgDispatcher) {
             val isVisible = siteSelected
                 ?.dashboardCardsAndItems
-                ?.filterIsInstance<DashboardCards>()
-                ?.firstOrNull()
-                ?.cards
                 ?.any {
                         card -> card is DashboardPlansCard
                 } ?: false
@@ -128,9 +121,6 @@ class PlansCardUtils @Inject constructor(
     private fun positionIndex(siteSelected: SiteSelected?): Int {
         return siteSelected
             ?.dashboardCardsAndItems
-            ?.filterIsInstance<DashboardCards>()
-            ?.firstOrNull()
-            ?.cards
             ?.indexOfFirst {
                 it is DashboardPlansCard
             } ?: -1

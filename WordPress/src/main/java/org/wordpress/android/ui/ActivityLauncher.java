@@ -1400,13 +1400,6 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
-    public static void viewJetpackSecuritySettings(Activity activity, SiteModel site) {
-        AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED);
-        Intent intent = new Intent(activity, JetpackSecuritySettingsActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        activity.startActivity(intent);
-    }
-
     public static void viewStories(Activity activity, SiteModel site, StorySaveResult event) {
         Intent intent = new Intent(activity, StoryComposerActivity.class);
         intent.putExtra(KEY_STORY_SAVE_RESULT, event);

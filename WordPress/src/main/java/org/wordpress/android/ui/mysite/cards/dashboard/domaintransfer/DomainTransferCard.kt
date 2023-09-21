@@ -37,7 +37,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.card.UnelevatedCard
 import org.wordpress.android.ui.compose.styles.DashboardCardTypography
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DomainTransferCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainTransferCardModel
 import org.wordpress.android.ui.utils.ListItemInteraction
 
 @Composable

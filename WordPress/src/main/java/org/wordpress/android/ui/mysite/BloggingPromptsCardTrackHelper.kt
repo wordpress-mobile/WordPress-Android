@@ -6,8 +6,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import java.util.concurrent.atomic.AtomicBoolean
@@ -42,12 +41,12 @@ class BloggingPromptsCardTrackHelper @Inject constructor(
     }
 
 
-    fun onDashboardCardsUpdated(scope: CoroutineScope, dashboard: DashboardCards?) {
+    fun onDashboardCardsUpdated(scope: CoroutineScope, bloggingPromptCards: List<BloggingPromptCard>) {
         // cancel any existing job (debouncing mechanism)
         dashboardUpdateDebounceJob?.cancel()
 
         dashboardUpdateDebounceJob = scope.launch(bgDispatcher) {
-            val isVisible = dashboard?.cards?.any { card -> card is BloggingPromptCard } ?: false
+            val isVisible = bloggingPromptCards.isNotEmpty()
 
             // add a delay (debouncing mechanism)
             delay(PROMPT_CARD_VISIBLE_DEBOUNCE)

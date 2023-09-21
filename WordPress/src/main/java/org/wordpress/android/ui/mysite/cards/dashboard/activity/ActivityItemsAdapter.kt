@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import org.wordpress.android.ui.utils.UiHelpers
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard.ActivityCardWithItems.ActivityItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard.ActivityCardWithItems.ActivityItem
 
 class ActivityItemsAdapter(
     private val uiHelpers: UiHelpers

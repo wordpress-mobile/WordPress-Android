@@ -137,18 +137,13 @@ sealed class MySiteCardAndItemBuilderParams {
         val activeTask: QuickStartTask? = null,
         val backupAvailable: Boolean = false,
         val scanAvailable: Boolean = false,
-        val enableStatsFocusPoint: Boolean = false,
-        val enablePagesFocusPoint: Boolean = false,
-        val enableMediaFocusPoint: Boolean = false,
+        val enableFocusPoints: Boolean = false,
         val onClick: (ListItemAction) -> Unit,
         val isBlazeEligible: Boolean = false
     ) : MySiteCardAndItemBuilderParams()
 
     data class BloggingPromptCardBuilderParams(
         val bloggingPrompt: BloggingPromptModel?,
-        val showViewMoreAction: Boolean,
-        val showViewAnswersAction: Boolean,
-        val showRemoveAction: Boolean,
         val onShareClick: (message: String) -> Unit,
         val onAnswerClick: (promptId: Int) -> Unit,
         val onSkipClick: () -> Unit,
@@ -209,5 +204,9 @@ sealed class MySiteCardAndItemBuilderParams {
         val site: SiteModel,
         val onLearnMoreClick: () -> Unit,
         val onHideMenuItemClick: () -> Unit,
+    )
+
+    data class PersonalizeCardBuilderParams(
+        val onClick: () -> Unit
     )
 }
