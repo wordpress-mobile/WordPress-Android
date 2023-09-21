@@ -169,7 +169,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Nullable private NotificationsDetailListFragment mNotificationsDetailListFragment;
     @Nullable private OnPostClickListener mOnPostClickListener;
     @Nullable private OnCommentActionListener mOnCommentActionListener;
-    private OnNoteCommentActionListener mOnNoteCommentActionListener;
+    @Nullable private OnNoteCommentActionListener mOnNoteCommentActionListener;
 
     private CommentSource mCommentSource;
 
