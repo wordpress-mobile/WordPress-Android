@@ -505,7 +505,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         mIsUsersBlog = (comment != null && site != null);
 
         if (mBinding != null && mReplyBinding != null && mActionBinding != null) {
-            showComment(mBinding, mReplyBinding, mActionBinding);
+            showComment(mBinding, mReplyBinding, mActionBinding, mComment);
         }
 
         // Reset the reply unique id since mComment just changed.
@@ -542,7 +542,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             mSite = createDummyWordPressComSite(mNote.getSiteId());
         }
         if (mBinding != null && mReplyBinding != null && mActionBinding != null && mNote != null) {
-            showComment(mBinding, mReplyBinding, mActionBinding);
+            showComment(mBinding, mReplyBinding, mActionBinding, mComment);
         }
     }
 
@@ -596,7 +596,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         EventBus.getDefault().register(this);
         mCommentsStoreAdapter.register(this);
         if (mBinding != null && mReplyBinding != null && mActionBinding != null) {
-            showComment(mBinding, mReplyBinding, mActionBinding);
+            showComment(mBinding, mReplyBinding, mActionBinding, mComment);
         }
     }
 
@@ -709,45 +709,64 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private void showComment(
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
-            @NonNull CommentActionFooterBinding actionBinding
+            @NonNull CommentActionFooterBinding actionBinding,
+            @Nullable CommentModel comment
     ) {
         if (!isAdded() || getView() == null) {
             return;
         }
 
-        // these two views contain all the other views except the progress bar
-        // hide container views when comment is null (will happen when opened from a notification)
-        if (mComment == null) {
-            binding.nestedScrollView.setVisibility(View.GONE);
-            binding.layoutBottom.setVisibility(View.GONE);
-
-            if (mNote != null) {
-                SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
-                if (site == null) {
-                    // This should not exist, we should clean that screen so a note without a site/comment
-                    // can be displayed
-                    site = createDummyWordPressComSite(mNote.getSiteId());
-                }
-
-                // Check if the comment is already in our store
-                CommentModel comment = mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, mNote.getCommentId());
-                if (comment != null) {
-                    // It exists, then show it as a "Notification"
-                    showCommentAsNotification(binding, replyBinding, actionBinding, mNote, site, comment);
-                } else {
-                    // It's not in our store yet, request it.
-                    RemoteCommentPayload payload = new RemoteCommentPayload(site, mNote.getCommentId());
-                    mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
-                    setProgressVisible(binding, true);
-
-                    // Show a "temporary" comment built from the note data, the view will be refreshed once the
-                    // comment has been fetched.
-                    showCommentAsNotification(binding, replyBinding, actionBinding, mNote, site, null);
-                }
-            }
-            return;
+        if (comment == null) {
+            showCommentWhenNullable(binding, replyBinding, actionBinding);
+        } else {
+            showCommentWhenNonNull(binding, replyBinding, actionBinding, comment);
         }
+    }
 
+    /**
+     * These two views contain all the other views except the progress bar
+     * hide container views when comment is null (will happen when opened from a notification)
+     */
+    private void showCommentWhenNullable(
+            @NonNull CommentDetailFragmentBinding binding,
+            @NonNull ReaderIncludeCommentBoxBinding replyBinding,
+            @NonNull CommentActionFooterBinding actionBinding
+    ) {
+        binding.nestedScrollView.setVisibility(View.GONE);
+        binding.layoutBottom.setVisibility(View.GONE);
+
+        if (mNote != null) {
+            SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
+            if (site == null) {
+                // This should not exist, we should clean that screen so a note without a site/comment
+                // can be displayed
+                site = createDummyWordPressComSite(mNote.getSiteId());
+            }
+
+            // Check if the comment is already in our store
+            CommentModel comment = mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, mNote.getCommentId());
+            if (comment != null) {
+                // It exists, then show it as a "Notification"
+                showCommentAsNotification(binding, replyBinding, actionBinding, mNote, site, comment);
+            } else {
+                // It's not in our store yet, request it.
+                RemoteCommentPayload payload = new RemoteCommentPayload(site, mNote.getCommentId());
+                mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
+                setProgressVisible(binding, true);
+
+                // Show a "temporary" comment built from the note data, the view will be refreshed once the
+                // comment has been fetched.
+                showCommentAsNotification(binding, replyBinding, actionBinding, mNote, site, null);
+            }
+        }
+    }
+
+    private void showCommentWhenNonNull(
+            @NonNull CommentDetailFragmentBinding binding,
+            @NonNull ReaderIncludeCommentBoxBinding replyBinding,
+            @NonNull CommentActionFooterBinding actionBinding,
+            @NonNull CommentModel comment
+    ) {
         binding.nestedScrollView.setVisibility(View.VISIBLE);
         binding.layoutBottom.setVisibility(View.VISIBLE);
 
@@ -757,18 +776,18 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
 
         binding.textName.setText(
-                mComment.getAuthorName() == null ? getString(R.string.anonymous) : mComment.getAuthorName()
+                comment.getAuthorName() == null ? getString(R.string.anonymous) : comment.getAuthorName()
         );
         binding.textDate.setText(
                 DateTimeUtils.javaDateToTimeSpan(
-                        DateTimeUtils.dateFromIso8601(mComment.getDatePublished()), WordPress.getContext()
+                        DateTimeUtils.dateFromIso8601(comment.getDatePublished()), WordPress.getContext()
                 )
         );
 
         String renderingError = getString(R.string.comment_unable_to_show_error);
         binding.textContent.post(() -> CommentUtils.displayHtmlComment(
                 binding.textContent,
-                mComment.getContent(),
+                comment.getContent(),
                 binding.textContent.getWidth(),
                 binding.textContent.getLineHeight(),
                 renderingError
@@ -776,19 +795,19 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         String avatarUrl = "";
-        if (mComment.getAuthorProfileImageUrl() != null) {
-            avatarUrl = GravatarUtils.fixGravatarUrl(mComment.getAuthorProfileImageUrl(), avatarSz);
-        } else if (mComment.getAuthorEmail() != null) {
-            avatarUrl = GravatarUtils.gravatarFromEmail(mComment.getAuthorEmail(), avatarSz);
+        if (comment.getAuthorProfileImageUrl() != null) {
+            avatarUrl = GravatarUtils.fixGravatarUrl(comment.getAuthorProfileImageUrl(), avatarSz);
+        } else if (comment.getAuthorEmail() != null) {
+            avatarUrl = GravatarUtils.gravatarFromEmail(comment.getAuthorEmail(), avatarSz);
         }
         mImageManager.loadIntoCircle(binding.imageAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
 
-        updateStatusViews(binding, actionBinding, mComment);
+        updateStatusViews(binding, actionBinding, comment);
 
         // navigate to author's blog when avatar or name clicked
-        if (mComment.getAuthorUrl() != null) {
+        if (comment.getAuthorUrl() != null) {
             View.OnClickListener authorListener =
-                    v -> ReaderActivityLauncher.openUrl(getActivity(), mComment.getAuthorUrl());
+                    v -> ReaderActivityLauncher.openUrl(getActivity(), comment.getAuthorUrl());
             binding.imageAvatar.setOnClickListener(authorListener);
             binding.textName.setOnClickListener(authorListener);
             binding.textName.setTextColor(ContextExtensionsKt.getColorFromAttribute(
@@ -802,7 +821,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             );
         }
 
-        showPostTitle(binding, mSite, mComment.getRemotePostId());
+        showPostTitle(binding, mSite, comment.getRemotePostId());
 
         // make sure reply box is showing
         if (replyBinding.layoutContainer.getVisibility() != View.VISIBLE && canReply()) {
