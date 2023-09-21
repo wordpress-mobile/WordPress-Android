@@ -166,7 +166,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Inject UnifiedCommentsCommentEditFeatureConfig mUnifiedCommentsCommentEditFeatureConfig;
 
     private boolean mIsSubmittingReply = false;
-    private NotificationsDetailListFragment mNotificationsDetailListFragment;
+    @Nullable private NotificationsDetailListFragment mNotificationsDetailListFragment;
     private OnPostClickListener mOnPostClickListener;
     private OnCommentActionListener mOnCommentActionListener;
     private OnNoteCommentActionListener mOnNoteCommentActionListener;
