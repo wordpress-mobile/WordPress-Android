@@ -146,7 +146,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Nullable private SiteModel mSite;
 
     @Nullable private Note mNote;
-    private SuggestionAdapter mSuggestionAdapter;
+    @Nullable private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
     private String mRestoredReplyText;
     private String mRestoredNoteId;
