@@ -22,7 +22,6 @@ Language: en_GB
     <string name="virtual_homepage_subtitle">Your homepage is using a Theme template and will open in the web editor.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Your new domain &lt;b&gt;%s&lt;/b&gt; is being set up.</string>
     <string name="account_closure_dialog_title">Confirm Close Account…</string>
-    <string name="account_closure_dialog_error_title">Couldn\'t close account automatically\"</string>
     <string name="account_closure_dialog_error_chargebacked_site">This user account cannot be closed if there are unresolved chargebacks.</string>
     <string name="account_closure_dialog_error_atomic_site">This user account cannot be closed immediately because it has active purchases. Please contact our support team to finish deleting the account.</string>
     <string name="account_closure_dialog_error_unauthorized">You\'re not authorised to close the account.</string>

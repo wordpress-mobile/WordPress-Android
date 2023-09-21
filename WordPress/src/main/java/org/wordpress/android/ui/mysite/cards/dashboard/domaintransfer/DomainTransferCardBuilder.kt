@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer
 
 import org.wordpress.android.R
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DomainTransferCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainTransferCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainTransferCardBuilderParams
 import org.wordpress.android.ui.utils.ListItemInteraction
 import javax.inject.Inject

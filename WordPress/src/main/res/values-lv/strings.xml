@@ -20,7 +20,6 @@ Language: lv
     <string name="contact_support_question_one">Kāda ir manas vietnes adrese?</string>
     <string name="contact_support_suggestions">Vai neesat drošs, ko jautāt?</string>
     <string name="contact_support_get_support">Sazināties ar atbalsta dienestu</string>
-    <string name="contact_support_first_message">Kā mēs varam jums palīdzēt?</string>
     <string name="contact_support_input_placeholder">Sūtīt ziņu…</string>
     <string name="post_settings_jetpack_social_share_message_clear">Notīrīt</string>
     <string name="jetpack_social_social_shares_remaining">Atlikušas %1$d sociālās kopīgošanas</string>
@@ -107,7 +106,6 @@ Language: lv
     <string name="account_closure_dialog_error_chargebacked_site">Šo lietotāja kontu nevar slēgt, ja ir neatrisinātas atmaksas.</string>
     <string name="account_closure_dialog_error_atomic_site">Šo lietotāja kontu nevar nekavējoties slēgt, jo tajā ir aktīvi pirkumi. Lūdzu, sazinieties ar mūsu atbalsta komandu, lai pabeigtu konta dzēšanu.</string>
     <string name="account_closure_dialog_error_unauthorized">Jums nav tiesību slēgt kontu.</string>
-    <string name="account_closure_dialog_error_title">Nevarēja automātiski slēgt kontu</string>
     <string name="account_closure_dialog_title">Apstiprināt konta slēgšanu…</string>
     <string name="account_closure_dialog_message">Lai to apstiprinātu, pirms slēgšanas atkārtoti ievadiet savu lietotājvārdu.</string>
     <string name="close_account">Aizvērt kontu</string>

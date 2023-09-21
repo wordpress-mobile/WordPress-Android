@@ -713,8 +713,11 @@ public class AnalyticsUtils {
         }
     }
 
-    public static void trackCommentActionWithSiteDetails(AnalyticsTracker.Stat stat,
-                                                         AnalyticsCommentActionSource actionSource, SiteModel site) {
+    public static void trackCommentActionWithSiteDetails(
+            AnalyticsTracker.Stat stat,
+            AnalyticsCommentActionSource actionSource,
+            @Nullable SiteModel site
+    ) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(COMMENT_ACTION_SOURCE, actionSource.toString());
 

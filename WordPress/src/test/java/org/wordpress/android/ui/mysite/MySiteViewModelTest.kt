@@ -49,9 +49,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFullPluginInstallOnboardingUseCase
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
@@ -100,6 +98,7 @@ import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHe
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
+import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlice
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -304,6 +303,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var bloggingPromptCardViewModelSlice: BloggingPromptCardViewModelSlice
+
+    @Mock
+    lateinit var noCardsMessageViewModelSlice: NoCardsMessageViewModelSlice
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
@@ -510,7 +512,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             mySiteInfoItemBuilder,
             personalizeCardViewModelSlice,
             personalizeCardBuilder,
-            bloggingPromptCardViewModelSlice
+            bloggingPromptCardViewModelSlice,
+            noCardsMessageViewModelSlice
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1769,7 +1772,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
-        assertThat(items.filterIsInstance(DashboardCards::class.java)).isNotEmpty
+        assertThat(items.filterIsInstance(MySiteCardAndItem.Card::class.java)).isNotEmpty
     }
 
     @Test
@@ -1808,16 +1811,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
         assertThat(items.filterIsInstance(QuickStartCard::class.java)).isEmpty()
-    }
-
-    @Test
-    fun `given selected site, when site menu cards and items, then dashboard cards not exist`() {
-        setUpSiteItemBuilder()
-        initSelectedSite()
-
-        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
-
-        assertThat(items.filterIsInstance(DashboardCards::class.java)).isEmpty()
     }
 
     @Test
@@ -2262,7 +2255,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 quickStartCard
             )
 
-            listOfCards.add(dashboardCards)
+            listOfCards.addAll(dashboardCards)
             if (mySiteDashboardTabsFeatureConfig.isEnabled())
                 listOfCards.add(quickLinkRibbon)
             listOfCards
@@ -2384,15 +2377,13 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun initDashboardCards(mockInvocation: InvocationOnMock): DashboardCards {
+    private fun initDashboardCards(mockInvocation: InvocationOnMock): List<MySiteCardAndItem.Card> {
         val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
-        return DashboardCards(
-            cards = mutableListOf<DashboardCard>().apply {
-                if (params.showErrorCard) {
-                    add(initErrorCard(mockInvocation))
-                }
+        return  mutableListOf<MySiteCardAndItem.Card>().apply {
+            if (params.showErrorCard) {
+                add(initErrorCard(mockInvocation))
             }
-        )
+        }
     }
 
     private fun initErrorCard(mockInvocation: InvocationOnMock): ErrorCard {

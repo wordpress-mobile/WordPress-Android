@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardErrorType
 import org.wordpress.android.fluxc.tools.FormattableContent
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
 import org.wordpress.android.util.DateTimeUtilsWrapper
 
