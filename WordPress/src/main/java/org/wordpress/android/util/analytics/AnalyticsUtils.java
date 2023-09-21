@@ -338,7 +338,7 @@ public class AnalyticsUtils {
      */
     public static void trackCommentReplyWithDetails(
             boolean isQuickReply,
-            SiteModel site,
+            @NonNull SiteModel site,
             @NonNull CommentModel comment,
             AnalyticsCommentActionSource source
     ) {
@@ -351,7 +351,7 @@ public class AnalyticsUtils {
         AnalyticsTracker.Stat stat = isQuickReply
                 ? AnalyticsTracker.Stat.COMMENT_QUICK_ACTION_REPLIED_TO
                 : AnalyticsTracker.Stat.COMMENT_REPLIED_TO;
-        if (site == null || !SiteUtils.isAccessedViaWPComRest(site)) {
+        if (!SiteUtils.isAccessedViaWPComRest(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack."
                                      + " Tracking analytics without blog info");
             AnalyticsTracker.track(stat);

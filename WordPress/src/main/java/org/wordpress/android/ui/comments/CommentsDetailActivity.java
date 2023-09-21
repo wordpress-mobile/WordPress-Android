@@ -299,11 +299,11 @@ public class CommentsDetailActivity extends LocaleAwareActivity
         binding.progressLoading.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-
     @Override
-    public void onModerateComment(final SiteModel site,
-                                  final CommentModel comment,
-                                  final CommentStatus newStatus) {
+    public void onModerateComment(
+            final CommentModel comment,
+            final CommentStatus newStatus
+    ) {
         Intent resultIntent = new Intent();
         resultIntent.putExtra(CommentConstants.COMMENT_MODERATE_ID_EXTRA, comment.getRemoteCommentId());
         resultIntent.putExtra(CommentConstants.COMMENT_MODERATE_STATUS_EXTRA, newStatus.toString());
