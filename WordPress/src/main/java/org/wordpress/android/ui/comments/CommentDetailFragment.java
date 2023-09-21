@@ -346,7 +346,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             return true;
         });
         ViewExtensionsKt.redirectContextClickToLongPressListener(mReplyBinding.buttonExpand);
-        setReplyUniqueId(mReplyBinding, mComment);
+        setReplyUniqueId(mReplyBinding, mComment, mNote);
 
         // hide comment like button until we know it can be enabled in showCommentAsNotification()
         mActionBinding.btnLike.setVisibility(View.GONE);
@@ -381,10 +381,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         mActionBinding.btnSpam.setOnClickListener(v -> {
             if (mComment != null) {
                 if (CommentStatus.fromString(mComment.getStatus()) == CommentStatus.SPAM) {
-                    moderateComment(mBinding, mActionBinding, mComment, CommentStatus.APPROVED);
+                    moderateComment(mBinding, mActionBinding, mComment, mNote, CommentStatus.APPROVED);
                     announceCommentStatusChangeForAccessibility(CommentStatus.UNSPAM);
                 } else {
-                    moderateComment(mBinding, mActionBinding, mComment, CommentStatus.SPAM);
+                    moderateComment(mBinding, mActionBinding, mComment, mNote, CommentStatus.SPAM);
                     announceCommentStatusChangeForAccessibility(CommentStatus.SPAM);
                 }
             }
@@ -398,7 +398,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         mActionBinding.btnMore.setOnClickListener(v -> {
             if (mComment != null) {
-                showMoreMenu(mBinding, mActionBinding, mComment, v);
+                showMoreMenu(mBinding, mActionBinding, mComment, mNote, v);
             }
         });
         // hide more button until we know it can be enabled
@@ -475,14 +475,15 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
     private void setReplyUniqueId(
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
-            @Nullable CommentModel comment
+            @Nullable CommentModel comment,
+            @Nullable Note note
     ) {
         if (isAdded()) {
             String sId = null;
             if (mSite != null && comment != null) {
                 sId = String.format(Locale.US, "%d-%d", mSite.getSiteId(), comment.getRemoteCommentId());
-            } else if (mNote != null) {
-                sId = String.format(Locale.US, "%d-%d", mNote.getSiteId(), mNote.getCommentId());
+            } else if (note != null) {
+                sId = String.format(Locale.US, "%d-%d", note.getSiteId(), note.getCommentId());
             }
             if (sId != null) {
                 replyBinding.editComment.getAutoSaveTextHelper().setUniqueId(sId);
@@ -498,7 +499,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
-    private void setComment(@Nullable final CommentModel comment, @Nullable final SiteModel site) {
+    private void setComment(
+            @Nullable final CommentModel comment,
+            @Nullable final SiteModel site
+    ) {
         mComment = comment;
         mSite = site;
 
@@ -507,11 +511,11 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         mIsUsersBlog = (comment != null && site != null);
 
         if (mBinding != null && mReplyBinding != null && mActionBinding != null) {
-            showComment(mBinding, mReplyBinding, mActionBinding, mComment);
+            showComment(mBinding, mReplyBinding, mActionBinding, mComment, mNote);
         }
 
         // Reset the reply unique id since mComment just changed.
-        if (mReplyBinding != null) setReplyUniqueId(mReplyBinding, mComment);
+        if (mReplyBinding != null) setReplyUniqueId(mReplyBinding, mComment, mNote);
     }
 
     private void disableShouldFocusReplyField() {
@@ -536,15 +540,15 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         return site;
     }
 
-    public void setNote(Note note) {
+    public void setNote(@NonNull Note note) {
         mNote = note;
         mSite = mSiteStore.getSiteBySiteId(note.getSiteId());
         if (mSite == null) {
             // This should not exist, we should clean that screen so a note without a site/comment can be displayed
             mSite = createDummyWordPressComSite(mNote.getSiteId());
         }
-        if (mBinding != null && mReplyBinding != null && mActionBinding != null && mNote != null) {
-            showComment(mBinding, mReplyBinding, mActionBinding, mComment);
+        if (mBinding != null && mReplyBinding != null && mActionBinding != null) {
+            showComment(mBinding, mReplyBinding, mActionBinding, mComment, mNote);
         }
     }
 
@@ -558,9 +562,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         Note note = NotificationsTable.getNoteById(noteId);
         if (note == null) {
             showErrorToastAndFinish();
-            return;
+        } else {
+            setNote(note);
         }
-        setNote(note);
     }
 
     private void setReplyText(String replyText) {
@@ -598,7 +602,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         EventBus.getDefault().register(this);
         mCommentsStoreAdapter.register(this);
         if (mBinding != null && mReplyBinding != null && mActionBinding != null) {
-            showComment(mBinding, mReplyBinding, mActionBinding, mComment);
+            showComment(mBinding, mReplyBinding, mActionBinding, mComment, mNote);
         }
     }
 
@@ -634,20 +638,23 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (mComment != null && requestCode == INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
-            reloadComment(mComment);
+            reloadComment(mComment, mNote);
         }
     }
 
     /**
      * Reload the current comment from the local database
      */
-    private void reloadComment(@NonNull CommentModel comment) {
+    private void reloadComment(
+            @NonNull CommentModel comment,
+            @Nullable Note note
+    ) {
         CommentModel updatedComment = mCommentsStoreAdapter.getCommentByLocalId(comment.getId());
         if (updatedComment != null) {
             setComment(updatedComment, mSite);
         }
-        if (mNotificationsDetailListFragment != null && mNote != null) {
-            mNotificationsDetailListFragment.refreshBlocksForEditedComment(mNote.getId());
+        if (mNotificationsDetailListFragment != null && note != null) {
+            mNotificationsDetailListFragment.refreshBlocksForEditedComment(note.getId());
         }
     }
 
@@ -655,7 +662,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
      * open the comment for editing
      */
     @SuppressWarnings("deprecation")
-    private void editComment(@NonNull CommentModel comment) {
+    private void editComment(
+            @NonNull CommentModel comment,
+            @Nullable Note note
+    ) {
         if (!isAdded()) {
             return;
         }
@@ -678,8 +688,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             Intent intent = new Intent(getActivity(), EditCommentActivity.class);
             intent.putExtra(WordPress.SITE, mSite);
             intent.putExtra(EditCommentActivity.KEY_COMMENT, comment);
-            if (mNote != null) {
-                intent.putExtra(EditCommentActivity.KEY_NOTE_ID, mNote.getId());
+            if (note != null) {
+                intent.putExtra(EditCommentActivity.KEY_NOTE_ID, note.getId());
             }
             startActivityForResult(intent, INTENT_COMMENT_EDITOR);
         }
@@ -712,16 +722,19 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @NonNull CommentActionFooterBinding actionBinding,
-            @Nullable CommentModel comment
+            @Nullable CommentModel comment,
+            @Nullable Note note
     ) {
         if (!isAdded() || getView() == null) {
             return;
         }
 
         if (comment == null) {
-            showCommentWhenNullable(binding, replyBinding, actionBinding);
+            if (note != null) {
+                showCommentWhenNullable(binding, replyBinding, actionBinding, note);
+            }
         } else {
-            showCommentWhenNonNull(binding, replyBinding, actionBinding, comment);
+            showCommentWhenNonNull(binding, replyBinding, actionBinding, comment, note);
         }
     }
 
@@ -732,34 +745,33 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private void showCommentWhenNullable(
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
-            @NonNull CommentActionFooterBinding actionBinding
+            @NonNull CommentActionFooterBinding actionBinding,
+            @NonNull Note note
     ) {
         binding.nestedScrollView.setVisibility(View.GONE);
         binding.layoutBottom.setVisibility(View.GONE);
 
-        if (mNote != null) {
-            SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
-            if (site == null) {
-                // This should not exist, we should clean that screen so a note without a site/comment
-                // can be displayed
-                site = createDummyWordPressComSite(mNote.getSiteId());
-            }
+        SiteModel site = mSiteStore.getSiteBySiteId(note.getSiteId());
+        if (site == null) {
+            // This should not exist, we should clean that screen so a note without a site/comment
+            // can be displayed
+            site = createDummyWordPressComSite(note.getSiteId());
+        }
 
-            // Check if the comment is already in our store
-            CommentModel comment = mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, mNote.getCommentId());
-            if (comment != null) {
-                // It exists, then show it as a "Notification"
-                showCommentAsNotification(binding, replyBinding, actionBinding, mNote, site, comment);
-            } else {
-                // It's not in our store yet, request it.
-                RemoteCommentPayload payload = new RemoteCommentPayload(site, mNote.getCommentId());
-                mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
-                setProgressVisible(binding, true);
+        // Check if the comment is already in our store
+        CommentModel comment = mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, note.getCommentId());
+        if (comment != null) {
+            // It exists, then show it as a "Notification"
+            showCommentAsNotification(binding, replyBinding, actionBinding, site, comment, note);
+        } else {
+            // It's not in our store yet, request it.
+            RemoteCommentPayload payload = new RemoteCommentPayload(site, note.getCommentId());
+            mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
+            setProgressVisible(binding, true);
 
-                // Show a "temporary" comment built from the note data, the view will be refreshed once the
-                // comment has been fetched.
-                showCommentAsNotification(binding, replyBinding, actionBinding, mNote, site, null);
-            }
+            // Show a "temporary" comment built from the note data, the view will be refreshed once the
+            // comment has been fetched.
+            showCommentAsNotification(binding, replyBinding, actionBinding, site, null, note);
         }
     }
 
@@ -767,13 +779,14 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @NonNull CommentActionFooterBinding actionBinding,
-            @NonNull CommentModel comment
+            @NonNull CommentModel comment,
+            @Nullable Note note
     ) {
         binding.nestedScrollView.setVisibility(View.VISIBLE);
         binding.layoutBottom.setVisibility(View.VISIBLE);
 
         // Add action buttons footer
-        if (mNote == null && actionBinding.layoutButtons.getParent() == null) {
+        if (note == null && actionBinding.layoutButtons.getParent() == null) {
             binding.commentContentContainer.addView(actionBinding.layoutButtons);
         }
 
@@ -804,7 +817,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
         mImageManager.loadIntoCircle(binding.imageAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
 
-        updateStatusViews(binding, actionBinding, comment);
+        updateStatusViews(binding, actionBinding, comment, note);
 
         // navigate to author's blog when avatar or name clicked
         if (comment.getAuthorUrl() != null) {
@@ -1031,6 +1044,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull CommentActionFooterBinding actionBinding,
             @NonNull CommentModel comment,
+            @Nullable Note note,
             @NonNull CommentStatus newStatus
     ) {
         if (!isAdded()) {
@@ -1057,8 +1071,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         trackModerationEvent(statusToTrack);
 
         // Fire the appropriate listener if we have one
-        if (mNote != null && mOnNoteCommentActionListener != null) {
-            mOnNoteCommentActionListener.onModerateCommentForNote(mNote, newStatus);
+        if (note != null && mOnNoteCommentActionListener != null) {
+            mOnNoteCommentActionListener.onModerateCommentForNote(note, newStatus);
             dispatchModerationAction(comment, newStatus);
         } else if (mOnCommentActionListener != null) {
             mOnCommentActionListener.onModerateComment(mSite, comment, newStatus);
@@ -1066,7 +1080,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             // That's why we don't call dispatchModerationAction() here.
         }
 
-        updateStatusViews(binding, actionBinding, comment);
+        updateStatusViews(binding, actionBinding, comment, note);
     }
 
     private void dispatchModerationAction(@NonNull CommentModel comment, CommentStatus newStatus) {
@@ -1138,7 +1152,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private void updateStatusViews(
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull CommentActionFooterBinding actionBinding,
-            @NonNull CommentModel comment
+            @NonNull CommentModel comment,
+            @Nullable Note note
     ) {
         if (!isAdded()) {
             return;
@@ -1205,7 +1220,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         if (canModerate()) {
             setModerateButtonForStatus(actionBinding, commentStatus);
-            actionBinding.btnModerate.setOnClickListener(v -> performModerateAction(binding, actionBinding, comment));
+            actionBinding.btnModerate.setOnClickListener(
+                    v -> performModerateAction(binding, actionBinding, comment, note)
+            );
             actionBinding.btnModerate.setVisibility(View.VISIBLE);
         } else {
             actionBinding.btnModerate.setVisibility(View.GONE);
@@ -1248,7 +1265,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private void performModerateAction(
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull CommentActionFooterBinding actionBinding,
-            @NonNull CommentModel comment) {
+            @NonNull CommentModel comment,
+            @Nullable Note note
+    ) {
         if (!isAdded() || !NetworkUtils.checkConnection(getActivity())) {
             return;
         }
@@ -1263,7 +1282,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         setModerateButtonForStatus(actionBinding, newStatus);
         AniUtils.startAnimation(actionBinding.btnModerateIcon, R.anim.notifications_button_scale);
-        moderateComment(binding, actionBinding, comment, newStatus);
+        moderateComment(binding, actionBinding, comment, note, newStatus);
     }
 
     private void setModerateButtonForStatus(
@@ -1340,9 +1359,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @NonNull CommentActionFooterBinding actionBinding,
-            Note note,
             @NonNull SiteModel site,
-            @Nullable CommentModel comment
+            @Nullable CommentModel comment,
+            @Nullable Note note
     ) {
         // hide standard comment views, since we'll be adding note blocks instead
         binding.commentContent.setVisibility(View.GONE);
@@ -1354,24 +1373,28 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
          * blog then all actions will be enabled, but they won't be if it's a reply to a comment
          * this user made on someone else's blog
          */
-        mEnabledActions = note.getEnabledActions();
+        if (note != null) {
+            mEnabledActions = note.getEnabledActions();
+        }
 
         // Set 'Reply to (Name)' in comment reply EditText if it's a reasonable size
-        if (mNote != null
-            && !TextUtils.isEmpty(mNote.getCommentAuthorName())
-            && mNote.getCommentAuthorName().length() < 28) {
+        if (note != null
+            && !TextUtils.isEmpty(note.getCommentAuthorName())
+            && note.getCommentAuthorName().length() < 28) {
             replyBinding.editComment.setHint(
-                    String.format(getString(R.string.comment_reply_to_user), mNote.getCommentAuthorName())
+                    String.format(getString(R.string.comment_reply_to_user), note.getCommentAuthorName())
             );
         }
 
         if (comment != null) {
             setComment(comment, site);
-        } else {
+        } else if (note != null) {
             setComment(note.buildComment(), site);
         }
 
-        addDetailFragment(binding, actionBinding, note.getId());
+        if (note != null) {
+            addDetailFragment(binding, actionBinding, note.getId());
+        }
 
         requireActivity().invalidateOptionsMenu();
     }
@@ -1494,11 +1517,12 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull CommentActionFooterBinding actionBinding,
             @NonNull CommentModel comment,
+            @Nullable Note note,
             OnCommentChanged event
     ) {
         // send signal for listeners to perform any needed updates
-        if (mNote != null) {
-            EventBus.getDefault().postSticky(new NotificationEvents.NoteLikeOrModerationStatusChanged(mNote.getId()));
+        if (note != null) {
+            EventBus.getDefault().postSticky(new NotificationEvents.NoteLikeOrModerationStatusChanged(note.getId()));
         }
 
         if (!isAdded()) {
@@ -1507,10 +1531,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         if (event.isError()) {
             comment.setStatus(mPreviousStatus);
-            updateStatusViews(binding, actionBinding, comment);
+            updateStatusViews(binding, actionBinding, comment, note);
             ToastUtils.showToast(requireActivity(), R.string.error_moderate_comment);
         } else {
-            reloadComment(comment);
+            reloadComment(comment, note);
         }
     }
 
@@ -1520,13 +1544,14 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @NonNull CommentActionFooterBinding actionBinding,
             @NonNull CommentModel comment,
+            @Nullable Note note,
             OnCommentChanged event
     ) {
         mIsSubmittingReply = false;
         replyBinding.editComment.setEnabled(true);
         replyBinding.btnSubmitReply.setVisibility(View.VISIBLE);
         replyBinding.progressSubmitComment.setVisibility(View.GONE);
-        updateStatusViews(binding, actionBinding, comment);
+        updateStatusViews(binding, actionBinding, comment, note);
 
         if (event.isError()) {
             if (isAdded()) {
@@ -1538,7 +1563,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             return;
         }
 
-        reloadComment(comment);
+        reloadComment(comment, note);
 
         if (isAdded()) {
             ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
@@ -1559,17 +1584,18 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         // approve the comment
         if (!(CommentStatus.fromString(comment.getStatus()) == CommentStatus.APPROVED)) {
-            moderateComment(binding, actionBinding, comment, CommentStatus.APPROVED);
+            moderateComment(binding, actionBinding, comment, note, CommentStatus.APPROVED);
         }
     }
 
     private void onCommentLiked(
             @NonNull CommentActionFooterBinding actionBinding,
+            @Nullable Note note,
             OnCommentChanged event
     ) {
         // send signal for listeners to perform any needed updates
-        if (mNote != null) {
-            EventBus.getDefault().postSticky(new NotificationEvents.NoteLikeOrModerationStatusChanged(mNote.getId()));
+        if (note != null) {
+            EventBus.getDefault().postSticky(new NotificationEvents.NoteLikeOrModerationStatusChanged(note.getId()));
         }
 
         if (event.isError()) {
@@ -1596,20 +1622,20 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             );
             // Moderating comment
             if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
-                onCommentModerated(mBinding, mActionBinding, mComment, event);
+                onCommentModerated(mBinding, mActionBinding, mComment, mNote, event);
                 mPreviousStatus = null;
                 return;
             }
 
             // New comment (reply)
             if (event.causeOfChange == CommentAction.CREATE_NEW_COMMENT) {
-                onCommentCreated(mBinding, mReplyBinding, mActionBinding, mComment, event);
+                onCommentCreated(mBinding, mReplyBinding, mActionBinding, mComment, mNote, event);
                 return;
             }
 
             // Like/Unlike
             if (event.causeOfChange == CommentAction.LIKE_COMMENT) {
-                onCommentLiked(mActionBinding, event);
+                onCommentLiked(mActionBinding, mNote, event);
                 return;
             }
 
@@ -1665,17 +1691,18 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull CommentActionFooterBinding actionBinding,
             @NonNull CommentModel comment,
+            @Nullable Note note,
             View view
     ) {
         androidx.appcompat.widget.PopupMenu morePopupMenu =
                 new androidx.appcompat.widget.PopupMenu(requireContext(), view);
         morePopupMenu.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_edit) {
-                editComment(comment);
+                editComment(comment, note);
                 return true;
             }
             if (item.getItemId() == R.id.action_trash) {
-                trashComment(binding, actionBinding, comment);
+                trashComment(binding, actionBinding, comment, note);
                 return true;
             }
             if (item.getItemId() == R.id.action_copy_link_address) {
@@ -1714,7 +1741,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private void trashComment(
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull CommentActionFooterBinding actionBinding,
-            @NonNull CommentModel comment
+            @NonNull CommentModel comment,
+            @Nullable Note note
     ) {
         if (!isAdded()) {
             return;
@@ -1728,7 +1756,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
                     (dialog, whichButton) -> {
-                        moderateComment(binding, actionBinding, comment, CommentStatus.DELETED);
+                        moderateComment(binding, actionBinding, comment, note, CommentStatus.DELETED);
                         announceCommentStatusChangeForAccessibility(CommentStatus.DELETED);
                     });
             dialogBuilder.setNegativeButton(
@@ -1737,7 +1765,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             dialogBuilder.setCancelable(true);
             dialogBuilder.create().show();
         } else {
-            moderateComment(binding, actionBinding, comment, CommentStatus.TRASH);
+            moderateComment(binding, actionBinding, comment, note, CommentStatus.TRASH);
             announceCommentStatusChangeForAccessibility(CommentStatus.TRASH);
         }
     }
