@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -839,16 +838,16 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
      * displays the passed post title for the current comment, updates stored title if one doesn't exist
      */
     private void setPostTitle(
-            TextView txtTitle,
+            @NonNull CommentDetailFragmentBinding binding,
             @NonNull CommentModel comment,
             String postTitle,
             boolean isHyperlink
     ) {
-        if (txtTitle == null || !isAdded()) {
+        if (!isAdded()) {
             return;
         }
         if (TextUtils.isEmpty(postTitle)) {
-            txtTitle.setText(R.string.untitled);
+            binding.textPostTitle.setText(R.string.untitled);
             return;
         }
 
@@ -869,10 +868,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                           + ">"
                           + postTitle.trim()
                           + "</font>";
-            txtTitle.setText(HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY));
+            binding.textPostTitle.setText(HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY));
         } else {
             String text = getString(R.string.on) + " " + postTitle.trim();
-            txtTitle.setText(text);
+            binding.textPostTitle.setText(text);
         }
     }
 
@@ -910,7 +909,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             hasTitle = false;
         }
         if (hasTitle) {
-            setPostTitle(binding.textPostTitle, comment, title, canRequestPost);
+            setPostTitle(binding, comment, title, canRequestPost);
         } else if (canRequestPost) {
             binding.textPostTitle.setText(postExists ? R.string.untitled : R.string.loading);
         }
@@ -940,7 +939,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                                                     comment.getRemotePostId()
                                             );
                                             if (!TextUtils.isEmpty(postTitle)) {
-                                                setPostTitle(binding.textPostTitle, comment, postTitle, true);
+                                                setPostTitle(binding, comment, postTitle, true);
                                             } else {
                                                 binding.textPostTitle.setText(R.string.untitled);
                                             }
