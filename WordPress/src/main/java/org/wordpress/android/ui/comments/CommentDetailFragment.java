@@ -1382,7 +1382,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             @NonNull CommentActionFooterBinding actionBinding,
             String noteId
     ) {
-            // Now we'll add a detail fragment list
+        // Now we'll add a detail fragment list
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(noteId);
