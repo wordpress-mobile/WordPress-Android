@@ -336,8 +336,12 @@ public class AnalyticsUtils {
      * @param comment      The comment object
      * @param source       The source of the comment action
      */
-    public static void trackCommentReplyWithDetails(boolean isQuickReply, SiteModel site,
-                                                    CommentModel comment, AnalyticsCommentActionSource source) {
+    public static void trackCommentReplyWithDetails(
+            boolean isQuickReply,
+            SiteModel site,
+            @NonNull CommentModel comment,
+            AnalyticsCommentActionSource source
+    ) {
         AnalyticsTracker.Stat legacyTracker = null;
         if (source == AnalyticsCommentActionSource.NOTIFICATIONS) {
             legacyTracker = isQuickReply ? AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_REPLIED_TO

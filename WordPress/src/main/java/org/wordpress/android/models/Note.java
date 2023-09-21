@@ -7,6 +7,8 @@ import android.text.Spannable;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -412,6 +414,7 @@ public class Note {
     /**
      * Constructs a new Comment object based off of data in a Note
      */
+    @NonNull
     public CommentModel buildComment() {
         CommentModel comment = new CommentModel();
         comment.setRemotePostId(getPostId());
