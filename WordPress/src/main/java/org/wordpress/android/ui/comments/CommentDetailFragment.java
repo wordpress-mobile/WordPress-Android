@@ -178,7 +178,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
      * for this comment - all actions are enabled when opened from the comment list, only
      * changed when opened from a notification
      */
-    private EnumSet<EnabledActions> mEnabledActions = EnumSet.allOf(EnabledActions.class);
+    @NonNull private EnumSet<EnabledActions> mEnabledActions = EnumSet.allOf(EnabledActions.class);
 
     @Nullable private CommentDetailFragmentBinding mBinding = null;
     @Nullable private ReaderIncludeCommentBoxBinding mReplyBinding = null;
@@ -1350,16 +1350,16 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
      * does user have permission to moderate/reply/spam this comment?
      */
     private boolean canModerate() {
-        return mEnabledActions != null && (mEnabledActions.contains(EnabledActions.ACTION_APPROVE)
-                                           || mEnabledActions.contains(EnabledActions.ACTION_UNAPPROVE));
+        return mEnabledActions.contains(EnabledActions.ACTION_APPROVE)
+               || mEnabledActions.contains(EnabledActions.ACTION_UNAPPROVE);
     }
 
     private boolean canMarkAsSpam() {
-        return (mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_SPAM));
+        return mEnabledActions.contains(EnabledActions.ACTION_SPAM);
     }
 
     private boolean canReply() {
-        return (mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_REPLY));
+        return mEnabledActions.contains(EnabledActions.ACTION_REPLY);
     }
 
     private boolean canTrash() {
@@ -1371,7 +1371,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     private boolean canLike(@NonNull SiteModel site) {
-        return mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_LIKE)
+        return mEnabledActions.contains(EnabledActions.ACTION_LIKE)
                && SiteUtils.isAccessedViaWPComRest(site);
     }
 
