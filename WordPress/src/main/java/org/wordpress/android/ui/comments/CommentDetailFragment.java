@@ -432,7 +432,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
 
         // reattach listeners to collapsible reply dialog
-        // we need to to it in onResume to make sure mComment is already intialized
+        // we need to to it in onResume to make sure mComment is already initialized
         CollapseFullScreenDialogFragment fragment =
                 (CollapseFullScreenDialogFragment) requireActivity().getSupportFragmentManager().findFragmentByTag(
                         CollapseFullScreenDialogFragment.TAG + getCommentSpecificFragmentTagSuffix());
