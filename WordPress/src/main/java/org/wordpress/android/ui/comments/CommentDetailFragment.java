@@ -501,16 +501,16 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private void setComment(final long commentRemoteId, final int siteLocalId) {
         final SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
         if (site != null) {
-            setComment(mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, commentRemoteId), site);
+            setComment(site, mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, commentRemoteId));
         }
     }
 
     private void setComment(
-            @Nullable final CommentModel comment,
-            @NonNull final SiteModel site
+            @NonNull final SiteModel site,
+            @Nullable final CommentModel comment
     ) {
-        mComment = comment;
         mSite = site;
+        mComment = comment;
 
         // is this comment on one of the user's blogs? it won't be if this was displayed from a
         // notification about a reply to a comment this user posted on someone else's blog
@@ -659,7 +659,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     ) {
         CommentModel updatedComment = mCommentsStoreAdapter.getCommentByLocalId(comment.getId());
         if (updatedComment != null) {
-            setComment(updatedComment, site);
+            setComment(site, updatedComment);
         }
         if (mNotificationsDetailListFragment != null && note != null) {
             mNotificationsDetailListFragment.refreshBlocksForEditedComment(note.getId());
@@ -1411,9 +1411,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
 
         if (comment != null) {
-            setComment(comment, site);
+            setComment(site, comment);
         } else if (note != null) {
-            setComment(note.buildComment(), site);
+            setComment(site, note.buildComment());
         }
 
         if (note != null) {
