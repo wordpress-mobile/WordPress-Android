@@ -149,7 +149,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Nullable private SuggestionAdapter mSuggestionAdapter;
     @Nullable private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
     @Nullable private String mRestoredReplyText;
-    private String mRestoredNoteId;
+    @Nullable private String mRestoredNoteId;
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
     private String mPreviousStatus;
