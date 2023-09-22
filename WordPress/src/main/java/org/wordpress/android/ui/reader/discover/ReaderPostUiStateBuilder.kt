@@ -232,7 +232,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onBlogSectionClicked: (Long, Long) -> Unit,
         postListType: ReaderPostListType? = null,
         isP2Post: Boolean = false,
-        isReaderImprovementsEnabled: Boolean = false
+        isReaderImprovementsEnabled: Boolean = false,
     ) = buildBlogSectionUiState(post, onBlogSectionClicked, postListType, isP2Post, isReaderImprovementsEnabled)
 
     private fun buildBlogSectionUiState(
@@ -240,7 +240,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onBlogSectionClicked: (Long, Long) -> Unit,
         postListType: ReaderPostListType?,
         isP2Post: Boolean = false,
-        isReaderImprovementsEnabled: Boolean = false
+        isReaderImprovementsEnabled: Boolean = false,
     ): ReaderBlogSectionUiState {
         return ReaderBlogSectionUiState(
             postId = post.postId,
