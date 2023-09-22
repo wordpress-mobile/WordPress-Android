@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package org.wordpress.android.ui.mysite.tabs
+package org.wordpress.android.ui.mysite
 
 import android.app.Activity
 import android.content.Intent
@@ -47,16 +47,12 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.mysite.BloggingPromptCardNavigationAction
-import org.wordpress.android.ui.mysite.MySiteAdapter
-import org.wordpress.android.ui.mysite.MySiteCardAndItemDecoration
-import org.wordpress.android.ui.mysite.MySiteViewModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.MySiteTrackWithTabSource
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
-import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher

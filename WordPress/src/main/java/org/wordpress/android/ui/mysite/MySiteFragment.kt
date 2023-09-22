@@ -47,7 +47,6 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.SiteInfoToolbarViewParams
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
-import org.wordpress.android.ui.mysite.tabs.BloggingPromptsOnboardingListener
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
