@@ -18,21 +18,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="RtlSymmetry" />
 
-    <ViewStub
-        android:id="@+id/dynamic_center_point"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/blog_section_image_blog_avatar"
-        app:layout_constraintLeft_toLeftOf="@+id/blog_section_image_blog_avatar"
-        app:layout_constraintRight_toRightOf="@+id/blog_section_image_blog_avatar"
-        app:layout_constraintTop_toTopOf="@+id/blog_section_image_blog_avatar" />
-
     <ImageView
         android:id="@+id/blog_section_image_author_avatar"
         style="@style/ReaderImageView.Avatar.ExtraExtraSmall"
         android:importantForAccessibility="no"
-        app:layout_constraintStart_toEndOf="@+id/dynamic_center_point"
-        app:layout_constraintTop_toTopOf="@+id/dynamic_center_point"
+        app:layout_constraintEnd_toEndOf="@id/blog_section_image_blog_avatar"
+        app:layout_constraintBottom_toBottomOf="@id/blog_section_image_blog_avatar"
         tools:ignore="RtlSymmetry"
         tools:src="@drawable/login_prologue_third_asset_three" />
 
