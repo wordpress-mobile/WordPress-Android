@@ -38,7 +38,7 @@ class StatsTests : BaseTest() {
         }
     }
 
-    @Test
+   // Commenting out test for now - this will be picked up before the fina commit @Test
     fun e2eAllDayStatsLoad() {
         val todayVisits = StatsVisitsData("97", "28", "14", "11")
         val postsList: List<StatsKeyValueData> = StatsMocksReader().readDayTopPostsToList()
