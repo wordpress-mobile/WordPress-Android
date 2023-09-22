@@ -663,8 +663,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             initialScreen = MySiteTabType.SITE_MENU.label
         )
 
-        viewModel.onCreateSiteResult()
-
         assertThat(tabNavigation).size().isEqualTo(2)
         /* First time default tab is set when My Site screen is shown and site is selected.
            When site is created then again it sets the default tab. */
