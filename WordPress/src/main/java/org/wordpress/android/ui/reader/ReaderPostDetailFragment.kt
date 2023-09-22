@@ -1843,8 +1843,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             root,
             bookmark,
             reblog,
-            countComments,
-            countLikes,
+            comment,
+            like,
         )
 
     companion object {
