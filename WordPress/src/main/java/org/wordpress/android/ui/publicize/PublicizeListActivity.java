@@ -37,6 +37,7 @@ import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.JPSocialMastodonConnectViaWebFeatureConfig;
 import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
@@ -61,6 +62,8 @@ public class PublicizeListActivity extends LocaleAwareActivity
 
     @Inject SiteStore mSiteStore;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
+
+    @Inject JPSocialMastodonConnectViaWebFeatureConfig mJPSocialMastodonConnectViaWebFeatureConfig;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -277,8 +280,10 @@ public class PublicizeListActivity extends LocaleAwareActivity
      */
     private boolean shouldConnectViaWeb(PublicizeService service) {
         String serviceId = service.getId();
-        return serviceId.equals(PublicizeConstants.FACEBOOK_ID)
-                || serviceId.equals(PublicizeConstants.MASTODON_ID);
+        boolean showForFacebook = serviceId.equals(PublicizeConstants.FACEBOOK_ID);
+        boolean showForMastodon = serviceId.equals(PublicizeConstants.MASTODON_ID)
+                             && mJPSocialMastodonConnectViaWebFeatureConfig.isEnabled();
+        return showForFacebook || showForMastodon;
     }
 
     private String getConnectionsUrl(SiteModel site) {
