@@ -23,7 +23,7 @@ import com.yalantis.ucrop.UCropActivity
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.databinding.MySiteTabFragmentBinding
+import org.wordpress.android.databinding.MySiteMenuFragmentBinding
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
@@ -104,7 +104,7 @@ import android.R as AndroidR
 import com.google.android.material.R as MaterialR
 
 @Suppress("LargeClass")
-class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
+class MySiteTabFragment : Fragment(R.layout.my_site_menu_fragment),
     TextInputDialogFragment.Callback,
     QuickStartPromptClickInterface,
     OnConfirmListener,
@@ -156,7 +156,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var mySiteTabType: MySiteTabType
 
-    private var binding: MySiteTabFragmentBinding? = null
+    private var binding: MySiteMenuFragmentBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -177,7 +177,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initTabType()
-        binding = MySiteTabFragmentBinding.bind(view).apply {
+        binding = MySiteMenuFragmentBinding.bind(view).apply {
             setupContentViews(savedInstanceState)
             setupObservers()
             swipeToRefreshHelper.isRefreshing = true
@@ -201,7 +201,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         }
     }
 
-    private fun MySiteTabFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
+    private fun MySiteMenuFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
         with(requireActivity() as AppCompatActivity) {
             setSupportActionBar(toolbarMain)
             supportActionBar?.apply {
@@ -260,7 +260,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     }
 
     @Suppress("DEPRECATION", "LongMethod")
-    private fun MySiteTabFragmentBinding.setupObservers() {
+    private fun MySiteMenuFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
             hideRefreshIndicatorIfNeeded()
             when (val state = uiModel.state) {
@@ -711,7 +711,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         quickStartTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
     }
 
-    private fun MySiteTabFragmentBinding.loadData(state: State.SiteSelected) {
+    private fun MySiteMenuFragmentBinding.loadData(state: State.SiteSelected) {
         recyclerView.setVisible(true)
         val cardAndItems = when (mySiteTabType) {
             MySiteTabType.SITE_MENU -> state.siteMenuCardsAndItems
@@ -721,7 +721,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         (recyclerView.adapter as? MySiteAdapter)?.submitList(cardAndItems)
     }
 
-    private fun MySiteTabFragmentBinding.loadEmptyView() {
+    private fun MySiteMenuFragmentBinding.loadEmptyView() {
         recyclerView.setVisible(false)
     }
 
@@ -747,7 +747,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         }
     }
 
-    private fun MySiteTabFragmentBinding.hideRefreshIndicatorIfNeeded() {
+    private fun MySiteMenuFragmentBinding.hideRefreshIndicatorIfNeeded() {
         swipeRefreshLayout.postDelayed({
             swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
         }, CHECK_REFRESH_DELAY)

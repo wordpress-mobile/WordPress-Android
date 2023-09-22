@@ -11,6 +11,6 @@
         android:name="org.wordpress.android.ui.mysite.tabs.MySiteTabFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/my_site_tab_fragment" />
+        tools:layout="@layout/my_site_menu_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
