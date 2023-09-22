@@ -4,7 +4,6 @@ package org.wordpress.android.ui.mysite
 
 import android.content.Intent
 import android.net.Uri
-import android.text.TextUtils
 import androidx.annotation.DimenRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -19,9 +18,9 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
@@ -61,7 +60,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
@@ -69,8 +67,6 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
-import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
-import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
@@ -101,10 +97,7 @@ import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
-import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
-import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
-import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
-import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
+import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
@@ -114,15 +107,9 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
-import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.MediaUtilsWrapper
-import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.UriWrapper
-import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
@@ -132,27 +119,20 @@ import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.merge
 import org.wordpress.android.util.publicdata.AppStatus
 import org.wordpress.android.util.publicdata.WordPressPublicData
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val siteItemsBuilder: SiteItemsBuilder,
     private val accountStore: AccountStore,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val wpMediaUtilsWrapper: WPMediaUtilsWrapper,
-    private val mediaUtilsWrapper: MediaUtilsWrapper,
-    private val fluxCUtilsWrapper: FluxCUtilsWrapper,
-    private val contextProvider: ContextProvider,
     private val siteIconUploadHandler: SiteIconUploadHandler,
     private val siteStoriesHandler: SiteStoriesHandler,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
@@ -201,10 +181,7 @@ class MySiteViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
-    private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
-    private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
-    private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
@@ -270,16 +247,14 @@ class MySiteViewModel @Inject constructor(
         siteStoriesHandler.onSnackbar,
         quickStartRepository.onSnackbar,
         siteItemsViewModelSlice.onSnackbarMessage,
-        bloggingPromptCardViewModelSlice.onSnackbarMessage
+        bloggingPromptCardViewModelSlice.onSnackbarMessage,
+        siteInfoHeaderCardViewModelSlice.onSnackbarMessage
     )
     val onQuickStartMySitePrompts = quickStartRepository.onQuickStartMySitePrompts
 
-    val onTextInputDialogShown = merge(
-        _onTechInputDialogShown,
-        siteInfoHeaderCardViewModelSlice.onTechInputDialogShown
-    )
+    val onTextInputDialogShown = siteInfoHeaderCardViewModelSlice.onTechInputDialogShown
 
-    val onBasicDialogShown = merge(_onBasicDialogShown, siteInfoHeaderCardViewModelSlice.onBasicDialogShown)
+    val onBasicDialogShown = siteInfoHeaderCardViewModelSlice.onBasicDialogShown
 
     val onNavigation = merge(
         _onNavigation,
@@ -296,7 +271,7 @@ class MySiteViewModel @Inject constructor(
         siteInfoHeaderCardViewModelSlice.onNavigation
     )
 
-    val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
+    val onMediaUpload = siteInfoHeaderCardViewModelSlice.onMediaUpload
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onOpenJetpackInstallFullPluginOnboarding = _onOpenJetpackInstallFullPluginOnboarding as LiveData<Event<Unit>>
     val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
@@ -387,6 +362,7 @@ class MySiteViewModel @Inject constructor(
     init {
         dispatcher.register(this)
         bloggingPromptCardViewModelSlice.initialize(viewModelScope, mySiteSourceManager)
+        siteInfoHeaderCardViewModelSlice.initialize(viewModelScope)
     }
 
     @Suppress("LongParameterList")
@@ -921,97 +897,25 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onSiteNameChosen(input: String) {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _onSnackbarMessage.postValue(
-                Event(SnackbarMessageHolder(UiStringRes(R.string.error_update_site_title_network)))
-            )
-        } else {
-            selectedSiteRepository.updateTitle(input)
-        }
+        siteInfoHeaderCardViewModelSlice.onSiteNameChosen(input)
     }
 
     fun onSiteNameChooserDismissed() {
-        // This callback is called even when the dialog interaction is positive,
-        // otherwise we would need to call 'completeTask' on 'onSiteNameChosen' as well.
-        quickStartRepository.completeTask(QuickStartNewSiteTask.UPDATE_SITE_TITLE)
-        quickStartRepository.checkAndShowQuickStartNotice()
+        siteInfoHeaderCardViewModelSlice.onSiteNameChooserDismissed()
     }
 
-    fun onDialogInteraction(interaction: DialogInteraction) {
-        when (interaction) {
-            is Positive -> when (interaction.tag) {
-                TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
-                    quickStartRepository.completeTask(QuickStartNewSiteTask.UPLOAD_SITE_ICON)
-                    _onNavigation.postValue(
-                        Event(
-                            SiteNavigationAction.OpenMediaPicker(
-                                requireNotNull(selectedSiteRepository.getSelectedSite())
-                            )
-                        )
-                    )
-                }
-            }
-
-            is Negative -> when (interaction.tag) {
-                TAG_ADD_SITE_ICON_DIALOG -> {
-                    quickStartRepository.completeTask(QuickStartNewSiteTask.UPLOAD_SITE_ICON)
-                    quickStartRepository.checkAndShowQuickStartNotice()
-                }
-
-                TAG_CHANGE_SITE_ICON_DIALOG -> {
-                    analyticsTrackerWrapper.track(Stat.MY_SITE_ICON_REMOVED)
-                    quickStartRepository.completeTask(QuickStartNewSiteTask.UPLOAD_SITE_ICON)
-                    quickStartRepository.checkAndShowQuickStartNotice()
-                    selectedSiteRepository.updateSiteIconMediaId(0, true)
-                }
-            }
-
-            is Dismissed -> when (interaction.tag) {
-                TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
-                    quickStartRepository.completeTask(QuickStartNewSiteTask.UPLOAD_SITE_ICON)
-                    quickStartRepository.checkAndShowQuickStartNotice()
-                }
-            }
-        }
+    fun onDialogInteraction(interaction: BasicDialogViewModel.DialogInteraction) {
+        siteInfoHeaderCardViewModelSlice.onDialogInteraction(interaction)
     }
 
-    @Suppress("DEPRECATION")
-    fun handleTakenSiteIcon(iconUrl: String?, source: PhotoPickerActivity.PhotoPickerMediaSource?) {
-        val stat = if (source == PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA) {
-            Stat.MY_SITE_ICON_SHOT_NEW
-        } else {
-            Stat.MY_SITE_ICON_GALLERY_PICKED
-        }
-        analyticsTrackerWrapper.track(stat)
-        val imageUri = Uri.parse(iconUrl)?.let { UriWrapper(it) }
-        if (imageUri != null) {
-            launch(bgDispatcher) {
-                val fetchMedia = wpMediaUtilsWrapper.fetchMediaToUriWrapper(imageUri)
-                if (fetchMedia != null) {
-                    _onNavigation.postValue(Event(SiteNavigationAction.OpenCropActivity(fetchMedia)))
-                }
-            }
-        }
+    fun handleCropResult(output: Uri?, success: Boolean) {
+        siteInfoHeaderCardViewModelSlice.handleCropResult(output, success)
     }
 
-    fun handleSelectedSiteIcon(mediaId: Long) {
-        selectedSiteRepository.updateSiteIconMediaId(mediaId.toInt(), true)
-    }
+    fun handleSelectedSiteIcon(mediaId: Long) = siteInfoHeaderCardViewModelSlice.handleSelectedSiteIcon(mediaId)
 
-    fun handleCropResult(croppedUri: Uri?, success: Boolean) {
-        if (success && croppedUri != null) {
-            analyticsTrackerWrapper.track(Stat.MY_SITE_ICON_CROPPED)
-            selectedSiteRepository.showSiteIconProgressBar(true)
-            launch(bgDispatcher) {
-                wpMediaUtilsWrapper.fetchMediaToUriWrapper(UriWrapper(croppedUri))?.let { fetchMedia ->
-                    mediaUtilsWrapper.getRealPathFromURI(fetchMedia.uri)
-                }?.let {
-                    startSiteIconUpload(it)
-                }
-            }
-        } else {
-            _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.error_cropping_image))))
-        }
+    fun handleTakenSiteIcon(iconUrl: String, source: PhotoPickerActivity.PhotoPickerMediaSource?) {
+        siteInfoHeaderCardViewModelSlice.handleTakenSiteIcon(iconUrl, source)
     }
 
     fun handleSuccessfulLoginResult() {
@@ -1023,38 +927,8 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun handleSuccessfulDomainRegistrationResult(email: String?) {
-        analyticsTrackerWrapper.track(Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS)
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS)
         _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(getEmailValidationMessage(email))))
-    }
-
-    @Suppress("ReturnCount")
-    private fun startSiteIconUpload(filePath: String) {
-        if (TextUtils.isEmpty(filePath)) {
-            _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.error_locating_image))))
-            return
-        }
-        val file = File(filePath)
-        if (!file.exists()) {
-            _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.file_error_create))))
-            return
-        }
-        val selectedSite = selectedSiteRepository.getSelectedSite()
-        if (selectedSite != null) {
-            val media = buildMediaModel(file, selectedSite)
-            if (media == null) {
-                _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.file_not_found))))
-                return
-            }
-            _onMediaUpload.postValue(Event(media))
-        } else {
-            _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.error_generic))))
-        }
-    }
-
-    private fun buildMediaModel(file: File, site: SiteModel): MediaModel? {
-        val uri = Uri.Builder().path(file.path).build()
-        val mimeType = contextProvider.getContext().contentResolver.getType(uri)
-        return fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
     }
 
     private fun getStatsNavigationActionForSite(site: SiteModel): SiteNavigationAction = when {
