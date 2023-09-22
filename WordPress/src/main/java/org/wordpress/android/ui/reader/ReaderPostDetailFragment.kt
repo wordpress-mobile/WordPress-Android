@@ -1011,7 +1011,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             binding.layoutPostDetailContainer,
             uiHelpers.getTextOfUiString(requireContext(), this.message),
             Snackbar.LENGTH_LONG
-        )
+        ).setAnchorView(layoutFooterBinding.root)
         if (this.buttonTitle != null) {
             snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), this.buttonTitle)) {
                 this.buttonAction.invoke()
