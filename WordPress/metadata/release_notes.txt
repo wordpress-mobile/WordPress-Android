@@ -1,3 +1,3 @@
-- The Social Link block includes an outline so you can see when it’s selected.
-- In the block editor, the app should no longer crash when you turn a nested Columns block into a Group block.
-- In the block inserter, you can now search for a block type without crashing the app.
+* [*] Block editor: Fix the obscurred "Insert from URL" input for media blocks when using a device in landscape orientation. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6143]
+* [**] Block editor: Updated placeholder text colors for block-based themes [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6182]
+

@@ -99,7 +99,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final float mDisabledSiteOpacity;
 
     private final LayoutInflater mInflater;
-    private final HashSet<Integer> mSelectedPositions = new HashSet<>();
+    @NonNull private final HashSet<Integer> mSelectedPositions = new HashSet<>();
     @Nullable private final ViewHolderHandler mHeaderHandler;
     @Nullable private final ViewHolderHandler mFooterHandler;
 
@@ -493,7 +493,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * called when the user chooses to edit the visibility of wp.com blogs
      */
-    void setEnableEditMode(boolean enable, HashSet<Integer> selectedPositions) {
+    void setEnableEditMode(boolean enable, @NonNull HashSet<Integer> selectedPositions) {
         if (mIsMultiSelectEnabled == enable) {
             return;
         }

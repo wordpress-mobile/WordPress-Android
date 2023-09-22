@@ -200,7 +200,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     /*
      * used when called from comment list
      */
-    static CommentDetailFragment newInstance(SiteModel site, CommentModel commentModel) {
+    static CommentDetailFragment newInstance(
+            @NonNull SiteModel site,
+            CommentModel commentModel
+    ) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         Bundle args = new Bundle();
         args.putSerializable(KEY_MODE, CommentSource.SITE_COMMENTS);
