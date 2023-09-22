@@ -104,7 +104,7 @@ import android.R as AndroidR
 import com.google.android.material.R as MaterialR
 
 @Suppress("LargeClass")
-class MySiteTabFragment : Fragment(R.layout.my_site_menu_fragment),
+class MySiteMenuFragment : Fragment(R.layout.my_site_menu_fragment),
     TextInputDialogFragment.Callback,
     QuickStartPromptClickInterface,
     OnConfirmListener,
@@ -288,7 +288,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_menu_fragment),
                 model.isInputEnabled,
                 model.callbackId
             )
-            inputDialog.setTargetFragment(this@MySiteTabFragment, 0)
+            inputDialog.setTargetFragment(this@MySiteMenuFragment, 0)
             inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
         })
         viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
@@ -318,7 +318,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_menu_fragment),
         is SiteNavigationAction.OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
         is SiteNavigationAction.OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
         is SiteNavigationAction.OpenMediaPicker ->
-            mediaPickerLauncher.showSiteIconPicker(this@MySiteTabFragment, action.site)
+            mediaPickerLauncher.showSiteIconPicker(this@MySiteMenuFragment, action.site)
         is SiteNavigationAction.OpenCropActivity -> startCropActivity(action.imageUri)
         is SiteNavigationAction.OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
         is SiteNavigationAction.OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
@@ -345,7 +345,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_menu_fragment),
         is SiteNavigationAction.ConnectJetpackForStats ->
             ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
         is SiteNavigationAction.StartWPComLoginForJetpackStats ->
-            ActivityLauncher.loginForJetpackStats(this@MySiteTabFragment)
+            ActivityLauncher.loginForJetpackStats(this@MySiteMenuFragment)
         is SiteNavigationAction.OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
         is SiteNavigationAction.AddNewStory ->
             ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)
@@ -776,7 +776,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_menu_fragment),
         private const val FIRST_ITEM = 0
 
         @JvmStatic
-        fun newInstance(mySiteTabType: MySiteTabType) = MySiteTabFragment().apply {
+        fun newInstance(mySiteTabType: MySiteTabType) = MySiteMenuFragment().apply {
             arguments = Bundle().apply {
                 putString(KEY_MY_SITE_TAB_TYPE, mySiteTabType.label)
             }

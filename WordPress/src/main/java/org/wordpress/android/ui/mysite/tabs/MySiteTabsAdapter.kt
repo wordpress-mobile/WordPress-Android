@@ -10,5 +10,5 @@ class MySiteTabsAdapter(
 ) : FragmentStateAdapter(parent) {
     override fun getItemCount(): Int = tabUiStates.size
 
-    override fun createFragment(position: Int) = MySiteTabFragment.newInstance(tabUiStates[position].tabType)
+    override fun createFragment(position: Int) = MySiteMenuFragment.newInstance(tabUiStates[position].tabType)
 }
