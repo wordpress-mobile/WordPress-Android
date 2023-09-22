@@ -656,8 +656,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
         is SiteNavigationAction.StartWPComLoginForJetpackStats ->
             ActivityLauncher.loginForJetpackStats(this@MySiteFragment)
-        is SiteNavigationAction.OpenJetpackSettings ->
-            ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
         is SiteNavigationAction.OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
         is SiteNavigationAction.AddNewStory ->
             ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)
