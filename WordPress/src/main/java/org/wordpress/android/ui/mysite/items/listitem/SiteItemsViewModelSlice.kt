@@ -110,6 +110,7 @@ class SiteItemsViewModelSlice @Inject constructor(
                 ListItemAction.COMMENTS -> SiteNavigationAction.OpenUnifiedComments(selectedSite)
 
                 ListItemAction.BLAZE -> onBlazeMenuItemClick()
+                ListItemAction.MORE ->  TODO()
             }
             _onNavigation.postValue(Event(navigationAction))
         } ?: _onSnackbarMessage.postValue(
