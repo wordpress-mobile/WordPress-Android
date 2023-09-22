@@ -238,7 +238,7 @@ Language: es_CO
     <string name="gutenberg_native_tiled_gallery_settings">Ajustes de la galería de mosaico</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navega a la pantalla de selección del diseño</string>
     <string name="gutenberg_native_gallery_style">Estilo de la galería</string>
-    <string name="sharing_facebook_warning_positive_button">Ir a la web</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Ir a la web</string>
     <string name="sharing_facebook_warning_message">Puedes conectar tu cuenta de Facebook en la web de WordPress.com. Cuando lo hayas hecho, vuelve a la aplicación de WordPress para cambiar tus ajustes para compartir.</string>
     <string name="about_automattic_app_icon_description">Icono de la aplicación</string>
     <string name="about_automattic_back_icon_description">Icono de volver</string>

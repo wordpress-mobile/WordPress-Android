@@ -631,7 +631,7 @@ Language: zh_TW
     <string name="gutenberg_native_tiled_gallery_settings">並排圖庫設定</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">導覽至版面配置選取畫面</string>
     <string name="gutenberg_native_gallery_style">圖庫樣式</string>
-    <string name="sharing_facebook_warning_positive_button">前往網頁</string>
+    <string name="sharing_connect_via_web_warning_positive_button">前往網頁</string>
     <string name="sharing_facebook_warning_message">你可以在 WordPress.com 網站連結 Facebook 帳號。 完成設定後，請返回 WordPress 應用程式變更你的「分享」設定。</string>
     <string name="about_automattic_app_icon_description">應用程式圖示</string>
     <string name="about_automattic_back_icon_description">返回圖示</string>
