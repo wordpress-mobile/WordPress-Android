@@ -94,6 +94,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
+import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
@@ -195,7 +196,8 @@ class MySiteViewModel @Inject constructor(
     private val personalizeCardViewModelSlice: PersonalizeCardViewModelSlice,
     private val personalizeCardBuilder: PersonalizeCardBuilder,
     private val bloggingPromptCardViewModelSlice: BloggingPromptCardViewModelSlice,
-    private val noCardsMessageViewModelSlice: NoCardsMessageViewModelSlice
+    private val noCardsMessageViewModelSlice: NoCardsMessageViewModelSlice,
+    private val siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -271,8 +273,14 @@ class MySiteViewModel @Inject constructor(
         bloggingPromptCardViewModelSlice.onSnackbarMessage
     )
     val onQuickStartMySitePrompts = quickStartRepository.onQuickStartMySitePrompts
-    val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
-    val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
+
+    val onTextInputDialogShown = merge(
+        _onTechInputDialogShown,
+        siteInfoHeaderCardViewModelSlice.onTechInputDialogShown
+    )
+
+    val onBasicDialogShown = merge(_onBasicDialogShown, siteInfoHeaderCardViewModelSlice.onBasicDialogShown)
+
     val onNavigation = merge(
         _onNavigation,
         siteStoriesHandler.onNavigation,
@@ -284,13 +292,21 @@ class MySiteViewModel @Inject constructor(
         activityLogCardViewModelSlice.onNavigation,
         siteItemsViewModelSlice.onNavigation,
         bloggingPromptCardViewModelSlice.onNavigation,
-        personalizeCardViewModelSlice.onNavigation
+        personalizeCardViewModelSlice.onNavigation,
+        siteInfoHeaderCardViewModelSlice.onNavigation
     )
+
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onOpenJetpackInstallFullPluginOnboarding = _onOpenJetpackInstallFullPluginOnboarding as LiveData<Event<Unit>>
     val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
-    val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
+
+    val onTrackWithTabSource = merge(
+        _onTrackWithTabSource,
+        siteInfoHeaderCardViewModelSlice.onTrackWithTabSource
+    )
+
+
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     val refresh =
         merge(
@@ -399,17 +415,13 @@ class MySiteViewModel @Inject constructor(
             blazeCardUpdate
         )
 
-        val siteInfoCardBuilderParams = SiteInfoCardBuilderParams(
-            site = site,
-            showSiteIconProgressBar = showSiteIconProgressBar,
-            titleClick = this::titleClick,
-            iconClick = this::iconClick,
-            urlClick = this::urlClick,
-            switchSiteClick = this::switchSiteClick,
-            activeTask = activeTask
+        val siteInfo = siteInfoHeaderCardBuilder.buildSiteInfoCard(
+            siteInfoHeaderCardViewModelSlice.getParams(
+                site,
+                activeTask,
+                showSiteIconProgressBar
+            )
         )
-
-        val siteInfo = siteInfoHeaderCardBuilder.buildSiteInfoCard(siteInfoCardBuilderParams)
 
         if (activeTask != null) {
             scrollToQuickStartTaskIfNecessary(
@@ -835,70 +847,6 @@ class MySiteViewModel @Inject constructor(
 
     fun onQuickStartFullScreenDialogDismiss() {
         mySiteSourceManager.refreshQuickStart()
-    }
-
-    private fun titleClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
-        } else if (!SiteUtils.isAccessedViaWPComRest(selectedSite) || !selectedSite.hasCapabilityManageOptions) {
-            _onSnackbarMessage.value = Event(
-                SnackbarMessageHolder(UiStringRes(R.string.my_site_title_changer_dialog_not_allowed_hint))
-            )
-        } else {
-            _onTechInputDialogShown.value = Event(
-                TextInputDialogModel(
-                    callbackId = SITE_NAME_CHANGE_CALLBACK_ID,
-                    title = R.string.my_site_title_changer_dialog_title,
-                    initialText = selectedSite.name,
-                    hint = R.string.my_site_title_changer_dialog_hint,
-                    isMultiline = false,
-                    isInputEnabled = true
-                )
-            )
-        }
-    }
-
-    private fun iconClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.MY_SITE_ICON_TAPPED)
-        val hasIcon = selectedSite.iconUrl != null
-        if (selectedSite.hasCapabilityManageOptions && selectedSite.hasCapabilityUploadFiles) {
-            if (hasIcon) {
-                _onBasicDialogShown.value = Event(ChangeSiteIconDialogModel)
-            } else {
-                _onBasicDialogShown.value = Event(AddSiteIconDialogModel)
-            }
-        } else {
-            val message = when {
-                !selectedSite.isUsingWpComRestApi -> {
-                    R.string.my_site_icon_dialog_change_requires_jetpack_message
-                }
-
-                hasIcon -> {
-                    R.string.my_site_icon_dialog_change_requires_permission_message
-                }
-
-                else -> {
-                    R.string.my_site_icon_dialog_add_requires_permission_message
-                }
-            }
-            _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(message)))
-        }
-    }
-
-    private fun urlClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        quickStartRepository.completeTask(
-            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_VIEW_SITE_LABEL)
-        )
-        _onNavigation.value = Event(SiteNavigationAction.OpenSite(selectedSite))
-    }
-
-    private fun switchSiteClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        trackWithTabSourceIfNeeded(Stat.MY_SITE_SITE_SWITCHER_TAPPED)
-        _onNavigation.value = Event(SiteNavigationAction.OpenSitePicker(selectedSite))
     }
 
     private fun onQuickLinkRibbonStatsClick() {
