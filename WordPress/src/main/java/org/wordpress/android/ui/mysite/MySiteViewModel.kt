@@ -252,7 +252,7 @@ class MySiteViewModel @Inject constructor(
     )
     val onQuickStartMySitePrompts = quickStartRepository.onQuickStartMySitePrompts
 
-    val onTextInputDialogShown = siteInfoHeaderCardViewModelSlice.onTechInputDialogShown
+    val onTextInputDialogShown = siteInfoHeaderCardViewModelSlice.onTextInputDialogShown
 
     val onBasicDialogShown = siteInfoHeaderCardViewModelSlice.onBasicDialogShown
 

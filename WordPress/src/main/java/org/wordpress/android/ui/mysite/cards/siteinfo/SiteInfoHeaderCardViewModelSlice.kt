@@ -52,8 +52,8 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage
 
-    private val _onTechInputDialogShown = MutableLiveData<Event<MySiteViewModel.TextInputDialogModel>>()
-    val onTechInputDialogShown = _onTechInputDialogShown
+    private val _onTextInputDialogShown = MutableLiveData<Event<MySiteViewModel.TextInputDialogModel>>()
+    val onTextInputDialogShown = _onTextInputDialogShown
 
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
     val onBasicDialogShown = _onBasicDialogShown
@@ -101,7 +101,7 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
                 SnackbarMessageHolder(UiString.UiStringRes(R.string.my_site_title_changer_dialog_not_allowed_hint))
             )
         } else {
-            _onTechInputDialogShown.value = Event(
+            _onTextInputDialogShown.value = Event(
                 MySiteViewModel.TextInputDialogModel(
                     callbackId = MySiteViewModel.SITE_NAME_CHANGE_CALLBACK_ID,
                     title = R.string.my_site_title_changer_dialog_title,
