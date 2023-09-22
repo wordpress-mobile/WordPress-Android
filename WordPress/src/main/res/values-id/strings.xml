@@ -630,7 +630,7 @@ Language: id
     <string name="gutenberg_native_tiled_gallery_settings">Pengaturan galeri tampilan kotak</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Buka layar pemilihan tata letak</string>
     <string name="gutenberg_native_gallery_style">Gaya galeri</string>
-    <string name="sharing_facebook_warning_positive_button">Kunjungi situs</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Kunjungi situs</string>
     <string name="sharing_facebook_warning_message">Anda dapat menghubungkan akun Facebook Anda di situs WordPress.com. Setelah selesai, kembali ke aplikasi WordPress untuk mengubah pengaturan fitur Berbagikan.</string>
     <string name="about_automattic_app_icon_description">Ikon Aplikasi</string>
     <string name="about_automattic_back_icon_description">Ikon kembali</string>

@@ -239,8 +239,8 @@ public class PublicizeListActivity extends LocaleAwareActivity
      */
     @Override
     public void onRequestConnect(PublicizeService service) {
-        if (isFacebook(service)) {
-            showFacebookWarning();
+        if (shouldConnectViaWeb(service)) {
+            showConnectViaWebWarning(service.getLabel());
         } else {
             showWebViewFragment(service, null);
         }
@@ -251,8 +251,8 @@ public class PublicizeListActivity extends LocaleAwareActivity
      */
     @Override
     public void onRequestReconnect(PublicizeService service, PublicizeConnection publicizeConnection) {
-        if (isFacebook(service)) {
-            showFacebookWarning();
+        if (shouldConnectViaWeb(service)) {
+            showConnectViaWebWarning(service.getLabel());
         } else {
             PublicizeActions.reconnect(publicizeConnection);
             showWebViewFragment(service, null);
@@ -267,8 +267,18 @@ public class PublicizeListActivity extends LocaleAwareActivity
         confirmDisconnect(publicizeConnection);
     }
 
-    private boolean isFacebook(PublicizeService service) {
-        return service.getId().equals(PublicizeConstants.FACEBOOK_ID);
+    /*
+     * As of Oct 5, 2021 Facebook has deprecated support for authentication on embedded browsers, so Publicize
+     * connections can't be established through web views anymore (ref: pbArwn-3uU-p2).
+     *
+     * Mastodon was introduced in mid-2023, but it requires an "instance" parameter to work properly. At this moment we
+     * are not asking the user for that parameter on the mobile client side, so we can't establish the connection here.
+     * ref: pcdRpT-3QQ-p2#comment-6373
+     */
+    private boolean shouldConnectViaWeb(PublicizeService service) {
+        String serviceId = service.getId();
+        return serviceId.equals(PublicizeConstants.FACEBOOK_ID)
+                || serviceId.equals(PublicizeConstants.MASTODON_ID);
     }
 
     private String getConnectionsUrl(SiteModel site) {
@@ -276,14 +286,13 @@ public class PublicizeListActivity extends LocaleAwareActivity
     }
 
     /*
-     * As of Oct 5, 2021 Facebook has deprecated support for authentication on embedded browsers, so Publicize
-     * connections can't be established through web views anymore (ref: pbArwn-3uU-p2).
-     * This method shows a temporary warning message to the user instead.
+     * This method shows a temporary warning message to the user and sends them to the web connections page.
      */
-    private void showFacebookWarning() {
+    private void showConnectViaWebWarning(String serviceName) {
+        String message = getResources().getString(R.string.sharing_connect_via_web_warning_message, serviceName);
         new MaterialAlertDialogBuilder(this)
-                .setMessage(R.string.sharing_facebook_warning_message)
-                .setPositiveButton(R.string.sharing_facebook_warning_positive_button,
+                .setMessage(message)
+                .setPositiveButton(R.string.sharing_connect_via_web_warning_positive_button,
                         (dialog, id) -> ActivityLauncher.openUrlExternal(this, getConnectionsUrl(mSite)))
                 .setNegativeButton(R.string.cancel, null)
                 .setCancelable(true)
