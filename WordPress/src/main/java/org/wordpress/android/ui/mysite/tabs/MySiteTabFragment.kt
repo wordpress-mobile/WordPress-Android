@@ -665,7 +665,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             RequestCodes.CREATE_SITE -> {
                 val isNewSite = requestCode == RequestCodes.CREATE_SITE ||
                         data.getBooleanExtra(LoginEpilogueActivity.KEY_SITE_CREATED_FROM_LOGIN_EPILOGUE, false)
-                viewModel.onCreateSiteResult()
                 viewModel.performFirstStepAfterSiteCreation(
                     data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                     isNewSite = isNewSite
@@ -673,7 +672,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                    viewModel.onCreateSiteResult()
                     viewModel.performFirstStepAfterSiteCreation(
                         data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                         isNewSite = true

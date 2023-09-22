@@ -971,11 +971,6 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    fun onCreateSiteResult() {
-        isDefaultTabSet = false
-        selectDefaultTabIfNeeded()
-    }
-
     fun onSitePicked() {
         selectedSiteRepository.getSelectedSite()?.let {
             val siteLocalId = it.id.toLong()
