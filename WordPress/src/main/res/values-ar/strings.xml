@@ -630,7 +630,7 @@ Language: ar
     <string name="gutenberg_native_tiled_gallery_settings">إعدادات المعرض المتجانب</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">ينتقل إلى شاشة اختيار التخطيط</string>
     <string name="gutenberg_native_gallery_style">نمط المعرض</string>
-    <string name="sharing_facebook_warning_positive_button">الانتقال إلى الويب</string>
+    <string name="sharing_connect_via_web_warning_positive_button">الانتقال إلى الويب</string>
     <string name="sharing_facebook_warning_message">يمكنك ربط حسابك على فيسبوك على موقع ووردبريس.كوم على الويب. عند الانتهاء، ارجع إلى تطبيق ووردبريس لتغيير إعدادات المشاركة الخاصة بك.</string>
     <string name="about_automattic_app_icon_description">أيقونة التطبيق</string>
     <string name="about_automattic_back_icon_description">أيقونة الرجوع</string>

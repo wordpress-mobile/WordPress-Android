@@ -633,7 +633,7 @@ Language: gl_ES
     <string name="gutenberg_native_tiled_gallery_settings">Axustes da galería de mosaico</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navega á pantalla de selección do deseño</string>
     <string name="gutenberg_native_gallery_style">Estilo da galería</string>
-    <string name="sharing_facebook_warning_positive_button">Ir á web</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Ir á web</string>
     <string name="sharing_facebook_warning_message">Podes conectar a túa conta de Facebook na web de WordPress.com. Cando o teñas feito, volve á aplicación de WordPress para cambiar os teus axustes para compartir.</string>
     <string name="about_automattic_app_icon_description">Icona da aplicación</string>
     <string name="about_automattic_back_icon_description">Icona de volver</string>
