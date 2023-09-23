@@ -48,30 +48,17 @@ class ReaderFollowButton @JvmOverloads constructor(
             }
         }
         if (!showCaption) {
-            hideCaptionAndEnlargeIcon(context)
+            text = null
         }
 
-        updateFollowTextAndIcon()
+        updateFollowText()
     }
 
-    private fun hideCaptionAndEnlargeIcon(context: Context) {
-        text = null
-        iconSize = context.resources.getDimensionPixelSize(R.dimen.reader_follow_icon_no_caption)
-        iconPadding = context.resources.getDimensionPixelSize(R.dimen.reader_follow_icon_padding_no_caption)
-        iconGravity = ICON_GRAVITY_TEXT_START
-    }
-
-    private fun updateFollowTextAndIcon() {
+    private fun updateFollowText() {
         if (showCaption) {
             setText(if (isFollowed) followButtonType.captionFollowing else followButtonType.captionFollow)
         }
         isSelected = isFollowed
-        val drawableId = if (isFollowed) {
-            followButtonType.iconFollowing
-        } else {
-            followButtonType.iconFollow
-        }
-        icon = context.resources.getDrawable(drawableId, context.theme)
     }
 
     fun setIsFollowed(isFollowed: Boolean) {
@@ -100,7 +87,7 @@ class ReaderFollowButton @JvmOverloads constructor(
                 repeatCount = 1
                 addListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationRepeat(animation: Animator) {
-                        updateFollowTextAndIcon()
+                        updateFollowText()
                     }
                 })
             }
@@ -110,7 +97,7 @@ class ReaderFollowButton @JvmOverloads constructor(
                 interpolator = AccelerateDecelerateInterpolator()
             }.start()
         } else {
-            updateFollowTextAndIcon()
+            updateFollowText()
         }
     }
 }
