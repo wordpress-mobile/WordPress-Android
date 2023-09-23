@@ -10,10 +10,11 @@ import org.wordpress.android.util.image.ImageManager
 
 class ReaderRecommendedBlogsAdapter(
     private val imageManager: ImageManager,
-    private val uiHelpers: UiHelpers
+    private val uiHelpers: UiHelpers,
+    private val isReaderImprovementsEnabled: Boolean,
 ) : ListAdapter<ReaderRecommendedBlogUiState, ReaderRecommendedBlogViewHolder>(RecommendedBlogsDiffUtil()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReaderRecommendedBlogViewHolder {
-        return ReaderRecommendedBlogViewHolder(parent, imageManager, uiHelpers)
+        return ReaderRecommendedBlogViewHolder(parent, imageManager, uiHelpers, isReaderImprovementsEnabled)
     }
 
     override fun onBindViewHolder(holder: ReaderRecommendedBlogViewHolder, position: Int) {

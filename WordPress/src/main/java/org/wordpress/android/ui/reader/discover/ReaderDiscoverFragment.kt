@@ -45,6 +45,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.RecyclerItemDecoration
@@ -71,6 +72,9 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     lateinit var readerTracker: ReaderTracker
     private lateinit var parentViewModel: ReaderViewModel
 
+    @Inject
+    lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
+
     private var binding: ReaderDiscoverFragmentLayoutBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,7 +86,10 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         super.onViewCreated(view, savedInstanceState)
         binding = ReaderDiscoverFragmentLayoutBinding.bind(view).apply {
             recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            recyclerView.adapter = ReaderDiscoverAdapter(uiHelpers, imageManager, readerTracker)
+            recyclerView.adapter =
+                ReaderDiscoverAdapter(
+                    uiHelpers, imageManager, readerTracker, readerImprovementsFeatureConfig.isEnabled()
+                )
 
             val spacingHorizontal = resources.getDimensionPixelSize(R.dimen.reader_card_margin)
             val spacingVertical = resources.getDimensionPixelSize(R.dimen.reader_card_gutters)
