@@ -13,7 +13,8 @@
         android:id="@+id/root_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_medium">
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_medium">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recommended_blogs"
@@ -31,6 +32,8 @@
             android:id="@+id/recommended_blogs_header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_medium"
             android:text="@string/reader_discover_recommended_blogs_header"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textSize="@dimen/text_sz_medium"

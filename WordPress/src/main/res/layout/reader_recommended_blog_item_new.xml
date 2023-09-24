@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:paddingBottom="@dimen/margin_medium"
-    android:paddingTop="@dimen/margin_medium">
+    android:padding="@dimen/margin_medium">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/site_icon"

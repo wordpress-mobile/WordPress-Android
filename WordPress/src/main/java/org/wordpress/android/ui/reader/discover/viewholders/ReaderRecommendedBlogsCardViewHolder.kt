@@ -16,12 +16,11 @@ class ReaderRecommendedBlogsCardViewHolder(
     parentView: ViewGroup,
     imageManager: ImageManager,
     uiHelpers: UiHelpers,
-    isReaderImprovementsEnabled: Boolean,
 ) : ReaderViewHolder<ReaderRecommendedBlogsCardBinding>(
     parentView.viewBinding(ReaderRecommendedBlogsCardBinding::inflate)
 ) {
     private val recommendedBlogsAdapter =
-        ReaderRecommendedBlogsAdapter(imageManager, uiHelpers, isReaderImprovementsEnabled)
+        ReaderRecommendedBlogsAdapter(imageManager, uiHelpers)
 
     init {
         with(binding) {
