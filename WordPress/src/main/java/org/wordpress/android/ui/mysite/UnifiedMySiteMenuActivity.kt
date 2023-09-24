@@ -10,6 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -33,8 +35,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
@@ -122,7 +126,12 @@ class UnifiedMySiteMenuActivity : ComponentActivity() {
 
     @Composable
     fun UnifiedMenuContent(uiState: UnifiedMenuViewState) {
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
             items(uiState.items) { viewState ->
                 when (viewState) {
                     is MySiteCardAndItem.Item.ListItem -> MySiteListItem(viewState)
@@ -144,7 +153,7 @@ class UnifiedMySiteMenuActivity : ComponentActivity() {
             is UiString.UiStringResWithParams -> TODO()
         }
         Text(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(8.dp),
             text = title)
     }
 
@@ -152,7 +161,7 @@ class UnifiedMySiteMenuActivity : ComponentActivity() {
     fun MySiteListItemEmptyHeader() {
         // todo: this is just a spacer - could just use a spacer
         Text(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(8.dp),
             text = ""
         )
     }
@@ -163,7 +172,7 @@ class UnifiedMySiteMenuActivity : ComponentActivity() {
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentSize()
-                .padding(vertical = 8.dp)
+                .padding(vertical = 8.dp, horizontal = 8.dp)
                 .clickable { item.onClick.click() },
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -179,11 +188,14 @@ class UnifiedMySiteMenuActivity : ComponentActivity() {
 
             Text(
                 text = stringResource(id = (item.primaryText as UiString.UiStringRes).stringRes),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = 8.dp)
+                    .padding(end = 8.dp),
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             // todo: eventually we can take uiStringRes out of the state, but for now it's shared, so leave it
             if (item.secondaryText != null) {
@@ -195,6 +207,9 @@ class UnifiedMySiteMenuActivity : ComponentActivity() {
             }
                 Text(
                     text = secondaryStringResourceText,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp),
