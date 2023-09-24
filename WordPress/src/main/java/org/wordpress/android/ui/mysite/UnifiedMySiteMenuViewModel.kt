@@ -30,10 +30,6 @@ class UnifiedMySiteMenuViewModel @Inject constructor(
     private val siteItemsViewModelSlice: SiteItemsViewModelSlice,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
 ) : ScopedViewModel(bgDispatcher) {
-    // todo: This is a placeholder; I would like to pass along the siteNavigationAction as a channel
-//    private val _actionEvents = Channel<Event<SiteNavigationAction>>(Channel.BUFFERED)
-//    val actionEvents = _actionEvents.receiveAsFlow()
-
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val navigation = merge(_onNavigation, siteItemsViewModelSlice.onNavigation)
 
@@ -64,7 +60,6 @@ class UnifiedMySiteMenuViewModel @Inject constructor(
     private fun updateSiteItemsForJetpackCapabilities(site: SiteModel) {
         launch(bgDispatcher) {
             jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
-                Log.i(javaClass.simpleName, "***=> jp capabilities updated")
                 _uiState.value = UnifiedMenuViewState(
                     items = siteItemsBuilder.build(
                         siteItemsViewModelSlice.buildItems(
@@ -81,7 +76,6 @@ class UnifiedMySiteMenuViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        Log.i(javaClass.simpleName, "**=> onCleared()")
         jetpackCapabilitiesUseCase.clear()
         super.onCleared()
     }
