@@ -4,13 +4,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.databinding.ReaderRecommendedBlogItemBinding
 import org.wordpress.android.databinding.ReaderRecommendedBlogItemNewBinding
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
-import org.wordpress.android.ui.reader.discover.viewholders.ReaderRecommendedBlogViewHolder.ReaderRecommendedBlogBinding.ImprovementsDisabled
-import org.wordpress.android.ui.reader.discover.viewholders.ReaderRecommendedBlogViewHolder.ReaderRecommendedBlogBinding.ImprovementsEnabled
 import org.wordpress.android.ui.reader.views.ReaderFollowButton
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
@@ -24,23 +21,24 @@ class ReaderRecommendedBlogViewHolder(
     private val isReaderImprovementsEnabled: Boolean,
     private val binding: ReaderRecommendedBlogBinding = if(isReaderImprovementsEnabled) {
         with(parent.viewBinding(ReaderRecommendedBlogItemNewBinding::inflate)) {
-            ImprovementsEnabled(
+            ReaderRecommendedBlogBinding(
                 root = root,
                 siteName = siteName,
                 siteUrl = siteUrl,
                 siteDescription = siteDescription,
                 siteIcon = siteIcon,
+                siteFollowIcon = siteFollowIcon,
             )
         }
     } else {
         with(parent.viewBinding(ReaderRecommendedBlogItemBinding::inflate)) {
-            ImprovementsDisabled(
+            ReaderRecommendedBlogBinding(
                 root = root,
                 siteName = siteName,
                 siteUrl = siteUrl,
                 siteDescription = siteDescription,
-                siteFollowIcon = siteFollowIcon,
                 siteIcon = siteIcon,
+                siteFollowIcon = siteFollowIcon,
             )
         }
     },
@@ -58,18 +56,11 @@ class ReaderRecommendedBlogViewHolder(
         }
 
     private fun updateSiteFollowIcon(uiState: ReaderRecommendedBlogUiState, binding: ReaderRecommendedBlogBinding) {
-        if (binding is ImprovementsDisabled) {
-            with(binding.siteFollowIcon) {
-                if (!isReaderImprovementsEnabled) {
-                    isVisible = true
-                    setIsFollowed(uiState.isFollowed)
-                    contentDescription = context.getString(uiState.followContentDescription.stringRes)
-                    setOnClickListener {
-                        uiState.onFollowClicked(uiState)
-                    }
-                } else {
-                    isVisible = false
-                }
+        with(binding.siteFollowIcon) {
+            setIsFollowed(uiState.isFollowed)
+            contentDescription = context.getString(uiState.followContentDescription.stringRes)
+            setOnClickListener {
+                uiState.onFollowClicked(uiState)
             }
         }
     }
@@ -86,28 +77,12 @@ class ReaderRecommendedBlogViewHolder(
         }
     }
 
-    abstract class ReaderRecommendedBlogBinding {
-        abstract val root: View
-        abstract val siteName: TextView
-        abstract val siteUrl: TextView
-        abstract val siteDescription: TextView
-        abstract val siteIcon: ImageView
-
-        data class ImprovementsDisabled(
-            override val root: View,
-            override val siteName: TextView,
-            override val siteUrl: TextView,
-            override val siteDescription: TextView,
-            override val siteIcon: ImageView,
-            val siteFollowIcon: ReaderFollowButton
-        ) : ReaderRecommendedBlogBinding()
-
-        data class ImprovementsEnabled(
-            override val root: View,
-            override val siteName: TextView,
-            override val siteUrl: TextView,
-            override val siteDescription: TextView,
-            override val siteIcon: ImageView,
-        ) : ReaderRecommendedBlogBinding()
-    }
+    data class ReaderRecommendedBlogBinding(
+        val root: View,
+        val siteName: TextView,
+        val siteUrl: TextView,
+        val siteDescription: TextView,
+        val siteIcon: ImageView,
+        val siteFollowIcon: ReaderFollowButton,
+    )
 }
