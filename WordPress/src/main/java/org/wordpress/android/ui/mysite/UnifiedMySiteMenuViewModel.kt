@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
