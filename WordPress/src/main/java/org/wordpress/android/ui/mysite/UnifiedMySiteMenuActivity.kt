@@ -154,16 +154,15 @@ class UnifiedMySiteMenuActivity : ComponentActivity() {
         }
         Text(
             modifier = Modifier.padding(8.dp),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
             text = title)
     }
 
     @Composable
     fun MySiteListItemEmptyHeader() {
-        // todo: this is just a spacer - could just use a spacer
-        Text(
-            modifier = Modifier.padding(8.dp),
-            text = ""
-        )
+        Spacer(modifier = Modifier.height(4.dp))
     }
 
     @Composable
