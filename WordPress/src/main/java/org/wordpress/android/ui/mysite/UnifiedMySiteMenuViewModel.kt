@@ -23,7 +23,7 @@ data class UnifiedMenuViewState(
 )
 
 @HiltViewModel
-class UnifiedMenuViewModel @Inject constructor(
+class UnifiedMySiteMenuViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val siteItemsBuilder: SiteItemsBuilder,

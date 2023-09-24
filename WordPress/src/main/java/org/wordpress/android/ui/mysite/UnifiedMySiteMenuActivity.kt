@@ -51,7 +51,7 @@ import javax.inject.Inject
 class UnifiedMySiteMenuActivity : ComponentActivity() {
     @Inject
     lateinit var activityNavigator: ActivityNavigator
-    private val viewModel: UnifiedMenuViewModel by viewModels()
+    private val viewModel: UnifiedMySiteMenuViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
