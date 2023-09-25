@@ -146,6 +146,7 @@ android {
         buildConfigField "boolean", "JETPACK_SOCIAL", "false"
         buildConfigField "boolean", "JP_SOCIAL_MASTODON_CONNECT_VIA_WEB", "true"
         buildConfigField "boolean", "CONTACT_SUPPORT_CHATBOT", "false"
+        buildConfigField "boolean", "PLANS_IN_SITE_CREATION", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
