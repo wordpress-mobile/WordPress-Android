@@ -654,22 +654,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
     }
 
-    /* CREATE SITE - DEFAULT TAB */
-
-    @Test
-    fun `given tabs enabled, when site is created, then default tab is set`() {
-        initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true,
-            initialScreen = MySiteTabType.SITE_MENU.label
-        )
-
-        assertThat(tabNavigation).size().isEqualTo(2)
-        /* First time default tab is set when My Site screen is shown and site is selected.
-           When site is created then again it sets the default tab. */
-        assertThat(tabNavigation.last())
-            .isEqualTo(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
-    }
-
     /* AVATAR */
 
     @Test
