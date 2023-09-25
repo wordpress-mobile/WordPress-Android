@@ -633,7 +633,7 @@ Language: ko_KR
     <string name="gutenberg_native_tiled_gallery_settings">바둑판식 갤러리 설정</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">레이아웃 선택 화면으로 이동</string>
     <string name="gutenberg_native_gallery_style">갤러리 스타일</string>
-    <string name="sharing_facebook_warning_positive_button">웹으로 이동</string>
+    <string name="sharing_connect_via_web_warning_positive_button">웹으로 이동</string>
     <string name="sharing_facebook_warning_message">워드프레스닷컴 웹사이트에서 페이스북 계정을 연결할 수 있습니다. 완료하면 워드프레스 앱으로 돌아가서 공유 설정을 변경하세요.</string>
     <string name="about_automattic_app_icon_description">앱 아이콘</string>
     <string name="about_automattic_back_icon_description">뒤로 아이콘</string>

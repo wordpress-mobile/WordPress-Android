@@ -630,7 +630,7 @@ Language: lv
     <string name="gutenberg_native_tiled_gallery_settings">Flīžu galerijas iestatījumi</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Pāriet uz izkārtojuma atlases ekrānu</string>
     <string name="gutenberg_native_gallery_style">Galerijas stils</string>
-    <string name="sharing_facebook_warning_positive_button">Iet uz tīmekļa vietni</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Iet uz tīmekļa vietni</string>
     <string name="sharing_facebook_warning_message">Savu Facebook kontu varat pievienot WordPress.com vietnē. Kad esat pabeidzis, atgriezieties WordPress lietotnē, lai mainītu koplietošanas iestatījumus.</string>
     <string name="about_automattic_app_icon_description">Lietotnes ikona</string>
     <string name="about_automattic_back_icon_description">Atgriešanās ikona</string>
