@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-06-13 08:27:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: el_GR
 -->
 <resources>
@@ -45,7 +45,6 @@ Language: el_GR
     <string name="button_copy">Διπλότυπο</string>
     <string name="toast_edit_story_update_in_progress_title">Η ιστορία αποθηκευεται, παρακαλούμε περιμένετε…</string>
     <string name="gutenberg_native_file_name">Όνομα αρχείου</string>
-    <string name="gutenberg_native_choose_a_file">ΕΠΙΛΕΞΤΕ ΕΝΑ ΑΡΧΕΙΟ</string>
     <string name="activity_log_activity_type_filter_apply">Εκτέλεση</string>
     <string name="activity_log_activity_type_filter_clear">Καθαρισμός</string>
     <string name="label_done_button">Ολοκληρώθηκε</string>

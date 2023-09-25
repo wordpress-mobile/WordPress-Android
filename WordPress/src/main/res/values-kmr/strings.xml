@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-11-12 12:10:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: ku_TR
 -->
 <resources>
@@ -596,10 +596,7 @@ Language: ku_TR
     <string name="gutenberg_native_alt_text">Nivîsa alternatîv</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Çewtiyeke nenas qewimî. Jkx dîsa hewl bide.</string>
     <string name="gutenberg_native_add_block_here">BLOKÊ TEVLÎ VIR BIKE</string>
-    <string name="gutenberg_native_add_video">VÎDYO TEVLÎ BIKE</string>
     <string name="gutenberg_native_add_url">URL tevlî bike</string>
-    <string name="gutenberg_native_add_image_or_video">WÊNE AN VÎDYO TEVLÎ BIKE</string>
-    <string name="gutenberg_native_add_image">WÊNE TEVLÎ BIKE</string>
     <string name="reader_acessibility_list_loaded">\"%1$d hêman li lîsteyê hatin barkirin.\"</string>
     <string name="reader_empty_saved_posts_content_description">Ji bo tu şandiyekê li lîsteya xwe qeyd bikî, ji bo tomarkirina şandiyan li \"Tevlî bike\"yê bitikîne.</string>
     <string name="notifications_tab_dialog_switch_desc">Danezan</string>
@@ -869,10 +866,7 @@ Language: ku_TR
     <string name="quick_start_dialog_upload_site_icon_message_short">Ji bo yeka din lê hilxînî, li %1$sÎkona Malpera Te%2$s\'yê bitepîne</string>
     <string name="quick_start_dialog_enable_sharing_title">Parvekirina şandiyê biçalakîne</string>
     <string name="quick_start_dialog_enable_sharing_message">Şandiyên nû di hesabên xwe yên medyaya civakî de bixweber parve bike.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Gavên Pêş Rake</string>
-    <string name="quick_start_remove_next_steps_menu_title">Vêya rake</string>
     <string name="quick_start_dialog_check_stats_title">Amarên malpera xwe kontrol bike</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Rakirina Gavên Pêşve ew ê hemû gerên vê malperê veşêre. Ev çalakî nayê vegerandin.</string>
     <string name="quick_start_task_skip_menu_title">Peywirê derbas bike</string>
     <string name="notification_channel_reminder_title">Bîranîner</string>
     <string name="stats_select_previous_period_description">Heyama paşî hilbijêre</string>
@@ -1456,7 +1450,6 @@ Language: ku_TR
     <string name="jetpack_site_settings_category_title">Sazkariyên Jetpack\'ê</string>
     <string name="share_intent_pick_site">Malperê hilbijêre</string>
     <string name="share_action_post">Tevlî şandiya nû bike</string>
-    <string name="share_media_permission_required">Ji bo parvekirina wêne an jî vîdyoyan destûrên hewce.</string>
     <string name="invalid_ip_or_range">IP an jî navbera IPyê nederbasdar e</string>
     <string name="deleting_media_dlg">Tê jêbirin</string>
     <string name="confirm_delete_media_video">Bila ev vîdyo jê biçe?</string>

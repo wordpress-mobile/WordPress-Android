@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-09-05 06:06:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: es
 -->
 <resources>
@@ -31,7 +31,6 @@ Language: es
     <string name="campaign_detail_error_title">Algo ha salido mal</string>
     <string name="campaign_listing_page_error_title">Algo ha salido mal</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Algo ha salido mal, no se han podido recoger las campañas</string>
-    <string name="domain_transfer_card_menu_hide_this">Ocultar esto</string>
     <string name="domain_transfer_card_cta">Transfiere tus dominios</string>
     <string name="domain_transfer_card_caption">Como probablemente sabes, Google Domains ha sido transferido a Squarespace. Transfiere tus dominios a WordPress.com y nosotros pagaremos todas las tasas de transferencia además de un año extra en el registro de tu domino.</string>
     <string name="domain_transfer_card_sub_title">Reclama tus dominios de Google</string>
@@ -95,7 +94,6 @@ Language: es
     <string name="dashboard_card_plans_checkout_success_info">El dominio puede tardar hasta 30 minutos en empezar a funcionar correctamente.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Tu nuevo dominio &lt;b&gt;%s&lt;/b&gt; se está configurando.</string>
     <string name="dashboard_card_plans_checkout_success_title">¡Todo listo!</string>
-    <string name="dashboard_card_plans_menu_hide_this">Ocultar esto</string>
     <string name="dashboard_card_plans_sub_title">Obtén un dominio gratuito durante el primer año, elimina los anuncios de tu sitio y aumenta tu espacio de almacenamiento.</string>
     <string name="dashboard_card_plans_title">Consigue un dominio gratis con un plan anual</string>
     <string name="virtual_homepage_learn_more">Obtén más información sobre las plantillas</string>
@@ -122,9 +120,7 @@ Language: es
     <string name="wp_jp_static_poster_title_plural">Usa WordPress con %s en la\u00A0aplicación de Jetpack.</string>
     <string name="wp_jp_static_poster_title">Usa WordPress con %s en la\u00A0aplicación de Jetpack.</string>
     <string name="gutenberg_native_unlabeled_color_s">Color sin etiquetar. %s</string>
-    <string name="dashboard_activity_card_footer_link">Ver toda la actividad</string>
     <string name="dashboard_activity_card_title">Actividad reciente</string>
-    <string name="dashboard_card_domain_title">Encuentra un dominio personalizado</string>
     <string name="site_creation_search_domain_example_body">Como en el ejemplo superior, un dominio le permite a la gente encontrar y visitar tu sitio desde su navegador.</string>
     <string name="site_creation_search_domain_example_title">Elnombredetuweb.com</string>
     <string name="site_creation_domain_search_input_hint">Buscar con palabras clave</string>
@@ -149,8 +145,6 @@ Language: es
     <string name="dashboard_pages_card_create_another_page_description">Comience con diseños personalizados y preparados para dispositivos móviles</string>
     <string name="dashboard_pages_card_create_another_page_button">Crear otra página</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Añadir páginas a tu sitio</string>
-    <string name="dashboard_card_domain_menu_hide_this">Ocultar esto</string>
-    <string name="dashboard_card_domain_sub_title">Hazte con tu rincón en Internet con una dirección web fácil de encontrar, de compartir y de seguir.</string>
     <string name="blogging_reminders_notifications_permission_caption">Para usar recordatorios para publicar tienes que activar los avisos instantáneos.</string>
     <string name="blogging_reminders_notifications_permission_title">Activar los avisos instantáneos</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Continuar con subdominio</string>
@@ -215,7 +209,6 @@ Language: es
     <string name="free">Gratis</string>
     <string name="help_buttons_screen_title">Ayuda</string>
     <string name="gutenberg_native_blocks_menu">Menú de bloques</string>
-    <string name="promote_blaze_card_menu_hide_this">Ocultar esto</string>
     <string name="promote_blaze_card_sub_title">Muestra tu trabajo en millones de sitios</string>
     <string name="promote_blaze_card_title">Promociona tu contenido con Blaze</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Cerrar</string>
@@ -284,7 +277,6 @@ Language: es
     <string name="weeks_quantity_other">%d semanas</string>
     <string name="weeks_quantity_one">1 semana</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Desde el &lt;b&gt;DayOne&lt;/b&gt;</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Ocultar esto</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Recuérdamelo más tarde</string>
     <string name="jetpack_feature_card_content_phase_three">Algunas funciones, como estadísticas, lector o avisos, se trasladarán pronto a la aplicación móvil de Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Cambiar a la aplicación de Jetpack</string>
@@ -622,7 +614,6 @@ Language: es
     <string name="my_site_menu_tab_title">Menú</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Tu búsqueda incluye caracteres no compatibles en los dominios de WordPress.com. Se permiten los siguientes caracteres: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Comprueba tu conexión a Internet y actualiza la página.</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Ir a las estadísticas</string>
     <string name="my_site_todays_stat_card_title">Estadísticas de hoy</string>
     <string name="error_edit_notification">Ha ocurrido un error al actualizar el contenido del aviso</string>
     <string name="reader_comment_menu_edit">Editar</string>
@@ -633,7 +624,7 @@ Language: es
     <string name="gutenberg_native_tiled_gallery_settings">Ajustes de la galería de mosaico</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navega a la pantalla de selección del diseño</string>
     <string name="gutenberg_native_gallery_style">Estilo de la galería</string>
-    <string name="sharing_connect_via_web_warning_positive_button">Ir a la web</string>
+    <string name="sharing_facebook_warning_positive_button">Ir a la web</string>
     <string name="sharing_facebook_warning_message">Puedes conectar tu cuenta de Facebook en la web de WordPress.com. Cuando lo hayas hecho, vuelve a la aplicación de WordPress para cambiar tus ajustes para compartir.</string>
     <string name="about_automattic_app_icon_description">Icono de la aplicación</string>
     <string name="about_automattic_back_icon_description">Icono de volver</string>
@@ -693,8 +684,6 @@ Language: es
     <string name="gutenberg_native_featured_image">Imagen destacada</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Copiar la URL desde el portapapeles, %s</string>
     <string name="me_btn_about">Acerca de WordPress</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Ir a las entradas programadas</string>
-    <string name="my_site_post_card_link_go_to_drafts">Ir a los borradores</string>
     <string name="my_site_post_card_link_create_post">Crear una entrada</string>
     <string name="my_site_create_next_post_excerpt">¡Publicar regularmente ayuda a crear tu audiencia!</string>
     <string name="my_site_create_next_post_title">Crear tu próxima entrada</string>
@@ -1060,7 +1049,6 @@ Language: es
     <string name="gutenberg_native_audio_file">archivo de audio</string>
     <string name="gutenberg_native_audio_caption_s">Leyenda del audio. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Leyenda del audio. Vacía</string>
-    <string name="gutenberg_native_add_audio">AÑADIR AUDIO</string>
     <string name="continue_with_wpcom">Accede o regístrate con WordPress.com</string>
     <string name="photo_picker_use_audio">Usasr este audio</string>
     <string name="photo_picker_choose_audio">Elige un audio del dispositivo</string>
@@ -1261,9 +1249,7 @@ Language: es
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Fallo al guardar los medios.\nPor favor, toca para ver las opciones.</string>
     <string name="gutenberg_native_edit_file">Editar el archivo</string>
     <string name="gutenberg_native_copy_file_url">Copiar la URL del archivo </string>
-    <string name="gutenberg_native_choose_a_file">ELEGIR UN ARCHIVO</string>
     <string name="new_site_creation_domain_header_title">Elige un dominio</string>
-    <string name="my_site_btn_jetpack_settings">Ajustes de Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Siguiendo la conversación por correo electrónico</string>
     <string name="reader_btn_follow_comments">Seguir la conversación por correo electrónico</string>
@@ -1826,11 +1812,8 @@ Language: es
     <string name="gutenberg_native_choose_from_device">Elegir desde el dispositivo</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ha ocurrido un error desconocido. Por favor, inténtalo de nuevo.</string>
     <string name="gutenberg_native_alt_text">Texto alternativo</string>
-    <string name="gutenberg_native_add_video">AÑADIR UN VÍDEO</string>
     <string name="gutenberg_native_add_url">Añadir la URL</string>
     <string name="gutenberg_native_add_alt_text">Añadir el texto alternativo</string>
-    <string name="gutenberg_native_add_image_or_video">AÑADIR UNA IMAGEN O UN VÍDEO</string>
-    <string name="gutenberg_native_add_image">AÑADIR UNA IMAGEN</string>
     <string name="gutenberg_native_add_block_here">AÑADIR EL BLOQUE AQUÍ</string>
     <string name="gutenberg_native_add_description">Añadir descripción</string>
     <string name="reader_empty_saved_posts_content_description">Toca el botón «Añadir a las entradas guardadas» para guardar una entrada en tu lista.</string>
@@ -2121,9 +2104,6 @@ Language: es
     <string name="quick_start_dialog_enable_sharing_message">Comparte automáticamente las nuevas entradas en tus cuentas de medios sociales.</string>
     <string name="quick_start_dialog_check_stats_title">Revisa las estadísticas de tu sitio</string>
     <string name="quick_start_dialog_check_stats_message">Mantente al día sobre el rendimiento de tu sitio.</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Eliminar los siguientes pasos ocultará todas las visitas guiadas de este sitio. Esta acción es irreversible.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Quitar los siguientes pasos</string>
-    <string name="quick_start_remove_next_steps_menu_title">Quitar esto</string>
     <string name="quick_start_task_skip_menu_title">Saltar tarea</string>
     <string name="notification_channel_reminder_title">Recordatorio</string>
     <string name="stats_select_next_period_description">Elige el siguiente periodo</string>
@@ -2723,7 +2703,6 @@ Language: es
     <string name="share_intent_pick_site">Elige el sitio</string>
     <string name="share_action_media">Añadir a la biblioteca de medios</string>
     <string name="share_action_post">Añadir a una nueva entrada</string>
-    <string name="share_media_permission_required">Se requieren permisos para compartir imágenes o vídeos</string>
     <string name="invalid_ip_or_range">IP o rango de IP no válido</string>
     <string name="deleting_media_dlg">Eliminando</string>
     <string name="confirm_delete_media_video">¿Borrar este vídeo?</string>
