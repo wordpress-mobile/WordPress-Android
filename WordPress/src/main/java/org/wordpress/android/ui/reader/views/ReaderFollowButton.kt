@@ -12,7 +12,6 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
-import org.wordpress.android.ui.reader.views.ReaderFollowButtonType.FOLLOW_SITE
 import android.R as AndroidR
 
 /**
@@ -25,7 +24,6 @@ class ReaderFollowButton @JvmOverloads constructor(
 ) : MaterialButton(context, attrs, defStyleAttr) {
     private var isFollowed = false
     private var showCaption = false
-    private var followButtonType = FOLLOW_SITE
 
     init {
         initView(context, attrs)
@@ -37,15 +35,6 @@ class ReaderFollowButton @JvmOverloads constructor(
         attrs?.let {
             val array = context.theme.obtainStyledAttributes(attrs, R.styleable.ReaderFollowButton, 0, 0)
             showCaption = array.getBoolean(R.styleable.ReaderFollowButton_wpShowFollowButtonCaption, true)
-
-            try {
-                val buttonTypeValue = array.getInteger(R.styleable.ReaderFollowButton_wpReaderFollowButtonType, -1)
-                if (buttonTypeValue != -1) {
-                    followButtonType = ReaderFollowButtonType.fromInt(buttonTypeValue)
-                }
-            } finally {
-                array.recycle()
-            }
         }
         if (!showCaption) {
             text = null
@@ -56,7 +45,7 @@ class ReaderFollowButton @JvmOverloads constructor(
 
     private fun updateFollowText() {
         if (showCaption) {
-            setText(if (isFollowed) followButtonType.captionFollowing else followButtonType.captionFollow)
+            setText(if (isFollowed) R.string.reader_btn_unfollow else R.string.reader_btn_follow)
         }
         isSelected = isFollowed
     }
