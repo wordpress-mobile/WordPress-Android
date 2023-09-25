@@ -1,8 +1,7 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.menu
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.activity.ComponentActivity
@@ -47,15 +46,17 @@ import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class UnifiedMySiteMenuActivity : ComponentActivity() {
+class MenuActivity : ComponentActivity() {
     @Inject
     lateinit var activityNavigator: ActivityNavigator
-    private val viewModel: UnifiedMySiteMenuViewModel by viewModels()
+    private val viewModel: MenuViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +76,6 @@ class UnifiedMySiteMenuActivity : ComponentActivity() {
 
     @Suppress("ComplexMethod", "LongMethod")
     private fun handleNavigationAction(action: SiteNavigationAction?) {
-        Log.i(javaClass.simpleName, "***=> handleNavigationAction")
         when (action) {
             is SiteNavigationAction.OpenActivityLog -> ActivityLauncher.viewActivityLogList(this, action.site)
             is SiteNavigationAction.OpenBackup -> ActivityLauncher.viewBackupList(this, action.site)
@@ -125,7 +125,7 @@ class UnifiedMySiteMenuActivity : ComponentActivity() {
     }
 
     @Composable
-    fun UnifiedMenuContent(uiState: UnifiedMenuViewState) {
+    fun UnifiedMenuContent(uiState: MenuViewState) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -264,8 +264,8 @@ class UnifiedMySiteMenuActivity : ComponentActivity() {
         val onClick = remember { {} }
         MySiteListItem(
             MySiteCardAndItem.Item.ListItem(
-            primaryIcon = R.drawable.ic_posts_white_24dp,
-            primaryText = UiString.UiStringText("Blog Posts"),
+                primaryIcon = R.drawable.ic_posts_white_24dp,
+                primaryText = UiString.UiStringText("Blog Posts"),
                 secondaryIcon = null,
                 secondaryText = null,
                 showFocusPoint = false,
