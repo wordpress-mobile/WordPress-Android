@@ -4731,4 +4731,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="my_site_dashboard_no_cards_message_title">All cards are hidden</string>
     <string name="my_site_dashboard_no_cards_message_description">Tap the personalise button to show more cards.</string>
 
+    <string name="pages_no_site_something_went_wrong">Uh oh, something went wrong. Please try again later.</string>
+
 </resources>
