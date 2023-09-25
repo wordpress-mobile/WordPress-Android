@@ -182,7 +182,8 @@ class UnifiedMySiteMenuActivity : ComponentActivity() {
                 modifier = Modifier
                     .size(24.dp)
                     .padding(end = 8.dp),
-                colorFilter = if (item.disablePrimaryIconTint) null else ColorFilter.tint(MaterialTheme.colors.onSurface)
+                colorFilter =
+                    if (item.disablePrimaryIconTint) null else ColorFilter.tint(MaterialTheme.colors.onSurface)
             )
 
             Text(
