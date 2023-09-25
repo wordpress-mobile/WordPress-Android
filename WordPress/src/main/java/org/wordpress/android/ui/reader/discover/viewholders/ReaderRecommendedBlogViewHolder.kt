@@ -27,7 +27,7 @@ class ReaderRecommendedBlogViewHolder(
                 siteUrl = siteUrl,
                 siteDescription = siteDescription,
                 siteIcon = siteIcon,
-                siteFollowIcon = siteFollowIcon,
+                siteFollowButton = siteFollowIcon,
             )
         }
     } else {
@@ -38,7 +38,7 @@ class ReaderRecommendedBlogViewHolder(
                 siteUrl = siteUrl,
                 siteDescription = siteDescription,
                 siteIcon = siteIcon,
-                siteFollowIcon = siteFollowIcon,
+                siteFollowButton = siteFollowIcon,
             )
         }
     },
@@ -56,7 +56,7 @@ class ReaderRecommendedBlogViewHolder(
         }
 
     private fun updateSiteFollowIcon(uiState: ReaderRecommendedBlogUiState, binding: ReaderRecommendedBlogBinding) {
-        with(binding.siteFollowIcon) {
+        with(binding.siteFollowButton) {
             setIsFollowed(uiState.isFollowed)
             contentDescription = context.getString(uiState.followContentDescription.stringRes)
             setOnClickListener {
@@ -83,6 +83,6 @@ class ReaderRecommendedBlogViewHolder(
         val siteUrl: TextView,
         val siteDescription: TextView,
         val siteIcon: ImageView,
-        val siteFollowIcon: ReaderFollowButton,
+        val siteFollowButton: ReaderFollowButton,
     )
 }
