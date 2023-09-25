@@ -14,7 +14,7 @@
         app:layout_constraintBottom_toTopOf="@+id/follow_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_extra_large"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="123 posts • 1.2m followers" />
 
