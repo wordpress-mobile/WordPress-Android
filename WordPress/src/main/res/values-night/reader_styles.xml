@@ -8,5 +8,6 @@
         <item name="android:paddingEnd">@dimen/margin_extra_medium_large</item>
         <item name="android:paddingTop">@dimen/margin_medium</item>
         <item name="android:paddingBottom">@dimen/margin_medium</item>
+        <item name="android:minHeight">@dimen/reader_follow_button_min_height</item>
     </style>
 </resources>
