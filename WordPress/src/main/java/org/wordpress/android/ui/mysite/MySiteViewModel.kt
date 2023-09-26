@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
@@ -66,7 +67,6 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPrompt
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
-import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
@@ -88,7 +88,6 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
@@ -103,7 +102,6 @@ import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.utils.ListItemInteraction
-import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
@@ -187,18 +185,6 @@ class MySiteViewModel @Inject constructor(
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
     private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
     private val _onShowJetpackIndividualPluginOverlay = SingleLiveEvent<Event<Unit>>()
-
-    private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartTabStep
-        .switchMap { quickStartSiteMenuStep ->
-            val result = MutableLiveData<TabsUiState>()
-            /* We want to filter out tabs state livedata update when state is not set in uiModel.
-               Without this check, tabs state livedata merge with state livedata may return a null state
-               when building UiModel. */
-            uiModel.value?.state?.tabsUiState?.let {
-                result.value = it.copy(tabUiStates = it.update(quickStartSiteMenuStep))
-            }
-            result
-        }
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
@@ -312,12 +298,11 @@ class MySiteViewModel @Inject constructor(
             result.filter { it.siteId == null || it.state.site != null }.mapSafe { it.state }
         }
 
-    val uiModel: LiveData<UiModel> = merge(tabsUiState, state) { tabsUiState, mySiteUiState ->
-        with(requireNotNull(mySiteUiState)) {
+    val uiModel: LiveData<UiModel> = state.map {
+        with(it) {
             val state = if (site != null) {
                 cardsUpdate?.checkAndShowSnackbarError()
                 val state = buildSiteSelectedStateAndScroll(
-                    tabsUiState,
                     site,
                     showSiteIconProgressBar,
                     activeTask,
@@ -367,7 +352,6 @@ class MySiteViewModel @Inject constructor(
 
     @Suppress("LongParameterList")
     private fun buildSiteSelectedStateAndScroll(
-        tabsUiState: TabsUiState?,
         site: SiteModel,
         showSiteIconProgressBar: Boolean,
         activeTask: QuickStartTask?,
@@ -407,11 +391,6 @@ class MySiteViewModel @Inject constructor(
         }
         // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
-            tabsUiState = tabsUiState?.copy(
-                showTabs = isMySiteTabsEnabled,
-                tabUiStates = orderedTabTypes.mapToTabUiStates(),
-                shouldUpdateViewPager = shouldUpdateViewPager()
-            ) ?: createTabsUiState(),
             siteInfoToolbarViewParams = getSiteInfoToolbarViewParams(),
             siteInfoHeaderState = SiteInfoHeaderState(
                 hasUpdates = hasSiteHeaderUpdates(siteInfo),
@@ -690,7 +669,6 @@ class MySiteViewModel @Inject constructor(
         val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
                 displayUtilsWrapper.getWindowPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
         return NoSites(
-            tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
             siteInfoToolbarViewParams = SiteInfoToolbarViewParams(
                 appBarHeight = R.dimen.app_bar_with_no_site_info_height,
                 toolbarBottomMargin = R.dimen.toolbar_bottom_margin_with_no_tabs,
@@ -763,16 +741,7 @@ class MySiteViewModel @Inject constructor(
 
     fun onTabChanged(position: Int) {
         quickStartRepository.currentTab = orderedTabTypes[position]
-        findUiStateForTab(orderedTabTypes[position])?.pendingTask?.let { requestTabStepPendingTask(it) }
         trackTabChanged(position == orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
-    }
-
-    private fun requestTabStepPendingTask(pendingTask: QuickStartTask) {
-        quickStartRepository.clearTabStep()
-        launch {
-            delay(LIST_SCROLL_DELAY_MS)
-            quickStartRepository.setActiveTask(pendingTask)
-        }
     }
 
     private fun onQuickStartMoreMenuClick(quickStartCardType: QuickStartCardType) =
@@ -1129,10 +1098,6 @@ class MySiteViewModel @Inject constructor(
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
 
-    fun onActionableEmptyViewGone() {
-        analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_HIDDEN)
-    }
-
     fun onActionableEmptyViewVisible() {
         analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
         checkJetpackIndividualPluginOverlayShouldShow()
@@ -1239,25 +1204,6 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun findUiStateForTab(tabType: MySiteTabType) =
-        tabsUiState.value?.tabUiStates?.firstOrNull { it.tabType == tabType }
-
-    private fun createTabsUiState() = TabsUiState(
-        showTabs = isMySiteTabsEnabled,
-        tabUiStates = orderedTabTypes.mapToTabUiStates(),
-        shouldUpdateViewPager = shouldUpdateViewPager()
-    )
-
-    private fun List<MySiteTabType>.mapToTabUiStates() = map {
-        TabUiState(
-            label = UiStringRes(it.stringResId),
-            tabType = it,
-            showQuickStartFocusPoint = findUiStateForTab(it)?.showQuickStartFocusPoint ?: false
-        )
-    }
-
-    private fun shouldUpdateViewPager() = uiModel.value?.state?.tabsUiState?.tabUiStates?.size != orderedTabTypes.size
-
     private fun hasSiteHeaderUpdates(nextSiteInfoHeaderCard: SiteInfoHeaderCard): Boolean {
         return !((uiModel.value?.state as? SiteSelected)?.siteInfoHeaderState?.siteInfoHeader?.equals(
             nextSiteInfoHeaderCard
@@ -1282,11 +1228,9 @@ class MySiteViewModel @Inject constructor(
     )
 
     sealed class State {
-        abstract val tabsUiState: TabsUiState
         abstract val siteInfoToolbarViewParams: SiteInfoToolbarViewParams
 
         data class SiteSelected(
-            override val tabsUiState: TabsUiState,
             override val siteInfoToolbarViewParams: SiteInfoToolbarViewParams,
             val siteInfoHeaderState: SiteInfoHeaderState,
             val cardAndItems: List<MySiteCardAndItem>,
@@ -1295,7 +1239,6 @@ class MySiteViewModel @Inject constructor(
         ) : State()
 
         data class NoSites(
-            override val tabsUiState: TabsUiState,
             override val siteInfoToolbarViewParams: SiteInfoToolbarViewParams,
             val shouldShowImage: Boolean
         ) : State()
@@ -1305,27 +1248,6 @@ class MySiteViewModel @Inject constructor(
         val hasUpdates: Boolean,
         val siteInfoHeader: SiteInfoHeaderCard
     )
-
-    data class TabsUiState(
-        val showTabs: Boolean = false,
-        val tabUiStates: List<TabUiState>,
-        val shouldUpdateViewPager: Boolean = false
-    ) {
-        data class TabUiState(
-            val label: UiString,
-            val tabType: MySiteTabType,
-            val showQuickStartFocusPoint: Boolean = false,
-            val pendingTask: QuickStartTask? = null
-        )
-
-        fun update(quickStartTabStep: QuickStartTabStep?) = tabUiStates.map { tabUiState ->
-            tabUiState.copy(
-                showQuickStartFocusPoint = quickStartTabStep?.mySiteTabType == tabUiState.tabType &&
-                        quickStartTabStep.isStarted,
-                pendingTask = quickStartTabStep?.task
-            )
-        }
-    }
 
     data class SiteInfoToolbarViewParams(
         @DimenRes val appBarHeight: Int,
@@ -1368,7 +1290,6 @@ class MySiteViewModel @Inject constructor(
         const val SITE_NAME_CHANGE_CALLBACK_ID = 1
         const val ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK"
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
-        const val LIST_SCROLL_DELAY_MS = 500L
         const val MY_SITE_TAB = "tab"
         const val TAB_SOURCE = "tab_source"
         private const val DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY = 500L
