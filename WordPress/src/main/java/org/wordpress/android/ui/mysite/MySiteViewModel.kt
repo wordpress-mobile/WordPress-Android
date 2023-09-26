@@ -391,7 +391,6 @@ class MySiteViewModel @Inject constructor(
         }
         // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
-            siteInfoToolbarViewParams = getSiteInfoToolbarViewParams(),
             siteInfoHeaderState = SiteInfoHeaderState(
                 hasUpdates = hasSiteHeaderUpdates(siteInfo),
                 siteInfoHeader = siteInfo
@@ -401,9 +400,6 @@ class MySiteViewModel @Inject constructor(
             dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
         )
     }
-
-    private fun getSiteInfoToolbarViewParams() =
-        SiteInfoToolbarViewParams(R.dimen.app_bar_with_site_info_height, R.dimen.toolbar_bottom_margin_with_no_tabs)
 
     private fun getPositionOfQuickStartItem(
         siteItems: Map<MySiteTabType, List<MySiteCardAndItem>>,
@@ -669,13 +665,6 @@ class MySiteViewModel @Inject constructor(
         val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
                 displayUtilsWrapper.getWindowPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
         return NoSites(
-            siteInfoToolbarViewParams = SiteInfoToolbarViewParams(
-                appBarHeight = R.dimen.app_bar_with_no_site_info_height,
-                toolbarBottomMargin = R.dimen.toolbar_bottom_margin_with_no_tabs,
-                headerVisible = false,
-                appBarLiftOnScroll = true
-
-            ),
             shouldShowImage = shouldShowImage
         )
     }
@@ -1228,10 +1217,7 @@ class MySiteViewModel @Inject constructor(
     )
 
     sealed class State {
-        abstract val siteInfoToolbarViewParams: SiteInfoToolbarViewParams
-
         data class SiteSelected(
-            override val siteInfoToolbarViewParams: SiteInfoToolbarViewParams,
             val siteInfoHeaderState: SiteInfoHeaderState,
             val cardAndItems: List<MySiteCardAndItem>,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
@@ -1239,7 +1225,6 @@ class MySiteViewModel @Inject constructor(
         ) : State()
 
         data class NoSites(
-            override val siteInfoToolbarViewParams: SiteInfoToolbarViewParams,
             val shouldShowImage: Boolean
         ) : State()
     }
@@ -1247,13 +1232,6 @@ class MySiteViewModel @Inject constructor(
     data class SiteInfoHeaderState(
         val hasUpdates: Boolean,
         val siteInfoHeader: SiteInfoHeaderCard
-    )
-
-    data class SiteInfoToolbarViewParams(
-        @DimenRes val appBarHeight: Int,
-        @DimenRes val toolbarBottomMargin: Int,
-        val headerVisible: Boolean = true,
-        val appBarLiftOnScroll: Boolean = false
     )
 
     data class TabNavigation(val position: Int, val smoothAnimation: Boolean)
