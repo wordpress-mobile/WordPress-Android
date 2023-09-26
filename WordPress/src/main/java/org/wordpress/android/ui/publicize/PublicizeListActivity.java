@@ -37,7 +37,6 @@ import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.config.JPSocialMastodonConnectViaWebFeatureConfig;
 import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
@@ -55,15 +54,11 @@ public class PublicizeListActivity extends LocaleAwareActivity
         PublicizeServiceAdapter.OnServiceClickListener,
         PublicizeListFragment.PublicizeButtonPrefsListener, ScrollableViewInitializedListener {
     private static final String WPCOM_CONNECTIONS_URL = "https://wordpress.com/marketing/connections/";
-
+    @Inject SiteStore mSiteStore;
+    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     private SiteModel mSite;
     private ProgressDialog mProgressDialog;
     private AppBarLayout mAppBarLayout;
-
-    @Inject SiteStore mSiteStore;
-    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
-
-    @Inject JPSocialMastodonConnectViaWebFeatureConfig mJPSocialMastodonConnectViaWebFeatureConfig;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -273,17 +268,11 @@ public class PublicizeListActivity extends LocaleAwareActivity
     /*
      * As of Oct 5, 2021 Facebook has deprecated support for authentication on embedded browsers, so Publicize
      * connections can't be established through web views anymore (ref: pbArwn-3uU-p2).
-     *
-     * Mastodon was introduced in mid-2023, but it requires an "instance" parameter to work properly. At this moment we
-     * are not asking the user for that parameter on the mobile client side, so we can't establish the connection here.
-     * ref: pcdRpT-3QQ-p2#comment-6373
      */
     private boolean shouldConnectViaWeb(PublicizeService service) {
         String serviceId = service.getId();
         boolean showForFacebook = serviceId.equals(PublicizeConstants.FACEBOOK_ID);
-        boolean showForMastodon = serviceId.equals(PublicizeConstants.MASTODON_ID)
-                             && mJPSocialMastodonConnectViaWebFeatureConfig.isEnabled();
-        return showForFacebook || showForMastodon;
+        return showForFacebook;
     }
 
     private String getConnectionsUrl(SiteModel site) {
