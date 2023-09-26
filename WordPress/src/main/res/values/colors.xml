@@ -98,8 +98,9 @@
     <color name="reader_topics_you_might_like_chip_orange_font">@color/orange_50</color>
     <color name="reader_topics_you_might_like_chip_orange_fill">@color/orange_0</color>
 
-    <!-- Reader follow button -->
-    <color name="reader_follow_button_following_state_color">#F4F4F4</color>
+    <!-- Reader Improvements -->
+    <color name="reader_improvements_follow_button_following_state">#F4F4F4</color>
+    <color name="reader_improvements_recommended_section_title">#3C3C43</color>
 
     <!-- These colors were removed from the login library and moved here as they are still being
     used by some old layouts. They should be replaced here as well, whenever possible. -->

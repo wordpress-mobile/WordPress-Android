@@ -5,7 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:padding="@dimen/margin_medium">
+    android:paddingBottom="@dimen/margin_medium_large"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_medium_large">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/site_icon"
