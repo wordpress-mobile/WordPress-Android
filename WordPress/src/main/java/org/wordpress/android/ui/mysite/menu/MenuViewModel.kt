@@ -48,7 +48,7 @@ class MenuViewModel @Inject constructor(
         _uiState.value = MenuViewState(
             items = siteItemsBuilder.build(
                 siteItemsViewModelSlice.buildItems(
-                    defaultTab = MySiteTabType.SITE_MENU,
+                    shouldEnableFocusPoints = true,
                     site = site,
                     activeTask = null,
                     backupAvailable = false,
@@ -65,7 +65,7 @@ class MenuViewModel @Inject constructor(
                 _uiState.value = MenuViewState(
                     items = siteItemsBuilder.build(
                         siteItemsViewModelSlice.buildItems(
-                            defaultTab = MySiteTabType.SITE_MENU,
+                            shouldEnableFocusPoints = true,
                             site = site,
                             activeTask = null,
                             backupAvailable = it.backup,

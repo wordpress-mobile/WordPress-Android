@@ -68,17 +68,17 @@ class QuickLinkRibbonBuilder @Inject constructor(
     }
 
     private fun shouldShowPagesFocusPoint(params: QuickLinkRibbonBuilderParams): Boolean {
-        return params.enableFocusPoints && params.activeTask == QuickStartNewSiteTask.REVIEW_PAGES
+        return params.activeTask == QuickStartNewSiteTask.REVIEW_PAGES
     }
 
     private fun shouldShowStatsFocusPoint(params: QuickLinkRibbonBuilderParams): Boolean {
-        return params.enableFocusPoints && params.activeTask == quickStartRepository.quickStartType.getTaskFromString(
+        return params.activeTask == quickStartRepository.quickStartType.getTaskFromString(
             QuickStartStore.QUICK_START_CHECK_STATS_LABEL
         )
     }
 
     private fun shouldShowMediaFocusPoint(params: QuickLinkRibbonBuilderParams): Boolean {
-        return params.enableFocusPoints && params.activeTask == quickStartRepository.quickStartType.getTaskFromString(
+        return params.activeTask == quickStartRepository.quickStartType.getTaskFromString(
             QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL
         )
     }
