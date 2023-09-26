@@ -79,7 +79,6 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.ui.mysite.MySiteMenuActivity;
 import org.wordpress.android.ui.pages.PageParentActivity;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
@@ -684,13 +683,6 @@ public class ActivityLauncher {
         intent.putExtra(ARG_BROWSER_TYPE, MediaBrowserType.BROWSER);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site);
-    }
-
-    public static void viewQuickLinkMoreMenu(Context context, SiteModel site) {
-        Intent intent = new Intent(context, MySiteMenuActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        context.startActivity(intent);
-        AnalyticsUtils.trackWithSiteDetails(Stat.OPENED_QUICK_LINK_RIBBON_MORE, site);
     }
 
     public static void viewCurrentBlogPages(@NonNull Context context, @NonNull SiteModel site) {

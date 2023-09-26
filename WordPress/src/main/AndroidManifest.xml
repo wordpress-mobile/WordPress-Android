@@ -97,12 +97,6 @@
             android:label="" />
 
         <activity
-            android:name=".ui.mysite.MySiteMenuActivity"
-            android:theme="@style/WordPress.NoActionBar"
-            android:label="@string/my_site_section_screen_title"
-            android:exported="false" />
-
-        <activity
             android:name=".ui.mysite.menu.MenuActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/my_site_section_screen_title"
