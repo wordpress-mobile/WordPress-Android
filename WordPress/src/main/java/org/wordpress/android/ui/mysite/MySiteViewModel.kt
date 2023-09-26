@@ -4,7 +4,6 @@ package org.wordpress.android.ui.mysite
 
 import android.content.Intent
 import android.net.Uri
-import androidx.annotation.DimenRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -177,12 +176,10 @@ class MySiteViewModel @Inject constructor(
     private val noCardsMessageViewModelSlice: NoCardsMessageViewModelSlice,
     private val siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
-    private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
-    private val _selectTab = MutableLiveData<Event<TabNavigation>>()
     private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
     private val _onShowJetpackIndividualPluginOverlay = SingleLiveEvent<Event<Unit>>()
 
@@ -268,7 +265,6 @@ class MySiteViewModel @Inject constructor(
     )
 
 
-    val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     val refresh =
         merge(
             blazeCardViewModelSlice.refresh,
@@ -314,7 +310,6 @@ class MySiteViewModel @Inject constructor(
                     bloggingPromptsUpdate,
                     blazeCardUpdate
                 )
-                selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
 
                 bloggingPromptCardViewModelSlice.onDashboardCardsUpdated(
@@ -404,23 +399,14 @@ class MySiteViewModel @Inject constructor(
     private fun getPositionOfQuickStartItem(
         siteItems: Map<MySiteTabType, List<MySiteCardAndItem>>,
         activeTask: QuickStartTask
-    ) = if (isMySiteTabsEnabled) {
-        _selectTab.value?.let { tabEvent ->
-            val currentTab = orderedTabTypes[tabEvent.peekContent().position]
-            if (currentTab == MySiteTabType.DASHBOARD && activeTask.showInSiteMenu()) {
-                (siteItems[MySiteTabType.SITE_MENU] as List<MySiteCardAndItem>)
+    ): Int {
+        return if(activeTask.shownInMoreMenu())
+                (siteItems[MySiteTabType.DASHBOARD] as List<MySiteCardAndItem>)
                     .indexOfFirst { it.activeQuickStartItem }
-            } else {
-                (siteItems[currentTab] as List<MySiteCardAndItem>)
-                    .indexOfFirst { it.activeQuickStartItem }
-            }
-        } ?: LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM
-    } else {
-        (siteItems[MySiteTabType.ALL] as List<MySiteCardAndItem>)
-            .indexOfFirst { it.activeQuickStartItem }
+        else LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM
     }
 
-    private fun QuickStartTask.showInSiteMenu() = when (this) {
+    private fun QuickStartTask.shownInMoreMenu() = when (this) {
         QuickStartNewSiteTask.ENABLE_POST_SHARING -> true
         else -> false
     }
@@ -726,11 +712,6 @@ class MySiteViewModel @Inject constructor(
 
             else -> false
         }
-    }
-
-    fun onTabChanged(position: Int) {
-        quickStartRepository.currentTab = orderedTabTypes[position]
-        trackTabChanged(position == orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
     }
 
     private fun onQuickStartMoreMenuClick(quickStartCardType: QuickStartCardType) =
@@ -1129,25 +1110,6 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    @Suppress("NestedBlockDepth")
-    private fun selectDefaultTabIfNeeded() {
-        if (!isMySiteTabsEnabled) return
-        val index = orderedTabTypes.indexOf(defaultTab)
-        if (index != -1) {
-            if (isDefaultTabSet) {
-                // This logic checks if the current default tab is the same as the tab
-                // set as initial screen, if yes then return
-                _selectTab.value?.let { tab ->
-                    val currentDefaultTab = tab.peekContent().position
-                    if (currentDefaultTab == index) return
-                }
-            }
-            quickStartRepository.quickStartTaskOriginTab = orderedTabTypes[index]
-            _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
-            isDefaultTabSet = true
-        }
-    }
-
     private fun trackCardsAndItemsShownIfNeeded(siteSelected: SiteSelected) {
         siteSelected.cardAndItems.filterIsInstance<DomainRegistrationCard>()
             .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
@@ -1160,7 +1122,7 @@ class MySiteViewModel @Inject constructor(
         siteSelected.cardAndItems.filterIsInstance<JetpackFeatureCard>()
             .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
         siteSelected.cardAndItems.filterIsInstance<JetpackInstallFullPluginCard>()
-            .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type, quickStartRepository.currentTab) }
+            .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type) }
         dashboardCardPlansUtils.trackCardShown(viewModelScope, siteSelected)
         siteSelected.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>()
             .forEach { personalizeCardViewModelSlice.trackShown(it.type) }
@@ -1175,22 +1137,6 @@ class MySiteViewModel @Inject constructor(
         jetpackFeatureCardShownTracker.resetShown()
         jetpackInstallFullPluginShownTracker.resetShown()
         personalizeCardViewModelSlice.resetShown()
-    }
-
-    private fun trackTabChanged(isSiteMenu: Boolean) {
-        if (isSiteMenu) {
-            analyticsTrackerWrapper.track(
-                Stat.MY_SITE_TAB_TAPPED,
-                mapOf(MY_SITE_TAB to MySiteTabType.SITE_MENU.trackingLabel)
-            )
-            analyticsTrackerWrapper.track(Stat.MY_SITE_SITE_MENU_SHOWN)
-        } else {
-            analyticsTrackerWrapper.track(
-                Stat.MY_SITE_TAB_TAPPED,
-                mapOf(MY_SITE_TAB to MySiteTabType.DASHBOARD.trackingLabel)
-            )
-            analyticsTrackerWrapper.track(Stat.MY_SITE_DASHBOARD_SHOWN)
-        }
     }
 
     private fun hasSiteHeaderUpdates(nextSiteInfoHeaderCard: SiteInfoHeaderCard): Boolean {
