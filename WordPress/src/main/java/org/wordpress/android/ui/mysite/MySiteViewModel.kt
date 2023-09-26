@@ -48,11 +48,9 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistration
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
@@ -359,10 +357,7 @@ class MySiteViewModel @Inject constructor(
         }
         // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
-            siteInfoHeaderState = SiteInfoHeaderState(
-                hasUpdates = hasSiteHeaderUpdates(siteInfo),
-                siteInfoHeader = siteInfo
-            ),
+            siteInfoHeader =  siteInfo,
             siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
             dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
         )
@@ -1009,12 +1004,6 @@ class MySiteViewModel @Inject constructor(
         personalizeCardViewModelSlice.resetShown()
     }
 
-    private fun hasSiteHeaderUpdates(nextSiteInfoHeaderCard: SiteInfoHeaderCard): Boolean {
-        return !((uiModel.value?.state as? SiteSelected)?.siteInfoHeaderState?.siteInfoHeader?.equals(
-            nextSiteInfoHeaderCard
-        ) ?: false)
-    }
-
     // FluxC events
     @Subscribe(threadMode = MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
@@ -1034,7 +1023,7 @@ class MySiteViewModel @Inject constructor(
 
     sealed class State {
         data class SiteSelected(
-            val siteInfoHeaderState: SiteInfoHeaderState,
+            val siteInfoHeader: SiteInfoHeaderCard,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
             val dashboardCardsAndItems: List<MySiteCardAndItem>
         ) : State()
@@ -1043,11 +1032,6 @@ class MySiteViewModel @Inject constructor(
             val shouldShowImage: Boolean
         ) : State()
     }
-
-    data class SiteInfoHeaderState(
-        val hasUpdates: Boolean,
-        val siteInfoHeader: SiteInfoHeaderCard
-    )
 
     data class TextInputDialogModel(
         val callbackId: Int = SITE_NAME_CHANGE_CALLBACK_ID,
