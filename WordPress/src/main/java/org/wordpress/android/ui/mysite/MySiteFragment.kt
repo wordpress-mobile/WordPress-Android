@@ -47,7 +47,6 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.SiteInfoToolbarViewParams
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
-import org.wordpress.android.ui.mysite.tabs.BloggingPromptsOnboardingListener
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -276,7 +275,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             RequestCodes.CREATE_SITE -> {
                 val isNewSite = requestCode == RequestCodes.CREATE_SITE ||
                         data.getBooleanExtra(LoginEpilogueActivity.KEY_SITE_CREATED_FROM_LOGIN_EPILOGUE, false)
-                viewModel.onCreateSiteResult()
                 viewModel.performFirstStepAfterSiteCreation(
                     data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                     isNewSite = isNewSite
@@ -284,7 +282,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                    viewModel.onCreateSiteResult()
                     viewModel.performFirstStepAfterSiteCreation(
                         data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                         isNewSite = true
@@ -649,7 +646,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)
         is SiteNavigationAction.OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
         is SiteNavigationAction.OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
-        is SiteNavigationAction.OpenMore -> ActivityLauncher.viewQuickLinkMoreMenu(activity, action.site)
+      //  is SiteNavigationAction.OpenMore -> ActivityLauncher.viewQuickLinkMoreMenu(activity, action.site)
+        is SiteNavigationAction.OpenMore -> activityNavigator.openUnifiedMySiteMenu(requireActivity())
         is SiteNavigationAction.OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(activity, action.site)
         is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
         is SiteNavigationAction.ConnectJetpackForStats ->

@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package org.wordpress.android.ui.mysite.tabs
+package org.wordpress.android.ui.mysite
 
 import android.app.Activity
 import android.content.Intent
@@ -23,7 +23,7 @@ import com.yalantis.ucrop.UCropActivity
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.databinding.MySiteTabFragmentBinding
+import org.wordpress.android.databinding.MySiteMenuFragmentBinding
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
@@ -47,16 +47,12 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.mysite.BloggingPromptCardNavigationAction
-import org.wordpress.android.ui.mysite.MySiteAdapter
-import org.wordpress.android.ui.mysite.MySiteCardAndItemDecoration
-import org.wordpress.android.ui.mysite.MySiteViewModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.MySiteTrackWithTabSource
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
-import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -104,7 +100,7 @@ import android.R as AndroidR
 import com.google.android.material.R as MaterialR
 
 @Suppress("LargeClass")
-class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
+class MySiteMenuFragment : Fragment(R.layout.my_site_menu_fragment),
     TextInputDialogFragment.Callback,
     QuickStartPromptClickInterface,
     OnConfirmListener,
@@ -156,7 +152,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var mySiteTabType: MySiteTabType
 
-    private var binding: MySiteTabFragmentBinding? = null
+    private var binding: MySiteMenuFragmentBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -177,7 +173,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initTabType()
-        binding = MySiteTabFragmentBinding.bind(view).apply {
+        binding = MySiteMenuFragmentBinding.bind(view).apply {
             setupContentViews(savedInstanceState)
             setupObservers()
             swipeToRefreshHelper.isRefreshing = true
@@ -201,7 +197,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         }
     }
 
-    private fun MySiteTabFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
+    private fun MySiteMenuFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
         with(requireActivity() as AppCompatActivity) {
             setSupportActionBar(toolbarMain)
             supportActionBar?.apply {
@@ -260,7 +256,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     }
 
     @Suppress("DEPRECATION", "LongMethod")
-    private fun MySiteTabFragmentBinding.setupObservers() {
+    private fun MySiteMenuFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
             hideRefreshIndicatorIfNeeded()
             when (val state = uiModel.state) {
@@ -288,7 +284,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 model.isInputEnabled,
                 model.callbackId
             )
-            inputDialog.setTargetFragment(this@MySiteTabFragment, 0)
+            inputDialog.setTargetFragment(this@MySiteMenuFragment, 0)
             inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
         })
         viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
@@ -318,7 +314,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         is SiteNavigationAction.OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
         is SiteNavigationAction.OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
         is SiteNavigationAction.OpenMediaPicker ->
-            mediaPickerLauncher.showSiteIconPicker(this@MySiteTabFragment, action.site)
+            mediaPickerLauncher.showSiteIconPicker(this@MySiteMenuFragment, action.site)
         is SiteNavigationAction.OpenCropActivity -> startCropActivity(action.imageUri)
         is SiteNavigationAction.OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
         is SiteNavigationAction.OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
@@ -345,7 +341,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         is SiteNavigationAction.ConnectJetpackForStats ->
             ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
         is SiteNavigationAction.StartWPComLoginForJetpackStats ->
-            ActivityLauncher.loginForJetpackStats(this@MySiteTabFragment)
+            ActivityLauncher.loginForJetpackStats(this@MySiteMenuFragment)
         is SiteNavigationAction.OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
         is SiteNavigationAction.AddNewStory ->
             ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)
@@ -665,7 +661,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             RequestCodes.CREATE_SITE -> {
                 val isNewSite = requestCode == RequestCodes.CREATE_SITE ||
                         data.getBooleanExtra(LoginEpilogueActivity.KEY_SITE_CREATED_FROM_LOGIN_EPILOGUE, false)
-                viewModel.onCreateSiteResult()
                 viewModel.performFirstStepAfterSiteCreation(
                     data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                     isNewSite = isNewSite
@@ -673,7 +668,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                    viewModel.onCreateSiteResult()
                     viewModel.performFirstStepAfterSiteCreation(
                         data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                         isNewSite = true
@@ -713,7 +707,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         quickStartTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
     }
 
-    private fun MySiteTabFragmentBinding.loadData(state: State.SiteSelected) {
+    private fun MySiteMenuFragmentBinding.loadData(state: State.SiteSelected) {
         recyclerView.setVisible(true)
         val cardAndItems = when (mySiteTabType) {
             MySiteTabType.SITE_MENU -> state.siteMenuCardsAndItems
@@ -723,7 +717,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         (recyclerView.adapter as? MySiteAdapter)?.submitList(cardAndItems)
     }
 
-    private fun MySiteTabFragmentBinding.loadEmptyView() {
+    private fun MySiteMenuFragmentBinding.loadEmptyView() {
         recyclerView.setVisible(false)
     }
 
@@ -749,7 +743,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         }
     }
 
-    private fun MySiteTabFragmentBinding.hideRefreshIndicatorIfNeeded() {
+    private fun MySiteMenuFragmentBinding.hideRefreshIndicatorIfNeeded() {
         swipeRefreshLayout.postDelayed({
             swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
         }, CHECK_REFRESH_DELAY)
@@ -778,7 +772,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         private const val FIRST_ITEM = 0
 
         @JvmStatic
-        fun newInstance(mySiteTabType: MySiteTabType) = MySiteTabFragment().apply {
+        fun newInstance(mySiteTabType: MySiteTabType) = MySiteMenuFragment().apply {
             arguments = Bundle().apply {
                 putString(KEY_MY_SITE_TAB_TYPE, mySiteTabType.label)
             }
