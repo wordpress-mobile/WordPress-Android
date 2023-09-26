@@ -21,7 +21,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -93,35 +92,35 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `activity item click emits OpenActivity navigation event`() {
-        invokeItemClickAction(ListItemAction.ACTIVITY_LOG)
+        invokeItemClickAction(action =ListItemAction.ACTIVITY_LOG)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenActivityLog(site))
     }
 
     @Test
     fun `scan item click emits OpenScan navigation event`() {
-        invokeItemClickAction(ListItemAction.SCAN)
+        invokeItemClickAction(action =ListItemAction.SCAN)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenScan(site))
     }
 
     @Test
     fun `plan item click emits OpenPlan navigation event`() {
-        invokeItemClickAction(ListItemAction.PLAN)
+        invokeItemClickAction(action =ListItemAction.PLAN)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPlan(site))
     }
 
     @Test
     fun `posts item click emits OpenPosts navigation event`() {
-        invokeItemClickAction(ListItemAction.POSTS)
+        invokeItemClickAction(action =ListItemAction.POSTS)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPosts(site))
     }
 
     @Test
     fun `pages item click emits OpenPages navigation event`() {
-        invokeItemClickAction(ListItemAction.PAGES)
+        invokeItemClickAction(action =ListItemAction.PAGES)
 
         verify(quickStartRepository).completeTask(QuickStartStore.QuickStartNewSiteTask.REVIEW_PAGES)
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPages(site))
@@ -129,35 +128,35 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `admin item click emits OpenAdmin navigation event`() {
-        invokeItemClickAction(ListItemAction.ADMIN)
+        invokeItemClickAction(action =ListItemAction.ADMIN)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenAdmin(site))
     }
 
     @Test
     fun `sharing item click emits OpenSharing navigation event`() {
-        invokeItemClickAction(ListItemAction.SHARING)
+        invokeItemClickAction(action =ListItemAction.SHARING)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenSharing(site))
     }
 
     @Test
     fun `site settings item click emits OpenSiteSettings navigation event`() {
-        invokeItemClickAction(ListItemAction.SITE_SETTINGS)
+        invokeItemClickAction(action =ListItemAction.SITE_SETTINGS)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenSiteSettings(site))
     }
 
     @Test
     fun `themes item click emits OpenThemes navigation event`() {
-        invokeItemClickAction(ListItemAction.THEMES)
+        invokeItemClickAction(action =ListItemAction.THEMES)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenThemes(site))
     }
 
     @Test
     fun `plugins item click emits OpenPlugins navigation event`() {
-        invokeItemClickAction(ListItemAction.PLUGINS)
+        invokeItemClickAction(action =ListItemAction.PLUGINS)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPlugins(site))
     }
@@ -166,7 +165,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
     fun `media item click emits OpenMedia navigation event`() = test {
         mockQuickStart()
 
-        invokeItemClickAction(ListItemAction.MEDIA)
+        invokeItemClickAction(action= ListItemAction.MEDIA)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenMedia(site))
     }
@@ -175,7 +174,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
     fun `comments item click emits OpenUnifiedComments navigation event`() {
         mockQuickStart()
 
-        invokeItemClickAction(ListItemAction.COMMENTS)
+        invokeItemClickAction(action= ListItemAction.COMMENTS)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenUnifiedComments(site))
     }
@@ -186,7 +185,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         site.setIsWPCom(true)
         mockQuickStart()
 
-        invokeItemClickAction(ListItemAction.STATS)
+        invokeItemClickAction(action= ListItemAction.STATS)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenStats(site))
     }
@@ -198,7 +197,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         site.setIsJetpackInstalled(true)
         mockQuickStart()
 
-        invokeItemClickAction(ListItemAction.STATS)
+        invokeItemClickAction(action= ListItemAction.STATS)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenStats(site))
     }
@@ -209,7 +208,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
             .thenReturn(QuickStartStore.QuickStartNewSiteTask.CHECK_STATS)
         val builderParams = siteItemsViewModelSlice.buildItems(
-            MySiteTabType.SITE_MENU,
+            true,
             site,
             QuickStartStore.QuickStartNewSiteTask.CHECK_STATS
         )
@@ -224,7 +223,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
             .thenReturn(QuickStartStore.QuickStartExistingSiteTask.CHECK_STATS)
         val builderParams = siteItemsViewModelSlice.buildItems(
-            MySiteTabType.SITE_MENU,
+            true,
             site,
             QuickStartStore.QuickStartExistingSiteTask.CHECK_STATS
         )
@@ -243,7 +242,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
             .thenReturn(QuickStartStore.QuickStartExistingSiteTask.UNKNOWN)
 
-        invokeItemClickAction(ListItemAction.STATS)
+        invokeItemClickAction(action = ListItemAction.STATS)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.StartWPComLoginForJetpackStats)
     }
@@ -256,14 +255,14 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         site.origin = SiteModel.ORIGIN_XMLRPC
         mockQuickStart()
 
-        invokeItemClickAction(ListItemAction.STATS)
+        invokeItemClickAction(action = ListItemAction.STATS)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.ConnectJetpackForStats(site))
     }
 
     @Test
     fun `when site item is clicked, then event is tracked`() = test {
-        invokeItemClickAction(ListItemAction.POSTS)
+        invokeItemClickAction(action = ListItemAction.POSTS)
 
         verify(analyticsTrackerWrapper).track(
             AnalyticsTracker.Stat.MY_SITE_MENU_ITEM_TAPPED,
@@ -277,7 +276,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(true)
 
         // When
-        invokeItemClickAction(ListItemAction.BLAZE)
+        invokeItemClickAction(action = ListItemAction.BLAZE)
 
 
         // Then
@@ -294,7 +293,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(false)
 
         // When
-        invokeItemClickAction(ListItemAction.BLAZE)
+        invokeItemClickAction(action = ListItemAction.BLAZE)
 
         // Then
         verify(blazeFeatureUtils).trackEntryPointTapped(BlazeFlowSource.MENU_ITEM)
@@ -311,7 +310,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         whenever(blazeFeatureUtils.isSiteBlazeEligible(site)).thenReturn(true)
 
         // When
-        val result = siteItemsViewModelSlice.buildItems(MySiteTabType.SITE_MENU, site)
+        val result = siteItemsViewModelSlice.buildItems(site = site)
 
         // Then
         assertThat(result.isBlazeEligible).isTrue()
@@ -324,16 +323,17 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         whenever(blazeFeatureUtils.isSiteBlazeEligible(site)).thenReturn(false)
 
         // When
-        val result = siteItemsViewModelSlice.buildItems(MySiteTabType.SITE_MENU, site)
+        val result = siteItemsViewModelSlice.buildItems(site = site)
 
         // Then
         assertThat(result.isBlazeEligible).isFalse()
     }
 
     private fun invokeItemClickAction(
+        enableFocusPoints: Boolean = false,
         action: ListItemAction,
     ) {
-        val builderParams = siteItemsViewModelSlice.buildItems(MySiteTabType.SITE_MENU, site)
+        val builderParams = siteItemsViewModelSlice.buildItems(enableFocusPoints, site)
         builderParams.onClick.invoke(action)
     }
 
