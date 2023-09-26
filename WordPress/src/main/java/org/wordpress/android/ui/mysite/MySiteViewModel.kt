@@ -363,7 +363,6 @@ class MySiteViewModel @Inject constructor(
                 hasUpdates = hasSiteHeaderUpdates(siteInfo),
                 siteInfoHeader = siteInfo
             ),
-            cardAndItems = siteItems[MySiteTabType.ALL]!!,
             siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
             dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
         )
@@ -488,38 +487,23 @@ class MySiteViewModel @Inject constructor(
         val noCardsMessage = noCardsMessageViewModelSlice.buildNoCardsMessage(cardsResult)
 
         return mapOf(
-            MySiteTabType.ALL to orderForDisplay(
-                infoItem = infoItem,
-                migrationSuccessCard = migrationSuccessCard,
-                cards = cardsResult,
-                siteItems = siteItems,
-                jetpackBadge = jetpackBadge,
-                jetpackFeatureCard = jetpackFeatureCard,
-                jetpackSwitchMenu = jetpackSwitchMenu
-            ),
-            MySiteTabType.SITE_MENU to orderForDisplay(
-                infoItem = infoItem,
-                migrationSuccessCard = migrationSuccessCard,
-                jetpackInstallFullPluginCard = jetpackInstallFullPluginCard,
-                cards = cardsResult.filterNot {
-                    getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
-                },
-                siteItems = siteItems,
-                jetpackFeatureCard = jetpackFeatureCard,
-                jetpackSwitchMenu = jetpackSwitchMenu
-            ),
-            MySiteTabType.DASHBOARD to orderForDisplay(
-                infoItem = infoItem,
-                migrationSuccessCard = migrationSuccessCard,
-                cards = cardsResult.filterNot {
-                    getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
-                },
-                siteItems = listOf(),
-                jetpackBadge = jetpackBadge,
-                jetpackSwitchMenu = jetpackSwitchMenu,
-                noCardsMessage = noCardsMessage,
-                personalizeCard = personalizeCard
-            )
+            MySiteTabType.SITE_MENU to mutableListOf<MySiteCardAndItem>().apply {
+                infoItem?.let {  add(infoItem)}
+                addAll(siteItems)
+                jetpackBadge?.let { add(jetpackBadge) }
+                jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
+                if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
+                    jetpackFeatureCard?.let { add(0, jetpackFeatureCard) }
+                else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
+            },
+            MySiteTabType.DASHBOARD to mutableListOf<MySiteCardAndItem>().apply {
+                infoItem?.let { add(infoItem) }
+                migrationSuccessCard?.let { add(migrationSuccessCard) }
+                jetpackInstallFullPluginCard?.let { add(jetpackInstallFullPluginCard) }
+                addAll(cardsResult)
+                noCardsMessage?.let { add(noCardsMessage) }
+                personalizeCard?.let { add(personalizeCard) }
+            }.toList()
         )
     }
 
@@ -584,30 +568,6 @@ class MySiteViewModel @Inject constructor(
         _onNavigation.value = Event(SiteNavigationAction.OpenJetpackPoweredBottomSheet)
     }
 
-    private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
-        MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
-            add(Type.ERROR_CARD)
-            add(Type.TODAYS_STATS_CARD_ERROR)
-            add(Type.TODAYS_STATS_CARD)
-            add(Type.POST_CARD_ERROR)
-            add(Type.POST_CARD_WITH_POST_ITEMS)
-            add(Type.BLOGGING_PROMPT_CARD)
-            add(Type.PROMOTE_WITH_BLAZE_CARD)
-            add(Type.DASHBOARD_DOMAIN_TRANSFER_CARD)
-            add(Type.BLAZE_CAMPAIGNS_CARD)
-            add(Type.DASHBOARD_PLANS_CARD)
-            add(Type.PAGES_CARD_ERROR)
-            add(Type.PAGES_CARD)
-            add(Type.ACTIVITY_CARD)
-            add(Type.QUICK_START_CARD)
-            add(Type.QUICK_LINK_RIBBON)
-            add(Type.JETPACK_INSTALL_FULL_PLUGIN_CARD)
-            add(Type.DOMAIN_REGISTRATION_CARD)
-        }
-
-        else -> emptyList()
-    }
-
     private fun buildNoSiteState(): NoSites {
         // Hide actionable empty view image when screen height is under specified min height.
         val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
@@ -615,34 +575,6 @@ class MySiteViewModel @Inject constructor(
         return NoSites(
             shouldShowImage = shouldShowImage
         )
-    }
-
-    private fun orderForDisplay(
-        infoItem: InfoItem?,
-        migrationSuccessCard: SingleActionCard? = null,
-        jetpackInstallFullPluginCard: JetpackInstallFullPluginCard? = null,
-        cards: List<MySiteCardAndItem>,
-        siteItems: List<MySiteCardAndItem>,
-        jetpackBadge: JetpackBadge? = null,
-        jetpackFeatureCard: JetpackFeatureCard? = null,
-        jetpackSwitchMenu: MySiteCardAndItem.Card.JetpackSwitchMenu? = null,
-        noCardsMessage : MySiteCardAndItem.Card.NoCardsMessage? = null,
-        personalizeCard: MySiteCardAndItem.Card.PersonalizeCardModel? = null
-    ): List<MySiteCardAndItem> {
-        return mutableListOf<MySiteCardAndItem>().apply {
-            infoItem?.let { add(infoItem) }
-            migrationSuccessCard?.let { add(migrationSuccessCard) }
-            jetpackInstallFullPluginCard?.let { add(jetpackInstallFullPluginCard) }
-            addAll(cards)
-            noCardsMessage?.let { add(noCardsMessage) }
-            personalizeCard?.let { add(personalizeCard) }
-            addAll(siteItems)
-            jetpackBadge?.let { add(jetpackBadge) }
-            jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
-            if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
-                jetpackFeatureCard?.let { add(0, jetpackFeatureCard) }
-            else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
-        }.toList()
     }
 
     private fun scrollToQuickStartTaskIfNecessary(
@@ -1049,17 +981,17 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun trackCardsAndItemsShownIfNeeded(siteSelected: SiteSelected) {
-        siteSelected.cardAndItems.filterIsInstance<DomainRegistrationCard>()
+        siteSelected.dashboardCardsAndItems.filterIsInstance<DomainRegistrationCard>()
             .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
-        siteSelected.cardAndItems.filterIsInstance<MySiteCardAndItem.Card>()
+        siteSelected.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card>()
             .let { cardsTracker.trackShown(it) }
-        siteSelected.cardAndItems.filterIsInstance<QuickStartCard>()
+        siteSelected.dashboardCardsAndItems.filterIsInstance<QuickStartCard>()
             .firstOrNull()?.let { quickStartTracker.trackShown(it.type) }
         siteSelected.dashboardCardsAndItems.filterIsInstance<QuickStartCard>()
             .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
-        siteSelected.cardAndItems.filterIsInstance<JetpackFeatureCard>()
+        siteSelected.siteMenuCardsAndItems.filterIsInstance<JetpackFeatureCard>()
             .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
-        siteSelected.cardAndItems.filterIsInstance<JetpackInstallFullPluginCard>()
+        siteSelected.dashboardCardsAndItems.filterIsInstance<JetpackInstallFullPluginCard>()
             .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type) }
         dashboardCardPlansUtils.trackCardShown(viewModelScope, siteSelected)
         siteSelected.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>()
@@ -1103,7 +1035,6 @@ class MySiteViewModel @Inject constructor(
     sealed class State {
         data class SiteSelected(
             val siteInfoHeaderState: SiteInfoHeaderState,
-            val cardAndItems: List<MySiteCardAndItem>,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
             val dashboardCardsAndItems: List<MySiteCardAndItem>
         ) : State()
@@ -1136,15 +1067,12 @@ class MySiteViewModel @Inject constructor(
     companion object {
         private const val MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE = 600
         private const val LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM = -1
-        private const val TYPE = "type"
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
         const val TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG"
         const val SITE_NAME_CHANGE_CALLBACK_ID = 1
         const val ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK"
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
-        const val MY_SITE_TAB = "tab"
-        const val TAB_SOURCE = "tab_source"
         private const val DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY = 500L
     }
 }

@@ -708,12 +708,7 @@ class MySiteMenuFragment : Fragment(R.layout.my_site_menu_fragment),
 
     private fun MySiteMenuFragmentBinding.loadData(state: State.SiteSelected) {
         recyclerView.setVisible(true)
-        val cardAndItems = when (mySiteTabType) {
-            MySiteTabType.SITE_MENU -> state.siteMenuCardsAndItems
-            MySiteTabType.DASHBOARD -> state.dashboardCardsAndItems
-            else -> state.cardAndItems
-        }
-        (recyclerView.adapter as? MySiteAdapter)?.submitList(cardAndItems)
+        (recyclerView.adapter as? MySiteAdapter)?.submitList(state.siteMenuCardsAndItems)
     }
 
     private fun MySiteMenuFragmentBinding.loadEmptyView() {
@@ -801,10 +796,6 @@ class MySiteMenuFragment : Fragment(R.layout.my_site_menu_fragment),
 
     override fun onDismiss() {
         viewModel.onQuickStartFullScreenDialogDismiss()
-    }
-
-    fun handleScrollTo(scrollTo: Int) {
-        (binding?.recyclerView?.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(scrollTo, 0)
     }
 }
 
