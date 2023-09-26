@@ -71,7 +71,6 @@
     <string name="connection_to_server_lost">The connection to the server was lost</string>
     <string name="category_refresh_error">Category refresh error</string>
     <string name="incorrect_credentials">Incorrect username or password.</string>
-    <string name="cancel_edit">Cancel edit</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="refresh">Refresh</string>
     <string name="blog_not_found">An error occurred when accessing this blog</string>
@@ -487,11 +486,8 @@
 
     <!-- edit comment view -->
     <string name="saving_changes">Saving changes</string>
-    <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
     <string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
     <string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
-    <string name="content_required">Comment is required</string>
-    <string name="toast_comment_unedited">Comment hasn\'t changed</string>
     <string name="comment_edit_menu_done">Done</string>
     <string name="comment_edit_user_name">Name</string>
     <string name="comment_edit_comment">Comment</string>
