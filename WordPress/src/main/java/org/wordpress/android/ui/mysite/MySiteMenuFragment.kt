@@ -47,7 +47,6 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.mysite.MySiteViewModel.MySiteTrackWithTabSource
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
@@ -806,10 +805,6 @@ class MySiteMenuFragment : Fragment(R.layout.my_site_menu_fragment),
 
     fun handleScrollTo(scrollTo: Int) {
         (binding?.recyclerView?.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(scrollTo, 0)
-    }
-
-    fun onTrackWithTabSource(event: MySiteTrackWithTabSource) {
-        viewModel.trackWithTabSource(event = event.copy(currentTab = mySiteTabType))
     }
 }
 

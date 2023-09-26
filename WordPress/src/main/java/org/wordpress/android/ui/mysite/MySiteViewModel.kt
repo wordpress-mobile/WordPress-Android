@@ -179,7 +179,6 @@ class MySiteViewModel @Inject constructor(
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
-    private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
     private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
     private val _onShowJetpackIndividualPluginOverlay = SingleLiveEvent<Event<Unit>>()
 
@@ -258,12 +257,6 @@ class MySiteViewModel @Inject constructor(
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onOpenJetpackInstallFullPluginOnboarding = _onOpenJetpackInstallFullPluginOnboarding as LiveData<Event<Unit>>
     val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
-
-    val onTrackWithTabSource = merge(
-        _onTrackWithTabSource,
-        siteInfoHeaderCardViewModelSlice.onTrackWithTabSource
-    )
-
 
     val refresh =
         merge(
@@ -756,7 +749,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onQuickLinkRibbonStatsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_STATS_TAPPED)
+        analyticsTrackerWrapper.track(Stat.QUICK_LINK_RIBBON_STATS_TAPPED)
         quickStartRepository.completeTask(
             quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
         )
@@ -765,20 +758,20 @@ class MySiteViewModel @Inject constructor(
 
     private fun onQuickLinkRibbonPagesClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_PAGES_TAPPED)
+        analyticsTrackerWrapper.track(Stat.QUICK_LINK_RIBBON_PAGES_TAPPED)
         quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
         _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
     }
 
     private fun onQuickLinkRibbonPostsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_POSTS_TAPPED)
+        analyticsTrackerWrapper.track(Stat.QUICK_LINK_RIBBON_POSTS_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenPosts(selectedSite))
     }
 
     private fun onQuickLinkRibbonMediaClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_MEDIA_TAPPED)
+        analyticsTrackerWrapper.track(Stat.QUICK_LINK_RIBBON_MEDIA_TAPPED)
         quickStartRepository.requestNextStepOfTask(
             quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
         )
@@ -787,7 +780,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onQuickLinkRibbonMoreClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_MORE_TAPPED)
+        analyticsTrackerWrapper.track(Stat.QUICK_LINK_RIBBON_MORE_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenMore(selectedSite))
     }
 
@@ -798,7 +791,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun refresh(isPullToRefresh: Boolean = false) {
-        if (isPullToRefresh) trackWithTabSourceIfNeeded(Stat.MY_SITE_PULL_TO_REFRESH)
+        if (isPullToRefresh) analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH)
         mySiteSourceManager.refresh()
     }
 
@@ -1037,14 +1030,14 @@ class MySiteViewModel @Inject constructor(
 
     private fun onJetpackInstallFullPluginHideMenuItemClick() {
         selectedSiteRepository.getSelectedSite()?.localId()?.value?.let {
-            trackWithTabSourceIfNeeded(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_DISMISSED)
+            analyticsTrackerWrapper.track(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_DISMISSED)
             appPrefsWrapper.setShouldHideJetpackInstallFullPluginCard(it, true)
             refresh()
         }
     }
 
     private fun onJetpackInstallFullPluginLearnMoreClick() {
-        trackWithTabSourceIfNeeded(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_TAPPED)
+        analyticsTrackerWrapper.track(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_TAPPED)
         _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
     }
 
@@ -1086,28 +1079,8 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    fun trackWithTabSource(event: MySiteTrackWithTabSource) {
-        if (event.currentTab == MySiteTabType.ALL) {
-            analyticsTrackerWrapper.track(event.stat, event.properties ?: emptyMap())
-        } else {
-            val props: MutableMap<String, Any> = mutableMapOf(event.key to event.currentTab.trackingLabel)
-            if (!event.properties.isNullOrEmpty()) {
-                props.putAll(event.properties)
-            }
-            analyticsTrackerWrapper.track(event.stat, props)
-        }
-    }
-
     fun onBloggingPromptsLearnMoreClicked() {
         _onNavigation.postValue(Event(BloggingPromptCardNavigationAction.LearnMore))
-    }
-
-    private fun trackWithTabSourceIfNeeded(stat: Stat, properties: HashMap<String, *>? = null) {
-        if (isMySiteDashboardTabsEnabled) {
-            _onTrackWithTabSource.postValue(Event(MySiteTrackWithTabSource(stat, properties)))
-        } else {
-            analyticsTrackerWrapper.track(stat, properties ?: emptyMap())
-        }
     }
 
     private fun trackCardsAndItemsShownIfNeeded(siteSelected: SiteSelected) {
@@ -1180,8 +1153,6 @@ class MySiteViewModel @Inject constructor(
         val siteInfoHeader: SiteInfoHeaderCard
     )
 
-    data class TabNavigation(val position: Int, val smoothAnimation: Boolean)
-
     data class TextInputDialogModel(
         val callbackId: Int = SITE_NAME_CHANGE_CALLBACK_ID,
         @StringRes val title: Int,
@@ -1196,13 +1167,6 @@ class MySiteViewModel @Inject constructor(
             return this.copy(state = state.update(partialState))
         }
     }
-
-    data class MySiteTrackWithTabSource(
-        val stat: Stat,
-        val properties: HashMap<String, *>? = null,
-        val key: String = TAB_SOURCE,
-        val currentTab: MySiteTabType = MySiteTabType.ALL
-    )
 
     companion object {
         private const val MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE = 600
