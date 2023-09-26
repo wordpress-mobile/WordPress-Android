@@ -13,7 +13,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -34,10 +33,9 @@ class QuickStartTracker @Inject constructor(
         analyticsTrackerWrapper.track(stat, props)
     }
 
-    fun trackShown(itemType: MySiteCardAndItem.Type, tabType: MySiteTabType) {
+    fun trackShown(itemType: MySiteCardAndItem.Type) {
         if (itemType == QUICK_START_CARD) {
             val props = mapOf(
-                TAB to tabType.trackingLabel,
                 SITE_TYPE to getLastSelectedQuickStartType().trackingLabel
             )
             val cardsShownTrackedPair = Pair(itemType, props)
