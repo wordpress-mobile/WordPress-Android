@@ -42,7 +42,7 @@ class SiteItemsViewModelSlice @Inject constructor(
     val onSnackbarMessage = _onSnackbarMessage
 
     fun buildItems(
-        shouldEnableFocusPoints: Boolean,
+        shouldEnableFocusPoints: Boolean = false,
         site: SiteModel,
         activeTask: QuickStartStore.QuickStartTask? = null,
         backupAvailable: Boolean = false,

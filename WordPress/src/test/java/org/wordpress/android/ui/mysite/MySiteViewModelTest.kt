@@ -73,10 +73,8 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabil
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
-import org.wordpress.android.ui.mysite.MySiteViewModel.MySiteTrackWithTabSource
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
-import org.wordpress.android.ui.mysite.MySiteViewModel.TabNavigation
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
@@ -100,7 +98,6 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
@@ -293,8 +290,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var dialogModels: MutableList<SiteDialogModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
-    private lateinit var trackWithTabSource: MutableList<MySiteTrackWithTabSource>
-    private lateinit var tabNavigation: MutableList<TabNavigation>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
     private val siteLocalId = 1
     private val siteUrl = "http://site.com"
@@ -323,7 +318,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val currentAvatar = MutableLiveData(CurrentAvatarUrl(""))
     private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
     private val activeTask = MutableLiveData<QuickStartTask>()
-    private val quickStartTabStep = MutableLiveData<QuickStartTabStep?>()
 
     private var quickStartHideThisMenuItemClickAction: ((type: QuickStartCardType) -> Unit)? = null
     private var quickStartMoreMenuClickAction: ((type: QuickStartCardType) -> Unit)? = null
@@ -419,7 +413,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(mySiteSourceManager.build(any(), anyOrNull())).thenReturn(partialStates)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
-        whenever(quickStartRepository.onQuickStartTabStep).thenReturn(quickStartTabStep)
         whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
             .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
@@ -494,8 +487,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         dialogModels = mutableListOf()
         navigationActions = mutableListOf()
         showSwipeRefreshLayout = mutableListOf()
-        trackWithTabSource = mutableListOf()
-        tabNavigation = mutableListOf()
         launch(testDispatcher()) {
             viewModel.uiModel.observeForever {
                 uiModels.add(it)
@@ -511,16 +502,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 navigationActions.add(it)
             }
         }
-        viewModel.onTrackWithTabSource.observeForever { event ->
-            event?.getContentIfNotHandled()?.let {
-                trackWithTabSource.add(it)
-            }
-        }
-        viewModel.selectTab.observeForever { event ->
-            event?.getContentIfNotHandled()?.let {
-                tabNavigation.add(it)
-            }
-        }
+
         site = SiteModel()
         site.id = siteLocalId
         site.url = siteUrl
@@ -538,56 +520,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* SITE STATE */
-
-    @Test
-    fun `given my site tabs feature flag not enabled, when site is selected, then tabs are not visible`() {
-        initSelectedSite(isMySiteDashboardTabsEnabled = false)
-
-        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isFalse
-    }
-
-    @Test
-    fun `given my site tabs build config not enabled, when site is selected, then tabs are not visible`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
-
-        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isFalse
-    }
-
-    @Test
-    fun `given my site tabs build config with flag enabled, when site is selected, then tabs are visible`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
-
-        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isTrue
-    }
-
-    @Test
-    fun `given site not using wpcom rest api, when site is selected, then tabs are not visible`() {
-        site.setIsJetpackConnected(false)
-
-        initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true,
-            isSiteUsingWpComRestApi = false
-        )
-
-        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isFalse
-    }
-
-    @Test
-    fun `given site using wpcom rest api, when site is selected, then tabs are visible`() {
-        initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true,
-            isSiteUsingWpComRestApi = true
-        )
-
-        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isTrue
-    }
-
-    @Test
-    fun `given my site tabs build, when site is selected, then site header is visible`() {
-        initSelectedSite()
-
-        assertThat((uiModels.last().state as SiteSelected).siteInfoToolbarViewParams.headerVisible).isTrue
-    }
 
     @Test
     fun `model is empty with no selected site`() {
@@ -620,39 +552,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(domainRegistrationCardShownTracker, atLeastOnce()).resetShown()
     }
 
-    /* SELECTED SITE - DEFAULT TAB */
-
-    @Test
-    fun `given tabs not enabled, when site is selected, then default tab is not set`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsEnabled = false)
-
-        assertThat(tabNavigation).isEmpty()
-    }
-
-    @Test
-    fun `given tabs enabled + initial screen is home, when site is selected, then default tab is dashboard`() {
-        whenever(appPrefsWrapper.getMySiteInitialScreen(any())).thenReturn(MySiteTabType.DASHBOARD.label)
-
-        initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true,
-            initialScreen = MySiteTabType.DASHBOARD.label
-        )
-
-        assertThat(tabNavigation)
-            .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD), false))
-    }
-
-    @Test
-    fun `given tabs enabled + initial screen is site_menu, when site is selected, then default tab is site menu`() {
-        whenever(appPrefsWrapper.getMySiteInitialScreen(any())).thenReturn(MySiteTabType.SITE_MENU.label)
-        initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true,
-            initialScreen = MySiteTabType.SITE_MENU.label
-        )
-
-        assertThat(tabNavigation)
-            .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
-    }
 
     /* AVATAR */
 
@@ -684,21 +583,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* EMPTY VIEW */
-
-    @Test
-    fun `when no site is selected, then tabs are not visible`() {
-        onSiteSelected.value = null
-
-        assertThat((uiModels.last().state as NoSites).tabsUiState.showTabs).isFalse
-    }
-
-    @Test
-    fun `given no selected site, then site info header is not visible `() {
-        onSiteSelected.value = null
-
-        assertThat((uiModels.last().state as NoSites).siteInfoToolbarViewParams.headerVisible).isFalse
-    }
-
     @Test
     fun `given wp app, when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
@@ -1023,49 +907,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartTracker).track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
-    /* QUICK START SITE MENU STEP */
-
-    @Test
-    fun `when quick start menu step is triggered, then dashboard tab has quick start focus point`() {
-        initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true,
-            initialScreen = MySiteTabType.DASHBOARD.label
-        )
-
-        quickStartTabStep.value = QuickStartTabStep(true, QuickStartNewSiteTask.REVIEW_PAGES, MySiteTabType.DASHBOARD)
-
-        assertThat((uiModels.last().state as SiteSelected).findDashboardTabUiState().showQuickStartFocusPoint).isTrue
-    }
-
-    @Test
-    fun `given dashboard tab has qs focus point, when tab is changed, then qs focus point is cleared`() {
-        initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true,
-            initialScreen = MySiteTabType.DASHBOARD.label
-        )
-        val pendingTask = QuickStartNewSiteTask.REVIEW_PAGES
-        quickStartTabStep.value = QuickStartTabStep(true, pendingTask, MySiteTabType.DASHBOARD)
-
-        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD))
-
-        verify(quickStartRepository).clearTabStep()
-    }
-
-    @Test
-    fun `given dashboard tab has qs focus point, when tab is changed, then dashboard pending task is active`() = test {
-        initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true,
-            initialScreen = MySiteTabType.DASHBOARD.label
-        )
-        val pendingTask = QuickStartNewSiteTask.REVIEW_PAGES
-        quickStartTabStep.value = QuickStartTabStep(true, pendingTask, MySiteTabType.DASHBOARD)
-
-        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD))
-        advanceUntilIdle()
-
-        verify(quickStartRepository).setActiveTask(pendingTask)
-    }
-
     /* DASHBOARD BLOGGING PROMPT */
     @Test
     fun `when blogging prompt answer is uploaded, refresh prompt card`() = test {
@@ -1188,7 +1029,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         cardsUpdate.value = cardsUpdate.value?.copy(showStaleMessage = false)
 
-        assertThat((uiModels.last().state as SiteSelected).cardAndItems.filterIsInstance(InfoItem::class.java))
+        assertThat((uiModels.last().state as SiteSelected)
+            .dashboardCardsAndItems.filterIsInstance(InfoItem::class.java))
             .isEmpty()
     }
 
@@ -1198,7 +1040,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         cardsUpdate.value = cardsUpdate.value?.copy(showStaleMessage = true)
 
-        assertThat((uiModels.last().state as SiteSelected).cardAndItems.filterIsInstance(InfoItem::class.java))
+        assertThat((uiModels.last().state as SiteSelected)
+            .dashboardCardsAndItems.filterIsInstance(InfoItem::class.java))
             .isNotEmpty
     }
 
@@ -1512,7 +1355,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             isMySiteTabsBuildConfigEnabled = true,
             initialScreen = MySiteTabType.SITE_MENU.label
         )
-        setUpSiteItemBuilder(shouldEnableFocusPoint = true, defaultTab = MySiteTabType.SITE_MENU)
+        setUpSiteItemBuilder(shouldEnableFocusPoint = true)
 
         val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
@@ -1540,93 +1383,12 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given site menu tab is selected, when tab is changed, then site menu events are tracked`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
-
-        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
-
-        verify(analyticsTrackerWrapper, atLeastOnce()).track(
-            Stat.MY_SITE_TAB_TAPPED,
-            mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.SITE_MENU.trackingLabel)
-        )
-        verify(analyticsTrackerWrapper, atLeastOnce()).track(Stat.MY_SITE_SITE_MENU_SHOWN)
-    }
-
-    @Test
-    fun `given dashboard tab is selected, when tab is changed, then dashboard events are tracked`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
-
-        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD))
-
-        verify(analyticsTrackerWrapper, atLeastOnce()).track(
-            Stat.MY_SITE_TAB_TAPPED,
-            mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.DASHBOARD.trackingLabel)
-        )
-        verify(analyticsTrackerWrapper, atLeastOnce()).track(Stat.MY_SITE_DASHBOARD_SHOWN)
-    }
-
-    /* TRACK WITH TAB SOURCE */
-    @Test
-    fun `given tabs are enabled, when pull to refresh invoked, then track with tab source is requested`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
-
-        viewModel.refresh(true)
-
-        assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.MY_SITE_PULL_TO_REFRESH)
-    }
-
-    @Test
-    fun `given tabs are disabled, when pull to refresh invoked, then track with tab source is not requested`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsEnabled = false)
-
-        viewModel.refresh(true)
-
-        assertThat(trackWithTabSource).isEmpty()
-    }
-
-    @Test
     fun `given tabs are disabled, when pull to refresh invoked, then pull-to-refresh is tracked`() {
         initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsEnabled = false)
 
         viewModel.refresh(true)
 
         verify(analyticsTrackerWrapper).track(Stat.MY_SITE_PULL_TO_REFRESH, emptyMap())
-    }
-
-    @Test
-    fun `given tabs are enabled, when quick link ribbon pages tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
-
-        requireNotNull(quickLinkRibbonPagesClickAction).invoke()
-
-        assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.QUICK_LINK_RIBBON_PAGES_TAPPED)
-    }
-
-    @Test
-    fun `given tabs are enabled, when quick link ribbon posts tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
-
-        requireNotNull(quickLinkRibbonPostsClickAction).invoke()
-
-        assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.QUICK_LINK_RIBBON_POSTS_TAPPED)
-    }
-
-    @Test
-    fun `given tabs are enabled, when quick link ribbon stats tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
-
-        requireNotNull(quickLinkRibbonStatsClickAction).invoke()
-
-        assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.QUICK_LINK_RIBBON_STATS_TAPPED)
-    }
-
-    @Test
-    fun `given tabs are enabled, when quick link ribbon media tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
-
-        requireNotNull(quickLinkRibbonMediaClickAction).invoke()
-
-        assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.QUICK_LINK_RIBBON_MEDIA_TAPPED)
     }
 
     @Test
@@ -1837,22 +1599,19 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun findJetpackFeatureCard() =
         getLastItems().find { it is JetpackFeatureCard } as JetpackFeatureCard?
 
-    private fun SiteSelected.findDashboardTabUiState() =
-        tabsUiState.tabUiStates.first { it.tabType == MySiteTabType.DASHBOARD }
-
     private fun findBackupListItem() = getLastItems().filterIsInstance(ListItem::class.java)
         .firstOrNull { it.primaryText == UiStringRes(R.string.backup) }
 
     private fun findScanListItem() = getLastItems().filterIsInstance(ListItem::class.java)
         .firstOrNull { it.primaryText == UiStringRes(R.string.scan) }
 
-    private fun getLastItems() = (uiModels.last().state as SiteSelected).cardAndItems
+    private fun getLastItems() = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
     private fun getDashboardTabLastItems() = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
     private fun getSiteMenuTabLastItems() = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
-    private fun getSiteInfoHeaderCard() = (uiModels.last().state as SiteSelected).siteInfoHeaderState.siteInfoHeader
+    private fun getSiteInfoHeaderCard() = (uiModels.last().state as SiteSelected).siteInfoHeader
 
     @Suppress("LongParameterList")
     private fun initSelectedSite(
@@ -1919,7 +1678,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         backupAvailable: Boolean = false,
         scanAvailable: Boolean = false,
         shouldEnableFocusPoint: Boolean = false,
-        defaultTab: MySiteTabType = MySiteTabType.SITE_MENU,
         activeTask: QuickStartTask? = null
     ) {
         val siteItemsBuilderParams = SiteItemsBuilderParams(
@@ -1933,7 +1691,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
         doAnswer { siteItemsBuilderParams }
             .whenever(siteItemsViewModelSlice).buildItems(
-                defaultTab = defaultTab,
+                shouldEnableFocusPoints = true,
                 site = site,
                 activeTask = activeTask,
                 backupAvailable = backupAvailable,
