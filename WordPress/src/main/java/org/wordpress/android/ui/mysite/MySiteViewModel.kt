@@ -485,11 +485,11 @@ class MySiteViewModel @Inject constructor(
             MySiteTabType.SITE_MENU to mutableListOf<MySiteCardAndItem>().apply {
                 infoItem?.let {  add(infoItem)}
                 addAll(siteItems)
-                jetpackBadge?.let { add(jetpackBadge) }
                 jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
                 if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
                     jetpackFeatureCard?.let { add(0, jetpackFeatureCard) }
                 else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
+                jetpackBadge?.let { add(jetpackBadge) }
             },
             MySiteTabType.DASHBOARD to mutableListOf<MySiteCardAndItem>().apply {
                 infoItem?.let { add(infoItem) }
