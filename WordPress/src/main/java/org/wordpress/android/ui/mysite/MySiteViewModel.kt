@@ -194,26 +194,6 @@ class MySiteViewModel @Inject constructor(
                 jetpackFeatureRemovalPhaseHelper.shouldShowDashboard() &&
                 selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi ?: true
 
-    val orderedTabTypes: List<MySiteTabType>
-        get() = if (isMySiteTabsEnabled) {
-            listOf(MySiteTabType.DASHBOARD, MySiteTabType.SITE_MENU)
-        } else {
-            listOf(MySiteTabType.ALL)
-        }
-
-    private val defaultTab: MySiteTabType
-        get() = if (isMySiteTabsEnabled) {
-            if (appPrefsWrapper.getMySiteInitialScreen(buildConfigWrapper.isJetpackApp) ==
-                MySiteTabType.SITE_MENU.label
-            ) {
-                MySiteTabType.SITE_MENU
-            } else {
-                MySiteTabType.DASHBOARD
-            }
-        } else {
-            MySiteTabType.ALL
-        }
-
     val onScrollTo: LiveData<Event<Int>> = merge(
         _activeTaskPosition.distinctUntilChanged(),
         quickStartRepository.activeTask
@@ -485,8 +465,7 @@ class MySiteViewModel @Inject constructor(
                 onMediaClick = this::onQuickLinkRibbonMediaClick,
                 onStatsClick = this::onQuickLinkRibbonStatsClick,
                 onMoreClick = this::onQuickLinkRibbonMoreClick,
-                activeTask = activeTask,
-                enableFocusPoints = shouldEnableQuickLinkRibbonFocusPoints()
+                activeTask = activeTask
             ),
             jetpackInstallFullPluginCardParams,
             isMySiteTabsEnabled
@@ -494,7 +473,7 @@ class MySiteViewModel @Inject constructor(
 
         val siteItems = siteItemsBuilder.build(
             siteItemsViewModelSlice.buildItems(
-                defaultTab = defaultTab,
+                shouldEnableFocusPoints = false,
                 site = site,
                 activeTask = activeTask,
                 backupAvailable = backupAvailable,
@@ -605,8 +584,6 @@ class MySiteViewModel @Inject constructor(
         _onNavigation.value = Event(SiteNavigationAction.OpenJetpackPoweredBottomSheet)
     }
 
-    private fun shouldEnableQuickLinkRibbonFocusPoints() = defaultTab == MySiteTabType.DASHBOARD
-
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
             add(Type.ERROR_CARD)
@@ -622,21 +599,13 @@ class MySiteViewModel @Inject constructor(
             add(Type.PAGES_CARD_ERROR)
             add(Type.PAGES_CARD)
             add(Type.ACTIVITY_CARD)
-            if (defaultTab == MySiteTabType.DASHBOARD) {
-                add(Type.QUICK_START_CARD)
-            }
+            add(Type.QUICK_START_CARD)
             add(Type.QUICK_LINK_RIBBON)
             add(Type.JETPACK_INSTALL_FULL_PLUGIN_CARD)
             add(Type.DOMAIN_REGISTRATION_CARD)
         }
 
-        MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
-            if (defaultTab == MySiteTabType.SITE_MENU) {
-                add(Type.QUICK_START_CARD)
-            }
-        }
-
-        MySiteTabType.ALL -> emptyList()
+        else -> emptyList()
     }
 
     private fun buildNoSiteState(): NoSites {
@@ -729,11 +698,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
         clearActiveQuickStartTask()
-        if (defaultTab == MySiteTabType.DASHBOARD) {
-            cardsTracker.trackQuickStartCardItemClicked(type)
-        } else {
-            quickStartTracker.track(Stat.QUICK_START_TAPPED, mapOf(TYPE to type.toString()))
-        }
+        cardsTracker.trackQuickStartCardItemClicked(type)
         _onNavigation.value = Event(
             SiteNavigationAction.OpenQuickStartFullScreenDialog(type, quickStartCardBuilder.getTitle(type))
         )
@@ -1089,7 +1054,7 @@ class MySiteViewModel @Inject constructor(
         siteSelected.cardAndItems.filterIsInstance<MySiteCardAndItem.Card>()
             .let { cardsTracker.trackShown(it) }
         siteSelected.cardAndItems.filterIsInstance<QuickStartCard>()
-            .firstOrNull()?.let { quickStartTracker.trackShown(it.type, defaultTab) }
+            .firstOrNull()?.let { quickStartTracker.trackShown(it.type) }
         siteSelected.dashboardCardsAndItems.filterIsInstance<QuickStartCard>()
             .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
         siteSelected.cardAndItems.filterIsInstance<JetpackFeatureCard>()
