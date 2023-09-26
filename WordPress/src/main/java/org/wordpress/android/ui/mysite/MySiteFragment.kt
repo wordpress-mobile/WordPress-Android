@@ -446,6 +446,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 quickStartScrollPosition = 0
             }
             if (quickStartScrollPosition > 0) recyclerView.scrollToPosition(quickStartScrollPosition)
+            else appbarMain.setExpanded(true)
         }
     }
 
