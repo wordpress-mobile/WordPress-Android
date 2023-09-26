@@ -15,11 +15,13 @@ import org.wordpress.android.util.image.ImageManager
 class ReaderRecommendedBlogsCardViewHolder(
     parentView: ViewGroup,
     imageManager: ImageManager,
-    uiHelpers: UiHelpers
+    uiHelpers: UiHelpers,
+    isReaderImprovementsEnabled: Boolean,
 ) : ReaderViewHolder<ReaderRecommendedBlogsCardBinding>(
     parentView.viewBinding(ReaderRecommendedBlogsCardBinding::inflate)
 ) {
-    private val recommendedBlogsAdapter = ReaderRecommendedBlogsAdapter(imageManager, uiHelpers)
+    private val recommendedBlogsAdapter =
+        ReaderRecommendedBlogsAdapter(imageManager, uiHelpers, isReaderImprovementsEnabled)
 
     init {
         with(binding) {
