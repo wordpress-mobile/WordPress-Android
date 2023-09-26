@@ -1061,6 +1061,16 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(findScanListItem()).isNotNull
     }
 
+    @Test
+    fun `backup menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
+        setUpSiteItemBuilder(backupAvailable = true)
+        initSelectedSite()
+
+        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = true)
+
+        assertThat(findBackupListItem()).isNotNull
+    }
+
     /* SWIPE REFRESH */
 
     @Test
@@ -1636,9 +1646,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                 backupAvailable = backupAvailable,
                 scanAvailable = scanAvailable
             )
-        doAnswer { initSiteItems(it) }
-            .whenever(siteItemsBuilder).build(
-                siteItemsBuilderParams)
+        doAnswer {
+            initSiteItems(it)
+        }.whenever(siteItemsBuilder).build(siteItemsBuilderParams)
     }
 
     private fun initSiteInfoCard(): SiteInfoHeaderCard {
