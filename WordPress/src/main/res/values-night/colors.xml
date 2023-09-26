@@ -96,4 +96,8 @@
     <!-- Partial Media Access -->
     <color name="partial_media_access_prompt_background">#444444</color>
 
+    <!-- Reader Improvements -->
+    <color name="reader_you_might_like_background">#1FFFFFFF</color>
+    <color name="reader_improvements_recommended_section_text">#99FFFFFF</color>
+
 </resources>

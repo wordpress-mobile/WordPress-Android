@@ -1641,6 +1641,7 @@
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Hide</string>
     <string name="reader_discover_interests_header">You might like</string>
     <string name="reader_discover_recommended_blogs_header">Sites to follow</string>
+    <string name="reader_discover_recommended_header_new">You might like</string>
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
     <string name="reader_discover_empty_title">Welcome!</string>

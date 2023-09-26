@@ -9,6 +9,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommen
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder
+import org.wordpress.android.ui.reader.discover.viewholders.ReaderRecommendedBlogsCardNewViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderRecommendedBlogsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.WelcomeBannerViewHolder
@@ -33,9 +34,16 @@ class ReaderDiscoverAdapter(
             welcomeBannerViewType -> WelcomeBannerViewHolder(parent)
             postViewType -> ReaderPostViewHolder(uiHelpers, imageManager, readerTracker, parent)
             interestViewType -> ReaderInterestsCardViewHolder(uiHelpers, parent)
-            recommendedBlogsViewType -> ReaderRecommendedBlogsCardViewHolder(
-                parent, imageManager, uiHelpers, isReaderImprovementsEnabled
-            )
+            recommendedBlogsViewType ->
+                if (isReaderImprovementsEnabled) {
+                    ReaderRecommendedBlogsCardNewViewHolder(
+                        parent, imageManager
+                    )
+                } else {
+                    ReaderRecommendedBlogsCardViewHolder(
+                        parent, imageManager, uiHelpers
+                    )
+                }
             else -> throw NotImplementedError("Unknown ViewType")
         }
     }
