@@ -108,7 +108,6 @@ class QuickStartTracker @Inject constructor(
     }
     companion object {
         private const val SITE_TYPE = "site_type"
-        private const val TAB = "tab"
         private const val CARD = "card"
         private const val ITEM = "item"
     }
