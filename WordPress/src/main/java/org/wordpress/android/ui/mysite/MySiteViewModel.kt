@@ -378,7 +378,7 @@ class MySiteViewModel @Inject constructor(
         else -> false
     }
 
-    @Suppress("LongParameterList")
+    @Suppress("LongParameterList","CyclomaticComplexMethod")
     private fun buildSiteSelectedState(
         site: SiteModel,
         activeTask: QuickStartTask?,

@@ -13,11 +13,10 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType
-import javax.inject.Inject
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
+import javax.inject.Inject
 import javax.inject.Named
 
 data class MenuViewState(
