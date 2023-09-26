@@ -17,14 +17,14 @@
             style="@style/WordPress.CollapsedToolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll">
 
             <RelativeLayout
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:visibility="visible"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <include
                     android:id="@+id/site_info"
