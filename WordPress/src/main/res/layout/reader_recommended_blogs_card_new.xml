@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_large"
-        app:cardBackgroundColor="@color/neutral_0"
+        app:cardBackgroundColor="@color/reader_you_might_like_background"
         app:cardCornerRadius="@dimen/margin_medium">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,7 +41,7 @@
                 android:layout_marginStart="@dimen/margin_extra_large"
                 android:text="@string/reader_discover_recommended_header_new"
                 android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="@color/reader_improvements_recommended_section_title"
+                android:textColor="@color/reader_improvements_recommended_section_text"
                 android:textSize="@dimen/text_sz_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
