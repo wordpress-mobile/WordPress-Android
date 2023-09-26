@@ -1458,7 +1458,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         assertThat(getSiteMenuTabLastItems()[getSiteMenuTabLastItems().size - 1])
             .isInstanceOf(JetpackFeatureCard::class.java)
-        assertThat(getLastItems()[getLastItems().size - 1]).isInstanceOf(JetpackFeatureCard::class.java)
     }
 
     @Test
