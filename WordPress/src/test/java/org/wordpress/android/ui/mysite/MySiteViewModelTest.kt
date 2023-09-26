@@ -64,7 +64,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegi
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
@@ -101,7 +100,6 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.Qui
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
@@ -1555,11 +1553,11 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun findJetpackFeatureCard() =
         getMenuItems().find { it is JetpackFeatureCard } as JetpackFeatureCard?
 
-    private fun findBackupListItem() = getMenuItems().filterIsInstance(ListItem::class.java)
-        .firstOrNull { it.primaryText == UiStringRes(R.string.backup) }
-
-    private fun findScanListItem() = getMenuItems().filterIsInstance(ListItem::class.java)
-        .firstOrNull { it.primaryText == UiStringRes(R.string.scan) }
+//    private fun findBackupListItem() = getMenuItems().filterIsInstance(ListItem::class.java)
+//        .firstOrNull { it.primaryText == UiStringRes(R.string.backup) }
+//
+//    private fun findScanListItem() = getMenuItems().filterIsInstance(ListItem::class.java)
+//        .firstOrNull { it.primaryText == UiStringRes(R.string.scan) }
 
     private fun getLastItems() = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
@@ -1746,47 +1744,47 @@ class MySiteViewModelTest : BaseUnitTest() {
         return ErrorCard(onRetryClick = ListItemInteraction.create { onDashboardErrorRetryClick })
     }
 
-    private fun initSiteItems(mockInvocation: InvocationOnMock): List<ListItem> {
-        val params = (mockInvocation.arguments.filterIsInstance<SiteItemsBuilderParams>()).first()
-        val items = mutableListOf<ListItem>()
-        items.add(
-            ListItem(
-                0,
-                UiStringRes(0),
-                onClick = ListItemInteraction.create(ListItemAction.POSTS, params.onClick)
-            )
-        )
-        if (params.scanAvailable) {
-            items.add(
-                ListItem(
-                    0,
-                    UiStringRes(R.string.scan),
-                    onClick = mock()
-                )
-            )
-        }
-        if (params.backupAvailable) {
-            items.add(
-                ListItem(
-                    0,
-                    UiStringRes(R.string.backup),
-                    onClick = mock()
-                )
-            )
-        }
-        if (params.isBlazeEligible) {
-            items.add(
-                ListItem(
-                    0,
-                    UiStringRes(R.string.blaze_menu_item_label),
-                    onClick = mock(),
-                    disablePrimaryIconTint = true
-                )
-            )
-        }
-
-        return items
-    }
+//    private fun initSiteItems(mockInvocation: InvocationOnMock): List<ListItem> {
+//        val params = (mockInvocation.arguments.filterIsInstance<SiteItemsBuilderParams>()).first()
+//        val items = mutableListOf<ListItem>()
+//        items.add(
+//            ListItem(
+//                0,
+//                UiStringRes(0),
+//                onClick = ListItemInteraction.create(ListItemAction.POSTS, params.onClick)
+//            )
+//        )
+//        if (params.scanAvailable) {
+//            items.add(
+//                ListItem(
+//                    0,
+//                    UiStringRes(R.string.scan),
+//                    onClick = mock()
+//                )
+//            )
+//        }
+//        if (params.backupAvailable) {
+//            items.add(
+//                ListItem(
+//                    0,
+//                    UiStringRes(R.string.backup),
+//                    onClick = mock()
+//                )
+//            )
+//        }
+//        if (params.isBlazeEligible) {
+//            items.add(
+//                ListItem(
+//                    0,
+//                    UiStringRes(R.string.blaze_menu_item_label),
+//                    onClick = mock(),
+//                    disablePrimaryIconTint = true
+//                )
+//            )
+//        }
+//
+//        return items
+//    }
 
     fun ViewModel.invokeOnCleared() {
         val viewModelStore = ViewModelStore()
