@@ -10,7 +10,6 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/site_icon"
         style="@style/ReaderImageView.Avatar"
-        android:layout_marginEnd="@dimen/reader_site_header_avatar_margin_end"
         android:background="@drawable/bg_oval_placeholder"
         android:contentDescription="@null"
         android:importantForAccessibility="no"
@@ -23,8 +22,8 @@
         android:id="@+id/site_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_medium"
-        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_large"
         android:textAppearance="?attr/textAppearanceLabelLarge"
         android:textSize="@dimen/text_sz_medium"
         app:layout_constraintBottom_toTopOf="@+id/site_url"
