@@ -19,13 +19,6 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll">
 
-            <RelativeLayout
-                android:id="@+id/header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:visibility="visible"
-                android:visibility="visible">
-
                 <include
                     android:id="@+id/site_info"
                     layout="@layout/my_site_info_header_card"
@@ -35,8 +28,6 @@
                     android:layout_centerHorizontal="true"
                     app:layout_collapseMode="parallax"
                     app:layout_collapseParallaxMultiplier="1.0" />
-
-            </RelativeLayout>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
