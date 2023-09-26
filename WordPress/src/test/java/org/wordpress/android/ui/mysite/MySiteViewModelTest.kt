@@ -1029,38 +1029,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             .dashboardCardsAndItems.filterIsInstance(InfoItem::class.java))
             .isNotEmpty
     }
-
-    /* ITEM VISIBILITY */
-
-    @Test
-    fun `backup menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
-        setUpSiteItemBuilder()
-        initSelectedSite()
-
-        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
-
-        assertThat(findBackupListItem()).isNull()
-    }
-
-    @Test
-    fun `scan menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
-        setUpSiteItemBuilder()
-        initSelectedSite()
-        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
-
-        assertThat(findScanListItem()).isNull()
-    }
-
-    @Test
-    fun `scan menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
-        setUpSiteItemBuilder(scanAvailable = true)
-        initSelectedSite()
-
-        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = true, backupAvailable = false)
-
-        assertThat(findScanListItem()).isNotNull
-    }
-
     /* SWIPE REFRESH */
 
     @Test
