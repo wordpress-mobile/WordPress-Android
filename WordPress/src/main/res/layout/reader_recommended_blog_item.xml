@@ -15,6 +15,7 @@
         android:contentDescription="@null"
         android:importantForAccessibility="no"
         android:src="@drawable/bg_oval_placeholder_globe_32dp"
+        app:layout_constraintBottom_toTopOf="@+id/site_description"
         app:layout_constraintStart_toStartOf="@id/guideline_start"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1" />
