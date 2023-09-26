@@ -64,7 +64,7 @@ class MenuActivity : ComponentActivity() {
         setContent {
             AppTheme {
                 viewModel.start()
-                UnifiedMenuScreen()
+                MenuScreen()
             }
         }
     }
@@ -107,7 +107,7 @@ class MenuActivity : ComponentActivity() {
 
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    fun UnifiedMenuScreen() {
+    fun MenuScreen() {
         val uiState by viewModel.uiState.collectAsState()
 
         Scaffold(
@@ -119,13 +119,13 @@ class MenuActivity : ComponentActivity() {
                 )
             },
             content = {
-                UnifiedMenuContent(uiState)
+                MenuContent(uiState)
             }
         )
     }
 
     @Composable
-    fun UnifiedMenuContent(uiState: MenuViewState) {
+    fun MenuContent(uiState: MenuViewState) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
