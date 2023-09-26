@@ -754,28 +754,13 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartRepository).clearActiveTask()
     }
 
+
     @Test
-    fun `given site menu tab, when quick start card item is clicked, then quick start tapped is tracked`() {
+    fun `when quick start card item clicked, then quick start card item tapped is tracked`() {
         initSelectedSite(
             isMySiteTabsBuildConfigEnabled = true,
 
-            isQuickStartInProgress = true,
-            initialScreen = MySiteTabType.SITE_MENU.label
-        )
-
-        requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
-
-        verify(quickStartTracker)
-            .track(Stat.QUICK_START_TAPPED, mapOf("type" to QuickStartTaskType.CUSTOMIZE.toString()))
-    }
-
-    @Test
-    fun `given dashboard tab, when quick start card item clicked, then quick start card item tapped is tracked`() {
-        initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true,
-
-            isQuickStartInProgress = true,
-            initialScreen = MySiteTabType.DASHBOARD.label
+            isQuickStartInProgress = true
         )
 
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
@@ -1146,9 +1131,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite(shouldShowJetpackBranding = true)
 
-        assertThat(getSiteMenuTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
-        assertThat(getLastItems().last()).isInstanceOf(JetpackBadge::class.java)
-        assertThat(getDashboardTabLastItems().last()).isInstanceOf(JetpackBadge::class.java)
+        assertThat(getSiteMenuTabLastItems().last()).isInstanceOf(JetpackBadge::class.java)
     }
 
     @Test
@@ -1158,8 +1141,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(shouldShowJetpackBranding = false)
 
         assertThat(getSiteMenuTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
-        assertThat(getLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
-        assertThat(getDashboardTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
     }
 
     @Test
@@ -1212,8 +1193,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        assertThat(getSiteMenuTabLastItems()[0]).isInstanceOf(SingleActionCard::class.java)
-        assertThat(getLastItems()[0]).isInstanceOf(SingleActionCard::class.java)
         assertThat(getDashboardTabLastItems()[0]).isInstanceOf(SingleActionCard::class.java)
     }
 
@@ -1227,8 +1206,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite()
 
         val expected = R.string.jp_migration_success_card_message
-        assertThat((getSiteMenuTabLastItems()[0] as SingleActionCard).textResource).isEqualTo(expected)
-        assertThat((getLastItems()[0] as SingleActionCard).textResource).isEqualTo(expected)
         assertThat((getDashboardTabLastItems()[0] as SingleActionCard).textResource).isEqualTo(expected)
     }
 
@@ -1242,8 +1219,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite()
 
         val expected = R.drawable.ic_wordpress_jetpack_appicon
-        assertThat((getSiteMenuTabLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
-        assertThat((getLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
         assertThat((getDashboardTabLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
     }
 
@@ -1256,7 +1231,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
         initSelectedSite()
 
-        (getSiteMenuTabLastItems()[0] as SingleActionCard).onActionClick.invoke()
+        (getDashboardTabLastItems()[0] as SingleActionCard).onActionClick.invoke()
 
         verify(contentMigrationAnalyticsTracker).trackPleaseDeleteWordPressCardTapped()
     }
@@ -1298,12 +1273,11 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given tabs enabled + dashboard variant, when dashboard cards items, then qs card exists`() {
+    fun `when dashboard cards items built, then qs card exists`() {
         setUpSiteItemBuilder()
 
         initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true,
-            initialScreen = MySiteTabType.DASHBOARD.label
+            isMySiteTabsBuildConfigEnabled = true
         )
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
@@ -1312,15 +1286,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given tabs enabled + site menu default tab variant, when dashboard cards items, then qs card not exists`() {
+    fun `given site menu built, when dashboard cards items, then qs card not exists`() {
         setUpSiteItemBuilder(shouldEnableFocusPoint = true)
 
         initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true,
-            initialScreen = MySiteTabType.SITE_MENU.label
+            isMySiteTabsBuildConfigEnabled = true
         )
 
-        val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
         assertThat(items.filterIsInstance(QuickStartCard::class.java)).isEmpty()
     }
@@ -1340,26 +1313,12 @@ class MySiteViewModelTest : BaseUnitTest() {
         setUpSiteItemBuilder()
 
         initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true,
-            initialScreen = MySiteTabType.DASHBOARD.label
+            isMySiteTabsBuildConfigEnabled = true
         )
 
         val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
         assertThat(items.filterIsInstance(QuickStartCard::class.java)).isEmpty()
-    }
-
-    @Test
-    fun `given tabs enabled + site menu default tab variant, when site menu cards and items, then qs card exists`() {
-        initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true,
-            initialScreen = MySiteTabType.SITE_MENU.label
-        )
-        setUpSiteItemBuilder(shouldEnableFocusPoint = true)
-
-        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
-
-        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty
     }
 
     @Test
@@ -1380,15 +1339,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
         assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isEmpty()
-    }
-
-    @Test
-    fun `given tabs are disabled, when pull to refresh invoked, then pull-to-refresh is tracked`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsEnabled = false)
-
-        viewModel.refresh(true)
-
-        verify(analyticsTrackerWrapper).track(Stat.MY_SITE_PULL_TO_REFRESH, emptyMap())
     }
 
     @Test
@@ -1496,7 +1446,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite()
 
         assertThat(getSiteMenuTabLastItems()[0]).isInstanceOf(JetpackFeatureCard::class.java)
-        assertThat(getLastItems()[0]).isInstanceOf(JetpackFeatureCard::class.java)
+        assertThat(getMenuItems()[0]).isInstanceOf(JetpackFeatureCard::class.java)
     }
 
     @Test
@@ -1597,15 +1547,17 @@ class MySiteViewModelTest : BaseUnitTest() {
         getLastItems().find { it is DomainRegistrationCard } as DomainRegistrationCard?
 
     private fun findJetpackFeatureCard() =
-        getLastItems().find { it is JetpackFeatureCard } as JetpackFeatureCard?
+        getMenuItems().find { it is JetpackFeatureCard } as JetpackFeatureCard?
 
-    private fun findBackupListItem() = getLastItems().filterIsInstance(ListItem::class.java)
+    private fun findBackupListItem() = getMenuItems().filterIsInstance(ListItem::class.java)
         .firstOrNull { it.primaryText == UiStringRes(R.string.backup) }
 
-    private fun findScanListItem() = getLastItems().filterIsInstance(ListItem::class.java)
+    private fun findScanListItem() = getMenuItems().filterIsInstance(ListItem::class.java)
         .firstOrNull { it.primaryText == UiStringRes(R.string.scan) }
 
     private fun getLastItems() = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+
+    private fun getMenuItems() = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
     private fun getDashboardTabLastItems() = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
@@ -1618,7 +1570,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         isMySiteTabsBuildConfigEnabled: Boolean = true,
         isQuickStartInProgress: Boolean = false,
         showStaleMessage: Boolean = false,
-        initialScreen: String = MySiteTabType.SITE_MENU.label,
         isSiteUsingWpComRestApi: Boolean = true,
         isMySiteDashboardTabsEnabled: Boolean = true,
         shouldShowJetpackBranding: Boolean = true
@@ -1630,7 +1581,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
         whenever(buildConfigWrapper.isMySiteTabsEnabled).thenReturn(isMySiteTabsBuildConfigEnabled)
-        whenever(appPrefsWrapper.getMySiteInitialScreen(any())).thenReturn(initialScreen)
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsEnabled)
         whenever(jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard()).thenReturn(shouldShowJetpackBranding)
         if (isSiteUsingWpComRestApi) {
