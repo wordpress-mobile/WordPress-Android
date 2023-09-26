@@ -24,8 +24,4 @@ class JetpackInstallFullPluginShownTracker @Inject constructor(
             }
         }
     }
-
-    companion object {
-        private const val TAB_SOURCE = "tab_source"
-    }
 }
