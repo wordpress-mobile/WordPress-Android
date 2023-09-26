@@ -200,8 +200,7 @@
     <dimen name="reader_count_icon">18dp</dimen>
     <dimen name="reader_more_icon">36dp</dimen>
     <dimen name="reader_follow_icon">16dp</dimen>
-    <dimen name="reader_follow_icon_no_caption">24dp</dimen>
-    <dimen name="reader_follow_icon_padding_no_caption">@dimen/margin_none</dimen>
+    <dimen name="reader_follow_button_min_height">36dp</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
