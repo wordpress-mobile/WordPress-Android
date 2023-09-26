@@ -709,10 +709,6 @@
     <dimen name="blogging_reminders_prompt_help_buttons_size">16dp</dimen>
     <dimen name="blogging_prompt_card_compact_help_button_size">16dp</dimen>
 
-    <dimen name="app_bar_with_site_info_height">62dp</dimen>
-    <dimen name="app_bar_with_no_site_info_height">62dp</dimen>
-    <dimen name="toolbar_bottom_margin_with_no_tabs">0dp</dimen>
-
     <!-- quick link ribbon -->
     <dimen name="quick_link_ribbon_padding_start">12dp</dimen>
     <dimen name="quick_link_ribbon_padding_end">16dp</dimen>
