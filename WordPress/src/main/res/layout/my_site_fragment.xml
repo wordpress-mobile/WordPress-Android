@@ -10,21 +10,14 @@
         android:id="@+id/appbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             style="@style/WordPress.CollapsedToolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
-
-            <RelativeLayout
-                android:id="@+id/header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:visibility="visible"
-                android:visibility="gone">
+            app:layout_scrollFlags="scroll">
 
                 <include
                     android:id="@+id/site_info"
@@ -35,8 +28,6 @@
                     android:layout_centerHorizontal="true"
                     app:layout_collapseMode="parallax"
                     app:layout_collapseParallaxMultiplier="1.0" />
-
-            </RelativeLayout>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

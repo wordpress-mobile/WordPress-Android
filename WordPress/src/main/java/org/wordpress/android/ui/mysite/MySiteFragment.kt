@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.AppBarLayout
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
 import org.wordpress.android.R
@@ -43,7 +42,6 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
-import org.wordpress.android.ui.mysite.MySiteViewModel.SiteInfoToolbarViewParams
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
@@ -156,7 +154,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         super.onViewCreated(view, savedInstanceState)
         initViewModel()
         binding = MySiteFragmentBinding.bind(view).apply {
-            setupToolbar()
             setupContentViews(savedInstanceState)
             setupObservers()
         }
@@ -318,37 +315,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             .get(BasicDialogViewModel::class.java)
     }
 
-    private fun MySiteFragmentBinding.setupToolbar() {
-        appbarMain.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            val maxOffset = appBarLayout.totalScrollRange
-            val currentOffset = maxOffset + verticalOffset
-
-            val percentage = if (maxOffset == 0) {
-                updateCollapsibleToolbar(1)
-                MAX_PERCENT
-            } else {
-                updateCollapsibleToolbar(currentOffset)
-                ((currentOffset.toFloat() / maxOffset.toFloat()) * MAX_PERCENT).toInt()
-            }
-
-            fadeSiteInfoHeader(percentage)
-        })
-    }
-
-    private fun MySiteFragmentBinding.updateCollapsibleToolbar(currentOffset: Int) {
-        if (currentOffset == 0) {
-            collapsingToolbar.title = siteTitle
-            siteInfo.siteInfoCard.visibility = View.INVISIBLE
-        } else {
-            collapsingToolbar.title = null
-            siteInfo.siteInfoCard.visibility = View.VISIBLE
-        }
-    }
-
-    private fun MySiteFragmentBinding.fadeSiteInfoHeader(percentage: Int) {
-        siteInfo.siteInfoCard.alpha = percentage.toFloat() / 100
-    }
-
     private fun MySiteFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity)
 
@@ -462,15 +428,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             )
         }
 
-        viewModel.onScrollTo.observeEvent(viewLifecycleOwner) {
-            var quickStartScrollPosition = it
-            if (quickStartScrollPosition == -1) {
-                appbarMain.setExpanded(true, true)
-                quickStartScrollPosition = 0
-            }
-            if (quickStartScrollPosition > 0) appbarMain.setExpanded(false, true)
-        }
-
         viewModel.refresh.observe(viewLifecycleOwner) {
             viewModel.refresh()
         }
@@ -482,7 +439,17 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         viewModel.onShowJetpackIndividualPluginOverlay.observeEvent(viewLifecycleOwner) {
             WPJetpackIndividualPluginFragment.show(requireActivity().supportFragmentManager)
         }
+
+        viewModel.onScrollTo.observeEvent(viewLifecycleOwner) {
+            var quickStartScrollPosition = it
+            if (quickStartScrollPosition == -1) {
+                quickStartScrollPosition = 0
+            }
+            if (quickStartScrollPosition > 0) recyclerView.scrollToPosition(quickStartScrollPosition)
+            else appbarMain.setExpanded(true)
+        }
     }
+
 
     private fun MySiteFragmentBinding.hideRefreshIndicatorIfNeeded() {
         swipeRefreshLayout.postDelayed({
@@ -552,10 +519,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
-        if (state.siteInfoHeaderState.hasUpdates || !header.isVisible) {
-            siteInfo.loadMySiteDetails(state.siteInfoHeaderState.siteInfoHeader)
-        }
-        updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
+        appbarMain.visibility = View.VISIBLE
+        siteInfo.loadMySiteDetails(state.siteInfoHeader)
 
         recyclerView.setVisible(true)
         val cardAndItems = if (buildConfigWrapper.isJetpackApp) {
@@ -576,8 +541,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
 
         siteTitle = getString(R.string.my_site_section_screen_title)
-        updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
-        appbarMain.setExpanded(false, true)
     }
 
     private fun MySiteInfoHeaderCardBinding.loadMySiteDetails(siteInfoHeader: SiteInfoHeaderCard) {
@@ -604,18 +567,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         siteInfoContainer.subtitle.text = siteInfoHeader.url
         siteInfoContainer.subtitle.setOnClickListener { siteInfoHeader.onUrlClick.click() }
         switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
-    }
-
-    private fun MySiteFragmentBinding.updateSiteInfoToolbarView(siteInfoToolbarViewParams: SiteInfoToolbarViewParams) {
-        showHeader(siteInfoToolbarViewParams.headerVisible)
-        val appBarHeight = resources.getDimension(siteInfoToolbarViewParams.appBarHeight).toInt()
-        appbarMain.layoutParams.height = appBarHeight
-        appbarMain.isLiftOnScroll = siteInfoToolbarViewParams.appBarLiftOnScroll
-        appbarMain.requestLayout()
-    }
-
-    private fun MySiteFragmentBinding.showHeader(visibility: Boolean) {
-        header.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
     }
 
 
@@ -888,7 +839,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     companion object {
         @JvmField var TAG: String = MySiteFragment::class.java.simpleName
         private const val CHECK_REFRESH_DELAY = 300L
-        private const val MAX_PERCENT = 100
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         private const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"

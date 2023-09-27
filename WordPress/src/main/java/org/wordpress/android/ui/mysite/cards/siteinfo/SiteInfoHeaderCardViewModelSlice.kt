@@ -30,7 +30,6 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import java.io.File
@@ -46,8 +45,7 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
     private val wpMediaUtilsWrapper: WPMediaUtilsWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
-    private val contextProvider: ContextProvider,
-    mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+    private val contextProvider: ContextProvider
 ) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage
@@ -61,15 +59,10 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _onTrackWithTabSource = MutableLiveData<Event<MySiteViewModel.MySiteTrackWithTabSource>>()
-    val onTrackWithTabSource = _onTrackWithTabSource
-
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     val onMediaUpload = _onMediaUpload
 
     private lateinit var scope: CoroutineScope
-
-    private val isMySiteDashboardTabsEnabled by lazy { mySiteDashboardTabsFeatureConfig.isEnabled() }
 
     fun initialize(viewModelScope: CoroutineScope) {
         this.scope = viewModelScope
@@ -152,16 +145,8 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
 
     private fun switchSiteClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        trackWithTabSourceIfNeeded(AnalyticsTracker.Stat.MY_SITE_SITE_SWITCHER_TAPPED)
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.MY_SITE_SITE_SWITCHER_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenSitePicker(selectedSite))
-    }
-
-    private fun trackWithTabSourceIfNeeded(stat: AnalyticsTracker.Stat, properties: HashMap<String, *>? = null) {
-        if (isMySiteDashboardTabsEnabled) {
-            _onTrackWithTabSource.postValue(Event(MySiteViewModel.MySiteTrackWithTabSource(stat, properties)))
-        } else {
-            analyticsTrackerWrapper.track(stat, properties ?: emptyMap())
-        }
     }
 
     fun onSiteNameChosen(input: String) {

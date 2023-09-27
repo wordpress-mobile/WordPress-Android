@@ -118,8 +118,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
             contextProvider,
             htmlMessageUtils,
             quickStartTracker,
-            buildConfigWrapper,
-            mySiteDashboardTabsFeatureConfig,
             quickStartExistingUsersV2FeatureConfig
         )
         quickStartCardSource = QuickStartCardSource(

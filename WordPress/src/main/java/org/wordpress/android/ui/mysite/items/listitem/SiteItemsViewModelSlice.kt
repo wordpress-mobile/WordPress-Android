@@ -16,7 +16,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -43,25 +42,22 @@ class SiteItemsViewModelSlice @Inject constructor(
     val onSnackbarMessage = _onSnackbarMessage
 
     fun buildItems(
-        defaultTab: MySiteTabType,
+        shouldEnableFocusPoints: Boolean = false,
         site: SiteModel,
         activeTask: QuickStartStore.QuickStartTask? = null,
         backupAvailable: Boolean = false,
         scanAvailable: Boolean = false
     ): MySiteCardAndItemBuilderParams.SiteItemsBuilderParams {
-        val shouldEnableFocusPoint = shouldEnableSiteItemsFocusPoints(defaultTab)
         return MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
             site = site,
             activeTask = activeTask,
             backupAvailable = backupAvailable,
             scanAvailable = scanAvailable,
-            enableFocusPoints = shouldEnableFocusPoint,
+            enableFocusPoints = shouldEnableFocusPoints,
             onClick = this::onItemClick,
             isBlazeEligible = isSiteBlazeEligible()
         )
     }
-
-    private fun shouldEnableSiteItemsFocusPoints(defaultTab: MySiteTabType) = defaultTab != MySiteTabType.DASHBOARD
 
     @Suppress("ComplexMethod")
     private fun onItemClick(action: ListItemAction) {

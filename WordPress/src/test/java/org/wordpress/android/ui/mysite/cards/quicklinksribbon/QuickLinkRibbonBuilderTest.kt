@@ -91,20 +91,10 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
         assertThat(quickLinkRibbon.showPagesFocusPoint).isEqualTo(true)
     }
 
-    @Test
-    fun `given enable focus point is false, when card is built, then active focus point should false`() {
-        val quickLinkRibbon = buildQuickLinkRibbon(showPagesFocusPoint = true, enableFocusPoints = false)
-
-        assertThat(quickLinkRibbon.quickLinkRibbonItems[2].showFocusPoint).isEqualTo(false)
-        assertThat(quickLinkRibbon.showPagesFocusPoint).isEqualTo(false)
-        assertThat(quickLinkRibbon.activeQuickStartItem).isEqualTo(false)
-    }
-
     private fun buildQuickLinkRibbon(
         showPages: Boolean = true,
         showPagesFocusPoint: Boolean = false,
         showStatsFocusPoint: Boolean = false,
-        enableFocusPoints: Boolean = true,
         isNewSiteQuickStart: Boolean = true
     ): QuickLinkRibbon {
         setShowPages(showPages)
@@ -124,8 +114,7 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
                 onMediaClick,
                 onStatsClick,
                 onMoreClick,
-                setActiveTask(showPagesFocusPoint, showStatsFocusPoint, checkStatsTask),
-                enableFocusPoints = enableFocusPoints
+                setActiveTask(showPagesFocusPoint, showStatsFocusPoint, checkStatsTask)
             )
         )
     }

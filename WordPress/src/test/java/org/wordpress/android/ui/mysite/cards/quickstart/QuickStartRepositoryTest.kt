@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.cards.quickstart
 
-import androidx.core.text.HtmlCompat
 import com.google.android.material.snackbar.Snackbar.Callback
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -10,7 +9,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.reset
 import org.mockito.kotlin.verify
@@ -20,12 +18,9 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
@@ -37,7 +32,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -78,9 +72,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     lateinit var buildConfigWrapper: BuildConfigWrapper
 
     @Mock
-    lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
-
-    @Mock
     lateinit var quickStartExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
 
     @Mock
@@ -92,19 +83,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var quickStartPrompts: MutableList<QuickStartMySitePrompts>
-    private lateinit var quickStartTabStep: MutableList<QuickStartTabStep?>
     private val siteLocalId = 1
-
-    private val siteMenuTasks = listOf(
-        QuickStartNewSiteTask.ENABLE_POST_SHARING
-    )
-
-    private val dashboardTasks = listOf(
-        QuickStartNewSiteTask.CHECK_STATS,
-        QuickStartNewSiteTask.REVIEW_PAGES
-    )
-
-    private val nonSiteMenuTasks = QuickStartTask.getAllTasks().subtract(siteMenuTasks)
 
     @Before
     fun setUp() = test {
@@ -123,22 +102,16 @@ class QuickStartRepositoryTest : BaseUnitTest() {
             contextProvider,
             htmlMessageUtils,
             quickStartTracker,
-            buildConfigWrapper,
-            mySiteDashboardTabsFeatureConfig,
             quickStartExistingUsersV2FeatureConfig
         )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
-        quickStartTabStep = mutableListOf()
         quickStartRepository.onSnackbar.observeForever { event ->
             event?.getContentIfNotHandled()
                 ?.let { snackbars.add(it) }
         }
         quickStartRepository.onQuickStartMySitePrompts.observeForever { event ->
             event?.getContentIfNotHandled()?.let { quickStartPrompts.add(it) }
-        }
-        quickStartRepository.onQuickStartTabStep.observeForever {
-            quickStartTabStep.add(it)
         }
         site = SiteModel()
         site.id = siteLocalId
@@ -191,93 +164,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.completeTask(QuickStartNewSiteTask.UPDATE_SITE_TITLE)
 
         verifyNoInteractions(quickStartStore)
-    }
-
-    /* QUICK START REQUEST TAB STEP - SITE MENU */
-
-    @Test
-    fun `given task origin site menu tab, when site menu task is activated, then site menu tab step is not started`() {
-        quickStartRepository.currentTab = MySiteTabType.SITE_MENU
-        initQuickStartInProgress()
-
-        quickStartRepository.setActiveTask(siteMenuTasks.random())
-
-        assertThat(quickStartTabStep).isEmpty()
-    }
-
-    @Test
-    fun `given task origin dashboard tab, when site menu task is activated, then site menu tab step is started`() {
-        quickStartRepository.currentTab = MySiteTabType.DASHBOARD
-        quickStartRepository.quickStartTaskOriginTab = MySiteTabType.SITE_MENU
-        initQuickStartInProgress()
-        val task = siteMenuTasks.random()
-
-        quickStartRepository.setActiveTask(task)
-
-        assertThat(quickStartTabStep.last()).isEqualTo(QuickStartTabStep(true, task, MySiteTabType.SITE_MENU))
-    }
-
-    @Test
-    fun `given task origin dashboard tab, when site menu task is activated, then snackbar is shown`() {
-        quickStartRepository.currentTab = MySiteTabType.DASHBOARD
-        quickStartRepository.quickStartTaskOriginTab = MySiteTabType.SITE_MENU
-        initQuickStartInProgress()
-
-        quickStartRepository.setActiveTask(siteMenuTasks.random())
-
-        assertThat(snackbars).isNotEmpty
-    }
-
-    @Test
-    fun `given task origin dashboard tab, when non site menu task is activated, then site menu step is not started`() {
-        quickStartRepository.currentTab = MySiteTabType.DASHBOARD
-        initQuickStartInProgress()
-
-        quickStartRepository.setActiveTask(nonSiteMenuTasks.random())
-
-        assertThat(quickStartTabStep).isEmpty()
-    }
-
-    /* QUICK START REQUEST TAB STEP - DASHBOARD */
-
-    @Test
-    fun `given task origin + current tab is dashboard, when task is activated, then tab step is not started`() {
-        quickStartRepository.currentTab = MySiteTabType.DASHBOARD
-        quickStartRepository.quickStartTaskOriginTab = MySiteTabType.DASHBOARD
-        val task = dashboardTasks.random()
-        initQuickStartInProgress()
-
-        quickStartRepository.setActiveTask(task)
-
-        assertThat(quickStartTabStep).isEmpty()
-    }
-
-    @Test
-    fun `given new site + task origin dashboard + current tab menu, when task activated, then tab step started`() {
-        quickStartRepository.currentTab = MySiteTabType.SITE_MENU
-        quickStartRepository.quickStartTaskOriginTab = MySiteTabType.DASHBOARD
-        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-            .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
-        val task = dashboardTasks.random()
-        initQuickStartInProgress()
-
-        quickStartRepository.setActiveTask(task)
-
-        assertThat(quickStartTabStep.last()).isEqualTo(QuickStartTabStep(true, task, MySiteTabType.DASHBOARD))
-    }
-
-    @Test
-    fun `given existing site + task origin dashboard + current tab menu, when task activated, then tab step started`() {
-        quickStartRepository.currentTab = MySiteTabType.SITE_MENU
-        quickStartRepository.quickStartTaskOriginTab = MySiteTabType.DASHBOARD
-        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-            .thenReturn(QuickStartExistingSiteTask.CHECK_STATS)
-        val task = QuickStartExistingSiteTask.CHECK_STATS
-        initQuickStartInProgress()
-
-        quickStartRepository.setActiveTask(task)
-
-        assertThat(quickStartTabStep.last()).isEqualTo(QuickStartTabStep(true, task, MySiteTabType.DASHBOARD))
     }
 
     /* QUICK START REQUEST NEXT STEP */
@@ -390,7 +276,5 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(quickStartType, siteLocalId.toLong()))
             .thenReturn(nextUncompletedTask)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormat(anyOrNull())).thenReturn("")
-        whenever(resourceProvider.getString(anyOrNull(), anyOrNull())).thenReturn("")
-        whenever(htmlCompat.fromHtml(anyOrNull(), eq(HtmlCompat.FROM_HTML_MODE_COMPACT))).thenReturn("")
     }
 }
