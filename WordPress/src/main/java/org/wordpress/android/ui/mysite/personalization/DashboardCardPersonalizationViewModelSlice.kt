@@ -83,12 +83,6 @@ class DashboardCardPersonalizationViewModelSlice @Inject constructor(
                 description = R.string.personalization_screen_blogging_prompts_card_description,
                 enabled = isPromptsSettingEnabled(selectedSiteRepository.getSelectedSiteLocalId()),
                 cardType = CardType.BLOGGING_PROMPTS
-            ),
-            DashboardCardState(
-                title = R.string.personalization_screen_next_steps_card_title,
-                description = R.string.personalization_screen_next_steps_card_description,
-                enabled = isNextStepCardShown(siteId),
-                cardType = CardType.NEXT_STEPS
             )
         )
     }
@@ -115,7 +109,6 @@ class DashboardCardPersonalizationViewModelSlice @Inject constructor(
                 CardType.ACTIVITY_LOG -> appPrefsWrapper.setShouldHideActivityDashboardCard(siteId, !enabled)
                 CardType.BLAZE -> appPrefsWrapper.setShouldHideBlazeCard(siteId, !enabled)
                 CardType.BLOGGING_PROMPTS -> updatePromptsCardEnabled(enabled)
-                CardType.NEXT_STEPS -> appPrefsWrapper.setShouldHideNextStepsDashboardCard(siteId, !enabled)
             }
             // update the ui state
             updateCardState(cardType, enabled)
@@ -161,9 +154,6 @@ class DashboardCardPersonalizationViewModelSlice @Inject constructor(
     private fun isActivityLogCardShown(siteId: Long) = !appPrefsWrapper.getShouldHideActivityDashboardCard(siteId)
 
     private fun isBlazeCardShown(siteId: Long) = !appPrefsWrapper.hideBlazeCard(siteId)
-
-    private fun isNextStepCardShown(siteId: Long) = !appPrefsWrapper.getShouldHideNextStepsDashboardCard(siteId)
-
     private suspend fun isPromptsSettingEnabled(
         siteId: Int
     ): Boolean = bloggingRemindersStore
