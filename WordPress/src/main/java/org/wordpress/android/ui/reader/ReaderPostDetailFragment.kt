@@ -20,6 +20,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewStub
 import android.webkit.CookieManager
 import android.webkit.WebView
 import android.widget.ImageView.ScaleType.CENTER_CROP
@@ -29,12 +30,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.appcompat.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -48,6 +51,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
@@ -59,6 +63,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
+import org.wordpress.android.databinding.ReaderIncludePostDetailFooterBinding
+import org.wordpress.android.databinding.ReaderIncludePostDetailFooterNewBinding
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -180,7 +186,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private var moreMenuPopup: ListPopupWindow? = null
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var scrollView: WPScrollView
-    private lateinit var layoutFooter: ViewGroup
     private lateinit var readerWebView: ReaderWebView
     private lateinit var readerProgressBar: ProgressBar
 
@@ -205,6 +210,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var globalRelatedPostsView: ReaderSimplePostContainerView
     private lateinit var localRelatedPostsView: ReaderSimplePostContainerView
 
+    private lateinit var layoutFooterBinding: PostDetailFooterBarBinding
+
     private var postSlugsResolutionUnderway: Boolean = false
     private var hasAlreadyUpdatedPost: Boolean = false
     private var isWebViewPaused: Boolean = false
@@ -220,6 +227,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private val viewModel: ReaderPostDetailViewModel by viewModels()
     private lateinit var conversationViewModel: ConversationNotificationsViewModel
+
+    private var binding: ReaderFragmentPostDetailBinding? = null
 
     @Inject
     internal lateinit var accountStore: AccountStore
@@ -351,7 +360,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false)
+        val viewBinding = ReaderFragmentPostDetailBinding.inflate(inflater, container, false).also { binding = it }
+        val view = viewBinding.root
 
         initSwipeRefreshLayout(view)
         initAppBar(view)
@@ -459,14 +469,36 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun initLayoutFooter(view: View) {
-        layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
-        val elevationOverlayProvider = ElevationOverlayProvider(layoutFooter.context)
-        val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
-        val elevatedSurfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
-            appbarElevation
-        )
-        layoutFooter.setBackgroundColor(elevatedSurfaceColor)
-        layoutFooter.visibility = View.INVISIBLE
+        val isReaderImprovementsEnabled = readerImprovementsFeatureConfig.isEnabled()
+        view.findViewById<ViewStub>(R.id.layout_post_detail_footer).apply {
+            layoutResource = if (isReaderImprovementsEnabled) {
+                R.layout.reader_include_post_detail_footer_new
+            } else {
+                R.layout.reader_include_post_detail_footer
+            }
+
+            setOnInflateListener { _, inflated ->
+                layoutFooterBinding = if (isReaderImprovementsEnabled) {
+                    ReaderIncludePostDetailFooterNewBinding.bind(inflated).mapBinding().apply {
+                        // the new bar should hide on scroll
+                        val params = root.layoutParams as CoordinatorLayout.LayoutParams
+                        params.behavior = HideBottomViewOnScrollBehavior<View>()
+                    }
+                } else {
+                    ReaderIncludePostDetailFooterBinding.bind(inflated).mapBinding().apply {
+                        // the old bar should have the elevated surface color background
+                        val elevationOverlayProvider = ElevationOverlayProvider(root.context)
+                        val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
+                        val elevatedSurfaceColor = elevationOverlayProvider
+                            .compositeOverlayWithThemeSurfaceColorIfNeeded(appbarElevation)
+                        root.setBackgroundColor(elevatedSurfaceColor)
+                    }
+                }
+                layoutFooterBinding.root.isInvisible = true
+            }
+        }.also { stub ->
+            stub.inflate()
+        }
     }
 
     private fun initSignInButton(view: View) {
@@ -499,11 +531,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        val binding = ReaderFragmentPostDetailBinding.bind(view)
 
         initLikeFacesRecycler(savedInstanceState)
         initCommentSnippetRecycler(savedInstanceState)
-        initViewModel(binding, savedInstanceState)
+        binding?.let { initViewModel(it, savedInstanceState) }
         restoreState(savedInstanceState)
 
         showPost()
@@ -785,10 +816,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         updateFeaturedImage(state.featuredImageUiState, binding)
         updateExcerptFooter(state.excerptFooterUiState)
 
-        with(binding.layoutPostDetailFooter) {
-            updateActionButton(state.postId, state.blogId, state.actions.likeAction, countLikes)
+        with(layoutFooterBinding) {
+            updateActionButton(state.postId, state.blogId, state.actions.likeAction, like)
             updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
-            updateActionButton(state.postId, state.blogId, state.actions.commentsAction, countComments)
+            updateActionButton(state.postId, state.blogId, state.actions.commentsAction, comment)
             updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
         }
 
@@ -806,7 +837,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             if (handleDirectOperation()) return
 
             scrollView.visibility = View.VISIBLE
-            layoutFooter.visibility = View.VISIBLE
+            layoutFooterBinding.root.visibility = View.VISIBLE
         }
     }
 
@@ -987,13 +1018,18 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             binding.layoutPostDetailContainer,
             uiHelpers.getTextOfUiString(requireContext(), this.message),
             Snackbar.LENGTH_LONG
-        )
+        ).setAnchorView(layoutFooterBinding.root)
         if (this.buttonTitle != null) {
             snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), this.buttonTitle)) {
                 this.buttonAction.invoke()
             }
         }
         snackbar.show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
     override fun onDestroy() {
@@ -1791,6 +1827,32 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             AniUtils.animateTopBar(appBar, show)
         }
     }
+
+    private data class PostDetailFooterBarBinding(
+        val root: ViewGroup,
+        val bookmark: View,
+        val reblog: View,
+        val comment: View,
+        val like: View,
+    )
+
+    private fun ReaderIncludePostDetailFooterBinding.mapBinding(): PostDetailFooterBarBinding =
+        PostDetailFooterBarBinding(
+            root,
+            bookmark,
+            reblog,
+            countComments,
+            countLikes,
+        )
+
+    private fun ReaderIncludePostDetailFooterNewBinding.mapBinding(): PostDetailFooterBarBinding =
+        PostDetailFooterBarBinding(
+            root,
+            bookmark,
+            reblog,
+            comment,
+            like,
+        )
 
     companion object {
         private const val ON_PAGE_FINISHED_DELAY_MILLIS = 300L

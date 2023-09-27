@@ -404,7 +404,7 @@
         <item name="chipStrokeWidth">@dimen/reader_expandable_tags_view_chip_new_border</item>
     </style>
 
-    <!-- Post Details Header -->
+    <!-- Post Details -->
     <style name="ReaderTextView.PostDetail" />
 
     <style name="ReaderTextView.PostDetail.Header" />
@@ -436,5 +436,16 @@
     <style name="ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis">
         <item name="android:alpha">@dimen/material_emphasis_medium</item>
     </style>
+
+   <style name="ReaderTextView.PostDetail.FooterActionItem">
+       <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>
+       <item name="android:textAlignment">center</item>
+       <item name="android:textColor">@color/on_surface_primary_selector</item>
+       <item name="android:lines">1</item>
+       <item name="android:ellipsize">end</item>
+       <item name="android:background">?attr/selectableItemBackground</item>
+       <item name="drawableTint">@color/on_surface_primary_selector</item>
+       <item name="android:minHeight">@dimen/reader_button_minimum_height</item>
+   </style>
 
 </resources>
