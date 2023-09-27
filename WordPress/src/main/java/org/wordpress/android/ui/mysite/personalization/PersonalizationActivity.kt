@@ -21,13 +21,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Tab
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -41,6 +42,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,6 +52,7 @@ import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.components.buttons.WPSwitch
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.utils.UiString
 
 @AndroidEntryPoint
 class PersonalizationActivity : ComponentActivity() {
@@ -269,7 +272,8 @@ fun ShortcutStateRow(
                     shape = RoundedCornerShape(size = 10.dp)
                 )
                 .padding(start = 12.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
         ) {
             Image(
                 painter = painterResource(id = state.icon),
@@ -286,10 +290,44 @@ fun ShortcutStateRow(
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
                 modifier = Modifier
-                    .weight(1f)
                     .padding(end = 8.dp),
             )
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.weight(1f))
+            IconButton(
+                modifier = modifier
+                    .size(24.dp)
+                    .padding(1.dp),
+                onClick = {}
+            ) {
+                val icon = if (state.isActive) R.drawable.ic_personalization_quick_link_remove_circle
+                else R.drawable.ic_personalization_shortcuts_plus_circle
+
+                val iconTint = if (state.isActive) Color(0xFF008710)
+                else Color(0xFFD63638)
+
+                Icon(
+                    painter = painterResource(id = icon),
+                    tint = iconTint,
+                    contentDescription = stringResource(
+                        R.string.personalization_screen_shortcuts_add_or_remove_shortcut_button
+                    ),
+                )
+            }
         }
     }
 }
+
+@Preview
+@Composable
+fun PersonalizationScreenPreview() {
+    AppTheme {
+        ShortcutStateRow(
+            state = ShortcutsState(
+                label = UiString.UiStringRes(R.string.media),
+                icon = R.drawable.media_icon_circle,
+                isActive = true
+            )
+        )
+    }
+}
+
