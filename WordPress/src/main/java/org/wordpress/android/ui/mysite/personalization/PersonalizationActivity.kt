@@ -277,8 +277,9 @@ fun ShortcutStateRow(
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .size(24.dp)
-                    .padding(end = 8.dp)
+                    .padding(1.dp)
             )
+            Spacer(Modifier.width(8.dp))
             Text(
                 text = uiStringText(state.label),
                 fontSize = 16.sp,
