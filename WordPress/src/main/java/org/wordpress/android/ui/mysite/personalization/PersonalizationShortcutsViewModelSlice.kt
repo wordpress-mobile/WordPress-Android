@@ -19,7 +19,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class PersonalizationShortcutsViewModelSlice @Inject constructor(
-    private val selectedSiteRepository: SelectedSiteRepository,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val siteItemsBuilder: SiteItemsBuilder,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
@@ -35,12 +34,7 @@ class PersonalizationShortcutsViewModelSlice @Inject constructor(
 
     val uiState: StateFlow<List<ShortcutsState>> = _uiState
 
-    fun start() {
-        val site = selectedSiteRepository.getSelectedSite()!!
-        buildSiteMenu(site)
-    }
-
-    private fun buildSiteMenu(site: SiteModel) {
+    fun start(site: SiteModel) {
         _uiState.value = convertToShortCutsState(
             items = siteItemsBuilder.build(
                 MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
@@ -50,7 +44,7 @@ class PersonalizationShortcutsViewModelSlice @Inject constructor(
                     scanAvailable = false,
                     enableFocusPoints = false,
                     onClick = { },
-                    isBlazeEligible = isSiteBlazeEligible()
+                    isBlazeEligible = isSiteBlazeEligible(site)
                 )
             )
         )
@@ -58,13 +52,13 @@ class PersonalizationShortcutsViewModelSlice @Inject constructor(
     }
 
     private fun convertToShortCutsState(items: List<MySiteCardAndItem>): List<ShortcutsState> {
-        return (items.filter { it.type == MySiteCardAndItem.Type.LIST_ITEM } as List<MySiteCardAndItem.Item.ListItem>)
-            .map { listItem ->
-                ShortcutsState(
-                    icon = listItem.primaryIcon,
-                    label = listItem.primaryText as UiString.UiStringRes
-                )
-            }
+        val listItems = items.filterIsInstance(MySiteCardAndItem.Item.ListItem::class.java)
+        return listItems.map { listItem ->
+            ShortcutsState(
+                icon = listItem.primaryIcon,
+                label = listItem.primaryText as UiString.UiStringRes
+            )
+        }
     }
 
     private fun updateSiteItemsForJetpackCapabilities(site: SiteModel) {
@@ -79,7 +73,7 @@ class PersonalizationShortcutsViewModelSlice @Inject constructor(
                             scanAvailable = (it.scan && !site.isWPCom && !site.isWPComAtomic),
                             enableFocusPoints = false,
                             onClick = { },
-                            isBlazeEligible = isSiteBlazeEligible()
+                            isBlazeEligible = isSiteBlazeEligible(site)
                         )
                     )
                 )
@@ -87,8 +81,8 @@ class PersonalizationShortcutsViewModelSlice @Inject constructor(
         }
     }
 
-    private fun isSiteBlazeEligible() =
-        blazeFeatureUtils.isSiteBlazeEligible(selectedSiteRepository.getSelectedSite()!!)
+    private fun isSiteBlazeEligible(site: SiteModel) =
+        blazeFeatureUtils.isSiteBlazeEligible(site)
 
     fun onCleared() {
         this.scope.cancel()
