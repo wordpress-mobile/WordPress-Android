@@ -4708,8 +4708,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="personalization_screen_title"> Personalize home tab</string>
     <string name="personalization_screen_cards_tab_title">Cards</string>
     <string name="personalization_screen_shortcuts_tab_title">Shortcuts</string>
-    <string name="personalization_screen_description"> Add or hide Cards</string>
-    <string name="personalization_screen_footer_cards"> Cards may show different content depending on what\'s happening with your site</string>
+    <string name="personalization_screen_tab_cards_description">Add or hide Cards</string>
+    <string name="personalization_screen_tab_cards_footer_cards">Cards may show different content depending on what\'s happening with your site</string>
     <string name="personalization_screen_stats_card_title" translatable="false">@string/my_site_todays_stat_card_title</string>
     <string name="personalization_screen_stats_card_description">Views, Visitors and likes</string>
     <string name="personalization_screen_draft_posts_card_title"> Draft posts</string>
