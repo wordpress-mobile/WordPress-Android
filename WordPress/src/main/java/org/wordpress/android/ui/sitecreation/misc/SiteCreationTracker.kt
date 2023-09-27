@@ -16,7 +16,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.T
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.THUMBNAIL_MODE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VERTICAL_SLUG
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
+import org.wordpress.android.util.config.PlansInSiteCreationFeatureConfig
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,7 +32,7 @@ private const val SITE_CREATION_SOURCE = "source"
 @Singleton
 class SiteCreationTracker @Inject constructor(
     val tracker: AnalyticsTrackerWrapper,
-    private val purchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig,
+    private val plansInSiteCreationFeatureConfig: PlansInSiteCreationFeatureConfig
 ) : LayoutPickerTracker {
     private enum class PROPERTY(val key: String) {
         TEMPLATE("template"),
@@ -63,7 +63,7 @@ class SiteCreationTracker @Inject constructor(
     }
 
     fun trackDomainSelected(chosenDomain: String, searchTerm: String, domainCost: String = "free") {
-        if(purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
+        if(plansInSiteCreationFeatureConfig.isEnabled()) {
             tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_SELECTED,
                 mapOf(

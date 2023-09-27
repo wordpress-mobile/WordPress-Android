@@ -142,16 +142,6 @@ class DashboardCardPersonalizationViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given next steps card is not hidden, when cards are fetched, then state is checked`() {
-        whenever(appPrefsWrapper.getShouldHideNextStepsDashboardCard(123L)).thenReturn(false)
-
-        viewModelSlice.start(123L)
-        val statsCardState = uiStateList.last().find { it.cardType == CardType.NEXT_STEPS }
-
-        assertTrue(statsCardState!!.enabled)
-    }
-
-    @Test
     fun `given card is disabled, when card is toggled, then card is enabled`() {
         val cardType = CardType.STATS
         whenever(appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(site.siteId)).thenReturn(true)
@@ -236,16 +226,6 @@ class DashboardCardPersonalizationViewModelSliceTest : BaseUnitTest() {
         verify(bloggingRemindersStore).updateBloggingReminders(
             userSetBloggingRemindersModel.copy(isPromptsCardEnabled = true)
         )
-    }
-
-    @Test
-    fun `when next steps card state is toggled, then pref is updated`() {
-        val cardType = CardType.NEXT_STEPS
-
-        viewModelSlice.start(123L)
-        viewModelSlice.onCardToggled(cardType, true)
-
-        verify(appPrefsWrapper).setShouldHideNextStepsDashboardCard(site.siteId, false)
     }
 
     @Test

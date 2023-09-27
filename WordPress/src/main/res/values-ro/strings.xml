@@ -634,7 +634,7 @@ Language: ro
     <string name="gutenberg_native_tiled_gallery_settings">Setări galerii placate</string>
     <string name="gutenberg_native_gallery_style">Stil galerie</string>
     <string name="sharing_facebook_warning_message">Îți poți conecta contul Facebook la site-ul WordPress.com. Când ai terminat, întoarce-te la aplicația WordPress pentru a modifica setările de partajare.</string>
-    <string name="sharing_facebook_warning_positive_button">Mergi pe web</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Mergi pe web</string>
     <string name="about_automattic_wordpress">WordPress</string>
     <string name="about_automattic_back_icon_description">Icon înapoi</string>
     <string name="about_automattic_logo_description">Logo Automattic</string>

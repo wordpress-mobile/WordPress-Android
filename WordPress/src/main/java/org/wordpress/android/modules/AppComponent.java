@@ -16,7 +16,6 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderBottomSheetFragment;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderTimePicker;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
-import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.comments.unified.EditCancelDialogFragment;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsFragment;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListAdapter;
@@ -213,8 +212,6 @@ public interface AppComponent {
     void inject(AddQuickPressShortcutActivity object);
 
     void inject(CommentDetailFragment object);
-
-    void inject(EditCommentActivity object);
 
     void inject(MeFragment object);
 

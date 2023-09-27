@@ -108,9 +108,7 @@ android {
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
         buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "true"
         buildConfigField "boolean", "QUICK_START_DYNAMIC_CARDS", "false"
-        buildConfigField "boolean", "SITE_DOMAINS", "false"
         buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
-        buildConfigField "boolean", "UNIFIED_COMMENTS_COMMENT_EDIT", "false"
         buildConfigField "boolean", "MY_SITE_DASHBOARD_TABS", "false"
         buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
@@ -144,7 +142,9 @@ android {
         buildConfigField "boolean", "WP_INDIVIDUAL_PLUGIN_OVERLAY", "false"
         buildConfigField "boolean", "SITE_EDITOR_MVP", "false"
         buildConfigField "boolean", "JETPACK_SOCIAL", "false"
+        buildConfigField "boolean", "JP_SOCIAL_MASTODON_CONNECT_VIA_WEB", "true"
         buildConfigField "boolean", "CONTACT_SUPPORT_CHATBOT", "false"
+        buildConfigField "boolean", "PLANS_IN_SITE_CREATION", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -157,7 +157,6 @@ android {
         buildConfigField "boolean", "ENABLE_MY_SITE_DASHBOARD_TABS", "true"
         buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
         buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
-        buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
         buildConfigField "boolean", "BLAZE_MANAGE_CAMPAIGNS", "false"
         buildConfigField "boolean", "DASHBOARD_PERSONALIZATION", "false"
 
@@ -186,7 +185,6 @@ android {
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "false"
             buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
-            buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
 
             manifestPlaceholders = [magicLinkScheme:"wordpress"]
         }
@@ -208,7 +206,6 @@ android {
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
             buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "false"
-            buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
 
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
 
