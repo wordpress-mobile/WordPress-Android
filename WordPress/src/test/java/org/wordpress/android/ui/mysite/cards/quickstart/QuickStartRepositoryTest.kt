@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.cards.quickstart
 
-import androidx.core.text.HtmlCompat
 import com.google.android.material.snackbar.Snackbar.Callback
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -10,7 +9,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.reset
 import org.mockito.kotlin.verify
