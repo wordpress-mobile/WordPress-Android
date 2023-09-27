@@ -57,4 +57,11 @@ object AppColor {
     // Yellows
     @Stable
     val Yellow50 = Color(0xFF9D6E00)
+
+    // Oranges
+    @Stable
+    val Orange40 = Color(0xFFD67709)
+
+    @Stable
+    val Orange50 = Color(0xFFB26200)
 }
