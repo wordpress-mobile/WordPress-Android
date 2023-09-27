@@ -11,14 +11,13 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.utils.UiString
 import javax.inject.Inject
 import javax.inject.Named
 
-class PersonalizationShortcutsViewModelSlice @Inject constructor(
+class ShortcutsPersonalizationViewModelSlice @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val siteItemsBuilder: SiteItemsBuilder,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
