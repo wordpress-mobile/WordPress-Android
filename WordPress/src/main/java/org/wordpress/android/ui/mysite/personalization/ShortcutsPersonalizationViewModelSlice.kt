@@ -55,7 +55,8 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
         return listItems.map { listItem ->
             ShortcutsState(
                 icon = listItem.primaryIcon,
-                label = listItem.primaryText as UiString.UiStringRes
+                label = listItem.primaryText as UiString.UiStringRes,
+                disableTint = listItem.disablePrimaryIconTint
             )
         }
     }

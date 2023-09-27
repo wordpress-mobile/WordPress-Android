@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -281,7 +282,10 @@ fun ShortcutStateRow(
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .size(24.dp)
-                    .padding(1.dp)
+                    .padding(1.dp),
+                colorFilter = if (state.disableTint) null
+                else ColorFilter.tint(MaterialTheme.colors.onSurface)
+
             )
             Spacer(Modifier.width(8.dp))
             Text(
@@ -302,8 +306,8 @@ fun ShortcutStateRow(
                 val icon = if (state.isActive) R.drawable.ic_personalization_quick_link_remove_circle
                 else R.drawable.ic_personalization_shortcuts_plus_circle
 
-                val iconTint = if (state.isActive) Color(0xFF008710)
-                else Color(0xFFD63638)
+                val iconTint = if (state.isActive) Color(0xFFD63638)
+                else Color(0xFF008710)
 
                 Icon(
                     painter = painterResource(id = icon),
