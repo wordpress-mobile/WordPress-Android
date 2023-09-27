@@ -480,13 +480,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 } else {
                     ReaderIncludePostDetailFooterBinding.bind(inflated).mapBinding()
                 }
-
-                val elevationOverlayProvider = ElevationOverlayProvider(layoutFooterBinding.root.context)
-                val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
-                val elevatedSurfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
-                    appbarElevation
-                )
-                layoutFooterBinding.root.setBackgroundColor(elevatedSurfaceColor)
                 layoutFooterBinding.root.visibility = View.INVISIBLE
             }
         }.also { stub ->
