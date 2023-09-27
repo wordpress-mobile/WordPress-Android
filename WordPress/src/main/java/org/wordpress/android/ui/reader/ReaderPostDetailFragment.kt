@@ -488,9 +488,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         // the old bar should have the elevated surface color background
                         val elevationOverlayProvider = ElevationOverlayProvider(root.context)
                         val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
-                        val elevatedSurfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
-                            appbarElevation
-                        )
+                        val elevatedSurfaceColor = elevationOverlayProvider
+                            .compositeOverlayWithThemeSurfaceColorIfNeeded(appbarElevation)
                         root.setBackgroundColor(elevatedSurfaceColor)
                     }
                 }
