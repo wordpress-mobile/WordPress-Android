@@ -37,6 +37,7 @@ import androidx.core.graphics.BlendModeCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -493,7 +494,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         root.setBackgroundColor(elevatedSurfaceColor)
                     }
                 }
-                layoutFooterBinding.root.visibility = View.INVISIBLE
+                layoutFooterBinding.root.isInvisible = true
             }
         }.also { stub ->
             stub.inflate()
