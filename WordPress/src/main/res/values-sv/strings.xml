@@ -633,7 +633,7 @@ Language: sv_SE
     <string name="gutenberg_native_tiled_gallery_settings">Mosaikinställningar för galleri</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Går till skärmen för val av layout</string>
     <string name="gutenberg_native_gallery_style">Galleristil</string>
-    <string name="sharing_facebook_warning_positive_button">Gå till webben</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Gå till webben</string>
     <string name="sharing_facebook_warning_message">Du kan ansluta ditt Facebook-konto på WordPress.com-webbplatsen. När du är klar, gå tillbaka till WordPress-appen för att ändra dina delningsinställningar.</string>
     <string name="about_automattic_app_icon_description">App-ikon</string>
     <string name="about_automattic_back_icon_description">Ikon för tillbaka</string>

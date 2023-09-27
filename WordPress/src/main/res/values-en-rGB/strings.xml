@@ -547,7 +547,7 @@ Language: en_GB
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navigates to layout selection screen</string>
     <string name="gutenberg_native_tiled_gallery_settings">Tiled gallery settings</string>
     <string name="sharing_facebook_warning_message">You can connect your Facebook account on the WordPress.com website. When you\'re done, return to the WordPress app to change your Sharing settings.</string>
-    <string name="sharing_facebook_warning_positive_button">Go to web</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Go to web</string>
     <string name="gutenberg_native_gallery_style">Gallery style</string>
     <string name="about_automattic_wordpress">WordPress</string>
     <string name="about_automattic_logo_description">Automattic logo</string>

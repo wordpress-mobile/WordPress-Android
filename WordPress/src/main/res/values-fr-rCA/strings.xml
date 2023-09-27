@@ -632,7 +632,7 @@ Language: fr
     <string name="gutenberg_native_tiled_gallery_settings">Réglages de la mosaïque d’images</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Ouvrir l’écran de sélection de la mise en page</string>
     <string name="gutenberg_native_gallery_style">Style de la galerie</string>
-    <string name="sharing_facebook_warning_positive_button">Aller sur le web</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Aller sur le web</string>
     <string name="sharing_facebook_warning_message">Vous pouvez connecter votre compte Facebook sur le site Web de WordPress.com. Lorsque vous avez terminé, revenez à l’application WordPress pour modifier vos paramètres de partage.</string>
     <string name="about_automattic_app_icon_description">Icône de l’application</string>
     <string name="about_automattic_back_icon_description">Icône Retour</string>

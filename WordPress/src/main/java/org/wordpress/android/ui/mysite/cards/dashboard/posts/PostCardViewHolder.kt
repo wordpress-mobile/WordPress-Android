@@ -7,16 +7,16 @@ import androidx.viewbinding.ViewBinding
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.databinding.MySitePostCardWithPostItemsBinding
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
-import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
 import org.wordpress.android.util.image.ImageManager
 
 sealed class PostCardViewHolder<T : ViewBinding>(
     override val binding: T
-) : CardViewHolder<T>(binding) {
+) : MySiteCardAndItemViewHolder<T>(binding) {
     abstract fun bind(card: PostCard)
 
     class PostCardWithPostItemsViewHolder(

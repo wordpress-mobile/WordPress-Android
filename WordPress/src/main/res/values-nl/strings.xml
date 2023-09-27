@@ -609,7 +609,7 @@ Language: nl
     <string name="gutenberg_native_tiled_gallery_settings">Getegelde galerij instellingen</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navigeert naar het lay-out selectiescherm</string>
     <string name="gutenberg_native_gallery_style">Galerij stijl</string>
-    <string name="sharing_facebook_warning_positive_button">Ga naar het web</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Ga naar het web</string>
     <string name="sharing_facebook_warning_message">Je kunt je Facebook account koppelen op de WordPress.com site. Als je klaar bent, keer je terug naar de WordPress app om je instellingen voor delen te wijzigen.</string>
     <string name="about_automattic_app_icon_description">App pictogram</string>
     <string name="about_automattic_back_icon_description">Terug pictogram</string>
