@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.view.View.OnClickListener
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -76,6 +77,7 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.config.DomainManagementFeatureConfig
 import org.wordpress.android.util.config.QRCodeAuthFlowFeatureConfig
 import org.wordpress.android.util.config.RecommendTheAppFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
@@ -139,6 +141,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     @Inject
     lateinit var jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil
+
+    @Inject
+    lateinit var domainManagementFeatureConfig: DomainManagementFeatureConfig
 
     private val viewModel: MeViewModel by viewModels()
 
@@ -229,6 +234,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                     ActivityLauncher.showSignInForResultWpComOnly(activity)
                 }
             }
+        }
+
+        if (BuildConfig.IS_JETPACK_APP && domainManagementFeatureConfig.isEnabled()) {
+            domainManagementContainer.visibility = VISIBLE
         }
     }
 
