@@ -631,7 +631,7 @@ Language: he_IL
     <string name="gutenberg_native_tiled_gallery_settings">הגדרות גלריה פרושה</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">מנתב למסך של בחירת הפריסה</string>
     <string name="gutenberg_native_gallery_style">סגנון גלריה</string>
-    <string name="sharing_facebook_warning_positive_button">מעבר לאתר בדפדפן</string>
+    <string name="sharing_connect_via_web_warning_positive_button">מעבר לאתר בדפדפן</string>
     <string name="sharing_facebook_warning_message">אפשר לחבר את חשבון הפייסבוק לאתר שלך ב-WordPress.com. בסיום, אפשר לחזור לאפליקציה של WordPress כדי לשנות את הגדרות השיתוף.</string>
     <string name="about_automattic_app_icon_description">סמל האפליקציה</string>
     <string name="about_automattic_back_icon_description">סמל \'חזרה\'</string>

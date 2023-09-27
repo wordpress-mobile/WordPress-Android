@@ -44,6 +44,8 @@ ENV['PROJECT_ROOT_FOLDER'] = File.dirname(File.expand_path(__dir__)) + '/'
 ENV['FL_RELEASE_TOOLKIT_DEFAULT_BRANCH'] = 'trunk'
 REPOSITORY_NAME = 'WordPress-Android'
 
+# Used by Fastlane to work around the Google API random failures
+ENV['SUPPLY_UPLOAD_MAX_RETRIES'] = '5'
 
 ########################################################################
 # Import domain-specific lanes

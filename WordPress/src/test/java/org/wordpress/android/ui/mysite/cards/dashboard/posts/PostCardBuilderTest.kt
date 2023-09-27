@@ -16,10 +16,10 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.Post
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType.POST_CARD_ERROR
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_ERROR
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -248,19 +248,19 @@ class PostCardBuilderTest : BaseUnitTest() {
         assertThat((postsCard.filterScheduledPostCard())?.postItems?.first()?.isTimeIconVisible).isTrue
     }
 
-    private fun List<PostCard>.filterPostErrorCard() = firstOrNull { it.dashboardCardType == POST_CARD_ERROR }
+    private fun List<PostCard>.filterPostErrorCard() = firstOrNull { it.type == POST_CARD_ERROR }
 
     @Suppress("UNCHECKED_CAST")
     private fun List<PostCard>.filterDraftPostCard() = (
             filter {
-                it.dashboardCardType == DashboardCardType.POST_CARD_WITH_POST_ITEMS
+                it.type == MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS
             } as? List<PostCardWithPostItems>
             )?.firstOrNull { it.postCardType == PostCardType.DRAFT }
 
     @Suppress("UNCHECKED_CAST")
     private fun List<PostCard>.filterScheduledPostCard() = (
             filter {
-                it.dashboardCardType == DashboardCardType.POST_CARD_WITH_POST_ITEMS
+                it.type == MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS
             } as? List<PostCardWithPostItems>
             )?.firstOrNull { it.postCardType == PostCardType.SCHEDULED }
 

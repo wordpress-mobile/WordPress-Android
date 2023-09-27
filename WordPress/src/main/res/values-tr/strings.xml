@@ -633,7 +633,7 @@ Language: tr
     <string name="gutenberg_native_tiled_gallery_settings">Döşenmiş galeri ayarları</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Yerleşim seçim ekranına ilerler</string>
     <string name="gutenberg_native_gallery_style">Galeri biçimi</string>
-    <string name="sharing_facebook_warning_positive_button">Webe git</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Webe git</string>
     <string name="sharing_facebook_warning_message">Facebook hesabınızı WordPress.com web sitesine bağlayabilirsiniz. Tamamladığınızda WordPress uygulamasına dönüp paylaşım ayarlarını değiştirin.</string>
     <string name="about_automattic_app_icon_description">Uygulama simgesi</string>
     <string name="about_automattic_back_icon_description">Geri simgesi</string>

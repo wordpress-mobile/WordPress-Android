@@ -1,5 +1,3 @@
-- New chat-based support channel with service bot
-- View, locate, and remove Jetpack Paywall block
-- Outlined selected Social Link block
-- Fixed crashes in the block editor and block inserter
-- Create support tickets for errors during account closure
+- We changed the way alerts appear when you’re inserting media into blocks from a URL.
+- It’s easier to tell the difference between placeholder text and actual content in block-based themes.
+- My Site dashboard cards can be customized using the “Personalize Home Tab” button.

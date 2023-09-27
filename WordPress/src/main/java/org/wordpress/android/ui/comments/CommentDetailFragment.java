@@ -103,7 +103,6 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.config.UnifiedCommentsCommentEditFeatureConfig;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
@@ -180,7 +179,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Inject ImageManager mImageManager;
     @Inject CommentsStore mCommentsStore;
     @Inject LocalCommentCacheUpdateHandler mLocalCommentCacheUpdateHandler;
-    @Inject UnifiedCommentsCommentEditFeatureConfig mUnifiedCommentsCommentEditFeatureConfig;
 
     private boolean mIsSubmittingReply = false;
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
@@ -200,7 +198,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     /*
      * used when called from comment list
      */
-    static CommentDetailFragment newInstance(SiteModel site, CommentModel commentModel) {
+    static CommentDetailFragment newInstance(
+            @NonNull SiteModel site,
+            CommentModel commentModel
+    ) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         Bundle args = new Bundle();
         args.putSerializable(KEY_MODE, CommentSource.SITE_COMMENTS);
@@ -677,20 +678,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         // IMPORTANT: don't use getActivity().startActivityForResult() or else onActivityResult()
         // won't be called in this fragment
         // https://code.google.com/p/android/issues/detail?id=15394#c45
-        if (mUnifiedCommentsCommentEditFeatureConfig.isEnabled()) {
-            final CommentIdentifier commentIdentifier = mapCommentIdentifier();
-            final Intent intent =
-                    UnifiedCommentsEditActivity.createIntent(requireActivity(), commentIdentifier, mSite);
-            startActivityForResult(intent, INTENT_COMMENT_EDITOR);
-        } else {
-            Intent intent = new Intent(getActivity(), EditCommentActivity.class);
-            intent.putExtra(WordPress.SITE, mSite);
-            intent.putExtra(EditCommentActivity.KEY_COMMENT, mComment);
-            if (mNote != null && mComment == null) {
-                intent.putExtra(EditCommentActivity.KEY_NOTE_ID, mNote.getId());
-            }
-            startActivityForResult(intent, INTENT_COMMENT_EDITOR);
-        }
+        final CommentIdentifier commentIdentifier = mapCommentIdentifier();
+        final Intent intent =
+                UnifiedCommentsEditActivity.createIntent(requireActivity(), commentIdentifier, mSite);
+        startActivityForResult(intent, INTENT_COMMENT_EDITOR);
     }
 
     @Nullable

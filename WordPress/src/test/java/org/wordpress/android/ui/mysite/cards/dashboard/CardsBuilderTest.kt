@@ -12,16 +12,16 @@ import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard.ActivityCardWithItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardPlansCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BlazeCard.PromoteWithBlazeCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard.ActivityCardWithItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard.PagesCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.PromoteWithBlazeCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
@@ -229,28 +229,28 @@ class CardsBuilderTest : BaseUnitTest() {
         assertThat(cards.findActivityCard()).isNotNull
     }
 
-    private fun DashboardCards.findTodaysStatsCard() =
-        this.cards.find { it is TodaysStatsCardWithData } as? TodaysStatsCardWithData
+    private fun List<Card>.findTodaysStatsCard() =
+        this.find { it is TodaysStatsCardWithData } as? TodaysStatsCardWithData
 
-    private fun DashboardCards.findPostCardWithPosts() =
-        this.cards.find { it is PostCardWithPostItems } as? PostCardWithPostItems
+    private fun List<Card>.findPostCardWithPosts() =
+        this.find { it is PostCardWithPostItems } as? PostCardWithPostItems
 
-    private fun DashboardCards.findBloggingPromptCard() =
-        this.cards.find { it is BloggingPromptCard } as? BloggingPromptCard
+    private fun List<Card>.findBloggingPromptCard() =
+        this.find { it is BloggingPromptCard } as? BloggingPromptCard
 
-    private fun DashboardCards.findPromoteWithBlazeCard() =
-        this.cards.find { it is PromoteWithBlazeCard } as? PromoteWithBlazeCard
+    private fun List<Card>.findPromoteWithBlazeCard() =
+        this.find { it is PromoteWithBlazeCard } as? PromoteWithBlazeCard
 
-    private fun DashboardCards.findDashboardPlansCard() =
-        this.cards.find { it is DashboardPlansCard } as? DashboardPlansCard
+    private fun List<Card>.findDashboardPlansCard() =
+        this.find { it is DashboardPlansCard } as? DashboardPlansCard
 
-    private fun DashboardCards.findPagesCard() =
-        this.cards.find { it is PagesCardWithData } as? PagesCardWithData
+    private fun List<Card>.findPagesCard() =
+        this.find { it is PagesCardWithData } as? PagesCardWithData
 
-    private fun DashboardCards.findActivityCard() =
-        this.cards.find { it is ActivityCardWithItems } as? ActivityCardWithItems
+    private fun List<Card>.findActivityCard() =
+        this.find { it is ActivityCardWithItems } as? ActivityCardWithItems
 
-    private fun DashboardCards.findErrorCard() = this.cards.find { it is ErrorCard } as? ErrorCard
+    private fun List<Card>.findErrorCard() = this.find { it is ErrorCard } as? ErrorCard
 
     private val todaysStatsCard = mock<TodaysStatsCardWithData>()
 
@@ -284,7 +284,7 @@ class CardsBuilderTest : BaseUnitTest() {
         isEligibleForPlansCard: Boolean = false,
         hasPagesCard: Boolean = false,
         hasActivityCard: Boolean = false
-    ): DashboardCards {
+    ): List<Card> {
         doAnswer { if (hasTodaysStats) todaysStatsCard else null }.whenever(todaysStatsCardBuilder).build(any())
         doAnswer { if (hasPostsForPostCard) createPostCards() else emptyList() }.whenever(postCardBuilder)
             .build(any())
