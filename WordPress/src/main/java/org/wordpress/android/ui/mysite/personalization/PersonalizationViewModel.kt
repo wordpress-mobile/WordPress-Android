@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.personalization
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.firstOrNull
@@ -25,14 +26,22 @@ class PersonalizationViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val bloggingRemindersStore: BloggingRemindersStore,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val personalizationShortcutsViewModelSlice: PersonalizationShortcutsViewModelSlice
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiState = MutableLiveData<List<DashboardCardState>>()
     val uiState: LiveData<List<DashboardCardState>> = _uiState
 
+    val shortcutsState = personalizationShortcutsViewModelSlice.uiState
+
+    init {
+        personalizationShortcutsViewModelSlice.initialize(viewModelScope)
+    }
+
     fun start() {
         val siteId = selectedSiteRepository.getSelectedSite()!!.siteId
         launch(bgDispatcher) { _uiState.postValue(getCardStates(siteId)) }
+        personalizationShortcutsViewModelSlice.start(selectedSiteRepository.getSelectedSite()!!)
     }
 
     private suspend fun getCardStates(siteId: Long): List<DashboardCardState> {
