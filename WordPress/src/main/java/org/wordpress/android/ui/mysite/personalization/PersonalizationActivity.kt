@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -253,34 +254,41 @@ fun ShortcutStateRow(
     state: ShortcutsState,
     modifier: Modifier = Modifier
 ) {
-    Row(
+    Box(
         modifier = modifier
             .fillMaxWidth()
-            .border(width = 1.dp, color = Color(0xFFE1E2E2), shape = RoundedCornerShape(size = 10.dp))
-            .padding(start = 12.dp, top = 12.dp, end = 16.dp, bottom = 12.dp)
-            .padding(
-                start = 16.dp,
-                end = 16.dp
-            ),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            painter = painterResource(id = state.icon),
-            contentDescription = null, // Add appropriate content description
-            contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .size(24.dp)
-                .padding(end = 8.dp)
-        )
-        Text(
-            text = uiStringText(state.label),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = 8.dp),
-        )
-        Spacer(Modifier.width(8.dp))
+            .padding(start = 16.dp, end = 16.dp, top = 6.dp, bottom = 6.dp)
+    )
+    {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.12f),
+                    shape = RoundedCornerShape(size = 10.dp)
+                )
+                .padding(start = 12.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = state.icon),
+                contentDescription = null, // Add appropriate content description
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(end = 8.dp)
+            )
+            Text(
+                text = uiStringText(state.label),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
+            )
+            Spacer(Modifier.width(8.dp))
+        }
     }
 }
