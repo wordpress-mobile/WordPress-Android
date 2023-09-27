@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-08-03 09:59:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: sq_AL
 -->
 <resources>
@@ -12,7 +12,6 @@ Language: sq_AL
     <string name="dashboard_card_plans_checkout_success_info">Mund të duhen deri në 30 minuta që përkatësia juaj vetjake të fillojë të funksionojë.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Përkatësia juaj e re &lt;b&gt;%s&lt;/b&gt; po ujdiset.</string>
     <string name="dashboard_card_plans_checkout_success_title">Gati për punë!</string>
-    <string name="dashboard_card_plans_menu_hide_this">Fshihe këtë</string>
     <string name="dashboard_card_plans_sub_title">Merrni një përkatësi falas për vitin e parë, hiqni reklama në sajtin tuaj dhe shtoni hapësirë depozitimi.</string>
     <string name="dashboard_card_plans_title">Përkatësi falas me planin tuaj vjetor</string>
     <string name="virtual_homepage_learn_more">Mësoni më tepër rreth gjedhesh</string>
@@ -38,9 +37,7 @@ Language: sq_AL
     <string name="wp_jp_static_poster_title_plural">Përdorni WordPress-in me %s në Jetpack\u00A0app.</string>
     <string name="wp_jp_static_poster_title">Përdorni WordPress-in me %s në Jetpack\u00A0app.</string>
     <string name="gutenberg_native_unlabeled_color_s">Ngjyrë pa etiketë. %s</string>
-    <string name="dashboard_activity_card_footer_link">Shihni krejt veprimtarinë</string>
     <string name="dashboard_activity_card_title">Veprimtari së fundi</string>
-    <string name="dashboard_card_domain_title">Gjeni një përkatësi vetjake</string>
     <string name="site_creation_search_domain_example_body">Në ngjashmëri me shembullin më sipër, një përkatësi u lejon njerëzve të gjejnë dhe vizitojnë sajtin tuaj që nga shfletuesi.</string>
     <string name="site_creation_search_domain_example_title">EmriiSajtitTuaj.com</string>
     <string name="site_creation_domain_search_input_hint">Kërkoni me fjalëkyçe</string>
@@ -65,8 +62,6 @@ Language: sq_AL
     <string name="dashboard_pages_card_create_another_page_description">Fillojani me skema të qepura me porosi, të përshtatshme për celular</string>
     <string name="dashboard_pages_card_create_another_page_button">Krijoni Një Faqe Tjetër</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Shtoni Faqe te sajti juaj</string>
-    <string name="dashboard_card_domain_menu_hide_this">Fshihe këtë</string>
-    <string name="dashboard_card_domain_sub_title">Afirmoni pretendimin tuaj për qoshen tuaj në internet, me një adresë sajti që është kollaj të gjendet, jepet dhe ndiqet.</string>
     <string name="blogging_reminders_notifications_permission_caption">Që të përdorni kujtues blogimi, do t’ju duhet të aktivizoni njoftime push.</string>
     <string name="blogging_reminders_notifications_permission_title">Aktivizo njoftime push</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Vazhdo me nënpërkatësi</string>
@@ -130,7 +125,6 @@ Language: sq_AL
     <string name="free">Falas</string>
     <string name="help_buttons_screen_title">Ndihmë</string>
     <string name="gutenberg_native_blocks_menu">Menu blloqesh</string>
-    <string name="promote_blaze_card_menu_hide_this">Fshihe këtë</string>
     <string name="promote_blaze_card_sub_title">Shfaqeni punën tuaj nëpër miliona sajte.</string>
     <string name="promote_blaze_card_title">Promovoni lëndën tuaj përmes Blaze-i</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Mbylle</string>
@@ -199,7 +193,6 @@ Language: sq_AL
     <string name="weeks_quantity_other">%d javë</string>
     <string name="weeks_quantity_one">1 javë</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Nga &lt;b&gt;Dita e Parë&lt;/b&gt;</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Fshihe këtë</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Kujtoma më vonë</string>
     <string name="jetpack_feature_card_content_phase_three">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të Jetpack-ut së shpejti do të kalohen te aplikacioni Jetpack për celular.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Kaloni te aplikacioni Jetpack</string>
@@ -534,7 +527,6 @@ Language: sq_AL
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Kërkimi juaj përmban shenja të pambuluara në përkatësi WordPress.com. Lejohen shenjat vijuese: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Kontrolloni lidhjen tuaj internet dhe rifreskoni faqen.</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Shko te statistikat</string>
     <string name="my_site_todays_stat_card_title">Statistikat e Sotme</string>
     <string name="error_edit_notification">Ndodhi një gabim teksa përditësohej lënda e njoftimit</string>
     <string name="reader_comment_menu_edit">Përpunojeni</string>
@@ -545,7 +537,7 @@ Language: sq_AL
     <string name="gutenberg_native_tiled_gallery_settings">Rregullime galerie mozaik</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Kalohet te skena e përzgjedhjes së skemës</string>
     <string name="gutenberg_native_gallery_style">Stil galerie</string>
-    <string name="sharing_connect_via_web_warning_positive_button">Kaloni në web</string>
+    <string name="sharing_facebook_warning_positive_button">Kaloni në web</string>
     <string name="sharing_facebook_warning_message">Mund ta lidhni llogarinë tuaj Facebook në sajtin WordPress.com. Kur të keni mbaruar, kthehuni te aplikacioni WordPress, që të ndryshoni rregullimet tuaja për Ndarje Me të Tjerë.</string>
     <string name="about_automattic_app_icon_description">Ikonë aplikacioni</string>
     <string name="about_automattic_back_icon_description">Ikonë për mbrapsht</string>
@@ -604,8 +596,6 @@ Language: sq_AL
     <string name="gutenberg_native_featured_image">Figurë e Zgjedhur</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Kopjoje URL-në prej të papastre, %s</string>
     <string name="me_btn_about">Rreth WordPress-it</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Kalo te postime të planifikuara</string>
-    <string name="my_site_post_card_link_go_to_drafts">Shko te skicat</string>
     <string name="my_site_post_card_link_create_post">Krijoni një postim</string>
     <string name="my_site_create_next_post_excerpt">Postimi rregullisht ndihmon të krijoni publikun tuaj!</string>
     <string name="my_site_create_next_post_title">Krijoni postimin tuaj pasues</string>
@@ -969,7 +959,6 @@ Language: sq_AL
     <string name="gutenberg_native_audio_file">kartelë audio</string>
     <string name="gutenberg_native_audio_caption_s">Marrje audio. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Marrje audio. E zbrazët</string>
-    <string name="gutenberg_native_add_audio">SHTONI AUDIO</string>
     <string name="continue_with_wpcom">Hyni ose regjistrohuni me WordPress.com</string>
     <string name="photo_picker_use_audio">Përdor këtë audio</string>
     <string name="photo_picker_choose_audio">Zgjidhni audio prej pajisjes</string>
@@ -1169,9 +1158,7 @@ Language: sq_AL
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">S’u arrit të ruhen kartela.\nJu lutemi, prekeni për mundësi.</string>
     <string name="gutenberg_native_edit_file">Përpunoni kartelën</string>
     <string name="gutenberg_native_copy_file_url">Kopjoni URL-në e kartelës</string>
-    <string name="gutenberg_native_choose_a_file">ZGJIDHNI NJË KARTELË</string>
     <string name="new_site_creation_domain_header_title">Zgjidhni përkatësi</string>
-    <string name="my_site_btn_jetpack_settings">Rregullime Jetpack-u</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Ndjekje bisede përmes email-i</string>
     <string name="reader_btn_follow_comments">Ndiqeni bisedën përmes email-i</string>
@@ -1734,11 +1721,8 @@ Language: sq_AL
     <string name="gutenberg_native_choose_from_device">Zgjidhni nga pajisje</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ndodhi një gabim i panjohur. Ju lutemi, riprovoni.</string>
     <string name="gutenberg_native_alt_text">Tekst Alternativ</string>
-    <string name="gutenberg_native_add_video">SHTONI VIDEO</string>
     <string name="gutenberg_native_add_url">Shtoni URL</string>
     <string name="gutenberg_native_add_alt_text">Shtoni tekst alternativ</string>
-    <string name="gutenberg_native_add_image_or_video">SHTONI FIGURË OSE VIDEO</string>
-    <string name="gutenberg_native_add_image">SHTONI FIGURË</string>
     <string name="gutenberg_native_add_block_here">SHTONI BLLOK KËTU</string>
     <string name="gutenberg_native_add_description">Shtoni përshkrim</string>
     <string name="reader_empty_saved_posts_content_description">Prekni butonin “Shtoje te Postime të Ruajtur” që të ruhet një postim te lista juaj.</string>
@@ -2029,9 +2013,6 @@ Language: sq_AL
     <string name="quick_start_dialog_enable_sharing_message">Kryeni ndarje të vetvetishme me të tjerët në rrjetet tuaja shoqërore të postimeve të reja.</string>
     <string name="quick_start_dialog_check_stats_title">Ndiqni statistikat e sajtit tuaj</string>
     <string name="quick_start_dialog_check_stats_message">Ndiqni funksionimin e sajtit tuaj.</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Heqja e Hapave Pasues do të fshehë krejt turet në këtë sajt. Ky veprim s’mund të zhbëhet.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Hiqi Hapat Pasues</string>
-    <string name="quick_start_remove_next_steps_menu_title">Hiqe këtë</string>
     <string name="quick_start_task_skip_menu_title">Anashkaloje punën</string>
     <string name="notification_channel_reminder_title">Kujtues</string>
     <string name="stats_select_next_period_description">Përzgjidhni periudhën pasuese</string>
@@ -2631,7 +2612,6 @@ Language: sq_AL
     <string name="share_intent_pick_site">Zgjidhni sajt</string>
     <string name="share_action_media">Shtoje te mediateka</string>
     <string name="share_action_post">Shtoje në postim të ri</string>
-    <string name="share_media_permission_required">Lypsen leje që të mund të ndani figura ose video me të tjerët</string>
     <string name="invalid_ip_or_range">IP ose interval IP-sh i pavlefshëm</string>
     <string name="deleting_media_dlg">Po fshihet</string>
     <string name="confirm_delete_media_video">Të fshihet kjo video?</string>

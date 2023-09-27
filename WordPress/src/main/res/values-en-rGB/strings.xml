@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-06-04 17:26:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: en_GB
 -->
 <resources>
@@ -13,7 +13,6 @@ Language: en_GB
     <string name="gutenberg_native_block_ungrouped">Block ungrouped</string>
     <string name="dashboard_card_plans_title">Free domain with annual plan</string>
     <string name="dashboard_card_plans_sub_title">Get a free domain for the first year, remove ads on your site, and increase your storage.</string>
-    <string name="dashboard_card_plans_menu_hide_this">Hide this</string>
     <string name="virtual_homepage_title">Homepage</string>
     <string name="dashboard_card_plans_checkout_success_info">It may take up to 30 minutes for your domain to start working properly.</string>
     <string name="virtual_homepage_learn_more">Learn more about templates</string>
@@ -36,11 +35,9 @@ Language: en_GB
     <string name="wp_jp_static_poster_message">The Jetpack app has all the WordPress app’s functionality, and now exclusive access to Stats, Reader, Notifications and more.</string>
     <string name="wp_jp_static_poster_title">Use WordPress with %s in the Jetpack\u00A0app.</string>
     <string name="wp_jp_static_poster_title_plural">Use WordPress with %s in the Jetpack\u00A0app.</string>
-    <string name="dashboard_card_domain_title">Find a custom domain</string>
     <string name="site_creation_search_domain_example_body">Like the example above, a domain allows people to find and visit your site from their web browser.</string>
     <string name="dashboard_activity_card_title">Recent activity</string>
     <string name="gutenberg_native_unlabeled_color_s">Unlabeled colour. %s</string>
-    <string name="dashboard_activity_card_footer_link">View all activity</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_cost_sale">for the first year</string>
     <string name="new_site_creation_preview_caption_paid">It may take up to 30 minutes for your custom domain to start working.</string>
@@ -60,11 +57,9 @@ Language: en_GB
     <string name="dashboard_pages_card_create_another_page_button">Create Another Page</string>
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">Describe the purpose of the image. Leave empty if decorative.</string>
     <string name="gutenberg_native_dynamic">Dynamic</string>
-    <string name="dashboard_card_domain_menu_hide_this">Hide this</string>
     <string name="gutenberg_native_manual">Manual</string>
     <string name="gutenberg_native_playback_bar_color">Playback Bar Colour</string>
     <string name="gutenberg_native_playback_settings">Playback Settings</string>
-    <string name="dashboard_card_domain_sub_title">Stake your claim on your corner of the web with a site address that\'s easy to find, share, and follow.</string>
     <string name="dashboard_pages_card_create_another_page_description">Start with bespoke, mobile-friendly layouts</string>
     <string name="blogging_reminders_notifications_permission_caption">To use blogging reminders, you\'ll need to turn on push notifications.</string>
     <string name="photo_picker_soft_ask_audios_label">%s needs permission to access your audios</string>
@@ -134,7 +129,6 @@ Language: en_GB
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Close</string>
     <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contact support</string>
     <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
-    <string name="promote_blaze_card_menu_hide_this">Hide this</string>
     <string name="jetpack_full_plugin_install_onboarding_install_button">Install the full plugin</string>
     <string name="promote_blaze_card_title">Promote your content with Blaze</string>
     <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Terms and conditions</string>
@@ -199,7 +193,6 @@ Language: en_GB
     <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Your visitors in the last 7 days are %1$s higher than the previous 7 days.</string>
     <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Your visitors in the last 7 days are %1$s lower than the previous 7 days.</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">From &lt;b&gt;DayOne&lt;/b&gt;</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Stats, Reader, Notifications and other Jetpack-powered features will be removed from the WordPress app on %s.</string>
@@ -537,7 +530,6 @@ Language: en_GB
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="error_edit_notification">An error occurred while updating the notification content</string>
     <string name="my_site_todays_stat_card_title">Today\'s Stats</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Go to stats</string>
     <string name="my_site_error_within_card_subtitle">Check your internet connection and refresh the page.</string>
     <string name="reader_comment_menu_edit">Edit</string>
     <string name="reader_comment_menu_spam">Mark as spam</string>
@@ -547,7 +539,7 @@ Language: en_GB
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navigates to layout selection screen</string>
     <string name="gutenberg_native_tiled_gallery_settings">Tiled gallery settings</string>
     <string name="sharing_facebook_warning_message">You can connect your Facebook account on the WordPress.com website. When you\'re done, return to the WordPress app to change your Sharing settings.</string>
-    <string name="sharing_connect_via_web_warning_positive_button">Go to web</string>
+    <string name="sharing_facebook_warning_positive_button">Go to web</string>
     <string name="gutenberg_native_gallery_style">Gallery style</string>
     <string name="about_automattic_wordpress">WordPress</string>
     <string name="about_automattic_logo_description">Automattic logo</string>
@@ -603,8 +595,6 @@ Language: en_GB
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Double tap to select default font size</string>
     <string name="reader_btn_follow_conversation_settings">Follow conversation settings</string>
     <string name="reader_comments_fetch_failure">There was an error getting comments</string>
-    <string name="my_site_post_card_link_go_to_drafts">Go to drafts</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Go to scheduled posts</string>
     <string name="me_btn_about">About WordPress</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Copy URL from the clipboard, %s</string>
     <string name="gutenberg_native_featured_image">Featured image</string>
@@ -969,7 +959,6 @@ Language: en_GB
     <string name="photo_picker_choose_audio">Choose audio from device</string>
     <string name="photo_picker_use_audio">Use this audio</string>
     <string name="continue_with_wpcom">Log in or sign up with WordPress.com</string>
-    <string name="gutenberg_native_add_audio">ADD AUDIO</string>
     <string name="gutenberg_native_audio_caption_empty">Audio caption. Empty</string>
     <string name="gutenberg_native_audio_caption_s">Audio caption. %s</string>
     <string name="gutenberg_native_audio_player">Audio Player</string>
@@ -1166,7 +1155,6 @@ Language: en_GB
     <string name="dialog_confirm_copy_local_copy_button">Copy the version from this app</string>
     <string name="activity_log_activity_type_filter_header">Filter by Activity Type</string>
     <string name="toast_edit_story_update_in_progress_title">Story being saved, please wait…</string>
-    <string name="gutenberg_native_choose_a_file">CHOOSE A FILE</string>
     <string name="gutenberg_native_copy_file_url">Copy file URL</string>
     <string name="gutenberg_native_edit_file">Edit file</string>
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Failed to save files.\nPlease tap for options.</string>
@@ -1180,7 +1168,6 @@ Language: en_GB
     <string name="new_site_creation_domain_header_title">Choose a domain</string>
     <string name="reader_btn_follow_comments">Follow conversation by email</string>
     <string name="reader_btn_following_comments">Following conversation by email</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack Settings</string>
     <string name="activity_log_activity_type_filter_apply">Apply</string>
     <string name="activity_log_activity_type_filter_clear">Clear</string>
     <string name="reader_follow_comments_null_response">No response received</string>
@@ -1737,10 +1724,7 @@ Language: en_GB
     <string name="gutenberg_native_choose_from_device">Choose from device</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">An unknown error occurred. Please try again.</string>
     <string name="gutenberg_native_alt_text">Alt Text</string>
-    <string name="gutenberg_native_add_video">ADD VIDEO</string>
     <string name="gutenberg_native_add_url">Add URL</string>
-    <string name="gutenberg_native_add_image_or_video">ADD IMAGE OR VIDEO</string>
-    <string name="gutenberg_native_add_image">ADD IMAGE</string>
     <string name="gutenberg_native_add_block_here">ADD BLOCK HERE</string>
     <string name="gutenberg_native_add_alt_text">Add alt text</string>
     <string name="gutenberg_native_add_description">Add description</string>
@@ -2031,9 +2015,6 @@ Language: en_GB
     <string name="quick_start_dialog_enable_sharing_title">Enable post sharing</string>
     <string name="quick_start_dialog_enable_sharing_message">Automatically share new posts to your social media accounts.</string>
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
-    <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
     <string name="quick_start_dialog_check_stats_message">Keep up to date with your site\'s performance.</string>
     <string name="quick_start_task_skip_menu_title">Skip task</string>
     <string name="notification_channel_reminder_title">Reminder</string>
@@ -2634,7 +2615,6 @@ Language: en_GB
     <string name="share_intent_pick_site">Pick site</string>
     <string name="share_action_media">Add to media library</string>
     <string name="share_action_post">Add to new post</string>
-    <string name="share_media_permission_required">Permissions required in order to share images or videos</string>
     <string name="invalid_ip_or_range">Invalid IP or IP range</string>
     <string name="deleting_media_dlg">Deleting</string>
     <string name="confirm_delete_media_video">Delete this video?</string>

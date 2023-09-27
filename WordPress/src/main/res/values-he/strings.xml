@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-06 15:54:26+0000
+Translation-Revision-Date: 2023-09-27 12:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: he_IL
 -->
 <resources>
+    <string name="my_site_dashboard_no_cards_message_description">יש להקיש על הכפתור המותאם אישית כדי להציג כרטיסים נוספים.</string>
+    <string name="my_site_dashboard_no_cards_message_title">כל הכרטיסים מוסתרים</string>
+    <string name="personalization_screen_next_steps_card_description">באפשרותך ללמוד איך להפיק את המרב מהאתר שלך בעזרת האפליקציה.</string>
+    <string name="personalization_screen_activity_log_card_description">פעולות אחרונות שבוצעו באתר שלך.</string>
+    <string name="personalization_screen_pages_card_description">סקירה של העמוד באתר שלך.</string>
+    <string name="personalization_screen_blogging_prompts_card_description">רעיונות לפוסטים בבלוג בכל יום.</string>
+    <string name="personalization_screen_blogging_prompts_card_title">הצעות כתיבה בבלוג</string>
+    <string name="personalization_screen_blaze_card_description">לקדם פוסט ולהציג קמפיינים נוכחיים.</string>
+    <string name="personalization_screen_scheduled_posts_card_description">פוסטים שמתוזמנים לפרסום בקרוב.</string>
+    <string name="personalization_screen_scheduled_posts_card_title"> פוסטים מתוזמנים</string>
+    <string name="personalization_screen_draft_posts_card_description">טיוטות אחרונות של פוסטים.</string>
+    <string name="personalization_screen_draft_posts_card_title"> טיוטות פוסטים</string>
+    <string name="personalization_screen_stats_card_description">צפיות, מבקרים ולייקים</string>
+    <string name="personalization_screen_footer_cards"> הכרטיסים עשויים להציג תוכן שונה בהתאם לפעילות באתר שלך</string>
+    <string name="personalization_screen_description"> להוסיף או להסתיר כרטיסים</string>
+    <string name="personalization_screen_title"> להתאים אישית את הלשונית \'בית\'</string>
+    <string name="personalize_card_content_description">יש להקיש כדי להתאים אישית את הלשונית \'בית\' באתר שלך</string>
+    <string name="personalize_card_text">להתאים אישית את הלשונית \'בית\' באתר שלך</string>
+    <string name="partial_media_access_prompt_change_settings">לשנות ההגדרות</string>
+    <string name="partial_media_access_prompt_select_more">לבחור אפשרויות נוספות</string>
+    <string name="partial_media_access_prompt_text">רק התמונות והסרטונים הנבחרים שאליהם סיפקת גישה יהיו זמינים.</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">להציג את כל הקמפיינים</string>
+    <string name="dashboard_activity_card_menu_all_activity">כל הפעילויות</string>
+    <string name="dashboard_pages_card_more_menu_all_pages">כל העמודים</string>
+    <string name="gutenberg_native_choose_a_file">לבחור קובץ</string>
+    <string name="gutenberg_native_add_image_or_video">להוסיף תמונה או וידאו</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">להציג את כל הפוסטים המתוזמנים</string>
+    <string name="my_site_post_card_menu_view_all_drafts">להציג את כל הטיוטות</string>
+    <string name="my_site_todays_stats_menu_view_stats">לצפות בנתונים סטטיסטיים</string>
+    <string name="my_site_dashboard_card_more_menu_hide_card">להסתיר את המידע</string>
+    <string name="contact_support_first_message_hint">אם לא אצליח לענות על השאלה שלך, אוכל לעזור לך לפתוח קריאה לצוות התמיכה שלנו!</string>
+    <string name="contact_support_first_message_hi">שלום לך, אני ה-Jetpack AI Assistant.</string>
     <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">יש לגשת לבלוק \'חומת תשלום\' בדפדפן להגדרות מתקדמות.</string>
     <string name="contact_support_bot_ticket_comment_answer">תשובה:</string>
     <string name="contact_support_bot_ticket_comment_question">שאלה:</string>
@@ -30,7 +62,6 @@ Language: he_IL
     <string name="campaign_detail_error_title">משהו השתבש</string>
     <string name="campaign_listing_page_error_title">משהו השתבש</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> משהו השתבש. לא ניתן להביא קמפיינים</string>
-    <string name="domain_transfer_card_menu_hide_this">להסתיר את המידע</string>
     <string name="domain_transfer_card_cta">להעביר את הדומיינים שלך</string>
     <string name="domain_transfer_card_caption">כפי שוודאי ידוע לך, שירות Google Domains נמכר ל-Squarespace. אפשר להעביר את הדומיינים שלך ל-WordPress.com עכשיו ואנחנו נשלם עבור דמי ההעברה וניתן לך שנה נוספת של רישום דומיין בחינם.</string>
     <string name="domain_transfer_card_sub_title">לקבל בעלות על הדומיינים שלך ב-Google Domains</string>
@@ -93,7 +124,6 @@ Language: he_IL
     <string name="dashboard_card_plans_checkout_success_info">יידרשו עד 30 דקות להתחלת הפעילות התקינה של הדומיין.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">כעת מתבצע תהליך ההגדרה של הדומיין החדש שלך, &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="dashboard_card_plans_checkout_success_title">הכול מוכן!</string>
-    <string name="dashboard_card_plans_menu_hide_this">להסתיר את המידע</string>
     <string name="dashboard_card_plans_sub_title">באפשרותך לקבל דומיין בחינם לשנה הראשונה, להסיר הצגת פרסומות באתר שלך ולהגדיל את שטח האחסון.</string>
     <string name="dashboard_card_plans_title">דומיין חינם ברכישת תוכנית שנתית</string>
     <string name="virtual_homepage_learn_more">מידע נוסף על תבניות</string>
@@ -120,9 +150,7 @@ Language: he_IL
     <string name="wp_jp_static_poster_title_plural">להשתמש ב-WordPress עם %s באפליקציה של Jetpack\u00A0.</string>
     <string name="wp_jp_static_poster_title">להשתמש ב-WordPress עם %s באפליקציה של Jetpack\u00A0.</string>
     <string name="gutenberg_native_unlabeled_color_s">צבע ללא תווית. %s</string>
-    <string name="dashboard_activity_card_footer_link">להציג את כל הפעילויות</string>
     <string name="dashboard_activity_card_title">פעילות אחרונה</string>
-    <string name="dashboard_card_domain_title">למצוא דומיין אישי</string>
     <string name="site_creation_search_domain_example_body">כמו הדוגמה שמוצגת למעלה, דומיין מאפשר לאנשים למצוא את האתר שלך ולבקר בו מדפדפן האינטרנט שלהם.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">לחפש באמצעות מילות מפתח</string>
@@ -147,8 +175,6 @@ Language: he_IL
     <string name="dashboard_pages_card_create_another_page_description">להתחיל עם פריסות ידידותיות למכשירים ניידים בהתאמה אישית</string>
     <string name="dashboard_pages_card_create_another_page_button">ליצור עמוד נוסף</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">להוסיף עמודים לאתר שלך</string>
-    <string name="dashboard_card_domain_menu_hide_this">להסתיר את המידע</string>
-    <string name="dashboard_card_domain_sub_title">לבנות את הפינה האישית שלך באינטרנט בעזרת כתובת אתר שיהיה קל למצוא, לשתף ולעקוב אחריה.</string>
     <string name="blogging_reminders_notifications_permission_caption">כדי להשתמש בתזכורות לכתיבת בלוג, יש להפעיל הודעות בדחיפה.</string>
     <string name="blogging_reminders_notifications_permission_title">הפעלה של הודעות בדחיפה</string>
     <string name="site_creation_domain_button_continue_with_subdomain">להמשיך עם דומיין משנה</string>
@@ -213,7 +239,6 @@ Language: he_IL
     <string name="free">חינם</string>
     <string name="help_buttons_screen_title">עזרה</string>
     <string name="gutenberg_native_blocks_menu">תפריט בלוקים</string>
-    <string name="promote_blaze_card_menu_hide_this">להסתיר את המידע</string>
     <string name="promote_blaze_card_sub_title">להציג את העבודה שלך במיליוני אתרים.</string>
     <string name="promote_blaze_card_title">לקדם את התוכן שלך עם Blaze</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">לסגור</string>
@@ -282,7 +307,6 @@ Language: he_IL
     <string name="weeks_quantity_other">%d שבועות</string>
     <string name="weeks_quantity_one">שבוע אחד</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">מתוך &lt;b&gt;DayOne&lt;/b&gt;</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">להסתיר את המידע</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">הזכירו לי מאוחר יותר</string>
     <string name="jetpack_feature_card_content_phase_three">האפשרויות של נתונים סטטיסטיים, Reader, הודעות ואפשרויות אחרות יועברו בקרוב אל האפליקציה של Jetpack לנייד.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">החלפה לאפליקציה של Jetpack</string>
@@ -620,7 +644,6 @@ Language: he_IL
     <string name="my_site_menu_tab_title">תפריט</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">החיפוש שלך כולל תווים שלא נתמכים בדומיינים של WordPress.com. התווים הבאים מותרים: A–Z‏, a–z,‏ 0–9.</string>
     <string name="my_site_error_within_card_subtitle">יש לבדוק את החיבור לאינטרנט ולרענן את העמוד.</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">מעבר אל נתונים סטטיסטיים</string>
     <string name="my_site_todays_stat_card_title">הנתונים הסטטיסטיים של היום</string>
     <string name="error_edit_notification">אירעה שגיאה בעת העדכון של תוכן ההודעות</string>
     <string name="reader_comment_menu_edit">לערוך</string>
@@ -631,7 +654,7 @@ Language: he_IL
     <string name="gutenberg_native_tiled_gallery_settings">הגדרות גלריה פרושה</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">מנתב למסך של בחירת הפריסה</string>
     <string name="gutenberg_native_gallery_style">סגנון גלריה</string>
-    <string name="sharing_connect_via_web_warning_positive_button">מעבר לאתר בדפדפן</string>
+    <string name="sharing_facebook_warning_positive_button">מעבר לאתר בדפדפן</string>
     <string name="sharing_facebook_warning_message">אפשר לחבר את חשבון הפייסבוק לאתר שלך ב-WordPress.com. בסיום, אפשר לחזור לאפליקציה של WordPress כדי לשנות את הגדרות השיתוף.</string>
     <string name="about_automattic_app_icon_description">סמל האפליקציה</string>
     <string name="about_automattic_back_icon_description">סמל \'חזרה\'</string>
@@ -691,8 +714,6 @@ Language: he_IL
     <string name="gutenberg_native_featured_image">תמונה ראשית</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">להעתיק כתובת URL מהלוח, %s</string>
     <string name="me_btn_about">אודות WordPress</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">מעבר אל פוסטים מתוזמנים</string>
-    <string name="my_site_post_card_link_go_to_drafts">מעבר לטיוטות</string>
     <string name="my_site_post_card_link_create_post">ליצור פוסט</string>
     <string name="my_site_create_next_post_excerpt">פרסום פוסטים באופן קבוע יעזור לך לבנות את הקהל!</string>
     <string name="my_site_create_next_post_title">ליצור את הפוסט הבא שלך</string>
@@ -933,6 +954,7 @@ Language: he_IL
     <string name="gutenberg_native_padding">מרווחים</string>
     <string name="gutenberg_native_four">4</string>
     <string name="gutenberg_native_featured">מרכזיים</string>
+    <string name="gutenberg_native_add_image">להוסיף תמונה</string>
     <string name="gutenberg_native_custom_url">כתובת URL מותאמת</string>
     <string name="gutenberg_native_create_embed">ליצור תוכן מוטמע</string>
     <string name="gutenberg_native_column_d">טור %d</string>
@@ -1056,7 +1078,6 @@ Language: he_IL
     <string name="gutenberg_native_audio_file">קובץ אודיו</string>
     <string name="gutenberg_native_audio_caption_s">תיאור אודיו. %s</string>
     <string name="gutenberg_native_audio_caption_empty">תיאור אודיו. ריק</string>
-    <string name="gutenberg_native_add_audio">להוסיף אודיו</string>
     <string name="continue_with_wpcom">יש להתחבר או להירשם עם WordPress.com</string>
     <string name="photo_picker_use_audio">להשתמש באודיו זה</string>
     <string name="photo_picker_choose_audio">לבחור אודיו מהמכשיר</string>
@@ -1257,9 +1278,7 @@ Language: he_IL
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">שמירת הקבצים נכשלה.\nיש להקיש לאפשרויות.</string>
     <string name="gutenberg_native_edit_file">לערוך קובץ</string>
     <string name="gutenberg_native_copy_file_url">להעתיק כתובת URL של קובץ</string>
-    <string name="gutenberg_native_choose_a_file">לבחור קובץ</string>
     <string name="new_site_creation_domain_header_title">לבחור דומיין</string>
-    <string name="my_site_btn_jetpack_settings">הגדרות Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">הופעל מעקב אחר השיחה באמצעות האימייל</string>
     <string name="reader_btn_follow_comments">לעקוב אחר השיחה באמצעות האימייל</string>
@@ -1822,11 +1841,8 @@ Language: he_IL
     <string name="gutenberg_native_choose_from_device">לבחור מהמכשיר</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">אירעה שגיאה לא מזוהה. יש לנסות שוב.</string>
     <string name="gutenberg_native_alt_text">טקסט חלופי</string>
-    <string name="gutenberg_native_add_video">להוסיף וידאו</string>
     <string name="gutenberg_native_add_url">הוספת כתובת URL</string>
     <string name="gutenberg_native_add_alt_text">להוסיף טקסט חלופי</string>
-    <string name="gutenberg_native_add_image_or_video">להוסיף תמונה או וידאו</string>
-    <string name="gutenberg_native_add_image">להוסיף תמונה</string>
     <string name="gutenberg_native_add_block_here">להוסיף בלוק כאן</string>
     <string name="gutenberg_native_add_description">להוסיף תיאור</string>
     <string name="reader_empty_saved_posts_content_description">יש להקיש על הכפתור \'הוספה\' ו-\'שמירת פוסט\' כדי לשמור את הפוסט ברשימה שלך.</string>
@@ -2117,9 +2133,6 @@ Language: he_IL
     <string name="quick_start_dialog_enable_sharing_message">שיתוף אוטומטי של פוסטים חדשים בחשבונות שלך ברשתות החברתיות.</string>
     <string name="quick_start_dialog_check_stats_title">בדיקת הנתונים הסטטיסטיים של האתר שלך</string>
     <string name="quick_start_dialog_check_stats_message">לקבל עדכונים על הביצועים של האתר שלך.</string>
-    <string name="quick_start_dialog_remove_next_steps_message">ההסרה של השלבים הבאים תסתיר את כל הסיורים באתר זה. לא ניתן לבטל פעולה זו.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">הסרת השלבים הבאים</string>
-    <string name="quick_start_remove_next_steps_menu_title">להסיר את הפריט</string>
     <string name="quick_start_task_skip_menu_title">דילוג על המשימה</string>
     <string name="notification_channel_reminder_title">תזכורת</string>
     <string name="stats_select_next_period_description">בחירת התקופה הבאה</string>
@@ -2719,7 +2732,6 @@ Language: he_IL
     <string name="share_intent_pick_site">בחר אתר</string>
     <string name="share_action_media">הוסף לספריית המדיה</string>
     <string name="share_action_post">הוספה לפוסט חדש</string>
-    <string name="share_media_permission_required">נדרשות הרשאות כדי לשתף תמונות או סרטוני וידאו</string>
     <string name="invalid_ip_or_range">ערך IP או טווח IP לא חוקיים</string>
     <string name="deleting_media_dlg">מוחק</string>
     <string name="confirm_delete_media_video">האם למחוק את הווידאו?</string>

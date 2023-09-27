@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-05-09 06:46:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: es_CL
 -->
 <resources>
@@ -66,9 +66,6 @@ Language: es_CL
     <string name="quick_start_dialog_enable_sharing_title">Habilita el compartir publicaciones</string>
     <string name="quick_start_dialog_enable_sharing_message">Comparte automáticamente nuevas publicaciones en tus cuentas de redes sociales.</string>
     <string name="quick_start_dialog_check_stats_title">Consulta las estadísticas de tu sitio</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Si eliminas los Siguientes Pasos ocultarás todas las guías de este sitio. Esto no se puede deshacer.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Eliminar Siguientes Pasos</string>
-    <string name="quick_start_remove_next_steps_menu_title">Quitar esto</string>
     <string name="quick_start_task_skip_menu_title">Omitir tarea</string>
     <string name="notification_channel_reminder_title">Recordatorio</string>
     <string name="stats_select_next_period_description">Seleccione el siguiente período</string>
@@ -641,7 +638,6 @@ Language: es_CL
     <string name="share_intent_pick_site">Elegir sitio</string>
     <string name="jetpack_site_settings_category_title">Configuración de Jetpack</string>
     <string name="share_action_post">Agregar a nueva entrada</string>
-    <string name="share_media_permission_required">Permisos necesarios para compartir imágenes o vídeos</string>
     <string name="invalid_ip_or_range">IP o rango no válido</string>
     <string name="deleting_media_dlg">Eliminando</string>
     <string name="confirm_delete_media_video">¿Eliminar este vídeo?</string>
