@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-21 16:09:24+0000
+Translation-Revision-Date: 2023-09-04 21:05:32+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.7
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">Откройте этот блок Paywall в своем веб-браузере для дополнительных настроек.</string>
     <string name="contact_support_bot_ticket_comment_answer">Ответ:</string>
     <string name="contact_support_bot_ticket_comment_question">Вопрос:</string>
     <string name="contact_support_bot_ticket_comment_start">Расшифровка мобильного бота Jetpack:</string>
@@ -632,7 +633,7 @@ Language: ru
     <string name="gutenberg_native_tiled_gallery_settings">Настройки плиточной галереи</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Навигация к экрану выбора макета</string>
     <string name="gutenberg_native_gallery_style">Стиль галереи</string>
-    <string name="sharing_facebook_warning_positive_button">Переход на веб-сайт</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Переход на веб-сайт</string>
     <string name="sharing_facebook_warning_message">Вы можете подключить свою учётную запись Facebook на сайте WordPress.com. После этого вернитесь в приложение WordPress, чтобы изменить настройки возможностей поделиться.</string>
     <string name="about_automattic_app_icon_description">Значок приложения</string>
     <string name="about_automattic_back_icon_description">Значок Назад</string>

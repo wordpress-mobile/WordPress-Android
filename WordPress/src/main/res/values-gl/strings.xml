@@ -1,25 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-13 11:56:31+0000
+Translation-Revision-Date: 2023-09-05 06:08:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.7
 Language: gl_ES
 -->
 <resources>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">Accede a este bloque de Paywall no teu navegador web para axustes avanzados.</string>
+    <string name="contact_support_bot_ticket_comment_answer">Resposta:</string>
+    <string name="contact_support_bot_ticket_comment_question">Pregunta:</string>
+    <string name="contact_support_bot_ticket_comment_start">Transcrición do bot móbil de Jetpack:</string>
+    <string name="contact_support_bot_ticket_error">Erro ao enviar a petición de asistencia</string>
+    <string name="contact_support_bot_ticket_message">Petición creada</string>
+    <string name="contact_support_bot_ticket_loading">Creando petición de asistencia…</string>
+    <string name="contact_support_question_six">Como poido utilizar o meu dominio personalizado na aplicación?</string>
+    <string name="contact_support_question_five">Non me acordo dos meus datos de acceso</string>
+    <string name="contact_support_question_four">Por que non poido acceder?</string>
+    <string name="contact_support_question_three">Non poido subir fotos/vídeos</string>
+    <string name="contact_support_question_two">Axuda, o meu sitio non funciona.</string>
+    <string name="contact_support_question_one">Cal é o enderezo do meu sitio?</string>
+    <string name="contact_support_suggestions">Non estás seguro/a de que preguntar?</string>
+    <string name="contact_support_get_support">Contactar co soporte técnico</string>
+    <string name="contact_support_first_message">En que che podo axudar?</string>
+    <string name="contact_support_input_placeholder">Enviar unha mensaxe…</string>
+    <string name="post_settings_jetpack_social_share_message_clear">Borrar</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d compartidas en redes sociais restantes</string>
     <string name="missing_splits_dialog_button">PECHAR</string>
+    <string name="missing_splits_dialog_message">Á app de WordPress fáltanlle compoñentes obrigatorios e debe ser reinstalada da Google Play Store.</string>
+    <string name="missing_splits_dialog_title">Instalación fallida</string>
+    <string name="campaign_detail_error_title">Algo saíu mal</string>
+    <string name="campaign_listing_page_error_title">Algo saíu mal</string>
+    <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Algo saíu mal, non se puideron obter as campañas</string>
     <string name="domain_transfer_card_menu_hide_this">Ocultar isto</string>
+    <string name="domain_transfer_card_cta">Transfire os teus dominios</string>
+    <string name="domain_transfer_card_caption">Como probablemente sabes, Google Domains transferiuse a Squarespace. Transfire os teus dominios a WordPress.com e nós pagaremos todas as taxas de transferencia ademais dun ano extra no rexistro do teu dominio.</string>
+    <string name="domain_transfer_card_sub_title">Reclama os teus dominios de Google</string>
     <string name="domain_transfer_card_title">Novas</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Contas conectadas</string>
     <string name="prepublishing_nudges_toolbar_title_social">Compartir en redes sociais</string>
     <string name="prepublishing_nudges_social_action">Compartir en redes sociais</string>
     <string name="sharing">Redes sociais</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Compartindo en %1$d contas</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Compartindo en %1$d de %2$d contas</string>
+    <string name="jetpack_social_social_shares_title_single_account">Compartindo en %1$s</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Non se compartirá en ningunha rede social</string>
+    <string name="post_settings_jetpack_social_share_message_description">Personaliza a mensaxe que queres compartir. Se non engades o teu propio texto aquí, usaremos o título da entrada como mensaxe.</string>
     <string name="post_settings_jetpack_social_share_message_title">Personalizar a mensaxe</string>
     <string name="post_settings_jetpack_social_connect_not_now_button">Agora non</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_button">Contas conectadas</string>
+    <string name="gutenberg_native_insert_video_block">Insertar bloque de vídeo</string>
+    <string name="gutenberg_native_insert_image_block">Insertar bloque de imaxe</string>
+    <string name="gutenberg_native_insert_gallery_block">Insertar bloque de galería</string>
+    <string name="gutenberg_native_insert_audio_block">Insertar bloque de audio</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Crear</string>
+    <string name="campaign_listing_page_no_campaigns_message_description">Aínda non creaches ningunha campaña. Fai clic en Crear para empezar.</string>
+    <string name="campaign_listing_page_no_campaigns_message_title">Non tes campañas</string>
+    <string name="blaze_campaign_details_page_title">Detalles da campaña</string>
+    <string name="blaze_campaigns_page_title">Campañas de Blaze</string>
+    <string name="budget_campaign_stats">Orzamento</string>
     <string name="clicks_campaign_stats">Clics</string>
     <string name="impressions_campaign_stats">Impresións</string>
+    <string name="campaign_status_scheduled">PROGRAMADA</string>
+    <string name="campaign_status_in_moderation">EN MODERACIÓN</string>
+    <string name="campaign_status_canceled">CANCELADA</string>
+    <string name="campaign_status_rejected">REXEITADA</string>
+    <string name="campaign_status_completed">COMPLETADA</string>
+    <string name="campaign_status_active">ACTIVA</string>
+    <string name="blaze_campaigns_card_footer_label">Crear campaña</string>
+    <string name="blaze_campaigns_card_title">Campaña de Blaze</string>
+    <string name="promote_blaze_flow_error">Non se puido cargar o fluxo de promoción de Blaze</string>
+    <string name="prepublishing_nudges_social_new_connection_text">Aumenta o tráfico compartindo automaticamente as entradas cos teus amigos a través das redes sociais.</string>
     <string name="menu_close_editor">Pechar o editor</string>
+    <string name="menu_redo_context">Refacer o último cambio</string>
+    <string name="menu_undo_context">Desfacer o último cambio</string>
+    <string name="jetpack_social_social_shares_remaining_one">1 entrada compartida en redes sociais restante</string>
+    <string name="post_settings_jetpack_social_subscribe_share_more">Subscríbete agora para compartir máis</string>
+    <string name="post_settings_jetpack_social_connect_social_profiles_message">Aumenta o tráfico compartindo automaticamente as entradas cos teus amigos a través das redes sociais.</string>
+    <string name="post_settings_jetpack_social_header">Compartir en redes sociais</string>
     <string name="gutenberg_native_s_detached">%s separado</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">A edición de padróns sincronizados aínda non está incluída en %s para iOS</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">A edición de padróns sincronizados aínda non está incluída en %s para Android</string>
@@ -51,7 +108,7 @@ Language: gl_ES
     <string name="account_closure_dialog_error_chargebacked_site">Non é posible pechar a conta deste usuario se ten cargos rexeitados sen resolver.</string>
     <string name="account_closure_dialog_error_atomic_site">Non é posible pechar a conta deste usuario de inmediato porque ten compras activas. Contacta co noso equipo de soporte para eliminar a conta definitivamente.</string>
     <string name="account_closure_dialog_error_unauthorized">Non tes autorización para pechar a conta.</string>
-    <string name="account_closure_dialog_error_title">Non se puido pechar a conta automaticamente</string>
+    <string name="account_closure_dialog_error_title">Non se puido pechar a conta automaticamente!</string>
     <string name="account_closure_dialog_title">Confirmar o peche da conta…</string>
     <string name="account_closure_dialog_message">Para confirmar, volve a introducir o teu nome de usuario antes de cerrala.</string>
     <string name="close_account">Pechar conta</string>
@@ -576,7 +633,7 @@ Language: gl_ES
     <string name="gutenberg_native_tiled_gallery_settings">Axustes da galería de mosaico</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navega á pantalla de selección do deseño</string>
     <string name="gutenberg_native_gallery_style">Estilo da galería</string>
-    <string name="sharing_facebook_warning_positive_button">Ir á web</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Ir á web</string>
     <string name="sharing_facebook_warning_message">Podes conectar a túa conta de Facebook na web de WordPress.com. Cando o teñas feito, volve á aplicación de WordPress para cambiar os teus axustes para compartir.</string>
     <string name="about_automattic_app_icon_description">Icona da aplicación</string>
     <string name="about_automattic_back_icon_description">Icona de volver</string>

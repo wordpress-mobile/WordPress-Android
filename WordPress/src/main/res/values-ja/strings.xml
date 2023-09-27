@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-24 09:54:08+0000
+Translation-Revision-Date: 2023-09-07 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.7
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">詳細設定を行うには、Web ブラウザーでこの有料区分ブロックにアクセスしてください。</string>
     <string name="contact_support_bot_ticket_comment_answer">回答:</string>
     <string name="contact_support_bot_ticket_comment_question">質問:</string>
     <string name="contact_support_bot_ticket_comment_start">Jetpack モバイルのボットのトランスクリプト:</string>
@@ -20,7 +21,7 @@ Language: ja_JP
     <string name="contact_support_question_one">サイトのアドレスがわかりません。</string>
     <string name="contact_support_suggestions">どうすればいいかわからない場合</string>
     <string name="contact_support_get_support">サポートに連絡</string>
-    <string name="contact_support_first_message">サポートできることはありますか ?</string>
+    <string name="contact_support_first_message">何かお困りですか ?</string>
     <string name="contact_support_input_placeholder">メッセージを送信…</string>
     <string name="post_settings_jetpack_social_share_message_clear">消去</string>
     <string name="jetpack_social_social_shares_remaining">残りのソーシャルシェア数は%1$d件です</string>
@@ -107,7 +108,6 @@ Language: ja_JP
     <string name="account_closure_dialog_error_chargebacked_site">未解決のチャージバックがある場合、このユーザーアカウントを閉鎖できません。</string>
     <string name="account_closure_dialog_error_atomic_site">有効になっている購入があるため、すぐにはこのユーザーアカウントを閉鎖できません。 サポートチームにご連絡いただき、アカウントの削除を完了してください。</string>
     <string name="account_closure_dialog_error_unauthorized">アカウントを閉鎖する権限がありません。</string>
-    <string name="account_closure_dialog_error_title">アカウントを自動的にクローズできませんでした。</string>
     <string name="account_closure_dialog_title">アカウントの閉鎖を確認…</string>
     <string name="account_closure_dialog_message">確認するには、閉鎖する前のユーザーアカウントをもう一度入力してください。</string>
     <string name="close_account">アカウントを閉鎖</string>
@@ -632,7 +632,7 @@ Language: ja_JP
     <string name="gutenberg_native_tiled_gallery_settings">タイルギャラリー設定</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">レイアウト選択画面に移動します</string>
     <string name="gutenberg_native_gallery_style">ギャラリースタイル</string>
-    <string name="sharing_facebook_warning_positive_button">ウェブに移動</string>
+    <string name="sharing_connect_via_web_warning_positive_button">ウェブに移動</string>
     <string name="sharing_facebook_warning_message">WordPress.com サイトでお使いの Facebook アカウントを接続できます。 完了したら WordPress.com アプリに戻り「共有」設定を変更します。</string>
     <string name="about_automattic_app_icon_description">アプリアイコン</string>
     <string name="about_automattic_back_icon_description">「戻る」アイコン</string>

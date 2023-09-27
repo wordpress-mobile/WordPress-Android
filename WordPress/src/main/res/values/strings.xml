@@ -71,7 +71,6 @@
     <string name="connection_to_server_lost">The connection to the server was lost</string>
     <string name="category_refresh_error">Category refresh error</string>
     <string name="incorrect_credentials">Incorrect username or password.</string>
-    <string name="cancel_edit">Cancel edit</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="refresh">Refresh</string>
     <string name="blog_not_found">An error occurred when accessing this blog</string>
@@ -487,11 +486,8 @@
 
     <!-- edit comment view -->
     <string name="saving_changes">Saving changes</string>
-    <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
     <string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
     <string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
-    <string name="content_required">Comment is required</string>
-    <string name="toast_comment_unedited">Comment hasn\'t changed</string>
     <string name="comment_edit_menu_done">Done</string>
     <string name="comment_edit_user_name">Name</string>
     <string name="comment_edit_comment">Comment</string>
@@ -2280,7 +2276,9 @@
     <string name="support_ticket_subject">WordPress for Android Support</string>
 
     <string name="contact_support_input_placeholder">Send a message…</string>
+    <string name="contact_support_first_message_hi">Hi there, I\'m the Jetpack AI Assistant.</string>
     <string name="contact_support_first_message">What can I help you with?</string>
+    <string name="contact_support_first_message_hint">If I can\'t answer your question, I\'ll help you open a support ticket with our team!</string>
     <string name="contact_support_get_support">Contact support</string>
     <string name="contact_support_suggestions">Not sure what to ask?</string>
     <string name="contact_support_question_one">What is my site address?</string>
@@ -2505,12 +2503,15 @@
     <string name="sharing_twitter_message">This will be included in tweets when people share using the Twitter button</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
     <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Jetpack Social cannot connect to Facebook Profiles, only published Pages.</string>
-    <string name="sharing_facebook_warning_message">You can connect your Facebook account on the WordPress.com website. When you\'re done, return to the WordPress app to change your Sharing settings.</string>
-    <string name="sharing_facebook_warning_positive_button">Go to web</string>
     <string name="sharing_twitter_deprecation_notice_title">Twitter auto-sharing is no longer available</string>
     <string name="sharing_twitter_deprecation_notice_description">Twitter auto-sharing is no longer available due to Twitter\'s changes in terms and pricing.</string>
     <string name="sharing_twitter_deprecation_notice_find_out_more">Find out more</string>
     <string name="social_item_message_title">Message</string>
+
+    <!-- Some JP Social connections can only be connected via web at this time -->
+    <!-- translators: %s is replaced with an external service name, such as "Facebook" or "Mastodon". -->
+    <string name="sharing_connect_via_web_warning_message">You can connect your %s account on the WordPress.com website. When you\'re done, return to the app to change your Sharing settings.</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Go to web</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
@@ -3633,14 +3634,14 @@
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources">Add a new block at any time by tapping on the + icon in the toolbar on the bottom left.</string>
     <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources">Add a shortcode…</string>
     <string name="gutenberg_native_add_alt_text" tools:ignore="UnusedResources">Add alt text</string>
-    <string name="gutenberg_native_add_audio" tools:ignore="UnusedResources">ADD AUDIO</string>
+    <string name="gutenberg_native_add_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Add audio</string>
     <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Add Block After</string>
     <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">Add Block Before</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
     <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Add blocks</string>
     <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">Add button text</string>
-    <string name="gutenberg_native_add_image" tools:ignore="UnusedResources">ADD IMAGE</string>
-    <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources">ADD IMAGE OR VIDEO</string>
+    <string name="gutenberg_native_add_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Add image</string>
+    <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Add image or video</string>
     <string name="gutenberg_native_add_image_or_video_b7b3d22b" tools:ignore="UnusedResources">Add image or video</string>
     <string name="gutenberg_native_add_link" tools:ignore="UnusedResources">ADD LINK</string>
     <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources">Add link text</string>
@@ -3654,7 +3655,7 @@
     <string name="gutenberg_native_add_to_beginning" tools:ignore="UnusedResources">Add To Beginning</string>
     <string name="gutenberg_native_add_to_end" tools:ignore="UnusedResources">Add To End</string>
     <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">Add URL</string>
-    <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">ADD VIDEO</string>
+    <string name="gutenberg_native_add_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Add video</string>
     <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources">Address Settings</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
     <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit these blocks separately by tapping “Detach patterns”.</string>
@@ -3690,7 +3691,7 @@
     <string name="gutenberg_native_cancel_search" tools:ignore="UnusedResources">Cancel search</string>
     <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources">Change block position</string>
     <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b" tools:ignore="UnusedResources">Changes to featured image will not be affected by the undo/redo buttons.</string>
-    <string name="gutenberg_native_choose_a_file" tools:ignore="UnusedResources">CHOOSE A FILE</string>
+    <string name="gutenberg_native_choose_a_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Choose a file</string>
     <string name="gutenberg_native_choose_audio" tools:ignore="UnusedResources">Choose audio</string>
     <string name="gutenberg_native_choose_file" tools:ignore="UnusedResources">Choose file</string>
     <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">Choose from device</string>
@@ -4698,25 +4699,34 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="partial_media_access_prompt_select_more">Select More</string>
     <string name="partial_media_access_prompt_change_settings">Change Settings</string>
 
-    <!-- Personalisation Screen -->
-    <string name="personalisation_screen_title"> Personalise home tab</string>
-    <string name="personalisation_screen_description"> Add or hide Cards</string>
-    <string name="personalisation_screen_footer_cards"> Cards may show different content depending on what\'s happening with your site</string>
-    <string name="personalisation_screen_stats_card_title" translatable="false">@string/my_site_todays_stat_card_title</string>
-    <string name="personalisation_screen_stats_card_description">Views, Visitors and likes</string>
-    <string name="personalisation_screen_draft_posts_card_title"> Draft posts</string>
-    <string name="personalisation_screen_draft_posts_card_description">Your recent draft posts.</string>
-    <string name="personalisation_screen_scheduled_posts_card_title"> Scheduled posts</string>
-    <string name="personalisation_screen_scheduled_posts_card_description">Your upcoming scheduled posts.</string>
-    <string name="personalisation_screen_blaze_card_title" translatable="false"> @string/blaze_activity_title</string>
-    <string name="personalisation_screen_blaze_card_description">Promote a post and see current campaigns.</string>
-    <string name="personalisation_screen_blogging_prompts_card_title">Blogging prompts</string>
-    <string name="personalisation_screen_blogging_prompts_card_description">Daily ideas for your blog posts.</string>
-    <string name="personalisation_screen_pages_card_title" translatable="false">@string/pages</string>
-    <string name="personalisation_screen_pages_card_description">Overview of your site pages.</string>
-    <string name="personalisation_screen_activity_log_card_title" translatable="false">@string/activity_log</string>
-    <string name="personalisation_screen_activity_log_card_description">Recent actions taken on your site.</string>
-    <string name="personalisation_screen_next_steps_card_title" translatable="false">@string/quick_start_sites</string>
-    <string name="personalisation_screen_next_steps_card_description">Learn how to make the most of your site with the app.</string>
+    <!-- Personalize card -->
+    <string name="personalize_card_text">Personalize your home tab</string>
+    <string name="personalize_card_content_description">Tap to personalize your home tab</string>
+
+    <!-- Personalization Screen -->
+    <string name="personalization_screen_title">Personalize home tab</string>
+    <string name="personalization_screen_description">Add or hide Cards</string>
+    <string name="personalization_screen_footer_cards">Cards may show different content depending on what\'s happening with your site</string>
+    <string name="personalization_screen_stats_card_title" translatable="false">@string/my_site_todays_stat_card_title</string>
+    <string name="personalization_screen_stats_card_description">Views, Visitors and likes</string>
+    <string name="personalization_screen_draft_posts_card_title">Draft posts</string>
+    <string name="personalization_screen_draft_posts_card_description">Your recent draft posts.</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Scheduled posts</string>
+    <string name="personalization_screen_scheduled_posts_card_description">Your upcoming scheduled posts.</string>
+    <string name="personalization_screen_blaze_card_title" translatable="false">@string/blaze_activity_title</string>
+    <string name="personalization_screen_blaze_card_description">Promote a post and see current campaigns.</string>
+    <string name="personalization_screen_blogging_prompts_card_title">Blogging prompts</string>
+    <string name="personalization_screen_blogging_prompts_card_description">Daily ideas for your blog posts.</string>
+    <string name="personalization_screen_pages_card_title" translatable="false">@string/pages</string>
+    <string name="personalization_screen_pages_card_description">Overview of your site pages.</string>
+    <string name="personalization_screen_activity_log_card_title" translatable="false">@string/activity_log</string>
+    <string name="personalization_screen_activity_log_card_description">Recent actions taken on your site.</string>
+    <string name="personalization_screen_next_steps_card_title" translatable="false">@string/quick_start_sites</string>
+    <string name="personalization_screen_next_steps_card_description">Learn how to make the most of your site with the app.</string>
+
+    <string name="my_site_dashboard_no_cards_message_title">All cards are hidden</string>
+    <string name="my_site_dashboard_no_cards_message_description">Tap the personalise button to show more cards.</string>
+
+    <string name="pages_no_site_something_went_wrong">Uh oh, something went wrong. Please try again later.</string>
 
 </resources>

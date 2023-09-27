@@ -8,7 +8,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_EMPTY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DASHBOARD_CARDS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_BADGE
@@ -37,17 +36,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         CATEGORY_HEADER_ITEM,
         CATEGORY_EMPTY_HEADER_ITEM,
         LIST_ITEM,
-        DASHBOARD_CARDS,
-        JETPACK_BADGE,
-        SINGLE_ACTION_CARD,
-        JETPACK_FEATURE_CARD,
-        JETPACK_SWITCH_CARD,
-        JETPACK_INSTALL_FULL_PLUGIN_CARD,
-    }
-
-    enum class DashboardCardType {
         ERROR_CARD,
-        QUICK_START_CARD,
         TODAYS_STATS_CARD_ERROR,
         TODAYS_STATS_CARD,
         POST_CARD_ERROR,
@@ -60,6 +49,13 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         PAGES_CARD_ERROR,
         PAGES_CARD,
         ACTIVITY_CARD,
+        JETPACK_BADGE,
+        SINGLE_ACTION_CARD,
+        JETPACK_FEATURE_CARD,
+        JETPACK_SWITCH_CARD,
+        JETPACK_INSTALL_FULL_PLUGIN_CARD,
+        NO_CARDS_MESSAGE,
+        PERSONALIZE_CARD,
     }
 
     data class SiteInfoHeaderCard(
@@ -154,228 +150,227 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onHideMenuItemClick: ListItemInteraction,
         ) : Card(Type.JETPACK_INSTALL_FULL_PLUGIN_CARD)
 
-        data class DashboardCards(
-            val cards: List<DashboardCard>
-        ) : MySiteCardAndItem(DASHBOARD_CARDS) {
-            sealed class DashboardCard(
-                open val dashboardCardType: DashboardCardType
+
+        data class ErrorCard(
+            val onRetryClick: ListItemInteraction
+        ) : Card(Type.ERROR_CARD)
+
+        interface ErrorWithinCard {
+            val title: UiString
+        }
+
+        sealed class TodaysStatsCard(
+             override val type: Type
+        ) : Card(type) {
+            data class Error(
+                override val title: UiString
+            ) : TodaysStatsCard(type = Type.TODAYS_STATS_CARD_ERROR), ErrorWithinCard
+
+            data class TodaysStatsCardWithData(
+                val title: UiString,
+                val views: UiString,
+                val visitors: UiString,
+                val likes: UiString,
+                val onCardClick: () -> Unit,
+                val message: TextWithLinks? = null,
+                val moreMenuOptions: MoreMenuOptions
+            ) : TodaysStatsCard(type = Type.TODAYS_STATS_CARD)
+
+            data class TextWithLinks(
+                val text: UiString,
+                val links: List<Clickable>? = null
             ) {
-                data class ErrorCard(
-                    val onRetryClick: ListItemInteraction
-                ) : DashboardCard(dashboardCardType = DashboardCardType.ERROR_CARD)
+                data class Clickable(val navigationAction: ListItemInteraction)
+            }
 
-                interface ErrorWithinCard {
-                    val title: UiString
-                }
+            data class MoreMenuOptions(
+                val onMoreMenuClick: () -> Unit,
+                val onViewStatsMenuItemClick: () -> Unit,
+                val onHideThisMenuItemClick: () -> Unit
+            )
+        }
 
-                sealed class TodaysStatsCard(
-                    override val dashboardCardType: DashboardCardType
-                ) : DashboardCard(dashboardCardType) {
-                    data class Error(
-                        override val title: UiString
-                    ) : TodaysStatsCard(dashboardCardType = DashboardCardType.TODAYS_STATS_CARD_ERROR), ErrorWithinCard
+        sealed class PagesCard(
+             override val type: Type,
+        ) : Card(type) {
+            data class Error(
+                override val title: UiString
+            ) : PagesCard(type = Type.PAGES_CARD_ERROR), ErrorWithinCard
 
-                    data class TodaysStatsCardWithData(
-                        val title: UiString,
-                        val views: UiString,
-                        val visitors: UiString,
-                        val likes: UiString,
-                        val onCardClick: () -> Unit,
-                        val message: TextWithLinks? = null,
-                        val moreMenuOptions: MoreMenuOptions
-                    ) : TodaysStatsCard(dashboardCardType = DashboardCardType.TODAYS_STATS_CARD)
+            data class PagesCardWithData(
+                val title: UiString,
+                val pages: List<PageContentItem>,
+                val footerLink: CreateNewPageItem,
+                val moreMenuOptionsLink: MoreMenuOptions
+            ) : PagesCard(type = Type.PAGES_CARD) {
+                data class PageContentItem(
+                    val title: UiString,
+                    @DrawableRes val statusIcon: Int?,
+                    val status: UiString?,
+                    val lastEditedOrScheduledTime: UiString,
+                    val onClick: ListItemInteraction
+                )
 
-                    data class TextWithLinks(
-                        val text: UiString,
-                        val links: List<Clickable>? = null
-                    ) {
-                        data class Clickable(val navigationAction: ListItemInteraction)
-                    }
+                data class CreateNewPageItem(
+                    val label: UiString,
+                    val description: UiString? = null,
+                    @DrawableRes val imageRes: Int? = null,
+                    val onClick: () -> Unit
+                )
 
-                    data class MoreMenuOptions(
-                        val onMoreMenuClick: () -> Unit,
-                        val onViewStatsMenuItemClick: () -> Unit,
-                        val onHideThisMenuItemClick: () -> Unit
+                data class MoreMenuOptions(
+                    val onMoreClick: () -> Unit,
+                    val allPagesMenuItemClick: () -> Unit,
+                    val hideThisMenuItemClick: () -> Unit
+                )
+            }
+        }
+
+        sealed class PostCard(
+            override val type: Type,
+        ) : Card(type) {
+            data class Error(
+                override val title: UiString
+            ) : PostCard(type = Type.POST_CARD_ERROR), ErrorWithinCard
+
+            data class PostCardWithPostItems(
+                val postCardType: PostCardType,
+                val title: UiString,
+                val postItems: List<PostItem>,
+                @MenuRes val moreMenuResId: Int,
+                val moreMenuOptions: MoreMenuOptions
+            ) : PostCard(
+                type = Type.POST_CARD_WITH_POST_ITEMS
+            ) {
+                data class PostItem(
+                    val title: UiString,
+                    val excerpt: UiString?,
+                    val featuredImageUrl: String?,
+                    val isTimeIconVisible: Boolean = false,
+                    val onClick: ListItemInteraction
+                )
+
+                data class MoreMenuOptions(
+                    val onMoreMenuClick: (postCardType: PostCardType) -> Unit,
+                    val onViewPostsMenuItemClick: (postCardType: PostCardType) -> Unit,
+                    val onHideThisMenuItemClick: (postCardType: PostCardType) -> Unit
+                )
+            }
+        }
+
+        sealed class ActivityCard(
+            override val type: Type,
+        ) : Card(type) {
+            data class ActivityCardWithItems(
+                val title: UiString,
+                val activityItems: List<ActivityItem>,
+                val onAllActivityMenuItemClick: ListItemInteraction,
+                val onHideMenuItemClick: ListItemInteraction,
+                val onMoreMenuClick: ListItemInteraction
+            ) : ActivityCard(
+                type = Type.ACTIVITY_CARD
+            ) {
+                data class ActivityItem(
+                    val label: UiString,
+                    val subLabel: String?,
+                    val displayDate: String,
+                    @DrawableRes val icon: Int,
+                    @DrawableRes val iconBackgroundColor: Int,
+                    val onClick: ListItemInteraction
+                )
+            }
+        }
+
+        sealed class BloggingPromptCard(
+            override val type: Type,
+        ) : Card(type) {
+            data class BloggingPromptCardWithData(
+                val prompt: UiString,
+                val respondents: List<TrainOfAvatarsItem>,
+                val numberOfAnswers: Int,
+                val isAnswered: Boolean,
+                val promptId: Int,
+                val attribution: BloggingPromptAttribution,
+                val onShareClick: (String) -> Unit,
+                val onAnswerClick: (PromptID) -> Unit,
+                val onSkipClick: () -> Unit,
+                val onViewMoreClick: () -> Unit,
+                val onViewAnswersClick: ((PromptID) -> Unit)?,
+                val onRemoveClick: () -> Unit,
+            ) : BloggingPromptCard(type = Type.BLOGGING_PROMPT_CARD)
+        }
+
+        data class DomainTransferCardModel(
+            @StringRes val title: Int,
+            @StringRes val subtitle: Int,
+            @StringRes val caption: Int,
+            @StringRes val cta: Int,
+            val onClick: ListItemInteraction,
+            val onHideMenuItemClick: ListItemInteraction,
+            val onMoreMenuClick: ListItemInteraction,
+        ) : Card(type = Type.DASHBOARD_DOMAIN_TRANSFER_CARD)
+
+        sealed class BlazeCard(
+            override val type: Type,
+        ) : Card(type) {
+            data class BlazeCampaignsCardModel(
+                val title: UiString,
+                val campaign: BlazeCampaignsCardItem,
+                val footer: BlazeCampaignsCardFooter,
+                val onClick: ListItemInteraction,
+                val moreMenuOptions: MoreMenuOptions
+            ) : BlazeCard(type = Type.BLAZE_CAMPAIGNS_CARD) {
+                data class BlazeCampaignsCardItem(
+                    val id: Int,
+                    val title: UiString,
+                    val status: CampaignStatus?,
+                    val featuredImageUrl: String?,
+                    val stats: BlazeCampaignStats?,
+                    val onClick: (campaignId: Int) -> Unit,
+                ) {
+                    data class BlazeCampaignStats(
+                        val impressions: UiString,
+                        val clicks: UiString,
                     )
                 }
 
-                sealed class PagesCard(
-                    override val dashboardCardType: DashboardCardType,
-                ) : DashboardCard(dashboardCardType) {
-                    data class Error(
-                        override val title: UiString
-                    ) : PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD_ERROR), ErrorWithinCard
-
-                    data class PagesCardWithData(
-                        val title: UiString,
-                        val pages: List<PageContentItem>,
-                        val footerLink: CreateNewPageItem,
-                        val moreMenuOptionsLink: MoreMenuOptions
-                    ) : PagesCard(dashboardCardType = DashboardCardType.PAGES_CARD) {
-                        data class PageContentItem(
-                            val title: UiString,
-                            @DrawableRes val statusIcon: Int?,
-                            val status: UiString?,
-                            val lastEditedOrScheduledTime: UiString,
-                            val onClick: ListItemInteraction
-                        )
-
-                        data class CreateNewPageItem(
-                            val label: UiString,
-                            val description: UiString? = null,
-                            @DrawableRes val imageRes: Int? = null,
-                            val onClick: () -> Unit
-                        )
-
-                        data class MoreMenuOptions(
-                            val onMoreClick: () -> Unit,
-                            val allPagesMenuItemClick: () -> Unit,
-                            val hideThisMenuItemClick: () -> Unit
-                        )
-                    }
-                }
-
-                sealed class PostCard(
-                    override val dashboardCardType: DashboardCardType
-                ) : DashboardCard(dashboardCardType) {
-                    data class Error(
-                        override val title: UiString
-                    ) : PostCard(dashboardCardType = DashboardCardType.POST_CARD_ERROR), ErrorWithinCard
-
-                    data class PostCardWithPostItems(
-                        val postCardType: PostCardType,
-                        val title: UiString,
-                        val postItems: List<PostItem>,
-                        @MenuRes val moreMenuResId: Int,
-                        val moreMenuOptions: MoreMenuOptions
-                    ) : PostCard(
-                        dashboardCardType = DashboardCardType.POST_CARD_WITH_POST_ITEMS
-                    ) {
-                        data class PostItem(
-                            val title: UiString,
-                            val excerpt: UiString?,
-                            val featuredImageUrl: String?,
-                            val isTimeIconVisible: Boolean = false,
-                            val onClick: ListItemInteraction
-                        )
-                        data class MoreMenuOptions(
-                            val onMoreMenuClick: (postCardType: PostCardType) -> Unit,
-                            val onViewPostsMenuItemClick: (postCardType: PostCardType) -> Unit,
-                            val onHideThisMenuItemClick: (postCardType: PostCardType) -> Unit
-                        )
-                    }
-                }
-
-                sealed class ActivityCard(
-                    override val dashboardCardType: DashboardCardType
-                ) : DashboardCard(dashboardCardType) {
-                    data class ActivityCardWithItems(
-                        val title: UiString,
-                        val activityItems: List<ActivityItem>,
-                        val onAllActivityMenuItemClick: ListItemInteraction,
-                        val onHideMenuItemClick: ListItemInteraction,
-                        val onMoreMenuClick: ListItemInteraction
-                    ) : ActivityCard(
-                        dashboardCardType = DashboardCardType.ACTIVITY_CARD
-                    ) {
-                        data class ActivityItem(
-                            val label: UiString,
-                            val subLabel: String?,
-                            val displayDate: String,
-                            @DrawableRes val icon: Int,
-                            @DrawableRes val iconBackgroundColor: Int,
-                            val onClick: ListItemInteraction
-                        )
-                    }
-                }
-
-                sealed class BloggingPromptCard(
-                    override val dashboardCardType: DashboardCardType
-                ) : DashboardCard(dashboardCardType) {
-                    data class BloggingPromptCardWithData(
-                        val prompt: UiString,
-                        val respondents: List<TrainOfAvatarsItem>,
-                        val numberOfAnswers: Int,
-                        val isAnswered: Boolean,
-                        val promptId: Int,
-                        val attribution: BloggingPromptAttribution,
-                        val onShareClick: (String) -> Unit,
-                        val onAnswerClick: (PromptID) -> Unit,
-                        val onSkipClick: () -> Unit,
-                        val onViewMoreClick: () -> Unit,
-                        val onViewAnswersClick: ((PromptID) -> Unit)?,
-                        val onRemoveClick: () -> Unit,
-                    ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD)
-                }
-                data class DomainTransferCardModel(
-                    @StringRes val title: Int,
-                    @StringRes val subtitle: Int,
-                    @StringRes val caption: Int,
-                    @StringRes val cta: Int,
+                data class BlazeCampaignsCardFooter(
+                    val label: UiString,
                     val onClick: ListItemInteraction,
-                    val onHideMenuItemClick: ListItemInteraction,
-                    val onMoreMenuClick: ListItemInteraction,
-                ) : DashboardCard(dashboardCardType = DashboardCardType.DASHBOARD_DOMAIN_TRANSFER_CARD)
-                sealed class BlazeCard(
-                    override val dashboardCardType: DashboardCardType
-                ) : DashboardCard(dashboardCardType) {
-                    data class BlazeCampaignsCardModel(
-                        val title: UiString,
-                        val campaign: BlazeCampaignsCardItem,
-                        val footer: BlazeCampaignsCardFooter,
-                        val onClick: ListItemInteraction,
-                        val moreMenuOptions: MoreMenuOptions
-                        ) : BlazeCard(dashboardCardType = DashboardCardType.BLAZE_CAMPAIGNS_CARD) {
-                        data class BlazeCampaignsCardItem(
-                            val id: Int,
-                            val title: UiString,
-                            val status: CampaignStatus?,
-                            val featuredImageUrl: String?,
-                            val stats: BlazeCampaignStats?,
-                            val onClick: (campaignId: Int) -> Unit,
-                        ) {
-                            data class BlazeCampaignStats(
-                                val impressions: UiString,
-                                val clicks: UiString,
-                            )
-                        }
+                )
 
-                        data class BlazeCampaignsCardFooter(
-                            val label: UiString,
-                            val onClick: ListItemInteraction,
-                        )
+                data class MoreMenuOptions(
+                    val viewAllCampaignsItemClick: ListItemInteraction,
+                    val learnMoreClick: ListItemInteraction,
+                    val hideThisMenuItemClick: ListItemInteraction,
+                    val onMoreClick: ListItemInteraction
+                )
+            }
 
-                        data class MoreMenuOptions(
-                            val viewAllCampaignsItemClick: ListItemInteraction,
-                            val learnMoreClick: ListItemInteraction,
-                            val hideThisMenuItemClick: ListItemInteraction,
-                            val onMoreClick: ListItemInteraction
-                        )
-                    }
-
-                    data class PromoteWithBlazeCard(
-                        val title: UiString?,
-                        val subtitle: UiString?,
-                        val onClick: ListItemInteraction,
-                        val moreMenuOptions: MoreMenuOptions
-                    ) : BlazeCard(dashboardCardType = DashboardCardType.PROMOTE_WITH_BLAZE_CARD) {
-                        data class MoreMenuOptions(
-                            val onMoreClick: ListItemInteraction,
-                            val hideThisMenuItemClick: ListItemInteraction,
-                            val learnMoreClick: ListItemInteraction
-                        )
-                    }
-                }
-
-                data class DashboardPlansCard(
-                    val title: UiString?,
-                    val subtitle: UiString?,
-                    val onClick: ListItemInteraction,
-                    val onHideMenuItemClick: ListItemInteraction,
-                    val onMoreMenuClick: ListItemInteraction,
-                ) : DashboardCard(dashboardCardType = DashboardCardType.DASHBOARD_PLANS_CARD)
+            data class PromoteWithBlazeCard(
+                val title: UiString?,
+                val subtitle: UiString?,
+                val onClick: ListItemInteraction,
+                val moreMenuOptions: MoreMenuOptions
+            ) : BlazeCard(type = Type.PROMOTE_WITH_BLAZE_CARD) {
+                data class MoreMenuOptions(
+                    val onMoreClick: ListItemInteraction,
+                    val hideThisMenuItemClick: ListItemInteraction,
+                    val learnMoreClick: ListItemInteraction
+                )
             }
         }
+
+        data class DashboardPlansCard(
+            val title: UiString?,
+            val subtitle: UiString?,
+            val onClick: ListItemInteraction,
+            val onHideMenuItemClick: ListItemInteraction,
+            val onMoreMenuClick: ListItemInteraction,
+        ) : Card(type = Type.DASHBOARD_PLANS_CARD)
+
+        data class NoCardsMessage(val title: UiString, val message: UiString)  : Card(Type.NO_CARDS_MESSAGE)
+        data class PersonalizeCardModel(val onClick: () -> Unit) : Card(Type.PERSONALIZE_CARD)
     }
 
     sealed class Item(

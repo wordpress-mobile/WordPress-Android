@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-23 14:54:09+0000
+Translation-Revision-Date: 2023-09-06 15:54:27+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.7
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">قم بالوصول إلى مكوّن جدار الدفع هذا على متصفح الويب الخاص بك للحصول على الإعدادات المتقدمة.</string>
     <string name="contact_support_bot_ticket_comment_answer">الإجابة:</string>
     <string name="contact_support_bot_ticket_comment_question">السؤال:</string>
     <string name="contact_support_bot_ticket_comment_start">النص المكتوب في Jetpack Mobile Bot:</string>
@@ -20,8 +21,8 @@ Language: ar
     <string name="contact_support_question_one">ما عنوان موقعي؟</string>
     <string name="contact_support_suggestions">ألست متأكد ماذا تسأل؟</string>
     <string name="contact_support_get_support">الاتصال بالدعم</string>
-    <string name="contact_support_first_message">بماذا يمكننا مساعدتك؟</string>
     <string name="contact_support_input_placeholder">إرسال رسالة…</string>
+    <string name="contact_support_first_message">ما الذي يمكنني مساعدتك على القيام به؟</string>
     <string name="post_settings_jetpack_social_share_message_clear">واضح</string>
     <string name="missing_splits_dialog_button">إغلاق</string>
     <string name="missing_splits_dialog_title">فشل التثبيت</string>
@@ -104,8 +105,8 @@ Language: ar
     <string name="account_closure_dialog_error_chargebacked_site">يتعذر إغلاق حساب المستخدم هذا إذا كانت هناك عمليات رد مبالغ مدفوعة لم يتم حلها.</string>
     <string name="account_closure_dialog_error_atomic_site">يتعذر إغلاق حساب المستخدم هذا على الفور لأنه يتضمن عمليات شراء نشطة. يرجى الاتصال بفريق الدعم لدينا لإنهاء حذف الحساب.</string>
     <string name="account_closure_dialog_error_unauthorized">لست مخولاً لإغلاق الحساب.</string>
-    <string name="account_closure_dialog_error_title">يتعذر إغلاق الحساب تلقائيًا\"</string>
     <string name="account_closure_dialog_title">تأكيد إغلاق الحساب…</string>
+    <string name="account_closure_dialog_error_title">يتعذر إغلاق الحساب تلقائيًا!</string>
     <string name="account_closure_dialog_message">للتأكيد، ترجى إعادة إدخال اسم المستخدم الخاص بك قبل الإغلاق.</string>
     <string name="close_account">إغلاق الحساب</string>
     <string name="sharing_twitter_deprecation_notice_find_out_more">اكتشاف المزيد</string>
@@ -629,7 +630,7 @@ Language: ar
     <string name="gutenberg_native_tiled_gallery_settings">إعدادات المعرض المتجانب</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">ينتقل إلى شاشة اختيار التخطيط</string>
     <string name="gutenberg_native_gallery_style">نمط المعرض</string>
-    <string name="sharing_facebook_warning_positive_button">الانتقال إلى الويب</string>
+    <string name="sharing_connect_via_web_warning_positive_button">الانتقال إلى الويب</string>
     <string name="sharing_facebook_warning_message">يمكنك ربط حسابك على فيسبوك على موقع ووردبريس.كوم على الويب. عند الانتهاء، ارجع إلى تطبيق ووردبريس لتغيير إعدادات المشاركة الخاصة بك.</string>
     <string name="about_automattic_app_icon_description">أيقونة التطبيق</string>
     <string name="about_automattic_back_icon_description">أيقونة الرجوع</string>

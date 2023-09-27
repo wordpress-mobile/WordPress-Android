@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-23 14:54:09+0000
+Translation-Revision-Date: 2023-09-07 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.7
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">访问您的 Web 浏览器上的这一“付费墙”区块，进行高级设置。</string>
     <string name="contact_support_bot_ticket_comment_answer">答案：</string>
     <string name="contact_support_bot_ticket_comment_question">问题：</string>
     <string name="contact_support_bot_ticket_comment_start">Jetpack Mobile Bot 文字转录稿：</string>
@@ -20,7 +21,7 @@ Language: zh_CN
     <string name="contact_support_question_one">我的站点地址是什么？</string>
     <string name="contact_support_suggestions">不确定提问内容？</string>
     <string name="contact_support_get_support">联系支持人员</string>
-    <string name="contact_support_first_message">我们能为您提供什么帮助？</string>
+    <string name="contact_support_first_message">我能为您提供什么帮助？</string>
     <string name="contact_support_input_placeholder">发送消息……</string>
     <string name="post_settings_jetpack_social_share_message_clear">清除</string>
     <string name="jetpack_social_social_shares_remaining">还剩 %1$d 次社交分享机会</string>
@@ -106,7 +107,7 @@ Language: zh_CN
     <string name="account_closure_dialog_error_chargebacked_site">如果存在未解决的退款，则无法关闭此用户账户。</string>
     <string name="account_closure_dialog_error_atomic_site">无法立即关闭此用户账户，因为该账户存在活跃的购买。 请联系我们的支持团队，完成账户删除操作。</string>
     <string name="account_closure_dialog_error_unauthorized">您不具备关闭此账户的权限。</string>
-    <string name="account_closure_dialog_error_title">无法自动关闭账户\"</string>
+    <string name="account_closure_dialog_error_title">无法自动关闭账户！</string>
     <string name="account_closure_dialog_title">确认关闭账户…</string>
     <string name="account_closure_dialog_message">如果您确认关闭账户，请在关闭之前重新输入您的用户名。</string>
     <string name="close_account">关闭账户</string>
@@ -630,7 +631,7 @@ Language: zh_CN
     <string name="gutenberg_native_tiled_gallery_settings">平铺图片库设置</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">导航至布局选择界面</string>
     <string name="gutenberg_native_gallery_style">画廊样式</string>
-    <string name="sharing_facebook_warning_positive_button">转到网页</string>
+    <string name="sharing_connect_via_web_warning_positive_button">转到网页</string>
     <string name="sharing_facebook_warning_message">您可以在 WordPress.com 网站上连接您的 Facebook 账户。 完成后，返回 WordPress 应用程序更改您的共享设置。</string>
     <string name="about_automattic_app_icon_description">应用程序图标</string>
     <string name="about_automattic_back_icon_description">返回图标</string>

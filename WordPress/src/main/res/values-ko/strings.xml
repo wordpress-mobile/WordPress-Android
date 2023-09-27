@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-23 11:54:08+0000
+Translation-Revision-Date: 2023-09-13 01:26:36+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.7
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">웹 브라우저에서 유료 서비스 블록의 고급 설정에 접근하세요.</string>
     <string name="contact_support_bot_ticket_comment_answer">답변:</string>
     <string name="contact_support_bot_ticket_comment_question">질문:</string>
     <string name="contact_support_bot_ticket_comment_start">젯팩 모바일 봇 대본:</string>
@@ -20,7 +21,7 @@ Language: ko_KR
     <string name="contact_support_question_one">내 사이트 주소가 무엇인가요?</string>
     <string name="contact_support_suggestions">어떤 질문을 해야 할지 잘 모르시겠나요?</string>
     <string name="contact_support_get_support">지원팀에 문의</string>
-    <string name="contact_support_first_message">무엇을 도와 드릴까요?</string>
+    <string name="contact_support_first_message">무엇을 도와드릴까요?</string>
     <string name="contact_support_input_placeholder">메시지 보내기…</string>
     <string name="post_settings_jetpack_social_share_message_clear">지우기</string>
     <string name="jetpack_social_social_shares_remaining">소셜 공유 %1$d회 남음</string>
@@ -107,7 +108,7 @@ Language: ko_KR
     <string name="account_closure_dialog_error_chargebacked_site">해결되지 않는 결제 승인 거부가 있는 경우 이 사용자 계정을 종료할 수 없습니다.</string>
     <string name="account_closure_dialog_error_atomic_site">이 사용자 계정은 활성 구매 항목이 있어서 즉시 닫을 수 없습니다. 지원팀에 문의하여 계정 삭제를 마무리하세요.</string>
     <string name="account_closure_dialog_error_unauthorized">계정을 종료할 권한이 없습니다.</string>
-    <string name="account_closure_dialog_error_title">계정을 자동으로 종료할 수 없습니다.</string>
+    <string name="account_closure_dialog_error_title">계정을 자동으로 종료할 수 없습니다!</string>
     <string name="account_closure_dialog_title">계정 종료 확인…</string>
     <string name="account_closure_dialog_message">확인하려면 종료하기 전에 사용자명을 다시 입력하세요.</string>
     <string name="close_account">계정 종료</string>
@@ -632,7 +633,7 @@ Language: ko_KR
     <string name="gutenberg_native_tiled_gallery_settings">바둑판식 갤러리 설정</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">레이아웃 선택 화면으로 이동</string>
     <string name="gutenberg_native_gallery_style">갤러리 스타일</string>
-    <string name="sharing_facebook_warning_positive_button">웹으로 이동</string>
+    <string name="sharing_connect_via_web_warning_positive_button">웹으로 이동</string>
     <string name="sharing_facebook_warning_message">워드프레스닷컴 웹사이트에서 페이스북 계정을 연결할 수 있습니다. 완료하면 워드프레스 앱으로 돌아가서 공유 설정을 변경하세요.</string>
     <string name="about_automattic_app_icon_description">앱 아이콘</string>
     <string name="about_automattic_back_icon_description">뒤로 아이콘</string>

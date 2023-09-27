@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-23 14:54:09+0000
+Translation-Revision-Date: 2023-09-05 14:10:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.7
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">Öppna detta betalväggsblock i webbläsaren för att göra avancerade inställningar.</string>
     <string name="contact_support_bot_ticket_comment_answer">Svar:</string>
     <string name="contact_support_bot_ticket_comment_question">Fråga:</string>
     <string name="contact_support_bot_ticket_comment_start">Jetpack Mobile Bot-kopia:</string>
@@ -20,7 +21,7 @@ Language: sv_SE
     <string name="contact_support_question_one">Vad är min webbplatsadress?</string>
     <string name="contact_support_suggestions">Är du inte säker på vad du ska fråga?</string>
     <string name="contact_support_get_support">Kontakta supporten</string>
-    <string name="contact_support_first_message">Vad kan vi hjälpa dig med?</string>
+    <string name="contact_support_first_message">Vad kan jag hjälpa dig med?</string>
     <string name="contact_support_input_placeholder">Skicka ett meddelande …</string>
     <string name="post_settings_jetpack_social_share_message_clear">Rensa</string>
     <string name="jetpack_social_social_shares_remaining">%1$d sociala delningar kvar</string>
@@ -107,7 +108,7 @@ Language: sv_SE
     <string name="account_closure_dialog_error_chargebacked_site">Detta användarkonto kan inte avslutas eftersom det fortfarande finns olösta återkrav.</string>
     <string name="account_closure_dialog_error_atomic_site">Detta användarkonto kan inte avslutas med en gång eftersom det har aktiva köp. Kontakta vårt supportteam för att avsluta kontot helt.</string>
     <string name="account_closure_dialog_error_unauthorized">Du är inte auktoriserad att avsluta kontot.</string>
-    <string name="account_closure_dialog_error_title">Det gick inte att avsluta kontot automatiskt</string>
+    <string name="account_closure_dialog_error_title">Kunde inte stänga kontot automatiskt!</string>
     <string name="account_closure_dialog_title">Bekräfta avluta konto …</string>
     <string name="account_closure_dialog_message">Bekräfta genom att skriva in ditt användarnamn innan kontot avslutas.</string>
     <string name="close_account">Avsluta konto</string>
@@ -632,7 +633,7 @@ Language: sv_SE
     <string name="gutenberg_native_tiled_gallery_settings">Mosaikinställningar för galleri</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Går till skärmen för val av layout</string>
     <string name="gutenberg_native_gallery_style">Galleristil</string>
-    <string name="sharing_facebook_warning_positive_button">Gå till webben</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Gå till webben</string>
     <string name="sharing_facebook_warning_message">Du kan ansluta ditt Facebook-konto på WordPress.com-webbplatsen. När du är klar, gå tillbaka till WordPress-appen för att ändra dina delningsinställningar.</string>
     <string name="about_automattic_app_icon_description">App-ikon</string>
     <string name="about_automattic_back_icon_description">Ikon för tillbaka</string>

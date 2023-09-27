@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-21 15:41:13+0000
+Translation-Revision-Date: 2023-09-05 12:25:24+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.7
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">Pentru setări avansate, accesează acest bloc Paywall în navigatorul tău web.</string>
     <string name="contact_support_bot_ticket_comment_answer">Răspuns:</string>
     <string name="contact_support_bot_ticket_comment_question">Întrebare:</string>
     <string name="contact_support_bot_ticket_error">Eroare la trimiterea tichetului pentru suport</string>
@@ -20,8 +21,8 @@ Language: ro
     <string name="contact_support_question_one">Care este adresa site-ului meu?</string>
     <string name="contact_support_suggestions">Nu știi ce să întrebi?</string>
     <string name="contact_support_get_support">Contactează suportul</string>
-    <string name="contact_support_first_message">Cu ce te putem ajuta?</string>
     <string name="contact_support_input_placeholder">Trimite un mesaj…</string>
+    <string name="contact_support_first_message">Cu ce te pot ajuta?</string>
     <string name="post_settings_jetpack_social_share_message_clear">Șterge</string>
     <string name="jetpack_social_social_shares_remaining">Ți-au rămas %1$d partajări pe media socială</string>
     <string name="missing_splits_dialog_button">ÎNCHIDE</string>
@@ -107,8 +108,8 @@ Language: ro
     <string name="account_closure_dialog_error_chargebacked_site">Acest cont de utilizator nu poate fi închis dacă există restituiri nerezolvate.</string>
     <string name="account_closure_dialog_error_atomic_site">Acest cont de utilizator nu poate fi închis imediat deoarece are cumpărături active. Ca să finalizezi ștergerea contului, te rog să contactezi echipa noastră pentru suport.</string>
     <string name="account_closure_dialog_error_unauthorized">Nu ești autorizat să închizi contul.</string>
-    <string name="account_closure_dialog_error_title">Nu am putut să închid contul în mod automat</string>
     <string name="account_closure_dialog_title">Confirmă închiderea contului…</string>
+    <string name="account_closure_dialog_error_title">Nu am putut să închid contul în mod automat!</string>
     <string name="account_closure_dialog_message">Pentru a confirma, te rog ca înainte de a-l închide să introduci din nou numele de utilizator.</string>
     <string name="close_account">Închide contul</string>
     <string name="sharing_twitter_deprecation_notice_title">Partajarea automată pe Twitter nu mai este disponibilă</string>
@@ -633,7 +634,7 @@ Language: ro
     <string name="gutenberg_native_tiled_gallery_settings">Setări galerii placate</string>
     <string name="gutenberg_native_gallery_style">Stil galerie</string>
     <string name="sharing_facebook_warning_message">Îți poți conecta contul Facebook la site-ul WordPress.com. Când ai terminat, întoarce-te la aplicația WordPress pentru a modifica setările de partajare.</string>
-    <string name="sharing_facebook_warning_positive_button">Mergi pe web</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Mergi pe web</string>
     <string name="about_automattic_wordpress">WordPress</string>
     <string name="about_automattic_back_icon_description">Icon înapoi</string>
     <string name="about_automattic_logo_description">Logo Automattic</string>

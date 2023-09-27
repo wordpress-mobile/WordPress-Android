@@ -2612,6 +2612,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "my_site_dashboard_card_menu_item_tapped";
             case MY_SITE_DASHBOARD_CONTEXTUAL_MENU_ACCESSED:
                 return "my_site_dashboard_contextual_menu_accessed";
+            case PERSONALIZATION_SCREEN_CARD_HIDE_TAPPED:
+                return "personalization_screen_card_hide_tapped";
+            case PERSONALIZATION_SCREEN_CARD_SHOW_TAPPED:
+                return "personalization_screen_card_show_tapped";
         }
         return null;
     }

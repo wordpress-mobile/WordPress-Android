@@ -217,7 +217,7 @@ Language: vi_VN
     <string name="gutenberg_native_tiled_gallery_settings">Cài đặt bộ sưu tập dạng ô</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Chuyển đến chọn màn hình bố cục</string>
     <string name="gutenberg_native_gallery_style">Dạng bộ sưu tập</string>
-    <string name="sharing_facebook_warning_positive_button">Đến trang web</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Đến trang web</string>
     <string name="sharing_facebook_warning_message">Bạn có thể kết nối tài khoản Facebook với WordPress.com. Khi đã kết nối, quay lại app WordPress để thay đổi thiết lập Chia Sẻ.</string>
     <string name="about_automattic_app_icon_description">Biểu tượng app</string>
     <string name="about_automattic_back_icon_description">Biểu tượng trở về</string>

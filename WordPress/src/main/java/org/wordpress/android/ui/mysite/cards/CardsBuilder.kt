@@ -42,7 +42,7 @@ class CardsBuilder @Inject constructor(
         quickStartCardBuilderParams.quickStartCategories.takeIf { it.isNotEmpty() }?.let {
             cards.add(quickStartCardBuilder.build(quickStartCardBuilderParams))
         }
-        cards.add(dashboardCardsBuilder.build(dashboardCardsBuilderParams))
+        cards.addAll(dashboardCardsBuilder.build(dashboardCardsBuilderParams))
         return cards
     }
 

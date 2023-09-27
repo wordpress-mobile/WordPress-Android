@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-24 09:54:08+0000
+Translation-Revision-Date: 2023-09-07 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.7
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">請在網頁瀏覽器上存取此付費閱讀區塊，以便進階設定。</string>
     <string name="contact_support_bot_ticket_comment_answer">回答：</string>
     <string name="contact_support_bot_ticket_comment_question">問題：</string>
     <string name="contact_support_bot_ticket_comment_start">Jetpack 行動版 Bot 文字稿：</string>
@@ -20,7 +21,7 @@ Language: zh_TW
     <string name="contact_support_question_one">我的網站位址是？</string>
     <string name="contact_support_suggestions">不確定要詢問什麼嗎？</string>
     <string name="contact_support_get_support">聯絡支援團隊</string>
-    <string name="contact_support_first_message">你需要什麼協助？</string>
+    <string name="contact_support_first_message">我能為你提供什麼協助？</string>
     <string name="contact_support_input_placeholder">傳送訊息…</string>
     <string name="post_settings_jetpack_social_share_message_clear">清除</string>
     <string name="jetpack_social_social_shares_remaining">剩下 %1$d 次社群分享額度</string>
@@ -106,7 +107,7 @@ Language: zh_TW
     <string name="account_closure_dialog_error_chargebacked_site">若有未解決的退款，將無法關閉此使用者帳號。</string>
     <string name="account_closure_dialog_error_atomic_site">此使用者帳號內還有購買項目處於有效狀態，因此無法立即關閉。 請聯絡我們的支援團隊，以完成帳號刪除程序。</string>
     <string name="account_closure_dialog_error_unauthorized">你無權關閉此帳號。</string>
-    <string name="account_closure_dialog_error_title">無法自動關閉帳號</string>
+    <string name="account_closure_dialog_error_title">無法自動關閉帳號！</string>
     <string name="account_closure_dialog_title">確認關閉帳號…</string>
     <string name="account_closure_dialog_message">若要確認，請在關閉前重新輸入你的使用者名稱。</string>
     <string name="close_account">關閉帳號</string>
@@ -630,7 +631,7 @@ Language: zh_TW
     <string name="gutenberg_native_tiled_gallery_settings">並排圖庫設定</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">導覽至版面配置選取畫面</string>
     <string name="gutenberg_native_gallery_style">圖庫樣式</string>
-    <string name="sharing_facebook_warning_positive_button">前往網頁</string>
+    <string name="sharing_connect_via_web_warning_positive_button">前往網頁</string>
     <string name="sharing_facebook_warning_message">你可以在 WordPress.com 網站連結 Facebook 帳號。 完成設定後，請返回 WordPress 應用程式變更你的「分享」設定。</string>
     <string name="about_automattic_app_icon_description">應用程式圖示</string>
     <string name="about_automattic_back_icon_description">返回圖示</string>

@@ -204,4 +204,8 @@ sealed class MySiteCardAndItemBuilderParams {
         val onLearnMoreClick: () -> Unit,
         val onHideMenuItemClick: () -> Unit,
     )
+
+    data class PersonalizeCardBuilderParams(
+        val onClick: () -> Unit
+    )
 }

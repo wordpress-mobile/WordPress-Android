@@ -1,0 +1,6 @@
+23.2:
+- Kanal dukungan berbasis obrolan baru dengan bot layanan
+- Lihat, cari, dan hapus blok Paywall Jetpack
+- Blok Tautan Media Sosial terpilih yang diberi garis tepi
+- Crash di editor blok dan penyisip blok telah diperbaiki
+- Buat tiket dukungan untuk kejadian error selama akun ditutup

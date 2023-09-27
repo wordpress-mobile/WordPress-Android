@@ -25,7 +25,6 @@ Language: sq_AL
     <string name="account_closure_dialog_error_chargebacked_site">Kjo llogari përdoruesi s’mund të mbyllet, nëse ka pagesa të prapambetura të pakryera.</string>
     <string name="account_closure_dialog_error_atomic_site">Kjo llogari përdoruesi s’mund të mbyllet menjëherë, ngaqë ka blerje aktive. Ju lutemi, lidhuni me ekipin tonë të asistencës, që të përfundoni fshirjen e llogarisë.</string>
     <string name="account_closure_dialog_error_unauthorized">S’jeni i autorizuar të mbyllni llogarinë.</string>
-    <string name="account_closure_dialog_error_title">Llogaria s’u mbyll dot automatikisht</string>
     <string name="account_closure_dialog_title">Ripohoni Mbyllje Llogarie…</string>
     <string name="account_closure_dialog_message">Që ta ripohoni, ju lutemi, rijepni emrin tuaj të përdoruesit para mbylljes.</string>
     <string name="close_account">Mbylleni Llogarinë</string>
@@ -546,7 +545,7 @@ Language: sq_AL
     <string name="gutenberg_native_tiled_gallery_settings">Rregullime galerie mozaik</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Kalohet te skena e përzgjedhjes së skemës</string>
     <string name="gutenberg_native_gallery_style">Stil galerie</string>
-    <string name="sharing_facebook_warning_positive_button">Kaloni në web</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Kaloni në web</string>
     <string name="sharing_facebook_warning_message">Mund ta lidhni llogarinë tuaj Facebook në sajtin WordPress.com. Kur të keni mbaruar, kthehuni te aplikacioni WordPress, që të ndryshoni rregullimet tuaja për Ndarje Me të Tjerë.</string>
     <string name="about_automattic_app_icon_description">Ikonë aplikacioni</string>
     <string name="about_automattic_back_icon_description">Ikonë për mbrapsht</string>

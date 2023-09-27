@@ -217,10 +217,6 @@
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/edit_comment"/>
         <activity
-            android:name=".ui.comments.EditCommentActivity"
-            android:theme="@style/WordPress.NoActionBar"
-            android:label="@string/edit_comment"/>
-        <activity
             android:name=".ui.comments.CommentsDetailActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize"
@@ -1091,7 +1087,7 @@
             android:label="@string/stats"
             android:theme="@style/WordPress.NoActionBar"/>
 
-        <activity android:name=".ui.mysite.personalisation.PersonalisationActivity"
+        <activity android:name=".ui.mysite.personalization.PersonalizationActivity"
             android:exported="false"
             android:label="@string/stats"
             android:theme="@style/WordPress.NoActionBar"/>

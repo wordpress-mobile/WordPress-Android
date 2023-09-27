@@ -1,3 +1,3 @@
-- The Social Link block includes an outline so you can see when it’s selected.
-- In the block editor, the app should no longer crash when you turn a nested Columns block into a Group block.
-- In the block inserter, you can now search for a block type without crashing the app.
+We changed the way alerts appear when you’re inserting media into blocks from a URL. So we’ve got that going for us, which is nice.
+
+It’s also easier to tell the difference between placeholder text and actual content in block-based themes.
