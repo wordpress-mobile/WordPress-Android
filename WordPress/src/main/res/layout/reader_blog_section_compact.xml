@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/blog_section_image_blog_avatar"
+        style="@style/ReaderImageView.Avatar.ExtraSmall"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:background="@drawable/bg_oval_placeholder"
+        android:importantForAccessibility="no"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="RtlSymmetry" />
+
+    <ImageView
+        android:id="@+id/blog_section_image_author_avatar"
+        style="@style/ReaderImageView.Avatar.ExtraSmall"
+        android:importantForAccessibility="no"
+        app:layout_constraintStart_toEndOf="@id/blog_section_image_blog_avatar"
+        app:layout_constraintEnd_toEndOf="@id/blog_section_image_blog_avatar"
+        app:layout_constraintBottom_toBottomOf="@id/blog_section_image_blog_avatar"
+        tools:ignore="RtlSymmetry"
+        tools:src="@drawable/login_prologue_third_asset_three" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/blog_section_barrier_avatars"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="blog_section_image_author_avatar,blog_section_image_author_avatar"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/blog_section_text_blog_name"
+        style="@style/ReaderTextView.PostDetail.BlogSection.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:includeFontPadding="false"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/blog_section_barrier_avatars"
+        app:layout_constraintEnd_toStartOf="@id/blog_section_dot_separator"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="My Blog Name" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/blog_section_dot_separator"
+        style="@style/ReaderTextView.Post.New.BlogSection.Compact.Dateline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:text="@string/reader_dot_separator"
+        android:textAlignment="viewStart"
+        app:layout_constraintStart_toEndOf="@id/blog_section_text_blog_name"
+        app:layout_constraintEnd_toStartOf="@id/blog_section_text_dateline"
+        app:layout_constraintTop_toTopOf="@id/blog_section_text_blog_name"
+        app:layout_constraintBottom_toBottomOf="@id/blog_section_text_blog_name"
+        app:layout_constrainedWidth="true" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/blog_section_text_dateline"
+        style="@style/ReaderTextView.Post.New.BlogSection.Compact.Dateline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        app:layout_constraintStart_toEndOf="@id/blog_section_dot_separator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/blog_section_text_blog_name"
+        app:layout_constraintBottom_toBottomOf="@id/blog_section_text_blog_name"
+        app:layout_constrainedWidth="true"
+        tools:text="1h" />
+</androidx.constraintlayout.widget.ConstraintLayout>

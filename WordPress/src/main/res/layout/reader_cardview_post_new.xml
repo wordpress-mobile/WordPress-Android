@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ReaderCardView"
+    android:id="@+id/post_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_extra_large">
+
+        <include layout="@layout/reader_blog_section_compact"
+            android:id="@+id/layout_blog_section"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
+            android:background="?android:selectableItemBackground"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_title"
+            style="@style/ReaderTextView.Post.New.Title"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_marginTop="@dimen/margin_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_blog_section"
+            app:layout_constraintBottom_toTopOf="@+id/text_excerpt"
+            tools:text="This the tile of this post - Lorem ipsum dolor sit amet, consectetur adipiscing elit" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_excerpt"
+            style="@style/ReaderTextView.Post.New.Excerpt"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:importantForAccessibility="no"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:includeFontPadding="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_title"
+            tools:text="This is the post excerpt: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Praesent interdum iaculis ullamcorper." />
+
+        <!-- image section start -->
+        <ImageView
+            android:id="@+id/image_featured"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:contentDescription="@null"
+            android:cropToPadding="true"
+            android:padding="@dimen/reader_image_featured_border_width"
+            android:background="@drawable/bg_rectangle_stroke_placeholder_radius_4dp"
+            app:layout_constraintDimensionRatio="4:3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_excerpt"
+            tools:src="@color/blue_light" />
+
+        <ImageView
+            android:id="@+id/image_video_overlay"
+            android:layout_width="@dimen/reader_video_overlay_size"
+            android:layout_height="@dimen/reader_video_overlay_size"
+            android:contentDescription="@string/reader_cardview_post_play_video_desc"
+            android:src="@drawable/ic_play_white_black_black_white_24dp_selector"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            app:layout_constraintStart_toStartOf="@id/image_featured"
+            app:layout_constraintEnd_toEndOf="@id/image_featured"
+            app:layout_constraintTop_toTopOf="@id/image_featured"
+            app:layout_constraintBottom_toBottomOf="@id/image_featured"
+            tools:visibility="visible" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_photo_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginStart="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAlignment="viewStart"
+            android:shadowColor="@color/neutral_70"
+            android:shadowDx="@dimen/reader_photo_title_shadow_offset"
+            android:shadowDy="@dimen/reader_photo_title_shadow_offset"
+            android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
+            android:textColor="?attr/colorOnPrimarySurface"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/image_featured"
+            tools:text="text_photo_title" />
+        <!-- image section end -->
+
+        <org.wordpress.android.ui.reader.views.ReaderThumbnailStrip
+            android:id="@+id/thumbnail_strip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/margin_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_excerpt"
+            tools:visibility="visible"
+            tools:layout_height="150dp" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/reader_card_images_bottom_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="thumbnail_strip,image_featured" />
+
+
+        <!-- TODO thomashorta figure out what this is and if we need it -->
+        <!-- attribution section for discover posts start -->
+        <ImageView
+            android:id="@+id/image_discover_avatar"
+            style="@style/ReaderImageView.Avatar.Small"
+            android:background="?android:selectableItemBackground"
+            android:importantForAccessibility="no"
+            android:src="@drawable/bg_rectangle_placeholder_globe_32dp"
+            android:layout_marginEnd="@dimen/margin_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/text_discover"
+            app:layout_constraintTop_toTopOf="@id/text_discover"
+            app:layout_constraintBottom_toBottomOf="@id/text_discover"
+            tools:ignore="RtlSymmetry" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_discover"
+            style="@style/ReaderTextView"
+            android:visibility=""
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/avatar_sz_small"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
+            android:textAlignment="viewStart"
+            android:gravity="center_vertical|start"
+            android:layout_marginTop="@dimen/margin_medium"
+            app:layout_constraintStart_toEndOf="@id/image_discover_avatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reader_card_images_bottom_barrier"
+            tools:text="text_attribution"
+            tools:ignore="RtlSymmetry" />
+
+        <View
+            android:id="@+id/layout_discover"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            android:background="?android:selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_discover"
+            app:layout_constraintBottom_toBottomOf="@id/text_discover"
+            tools:visibility="visible" />
+        <!-- attribution section for discover posts end -->
+
+        <!-- like and comment counts start -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/reader_card_like_count"
+            style="@style/ReaderTextView.Post.New.BlogSection.Compact.Dateline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/reader_card_dot_separator"
+            app:layout_constraintTop_toBottomOf="@id/text_discover"
+            app:layout_constrainedWidth="true"
+            tools:text="15 likes" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/reader_card_dot_separator"
+            style="@style/ReaderTextView.Post.New.BlogSection.Compact.Dateline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:text="@string/reader_dot_separator"
+            android:textAlignment="viewStart"
+            app:layout_constraintStart_toEndOf="@id/reader_card_like_count"
+            app:layout_constraintEnd_toStartOf="@id/reader_card_comment_count"
+            app:layout_constraintTop_toBottomOf="@id/text_discover"
+            app:layout_constrainedWidth="true" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/reader_card_comment_count"
+            style="@style/ReaderTextView.Post.New.BlogSection.Compact.Dateline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            app:layout_constraintStart_toEndOf="@id/reader_card_dot_separator"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_discover"
+            app:layout_constrainedWidth="true"
+            tools:text="4 comments" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/reader_card_interactions_bottom_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="reader_card_comment_count,reader_card_like_count" />
+
+        <!-- like and comment counts end -->
+
+        <!-- footer start -->
+        <org.wordpress.android.ui.reader.views.ReaderIconCountView
+            android:id="@+id/reblog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/reader_view_reblog"
+            android:layout_marginTop="@dimen/margin_medium"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/count_comments"
+            app:layout_constraintTop_toBottomOf="@id/reader_card_interactions_bottom_barrier"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constrainedWidth="true"
+            app:readerIcon="reblog" />
+
+        <org.wordpress.android.ui.reader.views.ReaderIconCountView
+            android:id="@+id/count_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/reader_view_comments"
+            android:layout_marginTop="@dimen/margin_medium"
+            app:layout_constraintStart_toEndOf="@id/reblog"
+            app:layout_constraintEnd_toStartOf="@id/count_likes"
+            app:layout_constraintTop_toBottomOf="@id/reader_card_interactions_bottom_barrier"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constrainedWidth="true"
+            app:readerIcon="comment"/>
+
+        <org.wordpress.android.ui.reader.views.ReaderIconCountView
+            android:id="@+id/count_likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/likes_on_my_comments"
+            android:layout_marginTop="@dimen/margin_medium"
+            app:layout_constraintStart_toEndOf="@id/count_comments"
+            app:layout_constraintEnd_toStartOf="@id/image_more"
+            app:layout_constraintTop_toBottomOf="@id/reader_card_interactions_bottom_barrier"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constrainedWidth="true"
+            app:readerIcon="like" />
+
+        <ImageView
+            android:id="@+id/image_more"
+            android:layout_width="@dimen/reader_post_card_new_more_icon"
+            android:layout_height="@dimen/reader_post_card_new_more_icon"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:src="@drawable/ic_more_ellipsis_horizontal_squares"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/show_more_desc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reader_card_interactions_bottom_barrier"
+            app:tint="?attr/wpColorOnSurfaceMedium" />
+        <!-- footer end -->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

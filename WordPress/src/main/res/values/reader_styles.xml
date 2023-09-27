@@ -448,4 +448,37 @@
        <item name="android:minHeight">@dimen/reader_button_minimum_height</item>
    </style>
 
+    <!-- New Post Card -->
+    <style name="ReaderTextView.Post.New" parent="ReaderTextView" />
+
+    <style name="ReaderTextView.Post.New.BlogSection" />
+
+    <style name="ReaderTextView.Post.New.BlogSection.Compact">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.BlogSection.Compact.Dateline">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.Title">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleMedium</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.Excerpt" parent="ReaderTextView">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>
+        <item name="android:lineSpacingMultiplier">1.333333</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
 </resources>
