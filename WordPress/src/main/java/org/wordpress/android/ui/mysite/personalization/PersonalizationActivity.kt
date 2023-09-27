@@ -5,27 +5,45 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.TabRow
 import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Tab
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,6 +52,8 @@ import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.components.buttons.WPSwitch
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.utils.UiString
 
 @AndroidEntryPoint
 class PersonalizationActivity : ComponentActivity() {
@@ -44,14 +64,14 @@ class PersonalizationActivity : ComponentActivity() {
         setContent {
             AppTheme {
                 viewModel.start()
-                PersonalizationScreen(viewModel.uiState.observeAsState())
+                PersonalizationScreen()
             }
         }
     }
 
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    fun PersonalizationScreen(uiState: State<List<DashboardCardState>?>) {
+    fun PersonalizationScreen(modifier: Modifier = Modifier) {
         Scaffold(
             topBar = {
                 MainTopAppBar(
@@ -61,13 +81,45 @@ class PersonalizationActivity : ComponentActivity() {
                 )
             },
             content = {
-                PersonalizationContent(uiState.value ?: emptyList())
+                TabScreen(modifier = modifier)
             }
         )
     }
 
     @Composable
-    fun PersonalizationContent(cardStateList: List<DashboardCardState>, modifier: Modifier = Modifier) {
+    fun TabScreen(modifier: Modifier = Modifier) {
+        val dashboardCardStates = viewModel.uiState.observeAsState()
+        val shortcutsStates = viewModel.shortcutsState.collectAsState()
+
+        var tabIndex by remember { mutableStateOf(0) }
+
+        val tabs = listOf(
+            R.string.personalization_screen_cards_tab_title,
+            R.string.personalization_screen_shortcuts_tab_title
+        )
+
+        Column(modifier = modifier.fillMaxWidth()) {
+            TabRow(
+                selectedTabIndex = tabIndex,
+                backgroundColor = MaterialTheme.colors.surface,
+                contentColor = MaterialTheme.colors.onSurface,
+            ) {
+                tabs.forEachIndexed { index, title ->
+                    Tab(text = { Text(stringResource(id = title)) },
+                        selected = tabIndex == index,
+                        onClick = { tabIndex = index }
+                    )
+                }
+            }
+            when (tabIndex) {
+                0 -> CardsPersonalizationContent(dashboardCardStates.value ?: emptyList())
+                1 -> ShortCutsPersonalizationContent(shortcutsStates.value)
+            }
+        }
+    }
+
+    @Composable
+    fun CardsPersonalizationContent(cardStateList: List<DashboardCardState>, modifier: Modifier = Modifier) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -82,7 +134,7 @@ class PersonalizationActivity : ComponentActivity() {
                 item {
                     Text(
                         modifier = Modifier.padding(start = 16.dp),
-                        text = stringResource(id = R.string.personalization_screen_description),
+                        text = stringResource(id = R.string.personalization_screen_tab_cards_description),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
@@ -99,7 +151,49 @@ class PersonalizationActivity : ComponentActivity() {
                 item {
                     Text(
                         modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp),
-                        text = stringResource(id = R.string.personalization_screen_footer_cards),
+                        text = stringResource(id = R.string.personalization_screen_tab_cards_footer_cards),
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun ShortCutsPersonalizationContent(cardStateList: List<ShortcutsState>, modifier: Modifier = Modifier) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .wrapContentSize()
+                .padding(vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                item {
+                    Text(
+                        modifier = Modifier.padding(start = 16.dp),
+                        text = stringResource(id = R.string.personalization_screen_tab_shortcuts_active_shortcuts),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+                    )
+                }
+                items(cardStateList.size) { index ->
+                    val cardState = cardStateList[index]
+                    ShortcutStateRow(
+                        state = cardState,
+                    )
+                }
+
+                item {
+                    Text(
+                        modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp),
+                        text = stringResource(id = R.string.personalization_screen_tab_shortcuts_inactive_shortcuts),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
@@ -155,6 +249,88 @@ fun DashboardCardStateRow(
             thickness = 0.5.dp,
             modifier = Modifier
                 .padding()
+        )
+    }
+}
+
+@Composable
+fun ShortcutStateRow(
+    state: ShortcutsState,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 6.dp, bottom = 6.dp)
+    )
+    {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.12f),
+                    shape = RoundedCornerShape(size = 10.dp)
+                )
+                .padding(start = 12.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Image(
+                painter = painterResource(id = state.icon),
+                contentDescription = null, // Add appropriate content description
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(1.dp),
+                colorFilter = if (state.disableTint) null
+                else ColorFilter.tint(MaterialTheme.colors.onSurface)
+
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = uiStringText(state.label),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+                modifier = Modifier
+                    .padding(end = 8.dp),
+            )
+            Spacer(Modifier.weight(1f))
+            IconButton(
+                modifier = modifier
+                    .size(24.dp)
+                    .padding(1.dp),
+                onClick = {}
+            ) {
+                val icon = if (state.isActive) R.drawable.ic_personalization_quick_link_remove_circle
+                else R.drawable.ic_personalization_shortcuts_plus_circle
+
+                val iconTint = if (state.isActive) Color(0xFFD63638)
+                else Color(0xFF008710)
+
+                Icon(
+                    painter = painterResource(id = icon),
+                    tint = iconTint,
+                    contentDescription = stringResource(
+                        R.string.personalization_screen_shortcuts_add_or_remove_shortcut_button
+                    ),
+                )
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PersonalizationScreenPreview() {
+    AppTheme {
+        ShortcutStateRow(
+            state = ShortcutsState(
+                label = UiString.UiStringRes(R.string.media),
+                icon = R.drawable.media_icon_circle,
+                isActive = true
+            )
         )
     }
 }
