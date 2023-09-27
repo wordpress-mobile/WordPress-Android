@@ -27,21 +27,21 @@ class PersonalizationViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val bloggingRemindersStore: BloggingRemindersStore,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val personalizationShortcutsViewModelSlice: PersonalizationShortcutsViewModelSlice
+    private val shortcutsPersonalizationViewModelSlice: ShortcutsPersonalizationViewModelSlice
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiState = MutableLiveData<List<DashboardCardState>>()
     val uiState: LiveData<List<DashboardCardState>> = _uiState
 
-    val shortcutsState = personalizationShortcutsViewModelSlice.uiState
+    val shortcutsState = shortcutsPersonalizationViewModelSlice.uiState
 
     init {
-        personalizationShortcutsViewModelSlice.initialize(viewModelScope)
+        shortcutsPersonalizationViewModelSlice.initialize(viewModelScope)
     }
 
     fun start() {
         val siteId = selectedSiteRepository.getSelectedSite()!!.siteId
         launch(bgDispatcher) { _uiState.postValue(getCardStates(siteId)) }
-        personalizationShortcutsViewModelSlice.start(selectedSiteRepository.getSelectedSite()!!)
+        shortcutsPersonalizationViewModelSlice.start(selectedSiteRepository.getSelectedSite()!!)
     }
 
     private suspend fun getCardStates(siteId: Long): List<DashboardCardState> {
