@@ -278,7 +278,5 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(quickStartType, siteLocalId.toLong()))
             .thenReturn(nextUncompletedTask)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormat(anyOrNull())).thenReturn("")
-        whenever(resourceProvider.getString(anyOrNull(), anyOrNull())).thenReturn("")
-        whenever(htmlCompat.fromHtml(anyOrNull(), eq(HtmlCompat.FROM_HTML_MODE_COMPACT))).thenReturn("")
     }
 }
