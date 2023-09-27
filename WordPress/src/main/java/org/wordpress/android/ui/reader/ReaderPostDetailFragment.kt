@@ -30,6 +30,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.appcompat.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
@@ -49,6 +50,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
@@ -476,9 +478,21 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             setOnInflateListener { _, inflated ->
                 layoutFooterBinding = if (isReaderImprovementsEnabled) {
-                    ReaderIncludePostDetailFooterNewBinding.bind(inflated).mapBinding()
+                    ReaderIncludePostDetailFooterNewBinding.bind(inflated).mapBinding().apply {
+                        // the new bar should hide on scroll
+                        val params = root.layoutParams as CoordinatorLayout.LayoutParams
+                        params.behavior = HideBottomViewOnScrollBehavior<View>()
+                    }
                 } else {
-                    ReaderIncludePostDetailFooterBinding.bind(inflated).mapBinding()
+                    ReaderIncludePostDetailFooterBinding.bind(inflated).mapBinding().apply {
+                        // the old bar should have the elevated surface color background
+                        val elevationOverlayProvider = ElevationOverlayProvider(root.context)
+                        val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
+                        val elevatedSurfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
+                            appbarElevation
+                        )
+                        root.setBackgroundColor(elevatedSurfaceColor)
+                    }
                 }
                 layoutFooterBinding.root.visibility = View.INVISIBLE
             }
