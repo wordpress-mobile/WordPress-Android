@@ -18,10 +18,16 @@ import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.TabRow
 import androidx.compose.material.Text
+import androidx.compose.material3.Tab
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -61,13 +67,42 @@ class PersonalizationActivity : ComponentActivity() {
                 )
             },
             content = {
-                PersonalizationContent(uiState.value ?: emptyList())
+                TabScreen(uiState.value ?: emptyList())
             }
         )
     }
 
     @Composable
-    fun PersonalizationContent(cardStateList: List<DashboardCardState>, modifier: Modifier = Modifier) {
+    fun TabScreen(dashboardCardStates: List<DashboardCardState>) {
+        var tabIndex by remember { mutableStateOf(0) }
+
+        val tabs = listOf(
+            R.string.personalization_screen_cards_tab_title,
+            R.string.personalization_screen_shortcuts_tab_title
+        )
+
+        Column(modifier = Modifier.fillMaxWidth()) {
+            TabRow(
+                selectedTabIndex = tabIndex,
+                backgroundColor = MaterialTheme.colors.surface,
+                contentColor = MaterialTheme.colors.onSurface,
+            ) {
+                tabs.forEachIndexed { index, title ->
+                    Tab(text = { Text(stringResource(id = title)) },
+                        selected = tabIndex == index,
+                        onClick = { tabIndex = index }
+                    )
+                }
+            }
+            when (tabIndex) {
+                0 -> CardsPersonalizationContent(dashboardCardStates)
+                1 -> CardsPersonalizationContent(dashboardCardStates)
+            }
+        }
+    }
+
+    @Composable
+    fun CardsPersonalizationContent(cardStateList: List<DashboardCardState>, modifier: Modifier = Modifier) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
