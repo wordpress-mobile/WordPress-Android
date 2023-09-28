@@ -50,7 +50,6 @@ import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFu
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
@@ -62,7 +61,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.Icon
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
@@ -93,6 +91,7 @@ import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallF
 import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlice
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
+import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinksItemViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -280,6 +279,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice
+
+    @Mock
+    lateinit var quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
@@ -477,7 +479,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             personalizeCardBuilder,
             bloggingPromptCardViewModelSlice,
             noCardsMessageViewModelSlice,
-            siteInfoHeaderCardViewModelSlice
+            siteInfoHeaderCardViewModelSlice,
+            quickLinksItemViewModelSlice
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1600,7 +1603,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun setUpCardsBuilder() {
         doAnswer {
-            val quickLinkRibbon = initQuickLinkRibbon(it)
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
             val dashboardCards = initDashboardCards(it)
@@ -1610,16 +1612,12 @@ class MySiteViewModelTest : BaseUnitTest() {
             )
 
             listOfCards.addAll(dashboardCards)
-            if (mySiteDashboardTabsFeatureConfig.isEnabled())
-                listOfCards.add(quickLinkRibbon)
             listOfCards
         }.whenever(cardsBuilder).build(
             domainRegistrationCardBuilderParams = any(),
             quickStartCardBuilderParams = any(),
             dashboardCardsBuilderParams = any(),
-            quickLinkRibbonBuilderParams = any(),
             jetpackInstallFullPluginCardBuilderParams = any(),
-            isMySiteTabsEnabled = any()
         )
 
         doAnswer {
@@ -1668,19 +1666,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             onIconClick = mock(),
             onUrlClick = mock(),
             onSwitchSiteClick = mock()
-        )
-    }
-
-    private fun initQuickLinkRibbon(mockInvocation: InvocationOnMock): QuickLinkRibbon {
-        val params = (mockInvocation.arguments.filterIsInstance<QuickLinkRibbonBuilderParams>()).first()
-        quickLinkRibbonPagesClickAction = params.onPagesClick
-        quickLinkRibbonPostsClickAction = params.onPostsClick
-        quickLinkRibbonMediaClickAction = params.onMediaClick
-        quickLinkRibbonStatsClickAction = params.onStatsClick
-        return QuickLinkRibbon(
-            quickLinkRibbonItems = mock(),
-            showStatsFocusPoint = false,
-            showPagesFocusPoint = false
         )
     }
 

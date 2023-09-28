@@ -8,6 +8,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState.Visible
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
@@ -96,6 +97,7 @@ class MySiteCardAndItemTest {
         secondaryIcon = null,
         secondaryText = null,
         showFocusPoint = showFocusPoint,
-        onClick = interaction
+        onClick = interaction,
+        listItemAction = ListItemAction.STATS,
     )
 }

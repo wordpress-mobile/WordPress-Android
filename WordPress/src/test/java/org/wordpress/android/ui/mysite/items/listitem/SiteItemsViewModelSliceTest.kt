@@ -17,10 +17,9 @@ import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
+import org.wordpress.android.ui.mysite.cards.ListItemActionHandler
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -30,22 +29,16 @@ import kotlin.test.assertEquals
 @RunWith(MockitoJUnitRunner::class)
 class SiteItemsViewModelSliceTest : BaseUnitTest() {
     @Mock
-    lateinit var quickStartRepository: QuickStartRepository
-
-    @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     @Mock
-    lateinit var accountStore: AccountStore
-
-    @Mock
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
-
-    @Mock
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
+
+    @Mock
+    lateinit var listItemActionHandler: ListItemActionHandler
 
     private lateinit var siteItemsViewModelSlice: SiteItemsViewModelSlice
 
@@ -65,12 +58,10 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
 
         siteItemsViewModelSlice = SiteItemsViewModelSlice(
-            quickStartRepository,
             selectedSiteRepository,
             analyticsTrackerWrapper,
-            accountStore,
-            jetpackFeatureRemovalPhaseHelper,
-            blazeFeatureUtils
+            blazeFeatureUtils,
+            listItemActionHandler
         )
 
 
@@ -122,7 +113,6 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
     fun `pages item click emits OpenPages navigation event`() {
         invokeItemClickAction(action =ListItemAction.PAGES)
 
-        verify(quickStartRepository).completeTask(QuickStartStore.QuickStartNewSiteTask.REVIEW_PAGES)
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPages(site))
     }
 
@@ -181,9 +171,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `stats item click emits OpenStats navigation event if site is WPCom and has access token`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
         site.setIsWPCom(true)
-        mockQuickStart()
 
         invokeItemClickAction(action= ListItemAction.STATS)
 
@@ -191,12 +179,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `stats item click emits OpenStats navigation event if site is Jetpack and has access token`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        site.setIsJetpackConnected(true)
-        site.setIsJetpackInstalled(true)
-        mockQuickStart()
-
+    fun `stats item click emits OpenStats navigation event if site is Jetpack and has access token`() { site.setIsJetpackInstalled(true)
         invokeItemClickAction(action= ListItemAction.STATS)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenStats(site))
@@ -204,9 +187,6 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `given new site QS stats task, when stats item clicked, then CHECK_STATS task completed`() {
-        mockQuickStart()
-        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-            .thenReturn(QuickStartStore.QuickStartNewSiteTask.CHECK_STATS)
         val builderParams = siteItemsViewModelSlice.buildItems(
             true,
             site,
@@ -335,10 +315,5 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
     ) {
         val builderParams = siteItemsViewModelSlice.buildItems(enableFocusPoints, site)
         builderParams.onClick.invoke(action)
-    }
-
-
-    private fun mockQuickStart() {
-        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
     }
 }
