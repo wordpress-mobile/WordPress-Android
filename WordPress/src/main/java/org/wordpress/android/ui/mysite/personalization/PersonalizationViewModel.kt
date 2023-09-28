@@ -41,4 +41,14 @@ class PersonalizationViewModel @Inject constructor(
         shortcutsPersonalizationViewModelSlice.onCleared()
         dashboardCardPersonalizationViewModelSlice.onCleared()
     }
+
+    fun removeShortcut(shortcutState: ShortcutState) {
+        val siteId = selectedSiteRepository.getSelectedSite()!!.siteId
+        shortcutsPersonalizationViewModelSlice.removeShortcut(shortcutState,siteId)
+    }
+
+    fun addShortcut(shortcutState: ShortcutState) {
+        val siteId = selectedSiteRepository.getSelectedSite()!!.siteId
+        shortcutsPersonalizationViewModelSlice.addShortcut(shortcutState,siteId)
+    }
 }
