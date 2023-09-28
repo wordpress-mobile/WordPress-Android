@@ -56,13 +56,15 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     }
 
     fun onResume() {
-        val site = selectedSiteRepository.getSelectedSite()!!
-        buildQuickLinks(site)
+        selectedSiteRepository.getSelectedSite()?.let {
+            buildQuickLinks(it)
+        }
     }
 
     fun onRefresh() {
-        val site = selectedSiteRepository.getSelectedSite()!!
-        buildQuickLinks(site)
+        selectedSiteRepository.getSelectedSite()?.let {
+            buildQuickLinks(it)
+        }
     }
 
     private fun buildQuickLinks(site: SiteModel) {
