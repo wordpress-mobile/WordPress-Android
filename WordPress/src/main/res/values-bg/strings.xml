@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2018-12-10 19:56:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: bg
 -->
 <resources>
@@ -78,7 +78,6 @@ Language: bg
     <string name="share_intent_pick_site">Изберете сайт</string>
     <string name="jetpack_site_settings_category_title">Настройки на Jetpack</string>
     <string name="share_action_media">Добавяне към библиотеката</string>
-    <string name="share_media_permission_required">Необходимо е да имате права, за да споделите изображение или видео</string>
     <string name="share_action_post">Добавяне към нова публикация</string>
     <string name="invalid_ip_or_range">Невалиден IP адрес или блок от IP адреси</string>
     <string name="deleting_media_dlg">Изтриване</string>
