@@ -6,14 +6,18 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
+import org.wordpress.android.ui.mysite.cards.ListItemActionHandler
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
-import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
-import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -25,14 +29,16 @@ data class MenuViewState(
 
 @HiltViewModel
 class MenuViewModel @Inject constructor(
+    private val quickStartRepository: QuickStartRepository,
     private val selectedSiteRepository: SelectedSiteRepository,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val siteItemsBuilder: SiteItemsBuilder,
-    private val siteItemsViewModelSlice: SiteItemsViewModelSlice,
-    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
+    private val listItemActionHandler: ListItemActionHandler,
+    private val blazeFeatureUtils: BlazeFeatureUtils
 ) : ScopedViewModel(bgDispatcher) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
-    val navigation = merge(_onNavigation, siteItemsViewModelSlice.onNavigation)
+    val navigation = _onNavigation
 
     private val _uiState = MutableStateFlow(MenuViewState(items = emptyList()))
 
@@ -46,12 +52,12 @@ class MenuViewModel @Inject constructor(
     private fun buildSiteMenu(site: SiteModel) {
         _uiState.value = MenuViewState(
             items = siteItemsBuilder.build(
-                siteItemsViewModelSlice.buildItems(
-                    shouldEnableFocusPoints = true,
+                MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
+                    enableFocusPoints = true,
                     site = site,
                     activeTask = null,
-                    backupAvailable = false,
-                    scanAvailable = false
+                    onClick = this::onClick,
+                    isBlazeEligible = isSiteBlazeEligible()
                 )
             )
         )
@@ -63,16 +69,56 @@ class MenuViewModel @Inject constructor(
             jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
                 _uiState.value = MenuViewState(
                     items = siteItemsBuilder.build(
-                        siteItemsViewModelSlice.buildItems(
-                            shouldEnableFocusPoints = true,
+                        MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
                             site = site,
+                            enableFocusPoints = true,
                             activeTask = null,
+                            onClick = this@MenuViewModel::onClick,
+                            isBlazeEligible = isSiteBlazeEligible(),
                             backupAvailable = it.backup,
                             scanAvailable = (it.scan && !site.isWPCom && !site.isWPComAtomic)
                         )
                     )
                 )
             } // end collect
+        }
+    }
+
+    private fun isSiteBlazeEligible() =
+        blazeFeatureUtils.isSiteBlazeEligible(selectedSiteRepository.getSelectedSite()!!)
+
+
+    private fun onClick(action: ListItemAction) {
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            when(action){
+                ListItemAction.PAGES -> {
+                    quickStartRepository.completeTask(QuickStartStore.QuickStartNewSiteTask.REVIEW_PAGES)
+                }
+                ListItemAction.SHARING -> {
+                    quickStartRepository.requestNextStepOfTask(
+                        QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING
+                    )
+                }
+                ListItemAction.STATS -> {
+                    quickStartRepository.completeTask(
+                        quickStartRepository.quickStartType.getTaskFromString(
+                            QuickStartStore.QUICK_START_CHECK_STATS_LABEL
+                        )
+                    )
+                }
+
+                ListItemAction.MEDIA -> {
+                    quickStartRepository.requestNextStepOfTask(
+                        quickStartRepository.quickStartType.getTaskFromString(
+                            QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL
+                        )
+                    )
+                }
+
+                else -> {}
+            }
+            // add the tracking logic here
+            _onNavigation.postValue(Event(listItemActionHandler.handleAction(action, selectedSite)))
         }
     }
 
