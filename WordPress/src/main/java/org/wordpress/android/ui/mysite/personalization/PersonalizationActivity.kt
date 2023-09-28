@@ -162,7 +162,7 @@ class PersonalizationActivity : ComponentActivity() {
     }
 
     @Composable
-    fun ShortCutsPersonalizationContent(cardStateList: List<ShortcutsState>, modifier: Modifier = Modifier) {
+    fun ShortCutsPersonalizationContent(state: ShortcutsState, modifier: Modifier = Modifier) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -183,8 +183,8 @@ class PersonalizationActivity : ComponentActivity() {
                         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
                     )
                 }
-                items(cardStateList.size) { index ->
-                    val cardState = cardStateList[index]
+                items(state.activeShortCuts.size) { index ->
+                    val cardState = state.activeShortCuts[index]
                     ShortcutStateRow(
                         state = cardState,
                     )
@@ -197,6 +197,13 @@ class PersonalizationActivity : ComponentActivity() {
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
+                    )
+                }
+
+                items(state.inactiveShortCuts.size) { index ->
+                    val cardState = state.inactiveShortCuts[index]
+                    ShortcutStateRow(
+                        state = cardState,
                     )
                 }
             }
@@ -255,7 +262,7 @@ fun DashboardCardStateRow(
 
 @Composable
 fun ShortcutStateRow(
-    state: ShortcutsState,
+    state: ShortcutState,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -326,7 +333,7 @@ fun ShortcutStateRow(
 fun PersonalizationScreenPreview() {
     AppTheme {
         ShortcutStateRow(
-            state = ShortcutsState(
+            state = ShortcutState(
                 label = UiString.UiStringRes(R.string.media),
                 icon = R.drawable.media_icon_circle,
                 isActive = true

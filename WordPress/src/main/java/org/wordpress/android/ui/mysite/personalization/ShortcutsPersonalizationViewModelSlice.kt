@@ -32,9 +32,9 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
         this.scope = scope
     }
 
-    private val _uiState = MutableStateFlow(emptyList<ShortcutsState>())
+    private val _uiState = MutableStateFlow(ShortcutsState(emptyList(), emptyList()))
 
-    val uiState: StateFlow<List<ShortcutsState>> = _uiState
+    val uiState: StateFlow<ShortcutsState> = _uiState
 
     fun start(site: SiteModel) {
         _uiState.value = convertToShortCutsState(
@@ -54,16 +54,20 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
         updateSiteItemsForJetpackCapabilities(site)
     }
 
-    private fun convertToShortCutsState(items: List<MySiteCardAndItem>, siteId: Long): List<ShortcutsState> {
+    private fun convertToShortCutsState(items: List<MySiteCardAndItem>, siteId: Long): ShortcutsState {
         val listItems = items.filterIsInstance(MySiteCardAndItem.Item.ListItem::class.java)
-        return listItems.map { listItem ->
-            ShortcutsState(
+        val shortcuts = listItems.map { listItem ->
+            ShortcutState(
                 icon = listItem.primaryIcon,
                 label = listItem.primaryText as UiString.UiStringRes,
                 disableTint = listItem.disablePrimaryIconTint,
                 isActive = isActiveShortcut(listItem.listItemAction, siteId)
             )
         }
+        return ShortcutsState(
+            activeShortCuts = shortcuts.filter { it.isActive },
+            inactiveShortCuts = shortcuts.filter { !it.isActive }
+        )
     }
 
     private fun updateSiteItemsForJetpackCapabilities(site: SiteModel) {
