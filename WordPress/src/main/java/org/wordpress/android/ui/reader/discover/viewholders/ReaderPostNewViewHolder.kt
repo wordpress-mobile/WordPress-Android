@@ -121,10 +121,13 @@ class ReaderPostNewViewHolder(
     }
 
     private fun updateAvatarOrBlavatar(state: ReaderPostNewUiState) = with(binding.layoutBlogSection) {
+        var isShowingAnyAvatar = false
+
         uiHelpers.updateVisibility(blogSectionImageBlogAvatar, state.blogSection.avatarOrBlavatarUrl != null)
         if (state.blogSection.avatarOrBlavatarUrl == null) {
             imageManager.cancelRequestAndClearImageView(blogSectionImageBlogAvatar)
         } else {
+            isShowingAnyAvatar = true
             imageManager.loadIntoCircle(
                 blogSectionImageBlogAvatar,
                 state.blogSection.blavatarType, state.blogSection.avatarOrBlavatarUrl
@@ -137,12 +140,15 @@ class ReaderPostNewViewHolder(
         if (!canShowAuthorsAvatar) {
             imageManager.cancelRequestAndClearImageView(blogSectionImageAuthorAvatar)
         } else {
+            isShowingAnyAvatar = true
             imageManager.loadIntoCircle(
                 blogSectionImageAuthorAvatar,
                 BLAVATAR_CIRCULAR,
                 state.blogSection.authorAvatarUrl!!
             )
         }
+
+        blogSectionAvatarContainer.isVisible = isShowingAnyAvatar
     }
 
     private fun updateFeaturedImage(state: ReaderPostNewUiState) = with(binding) {

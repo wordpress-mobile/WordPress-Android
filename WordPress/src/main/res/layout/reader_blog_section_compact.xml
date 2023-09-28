@@ -6,45 +6,46 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/blog_section_image_blog_avatar"
-        style="@style/ReaderImageView.Avatar.ExtraSmall"
-        android:layout_marginEnd="@dimen/margin_medium"
-        android:background="@drawable/bg_oval_placeholder"
-        android:importantForAccessibility="no"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="RtlSymmetry" />
-
-    <ImageView
-        android:id="@+id/blog_section_image_author_avatar"
-        style="@style/ReaderImageView.Avatar.ExtraSmall"
-        android:importantForAccessibility="no"
-        app:layout_constraintStart_toEndOf="@id/blog_section_image_blog_avatar"
-        app:layout_constraintEnd_toEndOf="@id/blog_section_image_blog_avatar"
-        app:layout_constraintBottom_toBottomOf="@id/blog_section_image_blog_avatar"
-        tools:ignore="RtlSymmetry"
-        tools:src="@drawable/login_prologue_third_asset_three" />
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/blog_section_barrier_avatars"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/blog_section_avatar_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:barrierDirection="end"
-        app:constraint_referenced_ids="blog_section_image_author_avatar,blog_section_image_author_avatar"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingEnd="@dimen/margin_medium"
+        tools:ignore="RtlSymmetry">
+
+        <ImageView
+            android:id="@+id/blog_section_image_blog_avatar"
+            style="@style/ReaderImageView.Avatar.ExtraSmall"
+            android:background="@drawable/bg_oval_placeholder"
+            android:importantForAccessibility="no"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageView
+            android:id="@+id/blog_section_image_author_avatar"
+            style="@style/ReaderImageView.Avatar.ExtraSmall"
+            android:importantForAccessibility="no"
+            app:layout_constraintStart_toEndOf="@id/blog_section_image_blog_avatar"
+            app:layout_constraintEnd_toEndOf="@id/blog_section_image_blog_avatar"
+            app:layout_constraintBottom_toBottomOf="@id/blog_section_image_blog_avatar"
+            tools:src="@drawable/login_prologue_third_asset_three" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/blog_section_text_blog_name"
         style="@style/ReaderTextView.PostDetail.BlogSection.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_medium"
         android:includeFontPadding="false"
         app:layout_constrainedWidth="true"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toEndOf="@id/blog_section_barrier_avatars"
+        app:layout_constraintStart_toEndOf="@id/blog_section_avatar_container"
         app:layout_constraintEnd_toStartOf="@id/blog_section_dot_separator"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
