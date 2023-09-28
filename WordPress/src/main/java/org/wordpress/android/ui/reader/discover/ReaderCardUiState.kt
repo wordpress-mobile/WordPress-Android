@@ -89,9 +89,9 @@ sealed class ReaderCardUiState {
         val commentsAction: PrimaryAction,
         val moreMenuItems: List<ReaderPostCardAction>? = null,
         val onItemClicked: (Long, Long) -> Unit,
-        val onItemRendered: (ReaderCardUiState) -> Unit,
-        val onMoreButtonClicked: (ReaderPostUiState) -> Unit,
-        val onMoreDismissed: (ReaderPostUiState) -> Unit,
+        val onItemRendered: (ReaderPostNewUiState) -> Unit,
+        val onMoreButtonClicked: (ReaderPostNewUiState) -> Unit,
+        val onMoreDismissed: (ReaderPostNewUiState) -> Unit,
         val onVideoOverlayClicked: (Long, Long) -> Unit,
     ) : ReaderCardUiState() {
         data class CompactBlogSectionData(

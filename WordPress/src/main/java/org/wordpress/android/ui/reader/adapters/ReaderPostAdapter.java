@@ -43,6 +43,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiSt
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder;
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
+import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostNewViewHolder;
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
@@ -62,6 +63,7 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
@@ -126,6 +128,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Inject ReaderPostUiStateBuilder mReaderPostUiStateBuilder;
     @Inject ReaderPostMoreButtonUiStateBuilder mReaderPostMoreButtonUiStateBuilder;
     @Inject ReaderTracker mReaderTracker;
+    @Inject ReaderImprovementsFeatureConfig mReaderImprovementsFeatureConfig;
 
     public String getSource() {
         return mSource;
@@ -250,7 +253,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_removed_post, parent, false);
                 return new ReaderRemovedPostViewHolder(postView);
             default:
-                return new ReaderPostViewHolder(mUiHelpers, mImageManager, mReaderTracker, parent);
+                return mReaderImprovementsFeatureConfig.isEnabled()
+                        ? new ReaderPostNewViewHolder(mUiHelpers, mImageManager, mReaderTracker, parent)
+                        : new ReaderPostViewHolder(mUiHelpers, mImageManager, mReaderTracker, parent);
         }
     }
 
@@ -258,6 +263,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ReaderPostViewHolder) {
             renderPost(position, (ReaderPostViewHolder) holder, false);
+        } else if (holder instanceof ReaderPostNewViewHolder) {
+            renderPostNew(position, (ReaderPostNewViewHolder) holder, false);
         } else if (holder instanceof ReaderXPostViewHolder) {
             renderXPost(position, (ReaderXPostViewHolder) holder);
         } else if (holder instanceof ReaderRemovedPostViewHolder) {
@@ -514,7 +521,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     // TODO update the viewholder to the new one
-    private void renderPostNew(final int position, final ReaderPostViewHolder holder, boolean showMoreMenu) {
+    private void renderPostNew(final int position, final ReaderPostNewViewHolder holder, boolean showMoreMenu) {
         final ReaderPost post = getItem(position);
         if (post == null) {
             return;
@@ -570,12 +577,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             return Unit.INSTANCE;
         };
-        Function1<ReaderPostUiState, Unit> onMoreButtonClicked = (uiState) -> {
+        Function1<ReaderPostNewUiState, Unit> onMoreButtonClicked = (uiState) -> {
             renderPostNew(position, holder, true);
             return Unit.INSTANCE;
         };
 
-        Function1<ReaderPostUiState, Unit> onMoreDismissed = (uiState) -> {
+        Function1<ReaderPostNewUiState, Unit> onMoreDismissed = (uiState) -> {
             renderPostNew(position, holder, false);
             return Unit.INSTANCE;
         };

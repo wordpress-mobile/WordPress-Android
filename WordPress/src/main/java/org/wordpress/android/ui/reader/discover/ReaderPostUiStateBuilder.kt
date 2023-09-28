@@ -176,8 +176,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onItemClicked: (Long, Long) -> Unit,
         onItemRendered: (ReaderCardUiState) -> Unit,
         onDiscoverSectionClicked: (Long, Long) -> Unit,
-        onMoreButtonClicked: (ReaderPostUiState) -> Unit,
-        onMoreDismissed: (ReaderPostUiState) -> Unit,
+        onMoreButtonClicked: (ReaderPostNewUiState) -> Unit,
+        onMoreDismissed: (ReaderPostNewUiState) -> Unit,
         onVideoOverlayClicked: (Long, Long) -> Unit,
         onPostHeaderViewClicked: (Long, Long) -> Unit,
         moreMenuItems: List<SecondaryAction>? = null
@@ -211,12 +211,14 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onItemClicked: (Long, Long) -> Unit,
         onItemRendered: (ReaderCardUiState) -> Unit,
         onDiscoverSectionClicked: (Long, Long) -> Unit,
-        onMoreButtonClicked: (ReaderPostUiState) -> Unit,
-        onMoreDismissed: (ReaderPostUiState) -> Unit,
+        onMoreButtonClicked: (ReaderPostNewUiState) -> Unit,
+        onMoreDismissed: (ReaderPostNewUiState) -> Unit,
         onVideoOverlayClicked: (Long, Long) -> Unit,
         onPostHeaderViewClicked: (Long, Long) -> Unit,
         moreMenuItems: List<ReaderPostCardAction>? = null
     ): ReaderPostNewUiState {
+        // TODO thomashorta move likes and comments count to this state object and also remove contentDescription
+        //  from the likeAction and commentAction (or set the default description)
         return ReaderPostNewUiState(
             source = source,
             postId = post.postId,

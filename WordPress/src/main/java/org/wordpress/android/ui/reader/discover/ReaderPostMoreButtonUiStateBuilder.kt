@@ -34,6 +34,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     private val seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
+    // TODO thomashorta include a parameter includeBookmark and add the bookmark item if it's true
     suspend fun buildMoreMenuItems(
         post: ReaderPost,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
@@ -43,6 +44,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         }
     }
 
+    // TODO thomashorta include a parameter includeBookmark and add the bookmark item if it's true
     fun buildMoreMenuItemsBlocking(
         post: ReaderPost,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit

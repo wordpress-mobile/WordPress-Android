@@ -106,7 +106,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             .get(ReaderDiscoverViewModel::class.java)
         parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
 
-        viewModel.uiState.observe(viewLifecycleOwner, {
+        viewModel.uiState.observe(viewLifecycleOwner) {
             when (it) {
                 is DiscoverUiState.ContentUiState -> {
                     (recyclerView.adapter as ReaderDiscoverAdapter).update(it.cards)
@@ -131,7 +131,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             uiHelpers.updateVisibility(actionableEmptyView, it.fullscreenEmptyVisibility)
             ptrLayout.isEnabled = it.swipeToRefreshEnabled
             ptrLayout.isRefreshing = it.reloadProgressVisibility
-        })
+        }
         viewModel.navigationEvents.observeEvent(viewLifecycleOwner) { handleNavigation(it) }
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar() })
         viewModel.preloadPostEvents.observeEvent(viewLifecycleOwner, { it.addWebViewCachingFragment() })
