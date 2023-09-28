@@ -9,7 +9,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
-import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
@@ -28,8 +27,6 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
-import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_CHECK_STATS_LABEL
-import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_UPLOAD_MEDIA_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_VIEW_SITE_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -56,7 +53,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardC
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
@@ -81,6 +77,7 @@ import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallF
 import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlice
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
+import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinksItemViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -172,7 +169,8 @@ class MySiteViewModel @Inject constructor(
     private val personalizeCardBuilder: PersonalizeCardBuilder,
     private val bloggingPromptCardViewModelSlice: BloggingPromptCardViewModelSlice,
     private val noCardsMessageViewModelSlice: NoCardsMessageViewModelSlice,
-    private val siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice
+    private val siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice,
+    private val quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -208,7 +206,8 @@ class MySiteViewModel @Inject constructor(
         quickStartRepository.onSnackbar,
         siteItemsViewModelSlice.onSnackbarMessage,
         bloggingPromptCardViewModelSlice.onSnackbarMessage,
-        siteInfoHeaderCardViewModelSlice.onSnackbarMessage
+        siteInfoHeaderCardViewModelSlice.onSnackbarMessage,
+        quickLinksItemViewModelSlice.onSnackbarMessage
     )
     val onQuickStartMySitePrompts = quickStartRepository.onQuickStartMySitePrompts
 
@@ -228,7 +227,8 @@ class MySiteViewModel @Inject constructor(
         siteItemsViewModelSlice.onNavigation,
         bloggingPromptCardViewModelSlice.onNavigation,
         personalizeCardViewModelSlice.onNavigation,
-        siteInfoHeaderCardViewModelSlice.onNavigation
+        siteInfoHeaderCardViewModelSlice.onNavigation,
+        quickLinksItemViewModelSlice.navigation
     )
 
     val onMediaUpload = siteInfoHeaderCardViewModelSlice.onMediaUpload
@@ -265,8 +265,8 @@ class MySiteViewModel @Inject constructor(
             result.filter { it.siteId == null || it.state.site != null }.mapSafe { it.state }
         }
 
-    val uiModel: LiveData<UiModel> = state.map {
-        with(it) {
+    val uiModel: LiveData<UiModel> = merge(state, quickLinksItemViewModelSlice.uiState) { cards, quickLinks ->
+        with(requireNotNull(cards)) {
             val state = if (site != null) {
                 cardsUpdate?.checkAndShowSnackbarError()
                 val state = buildSiteSelectedStateAndScroll(
@@ -279,7 +279,8 @@ class MySiteViewModel @Inject constructor(
                     scanAvailable,
                     cardsUpdate,
                     bloggingPromptsUpdate,
-                    blazeCardUpdate
+                    blazeCardUpdate,
+                    quickLinks
                 )
                 trackCardsAndItemsShownIfNeeded(state)
 
@@ -287,7 +288,6 @@ class MySiteViewModel @Inject constructor(
                     viewModelScope,
                     state.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card.BloggingPromptCard>()
                 )
-
                 state
             } else {
                 buildNoSiteState()
@@ -314,6 +314,8 @@ class MySiteViewModel @Inject constructor(
         dispatcher.register(this)
         bloggingPromptCardViewModelSlice.initialize(viewModelScope, mySiteSourceManager)
         siteInfoHeaderCardViewModelSlice.initialize(viewModelScope)
+        quickLinksItemViewModelSlice.initialization(viewModelScope)
+        quickLinksItemViewModelSlice.start()
     }
 
     @Suppress("LongParameterList")
@@ -327,7 +329,8 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
-        blazeCardUpdate: BlazeCardUpdate?
+        blazeCardUpdate: BlazeCardUpdate?,
+        quickLinks: MySiteCardAndItem.Card.QuickLinkRibbon? = null
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
             site,
@@ -338,7 +341,8 @@ class MySiteViewModel @Inject constructor(
             scanAvailable,
             cardsUpdate,
             bloggingPromptUpdate,
-            blazeCardUpdate
+            blazeCardUpdate,
+            quickLinks
         )
 
         val siteInfo = siteInfoHeaderCardBuilder.buildSiteInfoCard(
@@ -378,7 +382,7 @@ class MySiteViewModel @Inject constructor(
         else -> false
     }
 
-    @Suppress("LongParameterList","CyclomaticComplexMethod")
+    @Suppress("LongParameterList", "CyclomaticComplexMethod")
     private fun buildSiteSelectedState(
         site: SiteModel,
         activeTask: QuickStartTask?,
@@ -388,7 +392,8 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
-        blazeCardUpdate: BlazeCardUpdate?
+        blazeCardUpdate: BlazeCardUpdate?,
+        quickLinks: MySiteCardAndItem.Card.QuickLinkRibbon?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = mySiteInfoItemBuilder.build(
             InfoItemBuilderParams(
@@ -452,17 +457,7 @@ class MySiteViewModel @Inject constructor(
                     cardsUpdate?.cards?.firstOrNull { it is ActivityCardModel } as? ActivityCardModel
                 ),
             ),
-            QuickLinkRibbonBuilderParams(
-                siteModel = site,
-                onPagesClick = this::onQuickLinkRibbonPagesClick,
-                onPostsClick = this::onQuickLinkRibbonPostsClick,
-                onMediaClick = this::onQuickLinkRibbonMediaClick,
-                onStatsClick = this::onQuickLinkRibbonStatsClick,
-                onMoreClick = this::onQuickLinkRibbonMoreClick,
-                activeTask = activeTask
-            ),
-            jetpackInstallFullPluginCardParams,
-            isMySiteTabsEnabled
+            jetpackInstallFullPluginCardParams
         )
 
         val siteItems = siteItemsBuilder.build(
@@ -495,6 +490,7 @@ class MySiteViewModel @Inject constructor(
                 infoItem?.let { add(infoItem) }
                 migrationSuccessCard?.let { add(migrationSuccessCard) }
                 jetpackInstallFullPluginCard?.let { add(jetpackInstallFullPluginCard) }
+                quickLinks?.let { add(quickLinks) }
                 addAll(cardsResult)
                 noCardsMessage?.let { add(noCardsMessage) }
                 personalizeCard?.let { add(personalizeCard) }
@@ -639,43 +635,6 @@ class MySiteViewModel @Inject constructor(
         mySiteSourceManager.refreshQuickStart()
     }
 
-    private fun onQuickLinkRibbonStatsClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_LINK_RIBBON_STATS_TAPPED)
-        quickStartRepository.completeTask(
-            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
-        )
-        _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
-    }
-
-    private fun onQuickLinkRibbonPagesClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_LINK_RIBBON_PAGES_TAPPED)
-        quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
-        _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
-    }
-
-    private fun onQuickLinkRibbonPostsClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_LINK_RIBBON_POSTS_TAPPED)
-        _onNavigation.value = Event(SiteNavigationAction.OpenPosts(selectedSite))
-    }
-
-    private fun onQuickLinkRibbonMediaClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_LINK_RIBBON_MEDIA_TAPPED)
-        quickStartRepository.requestNextStepOfTask(
-            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
-        )
-        _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
-    }
-
-    private fun onQuickLinkRibbonMoreClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_LINK_RIBBON_MORE_TAPPED)
-        _onNavigation.value = Event(SiteNavigationAction.OpenMore(selectedSite))
-    }
-
     private fun domainRegistrationClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
@@ -685,6 +644,7 @@ class MySiteViewModel @Inject constructor(
     fun refresh(isPullToRefresh: Boolean = false) {
         if (isPullToRefresh) analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH)
         mySiteSourceManager.refresh()
+        quickLinksItemViewModelSlice.onRefresh()
     }
 
     fun onResume(currentTab: MySiteTabType) {
@@ -694,6 +654,7 @@ class MySiteViewModel @Inject constructor(
         checkAndShowQuickStartNotice()
         bloggingPromptCardViewModelSlice.onResume(currentTab)
         dashboardCardPlansUtils.onResume(currentTab, uiModel.value?.state as? SiteSelected)
+        quickLinksItemViewModelSlice.onResume()
     }
 
     private fun checkAndShowJetpackFullPluginInstallOnboarding() {
