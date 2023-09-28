@@ -174,37 +174,48 @@ class PersonalizationActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                item {
-                    Text(
-                        modifier = Modifier.padding(start = 16.dp),
-                        text = stringResource(id = R.string.personalization_screen_tab_shortcuts_active_shortcuts),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
-                    )
+                val activeShortcuts = state.activeShortCuts
+                if (activeShortcuts.isNotEmpty()) {
+                    item {
+                        Text(
+                            modifier = Modifier.padding(start = 16.dp),
+                            text = stringResource(id = R.string.personalization_screen_tab_shortcuts_active_shortcuts),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+                        )
+                    }
+                    items(activeShortcuts.size) { index ->
+                        val cardState = activeShortcuts[index]
+                        ShortcutStateRow(
+                            state = cardState,
+                            actionIcon = R.drawable.ic_personalization_quick_link_remove_circle,
+                            actionIconTint = Color(0xFFD63638)
+                        )
+                    }
                 }
-                items(state.activeShortCuts.size) { index ->
-                    val cardState = state.activeShortCuts[index]
-                    ShortcutStateRow(
-                        state = cardState,
-                    )
-                }
+                val inactiveShortcuts = state.inactiveShortCuts
+                if (inactiveShortcuts.isNotEmpty()) {
+                    item {
+                        Text(
+                            modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp),
+                            text = stringResource(
+                                id = R.string.personalization_screen_tab_shortcuts_inactive_shortcuts
+                            ),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
+                        )
+                    }
 
-                item {
-                    Text(
-                        modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp),
-                        text = stringResource(id = R.string.personalization_screen_tab_shortcuts_inactive_shortcuts),
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
-                    )
-                }
-
-                items(state.inactiveShortCuts.size) { index ->
-                    val cardState = state.inactiveShortCuts[index]
-                    ShortcutStateRow(
-                        state = cardState,
-                    )
+                    items(inactiveShortcuts.size) { index ->
+                        val cardState = inactiveShortcuts[index]
+                        ShortcutStateRow(
+                            state = cardState,
+                            actionIcon = R.drawable.ic_personalization_shortcuts_plus_circle,
+                            actionIconTint = Color(0xFF008710)
+                        )
+                    }
                 }
             }
         }
@@ -263,6 +274,8 @@ fun DashboardCardStateRow(
 @Composable
 fun ShortcutStateRow(
     state: ShortcutState,
+    actionIcon: Int,
+    actionIconTint: Color,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -310,15 +323,9 @@ fun ShortcutStateRow(
                     .padding(1.dp),
                 onClick = {}
             ) {
-                val icon = if (state.isActive) R.drawable.ic_personalization_quick_link_remove_circle
-                else R.drawable.ic_personalization_shortcuts_plus_circle
-
-                val iconTint = if (state.isActive) Color(0xFFD63638)
-                else Color(0xFF008710)
-
                 Icon(
-                    painter = painterResource(id = icon),
-                    tint = iconTint,
+                    painter = painterResource(id = actionIcon),
+                    tint = actionIconTint,
                     contentDescription = stringResource(
                         R.string.personalization_screen_shortcuts_add_or_remove_shortcut_button
                     ),
@@ -337,7 +344,9 @@ fun PersonalizationScreenPreview() {
                 label = UiString.UiStringRes(R.string.media),
                 icon = R.drawable.media_icon_circle,
                 isActive = true
-            )
+            ),
+            actionIcon = R.drawable.ic_personalization_shortcuts_plus_circle,
+            actionIconTint = Color(0xFF008710)
         )
     }
 }
