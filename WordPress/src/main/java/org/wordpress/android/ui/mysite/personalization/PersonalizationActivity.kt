@@ -53,6 +53,7 @@ import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.components.buttons.WPSwitch
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.UiString
 
 @AndroidEntryPoint
@@ -186,11 +187,12 @@ class PersonalizationActivity : ComponentActivity() {
                         )
                     }
                     items(activeShortcuts.size) { index ->
-                        val cardState = activeShortcuts[index]
+                        val shortcutState = activeShortcuts[index]
                         ShortcutStateRow(
-                            state = cardState,
+                            state = shortcutState,
                             actionIcon = R.drawable.ic_personalization_quick_link_remove_circle,
-                            actionIconTint = Color(0xFFD63638)
+                            actionIconTint = Color(0xFFD63638),
+                            actionButtonClick = { viewModel.removeShortcut(shortcutState)}
                         )
                     }
                 }
@@ -209,11 +211,12 @@ class PersonalizationActivity : ComponentActivity() {
                     }
 
                     items(inactiveShortcuts.size) { index ->
-                        val cardState = inactiveShortcuts[index]
+                        val shortcutState = inactiveShortcuts[index]
                         ShortcutStateRow(
-                            state = cardState,
+                            state = shortcutState,
                             actionIcon = R.drawable.ic_personalization_shortcuts_plus_circle,
-                            actionIconTint = Color(0xFF008710)
+                            actionIconTint = Color(0xFF008710),
+                            actionButtonClick = { viewModel.addShortcut(shortcutState) },
                         )
                     }
                 }
@@ -276,6 +279,7 @@ fun ShortcutStateRow(
     state: ShortcutState,
     actionIcon: Int,
     actionIconTint: Color,
+    actionButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -321,7 +325,7 @@ fun ShortcutStateRow(
                 modifier = modifier
                     .size(24.dp)
                     .padding(1.dp),
-                onClick = {}
+                onClick = { actionButtonClick() }
             ) {
                 Icon(
                     painter = painterResource(id = actionIcon),
@@ -343,10 +347,12 @@ fun PersonalizationScreenPreview() {
             state = ShortcutState(
                 label = UiString.UiStringRes(R.string.media),
                 icon = R.drawable.media_icon_circle,
-                isActive = true
+                isActive = true,
+                listItemAction = ListItemAction.MEDIA
             ),
             actionIcon = R.drawable.ic_personalization_shortcuts_plus_circle,
-            actionIconTint = Color(0xFF008710)
+            actionIconTint = Color(0xFF008710),
+            actionButtonClick = { },
         )
     }
 }
