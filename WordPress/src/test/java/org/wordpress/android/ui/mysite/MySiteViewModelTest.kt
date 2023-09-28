@@ -38,7 +38,6 @@ import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -50,7 +49,6 @@ import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFu
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
@@ -62,7 +60,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.Icon
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
@@ -93,6 +90,7 @@ import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallF
 import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlice
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
+import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinksItemViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -281,6 +279,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice
 
+    @Mock
+    lateinit var quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -379,11 +380,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     )
 
-    private var quickLinkRibbonStatsClickAction: (() -> Unit)? = null
-    private var quickLinkRibbonPagesClickAction: (() -> Unit)? = null
-    private var quickLinkRibbonPostsClickAction: (() -> Unit)? = null
-    private var quickLinkRibbonMediaClickAction: (() -> Unit)? = null
-
     private val partialStates = listOf(
         isDomainCreditAvailable,
         jetpackCapabilities,
@@ -412,8 +408,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
-        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-            .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
         whenever(jetpackBrandingUtils.getBrandingTextForScreen(any())).thenReturn(mock())
         whenever(jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()).thenReturn(true)
         whenever(blazeCardViewModelSlice.refresh).thenReturn(refresh)
@@ -425,6 +419,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(personalizeCardViewModelSlice.getBuilderParams()).thenReturn(mock())
         whenever(personalizeCardBuilder.build(any())).thenReturn(mock())
         whenever(bloggingPromptCardViewModelSlice.getBuilderParams(anyOrNull())).thenReturn(mock())
+        whenever(quickLinksItemViewModelSlice.uiState).thenReturn(mock())
 
         viewModel = MySiteViewModel(
             testDispatcher(),
@@ -477,7 +472,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             personalizeCardBuilder,
             bloggingPromptCardViewModelSlice,
             noCardsMessageViewModelSlice,
-            siteInfoHeaderCardViewModelSlice
+            siteInfoHeaderCardViewModelSlice,
+            quickLinksItemViewModelSlice
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -755,11 +751,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when quick start card item clicked, then quick start card item tapped is tracked`() {
-        initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true,
-
-            isQuickStartInProgress = true
-        )
+        initSelectedSite()
 
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
@@ -1249,7 +1241,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given selected site with tabs disabled, when all cards and items, then qs card exists`() {
-        initSelectedSite(isMySiteDashboardTabsEnabled = false)
+        initSelectedSite()
 
         assertThat(getLastItems().filterIsInstance(QuickStartCard::class.java)).isNotEmpty
     }
@@ -1276,10 +1268,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `when dashboard cards items built, then qs card exists`() {
       //  setUpSiteItemBuilder()
-
-        initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true
-        )
+        initSelectedSite()
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
@@ -1290,9 +1279,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given site menu built, when dashboard cards items, then qs card not exists`() {
       //  setUpSiteItemBuilder(shouldEnableFocusPoint = true)
 
-        initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true
-        )
+        initSelectedSite()
 
         val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
@@ -1315,9 +1302,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given tabs enabled + dashboard default tab variant, when site menu cards + items, then qs card not exists`() {
       //  setUpSiteItemBuilder()
 
-        initSelectedSite(
-            isMySiteTabsBuildConfigEnabled = true
-        )
+        initSelectedSite()
 
         val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
@@ -1343,91 +1328,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isEmpty()
     }
-
-    @Test
-    fun `given site is WPCOM, when quick link ribbon stats click, then stats screen is shown`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-
-        site.setIsWPCom(true)
-
-        initSelectedSite()
-
-        requireNotNull(quickLinkRibbonStatsClickAction).invoke()
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
-    }
-
-    @Test
-    fun `given site is Jetpack, when quick link ribbon stats click, then stats screen is shown`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-
-        site.setIsJetpackInstalled(true)
-        site.setIsJetpackConnected(true)
-
-        initSelectedSite()
-
-        requireNotNull(quickLinkRibbonStatsClickAction).invoke()
-
-        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.CHECK_STATS)
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
-    }
-
-    @Test
-    fun `given self-hosted site, when quick link ribbon stats click, then shows connect jetpack screen`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-
-        site.setIsJetpackInstalled(false)
-        site.setIsJetpackConnected(false)
-
-        initSelectedSite(isSiteUsingWpComRestApi = false)
-
-        requireNotNull(quickLinkRibbonStatsClickAction).invoke()
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.ConnectJetpackForStats(site))
-    }
-
-    @Test
-    fun `given user is not logged in jetpack site, when quick link ribbon stats click, then login screen is shown`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
-
-        site.setIsJetpackInstalled(true)
-        site.setIsJetpackConnected(true)
-
-        initSelectedSite()
-
-        requireNotNull(quickLinkRibbonStatsClickAction).invoke()
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.StartWPComLoginForJetpackStats)
-    }
-
-    @Test
-    fun `when quick link ribbon pages click, then pages screen is shown and completes REVIEW_PAGES task `() {
-        initSelectedSite()
-
-        requireNotNull(quickLinkRibbonPagesClickAction).invoke()
-
-        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
-    }
-
-    @Test
-    fun `when quick link ribbon posts click, then posts screen is shown `() {
-        initSelectedSite()
-
-        requireNotNull(quickLinkRibbonPostsClickAction).invoke()
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPosts(site))
-    }
-
-    @Test
-    fun `when quick link ribbon media click, then media screen is shown`() {
-        initSelectedSite()
-
-        requireNotNull(quickLinkRibbonMediaClickAction).invoke()
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenMedia(site))
-    }
-
 
     /* JETPACK FEATURE CARD */
     @Test
@@ -1571,11 +1471,11 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Suppress("LongParameterList")
     private fun initSelectedSite(
-        isMySiteTabsBuildConfigEnabled: Boolean = true,
+    //    isMySiteTabsBuildConfigEnabled: Boolean = true,
         isQuickStartInProgress: Boolean = false,
         showStaleMessage: Boolean = false,
         isSiteUsingWpComRestApi: Boolean = true,
-        isMySiteDashboardTabsEnabled: Boolean = true,
+     //   isMySiteDashboardTabsEnabled: Boolean = true,
         shouldShowJetpackBranding: Boolean = true
     ) {
         whenever(
@@ -1584,8 +1484,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickStartUpdate.value = QuickStartUpdate(
             categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
-        whenever(buildConfigWrapper.isMySiteTabsEnabled).thenReturn(isMySiteTabsBuildConfigEnabled)
-        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsEnabled)
         whenever(jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard()).thenReturn(shouldShowJetpackBranding)
         if (isSiteUsingWpComRestApi) {
             site.setIsWPCom(true)
@@ -1600,7 +1498,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun setUpCardsBuilder() {
         doAnswer {
-            val quickLinkRibbon = initQuickLinkRibbon(it)
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
             val dashboardCards = initDashboardCards(it)
@@ -1610,16 +1507,12 @@ class MySiteViewModelTest : BaseUnitTest() {
             )
 
             listOfCards.addAll(dashboardCards)
-            if (mySiteDashboardTabsFeatureConfig.isEnabled())
-                listOfCards.add(quickLinkRibbon)
             listOfCards
         }.whenever(cardsBuilder).build(
             domainRegistrationCardBuilderParams = any(),
             quickStartCardBuilderParams = any(),
             dashboardCardsBuilderParams = any(),
-            quickLinkRibbonBuilderParams = any(),
             jetpackInstallFullPluginCardBuilderParams = any(),
-            isMySiteTabsEnabled = any()
         )
 
         doAnswer {
@@ -1668,19 +1561,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             onIconClick = mock(),
             onUrlClick = mock(),
             onSwitchSiteClick = mock()
-        )
-    }
-
-    private fun initQuickLinkRibbon(mockInvocation: InvocationOnMock): QuickLinkRibbon {
-        val params = (mockInvocation.arguments.filterIsInstance<QuickLinkRibbonBuilderParams>()).first()
-        quickLinkRibbonPagesClickAction = params.onPagesClick
-        quickLinkRibbonPostsClickAction = params.onPostsClick
-        quickLinkRibbonMediaClickAction = params.onMediaClick
-        quickLinkRibbonStatsClickAction = params.onStatsClick
-        return QuickLinkRibbon(
-            quickLinkRibbonItems = mock(),
-            showStatsFocusPoint = false,
-            showPagesFocusPoint = false
         )
     }
 

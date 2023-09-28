@@ -11,11 +11,9 @@ import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
@@ -28,11 +26,9 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainTran
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
-import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -47,9 +43,6 @@ class CardsBuilderTest {
 
     @Mock
     lateinit var dashboardCardsBuilder: DashboardCardsBuilder
-
-    @Mock
-    lateinit var quickLinkRibbonBuilder: QuickLinkRibbonBuilder
 
     @Mock
     lateinit var jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder
@@ -70,7 +63,6 @@ class CardsBuilderTest {
         setUpCardsBuilder()
         setUpQuickStartCardBuilder()
         setUpDashboardCardsBuilder()
-        setUpQuickLinkRibbonBuilder()
     }
 
     /* DOMAIN REGISTRATION CARD */
@@ -113,36 +105,16 @@ class CardsBuilderTest {
         assertThat(cards).isNotNull
     }
 
-    /*  QUICK LINK RIBBON */
-    @Test
-    fun `given tabs disabled, when cards are built, then quick link ribbon not built`() {
-        val cards = buildCards(isMySiteTabsEnabled = false)
-
-        assertThat(cards.findQuickLinkRibbon()).isNull()
-    }
-
-    @Test
-    fun `given tabs enabled, when cards are built, then quick link ribbon built`() {
-        val cards = buildCards(isMySiteTabsEnabled = true)
-
-        assertThat(cards.findQuickLinkRibbon()).isNotNull
-    }
-
     private fun List<MySiteCardAndItem>.findQuickStartCard() = this.find { it is QuickStartCard } as QuickStartCard?
 
     private fun List<MySiteCardAndItem>.findDomainRegistrationCard() =
         this.find { it is DomainRegistrationCard } as DomainRegistrationCard?
 
-    private fun List<MySiteCardAndItem>.findQuickLinkRibbon() =
-        this.find { it is QuickLinkRibbon } as QuickLinkRibbon?
-
     @Suppress("LongMethod")
     private fun buildCards(
-        activeTask: QuickStartTask? = null,
         isDomainCreditAvailable: Boolean = false,
         isEligibleForPlansCard: Boolean = false,
         isQuickStartInProgress: Boolean = false,
-        isMySiteTabsEnabled: Boolean = false,
         isEligibleForDomainTransferCard: Boolean = false,
     ): List<MySiteCardAndItem> {
         return cardsBuilder.build(
@@ -187,21 +159,11 @@ class CardsBuilderTest {
                     mock()
                 )
             ),
-            quickLinkRibbonBuilderParams = QuickLinkRibbonBuilderParams(
-                siteModel = mock(),
-                onPagesClick = mock(),
-                onPostsClick = mock(),
-                onMediaClick = mock(),
-                onStatsClick = mock(),
-                onMoreClick = mock(),
-                activeTask = activeTask
-            ),
             jetpackInstallFullPluginCardBuilderParams = JetpackInstallFullPluginCardBuilderParams(
                 site = site,
                 onLearnMoreClick = mock(),
                 onHideMenuItemClick = mock(),
-            ),
-            isMySiteTabsEnabled
+            )
         )
     }
 
@@ -217,16 +179,9 @@ class CardsBuilderTest {
         }.whenever(dashboardCardsBuilder).build(any())
     }
 
-    private fun setUpQuickLinkRibbonBuilder() {
-        doAnswer {
-            initQuickLinkRibbon()
-        }.whenever(quickLinkRibbonBuilder).build(any())
-    }
-
     private fun setUpCardsBuilder() {
         cardsBuilder = CardsBuilder(
             quickStartCardBuilder,
-            quickLinkRibbonBuilder,
             dashboardCardsBuilder,
             jetpackInstallFullPluginCardBuilder,
         )
@@ -251,10 +206,4 @@ class CardsBuilderTest {
     )
 
     private fun initDashboardCards() = mutableListOf<MySiteCardAndItem.Card>()
-
-    private fun initQuickLinkRibbon(): QuickLinkRibbon {
-        return QuickLinkRibbon(
-            quickLinkRibbonItems = mock()
-        )
-    }
 }
