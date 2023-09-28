@@ -199,6 +199,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             return@withContext ReaderInterestsCardUiState(interests.take(listSize).map { interest ->
                 ReaderInterestUiState(
                     interest = interest.tagTitle,
+                    slug = interest.tagSlug,
                     onClicked = onClicked,
                     chipStyle = buildChipStyle(interest, interests)
                 )

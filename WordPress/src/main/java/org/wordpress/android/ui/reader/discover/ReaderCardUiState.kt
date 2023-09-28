@@ -68,6 +68,7 @@ sealed class ReaderCardUiState {
     data class ReaderInterestsCardUiState(val interest: List<ReaderInterestUiState>) : ReaderCardUiState() {
         data class ReaderInterestUiState(
             val interest: String,
+            val slug: String,
             val onClicked: ((String) -> Unit),
             val chipStyle: ChipStyle
         )

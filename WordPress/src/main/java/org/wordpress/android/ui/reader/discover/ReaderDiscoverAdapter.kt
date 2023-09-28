@@ -7,6 +7,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterest
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
+import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestsCardNewViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderRecommendedBlogsCardNewViewHolder
@@ -33,7 +34,13 @@ class ReaderDiscoverAdapter(
         return when (viewType) {
             welcomeBannerViewType -> WelcomeBannerViewHolder(parent)
             postViewType -> ReaderPostViewHolder(uiHelpers, imageManager, readerTracker, parent)
-            interestViewType -> ReaderInterestsCardViewHolder(uiHelpers, parent)
+            interestViewType -> {
+                if (isReaderImprovementsEnabled) {
+                    ReaderInterestsCardNewViewHolder(uiHelpers, parent)
+                } else {
+                    ReaderInterestsCardViewHolder(uiHelpers, parent)
+                }
+            }
             recommendedBlogsViewType ->
                 if (isReaderImprovementsEnabled) {
                     ReaderRecommendedBlogsCardNewViewHolder(
