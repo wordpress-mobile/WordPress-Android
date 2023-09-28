@@ -98,6 +98,6 @@ class MySiteCardAndItemTest {
         secondaryText = null,
         showFocusPoint = showFocusPoint,
         onClick = interaction,
-        listItemAction = ListItemAction.STATS,
+        listItemAction = ListItemAction.PAGES
     )
 }
