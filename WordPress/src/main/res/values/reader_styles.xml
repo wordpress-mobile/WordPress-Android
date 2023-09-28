@@ -492,4 +492,13 @@
         <item name="drawableTint">@color/on_surface_primary_selector</item>
     </style>
 
+    <style name="ReaderTextView.Post.New.Interactions">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
 </resources>

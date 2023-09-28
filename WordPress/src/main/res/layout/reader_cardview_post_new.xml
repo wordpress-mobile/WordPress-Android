@@ -173,7 +173,7 @@
         <!-- like and comment counts start -->
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/reader_card_like_count"
-            style="@style/ReaderTextView.Post.New.BlogSection.Compact.Dateline"
+            style="@style/ReaderTextView.Post.New.Interactions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
@@ -187,7 +187,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/reader_card_dot_separator"
-            style="@style/ReaderTextView.Post.New.BlogSection.Compact.Dateline"
+            style="@style/ReaderTextView.Post.New.Interactions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
@@ -200,7 +200,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/reader_card_comment_count"
-            style="@style/ReaderTextView.Post.New.BlogSection.Compact.Dateline"
+            style="@style/ReaderTextView.Post.New.Interactions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
