@@ -65,6 +65,48 @@ sealed class ReaderCardUiState {
         )
     }
 
+    data class ReaderPostNewUiState(
+        val source: String,
+        val postId: Long,
+        val blogId: Long,
+        val feedId: Long,
+        val isFollowed: Boolean,
+        val blogSection: CompactBlogSectionData,
+        val title: UiString?,
+        val excerpt: String?,
+        val photoTitle: String?,
+        val featuredImageUrl: String?,
+        val featuredImageCornerRadius: UiDimen,
+        val fullVideoUrl: String?,
+        val thumbnailStripSection: ReaderPostUiState.GalleryThumbnailStripData?,
+        val discoverSection: ReaderPostUiState.DiscoverLayoutUiState?,
+        val videoOverlayVisibility: Boolean,
+        val featuredImageVisibility: Boolean,
+        val moreMenuVisibility: Boolean,
+        val photoFrameVisibility: Boolean,
+        val likeAction: PrimaryAction,
+        val reblogAction: PrimaryAction,
+        val commentsAction: PrimaryAction,
+        val moreMenuItems: List<ReaderPostCardAction>? = null,
+        val onItemClicked: (Long, Long) -> Unit,
+        val onItemRendered: (ReaderCardUiState) -> Unit,
+        val onMoreButtonClicked: (ReaderPostUiState) -> Unit,
+        val onMoreDismissed: (ReaderPostUiState) -> Unit,
+        val onVideoOverlayClicked: (Long, Long) -> Unit,
+    ) : ReaderCardUiState() {
+        data class CompactBlogSectionData(
+            val postId: Long,
+            val blogId: Long,
+            val dateLine: String,
+            val blogName: UiString,
+            val avatarOrBlavatarUrl: String?,
+            val authorAvatarUrl: String?,
+            val isAuthorAvatarVisible: Boolean,
+            val blavatarType: ImageType,
+            val onClicked: ((Long, Long) -> Unit)?,
+        )
+    }
+
     data class ReaderInterestsCardUiState(val interest: List<ReaderInterestUiState>) : ReaderCardUiState() {
         data class ReaderInterestUiState(
             val interest: String,
