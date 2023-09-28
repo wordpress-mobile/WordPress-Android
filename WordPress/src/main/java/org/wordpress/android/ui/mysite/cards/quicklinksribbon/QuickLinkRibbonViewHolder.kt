@@ -34,14 +34,8 @@ class QuickLinkRibbonViewHolder(
             }
         )
         (quickLinkRibbonItemList.adapter as QuickLinkRibbonItemAdapter).update(quickLinkRibbon.quickLinkRibbonItems)
-        if (quickLinkRibbon.showStatsFocusPoint) {
-            quickLinkRibbonItemList.smoothScrollToPosition(0)
-        }
-        if (quickLinkRibbon.showPagesFocusPoint) {
-            quickLinkRibbonItemList.smoothScrollToPosition(2)
-        }
-        if (quickLinkRibbon.showMediaFocusPoint) {
-            quickLinkRibbonItemList.smoothScrollToPosition(quickLinkRibbon.quickLinkRibbonItems.size)
+        if (quickLinkRibbon.showMoreFocusPoint) {
+            quickLinkRibbonItemList.smoothScrollToPosition(quickLinkRibbonItemList.adapter!!.itemCount - 1)
         }
     }
 }
