@@ -107,9 +107,7 @@ class MenuActivity : ComponentActivity() {
 
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    fun MenuScreen() {
-        val uiState by viewModel.uiState.collectAsState()
-
+    fun MenuScreen(modifier: Modifier = Modifier) {
         Scaffold(
             topBar = {
                 MainTopAppBar(
@@ -119,15 +117,16 @@ class MenuActivity : ComponentActivity() {
                 )
             },
             content = {
-                MenuContent(uiState)
+                MenuContent(modifier = modifier)
             }
         )
     }
 
     @Composable
-    fun MenuContent(uiState: MenuViewState) {
+    fun MenuContent(modifier: Modifier = Modifier) {
+        val uiState by viewModel.uiState.collectAsState()
         LazyColumn(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -146,7 +145,7 @@ class MenuActivity : ComponentActivity() {
 }
 
 @Composable
-fun MySiteListItemHeader(headerItem: MySiteCardAndItem.Item.CategoryHeaderItem) {
+fun MySiteListItemHeader(headerItem: MySiteCardAndItem.Item.CategoryHeaderItem, modifier: Modifier = Modifier) {
     val title = when (headerItem.title) {
         is UiString.UiStringRes -> stringResource(id = headerItem.title.stringRes)
         is UiString.UiStringText -> headerItem.title.text.toString()
@@ -154,7 +153,7 @@ fun MySiteListItemHeader(headerItem: MySiteCardAndItem.Item.CategoryHeaderItem) 
         is UiString.UiStringResWithParams -> TODO()
     }
     Text(
-        modifier = Modifier.padding(8.dp),
+        modifier = modifier.padding(8.dp),
         fontSize = 14.sp,
         fontWeight = FontWeight.Medium,
         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
@@ -162,14 +161,14 @@ fun MySiteListItemHeader(headerItem: MySiteCardAndItem.Item.CategoryHeaderItem) 
 }
 
 @Composable
-fun MySiteListItemEmptyHeader() {
-    Spacer(modifier = Modifier.height(4.dp))
+fun MySiteListItemEmptyHeader(modifier: Modifier = Modifier) {
+    Spacer(modifier = modifier.height(4.dp))
 }
 
 @Composable
-fun MySiteListItem(item: MySiteCardAndItem.Item.ListItem) {
+fun MySiteListItem(item: MySiteCardAndItem.Item.ListItem, modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .wrapContentSize()
             .padding(vertical = 8.dp, horizontal = 8.dp)
@@ -244,7 +243,7 @@ fun MySiteListItem(item: MySiteCardAndItem.Item.ListItem) {
     }
 }
 @Composable
-fun CustomXMLWidgetView() {
+fun CustomXMLWidgetView(modifier: Modifier = Modifier) {
     // Load the custom XML widget using AndroidView
     AndroidView(
         factory = { context ->
@@ -254,7 +253,7 @@ fun CustomXMLWidgetView() {
             val view = inflater.inflate(R.layout.quick_start_focus_point, parent, false)
             view
         },
-        modifier = Modifier.wrapContentSize(Alignment.Center)
+        modifier = modifier.wrapContentSize(Alignment.Center)
     )
 }
 
