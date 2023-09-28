@@ -18,7 +18,6 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import kotlin.test.assertEquals
 
-
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ListItemActionHandlerTest: BaseUnitTest() {
