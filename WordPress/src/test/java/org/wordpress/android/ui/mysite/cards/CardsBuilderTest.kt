@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
@@ -110,9 +109,6 @@ class CardsBuilderTest {
 
     private fun List<MySiteCardAndItem>.findDomainRegistrationCard() =
         this.find { it is DomainRegistrationCard } as DomainRegistrationCard?
-
-    private fun List<MySiteCardAndItem>.findQuickLinkRibbon() =
-        this.find { it is QuickLinkRibbon } as QuickLinkRibbon?
 
     @Suppress("LongMethod")
     private fun buildCards(

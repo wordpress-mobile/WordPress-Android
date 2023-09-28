@@ -712,21 +712,6 @@ class MySiteViewModel @Inject constructor(
         _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(getEmailValidationMessage(email))))
     }
 
-    private fun getStatsNavigationActionForSite(site: SiteModel): SiteNavigationAction = when {
-        // if we are in static posters phase - we don't want to show any connection/login messages
-        jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage() ->
-            SiteNavigationAction.ShowJetpackRemovalStaticPostersView
-
-        // If the user is not logged in and the site is already connected to Jetpack, ask to login.
-        !accountStore.hasAccessToken() && site.isJetpackConnected -> SiteNavigationAction.StartWPComLoginForJetpackStats
-
-        // If it's a WordPress.com or Jetpack site, show the Stats screen.
-        site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected -> SiteNavigationAction.OpenStats(site)
-
-        // If it's a self-hosted site, ask to connect to Jetpack.
-        else -> SiteNavigationAction.ConnectJetpackForStats(site)
-    }
-
     fun onAvatarPressed() {
         _onNavigation.value = Event(SiteNavigationAction.OpenMeScreen)
     }
