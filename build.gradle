@@ -37,7 +37,7 @@ ext {
     androidxAnnotationVersion = '1.6.0'
     androidxAppcompatVersion = '1.6.1'
     androidxArchCoreVersion = '2.2.0'
-    androidxComposeBomVersion = '2023.05.01'
+    androidxComposeBomVersion = '2023.09.02'
     androidxComposeCompilerVersion = '1.4.7'
     androidxCardviewVersion = '1.0.0'
     androidxConstraintlayoutVersion = '2.1.4'
