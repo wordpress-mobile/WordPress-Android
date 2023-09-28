@@ -50,8 +50,9 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     val uiState: LiveData<MySiteCardAndItem.Card.QuickLinkRibbon> = _uiState
 
     fun start() {
-        val site = selectedSiteRepository.getSelectedSite()!!
-        buildQuickLinks(site)
+        selectedSiteRepository.getSelectedSite()?.let {
+            buildQuickLinks(it)
+        }
     }
 
     fun onResume() {
