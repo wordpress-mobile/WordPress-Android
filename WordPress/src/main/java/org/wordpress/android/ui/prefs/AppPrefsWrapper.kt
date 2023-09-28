@@ -416,10 +416,10 @@ class AppPrefsWrapper @Inject constructor() {
         AppPrefs.getShouldShowSiteItemAsQuickLink(siteItem, siteId)
 
     fun setShouldShowDefaultQuickLink(siteItem: String, siteId: Long, shouldShow: Boolean) =
-        AppPrefs.setShouldShowSiteItemAsQuickLink(siteItem, siteId, shouldShow)
+        AppPrefs.setShouldShowDefaultQuickLink(siteItem, siteId, shouldShow)
 
     fun getShouldShowDefaultQuickLink(siteItem: String, siteId: Long): Boolean =
-        AppPrefs.getShouldShowSiteItemAsQuickLink(siteItem, siteId)
+        AppPrefs.getShouldShowDefaultQuickLink(siteItem, siteId)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
