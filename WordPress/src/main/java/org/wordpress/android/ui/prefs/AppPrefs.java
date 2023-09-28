@@ -1801,8 +1801,8 @@ public class AppPrefs {
     }
 
     public static void setShouldShowDefaultQuickLink(final String siteItem, final long siteId,
-                                                        final boolean isHidden) {
-        prefs().edit().putBoolean(getShouldShowDefaultQuickLinkKey(siteItem, siteId), isHidden).apply();
+                                                        final boolean shouldShow) {
+        prefs().edit().putBoolean(getShouldShowDefaultQuickLinkKey(siteItem, siteId), shouldShow).apply();
     }
 
     @NonNull private static String getShouldShowDefaultQuickLinkKey(String siteItem, long siteId) {
