@@ -266,40 +266,42 @@ class MySiteViewModel @Inject constructor(
         }
 
     val uiModel: LiveData<UiModel> = merge(state, quickLinksItemViewModelSlice.uiState) { cards, quickLinks ->
-        with(requireNotNull(cards)) {
-            val state = if (site != null) {
-                cardsUpdate?.checkAndShowSnackbarError()
-                val state = buildSiteSelectedStateAndScroll(
-                    site,
-                    showSiteIconProgressBar,
-                    activeTask,
-                    isDomainCreditAvailable,
-                    quickStartCategories,
-                    backupAvailable,
-                    scanAvailable,
-                    cardsUpdate,
-                    bloggingPromptsUpdate,
-                    blazeCardUpdate,
-                    quickLinks
-                )
-                trackCardsAndItemsShownIfNeeded(state)
+        cards?.let { nonNullCards ->
+            with(nonNullCards) {
+                val state = if (site != null) {
+                    cardsUpdate?.checkAndShowSnackbarError()
+                    val state = buildSiteSelectedStateAndScroll(
+                        site,
+                        showSiteIconProgressBar,
+                        activeTask,
+                        isDomainCreditAvailable,
+                        quickStartCategories,
+                        backupAvailable,
+                        scanAvailable,
+                        cardsUpdate,
+                        bloggingPromptsUpdate,
+                        blazeCardUpdate,
+                        quickLinks
+                    )
+                    trackCardsAndItemsShownIfNeeded(state)
 
-                bloggingPromptCardViewModelSlice.onDashboardCardsUpdated(
-                    viewModelScope,
-                    state.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card.BloggingPromptCard>()
-                )
-                state
-            } else {
-                buildNoSiteState()
+                    bloggingPromptCardViewModelSlice.onDashboardCardsUpdated(
+                        viewModelScope,
+                        state.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card.BloggingPromptCard>()
+                    )
+                    state
+                } else {
+                    buildNoSiteState()
+                }
+
+                bloggingPromptCardViewModelSlice.onSiteChanged(site?.id)
+
+                dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
+
+                domainTransferCardViewModel.onSiteChanged(site?.id, state as? SiteSelected)
+
+                UiModel(currentAvatarUrl.orEmpty(), state)
             }
-
-            bloggingPromptCardViewModelSlice.onSiteChanged(site?.id)
-
-            dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
-
-            domainTransferCardViewModel.onSiteChanged(site?.id, state as? SiteSelected)
-
-            UiModel(currentAvatarUrl.orEmpty(), state)
         }
     }
 
