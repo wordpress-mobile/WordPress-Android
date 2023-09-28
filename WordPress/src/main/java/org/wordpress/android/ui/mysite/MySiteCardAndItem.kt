@@ -21,6 +21,7 @@ import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 
@@ -396,7 +397,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val secondaryText: UiString? = null,
             val showFocusPoint: Boolean = false,
             val onClick: ListItemInteraction,
-            val disablePrimaryIconTint: Boolean = false
+            val disablePrimaryIconTint: Boolean = false,
+            val listItemAction: ListItemAction
         ) : Item(LIST_ITEM, activeQuickStartItem = showFocusPoint)
     }
 

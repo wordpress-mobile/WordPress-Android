@@ -48,6 +48,7 @@ import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import javax.inject.Inject
@@ -269,7 +270,8 @@ class MenuActivity : ComponentActivity() {
                 secondaryIcon = null,
                 secondaryText = null,
                 showFocusPoint = false,
-                onClick = ListItemInteraction.create { onClick() })
+                onClick = ListItemInteraction.create { onClick() },
+                listItemAction = ListItemAction.POSTS)
             )
     }
 
@@ -284,7 +286,8 @@ class MenuActivity : ComponentActivity() {
                 secondaryIcon = null,
                 secondaryText = null,
                 showFocusPoint = true,
-                onClick = ListItemInteraction.create { onClick() })
+                onClick = ListItemInteraction.create { onClick() },
+                listItemAction = ListItemAction.POSTS)
         )
     }
 
@@ -299,7 +302,8 @@ class MenuActivity : ComponentActivity() {
                 secondaryIcon = null,
                 secondaryText = UiString.UiStringText("Basic"),
                 showFocusPoint = false,
-                onClick = ListItemInteraction.create { onClick() })
+                onClick = ListItemInteraction.create { onClick() },
+                listItemAction = ListItemAction.PLAN)
         )
     }
 
@@ -314,7 +318,8 @@ class MenuActivity : ComponentActivity() {
                 secondaryIcon = R.drawable.ic_story_icon_24dp,
                 secondaryText = null,
                 showFocusPoint = false,
-                onClick = ListItemInteraction.create { onClick() })
+                onClick = ListItemInteraction.create { onClick() },
+                listItemAction = ListItemAction.PLAN)
         )
     }
 }

@@ -53,6 +53,7 @@ import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.components.buttons.WPSwitch
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.UiString
 
 @AndroidEntryPoint
@@ -162,7 +163,7 @@ class PersonalizationActivity : ComponentActivity() {
     }
 
     @Composable
-    fun ShortCutsPersonalizationContent(cardStateList: List<ShortcutsState>, modifier: Modifier = Modifier) {
+    fun ShortCutsPersonalizationContent(state: ShortcutsState, modifier: Modifier = Modifier) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -174,30 +175,50 @@ class PersonalizationActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                item {
-                    Text(
-                        modifier = Modifier.padding(start = 16.dp),
-                        text = stringResource(id = R.string.personalization_screen_tab_shortcuts_active_shortcuts),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
-                    )
+                val activeShortcuts = state.activeShortCuts
+                if (activeShortcuts.isNotEmpty()) {
+                    item {
+                        Text(
+                            modifier = Modifier.padding(start = 16.dp),
+                            text = stringResource(id = R.string.personalization_screen_tab_shortcuts_active_shortcuts),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+                        )
+                    }
+                    items(activeShortcuts.size) { index ->
+                        val shortcutState = activeShortcuts[index]
+                        ShortcutStateRow(
+                            state = shortcutState,
+                            actionIcon = R.drawable.ic_personalization_quick_link_remove_circle,
+                            actionIconTint = Color(0xFFD63638),
+                            actionButtonClick = { viewModel.removeShortcut(shortcutState)}
+                        )
+                    }
                 }
-                items(cardStateList.size) { index ->
-                    val cardState = cardStateList[index]
-                    ShortcutStateRow(
-                        state = cardState,
-                    )
-                }
+                val inactiveShortcuts = state.inactiveShortCuts
+                if (inactiveShortcuts.isNotEmpty()) {
+                    item {
+                        Text(
+                            modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp),
+                            text = stringResource(
+                                id = R.string.personalization_screen_tab_shortcuts_inactive_shortcuts
+                            ),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
+                        )
+                    }
 
-                item {
-                    Text(
-                        modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp),
-                        text = stringResource(id = R.string.personalization_screen_tab_shortcuts_inactive_shortcuts),
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
-                    )
+                    items(inactiveShortcuts.size) { index ->
+                        val shortcutState = inactiveShortcuts[index]
+                        ShortcutStateRow(
+                            state = shortcutState,
+                            actionIcon = R.drawable.ic_personalization_shortcuts_plus_circle,
+                            actionIconTint = Color(0xFF008710),
+                            actionButtonClick = { viewModel.addShortcut(shortcutState) },
+                        )
+                    }
                 }
             }
         }
@@ -255,7 +276,10 @@ fun DashboardCardStateRow(
 
 @Composable
 fun ShortcutStateRow(
-    state: ShortcutsState,
+    state: ShortcutState,
+    actionIcon: Int,
+    actionIconTint: Color,
+    actionButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -301,17 +325,11 @@ fun ShortcutStateRow(
                 modifier = modifier
                     .size(24.dp)
                     .padding(1.dp),
-                onClick = {}
+                onClick = { actionButtonClick() }
             ) {
-                val icon = if (state.isActive) R.drawable.ic_personalization_quick_link_remove_circle
-                else R.drawable.ic_personalization_shortcuts_plus_circle
-
-                val iconTint = if (state.isActive) Color(0xFFD63638)
-                else Color(0xFF008710)
-
                 Icon(
-                    painter = painterResource(id = icon),
-                    tint = iconTint,
+                    painter = painterResource(id = actionIcon),
+                    tint = actionIconTint,
                     contentDescription = stringResource(
                         R.string.personalization_screen_shortcuts_add_or_remove_shortcut_button
                     ),
@@ -326,11 +344,15 @@ fun ShortcutStateRow(
 fun PersonalizationScreenPreview() {
     AppTheme {
         ShortcutStateRow(
-            state = ShortcutsState(
+            state = ShortcutState(
                 label = UiString.UiStringRes(R.string.media),
                 icon = R.drawable.media_icon_circle,
-                isActive = true
-            )
+                isActive = true,
+                listItemAction = ListItemAction.MEDIA
+            ),
+            actionIcon = R.drawable.ic_personalization_shortcuts_plus_circle,
+            actionIconTint = Color(0xFF008710),
+            actionButtonClick = { },
         )
     }
 }
