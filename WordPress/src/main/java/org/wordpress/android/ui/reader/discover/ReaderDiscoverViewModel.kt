@@ -11,6 +11,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCardNew
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
@@ -186,6 +187,20 @@ class ReaderDiscoverViewModel @Inject constructor(
                     onPostHeaderViewClicked = this@ReaderDiscoverViewModel::onPostHeaderClicked,
                     onTagItemClicked = this@ReaderDiscoverViewModel::onTagItemClicked,
                     postListType = TAG_FOLLOWED
+                )
+                is ReaderPostCardNew -> postUiStateBuilder.mapPostToNewUiState(
+                    source = ReaderTracker.SOURCE_DISCOVER,
+                    post = card.post,
+                    photonWidth = photonWidth,
+                    photonHeight = photonHeight,
+                    onButtonClicked = this@ReaderDiscoverViewModel::onButtonClicked,
+                    onItemClicked = this@ReaderDiscoverViewModel::onPostItemClicked,
+                    onItemRendered = this@ReaderDiscoverViewModel::onItemRendered,
+                    onDiscoverSectionClicked = this@ReaderDiscoverViewModel::onDiscoverClicked,
+                    onMoreButtonClicked = this@ReaderDiscoverViewModel::onMoreButtonClicked,
+                    onMoreDismissed = this@ReaderDiscoverViewModel::onMoreMenuDismissed,
+                    onVideoOverlayClicked = this@ReaderDiscoverViewModel::onVideoOverlayClicked,
+                    onPostHeaderViewClicked = this@ReaderDiscoverViewModel::onPostHeaderClicked,
                 )
                 is InterestsYouMayLikeCard -> {
                     postUiStateBuilder.mapTagListToReaderInterestUiState(

@@ -38,6 +38,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState;
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder;
@@ -506,6 +507,108 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onVideoOverlayClicked,
                         onPostHeaderClicked,
                         onTagItemClicked,
+                        showMoreMenu ? mReaderPostMoreButtonUiStateBuilder
+                                .buildMoreMenuItemsBlocking(post, onButtonClicked) : null
+                );
+        holder.onBind(uiState);
+    }
+
+    // TODO update the viewholder to the new one
+    private void renderPostNew(final int position, final ReaderPostViewHolder holder, boolean showMoreMenu) {
+        final ReaderPost post = getItem(position);
+        if (post == null) {
+            return;
+        }
+        Context ctx = holder.getViewContext();
+        Function3<Long, Long, ReaderPostCardActionType, Unit> onButtonClicked =
+                (postId, blogId, type) -> {
+                    mOnPostListItemButtonListener.onButtonClicked(post, type);
+                    renderPostNew(position, holder, false);
+                    return Unit.INSTANCE;
+                };
+        Function2<Long, Long, Unit> onItemClicked = (postId, blogId) -> {
+            if (mPostSelectedListener != null) {
+                mPostSelectedListener.onPostSelected(post);
+            }
+            return Unit.INSTANCE;
+        };
+        Function1<ReaderCardUiState, Unit> onItemRendered = (item) -> {
+            checkLoadMore(position);
+
+            // if we haven't already rendered this post and it has a "railcar" attached to it, add it
+            // to the rendered list and record the TrainTracks render event
+            if (post.hasRailcar() && !mRenderedIds.contains(post.getPseudoId())) {
+                mRenderedIds.add(post.getPseudoId());
+                mReaderTracker.trackRailcar(post.getRailcarJson());
+            }
+            return Unit.INSTANCE;
+        };
+        Function2<Long, Long, Unit> onDiscoverSectionClicked = (postId, blogId) -> {
+            ReaderPostDiscoverData discoverData = post.getDiscoverData();
+            switch (discoverData.getDiscoverType()) {
+                case EDITOR_PICK:
+                    if (mPostSelectedListener != null) {
+                        mPostSelectedListener.onPostSelected(post);
+                    }
+                    break;
+                case SITE_PICK:
+                    if (discoverData.getBlogId() != 0) {
+                        ReaderActivityLauncher.showReaderBlogPreview(
+                                ctx,
+                                discoverData.getBlogId(),
+                                post.isFollowedByCurrentUser,
+                                mSource,
+                                mReaderTracker
+                        );
+                    } else if (discoverData.hasBlogUrl()) {
+                        ReaderActivityLauncher.openUrl(ctx, discoverData.getBlogUrl());
+                    }
+                    break;
+                case OTHER:
+                    // noop
+                    break;
+            }
+            return Unit.INSTANCE;
+        };
+        Function1<ReaderPostUiState, Unit> onMoreButtonClicked = (uiState) -> {
+            renderPostNew(position, holder, true);
+            return Unit.INSTANCE;
+        };
+
+        Function1<ReaderPostUiState, Unit> onMoreDismissed = (uiState) -> {
+            renderPostNew(position, holder, false);
+            return Unit.INSTANCE;
+        };
+
+        Function2<Long, Long, Unit> onVideoOverlayClicked = (postId, blogId) -> {
+            ReaderActivityLauncher.showReaderVideoViewer(ctx, post.getFeaturedVideo());
+            return Unit.INSTANCE;
+        };
+
+        Function2<Long, Long, Unit> onPostHeaderClicked = (postId, blogId) -> {
+            ReaderActivityLauncher.showReaderBlogPreview(
+                    ctx,
+                    post,
+                    mSource,
+                    mReaderTracker
+            );
+            return Unit.INSTANCE;
+        };
+
+        ReaderPostNewUiState uiState = mReaderPostUiStateBuilder
+                .mapPostToNewUiStateBlocking(
+                        mSource,
+                        post,
+                        mPhotonWidth,
+                        mPhotonHeight,
+                        onButtonClicked,
+                        onItemClicked,
+                        onItemRendered,
+                        onDiscoverSectionClicked,
+                        onMoreButtonClicked,
+                        onMoreDismissed,
+                        onVideoOverlayClicked,
+                        onPostHeaderClicked,
                         showMoreMenu ? mReaderPostMoreButtonUiStateBuilder
                                 .buildMoreMenuItemsBlocking(post, onButtonClicked) : null
                 );

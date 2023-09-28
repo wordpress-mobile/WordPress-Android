@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterest
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
@@ -165,6 +166,88 @@ class ReaderPostUiStateBuilder @Inject constructor(
         )
     }
 
+    @Suppress("LongParameterList")
+    suspend fun mapPostToNewUiState(
+        source: String,
+        post: ReaderPost,
+        photonWidth: Int,
+        photonHeight: Int,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
+        onItemClicked: (Long, Long) -> Unit,
+        onItemRendered: (ReaderCardUiState) -> Unit,
+        onDiscoverSectionClicked: (Long, Long) -> Unit,
+        onMoreButtonClicked: (ReaderPostUiState) -> Unit,
+        onMoreDismissed: (ReaderPostUiState) -> Unit,
+        onVideoOverlayClicked: (Long, Long) -> Unit,
+        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        moreMenuItems: List<SecondaryAction>? = null
+    ): ReaderPostNewUiState {
+        return withContext(bgDispatcher) {
+            mapPostToNewUiStateBlocking(
+                source,
+                post,
+                photonWidth,
+                photonHeight,
+                onButtonClicked,
+                onItemClicked,
+                onItemRendered,
+                onDiscoverSectionClicked,
+                onMoreButtonClicked,
+                onMoreDismissed,
+                onVideoOverlayClicked,
+                onPostHeaderViewClicked,
+                moreMenuItems
+            )
+        }
+    }
+
+    @Suppress("LongParameterList")
+    fun mapPostToNewUiStateBlocking(
+        source: String,
+        post: ReaderPost,
+        photonWidth: Int,
+        photonHeight: Int,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
+        onItemClicked: (Long, Long) -> Unit,
+        onItemRendered: (ReaderCardUiState) -> Unit,
+        onDiscoverSectionClicked: (Long, Long) -> Unit,
+        onMoreButtonClicked: (ReaderPostUiState) -> Unit,
+        onMoreDismissed: (ReaderPostUiState) -> Unit,
+        onVideoOverlayClicked: (Long, Long) -> Unit,
+        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        moreMenuItems: List<ReaderPostCardAction>? = null
+    ): ReaderPostNewUiState {
+        return ReaderPostNewUiState(
+            source = source,
+            postId = post.postId,
+            blogId = post.blogId,
+            feedId = post.feedId,
+            isFollowed = post.isFollowedByCurrentUser,
+            blogSection = buildCompactBlogSection(post, onPostHeaderViewClicked, post.isP2orA8C),
+            excerpt = buildExcerpt(post),
+            title = buildTitle(post),
+            photoFrameVisibility = buildPhotoFrameVisibility(post),
+            photoTitle = buildPhotoTitle(post),
+            featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
+            featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
+            thumbnailStripSection = buildThumbnailStripUrls(post),
+            videoOverlayVisibility = buildVideoOverlayVisibility(post),
+            featuredImageVisibility = buildFeaturedImageVisibility(post),
+            moreMenuVisibility = accountStore.hasAccessToken(),
+            moreMenuItems = moreMenuItems,
+            fullVideoUrl = buildFullVideoUrl(post),
+            discoverSection = buildDiscoverSection(post, onDiscoverSectionClicked),
+            likeAction = buildLikeSection(post, onButtonClicked),
+            reblogAction = buildReblogSection(post, onButtonClicked),
+            commentsAction = buildCommentsSection(post, onButtonClicked),
+            onItemClicked = onItemClicked,
+            onItemRendered = onItemRendered,
+            onMoreButtonClicked = onMoreButtonClicked,
+            onMoreDismissed = onMoreDismissed,
+            onVideoOverlayClicked = onVideoOverlayClicked
+        )
+    }
+
     fun mapPostToBlogSectionUiState(
         post: ReaderPost,
         isReaderImprovementsEnabled: Boolean,
@@ -233,14 +316,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
         postListType: ReaderPostListType? = null,
         isP2Post: Boolean = false,
         isReaderImprovementsEnabled: Boolean = false,
-    ) = buildBlogSectionUiState(post, onBlogSectionClicked, postListType, isP2Post, isReaderImprovementsEnabled)
-
-    private fun buildBlogSectionUiState(
-        post: ReaderPost,
-        onBlogSectionClicked: (Long, Long) -> Unit,
-        postListType: ReaderPostListType?,
-        isP2Post: Boolean = false,
-        isReaderImprovementsEnabled: Boolean = false,
     ): ReaderBlogSectionUiState {
         return ReaderBlogSectionUiState(
             postId = post.postId,
@@ -256,6 +331,27 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 R.dimen.avatar_sz_medium
             ),
             blogSectionClickData = buildOnBlogSectionClicked(onBlogSectionClicked, postListType)
+        )
+    }
+
+    private fun buildCompactBlogSection(
+        post: ReaderPost,
+        onBlogSectionClicked: (Long, Long) -> Unit,
+        isP2Post: Boolean = false,
+    ): ReaderPostNewUiState.CompactBlogSectionData {
+        return ReaderPostNewUiState.CompactBlogSectionData(
+            postId = post.postId,
+            blogId = post.blogId,
+            blogName = buildBlogName(post, isP2Post),
+            dateLine = buildDateLine(post),
+            avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
+            isAuthorAvatarVisible = isP2Post,
+            blavatarType = SiteUtils.getSiteImageType(isP2Post, CIRCULAR),
+            authorAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
+                post.postAvatar,
+                R.dimen.avatar_sz_medium
+            ),
+            onClicked = onBlogSectionClicked,
         )
     }
 
