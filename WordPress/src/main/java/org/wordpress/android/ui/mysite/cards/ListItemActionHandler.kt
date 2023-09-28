@@ -22,16 +22,10 @@ class ListItemActionHandler @Inject constructor(
             ListItemAction.SCAN -> SiteNavigationAction.OpenScan(selectedSite)
             ListItemAction.PLAN -> SiteNavigationAction.OpenPlan(selectedSite)
             ListItemAction.POSTS -> SiteNavigationAction.OpenPosts(selectedSite)
-            ListItemAction.PAGES -> {
-                SiteNavigationAction.OpenPages(selectedSite)
-            }
-
+            ListItemAction.PAGES -> SiteNavigationAction.OpenPages(selectedSite)
             ListItemAction.ADMIN -> SiteNavigationAction.OpenAdmin(selectedSite)
             ListItemAction.PEOPLE -> SiteNavigationAction.OpenPeople(selectedSite)
-            ListItemAction.SHARING -> {
-                SiteNavigationAction.OpenSharing(selectedSite)
-            }
-
+            ListItemAction.SHARING -> SiteNavigationAction.OpenSharing(selectedSite)
             ListItemAction.DOMAINS -> SiteNavigationAction.OpenDomains(selectedSite)
             ListItemAction.ME -> SiteNavigationAction.OpenMeScreen
             ListItemAction.SITE_SETTINGS -> SiteNavigationAction.OpenSiteSettings(selectedSite)
