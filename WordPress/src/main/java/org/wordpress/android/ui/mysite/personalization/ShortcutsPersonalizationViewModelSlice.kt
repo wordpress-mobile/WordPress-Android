@@ -37,7 +37,7 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
     val uiState: StateFlow<ShortcutsState> = _uiState
 
     fun start(site: SiteModel) {
-        _uiState.value = convertToShortCutsState(
+        convertToShortCutsState(
             items = siteItemsBuilder.build(
                 MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
                     site = site,
@@ -54,17 +54,22 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
         updateSiteItemsForJetpackCapabilities(site)
     }
 
-    private fun convertToShortCutsState(items: List<MySiteCardAndItem>, siteId: Long): ShortcutsState {
+    private fun convertToShortCutsState(items: List<MySiteCardAndItem>, siteId: Long) {
         val listItems = items.filterIsInstance(MySiteCardAndItem.Item.ListItem::class.java)
         val shortcuts = listItems.map { listItem ->
             ShortcutState(
                 icon = listItem.primaryIcon,
                 label = listItem.primaryText as UiString.UiStringRes,
                 disableTint = listItem.disablePrimaryIconTint,
-                isActive = isActiveShortcut(listItem.listItemAction, siteId)
+                isActive = isActiveShortcut(listItem.listItemAction, siteId),
+                listItemAction = listItem.listItemAction
             )
         }
-        return ShortcutsState(
+        groupByActiveAndInactiveShortcuts(shortcuts)
+    }
+
+    private fun groupByActiveAndInactiveShortcuts(shortcuts: List<ShortcutState>) {
+        _uiState.value = ShortcutsState(
             activeShortCuts = shortcuts.filter { it.isActive },
             inactiveShortCuts = shortcuts.filter { !it.isActive }
         )
@@ -73,7 +78,7 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
     private fun updateSiteItemsForJetpackCapabilities(site: SiteModel) {
         scope.launch(bgDispatcher) {
             jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
-                _uiState.value = convertToShortCutsState(
+                convertToShortCutsState(
                     items = siteItemsBuilder.build(
                         MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
                             site = site,
@@ -102,16 +107,75 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
     // Note: More item is not a list item and hence the check is dropped here, it will be shown as a quick link always
     private fun isActiveShortcut(listItemAction: ListItemAction, siteId: Long): Boolean {
         return when (listItemAction) {
-            ListItemAction.POSTS, ListItemAction.PAGES, ListItemAction.STATS -> {
+            in defaultShortcuts() -> {
                 appPrefsWrapper.getShouldShowDefaultQuickLink(
                     listItemAction.toString(), siteId
                 )
             }
+
             else -> {
                 appPrefsWrapper.getShouldShowSiteItemAsQuickLink(
-                    listItemAction.toString(), siteId)
+                    listItemAction.toString(), siteId
+                )
             }
         }
+    }
+
+    private fun defaultShortcuts(): List<ListItemAction> {
+        return listOf(
+            ListItemAction.POSTS,
+            ListItemAction.PAGES,
+            ListItemAction.STATS
+        )
+    }
+
+    fun removeShortcut(shortcutState: ShortcutState, siteId: Long) {
+        scope.launch(bgDispatcher) {
+            if (shortcutState.listItemAction in defaultShortcuts())
+                updateVisibilityOfDefaultShortcut(shortcutState.listItemAction, siteId, false)
+            else updateVisibilityOfListItem(shortcutState.listItemAction, siteId, false)
+            updateUiState(shortcutState, isActive = false)
+        }
+    }
+
+    fun addShortcut(shortcutState: ShortcutState, siteId: Long) {
+        scope.launch(bgDispatcher) {
+            if (shortcutState.listItemAction in defaultShortcuts())
+                updateVisibilityOfDefaultShortcut(shortcutState.listItemAction, siteId, true)
+            else updateVisibilityOfListItem(shortcutState.listItemAction, siteId, true)
+            updateUiState(shortcutState, isActive = true)
+        }
+    }
+
+    private fun updateUiState(shortcutState: ShortcutState, isActive: Boolean) {
+        // is active means changed to active from inactive
+        val currentState = _uiState.value
+        val updatedState = shortcutState.copy(isActive = isActive)
+        val activeShortcuts = currentState.activeShortCuts.toMutableList()
+        val inactiveShortcuts = currentState.inactiveShortCuts.toMutableList()
+        if (isActive) {
+            inactiveShortcuts.remove(shortcutState)
+            activeShortcuts.add(updatedState)
+        } else {
+            activeShortcuts.remove(shortcutState)
+            inactiveShortcuts.add(updatedState)
+        }
+        _uiState.value = ShortcutsState(
+            activeShortCuts = activeShortcuts,
+            inactiveShortCuts = inactiveShortcuts
+        )
+    }
+
+    private fun updateVisibilityOfListItem(listItemAction: ListItemAction, siteId: Long, shouldShow: Boolean) {
+        appPrefsWrapper.setShouldShowSiteItemAsQuickLink(
+            listItemAction.toString(), siteId, shouldShow
+        )
+    }
+
+    private fun updateVisibilityOfDefaultShortcut(listItemAction: ListItemAction, siteId: Long, shouldShow: Boolean) {
+        appPrefsWrapper.setShouldShowDefaultQuickLink(
+            listItemAction.toString(), siteId, shouldShow
+        )
     }
 }
 
