@@ -85,7 +85,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         override val activeQuickStartItem: Boolean = false
     ) : MySiteCardAndItem(type, activeQuickStartItem) {
         data class QuickLinkRibbon(
-            val quickLinkRibbonItems: List<QuickLinkRibbonItem>
+            val quickLinkRibbonItems: List<QuickLinkRibbonItem>,
             val showMoreFocusPoint : Boolean = false
         ) : Card(
             QUICK_LINK_RIBBON,
