@@ -13,6 +13,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import kotlinx.coroutines.launch
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
 import javax.inject.Inject
 import javax.inject.Named
@@ -21,7 +23,8 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val siteItemsBuilder: SiteItemsBuilder,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
-    private val blazeFeatureUtils: BlazeFeatureUtils
+    private val blazeFeatureUtils: BlazeFeatureUtils,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) {
     lateinit var scope: CoroutineScope
 
@@ -45,18 +48,20 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
                     onClick = { },
                     isBlazeEligible = isSiteBlazeEligible(site)
                 )
-            )
+            ),
+            site.siteId
         )
         updateSiteItemsForJetpackCapabilities(site)
     }
 
-    private fun convertToShortCutsState(items: List<MySiteCardAndItem>): List<ShortcutsState> {
+    private fun convertToShortCutsState(items: List<MySiteCardAndItem>, siteId: Long): List<ShortcutsState> {
         val listItems = items.filterIsInstance(MySiteCardAndItem.Item.ListItem::class.java)
         return listItems.map { listItem ->
             ShortcutsState(
                 icon = listItem.primaryIcon,
                 label = listItem.primaryText as UiString.UiStringRes,
-                disableTint = listItem.disablePrimaryIconTint
+                disableTint = listItem.disablePrimaryIconTint,
+                isActive = isActiveShortcut(listItem.listItemAction, siteId)
             )
         }
     }
@@ -75,7 +80,8 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
                             onClick = { },
                             isBlazeEligible = isSiteBlazeEligible(site)
                         )
-                    )
+                    ),
+                    siteId = site.siteId
                 )
             } // end collect
         }
@@ -87,6 +93,21 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
     fun onCleared() {
         this.scope.cancel()
         jetpackCapabilitiesUseCase.clear()
+    }
+
+    // Note: More item is not a list item and hence the check is dropped here, it will be shown as a quick link always
+    private fun isActiveShortcut(listItemAction: ListItemAction, siteId: Long): Boolean {
+        return when (listItemAction) {
+            ListItemAction.POSTS, ListItemAction.PAGES, ListItemAction.STATS -> {
+                appPrefsWrapper.getShouldShowDefaultQuickLink(
+                    listItemAction.toString(), siteId
+                )
+            }
+            else -> {
+                appPrefsWrapper.getShouldShowSiteItemAsQuickLink(
+                    listItemAction.toString(), siteId)
+            }
+        }
     }
 }
 
