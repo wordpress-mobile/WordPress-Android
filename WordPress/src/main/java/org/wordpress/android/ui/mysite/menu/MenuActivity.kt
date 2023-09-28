@@ -74,7 +74,6 @@ class MenuActivity : ComponentActivity() {
         viewModel.navigation.observe(this) { handleNavigationAction(it.getContentIfNotHandled()) }
     }
 
-
     @Suppress("ComplexMethod", "LongMethod")
     private fun handleNavigationAction(action: SiteNavigationAction?) {
         when (action) {
@@ -144,182 +143,182 @@ class MenuActivity : ComponentActivity() {
             }
         }
     }
+}
 
-    @Composable
-    fun MySiteListItemHeader(headerItem: MySiteCardAndItem.Item.CategoryHeaderItem) {
-        val title = when (headerItem.title) {
-            is UiString.UiStringRes -> stringResource(id = headerItem.title.stringRes)
-            is UiString.UiStringText -> headerItem.title.text.toString()
-            is UiString.UiStringPluralRes -> TODO()
-            is UiString.UiStringResWithParams -> TODO()
-        }
+@Composable
+fun MySiteListItemHeader(headerItem: MySiteCardAndItem.Item.CategoryHeaderItem) {
+    val title = when (headerItem.title) {
+        is UiString.UiStringRes -> stringResource(id = headerItem.title.stringRes)
+        is UiString.UiStringText -> headerItem.title.text.toString()
+        is UiString.UiStringPluralRes -> TODO()
+        is UiString.UiStringResWithParams -> TODO()
+    }
+    Text(
+        modifier = Modifier.padding(8.dp),
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+        text = title)
+}
+
+@Composable
+fun MySiteListItemEmptyHeader() {
+    Spacer(modifier = Modifier.height(4.dp))
+}
+
+@Composable
+fun MySiteListItem(item: MySiteCardAndItem.Item.ListItem) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentSize()
+            .padding(vertical = 8.dp, horizontal = 8.dp)
+            .clickable { item.onClick.click() },
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Image(
+            painter = painterResource(id = item.primaryIcon),
+            contentDescription = null, // Add appropriate content description
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .size(24.dp)
+                .padding(end = 8.dp),
+            colorFilter =
+            if (item.disablePrimaryIconTint) null else ColorFilter.tint(MaterialTheme.colors.onSurface)
+        )
+
         Text(
-            modifier = Modifier.padding(8.dp),
-            fontSize = 14.sp,
+            text = stringResource(id = (item.primaryText as UiString.UiStringRes).stringRes),
+            fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
-            text = title)
-    }
-
-    @Composable
-    fun MySiteListItemEmptyHeader() {
-        Spacer(modifier = Modifier.height(4.dp))
-    }
-
-    @Composable
-    fun MySiteListItem(item: MySiteCardAndItem.Item.ListItem) {
-        Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentSize()
-                .padding(vertical = 8.dp, horizontal = 8.dp)
-                .clickable { item.onClick.click() },
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Image(
-                painter = painterResource(id = item.primaryIcon),
-                contentDescription = null, // Add appropriate content description
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .size(24.dp)
-                    .padding(end = 8.dp),
-                colorFilter =
-                    if (item.disablePrimaryIconTint) null else ColorFilter.tint(MaterialTheme.colors.onSurface)
-            )
+                .weight(1f)
+                .padding(end = 8.dp),
+        )
+        Spacer(modifier = Modifier.height(4.dp))
 
+        // todo: eventually we can take uiStringRes out of the state, but for now it's shared, so leave it
+        if (item.secondaryText != null) {
+            val secondaryStringResourceText = when (item.secondaryText) {
+                is UiString.UiStringRes -> stringResource(id = item.secondaryText.stringRes)
+                is UiString.UiStringText -> item.secondaryText.text.toString()
+                is UiString.UiStringPluralRes -> TODO()
+                is UiString.UiStringResWithParams -> TODO()
+            }
             Text(
-                text = stringResource(id = (item.primaryText as UiString.UiStringRes).stringRes),
-                fontSize = 16.sp,
+                text = secondaryStringResourceText,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 8.dp),
             )
-            Spacer(modifier = Modifier.height(4.dp))
+        }
 
-            // todo: eventually we can take uiStringRes out of the state, but for now it's shared, so leave it
-            if (item.secondaryText != null) {
-                val secondaryStringResourceText = when (item.secondaryText) {
-                    is UiString.UiStringRes -> stringResource(id = item.secondaryText.stringRes)
-                    is UiString.UiStringText -> item.secondaryText.text.toString()
-                    is UiString.UiStringPluralRes -> TODO()
-                    is UiString.UiStringResWithParams -> TODO()
-            }
-                Text(
-                    text = secondaryStringResourceText,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(end = 8.dp),
-                )
-            }
+        if (item.secondaryIcon != null) {
+            Image(
+                painter = painterResource(id = item.secondaryIcon),
+                contentDescription = null, // Add appropriate content description
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(end = 8.dp),
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface)
+            )
+        }
 
-            if (item.secondaryIcon != null) {
-                Image(
-                    painter = painterResource(id = item.secondaryIcon),
-                    contentDescription = null, // Add appropriate content description
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface)
-                )
-            }
-
-            if (item.showFocusPoint) {
-                AndroidView(
-                    factory = { context ->
-                        val view = ComposeView(context)
-                        view.setContent {
-                            CustomXMLWidgetView()
-                        }
-                        view
-                    },
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
+        if (item.showFocusPoint) {
+            AndroidView(
+                factory = { context ->
+                    val view = ComposeView(context)
+                    view.setContent {
+                        CustomXMLWidgetView()
+                    }
+                    view
+                },
+                modifier = Modifier.padding(16.dp)
+            )
         }
     }
-
-    @Composable
-    fun CustomXMLWidgetView() {
-        // Load the custom XML widget using AndroidView
-        AndroidView(
-            factory = { context ->
-                // Inflate the custom XML layout
-                val inflater = LayoutInflater.from(context)
-                val parent: ViewGroup? = null
-                val view = inflater.inflate(R.layout.quick_start_focus_point, parent, false)
-                view
-            },
-            modifier = Modifier.wrapContentSize(Alignment.Center)
-        )
-    }
-
-    @Preview
-    @Composable
-    fun MySiteListItemPreviewBase() {
-        val onClick = remember { {} }
-        MySiteListItem(
-            MySiteCardAndItem.Item.ListItem(
-                primaryIcon = R.drawable.ic_posts_white_24dp,
-                primaryText = UiString.UiStringText("Blog Posts"),
-                secondaryIcon = null,
-                secondaryText = null,
-                showFocusPoint = false,
-                onClick = ListItemInteraction.create { onClick() },
-                listItemAction = ListItemAction.POSTS)
-            )
-    }
-
-    @Preview
-    @Composable
-    fun MySiteListItemPreviewWithFocusPoint() {
-        val onClick = remember { {} }
-        MySiteListItem(
-            MySiteCardAndItem.Item.ListItem(
-                primaryIcon = R.drawable.ic_posts_white_24dp,
-                primaryText = UiString.UiStringText("Blog Posts"),
-                secondaryIcon = null,
-                secondaryText = null,
-                showFocusPoint = true,
-                onClick = ListItemInteraction.create { onClick() },
-                listItemAction = ListItemAction.POSTS)
-        )
-    }
-
-    @Preview
-    @Composable
-    fun MySiteListItemPreviewWithSecondaryText() {
-        val onClick = remember { {} }
-        MySiteListItem(
-            MySiteCardAndItem.Item.ListItem(
-                primaryIcon = R.drawable.ic_posts_white_24dp,
-                primaryText = UiString.UiStringText("Plans"),
-                secondaryIcon = null,
-                secondaryText = UiString.UiStringText("Basic"),
-                showFocusPoint = false,
-                onClick = ListItemInteraction.create { onClick() },
-                listItemAction = ListItemAction.PLAN)
-        )
-    }
-
-    @Preview
-    @Composable
-    fun MySiteListItemPreviewWithSecondaryImage() {
-        val onClick = remember { {} }
-        MySiteListItem(
-            MySiteCardAndItem.Item.ListItem(
-                primaryIcon = R.drawable.ic_posts_white_24dp,
-                primaryText = UiString.UiStringText("Plans"),
-                secondaryIcon = R.drawable.ic_story_icon_24dp,
-                secondaryText = null,
-                showFocusPoint = false,
-                onClick = ListItemInteraction.create { onClick() },
-                listItemAction = ListItemAction.PLAN)
-        )
-    }
 }
+@Composable
+fun CustomXMLWidgetView() {
+    // Load the custom XML widget using AndroidView
+    AndroidView(
+        factory = { context ->
+            // Inflate the custom XML layout
+            val inflater = LayoutInflater.from(context)
+            val parent: ViewGroup? = null
+            val view = inflater.inflate(R.layout.quick_start_focus_point, parent, false)
+            view
+        },
+        modifier = Modifier.wrapContentSize(Alignment.Center)
+    )
+}
+
+@Preview
+@Composable
+fun MySiteListItemPreviewBase() {
+    val onClick = remember { {} }
+    MySiteListItem(
+        MySiteCardAndItem.Item.ListItem(
+            primaryIcon = R.drawable.ic_posts_white_24dp,
+            primaryText = UiString.UiStringText("Blog Posts"),
+            secondaryIcon = null,
+            secondaryText = null,
+            showFocusPoint = false,
+            onClick = ListItemInteraction.create { onClick() },
+            listItemAction = ListItemAction.POSTS)
+    )
+}
+
+@Preview
+@Composable
+fun MySiteListItemPreviewWithFocusPoint() {
+    val onClick = remember { {} }
+    MySiteListItem(
+        MySiteCardAndItem.Item.ListItem(
+            primaryIcon = R.drawable.ic_posts_white_24dp,
+            primaryText = UiString.UiStringText("Blog Posts"),
+            secondaryIcon = null,
+            secondaryText = null,
+            showFocusPoint = true,
+            onClick = ListItemInteraction.create { onClick() },
+            listItemAction = ListItemAction.POSTS)
+    )
+}
+
+@Preview
+@Composable
+fun MySiteListItemPreviewWithSecondaryText() {
+    val onClick = remember { {} }
+    MySiteListItem(
+        MySiteCardAndItem.Item.ListItem(
+            primaryIcon = R.drawable.ic_posts_white_24dp,
+            primaryText = UiString.UiStringText("Plans"),
+            secondaryIcon = null,
+            secondaryText = UiString.UiStringText("Basic"),
+            showFocusPoint = false,
+            onClick = ListItemInteraction.create { onClick() },
+            listItemAction = ListItemAction.PLAN)
+    )
+}
+
+@Preview
+@Composable
+fun MySiteListItemPreviewWithSecondaryImage() {
+    val onClick = remember { {} }
+    MySiteListItem(
+        MySiteCardAndItem.Item.ListItem(
+            primaryIcon = R.drawable.ic_posts_white_24dp,
+            primaryText = UiString.UiStringText("Plans"),
+            secondaryIcon = R.drawable.ic_story_icon_24dp,
+            secondaryText = null,
+            showFocusPoint = false,
+            onClick = ListItemInteraction.create { onClick() },
+            listItemAction = ListItemAction.PLAN)
+    )
+}
+
