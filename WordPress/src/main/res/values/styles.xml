@@ -1668,7 +1668,7 @@
         <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
 
-    <style name="MySiteQuickLinkRibbon" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+    <style name="MySiteQuickLinkItem" parent="Widget.MaterialComponents.Button.TextButton.Icon">
         <item name="iconSize">@dimen/quick_link_ribbon_icon_size</item>
         <item name="iconTint">?attr/wpColorOnSurfaceMedium</item>
         <item name="iconPadding">@dimen/quick_link_ribbon_icon_padding</item>

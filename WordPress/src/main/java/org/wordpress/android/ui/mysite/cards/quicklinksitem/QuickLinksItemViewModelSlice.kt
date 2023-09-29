@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.quicklinksribbon
+package org.wordpress.android.ui.mysite.cards.quicklinksitem
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -50,8 +50,8 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage
 
-    private val _uiState = MutableLiveData<MySiteCardAndItem.Card.QuickLinkRibbon>()
-    val uiState: LiveData<MySiteCardAndItem.Card.QuickLinkRibbon> = _uiState
+    private val _uiState = MutableLiveData<MySiteCardAndItem.Card.QuickLinksItem>()
+    val uiState: LiveData<MySiteCardAndItem.Card.QuickLinksItem> = _uiState
 
     fun start() {
         buildQuickLinks()
@@ -89,12 +89,12 @@ class QuickLinksItemViewModelSlice @Inject constructor(
 
     private fun convertToQuickLinkRibbonItem(
         listItems: List<MySiteCardAndItem>,
-    ): MySiteCardAndItem.Card.QuickLinkRibbon {
+    ): MySiteCardAndItem.Card.QuickLinksItem {
         val siteId = selectedSiteRepository.getSelectedSite()!!.siteId
         val activeListItems = listItems.filterIsInstance(MySiteCardAndItem.Item.ListItem::class.java)
             .filter { isActiveQuickLink(it.listItemAction, siteId = siteId) }
         val activeQuickLinks = activeListItems.map { listItem ->
-            MySiteCardAndItem.Card.QuickLinkRibbon.QuickLinkRibbonItem(
+            MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem(
                 icon = listItem.primaryIcon,
                 disableTint = listItem.disablePrimaryIconTint,
                 label = (listItem.primaryText as UiString.UiStringRes),
@@ -102,7 +102,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                 listItemAction = listItem.listItemAction,
             )
         }
-        val moreQuickLink = MySiteCardAndItem.Card.QuickLinkRibbon.QuickLinkRibbonItem(
+        val moreQuickLink = MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem(
             icon = R.drawable.ic_more_horiz_white_24dp,
             label = UiString.UiStringRes(R.string.more),
             onClick = ListItemInteraction.create(
@@ -111,8 +111,8 @@ class QuickLinksItemViewModelSlice @Inject constructor(
             ),
             listItemAction = ListItemAction.MORE
         )
-        return MySiteCardAndItem.Card.QuickLinkRibbon(
-            quickLinkRibbonItems = activeQuickLinks + moreQuickLink
+        return MySiteCardAndItem.Card.QuickLinksItem(
+            quickLinkItems = activeQuickLinks + moreQuickLink
         )
     }
 
@@ -160,15 +160,15 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     }
 
     fun updateToShowMoreFocusPointIfNeeded(
-        quickLinks: MySiteCardAndItem.Card.QuickLinkRibbon,
+        quickLinks: MySiteCardAndItem.Card.QuickLinksItem,
         activeTask: QuickStartStore.QuickStartTask
-    ): MySiteCardAndItem.Card.QuickLinkRibbon {
-        val updatedQuickLinks = if (shouldShowMoreFocusPoint(quickLinks.quickLinkRibbonItems, activeTask)) {
-            val quickLinkItems = quickLinks.quickLinkRibbonItems.toMutableList()
+    ): MySiteCardAndItem.Card.QuickLinksItem {
+        val updatedQuickLinks = if (shouldShowMoreFocusPoint(quickLinks.quickLinkItems, activeTask)) {
+            val quickLinkItems = quickLinks.quickLinkItems.toMutableList()
             val lastItem = quickLinkItems.last().copy(showFocusPoint = true)
             quickLinkItems.removeLast()
             quickLinkItems.add(lastItem)
-            quickLinks.copy(quickLinkRibbonItems = quickLinkItems, showMoreFocusPoint = true)
+            quickLinks.copy(quickLinkItems = quickLinkItems, showMoreFocusPoint = true)
         } else {
             quickLinks
         }
@@ -176,7 +176,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     }
 
     private fun shouldShowMoreFocusPoint(
-        activeShortcuts: List<MySiteCardAndItem.Card.QuickLinkRibbon.QuickLinkRibbonItem>,
+        activeShortcuts: List<MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem>,
         activeTask: QuickStartStore.QuickStartTask?
     ): Boolean {
         if (activeTask == null) return false

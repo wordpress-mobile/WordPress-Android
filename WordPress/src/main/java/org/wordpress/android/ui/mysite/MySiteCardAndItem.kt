@@ -84,14 +84,14 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         override val type: Type,
         override val activeQuickStartItem: Boolean = false
     ) : MySiteCardAndItem(type, activeQuickStartItem) {
-        data class QuickLinkRibbon(
-            val quickLinkRibbonItems: List<QuickLinkRibbonItem>,
+        data class QuickLinksItem(
+            val quickLinkItems: List<QuickLinkItem>,
             val showMoreFocusPoint : Boolean = false
         ) : Card(
             QUICK_LINK_RIBBON,
             activeQuickStartItem = showMoreFocusPoint
         ) {
-            data class QuickLinkRibbonItem(
+            data class QuickLinkItem(
                 val label: UiString.UiStringRes,
                 @DrawableRes val icon: Int,
                 val disableTint: Boolean = false,

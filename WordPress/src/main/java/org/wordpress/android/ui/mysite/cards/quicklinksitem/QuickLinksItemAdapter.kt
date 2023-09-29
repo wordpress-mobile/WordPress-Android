@@ -1,27 +1,27 @@
-package org.wordpress.android.ui.mysite.cards.quicklinksribbon
+package org.wordpress.android.ui.mysite.cards.quicklinksitem
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DiffUtil.Callback
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon.QuickLinkRibbonItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
 
-class QuickLinkRibbonItemAdapter : Adapter<QuickLinkRibbonItemViewHolder>() {
-    private val items = mutableListOf<QuickLinkRibbonItem>()
+class QuickLinksItemAdapter : Adapter<QuickLinksItemViewHolder>() {
+    private val items = mutableListOf<QuickLinkItem>()
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): QuickLinkRibbonItemViewHolder {
-        return QuickLinkRibbonItemViewHolder(parent)
+    ): QuickLinksItemViewHolder {
+        return QuickLinksItemViewHolder(parent)
     }
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: QuickLinkRibbonItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: QuickLinksItemViewHolder, position: Int) {
         holder.onBind(items[position])
     }
 
-    fun update(newItems: List<QuickLinkRibbonItem>) {
+    fun update(newItems: List<QuickLinkItem>) {
         val diffResult = DiffUtil.calculateDiff(InterestDiffUtil(items, newItems))
         items.clear()
         items.addAll(newItems)
@@ -29,8 +29,8 @@ class QuickLinkRibbonItemAdapter : Adapter<QuickLinkRibbonItemViewHolder>() {
     }
 
     class InterestDiffUtil(
-        private val oldList: List<QuickLinkRibbonItem>,
-        private val newList: List<QuickLinkRibbonItem>
+        private val oldList: List<QuickLinkItem>,
+        private val newList: List<QuickLinkItem>
     ) : Callback() {
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val newItem = newList[newItemPosition]

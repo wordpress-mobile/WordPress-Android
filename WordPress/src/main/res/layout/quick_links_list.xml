@@ -14,7 +14,7 @@
         android:layout_height="wrap_content">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/quick_link_ribbon_item_list"
+            android:id="@+id/quick_links_item_list"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:clipToPadding="false"

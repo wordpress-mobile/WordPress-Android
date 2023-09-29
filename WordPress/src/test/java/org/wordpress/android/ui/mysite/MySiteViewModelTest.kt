@@ -90,7 +90,7 @@ import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallF
 import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlice
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinksItemViewModelSlice
+import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinksItemViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository

@@ -77,7 +77,7 @@ import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallF
 import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlice
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinksItemViewModelSlice
+import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinksItemViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -180,7 +180,7 @@ class MySiteViewModel @Inject constructor(
        as they're already built on site select. */
     private var isSiteSelected = false
 
-    val quickLinks: LiveData<MySiteCardAndItem.Card.QuickLinkRibbon> = merge(
+    val quickLinks: LiveData<MySiteCardAndItem.Card.QuickLinksItem> = merge(
         quickLinksItemViewModelSlice.uiState,
         quickStartRepository.activeTask
     ) { quickLinks, activeTask ->
@@ -333,7 +333,7 @@ class MySiteViewModel @Inject constructor(
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
         blazeCardUpdate: BlazeCardUpdate?,
-        quickLinks: MySiteCardAndItem.Card.QuickLinkRibbon? = null
+        quickLinks: MySiteCardAndItem.Card.QuickLinksItem? = null
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
             site,
@@ -388,7 +388,7 @@ class MySiteViewModel @Inject constructor(
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
         blazeCardUpdate: BlazeCardUpdate?,
-        quickLinks: MySiteCardAndItem.Card.QuickLinkRibbon?
+        quickLinks: MySiteCardAndItem.Card.QuickLinksItem?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = mySiteInfoItemBuilder.build(
             InfoItemBuilderParams(
