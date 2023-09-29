@@ -175,6 +175,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         return updatedQuickLinks
     }
 
+    @Suppress("ReturnCount")
     private fun shouldShowMoreFocusPoint(
         activeShortcuts: List<MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem>,
         activeTask: QuickStartStore.QuickStartTask?
