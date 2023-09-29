@@ -178,6 +178,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null

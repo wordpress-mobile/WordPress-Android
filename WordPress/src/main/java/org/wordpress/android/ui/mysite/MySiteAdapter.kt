@@ -5,13 +5,24 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.BlazeCampaignsCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.PromoteWithBlazeCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainTransferCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorWithinCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackSwitchMenu
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PersonalizeCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
@@ -36,7 +47,7 @@ import org.wordpress.android.ui.mysite.cards.jetpackfeature.SwitchToJetpackMenuC
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardViewHolder
 import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewHolder
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewHolder
-import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonViewHolder
+import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinkRibbonViewHolder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
 import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemEmptyViewHolder
 import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemViewHolder
@@ -47,17 +58,6 @@ import org.wordpress.android.ui.mysite.jetpackbadge.MySiteJetpackBadgeViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.BlazeCampaignsCardModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.PromoteWithBlazeCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainTransferCardModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorWithinCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
 
 @Suppress("LongParameterList")
 class MySiteAdapter(
@@ -127,7 +127,7 @@ class MySiteAdapter(
     @Suppress("ComplexMethod")
     override fun onBindViewHolder(holder: MySiteCardAndItemViewHolder<*>, position: Int) {
         when (holder) {
-            is QuickLinkRibbonViewHolder -> holder.bind(getItem(position) as QuickLinkRibbon)
+            is QuickLinkRibbonViewHolder -> holder.bind(getItem(position) as QuickLinksItem)
             is DomainRegistrationViewHolder -> holder.bind(getItem(position) as DomainRegistrationCard)
             is QuickStartCardViewHolder -> holder.bind(getItem(position) as QuickStartCard)
             is MySiteInfoItemViewHolder -> holder.bind(getItem(position) as InfoItem)

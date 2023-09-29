@@ -7,7 +7,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/quick_link_item"
-        style="@style/MySiteQuickLinkRibbon"
+        style="@style/MySiteQuickLinkItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="@string/my_site_btn_site_pages"

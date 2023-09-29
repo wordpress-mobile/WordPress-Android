@@ -12,7 +12,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 
 @ExperimentalCoroutinesApi
 class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
@@ -30,7 +29,7 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
     fun `given onResume was called in dashboard, when dashboard cards are received with prompts card, then track once`() =
         test {
             launch {
-                helper.onResume(MySiteTabType.DASHBOARD)
+                helper.onResume()
 
                 // with prompt card (transient state)
                 helper.onDashboardCardsUpdated(
@@ -60,7 +59,7 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
     fun `given onResume was called in dashboard, when dashboard cards are received without prompts card, then don't track`() =
         test {
             launch {
-                helper.onResume(MySiteTabType.DASHBOARD)
+                helper.onResume()
 
                 val bloggingPromptCards = mock<List<MySiteCardAndItem.Card.BloggingPromptCard>>()
                 // with prompt card (transient state)
@@ -109,7 +108,7 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
 
                 advanceUntilIdle()
 
-                helper.onResume(MySiteTabType.DASHBOARD)
+                helper.onResume()
 
                 verify(bloggingPromptsCardAnalyticsTracker).trackMySiteCardViewed()
 
@@ -140,49 +139,7 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
 
                 advanceUntilIdle()
 
-                helper.onResume(MySiteTabType.DASHBOARD)
-
-                verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed()
-
-                // need to cancel this internal job to finish the test
-                cancel()
-            }
-        }
-
-    @Test
-    fun `given onResume was called in menu, when dashboard cards are received with prompts card, then don't track`() =
-        test {
-            launch {
-                helper.onResume(MySiteTabType.SITE_MENU)
-
-                // with prompt card (final state)
-                helper.onDashboardCardsUpdated(
-                    this,
-                    mock()
-                )
-
-                advanceUntilIdle()
-
-                verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed()
-
-                // need to cancel this internal job to finish the test
-                cancel()
-            }
-        }
-
-    @Test
-    fun `given dashboard cards were received with prompts card, when onResume is called in menu, then don't track`() =
-        test {
-            launch {
-                // with prompt card (final state)
-                helper.onDashboardCardsUpdated(
-                    this,
-                   mock()
-                )
-
-                advanceUntilIdle()
-
-                helper.onResume(MySiteTabType.SITE_MENU)
+                helper.onResume()
 
                 verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed()
 
@@ -207,7 +164,7 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
             helper.onSiteChanged(1)
 
             // screen resumed
-            helper.onResume(MySiteTabType.DASHBOARD)
+            helper.onResume()
 
             // dashboard cards updated with prompt card
             helper.onDashboardCardsUpdated(
@@ -242,7 +199,7 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
             helper.onSiteChanged(1)
 
             // screen resumed
-            helper.onResume(MySiteTabType.DASHBOARD)
+            helper.onResume()
 
             // dashboard cards updated without prompt card
             helper.onDashboardCardsUpdated(
