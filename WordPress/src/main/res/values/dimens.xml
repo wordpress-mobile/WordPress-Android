@@ -710,9 +710,8 @@
     <dimen name="blogging_prompt_card_compact_help_button_size">16dp</dimen>
 
     <!-- quick link ribbon -->
-    <dimen name="quick_link_ribbon_padding_start">12dp</dimen>
-    <dimen name="quick_link_ribbon_padding_end">16dp</dimen>
-    <dimen name="quick_link_ribbon_padding_vertical">8dp</dimen>
+    <dimen name="quick_link_ribbon_margin_horizontal">16dp</dimen>
+    <dimen name="quick_link_ribbon_margin_vertical">8dp</dimen>
     <dimen name="quick_link_ribbon_icon_size">24dp</dimen>
     <dimen name="quick_link_ribbon_text_size">16sp</dimen>
     <dimen name="quick_link_ribbon_corner_radius">10dp</dimen>

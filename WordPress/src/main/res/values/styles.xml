@@ -1673,10 +1673,6 @@
         <item name="iconTint">?attr/wpColorOnSurfaceMedium</item>
         <item name="iconPadding">@dimen/quick_link_ribbon_icon_padding</item>
         <item name="cornerRadius">@dimen/quick_link_ribbon_corner_radius</item>
-        <item name="android:paddingEnd">@dimen/quick_link_ribbon_padding_end</item>
-        <item name="android:paddingStart">@dimen/quick_link_ribbon_padding_start</item>
-        <item name="android:paddingTop">@dimen/quick_link_ribbon_padding_vertical</item>
-        <item name="android:paddingBottom">@dimen/quick_link_ribbon_padding_vertical</item>
         <item name="android:fontFamily">san-serif</item>
         <item name="android:letterSpacing">0</item>
         <item name="android:textAllCaps">false</item>
