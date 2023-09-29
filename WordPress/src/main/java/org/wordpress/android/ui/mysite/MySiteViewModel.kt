@@ -642,13 +642,13 @@ class MySiteViewModel @Inject constructor(
         quickLinksItemViewModelSlice.onRefresh()
     }
 
-    fun onResume(currentTab: MySiteTabType) {
+    fun onResume() {
         mySiteSourceManager.onResume(isSiteSelected)
         isSiteSelected = false
         checkAndShowJetpackFullPluginInstallOnboarding()
         checkAndShowQuickStartNotice()
-        bloggingPromptCardViewModelSlice.onResume(currentTab)
-        dashboardCardPlansUtils.onResume(currentTab, uiModel.value?.state as? SiteSelected)
+        bloggingPromptCardViewModelSlice.onResume()
+        dashboardCardPlansUtils.onResume(uiModel.value?.state as? SiteSelected)
         quickLinksItemViewModelSlice.onResume()
     }
 
