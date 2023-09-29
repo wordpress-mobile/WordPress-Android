@@ -52,7 +52,6 @@ class ReaderPostNewViewHolder(
         // Featured image section
         updateFeaturedImage(state)
         uiHelpers.updateVisibility(imageVideoOverlay, state.videoOverlayVisibility)
-        uiHelpers.setTextOrHide(textPhotoTitle, state.photoTitle)
         uiHelpers.updateVisibility(thumbnailStrip, state.thumbnailStripSection != null)
         state.thumbnailStripSection?.let {
             thumbnailStrip.loadThumbnails(it.images, it.isPrivate, it.content)

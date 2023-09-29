@@ -74,7 +74,6 @@ sealed class ReaderCardUiState {
         val blogSection: CompactBlogSectionData,
         val title: UiString?,
         val excerpt: String?,
-        val photoTitle: String?,
         val featuredImageUrl: String?,
         val featuredImageCornerRadius: UiDimen,
         val fullVideoUrl: String?,

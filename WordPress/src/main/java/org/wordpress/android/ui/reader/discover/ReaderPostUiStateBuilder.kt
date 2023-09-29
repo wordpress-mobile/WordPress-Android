@@ -223,10 +223,9 @@ class ReaderPostUiStateBuilder @Inject constructor(
             feedId = post.feedId,
             isFollowed = post.isFollowedByCurrentUser,
             blogSection = buildCompactBlogSection(post, onPostHeaderViewClicked, post.isP2orA8C),
-            excerpt = buildExcerpt(post),
-            title = buildTitle(post),
+            title = buildTitle(post, forceForPhoto = true, allowEmptyTitle = true),
+            excerpt = buildExcerpt(post, forceForPhoto = true),
             photoFrameVisibility = buildPhotoFrameVisibility(post),
-            photoTitle = buildPhotoTitle(post),
             featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
             featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
             thumbnailStripSection = buildThumbnailStripUrls(post),
@@ -407,19 +406,17 @@ class ReaderPostUiStateBuilder @Inject constructor(
         (post.hasFeaturedVideo() || post.hasFeaturedImage()) &&
                 post.cardType != GALLERY
 
-    // TODO malinjir show title only when buildPhotoTitle == null
-    private fun buildTitle(post: ReaderPost): UiString? {
-        return if (post.cardType != PHOTO) {
+    private fun buildTitle(post: ReaderPost, forceForPhoto: Boolean = false, allowEmptyTitle: Boolean = false): UiString? {
+        return if (post.cardType != PHOTO || forceForPhoto) {
             post.takeIf { it.hasTitle() }?.title?.let { UiStringText(it) }
-                ?: UiStringRes(R.string.untitled_in_parentheses)
+                ?: UiStringRes(R.string.untitled_in_parentheses).takeUnless { allowEmptyTitle }
         } else {
             null
         }
     }
 
-    // TODO malinjir show excerpt only when buildPhotoTitle == null
-    private fun buildExcerpt(post: ReaderPost) =
-        post.takeIf { post.cardType != PHOTO && post.hasExcerpt() }?.excerpt
+    private fun buildExcerpt(post: ReaderPost, forceForPhoto: Boolean = false) =
+        post.takeIf { (post.cardType != PHOTO || forceForPhoto) && post.hasExcerpt() }?.excerpt
 
     private fun buildBlogName(post: ReaderPost, isP2Post: Boolean = false): UiString {
         val blogName = post.takeIf { it.hasBlogName() }?.blogName?.let { UiStringText(it) }

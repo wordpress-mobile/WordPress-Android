@@ -79,27 +79,6 @@
             app:layout_constraintTop_toTopOf="@id/image_featured"
             app:layout_constraintBottom_toBottomOf="@id/image_featured"
             tools:visibility="visible" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_photo_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:layout_marginStart="@dimen/margin_large"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAlignment="viewStart"
-            android:shadowColor="@color/neutral_70"
-            android:shadowDx="@dimen/reader_photo_title_shadow_offset"
-            android:shadowDy="@dimen/reader_photo_title_shadow_offset"
-            android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
-            android:textColor="?attr/colorOnPrimarySurface"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/image_featured"
-            tools:text="text_photo_title" />
         <!-- image section end -->
 
         <org.wordpress.android.ui.reader.views.ReaderThumbnailStrip
