@@ -252,6 +252,7 @@ class MySiteViewModel @Inject constructor(
     val state: LiveData<MySiteUiState> =
         selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
             isSiteSelected = true
+            quickLinksItemViewModelSlice.onSiteChanged()
             resetShownTrackers()
             val result = MediatorLiveData<SiteIdToState>()
             for (newSource in mySiteSourceManager.build(viewModelScope, siteLocalId)) {
@@ -294,7 +295,6 @@ class MySiteViewModel @Inject constructor(
                 } else {
                     buildNoSiteState()
                 }
-
                 bloggingPromptCardViewModelSlice.onSiteChanged(site?.id)
 
                 dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
