@@ -32,7 +32,8 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         val hasAccessToken = accountStore.hasAccessToken()
         val textTitle = post
             .takeIf { post.hasTitle() }
-            ?.title?.let { UiStringText(it) } ?: UiStringRes(R.string.reader_untitled_post)
+            ?.title?.let { UiStringText(it) }
+            ?: UiStringRes(R.string.reader_untitled_post).takeIf { !readerImprovementsFeatureConfig.isEnabled() }
 
         return ReaderPostDetailsHeaderUiState(
             title = textTitle,
