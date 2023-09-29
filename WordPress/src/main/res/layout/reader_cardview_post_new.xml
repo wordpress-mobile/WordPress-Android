@@ -57,7 +57,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/margin_medium"
             android:contentDescription="@null"
-            app:layout_constraintDimensionRatio="4:3"
+            app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_excerpt"
