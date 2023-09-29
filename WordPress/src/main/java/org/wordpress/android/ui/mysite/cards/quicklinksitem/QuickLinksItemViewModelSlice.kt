@@ -176,8 +176,9 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     private fun isActiveTaskInMoreMenu(activeTask: QuickStartStore.QuickStartTask?): Boolean {
         return activeTask == QuickStartStore.QuickStartNewSiteTask.REVIEW_PAGES ||
                 activeTask == QuickStartStore.QuickStartNewSiteTask.CHECK_STATS ||
+                activeTask == QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING ||
                 activeTask == QuickStartStore.QuickStartExistingSiteTask.UPLOAD_MEDIA ||
-                activeTask == QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING
+                activeTask == QuickStartStore.QuickStartExistingSiteTask.CHECK_STATS
     }
 
     fun onSiteChanged() {
