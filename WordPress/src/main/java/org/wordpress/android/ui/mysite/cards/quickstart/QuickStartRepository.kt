@@ -38,7 +38,6 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -62,7 +61,6 @@ class QuickStartRepository
     private val contextProvider: ContextProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val quickStartTracker: QuickStartTracker,
-    quickStartForExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
 ) : CoroutineScope {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -78,7 +76,6 @@ class QuickStartRepository
     val onQuickStartMySitePrompts = _onQuickStartMySitePrompts as LiveData<Event<QuickStartMySitePrompts>>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
     val isQuickStartNoticeShown = _isQuickStartNoticeShown
-    val isQuickStartForExistingUsersV2FeatureEnabled = quickStartForExistingUsersV2FeatureConfig.isEnabled()
     val quickStartType: QuickStartType
         get() = selectedSiteRepository.getSelectedSite()?.let {
             val siteLocalId = it.id.toLong()
@@ -107,7 +104,6 @@ class QuickStartRepository
     }
 
     fun checkAndSetQuickStartType(isNewSite: Boolean) {
-        if (!isQuickStartForExistingUsersV2FeatureEnabled) return
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             val siteLocalId = selectedSite.id.toLong()
             val quickStartType = if (isNewSite) NewSiteQuickStartType else ExistingSiteQuickStartType
