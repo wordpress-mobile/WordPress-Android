@@ -6,7 +6,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
@@ -37,12 +36,11 @@ class QuickLinksItemViewModelSlice @Inject constructor(
 ) {
     lateinit var scope: CoroutineScope
 
-    lateinit var site: SiteModel
-
     fun initialization(scope: CoroutineScope) {
         this.scope = scope
-        this.site = selectedSiteRepository.getSelectedSite()!!
     }
+
+    fun site() = selectedSiteRepository.getSelectedSite()
 
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val navigation = _onNavigation
@@ -67,23 +65,25 @@ class QuickLinksItemViewModelSlice @Inject constructor(
 
     private fun buildQuickLinks() {
         scope.launch(bgDispatcher) {
-            jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
-                _uiState.postValue(
-                    convertToQuickLinkRibbonItem(
-                        siteItemsBuilder.build(
-                            MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
-                                site = site,
-                                enableFocusPoints = true,
-                                activeTask = null,
-                                onClick = this@QuickLinksItemViewModelSlice::onClick,
-                                isBlazeEligible = isSiteBlazeEligible(),
-                                backupAvailable = it.backup,
-                                scanAvailable = (it.scan && !site.isWPCom && !site.isWPComAtomic)
-                            )
-                        ),
+            site()?.let { site ->
+                jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
+                    _uiState.postValue(
+                        convertToQuickLinkRibbonItem(
+                            siteItemsBuilder.build(
+                                MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
+                                    site = site,
+                                    enableFocusPoints = true,
+                                    activeTask = null,
+                                    onClick = this@QuickLinksItemViewModelSlice::onClick,
+                                    isBlazeEligible = isSiteBlazeEligible(),
+                                    backupAvailable = it.backup,
+                                    scanAvailable = (it.scan && !site.isWPCom && !site.isWPComAtomic)
+                                )
+                            ),
+                        )
                     )
-                )
-            } // end collect
+                } // end collect
+            }
         }
     }
 
