@@ -201,4 +201,8 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                 activeTask == QuickStartStore.QuickStartExistingSiteTask.UPLOAD_MEDIA ||
                 activeTask == QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING
     }
+
+    fun onSiteChanged() {
+        buildQuickLinks()
+    }
 }
