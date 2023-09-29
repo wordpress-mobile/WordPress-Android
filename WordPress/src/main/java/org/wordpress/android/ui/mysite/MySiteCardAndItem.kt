@@ -95,7 +95,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 val label: UiString.UiStringRes,
                 @DrawableRes val icon: Int,
                 val onClick: ListItemInteraction,
-                val showFocusPoint: Boolean = false
+                val showFocusPoint: Boolean = false,
+                val listItemAction: ListItemAction
             )
         }
 
