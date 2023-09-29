@@ -1,3 +1,0 @@
-- The Social Link block includes an outline so you can see when it’s selected.
-- In the block editor, the app should no longer crash when you turn a nested Columns block into a Group block.
-- In the block inserter, you can now search for a block type without crashing the app.
