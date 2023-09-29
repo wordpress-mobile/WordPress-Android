@@ -406,7 +406,11 @@ class ReaderPostUiStateBuilder @Inject constructor(
         (post.hasFeaturedVideo() || post.hasFeaturedImage()) &&
                 post.cardType != GALLERY
 
-    private fun buildTitle(post: ReaderPost, forceForPhoto: Boolean = false, allowEmptyTitle: Boolean = false): UiString? {
+    private fun buildTitle(
+        post: ReaderPost,
+        forceForPhoto: Boolean = false,
+        allowEmptyTitle: Boolean = false
+    ): UiString? {
         return if (post.cardType != PHOTO || forceForPhoto) {
             post.takeIf { it.hasTitle() }?.title?.let { UiStringText(it) }
                 ?: UiStringRes(R.string.untitled_in_parentheses).takeUnless { allowEmptyTitle }

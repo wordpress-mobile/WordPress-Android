@@ -19,11 +19,11 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
-private const val welcomeBannerViewType: Int = 1
-private const val postViewType: Int = 2
-private const val interestViewType: Int = 3
-private const val recommendedBlogsViewType: Int = 4
-private const val postNewViewType: Int = 5
+private const val WELCOME_BANNER_VIEW_TYPE: Int = 1
+private const val POST_VIEW_TYPE: Int = 2
+private const val INTEREST_VIEW_TYPE: Int = 3
+private const val RECOMMENDED_BLOGS_VIEW_TYPE: Int = 4
+private const val POST_NEW_VIEW_TYPE: Int = 5
 
 class ReaderDiscoverAdapter(
     private val uiHelpers: UiHelpers,
@@ -34,11 +34,11 @@ class ReaderDiscoverAdapter(
     private val items = mutableListOf<ReaderCardUiState>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReaderViewHolder<*> {
         return when (viewType) {
-            welcomeBannerViewType -> WelcomeBannerViewHolder(parent)
-            postViewType -> ReaderPostViewHolder(uiHelpers, imageManager, readerTracker, parent)
-            postNewViewType -> ReaderPostNewViewHolder(uiHelpers, imageManager, readerTracker, parent)
-            interestViewType -> ReaderInterestsCardViewHolder(uiHelpers, parent)
-            recommendedBlogsViewType ->
+            WELCOME_BANNER_VIEW_TYPE -> WelcomeBannerViewHolder(parent)
+            POST_VIEW_TYPE -> ReaderPostViewHolder(uiHelpers, imageManager, readerTracker, parent)
+            POST_NEW_VIEW_TYPE -> ReaderPostNewViewHolder(uiHelpers, imageManager, readerTracker, parent)
+            INTEREST_VIEW_TYPE -> ReaderInterestsCardViewHolder(uiHelpers, parent)
+            RECOMMENDED_BLOGS_VIEW_TYPE ->
                 if (isReaderImprovementsEnabled) {
                     ReaderRecommendedBlogsCardNewViewHolder(
                         parent, imageManager
@@ -67,11 +67,11 @@ class ReaderDiscoverAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
-            is ReaderWelcomeBannerCardUiState -> welcomeBannerViewType
-            is ReaderPostUiState -> postViewType
-            is ReaderPostNewUiState -> postNewViewType
-            is ReaderInterestsCardUiState -> interestViewType
-            is ReaderRecommendedBlogsCardUiState -> recommendedBlogsViewType
+            is ReaderWelcomeBannerCardUiState -> WELCOME_BANNER_VIEW_TYPE
+            is ReaderPostUiState -> POST_VIEW_TYPE
+            is ReaderPostNewUiState -> POST_NEW_VIEW_TYPE
+            is ReaderInterestsCardUiState -> INTEREST_VIEW_TYPE
+            is ReaderRecommendedBlogsCardUiState -> RECOMMENDED_BLOGS_VIEW_TYPE
         }
     }
 
