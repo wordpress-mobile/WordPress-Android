@@ -94,6 +94,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             data class QuickLinkRibbonItem(
                 val label: UiString.UiStringRes,
                 @DrawableRes val icon: Int,
+                val disableTint: Boolean = false,
                 val onClick: ListItemInteraction,
                 val showFocusPoint: Boolean = false,
                 val listItemAction: ListItemAction

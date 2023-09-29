@@ -96,6 +96,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         val activeQuickLinks = activeListItems.map { listItem ->
             MySiteCardAndItem.Card.QuickLinkRibbon.QuickLinkRibbonItem(
                 icon = listItem.primaryIcon,
+                disableTint = listItem.disablePrimaryIconTint,
                 label = (listItem.primaryText as UiString.UiStringRes),
                 onClick = listItem.onClick,
                 listItemAction = listItem.listItemAction,
