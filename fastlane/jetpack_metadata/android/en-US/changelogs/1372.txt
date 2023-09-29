@@ -1,0 +1,3 @@
+- We changed the way alerts appear when you’re inserting media into blocks from a URL.
+- It’s easier to tell the difference between placeholder text and actual content in block-based themes.
+- My Site dashboard cards can be customized using the “Personalize Home Tab” button.

@@ -1,6 +1,0 @@
-23.2:
-- Ny chattbaserad supportkanal med servicerobot
-- Visa, lokalisera och ta bort Jetpack-betalväggsblocket
-- Markerad ytterkant för valt Sociala länkar-block
-- Vi har åtgärdat ett antal krascher som uppstod med blockredigeraren och blockinfogaren
-- Skapa supportärenden för fel som uppstår vid kontostängning

@@ -1,0 +1,4 @@
+23.3:
+- Bir URL'den bloklara ortam eklerken uyarıların görünme şeklini değiştirdik.
+- Ayrıca, blok tabanlı temalarda yer tutucu metin ile gerçek içerik arasındaki farkı anlamak da artık daha kolay.
+- Sitem panosu kartları, "Ana Sayfa Sekmesini Kişiselleştir" düğmesi kullanılarak özelleştirilebilir.
