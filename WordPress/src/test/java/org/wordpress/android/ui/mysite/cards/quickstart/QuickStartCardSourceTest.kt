@@ -38,7 +38,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -76,9 +75,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
 
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
-
-    @Mock
-    lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
 
     @Mock
     lateinit var quickStartTracker: QuickStartTracker

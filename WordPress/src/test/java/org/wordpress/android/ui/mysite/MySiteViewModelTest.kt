@@ -119,7 +119,6 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
-import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.publicdata.AppStatus
 import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.Event
@@ -185,9 +184,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
-
-    @Mock
-    lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
 
     @Mock
     lateinit var getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase
@@ -443,7 +439,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             cardsTracker,
             domainRegistrationCardShownTracker,
             buildConfigWrapper,
-            mySiteDashboardTabsFeatureConfig,
             jetpackBrandingUtils,
             appPrefsWrapper,
             quickStartTracker,
