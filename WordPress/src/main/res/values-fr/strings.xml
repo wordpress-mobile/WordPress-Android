@@ -15,13 +15,8 @@ Language: fr
     <string name="personalization_screen_blogging_prompts_card_title">Invites pour bloguer</string>
     <string name="personalization_screen_blaze_card_description">Faites la promotion d’un article et découvrez les campagnes en cours.</string>
     <string name="personalization_screen_scheduled_posts_card_description">Vos articles planifiés à venir.</string>
-    <string name="personalization_screen_scheduled_posts_card_title"> Articles planifiés</string>
     <string name="personalization_screen_draft_posts_card_description">Vos brouillons d’articles récents.</string>
-    <string name="personalization_screen_draft_posts_card_title"> Brouillons d’articles</string>
     <string name="personalization_screen_stats_card_description">Vues, visiteurs et mentions J’aime</string>
-    <string name="personalization_screen_footer_cards"> Le contenu des cartes peut varier en fonction de l’activité sur votre site.</string>
-    <string name="personalization_screen_description"> Ajouter ou masquer des cartes</string>
-    <string name="personalization_screen_title"> Personnaliser l’onglet Accueil</string>
     <string name="personalize_card_content_description">Appuyer pour personnaliser l’onglet Accueil</string>
     <string name="personalize_card_text">Personnaliser l’onglet Accueil</string>
     <string name="partial_media_access_prompt_change_settings">Modifier les réglages</string>
@@ -655,8 +650,6 @@ Language: fr
     <string name="gutenberg_native_tiled_gallery_settings">Réglages de la mosaïque d’images</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Ouvrir l’écran de sélection de la mise en page</string>
     <string name="gutenberg_native_gallery_style">Style de la galerie</string>
-    <string name="sharing_facebook_warning_positive_button">Aller sur le web</string>
-    <string name="sharing_facebook_warning_message">Vous pouvez connecter votre compte Facebook sur le site Web de WordPress.com. Lorsque vous avez terminé, revenez à l’application WordPress pour modifier vos paramètres de partage.</string>
     <string name="about_automattic_app_icon_description">Icône de l’application</string>
     <string name="about_automattic_back_icon_description">Icône Retour</string>
     <string name="about_automattic_logo_description">Logo Automattic</string>

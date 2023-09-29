@@ -1,4 +1,0 @@
-23.2:
-– Le bloc Réseaux sociaux inclut un aperçu afin que vous puissiez voir quand l’option est sélectionnée.
-– Dans l’éditeur de blocs, l’application ne devrait plus rencontrer d’incident lors de la transformation d’un bloc Colonnes imbriquées en bloc Groupe.
-– Dans l’outil d’insertion de bloc, vous pouvez désormais rechercher un type de bloc sans plantage de l’application.

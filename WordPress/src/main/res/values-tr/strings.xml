@@ -15,13 +15,8 @@ Language: tr
     <string name="personalization_screen_blogging_prompts_card_title">Blog talepleri</string>
     <string name="personalization_screen_blaze_card_description">Bir gönderiyi tanıtın ve mevcut kampanyaları görün.</string>
     <string name="personalization_screen_scheduled_posts_card_description">Yaklaşan zamanlanmış gönderileriniz.</string>
-    <string name="personalization_screen_scheduled_posts_card_title"> Zamanlanmış gönderiler</string>
     <string name="personalization_screen_draft_posts_card_description">En son taslak gönderileriniz.</string>
-    <string name="personalization_screen_draft_posts_card_title"> Taslak gönderiler</string>
     <string name="personalization_screen_stats_card_description">Görüntülemeler, Ziyaretçiler ve beğeniler</string>
-    <string name="personalization_screen_footer_cards"> Sitenizde olanlara göre kartlar farklı içerik gösterebilir.</string>
-    <string name="personalization_screen_description"> Kart ekle veya gizle</string>
-    <string name="personalization_screen_title"> Ana sayfa sekmesini kişiselleştir</string>
     <string name="personalize_card_content_description">Ana sayfa sekmenizi kişiselleştirmek için dokunun</string>
     <string name="personalize_card_text">Ana sayfa sekmenizi kişiselleştirin</string>
     <string name="partial_media_access_prompt_change_settings">Ayarları Değiştir</string>
@@ -656,8 +651,6 @@ Language: tr
     <string name="gutenberg_native_tiled_gallery_settings">Döşenmiş galeri ayarları</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Yerleşim seçim ekranına ilerler</string>
     <string name="gutenberg_native_gallery_style">Galeri biçimi</string>
-    <string name="sharing_facebook_warning_positive_button">Webe git</string>
-    <string name="sharing_facebook_warning_message">Facebook hesabınızı WordPress.com web sitesine bağlayabilirsiniz. Tamamladığınızda WordPress uygulamasına dönüp paylaşım ayarlarını değiştirin.</string>
     <string name="about_automattic_app_icon_description">Uygulama simgesi</string>
     <string name="about_automattic_back_icon_description">Geri simgesi</string>
     <string name="about_automattic_logo_description">Automattic logosu</string>

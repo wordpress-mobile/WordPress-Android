@@ -15,13 +15,8 @@ Language: ar
     <string name="personalization_screen_blogging_prompts_card_title">مطالبات التدوين</string>
     <string name="personalization_screen_blaze_card_description">روِّج لإحدى التدوينات واطلع على الحملات الحالية.</string>
     <string name="personalization_screen_scheduled_posts_card_description">تدويناتك المجدولة المقبلة.</string>
-    <string name="personalization_screen_scheduled_posts_card_title"> تدوينات مجدولة</string>
     <string name="personalization_screen_draft_posts_card_description">مسودات تدويناتك الأخيرة.</string>
-    <string name="personalization_screen_draft_posts_card_title"> إعداد مسودة للتدوينات</string>
     <string name="personalization_screen_stats_card_description">المشاهدات والزائرون والإعجابات</string>
-    <string name="personalization_screen_footer_cards"> قد تعرض البطاقات محتوى مختلفًا استنادًا إلى ما يحدث من خلال موقعك</string>
-    <string name="personalization_screen_description"> إضافة بطاقات أو إخفاؤها</string>
-    <string name="personalization_screen_title"> علامة تبويب تخصيص الصفحة الرئيسية</string>
     <string name="personalize_card_content_description">النقر على علامة تبويب تخصيص صفحتك الرئيسية</string>
     <string name="personalize_card_text">علامة تبويب تخصيص صفحتك الرئيسية</string>
     <string name="partial_media_access_prompt_change_settings">تغيير الإعدادات</string>
@@ -653,8 +648,6 @@ Language: ar
     <string name="gutenberg_native_tiled_gallery_settings">إعدادات المعرض المتجانب</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">ينتقل إلى شاشة اختيار التخطيط</string>
     <string name="gutenberg_native_gallery_style">نمط المعرض</string>
-    <string name="sharing_facebook_warning_positive_button">الانتقال إلى الويب</string>
-    <string name="sharing_facebook_warning_message">يمكنك ربط حسابك على فيسبوك على موقع ووردبريس.كوم على الويب. عند الانتهاء، ارجع إلى تطبيق ووردبريس لتغيير إعدادات المشاركة الخاصة بك.</string>
     <string name="about_automattic_app_icon_description">أيقونة التطبيق</string>
     <string name="about_automattic_back_icon_description">أيقونة الرجوع</string>
     <string name="about_automattic_logo_description">شعار شركة Automattic</string>

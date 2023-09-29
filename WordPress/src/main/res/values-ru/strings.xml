@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-20 10:06:02+0000
+Translation-Revision-Date: 2023-09-28 15:04:55+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.9
 Language: ru
 -->
 <resources>
+    <string name="sharing_connect_via_web_warning_positive_button">Переход на веб-сайт</string>
     <string name="my_site_dashboard_no_cards_message_description">Нажмите на кнопку персонализации, чтобы увидеть больше карточек.</string>
     <string name="my_site_dashboard_no_cards_message_title">Все карточки скрыты</string>
     <string name="personalization_screen_next_steps_card_description">Узнайте, как максимально эффективно использовать свой сайт с помощью приложения.</string>
@@ -15,13 +16,13 @@ Language: ru
     <string name="personalization_screen_blogging_prompts_card_title">Подсказки по ведению блога</string>
     <string name="personalization_screen_blaze_card_description">Продвиньте запись и посмотрите текущие кампании.</string>
     <string name="personalization_screen_scheduled_posts_card_description">Ваши запланированные к публикации записи.</string>
-    <string name="personalization_screen_scheduled_posts_card_title"> Запланированные записи</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Запланированные записи</string>
     <string name="personalization_screen_draft_posts_card_description">Ваши недавние черновики записей.</string>
-    <string name="personalization_screen_draft_posts_card_title"> Черновики записей</string>
+    <string name="personalization_screen_draft_posts_card_title">Черновики записей</string>
     <string name="personalization_screen_stats_card_description">Просмотры, посетители и отметки \"нравится\"</string>
-    <string name="personalization_screen_footer_cards"> На карточках может отображаться разное содержимое в зависимости от того, что происходит с вашим сайтом</string>
-    <string name="personalization_screen_description"> Добавление и скрытие карточек</string>
-    <string name="personalization_screen_title"> Настроить домашнюю вкладку</string>
+    <string name="personalization_screen_footer_cards">На карточках может отображаться разное содержимое в зависимости от того, что происходит с вашим сайтом</string>
+    <string name="personalization_screen_description">Добавление и скрытие карточек</string>
+    <string name="personalization_screen_title">Настроить домашнюю вкладку</string>
     <string name="personalize_card_content_description">Нажмите для настройки домашней вкладки</string>
     <string name="personalize_card_text">Настроить домашнюю вкладку</string>
     <string name="partial_media_access_prompt_change_settings">Изменить настройки</string>
@@ -656,8 +657,7 @@ Language: ru
     <string name="gutenberg_native_tiled_gallery_settings">Настройки плиточной галереи</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Навигация к экрану выбора макета</string>
     <string name="gutenberg_native_gallery_style">Стиль галереи</string>
-    <string name="sharing_facebook_warning_positive_button">Переход на веб-сайт</string>
-    <string name="sharing_facebook_warning_message">Вы можете подключить свою учётную запись Facebook на сайте WordPress.com. После этого вернитесь в приложение WordPress, чтобы изменить настройки возможностей поделиться.</string>
+    <string name="sharing_connect_via_web_warning_message">Вы можете подключить свою учётную запись %s на сайте WordPress.com. После этого вернитесь в приложение WordPress, чтобы изменить настройки возможностей поделиться.</string>
     <string name="about_automattic_app_icon_description">Значок приложения</string>
     <string name="about_automattic_back_icon_description">Значок Назад</string>
     <string name="about_automattic_logo_description">логотип Automattic</string>

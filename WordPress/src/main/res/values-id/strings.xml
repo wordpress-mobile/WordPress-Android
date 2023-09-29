@@ -15,13 +15,8 @@ Language: id
     <string name="personalization_screen_blogging_prompts_card_title">Prompt blogging</string>
     <string name="personalization_screen_blaze_card_description">Promosikan pos dan lihat kampanye saat ini.</string>
     <string name="personalization_screen_scheduled_posts_card_description">Pos terjadwal Anda yang akan datang.</string>
-    <string name="personalization_screen_scheduled_posts_card_title"> Pos terjadwal</string>
     <string name="personalization_screen_draft_posts_card_description">Konsep pos terbaru Anda.</string>
-    <string name="personalization_screen_draft_posts_card_title"> Konsep pos</string>
     <string name="personalization_screen_stats_card_description">Kunjungan, Pengunjung, dan suka</string>
-    <string name="personalization_screen_footer_cards"> Kartu bisa saja menampilkan konten berbeda, tergantung pada apa yang terjadi di situs Anda</string>
-    <string name="personalization_screen_description"> Tambahkan atau sembunyikan Kartu</string>
-    <string name="personalization_screen_title"> Personalisasikan tab beranda</string>
     <string name="personalize_card_content_description">Ketuk untuk mempersonalisasikan tab beranda Anda</string>
     <string name="personalize_card_text">Personalisasikan tab beranda Anda</string>
     <string name="partial_media_access_prompt_change_settings">Ubah Pengaturan</string>
@@ -653,8 +648,6 @@ Language: id
     <string name="gutenberg_native_tiled_gallery_settings">Pengaturan galeri tampilan kotak</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Buka layar pemilihan tata letak</string>
     <string name="gutenberg_native_gallery_style">Gaya galeri</string>
-    <string name="sharing_facebook_warning_positive_button">Kunjungi situs</string>
-    <string name="sharing_facebook_warning_message">Anda dapat menghubungkan akun Facebook Anda di situs WordPress.com. Setelah selesai, kembali ke aplikasi WordPress untuk mengubah pengaturan fitur Berbagikan.</string>
     <string name="about_automattic_app_icon_description">Ikon Aplikasi</string>
     <string name="about_automattic_back_icon_description">Ikon kembali</string>
     <string name="about_automattic_logo_description">Logo Automattic</string>

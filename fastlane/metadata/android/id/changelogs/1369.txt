@@ -1,4 +1,0 @@
-23.2:
-- Blok Tautan Media Sosial dilengkapi garis tepi yang akan terlihat saat dipilih.
-- Di editor blok, aplikasi tidak akan mengalami crash lagi saat Anda mengubah blok Kolom bertumpuk menjadi blok Grup.
-- Di penyisip blok, kini Anda bisa mencari jenis blok tanpa menimbulkan crash pada aplikasi.

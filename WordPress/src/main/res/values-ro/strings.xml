@@ -7,26 +7,21 @@ Language: ro
 -->
 <resources>
     <string name="my_site_dashboard_no_cards_message_description">Atinge butonul de personalizare ca să arăți mai multe cartușe.</string>
-    <string name="personalization_screen_scheduled_posts_card_title"> Articole programate</string>
     <string name="personalization_screen_stats_card_description">Vizualizări, vizitatori și aprecieri</string>
     <string name="personalization_screen_blogging_prompts_card_title">Îndemnuri de a scrie</string>
     <string name="personalization_screen_blaze_card_description">Promovează un articol și vezi campaniile curente.</string>
     <string name="personalization_screen_scheduled_posts_card_description">Articole programate în viitor.</string>
-    <string name="personalization_screen_footer_cards"> Cartușele pot să afișeze conținut diferit în funcție de ceea ce se întâmplă cu site-ul tău</string>
     <string name="personalization_screen_activity_log_card_description">Acțiuni recente efectuate pe site-ul tău.</string>
     <string name="personalization_screen_pages_card_description">Prezentare generală a paginilor site-ului.</string>
     <string name="personalization_screen_blogging_prompts_card_description">Idei zilnice pentru articole pe blogul tău.</string>
     <string name="my_site_dashboard_no_cards_message_title">Sunt ascunse toate cartușele</string>
     <string name="personalization_screen_next_steps_card_description">Învață cum să beneficiezi pe deplin de site-ul tău cu ajutorul aplicației.</string>
-    <string name="personalization_screen_draft_posts_card_title"> Articole ciornă</string>
     <string name="personalization_screen_draft_posts_card_description">Articole ciornă recente.</string>
-    <string name="personalization_screen_title"> Personalizează fila Prima pagină</string>
     <string name="personalize_card_content_description">Atinge ca să personalizezi fila Prima pagină</string>
     <string name="personalize_card_text">Personalizează fila Prima pagină</string>
     <string name="partial_media_access_prompt_change_settings">Modifică setările</string>
     <string name="partial_media_access_prompt_select_more">Selectează mai multe</string>
     <string name="partial_media_access_prompt_text">Sunt disponibile numai fotografiile și videourile selectate pentru care ai dat acces.</string>
-    <string name="personalization_screen_description"> Adaugă cartușe sau ascunde-le</string>
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Vezi toate campaniile</string>
     <string name="dashboard_activity_card_menu_all_activity">Toate activitățile</string>
     <string name="dashboard_pages_card_more_menu_all_pages">Toate paginile</string>
@@ -656,8 +651,6 @@ Language: ro
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navighează la ecranul de selectare a aranjamentului</string>
     <string name="gutenberg_native_tiled_gallery_settings">Setări galerii placate</string>
     <string name="gutenberg_native_gallery_style">Stil galerie</string>
-    <string name="sharing_facebook_warning_message">Îți poți conecta contul Facebook la site-ul WordPress.com. Când ai terminat, întoarce-te la aplicația WordPress pentru a modifica setările de partajare.</string>
-    <string name="sharing_facebook_warning_positive_button">Mergi pe web</string>
     <string name="about_automattic_wordpress">WordPress</string>
     <string name="about_automattic_back_icon_description">Icon înapoi</string>
     <string name="about_automattic_logo_description">Logo Automattic</string>

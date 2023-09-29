@@ -15,13 +15,8 @@ Language: zh_CN
     <string name="personalization_screen_blogging_prompts_card_title">博客提示</string>
     <string name="personalization_screen_blaze_card_description">推广文章并查看当前的广告活动。</string>
     <string name="personalization_screen_scheduled_posts_card_description">您即将发布的已排定文章。</string>
-    <string name="personalization_screen_scheduled_posts_card_title"> 已排定的文章</string>
     <string name="personalization_screen_draft_posts_card_description">您最近的文章草稿</string>
-    <string name="personalization_screen_draft_posts_card_title"> 文章草稿</string>
     <string name="personalization_screen_stats_card_description">浏览次数、访客人数和点赞数</string>
-    <string name="personalization_screen_footer_cards"> 卡片可能会显示不同的内容，具体取决于您站点上的情况</string>
-    <string name="personalization_screen_description"> 添加或隐藏卡片</string>
-    <string name="personalization_screen_title"> 对“首页”选项卡进行个性化</string>
     <string name="personalize_card_content_description">轻点以对您的“首页”选项卡进行个性化</string>
     <string name="personalize_card_text">对您的“首页”选项卡进行个性化</string>
     <string name="partial_media_access_prompt_change_settings">更改设置</string>
@@ -654,8 +649,6 @@ Language: zh_CN
     <string name="gutenberg_native_tiled_gallery_settings">平铺图片库设置</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">导航至布局选择界面</string>
     <string name="gutenberg_native_gallery_style">画廊样式</string>
-    <string name="sharing_facebook_warning_positive_button">转到网页</string>
-    <string name="sharing_facebook_warning_message">您可以在 WordPress.com 网站上连接您的 Facebook 账户。 完成后，返回 WordPress 应用程序更改您的共享设置。</string>
     <string name="about_automattic_app_icon_description">应用程序图标</string>
     <string name="about_automattic_back_icon_description">返回图标</string>
     <string name="about_automattic_logo_description">Automattic 徽标</string>

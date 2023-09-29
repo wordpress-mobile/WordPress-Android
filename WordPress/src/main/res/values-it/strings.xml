@@ -15,13 +15,8 @@ Language: it
     <string name="personalization_screen_blogging_prompts_card_title">Richieste di blog</string>
     <string name="personalization_screen_blaze_card_description">Promuovi un articolo e visualizza le campagne attuali.</string>
     <string name="personalization_screen_scheduled_posts_card_description">Prossimi articoli pianificati.</string>
-    <string name="personalization_screen_scheduled_posts_card_title"> Articoli pianificati</string>
     <string name="personalization_screen_draft_posts_card_description">I tuoi articoli in bozza recenti.</string>
-    <string name="personalization_screen_draft_posts_card_title"> Articoli in bozza</string>
     <string name="personalization_screen_stats_card_description">Visualizzazioni, visitatori e mi piace</string>
-    <string name="personalization_screen_footer_cards"> Le schede possono mostrare contenuti diversi a seconda di ciò che sta accadendo al tuo sito</string>
-    <string name="personalization_screen_description"> Aggiungi o nascondi Schede</string>
-    <string name="personalization_screen_title"> Personalizza la scheda home</string>
     <string name="personalize_card_content_description">Tocca per personalizzare la scheda home</string>
     <string name="personalize_card_text">Personalizza la scheda home</string>
     <string name="partial_media_access_prompt_change_settings">Modifica le impostazioni</string>
@@ -655,8 +650,6 @@ Language: it
     <string name="gutenberg_native_tiled_gallery_settings">Impostazioni galleria affiancata</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Naviga fino alla schermata di selezione del layout</string>
     <string name="gutenberg_native_gallery_style">Stile della galleria</string>
-    <string name="sharing_facebook_warning_positive_button">Vai al web</string>
-    <string name="sharing_facebook_warning_message">Puoi connettere il tuo account Facebook al sito web WordPress.com. Una volta terminato, torna all\'app di WordPress per modificare le impostazioni di Condivisione.</string>
     <string name="about_automattic_app_icon_description">Icona app</string>
     <string name="about_automattic_back_icon_description">Icona Indietro</string>
     <string name="about_automattic_logo_description">Logo Automattic</string>

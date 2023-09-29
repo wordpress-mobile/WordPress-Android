@@ -468,8 +468,6 @@ Language: cs_CZ
     <string name="gutenberg_native_tiled_gallery_settings">Nastavení dlaždicové galerie</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Přejde na obrazovku výběru rozvržení</string>
     <string name="gutenberg_native_gallery_style">Styl galerie</string>
-    <string name="sharing_facebook_warning_positive_button">Zpět na web</string>
-    <string name="sharing_facebook_warning_message">Svůj účet na Facebooku si můžete propojit na webu WordPress.com. Až budete hotovi, vraťte se do aplikace WordPress a změňte nastavení sdílení.</string>
     <string name="about_automattic_app_icon_description">Ikona aplikace</string>
     <string name="about_automattic_back_icon_description">Ikona zpět</string>
     <string name="about_automattic_logo_description">Automattic logo</string>
