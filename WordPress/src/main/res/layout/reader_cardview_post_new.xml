@@ -122,54 +122,6 @@
             app:barrierDirection="bottom"
             app:constraint_referenced_ids="thumbnail_strip,image_featured" />
 
-
-        <!-- TODO thomashorta figure out what this is and if we need it -->
-        <!-- attribution section for discover posts start -->
-        <ImageView
-            android:id="@+id/image_discover_avatar"
-            style="@style/ReaderImageView.Avatar.Small"
-            android:background="?android:selectableItemBackground"
-            android:importantForAccessibility="no"
-            android:src="@drawable/bg_rectangle_placeholder_globe_32dp"
-            android:layout_marginEnd="@dimen/margin_large"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/text_discover"
-            app:layout_constraintTop_toTopOf="@id/text_discover"
-            app:layout_constraintBottom_toBottomOf="@id/text_discover"
-            tools:ignore="RtlSymmetry" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_discover"
-            style="@style/ReaderTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:minHeight="@dimen/avatar_sz_small"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/wpColorOnSurfaceMedium"
-            android:textAlignment="viewStart"
-            android:gravity="center_vertical|start"
-            android:layout_marginTop="@dimen/margin_medium"
-            app:layout_constraintStart_toEndOf="@id/image_discover_avatar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/reader_card_images_bottom_barrier"
-            tools:text="text_attribution"
-            tools:ignore="RtlSymmetry" />
-
-        <View
-            android:id="@+id/layout_discover"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            android:background="?android:selectableItemBackground"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/text_discover"
-            app:layout_constraintBottom_toBottomOf="@id/text_discover"
-            tools:visibility="visible" />
-        <!-- attribution section for discover posts end -->
-
         <!-- like and comment counts start -->
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/reader_card_like_count"
@@ -181,7 +133,7 @@
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/reader_card_dot_separator"
-            app:layout_constraintTop_toBottomOf="@id/text_discover"
+            app:layout_constraintTop_toBottomOf="@id/reader_card_images_bottom_barrier"
             app:layout_constrainedWidth="true"
             tools:text="15 likes" />
 
@@ -195,7 +147,7 @@
             android:textAlignment="viewStart"
             app:layout_constraintStart_toEndOf="@id/reader_card_like_count"
             app:layout_constraintEnd_toStartOf="@id/reader_card_comment_count"
-            app:layout_constraintTop_toBottomOf="@id/text_discover"
+            app:layout_constraintTop_toBottomOf="@id/reader_card_images_bottom_barrier"
             app:layout_constrainedWidth="true" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -206,7 +158,7 @@
             android:layout_marginTop="@dimen/margin_medium"
             app:layout_constraintStart_toEndOf="@id/reader_card_dot_separator"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_discover"
+            app:layout_constraintTop_toBottomOf="@id/reader_card_images_bottom_barrier"
             app:layout_constrainedWidth="true"
             tools:text="4 comments" />
 
@@ -226,6 +178,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_extra_medium_large"
             android:contentDescription="@string/reader_view_reblog"
             android:text="@string/reader_view_reblog"
             app:drawableStartCompat="@drawable/ic_reblog_new_24dp"
@@ -243,7 +196,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginStart="@dimen/margin_extra_medium_large"
+            android:layout_marginEnd="@dimen/margin_extra_medium_large"
             android:contentDescription="@string/reader_view_comments"
             android:text="@string/comment"
             app:layout_goneMarginStart="0dp"
@@ -260,7 +213,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginStart="@dimen/margin_extra_medium_large"
+            android:layout_marginEnd="@dimen/margin_extra_medium_large"
             android:contentDescription="@string/like"
             android:text="@string/like"
             app:drawableStartCompat="@drawable/ic_like_new_selector"

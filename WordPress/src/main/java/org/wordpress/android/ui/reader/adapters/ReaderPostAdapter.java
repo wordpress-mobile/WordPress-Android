@@ -611,7 +611,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onButtonClicked,
                         onItemClicked,
                         onItemRendered,
-                        onDiscoverSectionClicked,
                         onMoreButtonClicked,
                         onMoreDismissed,
                         onVideoOverlayClicked,

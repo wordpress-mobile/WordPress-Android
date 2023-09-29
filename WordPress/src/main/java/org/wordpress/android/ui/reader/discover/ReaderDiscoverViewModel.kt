@@ -182,7 +182,6 @@ class ReaderDiscoverViewModel @Inject constructor(
                         onButtonClicked = this@ReaderDiscoverViewModel::onButtonClicked,
                         onItemClicked = this@ReaderDiscoverViewModel::onPostItemClicked,
                         onItemRendered = this@ReaderDiscoverViewModel::onItemRendered,
-                        onDiscoverSectionClicked = this@ReaderDiscoverViewModel::onDiscoverClicked,
                         onMoreButtonClicked = this@ReaderDiscoverViewModel::onMoreButtonClickedNew,
                         onMoreDismissed = this@ReaderDiscoverViewModel::onMoreMenuDismissedNew,
                         onVideoOverlayClicked = this@ReaderDiscoverViewModel::onVideoOverlayClicked,

@@ -79,7 +79,6 @@ sealed class ReaderCardUiState {
         val featuredImageCornerRadius: UiDimen,
         val fullVideoUrl: String?,
         val thumbnailStripSection: ReaderPostUiState.GalleryThumbnailStripData?,
-        val discoverSection: ReaderPostUiState.DiscoverLayoutUiState?,
         val videoOverlayVisibility: Boolean,
         val featuredImageVisibility: Boolean,
         val moreMenuVisibility: Boolean,

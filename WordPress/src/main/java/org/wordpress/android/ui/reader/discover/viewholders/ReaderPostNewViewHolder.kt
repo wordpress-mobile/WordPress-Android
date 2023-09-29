@@ -35,7 +35,6 @@ class ReaderPostNewViewHolder(
 ) : ReaderViewHolder<ReaderCardviewPostNewBinding>(parentView.viewBinding(ReaderCardviewPostNewBinding::inflate)) {
     init {
         with(binding) {
-            layoutDiscover.expandTouchTargetArea(R.dimen.reader_discover_layout_extra_padding, true)
             moreMenu.expandTouchTargetArea(R.dimen.reader_more_image_extra_padding, false)
         }
     }
@@ -74,9 +73,6 @@ class ReaderPostNewViewHolder(
             )
             state.onItemClicked(uiState.postId, uiState.blogId)
         }
-
-        // Discover section
-        updateDiscoverSection(state)
 
         // Interaction counts section
         updateInteractionCountsSection(state)
@@ -162,24 +158,6 @@ class ReaderPostNewViewHolder(
                 state.featuredImageUrl,
                 uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
             )
-        }
-    }
-
-    private fun updateDiscoverSection(state: ReaderPostNewUiState) = with(binding) {
-        uiHelpers.updateVisibility(imageDiscoverAvatar, state.discoverSection?.discoverAvatarUrl != null)
-        uiHelpers.updateVisibility(layoutDiscover, state.discoverSection != null)
-        uiHelpers.setTextOrHide(textDiscover, state.discoverSection?.discoverText)
-        if (state.discoverSection?.discoverAvatarUrl == null) {
-            imageManager.cancelRequestAndClearImageView(imageDiscoverAvatar)
-        } else {
-            imageManager.loadIntoCircle(
-                imageDiscoverAvatar,
-                state.discoverSection.imageType,
-                state.discoverSection.discoverAvatarUrl
-            )
-        }
-        layoutDiscover.setOnClickListener {
-            state.discoverSection?.onDiscoverClicked?.invoke(state.postId, state.blogId)
         }
     }
 
