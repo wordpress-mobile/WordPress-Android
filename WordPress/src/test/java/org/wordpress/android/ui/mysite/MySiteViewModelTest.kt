@@ -100,7 +100,6 @@ import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewMode
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -622,23 +621,23 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* ON RESUME */
     @Test
     fun `given not first resume, when on resume is triggered, then mySiteSourceManager onResume is invoked`() {
-        viewModel.onResume(mock()) // first call
+        viewModel.onResume() // first call
 
-        viewModel.onResume(mock()) // second call
+        viewModel.onResume() // second call
 
         verify(mySiteSourceManager).onResume(false)
     }
 
     @Test
     fun `given first resume, when on resume is triggered, then mySiteSourceManager onResume is invoked`() {
-        viewModel.onResume(mock())
+        viewModel.onResume()
 
         verify(mySiteSourceManager).onResume(true)
     }
 
     @Test
     fun `when first onResume is triggered, then checkAndShowQuickStartNotice is invoked`() {
-        viewModel.onResume(mock())
+        viewModel.onResume()
 
         verify(quickStartRepository).checkAndShowQuickStartNotice()
     }
@@ -910,9 +909,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(bloggingPromptCardViewModelSlice, atLeastOnce()).onSiteChanged(siteLocalId)
 
-        viewModel.onResume(MySiteTabType.DASHBOARD)
+        viewModel.onResume()
 
-        verify(bloggingPromptCardViewModelSlice).onResume(MySiteTabType.DASHBOARD)
+        verify(bloggingPromptCardViewModelSlice).onResume()
         verify(bloggingPromptCardViewModelSlice, atLeastOnce())
             .onDashboardCardsUpdated(
                 any(),
@@ -926,9 +925,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(bloggingPromptCardViewModelSlice, atLeastOnce()).onSiteChanged(siteLocalId)
 
-        viewModel.onResume(MySiteTabType.DASHBOARD)
+        viewModel.onResume()
 
-        verify(bloggingPromptCardViewModelSlice).onResume(MySiteTabType.DASHBOARD)
+        verify(bloggingPromptCardViewModelSlice).onResume()
         verify(bloggingPromptCardViewModelSlice, atMost(1))
             .onDashboardCardsUpdated(
                 any(),
@@ -942,9 +941,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(bloggingPromptCardViewModelSlice, atLeastOnce()).onSiteChanged(siteLocalId)
 
-        viewModel.onResume(MySiteTabType.SITE_MENU)
+        viewModel.onResume()
 
-        verify(bloggingPromptCardViewModelSlice).onResume(MySiteTabType.SITE_MENU)
+        verify(bloggingPromptCardViewModelSlice).onResume()
         verify(bloggingPromptCardViewModelSlice, atLeastOnce())
             .onDashboardCardsUpdated(
                 any(),
