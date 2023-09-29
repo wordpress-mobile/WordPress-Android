@@ -161,7 +161,7 @@ class ReaderPostNewViewHolder(
     }
 
     private fun updateActionButton(postId: Long, blogId: Long, state: PrimaryAction, view: View) {
-        view.isEnabled = state.isEnabled
+        view.isVisible = state.isEnabled
         view.isSelected = state.isSelected
         // TODO thomashorta ignore this for now since it's being passed with count information
 //        view.contentDescription = state.contentDescription?.let { uiHelpers.getTextOfUiString(view.context, it) }
