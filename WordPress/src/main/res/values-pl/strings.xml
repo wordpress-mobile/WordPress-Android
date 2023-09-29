@@ -271,7 +271,6 @@ Language: pl
     <string name="reader_comment_menu_trash">Przenieś do kosza</string>
     <string name="reader_comment_menu_spam">Oznacz jako spam</string>
     <string name="gutenberg_native_gallery_style">Styl galerii</string>
-    <string name="sharing_facebook_warning_positive_button">Idź do sieci</string>
     <string name="about_automattic_app_icon_description">Ikona aplikacji</string>
     <string name="about_automattic_back_icon_description">Ikona Cofnij/Wstecz</string>
     <string name="about_automattic_wordpress">WordPress</string>

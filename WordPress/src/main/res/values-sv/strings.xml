@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-26 11:54:34+0000
+Translation-Revision-Date: 2023-09-28 15:21:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: sv_SE
 -->
 <resources>
+    <string name="sharing_connect_via_web_warning_positive_button">Gå till webben</string>
     <string name="my_site_dashboard_no_cards_message_description">Tryck på anpassningsknappen för att visa fler kort.</string>
     <string name="my_site_dashboard_no_cards_message_title">Alla kort är dolda</string>
     <string name="personalization_screen_next_steps_card_description">Lär dig att få ut så mycket som möjligt av din webbplats med appen.</string>
@@ -17,11 +18,9 @@ Language: sv_SE
     <string name="personalization_screen_scheduled_posts_card_description">Dina kommande schemalagda inlägg.</string>
     <string name="personalization_screen_scheduled_posts_card_title"> Schemalagda inlägg</string>
     <string name="personalization_screen_draft_posts_card_description">Dina senaste inläggsutkast.</string>
-    <string name="personalization_screen_draft_posts_card_title"> Inläggsutkast</string>
     <string name="personalization_screen_stats_card_description">Visningar, besökare och gilla-markeringar</string>
-    <string name="personalization_screen_footer_cards"> Kort kan visa olika innehåll beroende på vad som händer på din webbplats</string>
+    <string name="personalization_screen_footer_cards">Kort kan visa olika innehåll beroende på vad som händer med din webbplats</string>
     <string name="personalization_screen_description"> Visa eller dölj kort</string>
-    <string name="personalization_screen_title"> Anpassa Hem-fliken</string>
     <string name="personalize_card_content_description">Tryck för att anpassa din Hem-flik</string>
     <string name="personalize_card_text">Anpassa din Hem-flik</string>
     <string name="partial_media_access_prompt_change_settings">Ändra inställningar</string>
@@ -656,8 +655,7 @@ Language: sv_SE
     <string name="gutenberg_native_tiled_gallery_settings">Mosaikinställningar för galleri</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Går till skärmen för val av layout</string>
     <string name="gutenberg_native_gallery_style">Galleristil</string>
-    <string name="sharing_facebook_warning_positive_button">Gå till webben</string>
-    <string name="sharing_facebook_warning_message">Du kan ansluta ditt Facebook-konto på WordPress.com-webbplatsen. När du är klar, gå tillbaka till WordPress-appen för att ändra dina delningsinställningar.</string>
+    <string name="sharing_connect_via_web_warning_message">Du kan ansluta ditt %s-konto på WordPress.com-webbplatsen. När du är klar, gå tillbaka till appen för att ändra dina delningsinställningar.</string>
     <string name="about_automattic_app_icon_description">App-ikon</string>
     <string name="about_automattic_back_icon_description">Ikon för tillbaka</string>
     <string name="about_automattic_logo_description">Logga för Automattic</string>

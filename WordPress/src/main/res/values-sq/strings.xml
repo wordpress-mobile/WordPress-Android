@@ -537,8 +537,6 @@ Language: sq_AL
     <string name="gutenberg_native_tiled_gallery_settings">Rregullime galerie mozaik</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Kalohet te skena e përzgjedhjes së skemës</string>
     <string name="gutenberg_native_gallery_style">Stil galerie</string>
-    <string name="sharing_facebook_warning_positive_button">Kaloni në web</string>
-    <string name="sharing_facebook_warning_message">Mund ta lidhni llogarinë tuaj Facebook në sajtin WordPress.com. Kur të keni mbaruar, kthehuni te aplikacioni WordPress, që të ndryshoni rregullimet tuaja për Ndarje Me të Tjerë.</string>
     <string name="about_automattic_app_icon_description">Ikonë aplikacioni</string>
     <string name="about_automattic_back_icon_description">Ikonë për mbrapsht</string>
     <string name="about_automattic_logo_description">Stemë e Automattic-ut</string>

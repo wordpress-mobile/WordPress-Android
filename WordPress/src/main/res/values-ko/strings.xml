@@ -15,13 +15,8 @@ Language: ko_KR
     <string name="personalization_screen_blogging_prompts_card_title">블로깅 프롬프트</string>
     <string name="personalization_screen_blaze_card_description">블로그 글을 홍보하고 현재 캠페인을 확인하세요.</string>
     <string name="personalization_screen_scheduled_posts_card_description">공개 예정인 글입니다.</string>
-    <string name="personalization_screen_scheduled_posts_card_title"> 예약된 글</string>
     <string name="personalization_screen_draft_posts_card_description">최근 임시글입니다.</string>
-    <string name="personalization_screen_draft_posts_card_title"> 임시글</string>
     <string name="personalization_screen_stats_card_description">조회수, 방문자 수 및 좋아요 개수</string>
-    <string name="personalization_screen_footer_cards"> 사이트에서 발생하는 상황에 따라 다른 콘텐츠가 카드에 표시될 수 있습니다</string>
-    <string name="personalization_screen_description"> 카드 추가 또는 숨기기</string>
-    <string name="personalization_screen_title"> 홈 탭 개인 설정</string>
     <string name="personalize_card_content_description">눌러서 홈 탭 개인 설정</string>
     <string name="personalize_card_text">홈 탭 개인 설정</string>
     <string name="partial_media_access_prompt_change_settings">설정 변경</string>
@@ -656,8 +651,6 @@ Language: ko_KR
     <string name="gutenberg_native_tiled_gallery_settings">바둑판식 갤러리 설정</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">레이아웃 선택 화면으로 이동</string>
     <string name="gutenberg_native_gallery_style">갤러리 스타일</string>
-    <string name="sharing_facebook_warning_positive_button">웹으로 이동</string>
-    <string name="sharing_facebook_warning_message">워드프레스닷컴 웹사이트에서 페이스북 계정을 연결할 수 있습니다. 완료하면 워드프레스 앱으로 돌아가서 공유 설정을 변경하세요.</string>
     <string name="about_automattic_app_icon_description">앱 아이콘</string>
     <string name="about_automattic_back_icon_description">뒤로 아이콘</string>
     <string name="about_automattic_logo_description">Automattic 로고</string>

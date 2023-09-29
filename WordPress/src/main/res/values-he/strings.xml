@@ -15,13 +15,8 @@ Language: he_IL
     <string name="personalization_screen_blogging_prompts_card_title">הצעות כתיבה בבלוג</string>
     <string name="personalization_screen_blaze_card_description">לקדם פוסט ולהציג קמפיינים נוכחיים.</string>
     <string name="personalization_screen_scheduled_posts_card_description">פוסטים שמתוזמנים לפרסום בקרוב.</string>
-    <string name="personalization_screen_scheduled_posts_card_title"> פוסטים מתוזמנים</string>
     <string name="personalization_screen_draft_posts_card_description">טיוטות אחרונות של פוסטים.</string>
-    <string name="personalization_screen_draft_posts_card_title"> טיוטות פוסטים</string>
     <string name="personalization_screen_stats_card_description">צפיות, מבקרים ולייקים</string>
-    <string name="personalization_screen_footer_cards"> הכרטיסים עשויים להציג תוכן שונה בהתאם לפעילות באתר שלך</string>
-    <string name="personalization_screen_description"> להוסיף או להסתיר כרטיסים</string>
-    <string name="personalization_screen_title"> להתאים אישית את הלשונית \'בית\'</string>
     <string name="personalize_card_content_description">יש להקיש כדי להתאים אישית את הלשונית \'בית\' באתר שלך</string>
     <string name="personalize_card_text">להתאים אישית את הלשונית \'בית\' באתר שלך</string>
     <string name="partial_media_access_prompt_change_settings">לשנות ההגדרות</string>
@@ -654,8 +649,6 @@ Language: he_IL
     <string name="gutenberg_native_tiled_gallery_settings">הגדרות גלריה פרושה</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">מנתב למסך של בחירת הפריסה</string>
     <string name="gutenberg_native_gallery_style">סגנון גלריה</string>
-    <string name="sharing_facebook_warning_positive_button">מעבר לאתר בדפדפן</string>
-    <string name="sharing_facebook_warning_message">אפשר לחבר את חשבון הפייסבוק לאתר שלך ב-WordPress.com. בסיום, אפשר לחזור לאפליקציה של WordPress כדי לשנות את הגדרות השיתוף.</string>
     <string name="about_automattic_app_icon_description">סמל האפליקציה</string>
     <string name="about_automattic_back_icon_description">סמל \'חזרה\'</string>
     <string name="about_automattic_logo_description">הסמל של Automattic</string>

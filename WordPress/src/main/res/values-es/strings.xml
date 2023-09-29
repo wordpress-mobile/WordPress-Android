@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-26 11:54:32+0000
+Translation-Revision-Date: 2023-09-28 15:21:14+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: es
 -->
 <resources>
+    <string name="sharing_connect_via_web_warning_positive_button">Ir a la web</string>
     <string name="my_site_dashboard_no_cards_message_description">Pulsa el botón de personalización para mostrar más tarjetas.</string>
     <string name="my_site_dashboard_no_cards_message_title">Todas las tarjetas están ocultas</string>
     <string name="personalization_screen_next_steps_card_description">Descubre cómo sacarle el máximo partido a tu sitio con la aplicación.</string>
@@ -17,11 +18,11 @@ Language: es
     <string name="personalization_screen_scheduled_posts_card_description">Tus próximas entradas programadas.</string>
     <string name="personalization_screen_scheduled_posts_card_title"> Entradas programadas</string>
     <string name="personalization_screen_draft_posts_card_description">Tus últimos borradores de entradas.</string>
-    <string name="personalization_screen_draft_posts_card_title"> Borradores de entradas</string>
+    <string name="personalization_screen_draft_posts_card_title">Borradores de entradas</string>
     <string name="personalization_screen_stats_card_description">Vistas, visitantes y me gusta</string>
-    <string name="personalization_screen_footer_cards"> El contenido de las tarjetas puede variar en función de lo que esté pasando con tu sitio</string>
-    <string name="personalization_screen_description"> Añadir u ocultar tarjetas</string>
-    <string name="personalization_screen_title"> Personalizar la pestaña Inicio</string>
+    <string name="personalization_screen_footer_cards">Las tarjetas pueden mostrar contenidos diferentes en función de lo que ocurra con tu web</string>
+    <string name="personalization_screen_description">Añadir u ocultar tarjetas</string>
+    <string name="personalization_screen_title">Personalizar la pestaña de inicio</string>
     <string name="personalize_card_content_description">Pulsa para personalizar la pestaña Inicio</string>
     <string name="personalize_card_text">Personaliza la pestaña Inicio</string>
     <string name="partial_media_access_prompt_change_settings">Cambiar ajustes</string>
@@ -656,8 +657,7 @@ Language: es
     <string name="gutenberg_native_tiled_gallery_settings">Ajustes de la galería de mosaico</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navega a la pantalla de selección del diseño</string>
     <string name="gutenberg_native_gallery_style">Estilo de la galería</string>
-    <string name="sharing_facebook_warning_positive_button">Ir a la web</string>
-    <string name="sharing_facebook_warning_message">Puedes conectar tu cuenta de Facebook en la web de WordPress.com. Cuando lo hayas hecho, vuelve a la aplicación de WordPress para cambiar tus ajustes para compartir.</string>
+    <string name="sharing_connect_via_web_warning_message">Puedes conectar tu cuenta de %s en el sitio web WordPress.com. Cuando hayas terminado, vuelve a la aplicación para cambiar los ajustes de compartir.</string>
     <string name="about_automattic_app_icon_description">Icono de la aplicación</string>
     <string name="about_automattic_back_icon_description">Icono de volver</string>
     <string name="about_automattic_logo_description">Logotipo de Automattic</string>
