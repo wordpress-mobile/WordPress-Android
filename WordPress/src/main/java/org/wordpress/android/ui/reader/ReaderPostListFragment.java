@@ -136,6 +136,7 @@ import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -236,6 +237,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject ReaderTracker mReaderTracker;
     @Inject SnackbarSequencer mSnackbarSequencer;
     @Inject DisplayUtilsWrapper mDisplayUtilsWrapper;
+    @Inject ReaderImprovementsFeatureConfig mReaderImprovementsFeatureConfig;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -1116,8 +1118,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
         // add the item decoration (dividers) to the recycler, skipping the first item if the first
         // item is the tag toolbar (shown when viewing posts in followed tags) - this is to avoid
         // having the tag toolbar take up more vertical space than necessary
+        int spacingVerticalRes = mReaderImprovementsFeatureConfig.isEnabled()
+                ? R.dimen.reader_card_gutters_new
+                : R.dimen.reader_card_gutters;
         int spacingHorizontal = getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
-        int spacingVertical = getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
+        int spacingVertical = getResources().getDimensionPixelSize(spacingVerticalRes);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
         mRecyclerView.setToolbarBackgroundColor(0);

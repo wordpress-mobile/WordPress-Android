@@ -91,8 +91,13 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                     uiHelpers, imageManager, readerTracker, readerImprovementsFeatureConfig.isEnabled()
                 )
 
+            val spacingVerticalRes = if (readerImprovementsFeatureConfig.isEnabled()) {
+                R.dimen.reader_card_gutters_new
+            } else {
+                R.dimen.reader_card_gutters
+            }
             val spacingHorizontal = resources.getDimensionPixelSize(R.dimen.reader_card_margin)
-            val spacingVertical = resources.getDimensionPixelSize(R.dimen.reader_card_gutters)
+            val spacingVertical = resources.getDimensionPixelSize(spacingVerticalRes)
             recyclerView.addItemDecoration(RecyclerItemDecoration(spacingHorizontal, spacingVertical, false))
 
             WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptrLayout) { viewModel.swipeToRefresh() }
