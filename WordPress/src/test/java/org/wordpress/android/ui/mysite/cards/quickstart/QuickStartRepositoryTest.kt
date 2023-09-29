@@ -32,7 +32,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -72,9 +71,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     lateinit var buildConfigWrapper: BuildConfigWrapper
 
     @Mock
-    lateinit var quickStartExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
-
-    @Mock
     lateinit var quickStartType: QuickStartType
 
     @Mock
@@ -88,7 +84,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Before
     fun setUp() = test {
         whenever(appPrefsWrapper.getLastSelectedQuickStartTypeForSite(any())).thenReturn(quickStartType)
-        whenever(quickStartExistingUsersV2FeatureConfig.isEnabled()).thenReturn(false)
         quickStartRepository = QuickStartRepository(
             testDispatcher(),
             quickStartStore,
@@ -101,8 +96,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
             htmlCompat,
             contextProvider,
             htmlMessageUtils,
-            quickStartTracker,
-            quickStartExistingUsersV2FeatureConfig
+            quickStartTracker
         )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()

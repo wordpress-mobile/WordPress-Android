@@ -17,7 +17,6 @@ import org.wordpress.android.ui.mysite.MySiteSourceManager
 import org.wordpress.android.ui.mysite.MySiteUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
@@ -132,7 +131,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         bloggingPromptsCardTrackHelper.onSiteChanged(siteId)
     }
 
-    fun onResume(currentTab: MySiteTabType) {
-        bloggingPromptsCardTrackHelper.onResume(currentTab)
+    fun onResume() {
+        bloggingPromptsCardTrackHelper.onResume()
     }
 }

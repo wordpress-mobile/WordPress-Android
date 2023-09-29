@@ -77,7 +77,7 @@ import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallF
 import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlice
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinksItemViewModelSlice
+import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinksItemViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -104,7 +104,6 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
-import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.mapSafe
@@ -140,7 +139,6 @@ class MySiteViewModel @Inject constructor(
     private val cardsTracker: CardsTracker,
     private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
-    mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val quickStartTracker: QuickStartTracker,
@@ -182,13 +180,16 @@ class MySiteViewModel @Inject constructor(
        as they're already built on site select. */
     private var isSiteSelected = false
 
-    private val isMySiteDashboardTabsEnabled by lazy { mySiteDashboardTabsFeatureConfig.isEnabled() }
-
-    val isMySiteTabsEnabled: Boolean
-        get() = isMySiteDashboardTabsEnabled &&
-                buildConfigWrapper.isMySiteTabsEnabled &&
-                jetpackFeatureRemovalPhaseHelper.shouldShowDashboard() &&
-                selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi ?: true
+    val quickLinks: LiveData<MySiteCardAndItem.Card.QuickLinksItem> = merge(
+        quickLinksItemViewModelSlice.uiState,
+        quickStartRepository.activeTask
+    ) { quickLinks, activeTask ->
+        if (quickLinks != null &&
+            activeTask != null) {
+            return@merge quickLinksItemViewModelSlice.updateToShowMoreFocusPointIfNeeded(quickLinks, activeTask)
+        }
+        return@merge quickLinks
+    }
 
     val onScrollTo: LiveData<Event<Int>> = merge(
         _activeTaskPosition.distinctUntilChanged(),
@@ -251,6 +252,7 @@ class MySiteViewModel @Inject constructor(
     val state: LiveData<MySiteUiState> =
         selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
             isSiteSelected = true
+            quickLinksItemViewModelSlice.onSiteChanged()
             resetShownTrackers()
             val result = MediatorLiveData<SiteIdToState>()
             for (newSource in mySiteSourceManager.build(viewModelScope, siteLocalId)) {
@@ -265,9 +267,9 @@ class MySiteViewModel @Inject constructor(
             result.filter { it.siteId == null || it.state.site != null }.mapSafe { it.state }
         }
 
-    val uiModel: LiveData<UiModel> = merge(state, quickLinksItemViewModelSlice.uiState) { cards, quickLinks ->
-        cards?.let { nonNullCards ->
-            with(nonNullCards) {
+    val uiModel: LiveData<UiModel> = merge(state, quickLinks) { cards, quickLinks ->
+        val nonNullCards = cards ?: return@merge UiModel("", buildNoSiteState())
+        with(nonNullCards) {
                 val state = if (site != null) {
                     cardsUpdate?.checkAndShowSnackbarError()
                     val state = buildSiteSelectedStateAndScroll(
@@ -293,7 +295,6 @@ class MySiteViewModel @Inject constructor(
                 } else {
                     buildNoSiteState()
                 }
-
                 bloggingPromptCardViewModelSlice.onSiteChanged(site?.id)
 
                 dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
@@ -302,7 +303,6 @@ class MySiteViewModel @Inject constructor(
 
                 UiModel(currentAvatarUrl.orEmpty(), state)
             }
-        }
     }
 
     private fun CardsUpdate.checkAndShowSnackbarError() {
@@ -332,7 +332,7 @@ class MySiteViewModel @Inject constructor(
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
         blazeCardUpdate: BlazeCardUpdate?,
-        quickLinks: MySiteCardAndItem.Card.QuickLinkRibbon? = null
+        quickLinks: MySiteCardAndItem.Card.QuickLinksItem? = null
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
             site,
@@ -358,12 +358,12 @@ class MySiteViewModel @Inject constructor(
         if (activeTask != null) {
             scrollToQuickStartTaskIfNecessary(
                 activeTask,
-                getPositionOfQuickStartItem(siteItems, activeTask)
+                getPositionOfQuickStartItem(siteItems)
             )
         }
         // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
-            siteInfoHeader =  siteInfo,
+            siteInfoHeader = siteInfo,
             siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
             dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
         )
@@ -371,17 +371,9 @@ class MySiteViewModel @Inject constructor(
 
     private fun getPositionOfQuickStartItem(
         siteItems: Map<MySiteTabType, List<MySiteCardAndItem>>,
-        activeTask: QuickStartTask
     ): Int {
-        return if(activeTask.shownInMoreMenu())
-                (siteItems[MySiteTabType.DASHBOARD] as List<MySiteCardAndItem>)
-                    .indexOfFirst { it.activeQuickStartItem }
-        else LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM
-    }
-
-    private fun QuickStartTask.shownInMoreMenu() = when (this) {
-        QuickStartNewSiteTask.ENABLE_POST_SHARING -> true
-        else -> false
+        return (siteItems[MySiteTabType.DASHBOARD] as List<MySiteCardAndItem>)
+            .indexOfFirst { it.activeQuickStartItem }
     }
 
     @Suppress("LongParameterList", "CyclomaticComplexMethod")
@@ -395,7 +387,7 @@ class MySiteViewModel @Inject constructor(
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?,
         blazeCardUpdate: BlazeCardUpdate?,
-        quickLinks: MySiteCardAndItem.Card.QuickLinkRibbon?
+        quickLinks: MySiteCardAndItem.Card.QuickLinksItem?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = mySiteInfoItemBuilder.build(
             InfoItemBuilderParams(
@@ -480,7 +472,7 @@ class MySiteViewModel @Inject constructor(
 
         return mapOf(
             MySiteTabType.SITE_MENU to mutableListOf<MySiteCardAndItem>().apply {
-                infoItem?.let {  add(infoItem)}
+                infoItem?.let { add(infoItem) }
                 addAll(siteItems)
                 jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
                 if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
@@ -649,13 +641,13 @@ class MySiteViewModel @Inject constructor(
         quickLinksItemViewModelSlice.onRefresh()
     }
 
-    fun onResume(currentTab: MySiteTabType) {
+    fun onResume() {
         mySiteSourceManager.onResume(isSiteSelected)
         isSiteSelected = false
         checkAndShowJetpackFullPluginInstallOnboarding()
         checkAndShowQuickStartNotice()
-        bloggingPromptCardViewModelSlice.onResume(currentTab)
-        dashboardCardPlansUtils.onResume(currentTab, uiModel.value?.state as? SiteSelected)
+        bloggingPromptCardViewModelSlice.onResume()
+        dashboardCardPlansUtils.onResume(uiModel.value?.state as? SiteSelected)
         quickLinksItemViewModelSlice.onResume()
     }
 
