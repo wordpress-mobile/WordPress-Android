@@ -268,8 +268,8 @@ class MySiteViewModel @Inject constructor(
         }
 
     val uiModel: LiveData<UiModel> = merge(state, quickLinks) { cards, quickLinks ->
-        cards?.let { nonNullCards ->
-            with(nonNullCards) {
+        val nonNullCards = cards ?: return@merge UiModel("", buildNoSiteState())
+        with(nonNullCards) {
                 val state = if (site != null) {
                     cardsUpdate?.checkAndShowSnackbarError()
                     val state = buildSiteSelectedStateAndScroll(
@@ -303,7 +303,6 @@ class MySiteViewModel @Inject constructor(
 
                 UiModel(currentAvatarUrl.orEmpty(), state)
             }
-        }
     }
 
     private fun CardsUpdate.checkAndShowSnackbarError() {
