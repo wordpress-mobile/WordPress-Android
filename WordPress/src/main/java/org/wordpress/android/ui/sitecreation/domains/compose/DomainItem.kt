@@ -97,19 +97,37 @@ fun DomainItem(uiState: DomainUiState): Unit = with(uiState) {
                         )
                     }
                 }
+                if (cost is Cost.Paid) {
+                    Text(
+                        text = cost.subtitle.asString(),
+                        color = colors.primary,
+                        fontSize = SecondaryFontSize,
+                    )
+                }
             }
             if (tags.none { it is Unavailable }) {
-                if (cost is Cost.OnSale) {
-                    SalePrince(
-                        cost.strikeoutTitle.asString() to cost.title.asString(),
-                        cost.subtitle.asString(),
-                        modifier = Modifier.padding(start = Margin.ExtraLarge.value)
-                    )
-                } else {
-                    Price(
-                        cost.title.asString(),
-                        modifier = Modifier.padding(start = Margin.ExtraLarge.value)
-                    )
+                when (cost) {
+                    is Cost.OnSale -> {
+                        SalePrice(
+                            cost.strikeoutTitle.asString() to cost.title.asString(),
+                            cost.subtitle.asString(),
+                            modifier = Modifier.padding(start = Margin.ExtraLarge.value)
+                        )
+                    }
+
+                    is Cost.Paid -> {
+                        Plan(
+                            cost.strikeoutTitle.asString() to cost.title.asString(),
+                            modifier = Modifier.padding(start = Margin.ExtraLarge.value)
+                        )
+                    }
+
+                    else -> {
+                        Price(
+                            cost.title.asString(),
+                            modifier = Modifier.padding(start = Margin.ExtraLarge.value)
+                        )
+                    }
                 }
             }
         }
@@ -128,7 +146,7 @@ private fun Price(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun SalePrince(title: Pair<String, String>, subtitle: String, modifier: Modifier = Modifier) {
+private fun SalePrice(title: Pair<String, String>, subtitle: String, modifier: Modifier = Modifier) {
     Column(
         modifier,
         horizontalAlignment = Alignment.End,
@@ -153,8 +171,27 @@ private fun SalePrince(title: Pair<String, String>, subtitle: String, modifier: 
             subtitle,
             color = colors.primary,
             fontSize = SecondaryFontSize,
-            modifier = Modifier.padding(top = 4.dp)
         )
+    }
+}
+
+@Composable
+private fun Plan(title: Pair<String, String>, modifier: Modifier = Modifier) {
+    Column(
+        modifier,
+        horizontalAlignment = Alignment.End,
+    ) {
+        title.let { (strikethroughText) ->
+            Row(verticalAlignment = Alignment.Bottom) {
+                Text(
+                    strikethroughText,
+                    color = SecondaryTextColor,
+                    fontSize = SecondaryFontSize,
+                    textDecoration = TextDecoration.LineThrough,
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+            }
+        }
     }
 }
 
