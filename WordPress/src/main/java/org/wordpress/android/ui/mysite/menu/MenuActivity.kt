@@ -10,12 +10,14 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -128,6 +130,7 @@ class MenuActivity : ComponentActivity() {
         LazyColumn(
             modifier = modifier
                 .fillMaxWidth()
+                .wrapContentSize()
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
@@ -145,7 +148,7 @@ class MenuActivity : ComponentActivity() {
 }
 
 @Composable
-fun MySiteListItemHeader(headerItem: MySiteCardAndItem.Item.CategoryHeaderItem, modifier: Modifier = Modifier) {
+fun MySiteListItemHeader(headerItem: MySiteCardAndItem.Item.CategoryHeaderItem) {
     val title = when (headerItem.title) {
         is UiString.UiStringRes -> stringResource(id = headerItem.title.stringRes)
         is UiString.UiStringText -> headerItem.title.text.toString()
@@ -153,7 +156,7 @@ fun MySiteListItemHeader(headerItem: MySiteCardAndItem.Item.CategoryHeaderItem, 
         is UiString.UiStringResWithParams -> TODO()
     }
     Text(
-        modifier = modifier.padding(8.dp),
+        modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp),
         fontSize = 14.sp,
         fontWeight = FontWeight.Medium,
         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
@@ -161,84 +164,91 @@ fun MySiteListItemHeader(headerItem: MySiteCardAndItem.Item.CategoryHeaderItem, 
 }
 
 @Composable
-fun MySiteListItemEmptyHeader(modifier: Modifier = Modifier) {
-    Spacer(modifier = modifier.height(4.dp))
+fun MySiteListItemEmptyHeader() {
+    Spacer(modifier = Modifier.height(4.dp))
 }
 
 @Composable
 fun MySiteListItem(item: MySiteCardAndItem.Item.ListItem, modifier: Modifier = Modifier) {
-    Row(
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentSize()
-            .padding(vertical = 8.dp, horizontal = 8.dp)
-            .clickable { item.onClick.click() },
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Image(
-            painter = painterResource(id = item.primaryIcon),
-            contentDescription = null, // Add appropriate content description
-            contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .size(24.dp)
-                .padding(end = 8.dp),
-            colorFilter =
-            if (item.disablePrimaryIconTint) null else ColorFilter.tint(MaterialTheme.colors.onSurface)
         )
-
-        Text(
-            text = stringResource(id = (item.primaryText as UiString.UiStringRes).stringRes),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = 8.dp),
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-
-        // todo: eventually we can take uiStringRes out of the state, but for now it's shared, so leave it
-        if (item.secondaryText != null) {
-            val secondaryStringResourceText = when (item.secondaryText) {
-                is UiString.UiStringRes -> stringResource(id = item.secondaryText.stringRes)
-                is UiString.UiStringText -> item.secondaryText.text.toString()
-                is UiString.UiStringPluralRes -> TODO()
-                is UiString.UiStringResWithParams -> TODO()
-            }
-            Text(
-                text = secondaryStringResourceText,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 8.dp),
-            )
-        }
-
-        if (item.secondaryIcon != null) {
+        {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .wrapContentSize()
+                .clickable { item.onClick.click() }
+                .padding(start = 12.dp, top = 6.dp, end = 16.dp, bottom = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start,
+        ) {
             Image(
-                painter = painterResource(id = item.secondaryIcon),
+                painter = painterResource(id = item.primaryIcon),
                 contentDescription = null, // Add appropriate content description
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .size(24.dp)
+                    .padding(1.dp),
+                colorFilter =
+                if (item.disablePrimaryIconTint) null else ColorFilter.tint(MaterialTheme.colors.onSurface)
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = stringResource(id = (item.primaryText as UiString.UiStringRes).stringRes),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+                modifier = Modifier
                     .padding(end = 8.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface)
             )
-        }
+            Spacer(modifier = Modifier.height(4.dp).weight(1f))
 
-        if (item.showFocusPoint) {
-            AndroidView(
-                factory = { context ->
-                    val view = ComposeView(context)
-                    view.setContent {
-                        CustomXMLWidgetView()
-                    }
-                    view
-                },
-                modifier = Modifier.padding(16.dp)
-            )
+            // todo: eventually we can take uiStringRes out of the state, but for now it's shared, so leave it
+            if (item.secondaryText != null) {
+                val secondaryStringResourceText = when (item.secondaryText) {
+                    is UiString.UiStringRes -> stringResource(id = item.secondaryText.stringRes)
+                    is UiString.UiStringText -> item.secondaryText.text.toString()
+                    is UiString.UiStringPluralRes -> TODO()
+                    is UiString.UiStringResWithParams -> TODO()
+                }
+                Text(
+                    text = secondaryStringResourceText,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp),
+                )
+            }
+
+            if (item.secondaryIcon != null) {
+                Image(
+                    painter = painterResource(id = item.secondaryIcon),
+                    contentDescription = null, // Add appropriate content description
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(1.dp),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface)
+                )
+            }
+
+            if (item.showFocusPoint) {
+                AndroidView(
+                    factory = { context ->
+                        val view = ComposeView(context)
+                        view.setContent {
+                            CustomXMLWidgetView()
+                        }
+                        view
+                    },
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         }
     }
 }
