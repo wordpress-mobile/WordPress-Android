@@ -104,7 +104,6 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
-import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.mapSafe
@@ -140,7 +139,6 @@ class MySiteViewModel @Inject constructor(
     private val cardsTracker: CardsTracker,
     private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
-    mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val quickStartTracker: QuickStartTracker,
@@ -182,13 +180,16 @@ class MySiteViewModel @Inject constructor(
        as they're already built on site select. */
     private var isSiteSelected = false
 
-    private val isMySiteDashboardTabsEnabled by lazy { mySiteDashboardTabsFeatureConfig.isEnabled() }
-
-    val isMySiteTabsEnabled: Boolean
-        get() = isMySiteDashboardTabsEnabled &&
-                buildConfigWrapper.isMySiteTabsEnabled &&
-                jetpackFeatureRemovalPhaseHelper.shouldShowDashboard() &&
-                selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi ?: true
+    val quickLinks: LiveData<MySiteCardAndItem.Card.QuickLinkRibbon> = merge(
+        quickLinksItemViewModelSlice.uiState,
+        quickStartRepository.activeTask
+    ) { quickLinks, activeTask ->
+        if (quickLinks != null &&
+            activeTask != null) {
+            return@merge quickLinksItemViewModelSlice.updateToShowMoreFocusPointIfNeeded(quickLinks, activeTask)
+        }
+        return@merge quickLinks
+    }
 
     val onScrollTo: LiveData<Event<Int>> = merge(
         _activeTaskPosition.distinctUntilChanged(),
@@ -265,7 +266,7 @@ class MySiteViewModel @Inject constructor(
             result.filter { it.siteId == null || it.state.site != null }.mapSafe { it.state }
         }
 
-    val uiModel: LiveData<UiModel> = merge(state, quickLinksItemViewModelSlice.uiState) { cards, quickLinks ->
+    val uiModel: LiveData<UiModel> = merge(state, quickLinks) { cards, quickLinks ->
         cards?.let { nonNullCards ->
             with(nonNullCards) {
                 val state = if (site != null) {
@@ -358,12 +359,12 @@ class MySiteViewModel @Inject constructor(
         if (activeTask != null) {
             scrollToQuickStartTaskIfNecessary(
                 activeTask,
-                getPositionOfQuickStartItem(siteItems, activeTask)
+                getPositionOfQuickStartItem(siteItems)
             )
         }
         // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
-            siteInfoHeader =  siteInfo,
+            siteInfoHeader = siteInfo,
             siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
             dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
         )
@@ -371,17 +372,9 @@ class MySiteViewModel @Inject constructor(
 
     private fun getPositionOfQuickStartItem(
         siteItems: Map<MySiteTabType, List<MySiteCardAndItem>>,
-        activeTask: QuickStartTask
     ): Int {
-        return if(activeTask.shownInMoreMenu())
-                (siteItems[MySiteTabType.DASHBOARD] as List<MySiteCardAndItem>)
-                    .indexOfFirst { it.activeQuickStartItem }
-        else LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM
-    }
-
-    private fun QuickStartTask.shownInMoreMenu() = when (this) {
-        QuickStartNewSiteTask.ENABLE_POST_SHARING -> true
-        else -> false
+        return (siteItems[MySiteTabType.DASHBOARD] as List<MySiteCardAndItem>)
+            .indexOfFirst { it.activeQuickStartItem }
     }
 
     @Suppress("LongParameterList", "CyclomaticComplexMethod")
@@ -480,7 +473,7 @@ class MySiteViewModel @Inject constructor(
 
         return mapOf(
             MySiteTabType.SITE_MENU to mutableListOf<MySiteCardAndItem>().apply {
-                infoItem?.let {  add(infoItem)}
+                infoItem?.let { add(infoItem) }
                 addAll(siteItems)
                 jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
                 if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
