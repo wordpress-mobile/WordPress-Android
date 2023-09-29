@@ -1678,7 +1678,7 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">@dimen/quick_link_ribbon_text_size</item>
-        <item name="android:textAlignment">textStart</item>
+        <item name="android:textAlignment">viewStart</item>
         <item name="rippleColor">@color/on_surface_disabled_transparent_selector</item>
     </style>
 
