@@ -106,28 +106,24 @@ fun DomainItem(uiState: DomainUiState): Unit = with(uiState) {
                 }
             }
             if (tags.none { it is Unavailable }) {
-                when (cost) {
-                    is Cost.OnSale -> {
-                        SalePrice(
-                            cost.strikeoutTitle.asString() to cost.title.asString(),
-                            cost.subtitle.asString(),
-                            modifier = Modifier.padding(start = Margin.ExtraLarge.value)
-                        )
-                    }
-
-                    is Cost.Paid -> {
-                        Plan(
-                            cost.strikeoutTitle.asString() to cost.title.asString(),
-                            modifier = Modifier.padding(start = Margin.ExtraLarge.value)
-                        )
-                    }
-
-                    else -> {
-                        Price(
-                            cost.title.asString(),
-                            modifier = Modifier.padding(start = Margin.ExtraLarge.value)
-                        )
-                    }
+                if (cost is Cost.OnSale) {
+                    SalePrice(
+                        cost.strikeoutTitle.asString() to cost.title.asString(),
+                        cost.subtitle.asString(),
+                        modifier = Modifier.padding(start = Margin.ExtraLarge.value)
+                    )
+                }
+                else if (cost is Cost.Paid) {
+                    Plan(
+                        cost.strikeoutTitle.asString() to cost.title.asString(),
+                        modifier = Modifier.padding(start = Margin.ExtraLarge.value)
+                    )
+                }
+                else {
+                    Price(
+                        cost.title.asString(),
+                        modifier = Modifier.padding(start = Margin.ExtraLarge.value)
+                    )
                 }
             }
         }
