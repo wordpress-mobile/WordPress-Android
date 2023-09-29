@@ -98,8 +98,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                 icon = listItem.primaryIcon,
                 disableTint = listItem.disablePrimaryIconTint,
                 label = (listItem.primaryText as UiString.UiStringRes),
-                onClick = listItem.onClick,
-                listItemAction = listItem.listItemAction,
+                onClick = listItem.onClick
             )
         }
         val moreQuickLink = MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem(
@@ -108,8 +107,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
             onClick = ListItemInteraction.create(
                 ListItemAction.MORE,
                 this@QuickLinksItemViewModelSlice::onClick
-            ),
-            listItemAction = ListItemAction.MORE
+            )
         )
         return MySiteCardAndItem.Card.QuickLinksItem(
             quickLinkItems = activeQuickLinks + moreQuickLink
@@ -163,7 +161,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         quickLinks: MySiteCardAndItem.Card.QuickLinksItem,
         activeTask: QuickStartStore.QuickStartTask
     ): MySiteCardAndItem.Card.QuickLinksItem {
-        val updatedQuickLinks = if (shouldShowMoreFocusPoint(quickLinks.quickLinkItems, activeTask)) {
+        val updatedQuickLinks = if (isActiveTaskInMoreMenu(activeTask)) {
             val quickLinkItems = quickLinks.quickLinkItems.toMutableList()
             val lastItem = quickLinkItems.last().copy(showFocusPoint = true)
             quickLinkItems.removeLast()
@@ -173,27 +171,6 @@ class QuickLinksItemViewModelSlice @Inject constructor(
             quickLinks
         }
         return updatedQuickLinks
-    }
-
-    @Suppress("ReturnCount")
-    private fun shouldShowMoreFocusPoint(
-        activeShortcuts: List<MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem>,
-        activeTask: QuickStartStore.QuickStartTask?
-    ): Boolean {
-        if (activeTask == null) return false
-        activeShortcuts.find { it.listItemAction in isQuickStartFocusListItemAction() }?.let {
-            return isActiveTaskInMoreMenu(activeTask)
-        }
-        return false
-    }
-
-    private fun isQuickStartFocusListItemAction(): List<ListItemAction> {
-        return listOf(
-            ListItemAction.POSTS,
-            ListItemAction.PAGES,
-            ListItemAction.STATS,
-            ListItemAction.MEDIA
-        )
     }
 
     private fun isActiveTaskInMoreMenu(activeTask: QuickStartStore.QuickStartTask?): Boolean {
