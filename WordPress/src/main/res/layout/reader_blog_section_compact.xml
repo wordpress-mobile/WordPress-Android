@@ -18,16 +18,16 @@
 
         <ImageView
             android:id="@+id/blog_section_image_blog_avatar"
-            style="@style/ReaderImageView.Avatar.ExtraSmall"
-            android:background="@drawable/bg_oval_placeholder"
+            style="@style/ReaderImageView.Avatar.ExtraSmall.OvalSurfaceBackground"
             android:importantForAccessibility="no"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:src="@drawable/ic_blaze_overlay_image" />
 
         <ImageView
             android:id="@+id/blog_section_image_author_avatar"
-            style="@style/ReaderImageView.Avatar.ExtraSmall"
+            style="@style/ReaderImageView.Avatar.ExtraSmall.OvalSurfaceBackground"
             android:importantForAccessibility="no"
             app:layout_constraintStart_toEndOf="@id/blog_section_image_blog_avatar"
             app:layout_constraintEnd_toEndOf="@id/blog_section_image_blog_avatar"
