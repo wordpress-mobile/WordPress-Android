@@ -406,7 +406,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
                     readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
-                        post, this@ReaderDiscoverViewModel::onButtonClicked
+                        post, false, this@ReaderDiscoverViewModel::onButtonClicked
                     )
                 } else {
                     null
@@ -430,7 +430,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
                     readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
-                        post, this@ReaderDiscoverViewModel::onButtonClicked
+                        post, true, this@ReaderDiscoverViewModel::onButtonClicked
                     )
                 } else {
                     null

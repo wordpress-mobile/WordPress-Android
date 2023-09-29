@@ -515,7 +515,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onPostHeaderClicked,
                         onTagItemClicked,
                         showMoreMenu ? mReaderPostMoreButtonUiStateBuilder
-                                .buildMoreMenuItemsBlocking(post, onButtonClicked) : null
+                                .buildMoreMenuItemsBlocking(post, false, onButtonClicked) : null
                 );
         holder.onBind(uiState);
     }
@@ -616,7 +616,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onVideoOverlayClicked,
                         onPostHeaderClicked,
                         showMoreMenu ? mReaderPostMoreButtonUiStateBuilder
-                                .buildMoreMenuItemsBlocking(post, onButtonClicked) : null
+                                .buildMoreMenuItemsBlocking(post, true, onButtonClicked) : null
                 );
         holder.onBind(uiState);
     }

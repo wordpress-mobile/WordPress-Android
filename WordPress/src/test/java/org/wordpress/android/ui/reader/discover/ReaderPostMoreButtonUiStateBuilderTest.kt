@@ -57,7 +57,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init(isFollowed = false)
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.FOLLOW &&
@@ -70,7 +70,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init(isFollowed = true)
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.FOLLOW &&
@@ -83,7 +83,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init(isFollowed = false)
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS
@@ -95,7 +95,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init(isFollowed = true)
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS
@@ -109,7 +109,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         whenever(readerUtilsWrapper.isExternalFeed(post.feedId, post.blogId)).thenReturn(true)
 
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS
@@ -121,7 +121,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init(isFollowed = true, isNotificationsEnabled = false)
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS &&
@@ -134,7 +134,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init(isFollowed = true, isNotificationsEnabled = true)
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS &&
@@ -147,7 +147,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init()
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.SHARE }).isNotNull
     }
@@ -157,7 +157,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init()
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.VISIT_SITE }).isNotNull
     }
@@ -167,7 +167,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init(isFollowed = false)
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.BLOCK_SITE }).isNotNull
     }
@@ -177,7 +177,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init(isFollowed = true)
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.BLOCK_SITE }).isNotNull
     }
@@ -187,7 +187,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init(isFollowed = false)
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.FOLLOW &&
@@ -200,7 +200,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init(isFollowed = true)
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.FOLLOW &&
@@ -213,7 +213,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init(isFollowed = true, isNotificationsEnabled = false)
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS &&
@@ -226,7 +226,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init(isFollowed = true, isNotificationsEnabled = true)
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS &&
@@ -239,7 +239,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init()
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.REPORT_POST }).isNotNull
     }
@@ -251,7 +251,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         whenever(readerUtilsWrapper.isSelfHosted(post.authorId)).thenReturn(false)
 
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.REPORT_USER }).isNotNull
     }
@@ -263,7 +263,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         whenever(readerUtilsWrapper.isSelfHosted(post.authorId)).thenReturn(true)
 
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.REPORT_USER }).isNull()
     }
@@ -273,7 +273,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init(isSeen = false)
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.TOGGLE_SEEN_STATUS &&
@@ -286,7 +286,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init(isSeen = true)
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.TOGGLE_SEEN_STATUS &&
@@ -299,7 +299,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init()
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.TOGGLE_SEEN_STATUS }).isNotNull
     }
@@ -309,7 +309,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init(isSeenSupported = false)
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.TOGGLE_SEEN_STATUS }).isNull()
     }
@@ -319,7 +319,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = init()
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.SPACER_NO_ACTION }).isNotNull
     }
@@ -331,7 +331,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         whenever(readerUtilsWrapper.isSelfHosted(post.authorId)).thenReturn(false)
 
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.BLOCK_USER
@@ -345,7 +345,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         whenever(readerUtilsWrapper.isSelfHosted(post.authorId)).thenReturn(true)
 
         // Act
-        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.BLOCK_USER
