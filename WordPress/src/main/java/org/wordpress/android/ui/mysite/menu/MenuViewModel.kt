@@ -160,6 +160,22 @@ class MenuViewModel @Inject constructor(
         }
     }
 
+    fun onResume() {
+        removeFocusPoints()
+    }
+
+    private fun removeFocusPoints() {
+        if (quickStartEvent == null) {
+            val items = _uiState.value.items.map { item ->
+                if (item is MySiteCardAndItem.Item.ListItem) {
+                    item.copy(showFocusPoint = false)
+                } else {
+                    item
+                }
+            }.toList()
+            _uiState.value = MenuViewState(items = items)
+        }
+    }
     private fun clearQuickStartEvent() {
         quickStartEvent = null
     }

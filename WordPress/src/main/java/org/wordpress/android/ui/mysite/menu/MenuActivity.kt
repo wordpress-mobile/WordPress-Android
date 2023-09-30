@@ -78,6 +78,11 @@ class MenuActivity : ComponentActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
+    }
+
     private fun initObservers() {
         viewModel.navigation.observe(this) { handleNavigationAction(it.getContentIfNotHandled()) }
     }
