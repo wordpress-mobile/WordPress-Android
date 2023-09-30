@@ -314,25 +314,15 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     /**
-     *  Sort in the order
      *  First two paid domains, become Recommended, and Best Alternative
-     *  First Free domain listed after above two paid domains
+     *  First Free domain listed after two paid domains
      *  Then remaining paid domains
      */
     private fun sortDomains(domains: List<DomainModel>): List<DomainModel> {
-        val paidDomains = domains.filter { !it.isFree }
-        val freeDomains = domains.filter { it.isFree }
-
-        // Sort paid domains first
-        val sortedPaidDomains = paidDomains.sortedBy { it.productId }
-
-        // Get the first two paid domains
-        val recommendedAndBestAlternative = sortedPaidDomains.take(2)
-
-        // Create a list containing recommended and best alternative domains, and first free domain, then rest
-        return recommendedAndBestAlternative + freeDomains + sortedPaidDomains.drop(2)
+        return domains.partition { !it.isFree }.let { (paidDomains, freeDomains) ->
+            paidDomains.take(2) + freeDomains + paidDomains.drop(2)
+        }
     }
-
 
     private fun createAvailableItemUiState(domain: DomainModel, index: Int): ListItemUiState {
         return when (plansInSiteCreationFeatureConfig.isEnabled()) {
