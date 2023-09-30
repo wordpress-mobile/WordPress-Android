@@ -15,10 +15,12 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.ListItemActionHandler
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.Event
@@ -33,6 +35,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     private val listItemActionHandler: ListItemActionHandler,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val quickStartRepository: QuickStartRepository
 ) {
     lateinit var scope: CoroutineScope
 
@@ -129,6 +132,11 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         }
     }
 
+    private fun clearMenuStepIfNeeded(action: ListItemAction) {
+        if (action != ListItemAction.MORE) return
+        quickStartRepository.clearMenuStep()
+    }
+
     fun onCleared() {
         jetpackCapabilitiesUseCase.clear()
     }
@@ -157,13 +165,22 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         )
     }
 
+    data class MoreClickWithTask(
+        val listActionType: ListItemAction,
+        val quickStartEvent: QuickStartEvent
+    )
     fun updateToShowMoreFocusPointIfNeeded(
         quickLinks: MySiteCardAndItem.Card.QuickLinksItem,
-        activeTask: QuickStartStore.QuickStartTask
+        quickStartMenuStep: QuickStartRepository.QuickStartMenuStep
     ): MySiteCardAndItem.Card.QuickLinksItem {
-        val updatedQuickLinks = if (isActiveTaskInMoreMenu(activeTask)) {
+        val updatedQuickLinks = if (isActiveTaskInMoreMenu(quickStartMenuStep.task)) {
             val quickLinkItems = quickLinks.quickLinkItems.toMutableList()
-            val lastItem = quickLinkItems.last().copy(showFocusPoint = true)
+            val lastItem = quickLinkItems.last().copy(showFocusPoint = true,
+                onClick = ListItemInteraction.create(
+                    MoreClickWithTask(ListItemAction.MORE,
+                        QuickStartEvent(task = quickStartMenuStep.task!!)),
+                    this@QuickLinksItemViewModelSlice::onMoreClick
+                ))
             quickLinkItems.removeLast()
             quickLinkItems.add(lastItem)
             quickLinks.copy(quickLinkItems = quickLinkItems, showMoreFocusPoint = true)
@@ -171,6 +188,26 @@ class QuickLinksItemViewModelSlice @Inject constructor(
             quickLinks
         }
         return updatedQuickLinks
+    }
+
+    private fun onMoreClick(moreClickWithTask: MoreClickWithTask) {
+        clearMenuStepIfNeeded(moreClickWithTask.listActionType)
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            // add the tracking logic here
+            _onNavigation.postValue(
+                Event(
+                    listItemActionHandler.handleAction(
+                        moreClickWithTask.listActionType,
+                        selectedSite,
+                        moreClickWithTask.quickStartEvent
+                    )
+                )
+            )
+        } ?: run {
+            _onSnackbarMessage.postValue(
+                Event(SnackbarMessageHolder(UiString.UiStringRes(R.string.site_cannot_be_loaded)))
+            )
+        }
     }
 
     private fun isActiveTaskInMoreMenu(activeTask: QuickStartStore.QuickStartTask?): Boolean {
