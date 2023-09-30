@@ -48,6 +48,7 @@ private val SecondaryFontSize = 13.sp
 private val PrimaryFontSize = 17.sp
 private val StartPadding = 40.dp
 
+
 @Composable
 fun DomainItem(uiState: DomainUiState): Unit = with(uiState) {
     Column(Modifier.background(if (isSelected) HighlightBgColor else Unspecified)) {
@@ -59,7 +60,11 @@ fun DomainItem(uiState: DomainUiState): Unit = with(uiState) {
                     indication = rememberRipple(color = HighlightBgColor),
                     onClick = onClick::invoke,
                 )
-                .padding(vertical = Margin.ExtraLarge.value)
+                .then(if (cost is Cost.Paid) {
+                    Modifier.padding(top = Margin.ExtraLarge.value)
+                } else {
+                    Modifier.padding(vertical = Margin.ExtraLarge.value)
+                })
                 .padding(end = Margin.ExtraLarge.value)
         ) {
             Box(
@@ -97,13 +102,6 @@ fun DomainItem(uiState: DomainUiState): Unit = with(uiState) {
                         )
                     }
                 }
-                if (cost is Cost.Paid) {
-                    Text(
-                        text = cost.subtitle.asString(),
-                        color = colors.primary,
-                        fontSize = SecondaryFontSize,
-                    )
-                }
             }
             if (tags.none { it is Unavailable }) {
                 if (cost is Cost.OnSale) {
@@ -125,6 +123,15 @@ fun DomainItem(uiState: DomainUiState): Unit = with(uiState) {
                         modifier = Modifier.padding(start = Margin.ExtraLarge.value)
                     )
                 }
+            }
+        }
+        if (cost is Cost.Paid) {
+            Row(modifier = Modifier.padding(bottom = Margin.ExtraLarge.value, start = StartPadding)) {
+                Text(
+                    text = cost.subtitle.asString(),
+                    color = colors.primary,
+                    fontSize = SecondaryFontSize,
+                )
             }
         }
         Divider(thickness = 0.5.dp)
