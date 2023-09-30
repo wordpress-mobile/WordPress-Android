@@ -3,7 +3,8 @@ package org.wordpress.android.ui.mysite.menu
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.View
+import android.widget.FrameLayout
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -26,14 +27,17 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -53,8 +57,10 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.extensions.getParcelableExtraCompat
 import javax.inject.Inject
 
+const val KEY_QUICK_START_EVENT = "key_quick_start_event"
 @AndroidEntryPoint
 class MenuActivity : ComponentActivity() {
     @Inject
@@ -66,7 +72,7 @@ class MenuActivity : ComponentActivity() {
         initObservers()
         setContent {
             AppTheme {
-                viewModel.start()
+                viewModel.start(intent.getParcelableExtraCompat(KEY_QUICK_START_EVENT))
                 MenuScreen()
             }
         }
@@ -237,34 +243,34 @@ fun MySiteListItem(item: MySiteCardAndItem.Item.ListItem, modifier: Modifier = M
                 )
             }
 
-            if (item.showFocusPoint) {
-                AndroidView(
-                    factory = { context ->
-                        val view = ComposeView(context)
-                        view.setContent {
-                            CustomXMLWidgetView()
-                        }
-                        view
-                    },
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
+           if (item.showFocusPoint) {
+               CustomXMLWidgetView()
+           }
         }
     }
 }
 @Composable
 fun CustomXMLWidgetView(modifier: Modifier = Modifier) {
     // Load the custom XML widget using AndroidView
-    AndroidView(
-        factory = { context ->
-            // Inflate the custom XML layout
-            val inflater = LayoutInflater.from(context)
-            val parent: ViewGroup? = null
-            val view = inflater.inflate(R.layout.quick_start_focus_point, parent, false)
-            view
-        },
-        modifier = modifier.wrapContentSize(Alignment.Center)
-    )
+     var customView: View? by remember { mutableStateOf(null) }
+    val context = LocalContext.current
+
+    DisposableEffect(context) {
+        // Perform the side effect (inflate view) when the composable is composed
+        customView = FrameLayout(context).apply {
+            addView(LayoutInflater.from(context).inflate(R.layout.quick_start_focus_point, this, false))
+        }
+        // Specify the cleanup action when the composable is disposed
+        onDispose {
+            // Release any resources if needed
+        }
+    }
+    customView?.let { view ->
+        AndroidView(
+            factory =  { view },
+            modifier = modifier.wrapContentSize(Alignment.Center)
+        )
+    }
 }
 
 @Preview
