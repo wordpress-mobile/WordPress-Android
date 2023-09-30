@@ -182,11 +182,11 @@ class MySiteViewModel @Inject constructor(
 
     val quickLinks: LiveData<MySiteCardAndItem.Card.QuickLinksItem> = merge(
         quickLinksItemViewModelSlice.uiState,
-        quickStartRepository.activeTask
-    ) { quickLinks, activeTask ->
+        quickStartRepository.onQuickStartMenuStep
+    ) { quickLinks, quickStartMenuStep ->
         if (quickLinks != null &&
-            activeTask != null) {
-            return@merge quickLinksItemViewModelSlice.updateToShowMoreFocusPointIfNeeded(quickLinks, activeTask)
+            quickStartMenuStep != null) {
+            return@merge quickLinksItemViewModelSlice.updateToShowMoreFocusPointIfNeeded(quickLinks, quickStartMenuStep)
         }
         return@merge quickLinks
     }
@@ -250,7 +250,7 @@ class MySiteViewModel @Inject constructor(
     private var shouldMarkUpdateSiteTitleTaskComplete = false
 
     val state: LiveData<MySiteUiState> =
-        selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
+        selectedSiteRepository.siteSelected.switchMap { siteLocalId: Int ->
             isSiteSelected = true
             quickLinksItemViewModelSlice.onSiteChanged()
             resetShownTrackers()
