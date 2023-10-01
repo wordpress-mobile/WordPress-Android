@@ -29,15 +29,15 @@ import javax.inject.Named
 
 @HiltViewModel
 class MenuViewModel @Inject constructor(
+    private val blazeFeatureUtils: BlazeFeatureUtils,
+    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
+    private val jetpackMigrationLanguageUtil: JetpackMigrationLanguageUtil,
+    private val listItemActionHandler: ListItemActionHandler,
+    private val localeManagerWrapper: LocaleManagerWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val selectedSiteRepository: SelectedSiteRepository,
-    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val siteItemsBuilder: SiteItemsBuilder,
-    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
-    private val listItemActionHandler: ListItemActionHandler,
-    private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val localeManagerWrapper: LocaleManagerWrapper,
-    private val jetpackMigrationLanguageUtil: JetpackMigrationLanguageUtil
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val navigation = _onNavigation
