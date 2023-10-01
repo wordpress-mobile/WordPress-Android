@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.menu
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,13 +19,16 @@ import org.wordpress.android.ui.mysite.cards.ListItemActionHandler
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
+import org.wordpress.android.util.JetpackMigrationLanguageUtil
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
 data class MenuViewState(
-    val items: List<MySiteCardAndItem> // cards and or items
+    val items: List<MySiteCardAndItem>
 )
 
 @HiltViewModel
@@ -35,14 +39,23 @@ class MenuViewModel @Inject constructor(
     private val siteItemsBuilder: SiteItemsBuilder,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
     private val listItemActionHandler: ListItemActionHandler,
-    private val blazeFeatureUtils: BlazeFeatureUtils
+    private val blazeFeatureUtils: BlazeFeatureUtils,
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val jetpackMigrationLanguageUtil: JetpackMigrationLanguageUtil
 ) : ScopedViewModel(bgDispatcher) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val navigation = _onNavigation
 
+    private val _refreshAppLanguage = MutableLiveData<String>()
+    val refreshAppLanguage: LiveData<String> = _refreshAppLanguage
+
     private val _uiState = MutableStateFlow(MenuViewState(items = emptyList()))
 
     val uiState: StateFlow<MenuViewState> = _uiState
+
+    init {
+        emitLanguageRefreshIfNeeded(localeManagerWrapper.getLanguage())
+    }
 
     fun start() {
         val site = selectedSiteRepository.getSelectedSite()!!
@@ -120,6 +133,19 @@ class MenuViewModel @Inject constructor(
             // add the tracking logic here
             _onNavigation.postValue(Event(listItemActionHandler.handleAction(action, selectedSite)))
         }
+    }
+
+    private fun emitLanguageRefreshIfNeeded(languageCode: String) {
+        if (languageCode.isNotEmpty()) {
+            val shouldEmitLanguageRefresh = !localeManagerWrapper.isSameLanguage(languageCode)
+            if (shouldEmitLanguageRefresh) {
+                _refreshAppLanguage.value = languageCode
+            }
+        }
+    }
+
+    fun setAppLanguage(locale: Locale) {
+        jetpackMigrationLanguageUtil.applyLanguage(locale.language)
     }
 
     override fun onCleared() {

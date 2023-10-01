@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -52,11 +53,13 @@ import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.LocaleManager
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -70,8 +73,15 @@ class MenuActivity : ComponentActivity() {
         initObservers()
         setContent {
             AppTheme {
-                viewModel.start()
-                MenuScreen()
+                val userLanguage by viewModel.refreshAppLanguage.observeAsState("")
+
+                LocaleAwareComposable(
+                    locale = LocaleManager.languageLocale(userLanguage),
+                    onLocaleChange = viewModel::setAppLanguage
+                ) {
+                    viewModel.start()
+                    MenuScreen()
+                }
             }
         }
     }
@@ -132,6 +142,7 @@ class MenuActivity : ComponentActivity() {
     @Composable
     fun MenuContent(modifier: Modifier = Modifier) {
         val uiState by viewModel.uiState.collectAsState()
+
         LazyColumn(
             modifier = modifier
                 .fillMaxWidth()
@@ -153,18 +164,14 @@ class MenuActivity : ComponentActivity() {
 }
 @Composable
 fun MySiteListItemHeader(headerItem: MySiteCardAndItem.Item.CategoryHeaderItem) {
-    val title = when (headerItem.title) {
-        is UiString.UiStringRes -> stringResource(id = headerItem.title.stringRes)
-        is UiString.UiStringText -> headerItem.title.text.toString()
-        is UiString.UiStringPluralRes -> TODO()
-        is UiString.UiStringResWithParams -> TODO()
-    }
     Text(
-        modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp),
+        text = stringResource(id = (headerItem.title as UiString.UiStringRes).stringRes),
         fontSize = 14.sp,
         fontWeight = FontWeight.Medium,
         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
-        text = title)
+        modifier = Modifier
+            .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp)
+    )
 }
 
 @Composable
@@ -188,7 +195,7 @@ fun MySiteListItem(item: MySiteCardAndItem.Item.ListItem, modifier: Modifier = M
                 .padding(start = 12.dp, top = 6.dp, end = 16.dp, bottom = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start,
-        ) {
+            content = {
             Image(
                 painter = painterResource(id = item.primaryIcon),
                 contentDescription = null, // Add appropriate content description
@@ -206,28 +213,21 @@ fun MySiteListItem(item: MySiteCardAndItem.Item.ListItem, modifier: Modifier = M
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
                 modifier = Modifier
-                    .padding(end = 8.dp),
+                    .padding(start = 8.dp, end = 8.dp),
             )
             Spacer(modifier = Modifier
                 .height(4.dp)
                 .weight(1f))
 
-            // todo: eventually we can take uiStringRes out of the state, but for now it's shared, so leave it
-            if (item.secondaryText != null) {
-                val secondaryStringResourceText = when (item.secondaryText) {
-                    is UiString.UiStringRes -> stringResource(id = item.secondaryText.stringRes)
-                    is UiString.UiStringText -> item.secondaryText.text.toString()
-                    is UiString.UiStringPluralRes -> TODO()
-                    is UiString.UiStringResWithParams -> TODO()
-                }
+            if (item.secondaryText != null && item.secondaryText is UiString.UiStringRes) {
                 Text(
-                    text = secondaryStringResourceText,
+                    text = stringResource(id = item.secondaryText.stringRes),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
                     modifier = Modifier
                         .weight(1f)
-                        .padding(end = 8.dp),
+                        .padding(start = 8.dp, end = 8.dp),
                 )
             }
 
@@ -244,7 +244,7 @@ fun MySiteListItem(item: MySiteCardAndItem.Item.ListItem, modifier: Modifier = M
             }
 
             if (item.showFocusPoint) CustomXMLWidgetView()
-        }
+        })
     }
 }
 @Composable
@@ -335,4 +335,3 @@ fun MySiteListItemPreviewWithSecondaryImage() {
             listItemAction = ListItemAction.PLAN)
     )
 }
-
