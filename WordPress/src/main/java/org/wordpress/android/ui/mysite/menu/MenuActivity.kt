@@ -55,7 +55,6 @@ import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
 import org.wordpress.android.ui.compose.utils.uiStringText
-import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -153,18 +152,16 @@ class MenuActivity : ComponentActivity() {
         ) {
             items(uiState.items) { viewState ->
                 when (viewState) {
-                    is MySiteCardAndItem.Item.ListItem -> MySiteListItem(viewState)
-                    is MySiteCardAndItem.Item.CategoryHeaderItem -> MySiteListItemHeader(viewState)
-                    is MySiteCardAndItem.Item.CategoryEmptyHeaderItem -> MySiteListItemEmptyHeader()
-                    else -> {
-                    }
+                    is MenuItemState.MenuListItem-> MySiteListItem(viewState)
+                    is MenuItemState.MenuHeaderItem -> MySiteListItemHeader(viewState)
+                    is MenuItemState.MenuEmptyHeaderItem -> MySiteListItemEmptyHeader()
                 }
             }
         }
     }
 }
 @Composable
-fun MySiteListItemHeader(headerItem: MySiteCardAndItem.Item.CategoryHeaderItem) {
+fun MySiteListItemHeader(headerItem: MenuItemState.MenuHeaderItem) {
     Text(
         text = uiStringText(headerItem.title),
         fontSize = 14.sp,
@@ -181,7 +178,7 @@ fun MySiteListItemEmptyHeader() {
 }
 
 @Composable
-fun MySiteListItem(item: MySiteCardAndItem.Item.ListItem, modifier: Modifier = Modifier) {
+fun MySiteListItem(item: MenuItemState.MenuListItem, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -278,7 +275,7 @@ fun CustomXMLWidgetView(modifier: Modifier = Modifier) {
 fun MySiteListItemPreviewBase() {
     val onClick = remember { {} }
     MySiteListItem(
-        MySiteCardAndItem.Item.ListItem(
+        MenuItemState.MenuListItem(
             primaryIcon = R.drawable.ic_posts_white_24dp,
             primaryText = UiString.UiStringText("Blog Posts"),
             secondaryIcon = null,
@@ -294,7 +291,7 @@ fun MySiteListItemPreviewBase() {
 fun MySiteListItemPreviewWithFocusPoint() {
     val onClick = remember { {} }
     MySiteListItem(
-        MySiteCardAndItem.Item.ListItem(
+        MenuItemState.MenuListItem(
             primaryIcon = R.drawable.ic_posts_white_24dp,
             primaryText = UiString.UiStringText("Blog Posts"),
             secondaryIcon = null,
@@ -310,7 +307,7 @@ fun MySiteListItemPreviewWithFocusPoint() {
 fun MySiteListItemPreviewWithSecondaryText() {
     val onClick = remember { {} }
     MySiteListItem(
-        MySiteCardAndItem.Item.ListItem(
+        MenuItemState.MenuListItem(
             primaryIcon = R.drawable.ic_posts_white_24dp,
             primaryText = UiString.UiStringText("Plans"),
             secondaryIcon = null,
@@ -326,7 +323,7 @@ fun MySiteListItemPreviewWithSecondaryText() {
 fun MySiteListItemPreviewWithSecondaryImage() {
     val onClick = remember { {} }
     MySiteListItem(
-        MySiteCardAndItem.Item.ListItem(
+        MenuItemState.MenuListItem(
             primaryIcon = R.drawable.ic_posts_white_24dp,
             primaryText = UiString.UiStringText("Plans"),
             secondaryIcon = R.drawable.ic_story_icon_24dp,

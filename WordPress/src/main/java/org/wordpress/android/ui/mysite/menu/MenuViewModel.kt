@@ -27,10 +27,6 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
-data class MenuViewState(
-    val items: List<MySiteCardAndItem>
-)
-
 @HiltViewModel
 class MenuViewModel @Inject constructor(
     private val quickStartRepository: QuickStartRepository,
@@ -63,8 +59,7 @@ class MenuViewModel @Inject constructor(
     }
 
     private fun buildSiteMenu(site: SiteModel) {
-        _uiState.value = MenuViewState(
-            items = siteItemsBuilder.build(
+        _uiState.value = MenuViewState(items = siteItemsBuilder.build(
                 MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
                     enableFocusPoints = true,
                     site = site,
@@ -72,8 +67,11 @@ class MenuViewModel @Inject constructor(
                     onClick = this::onClick,
                     isBlazeEligible = isSiteBlazeEligible()
                 )
-            )
+            ).filterIsInstance<MySiteCardAndItem.Item>().map {
+                it.toMenuItemState()
+            }.toList()
         )
+
         updateSiteItemsForJetpackCapabilities(site)
     }
 
@@ -91,7 +89,9 @@ class MenuViewModel @Inject constructor(
                             backupAvailable = it.backup,
                             scanAvailable = (it.scan && !site.isWPCom && !site.isWPComAtomic)
                         )
-                    )
+                    ).filterIsInstance<MySiteCardAndItem.Item>().map { item ->
+                        item.toMenuItemState()
+                    }.toList()
                 )
             } // end collect
         }
