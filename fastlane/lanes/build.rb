@@ -15,13 +15,28 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_and_upload_release do |options|
-    android_build_prechecks(skip_confirm: options[:skip_confirm], final: true) unless options[:skip_prechecks]
-    android_build_preflight() unless options[:skip_prechecks]
+    unless options[:skip_prechecks]
+      Fastlane::Helper::GitHelper.ensure_on_branch!('release') unless is_ci
+
+      UI.user_error!("Can't build a final release out of this branch because it's configured as a beta release!") if current_version_name.include? '-rc-'
+
+      ensure_git_status_clean unless is_ci
+
+      message = "Building version #{current_release_version} (#{current_build_code}) for upload to Release Channel\n"
+
+      if options[:skip_confirm]
+        UI.message(message)
+      else
+        UI.user_error!('Aborted by user request') unless UI.confirm("#{message}Do you want to continue?")
+      end
+    end
+
+    android_build_preflight unless options[:skip_prechecks]
 
     # Create the file names
     app = get_app_name_option!(options)
-    version = android_get_release_version()
-    build_bundle(app: app, version: version, flavor: 'Vanilla', buildType: 'Release')
+    version = current_version_name
+    build_bundle(app: app, version: version, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
     upload_build_to_play_store(app: app, version: version, track: 'production')
 
@@ -43,8 +58,22 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_and_upload_pre_releases do |options|
-    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless options[:skip_prechecks]
-    android_build_preflight() unless options[:skip_prechecks]
+    unless options[:skip_prechecks]
+      Fastlane::Helper::GitHelper.ensure_on_branch!('release') unless is_ci
+
+      ensure_git_status_clean unless is_ci
+
+      message = "Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel\n"
+
+      if options[:skip_confirm]
+        UI.message(message)
+      else
+        UI.user_error!('Aborted by user request') unless UI.confirm("#{message}Do you want to continue?")
+      end)
+    end
+
+    android_build_preflight unless options[:skip_prechecks]
+
     app = get_app_name_option!(options)
     build_beta(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
   end
@@ -64,13 +93,24 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_beta do |options|
-    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless options[:skip_prechecks]
-    android_build_preflight() unless options[:skip_prechecks]
+    Fastlane::Helper::GitHelper.ensure_on_branch!('release') unless is_ci
+
+    ensure_git_status_clean unless is_ci
+
+    message = "Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel\n"
+
+    if options[:skip_confirm]
+      UI.message(message)
+    else
+      UI.user_error!('Aborted by user request') unless UI.confirm("#{message}Do you want to continue?")
+    end
+
+    android_build_preflight unless options[:skip_prechecks]
 
     # Create the file names
     app = get_app_name_option!(options)
-    version = android_get_release_version()
-    build_bundle(app: app, version: version, flavor: 'Vanilla', buildType: 'Release')
+    version = current_version_name
+    build_bundle(app: app, version: version, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
     upload_build_to_play_store(app: app, version: version, track: 'beta') if options[:upload_to_play_store]
 
@@ -145,24 +185,19 @@ platform :android do
   # Usage:
   # bundle exec fastlane download_signed_apks_from_google_play # Download WordPress & Jetpack apks using the version from version.properties
   # bundle exec fastlane download_signed_apks_from_google_play app:<wordpress|jetpack> # Download given app's apk using the version from version.properties
-  # bundle exec fastlane download_signed_apks_from_google_play app:<wordpress|jetpack> version:<versionName,versionCode>
+  # bundle exec fastlane download_signed_apks_from_google_play app:<wordpress|jetpack> version:versionCode
   #####################################################################################
   lane :download_signed_apks_from_google_play do |options|
     # If no `app:` is specified, call this for both WordPress and Jetpack
     apps = options[:app].nil? ? %i[wordpress jetpack] : Array(options[:app]&.downcase&.to_sym)
-    version = options[:version] || android_get_release_version() # default to current release version
-    if version.is_a?(String) # for when calling from command line
-      (version_name, version_code) = version.split(',')
-      UI.user_error!('Please pass the `version` option as a comma-separated `name,code` value') if version_code.nil?
-      version = { 'name' => version_name, 'code' => version_code }
-    end
+    build_code = options[:version] || current_build_code
 
     apps.each do |app|
       package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
 
       download_universal_apk_from_google_play(
           package_name: package_name,
-          version_code: version['code'],
+          version_code: build_code,
           destination: signed_apk_path(app, version),
           json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
       )
@@ -221,12 +256,13 @@ platform :android do
   # This lane builds an app bundle
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_bundle app:<wordpress|jetpack> version:<versionName,versionCode> flavor:<flavor> buildType:<debug|release> [skip_lint:<true|false>]
+  # bundle exec fastlane build_bundle app:<wordpress|jetpack> version:string, build_code:string flavor:<flavor> buildType:<debug|release> [skip_lint:<true|false>]
   #####################################################################################
   desc 'Builds an app bundle'
   lane :build_bundle do |options|
     # Create the file names
     version = options[:version]
+    build_code = options[:build_code]
     app = get_app_name_option!(options)
 
     if version.nil?
@@ -235,11 +271,7 @@ platform :android do
     end
 
     prefix = APP_SPECIFIC_VALUES[app.to_sym][:bundle_name_prefix]
-    if version.is_a?(String) # for when calling from command line
-      (version_name, version_code) = version.split(',')
-      version = { 'name' => version_name, 'code' => version_code || '1' }
-    end
-    name = "#{prefix}-#{version['name']}.aab"
+    name = "#{prefix}-#{version}.aab"
 
     aab_file = "org.wordpress.android-#{app}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
     output_dir = 'WordPress/build/outputs/bundle/'
@@ -266,8 +298,8 @@ platform :android do
         UI.message('Skipping lint...')
       end
 
-      UI.message("Building #{version['name']} / #{version['code']} - #{aab_file}...")
-      sh("echo \"Building #{version['name']} / #{version['code']} - #{aab_file}...\" >> #{logfile_path}")
+      UI.message("Building #{version} / #{build_code} - #{aab_file}...")
+      sh("echo \"Building #{version} / #{build_code} - #{aab_file}...\" >> #{logfile_path}")
       sh("./gradlew bundle#{app}#{options[:flavor]}#{options[:buildType]} >> #{logfile_path} 2>&1")
 
       UI.crash!("Unable to find a bundle at #{bundle_path}") unless File.file?(bundle_path)
