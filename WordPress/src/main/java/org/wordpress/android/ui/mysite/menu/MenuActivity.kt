@@ -54,6 +54,7 @@ import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
+import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
@@ -165,7 +166,7 @@ class MenuActivity : ComponentActivity() {
 @Composable
 fun MySiteListItemHeader(headerItem: MySiteCardAndItem.Item.CategoryHeaderItem) {
     Text(
-        text = stringResource(id = (headerItem.title as UiString.UiStringRes).stringRes),
+        text = uiStringText(headerItem.title),
         fontSize = 14.sp,
         fontWeight = FontWeight.Medium,
         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
@@ -208,7 +209,7 @@ fun MySiteListItem(item: MySiteCardAndItem.Item.ListItem, modifier: Modifier = M
             )
             Spacer(Modifier.width(8.dp))
             Text(
-                text = stringResource(id = (item.primaryText as UiString.UiStringRes).stringRes),
+                text = uiStringText(item.primaryText),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
@@ -219,9 +220,9 @@ fun MySiteListItem(item: MySiteCardAndItem.Item.ListItem, modifier: Modifier = M
                 .height(4.dp)
                 .weight(1f))
 
-            if (item.secondaryText != null && item.secondaryText is UiString.UiStringRes) {
+            if (item.secondaryText != null) {
                 Text(
-                    text = stringResource(id = item.secondaryText.stringRes),
+                    text = uiStringText(item.secondaryText),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
