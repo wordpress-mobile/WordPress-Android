@@ -69,7 +69,7 @@ platform :android do
         UI.message(message)
       else
         UI.user_error!('Aborted by user request') unless UI.confirm("#{message}Do you want to continue?")
-      end)
+      end
     end
 
     android_build_preflight unless options[:skip_prechecks]
