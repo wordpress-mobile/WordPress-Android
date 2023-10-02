@@ -18,8 +18,8 @@ platform :android do
     check_for_toolkit_updates unless is_ci || ENV['FASTLANE_SKIP_TOOLKIT_UPDATE_CHECK']
 
     ensure_git_status_clean
-
     Fastlane::Helper::GitHelper.checkout_and_pull(DEFAULT_BRANCH)
+    ensure_git_branch(branch: DEFAULT_BRANCH)
 
     confirmation_message = <<-MESSAGE
 
@@ -37,13 +37,12 @@ platform :android do
 
     # Create the release branch
     UI.message 'Creating release branch...'
-    ensure_git_branch(branch: DEFAULT_BRANCH)
     Fastlane::Helper::GitHelper.create_branch("release/#{next_release_version}", from: DEFAULT_BRANCH)
+    ensure_git_branch(branch: '^release/') # Match branch names that begin with `release/`
     UI.message "Done! New release branch is: #{git_branch}"
 
     # Bump the version and build code
     UI.message 'Bumping beta version and build code...'
-    ensure_git_branch(branch: '^release/') # Match branch names that begin with `release/`
     VERSION_FILE.write_version(
       version_name: first_beta_version,
       version_code: next_build_code
@@ -291,9 +290,8 @@ platform :android do
   lane :finalize_release do |options|
     UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix
 
-    UI.user_error!("Current branch - '#{git_branch}' - is not a release branch. Abort.") unless git_branch.start_with?('release/')
-
     ensure_git_status_clean
+    ensure_git_branch(branch: '^release/') # Match branch names that begin with `release/`
 
     message = "Finalizing release: #{current_release_version}\n"
     if options[:skip_confirm]
@@ -316,7 +314,6 @@ platform :android do
 
     # Bump the release version and build code
     UI.message 'Bumping final release version and build code...'
-    ensure_git_branch(branch: '^release/') # Match branch names that begin with `release/`
     VERSION_FILE.write_version(
       version_name: current_release_version,
       version_code: next_build_code
