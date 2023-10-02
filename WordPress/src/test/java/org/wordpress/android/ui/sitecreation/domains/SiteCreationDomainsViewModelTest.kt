@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
@@ -456,7 +457,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         assertThat(uiDomains).filteredOn { it.cost is Cost.Paid }.hasSameSizeAs(apiPaidDomains)
     }
 
-    @Test
+    @Test @Ignore("It is removed from UI for now, for being Free with annual plan")
     fun `verify cost of sale domain results from api is 'OnSale'`() = testWithSuccessResultNewUi { (query) ->
         whenever(productsStore.fetchProducts(any())).thenReturn(OnProductsFetched(SALE_PRODUCTS))
 
@@ -468,7 +469,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         assertThat(uiDomains).filteredOn { it.cost is Cost.OnSale }.hasSameSizeAs(SALE_PRODUCTS)
     }
 
-    @Test
+    @Test @Ignore("It is removed from UI for now, for being Free with annual plan")
     fun `verify sale domain results from api have tag 'Sale'`() = testWithSuccessResultNewUi { (query) ->
         whenever(productsStore.fetchProducts(any())).thenReturn(OnProductsFetched(SALE_PRODUCTS))
 

@@ -3399,6 +3399,7 @@
     <!-- Site Creation : Domains -->
     <string name="site_creation_domain_cost">per year</string>
     <string name="site_creation_domain_cost_sale">for the first year</string>
+    <string name="site_creation_domain_free_with_annual_plan">Free for the first year with annual paid plans</string>
     <string name="site_creation_domain_tag_best_alternative">Best Alternative</string>
     <string name="site_creation_domain_tag_recommended">Recommended</string>
     <string name="site_creation_domain_tag_sale">Sale</string>
