@@ -89,8 +89,8 @@ class ReaderPostNewViewHolder(
     }
 
     private fun updateInteractionCountsSection(state: ReaderPostNewUiState) = with(binding) {
-        val likeCount = state.likeAction.count // TODO thomashorta this should come directly from state
-        val commentCount = state.commentsAction.count // TODO thomashorta this should come directly from state
+        val likeCount = state.interactionSection.likeCount
+        val commentCount = state.interactionSection.commentCount
 
         val likeLabel = ReaderUtils.getShortLikeLabelText(viewContext, likeCount).takeIf { likeCount > 0 }
         val commentLabel = ReaderUtils.getShortCommentLabelText(viewContext, commentCount).takeIf { commentCount > 0 }

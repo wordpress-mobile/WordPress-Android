@@ -29,6 +29,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterest
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState.InteractionSectionData
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
@@ -179,7 +180,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onMoreDismissed: (ReaderPostNewUiState) -> Unit,
         onVideoOverlayClicked: (Long, Long) -> Unit,
         onPostHeaderViewClicked: (Long, Long) -> Unit,
-        moreMenuItems: List<SecondaryAction>? = null
+        moreMenuItems: List<SecondaryAction>? = null,
     ): ReaderPostNewUiState {
         return withContext(bgDispatcher) {
             mapPostToNewUiStateBlocking(
@@ -194,7 +195,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 onMoreDismissed,
                 onVideoOverlayClicked,
                 onPostHeaderViewClicked,
-                moreMenuItems
+                moreMenuItems,
             )
         }
     }
@@ -212,10 +213,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onMoreDismissed: (ReaderPostNewUiState) -> Unit,
         onVideoOverlayClicked: (Long, Long) -> Unit,
         onPostHeaderViewClicked: (Long, Long) -> Unit,
-        moreMenuItems: List<ReaderPostCardAction>? = null
+        moreMenuItems: List<ReaderPostCardAction>? = null,
     ): ReaderPostNewUiState {
-        // TODO thomashorta move likes and comments count to this state object and also remove contentDescription
-        //  from the likeAction and commentAction (or set the default description)
+        // TODO thomashorta remove contentDescription from the likeAction and commentAction (or set the default
+        //  description)
         return ReaderPostNewUiState(
             source = source,
             postId = post.postId,
@@ -223,25 +224,26 @@ class ReaderPostUiStateBuilder @Inject constructor(
             feedId = post.feedId,
             isFollowed = post.isFollowedByCurrentUser,
             blogSection = buildCompactBlogSection(post, onPostHeaderViewClicked, post.isP2orA8C),
+            interactionSection = buildInteractionSection(post),
             title = buildTitle(post, forceForPhoto = true, allowEmptyTitle = true),
             excerpt = buildExcerpt(post, forceForPhoto = true),
-            photoFrameVisibility = buildPhotoFrameVisibility(post),
             featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
             featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius_new),
+            fullVideoUrl = buildFullVideoUrl(post),
             thumbnailStripSection = buildThumbnailStripUrls(post),
             videoOverlayVisibility = buildVideoOverlayVisibility(post),
             featuredImageVisibility = buildFeaturedImageVisibility(post),
             moreMenuVisibility = accountStore.hasAccessToken(),
-            moreMenuItems = moreMenuItems,
-            fullVideoUrl = buildFullVideoUrl(post),
+            photoFrameVisibility = buildPhotoFrameVisibility(post),
             likeAction = buildLikeSection(post, onButtonClicked),
             reblogAction = buildReblogSection(post, onButtonClicked),
             commentsAction = buildCommentsSection(post, onButtonClicked),
+            moreMenuItems = moreMenuItems,
             onItemClicked = onItemClicked,
             onItemRendered = onItemRendered,
             onMoreButtonClicked = onMoreButtonClicked,
             onMoreDismissed = onMoreDismissed,
-            onVideoOverlayClicked = onVideoOverlayClicked
+            onVideoOverlayClicked = onVideoOverlayClicked,
         )
     }
 
@@ -362,6 +364,13 @@ class ReaderPostUiStateBuilder @Inject constructor(
             null
         }
     }
+
+    private fun buildInteractionSection(
+        post: ReaderPost
+    ): InteractionSectionData = InteractionSectionData(
+        likeCount = post.numLikes,
+        commentCount = post.numReplies,
+    )
 
     private fun buildBlogUrl(post: ReaderPost) = post
         .takeIf { it.hasBlogUrl() }
