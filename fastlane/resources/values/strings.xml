@@ -71,7 +71,6 @@
     <string name="connection_to_server_lost">The connection to the server was lost</string>
     <string name="category_refresh_error">Category refresh error</string>
     <string name="incorrect_credentials">Incorrect username or password.</string>
-    <string name="cancel_edit">Cancel edit</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="refresh">Refresh</string>
     <string name="blog_not_found">An error occurred when accessing this blog</string>
@@ -487,11 +486,8 @@
 
     <!-- edit comment view -->
     <string name="saving_changes">Saving changes</string>
-    <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
     <string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
     <string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
-    <string name="content_required">Comment is required</string>
-    <string name="toast_comment_unedited">Comment hasn\'t changed</string>
     <string name="comment_edit_menu_done">Done</string>
     <string name="comment_edit_user_name">Name</string>
     <string name="comment_edit_comment">Comment</string>
@@ -4730,5 +4726,15 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <string name="my_site_dashboard_no_cards_message_title">All cards are hidden</string>
     <string name="my_site_dashboard_no_cards_message_description">Tap the personalise button to show more cards.</string>
+
+    <string name="pages_no_site_something_went_wrong">Uh oh, something went wrong. Please try again later.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block cannot be rendered because it is deeply nested. Tap here for more details.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks nested deeper than %d levels may not render properly in the mobile editor. For this reason, we recommend flattening the content by ungrouping the block or editing the block using your web browser.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks nested deeper than %d levels may not render properly in the mobile editor. For this reason, we recommend flattening the content by ungrouping the block or editing the block using the web editor.</string>
+    <string name="gutenberg_native_deeply_nested_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Deeply nested block</string>
+    <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Synced patterns</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap here to show more details.</string>
+    <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ungroup block</string>
+    <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Warning message</string>
 
 </resources>
