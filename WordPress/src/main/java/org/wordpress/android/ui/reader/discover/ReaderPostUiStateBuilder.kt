@@ -215,8 +215,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onPostHeaderViewClicked: (Long, Long) -> Unit,
         moreMenuItems: List<ReaderPostCardAction>? = null,
     ): ReaderPostNewUiState {
-        // TODO thomashorta remove contentDescription from the likeAction and commentAction (or set the default
-        //  description)
         return ReaderPostNewUiState(
             source = source,
             postId = post.postId,
@@ -235,7 +233,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             featuredImageVisibility = buildFeaturedImageVisibility(post),
             moreMenuVisibility = accountStore.hasAccessToken(),
             photoFrameVisibility = buildPhotoFrameVisibility(post),
-            likeAction = buildLikeSection(post, onButtonClicked),
+            likeAction = buildLikeSection(post, onButtonClicked, isReaderImprovementsEnabled = true),
             reblogAction = buildReblogSection(post, onButtonClicked),
             commentsAction = buildCommentsSection(post, onButtonClicked),
             moreMenuItems = moreMenuItems,
@@ -508,16 +506,21 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     private fun buildLikeSection(
         post: ReaderPost,
-        onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
+        onClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
+        isReaderImprovementsEnabled: Boolean = false,
     ): PrimaryAction {
         val likesEnabled = post.canLikePost() && accountStore.hasAccessToken()
+
+        val contentDescription = if (isReaderImprovementsEnabled) {
+            UiStringRes(R.string.reader_label_like)
+        } else {
+            UiStringText(readerUtilsWrapper.getLongLikeLabelText(post.numLikes, post.isLikedByCurrentUser))
+        }
 
         return PrimaryAction(
             isEnabled = likesEnabled,
             isSelected = post.isLikedByCurrentUser,
-            contentDescription = UiStringText(
-                readerUtilsWrapper.getLongLikeLabelText(post.numLikes, post.isLikedByCurrentUser)
-            ),
+            contentDescription = contentDescription,
             count = post.numLikes,
             onClicked = if (likesEnabled) onClicked else null,
             type = LIKE
