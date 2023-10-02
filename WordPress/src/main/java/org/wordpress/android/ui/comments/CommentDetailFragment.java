@@ -668,11 +668,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
      * open the comment for editing
      */
     @SuppressWarnings("deprecation")
-    private void editComment(
-            @NonNull SiteModel site,
-            @NonNull CommentModel comment,
-            @Nullable Note note
-    ) {
+    private void editComment(@NonNull SiteModel site) {
         if (!isAdded()) {
             return;
         }
@@ -1724,7 +1720,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 new androidx.appcompat.widget.PopupMenu(requireContext(), view);
         morePopupMenu.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_edit) {
-                editComment(site, comment, note);
+                editComment(site);
                 return true;
             }
             if (item.getItemId() == R.id.action_trash) {
