@@ -15,6 +15,10 @@ updates:
       - dependency-name: "com.android.tools.build:gradle"
       - dependency-name: "com.android.application"
       - dependency-name: "com.android.library"
+      # Bumping 2.13.3 to the newest version requires lots of changes, including changes to
+      # Gutenberg. As such, and as agreed, any update is paused. For more details, see
+      # https://github.com/wordpress-mobile/WordPress-Android/pull/17936#issuecomment-1553227875
+      - dependency-name: "com.google.android.exoplayer:exoplayer"
       # Bumping 2.26.3 to 2.27.2 will break the mocks. For more details, see
       # https://github.com/wiremock/wiremock/issues/1345#issuecomment-656060968
       - dependency-name: "com.github.tomakehurst:wiremock"
