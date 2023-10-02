@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-05 12:25:24+0000
+Translation-Revision-Date: 2023-09-20 16:13:57+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: ro
 -->
 <resources>
+    <string name="my_site_dashboard_no_cards_message_description">Atinge butonul de personalizare ca să arăți mai multe cartușe.</string>
+    <string name="personalization_screen_stats_card_description">Vizualizări, vizitatori și aprecieri</string>
+    <string name="personalization_screen_blogging_prompts_card_title">Îndemnuri de a scrie</string>
+    <string name="personalization_screen_blaze_card_description">Promovează un articol și vezi campaniile curente.</string>
+    <string name="personalization_screen_scheduled_posts_card_description">Articole programate în viitor.</string>
+    <string name="personalization_screen_activity_log_card_description">Acțiuni recente efectuate pe site-ul tău.</string>
+    <string name="personalization_screen_pages_card_description">Prezentare generală a paginilor site-ului.</string>
+    <string name="personalization_screen_blogging_prompts_card_description">Idei zilnice pentru articole pe blogul tău.</string>
+    <string name="my_site_dashboard_no_cards_message_title">Sunt ascunse toate cartușele</string>
+    <string name="personalization_screen_next_steps_card_description">Învață cum să beneficiezi pe deplin de site-ul tău cu ajutorul aplicației.</string>
+    <string name="personalization_screen_draft_posts_card_description">Articole ciornă recente.</string>
+    <string name="personalize_card_content_description">Atinge ca să personalizezi fila Prima pagină</string>
+    <string name="personalize_card_text">Personalizează fila Prima pagină</string>
+    <string name="partial_media_access_prompt_change_settings">Modifică setările</string>
+    <string name="partial_media_access_prompt_select_more">Selectează mai multe</string>
+    <string name="partial_media_access_prompt_text">Sunt disponibile numai fotografiile și videourile selectate pentru care ai dat acces.</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Vezi toate campaniile</string>
+    <string name="dashboard_activity_card_menu_all_activity">Toate activitățile</string>
+    <string name="dashboard_pages_card_more_menu_all_pages">Toate paginile</string>
+    <string name="gutenberg_native_choose_a_file">Alege un fișier</string>
+    <string name="gutenberg_native_add_image_or_video">Adaugă o imagine sau un video</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">Vezi toate articolele programate</string>
+    <string name="my_site_post_card_menu_view_all_drafts">Vezi toate ciornele</string>
+    <string name="my_site_todays_stats_menu_view_stats">Vezi statisticile</string>
+    <string name="my_site_dashboard_card_more_menu_hide_card">Ascunde asta</string>
+    <string name="contact_support_first_message_hint">Dacă nu îți pot răspunde la întrebare, te voi ajuta să deschizi un tichet pentru suport cu echipa noastră!</string>
+    <string name="contact_support_first_message_hi">Bună, sunt asistentul AI de la Jetpack.</string>
     <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">Pentru setări avansate, accesează acest bloc Paywall în navigatorul tău web.</string>
     <string name="contact_support_bot_ticket_comment_answer">Răspuns:</string>
     <string name="contact_support_bot_ticket_comment_question">Întrebare:</string>
@@ -31,7 +58,6 @@ Language: ro
     <string name="campaign_detail_error_title">Ceva nu a mers bine</string>
     <string name="campaign_listing_page_error_title">Ceva nu a mers bine</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Ceva nu a mers bine, nu am putut să preiau campaniile</string>
-    <string name="domain_transfer_card_menu_hide_this">Ascunde asta</string>
     <string name="domain_transfer_card_cta">Transferă-ți domeniile</string>
     <string name="domain_transfer_card_sub_title">Revendică-ți domeniile Google</string>
     <string name="domain_transfer_card_title">Noutăți</string>
@@ -87,15 +113,14 @@ Language: ro
     <string name="privacy_banner_analytics_description">Ne permit să optimizăm performanța prin colectarea de informații despre modul în care utilizatorii interacționează cu aplicațiile noastre pentru mobil.</string>
     <string name="privacy_banner_analytics">Analytics</string>
     <string name="privacy_banner_title">Administrează confidențialitatea</string>
-    <string name="tabbar_accessibility_label_me">Pe mine. Administrează informațiile din profilul tău.</string>
     <string name="privacy_banner_description">Confidențialitatea este foarte importantă pentru noi și a fost mereu în centrul atenției noastre. Folosim, stocăm și procesăm datele tale cu caracter personal în mai multe moduri ca să ne optimizăm aplicația (și experiența utilizatorilor). Avem nevoie neapărat de unele dintre datelor tale ca să facem lucrurile să funcționeze, iar alte date le poți personaliza în Setări.</string>
+    <string name="tabbar_accessibility_label_me">Pe mine. Administrează informațiile din profilul tău.</string>
     <string name="social_item_message_title">Mesaj</string>
     <string name="gutenberg_native_block_ungrouped">Bloc negrupat</string>
     <string name="gutenberg_native_block_grouped">Bloc grupat</string>
     <string name="dashboard_card_plans_checkout_success_info">Poate să dureze până la 30 de minute până când domeniul tău va începe să funcționeze așa cum trebuie.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Noul tău domeniu &lt;b&gt;%s&lt;/b&gt; este în curs de inițializare.</string>
     <string name="dashboard_card_plans_checkout_success_title">Totul este pregătit să începi!</string>
-    <string name="dashboard_card_plans_menu_hide_this">Ascunde asta</string>
     <string name="dashboard_card_plans_sub_title">Ai un domeniu gratuit în primul an, înlături reclamele de pe site și îți crești spațiul de stocare.</string>
     <string name="dashboard_card_plans_title">Domeniu gratuit cu un plan anual</string>
     <string name="virtual_homepage_learn_more">Află mai multe despre șabloane</string>
@@ -123,10 +148,8 @@ Language: ro
     <string name="wp_jp_static_poster_title">Folosește WordPress cu %s în aplicația Jetpack.</string>
     <string name="site_creation_search_domain_example_title">numelesiteuluitau.com</string>
     <string name="site_creation_search_domain_example_body">La fel ca în exemplul de mai sus, un domeniu le permite oamenilor să-ți găsească și să-ți viziteze site-ul din navigatoarele lor web.</string>
-    <string name="dashboard_card_domain_title">Găsește un domeniu personalizat</string>
     <string name="dashboard_activity_card_title">Activitate recentă</string>
     <string name="gutenberg_native_unlabeled_color_s">Culoare fără etichetă. %s</string>
-    <string name="dashboard_activity_card_footer_link">Vezi toată activitatea</string>
     <string name="site_creation_domain_cost_sale">în primul an</string>
     <string name="new_site_creation_preview_caption_paid">Poate să dureze până la 30 de minute până când domeniul tău personalizat va începe să funcționeze.</string>
     <string name="site_creation_domain_search_input_hint">Caută după cuvinte cheie</string>
@@ -142,8 +165,6 @@ Language: ro
     <string name="gutenberg_native_privacy_and_rating">Confidențialitate și evaluare</string>
     <string name="gutenberg_native_remove_blocks">Înlătură blocurile</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Adaugă pagini pe site-ul tău</string>
-    <string name="dashboard_card_domain_menu_hide_this">Ascunde asta</string>
-    <string name="dashboard_card_domain_sub_title">Rezervă-ți partea ta pe web cu o adresă de site ușor de găsit, partajat și urmărit.</string>
     <string name="blogging_reminders_notifications_permission_caption">Ca să folosești reamintirile pentru publicare, trebuie să activezi notificările imediate.</string>
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">Descrie scopul imaginii. Lasă gol dacă imaginea este doar decorativă.</string>
     <string name="dashboard_pages_card_create_another_page_button">Creează o altă pagină</string>
@@ -221,7 +242,6 @@ Language: ro
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Închide</string>
     <string name="promote_blaze_card_title">Promovează-ți conținutul cu Blaze</string>
     <string name="promote_blaze_card_sub_title">Afișează conținutul pe milioane de site-uri.</string>
-    <string name="promote_blaze_card_menu_hide_this">Ascunde asta</string>
     <string name="gutenberg_native_blocks_menu">Meniu blocuri</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s folosește %2$s, care încă nu suportă toate funcționalitățile aplicației. \n\nTe rog instalează %3$s pentru a folosi aplicația cu acest site.</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">modulul %1$s</string>
@@ -288,7 +308,6 @@ Language: ro
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Află mai multe la jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Comută la aplicația Jetpack</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Amintește-mi mai târziu</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Ascunde asta</string>
     <string name="jetpack_feature_card_content_phase_three">În curând, Statistici, Cititor, Notificări și alte funcționalități se vor muta în aplicația Jetpack pentru mobil.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">În curând, Statistici, Cititor, Notificări și alte funcționalități propulsate de Jetpack vor fi înlăturate din aplicația WordPress.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statistici, Cititor, Notificări și alte funcționalități propulsate de Jetpack vor fi înlăturate din aplicația WordPress pe %s.</string>
@@ -621,7 +640,6 @@ Language: ro
     <string name="login_error_xml_rpc_services_disabled">Serviciile XML-RPC sunt dezactivate pe acest site.</string>
     <string name="my_site_menu_tab_title">Meniu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Căutarea ta include caractere care nu sunt acceptate în domeniile WordPress.com. Sunt permise următoarele caractere: A–Z, a–z, 0–9.</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Mergi la statistici</string>
     <string name="my_site_todays_stat_card_title">Statistici pentru azi</string>
     <string name="error_edit_notification">A apărut o eroare în timpul actualizării conținutului notificării</string>
     <string name="my_site_error_within_card_subtitle">Verifică dacă ai conexiune la internet și reîmprospătează pagina.</string>
@@ -633,8 +651,6 @@ Language: ro
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navighează la ecranul de selectare a aranjamentului</string>
     <string name="gutenberg_native_tiled_gallery_settings">Setări galerii placate</string>
     <string name="gutenberg_native_gallery_style">Stil galerie</string>
-    <string name="sharing_facebook_warning_message">Îți poți conecta contul Facebook la site-ul WordPress.com. Când ai terminat, întoarce-te la aplicația WordPress pentru a modifica setările de partajare.</string>
-    <string name="sharing_facebook_warning_positive_button">Mergi pe web</string>
     <string name="about_automattic_wordpress">WordPress</string>
     <string name="about_automattic_back_icon_description">Icon înapoi</string>
     <string name="about_automattic_logo_description">Logo Automattic</string>
@@ -689,8 +705,6 @@ Language: ro
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Atinge de două ori pentru a selecta dimensiunea implicită pentru font</string>
     <string name="reader_comments_fetch_failure">A fost o eroare la preluarea comentariilor</string>
     <string name="reader_btn_follow_conversation_settings">Setări pentru urmărirea conversațiilor</string>
-    <string name="my_site_post_card_link_go_to_drafts">Mergi la ciorne</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Mergi la articole programate</string>
     <string name="me_btn_about">Despre WordPress</string>
     <string name="gutenberg_native_featured_image">Imagine reprezentativă</string>
     <string name="gutenberg_native_from_clipboard">Din clipbord</string>
@@ -937,6 +951,7 @@ Language: ro
     <string name="gutenberg_native_padding">Distanțare</string>
     <string name="gutenberg_native_featured">Reprezentativ</string>
     <string name="gutenberg_native_four">Patru</string>
+    <string name="gutenberg_native_add_image">Adaugă o imagine</string>
     <string name="gutenberg_native_create_embed">Creează înglobare</string>
     <string name="gutenberg_native_custom_url">URL personalizat</string>
     <string name="gutenberg_native_column_d">Coloana %d</string>
@@ -1058,13 +1073,13 @@ Language: ro
     <string name="gutenberg_native_audio_player">Player audio</string>
     <string name="gutenberg_native_audio_caption_s">Text asociat audio. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Text asociat audio. Gol</string>
-    <string name="gutenberg_native_add_audio">ADAUGĂ UN FIȘIER AUDIO</string>
     <string name="continue_with_wpcom">Autentifică-te în WordPress.com sau înregistrează-te</string>
     <string name="photo_picker_use_audio">Folosește acest fișier audio</string>
     <string name="photo_picker_choose_audio">Alege un fișier audio de pe dispozitiv</string>
     <string name="people_optional_custom_message_helper_text">Opțional: introdu un mesaj personalizat care să fie trimis împreună cu invitația.</string>
     <string name="gutenberg_native_audio_file">fișier audio</string>
     <string name="gutenberg_native_choose_audio">Alege fișierul audio</string>
+    <string name="gutenberg_native_add_audio">Adaugă audio</string>
     <string name="people_learn_more_about_roles">Află mai multe despre roluri</string>
     <string name="threat_status_fixed">Înlăturate</string>
     <string name="threat_found_header">Găsite</string>
@@ -1260,10 +1275,8 @@ Language: ro
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Salvarea fișierelor a eșuat.\nTe rog atinge pentru opțiuni.</string>
     <string name="gutenberg_native_edit_file">Editează fișierul</string>
     <string name="gutenberg_native_copy_file_url">Copiază URL-ul fișierului</string>
-    <string name="gutenberg_native_choose_a_file">ALEGE UN FIȘIER</string>
     <string name="gutenberg_native_file_block_settings">Setări bloc fișier</string>
     <string name="new_site_creation_domain_header_title">Alege un domeniu</string>
-    <string name="my_site_btn_jetpack_settings">Setări Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Nu am putut face dezabonarea la comentarii pentru acest articol</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Nu am putut face abonarea la comentarii pentru acest articol</string>
@@ -1824,15 +1837,13 @@ Language: ro
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Atinge de două ori pentru a muta blocul în sus</string>
     <string name="gutenberg_native_current_value_is_s">Valoarea curentă este %s</string>
     <string name="gutenberg_native_choose_from_device">Alege de pe dispozitiv</string>
-    <string name="gutenberg_native_add_image_or_video">ADAUGĂ IMAGINE SAU VIDEO</string>
-    <string name="gutenberg_native_add_image">ADAUGĂ IMAGINE</string>
     <string name="gutenberg_native_add_block_here">ADAUGĂ BLOC AICI</string>
     <string name="gutenberg_native_alt_text">Text alternativ</string>
-    <string name="gutenberg_native_add_video">ADAUGĂ VIDEO</string>
     <string name="gutenberg_native_add_url">Adaugă URL</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">A apărut o eroare necunoscută. Te rog încearcă din nou.</string>
     <string name="gutenberg_native_add_alt_text">Adaugă text alternativ</string>
     <string name="gutenberg_native_add_description">Adaugă o descriere</string>
+    <string name="gutenberg_native_add_video">Adaugă video</string>
     <string name="reader_acessibility_list_loaded">„Lista a fost încărcată și are %1$d elemente.”</string>
     <string name="reader_empty_saved_posts_content_description">Pentru a salva un articol în listă atinge butonul Adaugă în articole salvate.</string>
     <string name="notifications_tab_dialog_switch_desc">Notificări</string>
@@ -2119,9 +2130,6 @@ Language: ro
     <string name="quick_start_dialog_check_stats_message_short">Selectează %1$s Statistici %2$s pentru a vedea rezultatele obținute de site.</string>
     <string name="quick_start_dialog_enable_sharing_title">Activează partajarea articolelor</string>
     <string name="quick_start_dialog_enable_sharing_message">Partajează automat articole noi în conturile tale din media socială.</string>
-    <string name="quick_start_remove_next_steps_menu_title">Înlătură acest</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Înlătură pașii următori</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Înlăturarea pașilor următori va ascunde toate tururile de pe acest site. Această acțiune nu poate fi anulată.</string>
     <string name="quick_start_dialog_check_stats_title">Vezi statisticile site-ului</string>
     <string name="quick_start_dialog_check_stats_message">Fii la curent cu performanța site-ului.</string>
     <string name="quick_start_task_skip_menu_title">Sari sarcina</string>
@@ -2723,7 +2731,6 @@ Language: ro
     <string name="share_action_media">Adaugă în biblioteca media</string>
     <string name="share_intent_pick_site">Alege site-ul</string>
     <string name="share_action_post">Adaugă într-un articol nou</string>
-    <string name="share_media_permission_required">Permisiuni necesare pentru a partaja imagini sau videouri</string>
     <string name="invalid_ip_or_range">IP sau interval de IP-uri invalid</string>
     <string name="deleting_media_dlg">Ștergere</string>
     <string name="confirm_delete_media_video">Ștergi acest video?</string>

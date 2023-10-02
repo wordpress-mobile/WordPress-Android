@@ -325,7 +325,9 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         setupMlpObservers(activity)
         setupVirtualHomepageObservers(activity)
 
-        val site = requireNotNull(
+        // It is possible that we deep link to pages while we have no sites, at which time using requireNotNull will
+        // cause a crash. We should finish the activity and not throw an exception.
+        val site =
             if (savedInstanceState == null) {
                 val nonNullIntent = checkNotNull(activity.intent)
                 nonNullIntent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
@@ -333,7 +335,12 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                 restorePreviousSearch = true
                 savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)
             }
-        )
+
+        if (site == null) {
+            showToast(ToastMessageHolder(R.string.pages_no_site_something_went_wrong, Duration.LONG))
+            requireActivity().finish()
+            return
+        }
 
         viewModel.authorUIState.observe(activity) { state ->
             state?.let {

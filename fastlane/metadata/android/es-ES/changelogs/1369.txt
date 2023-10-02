@@ -1,4 +1,0 @@
-23.2:
-- El bloque de enlace a redes sociales incluye un esquema para que puedas ver si está seleccionado.
-- En el editor de bloques, la aplicación ya no debería bloquearse al convertir un bloque Columnas anidado en un bloque Grupo.
-- En el insertador de bloques, ahora puedes buscar un tipo de bloque sin que se bloquee la aplicación.

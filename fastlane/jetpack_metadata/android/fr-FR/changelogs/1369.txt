@@ -1,6 +1,0 @@
-23.2 :
-– Nouveau canal d’assistance par chat avec bot de service à la clientèle
-– Visualisation, localisation et suppression du bloc Paywall de Jetpack
-– Bloc de liens vers les réseaux sociaux sélectionné avec contour
-– Correction des incidents dans l’éditeur de blocs et l’outil d’insertion de bloc
-– Création de tickets d’assistance pour les erreurs survenant à la fermeture du compte

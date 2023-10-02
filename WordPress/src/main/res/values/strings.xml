@@ -71,7 +71,6 @@
     <string name="connection_to_server_lost">The connection to the server was lost</string>
     <string name="category_refresh_error">Category refresh error</string>
     <string name="incorrect_credentials">Incorrect username or password.</string>
-    <string name="cancel_edit">Cancel edit</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="refresh">Refresh</string>
     <string name="blog_not_found">An error occurred when accessing this blog</string>
@@ -487,11 +486,8 @@
 
     <!-- edit comment view -->
     <string name="saving_changes">Saving changes</string>
-    <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
     <string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
     <string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
-    <string name="content_required">Comment is required</string>
-    <string name="toast_comment_unedited">Comment hasn\'t changed</string>
     <string name="comment_edit_menu_done">Done</string>
     <string name="comment_edit_user_name">Name</string>
     <string name="comment_edit_comment">Comment</string>
@@ -2507,12 +2503,15 @@
     <string name="sharing_twitter_message">This will be included in tweets when people share using the Twitter button</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
     <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Jetpack Social cannot connect to Facebook Profiles, only published Pages.</string>
-    <string name="sharing_facebook_warning_message">You can connect your Facebook account on the WordPress.com website. When you\'re done, return to the WordPress app to change your Sharing settings.</string>
-    <string name="sharing_facebook_warning_positive_button">Go to web</string>
     <string name="sharing_twitter_deprecation_notice_title">Twitter auto-sharing is no longer available</string>
     <string name="sharing_twitter_deprecation_notice_description">Twitter auto-sharing is no longer available due to Twitter\'s changes in terms and pricing.</string>
     <string name="sharing_twitter_deprecation_notice_find_out_more">Find out more</string>
     <string name="social_item_message_title">Message</string>
+
+    <!-- Some JP Social connections can only be connected via web at this time -->
+    <!-- translators: %s is replaced with an external service name, such as "Facebook" or "Mastodon". -->
+    <string name="sharing_connect_via_web_warning_message">You can connect your %s account on the WordPress.com website. When you\'re done, return to the app to change your Sharing settings.</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Go to web</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
@@ -4705,16 +4704,16 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="personalize_card_content_description">Tap to personalize your home tab</string>
 
     <!-- Personalization Screen -->
-    <string name="personalization_screen_title"> Personalize home tab</string>
-    <string name="personalization_screen_description"> Add or hide Cards</string>
-    <string name="personalization_screen_footer_cards"> Cards may show different content depending on what\'s happening with your site</string>
+    <string name="personalization_screen_title">Personalize home tab</string>
+    <string name="personalization_screen_description">Add or hide Cards</string>
+    <string name="personalization_screen_footer_cards">Cards may show different content depending on what\'s happening with your site</string>
     <string name="personalization_screen_stats_card_title" translatable="false">@string/my_site_todays_stat_card_title</string>
     <string name="personalization_screen_stats_card_description">Views, Visitors and likes</string>
-    <string name="personalization_screen_draft_posts_card_title"> Draft posts</string>
+    <string name="personalization_screen_draft_posts_card_title">Draft posts</string>
     <string name="personalization_screen_draft_posts_card_description">Your recent draft posts.</string>
-    <string name="personalization_screen_scheduled_posts_card_title"> Scheduled posts</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Scheduled posts</string>
     <string name="personalization_screen_scheduled_posts_card_description">Your upcoming scheduled posts.</string>
-    <string name="personalization_screen_blaze_card_title" translatable="false"> @string/blaze_activity_title</string>
+    <string name="personalization_screen_blaze_card_title" translatable="false">@string/blaze_activity_title</string>
     <string name="personalization_screen_blaze_card_description">Promote a post and see current campaigns.</string>
     <string name="personalization_screen_blogging_prompts_card_title">Blogging prompts</string>
     <string name="personalization_screen_blogging_prompts_card_description">Daily ideas for your blog posts.</string>
@@ -4727,5 +4726,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <string name="my_site_dashboard_no_cards_message_title">All cards are hidden</string>
     <string name="my_site_dashboard_no_cards_message_description">Tap the personalise button to show more cards.</string>
+
+    <string name="pages_no_site_something_went_wrong">Uh oh, something went wrong. Please try again later.</string>
 
 </resources>
