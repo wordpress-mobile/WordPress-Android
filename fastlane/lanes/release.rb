@@ -91,8 +91,8 @@ platform :android do
   #####################################################################################
   desc 'Trigger a release build for a given app after code freeze'
   lane :complete_code_freeze do |options|
-    # Verify that the current branch is a release branch
-    UI.user_error!("Current branch - '#{git_branch}' - is not a release branch. Abort.") unless git_branch.start_with?('release/')
+    ensure_git_branch(branch: '^release/') # Match branch names that begin with `release/`
+    ensure_git_status_clean
 
     new_version = current_release_version
 
@@ -267,7 +267,7 @@ platform :android do
   #####################################################################################
   desc 'Finalizes a hotfix release by triggering a release build'
   lane :finalize_hotfix_release do |options|
-    UI.user_error!("Current branch - '#{git_branch}' - is not a release branch. Abort.") unless git_branch.start_with?('release/')
+    ensure_git_branch(branch: '^release/') # Match branch names that begin with `release/`
     ensure_git_status_clean unless is_ci
 
     UI.message = "Triggering hotfix build for version: #{current_release_version}"
