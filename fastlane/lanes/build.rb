@@ -16,7 +16,8 @@ platform :android do
   desc 'Builds and updates for distribution'
   lane :build_and_upload_release do |options|
     unless options[:skip_prechecks]
-      Fastlane::Helper::GitHelper.ensure_on_branch!('release') unless is_ci
+      # Match branch names that begin with `release/`
+      ensure_git_branch(branch: '^release/') unless is_ci
 
       UI.user_error!("Can't build a final release out of this branch because it's configured as a beta release!") if current_version_name.include? '-rc-'
 
@@ -59,7 +60,8 @@ platform :android do
   desc 'Builds and updates for distribution'
   lane :build_and_upload_pre_releases do |options|
     unless options[:skip_prechecks]
-      Fastlane::Helper::GitHelper.ensure_on_branch!('release') unless is_ci
+      # Match branch names that begin with `release/`
+      ensure_git_branch(branch: '^release/') unless is_ci
 
       ensure_git_status_clean unless is_ci
 
@@ -93,7 +95,8 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_beta do |options|
-    Fastlane::Helper::GitHelper.ensure_on_branch!('release') unless is_ci
+    # Match branch names that begin with `release/`
+    ensure_git_branch(branch: '^release/') unless is_ci
 
     ensure_git_status_clean unless is_ci
 

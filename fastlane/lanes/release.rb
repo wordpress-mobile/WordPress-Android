@@ -43,7 +43,7 @@ platform :android do
 
     # Bump the version and build code
     UI.message 'Bumping beta version and build code...'
-    Fastlane::Helper::GitHelper.ensure_on_branch!('release')
+    ensure_git_branch(branch: '^release/') # Match branch names that begin with `release/`
     VERSION_FILE.write_version(
       version_name: first_beta_version,
       version_code: next_build_code
@@ -170,7 +170,7 @@ platform :android do
 
     # Bump the release version and build code
     UI.message 'Bumping beta version and build code...'
-    Fastlane::Helper::GitHelper.ensure_on_branch!('release')
+    ensure_git_branch(branch: '^release/') # Match branch names that begin with `release/`
     VERSION_FILE.write_version(
       version_name: next_beta_version,
       version_code: next_build_code
@@ -316,7 +316,7 @@ platform :android do
 
     # Bump the release version and build code
     UI.message 'Bumping final release version and build code...'
-    Fastlane::Helper::GitHelper.ensure_on_branch!('release')
+    ensure_git_branch(branch: '^release/') # Match branch names that begin with `release/`
     VERSION_FILE.write_version(
       version_name: current_release_version,
       version_code: next_build_code
