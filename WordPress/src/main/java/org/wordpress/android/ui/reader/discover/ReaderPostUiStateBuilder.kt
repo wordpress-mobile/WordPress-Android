@@ -340,7 +340,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             postId = post.postId,
             blogId = post.blogId,
             blogName = buildBlogName(post, isP2Post),
-            dateLine = buildDateLine(post), // TODO thomashorta we don't want to show "ago" here (will need a custom?)
+            dateLine = buildDateLine(post),
             avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
             isAuthorAvatarVisible = isP2Post,
             blavatarType = SiteUtils.getSiteImageType(isP2Post, CIRCULAR),
