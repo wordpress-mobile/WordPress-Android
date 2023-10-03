@@ -3,19 +3,22 @@ package org.wordpress.android.ui.mysite.menu
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.View
+import android.widget.FrameLayout
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,14 +27,18 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -46,11 +53,13 @@ import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
+import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.LocaleManager
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -64,8 +73,15 @@ class MenuActivity : ComponentActivity() {
         initObservers()
         setContent {
             AppTheme {
-                viewModel.start()
-                MenuScreen()
+                val userLanguage by viewModel.refreshAppLanguage.observeAsState("")
+
+                LocaleAwareComposable(
+                    locale = LocaleManager.languageLocale(userLanguage),
+                    onLocaleChange = viewModel::setAppLanguage
+                ) {
+                    viewModel.start()
+                    MenuScreen()
+                }
             }
         }
     }
@@ -108,9 +124,7 @@ class MenuActivity : ComponentActivity() {
 
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    fun MenuScreen() {
-        val uiState by viewModel.uiState.collectAsState()
-
+    fun MenuScreen(modifier: Modifier = Modifier) {
         Scaffold(
             topBar = {
                 MainTopAppBar(
@@ -120,100 +134,98 @@ class MenuActivity : ComponentActivity() {
                 )
             },
             content = {
-                MenuContent(uiState)
+                MenuContent(modifier = modifier)
             }
         )
     }
 
     @Composable
-    fun MenuContent(uiState: MenuViewState) {
+    fun MenuContent(modifier: Modifier = Modifier) {
+        val uiState by viewModel.uiState.collectAsState()
+
         LazyColumn(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
+                .wrapContentSize()
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(uiState.items) { viewState ->
                 when (viewState) {
-                    is MySiteCardAndItem.Item.ListItem -> MySiteListItem(viewState)
-                    is MySiteCardAndItem.Item.CategoryHeaderItem -> MySiteListItemHeader(viewState)
-                    is MySiteCardAndItem.Item.CategoryEmptyHeaderItem -> MySiteListItemEmptyHeader()
-                    else -> {
-                    }
+                    is MenuItemState.MenuListItem-> MySiteListItem(viewState)
+                    is MenuItemState.MenuHeaderItem -> MySiteListItemHeader(viewState)
+                    is MenuItemState.MenuEmptyHeaderItem -> MySiteListItemEmptyHeader()
                 }
             }
         }
     }
+}
+@Composable
+fun MySiteListItemHeader(headerItem: MenuItemState.MenuHeaderItem) {
+    Text(
+        text = uiStringText(headerItem.title),
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+        modifier = Modifier
+            .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp)
+    )
+}
 
-    @Composable
-    fun MySiteListItemHeader(headerItem: MySiteCardAndItem.Item.CategoryHeaderItem) {
-        val title = when (headerItem.title) {
-            is UiString.UiStringRes -> stringResource(id = headerItem.title.stringRes)
-            is UiString.UiStringText -> headerItem.title.text.toString()
-            is UiString.UiStringPluralRes -> TODO()
-            is UiString.UiStringResWithParams -> TODO()
-        }
-        Text(
-            modifier = Modifier.padding(8.dp),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
-            text = title)
-    }
+@Composable
+fun MySiteListItemEmptyHeader() {
+    Spacer(modifier = Modifier.height(4.dp))
+}
 
-    @Composable
-    fun MySiteListItemEmptyHeader() {
-        Spacer(modifier = Modifier.height(4.dp))
-    }
-
-    @Composable
-    fun MySiteListItem(item: MySiteCardAndItem.Item.ListItem) {
+@Composable
+fun MySiteListItem(item: MenuItemState.MenuListItem, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentSize()
+    )
+    {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentSize()
-                .padding(vertical = 8.dp, horizontal = 8.dp)
-                .clickable { item.onClick.click() },
+                .clickable { item.onClick.click() }
+                .padding(start = 12.dp, top = 6.dp, end = 16.dp, bottom = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
-        ) {
+            horizontalArrangement = Arrangement.Start,
+            content = {
             Image(
                 painter = painterResource(id = item.primaryIcon),
                 contentDescription = null, // Add appropriate content description
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .size(24.dp)
-                    .padding(end = 8.dp),
+                    .padding(1.dp),
                 colorFilter =
-                    if (item.disablePrimaryIconTint) null else ColorFilter.tint(MaterialTheme.colors.onSurface)
+                if (item.disablePrimaryIconTint) null else ColorFilter.tint(MaterialTheme.colors.onSurface)
             )
-
+            Spacer(Modifier.width(8.dp))
             Text(
-                text = stringResource(id = (item.primaryText as UiString.UiStringRes).stringRes),
+                text = uiStringText(item.primaryText),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 8.dp),
+                    .padding(start = 8.dp, end = 8.dp),
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier
+                .height(4.dp)
+                .weight(1f))
 
-            // todo: eventually we can take uiStringRes out of the state, but for now it's shared, so leave it
             if (item.secondaryText != null) {
-                val secondaryStringResourceText = when (item.secondaryText) {
-                    is UiString.UiStringRes -> stringResource(id = item.secondaryText.stringRes)
-                    is UiString.UiStringText -> item.secondaryText.text.toString()
-                    is UiString.UiStringPluralRes -> TODO()
-                    is UiString.UiStringResWithParams -> TODO()
-            }
                 Text(
-                    text = secondaryStringResourceText,
+                    text = uiStringText(item.secondaryText),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
                     modifier = Modifier
                         .weight(1f)
-                        .padding(end = 8.dp),
+                        .padding(start = 8.dp, end = 8.dp),
                 )
             }
 
@@ -224,102 +236,100 @@ class MenuActivity : ComponentActivity() {
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .size(24.dp)
-                        .padding(end = 8.dp),
+                        .padding(1.dp),
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface)
                 )
             }
 
-            if (item.showFocusPoint) {
-                AndroidView(
-                    factory = { context ->
-                        val view = ComposeView(context)
-                        view.setContent {
-                            CustomXMLWidgetView()
-                        }
-                        view
-                    },
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
+            if (item.showFocusPoint) CustomXMLWidgetView()
+        })
+    }
+}
+@Composable
+fun CustomXMLWidgetView(modifier: Modifier = Modifier) {
+    // Load the custom XML widget using AndroidView
+    var customView: View? by remember { mutableStateOf(null) }
+    val context = LocalContext.current
+
+    DisposableEffect(context) {
+        // Perform the side effect (inflate view) when the composable is composed
+        customView = FrameLayout(context).apply {
+            addView(LayoutInflater.from(context).inflate(R.layout.quick_start_focus_point, this, false))
+        }
+
+        onDispose {
+            customView = null
         }
     }
-
-    @Composable
-    fun CustomXMLWidgetView() {
-        // Load the custom XML widget using AndroidView
+    customView?.let { view ->
         AndroidView(
-            factory = { context ->
-                // Inflate the custom XML layout
-                val inflater = LayoutInflater.from(context)
-                val parent: ViewGroup? = null
-                val view = inflater.inflate(R.layout.quick_start_focus_point, parent, false)
-                view
-            },
-            modifier = Modifier.wrapContentSize(Alignment.Center)
+            factory =  { view },
+            modifier = modifier.wrapContentSize(Alignment.Center)
         )
     }
+}
 
-    @Preview
-    @Composable
-    fun MySiteListItemPreviewBase() {
-        val onClick = remember { {} }
-        MySiteListItem(
-            MySiteCardAndItem.Item.ListItem(
-                primaryIcon = R.drawable.ic_posts_white_24dp,
-                primaryText = UiString.UiStringText("Blog Posts"),
-                secondaryIcon = null,
-                secondaryText = null,
-                showFocusPoint = false,
-                onClick = ListItemInteraction.create { onClick() },
-                listItemAction = ListItemAction.POSTS)
-            )
-    }
 
-    @Preview
-    @Composable
-    fun MySiteListItemPreviewWithFocusPoint() {
-        val onClick = remember { {} }
-        MySiteListItem(
-            MySiteCardAndItem.Item.ListItem(
-                primaryIcon = R.drawable.ic_posts_white_24dp,
-                primaryText = UiString.UiStringText("Blog Posts"),
-                secondaryIcon = null,
-                secondaryText = null,
-                showFocusPoint = true,
-                onClick = ListItemInteraction.create { onClick() },
-                listItemAction = ListItemAction.POSTS)
-        )
-    }
+@Preview
+@Composable
+fun MySiteListItemPreviewBase() {
+    val onClick = remember { {} }
+    MySiteListItem(
+        MenuItemState.MenuListItem(
+            primaryIcon = R.drawable.ic_posts_white_24dp,
+            primaryText = UiString.UiStringText("Blog Posts"),
+            secondaryIcon = null,
+            secondaryText = null,
+            showFocusPoint = false,
+            onClick = ListItemInteraction.create { onClick() },
+            listItemAction = ListItemAction.POSTS)
+    )
+}
 
-    @Preview
-    @Composable
-    fun MySiteListItemPreviewWithSecondaryText() {
-        val onClick = remember { {} }
-        MySiteListItem(
-            MySiteCardAndItem.Item.ListItem(
-                primaryIcon = R.drawable.ic_posts_white_24dp,
-                primaryText = UiString.UiStringText("Plans"),
-                secondaryIcon = null,
-                secondaryText = UiString.UiStringText("Basic"),
-                showFocusPoint = false,
-                onClick = ListItemInteraction.create { onClick() },
-                listItemAction = ListItemAction.PLAN)
-        )
-    }
+@Preview
+@Composable
+fun MySiteListItemPreviewWithFocusPoint() {
+    val onClick = remember { {} }
+    MySiteListItem(
+        MenuItemState.MenuListItem(
+            primaryIcon = R.drawable.ic_posts_white_24dp,
+            primaryText = UiString.UiStringText("Blog Posts"),
+            secondaryIcon = null,
+            secondaryText = null,
+            showFocusPoint = true,
+            onClick = ListItemInteraction.create { onClick() },
+            listItemAction = ListItemAction.POSTS)
+    )
+}
 
-    @Preview
-    @Composable
-    fun MySiteListItemPreviewWithSecondaryImage() {
-        val onClick = remember { {} }
-        MySiteListItem(
-            MySiteCardAndItem.Item.ListItem(
-                primaryIcon = R.drawable.ic_posts_white_24dp,
-                primaryText = UiString.UiStringText("Plans"),
-                secondaryIcon = R.drawable.ic_story_icon_24dp,
-                secondaryText = null,
-                showFocusPoint = false,
-                onClick = ListItemInteraction.create { onClick() },
-                listItemAction = ListItemAction.PLAN)
-        )
-    }
+@Preview
+@Composable
+fun MySiteListItemPreviewWithSecondaryText() {
+    val onClick = remember { {} }
+    MySiteListItem(
+        MenuItemState.MenuListItem(
+            primaryIcon = R.drawable.ic_posts_white_24dp,
+            primaryText = UiString.UiStringText("Plans"),
+            secondaryIcon = null,
+            secondaryText = UiString.UiStringText("Basic"),
+            showFocusPoint = false,
+            onClick = ListItemInteraction.create { onClick() },
+            listItemAction = ListItemAction.PLAN)
+    )
+}
+
+@Preview
+@Composable
+fun MySiteListItemPreviewWithSecondaryImage() {
+    val onClick = remember { {} }
+    MySiteListItem(
+        MenuItemState.MenuListItem(
+            primaryIcon = R.drawable.ic_posts_white_24dp,
+            primaryText = UiString.UiStringText("Plans"),
+            secondaryIcon = R.drawable.ic_story_icon_24dp,
+            secondaryText = null,
+            showFocusPoint = false,
+            onClick = ListItemInteraction.create { onClick() },
+            listItemAction = ListItemAction.PLAN)
+    )
 }
