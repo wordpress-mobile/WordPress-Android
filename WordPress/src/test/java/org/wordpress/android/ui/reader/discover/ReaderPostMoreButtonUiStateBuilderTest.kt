@@ -315,6 +315,52 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `contains bookmark action when includeBookmark is true`() = test {
+        // Arrange
+        val post = init()
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, true, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find { it.type == ReaderPostCardActionType.BOOKMARK }).isNotNull
+    }
+
+    @Test
+    fun `does not contain bookmark action when includeBookmark is false`() = test {
+        // Arrange
+        val post = init()
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find { it.type == ReaderPostCardActionType.BOOKMARK }).isNull()
+    }
+
+    @Test
+    fun `contains save bookmark action when post is not bookmarked`() = test {
+        // Arrange
+        val post = init(isBookmarked = false)
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, true, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find {
+            it.type == ReaderPostCardActionType.BOOKMARK &&
+                    (it as SecondaryAction).label == UiStringRes(R.string.reader_secondary_bookmark)
+        }).isNotNull
+    }
+
+    @Test
+    fun `contains saved bookmark action when post is bookmarked`() = test {
+        // Arrange
+        val post = init(isBookmarked = true)
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, true, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find {
+            it.type == ReaderPostCardActionType.BOOKMARK &&
+                    (it as SecondaryAction).label == UiStringRes(R.string.reader_secondary_bookmarked)
+        }).isNotNull
+    }
+
+    @Test
     fun `given post list card actions created, then list contains spacer no action`() = test {
         // Arrange
         val post = init()
@@ -357,7 +403,8 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         isNotificationsEnabled: Boolean = false,
         isFeed: Boolean = false,
         isSeenSupported: Boolean = true,
-        isSeen: Boolean = false
+        isSeen: Boolean = false,
+        isBookmarked: Boolean = false
     ): ReaderPost {
         whenever(readerPostTableWrapper.isPostFollowed(anyOrNull())).thenReturn(isFollowed)
         whenever(readerPostTableWrapper.isPostSeen(anyOrNull())).thenReturn(isSeen)
@@ -367,6 +414,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
             this.feedId = if (isFeed) 1L else 2L // set blogId == feedId so the post is treated as a feed
             this.isSeenSupported = isSeenSupported
             this.isSeen = isSeen
+            this.isBookmarked = isBookmarked
         }
     }
 }
