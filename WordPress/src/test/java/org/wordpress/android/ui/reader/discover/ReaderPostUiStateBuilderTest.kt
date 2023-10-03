@@ -596,11 +596,33 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `excerpt is displayed for all card types for new UI`() = test {
+        // Arrange
+        ReaderCardType.values().forEach {
+            val post = createPost(cardType = it)
+            // Act
+            val uiState = mapPostToNewUiState(post)
+            // Assert
+            assertThat(uiState.excerpt).isNotNull()
+        }
+    }
+
+    @Test
     fun `excerpt is not displayed when the post doesn't have an excerpt`() = test {
         // Arrange
         val post = createPost(cardType = DEFAULT, hasExcerpt = false)
         // Act
         val uiState = mapPostToUiState(post)
+        // Assert
+        assertThat(uiState.excerpt).isNull()
+    }
+
+    @Test
+    fun `excerpt is not displayed when the post doesn't have an excerpt for new UI`() = test {
+        // Arrange
+        val post = createPost(cardType = DEFAULT, hasExcerpt = false)
+        // Act
+        val uiState = mapPostToNewUiState(post)
         // Assert
         assertThat(uiState.excerpt).isNull()
     }
