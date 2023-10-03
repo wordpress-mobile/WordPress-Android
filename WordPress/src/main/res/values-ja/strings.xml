@@ -3515,9 +3515,6 @@ Language: ja_JP
     <string name="add_new_category">新規カテゴリーを追加</string>
     <string name="view_in_browser">ブラウザで表示</string>
     <string name="remove_account">サイトを削除</string>
-    <string name="toast_comment_unedited">コメントが変更されていません</string>
-    <string name="content_required">コメント欄は必須項目です</string>
-    <string name="sure_to_cancel_edit_comment">このコメントの修正を中止しますか ?</string>
     <string name="saving_changes">変更を保存中</string>
     <string name="trash">ゴミ箱</string>
     <string name="dlg_confirm_trash_comments">ゴミ箱に移動しますか ?</string>
@@ -3545,7 +3542,6 @@ Language: ja_JP
     <string name="learn_more">さらに詳しく</string>
     <string name="post_not_found">投稿を読み込む際にエラーが発生しました。再読み込みしてもう一度お試しください。</string>
     <string name="plugin_not_found">プラグインへのアクセス中にエラーが発生しました</string>
-    <string name="cancel_edit">編集をキャンセル</string>
     <string name="connection_error">接続エラー</string>
     <string name="select_categories">カテゴリーを選択</string>
     <string name="share_link">リンクを共有</string>

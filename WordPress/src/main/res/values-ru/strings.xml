@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-28 15:04:55+0000
+Translation-Revision-Date: 2023-10-02 16:10:41+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.9
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">Разгруппировать блок</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">Коснитесь, чтобы увидеть больше сведений.</string>
+    <string name="gutenberg_native_synced_patterns">Синхронизированные паттерны</string>
+    <string name="gutenberg_native_deeply_nested_block">Глубоко вложенный блок</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Блоки, вложенные глубже, чем %d уровней, могут отображаться неправильно в мобильном редакторе. По этой причине мы рекомендуем сгладить содержимое, разгруппировав блок или отредактировать блок с помощью веб-редактора.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Блоки, вложенные глубже, чем %d уровней, могут отображаться неправильно в мобильном редакторе. По этой причине мы рекомендуем сгладить содержимое, разгруппировав блок или отредактировать его с помощью веб-браузера.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Блок невозможно отобразить, поскольку он глубоко вложен. Нажмите здесь, чтобы получить более подробную информацию.</string>
+    <string name="pages_no_site_something_went_wrong">Что-то пошло не так. Попробуйте еще раз.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Переход на веб-сайт</string>
     <string name="my_site_dashboard_no_cards_message_description">Нажмите на кнопку персонализации, чтобы увидеть больше карточек.</string>
     <string name="my_site_dashboard_no_cards_message_title">Все карточки скрыты</string>
@@ -1698,6 +1706,7 @@ Language: ru
     <string name="app_theme_light">Светлая</string>
     <string name="app_theme">Внешний вид</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Вы недавно внесли изменения в эту страницу, но не сохранили их. Выберите версию для загрузки:\n\n</string>
+    <string name="gutenberg_native_warning_message">Предупреждающее сообщение</string>
     <string name="gutenberg_native_show_post_content">Показать содержимое записи</string>
     <string name="gutenberg_native_only_show_excerpt">Показывать только отрывок</string>
     <string name="gutenberg_native_link_to">Ссылка на</string>
@@ -3527,9 +3536,6 @@ Language: ru
     <string name="add_new_category">Добавить категорию</string>
     <string name="view_in_browser">Открыть в браузере</string>
     <string name="remove_account">Удалить сайт</string>
-    <string name="toast_comment_unedited">Комментарий не изменялся</string>
-    <string name="content_required">Требуется комментарий</string>
-    <string name="sure_to_cancel_edit_comment">Отменить редактирование комментария?</string>
     <string name="saving_changes">Сохранить изменения</string>
     <string name="trash">Удалённые</string>
     <string name="dlg_confirm_trash_comments">Удалить?</string>
@@ -3557,7 +3563,6 @@ Language: ru
     <string name="learn_more">Узнать больше</string>
     <string name="post_not_found">Произошла ошибка при загрузке поста. Обновите ваши записи и повторите попытку.</string>
     <string name="plugin_not_found">Возникла ошибка при доступе к этому плагину</string>
-    <string name="cancel_edit">Отменить изменения</string>
     <string name="connection_error">Ошибка соединения</string>
     <string name="select_categories">Выберите категории</string>
     <string name="share_link">Поделиться ссылкой</string>

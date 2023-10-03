@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-28 15:21:14+0000
+Translation-Revision-Date: 2023-10-02 16:34:02+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">Desagrupar bloque</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">Toca aquí para mostrar más detalles.</string>
+    <string name="gutenberg_native_synced_patterns">Patrones sincronizados</string>
+    <string name="gutenberg_native_deeply_nested_block">Bloque profundamente anidado</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Los bloques anidados a más profundidad de %d niveles puede que no se procesen correctamente en el editor móvil. Por este motivo, recomendamos allanar el contenido desagrupando el bloque o editando el bloque usando el editor web.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Los bloques anidados a más profundidad de %d niveles puede que no se procesen correctamente en el editor móvil. Por este motivo, recomendamos allanar el contenido desagrupando el bloque o editando el bloque usando tu navegador web.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">El bloque no se puede procesar debido a que está profundamente anidado. Toca aquí para más detalles.</string>
+    <string name="pages_no_site_something_went_wrong">Uy, vaya, algo ha salido mal. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Ir a la web</string>
     <string name="my_site_dashboard_no_cards_message_description">Pulsa el botón de personalización para mostrar más tarjetas.</string>
     <string name="my_site_dashboard_no_cards_message_title">Todas las tarjetas están ocultas</string>
@@ -1698,6 +1706,7 @@ Language: es
     <string name="app_theme_light">Claro</string>
     <string name="app_theme">Apariencia</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Recientemente has hecho cambios en esta página, pero no los has guardado. Elige una versión para cargar:\n\n</string>
+    <string name="gutenberg_native_warning_message">Mensaje de advertencia</string>
     <string name="gutenberg_native_show_post_content">Mostrar el contenido de la entrada</string>
     <string name="gutenberg_native_only_show_excerpt">Mostrar solo el extracto</string>
     <string name="gutenberg_native_link_to">Enlazar a</string>
@@ -3527,9 +3536,6 @@ Language: es
     <string name="add_new_category">Añadir nueva categoría</string>
     <string name="view_in_browser">Ver en el navegador</string>
     <string name="remove_account">Eliminar sitio</string>
-    <string name="toast_comment_unedited">El comentario no ha cambiado</string>
-    <string name="content_required">Comentario obligatorio</string>
-    <string name="sure_to_cancel_edit_comment">¿Cancelar la edición de este comentario?</string>
     <string name="saving_changes">Guardando cambios</string>
     <string name="trash">Papelera</string>
     <string name="dlg_confirm_trash_comments">¿Enviar a la papelera?</string>
@@ -3557,7 +3563,6 @@ Language: es
     <string name="learn_more">Aprender más</string>
     <string name="post_not_found">Ocurrió un error al cargar la entrada. Actualiza tus entradas e intenta nuevamente.</string>
     <string name="plugin_not_found">Ocurrió un error al acceder a este plugin</string>
-    <string name="cancel_edit">Cancelar edición</string>
     <string name="connection_error">Error de conexión</string>
     <string name="select_categories">Seleccionar categorías</string>
     <string name="share_link">Compartir enlace</string>

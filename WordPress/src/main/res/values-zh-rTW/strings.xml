@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-26 17:54:08+0000
+Translation-Revision-Date: 2023-10-03 15:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.9
 Language: zh_TW
 -->
 <resources>
+    <string name="sharing_connect_via_web_warning_positive_button">前往網頁</string>
     <string name="my_site_dashboard_no_cards_message_description">點選個人化按鈕，顯示更多卡片。</string>
     <string name="my_site_dashboard_no_cards_message_title">已隱藏所有卡片</string>
     <string name="personalization_screen_next_steps_card_description">使用此應用程式，瞭解如何充分運用你的網站。</string>
@@ -15,8 +16,13 @@ Language: zh_TW
     <string name="personalization_screen_blogging_prompts_card_title">網誌提示</string>
     <string name="personalization_screen_blaze_card_description">宣傳文章並查看最近的行銷活動。</string>
     <string name="personalization_screen_scheduled_posts_card_description">你即將發表的排程文章。</string>
+    <string name="personalization_screen_scheduled_posts_card_title">已排程的文章</string>
     <string name="personalization_screen_draft_posts_card_description">你近期的草稿文章。</string>
+    <string name="personalization_screen_draft_posts_card_title">草稿文章</string>
     <string name="personalization_screen_stats_card_description">點閱數、訪客數與按讚數</string>
+    <string name="personalization_screen_footer_cards">卡片可根據網站活動顯示不同內容</string>
+    <string name="personalization_screen_description">新增或隱藏卡片</string>
+    <string name="personalization_screen_title">打造個人版首頁分頁</string>
     <string name="personalize_card_content_description">點選以打造個人化「首頁」分頁</string>
     <string name="personalize_card_text">打造你的個人化「首頁」分頁</string>
     <string name="partial_media_access_prompt_change_settings">變更設定</string>
@@ -649,6 +655,7 @@ Language: zh_TW
     <string name="gutenberg_native_tiled_gallery_settings">並排圖庫設定</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">導覽至版面配置選取畫面</string>
     <string name="gutenberg_native_gallery_style">圖庫樣式</string>
+    <string name="sharing_connect_via_web_warning_message">你可以在 WordPress.com 網站連結 %s 帳號。 完成設定後，請返回此應用程式變更你的「分享」設定。</string>
     <string name="about_automattic_app_icon_description">應用程式圖示</string>
     <string name="about_automattic_back_icon_description">返回圖示</string>
     <string name="about_automattic_logo_description">Automattic 標誌</string>
@@ -3515,9 +3522,6 @@ Language: zh_TW
     <string name="add_new_category">新增類別</string>
     <string name="view_in_browser">在瀏覽器中檢視</string>
     <string name="remove_account">移除網站</string>
-    <string name="toast_comment_unedited">回應尚未變更</string>
-    <string name="content_required">必須發表回應</string>
-    <string name="sure_to_cancel_edit_comment">取消編輯此回應？</string>
     <string name="saving_changes">正在儲存變更</string>
     <string name="trash">移至回收桶</string>
     <string name="dlg_confirm_trash_comments">移至垃圾桶？</string>
@@ -3545,7 +3549,6 @@ Language: zh_TW
     <string name="learn_more">瞭解更多</string>
     <string name="post_not_found">載入文章時發生錯誤。重新整理你的文章，然後再試一次。</string>
     <string name="plugin_not_found">存取此外掛程式時發生錯誤</string>
-    <string name="cancel_edit">取消編輯</string>
     <string name="connection_error">連線錯誤</string>
     <string name="select_categories">選取類別</string>
     <string name="share_link">分享連結</string>

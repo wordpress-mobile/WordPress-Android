@@ -3380,9 +3380,6 @@ Language: pt_BR
     <string name="add_new_category">Adicionar nova categoria</string>
     <string name="view_in_browser">Exibir no navegador</string>
     <string name="remove_account">Remover site</string>
-    <string name="toast_comment_unedited">Comentário não foi alterado</string>
-    <string name="content_required">Comentário obrigatório</string>
-    <string name="sure_to_cancel_edit_comment">Cancelar edição do comentário?</string>
     <string name="saving_changes">Salvando alterações</string>
     <string name="trash">Lixeira</string>
     <string name="dlg_confirm_trash_comments">Enviar para a lixeira?</string>
@@ -3410,7 +3407,6 @@ Language: pt_BR
     <string name="learn_more">Saiba mais</string>
     <string name="post_not_found">Ocorreu um erro ao carregar o post. Atualize seus posts e tente novamente.</string>
     <string name="plugin_not_found">Ocorreu um erro ao acessar este plugin</string>
-    <string name="cancel_edit">Cancelar edição</string>
     <string name="connection_error">Erro de conexão</string>
     <string name="select_categories">Selecionar categorias</string>
     <string name="share_link">Compartilhar link</string>
