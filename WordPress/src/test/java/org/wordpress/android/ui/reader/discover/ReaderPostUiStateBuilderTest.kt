@@ -1012,11 +1012,31 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `Comments button is enabled on regular posts for new UI`() = test {
+        // Arrange
+        val post = createPost()
+        // Act
+        val uiState = mapPostToNewUiState(post)
+        // Assert
+        assertThat(uiState.commentsAction.isEnabled).isTrue
+    }
+
+    @Test
     fun `Comments button is disabled when comments are disabled on the post`() = test {
         // Arrange
         val post = createPost(isCommentsOpen = false)
         // Act
         val uiState = mapPostToUiState(post)
+        // Assert
+        assertThat(uiState.commentsAction.isEnabled).isFalse
+    }
+
+    @Test
+    fun `Comments button is disabled when comments are disabled on the post for new UI`() = test {
+        // Arrange
+        val post = createPost(isCommentsOpen = false)
+        // Act
+        val uiState = mapPostToNewUiState(post)
         // Assert
         assertThat(uiState.commentsAction.isEnabled).isFalse
     }
@@ -1032,12 +1052,34 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `Comments button is disabled on non-wpcom posts for new UI`() = test {
+        // Arrange
+        val post = createPost(isWPCom = false)
+        // Act
+        val uiState = mapPostToNewUiState(post)
+        // Assert
+        assertThat(uiState.commentsAction.isEnabled).isFalse
+    }
+
+    @Test
     fun `Comments button is disabled when the user is logged off and the post does not have any comments`() = test {
         // Arrange
         val post = createPost(numOfReplies = 0)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         // Act
         val uiState = mapPostToUiState(post)
+        // Assert
+        assertThat(uiState.commentsAction.isEnabled).isFalse
+    }
+
+    @Suppress("MaxLineLength")
+    @Test
+    fun `Comments button is disabled when the user is logged off and the post does not have any comments for new UI`() = test {
+        // Arrange
+        val post = createPost(numOfReplies = 0)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        // Act
+        val uiState = mapPostToNewUiState(post)
         // Assert
         assertThat(uiState.commentsAction.isEnabled).isFalse
     }
@@ -1054,11 +1096,32 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `Comments button is enabled when the user is logged off but the post has some comments for new UI`() = test {
+        // Arrange
+        val post = createPost(numOfReplies = 1)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        // Act
+        val uiState = mapPostToNewUiState(post)
+        // Assert
+        assertThat(uiState.commentsAction.isEnabled).isTrue
+    }
+
+    @Test
     fun `Comments button is disabled on discover posts`() = test {
         // Arrange
         val post = createPost(isDiscoverPost = true)
         // Act
         val uiState = mapPostToUiState(post)
+        // Assert
+        assertThat(uiState.commentsAction.isEnabled).isFalse
+    }
+
+    @Test
+    fun `Comments button is disabled on discover posts for new UI`() = test {
+        // Arrange
+        val post = createPost(isDiscoverPost = true)
+        // Act
+        val uiState = mapPostToNewUiState(post)
         // Assert
         assertThat(uiState.commentsAction.isEnabled).isFalse
     }
@@ -1073,6 +1136,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(uiState.commentsAction.count).isEqualTo(numReplies)
     }
+    // endregion
 
     @Test
     fun `Ensures that there are 5 interests within the uiState even though the ReaderTagList contains 6`() = test {
