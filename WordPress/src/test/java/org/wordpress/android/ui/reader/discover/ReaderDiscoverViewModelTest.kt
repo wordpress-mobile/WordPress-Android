@@ -70,6 +70,7 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
@@ -126,6 +127,9 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var parentViewModel: ReaderViewModel
 
+    @Mock
+    private lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
+
     private val fakeDiscoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>()
     private val fakeCommunicationChannel = MutableLiveData<Event<ReaderDiscoverCommunication>>()
     private val fakeNavigationFeed = MutableLiveData<Event<ReaderNavigationEvents>>()
@@ -148,6 +152,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
             readerTracker,
             displayUtilsWrapper,
             getFollowedTagsUseCase,
+            readerImprovementsFeatureConfig,
             testDispatcher(),
             testDispatcher()
         )
@@ -156,7 +161,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         whenever(readerPostCardActionsHandler.snackbarEvents).thenReturn(fakeSnackBarFeed)
         whenever(readerPostCardActionsHandler.preloadPostEvents).thenReturn(fakePreloadPostFeed)
         whenever(readerUtilsWrapper.getTagFromTagName(anyOrNull(), anyOrNull())).thenReturn(mock())
-        whenever(menuUiStateBuilder.buildMoreMenuItems(anyOrNull(), false, anyOrNull())).thenReturn(mock())
+        whenever(menuUiStateBuilder.buildMoreMenuItems(anyOrNull(), any(), anyOrNull())).thenReturn(mock())
         whenever(
             uiStateBuilder.mapPostToUiState(
                 source = anyString(),
@@ -213,6 +218,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         whenever(reblogUseCase.onReblogSiteSelected(anyInt(), anyOrNull())).thenReturn(mock())
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenReturn(mock<OpenEditorForReblog>())
         whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList().apply { add(mock()) })
+        whenever(readerImprovementsFeatureConfig.isEnabled()).thenReturn(false)
     }
 
     @Test
