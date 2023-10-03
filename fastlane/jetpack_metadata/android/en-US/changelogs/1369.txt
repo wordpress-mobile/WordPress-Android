@@ -1,5 +1,0 @@
-- New chat-based support channel with service bot
-- View, locate, and remove Jetpack Paywall block
-- Outlined selected Social Link block
-- Fixed crashes in the block editor and block inserter
-- Create support tickets for errors during account closure

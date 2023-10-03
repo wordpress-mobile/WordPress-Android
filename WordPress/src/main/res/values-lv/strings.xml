@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-09-01 07:54:03+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: lv
 -->
 <resources>
@@ -29,7 +29,6 @@ Language: lv
     <string name="campaign_detail_error_title">Kaut kas nogāja greizi</string>
     <string name="campaign_listing_page_error_title">Kaut kas ir nogājis greizi</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Kaut kas nogāja greizi, nevarēja ielādēt kampaņas</string>
-    <string name="domain_transfer_card_menu_hide_this">Slēpt šo</string>
     <string name="domain_transfer_card_cta">Pārcelt savus domēnus</string>
     <string name="domain_transfer_card_caption">Kā jūs varbūt zināt, Google Domains tika pārdots Squarespace. Pārceliet savus domēnus uz WordPress.com tagad, un mēs segsim visas pārneses maksas, kā arī nodrošināsim papildu gadu jūsu domēna reģistrācijai.</string>
     <string name="domain_transfer_card_sub_title">Atgūstiet savus Google domēnus</string>
@@ -93,7 +92,6 @@ Language: lv
     <string name="dashboard_card_plans_checkout_success_info">Var paiet līdz 30 minūtēm, līdz jūsu domēns sāks darboties pareizi.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Notiek jūsu jaunā domēna &lt;b&gt;%s&lt;/b&gt; iestatīšana.</string>
     <string name="dashboard_card_plans_checkout_success_title">Viss gatavs darbam!</string>
-    <string name="dashboard_card_plans_menu_hide_this">Slēpt šo</string>
     <string name="dashboard_card_plans_sub_title">Pirmo gadu iegūstiet bezmaksas domēnu, noņemiet reklāmas no savas vietnes un palieliniet krātuvi.</string>
     <string name="dashboard_card_plans_title">Bezmaksas domēns ar gada plānu</string>
     <string name="virtual_homepage_learn_more">Uzzināt vairāk par veidnēm</string>
@@ -119,9 +117,7 @@ Language: lv
     <string name="wp_jp_static_poster_title_plural">Izmantojiet WordPress ar %s Jetpack\u00A0app.</string>
     <string name="wp_jp_static_poster_title">Izmantojiet WordPress ar %s Jetpack\u00A0app.</string>
     <string name="gutenberg_native_unlabeled_color_s">Nenosaukta krāsa. %s</string>
-    <string name="dashboard_activity_card_footer_link">Pārskatīt visas darbības</string>
     <string name="dashboard_activity_card_title">Pēdējā darbība</string>
-    <string name="dashboard_card_domain_title">Pielāgota domēna atrašana</string>
     <string name="site_creation_search_domain_example_body">Līdzīgi kā iepriekš minētajā piemērā, domēns ļauj cilvēkiem atrast un apmeklēt jūsu vietni savā tīmekļa pārlūkprogrammā.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">Meklējiet ar atslēgvārdiem</string>
@@ -146,8 +142,6 @@ Language: lv
     <string name="dashboard_pages_card_create_another_page_description">Sāciet ar pielāgotiem, mobilajām ierīcēm draudzīgiem izkārtojumiem</string>
     <string name="dashboard_pages_card_create_another_page_button">Izveidot citu lapu</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Pievienojiet lapas savai vietnei</string>
-    <string name="dashboard_card_domain_menu_hide_this">Slēpt šo</string>
-    <string name="dashboard_card_domain_sub_title">Apstipriniet savu prasību pēc vietas tīmeklī, norādot vietnes adresi, kuru ir viegli atrast, kopīgot un sekot.</string>
     <string name="blogging_reminders_notifications_permission_caption">Lai izmantotu blogošanas atgādinājumus, jums būs jāieslēdz pašpiegādes paziņojumi.</string>
     <string name="blogging_reminders_notifications_permission_title">Ieslēgt vietnes paziņojumus</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Turpināt ar apakšdomēnu</string>
@@ -212,7 +206,6 @@ Language: lv
     <string name="free">Bezmaksas</string>
     <string name="help_buttons_screen_title">Palīdzība</string>
     <string name="gutenberg_native_blocks_menu">Bloku izvēlne</string>
-    <string name="promote_blaze_card_menu_hide_this">Slēpt šo</string>
     <string name="promote_blaze_card_sub_title">Parādiet savu darbu miljoniem vietņu.</string>
     <string name="promote_blaze_card_title">Reklamēt savu saturu, izmantojot Blaze</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Aizvērt</string>
@@ -281,7 +274,6 @@ Language: lv
     <string name="weeks_quantity_other">%d nedēļas</string>
     <string name="weeks_quantity_one">1 nedēļa</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">No &lt;b&gt;DayOne&lt;/b&gt;</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Slēpt šo</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Atgādināt vēlāk</string>
     <string name="jetpack_feature_card_content_phase_three">Statistika, Lasītājs, Paziņojumi un citi līdzekļi drīzumā tiks pārvietoti uz Jetpack mobilo lietotni.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Pārslēdzieties uz Jetpack lietotni</string>
@@ -619,7 +611,6 @@ Language: lv
     <string name="my_site_menu_tab_title">Izvēlne</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Jūsu meklēšanā ir iekļautas rakstzīmes, kas WordPress.com domēnos netiek atbalstītas. Ir atļautas šādas rakstzīmes: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Pārbaudiet interneta savienojumu un atsvaidziniet lapu.</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Dodieties uz statistiku</string>
     <string name="my_site_todays_stat_card_title">Šodienas statistika</string>
     <string name="error_edit_notification">Atjauninot paziņojuma saturu, radās kļūda</string>
     <string name="reader_comment_menu_edit">Rediģēt</string>
@@ -630,8 +621,6 @@ Language: lv
     <string name="gutenberg_native_tiled_gallery_settings">Flīžu galerijas iestatījumi</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Pāriet uz izkārtojuma atlases ekrānu</string>
     <string name="gutenberg_native_gallery_style">Galerijas stils</string>
-    <string name="sharing_facebook_warning_positive_button">Iet uz tīmekļa vietni</string>
-    <string name="sharing_facebook_warning_message">Savu Facebook kontu varat pievienot WordPress.com vietnē. Kad esat pabeidzis, atgriezieties WordPress lietotnē, lai mainītu koplietošanas iestatījumus.</string>
     <string name="about_automattic_app_icon_description">Lietotnes ikona</string>
     <string name="about_automattic_back_icon_description">Atgriešanās ikona</string>
     <string name="about_automattic_logo_description">Automattic logo</string>
@@ -690,8 +679,6 @@ Language: lv
     <string name="gutenberg_native_featured_image">Izceltais attēls</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Kopēt URL no starpliktuves, %s</string>
     <string name="me_btn_about">Par WordPress</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Dodieties uz ieplānotajām ziņām</string>
-    <string name="my_site_post_card_link_go_to_drafts">Dodieties uz melnrakstiem</string>
     <string name="my_site_post_card_link_create_post">Izveidojiet ziņu</string>
     <string name="my_site_create_next_post_excerpt">Regulāra publicēšana palīdz palielināt auditoriju!</string>
     <string name="my_site_create_next_post_title">Izveidojiet savu nākamo ziņu</string>
@@ -1057,7 +1044,6 @@ Language: lv
     <string name="gutenberg_native_audio_file"> audio fails</string>
     <string name="gutenberg_native_audio_caption_s">Audio paraksts. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Audio paraksts. Tukšs</string>
-    <string name="gutenberg_native_add_audio">PIEVIENOT AUDIO</string>
     <string name="continue_with_wpcom">Piesakieties vai reģistrējieties vietnē WordPress.com</string>
     <string name="photo_picker_use_audio">Izmantojiet šo audio</string>
     <string name="photo_picker_choose_audio">Izvēlieties audio no ierīces</string>
@@ -1258,9 +1244,7 @@ Language: lv
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Neizdevās saglabāt failus.\nLūdzu, pieskarieties, lai piekļūtu opcijām.</string>
     <string name="gutenberg_native_edit_file">Rediģēt failu</string>
     <string name="gutenberg_native_copy_file_url">Kopēt faila URL</string>
-    <string name="gutenberg_native_choose_a_file">IZVĒLIES FAILU</string>
     <string name="new_site_creation_domain_header_title">Izvēlieties domēnu</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack iestatījumi</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Pēc sarunas e-pastā</string>
     <string name="reader_btn_follow_comments">Sekojiet sarunai e-pastā</string>
@@ -1823,11 +1807,8 @@ Language: lv
     <string name="gutenberg_native_choose_from_device">Izvēlieties kādu no ierīces</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Radās nezināma kļūda. Lūdzu mēģiniet vēlreiz.</string>
     <string name="gutenberg_native_alt_text">Alternatīvais teksts</string>
-    <string name="gutenberg_native_add_video">PIEVIENOT VIDEO</string>
     <string name="gutenberg_native_add_url">Pievienot URL</string>
     <string name="gutenberg_native_add_alt_text">Pievienojiet alternatīvo tekstu</string>
-    <string name="gutenberg_native_add_image_or_video">PIEVIENOT ATTĒLU VAI VIDEO</string>
-    <string name="gutenberg_native_add_image">PIEVIENOT ATTĒLU</string>
     <string name="gutenberg_native_add_block_here">PIEVIENOT BLOKU ŠEIT</string>
     <string name="gutenberg_native_add_description">Pievienojiet aprakstu</string>
     <string name="reader_empty_saved_posts_content_description">Pieskarieties pogai Pievienot pie Saglabāt ziņas, lai saglabātu ziņu sarakstā.</string>
@@ -2118,9 +2099,6 @@ Language: lv
     <string name="quick_start_dialog_enable_sharing_message">Automātiski kopīgojiet jaunas ziņas savos sociālo mediju kontos.</string>
     <string name="quick_start_dialog_check_stats_title">Pārbaudiet savas vietnes statistiku</string>
     <string name="quick_start_dialog_check_stats_message">Sekojiet līdzi savas vietnes veiktspējai.</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Noņemot Nākamās darbības, tiks paslēptas visas ekskursijas šajā vietnē. Šo darbību nevar atsaukt.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Noņemt nākamās darbības</string>
-    <string name="quick_start_remove_next_steps_menu_title">Noņemiet šo</string>
     <string name="quick_start_task_skip_menu_title">Izlaist uzdevumu</string>
     <string name="notification_channel_reminder_title">Atgādinājums</string>
     <string name="stats_select_next_period_description">Izvēlieties nākamo periodu</string>
@@ -2720,7 +2698,6 @@ Language: lv
     <string name="share_intent_pick_site">Izvēlieties vietni</string>
     <string name="share_action_media">Pievienot multivides bibliotēkai</string>
     <string name="share_action_post">Pievienot jaunai ziņai</string>
-    <string name="share_media_permission_required">Nepieciešamas atļaujas, lai kopīgotu attēlus vai videoklipus</string>
     <string name="invalid_ip_or_range">Nederīgs IP vai IP diapazons</string>
     <string name="deleting_media_dlg">Dzēš</string>
     <string name="confirm_delete_media_video">Vai izdzēst šo videoklipu?</string>

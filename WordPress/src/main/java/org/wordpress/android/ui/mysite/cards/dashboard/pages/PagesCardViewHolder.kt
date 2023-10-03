@@ -7,17 +7,17 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.databinding.MySitePagesCardFooterLinkBinding
 import org.wordpress.android.databinding.MySitePagesCardWithPageItemsBinding
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.CreateNewPageItem
-import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard.PagesCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard.PagesCardWithData.CreateNewPageItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
 
 class PagesCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
-) : CardViewHolder<MySitePagesCardWithPageItemsBinding>(
+) : MySiteCardAndItemViewHolder<MySitePagesCardWithPageItemsBinding>(
     parent.viewBinding(MySitePagesCardWithPageItemsBinding::inflate)
 ) {
     init {

@@ -284,7 +284,9 @@ class PagesViewModel
 
     override fun onCleared() {
         actionPerformer.onCleanup()
-        pageListEventListener.onDestroy()
+        if (::pageListEventListener.isInitialized) {
+            pageListEventListener.onDestroy()
+        }
     }
 
     private fun loadPagesAsync() = launch(defaultDispatcher) {

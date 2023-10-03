@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-12-20 12:00:16+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: ms
 -->
 <resources>
@@ -58,7 +58,6 @@ Language: ms
     <string name="jetpack_site_settings_category_title">Tetapan Jetpack</string>
     <string name="share_intent_pick_site">Petik laman</string>
     <string name="share_action_post">Tambah ke kiriman baharu</string>
-    <string name="share_media_permission_required">Kebenaran diperlukan untuk berkongsi imej atau video</string>
     <string name="invalid_ip_or_range">IP atau julat IP tidak sah</string>
     <string name="confirm_delete_media_video">Hapuskan video ini?</string>
     <string name="deleting_media_dlg">Menghapuskan</string>

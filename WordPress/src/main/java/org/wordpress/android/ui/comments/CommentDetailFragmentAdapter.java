@@ -2,6 +2,7 @@ package org.wordpress.android.ui.comments;
 
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -19,14 +20,16 @@ import org.wordpress.android.util.AppLog;
  */
 @Deprecated
 public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
-    private final SiteModel mSite;
+    @NonNull private final SiteModel mSite;
     private final OnLoadMoreListener mOnLoadMoreListener;
     private final CommentList mCommentList;
 
-    CommentDetailFragmentAdapter(FragmentManager fm,
-                                 CommentList commentList,
-                                 SiteModel site,
-                                 OnLoadMoreListener onLoadMoreListener) {
+    CommentDetailFragmentAdapter(
+            FragmentManager fm,
+            CommentList commentList,
+            @NonNull SiteModel site,
+            OnLoadMoreListener onLoadMoreListener
+    ) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.mSite = site;
         this.mOnLoadMoreListener = onLoadMoreListener;

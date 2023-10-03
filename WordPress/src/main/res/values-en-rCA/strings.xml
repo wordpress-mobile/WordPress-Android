@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-04-07 20:35:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: en_CA
 -->
 <resources>
@@ -43,7 +43,6 @@ Language: en_CA
     <string name="weeks_quantity_other">%d weeks</string>
     <string name="wp_jetpack_powered_phase_2">Get the Jetpack app</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">From &lt;b&gt;DayOne&lt;/b&gt;</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
@@ -379,7 +378,6 @@ Language: en_CA
     <string name="error_edit_notification">An error occurred while updating the notification content</string>
     <string name="my_site_error_within_card_subtitle">Check your internet connection and refresh the page.</string>
     <string name="my_site_todays_stat_card_title">Today\'s Stats</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Go to stats</string>
     <string name="reader_comment_menu_edit">Edit</string>
     <string name="comment_moderation_error">Failed to moderate comments</string>
     <string name="reader_comment_menu_spam">Mark as Spam</string>
@@ -388,8 +386,6 @@ Language: en_CA
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navigates to layout selection screen</string>
     <string name="gutenberg_native_tiled_gallery_settings">Tiled gallery settings</string>
     <string name="gutenberg_native_gallery_style">Gallery style</string>
-    <string name="sharing_facebook_warning_message">You can connect your Facebook account on the WordPress.com website. When you\'re done, return to the WordPress app to change your Sharing settings.</string>
-    <string name="sharing_facebook_warning_positive_button">Go to web</string>
     <string name="about_automattic_app_icon_description">App icon</string>
     <string name="about_automattic_back_icon_description">Back icon</string>
     <string name="about_automattic_logo_description">Automattic logo</string>
@@ -448,8 +444,6 @@ Language: en_CA
     <string name="gutenberg_native_featured_image">Featured Image</string>
     <string name="gutenberg_native_from_clipboard">From clipboard</string>
     <string name="me_btn_about">About WordPress</string>
-    <string name="my_site_post_card_link_go_to_drafts">Go to drafts</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Go to scheduled posts</string>
     <string name="button_copy_link">Copy link</string>
     <string name="comment_author_badge">Author</string>
     <string name="menu_html_mode_switched_notice">Switched to HTML mode</string>
@@ -807,7 +801,6 @@ Language: en_CA
     <string name="gutenberg_native_audio_player">Audio Player</string>
     <string name="gutenberg_native_audio_caption_s">Audio caption. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Audio caption. Empty</string>
-    <string name="gutenberg_native_add_audio">ADD AUDIO</string>
     <string name="continue_with_wpcom">Log in or sign up with WordPress.com</string>
     <string name="photo_picker_use_audio">Use this audio</string>
     <string name="photo_picker_choose_audio">Choose audio from device</string>
@@ -1009,9 +1002,7 @@ Language: en_CA
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Failed to save files.\nPlease tap for options.</string>
     <string name="gutenberg_native_edit_file">Edit file</string>
     <string name="gutenberg_native_copy_file_url">Copy file URL</string>
-    <string name="gutenberg_native_choose_a_file">CHOOSE A FILE</string>
     <string name="new_site_creation_domain_header_title">Choose a domain</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack Settings</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Following conversation by email</string>
     <string name="reader_btn_follow_comments">Follow conversation by email</string>
@@ -1574,9 +1565,6 @@ Language: en_CA
     <string name="gutenberg_native_choose_from_device">Choose from device</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">An unknown error occurred. Please try again.</string>
     <string name="gutenberg_native_alt_text">Alt Text</string>
-    <string name="gutenberg_native_add_video">ADD VIDEO</string>
-    <string name="gutenberg_native_add_image_or_video">ADD IMAGE OR VIDEO</string>
-    <string name="gutenberg_native_add_image">ADD IMAGE</string>
     <string name="gutenberg_native_add_block_here">ADD BLOCK HERE</string>
     <string name="gutenberg_native_add_url">Add URL</string>
     <string name="gutenberg_native_add_alt_text">Add alt text</string>
@@ -1867,9 +1855,6 @@ Language: en_CA
     <string name="quick_start_dialog_enable_sharing_title">Enable post sharing</string>
     <string name="quick_start_dialog_enable_sharing_message">Automatically share new posts to your social media accounts.</string>
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
-    <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
     <string name="quick_start_dialog_check_stats_message">Keep up to date with your site\'s performance.</string>
     <string name="quick_start_task_skip_menu_title">Skip task</string>
     <string name="notification_channel_reminder_title">Reminder</string>
@@ -2469,7 +2454,6 @@ Language: en_CA
     <string name="share_intent_pick_site">Pick site</string>
     <string name="share_action_media">Add to media library</string>
     <string name="share_action_post">Add to new post</string>
-    <string name="share_media_permission_required">Permissions required in order to share images or videos</string>
     <string name="invalid_ip_or_range">Invalid IP or IP range</string>
     <string name="deleting_media_dlg">Deleting</string>
     <string name="confirm_delete_media_video">Delete this video?</string>

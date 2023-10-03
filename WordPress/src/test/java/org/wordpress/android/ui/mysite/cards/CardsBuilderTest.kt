@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
@@ -111,7 +110,7 @@ class CardsBuilderTest {
     fun `when cards are built, then dashboard cards built`() {
         val cards = buildCards()
 
-        assertThat(cards.findDashboardCards()).isNotNull
+        assertThat(cards).isNotNull
     }
 
     /*  QUICK LINK RIBBON */
@@ -130,8 +129,6 @@ class CardsBuilderTest {
     }
 
     private fun List<MySiteCardAndItem>.findQuickStartCard() = this.find { it is QuickStartCard } as QuickStartCard?
-
-    private fun List<MySiteCardAndItem>.findDashboardCards() = this.find { it is DashboardCards }
 
     private fun List<MySiteCardAndItem>.findDomainRegistrationCard() =
         this.find { it is DomainRegistrationCard } as DomainRegistrationCard?
@@ -252,7 +249,7 @@ class CardsBuilderTest {
         moreMenuOptions = mock()
     )
 
-    private fun initDashboardCards() = DashboardCards(cards = mock())
+    private fun initDashboardCards() = mutableListOf<MySiteCardAndItem.Card>()
 
     private fun initQuickLinkRibbon(): QuickLinkRibbon {
         return QuickLinkRibbon(

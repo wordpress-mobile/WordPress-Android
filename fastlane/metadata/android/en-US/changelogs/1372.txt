@@ -1,0 +1,3 @@
+We changed the way alerts appear when you’re inserting media into blocks from a URL. So we’ve got that going for us, which is nice.
+
+It’s also easier to tell the difference between placeholder text and actual content in block-based themes.

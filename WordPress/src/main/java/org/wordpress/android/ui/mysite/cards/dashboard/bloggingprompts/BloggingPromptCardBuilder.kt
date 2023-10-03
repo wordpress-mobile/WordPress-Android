@@ -4,7 +4,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText

@@ -1,0 +1,4 @@
+23.3 :
+– Nous avons modifié l’affichage des alertes lorsque vous insérez des médias dans des blocs à partir d’une URL.
+– Il est plus facile de différencier un texte indicatif d’un contenu réel dans les thèmes basés sur des blocs.
+– Les cartes du tableau de bord Mon site sont personnalisables avec le bouton « Personnaliser l’onglet Accueil ».

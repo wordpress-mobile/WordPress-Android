@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import org.wordpress.android.R
 import org.wordpress.android.databinding.DashboardCardPlansBinding
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardPlansCard
-import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
@@ -14,7 +14,7 @@ import org.wordpress.android.util.extensions.viewBinding
 class PlansCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
-) : CardViewHolder<DashboardCardPlansBinding>(
+) : MySiteCardAndItemViewHolder<DashboardCardPlansBinding>(
     parent.viewBinding(DashboardCardPlansBinding::inflate)
 ) {
     fun bind(card: DashboardPlansCard) = with(binding) {

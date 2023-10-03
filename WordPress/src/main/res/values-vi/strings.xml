@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-11-08 05:57:29+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: vi_VN
 -->
 <resources>
@@ -206,7 +206,6 @@ Language: vi_VN
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Tên miền WordPress.com không chứa những ký tự này. Chỉ có chữ và số được cho phép.</string>
     <string name="my_site_error_within_card_subtitle">Kiểm tra kết nối mạng và thử lại.</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Xem thống kê</string>
     <string name="my_site_todays_stat_card_title">Thống kê hôm nay</string>
     <string name="error_edit_notification">Xảy ra lỗi khi tải nội dung thông báo</string>
     <string name="reader_comment_menu_edit">Sửa</string>
@@ -217,8 +216,6 @@ Language: vi_VN
     <string name="gutenberg_native_tiled_gallery_settings">Cài đặt bộ sưu tập dạng ô</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Chuyển đến chọn màn hình bố cục</string>
     <string name="gutenberg_native_gallery_style">Dạng bộ sưu tập</string>
-    <string name="sharing_facebook_warning_positive_button">Đến trang web</string>
-    <string name="sharing_facebook_warning_message">Bạn có thể kết nối tài khoản Facebook với WordPress.com. Khi đã kết nối, quay lại app WordPress để thay đổi thiết lập Chia Sẻ.</string>
     <string name="about_automattic_app_icon_description">Biểu tượng app</string>
     <string name="about_automattic_back_icon_description">Biểu tượng trở về</string>
     <string name="about_automattic_logo_description">Biểu tượng Automattic</string>
@@ -277,8 +274,6 @@ Language: vi_VN
     <string name="gutenberg_native_featured_image">Ảnh minh họa</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Chép URL từ bộ nhớ tạm, %s</string>
     <string name="me_btn_about">Về WordPress</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Xem bài viết đã lên lịch</string>
-    <string name="my_site_post_card_link_go_to_drafts">Xem các bản nháp</string>
     <string name="my_site_post_card_link_create_post">Viết bài mới</string>
     <string name="my_site_create_next_post_excerpt">Đăng thường xuyên để thu hút độc giả!</string>
     <string name="my_site_create_next_post_title">Tạo bài viết kế tiếp</string>
@@ -634,7 +629,6 @@ Language: vi_VN
     <string name="gutenberg_native_audio_file">tập tin âm thanh</string>
     <string name="gutenberg_native_audio_caption_s">Chú thích âm thanh. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Chú thích âm thanh. Trống</string>
-    <string name="gutenberg_native_add_audio">THÊM ÂM THANH</string>
     <string name="continue_with_wpcom">Đăng nhập hoặc đăng ký WordPress.com</string>
     <string name="photo_picker_use_audio">Dùng âm thanh này</string>
     <string name="photo_picker_choose_audio">Chọn âm thanh từ thiết bị</string>
@@ -835,9 +829,7 @@ Language: vi_VN
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Lưu tập tin thất bại.\nNhấn để xem tùy chọn.</string>
     <string name="gutenberg_native_edit_file">Sửa tập tin</string>
     <string name="gutenberg_native_copy_file_url">Chép URL tập tin</string>
-    <string name="gutenberg_native_choose_a_file">CHỌN TẬP TIN</string>
     <string name="new_site_creation_domain_header_title">Chọn tên miền</string>
-    <string name="my_site_btn_jetpack_settings">Thiết lập Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Đang theo dõi bình luận qua email</string>
     <string name="reader_btn_follow_comments">Theo dõi bình luận qua email</string>
@@ -1398,11 +1390,8 @@ Language: vi_VN
     <string name="gutenberg_native_choose_from_device">Chọn từ thiết bị</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Đã có lỗi xảy ra. Xin thử lại.</string>
     <string name="gutenberg_native_alt_text">Văn bản thay thế</string>
-    <string name="gutenberg_native_add_video">THÊM VIDEO</string>
     <string name="gutenberg_native_add_url">Chèn URL</string>
     <string name="gutenberg_native_add_alt_text">Thêm văn bản thay thế</string>
-    <string name="gutenberg_native_add_image_or_video">THÊM ẢNH HOẶC VIDEO</string>
-    <string name="gutenberg_native_add_image">THÊM ẢNH</string>
     <string name="gutenberg_native_add_block_here">THÊM KHỐI Ở ĐÂY</string>
     <string name="reader_empty_saved_posts_content_description">Nhấn nút Lưu Bài Viết để lưu một bài viết vào danh sách của bạn.</string>
     <string name="reader_acessibility_list_loaded">\"Danh sách này có %1$d bài.\"</string>
@@ -1691,9 +1680,6 @@ Language: vi_VN
     <string name="quick_start_dialog_enable_sharing_message">Tự động chia sẻ bài mới tới những mạng xã hội của bạn.</string>
     <string name="quick_start_dialog_check_stats_title">Kiểm tra thống kê blog</string>
     <string name="quick_start_dialog_check_stats_message">Tối ưu hóa hiệu suất blog.</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Bỏ bước Kế Tiếp sẽ ẩn hướng dẫn nhanh trên blog này. Nó sẽ không xuất hiện lại.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Bỏ bước Kế Tiếp</string>
-    <string name="quick_start_remove_next_steps_menu_title">Bỏ qua</string>
     <string name="quick_start_task_skip_menu_title">Bỏ qua</string>
     <string name="notification_channel_reminder_title">Lượt nhắc</string>
     <string name="stats_select_next_period_description">Chọn chu kỳ kế</string>
@@ -2289,7 +2275,6 @@ Language: vi_VN
     <string name="share_intent_pick_site">Chọn blog</string>
     <string name="share_action_media">Thêm vào thư viện media</string>
     <string name="share_action_post">Thêm vào bài viết mới</string>
-    <string name="share_media_permission_required">Cần có quyền để chia sẻ ảnh hoặc video</string>
     <string name="invalid_ip_or_range">IP hoặc dải IP không hợp lệ</string>
     <string name="deleting_media_dlg">Đang xóa</string>
     <string name="confirm_delete_media_video">Xóa video này?</string>

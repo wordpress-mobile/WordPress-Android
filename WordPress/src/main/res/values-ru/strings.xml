@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-04 21:05:32+0000
+Translation-Revision-Date: 2023-09-28 15:04:55+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: ru
 -->
 <resources>
+    <string name="sharing_connect_via_web_warning_positive_button">Переход на веб-сайт</string>
+    <string name="my_site_dashboard_no_cards_message_description">Нажмите на кнопку персонализации, чтобы увидеть больше карточек.</string>
+    <string name="my_site_dashboard_no_cards_message_title">Все карточки скрыты</string>
+    <string name="personalization_screen_next_steps_card_description">Узнайте, как максимально эффективно использовать свой сайт с помощью приложения.</string>
+    <string name="personalization_screen_activity_log_card_description">Недавние действия на сайте.</string>
+    <string name="personalization_screen_pages_card_description">Обзор страниц вашего сайта.</string>
+    <string name="personalization_screen_blogging_prompts_card_description">Ежедневные идеи для ваших записей в блоге.</string>
+    <string name="personalization_screen_blogging_prompts_card_title">Подсказки по ведению блога</string>
+    <string name="personalization_screen_blaze_card_description">Продвиньте запись и посмотрите текущие кампании.</string>
+    <string name="personalization_screen_scheduled_posts_card_description">Ваши запланированные к публикации записи.</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Запланированные записи</string>
+    <string name="personalization_screen_draft_posts_card_description">Ваши недавние черновики записей.</string>
+    <string name="personalization_screen_draft_posts_card_title">Черновики записей</string>
+    <string name="personalization_screen_stats_card_description">Просмотры, посетители и отметки \"нравится\"</string>
+    <string name="personalization_screen_footer_cards">На карточках может отображаться разное содержимое в зависимости от того, что происходит с вашим сайтом</string>
+    <string name="personalization_screen_description">Добавление и скрытие карточек</string>
+    <string name="personalization_screen_title">Настроить домашнюю вкладку</string>
+    <string name="personalize_card_content_description">Нажмите для настройки домашней вкладки</string>
+    <string name="personalize_card_text">Настроить домашнюю вкладку</string>
+    <string name="partial_media_access_prompt_change_settings">Изменить настройки</string>
+    <string name="partial_media_access_prompt_select_more">Выбрать ещё</string>
+    <string name="partial_media_access_prompt_text">Доступны только выбранные фотографии и видеозаписи, к которым вы предоставили доступ.</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Посмотреть все кампании</string>
+    <string name="dashboard_activity_card_menu_all_activity">Вся активность</string>
+    <string name="dashboard_pages_card_more_menu_all_pages">Все страницы</string>
+    <string name="gutenberg_native_choose_a_file">Выбрать файл</string>
+    <string name="gutenberg_native_add_image_or_video">Добавить изображение или видео</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">Посмотреть все запланированные записи</string>
+    <string name="my_site_post_card_menu_view_all_drafts">Посмотреть все черновики</string>
+    <string name="my_site_todays_stats_menu_view_stats">Посмотреть статистику</string>
+    <string name="my_site_dashboard_card_more_menu_hide_card">Скрыть это</string>
+    <string name="contact_support_first_message_hint">Если я не смогу ответить на ваш вопрос, я помогу вам открыть заявку в службу поддержки с нашей командой!</string>
+    <string name="contact_support_first_message_hi">Привет, я помощник Jetpack AI.</string>
     <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">Откройте этот блок Paywall в своем веб-браузере для дополнительных настроек.</string>
     <string name="contact_support_bot_ticket_comment_answer">Ответ:</string>
     <string name="contact_support_bot_ticket_comment_question">Вопрос:</string>
@@ -31,7 +64,6 @@ Language: ru
     <string name="campaign_detail_error_title">Что-то пошло не так</string>
     <string name="campaign_listing_page_error_title">Что-то пошло не так</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Что-то пошло не так, не удалось загрузить кампании</string>
-    <string name="domain_transfer_card_menu_hide_this">Скрыть это</string>
     <string name="domain_transfer_card_cta">Перенести домены</string>
     <string name="domain_transfer_card_caption">Как вы, возможно, знаете, домены Google были проданы компании Squarespace. Перенесите свои домены на WordPress.com сейчас, и мы оплатим все сборы за перенос плюс дополнительный год регистрации вашего домена.</string>
     <string name="domain_transfer_card_sub_title">Заберите ваши домены Google</string>
@@ -95,7 +127,6 @@ Language: ru
     <string name="dashboard_card_plans_checkout_success_info">Прежде чем ваш домен начнёт работать, может пройти до 30 минут.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Ваш новый домен &lt;b&gt;%s&lt;/b&gt; настраивается.</string>
     <string name="dashboard_card_plans_checkout_success_title">Всё готово!</string>
-    <string name="dashboard_card_plans_menu_hide_this">Скрыть это</string>
     <string name="dashboard_card_plans_sub_title">Получите бесплатный домен на первый год, уберите рекламу на своем сайте и увеличьте объем хранилища.</string>
     <string name="dashboard_card_plans_title">Бесплатный домен на тарифном плане с ежегодной оплатой</string>
     <string name="virtual_homepage_learn_more">Узнать больше о шаблонах</string>
@@ -122,9 +153,7 @@ Language: ru
     <string name="wp_jp_static_poster_title_plural">Используйте WordPress с %s в приложении Jetpack.</string>
     <string name="wp_jp_static_poster_title">Используйте WordPress с %s в приложении Jetpack.</string>
     <string name="gutenberg_native_unlabeled_color_s">Цвет без ярлыка. %s</string>
-    <string name="dashboard_activity_card_footer_link">Просмотреть все действия</string>
     <string name="dashboard_activity_card_title">Недавние действия</string>
-    <string name="dashboard_card_domain_title">Найти пользовательский домен</string>
     <string name="site_creation_search_domain_example_body">Зная домен, пользователи могут найти сайт с помощью браузера, как в примере выше.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">Поиск по ключевым словам</string>
@@ -149,8 +178,6 @@ Language: ru
     <string name="dashboard_pages_card_create_another_page_description">Начните с макетов для мобильных устройств</string>
     <string name="dashboard_pages_card_create_another_page_button">Создать еще страницу</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Добавление новых страниц на сайт</string>
-    <string name="dashboard_card_domain_menu_hide_this">Скрыть это</string>
-    <string name="dashboard_card_domain_sub_title">Займите себе место в Интернете: зарегистрируйте адрес сайта, который будет легко запомнить и порекомендовать друзьям.</string>
     <string name="blogging_reminders_notifications_permission_caption">Для использования напоминаний следует включить push-уведомления.</string>
     <string name="blogging_reminders_notifications_permission_title">Включить push-уведомления</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Продолжить с поддоменом</string>
@@ -215,7 +242,6 @@ Language: ru
     <string name="free">Бесплатно</string>
     <string name="help_buttons_screen_title">Справка</string>
     <string name="gutenberg_native_blocks_menu">Меню \"Блоки\"</string>
-    <string name="promote_blaze_card_menu_hide_this">Свернуть</string>
     <string name="promote_blaze_card_sub_title">Демонстрируйте свою работу на миллионах сайтов.</string>
     <string name="promote_blaze_card_title">Продвигайте содержимое с помощью Blaze</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Закрыть</string>
@@ -284,7 +310,6 @@ Language: ru
     <string name="weeks_quantity_other">%d нед.</string>
     <string name="weeks_quantity_one">1 неделя</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">От &lt;b&gt;В Первый День&lt;/b&gt;</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Скрыть это</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Напомнить мне позже</string>
     <string name="jetpack_feature_card_content_phase_three">Статистика, Чтиво, Уведомления и другие функции скоро переедут в мобильное приложение Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Перейти в новое приложение Jetpack</string>
@@ -622,7 +647,6 @@ Language: ru
     <string name="my_site_menu_tab_title">Меню сайта</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Ваш поиск включает символы, которые не поддерживаются в доменах WordPress.com. Допускаются только буквенно-цифровые символы: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Проверьте подключение к Интернету и обновите страницу.</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Перейти к статистике</string>
     <string name="my_site_todays_stat_card_title">Статистика за сегодня</string>
     <string name="error_edit_notification">Произошла ошибка при обновлении содержимого уведомления</string>
     <string name="reader_comment_menu_edit">Редактировать</string>
@@ -633,8 +657,7 @@ Language: ru
     <string name="gutenberg_native_tiled_gallery_settings">Настройки плиточной галереи</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Навигация к экрану выбора макета</string>
     <string name="gutenberg_native_gallery_style">Стиль галереи</string>
-    <string name="sharing_facebook_warning_positive_button">Переход на веб-сайт</string>
-    <string name="sharing_facebook_warning_message">Вы можете подключить свою учётную запись Facebook на сайте WordPress.com. После этого вернитесь в приложение WordPress, чтобы изменить настройки возможностей поделиться.</string>
+    <string name="sharing_connect_via_web_warning_message">Вы можете подключить свою учётную запись %s на сайте WordPress.com. После этого вернитесь в приложение WordPress, чтобы изменить настройки возможностей поделиться.</string>
     <string name="about_automattic_app_icon_description">Значок приложения</string>
     <string name="about_automattic_back_icon_description">Значок Назад</string>
     <string name="about_automattic_logo_description">логотип Automattic</string>
@@ -693,8 +716,6 @@ Language: ru
     <string name="gutenberg_native_featured_image">Изображение записи</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Скопировать URL из буфера обмена, %s</string>
     <string name="me_btn_about">О WordPress</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Перейти к запланированным записям</string>
-    <string name="my_site_post_card_link_go_to_drafts">Перейти в черновики</string>
     <string name="my_site_post_card_link_create_post">Создать запись</string>
     <string name="my_site_create_next_post_excerpt">Регулярные публикации помогают вам формировать аудиторию!</string>
     <string name="my_site_create_next_post_title">Создайте вашу следующую запись</string>
@@ -937,6 +958,7 @@ Language: ru
     <string name="gutenberg_native_padding">Отступ</string>
     <string name="gutenberg_native_four">Четыре</string>
     <string name="gutenberg_native_featured">Избранное</string>
+    <string name="gutenberg_native_add_image">Добавить изображение</string>
     <string name="gutenberg_native_custom_url">Произвольный URL</string>
     <string name="gutenberg_native_create_embed">Создать встроенный объект</string>
     <string name="gutenberg_native_column_d">Столбец %d</string>
@@ -1060,7 +1082,7 @@ Language: ru
     <string name="gutenberg_native_audio_file">аудио файл</string>
     <string name="gutenberg_native_audio_caption_s">Подпись к аудиозаписи. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Подпись к аудиозаписи. Пустая</string>
-    <string name="gutenberg_native_add_audio">ДОБАВИТЬ АУДИО</string>
+    <string name="gutenberg_native_add_audio">Добавить аудиозапись</string>
     <string name="continue_with_wpcom">Войти или зарегистрироваться с WordPress.com</string>
     <string name="photo_picker_use_audio">Использовать эту аудиозапись</string>
     <string name="photo_picker_choose_audio">Выберите аудиозапись с устройства</string>
@@ -1261,9 +1283,7 @@ Language: ru
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Невозможно сохранить файлы.\nНажмите для выбора вариантов.</string>
     <string name="gutenberg_native_edit_file">Редактировать файл</string>
     <string name="gutenberg_native_copy_file_url">Скопировать URL файла</string>
-    <string name="gutenberg_native_choose_a_file">ВЫБРАТЬ ФАЙЛ</string>
     <string name="new_site_creation_domain_header_title">Выбрать домен</string>
-    <string name="my_site_btn_jetpack_settings">Настройки Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Вы подписаны на беседу по email</string>
     <string name="reader_btn_follow_comments">Подписаться на эту беседу по email</string>
@@ -1826,11 +1846,9 @@ Language: ru
     <string name="gutenberg_native_choose_from_device">Выбрать с устройства</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Произошла неизвестная ошибка. Повторите попытку.</string>
     <string name="gutenberg_native_alt_text">Текст атрибута alt</string>
-    <string name="gutenberg_native_add_video">ДОБАВИТЬ ВИДЕО</string>
+    <string name="gutenberg_native_add_video">Добавить видео</string>
     <string name="gutenberg_native_add_url">Добавить URL</string>
     <string name="gutenberg_native_add_alt_text">Добавить текст alt</string>
-    <string name="gutenberg_native_add_image_or_video">ДОБАВИТЬ ИЗОБРАЖЕНИЕ ИЛИ ВИДЕО</string>
-    <string name="gutenberg_native_add_image">ДОБАВИТЬ ИЗОБРАЖЕНИЕ</string>
     <string name="gutenberg_native_add_block_here">ДОБАВИТЬ БЛОК ЗДЕСЬ</string>
     <string name="gutenberg_native_add_description">Добавить описание</string>
     <string name="reader_empty_saved_posts_content_description">Нажмите на кнопку добавления в сохраненные записи для сохранения записи в ваш список.</string>
@@ -2121,9 +2139,6 @@ Language: ru
     <string name="quick_start_dialog_enable_sharing_message">Автоматически делитесь вашими новыми записями в социальных сетях.</string>
     <string name="quick_start_dialog_check_stats_title">Посмотреть статистику сайта</string>
     <string name="quick_start_dialog_check_stats_message">Будьте в курсе статистики вашего сайта.</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Пропуск следующих шагов отключит все гиды по этому сайту. Действие не может быть отменено.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Пропустить следующие шаги</string>
-    <string name="quick_start_remove_next_steps_menu_title">Убрать это</string>
     <string name="quick_start_task_skip_menu_title">Пропустить задачу</string>
     <string name="notification_channel_reminder_title">Напоминание</string>
     <string name="stats_select_next_period_description">Выбор следующего периода</string>
@@ -2723,7 +2738,6 @@ Language: ru
     <string name="share_intent_pick_site">Выбрать сайт</string>
     <string name="share_action_media">Добавить к медиатеке</string>
     <string name="share_action_post">Добавить к новой записи</string>
-    <string name="share_media_permission_required">Требуются разрешения для того, чтобы делиться изображениями или видео</string>
     <string name="invalid_ip_or_range">Неверный IP или диапазон IP</string>
     <string name="deleting_media_dlg">Удаление</string>
     <string name="confirm_delete_media_video">Удалить видео?</string>

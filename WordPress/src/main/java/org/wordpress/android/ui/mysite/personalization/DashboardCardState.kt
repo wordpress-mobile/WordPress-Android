@@ -17,6 +17,5 @@ enum class CardType(val order: Int, val trackingName:String) {
     PAGES(3, "pages"),
     ACTIVITY_LOG(4, "activity_log"),
     BLAZE(5, "blaze"),
-    BLOGGING_PROMPTS(6, "blogging_prompts"),
-    NEXT_STEPS(7, "next_steps")
+    BLOGGING_PROMPTS(6, "blogging_prompts")
 }
