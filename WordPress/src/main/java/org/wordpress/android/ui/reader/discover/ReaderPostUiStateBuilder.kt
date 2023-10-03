@@ -143,7 +143,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
             excerpt = buildExcerpt(post),
             title = buildTitle(post),
             tagItems = buildTagItems(post, onTagItemClicked),
-            photoFrameVisibility = buildPhotoFrameVisibility(post),
             photoTitle = buildPhotoTitle(post),
             featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
             featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
@@ -235,7 +234,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
             videoOverlayVisibility = buildVideoOverlayVisibility(post),
             featuredImageVisibility = buildFeaturedImageVisibility(post),
             moreMenuVisibility = accountStore.hasAccessToken(),
-            photoFrameVisibility = buildPhotoFrameVisibility(post),
             likeAction = buildLikeSection(post, onButtonClicked, isReaderImprovementsEnabled = true),
             reblogAction = buildReblogSection(post, onButtonClicked),
             commentsAction = buildCommentsSection(post, onButtonClicked),
@@ -412,10 +410,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     private fun buildPhotoTitle(post: ReaderPost) =
         post.takeIf { it.cardType == PHOTO && it.hasTitle() }?.title
-
-    private fun buildPhotoFrameVisibility(post: ReaderPost) =
-        (post.hasFeaturedVideo() || post.hasFeaturedImage()) &&
-                post.cardType != GALLERY
 
     private fun buildTitle(
         post: ReaderPost,
