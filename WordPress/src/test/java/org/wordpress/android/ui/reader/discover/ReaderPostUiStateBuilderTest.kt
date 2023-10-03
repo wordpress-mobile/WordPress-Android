@@ -640,11 +640,31 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `blog name is displayed for regular post for new UI`() = test {
+        // Arrange
+        val post = createPost()
+        // Act
+        val uiState = mapPostToNewUiState(post)
+        // Assert
+        assertThat(uiState.blogSection.blogName).isNotNull
+    }
+
+    @Test
     fun `default blog name is displayed when the post doesn't have a blog name`() = test {
         // Arrange
         val post = createPost(hasBlogName = false)
         // Act
         val uiState = mapPostToUiState(post)
+        // Assert
+        assertThat((uiState.blogSection.blogName as UiStringRes).stringRes).isEqualTo(R.string.untitled_in_parentheses)
+    }
+
+    @Test
+    fun `default blog name is displayed when the post doesn't have a blog name for new UI`() = test {
+        // Arrange
+        val post = createPost(hasBlogName = false)
+        // Act
+        val uiState = mapPostToNewUiState(post)
         // Assert
         assertThat((uiState.blogSection.blogName as UiStringRes).stringRes).isEqualTo(R.string.untitled_in_parentheses)
     }
@@ -667,6 +687,38 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Act
         val firstNameUiState = mapPostToUiState(postWithFirstName)
         val fullNameUiState = mapPostToUiState(postWithoutFirstName)
+        // Assert
+        val firstNameBlog = firstNameUiState.blogSection.blogName as UiStringResWithParams
+        assertThat(firstNameBlog.stringRes).isEqualTo(R.string.reader_author_with_blog_name)
+        assertThat(firstNameBlog.params.size).isEqualTo(2)
+        assertThat((firstNameBlog.params[0] as UiStringText).text).isEqualTo("John")
+        assertThat((firstNameBlog.params[1] as UiStringText).text).isEqualTo("Fancy Blog")
+
+        val fullNameBlog = fullNameUiState.blogSection.blogName as UiStringResWithParams
+        assertThat(fullNameBlog.stringRes).isEqualTo(R.string.reader_author_with_blog_name)
+        assertThat(fullNameBlog.params.size).isEqualTo(2)
+        assertThat((fullNameBlog.params[0] as UiStringText).text).isEqualTo("John Smith")
+        assertThat((fullNameBlog.params[1] as UiStringText).text).isEqualTo("Fancy Blog")
+    }
+
+    @Test
+    fun `p2 posts in the feed show author's first name (or full name) alongside the blog name for new UI`() = test {
+        // Arrange
+        val postWithFirstName = createPost(
+            isp2Post = true,
+            blogName = "Fancy Blog",
+            authorFirstName = "John",
+            authorName = "John Smith"
+        )
+        val postWithoutFirstName = createPost(
+            isp2Post = true,
+            blogName = "Fancy Blog",
+            authorFirstName = "",
+            authorName = "John Smith"
+        )
+        // Act
+        val firstNameUiState = mapPostToNewUiState(postWithFirstName)
+        val fullNameUiState = mapPostToNewUiState(postWithoutFirstName)
         // Assert
         val firstNameBlog = firstNameUiState.blogSection.blogName as UiStringResWithParams
         assertThat(firstNameBlog.stringRes).isEqualTo(R.string.reader_author_with_blog_name)
