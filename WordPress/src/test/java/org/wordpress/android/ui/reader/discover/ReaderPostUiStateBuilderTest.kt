@@ -1138,6 +1138,30 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
     // endregion
 
+    // region INTERACTION SECTION
+    @Test
+    fun `Count on comments section corresponds to number of comments on the post for new UI`() = test {
+        // Arrange
+        val numReplies = 15
+        val post = createPost(numOfReplies = numReplies)
+        // Act
+        val uiState = mapPostToNewUiState(post)
+        // Assert
+        assertThat(uiState.interactionSection.commentCount).isEqualTo(numReplies)
+    }
+
+    @Test
+    fun `Count on likes section corresponds to number of likes on the post for new UI`() = test {
+        // Arrange
+        val numLikes = 15
+        val post = createPost(numOfLikes = numLikes)
+        // Act
+        val uiState = mapPostToNewUiState(post)
+        // Assert
+        assertThat(uiState.interactionSection.likeCount).isEqualTo(numLikes)
+    }
+    // endregion
+
     @Test
     fun `Ensures that there are 5 interests within the uiState even though the ReaderTagList contains 6`() = test {
         // arrange
@@ -1310,6 +1334,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         blogId: Long = 2L,
         isBookmarked: Boolean = false,
         numOfReplies: Int = 0,
+        numOfLikes: Int = 0,
         isWPCom: Boolean = true,
         isCommentsOpen: Boolean = true,
         isPrivate: Boolean = false,
@@ -1340,6 +1365,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             whenever(mockedDiscoverData.avatarUrl).thenReturn("dummyUrl")
         }
         post.numReplies = numOfReplies
+        post.numLikes = numOfLikes
         post.isPrivate = isPrivate
         whenever(post.hasTitle()).thenReturn(hasTitle)
         whenever(post.hasBlogName()).thenReturn(hasBlogName)
