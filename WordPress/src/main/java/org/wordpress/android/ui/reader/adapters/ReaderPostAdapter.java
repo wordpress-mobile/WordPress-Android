@@ -608,6 +608,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         post,
                         mPhotonWidth,
                         mPhotonHeight,
+                        getPostListType(),
                         onButtonClicked,
                         onItemClicked,
                         onItemRendered,

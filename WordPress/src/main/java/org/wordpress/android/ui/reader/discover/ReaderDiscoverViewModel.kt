@@ -179,6 +179,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                         post = card.post,
                         photonWidth = photonWidth,
                         photonHeight = photonHeight,
+                        postListType = TAG_FOLLOWED,
                         onButtonClicked = this@ReaderDiscoverViewModel::onButtonClicked,
                         onItemClicked = this@ReaderDiscoverViewModel::onPostItemClicked,
                         onItemRendered = this@ReaderDiscoverViewModel::onItemRendered,

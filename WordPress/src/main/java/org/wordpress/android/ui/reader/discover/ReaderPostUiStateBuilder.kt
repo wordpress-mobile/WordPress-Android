@@ -173,6 +173,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         post: ReaderPost,
         photonWidth: Int,
         photonHeight: Int,
+        postListType: ReaderPostListType,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
         onItemClicked: (Long, Long) -> Unit,
         onItemRendered: (ReaderCardUiState) -> Unit,
@@ -188,6 +189,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 post,
                 photonWidth,
                 photonHeight,
+                postListType,
                 onButtonClicked,
                 onItemClicked,
                 onItemRendered,
@@ -206,6 +208,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         post: ReaderPost,
         photonWidth: Int,
         photonHeight: Int,
+        postListType: ReaderPostListType,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
         onItemClicked: (Long, Long) -> Unit,
         onItemRendered: (ReaderCardUiState) -> Unit,
@@ -221,7 +224,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             blogId = post.blogId,
             feedId = post.feedId,
             isFollowed = post.isFollowedByCurrentUser,
-            blogSection = buildCompactBlogSection(post, onPostHeaderViewClicked, post.isP2orA8C),
+            blogSection = buildCompactBlogSection(post, postListType, onPostHeaderViewClicked, post.isP2orA8C),
             interactionSection = buildInteractionSection(post),
             title = buildTitle(post, forceForPhoto = true, allowEmptyTitle = true),
             excerpt = buildExcerpt(post, forceForPhoto = true),
@@ -333,6 +336,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     private fun buildCompactBlogSection(
         post: ReaderPost,
+        postListType: ReaderPostListType,
         onBlogSectionClicked: (Long, Long) -> Unit,
         isP2Post: Boolean = false,
     ): ReaderPostNewUiState.CompactBlogSectionData {
@@ -348,7 +352,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 post.postAvatar,
                 R.dimen.avatar_sz_medium
             ),
-            onClicked = onBlogSectionClicked,
+            onClicked = onBlogSectionClicked.takeIf { postListType != ReaderPostListType.BLOG_PREVIEW },
         )
     }
 
