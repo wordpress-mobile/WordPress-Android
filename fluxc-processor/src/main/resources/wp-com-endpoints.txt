@@ -19,6 +19,7 @@
 /me/domain-contact-information/
 /me/settings/
 /me/sites/
+/me/sites/features
 /me/send-verification-email/
 /me/social-login/connect/
 /me/username/

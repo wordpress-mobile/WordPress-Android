@@ -132,16 +132,43 @@ class SiteRestClient @Inject constructor(
         val site: SiteModel? = null
     ) : Payload<SiteError>()
 
+    /**
+     *  Fetches the user's sites from WPCom.
+     *  Since the V1.2 endpoint doesn't return the plan features, we will handle the fetch by following two
+     *  different approaches:
+     *  1. If we don't need any filtering, then we'll simply use the v1.1 endpoint which includes the features.
+     *  2. If we have some filters, then we'll send two requests: the first one to the v1.2 endpoint to fetch sites
+     *     And the second one to the /me/sites/features to fetch the features separately, the combine the results.
+     */
+    @Suppress("ComplexMethod")
     suspend fun fetchSites(filters: List<SiteFilter?>, filterJetpackConnectedPackageSite: Boolean): SitesModel {
+        val useV2Endpoint = filters.isNotEmpty()
         val params = getFetchSitesParams(filters)
-        val url = WPCOMREST.me.sites.urlV1_2
+        val url = WPCOMREST.me.sites.let { if (useV2Endpoint) it.urlV1_2 else it.urlV1_1 }
         val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, SitesResponse::class.java)
+
+        val siteFeatures = if (useV2Endpoint) {
+            fetchSitesFeatures().let {
+                if (it is Error) {
+                    val result = SitesModel()
+                    result.error = it.error
+                    return result
+                }
+                (it as Success).data
+            }
+        } else null
+
         return when (response) {
             is Success -> {
                 val siteArray = mutableListOf<SiteModel>()
                 val jetpackCPSiteArray = mutableListOf<SiteModel>()
                 for (siteResponse in response.data.sites) {
                     val siteModel = siteResponseToSiteModel(siteResponse)
+
+                    siteFeatures?.get(siteModel.siteId)?.let {
+                        siteModel.planActiveFeatures = it.joinToString(",")
+                    }
+
                     if (siteModel.isJetpackCPConnected) jetpackCPSiteArray.add(siteModel)
                     // see https://github.com/wordpress-mobile/WordPress-Android/issues/15540#issuecomment-993752880
                     if (filterJetpackConnectedPackageSite && siteModel.isJetpackCPConnected) continue
@@ -149,10 +176,26 @@ class SiteRestClient @Inject constructor(
                 }
                 SitesModel(siteArray, jetpackCPSiteArray)
             }
+
             is Error -> {
                 val payload = SitesModel(emptyList())
                 payload.error = response.error
                 payload
+            }
+        }
+    }
+
+    private suspend fun fetchSitesFeatures(): Response<Map<Long, List<String>>> {
+        val url = WPCOMREST.me.sites.features.urlV1_1
+        return wpComGsonRequestBuilder.syncGetRequest(
+            restClient = this,
+            url = url,
+            params = emptyMap(),
+            clazz = SitesFeaturesRestResponse::class.java
+        ).let {
+            when (it) {
+                is Success -> Success(it.data.features.mapValues { it.value.active })
+                is Error -> Error(it.error)
             }
         }
     }
