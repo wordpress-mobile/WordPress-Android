@@ -925,11 +925,31 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `reblog button is enabled on regular posts for new UI`() = test {
+        // Arrange
+        val post = createPost()
+        // Act
+        val uiState = mapPostToNewUiState(post)
+        // Assert
+        assertThat(uiState.reblogAction.isEnabled).isTrue
+    }
+
+    @Test
     fun `reblog button is disabled on private posts`() = test {
         // Arrange
         val post = createPost(isPrivate = true)
         // Act
         val uiState = mapPostToUiState(post)
+        // Assert
+        assertThat(uiState.reblogAction.isEnabled).isFalse
+    }
+
+    @Test
+    fun `reblog button is disabled on private posts for new UI`() = test {
+        // Arrange
+        val post = createPost(isPrivate = true)
+        // Act
+        val uiState = mapPostToNewUiState(post)
         // Assert
         assertThat(uiState.reblogAction.isEnabled).isFalse
     }
@@ -946,11 +966,33 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `reblog button is disabled when the user is logged off for new UI`() = test {
+        // Arrange
+        val post = createPost()
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        // Act
+        val uiState = mapPostToNewUiState(post)
+        // Assert
+        assertThat(uiState.reblogAction.isEnabled).isFalse
+    }
+
+    @Test
     fun `onButtonClicked listener is correctly assigned to reblogAction`() = test {
         // Arrange
         val post = createPost()
         val onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
         val uiState = mapPostToUiState(post, onButtonClicked = onButtonClicked)
+        // Act
+        uiState.reblogAction.onClicked!!.invoke(1L, 1L, REBLOG)
+        // Assert
+        verify(onButtonClicked).invoke(1L, 1L, REBLOG)
+    }
+    @Test
+    fun `onButtonClicked listener is correctly assigned to reblogAction for new UI`() = test {
+        // Arrange
+        val post = createPost()
+        val onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
+        val uiState = mapPostToNewUiState(post, onButtonClicked = onButtonClicked)
         // Act
         uiState.reblogAction.onClicked!!.invoke(1L, 1L, REBLOG)
         // Assert
