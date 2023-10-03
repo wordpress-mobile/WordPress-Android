@@ -838,12 +838,33 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `like button is enabled on regular posts for new UI`() = test {
+        // Arrange
+        val post = createPost()
+        // Act
+        val uiState = mapPostToNewUiState(post)
+        // Assert
+        assertThat(uiState.likeAction.isEnabled).isTrue
+    }
+
+    @Test
     fun `like button is disabled when the user is logged off`() = test {
         // Arrange
         val post = createPost()
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         // Act
         val uiState = mapPostToUiState(post)
+        // Assert
+        assertThat(uiState.likeAction.isEnabled).isFalse
+    }
+
+    @Test
+    fun `like button is disabled when the user is logged off for new UI`() = test {
+        // Arrange
+        val post = createPost()
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        // Act
+        val uiState = mapPostToNewUiState(post)
         // Assert
         assertThat(uiState.likeAction.isEnabled).isFalse
     }
@@ -859,11 +880,32 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `like button is disabled when likes are disabled on the post for new UI`() = test {
+        // Arrange
+        val post = createPost(isCanLikePost = false)
+        // Act
+        val uiState = mapPostToNewUiState(post)
+        // Assert
+        assertThat(uiState.likeAction.isEnabled).isFalse
+    }
+
+    @Test
     fun `onButtonClicked listener is correctly assigned to likeAction`() = test {
         // Arrange
         val post = createPost()
         val onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
         val uiState = mapPostToUiState(post, onButtonClicked = onButtonClicked)
+        // Act
+        uiState.likeAction.onClicked!!.invoke(1L, 1L, LIKE)
+        // Assert
+        verify(onButtonClicked).invoke(1L, 1L, LIKE)
+    }
+    @Test
+    fun `onButtonClicked listener is correctly assigned to likeAction for new UI`() = test {
+        // Arrange
+        val post = createPost()
+        val onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
+        val uiState = mapPostToNewUiState(post, onButtonClicked = onButtonClicked)
         // Act
         uiState.likeAction.onClicked!!.invoke(1L, 1L, LIKE)
         // Assert
