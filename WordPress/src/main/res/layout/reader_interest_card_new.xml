@@ -18,7 +18,7 @@
             android:id="@+id/root_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/margin_extra_large"
+            android:paddingBottom="@dimen/margin_medium"
             android:paddingTop="@dimen/margin_extra_large">
 
             <androidx.recyclerview.widget.RecyclerView

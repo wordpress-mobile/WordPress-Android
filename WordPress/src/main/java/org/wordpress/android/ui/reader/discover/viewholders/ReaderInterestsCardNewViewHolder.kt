@@ -42,11 +42,7 @@ class ReaderInterestsCardNewViewHolder(
                 outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
             ) {
                 val spacingVertical = resources.getDimensionPixelSize(R.dimen.margin_medium)
-                if (parent.getChildAdapterPosition(view) == state.itemCount - 1) {
-                    outRect.setEmpty()
-                } else {
-                    outRect.set(0, 0, 0, spacingVertical)
-                }
+                outRect.set(0, 0, 0, spacingVertical)
             }
         })
     }
