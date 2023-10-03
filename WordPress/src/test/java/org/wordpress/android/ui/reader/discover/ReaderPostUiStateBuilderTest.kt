@@ -41,6 +41,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterest
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleOrange
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
@@ -121,6 +122,16 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `clicks on blog header are disabled on blog preview for new Ui`() = test {
+        // Arrange
+        val post = createPost()
+        // Act
+        val uiState = mapPostToNewUiState(post, BLOG_PREVIEW)
+        // Assert
+        assertThat(uiState.blogSection.onClicked).isNull()
+    }
+
+    @Test
     fun `clicks on blog header are enabled when not blog preview`() = test {
         // Arrange
         val post = createPost()
@@ -133,6 +144,18 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `clicks on blog header are enabled when not blog preview for new UI`() = test {
+        // Arrange
+        val post = createPost()
+        ReaderPostListType.values().filter { it != BLOG_PREVIEW }.forEach {
+            // Act
+            val uiState = mapPostToNewUiState(post, it)
+            // Assert
+            assertThat(uiState.blogSection.onClicked).isNotNull
+        }
+    }
+
+    @Test
     fun `p2 posts in the feed show author's avatar alongside site icon`() = test {
         // Arrange
         val p2post = createPost(isp2Post = true)
@@ -140,6 +163,19 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Act
         val p2UiState = mapPostToUiState(p2post)
         val nonP2UiState = mapPostToUiState(nonP2Post)
+        // Assert
+        assertThat(p2UiState.blogSection.isAuthorAvatarVisible).isTrue
+        assertThat(nonP2UiState.blogSection.isAuthorAvatarVisible).isFalse
+    }
+
+    @Test
+    fun `p2 posts in the feed show author's avatar alongside site icon for new UI`() = test {
+        // Arrange
+        val p2post = createPost(isp2Post = true)
+        val nonP2Post = createPost(isp2Post = false)
+        // Act
+        val p2UiState = mapPostToNewUiState(p2post)
+        val nonP2UiState = mapPostToNewUiState(nonP2Post)
         // Assert
         assertThat(p2UiState.blogSection.isAuthorAvatarVisible).isTrue
         assertThat(nonP2UiState.blogSection.isAuthorAvatarVisible).isFalse
@@ -940,6 +976,27 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             onVideoOverlayClicked = mock(),
             onPostHeaderViewClicked = mock(),
             onTagItemClicked = mock(),
+            onMoreDismissed = mock()
+        )
+    }
+
+    private suspend fun mapPostToNewUiState(
+        post: ReaderPost,
+        postListType: ReaderPostListType = TAG_FOLLOWED,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
+    ): ReaderPostNewUiState {
+        return builder.mapPostToNewUiState(
+            source = "source",
+            post = post,
+            photonWidth = 0,
+            photonHeight = 0,
+            postListType = postListType,
+            onButtonClicked = onButtonClicked,
+            onItemClicked = mock(),
+            onItemRendered = mock(),
+            onMoreButtonClicked = mock(),
+            onVideoOverlayClicked = mock(),
+            onPostHeaderViewClicked = mock(),
             onMoreDismissed = mock()
         )
     }
