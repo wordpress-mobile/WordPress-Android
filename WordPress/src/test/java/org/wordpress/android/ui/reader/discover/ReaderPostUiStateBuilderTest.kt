@@ -747,6 +747,19 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(uiState.blogSection.dateLine).isEqualTo("success")
     }
+
+    @Test
+    fun `builds dateline from post's display date for new UI`() = test {
+        // Arrange
+        val post = createPost()
+        val dummyDate: Date = mock()
+        whenever(post.getDisplayDate(dateTimeUtilsWrapper)).thenReturn(dummyDate)
+        whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(dummyDate)).thenReturn("success")
+        // Act
+        val uiState = mapPostToNewUiState(post)
+        // Assert
+        assertThat(uiState.blogSection.dateLine).isEqualTo("success")
+    }
     // endregion
 
     // region BOOKMARK BUTTON
