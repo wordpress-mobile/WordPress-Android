@@ -378,12 +378,34 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `thumbnail strip is not empty for GALLERY for new UI`() = test {
+        // Arrange
+        val post = createPost(cardType = GALLERY)
+        // Act
+        val uiState = mapPostToNewUiState(post)
+        // Assert
+        assertThat(uiState.thumbnailStripSection).isNotNull
+    }
+
+    @Test
     fun `thumbnail strip is empty for other than GALLERY`() = test {
         // Arrange
         ReaderCardType.values().filter { it != GALLERY }.forEach {
             val post = createPost(cardType = it)
             // Act
             val uiState = mapPostToUiState(post)
+            // Assert
+            assertThat(uiState.thumbnailStripSection).isNull()
+        }
+    }
+
+    @Test
+    fun `thumbnail strip is empty for other than GALLERY for new UI`() = test {
+        // Arrange
+        ReaderCardType.values().filter { it != GALLERY }.forEach {
+            val post = createPost(cardType = it)
+            // Act
+            val uiState = mapPostToNewUiState(post)
             // Assert
             assertThat(uiState.thumbnailStripSection).isNull()
         }
