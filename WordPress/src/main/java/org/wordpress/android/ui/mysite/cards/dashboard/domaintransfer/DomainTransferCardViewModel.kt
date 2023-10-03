@@ -105,11 +105,8 @@ class DomainTransferCardViewModel @Inject constructor(
     private fun positionIndex(siteSelected: SiteSelected?): Int {
         return siteSelected
             ?.dashboardCardsAndItems
-            ?.filterIsInstance<MySiteCardAndItem.Card.DashboardCards>()
-            ?.firstOrNull()
-            ?.cards
             ?.indexOfFirst {
-                it is MySiteCardAndItem.Card.DashboardCards.DashboardCard.DomainTransferCardModel
+                it is MySiteCardAndItem.Card.DomainTransferCardModel
             } ?: -1
     }
 
