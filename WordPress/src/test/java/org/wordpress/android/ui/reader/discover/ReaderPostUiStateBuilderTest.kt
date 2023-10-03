@@ -284,6 +284,16 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `videoUrl gets initialized for video cards for new UI`() = test {
+        // Arrange
+        val post = createPost(cardType = VIDEO, featuredVideoUrl = "12345")
+        // Act
+        val uiState = mapPostToNewUiState(post)
+        // Assert
+        assertThat(uiState.fullVideoUrl).isEqualTo("12345")
+    }
+
+    @Test
     fun `videoUrl does not get initialized for other than video cards`() = test {
         // Arrange
         val types = ReaderCardType.values()
@@ -291,6 +301,19 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             val post = createPost(cardType = it, featuredVideoUrl = "12345")
             // Act
             val uiState = mapPostToUiState(post)
+            // Assert
+            assertThat(uiState.fullVideoUrl).isNull()
+        }
+    }
+
+    @Test
+    fun `videoUrl does not get initialized for other than video cards for new UI`() = test {
+        // Arrange
+        val types = ReaderCardType.values()
+        types.filter { it != VIDEO }.forEach {
+            val post = createPost(cardType = it, featuredVideoUrl = "12345")
+            // Act
+            val uiState = mapPostToNewUiState(post)
             // Assert
             assertThat(uiState.fullVideoUrl).isNull()
         }
@@ -307,6 +330,16 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `video overlay is displayed for video cards for new UI`() = test {
+        // Arrange
+        val post = createPost(cardType = VIDEO)
+        // Act
+        val uiState = mapPostToNewUiState(post)
+        // Assert
+        assertThat(uiState.videoOverlayVisibility).isTrue
+    }
+
+    @Test
     fun `video overlay is not displayed for other than video cards`() = test {
         // Arrange
         val types = ReaderCardType.values()
@@ -314,6 +347,19 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             val post = createPost(cardType = it)
             // Act
             val uiState = mapPostToUiState(post)
+            // Assert
+            assertThat(uiState.videoOverlayVisibility).isFalse()
+        }
+    }
+
+    @Test
+    fun `video overlay is not displayed for other than video cards for new UI`() = test {
+        // Arrange
+        val types = ReaderCardType.values()
+        types.filter { it != VIDEO }.forEach {
+            val post = createPost(cardType = it)
+            // Act
+            val uiState = mapPostToNewUiState(post)
             // Assert
             assertThat(uiState.videoOverlayVisibility).isFalse()
         }
