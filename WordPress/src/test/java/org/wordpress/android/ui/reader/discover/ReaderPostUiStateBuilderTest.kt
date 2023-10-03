@@ -542,6 +542,18 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `title is displayed for all card types for new UI`() = test {
+        // Arrange
+        ReaderCardType.values().forEach {
+            val post = createPost(cardType = it)
+            // Act
+            val uiState = mapPostToNewUiState(post)
+            // Assert
+            assertThat((uiState.title as UiStringText).text).isEqualTo(post.title)
+        }
+    }
+
+    @Test
     fun `default title is displayed when the post doesn't have a title`() = test {
         // Arrange
         val post = createPost(cardType = DEFAULT, hasTitle = false)
@@ -549,6 +561,16 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         val uiState = mapPostToUiState(post)
         // Assert
         assertThat((uiState.title as UiStringRes).stringRes).isEqualTo(R.string.untitled_in_parentheses)
+    }
+
+    @Test
+    fun `title is not displayed when the post doesn't have a title for new UI`() = test {
+        // Arrange
+        val post = createPost(cardType = DEFAULT, hasTitle = false)
+        // Act
+        val uiState = mapPostToNewUiState(post)
+        // Assert
+        assertThat(uiState.title).isNull()
     }
 
     @Test
