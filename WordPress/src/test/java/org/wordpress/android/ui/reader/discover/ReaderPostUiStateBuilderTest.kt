@@ -427,6 +427,19 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `featured image is displayed for photo and default card types for new UI`() = test {
+        // Arrange
+        val dummyUrl = "12345"
+        ReaderCardType.values().filter { it == PHOTO || it == DEFAULT }.forEach {
+            val post = createPost(cardType = it, hasFeaturedImage = true, featuredImageUrlForDisplay = dummyUrl)
+            // Act
+            val uiState = mapPostToNewUiState(post)
+            // Assert
+            assertThat(uiState.featuredImageUrl).isEqualTo(dummyUrl)
+        }
+    }
+
+    @Test
     fun `featured image is not displayed for other than photo and default card types`() = test {
         // Arrange
         ReaderCardType.values().filter { it != PHOTO && it != DEFAULT }.forEach {
@@ -439,11 +452,33 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `featured image is not displayed for other than photo and default card types for new UI`() = test {
+        // Arrange
+        ReaderCardType.values().filter { it != PHOTO && it != DEFAULT }.forEach {
+            val post = createPost(cardType = it, hasFeaturedImage = true)
+            // Act
+            val uiState = mapPostToNewUiState(post)
+            // Assert
+            assertThat(uiState.featuredImageUrl).isNull()
+        }
+    }
+
+    @Test
     fun `featured image is not displayed when hasFeaturedImage returns false`() = test {
         // Arrange
         val post = createPost(cardType = PHOTO, hasFeaturedImage = false)
         // Act
         val uiState = mapPostToUiState(post)
+        // Assert
+        assertThat(uiState.featuredImageUrl).isNull()
+    }
+
+    @Test
+    fun `featured image is not displayed when hasFeaturedImage returns false for new UI`() = test {
+        // Arrange
+        val post = createPost(cardType = PHOTO, hasFeaturedImage = false)
+        // Act
+        val uiState = mapPostToNewUiState(post)
         // Assert
         assertThat(uiState.featuredImageUrl).isNull()
     }
