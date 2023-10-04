@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -63,7 +63,7 @@ import org.wordpress.android.util.LocaleManager
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MenuActivity : ComponentActivity() {
+class MenuActivity : AppCompatActivity() {
     @Inject
     lateinit var activityNavigator: ActivityNavigator
     private val viewModel: MenuViewModel by viewModels()

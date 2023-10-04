@@ -2,9 +2,9 @@ package org.wordpress.android.ui.mysite.personalization
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -57,7 +57,7 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.UiString
 
 @AndroidEntryPoint
-class PersonalizationActivity : ComponentActivity() {
+class PersonalizationActivity : AppCompatActivity() {
     private val viewModel: PersonalizationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
