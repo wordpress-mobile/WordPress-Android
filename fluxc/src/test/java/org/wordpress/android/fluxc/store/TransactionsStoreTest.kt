@@ -58,13 +58,13 @@ class TransactionsStoreTest {
     }
 
     @Test
-    fun createShoppingCart() = test {
+    fun createShoppingCartWithDomain() = test {
         whenever(
                 transactionsRestClient.createShoppingCart(
                         siteModel,
                         TEST_DOMAIN_PRODUCT_ID,
                         TEST_DOMAIN_NAME,
-                        isPrivacyProtectionEnabled = true,
+                        isDomainPrivacyProtectionEnabled = true,
                         isTemporary = true
                 )
         ).thenReturn(
