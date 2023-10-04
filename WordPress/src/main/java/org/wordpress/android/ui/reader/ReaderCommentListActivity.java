@@ -11,10 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,8 +19,6 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -42,6 +36,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.databinding.ReaderActivityCommentListBinding;
+import org.wordpress.android.databinding.ReaderIncludeCommentBoxBinding;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
@@ -73,7 +69,6 @@ import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.services.comment.ReaderCommentService;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel;
-import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.suggestion.Suggestion;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
@@ -93,7 +88,6 @@ import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
-import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.List;
@@ -126,11 +120,6 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private ReaderRecyclerView mRecyclerView;
-    private CoordinatorLayout mCoordinator;
-    private SuggestionAutoCompleteText mEditComment;
-    private View mSubmitReplyBtn;
-    private ViewGroup mCommentBox;
 
     private boolean mIsUpdatingComments;
     private boolean mHasUpdatedComments;
@@ -153,10 +142,15 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private ReaderCommentListViewModel mViewModel;
     private ConversationNotificationsViewModel mConversationViewModel;
 
+    @Nullable private ReaderActivityCommentListBinding mBinding = null;
+    @Nullable private ReaderIncludeCommentBoxBinding mBoxBinding = null;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.reader_activity_comment_list);
+        mBinding = ReaderActivityCommentListBinding.inflate(getLayoutInflater());
+        mBoxBinding = mBinding.layoutCommentBox;
+        setContentView(mBinding.getRoot());
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -173,63 +167,59 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         };
         getOnBackPressedDispatcher().addCallback(this, callback);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+        if (mBinding != null) {
+            setSupportActionBar(mBinding.toolbarMain);
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
         }
 
         initViewModel();
         initObservers(savedInstanceState);
 
-        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-                findViewById(R.id.swipe_to_refresh),
-                () -> {
-                    mConversationViewModel.onRefresh();
-                    updatePostAndComments();
+        if (mBinding != null) {
+            mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
+                    mBinding.swipeToRefresh,
+                    () -> {
+                        mConversationViewModel.onRefresh();
+                        updatePostAndComments();
+                    }
+            );
+        }
+
+        if (mBoxBinding != null) {
+            mBoxBinding.editComment.initializeWithPrefix('@');
+            mBoxBinding.editComment.getAutoSaveTextHelper().setUniqueId(
+                    String.format(Locale.US, "%d%d", mPostId, mBlogId)
+            );
+
+            mBoxBinding.editComment.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 }
-        );
 
-        mCoordinator = findViewById(R.id.coordinator_layout);
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
 
-        mRecyclerView = findViewById(R.id.recycler_view);
-        int spacingHorizontal = 0;
-        int spacingVertical = DisplayUtils.dpToPx(this, 1);
-        mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
+                @Override
+                public void afterTextChanged(Editable s) {
+                    mBoxBinding.btnSubmitReply.setEnabled(!TextUtils.isEmpty(s.toString().trim()));
+                }
+            });
+            mBoxBinding.btnSubmitReply.setEnabled(false);
+            mBoxBinding.btnSubmitReply.setOnLongClickListener(view -> {
+                if (view.isHapticFeedbackEnabled()) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
 
-        mCommentBox = findViewById(R.id.layout_comment_box);
-        mEditComment = mCommentBox.findViewById(R.id.edit_comment);
-        mEditComment.initializeWithPrefix('@');
-        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d", mPostId, mBlogId));
-
-        mEditComment.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mSubmitReplyBtn.setEnabled(!TextUtils.isEmpty(s.toString().trim()));
-            }
-        });
-        mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
-        mSubmitReplyBtn.setEnabled(false);
-        mSubmitReplyBtn.setOnLongClickListener(view -> {
-            if (view.isHapticFeedbackEnabled()) {
-                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-            }
-
-            Toast.makeText(view.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
-            return true;
-        });
-        ViewExtensionsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
+                Toast.makeText(view.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
+                return true;
+            });
+            ViewExtensionsKt.redirectContextClickToLongPressListener(mBoxBinding.btnSubmitReply);
+        }
 
         if (!loadPost()) {
             ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
@@ -237,7 +227,12 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             return;
         }
 
-        mRecyclerView.setAdapter(getCommentAdapter());
+        if (mBinding != null) {
+            int spacingHorizontal = 0;
+            int spacingVertical = DisplayUtils.dpToPx(this, 1);
+            mBinding.recyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
+            mBinding.recyclerView.setAdapter(getCommentAdapter());
+        }
 
         if (savedInstanceState != null) {
             setReplyToCommentId(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID), false);
@@ -246,49 +241,50 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         // update the post and its comments upon creation
         mUpdateOnResume = (savedInstanceState == null);
 
-        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, mBlogId);
-        mSuggestionAdapter = SuggestionUtils.setupUserSuggestions(
-                mBlogId,
-                this,
-                mSuggestionServiceConnectionManager,
-                mPost.isWP()
-        );
-        mEditComment.setAdapter(mSuggestionAdapter);
-
         mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost, mSource);
 
-        ImageView buttonExpand = findViewById(R.id.button_expand);
-        buttonExpand.setOnClickListener(
-                v -> {
-                    Bundle bundle = CommentFullScreenDialogFragment.Companion
-                            .newBundle(
-                                    mEditComment.getText().toString(),
-                                    mEditComment.getSelectionStart(),
-                                    mEditComment.getSelectionEnd(),
-                                    mBlogId
-                            );
+        if (mBoxBinding != null) {
+            mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, mBlogId);
+            mSuggestionAdapter = SuggestionUtils.setupUserSuggestions(
+                    mBlogId,
+                    this,
+                    mSuggestionServiceConnectionManager,
+                    mPost.isWP()
+            );
+            mBoxBinding.editComment.setAdapter(mSuggestionAdapter);
 
-                    new Builder(ReaderCommentListActivity.this)
-                            .setTitle(R.string.comment)
-                            .setOnCollapseListener(this)
-                            .setOnConfirmListener(this)
-                            .setContent(CommentFullScreenDialogFragment.class, bundle)
-                            .setAction(R.string.send)
-                            .setHideActivityBar(true)
-                            .build()
-                            .show(getSupportFragmentManager(), CollapseFullScreenDialogFragment.TAG);
+            mBoxBinding.buttonExpand.setOnClickListener(
+                    v -> {
+                        Bundle bundle = CommentFullScreenDialogFragment.Companion
+                                .newBundle(
+                                        mBoxBinding.editComment.getText().toString(),
+                                        mBoxBinding.editComment.getSelectionStart(),
+                                        mBoxBinding.editComment.getSelectionEnd(),
+                                        mBlogId
+                                );
+
+                        new Builder(ReaderCommentListActivity.this)
+                                .setTitle(R.string.comment)
+                                .setOnCollapseListener(this)
+                                .setOnConfirmListener(this)
+                                .setContent(CommentFullScreenDialogFragment.class, bundle)
+                                .setAction(R.string.send)
+                                .setHideActivityBar(true)
+                                .build()
+                                .show(getSupportFragmentManager(), CollapseFullScreenDialogFragment.TAG);
+                    }
+            );
+
+            mBoxBinding.buttonExpand.setOnLongClickListener(view -> {
+                if (view.isHapticFeedbackEnabled()) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 }
-        );
 
-        buttonExpand.setOnLongClickListener(view -> {
-            if (view.isHapticFeedbackEnabled()) {
-                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-            }
-
-            Toast.makeText(view.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
-            return true;
-        });
-        ViewExtensionsKt.redirectContextClickToLongPressListener(buttonExpand);
+                Toast.makeText(view.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
+                return true;
+            });
+            ViewExtensionsKt.redirectContextClickToLongPressListener(mBoxBinding.buttonExpand);
+        }
 
         // reattach listeners to collapsible reply dialog
         CollapseFullScreenDialogFragment fragment =
@@ -309,107 +305,106 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     private void initObservers(Bundle savedInstanceState) {
-        AppBarLayout appBarLayout = findViewById(R.id.appbar_main);
-
-        mViewModel.getScrollTo().observe(this, scrollPositionEvent -> {
-            ScrollPosition content = scrollPositionEvent.getContentIfNotHandled();
-            LayoutManager layoutManager = mRecyclerView.getLayoutManager();
-            if (content != null && layoutManager != null) {
-                if (content.isSmooth()) {
-                    RecyclerView.SmoothScroller smoothScrollerToTop = new LinearSmoothScroller(this) {
-                        @Override protected int getVerticalSnapPreference() {
-                            return LinearSmoothScroller.SNAP_TO_START;
-                        }
-                    };
-                    smoothScrollerToTop.setTargetPosition(content.getPosition());
-                    layoutManager.startSmoothScroll(smoothScrollerToTop);
-                } else {
-                    ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(content.getPosition(), 0);
-                }
-                appBarLayout.post(appBarLayout::requestLayout);
-            }
-        });
-
-        mConversationViewModel.getSnackbarEvents().observe(this, snackbarMessageHolderEvent -> {
-            FragmentManager fm = getSupportFragmentManager();
-            CommentNotificationsBottomSheetFragment bottomSheet =
-                    (CommentNotificationsBottomSheetFragment) fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG);
-
-            if (bottomSheet != null) return;
-
-            snackbarMessageHolderEvent.applyIfNotHandled(holder -> {
-                WPSnackbar.make(mCoordinator,
-                                  mUiHelpers.getTextOfUiString(ReaderCommentListActivity.this, holder.getMessage()),
-                                  Snackbar.LENGTH_LONG)
-                          .setAction(
-                                  holder.getButtonTitle() != null
-                                          ? mUiHelpers.getTextOfUiString(
-                                          ReaderCommentListActivity.this,
-                                          holder.getButtonTitle())
-                                          : null,
-                                  v -> holder.getButtonAction().invoke())
-                          .show();
-                return Unit.INSTANCE;
-            });
-        });
-
-        mConversationViewModel.getShowBottomSheetEvent().observe(this, event ->
-                event.applyIfNotHandled(isShowingData -> {
-                    FragmentManager fm = getSupportFragmentManager();
-                    CommentNotificationsBottomSheetFragment bottomSheet =
-                            (CommentNotificationsBottomSheetFragment) fm.findFragmentByTag(
-                                    NOTIFICATIONS_BOTTOM_SHEET_TAG
-                            );
-                    if (isShowingData.getShow() && bottomSheet == null) {
-                        bottomSheet = CommentNotificationsBottomSheetFragment.newInstance(
-                                isShowingData.isReceivingNotifications(),
-                                false
-                        );
-                        bottomSheet.show(fm, NOTIFICATIONS_BOTTOM_SHEET_TAG);
-                    } else if (!isShowingData.getShow() && bottomSheet != null) {
-                        bottomSheet.dismiss();
+        if (mBinding != null) {
+            mViewModel.getScrollTo().observe(this, scrollPositionEvent -> {
+                ScrollPosition content = scrollPositionEvent.getContentIfNotHandled();
+                LayoutManager layoutManager = mBinding.recyclerView.getLayoutManager();
+                if (content != null && layoutManager != null) {
+                    if (content.isSmooth()) {
+                        RecyclerView.SmoothScroller smoothScrollerToTop = new LinearSmoothScroller(this) {
+                            @Override protected int getVerticalSnapPreference() {
+                                return LinearSmoothScroller.SNAP_TO_START;
+                            }
+                        };
+                        smoothScrollerToTop.setTargetPosition(content.getPosition());
+                        layoutManager.startSmoothScroll(smoothScrollerToTop);
+                    } else {
+                        ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(content.getPosition(), 0);
                     }
+                    mBinding.appbarMain.post(mBinding.appbarMain::requestLayout);
+                }
+            });
+
+            mConversationViewModel.getSnackbarEvents().observe(this, snackbarMessageHolderEvent -> {
+                FragmentManager fm = getSupportFragmentManager();
+                CommentNotificationsBottomSheetFragment bottomSheet =
+                        (CommentNotificationsBottomSheetFragment) fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG);
+
+                if (bottomSheet != null) return;
+
+                snackbarMessageHolderEvent.applyIfNotHandled(holder -> {
+                    WPSnackbar.make(mBinding.coordinatorLayout,
+                                      mUiHelpers.getTextOfUiString(ReaderCommentListActivity.this, holder.getMessage()),
+                                      Snackbar.LENGTH_LONG)
+                              .setAction(
+                                      holder.getButtonTitle() != null
+                                              ? mUiHelpers.getTextOfUiString(
+                                              ReaderCommentListActivity.this,
+                                              holder.getButtonTitle())
+                                              : null,
+                                      v -> holder.getButtonAction().invoke())
+                              .show();
                     return Unit.INSTANCE;
-                })
-        );
+                });
+            });
 
+            mConversationViewModel.getShowBottomSheetEvent().observe(this, event ->
+                    event.applyIfNotHandled(isShowingData -> {
+                        FragmentManager fm = getSupportFragmentManager();
+                        CommentNotificationsBottomSheetFragment bottomSheet =
+                                (CommentNotificationsBottomSheetFragment) fm.findFragmentByTag(
+                                        NOTIFICATIONS_BOTTOM_SHEET_TAG
+                                );
+                        if (isShowingData.getShow() && bottomSheet == null) {
+                            bottomSheet = CommentNotificationsBottomSheetFragment.newInstance(
+                                    isShowingData.isReceivingNotifications(),
+                                    false
+                            );
+                            bottomSheet.show(fm, NOTIFICATIONS_BOTTOM_SHEET_TAG);
+                        } else if (!isShowingData.getShow() && bottomSheet != null) {
+                            bottomSheet.dismiss();
+                        }
+                        return Unit.INSTANCE;
+                    })
+            );
 
-        if (savedInstanceState != null) {
-            mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
-            mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
-            mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
-            mHasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS);
-            mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
-            mSource = savedInstanceState.getString(ReaderConstants.ARG_SOURCE);
-        } else {
-            mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-            mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-            mDirectOperation = (DirectOperation) getIntent()
-                    .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
-            mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
-            mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
-            mSource = getIntent().getStringExtra(ReaderConstants.ARG_SOURCE);
+            if (savedInstanceState != null) {
+                mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
+                mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
+                mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
+                mHasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS);
+                mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
+                mSource = savedInstanceState.getString(ReaderConstants.ARG_SOURCE);
+            } else {
+                mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+                mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
+                mDirectOperation = (DirectOperation) getIntent()
+                        .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
+                mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
+                mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
+                mSource = getIntent().getStringExtra(ReaderConstants.ARG_SOURCE);
+            }
+
+            mConversationViewModel.start(mBlogId, mPostId, ThreadedCommentsActionSource.READER_THREADED_COMMENTS);
         }
-
-        mConversationViewModel.start(mBlogId, mPostId, ThreadedCommentsActionSource.READER_THREADED_COMMENTS);
     }
 
     @Override
     public void onCollapse(@Nullable Bundle result) {
-        if (result != null) {
-            mEditComment.setText(result.getString(RESULT_REPLY));
-            mEditComment.setSelection(
+        if (mBoxBinding != null && result != null) {
+            mBoxBinding.editComment.setText(result.getString(RESULT_REPLY));
+            mBoxBinding.editComment.setSelection(
                     result.getInt(RESULT_SELECTION_START),
                     result.getInt(RESULT_SELECTION_END)
             );
-            mEditComment.requestFocus();
+            mBoxBinding.editComment.requestFocus();
         }
     }
 
     @Override
     public void onConfirm(@Nullable Bundle result) {
-        if (result != null) {
-            mEditComment.setText(result.getString(RESULT_REPLY));
+        if (mBoxBinding != null && result != null) {
+            mBoxBinding.editComment.setText(result.getString(RESULT_REPLY));
             submitComment();
         }
     }
@@ -478,8 +473,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             MenuItem followItem = menu.findItem(R.id.follow_item);
 
             if (bellItem != null && followItem != null) {
-                ShimmerFrameLayout shimmerView =
-                        followItem.getActionView().findViewById(R.id.shimmer_view_container);
+                ShimmerFrameLayout shimmerView = followItem.getActionView().findViewById(R.id.shimmer_view_container);
                 TextView followText = followItem.getActionView().findViewById(R.id.follow_button);
 
                 followItem.getActionView().setOnClickListener(
@@ -569,31 +563,33 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     private void moderateComment(ReaderComment comment, CommentStatus newStatus, int undoMessage, Stat tracker) {
-        getCommentAdapter().removeComment(comment.commentId);
-        checkEmptyView();
+        if (mBinding != null) {
+            getCommentAdapter().removeComment(comment.commentId);
+            checkEmptyView();
 
-        Snackbar snackbar = WPSnackbar.make(findViewById(R.id.coordinator_layout), undoMessage, Snackbar.LENGTH_LONG)
-                                      .setAction(R.string.undo, view -> {
-                                          getCommentAdapter().refreshComments();
-                                      });
+            Snackbar snackbar = WPSnackbar.make(mBinding.coordinatorLayout, undoMessage, Snackbar.LENGTH_LONG)
+                                          .setAction(R.string.undo, view -> {
+                                              getCommentAdapter().refreshComments();
+                                          });
 
-        snackbar.addCallback(new BaseCallback<Snackbar>() {
-            @Override public void onDismissed(Snackbar transientBottomBar, int event) {
-                super.onDismissed(transientBottomBar, event);
+            snackbar.addCallback(new BaseCallback<Snackbar>() {
+                @Override public void onDismissed(Snackbar transientBottomBar, int event) {
+                    super.onDismissed(transientBottomBar, event);
 
-                if (event == DISMISS_EVENT_ACTION) {
-                    AnalyticsUtils.trackCommentActionWithReaderPostDetails(Stat.COMMENT_MODERATION_UNDO,
+                    if (event == DISMISS_EVENT_ACTION) {
+                        AnalyticsUtils.trackCommentActionWithReaderPostDetails(Stat.COMMENT_MODERATION_UNDO,
+                                AnalyticsCommentActionSource.READER, mPost);
+                        return;
+                    }
+
+                    AnalyticsUtils.trackCommentActionWithReaderPostDetails(tracker,
                             AnalyticsCommentActionSource.READER, mPost);
-                    return;
+                    ReaderCommentActions.moderateComment(comment, newStatus);
                 }
+            });
 
-                AnalyticsUtils.trackCommentActionWithReaderPostDetails(tracker,
-                        AnalyticsCommentActionSource.READER, mPost);
-                ReaderCommentActions.moderateComment(comment, newStatus);
-            }
-        });
-
-        snackbar.show();
+            snackbar.show();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -628,51 +624,55 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     private void setReplyToCommentId(long commentId, boolean doFocus) {
-        if (mReplyToCommentId == commentId) {
-            mReplyToCommentId = 0;
-        } else {
-            mReplyToCommentId = commentId;
-        }
-        mEditComment.setHint(mReplyToCommentId == 0
-                ? R.string.reader_hint_comment_on_post
-                : R.string.reader_hint_comment_on_comment
-        );
+        if (mBoxBinding != null) {
+            if (mReplyToCommentId == commentId) {
+                mReplyToCommentId = 0;
+            } else {
+                mReplyToCommentId = commentId;
+            }
+            mBoxBinding.editComment.setHint(mReplyToCommentId == 0
+                    ? R.string.reader_hint_comment_on_post
+                    : R.string.reader_hint_comment_on_comment
+            );
 
-        if (doFocus) {
-            mEditComment.postDelayed(() -> {
-                final boolean isFocusableInTouchMode = mEditComment.isFocusableInTouchMode();
+            if (doFocus) {
+                mBoxBinding.editComment.postDelayed(() -> {
+                    final boolean isFocusableInTouchMode = mBoxBinding.editComment.isFocusableInTouchMode();
 
-                mEditComment.setFocusableInTouchMode(true);
-                EditTextUtils.showSoftInput(mEditComment);
+                    mBoxBinding.editComment.setFocusableInTouchMode(true);
+                    EditTextUtils.showSoftInput(mBoxBinding.editComment);
 
-                mEditComment.setFocusableInTouchMode(isFocusableInTouchMode);
+                    mBoxBinding.editComment.setFocusableInTouchMode(isFocusableInTouchMode);
 
+                    setupReplyToComment();
+                }, 200);
+            } else {
                 setupReplyToComment();
-            }, 200);
-        } else {
-            setupReplyToComment();
+            }
         }
     }
 
     private void setupReplyToComment() {
-        // if a comment is being replied to, highlight it and scroll it to the top so the user can
-        // see which comment they're replying to - note that scrolling is delayed to give time for
-        // listView to reposition due to soft keyboard appearing
-        getCommentAdapter().setHighlightCommentId(mReplyToCommentId, false);
-        getCommentAdapter().setReplyTargetComment(mReplyToCommentId);
-        getCommentAdapter().notifyDataSetChanged();
-        if (mReplyToCommentId != 0) {
-            scrollToCommentId(mReplyToCommentId);
+        if (mBoxBinding != null) {
+            // if a comment is being replied to, highlight it and scroll it to the top so the user can
+            // see which comment they're replying to - note that scrolling is delayed to give time for
+            // listView to reposition due to soft keyboard appearing
+            getCommentAdapter().setHighlightCommentId(mReplyToCommentId, false);
+            getCommentAdapter().setReplyTargetComment(mReplyToCommentId);
+            getCommentAdapter().notifyDataSetChanged();
+            if (mReplyToCommentId != 0) {
+                scrollToCommentId(mReplyToCommentId);
 
-            // reset to replying to the post when user hasn't entered any text and hits
-            // the back button in the editText to hide the soft keyboard
-            mEditComment.setOnBackListener(() -> {
-                if (EditTextUtils.isEmpty(mEditComment)) {
-                    setReplyToCommentId(0, false);
-                }
-            });
-        } else {
-            mEditComment.setOnBackListener(null);
+                // reset to replying to the post when user hasn't entered any text and hits
+                // the back button in the editText to hide the soft keyboard
+                mBoxBinding.editComment.setOnBackListener(() -> {
+                    if (EditTextUtils.isEmpty(mBoxBinding.editComment)) {
+                        setReplyToCommentId(0, false);
+                    }
+                });
+            } else {
+                mBoxBinding.editComment.setOnBackListener(null);
+            }
         }
     }
 
@@ -690,36 +690,35 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     private void showCommentsClosedMessage(boolean show) {
-        TextView txtCommentsClosed = findViewById(R.id.text_comments_closed);
-        if (txtCommentsClosed != null) {
-            txtCommentsClosed.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (mBinding != null) {
+            mBinding.textCommentsClosed.setVisibility(show ? View.VISIBLE : View.GONE);
         }
     }
 
     private boolean loadPost() {
         mPost = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
-        if (mPost == null) {
+        if (mBoxBinding == null || mPost == null) {
             return false;
         }
 
         if (!mAccountStore.hasAccessToken()) {
-            mCommentBox.setVisibility(View.GONE);
+            mBoxBinding.layoutContainer.setVisibility(View.GONE);
             showCommentsClosedMessage(false);
         } else if (mPost.isCommentsOpen) {
-            mCommentBox.setVisibility(View.VISIBLE);
+            mBoxBinding.layoutContainer.setVisibility(View.VISIBLE);
             showCommentsClosedMessage(false);
 
-            mEditComment.setOnEditorActionListener((v, actionId, event) -> {
+            mBoxBinding.editComment.setOnEditorActionListener((v, actionId, event) -> {
                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
                     submitComment();
                 }
                 return false;
             });
 
-            mSubmitReplyBtn.setOnClickListener(v -> submitComment());
+            mBoxBinding.btnSubmitReply.setOnClickListener(v -> submitComment());
         } else {
-            mCommentBox.setVisibility(View.GONE);
-            mEditComment.setEnabled(false);
+            mBoxBinding.layoutContainer.setVisibility(View.GONE);
+            mBoxBinding.editComment.setEnabled(false);
             showCommentsClosedMessage(true);
         }
 
@@ -804,11 +803,13 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 case COMMENT_LIKE:
                     getCommentAdapter().setHighlightCommentId(mCommentId, false);
                     if (!mAccountStore.hasAccessToken()) {
-                        WPSnackbar.make(mCoordinator,
-                                          R.string.reader_snackbar_err_cannot_like_post_logged_out,
-                                          Snackbar.LENGTH_INDEFINITE)
-                                  .setAction(R.string.sign_in, mSignInClickListener)
-                                  .show();
+                        if (mBinding != null) {
+                            WPSnackbar.make(mBinding.coordinatorLayout,
+                                              R.string.reader_snackbar_err_cannot_like_post_logged_out,
+                                              Snackbar.LENGTH_INDEFINITE)
+                                      .setAction(R.string.sign_in, mSignInClickListener)
+                                      .show();
+                        }
                     } else {
                         ReaderComment comment = ReaderCommentTable.getComment(mPost.blogId, mPost.postId, mCommentId);
                         if (comment == null) {
@@ -862,16 +863,14 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     private void showProgress() {
-        ProgressBar progress = findViewById(R.id.progress_loading);
-        if (progress != null) {
-            progress.setVisibility(View.VISIBLE);
+        if (mBinding != null) {
+            mBinding.progressLoading.setVisibility(View.VISIBLE);
         }
     }
 
     private void hideProgress() {
-        ProgressBar progress = findViewById(R.id.progress_loading);
-        if (progress != null) {
-            progress.setVisibility(View.GONE);
+        if (mBinding != null) {
+            mBinding.progressLoading.setVisibility(View.GONE);
         }
     }
 
@@ -924,8 +923,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     private void checkEmptyView() {
-        TextView txtEmpty = findViewById(R.id.text_empty);
-        if (txtEmpty == null) {
+        if (mBinding == null) {
             return;
         }
 
@@ -933,13 +931,13 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                           && getCommentAdapter().isEmpty()
                           && !mIsSubmittingComment;
         if (isEmpty && !NetworkUtils.isNetworkAvailable(this)) {
-            txtEmpty.setText(R.string.no_network_message);
-            txtEmpty.setVisibility(View.VISIBLE);
+            mBinding.textEmpty.setText(R.string.no_network_message);
+            mBinding.textEmpty.setVisibility(View.VISIBLE);
         } else if (isEmpty && mHasUpdatedComments) {
-            txtEmpty.setText(R.string.reader_empty_comments);
-            txtEmpty.setVisibility(View.VISIBLE);
+            mBinding.textEmpty.setText(R.string.reader_empty_comments);
+            mBinding.textEmpty.setVisibility(View.VISIBLE);
         } else {
-            txtEmpty.setVisibility(View.GONE);
+            mBinding.textEmpty.setVisibility(View.GONE);
         }
     }
 
@@ -975,7 +973,11 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
      * submit the text typed into the comment box as a comment on the current post
      */
     private void submitComment() {
-        final String commentText = EditTextUtils.getText(mEditComment);
+        if (mBoxBinding == null) {
+            return;
+        }
+
+        final String commentText = EditTextUtils.getText(mBoxBinding.editComment);
         if (TextUtils.isEmpty(commentText)) {
             return;
         }
@@ -990,8 +992,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON, mPost);
         }
 
-        mSubmitReplyBtn.setEnabled(false);
-        mEditComment.setEnabled(false);
+        mBoxBinding.btnSubmitReply.setEnabled(false);
+        mBoxBinding.editComment.setEnabled(false);
         mIsSubmittingComment = true;
 
         // generate a "fake" comment id to assign to the new comment so we can add it to the db
@@ -1003,19 +1005,19 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 return;
             }
             mIsSubmittingComment = false;
-            mEditComment.setEnabled(true);
+            mBoxBinding.editComment.setEnabled(true);
             if (succeeded) {
-                mSubmitReplyBtn.setEnabled(false);
+                mBoxBinding.btnSubmitReply.setEnabled(false);
                 // stop highlighting the fake comment and replace it with the real one
                 getCommentAdapter().setHighlightCommentId(0, false);
                 getCommentAdapter().setReplyTargetComment(0);
                 getCommentAdapter().replaceComment(fakeCommentId, newComment);
                 getCommentAdapter().refreshPost();
                 setReplyToCommentId(0, false);
-                mEditComment.getAutoSaveTextHelper().clearSavedText(mEditComment);
+                mBoxBinding.editComment.getAutoSaveTextHelper().clearSavedText(mBoxBinding.editComment);
             } else {
-                mEditComment.setText(commentText);
-                mSubmitReplyBtn.setEnabled(true);
+                mBoxBinding.editComment.setText(commentText);
+                mBoxBinding.btnSubmitReply.setEnabled(true);
                 getCommentAdapter().removeComment(fakeCommentId);
                 ToastUtils.showToast(
                         ReaderCommentListActivity.this, R.string.reader_toast_err_comment_failed,
@@ -1034,7 +1036,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 wpComUserId);
 
         if (newComment != null) {
-            mEditComment.setText(null);
+            mBoxBinding.editComment.setText(null);
             // add the "fake" comment to the adapter, highlight it, and show a progress bar
             // next to it while it's submitted
             getCommentAdapter().setHighlightCommentId(newComment.commentId, true);
@@ -1047,8 +1049,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     private int getCurrentPosition() {
-        if (mRecyclerView != null && hasCommentAdapter()) {
-            return ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+        if (mBinding != null && hasCommentAdapter()) {
+            return ((LinearLayoutManager) mBinding.recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         } else {
             return 0;
         }
