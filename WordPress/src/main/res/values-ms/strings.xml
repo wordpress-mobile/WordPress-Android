@@ -770,7 +770,6 @@ Language: ms
     <string name="create_a_link">Cipta pautan</string>
     <string name="local_draft">Draf setempat</string>
     <string name="select_categories">Pilih kategori</string>
-    <string name="cancel_edit">Batal edit</string>
     <string name="post_not_found">Ralat berlaku apabila kiriman dimuatkan. Segar semula kiriman anda dan cuba lagi.</string>
     <string name="mnu_comment_trash">Sampah</string>
     <string name="dlg_confirm_trash_comments">Hantar ke sampah?</string>
@@ -800,9 +799,6 @@ Language: ms
     <string name="page_settings">Tetapan laman</string>
     <string name="post_settings">Tetapan kiriman</string>
     <string name="remove_account">Buang laman</string>
-    <string name="sure_to_cancel_edit_comment">Batal menyunting komen ini?</string>
-    <string name="toast_comment_unedited">Ulasan tidak berubah</string>
-    <string name="content_required">Ulasan diwajibkan</string>
     <string name="edit_comment">Sunting ulasan</string>
     <string name="learn_more">Pelajari selanjutnya</string>
     <string name="invalid_site_url_message">Periksa bahawa URL laman yang dimasukkan adalah sah</string>

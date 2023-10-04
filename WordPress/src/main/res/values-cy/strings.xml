@@ -481,7 +481,6 @@ Language: cy_GB
     <string name="username_or_password_incorrect">Mae\'r enw defnyddiwr neu gyfrinair yn anghywir</string>
     <string name="select_categories">Dewis categorïau</string>
     <string name="connection_error">Gwall cysylltu</string>
-    <string name="cancel_edit">Diddymu golygu</string>
     <string name="post_not_found">Digwyddodd gwall wrth lwytho\'r cofnod. Adnewyddwch eich cofnodion a cheisiwch eto.</string>
     <string name="learn_more">Dysgu rhagor</string>
     <string name="media_gallery_type_thumbnail_grid">Grid lluniau bach</string>
@@ -505,9 +504,6 @@ Language: cy_GB
     <string name="dlg_confirm_trash_comments">Anfon i\'r sbwriel?</string>
     <string name="trash">Sbwriel</string>
     <string name="saving_changes">Cadw\'r newidiadau</string>
-    <string name="sure_to_cancel_edit_comment">Diddymu golygu\'r sylw hwn?</string>
-    <string name="content_required">Mae angen sylw</string>
-    <string name="toast_comment_unedited">Nid yw\'r sylw wedi newid</string>
     <string name="remove_account">Tynnu\'r blog</string>
     <string name="view_in_browser">Gweld mewn porwr</string>
     <string name="add_new_category">Ychwanegu categori newydd</string>

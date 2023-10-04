@@ -727,11 +727,9 @@ Language: bg
     <string name="link_enter_url_text">Текст на връзката (по избор)</string>
     <string name="fatal_db_error">Възникна грешка при създаване на базата от данни на приложението. Моля преинсталирайте приложението.</string>
     <string name="comment_status_unapproved">Предстоящ</string>
-    <string name="sure_to_cancel_edit_comment">Преустановяване редактирането на този коментар?</string>
     <string name="post_not_found">Възникна грешка при зареждане на тази плубликация. Опреснете Вашите публикации и опитайте отново.</string>
     <string name="trash">Кошче</string>
     <string name="media_gallery_type_thumbnail_grid">Решетка с малки изображения</string>
-    <string name="cancel_edit">Отказване</string>
     <string name="learn_more">Още</string>
     <string name="cannot_delete_multi_media_items">Някои от файловете не могат да бъдат изтрити в момента. Опитайте по-късно.</string>
     <string name="create_a_link">Създаване на връзка</string>
@@ -740,8 +738,6 @@ Language: bg
     <string name="mnu_comment_unapprove">Неодобряване</string>
     <string name="dlg_confirm_trash_comments">Изпращане в кошчето</string>
     <string name="remove_account">Премахване на сайта</string>
-    <string name="content_required">Коментарът е задължителен</string>
-    <string name="toast_comment_unedited">Коментарът не беше променен</string>
     <string name="view_in_browser">Преглед в браузър</string>
     <string name="add_new_category">Добавяне на нова категория</string>
     <string name="file_error_create">Грешка при създаване на временния файл. Уверете се че има достатъчно свободно място на вашето устройство.</string>

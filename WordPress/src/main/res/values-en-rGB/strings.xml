@@ -3384,7 +3384,6 @@ Language: en_GB
     <string name="error_deleting_post">An error occurred while deleting the post</string>
     <string name="select_categories">Select categories</string>
     <string name="connection_error">Connection error</string>
-    <string name="cancel_edit">Cancel edit</string>
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
     <string name="learn_more">Learn more</string>
     <string name="media_gallery_type_thumbnail_grid">Thumbnail grid</string>
@@ -3406,9 +3405,6 @@ Language: en_GB
     <string name="post_settings">Post settings</string>
     <string name="trash">Bin</string>
     <string name="saving_changes">Saving changes</string>
-    <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
-    <string name="content_required">Comment is required</string>
-    <string name="toast_comment_unedited">Comment hasn\'t changed</string>
     <string name="view_in_browser">View in browser</string>
     <string name="add_new_category">Add new category</string>
     <string name="category_name">Category name</string>

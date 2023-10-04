@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-26 15:54:08+0000
+Translation-Revision-Date: 2023-10-03 13:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.9
 Language: ar
 -->
 <resources>
+    <string name="sharing_connect_via_web_warning_positive_button">الانتقال إلى الويب</string>
     <string name="my_site_dashboard_no_cards_message_description">انقر على زر \"تخصيص\" لإظهار مزيد من البطاقات.</string>
     <string name="my_site_dashboard_no_cards_message_title">كل البطاقات مخفية</string>
     <string name="personalization_screen_next_steps_card_description">تعرف على كيف يمكنك تحقيق أقصى استفادة من موقعك باستخدام التطبيق.</string>
@@ -17,11 +18,16 @@ Language: ar
     <string name="personalization_screen_scheduled_posts_card_description">تدويناتك المجدولة المقبلة.</string>
     <string name="personalization_screen_draft_posts_card_description">مسودات تدويناتك الأخيرة.</string>
     <string name="personalization_screen_stats_card_description">المشاهدات والزائرون والإعجابات</string>
+    <string name="personalization_screen_scheduled_posts_card_title">تدوينات مجدولة</string>
+    <string name="personalization_screen_draft_posts_card_title">إعداد مسودة للتدوينات</string>
+    <string name="personalization_screen_footer_cards">قد تعرض البطاقات محتوى مختلفًا استنادًا إلى ما يحدث من خلال موقعك</string>
     <string name="personalize_card_content_description">النقر على علامة تبويب تخصيص صفحتك الرئيسية</string>
     <string name="personalize_card_text">علامة تبويب تخصيص صفحتك الرئيسية</string>
     <string name="partial_media_access_prompt_change_settings">تغيير الإعدادات</string>
     <string name="partial_media_access_prompt_select_more">تحديد مزيد</string>
     <string name="partial_media_access_prompt_text">لا تتوافر سوى الصور والفيديوهات المُحدَّدة التي منحت حق الوصول إليها.</string>
+    <string name="personalization_screen_description">إضافة بطاقات أو إخفاؤها</string>
+    <string name="personalization_screen_title">علامة تبويب تخصيص الصفحة الرئيسية</string>
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">عرض كل الحملات</string>
     <string name="dashboard_activity_card_menu_all_activity">كل النشاط</string>
     <string name="dashboard_pages_card_more_menu_all_pages">كل الصفحات</string>
@@ -648,6 +654,7 @@ Language: ar
     <string name="gutenberg_native_tiled_gallery_settings">إعدادات المعرض المتجانب</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">ينتقل إلى شاشة اختيار التخطيط</string>
     <string name="gutenberg_native_gallery_style">نمط المعرض</string>
+    <string name="sharing_connect_via_web_warning_message">يمكنك ربط حسابك على %s على موقع ووردبريس.كوم على الويب. عند الانتهاء، ارجع إلى التطبيق لتغيير إعدادات \"المشاركة\" الخاصة بك.</string>
     <string name="about_automattic_app_icon_description">أيقونة التطبيق</string>
     <string name="about_automattic_back_icon_description">أيقونة الرجوع</string>
     <string name="about_automattic_logo_description">شعار شركة Automattic</string>
@@ -3514,14 +3521,11 @@ Language: ar
     <string name="mnu_comment_unapprove">غير موافق</string>
     <string name="edit_comment">تعديل التعليق</string>
     <string name="image_settings">إعدادات الصورة</string>
-    <string name="toast_comment_unedited">لم يتم تغيير التعليق</string>
     <string name="view_in_browser">عرض في المستعرض</string>
     <string name="add_new_category">إضافة تصنيف جديد</string>
     <string name="category_name">اسم التصنيف</string>
     <string name="saving_changes">يتم حفظ التغييرات</string>
-    <string name="content_required">التعليق مطلوب</string>
     <string name="dlg_confirm_trash_comments">إرسال إلى سلة المهملات؟</string>
-    <string name="sure_to_cancel_edit_comment">إلغاء تعديل هذا التعليق؟</string>
     <string name="file_error_create">تعذر إنشاء ملف مؤقت لرفع الوسائط. تأكد من وجود مساحة حرة كافية على الجهاز.</string>
     <string name="new_media">وسائط جديدة</string>
     <string name="local_changes">التغيرات المحلية</string>
@@ -3543,7 +3547,6 @@ Language: ar
     <string name="delete_page">هل تريد حذف الصفحة؟</string>
     <string name="file_not_found">تعذر العثور على الملف المراد رفعه. هل تم حذفه أم نقله؟</string>
     <string name="comment_status_trash">محذوف</string>
-    <string name="cancel_edit">إلغاء التحرير</string>
     <string name="reader_toast_err_remove_tag">غير قادر على إزالة هذا الموضوع</string>
     <string name="reader_toast_err_add_tag">غير قادر على إضافة هذا الموضوع</string>
     <string name="http_authorization_required">التخويل مطلوب</string>
