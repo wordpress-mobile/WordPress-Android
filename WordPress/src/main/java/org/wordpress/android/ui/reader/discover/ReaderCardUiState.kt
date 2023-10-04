@@ -4,7 +4,6 @@ import android.text.Spanned
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SPACER_NO_ACTION
@@ -17,8 +16,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.image.ImageType
 
 sealed class ReaderCardUiState {
-    data class ReaderWelcomeBannerCardUiState(@StringRes val titleRes: Int) : ReaderCardUiState()
-
     data class ReaderPostUiState(
         val source: String,
         val postId: Long,
