@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.TransactionAction
 import org.wordpress.android.fluxc.action.TransactionAction.CREATE_SHOPPING_CART
+import org.wordpress.android.fluxc.action.TransactionAction.CREATE_SHOPPING_CART_WITH_DOMAIN_AND_PLAN
 import org.wordpress.android.fluxc.action.TransactionAction.FETCH_SUPPORTED_COUNTRIES
 import org.wordpress.android.fluxc.action.TransactionAction.REDEEM_CART_WITH_CREDITS
 import org.wordpress.android.fluxc.annotations.action.Action
@@ -36,11 +37,24 @@ class TransactionsStore @Inject constructor(
                     emitChange(fetchSupportedCountries())
                 }
             }
+
             CREATE_SHOPPING_CART -> {
                 coroutineEngine.launch(AppLog.T.API, this, "CREATE_SHOPPING_CART") {
-                    emitChange(createShoppingCart(action.payload as CreateShoppingCartPayload))
+                    val payload = action.payload as CreateShoppingCartPayload
+                    emitChange(createShoppingCart(payload.toCreateShoppingCartWithDomainAndPlanPayload()))
                 }
             }
+
+            CREATE_SHOPPING_CART_WITH_DOMAIN_AND_PLAN -> {
+                coroutineEngine.launch(
+                        AppLog.T.API,
+                        this,
+                        "CREATE_SHOPPING_CART_WITH_DOMAIN_AND_PLAN"
+                ) {
+                    emitChange(createShoppingCart(action.payload as CreateShoppingCartWithDomainAndPlanPayload))
+                }
+            }
+
             REDEEM_CART_WITH_CREDITS -> {
                 coroutineEngine.launch(AppLog.T.API, this, "REDEEM_CART_WITH_CREDITS") {
                     emitChange(redeemCartUsingCredits(action.payload as RedeemShoppingCartPayload))
@@ -69,20 +83,24 @@ class TransactionsStore @Inject constructor(
         }
     }
 
-    private suspend fun createShoppingCart(payload: CreateShoppingCartPayload): OnShoppingCartCreated {
-        val createdShoppingCartPayload = transactionsRestClient.createShoppingCart(
+    private suspend fun createShoppingCart(payload: CreateShoppingCartWithDomainAndPlanPayload): OnShoppingCartCreated {
+        val createdShoppingCartWithDomainAndPlanPayload = transactionsRestClient.createShoppingCart(
                 payload.site,
-                payload.productId,
+                payload.domainProductId,
                 payload.domainName,
-                payload.isPrivacyEnabled,
-                payload.isTemporary
+                payload.isDomainPrivacyEnabled,
+                payload.isTemporary,
+                payload.planProductId
         )
 
-        return if (!createdShoppingCartPayload.isError) {
-            OnShoppingCartCreated(createdShoppingCartPayload.cartDetails)
+        return if (!createdShoppingCartWithDomainAndPlanPayload.isError) {
+            OnShoppingCartCreated(createdShoppingCartWithDomainAndPlanPayload.cartDetails)
         } else {
             OnShoppingCartCreated(
-                    CreateShoppingCartError(CreateCartErrorType.GENERIC_ERROR, createdShoppingCartPayload.error.message)
+                    CreateShoppingCartError(
+                            CreateCartErrorType.GENERIC_ERROR,
+                            createdShoppingCartWithDomainAndPlanPayload.error.message
+                    )
             )
         }
     }
