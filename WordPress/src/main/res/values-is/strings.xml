@@ -513,11 +513,9 @@ Language: is
     <string name="no_network_message">Ekkert net er til staðar</string>
     <string name="theme_fetch_failed">Tókst ekki að sækja þemu</string>
     <string name="username_or_password_incorrect">Notandanafnið eða lykilorðið sem þú gafst upp er rangt</string>
-    <string name="cancel_edit">Hætta við breytingar</string>
     <string name="post_not_found">Villa kom upp við að hlaða færslur. Endurfrískaðu færsluna og reyndu aftur.</string>
     <string name="comment_status_approved">Samþykkt</string>
     <string name="mnu_comment_approve">Samþykkja</string>
-    <string name="sure_to_cancel_edit_comment">Hætta við breytingar á athugasemd?</string>
     <string name="add_new_category">Bæta við nýjum flokki</string>
     <string name="category_name">Heiti flokks</string>
     <string name="http_authorization_required">Leyfisveitingar krafist</string>
@@ -525,8 +523,6 @@ Language: is
     <string name="reader_title_applog">Atburðarskrá forrits</string>
     <string name="connection_error">Tengingarvilla</string>
     <string name="create_a_link">Búa til tengil</string>
-    <string name="content_required">Athugasemdar er krafist</string>
-    <string name="toast_comment_unedited">Athugasemd var ekki breytt</string>
     <string name="comment_status_unapproved">Í bið</string>
     <string name="comment_status_spam">Amapóstur</string>
     <string name="edit_comment">Breyta athugasemd</string>

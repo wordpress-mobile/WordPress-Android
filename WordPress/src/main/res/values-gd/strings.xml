@@ -148,7 +148,6 @@ Language: gd_GB
     <string name="username_or_password_incorrect">Tha an t-ainm-cleachdaiche no am facal-faire a chuir thu a-steach cearr</string>
     <string name="select_categories">Tagh roinnean-seòrsa</string>
     <string name="connection_error">Mearachd leis a’ cheangal</string>
-    <string name="cancel_edit">Sguir dhen deasachadh</string>
     <string name="post_not_found">Thachair mearachd rè luchdadh a’ phuist. Ath-nuadhaich na puist is feuch ris a-rithist.</string>
     <string name="learn_more">Barrachd fiosrachaidh</string>
     <string name="media_gallery_type_thumbnail_grid">Griod nan dealbhagan</string>
@@ -172,9 +171,6 @@ Language: gd_GB
     <string name="dlg_confirm_trash_comments">Cuir dhan sgudal?</string>
     <string name="trash">An sgudal</string>
     <string name="saving_changes">A’ sàbhaladh nan atharrachadh</string>
-    <string name="sure_to_cancel_edit_comment">A bheil thu airson sgur de dheasachadh a’ bheachd seo?</string>
-    <string name="content_required">Tha feum air beachd</string>
-    <string name="toast_comment_unedited">Cha deach am beachd atharrachadh</string>
     <string name="remove_account">Thoir air falbh an làrach</string>
     <string name="view_in_browser">Seall sa bhrabhsair</string>
     <string name="add_new_category">Cuir roinn-seòrsa ùr ris</string>

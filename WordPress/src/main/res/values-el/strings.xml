@@ -1110,7 +1110,6 @@ Language: el_GR
     <string name="category_name">Όνομα κατηγορίας</string>
     <string name="select_categories">Επιλογή κατηγοριών</string>
     <string name="connection_error">Σφάλμα σύνδεσης</string>
-    <string name="cancel_edit">Ακύρωση επεξεργασίας</string>
     <string name="edit_comment">Επεξεργασία σχόλιου</string>
     <string name="saving_changes">Αποθήκευση αλλαγών</string>
     <string name="new_post">Νέα ανάρτηση</string>
@@ -1139,9 +1138,6 @@ Language: el_GR
     <string name="mnu_comment_unapprove">Αποέγκριση</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="trash">Διαγραφή</string>
-    <string name="sure_to_cancel_edit_comment">Ακύρωση επεξεργασίας αυτού του σχολίου;</string>
-    <string name="content_required">Απαιτείται σχόλιο</string>
-    <string name="toast_comment_unedited">Το σχόλιο δεν έχει αλλάξει</string>
     <string name="view_in_browser">Προβολή στον περιηγητή</string>
     <string name="add_new_category">Προσθήκη νέας κατηγορίας</string>
     <string name="file_error_create">Αδυναμία δημιουργίας προσωρινού αρχείου για μεταφόρτωση πολυμέσων. Βεβαιωθείτε ότι υπάρχει αρκετός ελεύθερος χώρος στη συσκευή σας.</string>

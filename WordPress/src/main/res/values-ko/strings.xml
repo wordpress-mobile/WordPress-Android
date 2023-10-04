@@ -3518,9 +3518,6 @@ Language: ko_KR
     <string name="add_new_category">새로운 카테고리를 추가</string>
     <string name="view_in_browser">브라우저에서 표시</string>
     <string name="remove_account">사이트 제거</string>
-    <string name="toast_comment_unedited">코멘트를 변경할 수 없습니다.</string>
-    <string name="content_required">댓글 본문은 필수 항목입니다.</string>
-    <string name="sure_to_cancel_edit_comment">이 코멘트 수정을 취소하시겠습니까?</string>
     <string name="saving_changes">변경 사항을 저장 중</string>
     <string name="trash">휴지통</string>
     <string name="dlg_confirm_trash_comments">휴지통에 보내겠습니까?</string>
@@ -3548,7 +3545,6 @@ Language: ko_KR
     <string name="learn_more">추가 정보</string>
     <string name="post_not_found">게시물을 로딩중 에러가 발생했습니다. 새로고침 후 다시 시도하세요.</string>
     <string name="plugin_not_found">이 플러그인에 접속하는 동안 오류가 발생했습니다.</string>
-    <string name="cancel_edit">편집을 취소</string>
     <string name="connection_error">연결 오류</string>
     <string name="select_categories">카테고리를 선택</string>
     <string name="share_link">링크 공유</string>

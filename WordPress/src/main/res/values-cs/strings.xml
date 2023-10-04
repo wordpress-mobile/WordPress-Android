@@ -3315,7 +3315,6 @@ Language: cs_CZ
     <string name="email_invalid">Vlož platnou e-mailovou adresu</string>
     <string name="invalid_email_message">Tvoje e-mailová adresa není platná</string>
     <string name="connection_error">Ztráta spojení</string>
-    <string name="cancel_edit">Zrušit úpravy</string>
     <string name="link_enter_url_text">Text odkazu</string>
     <string name="create_a_link">Vytvořit odkaz</string>
     <string name="page_settings">Nastavení stránky</string>
@@ -3331,8 +3330,6 @@ Language: cs_CZ
     <string name="comment_status_unapproved">Čekající na schválení</string>
     <string name="local_draft">Místní návrh</string>
     <string name="saving_changes">Ukládám změny</string>
-    <string name="content_required">Je vyžadován komentář</string>
-    <string name="toast_comment_unedited">Komentář nebyl změněn</string>
     <string name="view_in_browser">Zobrazit v prohlížeči</string>
     <string name="add_new_category">Přidat novou rubriku</string>
     <string name="category_name">Název rubriky</string>
@@ -3347,7 +3344,6 @@ Language: cs_CZ
     <string name="mnu_comment_approve">Schválit</string>
     <string name="mnu_comment_unapprove">Zamítnout</string>
     <string name="dlg_confirm_trash_comments">Přesunout do koše?</string>
-    <string name="sure_to_cancel_edit_comment">Ukončit úpravy tohoto komentáře?</string>
     <string name="image_settings">Vlastnosti obrázku</string>
     <string name="fatal_db_error">Vyskytla se chyba při vytváření databáze aplikace. Zkuste přeinstalovat tuto aplikaci.</string>
     <string name="reader_toast_err_add_tag">Nelze přidat tento štítek</string>
