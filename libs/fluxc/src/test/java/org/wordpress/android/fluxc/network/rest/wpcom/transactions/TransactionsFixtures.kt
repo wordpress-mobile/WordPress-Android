@@ -18,6 +18,16 @@ val CREATE_SHOPPING_CART_RESPONSE = CreateShoppingCartResponse(
         )
 )
 
+val CREATE_SHOPPING_CART_WITH_PLAN_RESPONSE = CreateShoppingCartResponse(
+    76,
+    22.toString(),
+    listOf(
+        Product(76, "superraredomainname156726.blog", Extra(true)),
+        Product(1009, "Plan", Extra(true)),
+        Product(1001, "other product", Extra(true))
+    )
+)
+
 val DOMAIN_CONTACT_INFORMATION = DomainContactModel(
         "Wapu",
         "Wordpress",
