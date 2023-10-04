@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-20 16:13:57+0000
+Translation-Revision-Date: 2023-10-03 14:31:41+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.9
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">Anulează gruparea blocului</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">Atinge aici pentru a arăta mai multe detalii.</string>
+    <string name="gutenberg_native_synced_patterns">Modele sincronizate</string>
+    <string name="gutenberg_native_deeply_nested_block">Bloc imbricat în adâncime</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Blocurile imbricate în adâncime pe mai mult de %d niveluri pot să nu fie randate corect în editorul pentru dispozitive mobile. Din acest motiv, recomandăm aplatizarea conținutului prin anularea grupării blocului sau prin editarea blocului folosind editorul web.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blocurile imbricate în adâncime pe mai mult de %d niveluri pot să nu fie randate corect în editorul pentru dispozitive mobile. Din acest motiv, recomandăm aplatizarea conținutului prin anularea grupării blocului sau prin editarea blocului folosind navigatorul tău web.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Blocul nu poate fi randat deoarece este imbricat în adâncime. Atinge aici pentru mai multe detalii.</string>
+    <string name="pages_no_site_something_went_wrong">Of, nu, ceva nu a mers bine. Te rog reîncearcă mai târziu.</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Mergi pe web</string>
     <string name="my_site_dashboard_no_cards_message_description">Atinge butonul de personalizare ca să arăți mai multe cartușe.</string>
     <string name="personalization_screen_stats_card_description">Vizualizări, vizitatori și aprecieri</string>
     <string name="personalization_screen_blogging_prompts_card_title">Îndemnuri de a scrie</string>
@@ -17,11 +26,16 @@ Language: ro
     <string name="my_site_dashboard_no_cards_message_title">Sunt ascunse toate cartușele</string>
     <string name="personalization_screen_next_steps_card_description">Învață cum să beneficiezi pe deplin de site-ul tău cu ajutorul aplicației.</string>
     <string name="personalization_screen_draft_posts_card_description">Articole ciornă recente.</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Articole programate</string>
+    <string name="personalization_screen_footer_cards">Cartușele pot să afișeze conținut diferit în funcție de ceea ce se întâmplă cu site-ul tău</string>
+    <string name="personalization_screen_draft_posts_card_title">Articole ciornă</string>
     <string name="personalize_card_content_description">Atinge ca să personalizezi fila Prima pagină</string>
     <string name="personalize_card_text">Personalizează fila Prima pagină</string>
     <string name="partial_media_access_prompt_change_settings">Modifică setările</string>
     <string name="partial_media_access_prompt_select_more">Selectează mai multe</string>
     <string name="partial_media_access_prompt_text">Sunt disponibile numai fotografiile și videourile selectate pentru care ai dat acces.</string>
+    <string name="personalization_screen_title">Personalizează fila Prima pagină</string>
+    <string name="personalization_screen_description">Adaugă cartușe sau ascunde-le</string>
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Vezi toate campaniile</string>
     <string name="dashboard_activity_card_menu_all_activity">Toate activitățile</string>
     <string name="dashboard_pages_card_more_menu_all_pages">Toate paginile</string>
@@ -651,6 +665,7 @@ Language: ro
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navighează la ecranul de selectare a aranjamentului</string>
     <string name="gutenberg_native_tiled_gallery_settings">Setări galerii placate</string>
     <string name="gutenberg_native_gallery_style">Stil galerie</string>
+    <string name="sharing_connect_via_web_warning_message">Îți poți conecta contul %s la site-ul WordPress.com. Când ai terminat, întoarce-te la aplicație pentru a modifica setările de partajare.</string>
     <string name="about_automattic_wordpress">WordPress</string>
     <string name="about_automattic_back_icon_description">Icon înapoi</string>
     <string name="about_automattic_logo_description">Logo Automattic</string>
@@ -1691,6 +1706,7 @@ Language: ro
     <string name="quickpress_shortcut_activity_label">Selectează blogul pentru scurtătura QuickPress</string>
     <string name="editor_uploading_page">Pagina ta se încarcă</string>
     <string name="editor_page_saved_locally_failed_media">Pagina a eșuat la încărcările media și a fost salvată local</string>
+    <string name="gutenberg_native_warning_message">Mesaj de avertizare</string>
     <string name="gutenberg_native_show_post_content">Arată conținutul articolului</string>
     <string name="gutenberg_native_only_show_excerpt">Arată numai rezumatul</string>
     <string name="gutenberg_native_link_to">Legătură la</string>
@@ -3517,8 +3533,6 @@ Language: ro
     <string name="dlg_confirm_trash_comments">Trimit la coșul de gunoi?</string>
     <string name="trash">Coș de gunoi</string>
     <string name="saving_changes">Salvează schimbările</string>
-    <string name="content_required">Comentariul e necesar</string>
-    <string name="toast_comment_unedited">Comentariul nu s-a schimbat</string>
     <string name="add_new_category">Adaugă categorie nouă</string>
     <string name="category_name">Nume categorie</string>
     <string name="file_error_create">Nu am putut crea fișierul temporar pentru a încărca media. Asigură-te că este destul spațiu liber pe dispozitiv.</string>
@@ -3531,7 +3545,6 @@ Language: ro
     <string name="error_blog_hidden">Acest blog este ascuns și nu poate fi încărcat. Validează-l din nou din setări și încearcă din nou.</string>
     <string name="fatal_db_error">A apărut o eroare în timp ce se creea baza de date a aplicației. Încearcă reinstalarea ei.</string>
     <string name="notifications_empty_all">Nicio notificare… încă.</string>
-    <string name="sure_to_cancel_edit_comment">Anulezi editarea acestui comentariu?</string>
     <string name="page_settings">Setări pagină</string>
     <string name="local_draft">Ciornă locală</string>
     <string name="error_refresh_media">Media nu a putut fi reîmprospătată în acest moment</string>
@@ -3551,7 +3564,6 @@ Language: ro
     <string name="view_in_browser">Vizualizează în navigator</string>
     <string name="comment_status_trash">Aruncate la gunoi</string>
     <string name="mnu_comment_unapprove">Anulează aprobarea</string>
-    <string name="cancel_edit">Anulează editarea</string>
     <string name="horizontal_alignment">Aliniere pe orizontală</string>
     <string name="share_link">Partajează legătura</string>
     <string name="reader_empty_posts_in_tag_updating">Se aduc articole…</string>

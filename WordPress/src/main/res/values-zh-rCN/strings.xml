@@ -3513,9 +3513,6 @@ Language: zh_CN
     <string name="add_new_category">添加新分类</string>
     <string name="view_in_browser">在浏览器中查看</string>
     <string name="remove_account">删除站点</string>
-    <string name="toast_comment_unedited">评论没有改变</string>
-    <string name="content_required">评论正文为必填项</string>
-    <string name="sure_to_cancel_edit_comment">是否确定要取消编辑该评论?</string>
     <string name="saving_changes">正在保存更改</string>
     <string name="trash">删除</string>
     <string name="dlg_confirm_trash_comments">确定删除？</string>
@@ -3543,7 +3540,6 @@ Language: zh_CN
     <string name="learn_more">了解更多</string>
     <string name="post_not_found">抱歉，尝试加载文章时出现错误。请刷新文章列表再试.</string>
     <string name="plugin_not_found">访问该插件时发生错误</string>
-    <string name="cancel_edit">取消编辑</string>
     <string name="connection_error">连接错误</string>
     <string name="select_categories">选择分类</string>
     <string name="share_link">分享链接</string>
