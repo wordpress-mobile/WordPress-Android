@@ -1,5 +1,8 @@
 package org.wordpress.android.fluxc.model;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
@@ -18,11 +21,53 @@ public class TaxonomyModel extends Payload<BaseNetworkError> implements Identifi
     @PrimaryKey
     @Column private int mId;
     @Column private int mLocalSiteId;
-    @Column private String mName;
-    @Column private String mLabel;
-    @Column private String mDescription;
+    @NonNull @Column private String mName;
+    @Nullable @Column private String mLabel;
+    @Nullable @Column private String mDescription;
     @Column private boolean mIsHierarchical;
     @Column private boolean mIsPublic;
+
+    @Deprecated
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    public TaxonomyModel() {
+        this.mId = 0;
+        this.mLocalSiteId = 0;
+        this.mName = "";
+        this.mLabel = null;
+        this.mDescription = null;
+        this.mIsHierarchical = false;
+        this.mIsPublic = false;
+    }
+
+    /**
+     * Use when adding a new taxonomy.
+     */
+    public TaxonomyModel(@NonNull String name) {
+        this.mId = 0;
+        this.mLocalSiteId = 0;
+        this.mName = name;
+        this.mLabel = null;
+        this.mDescription = null;
+        this.mIsHierarchical = false;
+        this.mIsPublic = false;
+    }
+
+    public TaxonomyModel(
+            int id,
+            int localSiteId,
+            @NonNull String name,
+            @Nullable String label,
+            @Nullable String description,
+            boolean isHierarchical,
+            boolean isPublic) {
+        this.mId = id;
+        this.mLocalSiteId = localSiteId;
+        this.mName = name;
+        this.mLabel = label;
+        this.mDescription = description;
+        this.mIsHierarchical = isHierarchical;
+        this.mIsPublic = isPublic;
+    }
 
     @Override
     public int getId() {
@@ -42,27 +87,30 @@ public class TaxonomyModel extends Payload<BaseNetworkError> implements Identifi
         mLocalSiteId = localSiteId;
     }
 
+    @NonNull
     public String getName() {
         return mName;
     }
 
-    public void setName(String name) {
+    public void setName(@NonNull String name) {
         mName = name;
     }
 
+    @Nullable
     public String getLabel() {
         return mLabel;
     }
 
-    public void setLabel(String label) {
+    public void setLabel(@Nullable String label) {
         mLabel = label;
     }
 
+    @Nullable
     public String getDescription() {
         return mDescription;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         mDescription = description;
     }
 
@@ -83,7 +131,8 @@ public class TaxonomyModel extends Payload<BaseNetworkError> implements Identifi
     }
 
     @Override
-    public boolean equals(Object other) {
+    @SuppressWarnings("ConditionCoveredByFurtherCondition")
+    public boolean equals(@Nullable Object other) {
         if (this == other) return true;
         if (other == null || !(other instanceof TaxonomyModel)) return false;
 
