@@ -12,11 +12,11 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.TaxonomyAction.FETCH_CATEGORIES
+import org.wordpress.android.fluxc.action.TaxonomyAction
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError
-import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.prefs.categories.list.CategoriesListViewModel
 import org.wordpress.android.ui.prefs.categories.list.UiState
@@ -165,15 +165,12 @@ class CategoriesListViewModelTest : BaseUnitTest() {
     }
 
     private fun getGenericTaxonomyError(): OnTaxonomyChanged {
-        val taxonomyChanged = OnTaxonomyChanged(0)
-        taxonomyChanged.causeOfChange = FETCH_CATEGORIES
-        taxonomyChanged.error = TaxonomyError(GENERIC_ERROR)
+        val taxonomyChanged = OnTaxonomyChanged(0, TaxonomyAction.FETCH_CATEGORIES)
+        taxonomyChanged.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR)
         return taxonomyChanged
     }
 
     private fun getTaxonomyChangedCallback(): OnTaxonomyChanged {
-        val taxonomyChanged = OnTaxonomyChanged(0)
-        taxonomyChanged.causeOfChange = FETCH_CATEGORIES
-        return taxonomyChanged
+        return OnTaxonomyChanged(0, TaxonomyAction.FETCH_CATEGORIES)
     }
 }

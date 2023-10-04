@@ -347,10 +347,16 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
         )
 
     private fun getTermModel(): TermModel {
-        val termModel = TermModel()
-        termModel.name = "Cars"
-        termModel.remoteTermId = 20
-        termModel.slug = "Cars"
-        return termModel
+        return TermModel(
+            0,
+            6,
+            20,
+            TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+            "Cars",
+            "cars",
+            null,
+            0,
+            0
+        )
     }
 }

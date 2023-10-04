@@ -110,10 +110,11 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
             return false;
         }
 
-        TermModel newCategory = new TermModel();
-        newCategory.setTaxonomy(TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY);
-        newCategory.setName(categoryName);
-        newCategory.setParentRemoteId(parentId);
+        TermModel newCategory = new TermModel(
+                TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+                categoryName,
+                parentId
+        );
         ((SelectCategoriesActivity) getActivity()).categoryAdded(newCategory);
 
         return true;
