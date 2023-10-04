@@ -3398,9 +3398,6 @@ Language: sq_AL
     <string name="add_new_category">Shtoni kategori të re</string>
     <string name="view_in_browser">Shiheni në shfletues</string>
     <string name="remove_account">Hiqe sajtin</string>
-    <string name="toast_comment_unedited">Komenti s’ndryshoi</string>
-    <string name="content_required">Komenti është i domosdoshëm</string>
-    <string name="sure_to_cancel_edit_comment">Të anulohet përpunimi i këtij dokumenti?</string>
     <string name="saving_changes">Po ruhen ndryshimet</string>
     <string name="trash">Hedhurina</string>
     <string name="dlg_confirm_trash_comments">Të kalohet te hedhurinat?</string>
@@ -3428,7 +3425,6 @@ Language: sq_AL
     <string name="learn_more">Mësoni më tepër</string>
     <string name="post_not_found">Ndodhi një gabim teksa ngarkohej postimi. Rifreskoni postimet tuaja dhe riprovoni.</string>
     <string name="plugin_not_found">Ndodhi një gabim gjatë hyrjes te kjo shtojcë</string>
-    <string name="cancel_edit">Anuloni përpunimin</string>
     <string name="connection_error">Gabim lidhjeje</string>
     <string name="select_categories">Përzgjidhni kategori</string>
     <string name="share_link">Ndajeni lidhjen me të tjerët</string>

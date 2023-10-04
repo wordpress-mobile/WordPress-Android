@@ -528,17 +528,13 @@ Language: eu_ES
     <string name="view_in_browser">Nabigatzailean ikusi</string>
     <string name="horizontal_alignment">Lerrokatze horizontala</string>
     <string name="file_not_found">Ezin izan da igotzeko fitxategia aurkitu. Mugitua edo ezabatua izan da?</string>
-    <string name="content_required">Iruzkina beharrezkoa da</string>
-    <string name="toast_comment_unedited">Iruzkina ez da aldatu</string>
     <string name="learn_more">Gehiago jakin</string>
     <string name="media_gallery_type_thumbnail_grid">Miniaturen sareta</string>
     <string name="http_authorization_required">Baimena beharrezkoa</string>
     <string name="connection_error">Errorea konektatzean</string>
-    <string name="cancel_edit">Ezeztatu editatutakoa</string>
     <string name="media_error_no_permission">Ez duzu media bilduma ikusteko baimenik</string>
     <string name="remove_account">Ezabatu gunea</string>
     <string name="saving_changes">Aldaketak gordetzen</string>
-    <string name="sure_to_cancel_edit_comment">Iruzkin honen edizioa ezeztatu?</string>
     <string name="file_error_create">Ezin izan da media fitxategia igotzeko behin-behineko fitxategia sortu. Ziurtatu zaitez gailuak behar haina toki duela.</string>
     <string name="new_post">Bidalketa berria</string>
     <string name="new_media">Media berria</string>

@@ -132,7 +132,6 @@ Language: az
     <string name="username_or_password_incorrect">Yanlış istifadəçi adı və ya parol daxil etdiniz</string>
     <string name="select_categories">Kateqoriyaları seç</string>
     <string name="connection_error">Qoşulma xətası</string>
-    <string name="cancel_edit">Redaktəni ləğv et</string>
     <string name="new_post">Yeni yazı</string>
     <string name="new_media">Yeni media</string>
     <string name="reader_title_applog">Proqram jurnalı</string>
@@ -147,9 +146,6 @@ Language: az
     <string name="category_name">Kateqoriya adı</string>
     <string name="file_error_create">Müvəqqəti media faylı yaradıla bilmir. Cihazınızda yetərli böş sahə olduğundan əmin olun.</string>
     <string name="saving_changes">Dəyişikliklər qeyd edilir</string>
-    <string name="sure_to_cancel_edit_comment">Şərhin redaktəsi ləğv edilsinmi?</string>
-    <string name="content_required">Şərh vacibdir</string>
-    <string name="toast_comment_unedited">Şərh dəyişdirilmədi</string>
     <string name="mnu_comment_approve">Təsdiqlə</string>
     <string name="mnu_comment_unapprove">Rədd et</string>
     <string name="mnu_comment_spam">Spam</string>

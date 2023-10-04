@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-27 12:54:09+0000
+Translation-Revision-Date: 2023-10-03 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: tr
 -->
 <resources>
+    <string name="sharing_connect_via_web_warning_positive_button">Webe git</string>
     <string name="my_site_dashboard_no_cards_message_description">Daha fazla kart görüntülemek için kişiselleştirme düğmesine dokunun.</string>
     <string name="my_site_dashboard_no_cards_message_title">Tüm kartlar gizli</string>
     <string name="personalization_screen_next_steps_card_description">Uygulamayla sitenizden en iyi şekilde yararlanmayı öğrenin.</string>
@@ -15,8 +16,13 @@ Language: tr
     <string name="personalization_screen_blogging_prompts_card_title">Blog talepleri</string>
     <string name="personalization_screen_blaze_card_description">Bir gönderiyi tanıtın ve mevcut kampanyaları görün.</string>
     <string name="personalization_screen_scheduled_posts_card_description">Yaklaşan zamanlanmış gönderileriniz.</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Zamanlanmış gönderiler</string>
     <string name="personalization_screen_draft_posts_card_description">En son taslak gönderileriniz.</string>
+    <string name="personalization_screen_draft_posts_card_title">Taslak gönderiler</string>
     <string name="personalization_screen_stats_card_description">Görüntülemeler, Ziyaretçiler ve beğeniler</string>
+    <string name="personalization_screen_footer_cards">Sitenizde olanlara göre kartlar farklı içerik gösterebilir.</string>
+    <string name="personalization_screen_description">Kart ekle veya gizle</string>
+    <string name="personalization_screen_title">Ana sayfa sekmesini kişiselleştir</string>
     <string name="personalize_card_content_description">Ana sayfa sekmenizi kişiselleştirmek için dokunun</string>
     <string name="personalize_card_text">Ana sayfa sekmenizi kişiselleştirin</string>
     <string name="partial_media_access_prompt_change_settings">Ayarları Değiştir</string>
@@ -651,6 +657,7 @@ Language: tr
     <string name="gutenberg_native_tiled_gallery_settings">Döşenmiş galeri ayarları</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Yerleşim seçim ekranına ilerler</string>
     <string name="gutenberg_native_gallery_style">Galeri biçimi</string>
+    <string name="sharing_connect_via_web_warning_message">WordPress.com web sitesindeki %s hesabınızı bağlayabilirsiniz. İşlem tamamlandığında, uygulamaya dönerek Paylaşım ayarlarınızı değiştirin.</string>
     <string name="about_automattic_app_icon_description">Uygulama simgesi</string>
     <string name="about_automattic_back_icon_description">Geri simgesi</string>
     <string name="about_automattic_logo_description">Automattic logosu</string>
@@ -3520,9 +3527,6 @@ Language: tr
     <string name="add_new_category">Yeni kategori ekle</string>
     <string name="view_in_browser">Tarayıcıda görüntüle</string>
     <string name="remove_account">Siteyi kaldır</string>
-    <string name="toast_comment_unedited">Yorum değiştirilmedi</string>
-    <string name="content_required">Yorum gerekli</string>
-    <string name="sure_to_cancel_edit_comment">Bu yorumun düzenlenmesi iptal edilsin mi?</string>
     <string name="saving_changes">Değişiklikler kaydediliyor</string>
     <string name="trash">Çöp</string>
     <string name="dlg_confirm_trash_comments">Çöpe gönderilsin mi?</string>
@@ -3550,7 +3554,6 @@ Language: tr
     <string name="learn_more">Daha fazla bilgi</string>
     <string name="post_not_found">Yazı yüklenirken hata oluştu. Yazıyı yenileyin ve tekrar deneyin</string>
     <string name="plugin_not_found">Bu eklentiye erişirken bir hata oluştu </string>
-    <string name="cancel_edit">Düzenlemekten vazgeç</string>
     <string name="connection_error">Bağlantı hatası</string>
     <string name="select_categories">Kategorileri seçin</string>
     <string name="share_link">Bağlantıyı paylaş</string>

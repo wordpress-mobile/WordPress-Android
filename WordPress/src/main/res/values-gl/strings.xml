@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-29 00:23:11+0000
+Translation-Revision-Date: 2023-10-02 17:15:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: gl_ES
@@ -1665,6 +1665,7 @@ Language: gl_ES
     <string name="editor_page_saved_locally_failed_media">A páxina fallou ao subir os medios e gardouse localmente</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Recentemente fixeches cambios nesta páxina, pero non os gardaches. Elixe unha versión para cargar:\n\n</string>
     <string name="app_theme">Aparencia</string>
+    <string name="gutenberg_native_warning_message">Mensaxe de advertencia</string>
     <string name="gutenberg_native_show_post_content">Amosar o contido da entrada</string>
     <string name="gutenberg_native_link_to">Enlazar a</string>
     <string name="gutenberg_native_only_show_excerpt">Amosar só o extracto</string>
@@ -3491,7 +3492,6 @@ Language: gl_ES
     <string name="view_in_browser">Ver no navegador</string>
     <string name="select_categories">Seleccionar categorías</string>
     <string name="connection_error">Erro de conexión</string>
-    <string name="cancel_edit">Cancelar a edición</string>
     <string name="media_gallery_type_thumbnail_grid">Grella de miniaturas</string>
     <string name="media_error_no_permission">Non tes permiso para ver a Biblioteca Multimedia</string>
     <string name="cannot_delete_multi_media_items">Non se poden eliminar algún ficheiros neste momento. Téntao de novo máis tarde.</string>
@@ -3514,12 +3514,9 @@ Language: gl_ES
     <string name="mnu_comment_trash">Botar ao lixo</string>
     <string name="dlg_confirm_trash_comments">Botar ao lixo?</string>
     <string name="trash">Lixo</string>
-    <string name="sure_to_cancel_edit_comment">Cancelar a edición deste comentario?</string>
     <string name="reader_title_applog">Rexistro da aplicación</string>
     <string name="error_blog_hidden">Este blogue non se pode cargar porque está oculto. Habilítao de novo na configuración e proba outra vez.</string>
     <string name="fatal_db_error">Houbo un erro mentres se creaba a base de datos da aplicación. Proba a reinstalar a aplicación.</string>
-    <string name="content_required">Fai falla un comentario</string>
-    <string name="toast_comment_unedited">O comentario non foi modificado</string>
     <string name="post_not_found">Houbo un erro mentres se cargaba o artigo. Actualiza os artigos e téntao de novo.</string>
     <string name="learn_more">Saber máis</string>
     <string name="file_not_found">Non foi posible atopar o ficheiro para cargar. Terá sido eliminado ou movido?</string>

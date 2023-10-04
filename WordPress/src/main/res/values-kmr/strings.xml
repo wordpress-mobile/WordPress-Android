@@ -2208,7 +2208,6 @@ Language: ku_TR
     <string name="comment_status_spam">Nexwestî</string>
     <string name="mnu_comment_approve">Bipejirîne</string>
     <string name="mnu_comment_unapprove">Red bike</string>
-    <string name="content_required">Şîrove pêwîst e</string>
     <string name="remove_account">Malperê rake</string>
     <string name="view_in_browser">Di gerokê de bibîne</string>
     <string name="category_name">Navê kategoriyê</string>
@@ -2233,7 +2232,6 @@ Language: ku_TR
     <string name="notifications_empty_all">Danezan tune ye…heta niha.</string>
     <string name="file_not_found">Ji bo hilxistinê dosye nehat dîtin. Ew hatiye jêbirin an jî veguheztin?</string>
     <string name="local_draft">Reşnivîsa cîgehî</string>
-    <string name="cancel_edit">Sererastkirinê betal bike</string>
     <string name="select_categories">Kategoriyan hilbijêre</string>
     <string name="reader_toast_err_remove_tag">Ev mijar nayê rakirin</string>
     <string name="reader_toast_err_add_tag">Ev mijar nayê tevlîkirin</string>
@@ -2243,8 +2241,6 @@ Language: ku_TR
     <string name="http_authorization_required">Destûrdarkirin pêwîst e</string>
     <string name="file_error_create">Ji bo hilxistina medyayê dosyeya demkî nayê afirandin. Jê bawer be bila di cîhaza te de têra xwe ciyê vala hebe.</string>
     <string name="add_new_category">Kategoriya nû tevlî bike</string>
-    <string name="toast_comment_unedited">Şîrove nehat guhertin</string>
-    <string name="sure_to_cancel_edit_comment">Sererastkirina vê şîroveyê betal bike?</string>
     <string name="dlg_confirm_trash_comments">Bişîne jêbirdankê?</string>
     <string name="comment_status_trash">Çû jêbirdankê</string>
     <string name="post_not_found">Di barkirina şandiyê de çewtiyek derket. Şandiyê nû bike û dîsa biceribîne.</string>

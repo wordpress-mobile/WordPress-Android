@@ -3094,7 +3094,6 @@ Language: pl
     <string name="fatal_db_error">Wystąpił błąd podczas tworzenia bazy danych. Spróbuj przeinstalować aplikacje.</string>
     <string name="view_in_browser">Zobacz w przeglądarce</string>
     <string name="category_name">Nazwa kategorii</string>
-    <string name="cancel_edit">Anuluj edycję</string>
     <string name="connection_error">Błąd połączenia</string>
     <string name="local_draft">Szkic lokalny</string>
     <string name="page_settings">Ustawienia strony</string>
@@ -3102,18 +3101,15 @@ Language: pl
     <string name="mnu_comment_spam">Spam</string>
     <string name="edit_comment">Edytuj komentarz</string>
     <string name="saving_changes">Zapisywanie zmian</string>
-    <string name="toast_comment_unedited">Komentarz nie został zmieniony</string>
     <string name="learn_more">Dowiedz się więcej</string>
     <string name="comment_status_spam">Spam</string>
     <string name="mnu_comment_approve">Zatwierdź</string>
     <string name="media_gallery_type_thumbnail_grid">Siatka miniatur</string>
     <string name="media_error_no_permission">Nie masz uprawnień do przeglądania biblioteki mediów</string>
     <string name="cannot_delete_multi_media_items">Niektóre media nie mogły zostać w tej chwili usunięte. Spróbuj ponownie później. \n</string>
-    <string name="content_required">Wymagany jest komentarz</string>
     <string name="file_error_create">Nie udało się utworzyć tymczasowego pliku do wgrania. Upewnij się, że na Twoim urządzeniu jest wystarczająco dużo wolnego miejsca.</string>
     <string name="http_authorization_required">Wymagana autoryzacja</string>
     <string name="reader_title_applog">Dziennik aplikacji</string>
-    <string name="sure_to_cancel_edit_comment">Anulować edytowanie tego komentarza?</string>
     <string name="mnu_comment_trash">Kosz</string>
     <string name="select_categories">Wybierz kategorie</string>
     <string name="dlg_confirm_trash_comments">Wyrzucić do kosza?</string>

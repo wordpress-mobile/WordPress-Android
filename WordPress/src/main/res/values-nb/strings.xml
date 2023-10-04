@@ -2406,9 +2406,6 @@ Language: nb_NO
     <string name="add_new_category">Legg til ny kategori</string>
     <string name="view_in_browser">Åpne i nettleseren</string>
     <string name="remove_account">Fjern nettsted</string>
-    <string name="toast_comment_unedited">Kommentaren har ikke endret seg</string>
-    <string name="content_required">Kommentering er påkrevd</string>
-    <string name="sure_to_cancel_edit_comment">Vil du avbryte redigeringen av denne kommentaren?</string>
     <string name="saving_changes">Lagrer endringer</string>
     <string name="trash">Papirkurv</string>
     <string name="dlg_confirm_trash_comments">Send til papirkurv?</string>
@@ -2435,7 +2432,6 @@ Language: nb_NO
     <string name="media_gallery_type_thumbnail_grid">Forhåndsvisningsnetting</string>
     <string name="learn_more">Lær mer</string>
     <string name="post_not_found">En feil oppstod under innlastning av innlegget. Oppfrisk innleggene dine, og prøv igjen.</string>
-    <string name="cancel_edit">Avbryt redigeringen</string>
     <string name="connection_error">Tilkoblingsfeil</string>
     <string name="select_categories">Velg kategorier</string>
     <string name="share_link">Del lenke</string>
