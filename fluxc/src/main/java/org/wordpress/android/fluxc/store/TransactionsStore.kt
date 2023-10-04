@@ -130,11 +130,32 @@ class TransactionsStore @Inject constructor(
 
     // Payloads
 
+    // Shopping cart with only domain
+    @Deprecated("Use CreateShoppingCartWithDomainAndPlanPayload with null 'planProductId' instead")
     class CreateShoppingCartPayload(
         val site: SiteModel,
         val productId: Int,
         val domainName: String,
         val isPrivacyEnabled: Boolean,
+        val isTemporary: Boolean = true
+    ) : Payload<BaseRequest.BaseNetworkError>() {
+        fun toCreateShoppingCartWithDomainAndPlanPayload() =
+                CreateShoppingCartWithDomainAndPlanPayload(
+                        site = site,
+                        domainProductId = productId,
+                        domainName = domainName,
+                        isDomainPrivacyEnabled = isPrivacyEnabled,
+                        planProductId = null,
+                        isTemporary = isTemporary
+                ).apply { error = this@CreateShoppingCartPayload.error }
+    }
+
+    class CreateShoppingCartWithDomainAndPlanPayload(
+        val site: SiteModel,
+        val domainProductId: Int,
+        val domainName: String,
+        val isDomainPrivacyEnabled: Boolean,
+        val planProductId: Int? = null,
         val isTemporary: Boolean = true
     ) : Payload<BaseRequest.BaseNetworkError>()
 
