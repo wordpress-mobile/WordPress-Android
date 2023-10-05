@@ -71,10 +71,12 @@ class QuickStartRepository
     private val _activeTask = MutableLiveData<QuickStartTask?>()
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onQuickStartMySitePrompts = MutableLiveData<Event<QuickStartMySitePrompts>>()
+    private val _quickStartMenuStep = MutableLiveData<QuickStartMenuStep?>()
     private var _isQuickStartNoticeShown: Boolean = false
     val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
     val onQuickStartMySitePrompts = _onQuickStartMySitePrompts as LiveData<Event<QuickStartMySitePrompts>>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
+    val quickStartMenuStep = _quickStartMenuStep as LiveData<QuickStartMenuStep?>
     val isQuickStartNoticeShown = _isQuickStartNoticeShown
     val quickStartType: QuickStartType
         get() = selectedSiteRepository.getSelectedSite()?.let {
@@ -129,6 +131,7 @@ class QuickStartRepository
         _activeTask.postValue(task)
         clearPendingTask()
         when {
+            task.isShownInMenu() -> requestMoreStepForTask(task)
             task == QuickStartNewSiteTask.UPDATE_SITE_TITLE -> {
                 val shortQuickStartMessage = resourceProvider.getString(
                     R.string.quick_start_dialog_update_site_title_message_short,
@@ -184,6 +187,18 @@ class QuickStartRepository
         quickStartTracker.track(quickStartUtilsWrapper.getTaskCompletedTracker(task))
     }
 
+    private fun requestMoreStepForTask(task: QuickStartTask) {
+        clearActiveTask()
+        pendingTask = task
+        val shortQuickStartMessage = resourceProvider.getString(
+            R.string.quick_start_site_menu_tab_message_short,
+            resourceProvider.getString(R.string.more)
+        )
+
+        _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(htmlCompat.fromHtml(shortQuickStartMessage)))))
+        _quickStartMenuStep.postValue(QuickStartMenuStep(true, task))
+    }
+
     fun requestNextStepOfTask(task: QuickStartTask) {
         if (task != activeTask.value) return
         clearActiveTask()
@@ -206,7 +221,7 @@ class QuickStartRepository
         }
     }
 
-    fun showCompletedQuickStartNotice() {
+    private fun showCompletedQuickStartNotice() {
         launch {
             delay(QUICK_START_COMPLETED_NOTICE_DELAY)
             val message = htmlMessageUtils.getHtmlMessageFromStringFormat(
@@ -273,12 +288,26 @@ class QuickStartRepository
         appPrefsWrapper.setLastSkippedQuickStartTask(task)
     }
 
+    private fun QuickStartTask.isShownInMenu() =
+        when (this) {
+            quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL),
+            quickStartType.getTaskFromString(QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL),
+            QuickStartNewSiteTask.REVIEW_PAGES,
+            QuickStartNewSiteTask.CHECK_STATS,
+            QuickStartNewSiteTask.ENABLE_POST_SHARING -> true
+            else -> false
+        }
+
     data class QuickStartCategory(
         val taskType: QuickStartTaskType,
         val uncompletedTasks: List<QuickStartTaskDetails>,
         val completedTasks: List<QuickStartTaskDetails>
     )
 
+    data class QuickStartMenuStep(
+        val isStarted: Boolean,
+        val task: QuickStartTask? = null
+    )
     companion object {
         private const val QUICK_START_NOTICE_DURATION = 7000
         private const val QUICK_START_COMPLETED_NOTICE_DELAY = 5000L
