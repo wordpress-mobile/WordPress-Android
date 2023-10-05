@@ -15,6 +15,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.ListItemActionHandler
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -32,7 +33,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
     private val listItemActionHandler: ListItemActionHandler,
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val appPrefsWrapper: AppPrefsWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) {
     lateinit var scope: CoroutineScope
 
@@ -159,9 +160,9 @@ class QuickLinksItemViewModelSlice @Inject constructor(
 
     fun updateToShowMoreFocusPointIfNeeded(
         quickLinks: MySiteCardAndItem.Card.QuickLinksItem,
-        activeTask: QuickStartStore.QuickStartTask
+        quickStartMenuStep: QuickStartRepository.QuickStartMenuStep
     ): MySiteCardAndItem.Card.QuickLinksItem {
-        val updatedQuickLinks = if (isActiveTaskInMoreMenu(activeTask)) {
+        val updatedQuickLinks = if (isActiveTaskInMoreMenu(quickStartMenuStep.task)) {
             val quickLinkItems = quickLinks.quickLinkItems.toMutableList()
             val lastItem = quickLinkItems.last().copy(showFocusPoint = true)
             quickLinkItems.removeLast()
