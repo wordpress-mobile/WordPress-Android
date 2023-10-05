@@ -335,6 +335,13 @@
         <item name="android:layout_height">@dimen/avatar_sz_extra_small</item>
     </style>
 
+    <style name="ReaderImageView.Avatar.ExtraSmall.OvalSurfaceBackground" parent="ReaderImageView">
+        <item name="android:layout_width">@dimen/avatar_sz_extra_small_with_padding</item>
+        <item name="android:layout_height">@dimen/avatar_sz_extra_small_with_padding</item>
+        <item name="android:padding">@dimen/avatar_sz_extra_small_background_padding</item>
+        <item name="android:background">@drawable/bg_oval_surface</item>
+    </style>
+
     <style name="ReaderImageView.Avatar.ExtraExtraSmall" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/avatar_sz_extra_extra_small</item>
         <item name="android:layout_height">@dimen/avatar_sz_extra_extra_small</item>
@@ -447,5 +454,58 @@
        <item name="drawableTint">@color/on_surface_primary_selector</item>
        <item name="android:minHeight">@dimen/reader_button_minimum_height</item>
    </style>
+
+    <!-- New Post Card -->
+    <style name="ReaderTextView.Post.New" parent="ReaderTextView" />
+
+    <style name="ReaderTextView.Post.New.BlogSection" />
+
+    <style name="ReaderTextView.Post.New.BlogSection.Compact">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.BlogSection.Compact.Dateline">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.Title">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleMedium</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.Excerpt" parent="ReaderTextView">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>
+        <item name="android:lineSpacingMultiplier">1.333333</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.FooterActionItem">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/on_surface_primary_selector</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="drawableTint">@color/on_surface_primary_selector</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.Interactions">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 
 </resources>

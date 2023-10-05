@@ -2086,6 +2086,8 @@
     <string name="reader_btn_share">Share</string>
     <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_unfollow">Following</string>
+    <string name="reader_secondary_bookmark">Save</string>
+    <string name="reader_secondary_bookmarked">Saved</string>
     <string name="reader_add_bookmark">Add to saved posts</string>
     <string name="reader_remove_bookmark">Remove from saved posts</string>
     <string name="reader_bookmark_snack_btn">View All</string>

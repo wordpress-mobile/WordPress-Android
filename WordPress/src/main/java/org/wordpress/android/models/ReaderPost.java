@@ -145,11 +145,6 @@ public class ReaderPost {
         // "score" only exists for search results
         post.score = json.optDouble("score");
 
-        // if the post is untitled, make up a title from the excerpt
-        if (!post.hasTitle() && post.hasExcerpt()) {
-            post.mTitle = extractTitle(post.mExcerpt, 50);
-        }
-
         // remove html from title (rare, but does happen)
         if (post.hasTitle() && post.mTitle.contains("<") && post.mTitle.contains(">")) {
             post.mTitle = HtmlUtils.stripHtml(post.mTitle);

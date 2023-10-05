@@ -39,7 +39,6 @@ sealed class ReaderCardUiState {
         val videoOverlayVisibility: Boolean,
         val featuredImageVisibility: Boolean,
         val moreMenuVisibility: Boolean,
-        val photoFrameVisibility: Boolean,
         val bookmarkAction: PrimaryAction,
         val likeAction: PrimaryAction,
         val reblogAction: PrimaryAction,
@@ -62,6 +61,51 @@ sealed class ReaderCardUiState {
             val discoverAvatarUrl: String,
             val imageType: ImageType,
             val onDiscoverClicked: ((Long, Long) -> Unit)
+        )
+    }
+
+    data class ReaderPostNewUiState(
+        val source: String,
+        val postId: Long,
+        val blogId: Long,
+        val feedId: Long,
+        val isFollowed: Boolean,
+        val blogSection: CompactBlogSectionData,
+        val interactionSection: InteractionSectionData,
+        val title: UiString?,
+        val excerpt: String?,
+        val featuredImageUrl: String?,
+        val featuredImageCornerRadius: UiDimen,
+        val fullVideoUrl: String?,
+        val thumbnailStripSection: ReaderPostUiState.GalleryThumbnailStripData?,
+        val videoOverlayVisibility: Boolean,
+        val featuredImageVisibility: Boolean,
+        val moreMenuVisibility: Boolean,
+        val likeAction: PrimaryAction,
+        val reblogAction: PrimaryAction,
+        val commentsAction: PrimaryAction,
+        val moreMenuItems: List<ReaderPostCardAction>? = null,
+        val onItemClicked: (Long, Long) -> Unit,
+        val onItemRendered: (ReaderPostNewUiState) -> Unit,
+        val onMoreButtonClicked: (ReaderPostNewUiState) -> Unit,
+        val onMoreDismissed: (ReaderPostNewUiState) -> Unit,
+        val onVideoOverlayClicked: (Long, Long) -> Unit,
+    ) : ReaderCardUiState() {
+        data class CompactBlogSectionData(
+            val postId: Long,
+            val blogId: Long,
+            val dateLine: String,
+            val blogName: UiString,
+            val avatarOrBlavatarUrl: String?,
+            val authorAvatarUrl: String?,
+            val isAuthorAvatarVisible: Boolean,
+            val blavatarType: ImageType,
+            val onClicked: ((Long, Long) -> Unit)?,
+        )
+
+        data class InteractionSectionData(
+            val likeCount: Int,
+            val commentCount: Int,
         )
     }
 
