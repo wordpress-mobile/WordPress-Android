@@ -4,60 +4,54 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.ListPopupWindow
+import androidx.core.view.isVisible
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.databinding.ReaderCardviewPostBinding
+import org.wordpress.android.databinding.ReaderCardviewPostNewBinding
 import org.wordpress.android.datasets.ReaderThumbnailTable
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener
-import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.expandTouchTargetArea
-import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
 import org.wordpress.android.util.extensions.viewBinding
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.util.image.ImageType.PHOTO_ROUNDED_CORNERS
 import org.wordpress.android.util.image.ImageType.VIDEO
 
-class ReaderPostViewHolder(
+class ReaderPostNewViewHolder(
     private val uiHelpers: UiHelpers,
     private val imageManager: ImageManager,
     private val readerTracker: ReaderTracker,
     parentView: ViewGroup
-) : ReaderViewHolder<ReaderCardviewPostBinding>(parentView.viewBinding(ReaderCardviewPostBinding::inflate)) {
+) : ReaderViewHolder<ReaderCardviewPostNewBinding>(parentView.viewBinding(ReaderCardviewPostNewBinding::inflate)) {
     init {
         with(binding) {
-            layoutDiscover.expandTouchTargetArea(R.dimen.reader_discover_layout_extra_padding, true)
-            imageMore.expandTouchTargetArea(R.dimen.reader_more_image_extra_padding, false)
+            moreMenu.expandTouchTargetArea(R.dimen.reader_more_image_extra_padding, false)
         }
     }
 
     override fun onBind(uiState: ReaderCardUiState) = with(binding) {
-        val state = uiState as ReaderPostUiState
-
-        // Expandable tags section
-        uiHelpers.updateVisibility(expandableTagsView, state.expandableTagsViewVisibility)
-        expandableTagsView.updateUi(state.tagItems)
+        val state = uiState as ReaderPostNewUiState
 
         // Blog section
         updateBlogSection(state)
 
         // More menu
-        uiHelpers.updateVisibility(imageMore, state.moreMenuVisibility)
-        imageMore.setOnClickListener { uiState.onMoreButtonClicked.invoke(state) }
+        uiHelpers.updateVisibility(moreMenu, state.moreMenuVisibility)
+        moreMenu.setOnClickListener { uiState.onMoreButtonClicked.invoke(state) }
 
         // Featured image section
         updateFeaturedImage(state)
         uiHelpers.updateVisibility(imageVideoOverlay, state.videoOverlayVisibility)
-        uiHelpers.setTextOrHide(textPhotoTitle, state.photoTitle)
         uiHelpers.updateVisibility(thumbnailStrip, state.thumbnailStripSection != null)
         state.thumbnailStripSection?.let {
             thumbnailStrip.loadThumbnails(it.images, it.isPrivate, it.content)
@@ -79,37 +73,41 @@ class ReaderPostViewHolder(
             state.onItemClicked(uiState.postId, uiState.blogId)
         }
 
-        // Discover section
-        updateDiscoverSection(state)
+        // Interaction counts section
+        updateInteractionCountsSection(state)
 
         // Action buttons section
-        updateActionButton(uiState.postId, uiState.blogId, uiState.likeAction, countLikes)
+        updateActionButton(uiState.postId, uiState.blogId, uiState.likeAction, like)
         updateActionButton(uiState.postId, uiState.blogId, uiState.reblogAction, reblog)
-        updateActionButton(uiState.postId, uiState.blogId, uiState.commentsAction, countComments)
-        updateActionButton(uiState.postId, uiState.blogId, uiState.bookmarkAction, bookmark)
+        updateActionButton(uiState.postId, uiState.blogId, uiState.commentsAction, comment)
 
         state.moreMenuItems?.let {
-            renderMoreMenu(state, state.moreMenuItems, imageMore)
+            renderMoreMenu(state, state.moreMenuItems, moreMenu)
         }
 
         state.onItemRendered.invoke(uiState)
     }
 
-    private fun updateBlogSection(state: ReaderPostUiState) = with(binding.layoutBlogSection) {
-        updateAvatarOrBlavatar(state)
-        uiHelpers.setTextOrHide(textAuthorAndBlogName, state.blogSection.blogName)
-        uiHelpers.setTextOrHide(textBlogUrl, state.blogSection.blogUrl)
-        uiHelpers.updateVisibility(dotSeparator, state.blogSection.dotSeparatorVisibility)
-        uiHelpers.setTextOrHide(textDateline, state.blogSection.dateLine)
+    private fun updateInteractionCountsSection(state: ReaderPostNewUiState) = with(binding) {
+        val likeCount = state.interactionSection.likeCount
+        val commentCount = state.interactionSection.commentCount
 
-        root.setBackgroundResource(
-            root.context.getDrawableResIdFromAttribute(
-                state.blogSection.blogSectionClickData?.background ?: 0
-            )
-        )
-        state.blogSection.blogSectionClickData?.onBlogSectionClicked?.let {
+        val likeLabel = ReaderUtils.getShortLikeLabelText(viewContext, likeCount).takeIf { likeCount > 0 }
+        val commentLabel = ReaderUtils.getShortCommentLabelText(viewContext, commentCount).takeIf { commentCount > 0 }
+
+        uiHelpers.setTextOrHide(readerCardLikeCount, likeLabel)
+        uiHelpers.setTextOrHide(readerCardCommentCount, commentLabel)
+        readerCardDotSeparator.isVisible = likeLabel != null && commentLabel != null
+    }
+
+    private fun updateBlogSection(state: ReaderPostNewUiState) = with(binding.layoutBlogSection) {
+        updateAvatarOrBlavatar(state)
+        uiHelpers.setTextOrHide(blogSectionTextBlogName, state.blogSection.blogName)
+        uiHelpers.setTextOrHide(blogSectionTextDateline, state.blogSection.dateLine)
+
+        state.blogSection.onClicked?.let { onClicked ->
             root.setOnClickListener {
-                state.blogSection.blogSectionClickData.onBlogSectionClicked.invoke(state.postId, state.blogId)
+                onClicked.invoke(state.postId, state.blogId)
             }
         } ?: run {
             root.setOnClickListener(null)
@@ -117,7 +115,38 @@ class ReaderPostViewHolder(
         }
     }
 
-    private fun updateFeaturedImage(state: ReaderPostUiState) = with(binding) {
+    private fun updateAvatarOrBlavatar(state: ReaderPostNewUiState) = with(binding.layoutBlogSection) {
+        var isShowingAnyAvatar = false
+
+        uiHelpers.updateVisibility(blogSectionImageBlogAvatar, state.blogSection.avatarOrBlavatarUrl != null)
+        if (state.blogSection.avatarOrBlavatarUrl == null) {
+            imageManager.cancelRequestAndClearImageView(blogSectionImageBlogAvatar)
+        } else {
+            isShowingAnyAvatar = true
+            imageManager.loadIntoCircle(
+                blogSectionImageBlogAvatar,
+                state.blogSection.blavatarType, state.blogSection.avatarOrBlavatarUrl
+            )
+        }
+
+        val canShowAuthorsAvatar = state.blogSection.authorAvatarUrl != null && state.blogSection.isAuthorAvatarVisible
+        uiHelpers.updateVisibility(blogSectionImageAuthorAvatar, canShowAuthorsAvatar)
+
+        if (!canShowAuthorsAvatar) {
+            imageManager.cancelRequestAndClearImageView(blogSectionImageAuthorAvatar)
+        } else {
+            isShowingAnyAvatar = true
+            imageManager.loadIntoCircle(
+                blogSectionImageAuthorAvatar,
+                BLAVATAR_CIRCULAR,
+                state.blogSection.authorAvatarUrl!!
+            )
+        }
+
+        blogSectionAvatarContainer.isVisible = isShowingAnyAvatar
+    }
+
+    private fun updateFeaturedImage(state: ReaderPostNewUiState) = with(binding) {
         uiHelpers.updateVisibility(imageFeatured, state.featuredImageVisibility)
         if (state.featuredImageUrl == null) {
             imageManager.cancelRequestAndClearImageView(imageFeatured)
@@ -131,57 +160,14 @@ class ReaderPostViewHolder(
         }
     }
 
-    private fun updateAvatarOrBlavatar(state: ReaderPostUiState) = with(binding.layoutBlogSection) {
-        uiHelpers.updateVisibility(imageAvatarOrBlavatar, state.blogSection.avatarOrBlavatarUrl != null)
-        if (state.blogSection.avatarOrBlavatarUrl == null) {
-            imageManager.cancelRequestAndClearImageView(imageAvatarOrBlavatar)
-        } else {
-            imageManager.loadIntoCircle(
-                imageAvatarOrBlavatar,
-                state.blogSection.blavatarType, state.blogSection.avatarOrBlavatarUrl
-            )
-        }
-
-        val canShowAuthorsAvatar = state.blogSection.authorAvatarUrl != null && state.blogSection.isAuthorAvatarVisible
-        uiHelpers.updateVisibility(authorsAvatar, canShowAuthorsAvatar)
-
-        if (!canShowAuthorsAvatar) {
-            imageManager.cancelRequestAndClearImageView(authorsAvatar)
-        } else {
-            imageManager.loadIntoCircle(authorsAvatar, BLAVATAR_CIRCULAR, state.blogSection.authorAvatarUrl!!)
-        }
-    }
-
-    private fun updateDiscoverSection(state: ReaderPostUiState) = with(binding) {
-        uiHelpers.updateVisibility(imageDiscoverAvatar, state.discoverSection?.discoverAvatarUrl != null)
-        uiHelpers.updateVisibility(layoutDiscover, state.discoverSection != null)
-        uiHelpers.setTextOrHide(textDiscover, state.discoverSection?.discoverText)
-        if (state.discoverSection?.discoverAvatarUrl == null) {
-            imageManager.cancelRequestAndClearImageView(imageDiscoverAvatar)
-        } else {
-            // TODO do we need to use `imagemanager.load` for blavatar?
-            imageManager.loadIntoCircle(
-                imageDiscoverAvatar,
-                state.discoverSection.imageType,
-                state.discoverSection.discoverAvatarUrl
-            )
-        }
-        layoutDiscover.setOnClickListener {
-            state.discoverSection?.onDiscoverClicked?.invoke(state.postId, state.blogId)
-        }
-    }
-
     private fun updateActionButton(postId: Long, blogId: Long, state: PrimaryAction, view: View) {
-        if (view is ReaderIconCountView) {
-            view.setCount(state.count)
-        }
-        view.isEnabled = state.isEnabled
+        view.isVisible = state.isEnabled
         view.isSelected = state.isSelected
         view.contentDescription = state.contentDescription?.let { uiHelpers.getTextOfUiString(view.context, it) }
         view.setOnClickListener { state.onClicked?.invoke(postId, blogId, state.type) }
     }
 
-    private fun loadVideoThumbnail(state: ReaderPostUiState) = with(binding) {
+    private fun loadVideoThumbnail(state: ReaderPostNewUiState) = with(binding) {
         /* TODO ideally, we'd be passing just a thumbnail url in the UiState. However, the code for retrieving
             thumbnail from full video URL needs to be fully refactored. */
         state.fullVideoUrl?.let { videoUrl ->
@@ -206,7 +192,7 @@ class ReaderPostViewHolder(
         }
     }
 
-    private fun renderMoreMenu(uiState: ReaderPostUiState, actions: List<ReaderPostCardAction>, v: View) {
+    private fun renderMoreMenu(uiState: ReaderPostNewUiState, actions: List<ReaderPostCardAction>, v: View) {
         readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
         val listPopup = ListPopupWindow(v.context)
         listPopup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)

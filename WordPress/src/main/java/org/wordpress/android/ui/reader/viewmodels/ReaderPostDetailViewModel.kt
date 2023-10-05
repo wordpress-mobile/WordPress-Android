@@ -442,7 +442,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             findPost(it.postId, it.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
                     readerPostMoreButtonUiStateBuilder.buildMoreMenuItemsBlocking(
-                        post, this@ReaderPostDetailViewModel::onButtonClicked
+                        post, false, this@ReaderPostDetailViewModel::onButtonClicked
                     )
                 } else {
                     null

@@ -82,7 +82,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/like"
-            android:contentDescription="@string/likes_on_my_comments"
+            android:contentDescription="@string/like"
             app:drawableTopCompat="@drawable/ic_like_new_selector"
             app:layout_constraintWidth_max="80dp"
             app:layout_constraintStart_toEndOf="@id/comment"

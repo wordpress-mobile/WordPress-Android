@@ -142,6 +142,7 @@
     <dimen name="reader_xpost_avatar_margin_start">12dp</dimen>
 
     <dimen name="reader_card_gutters">6dp</dimen>
+    <dimen name="reader_card_gutters_new">1dp</dimen>
     <dimen name="reader_card_elevation">0dp</dimen>
     <dimen name="reader_site_header_avatar_margin_end">20dp</dimen>
 
@@ -189,6 +190,8 @@
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="avatar_sz_extra_large">72dp</dimen>
     <dimen name="avatar_sz_login_epilogue">72dp</dimen>
+    <dimen name="avatar_sz_extra_small_with_padding">26dp</dimen>
+    <dimen name="avatar_sz_extra_small_background_padding">1dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
     <dimen name="blavatar_sz_extra_large">72dp</dimen>
@@ -202,12 +205,15 @@
     <dimen name="reader_follow_icon">16dp</dimen>
     <dimen name="reader_follow_button_min_height">36dp</dimen>
 
+    <dimen name="reader_post_card_new_more_icon">24dp</dimen>
+
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
     <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
     <dimen name="reader_image_avatar_or_blavatar_border_width">1dp</dimen>
     <dimen name="reader_featured_image_corner_radius">4dp</dimen>
+    <dimen name="reader_featured_image_corner_radius_new">5dp</dimen>
     <dimen name="reader_image_featured_border_width">1dp</dimen>
 
     <dimen name="reader_related_post_image_width">150dp</dimen>

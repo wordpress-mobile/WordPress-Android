@@ -28,6 +28,8 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterest
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState.InteractionSectionData
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
@@ -141,7 +143,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
             excerpt = buildExcerpt(post),
             title = buildTitle(post),
             tagItems = buildTagItems(post, onTagItemClicked),
-            photoFrameVisibility = buildPhotoFrameVisibility(post),
             photoTitle = buildPhotoTitle(post),
             featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
             featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
@@ -162,6 +163,86 @@ class ReaderPostUiStateBuilder @Inject constructor(
             onMoreButtonClicked = onMoreButtonClicked,
             onMoreDismissed = onMoreDismissed,
             onVideoOverlayClicked = onVideoOverlayClicked
+        )
+    }
+
+    @Suppress("LongParameterList")
+    suspend fun mapPostToNewUiState(
+        source: String,
+        post: ReaderPost,
+        photonWidth: Int,
+        photonHeight: Int,
+        postListType: ReaderPostListType,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
+        onItemClicked: (Long, Long) -> Unit,
+        onItemRendered: (ReaderCardUiState) -> Unit,
+        onMoreButtonClicked: (ReaderPostNewUiState) -> Unit,
+        onMoreDismissed: (ReaderPostNewUiState) -> Unit,
+        onVideoOverlayClicked: (Long, Long) -> Unit,
+        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        moreMenuItems: List<SecondaryAction>? = null,
+    ): ReaderPostNewUiState {
+        return withContext(bgDispatcher) {
+            mapPostToNewUiStateBlocking(
+                source,
+                post,
+                photonWidth,
+                photonHeight,
+                postListType,
+                onButtonClicked,
+                onItemClicked,
+                onItemRendered,
+                onMoreButtonClicked,
+                onMoreDismissed,
+                onVideoOverlayClicked,
+                onPostHeaderViewClicked,
+                moreMenuItems,
+            )
+        }
+    }
+
+    @Suppress("LongParameterList")
+    fun mapPostToNewUiStateBlocking(
+        source: String,
+        post: ReaderPost,
+        photonWidth: Int,
+        photonHeight: Int,
+        postListType: ReaderPostListType,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
+        onItemClicked: (Long, Long) -> Unit,
+        onItemRendered: (ReaderCardUiState) -> Unit,
+        onMoreButtonClicked: (ReaderPostNewUiState) -> Unit,
+        onMoreDismissed: (ReaderPostNewUiState) -> Unit,
+        onVideoOverlayClicked: (Long, Long) -> Unit,
+        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        moreMenuItems: List<ReaderPostCardAction>? = null,
+    ): ReaderPostNewUiState {
+        return ReaderPostNewUiState(
+            source = source,
+            postId = post.postId,
+            blogId = post.blogId,
+            feedId = post.feedId,
+            isFollowed = post.isFollowedByCurrentUser,
+            blogSection = buildCompactBlogSection(post, postListType, onPostHeaderViewClicked, post.isP2orA8C),
+            interactionSection = buildInteractionSection(post),
+            title = buildTitle(post, forceForPhoto = true, allowEmptyTitle = true),
+            excerpt = buildExcerpt(post, forceForPhoto = true),
+            featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
+            featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius_new),
+            fullVideoUrl = buildFullVideoUrl(post),
+            thumbnailStripSection = buildThumbnailStripUrls(post),
+            videoOverlayVisibility = buildVideoOverlayVisibility(post),
+            featuredImageVisibility = buildFeaturedImageVisibility(post),
+            moreMenuVisibility = accountStore.hasAccessToken(),
+            likeAction = buildLikeSection(post, onButtonClicked, isReaderImprovementsEnabled = true),
+            reblogAction = buildReblogSection(post, onButtonClicked),
+            commentsAction = buildCommentsSection(post, onButtonClicked),
+            moreMenuItems = moreMenuItems,
+            onItemClicked = onItemClicked,
+            onItemRendered = onItemRendered,
+            onMoreButtonClicked = onMoreButtonClicked,
+            onMoreDismissed = onMoreDismissed,
+            onVideoOverlayClicked = onVideoOverlayClicked,
         )
     }
 
@@ -233,14 +314,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
         postListType: ReaderPostListType? = null,
         isP2Post: Boolean = false,
         isReaderImprovementsEnabled: Boolean = false,
-    ) = buildBlogSectionUiState(post, onBlogSectionClicked, postListType, isP2Post, isReaderImprovementsEnabled)
-
-    private fun buildBlogSectionUiState(
-        post: ReaderPost,
-        onBlogSectionClicked: (Long, Long) -> Unit,
-        postListType: ReaderPostListType?,
-        isP2Post: Boolean = false,
-        isReaderImprovementsEnabled: Boolean = false,
     ): ReaderBlogSectionUiState {
         return ReaderBlogSectionUiState(
             postId = post.postId,
@@ -259,6 +332,28 @@ class ReaderPostUiStateBuilder @Inject constructor(
         )
     }
 
+    private fun buildCompactBlogSection(
+        post: ReaderPost,
+        postListType: ReaderPostListType,
+        onBlogSectionClicked: (Long, Long) -> Unit,
+        isP2Post: Boolean = false,
+    ): ReaderPostNewUiState.CompactBlogSectionData {
+        return ReaderPostNewUiState.CompactBlogSectionData(
+            postId = post.postId,
+            blogId = post.blogId,
+            blogName = buildBlogName(post, isP2Post),
+            dateLine = buildDateLine(post),
+            avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
+            isAuthorAvatarVisible = isP2Post,
+            blavatarType = SiteUtils.getSiteImageType(isP2Post, CIRCULAR),
+            authorAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
+                post.postAvatar,
+                R.dimen.avatar_sz_medium
+            ),
+            onClicked = onBlogSectionClicked.takeIf { postListType != ReaderPostListType.BLOG_PREVIEW },
+        )
+    }
+
     private fun buildOnBlogSectionClicked(
         onBlogSectionClicked: (Long, Long) -> Unit,
         postListType: ReaderPostListType?
@@ -269,6 +364,13 @@ class ReaderPostUiStateBuilder @Inject constructor(
             null
         }
     }
+
+    private fun buildInteractionSection(
+        post: ReaderPost
+    ): InteractionSectionData = InteractionSectionData(
+        likeCount = post.numLikes,
+        commentCount = post.numReplies,
+    )
 
     private fun buildBlogUrl(post: ReaderPost) = post
         .takeIf { it.hasBlogUrl() }
@@ -309,23 +411,21 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildPhotoTitle(post: ReaderPost) =
         post.takeIf { it.cardType == PHOTO && it.hasTitle() }?.title
 
-    private fun buildPhotoFrameVisibility(post: ReaderPost) =
-        (post.hasFeaturedVideo() || post.hasFeaturedImage()) &&
-                post.cardType != GALLERY
-
-    // TODO malinjir show title only when buildPhotoTitle == null
-    private fun buildTitle(post: ReaderPost): UiString? {
-        return if (post.cardType != PHOTO) {
+    private fun buildTitle(
+        post: ReaderPost,
+        forceForPhoto: Boolean = false,
+        allowEmptyTitle: Boolean = false
+    ): UiString? {
+        return if (post.cardType != PHOTO || forceForPhoto) {
             post.takeIf { it.hasTitle() }?.title?.let { UiStringText(it) }
-                ?: UiStringRes(R.string.untitled_in_parentheses)
+                ?: UiStringRes(R.string.untitled_in_parentheses).takeUnless { allowEmptyTitle }
         } else {
             null
         }
     }
 
-    // TODO malinjir show excerpt only when buildPhotoTitle == null
-    private fun buildExcerpt(post: ReaderPost) =
-        post.takeIf { post.cardType != PHOTO && post.hasExcerpt() }?.excerpt
+    private fun buildExcerpt(post: ReaderPost, forceForPhoto: Boolean = false) =
+        post.takeIf { (post.cardType != PHOTO || forceForPhoto) && post.hasExcerpt() }?.excerpt
 
     private fun buildBlogName(post: ReaderPost, isP2Post: Boolean = false): UiString {
         val blogName = post.takeIf { it.hasBlogName() }?.blogName?.let { UiStringText(it) }
@@ -404,16 +504,21 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     private fun buildLikeSection(
         post: ReaderPost,
-        onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
+        onClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
+        isReaderImprovementsEnabled: Boolean = false,
     ): PrimaryAction {
         val likesEnabled = post.canLikePost() && accountStore.hasAccessToken()
+
+        val contentDescription = if (isReaderImprovementsEnabled) {
+            UiStringRes(R.string.reader_label_like)
+        } else {
+            UiStringText(readerUtilsWrapper.getLongLikeLabelText(post.numLikes, post.isLikedByCurrentUser))
+        }
 
         return PrimaryAction(
             isEnabled = likesEnabled,
             isSelected = post.isLikedByCurrentUser,
-            contentDescription = UiStringText(
-                readerUtilsWrapper.getLongLikeLabelText(post.numLikes, post.isLikedByCurrentUser)
-            ),
+            contentDescription = contentDescription,
             count = post.numLikes,
             onClicked = if (likesEnabled) onClicked else null,
             type = LIKE
