@@ -415,6 +415,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(personalizeCardBuilder.build(any())).thenReturn(mock())
         whenever(bloggingPromptCardViewModelSlice.getBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(quickLinksItemViewModelSlice.uiState).thenReturn(mock())
+        whenever(quickStartRepository.quickStartMenuStep).thenReturn(mock())
 
         viewModel = MySiteViewModel(
             testDispatcher(),
