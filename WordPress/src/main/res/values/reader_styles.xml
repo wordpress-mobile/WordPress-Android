@@ -411,6 +411,12 @@
         <item name="chipStrokeWidth">@dimen/reader_expandable_tags_view_chip_new_border</item>
     </style>
 
+    <style name="ReaderExpandableTagsViewChipInterestNew" parent="@style/ReaderExpandableTagsViewChipNew">
+        <item name="android:textColor">@color/material_on_background_emphasis_high_type</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="chipBackgroundColor">@color/reader_you_might_like_background</item>
+    </style>
+
     <!-- Post Details -->
     <style name="ReaderTextView.PostDetail" />
 
