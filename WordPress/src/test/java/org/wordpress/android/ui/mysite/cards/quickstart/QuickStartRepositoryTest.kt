@@ -59,7 +59,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     lateinit var eventBus: EventBusWrapper
 
     @Mock
-    lateinit var htmlCompat: HtmlCompatWrapper
+    lateinit var htmlCompatWrapper: HtmlCompatWrapper
 
     @Mock
     lateinit var contextProvider: ContextProvider
@@ -79,6 +79,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var quickStartPrompts: MutableList<QuickStartMySitePrompts>
+    private lateinit var quickStartMenuStep: MutableList<QuickStartRepository.QuickStartMenuStep>
     private val siteLocalId = 1
 
     @Before
@@ -93,19 +94,23 @@ class QuickStartRepositoryTest : BaseUnitTest() {
             resourceProvider,
             dispatcher,
             eventBus,
-            htmlCompat,
+            htmlCompatWrapper,
             contextProvider,
             htmlMessageUtils,
             quickStartTracker
         )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
+        quickStartMenuStep = mutableListOf()
         quickStartRepository.onSnackbar.observeForever { event ->
             event?.getContentIfNotHandled()
                 ?.let { snackbars.add(it) }
         }
         quickStartRepository.onQuickStartMySitePrompts.observeForever { event ->
             event?.getContentIfNotHandled()?.let { quickStartPrompts.add(it) }
+        }
+        quickStartRepository.quickStartMenuStep.observeForever { event ->
+            quickStartMenuStep.add(event!!)
         }
         site = SiteModel()
         site.id = siteLocalId
@@ -161,15 +166,24 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     /* QUICK START REQUEST NEXT STEP */
-
+// todo: annmarie
     @Test
     fun `requestNextStepOfTask emits quick start event`() = test {
         initQuickStartInProgress()
 
-        quickStartRepository.setActiveTask(QuickStartNewSiteTask.ENABLE_POST_SHARING)
-        quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.ENABLE_POST_SHARING)
+        quickStartRepository.setActiveTask(QuickStartNewSiteTask.FOLLOW_SITE)
+        quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.FOLLOW_SITE)
 
-        verify(eventBus).postSticky(QuickStartEvent(QuickStartNewSiteTask.ENABLE_POST_SHARING))
+        verify(eventBus).postSticky(QuickStartEvent(QuickStartNewSiteTask.FOLLOW_SITE))
+    }
+
+    @Test
+    fun `given more menu task, when setActiveTask invoked, then quick start menu step is posted`() = test {
+        initQuickStartInProgress()
+
+        quickStartRepository.setActiveTask(QuickStartNewSiteTask.ENABLE_POST_SHARING)
+
+        assertThat(quickStartMenuStep.last()).isInstanceOf(QuickStartRepository.QuickStartMenuStep::class.java)
     }
 
     /* QUICK START REMINDER NOTIFICATION */
@@ -270,5 +284,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(quickStartType, siteLocalId.toLong()))
             .thenReturn(nextUncompletedTask)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormat(anyOrNull())).thenReturn("")
+        whenever(resourceProvider.getString(any())).thenReturn("")
+        whenever(resourceProvider.getString(any(), any())).thenReturn("")
+        whenever(htmlCompatWrapper.fromHtml(any(), any())).thenReturn(" ")
     }
 }
