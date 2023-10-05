@@ -32,6 +32,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.plans.PlanModel
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
@@ -59,6 +60,7 @@ data class SiteCreationState(
     val segmentId: Long? = null,
     val siteDesign: String? = null,
     val domain: DomainModel? = null,
+    val plan: PlanModel? = null,
     val result: SiteCreationResult = NotCreated,
 ) : WizardState, Parcelable
 
