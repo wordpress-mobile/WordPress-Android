@@ -13,10 +13,12 @@ import org.wordpress.android.fluxc.action.TransactionAction
 import org.wordpress.android.fluxc.generated.TransactionActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.CREATE_SHOPPING_CART_RESPONSE
+import org.wordpress.android.fluxc.network.rest.wpcom.transactions.CREATE_SHOPPING_CART_WITH_PLAN_RESPONSE
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.DOMAIN_CONTACT_INFORMATION
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.SUPPORTED_COUNTRIES_MODEL
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient
 import org.wordpress.android.fluxc.store.TransactionsStore.CreateShoppingCartPayload
+import org.wordpress.android.fluxc.store.TransactionsStore.CreateShoppingCartWithDomainAndPlanPayload
 import org.wordpress.android.fluxc.store.TransactionsStore.CreatedShoppingCartPayload
 import org.wordpress.android.fluxc.store.TransactionsStore.FetchedSupportedCountriesPayload
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartPayload
@@ -34,6 +36,7 @@ class TransactionsStoreTest {
     companion object {
         private const val TEST_DOMAIN_NAME = "superraredomainname156726.blog"
         private const val TEST_DOMAIN_PRODUCT_ID = 76
+        private const val TEST_PLAN_PRODUCT_ID = 1009
     }
 
     @Before
@@ -58,13 +61,13 @@ class TransactionsStoreTest {
     }
 
     @Test
-    fun createShoppingCart() = test {
+    fun createShoppingCartWithDomain() = test {
         whenever(
                 transactionsRestClient.createShoppingCart(
                         siteModel,
                         TEST_DOMAIN_PRODUCT_ID,
                         TEST_DOMAIN_NAME,
-                        isPrivacyProtectionEnabled = true,
+                        isDomainPrivacyProtectionEnabled = true,
                         isTemporary = true
                 )
         ).thenReturn(
@@ -93,6 +96,50 @@ class TransactionsStoreTest {
         )
 
         val expectedEvent = TransactionsStore.OnShoppingCartCreated(CREATE_SHOPPING_CART_RESPONSE)
+        verify(dispatcher).emitChange(eq(expectedEvent))
+    }
+
+    @Test
+    fun createShoppingCartWithDomainAndPlan() = test {
+        whenever(
+            transactionsRestClient.createShoppingCart(
+                siteModel,
+                TEST_DOMAIN_PRODUCT_ID,
+                TEST_DOMAIN_NAME,
+                isDomainPrivacyProtectionEnabled = true,
+                isTemporary = true,
+                planProductId = TEST_PLAN_PRODUCT_ID
+            )
+        ).thenReturn(
+            CreatedShoppingCartPayload(
+                CREATE_SHOPPING_CART_WITH_PLAN_RESPONSE
+            )
+        )
+
+        val payload = CreateShoppingCartWithDomainAndPlanPayload(
+            site = siteModel,
+            domainProductId = TEST_DOMAIN_PRODUCT_ID,
+            domainName = TEST_DOMAIN_NAME,
+            isDomainPrivacyEnabled = true,
+            planProductId = TEST_PLAN_PRODUCT_ID,
+            isTemporary = true
+        )
+
+        val action = TransactionActionBuilder.newCreateShoppingCartWithDomainAndPlanAction(payload)
+        transactionsStore.onAction(action)
+
+        verify(transactionsRestClient).createShoppingCart(
+            site = payload.site,
+            domainProductId = payload.domainProductId,
+            domainName = payload.domainName,
+            isDomainPrivacyProtectionEnabled = payload.isDomainPrivacyEnabled,
+            isTemporary = payload.isTemporary,
+            planProductId = payload.planProductId
+        )
+
+        val expectedEvent = TransactionsStore.OnShoppingCartCreated(
+            CREATE_SHOPPING_CART_WITH_PLAN_RESPONSE
+        )
         verify(dispatcher).emitChange(eq(expectedEvent))
     }
 
