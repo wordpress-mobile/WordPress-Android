@@ -2,5 +2,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <corners android:radius="5dp" />
-    <solid android:color="@color/white_default_light_grey_selected_selector" />
+    <solid android:color="@color/reader_follow_button" />
 </shape>
