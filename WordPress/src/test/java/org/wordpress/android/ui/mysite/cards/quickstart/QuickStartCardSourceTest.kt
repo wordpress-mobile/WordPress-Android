@@ -208,8 +208,8 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     fun `requestNextStepOfTask clears current active task`() = test {
         initQuickStartInProgress()
 
-        quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
-        quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
+        quickStartRepository.setActiveTask(QuickStartStore.QuickStartNewSiteTask.FOLLOW_SITE)
+        quickStartRepository.requestNextStepOfTask(QuickStartStore.QuickStartNewSiteTask.FOLLOW_SITE)
 
         val update = result.last()
         assertThat(update.activeTask).isNull()
@@ -342,6 +342,9 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(quickStartType, siteLocalId.toLong()))
             .thenReturn(nextUncompletedTask)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormat(anyOrNull())).thenReturn("")
+        whenever(resourceProvider.getString(any())).thenReturn("")
+        whenever(resourceProvider.getString(any(), any())).thenReturn("")
+        whenever(htmlCompat.fromHtml(any(), any())).thenReturn(" ")
         initBuild()
     }
 
