@@ -35,7 +35,7 @@ FASTLANE_FOLDER = File.join(PROJECT_ROOT_FOLDER, 'fastlane')
 VERSION_PROPERTIES_PATH = File.join(PROJECT_ROOT_FOLDER, 'version.properties')
 
 # Instanstiate versioning classes
-VERSION_CALCULATOR = Fastlane::Wpmreleasetoolkit::Versioning::DateVersionCalculator.new
+VERSION_CALCULATOR = Fastlane::Wpmreleasetoolkit::Versioning::MarketingVersionCalculator.new
 VERSION_FORMATTER = Fastlane::Wpmreleasetoolkit::Versioning::RCNotationVersionFormatter.new
 BUILD_CODE_CALCULATOR = Fastlane::Wpmreleasetoolkit::Versioning::SimpleBuildCodeCalculator.new
 BUILD_CODE_FORMATTER = Fastlane::Wpmreleasetoolkit::Versioning::SimpleBuildCodeFormatter.new
