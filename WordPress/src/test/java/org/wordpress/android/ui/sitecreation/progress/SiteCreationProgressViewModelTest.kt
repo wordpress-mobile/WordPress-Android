@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.nullable
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argThat
@@ -168,7 +169,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
         startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
         viewModel.retry()
-        verify(createCartUseCase, times(2)).execute(any(), any(), any(), any(), eq(false))
+        verify(createCartUseCase, times(2)).execute(any(), any(), any(), any(), eq(false), nullable(Int::class.java))
     }
 
     @Test
@@ -205,6 +206,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
             eq(PAID_DOMAIN.domainName),
             eq(PAID_DOMAIN.supportsPrivacy),
             any(),
+            nullable(Int::class.java)
         )
     }
 
@@ -248,7 +250,8 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
             eq(PAID_DOMAIN.productId),
             eq(PAID_DOMAIN.domainName),
             eq(PAID_DOMAIN.supportsPrivacy),
-            any()
+            any(),
+            nullable(Int::class.java)
         )
     }
 
@@ -288,7 +291,16 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
 
     // region Helpers
     private fun testWith(response: OnShoppingCartCreated, block: suspend CoroutineScope.() -> Unit) = test {
-        whenever(createCartUseCase.execute(any(), any(), any(), any(), any())).thenReturn(response)
+        whenever(
+            createCartUseCase.execute(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                nullable(Int::class.java)
+            )
+        ).thenReturn(response)
         block()
     }
 
