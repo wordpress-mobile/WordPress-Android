@@ -166,7 +166,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     /* QUICK START REQUEST NEXT STEP */
-// todo: annmarie
     @Test
     fun `requestNextStepOfTask emits quick start event`() = test {
         initQuickStartInProgress()
