@@ -3418,6 +3418,7 @@
     <string name="notification_new_site_creation_title">Create Site</string>
     <string name="notification_new_site_creation_failed">There was a problem</string>
     <string name="notification_new_site_creation_creating_site_subtitle">We\'re creating your new site</string>
+    <string name="site_creation_plans_selection_title">Select a plan</string>
 
     <!-- Site Creation : Domains - Updated designs -->
     <string name="site_creation_domain_header_subtitle">Search for a short and memorable domain to help people find and visit your site.</string>
