@@ -166,8 +166,6 @@ public class AppPrefs {
         // Used to delete recommended tags saved as followed tags in tbl_tags
         // Need to be done just once for a logged out user
         READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER,
-
-        READER_DISCOVER_WELCOME_BANNER_SHOWN,
         MANUAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
@@ -1279,14 +1277,6 @@ public class AppPrefs {
 
     public static void setReaderRecommendedTagsDeletedForLoggedOutUser(boolean deleted) {
         setBoolean(DeletablePrefKey.READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER, deleted);
-    }
-
-    public static boolean getReaderDiscoverWelcomeBannerShown() {
-        return getBoolean(DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN, false);
-    }
-
-    public static void setReaderDiscoverWelcomeBannerShown(boolean shown) {
-        setBoolean(DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN, shown);
     }
 
     public static void setShouldShowStoriesIntro(boolean shouldShow) {

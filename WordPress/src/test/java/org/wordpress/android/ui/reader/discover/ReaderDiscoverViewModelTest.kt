@@ -27,17 +27,14 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
-import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.RequestFailedUiState
@@ -130,9 +127,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     private lateinit var readerTracker: ReaderTracker
 
     @Mock
-    private lateinit var appPrefsWrapper: AppPrefsWrapper
-
-    @Mock
     private lateinit var displayUtilsWrapper: DisplayUtilsWrapper
 
     @Mock
@@ -159,7 +153,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
             readerDiscoverDataProvider,
             reblogUseCase,
             readerUtilsWrapper,
-            appPrefsWrapper,
             readerTracker,
             displayUtilsWrapper,
             getFollowedTagsUseCase,
@@ -378,32 +371,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         // Assert
         val contentUiState = uiStates[1] as ContentUiState
         assertThat(contentUiState.cards.first()).isInstanceOf(ReaderPostNewUiState::class.java)
-    }
-
-    @Test
-    fun `if welcome card exists then ReaderWelcomeBannerCardUiState will be present`() = test {
-        // Arrange
-        val uiStates = init(autoUpdateFeed = false).uiStates
-        // Act
-        fakeDiscoverFeed.value = ReaderDiscoverCards(
-            createWelcomeBannerCard()
-                .plus(createDummyReaderPostCardList())
-        )
-        // Assert
-        val contentUiState = uiStates[1] as ContentUiState
-        assertThat(contentUiState.cards.first()).isInstanceOf(ReaderWelcomeBannerCardUiState::class.java)
-    }
-
-    @Test
-    fun `WelcomeBannerCard has welcome title set to it`() = test {
-        // Arrange
-        val uiStates = init(autoUpdateFeed = false).uiStates
-        // Act
-        fakeDiscoverFeed.value = ReaderDiscoverCards(createWelcomeBannerCard().plus(createDummyReaderPostCardList()))
-        // Assert
-        val contentUiState = uiStates[1] as ContentUiState
-        val welcomeBannerCardUiState = contentUiState.cards.first() as ReaderWelcomeBannerCardUiState
-        assertThat(welcomeBannerCardUiState.titleRes).isEqualTo(R.string.reader_welcome_banner)
     }
 
     @Test
@@ -903,7 +870,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     }
 
     private fun createInterestsYouMayLikeCardList() = listOf(InterestsYouMayLikeCard(createReaderTagList()))
-    private fun createWelcomeBannerCard() = listOf(WelcomeBannerCard)
     private fun createReaderRecommendedBlogsCardList(): List<ReaderRecommendedBlogsCard> {
         return listOf(ReaderRecommendedBlogsCard(createRecommendedBlogsList()))
     }

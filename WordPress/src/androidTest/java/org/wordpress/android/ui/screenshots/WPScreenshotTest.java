@@ -151,10 +151,6 @@ public class WPScreenshotTest extends BaseTest {
         waitForElementToBeDisplayedWithoutFailure(R.id.interests_fragment_container);
 
         idleFor(2000);
-        if (isElementDisplayed(R.id.welcome_banner_wrapper)) {
-            swipeDownOnView(R.id.welcome_banner_wrapper, 2);
-            idleFor(4000);
-        }
 
         swipeUpOnView(R.id.interests_fragment_container, (float) 1.15);
 
