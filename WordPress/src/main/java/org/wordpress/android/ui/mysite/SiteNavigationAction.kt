@@ -10,6 +10,7 @@ import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
+import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.UriWrapper
 
@@ -39,7 +40,7 @@ sealed class SiteNavigationAction {
     data class OpenThemes(val site: SiteModel) : SiteNavigationAction()
     data class OpenPlugins(val site: SiteModel) : SiteNavigationAction()
     data class OpenMedia(val site: SiteModel) : SiteNavigationAction()
-    data class OpenMore(val site:SiteModel) : SiteNavigationAction()
+    data class OpenMore(val site:SiteModel, val quickStartEvent: QuickStartEvent?) : SiteNavigationAction()
     data class OpenUnifiedComments(val site: SiteModel) : SiteNavigationAction()
     object StartWPComLoginForJetpackStats : SiteNavigationAction()
     data class OpenStats(val site: SiteModel) : SiteNavigationAction()
