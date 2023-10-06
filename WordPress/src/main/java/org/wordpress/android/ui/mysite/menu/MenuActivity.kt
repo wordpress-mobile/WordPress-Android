@@ -57,9 +57,15 @@ import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.util.QuickStartUtilsWrapper
+import org.wordpress.android.util.SnackbarItem
+import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.extensions.getParcelableExtraCompat
 import javax.inject.Inject
 
 const val KEY_QUICK_START_EVENT = "key_quick_start_event"
@@ -67,6 +73,13 @@ const val KEY_QUICK_START_EVENT = "key_quick_start_event"
 class MenuActivity : AppCompatActivity() {
     @Inject
     lateinit var activityNavigator: ActivityNavigator
+
+    @Inject
+    lateinit var snackbarSequencer: SnackbarSequencer
+
+    @Inject
+    lateinit var quickStartUtils: QuickStartUtilsWrapper
+
     private val viewModel: MenuViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +93,7 @@ class MenuActivity : AppCompatActivity() {
                     locale = LocaleManager.languageLocale(userLanguage),
                     onLocaleChange = viewModel::setAppLanguage
                 ) {
-                    viewModel.start()
+                    viewModel.start(intent.getParcelableExtraCompat(KEY_QUICK_START_EVENT))
                     MenuScreen()
                 }
             }
@@ -89,8 +102,9 @@ class MenuActivity : AppCompatActivity() {
 
     private fun initObservers() {
         viewModel.navigation.observe(this) { handleNavigationAction(it.getContentIfNotHandled()) }
+        viewModel.onSnackbarMessage.observe(this) { showSnackbar(it.getContentIfNotHandled()) }
+        viewModel.onQuickStartMySitePrompts.observe(this) { handleActiveTutorialPrompt(it.getContentIfNotHandled()) }
     }
-
 
     @Suppress("ComplexMethod", "LongMethod")
     private fun handleNavigationAction(action: SiteNavigationAction?) {
@@ -121,6 +135,45 @@ class MenuActivity : AppCompatActivity() {
             )
             else -> {}
         }
+    }
+
+    private fun showSnackbar(holder: SnackbarMessageHolder?) {
+        holder?.let {
+            snackbarSequencer.enqueue(
+                SnackbarItem(
+                    info = SnackbarItem.Info(
+                        view = parent.findViewById(R.id.coordinator),
+                        textRes = holder.message,
+                        duration = holder.duration,
+                        isImportant = holder.isImportant
+                    ),
+                    action = holder.buttonTitle?.let {
+                        SnackbarItem.Action(
+                            textRes = holder.buttonTitle,
+                            clickListener = { holder.buttonAction() }
+                        )
+                    },
+                    dismissCallback = { _, event -> holder.onDismissAction(event) }
+                )
+            )
+        }
+    }
+
+    private fun handleActiveTutorialPrompt(activeTutorialPrompt: QuickStartMySitePrompts?) {
+        activeTutorialPrompt?.let {
+            val message = quickStartUtils.stylizeQuickStartPrompt(
+                this,
+                activeTutorialPrompt.shortMessagePrompt,
+                activeTutorialPrompt.iconId
+            )
+
+            showSnackbar(SnackbarMessageHolder(UiString.UiStringText(message)))
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
     }
 
     @Composable
