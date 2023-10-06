@@ -191,7 +191,8 @@
     <dimen name="avatar_sz_extra_large">72dp</dimen>
     <dimen name="avatar_sz_login_epilogue">72dp</dimen>
     <dimen name="avatar_sz_extra_small_with_padding">26dp</dimen>
-    <dimen name="avatar_sz_extra_small_background_padding">1dp</dimen>
+    <dimen name="avatar_sz_extra_extra_small_with_padding">22dp</dimen>
+    <dimen name="avatar_sz_background_padding">1dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
     <dimen name="blavatar_sz_extra_large">72dp</dimen>

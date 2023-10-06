@@ -10,17 +10,19 @@
         android:id="@+id/blog_section_image_blog_avatar"
         style="@style/ReaderImageView.Avatar"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:background="@drawable/bg_oval_placeholder"
+        android:background="@drawable/bg_oval_surface"
+        android:padding="@dimen/avatar_sz_background_padding"
         android:importantForAccessibility="no"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/blog_section_text_blog_name"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        tools:src="@drawable/ic_blaze_overlay_image"
         tools:ignore="RtlSymmetry" />
 
     <ImageView
         android:id="@+id/blog_section_image_author_avatar"
-        style="@style/ReaderImageView.Avatar.ExtraExtraSmall"
+        style="@style/ReaderImageView.Avatar.ExtraExtraSmall.OvalSurfaceBackground"
         android:importantForAccessibility="no"
         app:layout_constraintEnd_toEndOf="@id/blog_section_image_blog_avatar"
         app:layout_constraintBottom_toBottomOf="@id/blog_section_image_blog_avatar"
