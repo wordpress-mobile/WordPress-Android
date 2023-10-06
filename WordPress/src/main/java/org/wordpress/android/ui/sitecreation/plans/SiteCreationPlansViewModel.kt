@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
@@ -33,7 +34,10 @@ class SiteCreationPlansViewModel @Inject constructor(
     private val _actionEvents = Channel<SiteCreationPlansActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
-    fun start() {
+    private lateinit var domainName: String
+
+    fun start(siteCreationState: SiteCreationState) {
+        domainName = requireNotNull(siteCreationState.domain).domainName
         showPlans()
     }
 
@@ -95,11 +99,12 @@ class SiteCreationPlansViewModel @Inject constructor(
         }.toString()
 
 
-        // https://container-focused-fermi.calypso.live/plans/domainspurchases.wordpress.com
 //        return Uri.Builder().apply {
 //            scheme("https")
-//            authority("container-amazing-stonebraker.calypso.live")
+//            authority("container-jolly-cerf.calypso.live")
 //            appendPath("jetpack-app-plans")
+//            appendQueryParameter(PAID_DOMAIN_NAME, domainName)
+//            appendQueryParameter(REDIRECT_TO, REDIRECT_SCHEME)
 //            build()
 //        }.toString()
     }
@@ -127,8 +132,7 @@ class SiteCreationPlansViewModel @Inject constructor(
         }
         return WPWebViewActivity.getAuthenticationPostData(
             WPCOM_LOGIN_URL,
-//            "https://container-amazing-stonebraker.calypso.live/jetpack-app-plans",
-            addressToLoad,
+            url, // addressToLoad,
             username,
             "",
             accessToken?:""
@@ -168,7 +172,8 @@ class SiteCreationPlansViewModel @Inject constructor(
 
         const val WP_HOST = "https://wordpress.com"
         const val PLANS_PATH = "plans" // "jetpack-app-plans"
-        const val REDIRECT_TO = "jetpackapp://"
+        const val REDIRECT_TO = "redirect_to"
+        const val REDIRECT_SCHEME = "jetpackapp://"
         const val PAID_DOMAIN_NAME = "paid_domain_name"
         const val PLANS_FREQUENCY_PATH = "yearly" // not required
         const val PLANS_JETPACK_APP = "jetpackAppPlans" // not required

@@ -46,8 +46,10 @@ import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
-import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment.Companion.EXTRA_SCREEN_TITLE
+import org.wordpress.android.ui.sitecreation.SiteCreationActivity.Companion.ARG_STATE
+import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.plans.SiteCreationPlansWebViewClient.SiteCreationPlansWebViewClientListener
+import org.wordpress.android.util.extensions.getParcelableCompat
 
 @AndroidEntryPoint
 class SiteCreationPlansFragment : Fragment(), SiteCreationPlansWebViewClientListener {
@@ -68,7 +70,8 @@ class SiteCreationPlansFragment : Fragment(), SiteCreationPlansWebViewClientList
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.start()
+
+        viewModel.start(requireNotNull(requireArguments().getParcelableCompat(ARG_STATE)))
         viewModel.actionEvents.onEach(this::handleActionEvents).launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
@@ -201,9 +204,10 @@ class SiteCreationPlansFragment : Fragment(), SiteCreationPlansWebViewClientList
 
     companion object {
         const val TAG = "site_creation_plans_fragment_tag"
-        fun newInstance(screenTitle: String) = SiteCreationPlansFragment().apply {
+
+        fun newInstance(siteCreationState: SiteCreationState) = SiteCreationPlansFragment().apply {
             arguments = Bundle().apply {
-                putString(EXTRA_SCREEN_TITLE, screenTitle)
+                putParcelable(ARG_STATE, siteCreationState)
             }
         }
     }

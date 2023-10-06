@@ -237,7 +237,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
                 HomePagePickerFragment.newInstance(target.wizardState.siteIntent)
             }
             DOMAINS -> SiteCreationDomainsFragment.newInstance(screenTitle)
-            PLANS -> SiteCreationPlansFragment.newInstance(screenTitle)
+            PLANS -> SiteCreationPlansFragment.newInstance(target.wizardState)
             PROGRESS -> SiteCreationProgressFragment.newInstance(target.wizardState)
             SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState)
         }
