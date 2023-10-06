@@ -103,10 +103,6 @@
         ReaderFollowButton attributes
     -->
     <declare-styleable name="ReaderFollowButton">
-        <attr name="wpReaderFollowButtonType" format="enum">
-            <enum name="followSite" value="0" />
-            <enum name="followComments" value="1" />
-        </attr>
         <attr name="wpShowFollowButtonCaption" format="boolean" />
     </declare-styleable>
 

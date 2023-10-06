@@ -277,8 +277,8 @@
     </style>
 
     <style name="Reader.Follow.Button.New" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:textColor">@color/default_white_selected_black_selector</item>
-        <item name="android:background">@drawable/reader_follow_button_effect_light</item>
+        <item name="android:textColor">@color/reader_follow_button_text_color_selector</item>
+        <item name="android:background">@drawable/reader_follow_button_effect</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:paddingStart">@dimen/margin_extra_medium_large</item>
         <item name="android:paddingEnd">@dimen/margin_extra_medium_large</item>
@@ -411,6 +411,12 @@
         <item name="chipStrokeWidth">@dimen/reader_expandable_tags_view_chip_new_border</item>
     </style>
 
+    <style name="ReaderExpandableTagsViewChipInterestNew" parent="@style/ReaderExpandableTagsViewChipNew">
+        <item name="android:textColor">@color/material_on_background_emphasis_high_type</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="chipBackgroundColor">@color/reader_you_might_like_background</item>
+    </style>
+
     <!-- Post Details -->
     <style name="ReaderTextView.PostDetail" />
 
@@ -506,6 +512,14 @@
         <item name="android:textAlignment">viewStart</item>
         <item name="android:lines">1</item>
         <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.Removed.Title" parent="ReaderTextView">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleMedium</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="ReaderTextView.Post.New.XPost.Subtitle" parent="ReaderTextView.Post.New">
