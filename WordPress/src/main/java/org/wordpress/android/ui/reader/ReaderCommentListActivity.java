@@ -115,7 +115,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
     private long mPostId;
     private long mBlogId;
-    private ReaderPost mPost;
+    @Nullable private ReaderPost mPost;
     private ReaderCommentAdapter mCommentAdapter;
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
@@ -253,7 +253,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
         mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost, mSource);
 
-        if (mBoxBinding != null) {
+        if (mBoxBinding != null && mPost != null) {
             mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, mBlogId);
             mSuggestionAdapter = SuggestionUtils.setupUserSuggestions(
                     mBlogId,
@@ -437,19 +437,21 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             @NonNull ReaderActivityCommentListBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding boxBinding
     ) {
-        ReaderPostActions.updatePost(mPost, result -> {
-            if (!isFinishing() && result.isNewOrChanged()) {
-                // get the updated post and pass it to the adapter
-                ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
-                if (post != null) {
-                    getCommentAdapter(binding, boxBinding).setPost(post);
-                    mPost = post;
+        if (mPost != null) {
+            ReaderPostActions.updatePost(mPost, result -> {
+                if (!isFinishing() && result.isNewOrChanged()) {
+                    // get the updated post and pass it to the adapter
+                    ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
+                    if (post != null) {
+                        getCommentAdapter(binding, boxBinding).setPost(post);
+                        mPost = post;
+                    }
                 }
-            }
-        });
+            });
 
-        // load the first page of comments
-        updateComments(binding, true, false);
+            // load the first page of comments
+            updateComments(binding, mPost, true, false);
+        }
     }
 
     @Override
@@ -629,13 +631,18 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 super.onDismissed(transientBottomBar, event);
 
                 if (event == DISMISS_EVENT_ACTION) {
-                    AnalyticsUtils.trackCommentActionWithReaderPostDetails(Stat.COMMENT_MODERATION_UNDO,
-                            AnalyticsCommentActionSource.READER, mPost);
+                    AnalyticsUtils.trackCommentActionWithReaderPostDetails(
+                            Stat.COMMENT_MODERATION_UNDO,
+                            AnalyticsCommentActionSource.READER, mPost
+                    );
                     return;
                 }
 
-                AnalyticsUtils.trackCommentActionWithReaderPostDetails(tracker,
-                        AnalyticsCommentActionSource.READER, mPost);
+                AnalyticsUtils.trackCommentActionWithReaderPostDetails(
+                        tracker,
+                        AnalyticsCommentActionSource.READER,
+                        mPost
+                );
                 ReaderCommentActions.moderateComment(comment, newStatus);
             }
         });
@@ -806,8 +813,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             @NonNull ReaderActivityCommentListBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding boxBinding
     ) {
-        if (mCommentAdapter == null) {
-            mCommentAdapter = new ReaderCommentAdapter(WPActivityUtils.getThemedContext(this), getPost());
+        if (mCommentAdapter == null && mPost != null) {
+            mCommentAdapter = new ReaderCommentAdapter(WPActivityUtils.getThemedContext(this), mPost);
 
             // adapter calls this when user taps reply icon
             mCommentAdapter.setReplyListener(
@@ -827,7 +834,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             mCommentAdapter.setDataLoadedListener(isEmpty -> {
                 if (!isFinishing()) {
                     if (isEmpty || !mHasUpdatedComments) {
-                        updateComments(binding, isEmpty, false);
+                        updateComments(binding, mPost, isEmpty, false);
                     } else if (mCommentId > 0 || mDirectOperation != null) {
                         if (mCommentId > 0) {
                             // Scroll to the commentId once if it was passed to this activity
@@ -848,7 +855,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             mCommentAdapter.setDataRequestedListener(() -> {
                 if (!mIsUpdatingComments) {
                     AppLog.i(T.READER, "reader comments > requesting next page of comments");
-                    updateComments(binding, true, true);
+                    updateComments(binding, mPost, true, true);
                 }
             });
         }
@@ -883,7 +890,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                                           Snackbar.LENGTH_INDEFINITE)
                                   .setAction(R.string.sign_in, mSignInClickListener)
                                   .show();
-                    } else {
+                    } else if (mPost != null) {
                         ReaderComment comment = ReaderCommentTable.getComment(mPost.blogId, mPost.postId, mCommentId);
                         if (comment == null) {
                             ToastUtils.showToast(
@@ -931,10 +938,6 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         }
     }
 
-    private ReaderPost getPost() {
-        return mPost;
-    }
-
     private void showProgress(@NonNull ReaderActivityCommentListBinding binding) {
         binding.progressLoading.setVisibility(View.VISIBLE);
     }
@@ -975,6 +978,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
      */
     private void updateComments(
             @NonNull ReaderActivityCommentListBinding binding,
+            @NonNull ReaderPost post,
             boolean showProgress,
             boolean requestNextPage
     ) {
@@ -992,7 +996,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         if (showProgress) {
             showProgress(binding);
         }
-        ReaderCommentService.startService(this, mPost.blogId, mPost.postId, requestNextPage);
+        ReaderCommentService.startService(this, post.blogId, post.postId, requestNextPage);
     }
 
     private void checkEmptyView(
@@ -1114,7 +1118,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
         long wpComUserId = mAccountStore.getAccount().getUserId();
         ReaderComment newComment = ReaderCommentActions.submitPostComment(
-                getPost(),
+                mPost,
                 fakeCommentId,
                 commentText,
                 mReplyToCommentId,

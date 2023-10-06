@@ -180,7 +180,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public ReaderCommentAdapter(Context context, ReaderPost post) {
+    public ReaderCommentAdapter(
+            Context context,
+            @NonNull ReaderPost post
+    ) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
         mPost = post;
         mIsPrivatePost = mThreadedCommentsUtils.isPrivatePost(post);
