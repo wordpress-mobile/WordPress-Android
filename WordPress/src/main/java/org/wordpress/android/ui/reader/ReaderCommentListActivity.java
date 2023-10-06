@@ -551,8 +551,6 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             @NonNull ReaderCommentMenuActionType action
     ) {
         switch (action) {
-            case APPROVE:
-                break;
             case EDIT:
                 SiteModel postSite = mSiteStore.getSiteBySiteId(comment.blogId);
                 if (postSite != null) {
@@ -592,6 +590,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             case SHARE:
                 shareComment(comment.getShortUrl());
                 break;
+            case APPROVE:
             case DIVIDER_NO_ACTION:
                 break;
         }
