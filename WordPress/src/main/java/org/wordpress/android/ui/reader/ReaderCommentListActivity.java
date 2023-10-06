@@ -116,7 +116,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private long mPostId;
     private long mBlogId;
     @Nullable private ReaderPost mPost;
-    private ReaderCommentAdapter mCommentAdapter;
+    @Nullable private ReaderCommentAdapter mCommentAdapter;
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
@@ -869,11 +869,13 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         if (mDirectOperation != null) {
             switch (mDirectOperation) {
                 case COMMENT_JUMP:
-                    mCommentAdapter.setHighlightCommentId(mCommentId, false);
+                    if (mCommentAdapter != null) {
+                        mCommentAdapter.setHighlightCommentId(mCommentId, false);
 
-                    // clear up the direct operation vars. Only performing it once.
-                    mDirectOperation = null;
-                    mCommentId = 0;
+                        // clear up the direct operation vars. Only performing it once.
+                        mDirectOperation = null;
+                        mCommentId = 0;
+                    }
                     break;
                 case COMMENT_REPLY:
                     setReplyToCommentId(binding, boxBinding, mCommentId, mAccountStore.hasAccessToken());
