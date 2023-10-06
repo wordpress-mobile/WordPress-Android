@@ -95,6 +95,7 @@ class QuickStartRepository
     fun resetTask() {
         clearActiveTask()
         clearPendingTask()
+        clearMenuStep()
     }
 
     fun clearActiveTask() {
@@ -127,11 +128,12 @@ class QuickStartRepository
         }
     }
 
-    fun setActiveTask(task: QuickStartTask) {
+    fun setActiveTask(task: QuickStartTask, isFromMenu: Boolean = false) {
         _activeTask.postValue(task)
         clearPendingTask()
+        clearMenuStep()
         when {
-            task.isShownInMenu() -> requestMoreStepForTask(task)
+            !isFromMenu && task.isShownInMenu() -> requestMoreStepForTask(task)
             task == QuickStartNewSiteTask.UPDATE_SITE_TITLE -> {
                 val shortQuickStartMessage = resourceProvider.getString(
                     R.string.quick_start_dialog_update_site_title_message_short,
@@ -297,6 +299,12 @@ class QuickStartRepository
             QuickStartNewSiteTask.ENABLE_POST_SHARING -> true
             else -> false
         }
+
+    fun clearMenuStep() {
+        if (_quickStartMenuStep.value != null) {
+            _quickStartMenuStep.value = null
+        }
+    }
 
     data class QuickStartCategory(
         val taskType: QuickStartTaskType,
