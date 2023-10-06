@@ -83,6 +83,7 @@ class ReaderDiscoverLogic @Inject constructor(
         coroutineScope?.launch {
             val params = HashMap<String, String>()
             params["tags"] = getFollowedTagsUseCase.get().joinToString { it.tagSlug }
+            params["tag_recs_per_card"] = RECOMMENDED_TAGS_COUNT
 
             when (taskType) {
                 REQUEST_FIRST_PAGE -> {
@@ -286,5 +287,9 @@ class ReaderDiscoverLogic @Inject constructor(
         }
 
         return blogsToBeDeleted
+    }
+
+    companion object {
+        private const val RECOMMENDED_TAGS_COUNT = "5"
     }
 }
