@@ -199,15 +199,15 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
             mBoxBinding.editComment.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                public void beforeTextChanged(@NonNull CharSequence s, int start, int count, int after) {
                 }
 
                 @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
                 }
 
                 @Override
-                public void afterTextChanged(Editable s) {
+                public void afterTextChanged(@NonNull Editable s) {
                     mBoxBinding.btnSubmitReply.setEnabled(!TextUtils.isEmpty(s.toString().trim()));
                 }
             });
@@ -421,7 +421,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
     private final View.OnClickListener mSignInClickListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(@NonNull View v) {
             if (isFinishing()) {
                 return;
             }
@@ -618,7 +618,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         ).setAction(R.string.undo, view -> getCommentAdapter(binding, boxBinding).refreshComments());
 
         snackbar.addCallback(new BaseCallback<Snackbar>() {
-            @Override public void onDismissed(Snackbar transientBottomBar, int event) {
+            @Override
+            public void onDismissed(@Nullable Snackbar transientBottomBar, int event) {
                 super.onDismissed(transientBottomBar, event);
 
                 if (event == DISMISS_EVENT_ACTION) {
@@ -1138,7 +1139,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // if user is returning from login, make sure to update the post and its comments
