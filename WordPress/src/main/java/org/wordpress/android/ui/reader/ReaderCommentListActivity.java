@@ -1137,7 +1137,12 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
     private int getCurrentPosition(@NonNull ReaderActivityCommentListBinding binding) {
         if (hasCommentAdapter()) {
-            return ((LinearLayoutManager) binding.recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+            LinearLayoutManager layoutManager = (LinearLayoutManager) binding.recyclerView.getLayoutManager();
+            if (layoutManager != null) {
+                return layoutManager.findFirstVisibleItemPosition();
+            } else {
+                return 0;
+            }
         } else {
             return 0;
         }
