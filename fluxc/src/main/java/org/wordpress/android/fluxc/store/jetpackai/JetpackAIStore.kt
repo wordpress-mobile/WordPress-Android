@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store.jetpackai
 
+import org.wordpress.android.fluxc.model.JWTToken
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAICompletionsErrorType.AUTH_ERROR
@@ -17,7 +18,7 @@ class JetpackAIStore @Inject constructor(
     private val jetpackAIRestClient: JetpackAIRestClient,
     private val coroutineEngine: CoroutineEngine
 ) {
-    private var token: String? = null
+    private var token: JWTToken? = null
 
     /**
      * Fetches Jetpack AI completions for a given prompt to be used on a particular post.
@@ -75,7 +76,7 @@ class JetpackAIStore @Inject constructor(
         caller = this,
         loggedMessage = "fetch Jetpack AI completions"
     ) {
-        val token = token ?: fetchJetpackAIJWTToken(site).let { tokenResponse ->
+        val token = token?.takeIfValid() ?: fetchJetpackAIJWTToken(site).let { tokenResponse ->
             when (tokenResponse) {
                 is Error -> {
                     return@withDefaultContext JetpackAICompletionsResponse.Error(
