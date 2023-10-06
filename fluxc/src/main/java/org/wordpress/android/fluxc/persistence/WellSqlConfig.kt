@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 195
+        return 196
     }
 
     override fun getDbName(): String {
@@ -1975,6 +1975,20 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 194 -> migrate(version) {
                     db.execSQL("DROP TABLE IF EXISTS DynamicCard")
+                }
+                195 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCRevenueStatsModel")
+                    db.execSQL(
+                        "CREATE TABLE WCRevenueStatsModel(" +
+                            "LOCAL_SITE_ID INTEGER," +
+                            "INTERVAL TEXT NOT NULL," +
+                            "START_DATE TEXT NOT NULL," +
+                            "END_DATE TEXT NOT NULL," +
+                            "DATA TEXT NOT NULL," +
+                            "TOTAL TEXT NOT NULL," +
+                            "RANGE_ID TEXT NOT NULL," +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT)"
+                    )
                 }
             }
         }
