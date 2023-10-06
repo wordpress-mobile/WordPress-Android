@@ -1136,6 +1136,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void setRefreshing(boolean refreshing) {
         mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
