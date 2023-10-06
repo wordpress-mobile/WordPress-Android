@@ -8,7 +8,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestCli
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIJWTTokenResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIJWTTokenResponse.Success
 import org.wordpress.android.fluxc.tools.CoroutineEngine
-import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -16,12 +15,10 @@ import javax.inject.Singleton
 @Singleton
 class JetpackAIStore @Inject constructor(
     private val jetpackAIRestClient: JetpackAIRestClient,
-    private val coroutineEngine: CoroutineEngine,
-    private val preferenceUtils: PreferenceUtilsWrapper
+    private val coroutineEngine: CoroutineEngine
 ) {
-    companion object {
-        const val JETPACK_AI_JWT_TOKEN_KEY = "JETPACK_AI_JWT_TOKEN_KEY"
-    }
+    private var token: String? = null
+
     /**
      * Fetches Jetpack AI completions for a given prompt to be used on a particular post.
      *
@@ -78,7 +75,7 @@ class JetpackAIStore @Inject constructor(
         caller = this,
         loggedMessage = "fetch Jetpack AI completions"
     ) {
-        val token = preferenceUtils.getFluxCPreferences().getString(JETPACK_AI_JWT_TOKEN_KEY, null)
+        val token = token
 
         val result = if (token != null) {
             jetpackAIRestClient.fetchJetpackAITextCompletion(token, prompt, feature)
@@ -112,9 +109,7 @@ class JetpackAIStore @Inject constructor(
             }
 
             is Success -> {
-                preferenceUtils.getFluxCPreferences().edit().putString(
-                    JETPACK_AI_JWT_TOKEN_KEY, jwtTokenResponse.token
-                ).apply()
+                token = jwtTokenResponse.token
 
                 jetpackAIRestClient.fetchJetpackAITextCompletion(
                     jwtTokenResponse.token,
