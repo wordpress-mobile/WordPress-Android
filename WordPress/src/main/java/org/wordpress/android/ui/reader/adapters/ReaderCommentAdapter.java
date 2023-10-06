@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.ListPopupWindow;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
@@ -109,7 +110,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public interface CommentMenuActionListener {
-        void onCommentMenuItemTapped(ReaderComment comment, ReaderCommentMenuActionType actionType);
+        void onCommentMenuItemTapped(@NonNull ReaderComment comment, @NonNull ReaderCommentMenuActionType actionType);
     }
 
     private ReaderCommentList mComments = new ReaderCommentList();

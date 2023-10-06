@@ -547,14 +547,17 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private void performCommentAction(
             @NonNull ReaderActivityCommentListBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding boxBinding,
-            ReaderComment comment,
-            ReaderCommentMenuActionType action
+            @NonNull ReaderComment comment,
+            @NonNull ReaderCommentMenuActionType action
     ) {
         switch (action) {
             case APPROVE:
                 break;
             case EDIT:
-                openCommentEditor(comment);
+                SiteModel postSite = mSiteStore.getSiteBySiteId(comment.blogId);
+                if (postSite != null) {
+                    openCommentEditor(comment, postSite);
+                }
                 break;
             case UNAPPROVE:
                 moderateComment(
@@ -594,10 +597,15 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         }
     }
 
-    private void openCommentEditor(ReaderComment comment) {
-        SiteModel postSite = mSiteStore.getSiteBySiteId(comment.blogId);
-        final Intent intent = UnifiedCommentsEditActivity.createIntent(this,
-                new ReaderCommentIdentifier(comment.blogId, comment.postId, comment.commentId), postSite);
+    private void openCommentEditor(
+            @NonNull ReaderComment comment,
+            @NonNull SiteModel postSite
+    ) {
+        final Intent intent = UnifiedCommentsEditActivity.createIntent(
+                this,
+                new ReaderCommentIdentifier(comment.blogId, comment.postId, comment.commentId),
+                postSite
+        );
         startActivity(intent);
     }
 
