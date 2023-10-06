@@ -75,57 +75,42 @@ class JetpackAIStore @Inject constructor(
         caller = this,
         loggedMessage = "fetch Jetpack AI completions"
     ) {
-        val token = token
+        val token = token ?: fetchJetpackAIJWTToken(site).let { tokenResponse ->
+            when (tokenResponse) {
+                is Error -> {
+                    return@withDefaultContext JetpackAICompletionsResponse.Error(
+                        type = AUTH_ERROR,
+                        message = tokenResponse.message,
+                    )
+                }
 
-        val result = if (token != null) {
-            jetpackAIRestClient.fetchJetpackAITextCompletion(token, prompt, feature)
-        } else {
-            val jwtTokenResponse = fetchJetpackAIJWTToken(site)
-            fetchCompletionsWithToken(jwtTokenResponse, prompt, feature)
+                is Success -> {
+                    token = tokenResponse.token
+                    tokenResponse.token
+                }
+            }
         }
+
+        val result = jetpackAIRestClient.fetchJetpackAITextCompletion(token, prompt, feature)
 
         return@withDefaultContext when {
             // Fetch token anew if using existing token returns AUTH_ERROR
             result is JetpackAICompletionsResponse.Error && result.type == AUTH_ERROR -> {
-                val jwtTokenResponse = fetchJetpackAIJWTToken(site)
-                fetchCompletionsWithToken(jwtTokenResponse, prompt, feature)
+                // Remove cached token
+                this@JetpackAIStore.token = null
+                fetchJetpackAICompletions(site, prompt, feature)
             }
 
             else -> result
         }
     }
 
-    private suspend fun fetchCompletionsWithToken(
-        jwtTokenResponse: JetpackAIJWTTokenResponse,
-        prompt: String,
-        feature: String
-    ): JetpackAICompletionsResponse {
-        return when (jwtTokenResponse) {
-            is Error -> {
-                JetpackAICompletionsResponse.Error(
-                    type = AUTH_ERROR,
-                    message = jwtTokenResponse.message,
-                )
-            }
-
-            is Success -> {
-                token = jwtTokenResponse.token
-
-                jetpackAIRestClient.fetchJetpackAITextCompletion(
-                    jwtTokenResponse.token,
-                    prompt,
-                    feature
-                )
-            }
+    private suspend fun fetchJetpackAIJWTToken(site: SiteModel): JetpackAIJWTTokenResponse =
+        coroutineEngine.withDefaultContext(
+            tag = AppLog.T.API,
+            caller = this,
+            loggedMessage = "fetch Jetpack AI JWT token"
+        ) {
+            jetpackAIRestClient.fetchJetpackAIJWTToken(site)
         }
-    }
-
-     private suspend fun fetchJetpackAIJWTToken(site: SiteModel)
-     : JetpackAIJWTTokenResponse = coroutineEngine.withDefaultContext(
-        tag = AppLog.T.API,
-        caller = this,
-        loggedMessage = "fetch Jetpack AI JWT token"
-    ) {
-        jetpackAIRestClient.fetchJetpackAIJWTToken(site)
-    }
 }
