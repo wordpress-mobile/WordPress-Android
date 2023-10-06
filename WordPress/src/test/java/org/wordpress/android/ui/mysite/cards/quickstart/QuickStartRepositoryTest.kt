@@ -110,7 +110,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
             event?.getContentIfNotHandled()?.let { quickStartPrompts.add(it) }
         }
         quickStartRepository.quickStartMenuStep.observeForever { event ->
-            quickStartMenuStep.add(event!!)
+            event?.let { quickStartMenuStep.add(it) }
         }
         site = SiteModel()
         site.id = siteLocalId
