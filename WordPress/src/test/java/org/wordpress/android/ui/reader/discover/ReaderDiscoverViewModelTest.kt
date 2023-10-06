@@ -816,7 +816,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     }
 
     private fun createReaderInterestsCardUiState(readerTagList: ReaderTagList) =
-        ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState("", mock(), mock()) })
+        ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState("", "", mock(), mock()) })
 
     private fun createReaderRecommendedBlogsCardUiState(
         recommendedBlogs: List<ReaderBlog>,
