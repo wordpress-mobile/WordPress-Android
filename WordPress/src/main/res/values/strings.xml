@@ -2445,8 +2445,8 @@
 
     <!-- Jetpack Social and sharing -->
     <string name="sharing">Social</string>
-    <string name="sharing_disabled">Sharing module disabled</string>
-    <string name="sharing_disabled_description">You cannot access your sharing settings because your Sharing Jetpack module is disabled.</string>
+    <string name="sharing_disabled">Social module disabled</string>
+    <string name="sharing_disabled_description">You cannot access your social sharing settings because your Jetpack Social module is disabled.</string>
     <string name="connections_label">Jetpack Social Connections</string>
     <string name="connections_description">Connect your favorite social media services to automatically share new posts with friends.</string>
     <string name="connected_accounts_label">Connected accounts</string>
@@ -2510,7 +2510,7 @@
 
     <!-- Some JP Social connections can only be connected via web at this time -->
     <!-- translators: %s is replaced with an external service name, such as "Facebook" or "Mastodon". -->
-    <string name="sharing_connect_via_web_warning_message">You can connect your %s account on the WordPress.com website. When you\'re done, return to the app to change your Sharing settings.</string>
+    <string name="sharing_connect_via_web_warning_message">You can connect your %s account on the WordPress.com website. When you\'re done, return to the app to change your Social settings.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Go to web</string>
 
     <!--Theme Browser-->
@@ -3201,7 +3201,7 @@
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
     <string name="quick_start_dialog_enable_sharing_message" tools:ignore="UnusedResources">Automatically share new posts to your social media accounts.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing" tools:ignore="UnusedResources">Tap %1$s Sharing %2$s to continue</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing" tools:ignore="UnusedResources">Tap %1$s Social %2$s to continue</string>
     <string name="quick_start_dialog_enable_sharing_title" tools:ignore="UnusedResources">Enable post sharing</string>
     <string name="quick_start_dialog_follow_sites_message" translatable="false">@string/quick_start_list_follow_site_subtitle</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Select %1$s Reader %2$s to find other sites.</string>
