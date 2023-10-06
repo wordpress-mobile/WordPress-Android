@@ -669,6 +669,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_link)));
     }
 
+    @SuppressWarnings("deprecation")
     private void setReplyToCommentId(
             @NonNull ReaderActivityCommentListBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding boxBinding,
