@@ -76,21 +76,22 @@ class JetpackAIStore @Inject constructor(
         caller = this,
         loggedMessage = "fetch Jetpack AI completions"
     ) {
-        val token = token?.takeIfValid() ?: fetchJetpackAIJWTToken(site).let { tokenResponse ->
-            when (tokenResponse) {
-                is Error -> {
-                    return@withDefaultContext JetpackAICompletionsResponse.Error(
-                        type = AUTH_ERROR,
-                        message = tokenResponse.message,
-                    )
-                }
+        val token = token?.validateExpiryDate()?.validateBlogId(site.siteId)
+            ?: fetchJetpackAIJWTToken(site).let { tokenResponse ->
+                when (tokenResponse) {
+                    is Error -> {
+                        return@withDefaultContext JetpackAICompletionsResponse.Error(
+                            type = AUTH_ERROR,
+                            message = tokenResponse.message,
+                        )
+                    }
 
-                is Success -> {
-                    token = tokenResponse.token
-                    tokenResponse.token
+                    is Success -> {
+                        token = tokenResponse.token
+                        tokenResponse.token
+                    }
                 }
             }
-        }
 
         val result = jetpackAIRestClient.fetchJetpackAITextCompletion(token, prompt, feature)
 
@@ -114,4 +115,7 @@ class JetpackAIStore @Inject constructor(
         ) {
             jetpackAIRestClient.fetchJetpackAIJWTToken(site)
         }
+
+    private fun JWTToken.validateBlogId(blogId: Long): JWTToken? =
+        if (getPayloadItem("blog_id")?.toLong() == blogId) this else null
 }
