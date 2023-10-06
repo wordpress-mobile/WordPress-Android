@@ -13,7 +13,7 @@ import javax.inject.Named
 
 @HiltViewModel
 class UseDomainViewModel @Inject constructor(
-    @Named(UI_THREAD) val mainDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _actionEvents = MutableSharedFlow<ActionEvent>()

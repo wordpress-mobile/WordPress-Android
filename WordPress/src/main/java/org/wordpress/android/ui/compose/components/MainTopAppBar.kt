@@ -62,7 +62,7 @@ object NavigationIcons {
  * @param navigationIcon The composable to be used as navigation icon, preferably one of the default options from
  * [NavigationIcons]. It can be an composable function providing an [Icon] as well, since it is used inside an
  * [IconButton]. Note that leaving this field null will cause the navigation icon to not be shown.
- * @param elevation the elevation of this MainTopAppBar.
+ * @param elevation The elevation of this MainTopAppBar.
  * @param onNavigationIconClick The lambda to be invoked when the navigation icon is pressed.
  * @param actions The actions displayed at the end of the TopAppBar. This should typically be IconButtons
  */
