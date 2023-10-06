@@ -342,11 +342,6 @@
         <item name="android:background">@drawable/bg_oval_surface</item>
     </style>
 
-    <style name="ReaderImageView.Avatar.ExtraExtraSmall" parent="ReaderImageView">
-        <item name="android:layout_width">@dimen/avatar_sz_extra_extra_small</item>
-        <item name="android:layout_height">@dimen/avatar_sz_extra_extra_small</item>
-    </style>
-
     <style name="ReaderImageView.Avatar.ExtraExtraSmall.OvalSurfaceBackground" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/avatar_sz_extra_extra_small_with_padding</item>
         <item name="android:layout_height">@dimen/avatar_sz_extra_extra_small_with_padding</item>
