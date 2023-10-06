@@ -514,4 +514,12 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="ReaderTextView.Post.New.Removed.Title" parent="ReaderTextView">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleMedium</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
 </resources>
