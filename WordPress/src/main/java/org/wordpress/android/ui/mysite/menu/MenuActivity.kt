@@ -62,6 +62,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.LocaleManager
 import javax.inject.Inject
 
+const val KEY_QUICK_START_EVENT = "key_quick_start_event"
 @AndroidEntryPoint
 class MenuActivity : AppCompatActivity() {
     @Inject
