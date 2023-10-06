@@ -5,26 +5,31 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
-import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
-import kotlinx.coroutines.launch
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
+
+const val SHORTCUT_NAME_TRACKING_PARAMETER = "type"
 
 class ShortcutsPersonalizationViewModelSlice @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val siteItemsBuilder: SiteItemsBuilder,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     lateinit var scope: CoroutineScope
 
@@ -131,6 +136,10 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
 
     fun removeShortcut(shortcutState: ShortcutState, siteId: Long) {
         scope.launch(bgDispatcher) {
+            analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.PERSONALIZATION_SCREEN_SHORTCUT_HIDE_QUICK_LINK_TAPPED,
+                mapOf(SHORTCUT_NAME_TRACKING_PARAMETER to shortcutState.listItemAction.trackingLabel)
+            )
             if (shortcutState.listItemAction in defaultShortcuts())
                 updateVisibilityOfDefaultShortcut(shortcutState.listItemAction, siteId, false)
             else updateVisibilityOfListItem(shortcutState.listItemAction, siteId, false)
@@ -140,6 +149,10 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
 
     fun addShortcut(shortcutState: ShortcutState, siteId: Long) {
         scope.launch(bgDispatcher) {
+            analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.PERSONALIZATION_SCREEN_SHORTCUT_SHOW_QUICK_LINK_TAPPED,
+                mapOf(SHORTCUT_NAME_TRACKING_PARAMETER to shortcutState.listItemAction.trackingLabel)
+            )
             if (shortcutState.listItemAction in defaultShortcuts())
                 updateVisibilityOfDefaultShortcut(shortcutState.listItemAction, siteId, true)
             else updateVisibilityOfListItem(shortcutState.listItemAction, siteId, true)
