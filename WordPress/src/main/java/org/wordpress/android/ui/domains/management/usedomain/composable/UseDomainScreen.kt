@@ -42,6 +42,9 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
 fun UseDomainScreen(
+    onNewDomainCardSelected: () -> Unit,
+    onExistingDomainCardSelected: () -> Unit,
+    onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val contentScrollState = rememberScrollState()
@@ -55,7 +58,8 @@ fun UseDomainScreen(
             MainTopAppBar(
                 title = stringResource(id = R.string.use_domain_screen_title),
                 navigationIcon = NavigationIcons.BackIcon,
-                elevation = elevation.value
+                elevation = elevation.value,
+                onNavigationIconClick = onBackPressed
             )
         },
         content = {
@@ -73,8 +77,7 @@ fun UseDomainScreen(
                 ) {
                     ScreenHeader()
                     ScreenDescription()
-                    DomainCards()
-                    Spacer(modifier = Modifier.weight(1f))
+                    DomainCards(onNewDomainCardSelected, onExistingDomainCardSelected)
                     DiscountNotice()
                 }
             }
@@ -83,18 +86,22 @@ fun UseDomainScreen(
 }
 
 @Composable
-private fun DomainCards(modifier: Modifier = Modifier) {
+private fun DomainCards(
+    onNewDomainCardSelected: () -> Unit,
+    onExistingDomainCardSelected: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Box(modifier = modifier.padding(top = 24.dp)) {
         if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
             Column {
-                NewDomainCard()
-                ExistingDomainCard(modifier = Modifier.padding(top = 16.dp))
+                NewDomainCard(onNewDomainCardSelected)
+                ExistingDomainCard(onExistingDomainCardSelected, modifier = Modifier.padding(top = 16.dp))
             }
         } else {
             Row {
-                NewDomainCard(modifier = Modifier.weight(1f))
+                NewDomainCard(onNewDomainCardSelected, modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(16.dp))
-                ExistingDomainCard(modifier = Modifier.weight(1f))
+                ExistingDomainCard(onExistingDomainCardSelected, modifier = Modifier.weight(1f))
             }
         }
     }
@@ -134,23 +141,31 @@ private fun DiscountNotice(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun NewDomainCard(modifier: Modifier = Modifier) {
+private fun NewDomainCard(
+    onNewDomainCardSelected: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     DomainOptionCard(
         icon = R.drawable.ic_domains_white_24dp,
         title = R.string.use_domain_screen_new_domain_card_title,
         description = R.string.use_domain_screen_new_domain_card_description,
         button = R.string.use_domain_screen_new_domain_card_button,
+        onOptionSelected = onNewDomainCardSelected,
         modifier = modifier,
     )
 }
 
 @Composable
-private fun ExistingDomainCard(modifier: Modifier = Modifier) {
+private fun ExistingDomainCard(
+    onExistingDomainCardSelected: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     DomainOptionCard(
         icon = R.drawable.ic_themes_white_24dp,
         title = R.string.use_domain_screen_existing_domain_card_title,
         description = R.string.use_domain_screen_existing_domain_card_description,
         button = R.string.use_domain_screen_existing_domain_card_button,
+        onOptionSelected = onExistingDomainCardSelected,
         modifier = modifier,
     )
 }
@@ -161,6 +176,7 @@ private fun DomainOptionCard(
     @StringRes title: Int,
     @StringRes description: Int,
     @StringRes button: Int,
+    onOptionSelected: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -194,7 +210,7 @@ private fun DomainOptionCard(
             modifier = Modifier.padding(top = 8.dp)
         )
         Button(
-            onClick = { },
+            onClick = onOptionSelected,
             shape = MaterialTheme.shapes.small.copy(CornerSize(36.dp)),
             elevation = ButtonDefaults.elevation(
                 defaultElevation = 0.dp,
@@ -221,11 +237,12 @@ private fun DomainOptionCard(
 
 @Preview(name = "Light mode", locale = "en")
 @Preview(name = "Dark mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "Small screen", device = Devices.NEXUS_5)
 @Preview(name = "Landscape orientation", device = Devices.AUTOMOTIVE_1024p)
 @Composable
 fun UseDomainScreenPreview() {
     AppTheme {
-        UseDomainScreen()
+        UseDomainScreen({},{},{})
     }
 }
 
