@@ -1899,7 +1899,6 @@ Language: sr_RS
     <string name="select_categories">Одаберите категорије</string>
     <string name="page_settings">Подешавања стране</string>
     <string name="connection_error">Грешка у успостављању везе</string>
-    <string name="cancel_edit">Одустани од уређивања</string>
     <string name="learn_more">Сазнајте више</string>
     <string name="media_gallery_type_thumbnail_grid">Мрежа умањених слика</string>
     <string name="comment_status_approved">Одобрено</string>
@@ -1913,9 +1912,6 @@ Language: sr_RS
     <string name="media_error_no_permission">Немате дозволу да прегледате библиотеку медија</string>
     <string name="trash">Отпад</string>
     <string name="saving_changes">Чувам измене</string>
-    <string name="sure_to_cancel_edit_comment">Одустајете од уређивања овог коментара?</string>
-    <string name="content_required">Коментар је неопходан</string>
-    <string name="toast_comment_unedited">Коментар није промењен</string>
     <string name="http_authorization_required">Неопходно овлашћење</string>
     <string name="new_post">Нови чланак</string>
     <string name="new_media">Нови медиј</string>

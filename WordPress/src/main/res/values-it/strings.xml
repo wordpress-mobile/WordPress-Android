@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-26 13:54:08+0000
+Translation-Revision-Date: 2023-10-03 15:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">Separa blocco</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">Tocca qui per visualizzare ulteriori dettagli.</string>
+    <string name="gutenberg_native_synced_patterns">Pattern sincronizzati</string>
+    <string name="gutenberg_native_deeply_nested_block">Blocco con molti livelli di nidificazione</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">I blocchi con molti più livelli di nidificazione rispetto ai %d livelli potrebbero non essere visualizzati correttamente nell\'editor per dispositivi mobili. Per questo motivo, consigliamo di uniformare i contenuti separando o modificando il blocco utilizzando l\'editor web.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">I blocchi con molti più livelli di nidificazione rispetto ai %d livelli potrebbero non essere visualizzati correttamente nell\'editor per dispositivi mobili. Per questo motivo, consigliamo di uniformare i contenuti separando o modificando il blocco utilizzando il browser web.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Il blocco non può essere visualizzato perché ha troppi livelli di nidificazione. Tocca qui per ulteriori dettagli.</string>
+    <string name="pages_no_site_something_went_wrong">Ops, si è verificato un problema. Riprova più tardi.</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Vai al web</string>
     <string name="my_site_dashboard_no_cards_message_description">Tocca il pulsante Personalizza per visualizzare più schede.</string>
     <string name="my_site_dashboard_no_cards_message_title">Tutte le schede sono nascoste</string>
     <string name="personalization_screen_next_steps_card_description">Scopri come ottenere il massimo dal tuo sito con l\'app.</string>
@@ -15,8 +24,13 @@ Language: it
     <string name="personalization_screen_blogging_prompts_card_title">Richieste di blog</string>
     <string name="personalization_screen_blaze_card_description">Promuovi un articolo e visualizza le campagne attuali.</string>
     <string name="personalization_screen_scheduled_posts_card_description">Prossimi articoli pianificati.</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Articoli programmati</string>
     <string name="personalization_screen_draft_posts_card_description">I tuoi articoli in bozza recenti.</string>
+    <string name="personalization_screen_draft_posts_card_title">Articoli in bozza</string>
     <string name="personalization_screen_stats_card_description">Visualizzazioni, visitatori e mi piace</string>
+    <string name="personalization_screen_footer_cards">Le schede possono mostrare contenuti diversi a seconda di ciò che sta accadendo al sito</string>
+    <string name="personalization_screen_description">Aggiungi o nascondi schede</string>
+    <string name="personalization_screen_title">Personalizza la scheda home</string>
     <string name="personalize_card_content_description">Tocca per personalizzare la scheda home</string>
     <string name="personalize_card_text">Personalizza la scheda home</string>
     <string name="partial_media_access_prompt_change_settings">Modifica le impostazioni</string>
@@ -650,6 +664,7 @@ Language: it
     <string name="gutenberg_native_tiled_gallery_settings">Impostazioni galleria affiancata</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Naviga fino alla schermata di selezione del layout</string>
     <string name="gutenberg_native_gallery_style">Stile della galleria</string>
+    <string name="sharing_connect_via_web_warning_message">Puoi connettere il tuo account %s al sito web WordPress.com. Una volta terminato, torna all\'app per modificare le impostazioni di condivisione.</string>
     <string name="about_automattic_app_icon_description">Icona app</string>
     <string name="about_automattic_back_icon_description">Icona Indietro</string>
     <string name="about_automattic_logo_description">Logo Automattic</string>
@@ -3519,9 +3534,6 @@ Language: it
     <string name="add_new_category">Aggiungi nuova categoria</string>
     <string name="view_in_browser">Visualizza nel browser</string>
     <string name="remove_account">Rimuovi sito</string>
-    <string name="toast_comment_unedited">Il commento non è stato modificato</string>
-    <string name="content_required">Il commento è richiesto</string>
-    <string name="sure_to_cancel_edit_comment">Annullare la modifica a questo commento?</string>
     <string name="saving_changes">Salvataggio delle modifiche in corso</string>
     <string name="trash">Elimina</string>
     <string name="dlg_confirm_trash_comments">Inviare al cestino?</string>
@@ -3549,7 +3561,6 @@ Language: it
     <string name="learn_more">Ulteriori informazioni</string>
     <string name="post_not_found">Si è verificato un errore durante il caricamento dell\'articolo. Aggiorna gli articoli e riprova.</string>
     <string name="plugin_not_found">Si è verificato un errore durante l\'accesso a questo plugin</string>
-    <string name="cancel_edit">Annulla la modifica</string>
     <string name="connection_error">Errore di connessione</string>
     <string name="select_categories">Seleziona le categorie</string>
     <string name="share_link">Condividi il link</string>

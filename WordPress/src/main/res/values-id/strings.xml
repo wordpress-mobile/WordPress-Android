@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-26 09:54:10+0000
+Translation-Revision-Date: 2023-10-03 09:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: id
 -->
 <resources>
+    <string name="sharing_connect_via_web_warning_positive_button">Kunjungi situs</string>
     <string name="my_site_dashboard_no_cards_message_description">Ketuk tombol personalisasi untuk menampilkan lebih banyak kartu.</string>
     <string name="my_site_dashboard_no_cards_message_title">Semua kartu disembunyikan</string>
     <string name="personalization_screen_next_steps_card_description">Pelajari cara memaksimalkan situs Anda dengan aplikasi ini.</string>
@@ -15,8 +16,13 @@ Language: id
     <string name="personalization_screen_blogging_prompts_card_title">Prompt blogging</string>
     <string name="personalization_screen_blaze_card_description">Promosikan pos dan lihat kampanye saat ini.</string>
     <string name="personalization_screen_scheduled_posts_card_description">Pos terjadwal Anda yang akan datang.</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Pos terjadwal</string>
     <string name="personalization_screen_draft_posts_card_description">Konsep pos terbaru Anda.</string>
+    <string name="personalization_screen_draft_posts_card_title">Buat konsep pos</string>
     <string name="personalization_screen_stats_card_description">Kunjungan, Pengunjung, dan suka</string>
+    <string name="personalization_screen_footer_cards">Kartu bisa saja menampilkan konten berbeda, tergantung pada apa yang terjadi di situs Anda</string>
+    <string name="personalization_screen_description">Tambahkan atau sembunyikan Kartu</string>
+    <string name="personalization_screen_title">Personalisasikan tab beranda</string>
     <string name="personalize_card_content_description">Ketuk untuk mempersonalisasikan tab beranda Anda</string>
     <string name="personalize_card_text">Personalisasikan tab beranda Anda</string>
     <string name="partial_media_access_prompt_change_settings">Ubah Pengaturan</string>
@@ -648,6 +654,7 @@ Language: id
     <string name="gutenberg_native_tiled_gallery_settings">Pengaturan galeri tampilan kotak</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Buka layar pemilihan tata letak</string>
     <string name="gutenberg_native_gallery_style">Gaya galeri</string>
+    <string name="sharing_connect_via_web_warning_message">Anda dapat menghubungkan akun %s Anda di situs WordPress.com. Setelah selesai, kembali ke aplikasi untuk mengubah pengaturan Berbagi.</string>
     <string name="about_automattic_app_icon_description">Ikon Aplikasi</string>
     <string name="about_automattic_back_icon_description">Ikon kembali</string>
     <string name="about_automattic_logo_description">Logo Automattic</string>
@@ -3517,9 +3524,6 @@ Language: id
     <string name="add_new_category">Tambahkan kategori baru</string>
     <string name="view_in_browser">Tampilkan di peramban</string>
     <string name="remove_account">Hapus situs</string>
-    <string name="toast_comment_unedited">Komentar belum berubah</string>
-    <string name="content_required">Komentar diwajibkan</string>
-    <string name="sure_to_cancel_edit_comment">Batal mengedit komentar ini?</string>
     <string name="saving_changes">Menyimpan perubahan</string>
     <string name="trash">Tong Sampah</string>
     <string name="dlg_confirm_trash_comments">Buang ke Tong Sampah?</string>
@@ -3547,7 +3551,6 @@ Language: id
     <string name="learn_more">Pelajari lebih lanjut</string>
     <string name="post_not_found">Terjadi galat saat memuat pos. Segarkan pos Anda dan coba lagi.</string>
     <string name="plugin_not_found">Terjadi error saat mengakses plugin ini</string>
-    <string name="cancel_edit">Batalkan edit</string>
     <string name="connection_error">Galat sambungan</string>
     <string name="select_categories">Pilih kategori</string>
     <string name="share_link">Bagikan tautan</string>

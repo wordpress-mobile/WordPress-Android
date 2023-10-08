@@ -271,29 +271,6 @@ class AppInitializer @Inject constructor(
         }
     }
 
-    /**
-     * Data access auditing
-     * @link https://developer.android.com/guide/topics/data/audit-access
-     */
-    @RequiresApi(VERSION_CODES.R)
-    val appOpsCallback = object : AppOpsManager.OnOpNotedCallback() {
-        private fun logPrivateDataAccess(opCode: String, trace: String) {
-            AppLog.i(T.MAIN, "Private data accessed. Operation: $opCode\nStack Trace:\n$trace")
-        }
-
-        override fun onNoted(syncNotedAppOp: SyncNotedAppOp) {
-            logPrivateDataAccess(syncNotedAppOp.op, Throwable("Stack Trace: ").stackTrace.toString())
-        }
-
-        override fun onSelfNoted(syncNotedAppOp: SyncNotedAppOp) {
-            logPrivateDataAccess(syncNotedAppOp.op, Throwable("Stack Trace: ").stackTrace.toString())
-        }
-
-        override fun onAsyncNoted(asyncNotedAppOp: AsyncNotedAppOp) {
-            logPrivateDataAccess(asyncNotedAppOp.op, asyncNotedAppOp.message)
-        }
-    }
-
     init {
         context = application
         startDate = SystemClock.elapsedRealtime()
@@ -404,9 +381,32 @@ class AppInitializer @Inject constructor(
         initialized = true
     }
 
+    /**
+     * Data access auditing
+     * @link https://developer.android.com/guide/topics/data/audit-access
+     */
     @RequiresApi(VERSION_CODES.R)
     private fun initAppOpsManager() {
         val appOpsManager = context?.getSystemService(AppOpsManager::class.java) as AppOpsManager
+
+        val appOpsCallback = object : AppOpsManager.OnOpNotedCallback() {
+            private fun logPrivateDataAccess(opCode: String, trace: String) {
+                AppLog.i(T.MAIN, "Private data accessed. Operation: $opCode\nStack Trace:\n$trace")
+            }
+
+            override fun onNoted(syncNotedAppOp: SyncNotedAppOp) {
+                logPrivateDataAccess(syncNotedAppOp.op, Throwable("Stack Trace: ").stackTrace.toString())
+            }
+
+            override fun onSelfNoted(syncNotedAppOp: SyncNotedAppOp) {
+                logPrivateDataAccess(syncNotedAppOp.op, Throwable("Stack Trace: ").stackTrace.toString())
+            }
+
+            override fun onAsyncNoted(asyncNotedAppOp: AsyncNotedAppOp) {
+                logPrivateDataAccess(asyncNotedAppOp.op, asyncNotedAppOp.message)
+            }
+        }
+
         appOpsManager.setOnOpNotedCallback(context?.mainExecutor, appOpsCallback)
     }
 

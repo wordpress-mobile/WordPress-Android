@@ -2287,10 +2287,7 @@ Language: es_MX
     <string name="mnu_comment_approve">Aprobar</string>
     <string name="comment_status_approved">Aprobado</string>
     <string name="http_authorization_required">Se necesita autorización</string>
-    <string name="cancel_edit">Cancelar edición</string>
-    <string name="sure_to_cancel_edit_comment">¿Cancelar la edición de este comentario?</string>
     <string name="category_name">Nombre de la categoría</string>
-    <string name="toast_comment_unedited">El comentario no ha cambiado</string>
     <string name="connection_error">Error de conexión</string>
     <string name="create_a_link">Crear un enlace</string>
     <string name="edit_comment">Editar comentario</string>
@@ -2319,7 +2316,6 @@ Language: es_MX
     <string name="invalid_site_url_message">Comprueba que la URL del sitio introducida es válida</string>
     <string name="file_error_create">No se pudo crear un archivo temporal para subir el archivo multimedia. Asegúrate que haya suficiente espacio libre en tu dispositivo.</string>
     <string name="view_in_browser">Ver en el navegador</string>
-    <string name="content_required">Comentario obligatorio</string>
     <string name="mnu_comment_trash">Enviar a la papelera</string>
     <string name="comment_status_trash">En la papelera</string>
     <string name="delete_page">¿Borrar página?</string>

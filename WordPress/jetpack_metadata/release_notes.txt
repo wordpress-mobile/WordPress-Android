@@ -1,4 +1,4 @@
-* [*] Block Editor: Prevent crash from invalid media URLs [https://github.com/WordPress/gutenberg/pull/54834]
-* [*] Block Editor: Limit inner blocks nesting depth to avoid call stack size exceeded crash [https://github.com/WordPress/gutenberg/pull/54382]
-* [**] Block Editor: Fallback to Twitter provider when embedding X URLs [https://github.com/WordPress/gutenberg/pull/54876]
-
+We’ve been squashing bugs!
+- You can now embed URLs from X without getting a broken link.
+- When you use an invalid media URL, the app displays an error message instead of crashing.
+- In the block editor, the app will no longer crash when you nest too many blocks within blocks.

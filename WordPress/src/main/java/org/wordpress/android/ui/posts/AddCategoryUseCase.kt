@@ -14,10 +14,11 @@ class AddCategoryUseCase @Inject constructor(
     private val dispatcher: Dispatcher
 ) {
     fun addCategory(categoryName: String, parentCategoryId: Long, siteModel: SiteModel) {
-        val newCategory = TermModel()
-        newCategory.taxonomy = TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
-        newCategory.name = categoryName
-        newCategory.parentRemoteId = parentCategoryId
+        val newCategory = TermModel(
+            TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+            categoryName,
+            parentCategoryId
+        )
         val payload = RemoteTermPayload(newCategory, siteModel)
         dispatcher.dispatch(TaxonomyActionBuilder.newPushTermAction(payload))
     }
