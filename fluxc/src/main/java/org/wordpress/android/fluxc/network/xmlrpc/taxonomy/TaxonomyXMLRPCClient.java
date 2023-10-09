@@ -143,7 +143,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
                 (Listener<Object>) response -> {
                     // `term_id` is only returned for XMLRPC.NEW_TERM
                     if (!updatingExistingTerm) {
-                        term.setRemoteTermId(Long.valueOf((String) response));
+                        term.setRemoteTermId(Long.parseLong((String) response));
                     }
 
                     RemoteTermPayload payload = new RemoteTermPayload(term, site);
