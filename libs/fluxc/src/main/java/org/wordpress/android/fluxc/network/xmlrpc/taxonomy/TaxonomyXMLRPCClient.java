@@ -128,7 +128,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void pushTerm(final TermModel term, final SiteModel site) {
+    public void pushTerm(@NonNull final TermModel term, @NonNull final SiteModel site) {
         Map<String, Object> contentStruct = termModelToContentStruct(term);
         final boolean updatingExistingTerm = term.getRemoteTermId() > 0;
 
