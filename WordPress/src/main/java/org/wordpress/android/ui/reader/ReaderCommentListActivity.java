@@ -118,7 +118,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     @Nullable private ReaderPost mPost;
     @Nullable private ReaderCommentAdapter mCommentAdapter;
     @Nullable private SuggestionAdapter mSuggestionAdapter;
-    private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
+    @Nullable private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
