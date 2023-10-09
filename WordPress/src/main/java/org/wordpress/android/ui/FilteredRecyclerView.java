@@ -151,6 +151,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     private void init(@NonNull Context context, @Nullable AttributeSet attrs) {
         inflate(getContext(), R.layout.filtered_list_component, this);
 
+        boolean includeDefaultSpacing = true;
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(
                     attrs,
@@ -165,16 +166,21 @@ public class FilteredRecyclerView extends RelativeLayout {
 
                 mHideAppBarLayout = a.getBoolean(
                         R.styleable.FilteredRecyclerView_wpHideAppBarLayout, false);
+
+                includeDefaultSpacing = a.getBoolean(R.styleable.FilteredRecyclerView_wpIncludeDefaultSpacing, true);
             } finally {
                 a.recycle();
             }
         }
 
-        int spacingHorizontal = 0;
-        int spacingVertical = DisplayUtils.dpToPx(getContext(), 1);
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
+
+        if (includeDefaultSpacing) {
+            int spacingHorizontal = 0;
+            int spacingVertical = DisplayUtils.dpToPx(getContext(), 1);
+            mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
+        }
 
         mToolbar = findViewById(R.id.toolbar_with_spinner);
         mAppBarLayout = findViewById(R.id.app_bar_layout);
