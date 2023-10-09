@@ -167,7 +167,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void deleteTerm(final TermModel term, final SiteModel site) {
+    public void deleteTerm(@NonNull final TermModel term, @NonNull final SiteModel site) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
