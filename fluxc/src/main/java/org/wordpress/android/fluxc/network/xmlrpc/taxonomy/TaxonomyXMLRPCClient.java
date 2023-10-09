@@ -39,10 +39,11 @@ import javax.inject.Singleton;
 
 @Singleton
 public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
-    @Inject public TaxonomyXMLRPCClient(Dispatcher dispatcher,
-                                @Named("custom-ssl") RequestQueue requestQueue,
-                                UserAgent userAgent,
-                                HTTPAuthManager httpAuthManager) {
+    @Inject public TaxonomyXMLRPCClient(
+            Dispatcher dispatcher,
+            @Named("custom-ssl") RequestQueue requestQueue,
+            UserAgent userAgent,
+            HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
@@ -62,22 +63,22 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
-                    if (response != null && response instanceof Map) {
-                        TermModel termModel = termResponseObjectToTermModel(response, site);
-                        FetchTermResponsePayload payload;
-                        if (termModel != null) {
-                            if (origin == TaxonomyAction.PUSH_TERM) {
-                                termModel.setId(term.getId());
+                        if (response != null && response instanceof Map) {
+                            TermModel termModel = termResponseObjectToTermModel(response, site);
+                            FetchTermResponsePayload payload;
+                            if (termModel != null) {
+                                if (origin == TaxonomyAction.PUSH_TERM) {
+                                    termModel.setId(term.getId());
+                                }
+                                payload = new FetchTermResponsePayload(termModel, site);
+                            } else {
+                                payload = new FetchTermResponsePayload(term, site);
+                                payload.error = new TaxonomyError(TaxonomyErrorType.INVALID_RESPONSE);
                             }
-                            payload = new FetchTermResponsePayload(termModel, site);
-                        } else {
-                            payload = new FetchTermResponsePayload(term, site);
-                            payload.error = new TaxonomyError(TaxonomyErrorType.INVALID_RESPONSE);
-                        }
-                        payload.origin = origin;
+                            payload.origin = origin;
 
-                        mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermAction(payload));
-                    }
+                            mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermAction(payload));
+                        }
                     }
                 },
                 new BaseErrorListener() {
@@ -101,8 +102,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
                         payload.origin = origin;
                         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermAction(payload));
                     }
-                }
-        );
+                });
 
         add(request);
     }
@@ -148,8 +148,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
                         FetchTermsResponsePayload payload = new FetchTermsResponsePayload(taxonomyError, taxonomyName);
                         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(payload));
                     }
-                }
-        );
+                });
 
         add(request);
     }
@@ -203,8 +202,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
                         payload.error = taxonomyError;
                         mDispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload));
                     }
-                }
-        );
+                });
 
         request.disableRetries();
         add(request);
@@ -241,8 +239,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
                         payload.error = taxonomyError;
                         mDispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload));
                     }
-                }
-        );
+                });
 
         request.disableRetries();
         add(request);
