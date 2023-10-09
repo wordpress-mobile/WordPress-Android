@@ -140,7 +140,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     @Inject ReaderTracker mReaderTracker;
     @Inject SiteStore mSiteStore;
 
-    private ReaderCommentListViewModel mViewModel;
+    @Nullable private ReaderCommentListViewModel mViewModel;
     private ConversationNotificationsViewModel mConversationViewModel;
 
     @Nullable private ReaderActivityCommentListBinding mBinding = null;
@@ -177,9 +177,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             }
         }
 
-        initViewModel();
         if (mBinding != null) {
-            initObservers(mBinding, savedInstanceState);
+            initViewModels(mBinding, savedInstanceState);
         }
 
         if (mBinding != null && mBoxBinding != null) {
@@ -309,17 +308,11 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         }
     }
 
-    private void initViewModel() {
-        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ReaderCommentListViewModel.class);
-        mConversationViewModel = new ViewModelProvider(this, mViewModelFactory).get(
-                ConversationNotificationsViewModel.class
-        );
-    }
-
-    private void initObservers(
+    private void initViewModels(
             @NonNull ReaderActivityCommentListBinding binding,
             Bundle savedInstanceState
     ) {
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ReaderCommentListViewModel.class);
         mViewModel.getScrollTo().observe(this, scrollPositionEvent -> {
             ScrollPosition content = scrollPositionEvent.getContentIfNotHandled();
             LayoutManager layoutManager = binding.recyclerView.getLayoutManager();
@@ -339,6 +332,9 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             }
         });
 
+        mConversationViewModel = new ViewModelProvider(this, mViewModelFactory).get(
+                ConversationNotificationsViewModel.class
+        );
         mConversationViewModel.getSnackbarEvents().observe(this, snackbarMessageHolderEvent -> {
             FragmentManager fm = getSupportFragmentManager();
             CommentNotificationsBottomSheetFragment bottomSheet =
@@ -847,7 +843,9 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
                         doDirectOperation(binding, boxBinding);
                     } else if (mRestorePosition > 0) {
-                        mViewModel.scrollToPosition(mRestorePosition, false);
+                        if (mViewModel != null) {
+                            mViewModel.scrollToPosition(mRestorePosition, false);
+                        }
                     }
                     mRestorePosition = 0;
                     checkEmptyView(binding, boxBinding);
@@ -1043,7 +1041,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             long commentId
     ) {
         int position = getCommentAdapter(binding, boxBinding).positionOfCommentId(commentId);
-        if (position > -1) {
+        if (mViewModel != null && position > -1) {
             mViewModel.scrollToPosition(position, false);
         }
     }
@@ -1057,7 +1055,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             long commentId
     ) {
         int position = getCommentAdapter(binding, boxBinding).positionOfCommentId(commentId);
-        if (position > -1) {
+        if (mViewModel != null && position > -1) {
             mViewModel.scrollToPosition(position, true);
         }
     }
