@@ -1115,6 +1115,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
         });
 
+        // set the background color as we have different colors for the new and legacy designs that are not easy to
+        // change via styles, because of the FeatureConfig logic
+        int backgroundColor = mReaderImprovementsFeatureConfig.isEnabled()
+                ? R.color.reader_post_list_background_new
+                : R.color.reader_post_list_background;
+        mRecyclerView.setBackgroundColor(ContextCompat.getColor(requireContext(), backgroundColor));
+
         // add the item decoration (dividers) to the recycler, skipping the first item if the first
         // item is the tag toolbar (shown when viewing posts in followed tags) - this is to avoid
         // having the tag toolbar take up more vertical space than necessary
@@ -1124,6 +1131,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
         int spacingHorizontal = getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
         int spacingVertical = getResources().getDimensionPixelSize(spacingVerticalRes);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
+
+        // add a proper item divider to the RecyclerView when Reader Improvements are enabled
+        if (mReaderImprovementsFeatureConfig.isEnabled()) {
+            mRecyclerView.addItemDivider(R.drawable.default_list_divider);
+        }
 
         mRecyclerView.setToolbarBackgroundColor(0);
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
