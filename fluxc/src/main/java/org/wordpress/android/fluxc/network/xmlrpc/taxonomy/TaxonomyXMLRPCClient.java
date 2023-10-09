@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.network.xmlrpc.taxonomy;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -99,16 +100,17 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_TERMS, params,
                 response -> {
+                    FetchTermsResponsePayload payload;
                     TermsModel terms = termsResponseToTermsModel(response, site);
-
-                    FetchTermsResponsePayload payload = new FetchTermsResponsePayload(terms, site, taxonomyName);
-
                     if (terms != null) {
-                        mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(payload));
+                        payload = new FetchTermsResponsePayload(terms, site, taxonomyName);
                     } else {
-                        payload.error = new TaxonomyError(TaxonomyErrorType.INVALID_RESPONSE);
-                        mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(payload));
+                        payload = new FetchTermsResponsePayload(
+                                new TaxonomyError(TaxonomyErrorType.INVALID_RESPONSE),
+                                taxonomyName
+                        );
                     }
+                    mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(payload));
                 },
                 error -> {
                     // Possible non-generic errors:
@@ -185,6 +187,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
+    @Nullable
     private TermsModel termsResponseToTermsModel(Object[] response, SiteModel site) {
         List<Map<?, ?>> termsList = new ArrayList<>();
         for (Object responseObject : response) {
