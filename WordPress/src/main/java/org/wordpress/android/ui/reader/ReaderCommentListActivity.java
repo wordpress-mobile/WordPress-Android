@@ -132,7 +132,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private long mCommentId;
     private int mRestorePosition;
     @Nullable private String mInterceptedUri;
-    private String mSource;
+    @Nullable private String mSource;
 
     @Inject AccountStore mAccountStore;
     @Inject UiHelpers mUiHelpers;
@@ -251,7 +251,9 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         // update the post and its comments upon creation
         mUpdateOnResume = (savedInstanceState == null);
 
-        mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost, mSource);
+        if (mSource != null) {
+            mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost, mSource);
+        }
 
         if (mBoxBinding != null && mPost != null) {
             mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, mBlogId);
