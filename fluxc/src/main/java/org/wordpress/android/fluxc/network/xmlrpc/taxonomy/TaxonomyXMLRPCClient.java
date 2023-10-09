@@ -47,11 +47,14 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
-    public void fetchTerm(final TermModel term, final SiteModel site) {
+    public void fetchTerm(@NonNull final TermModel term, @NonNull final SiteModel site) {
         fetchTerm(term, site, TaxonomyAction.FETCH_TERM);
     }
 
-    public void fetchTerm(final TermModel term, final SiteModel site, final TaxonomyAction origin) {
+    public void fetchTerm(
+            @NonNull final TermModel term,
+            @NonNull final SiteModel site,
+            @NonNull final TaxonomyAction origin) {
         List<Object> params = new ArrayList<>(5);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
