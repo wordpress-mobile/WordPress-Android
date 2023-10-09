@@ -242,7 +242,8 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         );
     }
 
-    private static Map<String, Object> termModelToContentStruct(TermModel term) {
+    @NonNull
+    private static Map<String, Object> termModelToContentStruct(@NonNull TermModel term) {
         Map<String, Object> contentStruct = new HashMap<>();
 
         contentStruct.put("name", term.getName());
