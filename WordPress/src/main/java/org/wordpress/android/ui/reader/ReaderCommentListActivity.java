@@ -131,7 +131,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private long mReplyToCommentId;
     private long mCommentId;
     private int mRestorePosition;
-    private String mInterceptedUri;
+    @Nullable private String mInterceptedUri;
     private String mSource;
 
     @Inject AccountStore mAccountStore;
@@ -427,7 +427,9 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 return;
             }
 
-            mReaderTracker.trackUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
+            if (mInterceptedUri != null) {
+                mReaderTracker.trackUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
+            }
             ActivityLauncher.loginWithoutMagicLink(ReaderCommentListActivity.this);
         }
     };
