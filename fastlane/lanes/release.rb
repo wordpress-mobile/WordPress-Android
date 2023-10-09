@@ -14,14 +14,11 @@ platform :android do
   #####################################################################################
   desc 'Creates a new release branch from the current trunk'
   lane :code_freeze do |options|
-    # Ensure we use the latest version of the toolkit
-    check_for_toolkit_updates unless is_ci || ENV['FASTLANE_SKIP_TOOLKIT_UPDATE_CHECK']
-
     ensure_git_status_clean
     Fastlane::Helper::GitHelper.checkout_and_pull(DEFAULT_BRANCH)
     ensure_git_branch(branch: DEFAULT_BRANCH)
 
-    confirmation_message = <<-MESSAGE
+    message = <<-MESSAGE
 
       Code Freeze:
       • New release branch from #{DEFAULT_BRANCH}: release/#{next_release_version}
@@ -32,13 +29,16 @@ platform :android do
 
     MESSAGE
 
-    # Ask user confirmation
-    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm(confirmation_message)
+    UI.message(message)
+
+    unless options[:skip_confirm]
+      UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
+    end
 
     # Create the release branch
     UI.message 'Creating release branch...'
     Fastlane::Helper::GitHelper.create_branch("release/#{next_release_version}", from: DEFAULT_BRANCH)
-    ensure_git_branch(branch: '^release/') # Match branch names that begin with `release/`
+    ensure_git_branch(branch: '^release/')
     UI.message "Done! New release branch is: #{git_branch}"
 
     # Bump the version and build code
@@ -47,10 +47,8 @@ platform :android do
       version_name: first_beta_version,
       version_code: next_build_code
     )
-    UI.message "Done! New Beta Version: #{current_beta_version}. New Build Code: #{current_build_code}"
-
-    # Commit the version bump
     commit_version_bump
+    UI.message "Done! New Beta Version: #{current_beta_version}. New Build Code: #{current_build_code}"
 
     new_version = current_release_version
 
@@ -91,16 +89,15 @@ platform :android do
   #####################################################################################
   desc 'Trigger a release build for a given app after code freeze'
   lane :complete_code_freeze do |options|
-    ensure_git_branch(branch: '^release/') # Match branch names that begin with `release/`
+    ensure_git_branch(branch: '^release/')
     ensure_git_status_clean
 
     new_version = current_release_version
 
-    message = "Completing code freeze for: #{new_version}\n"
-    if options[:skip_confirm]
-      UI.message(message)
-    else
-      UI.user_error!('Aborted by user request') unless UI.confirm("#{message}Do you want to continue?")
+    UI.message("Completing code freeze for: #{new_version}\n")
+
+    unless options[:skip_confirm]
+      UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
     end
 
     localize_libraries
@@ -138,8 +135,16 @@ platform :android do
     # Check local repo status
     ensure_git_status_clean
 
+    # Check branch
+    unless !options[:base_version].nil? || Fastlane::Helper::GitHelper.checkout_and_pull(release: current_release_version)
+      UI.user_error!("Release branch for version #{current_release_version} doesn't exist.")
+    end
+
+    # Check user override
+    override_default_release_branch(options[:base_version]) unless options[:base_version].nil?
+
     # Check versions
-    message = <<-MESSAGE
+    message = (<<-MESSAGE
 
       Current beta version: #{current_beta_version}
       New beta version: #{next_beta_version}
@@ -149,19 +154,10 @@ platform :android do
 
     MESSAGE
 
-    # Check branch
-    unless !options[:base_version].nil? || Fastlane::Helper::GitHelper.checkout_and_pull(release: current_release_version)
-      UI.user_error!("Release branch for version #{current_release_version} doesn't exist.")
-    end
+    UI.message(message)
 
-    # Check user override
-    override_default_release_branch(options[:base_version]) unless options[:base_version].nil?
-
-    # Verify
-    if options[:skip_confirm]
-      UI.message(message)
-    else
-      UI.user_error!('Aborted by user request') unless UI.confirm("#{message}Do you want to continue?")
+    unless options[:skip_confirm]
+      UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
     end
 
     update_frozen_strings_for_translation
@@ -169,7 +165,7 @@ platform :android do
 
     # Bump the release version and build code
     UI.message 'Bumping beta version and build code...'
-    ensure_git_branch(branch: '^release/') # Match branch names that begin with `release/`
+    ensure_git_branch(branch: '^release/')
     VERSION_FILE.write_version(
       version_name: next_beta_version,
       version_code: next_build_code
@@ -177,8 +173,7 @@ platform :android do
     commit_version_bump
     UI.message "Done! New Beta Version: #{current_beta_version}. New Build Code: #{current_build_code}"
 
-    app_version = current_release_version
-    release_branch = "release/#{app_version}"
+    release_branch = "release/#{current_release_version}"
     release_version = current_version_name
 
     # Create an intermediate branch
@@ -198,15 +193,15 @@ platform :android do
   # This lane updates the release branch for a new hotfix release.
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane new_hotfix_release [skip_confirm:<skip confirm>] [version_name:<x.y.z>] [version_code:<nnnn>]
+  # bundle exec fastlane new_hotfix_release [skip_confirm:<skip confirm>] [version_name:<x.y.z>] [build_code:<nnnn>]
   #
   # Example:
-  # bundle exec fastlane new_hotfix_release version_name:10.6.1 version_code:1070
+  # bundle exec fastlane new_hotfix_release version_name:10.6.1 build_code:1070
   #####################################################################################
   desc 'Prepare a new hotfix branch cut from the previous tag, and bump the version'
   lane :new_hotfix_release do |options|
     new_version = options[:version_name] || UI.input('Version number for the new hotfix?')
-    new_version_code = options[:version_code] || UI.input('Version code for the new hotfix?')
+    new_build_code = options[:build_code] || UI.input('Version code for the new hotfix?')
 
     ensure_git_status_clean
 
@@ -221,16 +216,16 @@ platform :android do
       New hotfix version: #{new_version}
 
       Current build code: #{current_build_code}
-      New build code: #{new_version_code}
+      New build code: #{new_build_code}
 
       Branching from tag: #{previous_version}
 
     MESSAGE
 
-    if options[:skip_confirm]
-      UI.message(message)
-    else
-      UI.user_error!('Aborted by user request') unless UI.confirm("#{message}Do you want to continue?")
+    UI.message(message)
+
+    unless options[:skip_confirm]
+      UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
     end
 
     # Check tags
@@ -246,7 +241,7 @@ platform :android do
     UI.message 'Bumping hotfix version and build code...'
     VERSION_FILE.write_version(
       version_name: new_version,
-      version_code: new_version_code
+      version_code: new_build_code
     )
     commit_version_bump
     UI.message "Done! New Release Version: #{current_release_version}. New Build Code: #{current_build_code}"
@@ -267,7 +262,7 @@ platform :android do
   #####################################################################################
   desc 'Finalizes a hotfix release by triggering a release build'
   lane :finalize_hotfix_release do |options|
-    ensure_git_branch(branch: '^release/') # Match branch names that begin with `release/`
+    ensure_git_branch(branch: '^release/')
     ensure_git_status_clean unless is_ci
 
     UI.message = "Triggering hotfix build for version: #{current_release_version}"
@@ -291,19 +286,17 @@ platform :android do
     UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix
 
     ensure_git_status_clean
-    ensure_git_branch(branch: '^release/') # Match branch names that begin with `release/`
+    ensure_git_branch(branch: '^release/')
 
-    message = "Finalizing release: #{current_release_version}\n"
-    if options[:skip_confirm]
-      UI.message(message)
-    else
-      UI.user_error!('Aborted by user request') unless UI.confirm("#{message}Do you want to continue?")
+    UI.message("Finalizing release: #{current_release_version}\n")
+
+    unless options[:skip_confirm]
+      UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
     end
 
     configure_apply(force: is_ci)
 
-    app_version = current_release_version
-    release_branch = "release/#{app_version}"
+    release_branch = "release/#{current_release_version}"
 
     # Remove branch protection first, so that we can push the final commits directly to the release branch
     removebranchprotection(repository: GHHELPER_REPO, branch: release_branch)
@@ -321,21 +314,21 @@ platform :android do
     commit_version_bump
     UI.message "Done! New Release Version: #{current_release_version}. New Build Code: #{current_build_code}"
 
-    version = current_release_version
+    version_name = current_release_version
     build_code = current_build_code
-    download_metadata_strings(version: version, build_number: build_code)
+    download_metadata_strings(version: version_name, build_number: build_code)
 
     push_to_git_remote(tags: false)
 
     # Wrap up
-    setfrozentag(repository: GHHELPER_REPO, milestone: version, freeze: false)
+    setfrozentag(repository: GHHELPER_REPO, milestone: version_name, freeze: false)
     create_new_milestone(repository: GHHELPER_REPO)
-    close_milestone(repository: GHHELPER_REPO, milestone: version)
+    close_milestone(repository: GHHELPER_REPO, milestone: version_name)
 
     # Trigger release build
-    trigger_release_build(branch_to_build: "release/#{version}")
+    trigger_release_build(branch_to_build: "release/#{version_name}")
 
-    create_release_management_pull_request('trunk', "Merge #{app_version} final to trunk")
+    create_release_management_pull_request('trunk', "Merge #{version_name} final to trunk")
   end
 
   lane :check_translations_coverage do |options|
@@ -416,17 +409,17 @@ platform :android do
   #   - If `prerelease:<true|false>`` is not provided, the pre-release status will be inferred from the version name
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane create_gh_release [app:<wordpress|jetpack>] [version:string] [prerelease:<true|false>]
+  # bundle exec fastlane create_gh_release [app:<wordpress|jetpack>] [version_name:string] [prerelease:<true|false>]
   #
   # Examples:
   # bundle exec fastlane create_gh_release     # Guesses prerelease status based on version name. Includes existing assets for WPBeta+JPBeta
   # bundle exec fastlane create_gh_release app:wordpress prerelease:true                        # Includes existing assets for WPBeta
-  # bundle exec fastlane create_gh_release version:12.3-rc-4 prerelease:true             # Includes existing assets for WPBeta+JPBeta 12.3-rc-4
-  # bundle exec fastlane create_gh_release app:jetpack version:12.3-rc-4 prerelease:true # Includes only existing asset for JPBeta 12.3-rc-4
+  # bundle exec fastlane create_gh_release version_name:12.3-rc-4 prerelease:true             # Includes existing assets for WPBeta+JPBeta 12.3-rc-4
+  # bundle exec fastlane create_gh_release app:jetpack version_name:12.3-rc-4 prerelease:true # Includes only existing asset for JPBeta 12.3-rc-4
   #####################################################################################
   lane :create_gh_release do |options|
     apps = options[:app].nil? ? ['wordpress', 'jetpack'] : [get_app_name_option!(options)]
-    versions = options[:version].nil? ? [current_version_name] : [options[:version]]
+    versions = options[:version_name].nil? ? [current_version_name] : [options[:version_name]]
 
     download_signed_apks_from_google_play(app: options[:app])
 
@@ -510,13 +503,13 @@ platform :android do
     ]
   end
 
-  def bundle_file_path(app, version)
+  def bundle_file_path(app, version_name)
     prefix = APP_SPECIFIC_VALUES[app.to_sym][:bundle_name_prefix]
-    File.join(ENV['PROJECT_ROOT_FOLDER'], 'build', "#{prefix}-#{version}.aab")
+    File.join(ENV['PROJECT_ROOT_FOLDER'], 'build', "#{prefix}-#{version_name}.aab")
   end
 
-  def signed_apk_path(app, version)
-    bundle_file_path(app, version).sub('.aab', '.apk')
+  def signed_apk_path(app, version_name)
+    bundle_file_path(app, version_name).sub('.aab', '.apk')
   end
 
   def commit_version_bump
@@ -524,5 +517,12 @@ platform :android do
       message: 'Bump version number',
       files: VERSION_PROPERTIES_PATH
     )
+  end
+
+  def override_default_release_branch(version_name)
+    success = Fastlane::Helper::GitHelper.checkout_and_pull(release: version_name)
+    UI.user_error!("Release branch for version #{version_name} doesn't exist. Abort.") unless success
+
+    UI.message "Checked out branch `#{git_branch}` as requested by user.\n"
   end
 end
