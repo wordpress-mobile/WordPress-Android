@@ -88,17 +88,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
                         // 403 - "Invalid taxonomy."
                         // 404 - "Invalid term ID."
                         FetchTermResponsePayload payload = new FetchTermResponsePayload(term, site);
-                        // TODO: Check the error message and flag this as INVALID_TAXONOMY or UNKNOWN_TERM
-                        // Convert GenericErrorType to TaxonomyErrorType where applicable
-                        TaxonomyError taxonomyError;
-                        switch (error.type) {
-                            case AUTHORIZATION_REQUIRED:
-                                taxonomyError = new TaxonomyError(TaxonomyErrorType.UNAUTHORIZED, error.message);
-                                break;
-                            default:
-                                taxonomyError = new TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, error.message);
-                        }
-                        payload.error = taxonomyError;
+                        payload.error = getTaxonomyError(error);
                         payload.origin = origin;
                         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermAction(payload));
                     }
@@ -135,17 +125,10 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         // Possible non-generic errors:
                         // 403 - "Invalid taxonomy."
-                        // TODO: Check the error message and flag this as INVALID_TAXONOMY if applicable
-                        // Convert GenericErrorType to TaxonomyErrorType where applicable
-                        TaxonomyError taxonomyError;
-                        switch (error.type) {
-                            case AUTHORIZATION_REQUIRED:
-                                taxonomyError = new TaxonomyError(TaxonomyErrorType.UNAUTHORIZED, error.message);
-                                break;
-                            default:
-                                taxonomyError = new TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, error.message);
-                        }
-                        FetchTermsResponsePayload payload = new FetchTermsResponsePayload(taxonomyError, taxonomyName);
+                        FetchTermsResponsePayload payload = new FetchTermsResponsePayload(
+                                getTaxonomyError(error),
+                                taxonomyName
+                        );
                         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(payload));
                     }
                 });
@@ -189,17 +172,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
                         // 403 - "The term name cannot be empty."
                         // 500 - "A term with the name provided already exists with this parent."
                         RemoteTermPayload payload = new RemoteTermPayload(term, site);
-                        // TODO: Check the error message and flag this as one of the above specific errors if applicable
-                        // Convert GenericErrorType to PostErrorType where applicable
-                        TaxonomyError taxonomyError;
-                        switch (error.type) {
-                            case AUTHORIZATION_REQUIRED:
-                                taxonomyError = new TaxonomyError(TaxonomyErrorType.UNAUTHORIZED, error.message);
-                                break;
-                            default:
-                                taxonomyError = new TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, error.message);
-                        }
-                        payload.error = taxonomyError;
+                        payload.error = getTaxonomyError(error);
                         mDispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload));
                     }
                 });
@@ -228,15 +201,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         RemoteTermPayload payload = new RemoteTermPayload(term, site);
-                        TaxonomyError taxonomyError;
-                        switch (error.type) {
-                            case AUTHORIZATION_REQUIRED:
-                                taxonomyError = new TaxonomyError(TaxonomyErrorType.UNAUTHORIZED, error.message);
-                                break;
-                            default:
-                                taxonomyError = new TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, error.message);
-                        }
-                        payload.error = taxonomyError;
+                        payload.error = getTaxonomyError(error);
                         mDispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload));
                     }
                 });
@@ -314,5 +279,32 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         }
 
         return contentStruct;
+    }
+
+    // TODO: Check the error message and flag this as a specific error if applicable.
+    // Convert GenericErrorType to TaxonomyErrorType where applicable
+    @NonNull
+    private TaxonomyError getTaxonomyError(@NonNull BaseNetworkError error) {
+        TaxonomyError taxonomyError;
+        switch (error.type) {
+            case AUTHORIZATION_REQUIRED:
+                taxonomyError = new TaxonomyError(TaxonomyErrorType.UNAUTHORIZED, error.message);
+                break;
+            case TIMEOUT:
+            case NO_CONNECTION:
+            case NETWORK_ERROR:
+            case NOT_FOUND:
+            case CENSORED:
+            case SERVER_ERROR:
+            case INVALID_SSL_CERTIFICATE:
+            case HTTP_AUTH_ERROR:
+            case INVALID_RESPONSE:
+            case NOT_AUTHENTICATED:
+            case PARSE_ERROR:
+            case UNKNOWN:
+            default:
+                taxonomyError = new TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, error.message);
+        }
+        return taxonomyError;
     }
 }
