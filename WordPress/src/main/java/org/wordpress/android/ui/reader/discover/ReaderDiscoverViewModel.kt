@@ -12,17 +12,14 @@ import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
-import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
@@ -59,7 +56,6 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val readerDiscoverDataProvider: ReaderDiscoverDataProvider,
     private val reblogUseCase: ReblogUseCase,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper,
     private val readerTracker: ReaderTracker,
     displayUtilsWrapper: DisplayUtilsWrapper,
     private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
@@ -170,9 +166,6 @@ class ReaderDiscoverViewModel @Inject constructor(
     private suspend fun convertCardsToUiStates(posts: ReaderDiscoverCards): List<ReaderCardUiState> {
         return posts.cards.map { card ->
             when (card) {
-                is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(
-                    titleRes = R.string.reader_welcome_banner
-                )
                 is ReaderPostCard -> if (readerImprovementsFeatureConfig.isEnabled()) {
                     postUiStateBuilder.mapPostToNewUiState(
                         source = ReaderTracker.SOURCE_DISCOVER,
@@ -471,8 +464,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         readerDiscoverDataProvider.stop()
         readerPostCardActionsHandler.onCleared()
         readerDiscoverDataProvider.communicationChannel.removeObserver(communicationChannelObserver)
-
-        appPrefsWrapper.readerDiscoverWelcomeBannerShown = true
     }
 
     fun swipeToRefresh() {
@@ -481,8 +472,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         launch {
             readerDiscoverDataProvider.refreshCards()
         }
-
-        appPrefsWrapper.readerDiscoverWelcomeBannerShown = true
     }
 
     fun onRetryButtonClick() {
