@@ -115,17 +115,14 @@ platform :android do
   # new_beta_release
   # -----------------------------------------------------------------------------------
   # This lane updates the release branch for a new beta release. It will update the
-  # current release branch by default. If you want to update a different branch
-  # (i.e. hotfix branch) pass the related version with the 'base_version' param
-  # (example: base_version:10.6.1 will work on the 10.6.1 branch)
+  # current release branch by default.
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane new_beta_release [skip_confirm:<skip confirm>] [base_version:<version>]
+  # bundle exec fastlane new_beta_release [skip_confirm:<skip confirm>]
   #
   # Example:
   # bundle exec fastlane new_beta_release
   # bundle exec fastlane new_beta_release skip_confirm:true
-  # bundle exec fastlane new_beta_release base_version:10.6.1
   #####################################################################################
   desc 'Updates a release branch for a new beta release'
   lane :new_beta_release do |options|
@@ -136,15 +133,12 @@ platform :android do
     ensure_git_status_clean
 
     # Check branch
-    unless !options[:base_version].nil? || Fastlane::Helper::GitHelper.checkout_and_pull(release: current_release_version)
+    unless Fastlane::Helper::GitHelper.checkout_and_pull(release: current_release_version)
       UI.user_error!("Release branch for version #{current_release_version} doesn't exist.")
     end
 
-    # Check user override
-    override_default_release_branch(options[:base_version]) unless options[:base_version].nil?
-
     # Check versions
-    message = (<<-MESSAGE
+    message = <<-MESSAGE
 
       Current beta version: #{current_beta_version}
       New beta version: #{next_beta_version}
@@ -165,7 +159,6 @@ platform :android do
 
     # Bump the release version and build code
     UI.message 'Bumping beta version and build code...'
-    ensure_git_branch(branch: '^release/')
     VERSION_FILE.write_version(
       version_name: next_beta_version,
       version_code: next_build_code
@@ -517,12 +510,5 @@ platform :android do
       message: 'Bump version number',
       files: VERSION_PROPERTIES_PATH
     )
-  end
-
-  def override_default_release_branch(version_name)
-    success = Fastlane::Helper::GitHelper.checkout_and_pull(release: version_name)
-    UI.user_error!("Release branch for version #{version_name} doesn't exist. Abort.") unless success
-
-    UI.message "Checked out branch `#{git_branch}` as requested by user.\n"
   end
 end
