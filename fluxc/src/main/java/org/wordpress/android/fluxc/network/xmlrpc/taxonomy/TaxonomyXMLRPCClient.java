@@ -94,7 +94,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void fetchTerms(final SiteModel site, final String taxonomyName) {
+    public void fetchTerms(@NonNull final SiteModel site, @NonNull final String taxonomyName) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
