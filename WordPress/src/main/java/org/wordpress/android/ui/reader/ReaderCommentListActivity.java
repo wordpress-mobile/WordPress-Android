@@ -310,7 +310,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
     private void initViewModels(
             @NonNull ReaderActivityCommentListBinding binding,
-            Bundle savedInstanceState
+            @Nullable Bundle savedInstanceState
     ) {
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ReaderCommentListViewModel.class);
         mViewModel.getScrollTo().observe(this, scrollPositionEvent -> {
