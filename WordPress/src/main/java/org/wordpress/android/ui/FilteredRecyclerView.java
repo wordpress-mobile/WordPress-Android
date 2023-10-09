@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ import com.google.android.material.appbar.AppBarLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.FilterCriteria;
+import org.wordpress.android.ui.utils.RecyclerViewExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -417,6 +419,12 @@ public class FilteredRecyclerView extends RelativeLayout {
         if (mRecyclerView == null) return;
 
         mRecyclerView.addItemDecoration(decor);
+    }
+
+    public void addItemDivider(@DrawableRes int dividerRes) {
+        if (mRecyclerView == null) return;
+
+        RecyclerViewExtensionsKt.addItemDivider(mRecyclerView, dividerRes);
     }
 
     public void addOnScrollListener(RecyclerView.OnScrollListener listener) {
