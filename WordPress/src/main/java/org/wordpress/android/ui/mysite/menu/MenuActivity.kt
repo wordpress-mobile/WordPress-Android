@@ -25,9 +25,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -104,6 +107,11 @@ class MenuActivity : AppCompatActivity() {
         viewModel.navigation.observe(this) { handleNavigationAction(it.getContentIfNotHandled()) }
         viewModel.onSnackbarMessage.observe(this) { showSnackbar(it.getContentIfNotHandled()) }
         viewModel.onQuickStartMySitePrompts.observe(this) { handleActiveTutorialPrompt(it.getContentIfNotHandled()) }
+
+        // Set the Compose callback for SnackbarSequencer
+        snackbarSequencer.setComposeSnackbarCallback { item ->
+            item?.let { viewModel.showSnackbarRequest(it) }
+        }
     }
 
     @Suppress("ComplexMethod", "LongMethod")
@@ -142,7 +150,7 @@ class MenuActivity : AppCompatActivity() {
             snackbarSequencer.enqueue(
                 SnackbarItem(
                     info = SnackbarItem.Info(
-                        view = parent.findViewById(R.id.coordinator),
+                        view = window.decorView.findViewById(android.R.id.content),
                         textRes = holder.message,
                         duration = holder.duration,
                         isImportant = holder.isImportant
@@ -176,10 +184,21 @@ class MenuActivity : AppCompatActivity() {
         viewModel.onResume()
     }
 
+    override fun onStop() {
+        snackbarSequencer.clearComposeSnackbarCallback()
+        super.onStop()
+    }
+
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     fun MenuScreen(modifier: Modifier = Modifier) {
+        val scaffoldState = rememberScaffoldState()
+
         Scaffold(
+            scaffoldState = scaffoldState,
+            snackbarHost = { snackbarHostState ->
+                SnackbarHost(hostState = snackbarHostState)
+            },
             topBar = {
                 MainTopAppBar(
                     title = stringResource(id = R.string.my_site_section_screen_title),
@@ -191,7 +210,14 @@ class MenuActivity : AppCompatActivity() {
                 MenuContent(modifier = modifier)
             }
         )
+        LaunchedEffect(viewModel.snackBar) {
+            viewModel.snackBar.collect { message ->
+                scaffoldState.snackbarHostState.showSnackbar(
+                    message.message, message.actionLabel, message.duration)
+            }
+        }
     }
+
 
     @Composable
     fun MenuContent(modifier: Modifier = Modifier) {
@@ -214,6 +240,7 @@ class MenuActivity : AppCompatActivity() {
         }
     }
 }
+
 @Composable
 fun MySiteListItemHeader(headerItem: MenuItemState.MenuHeaderItem) {
     Text(
