@@ -127,7 +127,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private boolean mIsSubmittingComment;
     private boolean mUpdateOnResume;
 
-    private DirectOperation mDirectOperation;
+    @Nullable private DirectOperation mDirectOperation;
     private long mReplyToCommentId;
     private long mCommentId;
     private int mRestorePosition;
