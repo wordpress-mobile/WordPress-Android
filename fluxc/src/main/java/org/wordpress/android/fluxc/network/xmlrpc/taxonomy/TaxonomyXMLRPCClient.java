@@ -191,7 +191,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
     }
 
     @Nullable
-    private TermsModel termsResponseToTermsModel(Object[] response, SiteModel site) {
+    private TermsModel termsResponseToTermsModel(@NonNull Object[] response, @NonNull SiteModel site) {
         List<Map<?, ?>> termsList = new ArrayList<>();
         for (Object responseObject : response) {
             Map<?, ?> termMap = (Map<?, ?>) responseObject;
