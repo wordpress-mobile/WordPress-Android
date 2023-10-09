@@ -141,7 +141,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     @Inject SiteStore mSiteStore;
 
     @Nullable private ReaderCommentListViewModel mViewModel;
-    private ConversationNotificationsViewModel mConversationViewModel;
+    @Nullable private ConversationNotificationsViewModel mConversationViewModel;
 
     @Nullable private ReaderActivityCommentListBinding mBinding = null;
     @Nullable private ReaderIncludeCommentBoxBinding mBoxBinding = null;
@@ -181,7 +181,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             initViewModels(mBinding, savedInstanceState);
         }
 
-        if (mBinding != null && mBoxBinding != null) {
+        if (mBinding != null && mBoxBinding != null && mConversationViewModel != null) {
             mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                     mBinding.swipeToRefresh,
                     () -> {
@@ -486,48 +486,52 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.threaded_comments_menu, menu);
 
-        mConversationViewModel.getUpdateFollowUiState().observe(this, uiState -> {
-            MenuItem bellItem = menu.findItem(R.id.manage_notifications_item);
-            MenuItem followItem = menu.findItem(R.id.follow_item);
+        if (mConversationViewModel != null) {
+            mConversationViewModel.getUpdateFollowUiState().observe(this, uiState -> {
+                MenuItem bellItem = menu.findItem(R.id.manage_notifications_item);
+                MenuItem followItem = menu.findItem(R.id.follow_item);
 
-            if (bellItem != null && followItem != null) {
-                ShimmerFrameLayout shimmerView = followItem.getActionView().findViewById(R.id.shimmer_view_container);
-                TextView followText = followItem.getActionView().findViewById(R.id.follow_button);
+                if (bellItem != null && followItem != null) {
+                    ShimmerFrameLayout shimmerView =
+                            followItem.getActionView().findViewById(R.id.shimmer_view_container);
+                    TextView followText =
+                            followItem.getActionView().findViewById(R.id.follow_button);
 
-                followItem.getActionView().setOnClickListener(
-                        uiState.getOnFollowTapped() != null
-                                ? v -> uiState.getOnFollowTapped().invoke()
-                                : null
-                );
+                    followItem.getActionView().setOnClickListener(
+                            uiState.getOnFollowTapped() != null
+                                    ? v -> uiState.getOnFollowTapped().invoke()
+                                    : null
+                    );
 
-                bellItem.setOnMenuItemClickListener(item -> {
-                    uiState.getOnManageNotificationsTapped().invoke();
-                    return true;
-                });
+                    bellItem.setOnMenuItemClickListener(item -> {
+                        uiState.getOnManageNotificationsTapped().invoke();
+                        return true;
+                    });
 
-                followItem.getActionView().setEnabled(uiState.getFlags().isMenuEnabled());
-                followText.setEnabled(uiState.getFlags().isMenuEnabled());
-                bellItem.setEnabled(uiState.getFlags().isMenuEnabled());
+                    followItem.getActionView().setEnabled(uiState.getFlags().isMenuEnabled());
+                    followText.setEnabled(uiState.getFlags().isMenuEnabled());
+                    bellItem.setEnabled(uiState.getFlags().isMenuEnabled());
 
-                if (uiState.getFlags().getShowMenuShimmer()) {
-                    if (!shimmerView.isShimmerVisible()) {
-                        shimmerView.showShimmer(true);
-                    } else if (!shimmerView.isShimmerStarted()) {
-                        shimmerView.startShimmer();
+                    if (uiState.getFlags().getShowMenuShimmer()) {
+                        if (!shimmerView.isShimmerVisible()) {
+                            shimmerView.showShimmer(true);
+                        } else if (!shimmerView.isShimmerStarted()) {
+                            shimmerView.startShimmer();
+                        }
+                    } else {
+                        shimmerView.hideShimmer();
                     }
-                } else {
-                    shimmerView.hideShimmer();
+
+                    followItem.setVisible(uiState.getFlags().isFollowMenuVisible());
+                    bellItem.setVisible(uiState.getFlags().isBellMenuVisible());
+
+                    setResult(RESULT_OK, new Intent().putExtra(
+                            FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY,
+                            uiState.getFlags()
+                    ));
                 }
-
-                followItem.setVisible(uiState.getFlags().isFollowMenuVisible());
-                bellItem.setVisible(uiState.getFlags().isBellMenuVisible());
-
-                setResult(RESULT_OK, new Intent().putExtra(
-                        FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY,
-                        uiState.getFlags()
-                ));
-            }
-        });
+            });
+        }
         return true;
     }
 
