@@ -60,7 +60,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_TERM, params,
                 (Listener<Object>) response -> {
-                    if (response != null && response instanceof Map) {
+                    if (response instanceof Map) {
                         TermModel termModel = termResponseObjectToTermModel(response, site);
                         FetchTermResponsePayload payload;
                         if (termModel != null) {
