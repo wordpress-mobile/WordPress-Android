@@ -215,7 +215,8 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         return new TermsModel(termArray);
     }
 
-    private TermModel termResponseObjectToTermModel(Object termObject, SiteModel site) {
+    @Nullable
+    private TermModel termResponseObjectToTermModel(@NonNull Object termObject, @NonNull SiteModel site) {
         // Sanity checks
         if (!(termObject instanceof Map)) {
             return null;
