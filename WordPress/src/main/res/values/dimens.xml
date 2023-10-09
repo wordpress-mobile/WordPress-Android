@@ -145,6 +145,7 @@
     <dimen name="reader_card_gutters">6dp</dimen>
     <dimen name="reader_card_gutters_new">1dp</dimen>
     <dimen name="reader_card_elevation">0dp</dimen>
+    <dimen name="reader_card_elevation_new">0dp</dimen>
     <dimen name="reader_site_header_avatar_margin_end">20dp</dimen>
 
     <dimen name="reader_video_overlay_size">56dp</dimen>
