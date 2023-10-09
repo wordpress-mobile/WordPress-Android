@@ -120,7 +120,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     @Nullable private SuggestionAdapter mSuggestionAdapter;
     @Nullable private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
-    private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    @Nullable private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     private boolean mIsUpdatingComments;
     private boolean mHasUpdatedComments;
@@ -1155,7 +1155,9 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
     @SuppressWarnings("SameParameterValue")
     private void setRefreshing(boolean refreshing) {
-        mSwipeToRefreshHelper.setRefreshing(refreshing);
+        if (mSwipeToRefreshHelper != null) {
+            mSwipeToRefreshHelper.setRefreshing(refreshing);
+        }
     }
 
     @Override
