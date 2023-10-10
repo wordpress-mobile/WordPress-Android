@@ -76,7 +76,9 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void pushComment(final SiteModel site, @NonNull final CommentModel comment) {
+    public void pushComment(
+            @NonNull final SiteModel site,
+            @NonNull final CommentModel comment) {
         List<Object> params = new ArrayList<>(5);
         Map<String, Object> commentParams = new HashMap<>();
         commentParams.put("content", comment.getContent());

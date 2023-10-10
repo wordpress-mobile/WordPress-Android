@@ -79,7 +79,9 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void pushComment(final SiteModel site, @NonNull final CommentModel comment) {
+    public void pushComment(
+            @NonNull final SiteModel site,
+            @NonNull final CommentModel comment) {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId()).getUrlV1_1();
         Map<String, Object> params = new HashMap<>();
         params.put("content", comment.getContent());
