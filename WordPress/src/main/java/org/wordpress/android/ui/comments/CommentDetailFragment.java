@@ -1619,27 +1619,29 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Subscribe(threadMode = ThreadMode.MAIN)
     @OptIn(markerClass = DelicateCoroutinesApi.class)
     public void onCommentChanged(OnCommentChanged event) {
-        if (mBinding != null && mReplyBinding != null && mActionBinding != null && mSite != null && mComment != null) {
-            setProgressVisible(mBinding, false);
-            // requesting local comment cache refresh
-            BuildersKt.launch(GlobalScope.INSTANCE,
-                    Dispatchers.getMain(),
-                    CoroutineStart.DEFAULT,
-                    (coroutineScope, continuation) -> mLocalCommentCacheUpdateHandler.requestCommentsUpdate(
-                            continuation
-                    )
-            );
-            // Moderating comment
-            if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
-                onCommentModerated(mBinding, mActionBinding, mSite, mComment, mNote, event);
-                mPreviousStatus = null;
-                return;
-            }
+        // requesting local comment cache refresh
+        BuildersKt.launch(GlobalScope.INSTANCE,
+                Dispatchers.getMain(),
+                CoroutineStart.DEFAULT,
+                (coroutineScope, continuation) -> mLocalCommentCacheUpdateHandler.requestCommentsUpdate(continuation)
+        );
 
-            // New comment (reply)
-            if (event.causeOfChange == CommentAction.CREATE_NEW_COMMENT) {
-                onCommentCreated(mBinding, mReplyBinding, mActionBinding, mSite, mComment, mNote, event);
-                return;
+        if (mBinding != null && mReplyBinding != null && mActionBinding != null) {
+            setProgressVisible(mBinding, false);
+
+            if (mSite != null && mComment != null) {
+                // Moderating comment
+                if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
+                    onCommentModerated(mBinding, mActionBinding, mSite, mComment, mNote, event);
+                    mPreviousStatus = null;
+                    return;
+                }
+
+                // New comment (reply)
+                if (event.causeOfChange == CommentAction.CREATE_NEW_COMMENT) {
+                    onCommentCreated(mBinding, mReplyBinding, mActionBinding, mSite, mComment, mNote, event);
+                    return;
+                }
             }
 
             // Like/Unlike
@@ -1647,12 +1649,12 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 onCommentLiked(mActionBinding, mNote, event);
                 return;
             }
+        }
 
-            if (event.isError()) {
-                AppLog.i(T.TESTS, "event error type: " + event.error.type + " - message: " + event.error.message);
-                if (isAdded() && !TextUtils.isEmpty(event.error.message)) {
-                    ToastUtils.showToast(getActivity(), event.error.message);
-                }
+        if (event.isError()) {
+            AppLog.i(T.TESTS, "event error type: " + event.error.type + " - message: " + event.error.message);
+            if (isAdded() && !TextUtils.isEmpty(event.error.message)) {
+                ToastUtils.showToast(getActivity(), event.error.message);
             }
         }
     }
