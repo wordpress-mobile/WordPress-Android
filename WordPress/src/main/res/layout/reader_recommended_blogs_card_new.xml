@@ -7,7 +7,7 @@
     android:background="?android:colorBackground">
 
     <com.google.android.material.card.MaterialCardView
-        style="@style/ReaderCardView"
+        style="@style/ReaderCardViewNew"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_large"

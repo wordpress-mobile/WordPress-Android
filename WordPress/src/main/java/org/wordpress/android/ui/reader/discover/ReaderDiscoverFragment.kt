@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,6 +45,7 @@ import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostCon
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.addItemDivider
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.util.image.ImageManager
@@ -91,6 +93,15 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                     uiHelpers, imageManager, readerTracker, readerImprovementsFeatureConfig.isEnabled()
                 )
 
+            // set the background color as we have different colors for the new and legacy designs that are not easy to
+            // change via styles, because of the FeatureConfig logic
+            val backgroundColor = if (readerImprovementsFeatureConfig.isEnabled()) {
+                R.color.reader_post_list_background_new
+            } else {
+                R.color.reader_post_list_background
+            }
+            recyclerView.setBackgroundColor(ContextCompat.getColor(requireContext(), backgroundColor))
+
             val spacingVerticalRes = if (readerImprovementsFeatureConfig.isEnabled()) {
                 R.dimen.reader_card_gutters_new
             } else {
@@ -99,6 +110,11 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             val spacingHorizontal = resources.getDimensionPixelSize(R.dimen.reader_card_margin)
             val spacingVertical = resources.getDimensionPixelSize(spacingVerticalRes)
             recyclerView.addItemDecoration(RecyclerItemDecoration(spacingHorizontal, spacingVertical, false))
+
+            // add a proper item divider to the RecyclerView when Reader Improvements are enabled
+            if (readerImprovementsFeatureConfig.isEnabled()) {
+                recyclerView.addItemDivider(R.drawable.default_list_divider)
+            }
 
             WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptrLayout) { viewModel.swipeToRefresh() }
 

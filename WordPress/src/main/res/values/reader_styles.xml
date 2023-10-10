@@ -19,6 +19,11 @@
         <item name="cardCornerRadius">0dp</item>
     </style>
 
+    <style name="ReaderCardViewNew" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">@dimen/reader_card_elevation_new</item>
+        <item name="cardCornerRadius">0dp</item>
+    </style>
+
     <!-- TextViews -->
     <style name="ReaderTextView" parent="android:Widget.TextView">
         <item name="android:textColorLink">?attr/colorPrimary</item>

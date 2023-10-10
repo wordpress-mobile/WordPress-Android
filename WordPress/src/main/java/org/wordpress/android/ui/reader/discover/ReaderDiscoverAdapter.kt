@@ -15,6 +15,7 @@ import org.wordpress.android.ui.reader.discover.viewholders.ReaderRecommendedBlo
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderRecommendedBlogsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderViewHolder
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.utils.HideItemDivider
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
@@ -58,6 +59,16 @@ class ReaderDiscoverAdapter(
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: ReaderViewHolder<*>, position: Int) {
+        if (isReaderImprovementsEnabled) {
+            // hide the item divider by setting the HideItemDivider object as view tag, which is used by the
+            // DividerItemDecorator to skip drawing the bottom divider for the item. It should be hidden for any
+            // recommendation cards and cards above them.
+            val nextPosition = position + 1
+            val shouldHideDivider = isRecommendationCard(position) ||
+                    (nextPosition < itemCount && isRecommendationCard(nextPosition))
+            holder.itemView.tag = HideItemDivider.takeIf { shouldHideDivider }
+        }
+
         holder.onBind(items[position])
     }
 
@@ -75,6 +86,11 @@ class ReaderDiscoverAdapter(
             is ReaderInterestsCardUiState -> INTEREST_VIEW_TYPE
             is ReaderRecommendedBlogsCardUiState -> RECOMMENDED_BLOGS_VIEW_TYPE
         }
+    }
+
+    private fun isRecommendationCard(position: Int): Boolean {
+        val type = getItemViewType(position)
+        return type in listOf(INTEREST_VIEW_TYPE, RECOMMENDED_BLOGS_VIEW_TYPE)
     }
 
     private class DiscoverDiffUtil(

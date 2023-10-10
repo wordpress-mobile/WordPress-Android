@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways"
+            android:background="?attr/colorSurface"
             app:theme="@style/WordPress.ActionBar" />
 
     </com.google.android.material.appbar.AppBarLayout>
