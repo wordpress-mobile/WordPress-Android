@@ -46,7 +46,11 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
-    public void fetchComments(final SiteModel site, final int number, final int offset, final CommentStatus status) {
+    public void fetchComments(
+            @NonNull final SiteModel site,
+            final int number,
+            final int offset,
+            @NonNull final CommentStatus status) {
         List<Object> params = new ArrayList<>(4);
         Map<String, Object> commentParams = new HashMap<>();
         commentParams.put("number", number);
@@ -227,7 +231,8 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    private String getXMLRPCCommentStatus(CommentStatus status) {
+    @NonNull
+    private String getXMLRPCCommentStatus(@NonNull CommentStatus status) {
         switch (status) {
             case APPROVED:
                 return "approve";
