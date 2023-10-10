@@ -1508,7 +1508,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         }.whenever(siteInfoHeaderCardBuilder).buildSiteInfoCard(any())
     }
 
-    // todo: annmarie set this up for viewModelSlice
     private fun setUpSiteItemBuilder(
         backupAvailable: Boolean = false,
         scanAvailable: Boolean = false,
@@ -1604,9 +1603,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     private fun initSiteItems(params: MySiteCardAndItemBuilderParams.SiteItemsBuilderParams): List<ListItem> {
-        // private fun initSiteItems(mockInvocation: InvocationOnMock): List<ListItem> {
-        // todo: annmarie this is not being called
-    //    val params = (mockInvocation.arguments.filterIsInstance<MySiteCardAndItemBuilderParams.SiteItemsBuilderParams>()).first()
         val items = mutableListOf<ListItem>()
         items.add(
             ListItem(
