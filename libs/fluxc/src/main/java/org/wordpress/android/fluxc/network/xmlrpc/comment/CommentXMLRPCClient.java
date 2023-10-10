@@ -249,18 +249,17 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
     }
 
     private CommentStatus getCommentStatusFromXMLRPCStatusString(String stringStatus) {
-        // Default
-        CommentStatus status = CommentStatus.APPROVED;
         if ("approve".equals(stringStatus)) {
-            status = CommentStatus.APPROVED;
+            return CommentStatus.APPROVED;
         } else if ("hold".equals(stringStatus)) {
-            status = CommentStatus.UNAPPROVED;
+            return CommentStatus.UNAPPROVED;
         } else if ("spam".equals(stringStatus)) {
-            status = CommentStatus.SPAM;
+            return CommentStatus.SPAM;
         } else if ("trash".equals(stringStatus)) {
-            status = CommentStatus.TRASH;
+            return CommentStatus.TRASH;
+        } else { // Defaults (don't exist in XMLRPC)
+            return CommentStatus.APPROVED;
         }
-        return status;
     }
 
     private List<CommentModel> commentsResponseToCommentList(Object response, SiteModel site) {
