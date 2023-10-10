@@ -491,18 +491,18 @@ public class CommentStore extends Store {
         emitChange(event);
     }
 
-    private void pushComment(RemoteCommentPayload payload) {
-        if (payload.comment == null) {
+    private void pushComment(@NonNull RemoteCommentPayload payload) {
+        if (payload.comment != null) {
+            if (payload.site.isUsingWpComRestApi()) {
+                mCommentRestClient.pushComment(payload.site, payload.comment);
+            } else {
+                mCommentXMLRPCClient.pushComment(payload.site, payload.comment);
+            }
+        } else {
             OnCommentChanged event = new OnCommentChanged(0);
             event.causeOfChange = CommentAction.PUSH_COMMENT;
             event.error = new CommentError(CommentErrorType.INVALID_INPUT, "Comment can't be null");
             emitChange(event);
-            return;
-        }
-        if (payload.site.isUsingWpComRestApi()) {
-            mCommentRestClient.pushComment(payload.site, payload.comment);
-        } else {
-            mCommentXMLRPCClient.pushComment(payload.site, payload.comment);
         }
     }
 
