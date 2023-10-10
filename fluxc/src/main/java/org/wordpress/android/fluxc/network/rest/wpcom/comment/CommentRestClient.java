@@ -41,7 +41,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class CommentRestClient extends BaseWPComRestClient {
-    LikesUtilsProvider mLikesUtilsProvider;
+    @NonNull private final LikesUtilsProvider mLikesUtilsProvider;
 
     @Inject public CommentRestClient(
             Context appContext,
@@ -49,7 +49,7 @@ public class CommentRestClient extends BaseWPComRestClient {
             @Named("regular") RequestQueue requestQueue,
             AccessToken accessToken,
             UserAgent userAgent,
-            LikesUtilsProvider likesUtilsProvider) {
+            @NonNull LikesUtilsProvider likesUtilsProvider) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mLikesUtilsProvider = likesUtilsProvider;
     }
