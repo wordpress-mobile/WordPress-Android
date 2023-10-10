@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-08-08 10:50:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: hi_IN
 -->
 <resources>
@@ -268,10 +268,8 @@ Language: hi_IN
     <string name="error_moderate_comment">मध्यस्थता करते हुए त्रुटि हुई</string>
     <string name="sdcard_message">मीडिया अपलोड करने के लिए एक माउंटेड एसडी कार्ड की आवश्यकता है</string>
     <string name="add_new_category">नई श्रेणी जोड़ें</string>
-    <string name="content_required">टिप्पणी आवश्यक है</string>
     <string name="http_authorization_required">प्रमाणीकरण आवश्यक</string>
     <string name="edit_comment">टिप्पणी संपादित करें</string>
-    <string name="cancel_edit">संपादन रद्द करें</string>
     <string name="category_name">श्रेणी नाम</string>
     <string name="create_a_link">एक कड़ी बनाएं</string>
     <string name="image_settings">छवि सेटिंग्स</string>
@@ -296,9 +294,7 @@ Language: hi_IN
     <string name="media_error_no_permission">आपको मीडिया समूह देखने की अनुमति नहीं है</string>
     <string name="select_categories">श्रेणियों को चुने</string>
     <string name="saving_changes">परिवर्तन सहेजे जा रहा</string>
-    <string name="toast_comment_unedited">टिप्पणी नहीं बदला है</string>
     <string name="dlg_confirm_trash_comments">कचरा पेटी में भेजें?</string>
-    <string name="sure_to_cancel_edit_comment">इस टिप्पणी का संपादन रद्द करें?</string>
     <string name="cannot_delete_multi_media_items">कुछ मीडिया को इस समय हटाया नहीं जा सकता है. बाद में पुन: प्रयास करें.</string>
     <string name="media_gallery_type_thumbnail_grid">लघुछवि ग्रिड</string>
     <string name="post_not_found">पोस्ट लोड करते समय एक त्रुटि हुई.पोस्ट को रिफ्रेश करे और फिर से प्रयास करें</string>

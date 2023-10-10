@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-06 15:54:28+0000
+Translation-Revision-Date: 2023-10-03 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: tr
 -->
 <resources>
+    <string name="sharing_connect_via_web_warning_positive_button">Webe git</string>
+    <string name="my_site_dashboard_no_cards_message_description">Daha fazla kart görüntülemek için kişiselleştirme düğmesine dokunun.</string>
+    <string name="my_site_dashboard_no_cards_message_title">Tüm kartlar gizli</string>
+    <string name="personalization_screen_next_steps_card_description">Uygulamayla sitenizden en iyi şekilde yararlanmayı öğrenin.</string>
+    <string name="personalization_screen_activity_log_card_description">Sitenizde en son gerçekleştirilen işlemler.</string>
+    <string name="personalization_screen_pages_card_description">Site sayfalarınıza genel bakış.</string>
+    <string name="personalization_screen_blogging_prompts_card_description">Blog gönderileriniz için günlük fikirler.</string>
+    <string name="personalization_screen_blogging_prompts_card_title">Blog talepleri</string>
+    <string name="personalization_screen_blaze_card_description">Bir gönderiyi tanıtın ve mevcut kampanyaları görün.</string>
+    <string name="personalization_screen_scheduled_posts_card_description">Yaklaşan zamanlanmış gönderileriniz.</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Zamanlanmış gönderiler</string>
+    <string name="personalization_screen_draft_posts_card_description">En son taslak gönderileriniz.</string>
+    <string name="personalization_screen_draft_posts_card_title">Taslak gönderiler</string>
+    <string name="personalization_screen_stats_card_description">Görüntülemeler, Ziyaretçiler ve beğeniler</string>
+    <string name="personalization_screen_footer_cards">Sitenizde olanlara göre kartlar farklı içerik gösterebilir.</string>
+    <string name="personalization_screen_description">Kart ekle veya gizle</string>
+    <string name="personalization_screen_title">Ana sayfa sekmesini kişiselleştir</string>
+    <string name="personalize_card_content_description">Ana sayfa sekmenizi kişiselleştirmek için dokunun</string>
+    <string name="personalize_card_text">Ana sayfa sekmenizi kişiselleştirin</string>
+    <string name="partial_media_access_prompt_change_settings">Ayarları Değiştir</string>
+    <string name="partial_media_access_prompt_select_more">Daha Fazla Seç</string>
+    <string name="partial_media_access_prompt_text">Yalnızca erişim izni verdiğiniz seçili fotoğraflar ve videolar kullanılabilir.</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Tüm kampanyaları görüntüle</string>
+    <string name="dashboard_activity_card_menu_all_activity">Tüm etkinlikler</string>
+    <string name="dashboard_pages_card_more_menu_all_pages">Tüm sayfalar</string>
+    <string name="gutenberg_native_choose_a_file">Dosya seç</string>
+    <string name="gutenberg_native_add_image_or_video">Görsel veya video ekle.</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">Tüm zamanlanmış yazıları görüntüle</string>
+    <string name="my_site_post_card_menu_view_all_drafts">Tüm taslakları görüntüle</string>
+    <string name="my_site_todays_stats_menu_view_stats">İstatistikleri Görüntüle</string>
+    <string name="my_site_dashboard_card_more_menu_hide_card">Bunu gizle</string>
+    <string name="contact_support_first_message_hint">Sorunuzu yanıtlayamazsam, ekibimiz için destek bileti açmanıza yardımcı olacağım!</string>
+    <string name="contact_support_first_message_hi">Merhaba, Ben Jetpack Yapay Zeka Asistanıyım.</string>
     <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">Gelişmiş ayarlar için web tarayıcınızda bu Ödeme blokuna erişin.</string>
     <string name="contact_support_bot_ticket_comment_answer">Cevap:</string>
     <string name="contact_support_bot_ticket_comment_question">Soru:</string>
@@ -31,7 +64,6 @@ Language: tr
     <string name="campaign_detail_error_title">Bir şeyler yanlış gitti</string>
     <string name="campaign_listing_page_error_title">Bir şeyler yanlış gitti</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Bir şeyler yanlış gitti, kampanyalar çekilemiyor</string>
-    <string name="domain_transfer_card_menu_hide_this">Bunu gizle</string>
     <string name="domain_transfer_card_cta">Alan adlarınızı aktarın</string>
     <string name="domain_transfer_card_caption">Bildiğiniz gibi Google Domains, Squarespace firmasına satıldı. Alan adlarınızı şimdi WordPress.com\'a taşıyın, tüm taşıma masrafları ve ek bir yıllık alan adı kaydı ücretini biz üstlenelim.</string>
     <string name="domain_transfer_card_sub_title">Google Domains için harekete geçin</string>
@@ -95,7 +127,6 @@ Language: tr
     <string name="dashboard_card_plans_checkout_success_info">Alan adınızın düzgün şekilde çalışmaya başlaması 30 dakika kadar sürebilir.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Yeni alan adınız &lt;b&gt;%s&lt;/b&gt; ayarlanıyor.</string>
     <string name="dashboard_card_plans_checkout_success_title">Her şey hazır!</string>
-    <string name="dashboard_card_plans_menu_hide_this">Bunu gizle</string>
     <string name="dashboard_card_plans_sub_title">İlk yıl için ücretsiz bir alan adı alın, sitenizdeki reklamları kaldırın ve saklama alanınızı arttırın.</string>
     <string name="dashboard_card_plans_title">Yıllık pakette ücretsiz alan adı</string>
     <string name="virtual_homepage_learn_more">Şablonlar hakkında daha fazlasını öğren</string>
@@ -122,9 +153,7 @@ Language: tr
     <string name="wp_jp_static_poster_title_plural">Jetpack\u00A0uygulamasında WordPress\'i %s ile kullanın.</string>
     <string name="wp_jp_static_poster_title">Jetpack\u00A0uygulamasında WordPress\'i %s ile kullanın.</string>
     <string name="gutenberg_native_unlabeled_color_s">Etiketsiz renk. %s</string>
-    <string name="dashboard_activity_card_footer_link">Tüm etkinliği görüntüleyin</string>
     <string name="dashboard_activity_card_title">Son etkinlik</string>
-    <string name="dashboard_card_domain_title">Özel alan adı bulun</string>
     <string name="site_creation_search_domain_example_body">Yukarıdaki örnekte olduğu gibi, bir alan adı, kişilerin web sitenizi bir web tarayıcısı üzerinden bulmasını ve ziyaret etmesini sağlar.</string>
     <string name="site_creation_search_domain_example_title">SitenizinAdi.com</string>
     <string name="site_creation_domain_search_input_hint">Anahtar sözcük ile arayın</string>
@@ -149,8 +178,6 @@ Language: tr
     <string name="dashboard_pages_card_create_another_page_description">Sipariş üzerine oluşturulan mobil uyumlu düzenlerle başlayın</string>
     <string name="dashboard_pages_card_create_another_page_button">Başka Bir Sayfa Oluştur</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Sitenize Sayfalar ekleyin</string>
-    <string name="dashboard_card_domain_menu_hide_this">Bunu gizle</string>
-    <string name="dashboard_card_domain_sub_title">Bulması, paylaşması ve takip etmesi kolay bir site adresiyle internetin her yerini sahiplenin.</string>
     <string name="blogging_reminders_notifications_permission_caption">Blog hatırlatıcılarını kullanmak için anlık bildirimleri açmanız gerekir.</string>
     <string name="blogging_reminders_notifications_permission_title">Anlık bildirimleri aç</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Alt alan adı ile devam et</string>
@@ -215,7 +242,6 @@ Language: tr
     <string name="free">Ücretsiz</string>
     <string name="help_buttons_screen_title">Yardım</string>
     <string name="gutenberg_native_blocks_menu">Bloklar menüsü</string>
-    <string name="promote_blaze_card_menu_hide_this">Bunu gizle</string>
     <string name="promote_blaze_card_sub_title">Çalışmalarınızı milyonlarca sitede sergileyin.</string>
     <string name="promote_blaze_card_title">İçeriğinizi Blaze ile öne çıkarın</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Kapat</string>
@@ -284,7 +310,6 @@ Language: tr
     <string name="weeks_quantity_other">%d hafta</string>
     <string name="weeks_quantity_one">1 hafta</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt; tarafından</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Bunu gizle</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Daha sonra hatırlat</string>
     <string name="jetpack_feature_card_content_phase_three">İstatistikler, Okuyucu, Bildirimler ve diğer özellikler yakında Jetpack mobil uygulamasına taşınacak.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Jetpack uygulamasına geçiş yapın</string>
@@ -622,7 +647,6 @@ Language: tr
     <string name="my_site_menu_tab_title">Menü</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Aramanız, WordPress.com alan adlarında desteklenmeyen karakterler içeriyor. Aşağıdaki karakterlere izin verilir: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">İnternet bağlantınızı kontrol edin ve sayfayı yenileyin.</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">İstatistiklere Git</string>
     <string name="my_site_todays_stat_card_title">Bugünün istatistikleri</string>
     <string name="error_edit_notification">Bildirim içeriği güncellenirken bir hata oluştu</string>
     <string name="reader_comment_menu_edit">Düzenle</string>
@@ -633,8 +657,7 @@ Language: tr
     <string name="gutenberg_native_tiled_gallery_settings">Döşenmiş galeri ayarları</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Yerleşim seçim ekranına ilerler</string>
     <string name="gutenberg_native_gallery_style">Galeri biçimi</string>
-    <string name="sharing_connect_via_web_warning_positive_button">Webe git</string>
-    <string name="sharing_facebook_warning_message">Facebook hesabınızı WordPress.com web sitesine bağlayabilirsiniz. Tamamladığınızda WordPress uygulamasına dönüp paylaşım ayarlarını değiştirin.</string>
+    <string name="sharing_connect_via_web_warning_message">WordPress.com web sitesindeki %s hesabınızı bağlayabilirsiniz. İşlem tamamlandığında, uygulamaya dönerek Paylaşım ayarlarınızı değiştirin.</string>
     <string name="about_automattic_app_icon_description">Uygulama simgesi</string>
     <string name="about_automattic_back_icon_description">Geri simgesi</string>
     <string name="about_automattic_logo_description">Automattic logosu</string>
@@ -693,8 +716,6 @@ Language: tr
     <string name="gutenberg_native_featured_image">Öne çıkan görsel</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">URL\'yi panodan kopyalayın, %s</string>
     <string name="me_btn_about">WordPress hakkında</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Zamanlanmış gönderilere git</string>
-    <string name="my_site_post_card_link_go_to_drafts">Taslaklara git</string>
     <string name="my_site_post_card_link_create_post">Bir yazı oluştur</string>
     <string name="my_site_create_next_post_excerpt">Düzenli olarak paylaşım yapmak, hedef kitlenizi oluşturmanıza yardımcı olur!</string>
     <string name="my_site_create_next_post_title">Bir sonraki gönderinizi oluşturun</string>
@@ -937,6 +958,7 @@ Language: tr
     <string name="gutenberg_native_padding">Dolgu</string>
     <string name="gutenberg_native_four">Dört</string>
     <string name="gutenberg_native_featured">Öne çıkan</string>
+    <string name="gutenberg_native_add_image">Görsel ekle</string>
     <string name="gutenberg_native_custom_url">Özel adres</string>
     <string name="gutenberg_native_create_embed">Gömülü içerik oluştur</string>
     <string name="gutenberg_native_column_d">Sütun %d</string>
@@ -1060,7 +1082,7 @@ Language: tr
     <string name="gutenberg_native_audio_file">ses dosyası</string>
     <string name="gutenberg_native_audio_caption_s">Ses yazısı. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Ses yazısı. Boş</string>
-    <string name="gutenberg_native_add_audio">SES EKLE</string>
+    <string name="gutenberg_native_add_audio">Ses ekle</string>
     <string name="continue_with_wpcom">WordPress.com\'a giriş yapın veya kaydolun</string>
     <string name="photo_picker_use_audio">Bu sesi kullan</string>
     <string name="photo_picker_choose_audio">Cihazdan ses seç</string>
@@ -1261,9 +1283,7 @@ Language: tr
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Dosyalar kaydedilemedi.\nSeçenekler için dokunun.</string>
     <string name="gutenberg_native_edit_file">Dosyayı düzenle</string>
     <string name="gutenberg_native_copy_file_url">Dosya adresini kopyala</string>
-    <string name="gutenberg_native_choose_a_file">DOSYA SEÇ</string>
     <string name="new_site_creation_domain_header_title">Bir alan adı seçin</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack ayarları</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Sohbet e-postayla takip ediliyor</string>
     <string name="reader_btn_follow_comments">Sohbeti e-posta ile takip et</string>
@@ -1826,11 +1846,9 @@ Language: tr
     <string name="gutenberg_native_choose_from_device">Cihazdan seç</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Bilinmeyen bir hata oluştu. Lütfen tekrar deneyin.</string>
     <string name="gutenberg_native_alt_text">Alternatif metin</string>
-    <string name="gutenberg_native_add_video">VİDEO EKLE</string>
+    <string name="gutenberg_native_add_video">Video ekle</string>
     <string name="gutenberg_native_add_url">URL ekle</string>
     <string name="gutenberg_native_add_alt_text">Alternatif metin ekle</string>
-    <string name="gutenberg_native_add_image_or_video">GÖRSEL VEYA VİDEO EKLE</string>
-    <string name="gutenberg_native_add_image">GÖRSEL EKLE</string>
     <string name="gutenberg_native_add_block_here">BURAYA BLOK EKLE</string>
     <string name="gutenberg_native_add_description">Açıklama ekle</string>
     <string name="reader_empty_saved_posts_content_description">Bir gönderiyi listenize kaydetmek için Gönderileri Kaydetmek için Ekle düğmesine dokunun.</string>
@@ -2121,9 +2139,6 @@ Language: tr
     <string name="quick_start_dialog_enable_sharing_message">Yeni gönderileri sosyal medya hesaplarınızda otomatik olarak paylaşın.</string>
     <string name="quick_start_dialog_check_stats_title">Sitenizin istatistiklerini gözden geçirin</string>
     <string name="quick_start_dialog_check_stats_message">Sitenizin performansıyla ilgili bilgilerinizi güncelleyin.</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Sonraki Adımları kaldırma seçeneği, bu sitedeki diğer tüm turları gizler. Bu eylem geri alınamaz.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Sonraki Adımları Kaldır</string>
-    <string name="quick_start_remove_next_steps_menu_title">Kaldır</string>
     <string name="quick_start_task_skip_menu_title">Görevi geç</string>
     <string name="notification_channel_reminder_title">Hatırlatıcı</string>
     <string name="stats_select_next_period_description">Gelecek dönemi seç</string>
@@ -2723,7 +2738,6 @@ Language: tr
     <string name="share_intent_pick_site">Site seç</string>
     <string name="share_action_media">Ortam kütüphanesine ekle</string>
     <string name="share_action_post">Yeni yazıya ekle</string>
-    <string name="share_media_permission_required">Görsel veya videoları paylaşmak için gereken izinler</string>
     <string name="invalid_ip_or_range">Geçersiz IP yada IP aralığı</string>
     <string name="deleting_media_dlg">Siliniyor</string>
     <string name="confirm_delete_media_video">Bu video silinsin mi?</string>
@@ -3513,9 +3527,6 @@ Language: tr
     <string name="add_new_category">Yeni kategori ekle</string>
     <string name="view_in_browser">Tarayıcıda görüntüle</string>
     <string name="remove_account">Siteyi kaldır</string>
-    <string name="toast_comment_unedited">Yorum değiştirilmedi</string>
-    <string name="content_required">Yorum gerekli</string>
-    <string name="sure_to_cancel_edit_comment">Bu yorumun düzenlenmesi iptal edilsin mi?</string>
     <string name="saving_changes">Değişiklikler kaydediliyor</string>
     <string name="trash">Çöp</string>
     <string name="dlg_confirm_trash_comments">Çöpe gönderilsin mi?</string>
@@ -3543,7 +3554,6 @@ Language: tr
     <string name="learn_more">Daha fazla bilgi</string>
     <string name="post_not_found">Yazı yüklenirken hata oluştu. Yazıyı yenileyin ve tekrar deneyin</string>
     <string name="plugin_not_found">Bu eklentiye erişirken bir hata oluştu </string>
-    <string name="cancel_edit">Düzenlemekten vazgeç</string>
     <string name="connection_error">Bağlantı hatası</string>
     <string name="select_categories">Kategorileri seçin</string>
     <string name="share_link">Bağlantıyı paylaş</string>

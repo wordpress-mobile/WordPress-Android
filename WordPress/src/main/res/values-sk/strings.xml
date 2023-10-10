@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-04-09 10:22:41+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: sk
 -->
 <resources>
@@ -40,7 +40,6 @@ Language: sk
     <string name="stats_fewer_posts">Menej príspevkov</string>
     <string name="plans_loading_error_network_title">Žiadne pripojenie</string>
     <string name="quick_start_sites">Ďalšie kroky</string>
-    <string name="quick_start_remove_next_steps_menu_title">Odstrániť toto</string>
     <string name="stats_traffic_change">%1$s (%2$s)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="notification_new_site_creation_title">Vytvoriť webovú stránku</string>
@@ -599,7 +598,6 @@ Language: sk
     <string name="share_action_media">Pridajte do knižnice médií</string>
     <string name="share_intent_pick_site">Vybrať webovú stránku</string>
     <string name="share_action_post">Pridajte do nového článku</string>
-    <string name="share_media_permission_required">Pri zdielaní obrázkov a videí sa vyžadujú povolenia</string>
     <string name="invalid_ip_or_range">Neplatný IP alebo rozsah IP</string>
     <string name="deleting_media_dlg">Vymazávanie</string>
     <string name="confirm_delete_media_video">Vymazať toto video?</string>
@@ -1366,7 +1364,6 @@ Language: sk
     <string name="error_deleting_post">Počas odstraňovania príspevku sa vyskytla chyba</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="connection_error">Chyba pripojenia</string>
-    <string name="cancel_edit">Zrušiť úpravu</string>
     <string name="learn_more">Zistiť viac</string>
     <string name="select_categories">Vyberte si kategórie</string>
     <string name="create_a_link">Vytvoriť odkaz</string>
@@ -1383,9 +1380,6 @@ Language: sk
     <string name="mnu_comment_trash">Kôš</string>
     <string name="comment_status_unapproved">Čakajúci na schválenie</string>
     <string name="saving_changes">Ukladajú sa zmeny</string>
-    <string name="sure_to_cancel_edit_comment">Zrušiť úpravu tohto komentáru?</string>
-    <string name="content_required">Vyžaduje sa komentár</string>
-    <string name="toast_comment_unedited">Komentáre neboli zmenené</string>
     <string name="dlg_confirm_trash_comments">Odstrániť?</string>
     <string name="view_in_browser">Pozrieť v prehliadači</string>
     <string name="add_new_category">Pridať novú kategóriu</string>

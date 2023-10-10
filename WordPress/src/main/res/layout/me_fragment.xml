@@ -301,6 +301,35 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/domain_management_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                >
+
+                <LinearLayout
+                    android:id="@+id/row_domain_management"
+                    style="@style/MeListRowLayout">
+
+                    <ImageView
+                        android:id="@+id/me_domains_icon"
+                        style="@style/MeListRowIcon"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_domains_white_24dp" />
+
+                    <org.wordpress.android.util.widgets.AutoResizeTextView
+                        android:id="@+id/me_domain_management_text_view"
+                        style="@style/MeListRowTextView"
+                        android:text="@string/domains_title" />
+
+                </LinearLayout>
+
+                <View style="@style/MeListSectionDividerView" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/row_logout"
                 style="@style/MeListRowLayout">
 

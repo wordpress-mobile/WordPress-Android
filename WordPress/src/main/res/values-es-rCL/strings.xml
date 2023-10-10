@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-05-09 06:46:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: es_CL
 -->
 <resources>
@@ -66,9 +66,6 @@ Language: es_CL
     <string name="quick_start_dialog_enable_sharing_title">Habilita el compartir publicaciones</string>
     <string name="quick_start_dialog_enable_sharing_message">Comparte automáticamente nuevas publicaciones en tus cuentas de redes sociales.</string>
     <string name="quick_start_dialog_check_stats_title">Consulta las estadísticas de tu sitio</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Si eliminas los Siguientes Pasos ocultarás todas las guías de este sitio. Esto no se puede deshacer.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Eliminar Siguientes Pasos</string>
-    <string name="quick_start_remove_next_steps_menu_title">Quitar esto</string>
     <string name="quick_start_task_skip_menu_title">Omitir tarea</string>
     <string name="notification_channel_reminder_title">Recordatorio</string>
     <string name="stats_select_next_period_description">Seleccione el siguiente período</string>
@@ -641,7 +638,6 @@ Language: es_CL
     <string name="share_intent_pick_site">Elegir sitio</string>
     <string name="jetpack_site_settings_category_title">Configuración de Jetpack</string>
     <string name="share_action_post">Agregar a nueva entrada</string>
-    <string name="share_media_permission_required">Permisos necesarios para compartir imágenes o vídeos</string>
     <string name="invalid_ip_or_range">IP o rango no válido</string>
     <string name="deleting_media_dlg">Eliminando</string>
     <string name="confirm_delete_media_video">¿Eliminar este vídeo?</string>
@@ -1379,7 +1375,6 @@ Language: es_CL
     <string name="error_deleting_post">Se ha producido un error al eliminar la entrada</string>
     <string name="select_categories">Seleccionar categorías</string>
     <string name="connection_error">Error de conexión</string>
-    <string name="cancel_edit">Cancelar edición</string>
     <string name="post_not_found">Ocurrió un error al cargar la entrada. Actualiza tus entradas e intenta nuevamente.</string>
     <string name="learn_more">Aprender más</string>
     <string name="media_gallery_type_thumbnail_grid">Malla (red) de miniaturas</string>
@@ -1402,9 +1397,6 @@ Language: es_CL
     <string name="dlg_confirm_trash_comments">¿Enviar a la papelera?</string>
     <string name="trash">Papelera</string>
     <string name="saving_changes">Guardando cambios</string>
-    <string name="sure_to_cancel_edit_comment">¿Cancelar la edición de este comentario?</string>
-    <string name="content_required">Comentario obligatorio</string>
-    <string name="toast_comment_unedited">El comentario no ha cambiado</string>
     <string name="remove_account">Eliminar sitio</string>
     <string name="view_in_browser">Ver en el navegador</string>
     <string name="add_new_category">Añadir nueva categoría</string>

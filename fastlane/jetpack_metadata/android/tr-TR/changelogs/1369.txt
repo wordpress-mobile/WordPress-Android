@@ -1,6 +1,0 @@
-23.2:
-- Hizmet botuyla yeni sohbet tabanlı destek kanalı
-- Jetpack Ödeme blokunu görüntüleyin, kaldırın ve onun yerini belirleyin
-- Seçilen Sosyal Bağlantılar blokunun ana hatları belirlendi
-- Blok düzenleyici ve blok ekleyicideki çökmeler giderildi
-- Hesap kapanışı sırasında meydana gelen hatalar için destek biletleri oluşturun

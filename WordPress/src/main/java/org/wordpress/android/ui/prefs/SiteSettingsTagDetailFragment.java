@@ -54,8 +54,7 @@ public class SiteSettingsTagDetailFragment extends android.app.Fragment {
         Bundle args = new Bundle();
         if (term == null) {
             args.putBoolean(ARGS_IS_NEW_TERM, true);
-            term = new TermModel();
-            term.setTaxonomy(TaxonomyStore.DEFAULT_TAXONOMY_TAG);
+            term = new TermModel(TaxonomyStore.DEFAULT_TAXONOMY_TAG);
         }
         args.putSerializable(ARGS_TERM, term);
         fragment.setArguments(args);

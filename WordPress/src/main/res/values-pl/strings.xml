@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-08-08 09:40:32+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: pl
 -->
 <resources>
@@ -46,7 +46,6 @@ Language: pl
     <string name="dashboard_card_plans_checkout_success_info">Rozpoczęcie prawidłowego działania domeny może potrwać około 30 minut.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Twoja nowa domena &lt;b&gt;%s&lt;/b&gt; jest konfigurowana.</string>
     <string name="dashboard_card_plans_checkout_success_title">Wszystko gotowe do pracy!</string>
-    <string name="dashboard_card_plans_menu_hide_this">Ukryj</string>
     <string name="dashboard_card_plans_sub_title">Uzyskaj bezpłatną domenę na pierwszy rok, usuń reklamy ze swojej witryny i zwiększ przestrzeń dyskową.</string>
     <string name="dashboard_card_plans_title">Darmowa domena z planem rocznym</string>
     <string name="virtual_homepage_learn_more">Dowiedz się więcej o szablonach</string>
@@ -64,11 +63,9 @@ Language: pl
     <string name="close_account">Zamknij konto</string>
     <string name="sharing_twitter_deprecation_notice_find_out_more">Dowiedz się więcej</string>
     <string name="dashboard_activity_card_title">Ostatnia aktywność</string>
-    <string name="dashboard_activity_card_footer_link">Zobacz pełną aktywność</string>
     <string name="gutenberg_native_remove_blocks">Usuń bloki</string>
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative">Opisz zawartość obrazka. Pozostaw puste pole, jeśli jest on wyłącznie dekoracją.</string>
     <string name="dashboard_pages_card_create_another_page_button">Utwórz kolejną stronę</string>
-    <string name="dashboard_card_domain_menu_hide_this">Ukryj</string>
     <string name="blogging_reminders_notifications_permission_caption">Aby korzystać z przypomnień należy mieć włączone powiadomienia typu PUSH</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Dodaj strony do swojej witryny</string>
     <string name="notifications_permission_bottom_sheet_button">Włącz powiadomienia</string>
@@ -81,7 +78,6 @@ Language: pl
     <string name="weeks_quantity_other">%d tygodni</string>
     <string name="stats_timeframe_last_seven_days">Ostatnie 7 dni</string>
     <string name="stats_timeframe_previous_seven_days">Poprzednie 7 dni</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Ukryj</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d odpowiedzi</string>
     <string name="dlg_confirm_delete_category">Trwale usunąć kategorię \'%s\'?</string>
     <string name="deleting_cat_success">Kategoria została pomyślnie usunięta!</string>
@@ -271,12 +267,10 @@ Language: pl
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="login_error_xml_rpc_services_disabled">Usługa XML-RPC jest wyłączona.</string>
     <string name="my_site_todays_stat_card_title">Dzisiejsze statystyki</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Przejdź do statystyk</string>
     <string name="reader_comment_menu_edit">Edytuj</string>
     <string name="reader_comment_menu_trash">Przenieś do kosza</string>
     <string name="reader_comment_menu_spam">Oznacz jako spam</string>
     <string name="gutenberg_native_gallery_style">Styl galerii</string>
-    <string name="sharing_connect_via_web_warning_positive_button">Idź do sieci</string>
     <string name="about_automattic_app_icon_description">Ikona aplikacji</string>
     <string name="about_automattic_back_icon_description">Ikona Cofnij/Wstecz</string>
     <string name="about_automattic_wordpress">WordPress</string>
@@ -334,8 +328,6 @@ Language: pl
     <string name="gutenberg_native_featured_image">Obrazek wyróżniający</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Skopiuj adres URL ze schowka, %s</string>
     <string name="me_btn_about">O WordPressie</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Idź do zaplanowanych wpisów</string>
-    <string name="my_site_post_card_link_go_to_drafts">Idź do szkiców</string>
     <string name="my_site_post_card_link_create_post">Utwórz wpis</string>
     <string name="my_site_create_next_post_excerpt">Regularne dodawanie wpisów pomaga w budowaniu publiki!</string>
     <string name="my_site_create_next_post_title">Utwórz swój kolejny wpis</string>
@@ -686,7 +678,6 @@ Language: pl
     <string name="gutenberg_native_choose_audio">Wybierz plik dźwiękowy</string>
     <string name="gutenberg_native_audio_player">Odtwarzacz plików dźwiękowych</string>
     <string name="gutenberg_native_audio_file">plik dźwiękowy</string>
-    <string name="gutenberg_native_add_audio">DODAJ PLIK DŹWIĘKOWY</string>
     <string name="photo_picker_use_audio">Wykorzystaj ten plik dźwiękowy</string>
     <string name="photo_picker_choose_audio">Wybierz plik dźwiękowy z tego urządzenia</string>
     <string name="continue_with_wpcom">Zaloguj się lub zarejestruj w WordPress.com</string>
@@ -873,10 +864,8 @@ Language: pl
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Nie można było przesłać plików.\nStuknij aby wejść w opcje.</string>
     <string name="gutenberg_native_edit_file">Edytuj plik</string>
     <string name="gutenberg_native_copy_file_url">Kopiuj adres URL pliku</string>
-    <string name="gutenberg_native_choose_a_file">WYBIERZ PLIK</string>
     <string name="gutenberg_native_file_name">Nazwa pliku</string>
     <string name="new_site_creation_domain_header_title">Wybierz domenę</string>
-    <string name="my_site_btn_jetpack_settings">Ustawienia Jetpacka</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Nie można było cofnąć subskrypcji komentarzy dla tego wpisu</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Nie można było subskrybować komentarzy dla tego wpisu</string>
@@ -1433,13 +1422,10 @@ Language: pl
     <string name="gutenberg_native_current_value_is_s">Aktualna wartość to %s</string>
     <string name="gutenberg_native_choose_from_device">Wybierz z urządzenia</string>
     <string name="gutenberg_native_alt_text">Tekst alternatywny</string>
-    <string name="gutenberg_native_add_video">DODAJ FILM</string>
     <string name="gutenberg_native_add_url">Dodaj adres URL</string>
-    <string name="gutenberg_native_add_image_or_video">DODAJ ZDJĘCIE LUB FILM</string>
     <string name="gutenberg_native_add_block_here">DODAJ TUTAJ BLOK</string>
     <string name="gutenberg_native_add_description">Dodaj opis</string>
     <string name="gutenberg_native_add_alt_text">Dodaj tekst alternatywny</string>
-    <string name="gutenberg_native_add_image">Dodaj obrazek</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Wystąpił nieznany błąd. Proszę spróbować ponownie.</string>
     <string name="reader_empty_saved_posts_content_description">Stuknij przycisk Dodaj do Zapisanych Wpisów aby zapisać wpis na swojej liście. </string>
     <string name="reader_acessibility_list_loaded">\"Lista ma %1$d elementów.\"</string>
@@ -1728,9 +1714,6 @@ Language: pl
     <string name="quick_start_dialog_enable_sharing_title">Uaktywnij udostępnianie wpisów</string>
     <string name="quick_start_dialog_enable_sharing_message">Automatycznie udostępniaj nowe wpisy na swoich kontach mediów społecznościowych.</string>
     <string name="quick_start_dialog_check_stats_title">Sprawdź statystyki swojej witryny</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Usunięcie Kolejnych Kroków ukryje wszystkie przewodniki na tej witrynie. Nie można cofnąć tej czynności.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Usuń Kolejne Kroki</string>
-    <string name="quick_start_remove_next_steps_menu_title">Usuń to</string>
     <string name="quick_start_dialog_check_stats_message">Bądź na bieżąco z wydajnością swojej witryny.</string>
     <string name="quick_start_task_skip_menu_title">Pomiń zadanie</string>
     <string name="notification_channel_reminder_title">Przypomnienie</string>
@@ -2331,7 +2314,6 @@ Language: pl
     <string name="share_action_media">Dodaj do biblioteki mediów</string>
     <string name="jetpack_site_settings_category_title">Ustawienia Jetpacka</string>
     <string name="share_action_post">Dodaj do nowego wpisu</string>
-    <string name="share_media_permission_required">Wymagane uprawnienia do udostępnienia obrazków lub filmów</string>
     <string name="invalid_ip_or_range">Nieprawidłowy adres IP lub zakres adresów IP</string>
     <string name="deleting_media_dlg">Usuwanie</string>
     <string name="confirm_delete_media_video">Usunąć ten film? </string>
@@ -3112,7 +3094,6 @@ Language: pl
     <string name="fatal_db_error">Wystąpił błąd podczas tworzenia bazy danych. Spróbuj przeinstalować aplikacje.</string>
     <string name="view_in_browser">Zobacz w przeglądarce</string>
     <string name="category_name">Nazwa kategorii</string>
-    <string name="cancel_edit">Anuluj edycję</string>
     <string name="connection_error">Błąd połączenia</string>
     <string name="local_draft">Szkic lokalny</string>
     <string name="page_settings">Ustawienia strony</string>
@@ -3120,18 +3101,15 @@ Language: pl
     <string name="mnu_comment_spam">Spam</string>
     <string name="edit_comment">Edytuj komentarz</string>
     <string name="saving_changes">Zapisywanie zmian</string>
-    <string name="toast_comment_unedited">Komentarz nie został zmieniony</string>
     <string name="learn_more">Dowiedz się więcej</string>
     <string name="comment_status_spam">Spam</string>
     <string name="mnu_comment_approve">Zatwierdź</string>
     <string name="media_gallery_type_thumbnail_grid">Siatka miniatur</string>
     <string name="media_error_no_permission">Nie masz uprawnień do przeglądania biblioteki mediów</string>
     <string name="cannot_delete_multi_media_items">Niektóre media nie mogły zostać w tej chwili usunięte. Spróbuj ponownie później. \n</string>
-    <string name="content_required">Wymagany jest komentarz</string>
     <string name="file_error_create">Nie udało się utworzyć tymczasowego pliku do wgrania. Upewnij się, że na Twoim urządzeniu jest wystarczająco dużo wolnego miejsca.</string>
     <string name="http_authorization_required">Wymagana autoryzacja</string>
     <string name="reader_title_applog">Dziennik aplikacji</string>
-    <string name="sure_to_cancel_edit_comment">Anulować edytowanie tego komentarza?</string>
     <string name="mnu_comment_trash">Kosz</string>
     <string name="select_categories">Wybierz kategorie</string>
     <string name="dlg_confirm_trash_comments">Wyrzucić do kosza?</string>

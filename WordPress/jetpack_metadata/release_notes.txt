@@ -1,3 +1,4 @@
-- We changed the way alerts appear when you’re inserting media into blocks from a URL.
-- It’s easier to tell the difference between placeholder text and actual content in block-based themes.
-- My Site dashboard cards can be customized using the “Personalize Home Tab” button.
+We’ve been squashing bugs!
+- You can now embed URLs from X without getting a broken link.
+- When you use an invalid media URL, the app displays an error message instead of crashing.
+- In the block editor, the app will no longer crash when you nest too many blocks within blocks.

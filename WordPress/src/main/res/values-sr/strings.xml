@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-07-25 02:40:35+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: sr_RS
 -->
 <resources>
@@ -17,7 +17,6 @@ Language: sr_RS
     <string name="stats_timeframe_previous_seven_days">Претходних 7 дана</string>
     <string name="weeks_quantity_other">%d седмица</string>
     <string name="weeks_quantity_one">1 седмица</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Сакриј ово</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Подсети ме касније</string>
     <string name="blogging_prompts_list_error_fetch_title">Упс</string>
     <string name="post_settings_parent">Надређена страна</string>
@@ -57,8 +56,6 @@ Language: sr_RS
     <string name="gutenberg_native_contact_support">Контактирајте подршку</string>
     <string name="gutenberg_native_featured_image">Издвојена слика</string>
     <string name="me_btn_about">О Вордпресу</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Иди на заказане чланке</string>
-    <string name="my_site_post_card_link_go_to_drafts">Иди на нацрте</string>
     <string name="my_site_post_card_link_create_post">Направи чланак</string>
     <string name="my_site_create_next_post_title">Направи свој следећи чланак</string>
     <string name="menu_visual_mode_switched_notice">Пребачено на визуални режим</string>
@@ -109,7 +106,6 @@ Language: sr_RS
     <string name="gutenberg_native_lock_icon">Иконица за закључавање</string>
     <string name="gutenberg_native_choose_audio">Одабери звучни запис</string>
     <string name="gutenberg_native_audio_file">Датотека звучног записа</string>
-    <string name="gutenberg_native_add_audio">ДОДАЈ ЗВУЧНИ ЗАПИС</string>
     <string name="photo_picker_use_audio">Употреби овај звучни запис</string>
     <string name="photo_picker_choose_audio">Одабери звучни запис са уређаја</string>
     <string name="threat_status_fixed">Поправљено</string>
@@ -153,10 +149,8 @@ Language: sr_RS
     <string name="gutenberg_native_file_name">Назив датотеке</string>
     <string name="gutenberg_native_edit_file">Уреди датотеку</string>
     <string name="gutenberg_native_copy_file_url">Ископирај URL датотеке</string>
-    <string name="gutenberg_native_choose_a_file">ОДАБЕРИ ДАТОТЕКУ</string>
     <string name="new_site_creation_domain_header_title">Одабери домен</string>
     <string name="my_site_header_jetpack">Jetpack</string>
-    <string name="my_site_btn_jetpack_settings">Подешавања Jetpack-а</string>
     <string name="activity_log_activity_type_filter_clear">Очисти</string>
     <string name="activity_log_activity_type_filter_apply">Примени</string>
     <string name="dialog_edit_story_unsupported_format_title">GIF датотеке нису подржане</string>
@@ -528,10 +522,7 @@ Language: sr_RS
     <string name="gutenberg_native_current_value_is_s">Тренутна вредност је %s</string>
     <string name="gutenberg_native_choose_from_device">Одабери свој уређај</string>
     <string name="gutenberg_native_alt_text">Алтернативни текст</string>
-    <string name="gutenberg_native_add_video">ДОДАЈ ВИДЕО ЗАПИС</string>
     <string name="gutenberg_native_add_url">Додај URL</string>
-    <string name="gutenberg_native_add_image_or_video">ДОДАЈ СЛИКУ ИЛИ ВИДЕО ЗАПИС</string>
-    <string name="gutenberg_native_add_image">ДОДАЈ СЛИКУ</string>
     <string name="gutenberg_native_add_block_here">ДОДАЈ БЛОК ОВДЕ</string>
     <string name="gutenberg_native_add_description">Додај опис</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Јавила се непозната грешка. Молимо вас да покушате поново касније.</string>
@@ -729,8 +720,6 @@ Language: sr_RS
     <string name="quick_start_dialog_upload_icon_title">Одаберите јединствену иконицу сајта</string>
     <string name="quick_start_dialog_publish_post_message">Направи нацрт и објави чланак</string>
     <string name="quick_start_dialog_enable_sharing_title">Омогући дељење чланака</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Уклони наредне кораке</string>
-    <string name="quick_start_remove_next_steps_menu_title">Уклони ово</string>
     <string name="quick_start_dialog_check_stats_title">Провери статистику свог сајта</string>
     <string name="quick_start_dialog_check_stats_message">Прати редовно перформансе свог веб места.</string>
     <string name="quick_start_task_skip_menu_title">Прескочи задатак</string>
@@ -1910,7 +1899,6 @@ Language: sr_RS
     <string name="select_categories">Одаберите категорије</string>
     <string name="page_settings">Подешавања стране</string>
     <string name="connection_error">Грешка у успостављању везе</string>
-    <string name="cancel_edit">Одустани од уређивања</string>
     <string name="learn_more">Сазнајте више</string>
     <string name="media_gallery_type_thumbnail_grid">Мрежа умањених слика</string>
     <string name="comment_status_approved">Одобрено</string>
@@ -1924,9 +1912,6 @@ Language: sr_RS
     <string name="media_error_no_permission">Немате дозволу да прегледате библиотеку медија</string>
     <string name="trash">Отпад</string>
     <string name="saving_changes">Чувам измене</string>
-    <string name="sure_to_cancel_edit_comment">Одустајете од уређивања овог коментара?</string>
-    <string name="content_required">Коментар је неопходан</string>
-    <string name="toast_comment_unedited">Коментар није промењен</string>
     <string name="http_authorization_required">Неопходно овлашћење</string>
     <string name="new_post">Нови чланак</string>
     <string name="new_media">Нови медиј</string>

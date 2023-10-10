@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-05 14:10:23+0000
+Translation-Revision-Date: 2023-10-03 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: sv_SE
 -->
 <resources>
+    <string name="sharing_connect_via_web_warning_positive_button">Gå till webben</string>
+    <string name="my_site_dashboard_no_cards_message_description">Tryck på anpassningsknappen för att visa fler kort.</string>
+    <string name="my_site_dashboard_no_cards_message_title">Alla kort är dolda</string>
+    <string name="personalization_screen_next_steps_card_description">Lär dig att få ut så mycket som möjligt av din webbplats med appen.</string>
+    <string name="personalization_screen_activity_log_card_description">Senaste åtgärder gjorda på din webbplats.</string>
+    <string name="personalization_screen_pages_card_description">Översikt över dina webbplatssidor.</string>
+    <string name="personalization_screen_blogging_prompts_card_description">Dagliga idéer för dina blogginlägg.</string>
+    <string name="personalization_screen_blogging_prompts_card_title">Bloggningsförslag</string>
+    <string name="personalization_screen_blaze_card_description">Marknadsför ett inlägg och se nuvarande kampanjer.</string>
+    <string name="personalization_screen_scheduled_posts_card_description">Dina kommande schemalagda inlägg.</string>
+    <string name="personalization_screen_scheduled_posts_card_title"> Schemalagda inlägg</string>
+    <string name="personalization_screen_draft_posts_card_description">Dina senaste inläggsutkast.</string>
+    <string name="personalization_screen_draft_posts_card_title">Inläggsutkast</string>
+    <string name="personalization_screen_stats_card_description">Visningar, besökare och gilla-markeringar</string>
+    <string name="personalization_screen_footer_cards">Kort kan visa olika innehåll beroende på vad som händer med din webbplats</string>
+    <string name="personalization_screen_description"> Visa eller dölj kort</string>
+    <string name="personalization_screen_title">Anpassa Hem-fliken</string>
+    <string name="personalize_card_content_description">Tryck för att anpassa din Hem-flik</string>
+    <string name="personalize_card_text">Anpassa din Hem-flik</string>
+    <string name="partial_media_access_prompt_change_settings">Ändra inställningar</string>
+    <string name="partial_media_access_prompt_select_more">Välj fler</string>
+    <string name="partial_media_access_prompt_text">Endast markerade foton och videoklipp som du har gett åtkomst till är tillgängliga.</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Visa alla kampanjer</string>
+    <string name="dashboard_activity_card_menu_all_activity">All aktivet</string>
+    <string name="dashboard_pages_card_more_menu_all_pages">Alla sidor</string>
+    <string name="gutenberg_native_choose_a_file">Välj en fil</string>
+    <string name="gutenberg_native_add_image_or_video">Lägg till bild eller video</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">Visa alla schemalagda inlägg</string>
+    <string name="my_site_post_card_menu_view_all_drafts">Visa alla utkast</string>
+    <string name="my_site_todays_stats_menu_view_stats">Visa statistik</string>
+    <string name="my_site_dashboard_card_more_menu_hide_card">Dölj detta</string>
+    <string name="contact_support_first_message_hint">Om jag inte kan besvara din fråga hjälper jag dig att öppna ett supportärende med vårt team.</string>
+    <string name="contact_support_first_message_hi">Hej, jag är Jetpacks AI-assistent.</string>
     <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">Öppna detta betalväggsblock i webbläsaren för att göra avancerade inställningar.</string>
     <string name="contact_support_bot_ticket_comment_answer">Svar:</string>
     <string name="contact_support_bot_ticket_comment_question">Fråga:</string>
@@ -31,7 +64,6 @@ Language: sv_SE
     <string name="campaign_detail_error_title">Något gick fel</string>
     <string name="campaign_listing_page_error_title">Något gick fel</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Något gick fel: kunde inte hämta kampanjerna</string>
-    <string name="domain_transfer_card_menu_hide_this">Dölj detta</string>
     <string name="domain_transfer_card_cta">Överför dina domäner</string>
     <string name="domain_transfer_card_caption">Som du kanske vet, har Google Domains blivit uppköpta av Squarespace. Nu kan du föra över dina domäner till WordPress.com. Vi betalar kostnaden för överföringen och ett extra år på din domänregistrering.</string>
     <string name="domain_transfer_card_sub_title">Ta tillbaka dina Google-domäner</string>
@@ -95,7 +127,6 @@ Language: sv_SE
     <string name="dashboard_card_plans_checkout_success_info">Det kan ta upp till 30 minuter för din domän att börja fungera ordentligt.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Din nya domän &lt;b&gt;%s&lt;/b&gt; håller på att konfigureras.</string>
     <string name="dashboard_card_plans_checkout_success_title">Allt är klart att köras.</string>
-    <string name="dashboard_card_plans_menu_hide_this">Dölj detta</string>
     <string name="dashboard_card_plans_sub_title">Få en gratis domän det första året, ta bort annonser från din webbplats och utöka ditt lagringsutrymme.</string>
     <string name="dashboard_card_plans_title">Gratis domän med årligt paket</string>
     <string name="virtual_homepage_learn_more">Lär dig mer om mallar</string>
@@ -122,9 +153,7 @@ Language: sv_SE
     <string name="wp_jp_static_poster_title_plural">Använd WordPress med %s i Jetpack-appen.</string>
     <string name="wp_jp_static_poster_title">Använd WordPress med %s i Jetpack-appen.</string>
     <string name="gutenberg_native_unlabeled_color_s">Omärkt färg. %s</string>
-    <string name="dashboard_activity_card_footer_link">Visa all aktivitet</string>
     <string name="dashboard_activity_card_title">Senaste aktivitet</string>
-    <string name="dashboard_card_domain_title">Hitta en anpassad domän</string>
     <string name="site_creation_search_domain_example_body">Precis som i exemplet ovan så låter en domän människor hitta och besöka din webbplats från sina webbläsare.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">Sök med nyckelord</string>
@@ -149,8 +178,6 @@ Language: sv_SE
     <string name="dashboard_pages_card_create_another_page_description">Kom igång med skräddarsydda, mobilvänliga layouter</string>
     <string name="dashboard_pages_card_create_another_page_button">Skapa en ny sida</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Lägg till sidor på din webbplats</string>
-    <string name="dashboard_card_domain_menu_hide_this">Dölj detta</string>
-    <string name="dashboard_card_domain_sub_title">Gör anspråk på din del av webben med en webbadress som är lätt att hitta, dela och följa.</string>
     <string name="blogging_reminders_notifications_permission_caption">För att kunna använda bloggningspåminnelser behöver du aktivera push-meddelanden.</string>
     <string name="blogging_reminders_notifications_permission_title">Slå på push-meddelanden</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Fortsätt med underdomän</string>
@@ -215,7 +242,6 @@ Language: sv_SE
     <string name="free">Gratis</string>
     <string name="help_buttons_screen_title">Hjälp</string>
     <string name="gutenberg_native_blocks_menu">Block-meny</string>
-    <string name="promote_blaze_card_menu_hide_this">Dölj detta</string>
     <string name="promote_blaze_card_sub_title">Visa ditt arbete på miljontals webbplatser.</string>
     <string name="promote_blaze_card_title">Marknadsför ditt innehåll med Blaze</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Stäng</string>
@@ -284,7 +310,6 @@ Language: sv_SE
     <string name="weeks_quantity_other">%d veckor</string>
     <string name="weeks_quantity_one">1 vecka</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Från &lt;b&gt;dag ett&lt;/b&gt;</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Dölj detta</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Påminn mig senare</string>
     <string name="jetpack_feature_card_content_phase_three">Statistik, läsare, aviseringar och andra funktioner kommer snart att flyttas till Jetpacks mobilapp.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Byt till Jetpack-appen</string>
@@ -622,7 +647,6 @@ Language: sv_SE
     <string name="my_site_menu_tab_title">Meny</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Din sökning innehåller tecken som inte stöds i WordPress.com-domäner. Följande tecken är tillåtna: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Kontrollera din internetanslutning och ladda om sidan.</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Gå till statistiken</string>
     <string name="my_site_todays_stat_card_title">Dagens statistik</string>
     <string name="error_edit_notification">Ett fel uppstod när innehållet i aviseringen skulle uppdateras</string>
     <string name="reader_comment_menu_edit">Redigera</string>
@@ -633,8 +657,7 @@ Language: sv_SE
     <string name="gutenberg_native_tiled_gallery_settings">Mosaikinställningar för galleri</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Går till skärmen för val av layout</string>
     <string name="gutenberg_native_gallery_style">Galleristil</string>
-    <string name="sharing_connect_via_web_warning_positive_button">Gå till webben</string>
-    <string name="sharing_facebook_warning_message">Du kan ansluta ditt Facebook-konto på WordPress.com-webbplatsen. När du är klar, gå tillbaka till WordPress-appen för att ändra dina delningsinställningar.</string>
+    <string name="sharing_connect_via_web_warning_message">Du kan ansluta ditt %s-konto på WordPress.com-webbplatsen. När du är klar, gå tillbaka till appen för att ändra dina delningsinställningar.</string>
     <string name="about_automattic_app_icon_description">App-ikon</string>
     <string name="about_automattic_back_icon_description">Ikon för tillbaka</string>
     <string name="about_automattic_logo_description">Logga för Automattic</string>
@@ -693,8 +716,6 @@ Language: sv_SE
     <string name="gutenberg_native_featured_image">Utvald bild</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Kopiera URL från urklipp, %s</string>
     <string name="me_btn_about">Om WordPress</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts"> Gå till schemalagda inlägg</string>
-    <string name="my_site_post_card_link_go_to_drafts">Gå till utkast</string>
     <string name="my_site_post_card_link_create_post">Skapa ett inlägg</string>
     <string name="my_site_create_next_post_excerpt">Genom att publicera regelbundet bygger du upp en större publik!</string>
     <string name="my_site_create_next_post_title">Skapa ditt nästa inlägg</string>
@@ -937,6 +958,7 @@ Language: sv_SE
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_four">Fyra</string>
     <string name="gutenberg_native_featured">Utvalda</string>
+    <string name="gutenberg_native_add_image">Lägg till bild</string>
     <string name="gutenberg_native_custom_url">Anpassad URL</string>
     <string name="gutenberg_native_create_embed">Skapa inbäddning</string>
     <string name="gutenberg_native_column_d">Kolumn %d</string>
@@ -1060,7 +1082,7 @@ Language: sv_SE
     <string name="gutenberg_native_audio_file">ljudfil</string>
     <string name="gutenberg_native_audio_caption_s">Beskrivning för ljudfil. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Beskrivning för ljudfil. Tom</string>
-    <string name="gutenberg_native_add_audio">LÄGG TILL LJUD</string>
+    <string name="gutenberg_native_add_audio">Lägg till ljud</string>
     <string name="continue_with_wpcom">Logga in eller registrera dig hos WordPress.com</string>
     <string name="photo_picker_use_audio">Använd detta ljud</string>
     <string name="photo_picker_choose_audio">Välj ljud från enhet</string>
@@ -1261,9 +1283,7 @@ Language: sv_SE
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Kunde inte spara filerna.\nTryck för att visa alternativ.</string>
     <string name="gutenberg_native_edit_file">Redigera fil</string>
     <string name="gutenberg_native_copy_file_url">Kopiera filens URL</string>
-    <string name="gutenberg_native_choose_a_file">VÄLJ EN FIL</string>
     <string name="new_site_creation_domain_header_title">Välj en domän</string>
-    <string name="my_site_btn_jetpack_settings">Inställningar för Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Följer konversation via e-post</string>
     <string name="reader_btn_follow_comments">Följ konversation via e-post</string>
@@ -1678,6 +1698,7 @@ Language: sv_SE
     <string name="app_theme_light">Ljust</string>
     <string name="app_theme">Utseende</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Du har nyligen gjort ändringar i denna sida utan att spara. Välj vilken version du vill använda:\n\n</string>
+    <string name="gutenberg_native_warning_message">Varningsmeddelande</string>
     <string name="gutenberg_native_show_post_content">Visa inläggsinnehåll</string>
     <string name="gutenberg_native_only_show_excerpt">Visa endast utdrag</string>
     <string name="gutenberg_native_link_to">Länk till</string>
@@ -1826,11 +1847,9 @@ Language: sv_SE
     <string name="gutenberg_native_choose_from_device">Välj från enheten</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ett okänt fel har inträffatt. Försök igen.</string>
     <string name="gutenberg_native_alt_text">Alt-text</string>
-    <string name="gutenberg_native_add_video">LÄGG TILL VIDEO</string>
+    <string name="gutenberg_native_add_video">Lägg till video</string>
     <string name="gutenberg_native_add_url">Lägg till URL</string>
     <string name="gutenberg_native_add_alt_text">Lägg till alt-text</string>
-    <string name="gutenberg_native_add_image_or_video">LÄGG TILL BILD ELLER VIDEO</string>
-    <string name="gutenberg_native_add_image">LÄGG TILL BILD</string>
     <string name="gutenberg_native_add_block_here">LÄGG TILL BLOCK HÄR</string>
     <string name="gutenberg_native_add_description">Lägg till beskrivning</string>
     <string name="reader_empty_saved_posts_content_description">Tryck på knappen ”Lägg till i sparade inlägg” för att lägga till inlägget i din lista.</string>
@@ -2121,9 +2140,6 @@ Language: sv_SE
     <string name="quick_start_dialog_enable_sharing_message">Dela automatiskt dina nya inlägg i dina olika konton i sociala media.</string>
     <string name="quick_start_dialog_check_stats_title">Kontrollera statistiken för din webbplats</string>
     <string name="quick_start_dialog_check_stats_message">Håll dig informerad om hur det går för din webbplats.</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Om du tar bort resten av stegen kommer detta att dölja alla informativa rundvandringar på denna webbplats. Denna åtgärd går inte att ångra.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Ta bort resten av stegen</string>
-    <string name="quick_start_remove_next_steps_menu_title">Ta bort detta</string>
     <string name="quick_start_task_skip_menu_title">Hoppa över åtgärden</string>
     <string name="notification_channel_reminder_title">Påminnelse</string>
     <string name="stats_select_next_period_description">Välj nästa period</string>
@@ -2723,7 +2739,6 @@ Language: sv_SE
     <string name="share_intent_pick_site">Välj webbplats</string>
     <string name="share_action_media">Lägg till i mediabiblioteket</string>
     <string name="share_action_post">Lägg till i nytt inlägg</string>
-    <string name="share_media_permission_required">Tillstånd krävs för delning av bilder och video</string>
     <string name="invalid_ip_or_range">Ogiltig IP-adress eller -adressintervall</string>
     <string name="deleting_media_dlg">Raderar</string>
     <string name="confirm_delete_media_video">Ska videon raderas?</string>
@@ -3513,9 +3528,6 @@ Language: sv_SE
     <string name="add_new_category">Lägg till ny kategori</string>
     <string name="view_in_browser">Visa i webbläsare</string>
     <string name="remove_account">Ta bort webbplatsen</string>
-    <string name="toast_comment_unedited">Kommentaren har inte ändrats</string>
-    <string name="content_required">Kommentar krävs</string>
-    <string name="sure_to_cancel_edit_comment">Avbryt redigeringen av denna kommentar?</string>
     <string name="saving_changes">Spara ändringarna</string>
     <string name="trash">Kasta bort</string>
     <string name="dlg_confirm_trash_comments">Kasta?</string>
@@ -3543,7 +3555,6 @@ Language: sv_SE
     <string name="learn_more">Läs mer</string>
     <string name="post_not_found">Ett fel uppstod vid inläsning av inlägget. Uppdatera dina inlägg och försök igen.</string>
     <string name="plugin_not_found">Ett fel inträffade vid åtkomsten till detta tillägg</string>
-    <string name="cancel_edit">Avbryt redigering</string>
     <string name="connection_error">Kommunikationsfel</string>
     <string name="select_categories">Välj kategorier</string>
     <string name="share_link">Dela länk</string>
