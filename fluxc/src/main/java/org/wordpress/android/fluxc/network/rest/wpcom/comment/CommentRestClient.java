@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response.Listener;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -21,8 +20,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestResponse.CommentsWPComRestResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.common.LikeWPComRestResponse.LikesWPComRestResponse;
@@ -66,23 +63,15 @@ public class CommentRestClient extends BaseWPComRestClient {
         params.put("force", "wpcom");
         final WPComGsonRequest<CommentsWPComRestResponse> request = WPComGsonRequest.buildGetRequest(
                 url, params, CommentsWPComRestResponse.class,
-                new Listener<CommentsWPComRestResponse>() {
-                    @Override
-                    public void onResponse(CommentsWPComRestResponse response) {
-                        List<CommentModel> comments = commentsResponseToCommentList(response, site);
-                        FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(comments, site, number,
-                                offset, status);
-                        mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(payload));
-                    }
+                response -> {
+                    List<CommentModel> comments = commentsResponseToCommentList(response, site);
+                    FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(comments, site, number,
+                            offset, status);
+                    mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(payload));
                 },
 
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(
-                                CommentErrorUtils.commentErrorToFetchCommentsPayload(error, site)));
-                    }
-                });
+                error -> mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(
+                        CommentErrorUtils.commentErrorToFetchCommentsPayload(error, site))));
         add(request);
     }
 
@@ -94,23 +83,15 @@ public class CommentRestClient extends BaseWPComRestClient {
         params.put("status", comment.getStatus());
         final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildPostRequest(
                 url, params, CommentWPComRestResponse.class,
-                new Listener<CommentWPComRestResponse>() {
-                    @Override
-                    public void onResponse(CommentWPComRestResponse response) {
-                        CommentModel newComment = commentResponseToComment(response, site);
-                        newComment.setId(comment.getId()); // reconciliate local instance and newly created object
-                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(newComment);
-                        mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(payload));
-                    }
+                response -> {
+                    CommentModel newComment = commentResponseToComment(response, site);
+                    newComment.setId(comment.getId()); // reconciliate local instance and newly created object
+                    RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(newComment);
+                    mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(payload));
                 },
 
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(
-                                CommentErrorUtils.commentErrorToPushCommentPayload(error, comment)));
-                    }
-                });
+                error -> mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(
+                        CommentErrorUtils.commentErrorToPushCommentPayload(error, comment))));
         add(request);
     }
 
@@ -123,22 +104,14 @@ public class CommentRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).getUrlV1_1();
         final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildGetRequest(
                 url, null, CommentWPComRestResponse.class,
-                new Listener<CommentWPComRestResponse>() {
-                    @Override
-                    public void onResponse(CommentWPComRestResponse response) {
-                        CommentModel comment = commentResponseToComment(response, site);
-                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
-                        mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(payload));
-                    }
+                response -> {
+                    CommentModel comment1 = commentResponseToComment(response, site);
+                    RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment1);
+                    mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(payload));
                 },
 
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(
-                                CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
-                    }
-                });
+                error -> mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(
+                        CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment))));
         add(request);
     }
 
@@ -164,38 +137,30 @@ public class CommentRestClient extends BaseWPComRestClient {
 
         final WPComGsonRequest<LikesWPComRestResponse> request = WPComGsonRequest.buildGetRequest(
                 url, params, LikesWPComRestResponse.class,
-                new Listener<LikesWPComRestResponse>() {
-                    @Override
-                    public void onResponse(LikesWPComRestResponse response) {
-                        List<LikeModel> likes = mLikesUtilsProvider.likesResponseToLikeList(
-                                response,
-                                siteId,
-                                commentId,
-                                LikeType.COMMENT_LIKE);
+                response -> {
+                    List<LikeModel> likes = mLikesUtilsProvider.likesResponseToLikeList(
+                            response,
+                            siteId,
+                            commentId,
+                            LikeType.COMMENT_LIKE);
 
-                        FetchedCommentLikesResponsePayload payload = new FetchedCommentLikesResponsePayload(
-                                likes,
+                    FetchedCommentLikesResponsePayload payload = new FetchedCommentLikesResponsePayload(
+                            likes,
+                            siteId,
+                            commentId,
+                            requestNextPage,
+                            likes.size() >= pageLength
+                    );
+                    mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentLikesAction(payload));
+                },
+
+                error -> mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentLikesAction(
+                        CommentErrorUtils.commentErrorToFetchedCommentLikesPayload(
+                                error,
                                 siteId,
                                 commentId,
                                 requestNextPage,
-                                likes.size() >= pageLength
-                        );
-                        mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentLikesAction(payload));
-                    }
-                },
-
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentLikesAction(
-                                CommentErrorUtils.commentErrorToFetchedCommentLikesPayload(
-                                        error,
-                                        siteId,
-                                        commentId,
-                                        requestNextPage,
-                                        true)));
-                    }
-                });
+                                true))));
         add(request);
     }
 
@@ -208,26 +173,18 @@ public class CommentRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).delete.getUrlV1_1();
         final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildPostRequest(
                 url, null, CommentWPComRestResponse.class,
-                new Listener<CommentWPComRestResponse>() {
-                    @Override
-                    public void onResponse(CommentWPComRestResponse response) {
-                        CommentModel modifiedComment = commentResponseToComment(response, site);
-                        if (comment != null) {
-                            // reconciliate local instance and newly created object if it exists locally
-                            modifiedComment.setId(comment.getId());
-                        }
-                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(modifiedComment);
-                        mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(payload));
+                response -> {
+                    CommentModel modifiedComment = commentResponseToComment(response, site);
+                    if (comment != null) {
+                        // reconciliate local instance and newly created object if it exists locally
+                        modifiedComment.setId(comment.getId());
                     }
+                    RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(modifiedComment);
+                    mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(payload));
                 },
 
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(
-                                CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
-                    }
-                });
+                error -> mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(
+                        CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment))));
         add(request);
     }
 
@@ -238,23 +195,15 @@ public class CommentRestClient extends BaseWPComRestClient {
         params.put("content", reply.getContent());
         final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildPostRequest(
                 url, params, CommentWPComRestResponse.class,
-                new Listener<CommentWPComRestResponse>() {
-                    @Override
-                    public void onResponse(CommentWPComRestResponse response) {
-                        CommentModel newComment = commentResponseToComment(response, site);
-                        newComment.setId(reply.getId()); // reconciliate local instance and newly created object
-                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(newComment);
-                        mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(payload));
-                    }
+                response -> {
+                    CommentModel newComment = commentResponseToComment(response, site);
+                    newComment.setId(reply.getId()); // reconciliate local instance and newly created object
+                    RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(newComment);
+                    mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(payload));
                 },
 
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(
-                                CommentErrorUtils.commentErrorToFetchCommentPayload(error, reply)));
-                    }
-                });
+                error -> mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(
+                        CommentErrorUtils.commentErrorToFetchCommentPayload(error, reply))));
         add(request);
     }
 
@@ -265,23 +214,15 @@ public class CommentRestClient extends BaseWPComRestClient {
         params.put("content", comment.getContent());
         final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildPostRequest(
                 url, params, CommentWPComRestResponse.class,
-                new Listener<CommentWPComRestResponse>() {
-                    @Override
-                    public void onResponse(CommentWPComRestResponse response) {
-                        CommentModel newComment = commentResponseToComment(response, site);
-                        newComment.setId(comment.getId()); // reconciliate local instance and newly created object
-                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(newComment);
-                        mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(payload));
-                    }
+                response -> {
+                    CommentModel newComment = commentResponseToComment(response, site);
+                    newComment.setId(comment.getId()); // reconciliate local instance and newly created object
+                    RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(newComment);
+                    mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(payload));
                 },
 
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(
-                                CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
-                    }
-                });
+                error -> mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(
+                        CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment))));
         add(request);
     }
 
@@ -301,25 +242,17 @@ public class CommentRestClient extends BaseWPComRestClient {
         }
         final WPComGsonRequest<CommentLikeWPComRestResponse> request = WPComGsonRequest.buildPostRequest(
                 url, null, CommentLikeWPComRestResponse.class,
-                new Listener<CommentLikeWPComRestResponse>() {
-                    @Override
-                    public void onResponse(CommentLikeWPComRestResponse response) {
-                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
+                response -> {
+                    RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
 
-                        if (comment != null) {
-                            comment.setILike(response.i_like);
-                        }
-                        mDispatcher.dispatch(CommentActionBuilder.newLikedCommentAction(payload));
+                    if (comment != null) {
+                        comment.setILike(response.i_like);
                     }
+                    mDispatcher.dispatch(CommentActionBuilder.newLikedCommentAction(payload));
                 },
 
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        mDispatcher.dispatch(CommentActionBuilder.newLikedCommentAction(
-                                CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
-                    }
-                });
+                error -> mDispatcher.dispatch(CommentActionBuilder.newLikedCommentAction(
+                        CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment))));
         add(request);
     }
 
