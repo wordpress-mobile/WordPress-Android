@@ -98,6 +98,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.Qui
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -1016,46 +1017,44 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* ITEM VISIBILITY */
-//  The next four tests are failing because of the unified dashboard and removal of the tabs. These will be
-// revisited once the refactoring work is done.
-//   @Test
-//    fun `backup menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
-//        setUpSiteItemBuilder()
-//        initSelectedSite()
-//
-//        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
-//
-//        assertThat(findBackupListItem()).isNull()
-//    }
+   @Test
+    fun `backup menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
+        setUpSiteItemBuilder()
+        initSelectedSite()
 
-//    @Test
-//    fun `scan menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
-//        setUpSiteItemBuilder()
-//        initSelectedSite()
-//        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
-//
-//        assertThat(findScanListItem()).isNull()
-//    }
+        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
 
-//    @Test
-//    fun `scan menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
-//        setUpSiteItemBuilder(scanAvailable = true)
-//        initSelectedSite()
-//
-//        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = true, backupAvailable = false)
-//
-//        assertThat(findScanListItem()).isNotNull
-//    }
+        assertThat(findBackupListItem()).isNull()
+    }
 
-//    @Test
-//    fun `backup menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
-//        setUpSiteItemBuilder(backupAvailable = true)
-//        initSelectedSite()
-//
-//        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = true)
-//
-//        assertThat(findBackupListItem()).isNotNull
-//    }
+    @Test
+    fun `scan menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
+        setUpSiteItemBuilder()
+        initSelectedSite()
+        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
+
+        assertThat(findScanListItem()).isNull()
+    }
+
+    @Test
+    fun `scan menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
+        setUpSiteItemBuilder(scanAvailable = true)
+        initSelectedSite()
+
+        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = true, backupAvailable = false)
+
+        assertThat(findScanListItem()).isNotNull
+    }
+
+    @Test
+    fun `backup menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
+        setUpSiteItemBuilder(backupAvailable = true)
+        initSelectedSite()
+
+        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = true)
+
+        assertThat(findBackupListItem()).isNotNull
+    }
 
     /* SWIPE REFRESH */
 
@@ -1120,16 +1119,14 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(getSiteMenuTabLastItems().last()).isInstanceOf(JetpackBadge::class.java)
     }
 
-//    @Test
-//  This test is failing because of the unified dashboard and removal of the tabs. This will be
-// revisited once the refactoring work is done.
-//    fun `given shouldShowJetpackBranding is false, then no Jetpack badge is visible`() {
-//        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-//
-//        initSelectedSite(shouldShowJetpackBranding = false)
-//
-//        assertThat(getSiteMenuTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
-//    }
+    @Test
+    fun `given shouldShowJetpackBranding is false, then no Jetpack badge is visible`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+
+        initSelectedSite(shouldShowJetpackBranding = false)
+
+        assertThat(findJetpackBadgeListItem()).isEmpty()
+    }
 
     @Test
     fun `given IS NOT Jetpack app, migration success card SHOULD NOT be shown`() {
@@ -1280,18 +1277,15 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         assertThat(items.filterIsInstance(QuickStartCard::class.java)).isEmpty()
     }
+    @Test
+    fun `given selected site, when site menu cards and items, then list items exist`() {
+        setUpSiteItemBuilder()
+        initSelectedSite()
 
-//  @Test
-//  This test is failing because of the unified dashboard and removal of the tabs. This will be
-//  revisited once the refactoring work is done.
-//    fun `given selected site, when site menu cards and items, then list items exist`() {
-//        setUpSiteItemBuilder()
-//        initSelectedSite()
-//
-//        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
-//
-//        assertThat(items.filterIsInstance(ListItem::class.java)).isNotEmpty
-//    }
+        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+
+        assertThat(items.filterIsInstance(ListItem::class.java)).isNotEmpty
+    }
 
     @Test
     fun `given tabs enabled + dashboard default tab variant, when site menu cards + items, then qs card not exists`() {
@@ -1347,18 +1341,15 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(getMenuItems()[0]).isInstanceOf(JetpackFeatureCard::class.java)
     }
 
-//    @Test
-//  This test is failing because of the unified dashboard and removal of the tabs. This will be
-// revisited once the refactoring work is done.
-//    fun `when feature card criteria is met + show at bottom, then items do contain feature card`() = test {
-//        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
-//        whenever(jetpackFeatureCardHelper.shouldShowFeatureCardAtTop()).thenReturn(false)
-//
-//        initSelectedSite()
-//
-//        assertThat(getSiteMenuTabLastItems()[getSiteMenuTabLastItems().size - 1])
-//            .isInstanceOf(JetpackFeatureCard::class.java)
-//    }
+    @Test
+    fun `when feature card criteria is met + show at bottom, then items do contain feature card`() = test {
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+        whenever(jetpackFeatureCardHelper.shouldShowFeatureCardAtTop()).thenReturn(false)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems().filterIsInstance(JetpackFeatureCard::class.java)).isNotEmpty
+    }
 
     @Test
     fun `when jetpack feature card is shown, then jetpack feature card shown is tracked`() = test {
@@ -1448,11 +1439,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun findJetpackFeatureCard() =
         getMenuItems().find { it is JetpackFeatureCard } as JetpackFeatureCard?
 
-//    private fun findBackupListItem() = getMenuItems().filterIsInstance(ListItem::class.java)
-//        .firstOrNull { it.primaryText == UiStringRes(R.string.backup) }
-//
-//    private fun findScanListItem() = getMenuItems().filterIsInstance(ListItem::class.java)
-//        .firstOrNull { it.primaryText == UiStringRes(R.string.scan) }
+    private fun findBackupListItem() = getMenuItems().filterIsInstance(ListItem::class.java)
+        .firstOrNull { it.primaryText == UiStringRes(R.string.backup) }
+
+    private fun findScanListItem() = getMenuItems().filterIsInstance(ListItem::class.java)
+        .firstOrNull { it.primaryText == UiStringRes(R.string.scan) }
+
+
+    private fun findJetpackBadgeListItem() = getSiteMenuTabLastItems().filterIsInstance(JetpackBadge::class.java)
 
     private fun getLastItems() = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
@@ -1466,11 +1460,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Suppress("LongParameterList")
     private fun initSelectedSite(
-    //    isMySiteTabsBuildConfigEnabled: Boolean = true,
         isQuickStartInProgress: Boolean = false,
         showStaleMessage: Boolean = false,
         isSiteUsingWpComRestApi: Boolean = true,
-     //   isMySiteDashboardTabsEnabled: Boolean = true,
         shouldShowJetpackBranding: Boolean = true
     ) {
         whenever(
@@ -1516,33 +1508,25 @@ class MySiteViewModelTest : BaseUnitTest() {
         }.whenever(siteInfoHeaderCardBuilder).buildSiteInfoCard(any())
     }
 
-//    private fun setUpSiteItemBuilder(
-//        backupAvailable: Boolean = false,
-//        scanAvailable: Boolean = false,
-//        shouldEnableFocusPoint: Boolean = false,
-//        activeTask: QuickStartTask? = null
-//    ) {
-//        val siteItemsBuilderParams = SiteItemsBuilderParams(
-//            site = site,
-//            activeTask = activeTask,
-//            backupAvailable = backupAvailable,
-//            scanAvailable = scanAvailable,
-//            enableFocusPoints = shouldEnableFocusPoint,
-//            onClick = mock(),
-//            isBlazeEligible = true
-//        )
-//        doAnswer { siteItemsBuilderParams }
-//            .whenever(siteItemsViewModelSlice).buildItems(
-//                shouldEnableFocusPoints = true,
-//                site = site,
-//                activeTask = activeTask,
-//                backupAvailable = backupAvailable,
-//                scanAvailable = scanAvailable
-//            )
-//        doAnswer {
-//            initSiteItems(it)
-//        }.whenever(siteItemsBuilder).build(siteItemsBuilderParams)
-//    }
+    // todo: annmarie set this up for viewModelSlice
+    private fun setUpSiteItemBuilder(
+        backupAvailable: Boolean = false,
+        scanAvailable: Boolean = false,
+        shouldEnableFocusPoint: Boolean = false,
+        activeTask: QuickStartTask? = null
+    ) {
+        val siteItemsBuilderParams = MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
+            site = site,
+            activeTask = activeTask,
+            backupAvailable = backupAvailable,
+            scanAvailable = scanAvailable,
+            enableFocusPoints = shouldEnableFocusPoint,
+            onClick = mock(),
+            isBlazeEligible = true
+        )
+
+        whenever(siteItemsBuilder.build(anyOrNull())).thenReturn(initSiteItems(siteItemsBuilderParams))
+    }
 
     private fun initSiteInfoCard(): SiteInfoHeaderCard {
         return SiteInfoHeaderCard(
@@ -1619,47 +1603,53 @@ class MySiteViewModelTest : BaseUnitTest() {
         return ErrorCard(onRetryClick = ListItemInteraction.create { onDashboardErrorRetryClick })
     }
 
-//    private fun initSiteItems(mockInvocation: InvocationOnMock): List<ListItem> {
-//        val params = (mockInvocation.arguments.filterIsInstance<SiteItemsBuilderParams>()).first()
-//        val items = mutableListOf<ListItem>()
-//        items.add(
-//            ListItem(
-//                0,
-//                UiStringRes(0),
-//                onClick = ListItemInteraction.create(ListItemAction.POSTS, params.onClick)
-//            )
-//        )
-//        if (params.scanAvailable) {
-//            items.add(
-//                ListItem(
-//                    0,
-//                    UiStringRes(R.string.scan),
-//                    onClick = mock()
-//                )
-//            )
-//        }
-//        if (params.backupAvailable) {
-//            items.add(
-//                ListItem(
-//                    0,
-//                    UiStringRes(R.string.backup),
-//                    onClick = mock()
-//                )
-//            )
-//        }
-//        if (params.isBlazeEligible) {
-//            items.add(
-//                ListItem(
-//                    0,
-//                    UiStringRes(R.string.blaze_menu_item_label),
-//                    onClick = mock(),
-//                    disablePrimaryIconTint = true
-//                )
-//            )
-//        }
-//
-//        return items
-//    }
+    private fun initSiteItems(params: MySiteCardAndItemBuilderParams.SiteItemsBuilderParams): List<ListItem> {
+        // private fun initSiteItems(mockInvocation: InvocationOnMock): List<ListItem> {
+        // todo: annmarie this is not being called
+    //    val params = (mockInvocation.arguments.filterIsInstance<MySiteCardAndItemBuilderParams.SiteItemsBuilderParams>()).first()
+        val items = mutableListOf<ListItem>()
+        items.add(
+            ListItem(
+                0,
+                UiStringRes(0),
+                onClick = ListItemInteraction.create(ListItemAction.POSTS, params.onClick),
+                listItemAction = ListItemAction.POSTS
+            )
+        )
+        if (params.scanAvailable) {
+            items.add(
+                ListItem(
+                    0,
+                    UiStringRes(R.string.scan),
+                    onClick = mock(),
+                    listItemAction = ListItemAction.SCAN
+                )
+            )
+        }
+        if (params.backupAvailable) {
+            items.add(
+                ListItem(
+                    0,
+                    UiStringRes(R.string.backup),
+                    onClick = mock(),
+                    listItemAction = ListItemAction.BACKUP
+                )
+            )
+        }
+        if (params.isBlazeEligible) {
+            items.add(
+                ListItem(
+                    0,
+                    UiStringRes(R.string.blaze_menu_item_label),
+                    onClick = mock(),
+                    disablePrimaryIconTint = true,
+                    listItemAction = ListItemAction.BLAZE
+                )
+            )
+        }
+
+        return items
+    }
 
     fun ViewModel.invokeOnCleared() {
         val viewModelStore = ViewModelStore()
