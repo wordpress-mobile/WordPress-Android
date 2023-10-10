@@ -11,6 +11,8 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_SHOWN
 import org.wordpress.android.ui.domains.management.usedomain.UseDomainViewModel.ActionEvent
 import org.wordpress.android.ui.domains.management.usedomain.UseDomainViewModel.ActionEvent.GoBack
@@ -41,13 +43,13 @@ class UseDomainViewModelTest : BaseUnitTest() {
     @Test
     fun `WHEN new domain selected THEN track DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED event`() {
         viewModel.onNewDomainSelected()
-        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_SHOWN)
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED)
     }
 
     @Test
     fun `WHEN existing domain selected THEN track DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED event `() {
         viewModel.onExistingDomainSelected()
-        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_SHOWN)
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED)
     }
 
     @Test
