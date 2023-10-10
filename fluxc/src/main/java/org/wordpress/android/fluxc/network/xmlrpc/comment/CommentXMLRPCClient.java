@@ -40,10 +40,11 @@ import javax.inject.Singleton;
 
 @Singleton
 public class CommentXMLRPCClient extends BaseXMLRPCClient {
-    @Inject public CommentXMLRPCClient(Dispatcher dispatcher,
-                               @Named("custom-ssl") RequestQueue requestQueue,
-                               UserAgent userAgent,
-                               HTTPAuthManager httpAuthManager) {
+    @Inject public CommentXMLRPCClient(
+            Dispatcher dispatcher,
+            @Named("custom-ssl") RequestQueue requestQueue,
+            UserAgent userAgent,
+            HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
@@ -77,8 +78,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(
                                 CommentErrorUtils.commentErrorToFetchCommentsPayload(error, site)));
                     }
-                }
-        );
+                });
         add(request);
     }
 
@@ -110,8 +110,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                         mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(
                                 CommentErrorUtils.commentErrorToPushCommentPayload(error, comment)));
                     }
-                }
-        );
+                });
         add(request);
     }
 
@@ -142,8 +141,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
                     }
-                }
-        );
+                });
         add(request);
     }
 
@@ -184,8 +182,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                         mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
                     }
-                }
-        );
+                });
         add(request);
     }
 
@@ -268,8 +265,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                         mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
                     }
-                }
-        );
+                });
         add(request);
     }
 
