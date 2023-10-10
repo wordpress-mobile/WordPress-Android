@@ -56,6 +56,7 @@ class MenuViewModelTest : BaseUnitTest() {
     fun setUp() = test {
         whenever(localeManagerWrapper.getLanguage()).thenReturn("")
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        initJetpackCapabilities(scanPurchased = false, backupPurchased = false)
 
         viewModel = MenuViewModel(
             blazeFeatureUtils,
@@ -75,7 +76,7 @@ class MenuViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when vm, when inti, then uiState should contain empty list`() = test {
+    fun `when vm, when init, then uiState should contain empty list`() = test {
         assertThat(viewModel.uiState.first()).isEqualTo(MenuViewState(items = emptyList()))
     }
 
@@ -97,6 +98,78 @@ class MenuViewModelTest : BaseUnitTest() {
         }
     }
 
+    /* ITEM VISIBILITY */
+    @Test
+    fun `given vm start, when jetpack capabilities excludes backup, then backup menu item is NOT visible`() = test {
+        val uiStates = mutableListOf<MenuViewState>()
+        testWithData(uiStates) {
+            whenever(siteItemsBuilder.build(any()))
+                .thenReturn(createList(scanPurchased = false, backupPurchased = false))
+                .thenReturn(createList(scanPurchased = false, backupPurchased = false))
+
+            viewModel.start()
+
+            advanceUntilIdle()
+
+            assertThat(findBackupListItem(uiStates.last().items)).isNull()
+        }
+    }
+
+    @Test
+    fun `given vm start, when jetpack capabilities includes backup, then backup menu item is visible`() = test {
+        val uiStates = mutableListOf<MenuViewState>()
+        testWithData(uiStates) {
+            whenever(siteItemsBuilder.build(any()))
+                .thenReturn(createList(scanPurchased = false, backupPurchased = false))
+                .thenReturn(createList(scanPurchased = false, backupPurchased = true))
+
+            viewModel.start()
+
+            advanceUntilIdle()
+
+            assertThat(findBackupListItem(uiStates.last().items)).isNotNull()
+        }
+    }
+    @Test
+    fun `given vm start, when jetpack capabilities excludes scan, then scan menu item is NOT visible`() = test {
+        val uiStates = mutableListOf<MenuViewState>()
+        testWithData(uiStates) {
+            whenever(siteItemsBuilder.build(any()))
+                .thenReturn(createList(scanPurchased = false, backupPurchased = false))
+                .thenReturn(createList(scanPurchased = false, backupPurchased = false))
+
+            viewModel.start()
+
+            advanceUntilIdle()
+
+            assertThat(findScanListItem(uiStates.last().items)).isNull()
+        }
+    }
+
+    @Test
+    fun `given vm start, when jetpack capabilities includes scan, then scan menu item is visible`() = test {
+        val uiStates = mutableListOf<MenuViewState>()
+        testWithData(uiStates) {
+            whenever(siteItemsBuilder.build(any()))
+                .thenReturn(createList(scanPurchased = false, backupPurchased = false))
+                .thenReturn(createList(scanPurchased = true, backupPurchased = false))
+
+            viewModel.start()
+
+            advanceUntilIdle()
+
+            assertThat(findScanListItem(uiStates.last().items)).isNotNull()
+        }
+    }
+
+    private fun findBackupListItem(items: List<MenuItemState>) =
+        items.filterIsInstance(MenuItemState.MenuListItem::class.java)
+            .firstOrNull { it.listItemAction == ListItemAction.BACKUP }
+
+    private fun findScanListItem(items: List<MenuItemState>) =
+        items.filterIsInstance(MenuItemState.MenuListItem::class.java)
+            .firstOrNull { it.listItemAction == ListItemAction.SCAN }
+
     private suspend fun initJetpackCapabilities(
         scanPurchased: Boolean = false,
         backupPurchased: Boolean = false
@@ -114,7 +187,6 @@ class MenuViewModelTest : BaseUnitTest() {
         testBody(testScope())
         uiStatesJob.cancel()
     }
-
 
     private fun createList(
         scanPurchased: Boolean = false,
