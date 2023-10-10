@@ -54,7 +54,11 @@ public class CommentRestClient extends BaseWPComRestClient {
         mLikesUtilsProvider = likesUtilsProvider;
     }
 
-    public void fetchComments(final SiteModel site, final int number, final int offset, final CommentStatus status) {
+    public void fetchComments(
+            @NonNull final SiteModel site,
+            final int number,
+            final int offset,
+            @NonNull final CommentStatus status) {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.getUrlV1_1();
         Map<String, String> params = new HashMap<>();
         params.put("status", status.toString());

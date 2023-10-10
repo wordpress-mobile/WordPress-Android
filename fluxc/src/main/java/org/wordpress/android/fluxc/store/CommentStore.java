@@ -462,7 +462,7 @@ public class CommentStore extends Store {
         emitChange(event);
     }
 
-    private void fetchComments(FetchCommentsPayload payload) {
+    private void fetchComments(@NonNull FetchCommentsPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mCommentRestClient.fetchComments(payload.site, payload.number, payload.offset, payload.status);
         } else {
