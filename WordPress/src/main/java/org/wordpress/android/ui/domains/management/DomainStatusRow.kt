@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,7 +47,7 @@ fun StatusRow(
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = status.statusUiState.text,
+            text = stringResource(id = status.statusUiState.text),
             color = status.statusUiState.textColor,
             style = if (status.statusUiState.isBold) {
                 LocalTextStyle.current.copy(fontWeight = FontWeight.Bold)

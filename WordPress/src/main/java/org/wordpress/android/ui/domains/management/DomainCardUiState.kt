@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.domains.management
 
+import androidx.annotation.StringRes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import org.wordpress.android.R
 import java.time.LocalDate
 
 /**
@@ -30,7 +32,7 @@ data class DomainCardUiState(
 }
 
 data class StatusUiState(
-    val text: String,
+    @StringRes val text: Int,
     val indicatorColor: Color,
     val textColor: Color = indicatorColor,
     val isBold: Boolean = false,
@@ -51,36 +53,51 @@ enum class DomainStatus {
     val statusUiState
         @Composable
         get() = when (this) {
-            CompleteSetup -> StatusUiState("Complete Setup", MaterialTheme.colorScheme.warning)
+            CompleteSetup -> StatusUiState(
+                R.string.domain_management_status_complete_setup,
+                MaterialTheme.colorScheme.warning,
+            )
             Failed -> StatusUiState(
-                "Failed",
+                R.string.domain_management_status_failed,
                 MaterialTheme.colorScheme.error,
                 MaterialTheme.colorScheme.onSurface,
             )
-
-            Error -> StatusUiState("Error", MaterialTheme.colorScheme.error, isBold = true)
-            InProgress -> StatusUiState(
-                "In Progress",
-                MaterialTheme.colorScheme.secondary,
-                MaterialTheme.colorScheme.onSurface
+            Error -> StatusUiState(
+                R.string.domain_management_status_error,
+                MaterialTheme.colorScheme.error,
+                isBold = true,
             )
-
-            ActionRequired -> StatusUiState("Action Required", MaterialTheme.colorScheme.warning)
-            Expired -> StatusUiState("Expired", MaterialTheme.colorScheme.warning, isBold = true)
-            ExpiringSoon -> StatusUiState("Expiring Soon", MaterialTheme.colorScheme.warning, isBold = true)
-            Renew -> StatusUiState(
-                "Renew",
+            InProgress -> StatusUiState(
+                R.string.domain_management_status_in_progress,
                 MaterialTheme.colorScheme.secondary,
-                MaterialTheme.colorScheme.onSurface
+                MaterialTheme.colorScheme.onSurface,
+            )
+            ActionRequired -> StatusUiState(
+                R.string.domain_management_status_action_required,
+                MaterialTheme.colorScheme.warning,
+            )
+            Expired -> StatusUiState(
+                R.string.domain_management_status_expired,
+                MaterialTheme.colorScheme.warning,
+                isBold = true,
+            )
+            ExpiringSoon -> StatusUiState(
+                R.string.domain_management_status_expiring_soon,
+                MaterialTheme.colorScheme.warning,
+                isBold = true,
+            )
+            Renew -> StatusUiState(
+                R.string.domain_management_status_renew,
+                MaterialTheme.colorScheme.secondary,
+                MaterialTheme.colorScheme.onSurface,
             )
             VerifyEmail -> StatusUiState(
-                "Verify Email",
+                R.string.domain_management_status_verify_email,
                 MaterialTheme.colorScheme.secondary,
-                MaterialTheme.colorScheme.onSurface
+                MaterialTheme.colorScheme.onSurface,
             )
-
             Active -> StatusUiState(
-                "Active",
+                R.string.domain_management_status_active,
                 MaterialTheme.colorScheme.success,
                 MaterialTheme.colorScheme.onSurface,
             )

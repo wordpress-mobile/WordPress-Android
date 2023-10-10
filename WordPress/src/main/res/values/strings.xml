@@ -2698,6 +2698,18 @@
     <string name="domains_free_plan_get_your_domain_caption">Domains purchased on this site will redirect visitors to &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_search_for_a_domain_button">Search for a domain</string>
 
+    <!-- Domain Management -->
+    <string name="domain_management_status_complete_setup">Complete Setup</string>
+    <string name="domain_management_status_failed">Failed</string>
+    <string name="domain_management_status_error">Error</string>
+    <string name="domain_management_status_in_progress">In Progress</string>
+    <string name="domain_management_status_action_required">Action Required</string>
+    <string name="domain_management_status_expired">Expired</string>
+    <string name="domain_management_status_expiring_soon">Expiring Soon</string>
+    <string name="domain_management_status_renew">Renew</string>
+    <string name="domain_management_status_verify_email">Verify Email</string>
+    <string name="domain_management_status_active">Active</string>
+
     <!-- Automated Transfer Eligibility Errors -->
     <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Plugin feature requires a custom domain.</string>
