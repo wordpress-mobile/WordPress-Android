@@ -3061,9 +3061,6 @@ Language: vi_VN
     <string name="add_new_category">Thêm chuyên mục mới</string>
     <string name="view_in_browser">Xem trong trình duyệt</string>
     <string name="remove_account">Xóa blog</string>
-    <string name="toast_comment_unedited">Bình luận vẫn chưa thay đổi</string>
-    <string name="content_required">Bình luận là bắt buộc</string>
-    <string name="sure_to_cancel_edit_comment">Hủy bỏ việc sửa bình luận này?</string>
     <string name="saving_changes">Đang lưu các thay đổi</string>
     <string name="trash">Thùng rác</string>
     <string name="dlg_confirm_trash_comments">Cho vào thùng rác?</string>
@@ -3091,7 +3088,6 @@ Language: vi_VN
     <string name="learn_more">Tìm hiểu thêm</string>
     <string name="post_not_found">Xảy ra lỗi khi tải bài viết. Làm mới bài viết của bạn và thử lại.</string>
     <string name="plugin_not_found">Xảy ra lỗi khi truy cập plugin này</string>
-    <string name="cancel_edit">Hủy bỏ sửa</string>
     <string name="connection_error">Lỗi kết nối</string>
     <string name="select_categories">Chọn chuyên mục</string>
     <string name="share_link">Chia sẻ liên kết</string>

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-28 16:27:37+0000
+Translation-Revision-Date: 2023-10-02 20:44:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">Block entgruppieren</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">Hier tippen, um mehr Details anzuzeigen.</string>
+    <string name="gutenberg_native_synced_patterns">Synchronisierte Vorlagen</string>
+    <string name="gutenberg_native_deeply_nested_block">Tief verschachtelter Block</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Blöcke, die tiefer als %d Ebenen verschachtelt sind, werden im mobilen Editor möglicherweise nicht richtig dargestellt. Aus diesem Grund empfehlen wir, die Tiefe des Inhalts zu reduzieren, indem du die Gruppierung des Blocks aufhebst oder den Block mit dem Webeditor bearbeitest.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blöcke, die tiefer als %d Ebenen verschachtelt sind, werden im mobilen Editor möglicherweise nicht richtig dargestellt. Aus diesem Grund empfehlen wir, die Tiefe des Inhalts zu reduzieren, indem du die Gruppierung des Blocks aufhebst oder den Block mit deinem Webbrowser bearbeitest.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Der Block kann nicht gerendert werden, weil er tief verschachtelt ist. Tippe hier für weitere Details.</string>
+    <string name="pages_no_site_something_went_wrong">Huch, etwas ist schiefgelaufen. Bitte versuche es später erneut.</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Internet öffnen</string>
     <string name="my_site_dashboard_no_cards_message_description">Tippe auf den Button „Personalisieren“, um weitere Karten anzuzeigen.</string>
     <string name="my_site_dashboard_no_cards_message_title">Alle Karten sind ausgeblendet</string>
     <string name="personalization_screen_next_steps_card_description">Erfahre, wie du deine Website mit der App optimal nutzt.</string>
@@ -1697,6 +1706,7 @@ Language: de
     <string name="app_theme_light">Hell</string>
     <string name="app_theme">Design</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Du hast vor kurzem Änderungen an dieser Seite vorgenommen, diese aber nicht gespeichert. Wähle eine Version aus, die geladen wird:\n\n</string>
+    <string name="gutenberg_native_warning_message">Warnmeldung</string>
     <string name="gutenberg_native_show_post_content">Beitragsinhalt anzeigen</string>
     <string name="gutenberg_native_only_show_excerpt">Nur Textauszug anzeigen</string>
     <string name="gutenberg_native_link_to">Link zu</string>
@@ -3311,7 +3321,7 @@ Language: de
     <string name="media_edit_copy_url_toast">URL in Zwischenablage kopiert</string>
     <string name="selected_theme">Gewähltes Theme</string>
     <string name="could_not_load_theme">Konnte Theme nicht laden</string>
-    <string name="theme_activation_error">Etwas ist schief gelaufen. Konnte Theme nicht aktivieren</string>
+    <string name="theme_activation_error">Etwas ist schiefgelaufen. Das Theme konnte nicht aktiviert werden</string>
     <string name="theme_by_author_prompt_append"> von %1$s</string>
     <string name="theme_prompt">Danke, dass du %1$s gewählt hast</string>
     <string name="theme_manage_site">WEBSITE VERWALTEN</string>
@@ -3526,9 +3536,6 @@ Language: de
     <string name="add_new_category">Neue Kategorie hinzufügen</string>
     <string name="view_in_browser">Im Browser anschauen</string>
     <string name="remove_account">Website entfernen</string>
-    <string name="toast_comment_unedited">Kommentar wurde nicht verändert</string>
-    <string name="content_required">Kommentar wird benötigt</string>
-    <string name="sure_to_cancel_edit_comment">Bearbeiten des Kommentars abbrechen?</string>
     <string name="saving_changes">Änderungen speichern</string>
     <string name="trash">Papierkorb</string>
     <string name="dlg_confirm_trash_comments">In Papierkorb verschieben?</string>
@@ -3556,7 +3563,6 @@ Language: de
     <string name="learn_more">Mehr erfahren</string>
     <string name="post_not_found">Beim Abrufen des Beitrags trat ein Fehler auf. Lade deine Beiträge neu und versuche es erneut.</string>
     <string name="plugin_not_found">Beim Zugriff auf dieses Plugin ist ein Fehler aufgetreten</string>
-    <string name="cancel_edit">Bearbeiten abbrechen</string>
     <string name="connection_error">Fehler beim Verbinden</string>
     <string name="select_categories">Kategorien auswählen</string>
     <string name="share_link">Link teilen</string>

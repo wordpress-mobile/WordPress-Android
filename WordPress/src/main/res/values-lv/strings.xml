@@ -3487,9 +3487,6 @@ Language: lv
     <string name="add_new_category">Pievienot jaunu kategoriju</string>
     <string name="view_in_browser">Skatīt pārlūkprogrammā</string>
     <string name="remove_account">Noņemt vietni</string>
-    <string name="toast_comment_unedited">Komentārs nav mainījies</string>
-    <string name="content_required">Nepieciešams komentārs</string>
-    <string name="sure_to_cancel_edit_comment">Vai atcelt šī komentāra rediģēšanu?</string>
     <string name="saving_changes">Saglabā izmaiņas</string>
     <string name="trash">Atkritne</string>
     <string name="dlg_confirm_trash_comments">Vai nosūtīt uz atkritni?</string>
@@ -3517,7 +3514,6 @@ Language: lv
     <string name="learn_more">Uzzināt vairāk</string>
     <string name="post_not_found">Ielādējot ziņu, radās kļūda. Atsvaidziniet savas ziņas un mēģiniet vēlreiz.</string>
     <string name="plugin_not_found">Piekļūstot šim spraudnim, radās kļūda</string>
-    <string name="cancel_edit">Atcelt rediģēšanu</string>
     <string name="connection_error">Savienojuma kļūda</string>
     <string name="select_categories">Atlasiet kategorijas</string>
     <string name="share_link">Kopīgot saiti</string>

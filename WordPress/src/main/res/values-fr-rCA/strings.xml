@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-26 11:54:32+0000
+Translation-Revision-Date: 2023-10-03 17:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">Dégrouper le bloc</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">Appuyez ici pour afficher plus de détails.</string>
+    <string name="gutenberg_native_synced_patterns">Compositions synchronisées</string>
+    <string name="gutenberg_native_deeply_nested_block">Bloc profondément imbriqué</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Les blocs imbriqués à un niveau supérieur à %d peuvent ne pas s’afficher correctement dans l’éditeur mobile. Pour cette raison, nous vous recommandons d’aplatir le contenu en dégroupant le bloc ou en le modifiant à l’aide de l’éditeur web.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Les blocs imbriqués à un niveau supérieur à %d peuvent ne pas s’afficher correctement dans l’éditeur mobile. Pour cette raison, nous vous recommandons d’aplatir le contenu en dégroupant le bloc ou en le modifiant à l’aide de votre navigateur web.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Le bloc ne peut pas être affiché car il est profondément imbriqué. Appuyez ici pour plus de détails.</string>
+    <string name="pages_no_site_something_went_wrong">Oups, un problème est survenu. Veuillez réessayer plus tard.</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Aller sur le web</string>
     <string name="my_site_dashboard_no_cards_message_description">Appuyez sur le bouton de personnalisation pour afficher d’autres cartes.</string>
     <string name="my_site_dashboard_no_cards_message_title">Toutes les cartes sont masquées</string>
     <string name="personalization_screen_next_steps_card_description">Découvrez comment exploiter pleinement votre site grâce à l’application.</string>
@@ -15,8 +24,13 @@ Language: fr
     <string name="personalization_screen_blogging_prompts_card_title">Invites pour bloguer</string>
     <string name="personalization_screen_blaze_card_description">Faites la promotion d’un article et découvrez les campagnes en cours.</string>
     <string name="personalization_screen_scheduled_posts_card_description">Vos articles planifiés à venir.</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Articles planifiés</string>
     <string name="personalization_screen_draft_posts_card_description">Vos brouillons d’articles récents.</string>
+    <string name="personalization_screen_draft_posts_card_title">Brouillons d’articles</string>
     <string name="personalization_screen_stats_card_description">Vues, visiteurs et mentions J’aime</string>
+    <string name="personalization_screen_footer_cards">Le contenu des cartes peut varier en fonction de l’activité sur votre site.</string>
+    <string name="personalization_screen_description">Ajouter ou masquer des cartes</string>
+    <string name="personalization_screen_title">Personnaliser l’onglet Accueil</string>
     <string name="personalize_card_content_description">Appuyer pour personnaliser l’onglet Accueil</string>
     <string name="personalize_card_text">Personnaliser l’onglet Accueil</string>
     <string name="partial_media_access_prompt_change_settings">Modifier les réglages</string>
@@ -650,6 +664,7 @@ Language: fr
     <string name="gutenberg_native_tiled_gallery_settings">Réglages de la mosaïque d’images</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Ouvrir l’écran de sélection de la mise en page</string>
     <string name="gutenberg_native_gallery_style">Style de la galerie</string>
+    <string name="sharing_connect_via_web_warning_message">Vous pouvez connecter votre compte %s sur le site WordPress.com. Lorsque vous aurez terminé, retournez dans l’application pour modifier vos options de partage.</string>
     <string name="about_automattic_app_icon_description">Icône de l’application</string>
     <string name="about_automattic_back_icon_description">Icône Retour</string>
     <string name="about_automattic_logo_description">Logo Automattic</string>
@@ -3518,9 +3533,6 @@ Language: fr
     <string name="add_new_category">Ajouter une nouvelle catégorie</string>
     <string name="view_in_browser">Voir dans le navigateur</string>
     <string name="remove_account">Supprimer le site</string>
-    <string name="toast_comment_unedited">Le commentaire n\'a pas été modifié</string>
-    <string name="content_required">Commentaire requis</string>
-    <string name="sure_to_cancel_edit_comment">Annuler l\'édition de ce commentaire ?</string>
     <string name="saving_changes">Enregistrement des modifications</string>
     <string name="trash">Corbeille</string>
     <string name="dlg_confirm_trash_comments">Mettre à la corbeille ?</string>
@@ -3548,7 +3560,6 @@ Language: fr
     <string name="learn_more">En savoir plus</string>
     <string name="post_not_found">Une erreur s\'est produite en chargeant cet article. Actualisez vos articles et essayez de nouveau.</string>
     <string name="plugin_not_found">Une erreur s’est produite en accédant à cette extension.</string>
-    <string name="cancel_edit">Annuler la modification</string>
     <string name="connection_error">Erreur de connexion</string>
     <string name="select_categories">Sélectionner les catégories</string>
     <string name="share_link">Lien de partage</string>

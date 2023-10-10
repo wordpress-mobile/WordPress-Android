@@ -46,7 +46,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType
 import org.wordpress.android.fluxc.store.TransactionsStore
 import org.wordpress.android.fluxc.store.TransactionsStore.CreateCartErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.TransactionsStore.CreateShoppingCartError
-import org.wordpress.android.fluxc.store.TransactionsStore.CreateShoppingCartPayload
+import org.wordpress.android.fluxc.store.TransactionsStore.CreateShoppingCartWithDomainAndPlanPayload
 import org.wordpress.android.fluxc.store.TransactionsStore.FetchSupportedCountriesError
 import org.wordpress.android.fluxc.store.TransactionsStore.FetchSupportedCountriesErrorType
 import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
@@ -702,7 +702,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
             OnShoppingCartCreated(createShoppingCartResponse)
         }
         whenever(dispatcher.dispatch(argWhere<Action<Void>> {
-            it.type == TransactionAction.CREATE_SHOPPING_CART
+            it.type == TransactionAction.CREATE_SHOPPING_CART_WITH_DOMAIN_AND_PLAN
         })).then {
             viewModel.onShoppingCartCreated(event)
         }
@@ -759,15 +759,15 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     }
 
     private fun validateCreateCartAction(action: Action<*>) {
-        assertThat(action.type).isEqualTo(TransactionAction.CREATE_SHOPPING_CART)
+        assertThat(action.type).isEqualTo(TransactionAction.CREATE_SHOPPING_CART_WITH_DOMAIN_AND_PLAN)
         assertThat(action.payload).isNotNull
-        assertThat(action.payload).isInstanceOf(CreateShoppingCartPayload::class.java)
+        assertThat(action.payload).isInstanceOf(CreateShoppingCartWithDomainAndPlanPayload::class.java)
 
-        val createShoppingCartPayload = action.payload as CreateShoppingCartPayload
+        val createShoppingCartPayload = action.payload as CreateShoppingCartWithDomainAndPlanPayload
         assertThat(createShoppingCartPayload.site).isEqualTo(site)
         assertThat(createShoppingCartPayload.domainName).isEqualTo(testDomainName)
-        assertThat(createShoppingCartPayload.productId).isEqualTo(productId)
-        assertThat(createShoppingCartPayload.isPrivacyEnabled).isEqualTo(true)
+        assertThat(createShoppingCartPayload.domainProductId).isEqualTo(productId)
+        assertThat(createShoppingCartPayload.isDomainPrivacyEnabled).isEqualTo(true)
     }
 
     private fun validateRedeemCartAction(action: Action<*>) {

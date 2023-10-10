@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-28 15:21:12+0000
+Translation-Revision-Date: 2023-10-03 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: sv_SE
@@ -18,9 +18,11 @@ Language: sv_SE
     <string name="personalization_screen_scheduled_posts_card_description">Dina kommande schemalagda inlägg.</string>
     <string name="personalization_screen_scheduled_posts_card_title"> Schemalagda inlägg</string>
     <string name="personalization_screen_draft_posts_card_description">Dina senaste inläggsutkast.</string>
+    <string name="personalization_screen_draft_posts_card_title">Inläggsutkast</string>
     <string name="personalization_screen_stats_card_description">Visningar, besökare och gilla-markeringar</string>
     <string name="personalization_screen_footer_cards">Kort kan visa olika innehåll beroende på vad som händer med din webbplats</string>
     <string name="personalization_screen_description"> Visa eller dölj kort</string>
+    <string name="personalization_screen_title">Anpassa Hem-fliken</string>
     <string name="personalize_card_content_description">Tryck för att anpassa din Hem-flik</string>
     <string name="personalize_card_text">Anpassa din Hem-flik</string>
     <string name="partial_media_access_prompt_change_settings">Ändra inställningar</string>
@@ -1696,6 +1698,7 @@ Language: sv_SE
     <string name="app_theme_light">Ljust</string>
     <string name="app_theme">Utseende</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Du har nyligen gjort ändringar i denna sida utan att spara. Välj vilken version du vill använda:\n\n</string>
+    <string name="gutenberg_native_warning_message">Varningsmeddelande</string>
     <string name="gutenberg_native_show_post_content">Visa inläggsinnehåll</string>
     <string name="gutenberg_native_only_show_excerpt">Visa endast utdrag</string>
     <string name="gutenberg_native_link_to">Länk till</string>
@@ -3525,9 +3528,6 @@ Language: sv_SE
     <string name="add_new_category">Lägg till ny kategori</string>
     <string name="view_in_browser">Visa i webbläsare</string>
     <string name="remove_account">Ta bort webbplatsen</string>
-    <string name="toast_comment_unedited">Kommentaren har inte ändrats</string>
-    <string name="content_required">Kommentar krävs</string>
-    <string name="sure_to_cancel_edit_comment">Avbryt redigeringen av denna kommentar?</string>
     <string name="saving_changes">Spara ändringarna</string>
     <string name="trash">Kasta bort</string>
     <string name="dlg_confirm_trash_comments">Kasta?</string>
@@ -3555,7 +3555,6 @@ Language: sv_SE
     <string name="learn_more">Läs mer</string>
     <string name="post_not_found">Ett fel uppstod vid inläsning av inlägget. Uppdatera dina inlägg och försök igen.</string>
     <string name="plugin_not_found">Ett fel inträffade vid åtkomsten till detta tillägg</string>
-    <string name="cancel_edit">Avbryt redigering</string>
     <string name="connection_error">Kommunikationsfel</string>
     <string name="select_categories">Välj kategorier</string>
     <string name="share_link">Dela länk</string>
