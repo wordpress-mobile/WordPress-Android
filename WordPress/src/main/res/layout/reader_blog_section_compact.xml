@@ -17,22 +17,24 @@
         tools:ignore="RtlSymmetry">
 
         <ImageView
-            android:id="@+id/blog_section_image_blog_avatar"
+            android:id="@+id/blog_section_image_author_avatar"
             style="@style/ReaderImageView.Avatar.ExtraSmall.OvalSurfaceBackground"
             android:importantForAccessibility="no"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:src="@drawable/ic_blaze_overlay_image" />
+            tools:src="@drawable/login_prologue_third_asset_three" />
 
         <ImageView
-            android:id="@+id/blog_section_image_author_avatar"
+            android:id="@+id/blog_section_image_blog_avatar"
             style="@style/ReaderImageView.Avatar.ExtraSmall.OvalSurfaceBackground"
+            android:layout_marginStart="@dimen/reader_a8c_avatar_margin_start_new"
             android:importantForAccessibility="no"
-            app:layout_constraintStart_toEndOf="@id/blog_section_image_blog_avatar"
-            app:layout_constraintEnd_toEndOf="@id/blog_section_image_blog_avatar"
-            app:layout_constraintBottom_toBottomOf="@id/blog_section_image_blog_avatar"
-            tools:src="@drawable/login_prologue_third_asset_three" />
+            app:layout_goneMarginStart="0dp"
+            app:layout_constraintStart_toStartOf="@id/blog_section_image_author_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:src="@drawable/ic_blaze_overlay_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
