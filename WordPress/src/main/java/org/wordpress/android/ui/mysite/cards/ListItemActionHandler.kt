@@ -8,6 +8,7 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.quickstart.QuickStartEvent
 import javax.inject.Inject
 
 class ListItemActionHandler @Inject constructor(
@@ -15,7 +16,11 @@ class ListItemActionHandler @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val blazeFeatureUtils: BlazeFeatureUtils
 ) {
-    fun handleAction(action: ListItemAction, selectedSite: SiteModel): SiteNavigationAction {
+    fun handleAction(
+        action: ListItemAction,
+        selectedSite: SiteModel,
+        quickStartEvent: QuickStartEvent? = null
+    ): SiteNavigationAction {
         return when (action) {
             ListItemAction.ACTIVITY_LOG -> SiteNavigationAction.OpenActivityLog(selectedSite)
             ListItemAction.BACKUP -> SiteNavigationAction.OpenBackup(selectedSite)
@@ -35,7 +40,7 @@ class ListItemActionHandler @Inject constructor(
             ListItemAction.MEDIA -> SiteNavigationAction.OpenMedia(selectedSite)
             ListItemAction.COMMENTS -> SiteNavigationAction.OpenUnifiedComments(selectedSite)
             ListItemAction.BLAZE -> onBlazeMenuItemClick()
-            ListItemAction.MORE -> SiteNavigationAction.OpenMore(selectedSite)
+            ListItemAction.MORE -> SiteNavigationAction.OpenMore(selectedSite, quickStartEvent)
         }
     }
 

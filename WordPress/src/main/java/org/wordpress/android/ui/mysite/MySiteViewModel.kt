@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -182,11 +181,11 @@ class MySiteViewModel @Inject constructor(
 
     val quickLinks: LiveData<MySiteCardAndItem.Card.QuickLinksItem> = merge(
         quickLinksItemViewModelSlice.uiState,
-        quickStartRepository.activeTask
-    ) { quickLinks, activeTask ->
+        quickStartRepository.quickStartMenuStep
+    ) { quickLinks, quickStartMenuStep ->
         if (quickLinks != null &&
-            activeTask != null) {
-            return@merge quickLinksItemViewModelSlice.updateToShowMoreFocusPointIfNeeded(quickLinks, activeTask)
+            quickStartMenuStep != null) {
+            return@merge quickLinksItemViewModelSlice.updateToShowMoreFocusPointIfNeeded(quickLinks, quickStartMenuStep)
         }
         return@merge quickLinks
     }
@@ -702,7 +701,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun handleSuccessfulDomainRegistrationResult(email: String?) {
-        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS)
+        analyticsTrackerWrapper.track(Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS)
         _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(getEmailValidationMessage(email))))
     }
 

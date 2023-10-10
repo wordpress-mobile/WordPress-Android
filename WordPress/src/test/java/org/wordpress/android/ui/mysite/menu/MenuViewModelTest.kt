@@ -26,9 +26,11 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.JetpackMigrationLanguageUtil
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.viewmodel.ContextProvider
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -42,6 +44,8 @@ class MenuViewModelTest : BaseUnitTest() {
     private val selectedSiteRepository: SelectedSiteRepository = mock()
     private val siteItemsBuilder: SiteItemsBuilder = mock()
     private val refreshAppLanguageObserver: Observer<String> = mock()
+    private val contextProvider: ContextProvider = mock()
+    private val uiHelpers: UiHelpers = mock()
 
     private lateinit var viewModel: MenuViewModel
 
@@ -62,6 +66,8 @@ class MenuViewModelTest : BaseUnitTest() {
             quickStartRepository,
             selectedSiteRepository,
             siteItemsBuilder,
+            contextProvider,
+            uiHelpers,
             testDispatcher()
         )
 

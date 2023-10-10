@@ -25,9 +25,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -57,15 +60,29 @@ import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.util.QuickStartUtilsWrapper
+import org.wordpress.android.util.SnackbarItem
+import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.extensions.getParcelableExtraCompat
 import javax.inject.Inject
 
+const val KEY_QUICK_START_EVENT = "key_quick_start_event"
 @AndroidEntryPoint
 class MenuActivity : AppCompatActivity() {
     @Inject
     lateinit var activityNavigator: ActivityNavigator
+
+    @Inject
+    lateinit var snackbarSequencer: SnackbarSequencer
+
+    @Inject
+    lateinit var quickStartUtils: QuickStartUtilsWrapper
+
     private val viewModel: MenuViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +96,7 @@ class MenuActivity : AppCompatActivity() {
                     locale = LocaleManager.languageLocale(userLanguage),
                     onLocaleChange = viewModel::setAppLanguage
                 ) {
-                    viewModel.start()
+                    viewModel.start(intent.getParcelableExtraCompat(KEY_QUICK_START_EVENT))
                     MenuScreen()
                 }
             }
@@ -88,8 +105,14 @@ class MenuActivity : AppCompatActivity() {
 
     private fun initObservers() {
         viewModel.navigation.observe(this) { handleNavigationAction(it.getContentIfNotHandled()) }
-    }
+        viewModel.onSnackbarMessage.observe(this) { showSnackbar(it.getContentIfNotHandled()) }
+        viewModel.onQuickStartMySitePrompts.observe(this) { handleActiveTutorialPrompt(it.getContentIfNotHandled()) }
 
+        // Set the Compose callback for SnackbarSequencer
+        snackbarSequencer.setComposeSnackbarCallback { item ->
+            item?.let { viewModel.showSnackbarRequest(it) }
+        }
+    }
 
     @Suppress("ComplexMethod", "LongMethod")
     private fun handleNavigationAction(action: SiteNavigationAction?) {
@@ -122,10 +145,60 @@ class MenuActivity : AppCompatActivity() {
         }
     }
 
+    private fun showSnackbar(holder: SnackbarMessageHolder?) {
+        holder?.let {
+            snackbarSequencer.enqueue(
+                SnackbarItem(
+                    info = SnackbarItem.Info(
+                        view = window.decorView.findViewById(android.R.id.content),
+                        textRes = holder.message,
+                        duration = holder.duration,
+                        isImportant = holder.isImportant
+                    ),
+                    action = holder.buttonTitle?.let {
+                        SnackbarItem.Action(
+                            textRes = holder.buttonTitle,
+                            clickListener = { holder.buttonAction() }
+                        )
+                    },
+                    dismissCallback = { _, event -> holder.onDismissAction(event) }
+                )
+            )
+        }
+    }
+
+    private fun handleActiveTutorialPrompt(activeTutorialPrompt: QuickStartMySitePrompts?) {
+        activeTutorialPrompt?.let {
+            val message = quickStartUtils.stylizeQuickStartPrompt(
+                this,
+                activeTutorialPrompt.shortMessagePrompt,
+                activeTutorialPrompt.iconId
+            )
+
+            showSnackbar(SnackbarMessageHolder(UiString.UiStringText(message)))
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
+    }
+
+    override fun onStop() {
+        snackbarSequencer.clearComposeSnackbarCallback()
+        super.onStop()
+    }
+
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     fun MenuScreen(modifier: Modifier = Modifier) {
+        val scaffoldState = rememberScaffoldState()
+
         Scaffold(
+            scaffoldState = scaffoldState,
+            snackbarHost = { snackbarHostState ->
+                SnackbarHost(hostState = snackbarHostState)
+            },
             topBar = {
                 MainTopAppBar(
                     title = stringResource(id = R.string.my_site_section_screen_title),
@@ -137,7 +210,14 @@ class MenuActivity : AppCompatActivity() {
                 MenuContent(modifier = modifier)
             }
         )
+        LaunchedEffect(viewModel.snackBar) {
+            viewModel.snackBar.collect { message ->
+                scaffoldState.snackbarHostState.showSnackbar(
+                    message.message, message.actionLabel, message.duration)
+            }
+        }
     }
+
 
     @Composable
     fun MenuContent(modifier: Modifier = Modifier) {
@@ -160,6 +240,7 @@ class MenuActivity : AppCompatActivity() {
         }
     }
 }
+
 @Composable
 fun MySiteListItemHeader(headerItem: MenuItemState.MenuHeaderItem) {
     Text(
